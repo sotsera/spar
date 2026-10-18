@@ -1,6 +1,6 @@
 # Implementation kickoff
 
-Date: 2026-10-18. Status: proposed execution plan; environment inspected, no implementation experiments executed.
+Date: 2026-10-18. Status: execution started; the [managed probe](07-managed-probe.md) records actual outcomes and remaining checks. This document remains the sequence for subsequent deliveries.
 
 Read with [product direction](02-product-direction.md), [milestone 1](03-milestone-1.md), and the [upstream issue breakdown](04-milestone-1-issues.md). This document breaks down the first engineering decisions; it does not replace A01–A18 or claim they pass.
 
@@ -34,7 +34,9 @@ These are discovery results, not compatibility evidence:
 
 ## First delivery: prove the managed editing loop
 
-Work against [upstream issue #2](https://github.com/sotsera/spar/issues/2). Land the foundation documentation through its PR before starting an independent `feat/2-hot-reload-probe` branch from updated upstream `main`.
+Work against [upstream issue #2](https://github.com/sotsera/spar/issues/2). Foundation documentation is in [draft PR #13](https://github.com/sotsera/spar/pull/13). The implementation branch `feat/2-hot-reload-probe` deliberately depends on that documentation branch while its review is pending; it is not an independent branch from upstream `main`.
+
+The first experiments used SDK `11.0.100-rc.2.26504.105` / `net11.0`; the same complete VS Code scenario also passed on SDK `10.0.402` / `net10.0`. No necessary .NET 11 advantage was demonstrated in this slice. `global.json` therefore selects stable SDK `10.0.402` with roll-forward disabled and previews excluded; both projects now target `net10.0`. Requiring .NET 11 remains an option when a concrete benefit is proved. Visual Studio and native/AOT gates still precede a full product support promise. Central stable test dependencies are xUnit v3 `4.0.2` and AwesomeAssertions `9.6.0`; MTP is selected in `global.json`. No frontend toolchain has been scaffolded yet.
 
 Build one disposable CoreCLR console probe under `experiments/`, with no SPA, WebView, production framework packages, or custom compiler. It needs a greeting method, mutable counter, process/instance identity, and an update-observation hook. Commands should exercise the method repeatedly so the next invocation demonstrates new behavior.
 

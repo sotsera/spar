@@ -1,0 +1,499 @@
+{
+  "recordedOn": "2026-10-18",
+  "scope": "Console probe only; no native/SPA/AOT acceptance claim.",
+  "configuration": "Debug / CoreCLR / Windows x64",
+  "baseline": {
+    "sdk": "10.0.402",
+    "runner": "Microsoft.Testing.Platform",
+    "xunitV3": "4.0.2",
+    "awesomeAssertions": "9.6.0",
+    "targetFramework": "net10.0"
+  },
+  "commands": [
+    "dotnet build Spar.slnx --disable-build-servers",
+    "dotnet test --solution Spar.slnx --no-build",
+    "dotnet format Spar.slnx --verify-no-changes --no-restore",
+    "pwsh -NoProfile -File eng/Test-VSCodeProbe.ps1",
+    "pwsh -NoProfile -File eng/Test-VSCodeProbe.ps1 -TargetFramework net11.0"
+  ],
+  "build": {
+    "outcome": "passed",
+    "errors": 0,
+    "warnings": 0
+  },
+  "dotnetTest": {
+    "outcome": "passed",
+    "duration": "21.229 seconds",
+    "failed": 0,
+    "total": 3,
+    "skipped": 0
+  },
+  "format": "passed",
+  "watcherRuns": [
+    {
+      "scenario": "body",
+      "sdk": "10.0.402",
+      "targetFramework": "net10.0",
+      "outcome": "passed",
+      "artifactDirectory": "artifacts/hot-reload/body-1a64bf39b6754eefa9bc90bb5053a490",
+      "initialSourcesSha256": [
+        "F7ADA3621E043F9645C22196DE4A5FD630ADF28330230C9A33B2859986140FC8  GreetingProvider.cs",
+        "4ADD72F14FF9B63D16EB5F5DDEA3DFD5226B02DF1C67EC2D5B601434A8122A21  ProbeState.cs",
+        "799A1CC4D01836C311F26AA210B1E7A30D0817FF05AABB1977CCA3F49870B714  Program.cs",
+        "63F2AE7280A410C6342EC782188124D3091C068A63FF30A7811493879DEB9B18  Spar.HotReloadProbe.csproj",
+        "CF440E01E7106F8957DE17ABC1892B6AB247D7087950FB4A90B81B5DAEC2184C  UpdateObserver.cs"
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-10-18T18:05:59.1977265+02:00",
+          "processId": 8708,
+          "processStartedAtUtc": "2026-10-18T16:05:57.9028865Z",
+          "instanceId": "4f02d430-3ca0-4c2f-b67e-9bfb8ddb6f96",
+          "counter": 3,
+          "greeting": "Hello from Spar v1",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        {
+          "observedAt": "2026-10-18T18:05:59.6939385+02:00",
+          "processId": 8708,
+          "processStartedAtUtc": "2026-10-18T16:05:57.9028865Z",
+          "instanceId": "4f02d430-3ca0-4c2f-b67e-9bfb8ddb6f96",
+          "counter": 5,
+          "greeting": "Hello from Spar v2",
+          "update": {
+            "revision": 1,
+            "clearCacheCount": 1,
+            "callbackThreadId": 10,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        },
+        {
+          "observedAt": "2026-10-18T18:05:59.9426694+02:00",
+          "processId": 8708,
+          "processStartedAtUtc": "2026-10-18T16:05:57.9028865Z",
+          "instanceId": "4f02d430-3ca0-4c2f-b67e-9bfb8ddb6f96",
+          "counter": 6,
+          "greeting": "Hello from Spar v4",
+          "update": {
+            "revision": 2,
+            "clearCacheCount": 2,
+            "callbackThreadId": 10,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        }
+      ],
+      "cleanup": "2026-10-18T16:05:59.9682112+00:00 [cleanup] Owned watcher and all observed application processes exited (forced fixture teardown)."
+    },
+    {
+      "scenario": "compile",
+      "sdk": "10.0.402",
+      "targetFramework": "net10.0",
+      "outcome": "passed",
+      "artifactDirectory": "artifacts/hot-reload/compile-a053d391acda4dc5b8ba525ae3ef3f7b",
+      "initialSourcesSha256": [
+        "F7ADA3621E043F9645C22196DE4A5FD630ADF28330230C9A33B2859986140FC8  GreetingProvider.cs",
+        "4ADD72F14FF9B63D16EB5F5DDEA3DFD5226B02DF1C67EC2D5B601434A8122A21  ProbeState.cs",
+        "799A1CC4D01836C311F26AA210B1E7A30D0817FF05AABB1977CCA3F49870B714  Program.cs",
+        "63F2AE7280A410C6342EC782188124D3091C068A63FF30A7811493879DEB9B18  Spar.HotReloadProbe.csproj",
+        "CF440E01E7106F8957DE17ABC1892B6AB247D7087950FB4A90B81B5DAEC2184C  UpdateObserver.cs"
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-10-18T18:06:13.3341201+02:00",
+          "processId": 40672,
+          "processStartedAtUtc": "2026-10-18T16:06:12.0436321Z",
+          "instanceId": "3bf12364-45d6-48c7-bcb8-0432c6c29269",
+          "counter": 3,
+          "greeting": "Hello from Spar v1",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        {
+          "observedAt": "2026-10-18T18:06:13.8457547+02:00",
+          "processId": 40672,
+          "processStartedAtUtc": "2026-10-18T16:06:12.0436321Z",
+          "instanceId": "3bf12364-45d6-48c7-bcb8-0432c6c29269",
+          "counter": 5,
+          "greeting": "Hello from Spar v1",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        {
+          "observedAt": "2026-10-18T18:06:14.0949463+02:00",
+          "processId": 40672,
+          "processStartedAtUtc": "2026-10-18T16:06:12.0436321Z",
+          "instanceId": "3bf12364-45d6-48c7-bcb8-0432c6c29269",
+          "counter": 6,
+          "greeting": "Hello after correction",
+          "update": {
+            "revision": 1,
+            "clearCacheCount": 1,
+            "callbackThreadId": 9,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        }
+      ],
+      "cleanup": "2026-10-18T16:06:14.1128020+00:00 [cleanup] Owned watcher and all observed application processes exited (forced fixture teardown)."
+    },
+    {
+      "scenario": "restart",
+      "sdk": "10.0.402",
+      "targetFramework": "net10.0",
+      "outcome": "passed",
+      "artifactDirectory": "artifacts/hot-reload/restart-be8688dfa8b04ecb94c011700ce2c9ed",
+      "initialSourcesSha256": [
+        "F7ADA3621E043F9645C22196DE4A5FD630ADF28330230C9A33B2859986140FC8  GreetingProvider.cs",
+        "4ADD72F14FF9B63D16EB5F5DDEA3DFD5226B02DF1C67EC2D5B601434A8122A21  ProbeState.cs",
+        "799A1CC4D01836C311F26AA210B1E7A30D0817FF05AABB1977CCA3F49870B714  Program.cs",
+        "63F2AE7280A410C6342EC782188124D3091C068A63FF30A7811493879DEB9B18  Spar.HotReloadProbe.csproj",
+        "CF440E01E7106F8957DE17ABC1892B6AB247D7087950FB4A90B81B5DAEC2184C  UpdateObserver.cs"
+      ],
+      "observations": [
+        {
+          "observedAt": "2026-10-18T18:06:04.959665+02:00",
+          "processId": 40184,
+          "processStartedAtUtc": "2026-10-18T16:06:03.5907032Z",
+          "instanceId": "1016661e-abf7-47c2-b63f-2a88cbe4aba6",
+          "counter": 4,
+          "greeting": "Hello from Spar v1",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        {
+          "observedAt": "2026-10-18T18:06:08.37332+02:00",
+          "processId": 57980,
+          "processStartedAtUtc": "2026-10-18T16:06:07.6597569Z",
+          "instanceId": "fd9bad52-367d-4e57-88fa-94eb0ff7cb1b",
+          "counter": 1,
+          "greeting": "Hello from Spar v1",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        }
+      ],
+      "cleanup": "2026-10-18T16:06:08.4184365+00:00 [cleanup] Owned watcher and all observed application processes exited (forced fixture teardown)."
+    }
+  ],
+  "editorRuns": [
+    {
+      "sdk": "11.0.100-rc.2.26504.105",
+      "targetFramework": "net11.0",
+      "artifactDirectory": "artifacts/vscode-probe/ec2482941c5f4bd48faf07381c63e548",
+      "receipt": {
+        "vscode": "1.142.0",
+        "csharp": "2.160.4",
+        "devkit": "3.40.210",
+        "outcome": "passed",
+        "breakpointHit": true,
+        "before": {
+          "observedAt": "2026-10-18T17:55:46.0820429+02:00",
+          "processId": 58876,
+          "processStartedAtUtc": "2026-10-18T15:55:44.3065624Z",
+          "instanceId": "387e3eea-4309-45a3-8d13-8b45a63c9f55",
+          "counter": 3,
+          "greeting": "Hello from Spar v1",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        "after": {
+          "observedAt": "2026-10-18T17:55:48.968097+02:00",
+          "processId": 58876,
+          "processStartedAtUtc": "2026-10-18T15:55:44.3065624Z",
+          "instanceId": "387e3eea-4309-45a3-8d13-8b45a63c9f55",
+          "counter": 14,
+          "greeting": "Hello from the VS Code debugger",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        "callback": {
+          "observedAt": "2026-10-18T17:55:49.215069+02:00",
+          "processId": 58876,
+          "processStartedAtUtc": "2026-10-18T15:55:44.3065624Z",
+          "instanceId": "387e3eea-4309-45a3-8d13-8b45a63c9f55",
+          "counter": 15,
+          "greeting": "Hello from the VS Code debugger",
+          "update": {
+            "revision": 1,
+            "clearCacheCount": 1,
+            "callbackThreadId": 9,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        },
+        "metadataCallbacksObserved": true,
+        "duringError": {
+          "observedAt": "2026-10-18T17:55:49.4614484+02:00",
+          "processId": 58876,
+          "processStartedAtUtc": "2026-10-18T15:55:44.3065624Z",
+          "instanceId": "387e3eea-4309-45a3-8d13-8b45a63c9f55",
+          "counter": 16,
+          "greeting": "Hello from the VS Code debugger",
+          "update": {
+            "revision": 1,
+            "clearCacheCount": 1,
+            "callbackThreadId": 9,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        },
+        "corrected": {
+          "observedAt": "2026-10-18T17:55:50.0081417+02:00",
+          "processId": 58876,
+          "processStartedAtUtc": "2026-10-18T15:55:44.3065624Z",
+          "instanceId": "387e3eea-4309-45a3-8d13-8b45a63c9f55",
+          "counter": 18,
+          "greeting": "Hello after debugger correction",
+          "update": {
+            "revision": 2,
+            "clearCacheCount": 2,
+            "callbackThreadId": 7,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        },
+        "unsupportedEdit": {
+          "code": "ENC0014",
+          "diagnosticLogLine": "2026-10-18 17:55:50.139 [error]  ❌ [Spar.HotReloadProbe]: E:\\Ghidello\\Git\\spar.v2\\artifacts\\vscode-probe\\ec2482941c5f4bd48faf07381c63e548\\fixture\\ProbeState.cs(13,36): error ENC0014: Updating the base class and/or base interface(s) of class requires restarting the application."
+        },
+        "relaunched": {
+          "observedAt": "2026-10-18T17:55:53.3185262+02:00",
+          "processId": 50184,
+          "processStartedAtUtc": "2026-10-18T15:55:51.9845876Z",
+          "instanceId": "c14538ce-1cb3-4752-861a-b50fe2e8c26f",
+          "counter": 2,
+          "greeting": "Hello after debugger correction",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        "exits": [
+          {
+            "session": "0002a866-a7d9-4314-b50f-fdd49d71fa03",
+            "exitCode": -1
+          },
+          {
+            "session": "027794ff-09ad-4300-af37-13998eb3a9ee",
+            "exitCode": -1
+          }
+        ],
+        "processExitChecks": [
+          {
+            "outcome": "exited",
+            "processId": 58876
+          },
+          {
+            "outcome": "exited",
+            "processId": 50184
+          }
+        ]
+      },
+      "commandAtExecution": "pwsh -NoProfile -File eng/Test-VSCodeProbe.ps1 (default was net11.0 at execution)"
+    },
+    {
+      "sdk": "10.0.402",
+      "targetFramework": "net10.0",
+      "artifactDirectory": "artifacts/vscode-probe/b656ea67b07d4fb29b65ef56dcd5ec63",
+      "receipt": {
+        "vscode": "1.142.0",
+        "csharp": "2.160.4",
+        "devkit": "3.40.210",
+        "outcome": "passed",
+        "breakpointHit": true,
+        "before": {
+          "observedAt": "2026-10-18T18:03:24.30371+02:00",
+          "processId": 61372,
+          "processStartedAtUtc": "2026-10-18T16:03:21.7355098Z",
+          "instanceId": "a0d37009-bf64-4f62-b81b-df634a05397e",
+          "counter": 3,
+          "greeting": "Hello from Spar v1",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        "after": {
+          "observedAt": "2026-10-18T18:03:27.167195+02:00",
+          "processId": 61372,
+          "processStartedAtUtc": "2026-10-18T16:03:21.7355098Z",
+          "instanceId": "a0d37009-bf64-4f62-b81b-df634a05397e",
+          "counter": 14,
+          "greeting": "Hello from the VS Code debugger",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        "callback": {
+          "observedAt": "2026-10-18T18:03:27.4142562+02:00",
+          "processId": 61372,
+          "processStartedAtUtc": "2026-10-18T16:03:21.7355098Z",
+          "instanceId": "a0d37009-bf64-4f62-b81b-df634a05397e",
+          "counter": 15,
+          "greeting": "Hello from the VS Code debugger",
+          "update": {
+            "revision": 1,
+            "clearCacheCount": 1,
+            "callbackThreadId": 13,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        },
+        "metadataCallbacksObserved": true,
+        "duringError": {
+          "observedAt": "2026-10-18T18:03:27.6641898+02:00",
+          "processId": 61372,
+          "processStartedAtUtc": "2026-10-18T16:03:21.7355098Z",
+          "instanceId": "a0d37009-bf64-4f62-b81b-df634a05397e",
+          "counter": 16,
+          "greeting": "Hello from the VS Code debugger",
+          "update": {
+            "revision": 1,
+            "clearCacheCount": 1,
+            "callbackThreadId": 13,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        },
+        "corrected": {
+          "observedAt": "2026-10-18T18:03:28.2104224+02:00",
+          "processId": 61372,
+          "processStartedAtUtc": "2026-10-18T16:03:21.7355098Z",
+          "instanceId": "a0d37009-bf64-4f62-b81b-df634a05397e",
+          "counter": 18,
+          "greeting": "Hello after debugger correction",
+          "update": {
+            "revision": 2,
+            "clearCacheCount": 2,
+            "callbackThreadId": 7,
+            "updatedTypes": [
+              "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+            ]
+          }
+        },
+        "unsupportedEdit": {
+          "code": "ENC0014",
+          "diagnosticLogLine": "2026-10-18 18:03:28.337 [error]  ❌ [Spar.HotReloadProbe]: E:\\Ghidello\\Git\\spar.v2\\artifacts\\vscode-probe\\b656ea67b07d4fb29b65ef56dcd5ec63\\fixture\\ProbeState.cs(13,36): error ENC0014: Updating the base class and/or base interface(s) of class requires restarting the application."
+        },
+        "relaunched": {
+          "observedAt": "2026-10-18T18:03:40.5277772+02:00",
+          "processId": 58992,
+          "processStartedAtUtc": "2026-10-18T16:03:30.8649097Z",
+          "instanceId": "ac383a46-3659-4fd7-9b3f-ecbd104a320b",
+          "counter": 2,
+          "greeting": "Hello after debugger correction",
+          "update": {
+            "revision": 0,
+            "clearCacheCount": 0,
+            "callbackThreadId": 0,
+            "updatedTypes": []
+          }
+        },
+        "exits": [
+          {
+            "session": "01defcb5-e76c-4a3b-b255-d4deba730ac7",
+            "exitCode": -1
+          },
+          {
+            "session": "76e78d4c-835b-4924-a22f-159d0c9ca67e",
+            "exitCode": -1
+          }
+        ],
+        "sdk": "10.0.402",
+        "targetFramework": "net10.0",
+        "processExitChecks": [
+          {
+            "processId": 61372,
+            "outcome": "exited"
+          },
+          {
+            "processId": 58992,
+            "outcome": "exited"
+          }
+        ]
+      },
+      "initialSourcesSha256": [
+        "F7ADA3621E043F9645C22196DE4A5FD630ADF28330230C9A33B2859986140FC8  GreetingProvider.cs",
+        "4ADD72F14FF9B63D16EB5F5DDEA3DFD5226B02DF1C67EC2D5B601434A8122A21  ProbeState.cs",
+        "799A1CC4D01836C311F26AA210B1E7A30D0817FF05AABB1977CCA3F49870B714  Program.cs",
+        "6A16066A65DB1EA76A64838E16F04C07E2585846CF9A0F83EDEE0FE5BBAEC1E3  Spar.HotReloadProbe.csproj",
+        "CF440E01E7106F8957DE17ABC1892B6AB247D7087950FB4A90B81B5DAEC2184C  UpdateObserver.cs"
+      ],
+      "commandAtExecution": "pwsh -NoProfile -File eng/Test-VSCodeProbe.ps1"
+    }
+  ],
+  "firstFailures": [
+    {
+      "artifactDirectory": "artifacts/vscode-probe/96c9ce1d32004776911fa5f9ab3a0b17",
+      "observed": "No dotnet debug adapter descriptor when launching before project service initialization."
+    },
+    {
+      "artifactDirectory": "artifacts/vscode-probe/dd006163dcba4b06bde1891fb9992ad9",
+      "observed": "Breakpoint hit, method edit timed out. Workspace-scoped machine settings did not enable Hot Reload."
+    },
+    {
+      "artifactDirectory": "artifacts/vscode-probe/2e535c701d9d4e39ba7fc0f3e80939f1",
+      "observed": "No document in source/PDB match; no code changes applied. Reproduced on stable control before harness corrections."
+    },
+    {
+      "artifactDirectory": "artifacts/vscode-probe/ef03894de682415daa6692ffb66c8e81",
+      "observed": "ENC1008 stale document before waiting for project tasks."
+    },
+    {
+      "artifactDirectory": "artifacts/vscode-probe/5730fc9fdb29470a932b092e46a6f931",
+      "observed": "ENC0014 written to .NET Hot Reload output; waiting for it through languages.getDiagnostics timed out."
+    }
+  ],
+  "unavailable": [
+    "Visual Studio debugger scenario",
+    "Native window and visible rendering",
+    "NativeAOT publication/execution",
+    "Frontend HMR and coordinator lifetime",
+    "Remote CI and branch protection enforcement"
+  ]
+}

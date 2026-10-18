@@ -1,0 +1,39 @@
+name: Managed probe
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Windows managed probe
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          global-json-file: global.json
+
+      - name: Build
+        run: dotnet build Spar.slnx --disable-build-servers
+
+      - name: Test real dotnet watch behavior
+        run: dotnet test --solution Spar.slnx --no-build
+
+      - name: Preserve probe evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: managed-probe-evidence
+          path: |
+            artifacts/hot-reload/**/watch.log
+            artifacts/hot-reload/**/sources.sha256
+            **/TestResults/**
+          if-no-files-found: warn

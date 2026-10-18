@@ -8,7 +8,19 @@ Production targets NativeAOT by default, with CoreCLR compatibility for applicat
 
 ## Current status
 
-Planning only; no framework implementation or runnable build is present yet. The first milestone will prove the complete edit, debug, inspect, and publish loop in one small application. Previous Spar work supplies reference evidence, not the new implementation.
+Implementation has started with an isolated CoreCLR Hot Reload probe and real watcher/editor acceptance tooling. Native windows, the bridge, SPA integration, and NativeAOT delivery are still ahead. See the [probe results and remaining gates](docs/07-managed-probe.md); no full milestone acceptance scenario is complete yet.
+
+## Run the first slice
+
+Install SDK `10.0.402`, selected in `global.json`, then run from this checkout:
+
+```powershell
+dotnet build Spar.slnx --disable-build-servers
+dotnet test --solution Spar.slnx --no-build
+dotnet watch --project experiments/Spar.HotReloadProbe run
+```
+
+The tests edit disposable copies under `artifacts/` and launch real `dotnet watch` processes. The [editor probe guide](docs/07-managed-probe.md) covers VS Code automation, F5 setup, and the pending Visual Studio check. These are development experiments, not shipping Spar packages.
 
 ## Start here
 

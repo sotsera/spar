@@ -16,7 +16,7 @@ Start with [product direction](docs/02-product-direction.md), then the relevant 
 - Keep build, inspection, and development tools outside the production runtime. Keep the SPA framework-neutral.
 - Preserve explicit permissions, native document authority, contract matching, bounded work, and native ownership. Cancellation or timeout does not prove execution or cleanup ended. Never replay backend mutations automatically.
 - Confirm the working-tree state and preserve unrelated changes. Keep changes within the requested scope; do not alter sibling checkouts or repository remotes incidentally.
-- Pin and verify tooling during milestone kickoff. No build/test commands are established yet; document real commands as implementation introduces them.
+- Pin and verify tooling during milestone kickoff. Build with `dotnet build Spar.slnx --disable-build-servers`, then run `dotnet test --solution Spar.slnx --no-build`. The tests launch real watcher processes and edit isolated fixtures. See [the managed probe](docs/07-managed-probe.md) for editor verification; these commands do not verify native rendering or AOT.
 - Run checks appropriate to the change. Native rendering, debugger Hot Reload, and published AOT behavior require actual integration evidence; mocks and historical results do not establish them.
 - Record observed outcomes and unavailable checks. Keep milestone status and the README accurate; never mark skipped or unexecuted acceptance scenarios complete.
 - For upstream code adaptations, record source revision, paths, changes, and applicable license notices. Design inspiration alone does not require importing upstream code or dependencies.

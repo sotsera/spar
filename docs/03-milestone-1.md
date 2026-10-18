@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-18. Status: planned; no implementation or acceptance completed.
+Date: 2026-10-18. Status: M1.1 in progress; managed probe implemented. Watcher scenarios pass and the VS Code debugger probe has executed; see [evidence and remaining gates](07-managed-probe.md). No integrated A01–A18 acceptance scenario is complete.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -33,6 +33,8 @@ Select the supported Windows/x64 baseline and SDK/editor/frontend versions. Star
 Verify a method-body edit under terminal `dotnet watch`, VS Code F5 with the C# debugger, and Visual Studio F5. Observe changed behavior on subsequent calls and retained process/state. Verify an unsupported edit and identify how each lane reports it and permits restart. Determine a supported way to notify the coordinator/frontend after an update; if an event is unavailable, document and test the alternative instead of inventing a private debugger contract.
 
 Deliverables: version matrix, minimal reproducible probe, selected update owner for each lane, restart/debugger strategy, and precise supported limitations. Stop expanding this probe once it answers those questions. Do not develop a custom Hot Reload compiler as an incidental workaround.
+
+Progress: [managed probe](07-managed-probe.md), with xUnit integration tests, an actual VS Code extension-host driver, and a Windows CI job. Visual Studio evidence, final baseline selection, and verified required CI checks remain open; issue #2 stays open.
 
 ### M1.2 — Build the smallest Windows/AOT application
 
@@ -147,4 +149,4 @@ This follow-up initially belongs with the tooling/build foundation (upstream iss
 
 Milestone 1 is complete when A01-A18 have evidence on the selected baseline, the public sample follows its own guide, and known limits are documented. A remaining required scenario keeps the milestone open. No performance, installer, cross-platform, or general production-readiness claim follows automatically.
 
-The next milestone can address consumer polish, supported-machine coverage, workload budgets, file pickers/desktop services, and packaging. Add those only after the development loop is demonstrated. No implementation task in this document is currently marked complete.
+The next milestone can address consumer polish, supported-machine coverage, workload budgets, file pickers/desktop services, and packaging. Add those only after the development loop is demonstrated. M1.1 is partially implemented; the milestone remains open.
