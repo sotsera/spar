@@ -494,6 +494,20 @@
     "Native window and visible rendering",
     "NativeAOT publication/execution",
     "Frontend HMR and coordinator lifetime",
-    "Remote CI and branch protection enforcement"
-  ]
+    "Upstream PR CI and required-check enforcement"
+  ],
+  "remoteCI": {
+    "repository": "ghidello/spar",
+    "evidenceArtifactId": 12143045173,
+    "tests": {
+      "total": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "url": "https://github.com/ghidello/spar/actions/runs/39143727813",
+    "sourceCommit": "0be3b41",
+    "upstreamEnforcementVerified": false,
+    "runId": 39143727813,
+    "outcome": "passed"
+  }
 }

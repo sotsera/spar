@@ -137,6 +137,8 @@ Upstream `sotsera/spar` has an active `protect-main` ruleset requiring PRs, with
 
 The first workflow now defines **Windows managed probe** for PRs and development-branch pushes. GitHub reported no workflow/check suite on initial draft PR #14; branch CI in the development fork provides a separate pre-merge validation path. Do not treat a fork run as evidence that upstream required-check enforcement works. Add required checks only after upstream runs and the blocking policy have actually been verified.
 
+[Fork run 39143727813](https://github.com/ghidello/spar/actions/runs/39143727813) passed the build, three real watcher tests (none skipped), and evidence upload on implementation commit `0be3b41`. The upstream enforcement checklist below remains open.
+
 When introducing CI during milestone 1, treat enforcement as part of delivering the workflow:
 
 - [ ] Establish stable, unique check names and verify the workflows run on pull requests from the development fork.

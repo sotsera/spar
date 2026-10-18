@@ -58,7 +58,7 @@ See the [recorded receipts and source hashes](evidence/managed-probe-2026-10-18.
 | VS Code 1.142.0 / C# 2.160.4 / Dev Kit 3.40.210 / net11.0 | Breakpoint, saved method-body update, retained process/state, metadata callback, compiler-error recovery, ENC0014, explicit Stop/relaunch, and process exit verified |
 | Same VS Code extensions / SDK 10.0.402 / net10.0 | Same complete debugger scenario passed, including metadata callback, ENC0014, explicit relaunch, and process-exit checks |
 | Visual Studio Community 2026 18.11.12306.390 | Installed; debugger scenario not executed yet |
-| Windows CI | Workflow added; remote success/failure and required-check enforcement still need observation |
+| Windows CI | [Fork run 39143727813](https://github.com/ghidello/spar/actions/runs/39143727813) passed build, all 3 watcher tests, and evidence upload on source commit `0be3b41`; upstream PR checks and failed-check enforcement still need observation |
 | Native window, SPA HMR, coordinator cleanup, NativeAOT | Not implemented or verified by this probe |
 
 The installed environment is recorded in the [kickoff matrix](05-implementation-kickoff.md#local-observations). These are compatibility observations on one development machine, not a supported Windows floor or a clean-machine certification.

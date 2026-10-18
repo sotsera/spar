@@ -10,7 +10,7 @@ Spar is greenfield. Requiring .NET 10 or .NET 11 is acceptable if it enables a b
 
 Compare .NET 10 and .NET 11 using the same small probes, then select one initial supported runtime/language/editor baseline. Distinguish the SDK that builds Spar, the application's target framework, the development runtime/debugger, and the published delivery mode. An AOT consumer still needs a build toolchain, while a published application has different installation requirements.
 
-Recommendation: use the installed stable .NET 10 SDK as a control, and evaluate the current .NET 11 RC if it offers a concrete improvement. Prefer .NET 11 as the sole baseline if the probes justify it. The choice must include a tested Visual Studio path. Do not assume a newer SDK fixes an editor integration gap.
+The first comparison selected stable .NET 10 for implementation: both releases demonstrated the same debugger capabilities and this slice found no necessary RC advantage. Keep .NET 11 as a reproducible comparison lane and raise the product requirement if later probes justify it. The full support promise must include a tested Visual Studio path; a newer SDK alone does not establish editor integration.
 
 Microsoft released [.NET 11 RC2](https://devblogs.microsoft.com/dotnet/dotnet-11-rc-2/) on 2026-10-13 with a go-live license; the announcement identifies Visual Studio 2026 Insiders and VS Code with C# Dev Kit as supported development paths. RC2 is now installed locally. Test the updated release-channel Visual Studio installation against the selected SDK; decide the supported release/tooling baseline deliberately before publishing a support promise.
 
@@ -20,12 +20,12 @@ These are discovery results, not compatibility evidence:
 
 | Component | Observed | Next action |
 | --- | --- | --- |
-| .NET SDK | 10.0.400, 10.0.402, and 11.0.100-rc.2.26504.105 installed, alongside older SDKs | Select and record exact probe versions; add `global.json` so the choice is intentional |
-| Default `dotnet` selection | Unpinned checkout selects 11.0.100-rc.2.26504.105 | Avoid accidental preview drift |
+| .NET SDK | 10.0.400, 10.0.402, and 11.0.100-rc.2.26504.105 installed, alongside older SDKs | `global.json` now pins stable 10.0.402; retain the RC comparison lane |
+| Default `dotnet` selection | Initial unpinned checkout selected 11.0.100-rc.2.26504.105; repository selection is now 10.0.402 | Keep SDK selection deliberate when upgrading |
 | Visual Studio | Community 2026, 18.11.12306.390, release channel | Test selected SDK/debugger compatibility; investigate Insiders only if the RC lane requires it |
 | Native C++ tools | VS discovery reports the x64/x86 C++ tools component | Verify Windows SDK/linker prerequisites with an actual AOT publish |
 | VS Code | 1.142.0, x64 | Establish a reproducible profile and record C# debugger/Dev Kit versions |
-| VS Code extensions | C# Dev Kit 3.40.210; C# 2.160.4; .NET Install Tool 3.2.0; ESLint 3.0.34; Prettier 12.4.0 | Installation verified through the CLI; debugger/Hot Reload behavior still needs the actual probe |
+| VS Code extensions | C# Dev Kit 3.40.210; C# 2.160.4; .NET Install Tool 3.2.0; ESLint 3.0.34; Prettier 12.4.0 | Actual C# debugger probe passed on .NET 10 and 11; consumer/native integration remains ahead |
 | Node/npm | Node 24.21.0, npm 11.19.0; host nvm reports default v24.21.0 | Use the selected Node 24 line for the frontend experiment and record the project version when scaffolding |
 | WebView2 Runtime | Registry reports 155.0.4283.62 | Prove actual host startup; choose SDK and minimum runtime capabilities separately |
 | Windows | Registry reports build 26220.9739 and display version 25H2 | Record the actual test environment; choose the supported Windows floor separately |
