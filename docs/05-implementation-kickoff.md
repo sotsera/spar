@@ -22,7 +22,7 @@ These are discovery results, not compatibility evidence:
 | --- | --- | --- |
 | .NET SDK | 10.0.400, 10.0.402, and 11.0.100-rc.2.26504.105 installed, alongside older SDKs | `global.json` now pins stable 10.0.402; retain the RC comparison lane |
 | Default `dotnet` selection | Initial unpinned checkout selected 11.0.100-rc.2.26504.105; repository selection is now 10.0.402 | Keep SDK selection deliberate when upgrading |
-| Visual Studio | Community 2026, 18.11.12306.390, release channel | Test selected SDK/debugger compatibility; investigate Insiders only if the RC lane requires it |
+| Visual Studio | Community 2026, stable; About displays 18.11.0, October 2026 Feature Update; earlier discovery reported build 18.11.12306.390 | Manual console debugger probe passed on the .NET 10 project; repeat with the future native/SPA consumer |
 | Native C++ tools | VS discovery reports the x64/x86 C++ tools component | Verify Windows SDK/linker prerequisites with an actual AOT publish |
 | VS Code | 1.142.0, x64 | Establish a reproducible profile and record C# debugger/Dev Kit versions |
 | VS Code extensions | C# Dev Kit 3.40.210; C# 2.160.4; .NET Install Tool 3.2.0; ESLint 3.0.34; Prettier 12.4.0 | Actual C# debugger probe passed on .NET 10 and 11; consumer/native integration remains ahead |
@@ -36,7 +36,7 @@ These are discovery results, not compatibility evidence:
 
 Work against [upstream issue #2](https://github.com/sotsera/spar/issues/2). Foundation documentation is in [draft PR #13](https://github.com/sotsera/spar/pull/13). The implementation branch `feat/2-hot-reload-probe` deliberately depends on that documentation branch while its review is pending; it is not an independent branch from upstream `main`.
 
-The first experiments used SDK `11.0.100-rc.2.26504.105` / `net11.0`; the same complete VS Code scenario also passed on SDK `10.0.402` / `net10.0`. No necessary .NET 11 advantage was demonstrated in this slice. `global.json` therefore selects stable SDK `10.0.402` with roll-forward disabled and previews excluded; both projects now target `net10.0`. Requiring .NET 11 remains an option when a concrete benefit is proved. Visual Studio and native/AOT gates still precede a full product support promise. Central stable test dependencies are xUnit v3 `4.0.2` and AwesomeAssertions `9.6.0`; MTP is selected in `global.json`. No frontend toolchain has been scaffolded yet.
+The first experiments used SDK `11.0.100-rc.2.26504.105` / `net11.0`; the same complete VS Code scenario also passed on SDK `10.0.402` / `net10.0`. No necessary .NET 11 advantage was demonstrated in this slice. `global.json` therefore selects stable SDK `10.0.402` with roll-forward disabled and previews excluded; both projects now target `net10.0`. Requiring .NET 11 remains an option when a concrete benefit is proved. The manual Visual Studio console probe now passes on this project baseline; the integrated consumer/native/AOT gates still precede a full product support promise. Central stable test dependencies are xUnit v3 `4.0.2` and AwesomeAssertions `9.6.0`; MTP is selected in `global.json`. No frontend toolchain has been scaffolded yet.
 
 Build one disposable CoreCLR console probe under `experiments/`, with no SPA, WebView, production framework packages, or custom compiler. It needs a greeting method, mutable counter, process/instance identity, and an update-observation hook. Commands should exercise the method repeatedly so the next invocation demonstrates new behavior.
 
@@ -112,6 +112,6 @@ Exercise this editor setup with the public sample/external consumer when availab
 
 Create projects/packages as responsibilities become real. Initially, a small probe, minimal host, and consumer sample are enough; avoid prebuilding a plugin system, transport framework, renderer, installer, multi-window architecture, or cross-platform layers.
 
-Keep a short evidence record with each probe/PR: question, exact versions and commands, expected/observed behavior, source revision/hashes, artifacts, conclusion, and remaining limits. A GUI or debugger pass requires actual interaction; source inspection and mocks cannot substitute. No Hot Reload, native rendering, AOT, or editor acceptance experiment was run while preparing this document.
+Keep a short evidence record with each probe/PR: question, exact versions and commands, expected/observed behavior, source revision/hashes, artifacts, conclusion, and remaining limits. A GUI or debugger pass requires actual interaction; source inspection and mocks cannot substitute. The [managed probe ledger](07-managed-probe.md) now records executed watcher, VS Code, and manual Visual Studio console scenarios. Native rendering, integrated editor acceptance, and AOT execution remain ahead.
 
 The first result we want is modest and decisive: **edit a C# method, observe changed behavior with retained state, explain how every supported lane detects the update or restarts, and select the baseline from that evidence.** The next result is a visibly rendering AOT window. Once both are established, the rest of the framework can grow around mechanisms we have actually demonstrated.

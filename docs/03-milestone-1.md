@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-18. Status: M1.1 in progress; managed probe implemented. Watcher scenarios pass and the VS Code debugger probe has executed; see [evidence and remaining gates](07-managed-probe.md). No integrated A01–A18 acceptance scenario is complete.
+Date: 2026-10-18. Status: M1.1 in progress; managed console probe verified under the watcher, VS Code debugger, and a manual Visual Studio run. See [evidence and remaining gates](07-managed-probe.md). No integrated A01–A18 acceptance scenario is complete.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -34,7 +34,7 @@ Verify a method-body edit under terminal `dotnet watch`, VS Code F5 with the C# 
 
 Deliverables: version matrix, minimal reproducible probe, selected update owner for each lane, restart/debugger strategy, and precise supported limitations. Stop expanding this probe once it answers those questions. Do not develop a custom Hot Reload compiler as an incidental workaround.
 
-Progress: [managed probe](07-managed-probe.md), with xUnit integration tests, an actual VS Code extension-host driver, and a Windows CI job. Visual Studio evidence, final baseline selection, and verified required CI checks remain open; issue #2 stays open.
+Progress: [managed probe](07-managed-probe.md), with xUnit integration tests, an actual VS Code extension-host driver, a manual Visual Studio 2026 stable 18.11.0 pass, and successful fork Windows CI. Stable .NET 10 is the initial implementation baseline. The console editor proof permits the native/AOT spike; upstream required-check enforcement and later consumer/status integration remain open. Issue #2 stays open.
 
 ### M1.2 — Build the smallest Windows/AOT application
 

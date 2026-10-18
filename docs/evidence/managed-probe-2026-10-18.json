@@ -490,7 +490,7 @@
     }
   ],
   "unavailable": [
-    "Visual Studio debugger scenario",
+    "Integrated native/SPA Visual Studio workflow (A13)",
     "Native window and visible rendering",
     "NativeAOT publication/execution",
     "Frontend HMR and coordinator lifetime",
@@ -509,5 +509,12 @@
     "upstreamEnforcementVerified": false,
     "runId": 39143727813,
     "outcome": "passed"
+  },
+  "visualStudioRun": {
+    "receipt": "visual-studio-2026-10-18/receipt.json",
+    "version": "Visual Studio Community 2026 stable 18.11.0",
+    "outcome": "passed for manually exercised console probe scenarios",
+    "processExitVerified": true,
+    "fullIntegratedA13Verified": false
   }
 }

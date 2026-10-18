@@ -20,7 +20,7 @@ dotnet test --solution Spar.slnx --no-build
 dotnet watch --project experiments/Spar.HotReloadProbe run
 ```
 
-The tests edit disposable copies under `artifacts/` and launch real `dotnet watch` processes. The [editor probe guide](docs/07-managed-probe.md) covers VS Code automation, F5 setup, and the pending Visual Studio check. These are development experiments, not shipping Spar packages.
+The tests edit disposable copies under `artifacts/` and launch real `dotnet watch` processes. The [editor probe guide](docs/07-managed-probe.md) covers VS Code automation, F5 setup, and the recorded Visual Studio manual pass. These are development experiments, not shipping Spar packages.
 
 ## Start here
 

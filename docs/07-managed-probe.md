@@ -57,7 +57,7 @@ See the [recorded receipts and source hashes](evidence/managed-probe-2026-10-18.
 | Terminal: base-class edit | Watcher restarts the owned application; new process/instance and reset counter/revision |
 | VS Code 1.142.0 / C# 2.160.4 / Dev Kit 3.40.210 / net11.0 | Breakpoint, saved method-body update, retained process/state, metadata callback, compiler-error recovery, ENC0014, explicit Stop/relaunch, and process exit verified |
 | Same VS Code extensions / SDK 10.0.402 / net10.0 | Same complete debugger scenario passed, including metadata callback, ENC0014, explicit relaunch, and process-exit checks |
-| Visual Studio Community 2026 18.11.12306.390 | Installed; debugger scenario not executed yet |
+| Visual Studio Community 2026 stable, About version 18.11.0 / net10.0 project | Manual breakpoint, flame-applied update with retained state, metadata callbacks, CS0126 recovery, popup restart for an unsupported base-class edit, and subsequent process absence verified; [receipt and screenshots](evidence/visual-studio-2026-10-18/receipt.json) |
 | Windows CI | [Fork run 39143727813](https://github.com/ghidello/spar/actions/runs/39143727813) passed build, all 3 watcher tests, and evidence upload on source commit `0be3b41`; upstream PR checks and failed-check enforcement still need observation |
 | Native window, SPA HMR, coordinator cleanup, NativeAOT | Not implemented or verified by this probe |
 
@@ -73,8 +73,18 @@ The installed environment is recorded in the [kickoff matrix](05-implementation-
 - Debugger Stop reported exit code -1; OS process checks confirmed exit. This does not establish graceful application shutdown. The watcher tests also explicitly label forced cleanup.
 - The project-task wait tests ordinary project loading without private C# service APIs. It does not establish a public automatic “edit failed/restart required” event for the future Spar editor adapter. Keep diagnostics in the editor and implement explicit relaunch/status controls where no supported event exists.
 
-## Remaining gate and next slice
+## Visual Studio manual evidence
+
+The operator confirmed the initial breakpoint and supplied JSON samples, compiler output, and screenshots on 2026-10-18. The [receipt](evidence/visual-studio-2026-10-18/receipt.json) distinguishes operator evidence from the agent's direct process checks. Original screenshots document [settings](evidence/visual-studio-2026-10-18/settings.png), [CS0126](evidence/visual-studio-2026-10-18/compilation-error.png), [the unsupported-edit restart dialog](evidence/visual-studio-2026-10-18/unsupported-edit.png), and [the displayed version](evidence/visual-studio-2026-10-18/version.png).
+
+Apply-on-save was disabled; the operator explicitly clicked the flame button. PID `42560`, its creation time, and instance stayed unchanged as the counter progressed `268 → 639 → 1219 → 1398`. The supported edit raised revision to 1, the compilation error retained revision 1 and the previous greeting, and correction raised revision to 2. Both callbacks recorded thread 12 and `GreetingProvider` as the updated type. These snapshots do not establish precise callback timing or UI-thread affinity.
+
+Changing the base class produced the **Changes not supported** popup. The operator chose **Restart affected projects**, producing PID `17984`, a new creation time/instance, counter 9, and revision 0. A direct Windows lookup at `2026-10-18T16:29:25.5667354Z` confirmed both recorded PIDs absent. The exact Stop gesture and exit codes were not independently supplied; no graceful-shutdown claim follows. The two deliberate source edits were then restored. The selected SDK comes from repository `global.json`; a Visual Studio SDK build-log excerpt was not captured.
+
+This completes the exercised console probe's Visual Studio path. Save-triggered updates, Visual Studio on .NET 11, the future native/SPA consumer, and full A13 acceptance remain unverified.
+
+## Reproduction and next slice
 
 Run the same script manually in Visual Studio: open `Spar.slnx`, select the probe startup project, build Debug, set a breakpoint in `GetGreeting`, F5/Continue, save a greeting edit and apply Hot Reload, introduce/correct `return ;`, change the base class and use the IDE's restart flow, then Stop. Record versions, process/instance/counter observations, metadata callback/thread, actual diagnostic and process exit. Restore source edits afterward. Installed tooling alone is not evidence.
 
-Stable .NET 10 is the initial implementation baseline: the probe demonstrated the same debugger capabilities on both releases and no necessary .NET 11 advantage. Keep the RC comparison reproducible and revisit the requirement if native/process-lifetime work demonstrates a concrete improvement. Verify Visual Studio and CI on the upstream PR before making the full support promise or enforcing the real **Windows managed probe** check. Keep issue #2 open until its remaining tooling/notification decisions and Visual Studio evidence are resolved. Then proceed to [M1.2 / issue #3](03-milestone-1.md#m12--build-the-smallest-windowsaot-application): one Windows window/WebView2 and an immediately executed NativeAOT publish, before adding the SPA coordinator.
+Stable .NET 10 is the initial implementation baseline: the probe demonstrated the same VS Code debugger capabilities on both releases and no necessary .NET 11 advantage, and the Visual Studio console path now has a real manual pass. Keep the RC comparison reproducible and revisit the requirement if native/process-lifetime work demonstrates a concrete improvement. Upstream CI enforcement and the future consumer's supported status/diagnostic integration remain open; issue #2 and the integrated milestone stay open. The managed editor proof now permits [M1.2 / issue #3](03-milestone-1.md#m12--build-the-smallest-windowsaot-application): one Windows window/WebView2 and an immediately executed NativeAOT publish, before adding the SPA coordinator.

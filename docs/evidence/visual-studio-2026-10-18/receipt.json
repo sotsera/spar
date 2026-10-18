@@ -1,0 +1,192 @@
+{
+  "recordedOn": "2026-10-18",
+  "scope": "Manual CoreCLR console probe; does not establish integrated A13 or production/native/SPA acceptance.",
+  "repositoryHeadAtRecording": "9473ffecd31730d60c828e592fe71fbae1bf703b",
+  "evidenceSources": [
+    "Operator-provided JSON observations and Hot Reload output in the conversation",
+    "Operator-confirmed initial breakpoint and popup restart action",
+    "Unmodified operator screenshots copied into this directory",
+    "Agent's direct Windows process lookup after the walkthrough"
+  ],
+  "visualStudio": {
+    "product": "Visual Studio 2026",
+    "edition": "Community",
+    "displayVersion": "18.11.0",
+    "release": "October 2026 Feature Update",
+    "channel": "Stable",
+    "screenshot": "version.png"
+  },
+  "projectBaseline": {
+    "sdkSelectedByGlobalJson": "10.0.402",
+    "targetFramework": "net10.0",
+    "sdkBuildLogCaptured": false,
+    "launch": "Visual Studio F5 / Debug / managed CoreCLR console probe",
+    "updateOwner": "Visual Studio debugger"
+  },
+  "settings": {
+    "enableHotReload": true,
+    "applyOnFileSave": false,
+    "enableWhenNotDebugging": true,
+    "loggingVerbosity": "Minimal",
+    "screenshot": "settings.png",
+    "applicationMethod": "Operator saved each edit and clicked the Hot Reload flame button. Save-triggered application was not tested."
+  },
+  "breakpoint": {
+    "location": "GreetingProvider.GetGreeting return statement",
+    "hit": true,
+    "verification": "Explicitly confirmed by operator"
+  },
+  "observations": [
+    {
+      "phase": "baseline",
+      "sample": {
+        "observedAt": "2026-10-18T16:20:45.781742+00:00",
+        "processId": 42560,
+        "processStartedAtUtc": "2026-10-18T16:19:21.1447668Z",
+        "instanceId": "1da5b20e-fbf1-4c00-a6f9-e627d61434bc",
+        "counter": 268,
+        "greeting": "Hello from Spar v1",
+        "update": {
+          "revision": 0,
+          "clearCacheCount": 0,
+          "callbackThreadId": 0,
+          "updatedTypes": []
+        }
+      }
+    },
+    {
+      "phase": "supported-method-edit",
+      "sample": {
+        "observedAt": "2026-10-18T16:22:18.583752+00:00",
+        "processId": 42560,
+        "processStartedAtUtc": "2026-10-18T16:19:21.1447668Z",
+        "instanceId": "1da5b20e-fbf1-4c00-a6f9-e627d61434bc",
+        "counter": 639,
+        "greeting": "Hello from Visual Studio",
+        "update": {
+          "revision": 1,
+          "clearCacheCount": 1,
+          "callbackThreadId": 12,
+          "updatedTypes": [
+            "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+          ]
+        }
+      }
+    },
+    {
+      "phase": "compilation-error-keeps-previous-code",
+      "sample": {
+        "observedAt": "2026-10-18T16:24:43.5748597+00:00",
+        "processId": 42560,
+        "processStartedAtUtc": "2026-10-18T16:19:21.1447668Z",
+        "instanceId": "1da5b20e-fbf1-4c00-a6f9-e627d61434bc",
+        "counter": 1219,
+        "greeting": "Hello from Visual Studio",
+        "update": {
+          "revision": 1,
+          "clearCacheCount": 1,
+          "callbackThreadId": 12,
+          "updatedTypes": [
+            "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+          ]
+        }
+      }
+    },
+    {
+      "phase": "compilation-error-corrected",
+      "sample": {
+        "observedAt": "2026-10-18T16:25:28.3451898+00:00",
+        "processId": 42560,
+        "processStartedAtUtc": "2026-10-18T16:19:21.1447668Z",
+        "instanceId": "1da5b20e-fbf1-4c00-a6f9-e627d61434bc",
+        "counter": 1398,
+        "greeting": "Hello after VS correction",
+        "update": {
+          "revision": 2,
+          "clearCacheCount": 2,
+          "callbackThreadId": 12,
+          "updatedTypes": [
+            "Sotsera.Spar.HotReloadProbe.GreetingProvider"
+          ]
+        }
+      }
+    },
+    {
+      "phase": "unsupported-base-class-edit-restarted",
+      "sample": {
+        "observedAt": "2026-10-18T16:26:44.3208415+00:00",
+        "processId": 17984,
+        "processStartedAtUtc": "2026-10-18T16:26:41.1357846Z",
+        "instanceId": "5ca602d8-3eb3-4806-9c5c-fc9d9f1d4d2d",
+        "counter": 9,
+        "greeting": "Hello after VS correction",
+        "update": {
+          "revision": 0,
+          "clearCacheCount": 0,
+          "callbackThreadId": 0,
+          "updatedTypes": []
+        }
+      }
+    }
+  ],
+  "compilationFailure": {
+    "edit": "Replace the greeting return statement with return;",
+    "code": "CS0126",
+    "diagnostic": "An object of a type convertible to 'string' is required",
+    "sourceFile": "experiments/Spar.HotReloadProbe/GreetingProvider.cs",
+    "line": 7,
+    "localLogTime": "18:24:03.95",
+    "dialog": "Hot Reload - Unable to build changes",
+    "screenshot": "compilation-error.png",
+    "observed": "Previous greeting, process creation identity, and instance retained; counter increased and revision remained 1. Correction applied in the same process with revision 2."
+  },
+  "unsupportedEdit": {
+    "edit": "Change ProbeState's base from InitialProbeBase to ReplacementProbeBase",
+    "diagnosticCode": null,
+    "dialog": "Hot Reload - Changes not supported",
+    "diagnostic": "Updating the base class and/or base interface(s) of class requires restarting the application.",
+    "action": "Restart affected projects",
+    "actionVerification": "Operator reported using the popup restart button",
+    "alwaysRebuildCheckboxCheckedInScreenshot": false,
+    "screenshot": "unsupported-edit.png",
+    "observed": "New process/start time and instance, reset counter and update revision, corrected greeting retained after rebuild."
+  },
+  "processExitVerification": {
+    "checkedAtUtc": "2026-10-18T16:29:25.5667354+00:00",
+    "method": "System.Diagnostics.Process.GetProcessById for each recorded PID; ArgumentException confirmed absence",
+    "observations": [
+      {
+        "processId": 42560,
+        "outcome": "absent"
+      },
+      {
+        "processId": 17984,
+        "outcome": "absent"
+      }
+    ],
+    "operatorStopGestureSeparatelyConfirmed": false,
+    "gracefulShutdownEstablished": false
+  },
+  "outcome": "passed for the manually exercised console probe scenarios",
+  "limits": [
+    "Manual operator evidence, not an automated Visual Studio acceptance test",
+    "Apply-on-save disabled; updates explicitly applied through the flame button",
+    "No precise save/apply-to-update latency or callback ordering measurement",
+    "Thread 12 observed for callbacks; UI-thread affinity not established",
+    "Actual exit verified; exact Stop gesture and exit codes were not separately supplied",
+    "No Visual Studio .NET 11 run, SPA HMR, native UI, coordinator cleanup, AOT publish, or full A13 acceptance"
+  ],
+  "restoredSourcesSha256": {
+    "GreetingProvider.cs": "f7ada3621e043f9645c22196de4a5fd630adf28330230c9a33b2859986140fc8",
+    "ProbeState.cs": "4add72f14ff9b63d16eb5f5ddea3dfd5226b02df1c67ec2d5b601434a8122a21",
+    "Program.cs": "799a1cc4d01836c311f26aa210b1e7a30d0817ff05aabb1977cca3f49870b714",
+    "Spar.HotReloadProbe.csproj": "63f2ae7280a410c6342ec782188124d3091c068a63ff30a7811493879deb9b18",
+    "UpdateObserver.cs": "cf440e01e7106f8957de17abc1892b6ab247d7087950fb4a90b81b5daec2184c"
+  },
+  "screenshotSha256": {
+    "compilation-error.png": "9f7a7f54e30735851db87e02ee70c11279b3a2a315d0c940fcbfbdb14111c23d",
+    "settings.png": "d648b91c47ca617eca01743a836fe55d43e3489d2be61824bd0e8d613444b0c1",
+    "unsupported-edit.png": "e03e6652842818a81d8d65dad66873ad98d4d6a97d624ddcbc0d348966f3f892",
+    "version.png": "401d622ad921fe0baad61619529ffd148a896c247e3b17f27df0378a48f1321c"
+  }
+}
