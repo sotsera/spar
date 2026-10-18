@@ -15,6 +15,23 @@ internal partial interface IWebViewEnvironment
     [PreserveSig] int CreateController(nint parentWindow, nint handler);
     [PreserveSig] int CreateWebResourceResponse(nint content, int statusCode, nint reason, nint headers, out nint response);
     [PreserveSig] int GetBrowserVersionString(out nint version);
+    [PreserveSig] int AddNewBrowserVersionAvailable(nint handler, out long token);
+    [PreserveSig] int RemoveNewBrowserVersionAvailable(long token);
+}
+
+// Environment7 includes all Environment2–6 methods before its profile getter.
+[GeneratedComInterface(Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("43c22296-3bbd-43a4-9c00-5c0df6dd29a2")]
+internal partial interface IWebViewEnvironmentProfile : IWebViewEnvironment
+{
+    [PreserveSig] int CreateWebResourceRequest(nint uri, nint method, nint data, nint headers, out nint request);
+    [PreserveSig] int CreateCompositionController(nint parent, nint handler);
+    [PreserveSig] int CreatePointerInfo(out nint value);
+    [PreserveSig] int GetAutomationProviderForWindow(nint window, out nint value);
+    [PreserveSig] int AddBrowserProcessExited(nint handler, out long token);
+    [PreserveSig] int RemoveBrowserProcessExited(long token);
+    [PreserveSig] int CreatePrintSettings(out nint value);
+    [PreserveSig] int GetUserDataFolder(out nint value);
 }
 
 [GeneratedComInterface(Options = ComInterfaceOptions.ComObjectWrapper)]

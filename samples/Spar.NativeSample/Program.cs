@@ -8,6 +8,8 @@ namespace Spar.NativeSample;
 
 internal static class Program
 {
+    private static string? _runtimeFolder;
+
     [STAThread]
     private static int Main(string[] args)
     {
@@ -18,9 +20,11 @@ internal static class Program
         var closeFromWorker = args.Contains("--close-from-worker", StringComparer.Ordinal);
         if (args.Contains("--missing-runtime", StringComparer.Ordinal))
         {
-            // Configure the fixture inside the child so shell environment propagation cannot weaken this check.
-            Environment.SetEnvironmentVariable("WEBVIEW2_BROWSER_EXECUTABLE_FOLDER",
-                Path.Combine(profile, "absent-webview-runtime"));
+            _runtimeFolder = Path.Combine(profile, "absent-webview-runtime");
+        }
+        if (args.Contains("--redirect-profile", StringComparer.Ordinal))
+        {
+            Environment.SetEnvironmentVariable("WEBVIEW2_USER_DATA_FOLDER", Path.Combine(profile, "redirected-profile"));
         }
         try
         {
@@ -61,6 +65,7 @@ internal static class Program
                     </html>
                     """,
                 UserDataFolder = profile,
+                BrowserRuntimeFolder = _runtimeFolder,
                 Created = window =>
                 {
                     Write("window-created", window);
@@ -102,14 +107,15 @@ internal static class Program
         using var process = Process.GetCurrentProcess();
         var receipt = new NativeReceipt(stage, DateTimeOffset.UtcNow, Environment.ProcessId, Environment.CurrentManagedThreadId,
             process.StartTime.ToUniversalTime(), RuntimeFeature.IsDynamicCodeSupported ? "CoreCLR" : "NativeAOT",
-            window?.Handle.ToInt64(), window?.BrowserVersion,
-            Environment.GetEnvironmentVariable("WEBVIEW2_BROWSER_EXECUTABLE_FOLDER"), error);
+            window?.Handle.ToInt64(), window?.BrowserVersion, window?.UserDataFolder,
+            _runtimeFolder, error);
         Console.WriteLine(JsonSerializer.Serialize(receipt, NativeJsonContext.Default.NativeReceipt));
     }
 }
 
 internal sealed record NativeReceipt(string Stage, DateTimeOffset ObservedAt, int ProcessId, int ThreadId,
-    DateTime ProcessStartedAtUtc, string Mode, long? Window, string? BrowserVersion, string? RuntimeOverride, string? Error);
+    DateTime ProcessStartedAtUtc, string Mode, long? Window, string? BrowserVersion, string? UserDataFolder,
+    string? RuntimeFolder, string? Error);
 
 [JsonSerializable(typeof(NativeReceipt))]
 internal sealed partial class NativeJsonContext : JsonSerializerContext;

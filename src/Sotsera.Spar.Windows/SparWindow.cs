@@ -41,6 +41,12 @@ public sealed unsafe class SparWindow
         private set;
     }
 
+    public string? UserDataFolder
+    {
+        get;
+        private set;
+    }
+
     private SparWindow(SparWindowOptions options)
     {
         _options = options;
@@ -190,13 +196,13 @@ public sealed unsafe class SparWindow
 
     private void StartEnvironment(string profile)
     {
-        var callback = new EnvironmentCompleted((error, pointer) => Guard(() => EnvironmentCreated(error, pointer)));
+        var callback = new EnvironmentCompleted((error, pointer) => Guard(() => EnvironmentCreated(error, pointer, profile)));
         _pendingCreations++;
         try
         {
             ComReferences.WithCallback(callback, typeof(IEnvironmentCompleted).GUID, pointer =>
             {
-                Check(NativeMethods.CreateCoreWebView2EnvironmentWithOptions(null, profile, 0, pointer),
+                Check(NativeMethods.CreateCoreWebView2EnvironmentWithOptions(_options.BrowserRuntimeFolder, profile, 0, pointer),
                     "Create WebView2 environment. Install the Microsoft Edge WebView2 Evergreen Runtime.");
             });
         }
@@ -207,7 +213,7 @@ public sealed unsafe class SparWindow
         }
     }
 
-    private void EnvironmentCreated(int error, nint pointer)
+    private void EnvironmentCreated(int error, nint pointer, string leasedProfile)
     {
         _pendingCreations--;
         Check(error, "Create WebView2 environment. Check the runtime installation and browser profile access.");
@@ -217,6 +223,8 @@ public sealed unsafe class SparWindow
             ScheduleFinish();
             return;
         }
+
+        ConfirmProfile(leasedProfile);
 
         Check(_environment.GetBrowserVersionString(out var version), "Read browser version");
         try
@@ -269,6 +277,33 @@ public sealed unsafe class SparWindow
         fixed (char* html = _options.Html)
         {
             Check(_webView.NavigateToString((nint)html), "Load local HTML");
+        }
+    }
+
+    private void ConfirmProfile(string leasedProfile)
+    {
+        if (_environment is not IWebViewEnvironmentProfile profileEnvironment)
+        {
+            throw new InvalidOperationException("Update the WebView2 Runtime: Spar requires profile-directory confirmation.");
+        }
+
+        Check(profileEnvironment.GetUserDataFolder(out var folder), "Read actual WebView2 profile directory");
+        try
+        {
+            var actualProfile = Marshal.PtrToStringUni(folder)
+                ?? throw new InvalidOperationException("WebView2 returned no browser profile directory.");
+            if (!string.Equals(Path.TrimEndingDirectorySeparator(Path.GetFullPath(actualProfile)),
+                Path.TrimEndingDirectorySeparator(leasedProfile), StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    "WebView2 redirected the browser profile outside Spar's lease. Remove the user-data-folder override.");
+            }
+
+            UserDataFolder = actualProfile;
+        }
+        finally
+        {
+            Marshal.FreeCoTaskMem(folder);
         }
     }
 

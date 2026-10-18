@@ -74,6 +74,7 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
   $browserHandles = [Collections.Generic.List[Diagnostics.Process]]::new()
   $process = $null
   $forced = $false
+  $profileOverrideRejected = 'not-exercised'
   try {
     $process = Start-Process -FilePath $executablePath -WorkingDirectory (Split-Path $executablePath) `
       -ArgumentList (@('"' + $profile + '"') + $Arguments) -PassThru -WindowStyle Hidden `
@@ -117,6 +118,21 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
       [NativeProbeDesktop]::Close($window)
     }
 
+    if ($Name -eq 'redirected-profile') {
+      Wait-Until { $process.HasExited -or @(Read-Events $stdout | Where-Object Stage -eq 'document-loaded').Count -gt 0 } 'profile override outcome'
+      if (!$process.HasExited) {
+        $loaded = Read-Events $stdout | Where-Object Stage -eq 'document-loaded' | Select-Object -Last 1
+        if (![string]::Equals([IO.Path]::TrimEndingDirectorySeparator($loaded.UserDataFolder),
+            [IO.Path]::TrimEndingDirectorySeparator($profile), [StringComparison]::OrdinalIgnoreCase)) {
+          throw 'The host admitted a document outside its leased profile.'
+        }
+        # Some host/runtime configurations ignore environment overrides. This proves a matching profile, not rejection.
+        $profileOverrideRejected = 'not-exercised-platform-ignored-override'
+        $ExitCode = 0
+        [NativeProbeDesktop]::Close([IntPtr]$loaded.Window)
+      } else { $profileOverrideRejected = $true }
+    }
+
     Wait-Until {
       if ($Name -eq 'missing-runtime' -and @(Read-Events $stdout | Where-Object Stage -eq 'document-loaded').Count) {
         throw "Missing-runtime fixture unexpectedly loaded a document: $(Get-Content $stdout -Raw)"
@@ -129,8 +145,11 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
     if (@($events | Where-Object Mode -ne $ExpectedMode).Count) { throw 'Unexpected execution mode.' }
     $lastStage = if ($ExitCode -eq 0) { 'closed' } else { 'failed' }
     if ($events.Count -eq 0 -or $events[-1].Stage -ne $lastStage) { throw "Missing $lastStage receipt." }
-    if ($Name -eq 'missing-runtime' -and $events[-1].RuntimeOverride -ne (Join-Path $profile 'absent-webview-runtime')) {
-      throw 'The missing-runtime fixture did not apply its runtime override inside the child.'
+    if ($Name -eq 'missing-runtime' -and $events[-1].RuntimeFolder -ne (Join-Path $profile 'absent-webview-runtime')) {
+      throw 'The missing-runtime fixture did not select its explicit runtime directory.'
+    }
+    if ($Name -eq 'redirected-profile' -and $ExitCode -eq 1 -and !$events[-1].Error.Contains('redirected the browser profile')) {
+      throw 'Profile override failed for an unrelated reason.'
     }
     if ($Name -eq 'worker-dispatch' -and @($events | Where-Object Stage -eq 'ui-dispatch').Count -ne 1) {
       throw 'Worker-thread UI dispatch did not complete.'
@@ -155,6 +174,7 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
       mode = $ExpectedMode; visibleRendering = $(if ($ExpectDocument -and $VerifyRender) { 'verified-pixels' } else { 'not-exercised' })
       concurrentProfileRejected = $(if ($ExpectDocument) { $true } else { 'not-exercised' })
       profileDataPreserved = $(if ($sentinel) { $true } else { 'not-exercised' })
+      profileOverrideRejected = $profileOverrideRejected
       attributedBrowserProcesses = @($browserHandles | ForEach-Object {
         [ordered]@{ processId = $_.Id; processStartedAtUtc = $_.StartTime.ToUniversalTime(); exited = $_.HasExited }
       })
@@ -178,6 +198,7 @@ try {
   Invoke-Scenario 'worker-dispatch' @('--close-from-worker') $false
   Invoke-Scenario 'document-callback-error' @('--throw-on-document') $false 1
   Invoke-Scenario 'missing-runtime' @('--missing-runtime') $false 1
+  Invoke-Scenario 'redirected-profile' @('--redirect-profile') $false 1
   # A file cannot be a writable browser profile; this must fail before native/browser ownership starts.
   $invalid = Join-Path $evidencePath 'invalid-profile'
   New-Item -ItemType Directory -Path $invalid -Force | Out-Null

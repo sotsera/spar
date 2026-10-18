@@ -21,6 +21,13 @@ public sealed class SparWindowOptions
 
     public int Width { get; init; } = 1000;
 
+    /// <summary>Optional fixed WebView2 Runtime directory. Null selects the installed runtime.</summary>
+    public string? BrowserRuntimeFolder
+    {
+        get;
+        init;
+    }
+
     public int Height { get; init; } = 700;
 
     /// <summary>Called on the UI thread before WebView initialization. This does not establish rendering readiness.</summary>
