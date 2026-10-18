@@ -16,6 +16,7 @@ Production applications default to NativeAOT. CoreCLR compatibility delivery exi
 - Keep the Spar name and `Sotsera.Spar` package/namespace identity.
 - Keep the existing repository identity: `sotsera/spar` is canonical for issues, milestones, and PR targets; `ghidello/spar` is the development fork. The local remote named `origin` points to the fork.
 - Target Windows only for now.
+- Choose a modern greenfield .NET baseline. Requiring .NET 10 or .NET 11 is acceptable when it improves the product; supporting older .NET versions is not a goal. Select one initial supported baseline from measured tooling/interop results rather than maintaining multiple target frameworks by default.
 - Make AOT the default production target; support CoreCLR when application dependencies require it.
 - Drive the SPA's development server and use its native HMR mechanism.
 - Apply backend Hot Reload wherever supported; restart the application/window when required.
@@ -52,7 +53,9 @@ There is one coordinator per development session and one authority applying C# u
 
 Never run two Hot Reload engines against the same process. Do not assume undocumented debugger events, compiler protocols, or attach-time behavior. Milestone 1 first proves the necessary integration with pinned tooling. A custom Roslyn delta engine is not the default solution.
 
-The coordinator launches the configured SPA command, discovers or receives its actual loopback URL, waits for readiness, and opens it in WebView2. The SPA tool and framework plugin own HMR. A fixed port, package manager, or framework is not a runtime requirement. A development session must authenticate its backend control channel and bind bridge access to the expected local document/session.
+The coordinator launches the configured SPA command and discovers or receives its actual loopback URL. The preferred startup experience first builds the backend and matching contract artifacts, then starts the SPA server and application concurrently. The application can show a minimal development waiting/error page until the SPA is reachable, then navigate to it. Visible rendering plus a successful bridge/contract handshake establishes readiness, not the existence of the waiting window. Before the backend can run, progress belongs in the terminal/editor. The first implementation may wait for SPA readiness before opening the window, then add early-window feedback as a polish step.
+
+The SPA tool and framework plugin own HMR. A fixed port, package manager, or framework is not a runtime requirement. A development session must authenticate its backend control channel and bind bridge access to the expected local document/session. The waiting page has status-only authority, not application-operation authority.
 
 ### Change behavior
 
@@ -67,7 +70,27 @@ The coordinator launches the configured SPA command, discovers or receives its a
 
 Hot Reload does not rerun initialization or reconstruct every object. A WebView refresh alone does not reload the backend. Documentation and status must distinguish frontend HMR, backend patching, page refresh, and application restart.
 
-Proposed restart sequence: coalesce edits; prepare a matching build; stop admission to the retiring generation; request owned shutdown; launch the new generation only after the old one has actually exited; wait for native and bridge readiness. If compilation fails, the previous compatible generation may remain available with an explicit stale-build status. If it has already stopped, remain stopped with actionable diagnostics. Never replay a backend mutation automatically.
+The selected .NET watcher or IDE debugger compiles and applies backend edits; Spar does not implement a second compiler or patch engine. An in-process update requires successful compilation and support from the active Hot Reload engine. A compilation failure supplies no new patch, so an existing process can keep its previously applied code. Successfully compiled but unsupported edits require restart; if that restart has already stopped the old process and rebuilding fails, remain stopped. Spar coordinates the frontend, matching contracts, session lifetime, and honest update status around these outcomes.
+
+Proposed restart sequence: coalesce edits; prepare a matching build; stop admission to the retiring generation; request owned shutdown; launch the new generation only after the old one has actually exited; wait for native and bridge readiness. Keep one running backend, not concurrent old/new backends or a rollback store. A compile failure before activation can leave that same process running its last successfully applied code with an explicit **edit not applied** status. Failed source/build output is never a second active version. Do not promise transactional rollback of arbitrary runtime edits.
+
+Keeping the current application available is conditional on compatible client/server contracts. If new frontend/generated outputs could mismatch the running backend, reject mismatched calls and use a stopped/error state when a safe matching activation cannot be maintained simply. If the previous process has already stopped, remain stopped with actionable diagnostics. Never replay a backend mutation automatically.
+
+### Development session ownership and cleanup
+
+Keep the SPA server running across backend patches and expected application restarts. Give every owned development session a terminal/debug/workspace owner; do not tie server lifetime to a temporary backend PID or merely to whether an IDE process exists. Ordinary app close outside a planned restart ends the session by default.
+
+Owner Stop, terminal close, workspace/debug-session shutdown, failed startup, and coordinator/owner crash must lead to cleanup of owned server/watcher/application work. Use an explicit owner connection or lifetime signal and a Windows process-lifetime mechanism as an abrupt-exit safeguard; editor-deactivation callbacks alone are insufficient. Detached sessions require an explicit opt-in.
+
+Normal shutdown first requests graceful completion. Abrupt owner loss may force termination of owned development children under the session-lifetime policy; report it as forced shutdown rather than completed application work. Keep this distinct from restart, where old/new mutation owners must not overlap. Test actual process exit, owned descendants, nested jobs/debugger behavior, and PID creation identity; never terminate arbitrary Node/WebView2 processes by name. A manually supplied external frontend server is observed, not owned or terminated.
+
+### Lightweight development memory visibility
+
+Add optional, low-frequency observation of backend/host and WebView2 environment memory to the shared development status surface when the core lifecycle works. Keep polling/aggregation in development tooling; expose only the small development-only process-discovery hook needed from the host. This is a useful addition if it stays small, not a prerequisite for the first Hot Reload proof.
+
+Start with process counts, current private bytes and working set, timestamps, and session/process-generation identity. WebView2 process enumeration is scoped to its environment/user data folder and includes browser, renderers, GPU, and utility processes; report this environment total rather than claiming exact per-page RAM. Use a development-owned profile scope and deduplicate process identities. Report inaccessible/exited samples as unavailable, not zero.
+
+Label measurements accurately: private bytes are private committed memory, while working set is resident memory and can include shared pages. A sum of working sets is not unique physical RAM. Keep coordinator/Vite/watch/build memory separate from application measurements. Avoid heap profiling, automatic dumps, remote telemetry, and production monitoring dependencies in the initial implementation.
 
 ## AOT and dependency compatibility
 

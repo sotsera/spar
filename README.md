@@ -14,6 +14,7 @@ Planning only; no framework implementation or runnable build is present yet. The
 
 - [Product direction](docs/02-product-direction.md) — goals, architecture, and open decisions.
 - [First milestone](docs/03-milestone-1.md) — implementation sequence and acceptance criteria.
+- [Implementation kickoff](docs/05-implementation-kickoff.md) — first experiments, baseline choices, and topics to study.
 - [Milestone issues](docs/04-milestone-1-issues.md) — upstream tracking issue, implementation issues, and dependencies.
 - [Reference projects and licenses](docs/01-reference-projects.md) — Tauri, CodeAlta, NeoAstra, Reactor, and previous Spar.
 - [Agent guidance](AGENTS.md) — working rules for this repository.

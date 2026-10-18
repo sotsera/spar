@@ -89,6 +89,8 @@ Reactor's [reconciler](https://github.com/microsoft/microsoft-ui-reactor/blob/e1
 
 Borrow the product principles: useful diagnostics before runtime, inspectable live state, short edit/observe cycles, discoverable APIs, and automation designed into the development experience. For SPAR, apply those principles to backend calls, contract generation, reload state, SPA errors, and the actual WebView.
 
+The follow-up [backend reload source review](06-backend-reload-research.md) traces Reactor's metadata-update adapter, renderer state migration, and watcher-backed VS Code preview, alongside NeoAstra's orchestration and Tauri's Rust restart loop. Use it when implementing the initial backend Hot Reload probe.
+
 Do not import a C# UI DSL, reconciler, or WinUI dependency merely to obtain these benefits. Reactor's [AOT matrix](https://github.com/microsoft/microsoft-ui-reactor/blob/e16819520b6452d93fdeba9f59e2b81a47febd1c/docs/aot-support.md) also shows why development reflection and release compatibility need explicit separation. Its Hot Reload implementation is reference material, not proof that the same behavior works for SPAR.
 
 ## Previous SPAR: preserve evidence and reduce consumer complexity

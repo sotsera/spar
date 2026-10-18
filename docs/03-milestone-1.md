@@ -58,6 +58,8 @@ Track the frontend and application separately. Handle startup timeout, port conf
 
 Deliverables: one terminal/AI launch path, structured lifecycle events, CSS/component HMR demonstrations, and verified cleanup of owned processes. Full process-tree observations need PID plus creation identity, not an unqualified PID reuse assumption.
 
+Exercise terminal close, normal app close outside a planned restart, editor workspace/debug Stop, failed startup, and abrupt coordinator/owner exit. Keep the frontend alive across expected backend restarts, then observe all owned dev-server helpers exiting when the session ends. Test the process-lifetime safeguard independently from graceful shutdown; no unrelated Node/browser processes may be terminated. The early-window waiting/error page is polish after basic sequencing works, and does not count as application readiness.
+
 ### M1.5 — Integrate backend patches and coordinated restart
 
 Connect the mechanism selected in M1.1 to the actual SPAR application. For a supported implementation edit, preserve process/backend state and notify the frontend to refresh relevant data. Do not promise preservation for initialization changes or unsupported edits.
@@ -65,6 +67,8 @@ Connect the mechanism selected in M1.1 to the actual SPAR application. For a sup
 For a contract change, regenerate both sides and build matching outputs. Retire the old document/admission, request shutdown, establish that old execution has ended, then launch the new application and handshake. Coalesce rapid edits. Maintain generation IDs so old builds/results cannot become current after a newer edit wins.
 
 Compile failure must remain visible and must not activate mismatched outputs. An operation that ignores cancellation prevents a graceful restart until it finishes or the user explicitly chooses process termination; a timeout is not permission to overlap old and new mutation owners. Never replay a mutation to recover a missing response.
+
+Use one running backend and a failed-update status for compile errors; do not introduce concurrent version hosting, backend-state snapshots, or a rollback store. Retaining the current app is conditional on contract compatibility. A stopped/error outcome is acceptable when matching client/server activation cannot be maintained simply, with correction leading back to a usable app.
 
 Deliverables: supported body patch, contract restart, startup/dependency restart, compile-error recovery, rapid-edit behavior, and in-flight-operation retirement demonstrations.
 
@@ -120,6 +124,8 @@ A scenario is not passed when skipped, timed out, or verified only against a moc
 Record source revision or source hashes, tool versions, command, configuration, application mode, session/generation/contract identity, expected result, observed result, and artifact/log location. Preserve first-failure evidence. Capture screenshots for visible outcomes and structured events for sequencing.
 
 Measure cold/warm start, save-to-HMR, save-to-backend-update, contract restart, failed-edit recovery, publication time, installed payload size, and separate host/browser resource use. Use repeated runs and report the workload and sample count. This milestone establishes a baseline; select numerical targets after the mechanism works rather than inheriting the old attempt's limits.
+
+Optional small addition under the shared inspection/status work (#7): sample backend/host and WebView2-environment process memory at a low frequency, with separately labeled private bytes and working set, process counts, and sample/session/generation identity. Attribute browser processes through WebView2 discovery, deduplicate identities, and treat unavailable samples honestly. Keep dev-tool overhead separate and measure sampler overhead before enabling it by default. This is process-level visibility, not managed/JavaScript heap profiling or exact per-page physical RAM accounting.
 
 A copied application on a developer machine is not a clean-machine/no-.NET certification. AOT execution on a Windows machine without the .NET SDK/runtime installed should be attempted when available, and its absence must be carried into the release-readiness backlog. Missing WebView2 needs an actionable startup result, not an implicit claim that the browser is bundled.
 
