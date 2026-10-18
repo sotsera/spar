@@ -24,6 +24,8 @@ dotnet publish samples/Spar.NativeSample -c Release -o artifacts/native/publish 
 
 Debug uses CoreCLR; this sample defaults Release publishing to NativeAOT. AOT compilation warnings are errors. There is no automatic CoreCLR fallback. The published application needs its `WebView2Loader.dll` and the WebView2 license/notice files alongside the executable. PDBs are optional symbols. The browser engine remains a separately installed runtime with writable profile data; NativeAOT does not bundle it or make the app a single OS process.
 
+`BrowserRuntimeFolder` optionally forwards an explicit fixed-runtime directory to the native loader. The negative fixture uses a nonexistent directory so the native API must report the missing runtime. Normal startup uses the installed Evergreen Runtime. A valid redistributed fixed-runtime payload has not been qualified in this slice.
+
 To verify the payload outside the checkout, copy the published files (PDBs optional) to another directory and run the copied executable there. The sample accepts an optional first argument for the browser profile directory and prints source-generated JSON lifecycle receipts. Its default profile is `%LOCALAPPDATA%/Sotsera/Spar.NativeSample`.
 
 ## Ownership and failure handling
@@ -33,13 +35,14 @@ To verify the payload outside the checkout, copy the published files (PDBs optio
 - Closing during asynchronous environment/controller creation keeps the window and message pump alive until the pending creation callback returns. Final cleanup is posted outside the WebView callback stack. There is no timeout that pretends native creation finished.
 - Native event subscriptions are removed, the controller is closed, and COM references are released before destroying the window and uninitializing COM. Cleanup attempts continue when an individual cleanup operation reports failure.
 - An exclusive `.spar-profile.lock` file prevents concurrent Spar hosts from using the same profile. It is a host lease, not a claim that every browser helper exited when `Run` returns. Persistent browser data is preserved. Browser processes may finish later; the test driver observes them separately and never kills unrelated processes by name.
-- The missing-runtime test uses WebView2's browser-directory override with a nonexistent directory. It verifies an actual native startup failure and an actionable install/runtime diagnostic without uninstalling the developer's runtime.
+- Before creating the controller, Spar reads the actual native profile directory through `ICoreWebView2Environment7`. A mismatch with the leased directory fails startup. Environment/policy redirection must not silently move the browser outside that lease. Runtimes lacking this interface receive an actionable update diagnostic.
+- The missing-runtime test passes an explicit nonexistent runtime directory to WebView2. It verifies an actual native startup failure and an actionable install/runtime diagnostic without uninstalling the developer's runtime.
 
 Arbitrary tasks started by application callbacks are application-owned; this initial API does not track backend operations. The generation/admission/retirement model comes with the bridge and development coordinator. Keyboard/DPI polish, process-failure recovery, runtime installation, multi-window behavior, and clean-machine qualification remain follow-ups.
 
 ## Repeatable native checks
 
-Use PowerShell 7.4 or later for the test driver:
+Use PowerShell 7.4 or later for the test driver. The sample reports the explicit runtime directory used by the missing-runtime fixture:
 
 ```powershell
 pwsh -NoProfile -File eng/Test-NativeHost.ps1 `
@@ -51,7 +54,9 @@ pwsh -NoProfile -File eng/Test-NativeHost.ps1 `
   -Executable C:/path/to/copied/Spar.NativeSample.exe -ExpectedMode NativeAOT -VerifyRender
 ```
 
-The driver checks normal close, concurrent-profile rejection, close during initialization, worker-to-UI dispatch, a throwing document callback, missing-runtime startup, invalid profile input, profile preservation, execution mode, and actual host exit. It retains process handles and creation identities for attributed browser observations. Forced cleanup is reported as failure. A post-exit browser snapshot is not a full history of every short-lived subprocess.
+The driver checks normal close, concurrent-profile rejection, close during initialization, worker-to-UI dispatch, a throwing document callback, missing-runtime startup, profile redirection, invalid profile input, profile preservation, execution mode, and actual host exit. It retains process handles and creation identities for attributed browser observations. Forced cleanup is reported as failure. A post-exit browser snapshot is not a full history of every short-lived subprocess.
+
+The profile-redirection probe distinguishes a rejected override from a platform that ignores the override and keeps the correct leased profile. The latter is recorded as `profileOverrideRejected: not-exercised-platform-ignored-override`; it does not establish override rejection. Both local desktop modes actually exercised rejection. Ordinary successful startup always confirms the actual profile before admitting the document.
 
 `-VerifyRender` shows the native window, captures actual pixels through Win32 `PrintWindow`, checks the sample's accent pixels, resizes, and captures again. The captures require separate visual inspection as evidence of the complete layout. Without this switch, receipts explicitly say rendering was not exercised. A document-load event alone never passes the rendering check.
 
@@ -65,8 +70,22 @@ The direct SDK dependency is [Microsoft.Web.WebView2 1.0.4258.31](https://www.nu
 
 The SDK's `LICENSE.txt` is BSD-3-Clause with Microsoft's copyright; it and the package's `NOTICE.txt` are retained under [third-party/webview2](../third-party/webview2/) and copied into build/publish output. The installed browser runtime has its own distribution terms; the SDK license is not a license to redistribute the browser engine.
 
+Immutable package/source identifiers:
+
+- NuGet package SHA-512 (base64): `HlGVwvyP/IWiXAU8K57Vmg59khY3DWMOxMnH4AHusFRy0/vDAjKItXUIVNXiXXaq4CLfSZyNUic1wOIlnPLsPQ==`.
+- `WebView2.h` SHA-256: `DFF1E3181EC7EC203A34EF6EFA966590E0EF0BA1A5C3FE3B69DA6508C2F8A02E`.
+- `WebView2.idl` SHA-256: `57B35D4B63C25F656D04559C5692E1D9A622D77AD25FB556406C348A496D0E24`.
+
 The implementation uses the public [.NET COM source generator](https://learn.microsoft.com/en-us/dotnet/standard/native-interop/comwrappers-source-generation), unique-instance [COM release](https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.marshalling.comobject.finalrelease?view=net-10.0), and [WebView2 STA threading model](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/threading-model).
 
 ## Recorded execution
 
-Initial CoreCLR and copied NativeAOT desktop executions passed. Final source/payload hashes, screenshots, lifecycle receipts, CI outcome, and remaining limits are recorded with the PR's evidence. A copied AOT run on a developer machine does not certify execution on a machine without .NET installed. The full milestone remains incomplete.
+CoreCLR and copied NativeAOT desktop executions passed all seven driver scenarios, including a concurrent-profile subcheck in normal startup. The [desktop receipt](evidence/native-host-2026-10-18/receipt.json) records payload/source hashes and process identities; [CoreCLR](evidence/native-host-2026-10-18/coreclr-resized.png) and [AOT](evidence/native-host-2026-10-18/aot-resized.png) captures show the resized page. All four retained captures were visually inspected.
+
+The final no-symbol AOT payload contains the native executable, loader, and two notice files; no managed application DLL or runtime configuration is needed. Browser runtime/profile storage is additional. This is a single execution baseline, not a performance benchmark or clean-machine/no-.NET certification. The full milestone remains incomplete.
+
+Earlier test-driver iterations exposed a PowerShell 5 process-API mismatch and a nonexistent `[nint]` PowerShell alias; those failed attempts were retained under ignored `artifacts/native/` and did not count as passes. Visual inspection then caught a stale browser frame immediately after resizing; the final check waits for the accent to move into the smaller layout before accepting the image. These were harness fixes, not substituted rendering evidence.
+
+The first two upstream runs ([39153079064](https://github.com/sotsera/spar/actions/runs/39153079064), [39153448434](https://github.com/sotsera/spar/actions/runs/39153448434)) failed because the runner's native loader ignored the missing-runtime environment override, including when the child reported that variable as set. The runner loaded WebView2 154.0.4258.62; the local runtime was 155.0.4283.62. This does not establish why the override was ignored. The final fixture uses the explicit API parameter instead, and its expected native failure remains required; neither a timeout nor a loaded document passes it.
+
+[Upstream recovery run 39153778439](https://github.com/sotsera/spar/actions/runs/39153778439) passed solution build, three real watcher tests, CoreCLR native lifecycle, strict AOT publication, copied AOT lifecycle, and evidence upload on implementation revision `c120a53`. The final PR head must pass its own [required check](https://github.com/sotsera/spar/pull/16/checks). The runner did not exercise visible desktop rendering.

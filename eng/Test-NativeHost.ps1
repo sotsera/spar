@@ -74,6 +74,8 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
   $browserHandles = [Collections.Generic.List[Diagnostics.Process]]::new()
   $process = $null
   $forced = $false
+  $recorded = $false
+  $scenarioFailure = $null
   $profileOverrideRejected = 'not-exercised'
   try {
     $process = Start-Process -FilePath $executablePath -WorkingDirectory (Split-Path $executablePath) `
@@ -180,11 +182,25 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
       })
       exitCode = $process.ExitCode; forced = $false
     })
+    $recorded = $true
+  } catch {
+    $scenarioFailure = $_.ToString()
+    throw
   } finally {
     if ($process -and !$process.HasExited) {
       $forced = $true
       $process.Kill($true)
       if (!$process.WaitForExit(10000)) { Write-Warning "Owned host did not exit after forced termination: $($process.Id)" }
+    }
+    if (!$recorded) {
+      $results.Add([ordered]@{
+        scenario = $Name; passed = $false; error = $scenarioFailure; forced = $forced
+        processId = $(if ($process) { $process.Id } else { $null }); processStartedAtUtc = $started
+        hostExited = $(if ($process) { $process.HasExited } else { 'not-started' })
+        attributedBrowserProcesses = @($browserHandles | ForEach-Object {
+          [ordered]@{ processId = $_.Id; processStartedAtUtc = $_.StartTime.ToUniversalTime(); exited = $_.HasExited }
+        })
+      })
     }
     foreach ($browser in $browserHandles) { $browser.Dispose() }
     if ($process) { $process.Dispose() }
