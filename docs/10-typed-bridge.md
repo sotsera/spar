@@ -103,6 +103,8 @@ CoreCLR and copied NativeAOT passed both bridge scenarios with actual success pi
 
 During implementation a first publish failed the SDK's executable-reference compatibility validation, and an early successful publish copied the generator apphost/config files. The final build-only reference fixes both. An intermediate-output property evaluated too early also wrote generated files beside source; moving its evaluation into the target fixed output placement and duplicate compilation. Failed attempts remain under ignored artifacts and do not count as final passes.
 
+The [first upstream run](https://github.com/sotsera/spar/actions/runs/39159941118) passed build, all managed tests, TypeScript, and the bridge's renderer assertions, then failed the driver close request: `Process.CloseMainWindow()` did not discover the hidden CI window. The driver now posts close to the application's recorded native HWND, using the same helper as the existing lifecycle checks. That failure required forced cleanup and does not establish graceful exit; subsequent CI must pass actual exit and lease checks.
+
 ## Primary mechanisms and provenance
 
 - [Native web-message source](https://learn.microsoft.com/en-us/microsoft-edge/webview2/reference/win32/icorewebview2webmessagereceivedeventargs?view=webview2-1.0.4258.31), [navigation identities](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/navigation-events), and [WebView2 security guidance](https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/security).

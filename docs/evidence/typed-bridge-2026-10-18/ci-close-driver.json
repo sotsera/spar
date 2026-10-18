@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-10-18T19:45:54.0745654+00:00",
+  "firstUpstreamFailure": "https://github.com/sotsera/spar/actions/runs/39159941118",
+  "change": "Send WM_CLOSE to the recorded native HWND instead of relying on Process.CloseMainWindow discovery.",
+  "scriptSha256": "D635AD18DA23186129090D96BE9C520BF37573C5F477D24649F4D92776D73581",
+  "coreclr": [
+    {
+      "scenario": "roundtrips",
+      "passed": true,
+      "forcedCleanup": false,
+      "processId": 66236,
+      "startedAtUtc": "2026-10-18T19:45:19.1786248Z",
+      "mode": "CoreCLR",
+      "render": "not-exercised"
+    },
+    {
+      "scenario": "close-with-work",
+      "passed": true,
+      "forcedCleanup": false,
+      "processId": 67608,
+      "startedAtUtc": "2026-10-18T19:45:22.3063942Z",
+      "mode": "CoreCLR",
+      "render": "not-exercised"
+    }
+  ],
+  "aot": [
+    {
+      "scenario": "roundtrips",
+      "passed": true,
+      "forcedCleanup": false,
+      "processId": 22120,
+      "startedAtUtc": "2026-10-18T19:45:24.6083912Z",
+      "mode": "NativeAOT",
+      "render": "not-exercised"
+    },
+    {
+      "scenario": "close-with-work",
+      "passed": true,
+      "forcedCleanup": false,
+      "processId": 25928,
+      "startedAtUtc": "2026-10-18T19:45:27.4650006Z",
+      "mode": "NativeAOT",
+      "render": "not-exercised"
+    }
+  ],
+  "rendering": "not-exercised in these driver checks; desktop captures belong to the primary receipt"
+}

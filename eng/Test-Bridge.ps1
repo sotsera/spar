@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop'
 $executablePath = (Resolve-Path -LiteralPath $Executable).Path
 $evidencePath = [IO.Path]::GetFullPath($EvidenceDirectory)
 New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
-if ($VerifyRender) { Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs') }
+Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $results = [Collections.Generic.List[object]]::new()
 
 function Read-Events([string]$Path) {
@@ -75,7 +75,7 @@ foreach ($scenario in @('roundtrips', 'close-with-work')) {
         } 'actual renderer success pixels'
       }
       # Close only this retained child identity. No process-name or arbitrary browser termination.
-      if (!$process.CloseMainWindow()) { throw 'Could not request native close.' }
+      [NativeProbeDesktop]::Close($window)
     }
     Wait-Until { $process.HasExited } "$scenario actual host exit"
     $events = @(Read-Events $stdout)
