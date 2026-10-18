@@ -50,6 +50,11 @@ public static class NativeProbeDesktop
     // Returns the number of the sample's green accent pixels. A navigation event cannot satisfy this check.
     public static int Capture(IntPtr window, string path, int maximumAccentLeft)
     {
+        return CaptureColor(window, path, maximumAccentLeft, 112, 227, 189);
+    }
+
+    public static int CaptureColor(IntPtr window, string path, int maximumAccentLeft, byte red, byte green, byte blue)
+    {
         Rect rect;
         if (!GetWindowRect(window, out rect))
         {
@@ -95,23 +100,23 @@ public static class NativeProbeDesktop
                 writer.Write(pixels);
             }
 
-            var green = 0;
+            var matching = 0;
             var accentLeft = width;
             for (var y = 0; y < height; y++)
             {
                 for (var x = 0; x < width; x++)
                 {
                     var offset = y * stride + x * 3;
-                    if (pixels[offset] == 189 && pixels[offset + 1] == 227 && pixels[offset + 2] == 112)
+                    if (pixels[offset] == blue && pixels[offset + 1] == green && pixels[offset + 2] == red)
                     {
-                        green++;
+                        matching++;
                         accentLeft = Math.Min(accentLeft, x);
                     }
                 }
             }
 
             // The smaller layout moves the logo/button left. Reject a clipped frame from the old viewport.
-            return accentLeft <= maximumAccentLeft ? green : 0;
+            return accentLeft <= maximumAccentLeft ? matching : 0;
         }
         finally
         {

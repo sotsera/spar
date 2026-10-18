@@ -81,6 +81,48 @@ internal partial interface IWebView
     [PreserveSig] int RemoveHistoryChanged(long token);
     [PreserveSig] int AddNavigationCompleted(nint handler, out long token);
     [PreserveSig] int RemoveNavigationCompleted(long token);
+    [PreserveSig] int AddFrameNavigationStarting(nint handler, out long token);
+    [PreserveSig] int RemoveFrameNavigationStarting(long token);
+    [PreserveSig] int AddFrameNavigationCompleted(nint handler, out long token);
+    [PreserveSig] int RemoveFrameNavigationCompleted(long token);
+    [PreserveSig] int AddScriptDialogOpening(nint handler, out long token);
+    [PreserveSig] int RemoveScriptDialogOpening(long token);
+    [PreserveSig] int AddPermissionRequested(nint handler, out long token);
+    [PreserveSig] int RemovePermissionRequested(long token);
+    [PreserveSig] int AddProcessFailed(nint handler, out long token);
+    [PreserveSig] int RemoveProcessFailed(long token);
+    [PreserveSig] int AddScriptToExecuteOnDocumentCreated(nint script, nint handler);
+    [PreserveSig] int RemoveScriptToExecuteOnDocumentCreated(nint id);
+    [PreserveSig] int ExecuteScript(nint script, nint handler);
+    [PreserveSig] int CapturePreview(int format, nint stream, nint handler);
+    [PreserveSig] int Reload();
+    [PreserveSig] int PostWebMessageAsJson(nint message);
+    [PreserveSig] int PostWebMessageAsString(nint message);
+    [PreserveSig] int AddWebMessageReceived(nint handler, out long token);
+    [PreserveSig] int RemoveWebMessageReceived(long token);
+    [PreserveSig] int CallDevToolsProtocolMethod(nint method, nint parameters, nint handler);
+    [PreserveSig] int GetBrowserProcessId(out uint id);
+    [PreserveSig] int GetCanGoBack(out int value);
+    [PreserveSig] int GetCanGoForward(out int value);
+    [PreserveSig] int GoBack();
+    [PreserveSig] int GoForward();
+    [PreserveSig] int GetDevToolsProtocolEventReceiver(nint name, out nint receiver);
+    [PreserveSig] int Stop();
+    [PreserveSig] int AddNewWindowRequested(nint handler, out long token);
+    [PreserveSig] int RemoveNewWindowRequested(long token);
+    [PreserveSig] int AddDocumentTitleChanged(nint handler, out long token);
+    [PreserveSig] int RemoveDocumentTitleChanged(long token);
+    [PreserveSig] int GetDocumentTitle(out nint title);
+    [PreserveSig] int AddHostObjectToScript(nint name, nint variant);
+    [PreserveSig] int RemoveHostObjectFromScript(nint name);
+    [PreserveSig] int OpenDevToolsWindow();
+    [PreserveSig] int AddContainsFullScreenElementChanged(nint handler, out long token);
+    [PreserveSig] int RemoveContainsFullScreenElementChanged(long token);
+    [PreserveSig] int GetContainsFullScreenElement(out int value);
+    [PreserveSig] int AddWebResourceRequested(nint handler, out long token);
+    [PreserveSig] int RemoveWebResourceRequested(long token);
+    [PreserveSig] int AddWebResourceRequestedFilter(nint uri, int context);
+    [PreserveSig] int RemoveWebResourceRequestedFilter(nint uri, int context);
 }
 
 [GeneratedComInterface(Options = ComInterfaceOptions.ComObjectWrapper)]
@@ -89,6 +131,7 @@ internal partial interface INavigationCompletedArgs
 {
     [PreserveSig] int GetIsSuccess(out int success);
     [PreserveSig] int GetWebErrorStatus(out int status);
+    [PreserveSig] int GetNavigationId(out ulong id);
 }
 
 [GeneratedComInterface(Options = ComInterfaceOptions.ManagedObjectWrapper)]

@@ -21,11 +21,28 @@ jobs:
         with:
           global-json-file: global.json
 
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24.21.0'
+
       - name: Build
         run: dotnet build Spar.slnx --disable-build-servers
 
-      - name: Test real dotnet watch behavior
+      - name: Test bridge contracts and real dotnet watch behavior
         run: dotnet test --solution Spar.slnx --no-build
+
+      - name: Check generated TypeScript client
+        working-directory: eng/bridge-client-tests
+        run: |
+          npm ci --ignore-scripts
+          npm test
+
+      - name: Test native CoreCLR bridge
+        shell: pwsh
+        run: >-
+          ./eng/Test-Bridge.ps1
+          -Executable samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
+          -EvidenceDirectory artifacts/bridge/ci-coreclr
 
       - name: Test native CoreCLR lifecycle
         shell: pwsh
@@ -44,8 +61,13 @@ jobs:
           New-Item -ItemType Directory -Path $copyPath | Out-Null
           Get-ChildItem -LiteralPath artifacts/native/publish -File |
             Where-Object Extension -ne '.pdb' | Copy-Item -Destination $copyPath
+          $payload = @(Get-ChildItem -LiteralPath $copyPath -File | Sort-Object Name | Select-Object -ExpandProperty Name)
+          $expected = @('Spar.NativeSample.exe', 'WebView2-LICENSE.txt', 'WebView2-NOTICE.txt', 'WebView2Loader.dll') | Sort-Object
+          if (Compare-Object $payload $expected) { throw 'Unexpected AOT payload: build tools/managed runtime must not ship.' }
           ./eng/Test-NativeHost.ps1 -Executable (Join-Path $copyPath 'Spar.NativeSample.exe') `
             -ExpectedMode NativeAOT -EvidenceDirectory artifacts/native/ci-aot
+          ./eng/Test-Bridge.ps1 -Executable (Join-Path $copyPath 'Spar.NativeSample.exe') `
+            -ExpectedMode NativeAOT -EvidenceDirectory artifacts/bridge/ci-aot
 
       - name: Preserve probe evidence
         if: always()
@@ -59,4 +81,7 @@ jobs:
             artifacts/native/ci-*/receipt.json
             artifacts/native/ci-*/**/*.jsonl
             artifacts/native/ci-*/**/*.log
+            artifacts/bridge/ci-*/receipt.json
+            artifacts/bridge/ci-*/**/*.jsonl
+            artifacts/bridge/ci-*/**/*.log
           if-no-files-found: warn

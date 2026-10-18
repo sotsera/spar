@@ -4,6 +4,9 @@ namespace Sotsera.Spar.Windows.Interop;
 
 internal static unsafe partial class NativeMethods
 {
+    [LibraryImport("shlwapi.dll")]
+    internal static partial nint SHCreateMemStream(byte* bytes, uint length);
+
     [LibraryImport("ole32.dll")]
     internal static partial int CoInitializeEx(nint reserved, uint concurrency);
 

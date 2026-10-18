@@ -6,9 +6,14 @@
     <Project Path="samples/Spar.NativeSample/Spar.NativeSample.csproj" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/Sotsera.Spar.Bridge/Sotsera.Spar.Bridge.csproj" />
     <Project Path="src/Sotsera.Spar.Windows/Sotsera.Spar.Windows.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Sotsera.Spar.Bridge.Tests/Sotsera.Spar.Bridge.Tests.csproj" />
     <Project Path="tests/Spar.HotReloadProbe.Tests/Spar.HotReloadProbe.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj" />
   </Folder>
 </Solution>

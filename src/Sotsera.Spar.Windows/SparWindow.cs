@@ -7,7 +7,7 @@ using Sotsera.Spar.Windows.Interop;
 
 namespace Sotsera.Spar.Windows;
 
-public sealed unsafe class SparWindow
+public sealed unsafe partial class SparWindow
 {
     private const uint CloseMessage = 0x0010;
     private const uint DestroyMessage = 0x0002;
@@ -74,7 +74,7 @@ public sealed unsafe class SparWindow
         }
     }
 
-    /// <summary>Requests shutdown from any thread. Outstanding native creation callbacks must finish first.</summary>
+    /// <summary>Requests shutdown from any thread. Native creation and admitted bridge work must actually finish first.</summary>
     public void Close()
     {
         lock (_posted)
@@ -274,10 +274,8 @@ public sealed unsafe class SparWindow
             _subscribed = true;
         });
 
-        fixed (char* html = _options.Html)
-        {
-            Check(_webView.NavigateToString((nint)html), "Load local HTML");
-        }
+        ConfigureDocumentTransport();
+        LoadLocalDocument();
     }
 
     private void ConfirmProfile(string leasedProfile)
@@ -318,6 +316,12 @@ public sealed unsafe class SparWindow
             }
 
             Check(args.GetIsSuccess(out var success), "Read navigation status");
+            Check(args.GetNavigationId(out var navigationId), "Read completed navigation identity");
+            if (!_trustedNavigation || navigationId != _navigationId)
+            {
+                return;
+            }
+
             if (success == 0)
             {
                 Check(args.GetWebErrorStatus(out var status), "Read navigation error");
@@ -347,6 +351,8 @@ public sealed unsafe class SparWindow
 
     private void RequestClose()
     {
+        _reloadRequested = false;
+        _document?.Retire();
         lock (_posted)
         {
             _closeRequested = true;
@@ -358,7 +364,7 @@ public sealed unsafe class SparWindow
 
     private void ScheduleFinish()
     {
-        if (_closeRequested && _pendingCreations == 0 && !_closed)
+        if (_closeRequested && _pendingCreations == 0 && _pendingBridgeWork == 0 && !_closed)
         {
             // Release controllers and subscriptions outside the WebView2 callback stack.
             if (!NativeMethods.PostMessage(_handle, FinishMessage, 0, 0))
@@ -370,11 +376,17 @@ public sealed unsafe class SparWindow
 
     private void Finish()
     {
-        if (_closed || _pendingCreations != 0)
+        if (_closed || _pendingCreations != 0 || _pendingBridgeWork != 0)
         {
             return;
         }
 
+        foreach (var unsubscribe in _documentSubscriptions.AsEnumerable().Reverse())
+        {
+            Cleanup(unsubscribe);
+        }
+
+        _documentSubscriptions.Clear();
         if (_subscribed)
         {
             Cleanup(() => Check(_webView!.RemoveNavigationCompleted(_navigationToken), "Unsubscribe navigation"));
@@ -468,6 +480,13 @@ public sealed unsafe class SparWindow
                 return 0;
             case FinishMessage:
                 current.Guard(current.Finish);
+                return 0;
+            case BridgeMessage:
+                if (current._bridgePosted.TryDequeue(out var completion))
+                {
+                    current.Guard(completion);
+                }
+
                 return 0;
             case DestroyMessage:
                 NativeMethods.PostQuitMessage(0);

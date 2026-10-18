@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-18. Status: managed console Hot Reload verified under the watcher, VS Code, and Visual Studio; the first native host has CoreCLR/copied-AOT desktop evidence. See [managed evidence](07-managed-probe.md) and the [native host](09-native-host.md). No integrated A01–A18 acceptance scenario is complete.
+Date: 2026-10-18. Status: managed console Hot Reload verified under the watcher, VS Code, and Visual Studio; native hosting and the typed bridge have CoreCLR/copied-AOT desktop evidence. See [managed evidence](07-managed-probe.md), the [native host](09-native-host.md), and the [bridge](10-typed-bridge.md). No integrated A01–A18 acceptance scenario is complete.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -53,6 +53,8 @@ Generate a small C#/TypeScript contract from explicit application exports. Use d
 The greeting, counter, and delayed operation must work through the actual WebView. Verify unknown/denied operations, malformed input, stale fingerprints, cancellation, and response delivery after navigation or retirement. Keep the DTO surface small and documented.
 
 Deliverables: generated consumer adapter, typed frontend call, focused contract tests, and real CoreCLR/AOT roundtrips. Consumers should not write repetitive framework dispatch glue.
+
+Progress: the [typed bridge](10-typed-bridge.md) generates direct C# dispatch, JSON metadata, and a framework-neutral JavaScript module with TypeScript declarations from an explicit C# contract. Real CoreCLR and copied NativeAOT probes verify greeting/counter/delay, rejection, cancellation/timeout ownership, retirement, and close; desktop success captures were inspected. Contract and lifetime tests plus TypeScript call-site checks extend the existing required CI job. This is the local-document bridge proof, not SPA session admission, full production assets, debugger integration, or completion of A01–A18.
 
 ### M1.4 — Coordinate the SPA server and HMR
 

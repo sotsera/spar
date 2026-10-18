@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <SparContractFile>$(MSBuildProjectDirectory)/TestContract.cs</SparContractFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="AwesomeAssertions" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Sotsera.Spar.Bridge/Sotsera.Spar.Bridge.csproj" />
+    <ProjectReference Include="../../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj" />
+    <Content Include="TestContract.cs" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Import Project="../../build/Spar.Contracts.targets" />
+</Project>

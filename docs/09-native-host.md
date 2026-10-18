@@ -10,7 +10,7 @@ Call `SparApplication.Run(new SparWindowOptions { Title = ..., Html = ..., UserD
 
 `Created` and `DocumentLoaded` run on the UI thread. `Created` precedes browser initialization; `DocumentLoaded` reports successful navigation. Neither establishes visible rendering or a typed bridge handshake. `SparWindow.Post` queues work from another thread (maximum 256 queued actions); callback failures end the session. `Close` requests shutdown from any thread. A close request does not prove completion; wait for `Run` to return or observe the process exit.
 
-The HTML is an application-owned document. The sample supplies a restrictive CSP and no network assets. There are no exported backend operations or native host objects. Navigation policy, native document authority, explicit permissions, and contract matching must be implemented together before adding the typed bridge in M1.3; this host is not a general untrusted-content browser.
+The HTML is an application-owned document. The sample supplies a restrictive CSP and no network assets. M1.3 now adds the [typed bridge](10-typed-bridge.md), constrained native navigation, unique local document addresses, explicit permissions, and contract matching. Native host objects remain disabled; this host is not a general untrusted-content browser.
 
 ## Run and publish
 
@@ -38,7 +38,7 @@ To verify the payload outside the checkout, copy the published files (PDBs optio
 - Before creating the controller, Spar reads the actual native profile directory through `ICoreWebView2Environment7`. A mismatch with the leased directory fails startup. Environment/policy redirection must not silently move the browser outside that lease. Runtimes lacking this interface receive an actionable update diagnostic.
 - The missing-runtime test passes an explicit nonexistent runtime directory to WebView2. It verifies an actual native startup failure and an actionable install/runtime diagnostic without uninstalling the developer's runtime.
 
-Arbitrary tasks started by application callbacks are application-owned; this initial API does not track backend operations. The generation/admission/retirement model comes with the bridge and development coordinator. Keyboard/DPI polish, process-failure recovery, runtime installation, multi-window behavior, and clean-machine qualification remain follow-ups.
+Admitted bridge operations and cancellation callbacks now remain owned through actual completion before close/reload. Arbitrary tasks started independently by application callbacks remain application-owned. Application-generation/restart coordination comes later. Keyboard/DPI polish, process-failure recovery, runtime installation, multi-window behavior, and clean-machine qualification remain follow-ups.
 
 ## Repeatable native checks
 

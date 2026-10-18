@@ -1,8 +1,20 @@
+using Sotsera.Spar.Bridge;
+
 namespace Sotsera.Spar.Windows;
 
 /// <summary>Initial, trusted local document and persistent browser profile for one Windows/x64 window.</summary>
 public sealed class SparWindowOptions
 {
+    public SparBridge? Bridge
+    {
+        get; init;
+    }
+
+    public Action<SparBridgeEvent>? BridgeEvent
+    {
+        get; init;
+    }
+
     public required string Title
     {
         get; init;

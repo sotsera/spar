@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../Sotsera.Spar.Bridge/Sotsera.Spar.Bridge.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" GeneratePathProperty="true"
                       IncludeAssets="none" PrivateAssets="all" />
   </ItemGroup>

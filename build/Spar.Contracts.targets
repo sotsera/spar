@@ -1,0 +1,26 @@
+<Project>
+  <PropertyGroup>
+    <SparContractToolProject>$(MSBuildThisFileDirectory)../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj</SparContractToolProject>
+  </PropertyGroup>
+
+  <Target Name="GenerateSparContract" BeforeTargets="AssignTargetPaths;CoreCompile" DependsOnTargets="ResolveProjectReferences">
+    <PropertyGroup>
+      <SparGeneratedDirectory>$(IntermediateOutputPath)spar/</SparGeneratedDirectory>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(SparContractToolProject)" Targets="GetTargetPath"
+             RemoveProperties="RuntimeIdentifier;PublishAot;SelfContained"
+             Properties="Configuration=$(Configuration);TargetFramework=net10.0"
+             Condition="'$(DesignTimeBuild)' != 'true'">
+      <Output TaskParameter="TargetOutputs" ItemName="_SparContractTool" />
+    </MSBuild>
+
+    <Exec Command="dotnet &quot;@(_SparContractTool)&quot; &quot;$(SparContractFile)&quot; &quot;$(SparGeneratedDirectory)Contract.g.cs&quot; &quot;$(SparGeneratedDirectory)client.js&quot; &quot;$(SparGeneratedDirectory)client.d.ts&quot;"
+          Condition="'$(DesignTimeBuild)' != 'true'" />
+
+    <ItemGroup Condition="Exists('$(SparGeneratedDirectory)Contract.g.cs')">
+      <Compile Include="$(SparGeneratedDirectory)Contract.g.cs" />
+      <EmbeddedResource Include="$(SparGeneratedDirectory)client.js" LogicalName="Spar.Generated.Client.js" />
+    </ItemGroup>
+  </Target>
+</Project>

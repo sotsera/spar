@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>Spar native host</title>
+<style>
+  html { color-scheme: dark; font: 18px system-ui; background: #101827; color: #e6edf7 }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center }
+  main { max-width: 36rem; padding: 3rem }
+  .mark { color: #70e3bd; letter-spacing: .16em; font-weight: 700 }
+  h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1 }
+  p { line-height: 1.6; color: #b3bfd2 }
+  button { font: inherit; color: #101827; background: #70e3bd; border: 0;
+           border-radius: .5rem; padding: .7rem 1rem; cursor: pointer; margin-bottom: .5rem }
+  #status { overflow-wrap: anywhere }
+</style>
+<main>
+  <span class="mark">SPAR</span>
+  <h1>A typed native beginning.</h1>
+  <p>A Win32 window, WebView2, and a .NET backend. This local page runs without a web server.</p>
+  <button id="local">Local counter: 0</button>
+  <button id="backend">Backend counter: 0</button>
+  <p id="greeting">Connecting to C#…</p>
+  <p id="status" role="status">Waiting for the typed bridge.</p>
+</main>
+<script type="module">
+/*__CLIENT__*/
+/*__APPLICATION__*/
+</script>
+</html>
