@@ -110,3 +110,5 @@ Improve the consumer experience in the fresh design: examples should use public 
 5. CodeAlta's realistic application integration cases after the minimal workflow works.
 
 The first implementation should be new, small, and independently verified. Borrowing a design does not require adopting the upstream dependency graph.
+
+The first actual runtime dependency/projection is the official WebView2 native SDK. Its pinned version, BSD-3-Clause license, retained notices, ABI paths, and adaptations are recorded in the [native host provenance](09-native-host.md#webview2-source-and-license-provenance). The SDK license and separately installed browser-runtime distribution terms are distinct.

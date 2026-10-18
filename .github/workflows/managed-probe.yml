@@ -12,7 +12,7 @@ jobs:
   build-and-test:
     name: Windows managed probe
     runs-on: windows-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v7.0.1
@@ -27,6 +27,26 @@ jobs:
       - name: Test real dotnet watch behavior
         run: dotnet test --solution Spar.slnx --no-build
 
+      - name: Test native CoreCLR lifecycle
+        shell: pwsh
+        run: >-
+          ./eng/Test-NativeHost.ps1
+          -Executable samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
+          -EvidenceDirectory artifacts/native/ci-coreclr
+
+      - name: Publish strict NativeAOT sample
+        run: dotnet publish samples/Spar.NativeSample -c Release -o artifacts/native/publish --disable-build-servers
+
+      - name: Test copied NativeAOT lifecycle
+        shell: pwsh
+        run: |
+          $copyPath = Join-Path $env:RUNNER_TEMP ('spar-native-' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Path $copyPath | Out-Null
+          Get-ChildItem -LiteralPath artifacts/native/publish -File |
+            Where-Object Extension -ne '.pdb' | Copy-Item -Destination $copyPath
+          ./eng/Test-NativeHost.ps1 -Executable (Join-Path $copyPath 'Spar.NativeSample.exe') `
+            -ExpectedMode NativeAOT -EvidenceDirectory artifacts/native/ci-aot
+
       - name: Preserve probe evidence
         if: always()
         uses: actions/upload-artifact@v7.0.2
@@ -36,4 +56,7 @@ jobs:
             artifacts/hot-reload/**/watch.log
             artifacts/hot-reload/**/sources.sha256
             **/TestResults/**
+            artifacts/native/ci-*/receipt.json
+            artifacts/native/ci-*/**/*.jsonl
+            artifacts/native/ci-*/**/*.log
           if-no-files-found: warn

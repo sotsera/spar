@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-18. Status: M1.1 in progress; managed console probe verified under the watcher, VS Code debugger, and a manual Visual Studio run. See [evidence and remaining gates](07-managed-probe.md). No integrated A01–A18 acceptance scenario is complete.
+Date: 2026-10-18. Status: managed console Hot Reload verified under the watcher, VS Code, and Visual Studio; the first native host has CoreCLR/copied-AOT desktop evidence. See [managed evidence](07-managed-probe.md) and the [native host](09-native-host.md). No integrated A01–A18 acceptance scenario is complete.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -43,6 +43,8 @@ Implement native window/WebView ownership, UI-thread dispatch, initial local doc
 Publish and run a real NativeAOT copy at this stage. Establish that the chosen WebView interop/loader and startup path work with AOT before the development coordinator grows around them. Verify visible render, normal close, startup failure, and no unaccounted application-owned work after shutdown. Record browser-process observations separately.
 
 Deliverables: one public host entry point, CoreCLR development run, copied AOT run, and focused native lifecycle checks.
+
+Progress: the [minimal host](09-native-host.md) provides the public entry point, local HTML consumer, explicit STA/COM ownership, UI dispatch, deferred close during creation, and profile preservation. CoreCLR and copied NativeAOT desktop runs visibly rendered and resized; lifecycle/error checks passed. This establishes early native/AOT evidence, not A14's typed-call/production-asset acceptance or all of A17's later coordinator cleanup scenarios.
 
 ### M1.3 — Add a typed, document-bound call
 

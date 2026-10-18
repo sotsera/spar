@@ -8,7 +8,7 @@ Production targets NativeAOT by default, with CoreCLR compatibility for applicat
 
 ## Current status
 
-Implementation has started with an isolated CoreCLR Hot Reload probe and real watcher/editor acceptance tooling. Native windows, the bridge, SPA integration, and NativeAOT delivery are still ahead. See the [probe results and remaining gates](docs/07-managed-probe.md); no full milestone acceptance scenario is complete yet.
+The managed Hot Reload probe works under the watcher, VS Code, and Visual Studio. The first Win32/WebView2 host now visibly loads local HTML under CoreCLR and a copied NativeAOT executable. The typed bridge and SPA development loop come next. See the [native host guide](docs/09-native-host.md) and [managed probe results](docs/07-managed-probe.md); no full milestone acceptance scenario is complete yet.
 
 ## Run the first slice
 
@@ -19,6 +19,15 @@ dotnet build Spar.slnx --disable-build-servers
 dotnet test --solution Spar.slnx --no-build
 dotnet watch --project experiments/Spar.HotReloadProbe run
 ```
+
+For the first native window (requires the installed WebView2 Runtime):
+
+```powershell
+dotnet run --project samples/Spar.NativeSample
+dotnet publish samples/Spar.NativeSample -c Release -o artifacts/native/publish --disable-build-servers
+```
+
+The sample uses CoreCLR for Debug and NativeAOT for Release publishing. See the [native host guide](docs/09-native-host.md) for C++ prerequisites, copied-payload checks, and current limits.
 
 The tests edit disposable copies under `artifacts/` and launch real `dotnet watch` processes. The [editor probe guide](docs/07-managed-probe.md) covers VS Code automation, F5 setup, and the recorded Visual Studio manual pass. These are development experiments, not shipping Spar packages.
 
