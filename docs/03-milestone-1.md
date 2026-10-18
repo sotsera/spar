@@ -34,7 +34,7 @@ Verify a method-body edit under terminal `dotnet watch`, VS Code F5 with the C# 
 
 Deliverables: version matrix, minimal reproducible probe, selected update owner for each lane, restart/debugger strategy, and precise supported limitations. Stop expanding this probe once it answers those questions. Do not develop a custom Hot Reload compiler as an incidental workaround.
 
-Progress: [managed probe](07-managed-probe.md), with xUnit integration tests, an actual VS Code extension-host driver, a manual Visual Studio 2026 stable 18.11.0 pass, and successful fork Windows CI. Stable .NET 10 is the initial implementation baseline. The console editor proof permits the native/AOT spike; upstream required-check enforcement and later consumer/status integration remain open. Issue #2 stays open.
+Progress: [managed probe](07-managed-probe.md), with xUnit integration tests, an actual VS Code extension-host driver, a manual Visual Studio 2026 stable 18.11.0 pass, and successful fork/upstream Windows CI. Stable .NET 10 is the initial implementation baseline. The console editor proof permits the native/AOT spike; the [upstream CI gate](08-ci-merge-gate.md) now enforces the real check. Later consumer/status integration remains open. Issue #2 stays open.
 
 ### M1.2 — Build the smallest Windows/AOT application
 
@@ -133,19 +133,19 @@ A copied application on a developer machine is not a clean-machine/no-.NET certi
 
 ## CI and branch protection follow-up
 
-Upstream `sotsera/spar` has an active `protect-main` ruleset requiring PRs, with no bypass entries. No CI status checks were required when this note was recorded on 2026-10-18 because workflows had not been implemented.
+Upstream `sotsera/spar` has an active `protect-main` ruleset requiring PRs and the **Windows managed probe** check from GitHub Actions (integration ID `15368`), with up-to-date branches and no bypass entries. Existing signature, linear-history, conversation-resolution, and force-push/deletion protections remain in place. See the [CI gate proof](08-ci-merge-gate.md).
 
-The first workflow now defines **Windows managed probe** for PRs and development-branch pushes. GitHub reported no workflow/check suite on initial draft PR #14; branch CI in the development fork provides a separate pre-merge validation path. Do not treat a fork run as evidence that upstream required-check enforcement works. Add required checks only after upstream runs and the blocking policy have actually been verified.
+The first workflow defines **Windows managed probe** for PRs and development-branch pushes. Initial PR #14 had no upstream check suite before the workflow landed; fork CI supplied the bootstrap evidence. After merging, upstream `main` CI passed. Validation PR #15 then produced a real upstream build failure; once the rule was enabled, the non-draft PR reported the failed check as required and merging as blocked. The source was restored and upstream recovery run `39147429145` passed build, three real watcher tests (none skipped), and evidence upload. Each later PR head must pass its own required check.
 
-[Fork run 39143727813](https://github.com/ghidello/spar/actions/runs/39143727813) passed the build, three real watcher tests (none skipped), and evidence upload on implementation commit `0be3b41`. The upstream enforcement checklist below remains open.
+[Fork run 39143727813](https://github.com/ghidello/spar/actions/runs/39143727813) passed the build, three real watcher tests (none skipped), and evidence upload on implementation commit `0be3b41`. Later upstream evidence and ruleset details are in the CI gate proof; a fork run alone does not establish upstream enforcement.
 
 When introducing CI during milestone 1, treat enforcement as part of delivering the workflow:
 
-- [ ] Establish stable, unique check names and verify the workflows run on pull requests from the development fork.
-- [ ] After observing real successful and failing runs, add the applicable build/test check names to upstream `protect-main` as required status checks. Record the enforced names here; do not configure placeholder names.
+- [x] Establish stable, unique check names and verify the workflows run on pull requests from the development fork.
+- [x] After observing real successful and failing runs, add the applicable build/test check names to upstream `protect-main` as required status checks. Enforced name: **Windows managed probe**, GitHub Actions integration `15368`, strict up-to-date requirement.
 - [ ] Extend the required checks as AOT publication/execution and external-package consumer checks become available. Revisit the ruleset whenever required jobs are renamed or replaced.
 - [ ] Keep interactive Windows rendering/debugger checks explicit about desktop availability. An unavailable or skipped acceptance scenario does not establish milestone completion; report its remaining evidence requirement separately from ordinary CI results.
-- [ ] Verify the resulting policy blocks merging a PR with a failed required check without introducing a bypass. Preserve the PR-only and squash-only workflow.
+- [x] Verify the resulting policy blocks merging a PR with a failed required check without introducing a bypass. PR #15 was non-draft with `isRequired: true`, `conclusion: FAILURE`, and `mergeStateStatus: BLOCKED`; PR-only and squash-only policies remain intact.
 
 This follow-up initially belongs with the tooling/build foundation (upstream issue #2), then the issues introducing production AOT and external consumer verification (#10 and #12). Repository settings should be updated deliberately when those checks exist.
 

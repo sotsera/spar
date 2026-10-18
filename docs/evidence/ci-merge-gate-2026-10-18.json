@@ -1,0 +1,185 @@
+{
+  "recordedAtUtc": "2026-10-18T17:01:16.702Z",
+  "repository": "sotsera/spar",
+  "pullRequest": "https://github.com/sotsera/spar/pull/15",
+  "baselineMainCommit": "d426f1b3b23d2d0bea42f89e6c9304fe26aac26d",
+  "baselineSuccess": {
+    "runId": 39146637086,
+    "event": "push",
+    "branch": "main",
+    "conclusion": "success",
+    "url": "https://github.com/sotsera/spar/actions/runs/39146637086"
+  },
+  "intentionalFailure": {
+    "runId": 39147095673,
+    "event": "pull_request",
+    "commit": "24405241bb8982a920eb8145977194b7dfc471c8",
+    "conclusion": "failure",
+    "diagnostic": "CS0126: An object of a type convertible to string is required",
+    "edit": "GreetingProvider.GetGreeting return statement temporarily changed to return;",
+    "testStep": "not executed after the intentional build failure",
+    "url": "https://github.com/sotsera/spar/actions/runs/39147095673"
+  },
+  "policyBefore": {
+    "id": 25345567,
+    "name": "protect-main",
+    "enforcement": "active",
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "~DEFAULT_BRANCH"
+        ]
+      }
+    },
+    "bypass_actors": [],
+    "rules": [
+      {
+        "type": "deletion"
+      },
+      {
+        "type": "non_fast_forward"
+      },
+      {
+        "type": "required_signatures"
+      },
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 0,
+          "dismiss_stale_reviews_on_push": false,
+          "required_reviewers": [],
+          "require_code_owner_review": false,
+          "dismissal_restriction": {
+            "enabled": false,
+            "allowed_actors": []
+          },
+          "require_last_push_approval": false,
+          "required_review_thread_resolution": true,
+          "require_extra_approval_for_unattributed_changes": true,
+          "allowed_merge_methods": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
+        }
+      },
+      {
+        "type": "required_linear_history"
+      }
+    ]
+  },
+  "policyAfter": {
+    "id": 25345567,
+    "name": "protect-main",
+    "enforcement": "active",
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "~DEFAULT_BRANCH"
+        ]
+      }
+    },
+    "bypass_actors": [],
+    "rules": [
+      {
+        "type": "deletion"
+      },
+      {
+        "type": "non_fast_forward"
+      },
+      {
+        "type": "required_signatures"
+      },
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 0,
+          "dismiss_stale_reviews_on_push": false,
+          "required_reviewers": [],
+          "require_code_owner_review": false,
+          "dismissal_restriction": {
+            "enabled": false,
+            "allowed_actors": []
+          },
+          "require_last_push_approval": false,
+          "required_review_thread_resolution": true,
+          "require_extra_approval_for_unattributed_changes": true,
+          "allowed_merge_methods": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
+        }
+      },
+      {
+        "type": "required_linear_history"
+      },
+      {
+        "type": "required_status_checks",
+        "parameters": {
+          "strict_required_status_checks_policy": true,
+          "do_not_enforce_on_create": false,
+          "required_status_checks": [
+            {
+              "context": "Windows managed probe",
+              "integration_id": 15368
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "blockedProof": {
+    "number": 15,
+    "isDraft": false,
+    "mergeStateStatus": "BLOCKED",
+    "headRefOid": "24405241bb8982a920eb8145977194b7dfc471c8",
+    "commits": {
+      "nodes": [
+        {
+          "commit": {
+            "statusCheckRollup": {
+              "contexts": {
+                "nodes": [
+                  {
+                    "databaseId": 117733035459,
+                    "name": "Windows managed probe",
+                    "conclusion": "FAILURE",
+                    "isRequired": true,
+                    "checkSuite": {
+                      "repository": {
+                        "nameWithOwner": "sotsera/spar"
+                      },
+                      "app": {
+                        "databaseId": 15368,
+                        "slug": "github-actions"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "recovery": {
+    "runId": 39147429145,
+    "commit": "caec90387781c24b7af12fa51d25d56d607f40db",
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/sotsera/spar/actions/runs/39147429145",
+    "greetingRestoredToBaseline": true,
+    "greetingGitBlob": "31580a13fbb929d4610f9e0677ba6a158c2bf998",
+    "observations": "Build, three real watcher tests, and evidence upload succeeded; final evidence-only PR head must pass its own required check."
+  },
+  "limits": [
+    "Blocking verified through the public GitHub merge state and required-check identity; no attempt was made to merge the invalid commit.",
+    "Validation changes were confined to the feature branch; main was not modified.",
+    "Native rendering, debugger desktop scenarios, AOT, and external consumers are not covered by this console CI job."
+  ]
+}
