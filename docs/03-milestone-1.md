@@ -135,6 +135,8 @@ A copied application on a developer machine is not a clean-machine/no-.NET certi
 
 Upstream `sotsera/spar` has an active `protect-main` ruleset requiring PRs, with no bypass entries. No CI status checks were required when this note was recorded on 2026-10-18 because workflows had not been implemented.
 
+The first workflow now defines **Windows managed probe** for PRs and development-branch pushes. GitHub reported no workflow/check suite on initial draft PR #14; branch CI in the development fork provides a separate pre-merge validation path. Do not treat a fork run as evidence that upstream required-check enforcement works. Add required checks only after upstream runs and the blocking policy have actually been verified.
+
 When introducing CI during milestone 1, treat enforcement as part of delivering the workflow:
 
 - [ ] Establish stable, unique check names and verify the workflows run on pull requests from the development fork.
