@@ -4,6 +4,6 @@ internal static class GreetingProvider
 {
     public static string GetGreeting()
     {
-        return;
+        return "Hello from Spar v1";
     }
 }
