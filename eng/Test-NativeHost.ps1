@@ -62,8 +62,7 @@ function Find-Browsers([string]$Profile, $Handles) {
   }
 }
 
-function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocument, [int]$ExitCode = 0,
-    [hashtable]$EnvironmentOverrides = @{}) {
+function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocument, [int]$ExitCode = 0) {
   $directory = Join-Path $evidencePath $Name
   New-Item -ItemType Directory -Path $directory -Force | Out-Null
   $profile = Join-Path $directory 'profile'
@@ -78,7 +77,6 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
   try {
     $process = Start-Process -FilePath $executablePath -WorkingDirectory (Split-Path $executablePath) `
       -ArgumentList (@('"' + $profile + '"') + $Arguments) -PassThru -WindowStyle Hidden `
-      -Environment $EnvironmentOverrides `
       -RedirectStandardOutput $stdout -RedirectStandardError $stderr
     # Retain the process handle so PID reuse cannot turn an unrelated process into our child.
     $null = $process.Handle
@@ -119,13 +117,21 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
       [NativeProbeDesktop]::Close($window)
     }
 
-    Wait-Until { $process.HasExited } "$Name host exit"
+    Wait-Until {
+      if ($Name -eq 'missing-runtime' -and @(Read-Events $stdout | Where-Object Stage -eq 'document-loaded').Count) {
+        throw "Missing-runtime fixture unexpectedly loaded a document: $(Get-Content $stdout -Raw)"
+      }
+      $process.HasExited
+    } "$Name host exit"
     $process.WaitForExit()
     if ($process.ExitCode -ne $ExitCode) { throw "Unexpected exit $($process.ExitCode): $(Get-Content $stdout -Raw)" }
     $events = @(Read-Events $stdout)
     if (@($events | Where-Object Mode -ne $ExpectedMode).Count) { throw 'Unexpected execution mode.' }
     $lastStage = if ($ExitCode -eq 0) { 'closed' } else { 'failed' }
     if ($events.Count -eq 0 -or $events[-1].Stage -ne $lastStage) { throw "Missing $lastStage receipt." }
+    if ($Name -eq 'missing-runtime' -and $events[-1].RuntimeOverride -ne (Join-Path $profile 'absent-webview-runtime')) {
+      throw 'The missing-runtime fixture did not apply its runtime override inside the child.'
+    }
     if ($Name -eq 'worker-dispatch' -and @($events | Where-Object Stage -eq 'ui-dispatch').Count -ne 1) {
       throw 'Worker-thread UI dispatch did not complete.'
     }
@@ -171,9 +177,7 @@ try {
   Invoke-Scenario 'close-during-startup' @('--close-during-startup') $false
   Invoke-Scenario 'worker-dispatch' @('--close-from-worker') $false
   Invoke-Scenario 'document-callback-error' @('--throw-on-document') $false 1
-  Invoke-Scenario 'missing-runtime' @() $false 1 @{
-    WEBVIEW2_BROWSER_EXECUTABLE_FOLDER = (Join-Path $evidencePath 'absent-webview-runtime')
-  }
+  Invoke-Scenario 'missing-runtime' @('--missing-runtime') $false 1
   # A file cannot be a writable browser profile; this must fail before native/browser ownership starts.
   $invalid = Join-Path $evidencePath 'invalid-profile'
   New-Item -ItemType Directory -Path $invalid -Force | Out-Null

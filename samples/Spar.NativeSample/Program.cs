@@ -16,6 +16,12 @@ internal static class Program
         var closeDuringStartup = args.Contains("--close-during-startup", StringComparer.Ordinal);
         var throwOnDocument = args.Contains("--throw-on-document", StringComparer.Ordinal);
         var closeFromWorker = args.Contains("--close-from-worker", StringComparer.Ordinal);
+        if (args.Contains("--missing-runtime", StringComparer.Ordinal))
+        {
+            // Configure the fixture inside the child so shell environment propagation cannot weaken this check.
+            Environment.SetEnvironmentVariable("WEBVIEW2_BROWSER_EXECUTABLE_FOLDER",
+                Path.Combine(profile, "absent-webview-runtime"));
+        }
         try
         {
             SparApplication.Run(new SparWindowOptions
@@ -96,13 +102,14 @@ internal static class Program
         using var process = Process.GetCurrentProcess();
         var receipt = new NativeReceipt(stage, DateTimeOffset.UtcNow, Environment.ProcessId, Environment.CurrentManagedThreadId,
             process.StartTime.ToUniversalTime(), RuntimeFeature.IsDynamicCodeSupported ? "CoreCLR" : "NativeAOT",
-            window?.Handle.ToInt64(), window?.BrowserVersion, error);
+            window?.Handle.ToInt64(), window?.BrowserVersion,
+            Environment.GetEnvironmentVariable("WEBVIEW2_BROWSER_EXECUTABLE_FOLDER"), error);
         Console.WriteLine(JsonSerializer.Serialize(receipt, NativeJsonContext.Default.NativeReceipt));
     }
 }
 
 internal sealed record NativeReceipt(string Stage, DateTimeOffset ObservedAt, int ProcessId, int ThreadId,
-    DateTime ProcessStartedAtUtc, string Mode, long? Window, string? BrowserVersion, string? Error);
+    DateTime ProcessStartedAtUtc, string Mode, long? Window, string? BrowserVersion, string? RuntimeOverride, string? Error);
 
 [JsonSerializable(typeof(NativeReceipt))]
 internal sealed partial class NativeJsonContext : JsonSerializerContext;
