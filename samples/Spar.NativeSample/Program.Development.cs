@@ -41,6 +41,7 @@ internal static partial class Program
                 Title = "Spar development",
                 Html = "<!doctype html><title>Spar development</title>",
                 LoopbackContent = session.Content,
+                EnableDevelopmentInspection = session.InspectionEnabled,
                 Bridge = new SparBridge(new SampleBackendBridge(backend),
                     ["greeting.read", "counter.change", "delay.run", "sample.report"]),
                 BridgeEvent = session.ObserveBridge,

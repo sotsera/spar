@@ -8,7 +8,7 @@ using Sotsera.Spar.Windows;
 namespace Sotsera.Spar.Development;
 
 /// <summary>Debug-only application adapter. Reference this assembly only in a development configuration.</summary>
-public sealed class DevelopmentApplication : IDisposable
+public sealed partial class DevelopmentApplication : IDisposable
 {
     private readonly SessionConnection _connection;
     private readonly Channel<SessionMessage> _outbound = Channel.CreateBounded<SessionMessage>(64);
@@ -33,6 +33,8 @@ public sealed class DevelopmentApplication : IDisposable
         get;
     }
 
+    public bool InspectionEnabled { get; }
+
     private DevelopmentApplication(SessionConnection connection, SessionMessage configuration, string contract,
         HashSet<Type> contractTypes)
     {
@@ -41,6 +43,7 @@ public sealed class DevelopmentApplication : IDisposable
         _generation = configuration.Generation;
         Content = new SparLoopbackContent(new Uri(configuration.Url!), configuration.Credential!);
         UserDataFolder = configuration.Profile!;
+        InspectionEnabled = configuration.InspectionEnabled;
         _updated = (revision, types) =>
         {
             var contractChanged = types is null || types.Any(contractTypes.Contains);
@@ -140,7 +143,13 @@ public sealed class DevelopmentApplication : IDisposable
     public void Dispose()
     {
         DevelopmentUpdates.Unsubscribe(_updated);
-        _ending = true;
+        Task? inspection;
+        lock (_inspectionGate)
+        {
+            _ending = true;
+            inspection = _inspectionTask;
+        }
+        inspection?.GetAwaiter().GetResult();
         _outbound.Writer.TryComplete();
         _writer.GetAwaiter().GetResult();
         _connection.DisposeAsync().AsTask().GetAwaiter().GetResult();
@@ -211,6 +220,10 @@ public sealed class DevelopmentApplication : IDisposable
                 if (message.Kind == "stop")
                 {
                     Stop();
+                }
+                else if (message.Kind == "inspect" && InspectionEnabled && message.Inspection is { } request)
+                {
+                    DispatchInspection(request);
                 }
             }
 

@@ -28,6 +28,8 @@ Start with [product direction](docs/02-product-direction.md), then the relevant 
 
 The [Visual Studio project-launch guide](docs/14-visual-studio-development.md) distinguishes automated bootstrap ownership from actual IDE acceptance. Run `eng/Test-ProjectLaunch.ps1` for lifecycle changes; only an executed Visual Studio walkthrough establishes A13. Project launch ends the session for restart-required edits and relies on an IDE rebuild before fresh F5.
 
+For structured inspection, use the [inspection guide](docs/15-development-inspection.md): run `eng/Test-DevelopmentInspection.ps1` against the actual WebView and review its PNGs. Verify Release exclusion with `eng/Test-InspectionBoundary.ps1` after building Release. Preserve target identity and unfinished-work ownership; click completion does not establish asynchronous backend completion.
+
 ## C# readability and lifetime rules
 
 - Prefer clear statements, named intermediate values, and small methods over compressed expressions. Use LINQ when it describes one coherent transformation clearly.

@@ -28,6 +28,8 @@ For native F5 debugging, load the local adapter using the [VS Code guide](docs/1
 
 The [Visual Studio guide](docs/14-visual-studio-development.md) provides an ordinary **Spar development** project launch profile and an isolated manual walkthrough. The native acceptance pass covers F5/breakpoints, frontend HMR, backend Hot Reload, compiler recovery, whole-session relaunch, and debugger Stop with process cleanup. Visual Studio owns backend updates; restart-required edits use close, rebuild, and F5.
 
+For agent-driven verification, start the coordinator with `--owner-stdin --inspect`. The [inspection guide](docs/15-development-inspection.md) documents structured status, DOM snapshots, native viewport screenshots, bounded click/type, console/errors, build diagnostics, restart, and Stop. Inspection requires a Debug host and explicit opt-in; requests bind to the current session/generation/document/contract, and timeouts retain unfinished work. The native acceptance scenario verifies edits and cleanup through these generic operations.
+
 For the precursor probes and full managed tests:
 
 Install SDK `10.0.402`, selected in `global.json`, then run from this checkout:

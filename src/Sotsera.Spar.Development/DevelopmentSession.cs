@@ -17,7 +17,8 @@ namespace Sotsera.Spar.Development;
 /// <summary>Owns one SPA server and one application, with either an SDK watcher or editor debugger update owner.</summary>
 /// <param name="projectApplication">Optional already-launched project process. The caller retains its handle until RunAsync ends.</param>
 public sealed partial class DevelopmentSession(DevelopmentSettings settings, Action<DevelopmentEvent> observer, bool enableProbe = false,
-    Func<DevelopmentDebugLaunch, Task>? launchDebugger = null, Process? projectApplication = null) : IAsyncDisposable
+    Func<DevelopmentDebugLaunch, Task>? launchDebugger = null, Process? projectApplication = null,
+    bool enableInspection = false) : IAsyncDisposable
 {
     private readonly object _eventGate = new();
     private readonly string _session = Guid.NewGuid().ToString("N");
@@ -42,6 +43,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
     private string? _currentDocument;
     private string? _readyDocument;
     private string? _restartCorrelation;
+    private bool _restartPending;
     private string? _stopCorrelation;
     private string _stopReason = "owner_stop";
     private Uri? _frontendUri;
@@ -54,6 +56,11 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
     private int _disposed;
     private Exception? _observerFailure;
 
+    public void RejectCommand(DevelopmentCommand command, string code)
+    {
+        Emit("command-rejected", code: code, correlation: command.Id);
+    }
+
     public void RequestStop(bool force = false, string reason = "owner_stop", string? correlation = null)
     {
         if (_ended.Task.IsCompleted || Volatile.Read(ref _disposed) != 0)
@@ -62,6 +69,10 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         }
         _stopReason = reason;
         _stopCorrelation = correlation;
+        if (correlation is not null)
+        {
+            Emit("command-accepted", detail: "stop", correlation: correlation);
+        }
         _stop.TrySetResult();
         try
         {
@@ -328,7 +339,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             await _applicationPeer.Connection.WriteAsync(new SessionMessage("configure", _token, _session,
                 Url: _frontendUri!.AbsoluteUri, Contract: _contract, Credential: _credential,
                 Profile: Path.Combine(_directory, "profile-" + _generation.ToString(CultureInfo.InvariantCulture)),
-                Generation: _generation), timeout.Token).ConfigureAwait(false);
+                Generation: _generation, InspectionEnabled: enableInspection), timeout.Token).ConfigureAwait(false);
             _applicationPeer.StartReading(_messages.Writer, "application", _generation);
             _readyDeadline = DateTimeOffset.UtcNow.AddSeconds(settings.StartupTimeoutSeconds);
             return true;
@@ -393,6 +404,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 await tick.ConfigureAwait(false);
                 TrackProcesses();
+                CheckInspectionDeadline();
                 if (InputRestartReason() is { } reason)
                 {
                     await RebuildApplicationAsync(reason).ConfigureAwait(false);
@@ -422,16 +434,34 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             await PublishBackendUpdateAsync().ConfigureAwait(false);
             while (commands.TryRead(out var request))
             {
+                if (request.Command == "inspect")
+                {
+                    await BeginInspectionAsync(request).ConfigureAwait(false);
+                    continue;
+                }
+                if (request.Command == "restart" && _restartPending)
+                {
+                    Emit("command-rejected", code: "restart_pending", correlation: request.Id);
+                    continue;
+                }
+                if (request.Command == "diagnostics")
+                {
+                    InspectDiagnostics(request);
+                    continue;
+                }
+
                 Emit("command-accepted", correlation: request.Id, detail: request.Command);
                 if (request.Command == "status")
                 {
                     TrackProcesses();
-                    Emit("command-completed", code: _application is null ? "stopped" : _readyDocument is null ? "starting" : "ready",
-                        correlation: request.Id);
+                    Emit("command-completed", "application", _application?.Process,
+                        code: _application is null ? "stopped" : _readyDocument is null ? "starting" : "ready",
+                        correlation: request.Id, document: _readyDocument, contract: _contract);
                 }
                 else if (request.Command == "restart")
                 {
                     _restartCorrelation = request.Id;
+                    _restartPending = true;
                     if (settings.WatchBackend || settings.DebuggerBackend)
                     {
                         await RebuildApplicationAsync("owner_restart").ConfigureAwait(false);
@@ -513,7 +543,11 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             Emit("application-not-ready", code: "control_disconnected");
             return;
         }
-        if (message.Kind == "app-window")
+        if (message.Kind == "inspection-result")
+        {
+            CompleteInspection(message);
+        }
+        else if (message.Kind == "app-window")
         {
             Emit("window-created", "application", _application!.Process, window: message.Window);
         }
@@ -570,10 +604,12 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 _readyDocument = message.Document;
                 _awaitingInitialReadiness = false;
                 Emit("application-ready", "application", _application!.Process, contract: _contract, document: _readyDocument);
-                if (_restartCorrelation is not null)
+                if (_restartPending)
                 {
-                    Emit("command-completed", code: "restarted", correlation: _restartCorrelation);
+                    Emit("command-completed", "application", _application.Process, code: "restarted",
+                        correlation: _restartCorrelation, document: _readyDocument, contract: _contract);
                     _restartCorrelation = null;
+                    _restartPending = false;
                 }
             }
 
@@ -608,6 +644,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
 
         // No grace timeout authorizes dropping application work or starting a replacement.
         await DrainApplicationExitAsync().ConfigureAwait(false);
+        EndRetiredInspection();
 
         Emit("application-stopped", "application", _application.Process);
         if (_applicationPeer is not null)
@@ -838,6 +875,9 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         long? window = null, int? port = null, string? contract = null, string? document = null, string? correlation = null,
         long? updateRevision = null)
     {
+        detail = detail?.Replace(_token, "[redacted]", StringComparison.Ordinal)
+            .Replace(_credential, "[redacted]", StringComparison.Ordinal)
+            .Replace(_httpScope, "[session-path]", StringComparison.Ordinal);
         lock (_eventGate)
         {
             try

@@ -121,7 +121,12 @@ public sealed partial class DevelopmentSession
                 Emit("backend-stopped", code: "build_failed",
                     detail: "Edit not applied. Correct the source to rebuild automatically; inspect build logs.",
                     correlation: _restartCorrelation);
-                _restartCorrelation = null;
+                if (_restartPending)
+                {
+                    Emit("command-completed", code: "build_failed", correlation: _restartCorrelation);
+                    _restartCorrelation = null;
+                    _restartPending = false;
+                }
                 return false;
             }
             Emit("build-selected", detail: _selectedInputs?.Hash);
@@ -325,8 +330,14 @@ public sealed partial class DevelopmentSession
 
     private void DrainRetirementReceipts()
     {
+        CheckInspectionDeadline();
         while (_messages.Reader.TryRead(out var incoming))
         {
+            if (incoming.Role == "application" && incoming.Generation == _generation
+                && incoming.Message is { Kind: "inspection-result" } result)
+            {
+                CompleteInspection(result, retiring: true);
+            }
             if (incoming.Role == "application" && incoming.Generation == _generation
                 && incoming.Message is { Kind: "app-activity" } message)
             {

@@ -48,7 +48,7 @@ function New-Fixture([string]$Name, [string]$FrontendDirectory = 'frontend') {
   [pscustomobject]@{ Name = $Name; Directory = $directory; Frontend = $frontend; Settings = $settings; Config = (Join-Path $directory 'spar.dev.json') }
 }
 
-function Start-Session($Fixture, [bool]$Build = $false) {
+function Start-Session($Fixture, [bool]$Build = $false, [bool]$Inspect = $false, [bool]$Probe = $true) {
   $Fixture.Settings | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $Fixture.Config
   $start = [Diagnostics.ProcessStartInfo]::new($coordinatorPath)
   $start.WorkingDirectory = $repository
@@ -57,7 +57,9 @@ function Start-Session($Fixture, [bool]$Build = $false) {
   $start.RedirectStandardInput = $true
   $start.RedirectStandardOutput = $true
   $start.RedirectStandardError = $true
-  foreach ($arg in @($Fixture.Config,'--owner-stdin','--probe')) { $start.ArgumentList.Add($arg) }
+  foreach ($arg in @($Fixture.Config,'--owner-stdin')) { $start.ArgumentList.Add($arg) }
+  if ($Probe) { $start.ArgumentList.Add('--probe') }
+  if ($Inspect) { $start.ArgumentList.Add('--inspect') }
   if (!$Build) { $start.ArgumentList.Add('--no-build') }
   $process = [Diagnostics.Process]::Start($start)
   $null = $process.Handle

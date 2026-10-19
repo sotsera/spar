@@ -11,6 +11,10 @@
     <ProjectReference Include="../Sotsera.Spar.Bridge/Sotsera.Spar.Bridge.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <EmbeddedResource Include="Inspection.js" LogicalName="Spar.Inspection.js" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" GeneratePathProperty="true"
                       IncludeAssets="none" PrivateAssets="all" />

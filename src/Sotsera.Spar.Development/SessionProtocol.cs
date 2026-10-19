@@ -8,10 +8,12 @@ namespace Sotsera.Spar.Development;
 internal sealed record SessionMessage(string Kind, string? Token = null, string? Session = null,
     int? ProcessId = null, string? Url = null, string? Contract = null, string? Document = null,
     string? Detail = null, string? Credential = null, string? Profile = null, int Generation = 1, long? Window = null,
-    long? UpdateRevision = null);
+    long? UpdateRevision = null, string? Correlation = null, bool InspectionEnabled = false,
+    DevelopmentCommand? Inspection = null);
 
 public sealed record DevelopmentCommand(string Command, string? Id = null, string? Detail = null, bool Force = false,
-    int Generation = 0);
+    int Generation = 0, string? Session = null, string? Document = null, string? Contract = null,
+    string? Selector = null, string? Text = null, int TimeoutMilliseconds = 5000);
 
 /// <summary>Private owner handoff. Environment contains capabilities and must not be persisted in event logs.</summary>
 public sealed record DevelopmentDebugLaunch(string Kind, string Session, int Generation, string Project,
@@ -34,6 +36,7 @@ public sealed partial class DevelopmentJsonContext : JsonSerializerContext;
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, MaxDepth = 16,
     UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
 [JsonSerializable(typeof(SessionMessage))]
+[JsonSerializable(typeof(string))]
 internal sealed partial class SessionJsonContext : JsonSerializerContext;
 
 internal sealed class SessionConnection(PipeStream pipe) : IAsyncDisposable

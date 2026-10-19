@@ -37,6 +37,7 @@ public sealed unsafe partial class SparWindow
 
     private void ConfigureDocumentTransport()
     {
+        ConfigureInspection();
         if (Encoding.UTF8.GetByteCount(_options.Html) > 1024 * 1024)
         {
             throw new ArgumentException("Local HTML exceeds the 1 MiB document limit.");
@@ -111,6 +112,8 @@ public sealed unsafe partial class SparWindow
             },
             token => Check(_webView.RemovePermissionRequested(token), "Unsubscribe browser permissions"));
     }
+
+    partial void ConfigureInspection();
 
     private void Subscribe(object handler, Guid id, Func<nint, long> add, Action<long> remove)
     {

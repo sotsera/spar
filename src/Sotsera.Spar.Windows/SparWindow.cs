@@ -27,7 +27,7 @@ public sealed unsafe partial class SparWindow
     private IWebView? _webView;
     private Exception? _failure;
     private nint _handle;
-    private int _pendingCreations;
+    private int _pendingNativeCallbacks;
     private long _navigationToken;
     private bool _subscribed;
     private bool _closeRequested;
@@ -197,7 +197,7 @@ public sealed unsafe partial class SparWindow
     private void StartEnvironment(string profile)
     {
         var callback = new EnvironmentCompleted((error, pointer) => Guard(() => EnvironmentCreated(error, pointer, profile)));
-        _pendingCreations++;
+        _pendingNativeCallbacks++;
         try
         {
             ComReferences.WithCallback(callback, typeof(IEnvironmentCompleted).GUID, pointer =>
@@ -208,14 +208,14 @@ public sealed unsafe partial class SparWindow
         }
         catch
         {
-            _pendingCreations--;
+            _pendingNativeCallbacks--;
             throw;
         }
     }
 
     private void EnvironmentCreated(int error, nint pointer, string leasedProfile)
     {
-        _pendingCreations--;
+        _pendingNativeCallbacks--;
         Check(error, "Create WebView2 environment. Check the runtime installation and browser profile access.");
         _environment = ComReferences.Borrow<IWebViewEnvironment>(pointer);
         if (_closeRequested)
@@ -237,7 +237,7 @@ public sealed unsafe partial class SparWindow
         }
 
         var callback = new ControllerCompleted((status, controller) => Guard(() => ControllerCreated(status, controller)));
-        _pendingCreations++;
+        _pendingNativeCallbacks++;
         try
         {
             ComReferences.WithCallback(callback, typeof(IControllerCompleted).GUID, handler =>
@@ -247,14 +247,14 @@ public sealed unsafe partial class SparWindow
         }
         catch
         {
-            _pendingCreations--;
+            _pendingNativeCallbacks--;
             throw;
         }
     }
 
     private void ControllerCreated(int error, nint pointer)
     {
-        _pendingCreations--;
+        _pendingNativeCallbacks--;
         Check(error, "Create WebView2 controller");
         _controller = ComReferences.Borrow<IWebViewController>(pointer);
         if (_closeRequested)
@@ -364,7 +364,7 @@ public sealed unsafe partial class SparWindow
 
     private void ScheduleFinish()
     {
-        if (_closeRequested && _pendingCreations == 0 && _pendingBridgeWork == 0 && !_closed)
+        if (_closeRequested && _pendingNativeCallbacks == 0 && _pendingBridgeWork == 0 && !_closed)
         {
             // Release controllers and subscriptions outside the WebView2 callback stack.
             if (!NativeMethods.PostMessage(_handle, FinishMessage, 0, 0))
@@ -376,7 +376,7 @@ public sealed unsafe partial class SparWindow
 
     private void Finish()
     {
-        if (_closed || _pendingCreations != 0 || _pendingBridgeWork != 0)
+        if (_closed || _pendingNativeCallbacks != 0 || _pendingBridgeWork != 0)
         {
             return;
         }

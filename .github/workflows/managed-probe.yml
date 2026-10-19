@@ -56,6 +56,10 @@ jobs:
         shell: pwsh
         run: ./eng/Test-ProjectLaunch.ps1
 
+      - name: Test actual WebView inspection and bounded actions
+        shell: pwsh
+        run: ./eng/Test-DevelopmentInspection.ps1 -EvidenceDirectory artifacts/inspection/ci
+
       - name: Test native CoreCLR bridge
         shell: pwsh
         run: >-
@@ -72,6 +76,10 @@ jobs:
 
       - name: Publish strict NativeAOT sample
         run: dotnet publish samples/Spar.NativeSample -c Release -o artifacts/native/publish --disable-build-servers
+
+      - name: Verify inspection is absent from Release host
+        shell: pwsh
+        run: ./eng/Test-InspectionBoundary.ps1
 
       - name: Test copied NativeAOT lifecycle
         shell: pwsh
@@ -114,4 +122,11 @@ jobs:
             artifacts/project-launch/**/receipt.json
             artifacts/project-launch/**/project-*.jsonl
             artifacts/project-launch/**/*.log
+            artifacts/inspection/ci/receipt.json
+            artifacts/inspection/ci/**/coordinator.jsonl
+            artifacts/inspection/ci/**/commands.jsonl
+            artifacts/inspection/ci/**/*-snapshot.json
+            artifacts/inspection/ci/**/frontend-logs.json
+            artifacts/inspection/ci/**/*.png
+            artifacts/inspection/ci/**/*.log
           if-no-files-found: warn

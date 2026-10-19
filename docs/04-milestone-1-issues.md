@@ -25,7 +25,7 @@ Planning sources: `docs/02-product-direction.md` and `docs/03-milestone-1.md`.
 - [ ] [M1-03](https://github.com/sotsera/spar/issues/4) — Generate an AOT-compatible C# and TypeScript bridge
 - [ ] [M1-04](https://github.com/sotsera/spar/issues/5) — Coordinate frontend startup, readiness, HMR, and session cleanup
 - [ ] [M1-05](https://github.com/sotsera/spar/issues/6) — Integrate backend Hot Reload and coordinated application restart
-- [ ] [M1-06](https://github.com/sotsera/spar/issues/7) — Expose structured development controls and WebView automation
+- [x] [M1-06](https://github.com/sotsera/spar/issues/7) — Expose structured development controls and WebView automation
 - [ ] [M1-07](https://github.com/sotsera/spar/issues/8) — Deliver and test the VS Code development workflow
 - [ ] [M1-08](https://github.com/sotsera/spar/issues/9) — Validate the Visual Studio development workflow
 - [ ] [M1-09](https://github.com/sotsera/spar/issues/10) — Publish and execute a NativeAOT application with production assets
@@ -47,7 +47,7 @@ Record evidence links beside each scenario before checking it off. The implement
 - [ ] A09: Retirement accounts for unfinished operations, prevents stale delivery, and never replays mutations. Owners: [M1-03](https://github.com/sotsera/spar/issues/4), [M1-05](https://github.com/sotsera/spar/issues/6).
 - [ ] A10: Wrong origins, permissions, and contracts are rejected before handler entry. Owner: [M1-03](https://github.com/sotsera/spar/issues/4).
 - [ ] A11: VS Code F5, breakpoint, Hot Reload, restart/relaunch, and Stop work in the real C# debugger lane. Owner: [M1-07](https://github.com/sotsera/spar/issues/8).
-- [ ] A12: Structured AI commands and real UI inspection/actions verify an edit with unambiguous session/version identity. Owner: [M1-06](https://github.com/sotsera/spar/issues/7).
+- [x] A12: Structured AI commands and real UI inspection/actions verify an edit with unambiguous session/version identity. Owner: [M1-06](https://github.com/sotsera/spar/issues/7).
 - [ ] A13: Visual Studio F5, breakpoint, frontend/backend updates, restart, and Stop are executed and recorded. Owner: [M1-08](https://github.com/sotsera/spar/issues/9).
 - [ ] A14: A copied NativeAOT app visibly renders and calls C# without Node or a development server; execution mode is recorded. Owner: [M1-09](https://github.com/sotsera/spar/issues/10).
 - [ ] A15: An incompatible dependency fails strict AOT with attributable diagnostics and functions in explicit CoreCLR compatibility mode. Owner: [M1-10](https://github.com/sotsera/spar/issues/11).
@@ -181,16 +181,18 @@ An agent can start a session, wait for actual readiness, inspect failures, opera
 
 ### Acceptance criteria
 
-- [ ] Structured start/status/inspect/restart/stop operations include session, generation, process, document/contract, and correlation identity where applicable.
-- [ ] Command acceptance and operation completion are distinct; timeouts identify unfinished work.
-- [ ] Frontend console/errors and backend/build diagnostics can be collected alongside a DOM or accessibility snapshot and screenshot.
-- [ ] Bounded click/type actions operate against the actual development WebView and cannot silently target a retired document.
-- [ ] An agent-driven scenario verifies an edit through rendered UI inspection/actions and retains failure artifacts.
-- [ ] Inspection/control is development-only and does not broaden renderer permissions or expose arbitrary shell/filesystem execution.
+- [x] Structured start/status/inspect/restart/stop operations include session, generation, process, document/contract, and correlation identity where applicable.
+- [x] Command acceptance and operation completion are distinct; timeouts identify unfinished work.
+- [x] Frontend console/errors and backend/build diagnostics can be collected alongside a DOM or accessibility snapshot and screenshot.
+- [x] Bounded click/type actions operate against the actual development WebView and cannot silently target a retired document.
+- [x] An agent-driven scenario verifies an edit through rendered UI inspection/actions and retains failure artifacts.
+- [x] Inspection/control is development-only and does not broaden renderer permissions or expose arbitrary shell/filesystem execution.
 
 ### Evidence
 
 Retain structured transcripts, screenshots/snapshots, actual UI actions, correlation identities, timeout/failure outcomes, and the agent-driven verification scenario. Browser mocks alone do not establish completion. Production exclusion is verified in [M1-09](https://github.com/sotsera/spar/issues/10).
+
+Observed implementation: [structured inspection guide](15-development-inspection.md) and [native acceptance evidence](evidence/development-inspection-2026-10-19/README.md). Generic operations run without the sample probe. Debug opt-in and Release metadata exclusion are verified; full production-SPA delivery remains #10. Optional memory observation and an MCP adapter remain follow-ups.
 
 ## [M1-07](https://github.com/sotsera/spar/issues/8) — Deliver and test the VS Code development workflow
 

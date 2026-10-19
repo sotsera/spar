@@ -6,7 +6,7 @@ using Sotsera.Spar.Development;
 
 if (args.Length == 0)
 {
-    Console.Error.WriteLine("Usage: Spar.Dev <spar.dev.json> [--no-build] [--owner-stdin] [--debugger] [--probe] [--events-file <path>]");
+    Console.Error.WriteLine("Usage: Spar.Dev <spar.dev.json> [--no-build] [--owner-stdin] [--debugger] [--inspect] [--probe] [--events-file <path>]");
     return 1;
 }
 
@@ -66,7 +66,7 @@ await using var session = new DevelopmentSession(settings,
         // Private owner transport only. Never copy capabilities into the public event file.
         Console.WriteLine(JsonSerializer.Serialize(launch, DevelopmentJsonContext.Default.DevelopmentDebugLaunch));
         return Task.CompletedTask;
-    }, projectOwner);
+    }, projectOwner, args.Contains("--inspect", StringComparer.Ordinal));
 var interruptCount = 0;
 Console.CancelKeyPress += (_, eventArgs) =>
 {
@@ -105,7 +105,7 @@ _ = Task.Run(async () =>
             else if (!commands.Writer.TryWrite(command))
             {
                 // Keep reading so an explicit force/stop can still interrupt a pending graceful restart.
-                Console.Error.WriteLine("Command queue is full; this request was not accepted.");
+                session.RejectCommand(command, "command_queue_full");
             }
         }
 

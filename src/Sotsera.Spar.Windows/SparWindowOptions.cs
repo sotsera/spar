@@ -5,6 +5,11 @@ namespace Sotsera.Spar.Windows;
 /// <summary>Initial, trusted local document and persistent browser profile for one Windows/x64 window.</summary>
 public sealed class SparWindowOptions
 {
+#if DEBUG
+    /// <summary>Explicit opt-in to bounded inspection. This property and its implementation do not exist in Release.</summary>
+    public bool EnableDevelopmentInspection { get; init; }
+#endif
+
     /// <summary>Optional owner-authorized loopback content. Local HTML is used when absent.</summary>
     public SparLoopbackContent? LoopbackContent { get; init; }
 
