@@ -1,4 +1,4 @@
-import { backend, connect, type GreetingReply } from '../../samples/Spar.NativeSample/obj/Debug/net10.0-windows/win-x64/spar/client.js';
+import { backend, connect, type GreetingReply } from '../../samples/Spar.NativeSample.Contracts/obj/Debug/net10.0/spar/client.js';
 
 const identity = await connect();
 const version: 1 = identity.version;
