@@ -124,8 +124,11 @@ exports.run = async () => {
     await edit(vscode.Uri.file(path.join(root, "contracts/BackendContract.cs")), "record CounterReply(int Value)", "record CounterReply(int Value, int Revision)");
     await waitFor(() => events.some((item) => item.kind === "backend-stopped" && item.code === "build_failed"), "contract rebuild failure stays stopped");
     const buildDiagnostic = await waitFor(() => vscode.languages.getDiagnostics(source).find((item) => item.source === "Spar build"), "build diagnostic with source location");
-    await vscode.window.showTextDocument(source, { selection: buildDiagnostic.range });
-    assert.equal(vscode.window.activeTextEditor.document.uri.toString(), source.toString());
+    const diagnosticEditor = await vscode.window.showTextDocument(source, { selection: buildDiagnostic.range });
+    assert.equal(diagnosticEditor.document.uri.toString(), source.toString());
+    assert(diagnosticEditor.selection.isEqual(buildDiagnostic.range), "Diagnostic navigation must select its source range");
+    assert(vscode.window.visibleTextEditors.some((editor) => editor.document.uri.toString() === source.toString()),
+      "Diagnostic source must be visible even when Dev Kit focuses its output pane");
     receipt.buildDiagnostic = { code: buildDiagnostic.code, line: buildDiagnostic.range.start.line + 1 };
     assert(!events.some((item) => item.kind === "contract-update-observed"), "Contracts must never enter debugger delta application");
     await edit(source, "new CounterReply(Interlocked.Add(ref _counter, request.Delta))", "new CounterReply(Interlocked.Add(ref _counter, request.Delta), 7)");

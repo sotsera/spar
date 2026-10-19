@@ -10,14 +10,22 @@ export default function App() {
   const [status, setStatus] = useState('Waiting for C#');
   const [backendRevision, setBackendRevision] = useState(0);
   const [developmentStatus, setDevelopmentStatus] = useState('');
+  const [readRevision, setReadRevision] = useState(0);
+  const [reading, setReading] = useState(false);
 
   useEffect(() => {
     let current = true;
+    setReading(true);
     backend.greet({ name: 'Spar' }).then(reply => {
       if (current) { setGreeting(reply.greeting); setCounter(reply.counter); setStatus('Connected'); }
-    }).catch(error => { if (current) setStatus(String(error)); });
+    }).catch(error => {
+      if (!current) return;
+      setStatus(error.code === 'transport_timeout' || error.code === 'timeout'
+        ? 'Request timed out. If paused in the debugger, continue, then refresh backend data.'
+        : String(error));
+    }).finally(() => { if (current) setReading(false); });
     return () => { current = false; };
-  }, []);
+  }, [readRevision]);
 
   useEffect(() => {
     let current = true;
@@ -29,6 +37,7 @@ export default function App() {
       if (!current) return;
       setGreeting(reply.greeting);
       setCounter(reply.counter);
+      setStatus('Connected');
       setBackendRevision(event.revision);
       setDevelopmentStatus(`Backend updated (revision ${event.revision})`);
     };
@@ -113,6 +122,9 @@ export default function App() {
     <label>Local state <input value={text} onChange={event => setText(event.target.value)} placeholder="Type, then edit the component" /></label>
     <p id="greeting">{greeting}</p>
     <p id="status" role="status">{status}</p>
+    <button id="refresh-backend" disabled={reading} onClick={() => setReadRevision(value => value + 1)}>
+      {reading ? 'Reading backend data…' : 'Refresh backend data'}
+    </button>
     {developmentStatus && <p id="development-status" role="status">{developmentStatus}</p>}
   </main>;
 }

@@ -26,6 +26,8 @@ Start with [product direction](docs/02-product-direction.md), then the relevant 
 - Record observed outcomes and unavailable checks. Keep milestone status and the README accurate; never mark skipped or unexecuted acceptance scenarios complete.
 - For upstream code adaptations, record source revision, paths, changes, and applicable license notices. Design inspiration alone does not require importing upstream code or dependencies.
 
+The [Visual Studio project-launch guide](docs/14-visual-studio-development.md) distinguishes automated bootstrap ownership from actual IDE acceptance. Run `eng/Test-ProjectLaunch.ps1` for lifecycle changes; only an executed Visual Studio walkthrough establishes A13. Project launch ends the session for restart-required edits and relies on an IDE rebuild before fresh F5.
+
 ## C# readability and lifetime rules
 
 - Prefer clear statements, named intermediate values, and small methods over compressed expressions. Use LINQ when it describes one coherent transformation clearly.

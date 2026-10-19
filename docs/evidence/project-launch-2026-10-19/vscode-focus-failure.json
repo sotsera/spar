@@ -1,0 +1,40 @@
+{
+  "outcome": "failed",
+  "vscode": "1.142.0",
+  "csharp": "2.160.4",
+  "devkit": "3.40.210",
+  "initial": {
+    "mount": "ce115779-eeb1-45f8-9259-5e93beb601e2",
+    "document": "ed07a7888c3c40dcb0c0f9d4ee33dd1e",
+    "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+    "local": 7,
+    "text": "Retain this text through HMR",
+    "counter": 2,
+    "backendRevision": 0,
+    "developmentStatus": "",
+    "greeting": "Hello, Spar",
+    "heading": "A live development loop.",
+    "accent": "#70e3bd",
+    "color": "rgb(112, 227, 189)"
+  },
+  "patched": {
+    "mount": "ce115779-eeb1-45f8-9259-5e93beb601e2",
+    "document": "ed07a7888c3c40dcb0c0f9d4ee33dd1e",
+    "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+    "local": 7,
+    "text": "Retain this text through HMR",
+    "counter": 2,
+    "backendRevision": 1,
+    "developmentStatus": "Backend updated (revision 1)",
+    "greeting": "Hello debugger, Spar",
+    "heading": "A live development loop.",
+    "accent": "#e9b44c",
+    "color": "rgb(233, 180, 76)"
+  },
+  "rendering": "pixels-verified-review-capture",
+  "unsupportedEdit": "2026-10-19 17:20:05.023 [error]  ❌ [Spar.NativeSample]: E:\\Ghidello\\Git\\spar.v2\\artifacts\\vscode-development\\debugger-facb22d1eff14e218e133ce6573c2ea5\\backend\\SampleBackend.cs(4,121): error ENC0014: Updating the base class and/or base interface(s) of class requires restarting the application.",
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'output:ms-dotnettools.csdevkit..NET%20Hot%20Reload.log'\n- 'file:///e%3A/Ghidello/Git/spar.v2/artifacts/vscode-development/debugger-facb22d1eff14e218e133ce6573c2ea5/backend/SampleBackend.cs'\n\n\tat exports.run (e:\\Ghidello\\Git\\spar.v2\\eng\\vscode-development\\test.cjs:128:12)",
+  "events": 116,
+  "independentlyRetainedProcesses": 23,
+  "observedProcessesExited": true
+}

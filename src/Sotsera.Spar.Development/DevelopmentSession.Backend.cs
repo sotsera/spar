@@ -234,6 +234,12 @@ public sealed partial class DevelopmentSession
 
     private async Task RebuildApplicationAsync(string reason)
     {
+        if (projectApplication is not null)
+        {
+            Emit("restart-required", code: reason, detail: "This project launch ends here. Rebuild and launch again in the IDE.");
+            RequestStop(reason: "project_restart_required");
+            throw new SessionStoppedException();
+        }
         Emit("backend-restarting", code: reason, correlation: _restartCorrelation);
         await StopApplicationAsync().ConfigureAwait(false);
         if (_stop.Task.IsCompleted)

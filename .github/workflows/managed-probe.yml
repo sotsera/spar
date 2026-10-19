@@ -52,6 +52,10 @@ jobs:
         shell: pwsh
         run: ./eng/Test-BackendUpdates.ps1 -EvidenceDirectory artifacts/backend-loop/ci
 
+      - name: Test IDE project launch ownership (not debugger acceptance)
+        shell: pwsh
+        run: ./eng/Test-ProjectLaunch.ps1
+
       - name: Test native CoreCLR bridge
         shell: pwsh
         run: >-
@@ -107,4 +111,7 @@ jobs:
             artifacts/backend-loop/ci/**/sources.initial.sha256
             artifacts/backend-loop/ci/**/coordinator.jsonl
             artifacts/backend-loop/ci/**/*.log
+            artifacts/project-launch/**/receipt.json
+            artifacts/project-launch/**/project-*.jsonl
+            artifacts/project-launch/**/*.log
           if-no-files-found: warn

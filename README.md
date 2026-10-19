@@ -8,7 +8,7 @@ Production targets NativeAOT by default, with CoreCLR compatibility for applicat
 
 ## Current status
 
-The native sample runs React/Vite with generated, permission-checked C# calls in an owned development session. The terminal/AI watch lane and the local VS Code adapter apply supported backend edits in place and refresh read data while preserving state. Coordinated restart retains Vite, waits for actual retirement, and builds current sources; corrections recover stopped sessions automatically. The installed VS Code debugger lane now has native breakpoint, Hot Reload, diagnostic, relaunch, rendering, and Stop evidence. Visual Studio integration and the remaining milestone scenarios stay open. See the [backend update guide](docs/12-backend-updates.md), [VS Code debugger guide](docs/13-vscode-development.md), and [milestone status](docs/03-milestone-1.md).
+The native sample runs React/Vite with generated, permission-checked C# calls in an owned development session. The terminal/AI watch lane and the local VS Code adapter apply supported backend edits in place and refresh read data while preserving state. Coordinated restart retains Vite, waits for actual retirement, and builds current sources; corrections recover stopped sessions automatically. The installed VS Code debugger lane now has native breakpoint, Hot Reload, diagnostic, relaunch, rendering, and Stop evidence. The Visual Studio project-launch lane now has a recorded native manual pass; the remaining milestone scenarios stay open. See the [backend update guide](docs/12-backend-updates.md), [VS Code debugger guide](docs/13-vscode-development.md), and [milestone status](docs/03-milestone-1.md).
 
 ## Run the first slice
 
@@ -25,6 +25,8 @@ Pop-Location
 Edit `App.tsx`/`styles.css` in the frontend or the greeting in `SampleBackend.cs`. Type `stop` or press Ctrl+C to end the session. VS Code provides **Tasks: Run Task → Spar: development session**. See the [backend update guide](docs/12-backend-updates.md) for controls, failed-build recovery, and current limits.
 
 For native F5 debugging, load the local adapter using the [VS Code guide](docs/13-vscode-development.md), then select **Spar: native development (local adapter)**. Use **Spar: Restart backend** for coordinated restart; C# Dev Kit is the only Hot Reload owner in this lane.
+
+The [Visual Studio guide](docs/14-visual-studio-development.md) provides an ordinary **Spar development** project launch profile and an isolated manual walkthrough. The native acceptance pass covers F5/breakpoints, frontend HMR, backend Hot Reload, compiler recovery, whole-session relaunch, and debugger Stop with process cleanup. Visual Studio owns backend updates; restart-required edits use close, rebuild, and F5.
 
 For the precursor probes and full managed tests:
 

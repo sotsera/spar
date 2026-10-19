@@ -15,8 +15,9 @@ using Sotsera.Spar.Windows;
 namespace Sotsera.Spar.Development;
 
 /// <summary>Owns one SPA server and one application, with either an SDK watcher or editor debugger update owner.</summary>
+/// <param name="projectApplication">Optional already-launched project process. The caller retains its handle until RunAsync ends.</param>
 public sealed partial class DevelopmentSession(DevelopmentSettings settings, Action<DevelopmentEvent> observer, bool enableProbe = false,
-    Func<DevelopmentDebugLaunch, Task>? launchDebugger = null) : IAsyncDisposable
+    Func<DevelopmentDebugLaunch, Task>? launchDebugger = null, Process? projectApplication = null) : IAsyncDisposable
 {
     private readonly object _eventGate = new();
     private readonly string _session = Guid.NewGuid().ToString("N");
@@ -134,10 +135,20 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             if (settings.WatchBackend || settings.DebuggerBackend)
             {
                 _backendInputs = new BackendInputs(settings);
-                if (skipBuild)
+                if (skipBuild && projectApplication is null)
                 {
                     throw new SessionFailure("watch_build_required", "Watch mode requires a selected full build; omit --no-build.");
                 }
+            }
+            if (projectApplication is not null)
+            {
+                if (!settings.DebuggerBackend || !skipBuild)
+                {
+                    throw new SessionFailure("invalid_project_launch", "Project launch requires debugger ownership and an IDE-built application.");
+                }
+                _selectedInputs = await SelectInputsAsync().ConfigureAwait(false);
+                _observedInputs = _selectedInputs;
+                Emit("project-inputs-observed", detail: _selectedInputs.Hash);
             }
             if (!skipBuild && !await BuildSelectedApplicationAsync().ConfigureAwait(false))
             {
@@ -367,7 +378,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 _readyDeadline = DateTimeOffset.UtcNow.AddSeconds(settings.StartupTimeoutSeconds);
             }
-            if (_application is not null && _readyDocument is null && DateTimeOffset.UtcNow > _readyDeadline)
+            // Project launch has no public IDE pause event. A startup breakpoint can wait until Continue or owner loss.
+            if (projectApplication is null && _application is not null && _readyDocument is null && DateTimeOffset.UtcNow > _readyDeadline)
             {
                 if (_applicationControlLost)
                 {

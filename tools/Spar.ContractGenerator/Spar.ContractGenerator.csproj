@@ -1,4 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -10,9 +12,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.CodeAnalysis" HintPath="$(MSBuildToolsPath)/Roslyn/bincore/Microsoft.CodeAnalysis.dll" />
-    <Reference Include="Microsoft.CodeAnalysis.CSharp" HintPath="$(MSBuildToolsPath)/Roslyn/bincore/Microsoft.CodeAnalysis.CSharp.dll" />
     <EmbeddedResource Include="ClientRuntime.js" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!-- Resolve the selected SDK after its imports. Visual Studio's MSBuildToolsPath is not the .NET SDK. -->
+  <PropertyGroup>
+    <SparCompilerDirectory>$(NetCoreRoot)sdk/$(NETCoreSdkVersion)/Roslyn/bincore</SparCompilerDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeAnalysis" HintPath="$(SparCompilerDirectory)/Microsoft.CodeAnalysis.dll" />
+    <Reference Include="Microsoft.CodeAnalysis.CSharp" HintPath="$(SparCompilerDirectory)/Microsoft.CodeAnalysis.CSharp.dll" />
   </ItemGroup>
 
 </Project>

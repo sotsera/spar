@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Globalization;
 using System.Text.Json;
 using System.Threading.Channels;
 using Sotsera.Spar.Development;
@@ -9,13 +11,34 @@ if (args.Length == 0)
 }
 
 var settings = DevelopmentSettings.Load(args[0]);
-if (args.Contains("--debugger", StringComparer.Ordinal))
+var projectOwnerIndex = Array.IndexOf(args, "--project-owner");
+if (projectOwnerIndex >= 0 && projectOwnerIndex + 2 >= args.Length)
+{
+    Console.Error.WriteLine("--project-owner requires an application PID and UTC creation ticks.");
+    return 1;
+}
+using var projectOwner = projectOwnerIndex < 0 ? null : Process.GetProcessById(
+    int.Parse(args[projectOwnerIndex + 1], CultureInfo.InvariantCulture));
+if (projectOwner is not null)
+{
+    _ = projectOwner.Handle;
+    if (projectOwner.StartTime.ToUniversalTime().Ticks != long.Parse(args[projectOwnerIndex + 2], CultureInfo.InvariantCulture)
+        || !string.Equals(projectOwner.MainModule?.FileName, settings.Application, StringComparison.OrdinalIgnoreCase))
+    {
+        throw new InvalidDataException("Project owner does not match the configured application instance.");
+    }
+}
+if (args.Contains("--debugger", StringComparer.Ordinal) || projectOwner is not null)
 {
     if (settings.ContractFile is null)
     {
         throw new InvalidDataException("Debugger mode requires the separately compiled contract source path.");
     }
-    settings = settings with { WatchBackend = false, DebuggerBackend = true };
+    settings = settings with
+    {
+        WatchBackend = false,
+        DebuggerBackend = true
+    };
 }
 var eventsIndex = Array.IndexOf(args, "--events-file");
 if (eventsIndex >= 0 && eventsIndex + 1 >= args.Length)
@@ -43,14 +66,15 @@ await using var session = new DevelopmentSession(settings,
         // Private owner transport only. Never copy capabilities into the public event file.
         Console.WriteLine(JsonSerializer.Serialize(launch, DevelopmentJsonContext.Default.DevelopmentDebugLaunch));
         return Task.CompletedTask;
-    });
+    }, projectOwner);
 var interruptCount = 0;
 Console.CancelKeyPress += (_, eventArgs) =>
 {
     eventArgs.Cancel = true;
     session.RequestStop(Interlocked.Increment(ref interruptCount) > 1, "console_cancel");
 };
-var ownerStdin = args.Contains("--owner-stdin", StringComparer.Ordinal);
+var ownerStdin = projectOwner is not null || args.Contains("--owner-stdin", StringComparer.Ordinal);
+var projectCompleted = false;
 _ = Task.Run(async () =>
 {
     try
@@ -65,7 +89,12 @@ _ = Task.Run(async () =>
             {
                 continue;
             }
-            if (command.Command == "stop")
+            if (command.Command == "project-completed" && projectOwner is not null)
+            {
+                projectCompleted = true;
+                session.RequestStop(reason: "application_closed");
+            }
+            else if (command.Command == "stop")
             {
                 session.RequestStop(command.Force, correlation: command.Id);
             }
@@ -80,7 +109,7 @@ _ = Task.Run(async () =>
             }
         }
 
-        if (ownerStdin)
+        if (ownerStdin && !projectCompleted)
         {
             session.RequestStop(true, "owner_disconnected");
         }
@@ -91,4 +120,4 @@ _ = Task.Run(async () =>
     }
     finally { commands.Writer.TryComplete(); }
 });
-return await session.RunAsync(commands.Reader, args.Contains("--no-build", StringComparer.Ordinal));
+return await session.RunAsync(commands.Reader, projectOwner is not null || args.Contains("--no-build", StringComparer.Ordinal));

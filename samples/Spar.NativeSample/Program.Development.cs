@@ -10,6 +10,11 @@ internal static partial class Program
     {
         try
         {
+            var project = Environment.GetEnvironmentVariable("SPAR_DEV_PROJECT");
+            var hasSessionOwner = Environment.GetEnvironmentVariable("SPAR_DEV_APP_PIPE") is not null;
+            using var projectLaunch = project is null || hasSessionOwner ? null : DevelopmentProjectLaunch.Start(project,
+                Environment.GetEnvironmentVariable("SPAR_DEV_COORDINATOR")
+                    ?? throw new InvalidOperationException("Project launch requires the development coordinator path."));
             // Fingerprint is generated from this application's actual compiled contract.
             var fingerprint = new SampleBackendBridge(null!).Fingerprint;
             using var session = DevelopmentApplication.Connect(fingerprint, typeof(ISampleBackend));

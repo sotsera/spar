@@ -85,8 +85,11 @@ public sealed partial class DevelopmentSession
 
     private void AdoptDebuggerProcess(Process process)
     {
+        var expectedInstance = projectApplication is null
+            ? process.StartTime.ToUniversalTime() >= _debuggerRequestedAt
+            : process.Id == projectApplication.Id && process.StartTime == projectApplication.StartTime;
         if (!string.Equals(process.MainModule?.FileName, settings.Application, StringComparison.OrdinalIgnoreCase)
-            || process.StartTime.ToUniversalTime() < _debuggerRequestedAt)
+            || !expectedInstance)
         {
             throw new SessionFailure("debugger_process_mismatch", "The debugger launched a different executable or process instance.");
         }

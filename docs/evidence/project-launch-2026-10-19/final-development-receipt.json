@@ -1,0 +1,122 @@
+[
+  {
+    "scenario": "hmr-restart-close",
+    "passed": true,
+    "coordinatorProcessId": 25868,
+    "startedAtUtc": "2026-10-19T16:41:10.3508177Z",
+    "actualExitCode": 0,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 22,
+    "unrelatedSurvived": true,
+    "rendering": "verified-pixels-review-captures"
+  },
+  {
+    "scenario": "owner-pipe-eof",
+    "passed": true,
+    "coordinatorProcessId": 71068,
+    "startedAtUtc": "2026-10-19T16:41:16.7122696Z",
+    "actualExitCode": 0,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": true,
+    "independentlyRetainedProcesses": 13,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "malformed-owner-input",
+    "passed": true,
+    "coordinatorProcessId": 69920,
+    "startedAtUtc": "2026-10-19T16:41:18.4281618Z",
+    "actualExitCode": 0,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": true,
+    "independentlyRetainedProcesses": 13,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "abrupt-owner-kill",
+    "passed": true,
+    "coordinatorProcessId": 73196,
+    "startedAtUtc": "2026-10-19T16:41:20.1263408Z",
+    "actualExitCode": -1,
+    "abruptOwnerKill": true,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 13,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "frontend-exit",
+    "passed": true,
+    "coordinatorProcessId": 61836,
+    "startedAtUtc": "2026-10-19T16:41:21.3309159Z",
+    "actualExitCode": 1,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 13,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "application-exit",
+    "passed": true,
+    "coordinatorProcessId": 48800,
+    "startedAtUtc": "2026-10-19T16:41:23.1277631Z",
+    "actualExitCode": 1,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 13,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "port-conflict",
+    "passed": true,
+    "coordinatorProcessId": 64024,
+    "startedAtUtc": "2026-10-19T16:41:24.9812025Z",
+    "actualExitCode": 1,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 0,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "startup-timeout",
+    "passed": true,
+    "coordinatorProcessId": 42504,
+    "startedAtUtc": "2026-10-19T16:41:25.2457714Z",
+    "actualExitCode": 1,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": true,
+    "independentlyRetainedProcesses": 2,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "application-start-failure",
+    "passed": true,
+    "coordinatorProcessId": 56348,
+    "startedAtUtc": "2026-10-19T16:41:30.5501611Z",
+    "actualExitCode": 1,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 5,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  },
+  {
+    "scenario": "client-credential-denied",
+    "passed": true,
+    "coordinatorProcessId": 59000,
+    "startedAtUtc": "2026-10-19T16:41:32.56801Z",
+    "actualExitCode": 1,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 13,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  }
+]
