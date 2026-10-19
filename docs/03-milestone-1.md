@@ -149,6 +149,8 @@ Upstream `sotsera/spar` has an active `protect-main` ruleset requiring PRs and t
 
 The first workflow defines **Windows managed probe** for PRs and development-branch pushes. Initial PR #14 had no upstream check suite before the workflow landed; fork CI supplied the bootstrap evidence. After merging, upstream `main` CI passed. Validation PR #15 then produced a real upstream build failure; once the rule was enabled, the non-draft PR reported the failed check as required and merging as blocked. The source was restored and upstream recovery run `39147429145` passed build, three real watcher tests (none skipped), and evidence upload. Each later PR head must pass its own required check.
 
+Current trigger policy (2026-10-19): run the same required job for pull requests and pushes to `main`. Feature-branch push runs are disabled to avoid duplicating the upstream PR run in the development fork; pre-PR pushes therefore do not start CI. The check name and branch-protection requirement remain unchanged. The `main` run validates the actual integrated commit after squash merge.
+
 [Fork run 39143727813](https://github.com/ghidello/spar/actions/runs/39143727813) passed the build, three real watcher tests (none skipped), and evidence upload on implementation commit `0be3b41`. Later upstream evidence and ruleset details are in the CI gate proof; a fork run alone does not establish upstream enforcement.
 
 When introducing CI during milestone 1, treat enforcement as part of delivering the workflow:

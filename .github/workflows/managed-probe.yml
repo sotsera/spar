@@ -3,7 +3,7 @@ name: Managed probe
 on:
   pull_request:
   push:
-    branches: [main, 'feat/**', 'fix/**', 'chore/**']
+    branches: [main]
 
 permissions:
   contents: read

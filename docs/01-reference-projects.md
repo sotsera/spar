@@ -29,6 +29,7 @@ Revisions identify the material reviewed, not a claim that every upstream reposi
 | CodeAlta | `78e8bf28a8f7677edf446a2c64da9861a08ac4fe` | BSD-2-Clause: [license.txt](https://github.com/CodeAlta/CodeAlta/blob/78e8bf28a8f7677edf446a2c64da9861a08ac4fe/license.txt) |
 | NeoAstra | `7220b91b7c860c4bbee9488b19146918d9afe5d7` | BSD-2-Clause: [license.txt](https://github.com/NeoAstra/NeoAstra/blob/7220b91b7c860c4bbee9488b19146918d9afe5d7/license.txt) |
 | Microsoft.UI.Reactor | `e16819520b6452d93fdeba9f59e2b81a47febd1c` | MIT: [LICENSE](https://github.com/microsoft/microsoft-ui-reactor/blob/e16819520b6452d93fdeba9f59e2b81a47febd1c/LICENSE) |
+| Aspire (follow-up reviewed 2026-10-19) | `46bb4b7b60a3565b0379b188c38ef93a88bcb01c` | MIT: [LICENSE.TXT](https://github.com/microsoft/aspire/blob/46bb4b7b60a3565b0379b188c38ef93a88bcb01c/LICENSE.TXT). Selected C# process files only; DCP's native implementation is not covered by this source review. |
 | Tauri | `136a28eaa879e8aa706f9b2e05a050c46dcc1f4f` | Workspace declares `Apache-2.0 OR MIT`: [Cargo.toml](https://github.com/tauri-apps/tauri/blob/136a28eaa879e8aa706f9b2e05a050c46dcc1f4f/Cargo.toml). [MIT text](https://github.com/tauri-apps/tauri/blob/136a28eaa879e8aa706f9b2e05a050c46dcc1f4f/LICENSE-MIT), [Apache text](https://github.com/tauri-apps/tauri/blob/136a28eaa879e8aa706f9b2e05a050c46dcc1f4f/LICENSE-APACHE-2.0). The core crate inherits the workspace license. |
 | Previous SPAR | Local checkout reports `6d07b46`; license read directly | MIT, copyright 2026 Sotsera: [local LICENSE](E:/Ghidello/Git/spar/spar/LICENSE). This was not a clean-working-tree or signature verification. |
 
@@ -100,6 +101,28 @@ Local source: `E:\Ghidello\Git\spar\spar`. The parent directory also contains ge
 Preserve the scenarios around native STA ownership, cancellation versus actual completion, document retirement, scoped native file handles, visible rendering before shutdown, and distinct host/browser resource measurements. Consult the [progress ledger](E:/Ghidello/Git/spar/spar/docs/implementation/progress.md) and [package evidence](E:/Ghidello/Git/spar/spar/docs/implementation/evidence/sp-22-packages.md) for historical results and unresolved environments.
 
 Improve the consumer experience in the fresh design: examples should use public APIs; generated dispatch should not require repetitive handwritten adapters; mode/output configuration should live in package defaults; one development coordinator should replace scattered launch machinery. Do not carry forward old SDK pins, task IDs, numerical resource limits, or historical permissions as new decisions.
+
+## Follow-up: Aspire process launch and shutdown
+
+Requested 2026-10-19 for later investigation, especially launching and stopping Vite and its package-manager descendants. Initial source inspection used current `main` at `46bb4b7b60a3565b0379b188c38ef93a88bcb01c` (2026-10-19 19:33 UTC), not older articles. The shutdown service's recent history includes [the October 1 tray/lifecycle change](https://github.com/microsoft/aspire/commit/8eec461e839a1e04b7b790c12e01ead5e4f48cbf). This is a research note, not a dependency decision or executed Aspire integration proof.
+
+Confirmed starting points:
+
+- [JavaScriptHostingExtensions](https://github.com/microsoft/aspire/blob/46bb4b7b60a3565b0379b188c38ef93a88bcb01c/src/Aspire.Hosting.JavaScript/JavaScriptHostingExtensions.cs) contains `AddViteApp`, package-manager selection, and run-script configuration. Trace the resulting executable resource through DCP; the JavaScript builder alone does not explain shutdown.
+- [DcpExecutor.StopResourceAsync](https://github.com/microsoft/aspire/blob/46bb4b7b60a3565b0379b188c38ef93a88bcb01c/src/Aspire.Hosting/Dcp/DcpExecutor.cs#L1167) serializes resource operations, requests `Spec.Stop`, and checks terminal resource state. A stop request and observed completion are separate stages.
+- [ProcessTreeGracefulShutdownService](https://github.com/microsoft/aspire/blob/46bb4b7b60a3565b0379b188c38ef93a88bcb01c/src/Aspire.Cli/Processes/ProcessTreeGracefulShutdownService.cs) distinguishes connection-bound instance stops from broader process-tree cleanup. It guards targets with start-time identity, monitors exit, and applies different escalation policies. On Windows its graceful adapter invokes DCP `stop-process-tree --skip-descendants` to avoid killing the cleanup supervisor prematurely. These are concrete ideas for comparing Spar's ownership and shutdown ordering.
+- [ProcessUtil](https://github.com/microsoft/aspire/blob/46bb4b7b60a3565b0379b188c38ef93a88bcb01c/src/Aspire.Hosting/Dcp/Process/ProcessUtil.cs) starts processes without a shell, supports argument lists/environment control, drains stdout/stderr, and tracks process lifetime separately from disposal. Its disposal includes bounded waits and force-kill fallback; it explicitly accounts for descendants retaining redirected pipes.
+- [DcpHost](https://github.com/microsoft/aspire/blob/46bb4b7b60a3565b0379b188c38ef93a88bcb01c/src/Aspire.Hosting/Dcp/DcpHost.cs#L297) starts DCP with `--monitor` and `--detach`. The [shutdown tests](https://github.com/microsoft/aspire/blob/46bb4b7b60a3565b0379b188c38ef93a88bcb01c/tests/Aspire.Cli.Tests/Processes/ProcessTreeGracefulShutdownServiceTests.cs) cover connection-only stops, non-escalating timeout, launcher cleanup, and timestamp compatibility. These are test ideas, not proof of all descendant cleanup on Spar's machines.
+
+Later investigation checklist:
+
+- [ ] Re-resolve current upstream `main` and review relevant changes since this pinned revision.
+- [ ] Trace Vite/package-manager launch through executable creation and the exact DCP version/native source. Verify Windows console-group signaling and monitor behavior; C# comments about native behavior are not sufficient evidence.
+- [ ] Compare graceful Vite stop, npm/cmd/node helper lifetime, inherited stdout/stderr pipes, descendant exit, owner crash, and unrelated-process survival with Spar's job-object ownership.
+- [ ] Test PID/start-time mismatch and sibling-instance isolation. Preserve real handles and distinguish root exit, output EOF, and actual descendant cleanup.
+- [ ] Evaluate whether a small change to Spar's launch/stop mechanism is justified. Keep automatic force escalation separate from Spar backend restart: a timeout must not authorize replacing an unfinished mutation owner.
+
+The likely value is stronger shutdown ordering and failure scenarios, rather than adopting Aspire's orchestration stack. No upstream source was copied into shipping code and no Aspire runtime or DCP dependency was added. Any later adaptation needs its own pinned provenance, license review, and actual Windows integration evidence.
 
 ## Recommended borrowing order
 
