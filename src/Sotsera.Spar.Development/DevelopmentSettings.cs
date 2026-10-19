@@ -27,6 +27,7 @@ public sealed record DevelopmentSettings
     {
         get; set;
     }
+    public bool DebuggerBackend { get; set; }
     public string? ContractFile
     {
         get; set;
@@ -52,9 +53,13 @@ public sealed record DevelopmentSettings
         {
             throw new InvalidDataException("Backend input paths must be present; at most 32 restart files and 16 source directories are supported.");
         }
-        if (settings.WatchBackend && string.IsNullOrWhiteSpace(settings.ContractFile))
+        if (settings.WatchBackend && settings.DebuggerBackend)
         {
-            throw new InvalidDataException("Watch mode requires the separately compiled contract source path.");
+            throw new InvalidDataException("A session must have only one backend update owner.");
+        }
+        if ((settings.WatchBackend || settings.DebuggerBackend) && string.IsNullOrWhiteSpace(settings.ContractFile))
+        {
+            throw new InvalidDataException("Backend update modes require the separately compiled contract source path.");
         }
         if (settings.Frontend is null || settings.Frontend.Arguments is null || settings.Frontend.Environment is null)
         {

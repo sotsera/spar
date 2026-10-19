@@ -10,7 +10,12 @@ internal sealed record SessionMessage(string Kind, string? Token = null, string?
     string? Detail = null, string? Credential = null, string? Profile = null, int Generation = 1, long? Window = null,
     long? UpdateRevision = null);
 
-public sealed record DevelopmentCommand(string Command, string? Id = null, string? Detail = null, bool Force = false);
+public sealed record DevelopmentCommand(string Command, string? Id = null, string? Detail = null, bool Force = false,
+    int Generation = 0);
+
+/// <summary>Private owner handoff. Environment contains capabilities and must not be persisted in event logs.</summary>
+public sealed record DevelopmentDebugLaunch(string Kind, string Session, int Generation, string Project,
+    string Application, Dictionary<string, string> Environment, string[] Arguments);
 
 public sealed record DevelopmentEvent(string Kind, string Session, int Generation, DateTimeOffset ObservedAt,
     int CoordinatorProcessId, string? Role = null, int? ProcessId = null, DateTime? ProcessStartedAtUtc = null,
@@ -23,6 +28,7 @@ public sealed record DevelopmentEvent(string Kind, string Session, int Generatio
 [JsonSerializable(typeof(DevelopmentEvent))]
 [JsonSerializable(typeof(DevelopmentCommand))]
 [JsonSerializable(typeof(DevelopmentSettings))]
+[JsonSerializable(typeof(DevelopmentDebugLaunch))]
 public sealed partial class DevelopmentJsonContext : JsonSerializerContext;
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, MaxDepth = 16,

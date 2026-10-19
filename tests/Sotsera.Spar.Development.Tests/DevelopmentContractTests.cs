@@ -9,6 +9,14 @@ namespace Sotsera.Spar.Development.Tests;
 public sealed class DevelopmentContractTests
 {
     [Fact]
+    public void DebuggerBoundaryRejectsPatchableContractsAndAcceptsImmutableSample()
+    {
+        var validate = () => DevelopmentApplication.RequireImmutableDebuggerContract(typeof(IFingerprintContract).Assembly.Location);
+        validate.Should().Throw<InvalidOperationException>().WithMessage("*DebugType=none*");
+        DevelopmentApplication.RequireImmutableDebuggerContract(typeof(ISampleBackend).Assembly.Location);
+    }
+
+    [Fact]
     public void CompiledContractMatchesGeneratorIncludingNullabilityAndUnusedRecords()
     {
         using var stream = typeof(DevelopmentContractTests).Assembly.GetManifestResourceStream("FingerprintContract.cs")!;

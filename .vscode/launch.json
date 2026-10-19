@@ -2,6 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Spar: native development (local adapter)",
+      "type": "spar",
+      "request": "launch",
+      "spar": {
+        "coordinator": "tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe",
+        "settings": "samples/Spar.NativeSample/spar.dev.json"
+      }
+    },
+    {
       "name": "Spar: Hot Reload probe (C# Dev Kit)",
       "type": "dotnet",
       "request": "launch",

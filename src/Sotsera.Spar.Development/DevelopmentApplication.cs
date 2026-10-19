@@ -1,4 +1,5 @@
 using System.IO.Pipes;
+using System.Reflection.PortableExecutable;
 using System.Text.Json;
 using System.Threading.Channels;
 using Sotsera.Spar.Bridge;
@@ -55,6 +56,13 @@ public sealed class DevelopmentApplication : IDisposable
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(contract);
         var contractTypes = GetContractTypes(contractType);
+        if (Environment.GetEnvironmentVariable("SPAR_DEV_BACKEND_OWNER") == "debugger")
+        {
+            foreach (var assembly in contractTypes.Select(type => type.Assembly).Distinct())
+            {
+                RequireImmutableDebuggerContract(assembly.Location);
+            }
+        }
         var compiledContract = DevelopmentContract.GetFingerprint(contractType);
         var pipeName = Environment.GetEnvironmentVariable("SPAR_DEV_APP_PIPE")
             ?? throw new InvalidOperationException("Start the development application through Spar.Dev.");
@@ -152,6 +160,18 @@ public sealed class DevelopmentApplication : IDisposable
         }
 
         Send(new SessionMessage("app-activity", Detail: stage, Generation: _generation));
+    }
+
+    internal static void RequireImmutableDebuggerContract(string assemblyPath)
+    {
+        using var stream = File.OpenRead(assemblyPath);
+        using var executable = new PEReader(stream);
+        if (executable.ReadDebugDirectory().Any(entry => entry.Type is DebugDirectoryEntryType.CodeView
+            or DebugDirectoryEntryType.EmbeddedPortablePdb))
+        {
+            throw new InvalidOperationException("Debugger sessions require separately compiled contract assemblies "
+                + "with DebugType=none. Contract edits must rebuild and establish a new bridge handshake.");
+        }
     }
 
     private void Send(SessionMessage message)

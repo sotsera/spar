@@ -14,8 +14,9 @@ using Sotsera.Spar.Windows;
 
 namespace Sotsera.Spar.Development;
 
-/// <summary>Owns one SPA server and one application at a time, with an optional SDK-owned backend watcher.</summary>
-public sealed partial class DevelopmentSession(DevelopmentSettings settings, Action<DevelopmentEvent> observer, bool enableProbe = false) : IAsyncDisposable
+/// <summary>Owns one SPA server and one application, with either an SDK watcher or editor debugger update owner.</summary>
+public sealed partial class DevelopmentSession(DevelopmentSettings settings, Action<DevelopmentEvent> observer, bool enableProbe = false,
+    Func<DevelopmentDebugLaunch, Task>? launchDebugger = null) : IAsyncDisposable
 {
     private readonly object _eventGate = new();
     private readonly string _session = Guid.NewGuid().ToString("N");
@@ -118,11 +119,19 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         try
         {
             Emit("session-started", detail: _directory);
+            if (settings.DebuggerBackend && (settings.WatchBackend || settings.ContractFile is null))
+            {
+                throw new SessionFailure("invalid_debugger_settings", "Select one backend update owner and supply a separate contract source path.");
+            }
             if (_stop.Task.IsCompleted)
             {
                 throw new SessionStoppedException();
             }
-            if (settings.WatchBackend)
+            if (settings.DebuggerBackend && launchDebugger is null)
+            {
+                throw new SessionFailure("debugger_owner_required", "Debugger mode requires an editor launch owner.");
+            }
+            if (settings.WatchBackend || settings.DebuggerBackend)
             {
                 _backendInputs = new BackendInputs(settings);
                 if (skipBuild)
@@ -268,18 +277,25 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 ["SPAR_DEV_SESSION"] = _session,
                 ["SPAR_DEV_TOKEN"] = _token
             };
-            var launcher = settings.WatchBackend
-                ? StartWatcher(variables)
-                : Start("application", settings.Application, ["--spar-dev"], Path.GetDirectoryName(settings.Application)!, variables);
-            if (!settings.WatchBackend)
-            {
-                _application = launcher;
-            }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(_startupStop.Token);
-            timeout.CancelAfter(TimeSpan.FromSeconds(settings.StartupTimeoutSeconds));
-            _applicationPeer = await AwaitStartupAsync(AcceptAsync(pipe, "app", timeout.Token), launcher, timeout,
-                "application_startup_timeout").ConfigureAwait(false);
-            if (settings.WatchBackend)
+            if (settings.DebuggerBackend)
+            {
+                _applicationPeer = await LaunchDebuggerAsync(pipe, variables).ConfigureAwait(false);
+            }
+            else
+            {
+                var launcher = settings.WatchBackend
+                    ? StartWatcher(variables)
+                    : Start("application", settings.Application, ["--spar-dev"], Path.GetDirectoryName(settings.Application)!, variables);
+                if (!settings.WatchBackend)
+                {
+                    _application = launcher;
+                }
+                timeout.CancelAfter(TimeSpan.FromSeconds(settings.StartupTimeoutSeconds));
+                _applicationPeer = await AwaitStartupAsync(AcceptAsync(pipe, "app", timeout.Token), launcher, timeout,
+                    "application_startup_timeout").ConfigureAwait(false);
+            }
+            if (settings.WatchBackend || settings.DebuggerBackend)
             {
                 var application = Process.GetProcessById(_applicationPeer.Process.Id);
                 _ = application.Handle;
@@ -347,6 +363,10 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 throw new SessionFailure("watcher_exited", "The backend update owner exited; inspect its retained logs.");
             }
 
+            if (settings.DebuggerBackend && Volatile.Read(ref _debuggerPaused) != 0)
+            {
+                _readyDeadline = DateTimeOffset.UtcNow.AddSeconds(settings.StartupTimeoutSeconds);
+            }
             if (_application is not null && _readyDocument is null && DateTimeOffset.UtcNow > _readyDeadline)
             {
                 if (_applicationControlLost)
@@ -400,7 +420,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 else if (request.Command == "restart")
                 {
                     _restartCorrelation = request.Id;
-                    if (settings.WatchBackend)
+                    if (settings.WatchBackend || settings.DebuggerBackend)
                     {
                         await RebuildApplicationAsync("owner_restart").ConfigureAwait(false);
                     }
@@ -414,6 +434,13 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                         _generation++;
                         await StartApplicationAsync().ConfigureAwait(false);
                     }
+                }
+                else if (request.Command == "debugger-diagnostic" && settings.DebuggerBackend
+                    && request.Generation == _generation && request.Detail is not null)
+                {
+                    _pendingDiagnostic = request.Detail.Length > 2048 ? request.Detail[..2048] : request.Detail;
+                    Emit("debugger-diagnostic", detail: _pendingDiagnostic);
+                    await PublishWatchDiagnosticAsync().ConfigureAwait(false);
                 }
                 else if (request.Command == "probe" && enableProbe)
                 {
@@ -693,9 +720,16 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             process = Process.GetProcessById((int)nativeId);
             _ = process.Handle;
             if (hello?.Kind == role + "-hello" && hello.ProcessId == (int)nativeId && hello.Session == _session
-                && SecretEquals(hello.Token, _token) && _job!.Contains(process))
+                && SecretEquals(hello.Token, _token))
             {
-                return new Peer(connection, process, hello);
+                if (role == "app" && settings.DebuggerBackend && !_job!.Contains(process))
+                {
+                    AdoptDebuggerProcess(process);
+                }
+                if (_job!.Contains(process))
+                {
+                    return new Peer(connection, process, hello);
+                }
             }
 
             Emit("control-rejected", role, code: "peer_unauthorized");

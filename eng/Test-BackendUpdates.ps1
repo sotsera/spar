@@ -1,9 +1,11 @@
 #requires -Version 7.4
 param(
   [string]$EvidenceDirectory = 'artifacts/backend-loop/probe',
-  [switch]$VerifyRender
+  [switch]$VerifyRender,
+  [switch]$LibraryOnly
 )
 
+$backendLibraryOnly = $LibraryOnly.IsPresent
 . (Join-Path $PSScriptRoot 'Test-DevelopmentSession.ps1') -EvidenceDirectory $EvidenceDirectory -VerifyRender:$VerifyRender -LibraryOnly
 
 function New-BackendFixture([string]$Name) {
@@ -23,7 +25,7 @@ function New-BackendFixture([string]$Name) {
     if ($reference -is [Xml.XmlElement]) { $reference.Include = [IO.Path]::GetFullPath($reference.Include, $originalContracts) }
   }
   $contractXml.Project.Import.Project = [IO.Path]::GetFullPath($contractXml.Project.Import.Project, $originalContracts)
-  $contractXml.Project.PropertyGroup.SparClientOutputDirectory = Join-Path $fixture.Frontend 'src/generated'
+  $contractXml.SelectSingleNode('/Project/PropertyGroup/SparClientOutputDirectory').InnerText = Join-Path $fixture.Frontend 'src/generated'
   $contractXml.Save($contractProject)
   $xml = [xml][IO.File]::ReadAllText($project)
   foreach ($reference in $xml.Project.ItemGroup.ProjectReference) {
@@ -56,6 +58,8 @@ function Replace-Source([string]$Path, [string]$Before, [string]$After) {
   if (!$source.Contains($Before)) { throw "Replacement input not found: $Before" }
   [IO.File]::WriteAllText($Path, $source.Replace($Before,$After))
 }
+
+if ($backendLibraryOnly) { return }
 
 try {
   $priorWatchLogLevel = [Environment]::GetEnvironmentVariable('DOTNET_WATCH_LOG_LEVEL')

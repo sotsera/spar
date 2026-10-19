@@ -166,6 +166,12 @@ public sealed class OwnedProcessJob : IDisposable
         Check(ProcessNative.TerminateJobObject(_handle, 1));
     }
 
+    internal void AdoptAuthenticatedDebuggerProcess(Process process)
+    {
+        ArgumentNullException.ThrowIfNull(process);
+        Check(ProcessNative.AssignProcessToJobObject(_handle, process.Handle));
+    }
+
     public void Dispose() => _handle.Dispose();
 
     private static string ResolveExecutable(string value)

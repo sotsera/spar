@@ -1,0 +1,36 @@
+{
+  "name": "spar-development",
+  "displayName": "Spar Development",
+  "publisher": "sotsera",
+  "version": "0.1.0",
+  "private": true,
+  "engines": { "vscode": "^1.142.0" },
+  "main": "./extension.cjs",
+  "extensionDependencies": ["ms-dotnettools.csdevkit"],
+  "activationEvents": ["onDebugResolve:spar"],
+  "contributes": {
+    "debuggers": [{
+      "type": "spar",
+      "label": "Spar development",
+      "configurationAttributes": {
+        "launch": {
+          "required": ["spar"],
+          "properties": {
+            "spar": {
+              "type": "object",
+              "required": ["coordinator", "settings"],
+              "properties": {
+                "coordinator": { "type": "string", "description": "Path to the built Spar.Dev executable, relative to the workspace." },
+                "settings": { "type": "string", "description": "Path to spar.dev.json, relative to the workspace." }
+              }
+            }
+          }
+        }
+      }
+    }],
+    "commands": [
+      { "command": "spar.restart", "title": "Spar: Restart backend" },
+      { "command": "spar.stop", "title": "Spar: Stop development session" }
+    ]
+  }
+}

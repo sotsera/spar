@@ -9,6 +9,12 @@
     <SparClientOutputDirectory>$(MSBuildProjectDirectory)/../Spar.NativeSample/frontend/src/generated</SparClientOutputDirectory>
   </PropertyGroup>
 
+  <!-- Contract code is an immutable development boundary. Without symbols the debugger cannot patch it. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../src/Sotsera.Spar.Bridge/Sotsera.Spar.Bridge.csproj" />
     <ProjectReference Include="../../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj"

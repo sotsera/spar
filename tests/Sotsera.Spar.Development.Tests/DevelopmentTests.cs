@@ -8,6 +8,19 @@ namespace Sotsera.Spar.Development.Tests;
 
 public sealed class DevelopmentTests
 {
+    [Theory]
+    [InlineData("\"watchBackend\":true,\"debuggerBackend\":true,\"contractFile\":\"contract.cs\"")]
+    [InlineData("\"debuggerBackend\":true")]
+    public void ConfigurationRejectsAmbiguousOrIncompleteDebuggerOwnership(string properties)
+    {
+        var directory = Path.Combine(Path.GetTempPath(), "spar-settings-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        var file = Path.Combine(directory, "spar.dev.json");
+        File.WriteAllText(file, "{\"project\":\"sample.csproj\",\"application\":\"sample.exe\"," + properties + "}");
+        var load = () => DevelopmentSettings.Load(file);
+        load.Should().Throw<InvalidDataException>();
+    }
+
     [Fact]
     public void ConfigurationPreservesOmittedDefaults()
     {

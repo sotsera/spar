@@ -1,0 +1,36 @@
+{
+  "outcome": "failed",
+  "vscode": "1.142.0",
+  "initial": {
+    "mount": "8270751f-b7b7-4151-9a63-2771ff2cbf15",
+    "document": "0f3823def9174650856cfd870e1e41f0",
+    "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+    "local": 7,
+    "text": "Retain this text through HMR",
+    "counter": 2,
+    "backendRevision": 0,
+    "developmentStatus": "",
+    "greeting": "Hello, Spar",
+    "heading": "A live development loop.",
+    "accent": "#70e3bd",
+    "color": "rgb(112, 227, 189)"
+  },
+  "patched": {
+    "mount": "8270751f-b7b7-4151-9a63-2771ff2cbf15",
+    "document": "0f3823def9174650856cfd870e1e41f0",
+    "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+    "local": 7,
+    "text": "Retain this text through HMR",
+    "counter": 2,
+    "backendRevision": 1,
+    "developmentStatus": "Backend updated (revision 1)",
+    "greeting": "Hello debugger, Spar",
+    "heading": "A live development loop.",
+    "accent": "#e9b44c",
+    "color": "rgb(233, 180, 76)"
+  },
+  "error": "Error: Command failed: pwsh -NoProfile -File e:\\Ghidello\\Git\\spar.v2\\eng\\vscode-development\\Capture.ps1 -Window 33492630 -Path e:\\Ghidello\\Git\\spar.v2\\artifacts\\vscode-development\\debugger-ed4f6bb82f174d6ab67876facbae03e8\\patched.bmp\nException: E:\\Ghidello\\Git\\spar.v2\\eng\\vscode-development\\Capture.ps1:11\r\nLine |\r\n  11 |  throw 'The native window did not render the expected edited accent.'\r\n     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | The native window did not render the expected edited accent.\r\n\n\tat genericNodeError (node:internal/errors:986:15)\n\tat wrappedFn (node:internal/errors:540:14)\n\tat ChildProcess.exithandler (node:child_process:418:12)\n\tat ChildProcess.emit (node:events:514:28)\n\tat maybeClose (node:internal/child_process:1141:16)\n\tat ChildProcess._handle.onexit (node:internal/child_process:306:5)",
+  "events": 55,
+  "independentlyRetainedProcesses": 14,
+  "observedProcessesExited": true
+}

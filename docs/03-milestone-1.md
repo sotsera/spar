@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-19. Status: the [owned SPA session](11-development-session.md) supplies actual HMR/state retention (A02). The [native backend watcher lane](12-backend-updates.md) now supplies same-process edits and SPA read refresh (A03/A04), compiler recovery, contract rebuild, and actual retirement evidence. Console debugger precursors and native CoreCLR/copied-AOT checks remain recorded separately. Integrated debugger lanes and remaining acceptance scenarios stay open.
+Date: 2026-10-19. Status: the [owned SPA session](11-development-session.md) supplies actual HMR/state retention (A02). The [native backend watcher lane](12-backend-updates.md) supplies same-process edits and SPA read refresh (A03/A04), compiler recovery, contract rebuild, and actual retirement evidence. The [local VS Code debugger adapter](13-vscode-development.md) adds integrated native breakpoint, Hot Reload, diagnostics, coordinated relaunch, rendering, and Stop evidence for its documented flow (A11). Visual Studio integration, the remaining AI inspection surface, and other acceptance scenarios remain open.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -91,6 +91,8 @@ Provide structured start/status/inspect/restart/stop operations. Add screenshot,
 Automate the VS Code adapter in an Extension Development Host. Also run an installed C# debugger integration scenario: launch, hit a backend breakpoint, continue, apply an edit, verify changed behavior, restart, and verify the debugger reconnects or relaunches through the documented flow. Extension command tests alone cannot establish debugger Hot Reload correctness.
 
 Deliverables: repeatable VS Code workflow, automated editor checks, agent-driven UI verification, and retained failure artifacts. Use supported VS Code APIs; any required human interaction is reported explicitly.
+
+Progress: the [VS Code guide](13-vscode-development.md) and [debugger evidence](evidence/vscode-development-2026-10-19/README.md) cover the local adapter's ordinary C# Dev Kit launch, native breakpoints before and after coordinated relaunch, actual SPA HMR and debugger-owned method patches, state retention, compiler recovery/source diagnostics, contract rebuilds, native pixels, and explicit Stop. Contract assemblies have no patchable symbols, with admission enforcing that boundary. Public editor APIs drive the adapter; private Hot Reload logs are read only by acceptance tests to retain rude-edit evidence. The documented flow uses **Spar: Restart backend**, not the debugger toolbar's Restart. Integrated Visual Studio, general AI click/type inspection, and broader consumer/project layouts remain separate work; A11 does not complete M1.6 as a whole.
 
 ### M1.7 — Verify Visual Studio and production delivery
 

@@ -10,6 +10,10 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);frontend/**</DefaultItemExcludes>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../src/Sotsera.Spar.Windows/Sotsera.Spar.Windows.csproj" />
   </ItemGroup>

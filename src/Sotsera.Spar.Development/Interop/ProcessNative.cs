@@ -26,6 +26,10 @@ internal static unsafe partial class ProcessNative
 
     [LibraryImport("kernel32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
+    internal static partial bool AssignProcessToJobObject(SafeJobHandle job, nint process);
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
     internal static partial bool GetNamedPipeClientProcessId(SafePipeHandle pipe, out uint processId);
 
     [LibraryImport("kernel32.dll", SetLastError = true)]

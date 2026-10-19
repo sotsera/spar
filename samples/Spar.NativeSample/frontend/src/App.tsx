@@ -50,10 +50,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    let current = true;
     const report = async () => {
       // Report committed DOM after a layout opportunity; desktop pixel verification is a separate check.
       await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      if (!current) return;
       const identity = await connect();
+      if (!current) return;
       const detail = { mount, document: identity.document, contract: identity.contract, local, text, counter,
         backendRevision, developmentStatus,
         greeting, heading: document.querySelector('h1')?.textContent,
@@ -67,6 +70,7 @@ export default function App() {
     import.meta.hot?.on('vite:beforeUpdate', beforeUpdate);
     import.meta.hot?.on('vite:afterUpdate', afterUpdate);
     return () => {
+      current = false;
       import.meta.hot?.off('vite:beforeUpdate', beforeUpdate);
       import.meta.hot?.off('vite:afterUpdate', afterUpdate);
     };

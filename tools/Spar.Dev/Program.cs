@@ -4,11 +4,19 @@ using Sotsera.Spar.Development;
 
 if (args.Length == 0)
 {
-    Console.Error.WriteLine("Usage: Spar.Dev <spar.dev.json> [--no-build] [--owner-stdin] [--probe] [--events-file <path>]");
+    Console.Error.WriteLine("Usage: Spar.Dev <spar.dev.json> [--no-build] [--owner-stdin] [--debugger] [--probe] [--events-file <path>]");
     return 1;
 }
 
 var settings = DevelopmentSettings.Load(args[0]);
+if (args.Contains("--debugger", StringComparer.Ordinal))
+{
+    if (settings.ContractFile is null)
+    {
+        throw new InvalidDataException("Debugger mode requires the separately compiled contract source path.");
+    }
+    settings = settings with { WatchBackend = false, DebuggerBackend = true };
+}
 var eventsIndex = Array.IndexOf(args, "--events-file");
 if (eventsIndex >= 0 && eventsIndex + 1 >= args.Length)
 {
@@ -29,7 +37,13 @@ await using var session = new DevelopmentSession(settings,
         eventsFile?.WriteLine(line);
         Console.WriteLine(line);
     },
-    args.Contains("--probe", StringComparer.Ordinal));
+    args.Contains("--probe", StringComparer.Ordinal),
+    launch =>
+    {
+        // Private owner transport only. Never copy capabilities into the public event file.
+        Console.WriteLine(JsonSerializer.Serialize(launch, DevelopmentJsonContext.Default.DevelopmentDebugLaunch));
+        return Task.CompletedTask;
+    });
 var interruptCount = 0;
 Console.CancelKeyPress += (_, eventArgs) =>
 {
@@ -54,6 +68,10 @@ _ = Task.Run(async () =>
             if (command.Command == "stop")
             {
                 session.RequestStop(command.Force, correlation: command.Id);
+            }
+            else if (command.Command == "debugger-state" && command.Detail is not null)
+            {
+                session.ReportDebuggerState(command.Generation, command.Detail);
             }
             else if (!commands.Writer.TryWrite(command))
             {
