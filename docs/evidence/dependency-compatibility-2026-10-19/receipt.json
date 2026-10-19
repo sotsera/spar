@@ -1,0 +1,253 @@
+{
+  "sourceRevision": "35915d5b73a5dd7d2fdd14c091c8ffc061e29c8c",
+  "renderRequested": true,
+  "fixture": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831",
+  "observedAt": "2026-10-19T21:59:10.6241783+00:00",
+  "allPassed": true,
+  "dotnet": "10.0.402",
+  "powershell": "7.6.5",
+  "cases": [
+    {
+      "elapsedMs": 11708.14,
+      "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+      "name": "development-diagnostic",
+      "exitCode": 0,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\development-diagnostic.log",
+      "expectedSuccess": true,
+      "passed": true,
+      "arguments": [
+        "build",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Debug",
+        "--disable-build-servers"
+      ]
+    },
+    {
+      "elapsedMs": 14340.2649,
+      "expectedDiagnostic": "error IL3050.*RuntimeGreeting.Create",
+      "name": "strict-dependency",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\strict-dependency.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-strict-dependency",
+        "--disable-build-servers",
+        "-p:SparStrictAot=true"
+      ]
+    },
+    {
+      "elapsedMs": 18327.8991,
+      "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+      "name": "coreclr",
+      "exitCode": 0,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\coreclr.log",
+      "expectedSuccess": true,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-coreclr",
+        "--disable-build-servers"
+      ]
+    },
+    {
+      "elapsedMs": 6874.4251,
+      "expectedDiagnostic": "error CS",
+      "name": "syntax-error",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\syntax-error.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-syntax-error",
+        "--disable-build-servers"
+      ]
+    },
+    {
+      "elapsedMs": 1139.3815,
+      "expectedDiagnostic": "SPAR1004",
+      "name": "conflicting-aot",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\conflicting-aot.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-conflicting-aot",
+        "--disable-build-servers",
+        "-p:SparStrictAot=true",
+        "-p:PublishAot=false"
+      ]
+    },
+    {
+      "elapsedMs": 1140.6039,
+      "expectedDiagnostic": "SPAR1003",
+      "name": "missing-attribution",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\missing-attribution.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-missing-attribution",
+        "--disable-build-servers",
+        "-p:SparCompatibilityReason="
+      ]
+    },
+    {
+      "elapsedMs": 1140.5791,
+      "expectedDiagnostic": "SPAR1001",
+      "name": "invalid-mode",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\invalid-mode.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-invalid-mode",
+        "--disable-build-servers",
+        "-p:SparDeliveryMode=Automatic"
+      ]
+    },
+    {
+      "elapsedMs": 13641.1573,
+      "expectedDiagnostic": "",
+      "name": "dependency-removed",
+      "exitCode": 0,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\dependency-removed.log",
+      "expectedSuccess": true,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-dependency-removed",
+        "--disable-build-servers"
+      ]
+    },
+    {
+      "elapsedMs": 13353.0025,
+      "expectedDiagnostic": "",
+      "name": "strict-override",
+      "exitCode": 0,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\strict-override.log",
+      "expectedSuccess": true,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-strict-override",
+        "--disable-build-servers",
+        "-p:SparStrictAot=true"
+      ]
+    },
+    {
+      "elapsedMs": 3212.7611,
+      "expectedDiagnostic": "SparAssetBundle.cs.*error IL3050",
+      "name": "framework-regression-coreclr",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\framework-regression-coreclr.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-framework-regression-coreclr",
+        "--disable-build-servers"
+      ]
+    },
+    {
+      "elapsedMs": 3133.7958,
+      "expectedDiagnostic": "SparAssetBundle.cs.*error IL3050",
+      "name": "framework-regression-aot",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\framework-regression-aot.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-framework-regression-aot",
+        "--disable-build-servers",
+        "-p:SparStrictAot=true"
+      ]
+    },
+    {
+      "elapsedMs": 11419.1195,
+      "expectedDiagnostic": "ilc|compiler|MSB3073",
+      "name": "missing-toolchain",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\missing-toolchain.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-missing-toolchain",
+        "--disable-build-servers",
+        "-p:IlcToolsPath=E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\absent-native-compiler/",
+        "-t:Rebuild,Publish"
+      ]
+    },
+    {
+      "elapsedMs": 12594.4055,
+      "expectedDiagnostic": "LNK2001|LNK1120",
+      "name": "native-link-error",
+      "exitCode": 1,
+      "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\native-link-error.log",
+      "expectedSuccess": false,
+      "passed": true,
+      "arguments": [
+        "publish",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\fixture-6fab23e03a434dca8e9c5a9ae45ef831\\samples\\Spar.NativeSample\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "E:\\Ghidello\\Git\\spar.v2\\artifacts\\compatibility\\attempt-1\\publish-native-link-error",
+        "--disable-build-servers",
+        "-t:Rebuild,Publish"
+      ]
+    }
+  ]
+}

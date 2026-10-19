@@ -104,9 +104,9 @@ Production mode selection must be observable and reproducible:
 4. Framework AOT regressions, ordinary compilation failures, missing toolchains, and unrelated native link failures remain failures.
 5. Removing an incompatible dependency permits reevaluating AOT. Do not cache incompatibility forever.
 
-The exact configuration interface and whether eligible fallback requires a persisted explicit selection or an opt-in automatic policy remain to be selected in milestone 1. The user-facing requirement is dependency-driven fallback, not silent mode changes. Strict AOT publication must remain available for CI.
+Milestone 1 uses a persisted explicit selection: `SparDeliveryMode=CoreCLR` with `SparCompatibilityDependency` and `SparCompatibilityReason`, set before the delivery-targets import. Omission selects NativeAOT; `SparStrictAot=true` overrides a compatibility selection for Release CI publishing. There is no automatic failure classifier or fallback. See the [compatibility guide](17-dependency-compatibility.md).
 
-Package AOT annotations alone are insufficient evidence. Development must surface compatibility diagnostics, and CI must publish and execute the real AOT output. Proposed CoreCLR compatibility publication is self-contained; exact packaging shape is a milestone decision rather than a reason to add an installer now.
+Package AOT annotations alone are insufficient evidence. Development must surface compatibility diagnostics, and CI must publish and execute the real AOT output. CoreCLR compatibility publication is a self-contained, untrimmed directory with runtime assemblies and a mode/attribution receipt. An installer remains out of scope.
 
 ## AI-first capabilities
 

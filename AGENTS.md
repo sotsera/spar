@@ -32,6 +32,8 @@ For structured inspection, use the [inspection guide](docs/15-development-inspec
 
 For production, use the [delivery guide](docs/16-production-delivery.md): normal Release publishing builds the SPA. Run `eng/Test-ProductionBoundary.ps1` before any separate probe build and `eng/Test-Production.ps1 -VerifyRender`, then review the captures. The old native/bridge drivers require an explicit `-p:SparNativeProbe=true` AOT test build in a separate output directory. Do not rebuild shared tool outputs while native development suites own running processes.
 
+For dependency compatibility, use the [compatibility guide](docs/17-dependency-compatibility.md): run `eng/Test-Compatibility.ps1 -VerifyRender` and review both copied-mode captures. Keep attribution explicit, strict AOT overridable from CI, and unrelated failures fatal. The driver copies isolated sources and retains first-failure evidence; it does not alter or clean the primary projects.
+
 ## C# readability and lifetime rules
 
 - Prefer clear statements, named intermediate values, and small methods over compressed expressions. Use LINQ when it describes one coherent transformation clearly.

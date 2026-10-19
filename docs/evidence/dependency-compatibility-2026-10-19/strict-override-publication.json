@@ -1,0 +1,60 @@
+{
+  "schema": 2,
+  "createdAt": "2026-10-19T21:58:39.648203+00:00",
+  "mode": "NativeAOT",
+  "requestedMode": "CoreCLR",
+  "strictAot": true,
+  "selfContained": true,
+  "compatibility": {
+    "reason": "IL3050: RuntimeGreeting.Create emits and executes DynamicMethod IL.",
+    "dependency": "Spar.DynamicDependency (repository fixture)"
+  },
+  "configuration": "Release",
+  "runtimeIdentifier": "win-x64",
+  "revision": "35915d5b73a5dd7d2fdd14c091c8ffc061e29c8c",
+  "workingTreeDirty": true,
+  "sourceHashes": [],
+  "dotnet": "10.0.402",
+  "node": "v24.21.0",
+  "npm": "11.19.0",
+  "powershell": "7.6.5",
+  "assetArchiveSha256": "54A318E5ED063BE65894102B8B59BDD7F4C53DC284651C5D66514BC0A0F3690F",
+  "contractFingerprint": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+  "payload": [
+    {
+      "name": "Sotsera.Spar.Bridge.pdb",
+      "sha256": "3E1D3225BC7ADAF918FAE18EF4C76D699A3F9CE1A4AA1FB6AB38DCCE4ABBFD77",
+      "bytes": 36752
+    },
+    {
+      "name": "Sotsera.Spar.Windows.pdb",
+      "sha256": "63BC9FF87E9BE55E5C9DF4BE6C82617B3DCFAE5A040FCBE85DD44C4BA1186E3C",
+      "bytes": 100156
+    },
+    {
+      "name": "Spar.NativeSample.Contracts.pdb",
+      "sha256": "72A8D327DFBF0DAFA10099D1E7C97DCB151F99DA2DD047E26EDEEA573A0CD800",
+      "bytes": 44336
+    },
+    {
+      "name": "Spar.NativeSample.exe",
+      "sha256": "89DB2222FCB36DB0A79AEEADBD19750D3DBFE8195FC84F79982933D1AF34C11D",
+      "bytes": 3891200
+    },
+    {
+      "name": "WebView2-LICENSE.txt",
+      "sha256": "0AF8F1B807512AAE39C2AC1AA4D0CAE65CABECB6FD554B8439A5162A0D6ECA55",
+      "bytes": 1487
+    },
+    {
+      "name": "WebView2-NOTICE.txt",
+      "sha256": "106423785C5B7EBA0A8E61D1837F2132E9C828E20AD530F565D981C1DF60DD90",
+      "bytes": 3894
+    },
+    {
+      "name": "WebView2Loader.dll",
+      "sha256": "3426DCC55FDFB8B5E7AC623CF33B4CCF283FBF68A0C5A65BDDFDB4D749A8ABEE",
+      "bytes": 194912
+    }
+  ]
+}

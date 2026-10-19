@@ -1,0 +1,24 @@
+  Determining projects to restore...
+  Restored E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\tools\Spar.ContractGenerator\Spar.ContractGenerator.csproj (in 53 ms).
+  Restored E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Development\Sotsera.Spar.Development.csproj (in 60 ms).
+  Restored E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample.Contracts\Spar.NativeSample.Contracts.csproj (in 119 ms).
+  Restored E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\eng\compatibility-probe\Spar.DynamicDependency.csproj (in 118 ms).
+  Restored E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Bridge\Sotsera.Spar.Bridge.csproj (in 119 ms).
+  Restored E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample\Spar.NativeSample.csproj (in 119 ms).
+  Restored E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Windows\Sotsera.Spar.Windows.csproj (in 124 ms).
+  Sotsera.Spar.Bridge -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Bridge\bin\Debug\net10.0\Sotsera.Spar.Bridge.dll
+  Sotsera.Spar.Windows -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Windows\bin\Debug\net10.0-windows\Sotsera.Spar.Windows.dll
+  Sotsera.Spar.Development -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Development\bin\Debug\net10.0-windows\Sotsera.Spar.Development.dll
+  Spar.DynamicDependency -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\eng\compatibility-probe\bin\Debug\net10.0\Spar.DynamicDependency.dll
+  Spar.ContractGenerator -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\tools\Spar.ContractGenerator\bin\Debug\net10.0\Spar.ContractGenerator.dll
+  Spar.NativeSample.Contracts -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample.Contracts\bin\Debug\net10.0\Spar.NativeSample.Contracts.dll
+E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample\SampleBackend.cs(71,24): warning IL3050: Using member 'Spar.DynamicDependency.RuntimeGreeting.Create(String)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. RuntimeGreeting builds and executes a DynamicMethod; select explicit CoreCLR delivery or remove this dependency. [E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample\Spar.NativeSample.csproj]
+  Spar.NativeSample -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample\bin\Debug\net10.0-windows\win-x64\Spar.NativeSample.dll
+
+Build succeeded.
+
+E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample\SampleBackend.cs(71,24): warning IL3050: Using member 'Spar.DynamicDependency.RuntimeGreeting.Create(String)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. RuntimeGreeting builds and executes a DynamicMethod; select explicit CoreCLR delivery or remove this dependency. [E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample\Spar.NativeSample.csproj]
+    1 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:11.50

@@ -3,6 +3,7 @@ param(
   [string]$PublishDirectory = 'artifacts/production/publish',
   [string]$EvidenceDirectory = 'artifacts/production/acceptance',
   [ValidateRange(1, 10)][int]$Samples = 3,
+  [ValidateSet('NativeAOT', 'CoreCLR')][string]$ExpectedMode = 'NativeAOT',
   [switch]$VerifyRender
 )
 $ErrorActionPreference = 'Stop'
@@ -11,11 +12,27 @@ $evidence = [IO.Path]::GetFullPath($EvidenceDirectory)
 New-Item -ItemType Directory -Path $evidence -Force | Out-Null
 $copy = Join-Path ([IO.Path]::GetTempPath()) ('spar-production-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $copy | Out-Null
-Get-ChildItem -LiteralPath $publish -File | Where-Object Extension -ne '.pdb' | Copy-Item -Destination $copy
+Get-ChildItem -LiteralPath $publish | Where-Object Extension -ne '.pdb' | Copy-Item -Destination $copy -Recurse
 $expected = @('Spar.NativeSample.exe', 'WebView2Loader.dll', 'WebView2-LICENSE.txt', 'WebView2-NOTICE.txt', 'spar-publish.json')
-if (Compare-Object @((Get-ChildItem -LiteralPath $copy -File).Name) $expected) { throw 'Unexpected production payload.' }
+if ($ExpectedMode -eq 'NativeAOT') {
+  if (Compare-Object @((Get-ChildItem -LiteralPath $copy -File).Name) $expected) { throw 'Unexpected production payload.' }
+} else {
+  foreach ($name in @('coreclr.dll', 'hostfxr.dll', 'hostpolicy.dll', 'Spar.NativeSample.runtimeconfig.json')) {
+    if (!(Test-Path -LiteralPath (Join-Path $copy $name))) { throw "Self-contained CoreCLR payload missing $name" }
+  }
+  $runtime = Get-Content -LiteralPath (Join-Path $copy 'Spar.NativeSample.runtimeconfig.json') -Raw | ConvertFrom-Json
+  if ($runtime.runtimeOptions.framework -or $runtime.runtimeOptions.frameworks) { throw 'CoreCLR depends on an installed runtime.' }
+  if (Get-ChildItem -LiteralPath $copy -Recurse -File | Where-Object Name -Match 'Spar.Development|Spar.Dev\.|CodeAnalysis|ContractGenerator') {
+    throw 'Development/compiler tooling shipped in the compatibility payload.'
+  }
+}
 $publication = Get-Content -LiteralPath (Join-Path $copy 'spar-publish.json') -Raw | ConvertFrom-Json
-if ($publication.mode -ne 'NativeAOT') { throw 'Default publication must be NativeAOT.' }
+if ($publication.mode -ne $ExpectedMode -or !$publication.selfContained) { throw 'Unexpected publication mode.' }
+$expectedFiles = @($publication.payload | Where-Object name -NotLike '*.pdb' | Select-Object -ExpandProperty name)
+$actualFiles = @(Get-ChildItem -LiteralPath $copy -Recurse -File | Where-Object Name -ne 'spar-publish.json' |
+  ForEach-Object { [IO.Path]::GetRelativePath($copy, $_.FullName) })
+if (Compare-Object $actualFiles $expectedFiles) { throw 'Copied payload inventory does not match its receipt.' }
+$payloadBytes = (Get-ChildItem -LiteralPath $copy -Recurse -File | Measure-Object Length -Sum).Sum
 foreach ($file in $publication.payload | Where-Object name -NotLike '*.pdb') {
   if ((Get-FileHash -LiteralPath (Join-Path $copy $file.name)).Hash -ne $file.sha256) { throw 'Publication hash mismatch.' }
 }
@@ -57,7 +74,7 @@ try {
       $events = @(Events $stdout)
       $greeted = $events | Where-Object { $_.Stage -eq 'bridge-completed' -and $_.Detail -like '*|greet|*' } | Select-Object -First 1
       $processToGreetingMs = ([DateTimeOffset]$greeted.ObservedAt - [DateTimeOffset]$greeted.ProcessStartedAtUtc).TotalMilliseconds
-      if (@($events | Where-Object Mode -ne 'NativeAOT').Count -gt 0) { throw 'Unexpected runtime mode.' }
+      if (@($events | Where-Object Mode -ne $ExpectedMode).Count -gt 0) { throw 'Unexpected runtime mode.' }
       if (@($events | Where-Object Stage -eq 'bridge-rejected').Count -gt 0) { throw 'Production bridge rejected a normal call.' }
       $loaded = $events | Where-Object Stage -eq 'document-loaded' | Select-Object -Last 1
       $window = [IntPtr]$loaded.Window
@@ -131,8 +148,8 @@ try {
 } finally {
   @{ allPassed = $allPassed; observedAt = [DateTimeOffset]::UtcNow; copiedDirectory = $copy
     executableSha256 = (Get-FileHash -LiteralPath $exe).Hash; samples = $results.ToArray()
-    payloadBytes = (Get-ChildItem -LiteralPath $copy -File | Measure-Object Length -Sum).Sum
-    mode = 'NativeAOT'; noSdkMachine = 'not-available'; renderRequested = [bool]$VerifyRender
+    payloadBytes = $payloadBytes
+    mode = $ExpectedMode; noSdkMachine = 'not-available'; renderRequested = [bool]$VerifyRender
   } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $evidence 'receipt.json')
 }
 Write-Output "Production checks passed. Copied payload: $copy. Evidence: $evidence"

@@ -4,7 +4,10 @@ param(
   [Parameter(Mandatory)][string]$Archive,
   [Parameter(Mandatory)][string]$Configuration,
   [Parameter(Mandatory)][string]$RuntimeIdentifier,
-  [string]$PublishAot
+  [string]$PublishAot,
+  [ValidateSet('NativeAOT', 'CoreCLR')][string]$RequestedMode,
+  [ValidateSet('true', 'false')][string]$StrictAot,
+  [Parameter(Mandatory)][string]$AttributionDirectory
 )
 $ErrorActionPreference = 'Stop'
 $directory = (Resolve-Path -LiteralPath $PublishDirectory).Path
@@ -28,15 +31,20 @@ try {
   try { $fingerprint = $reader.ReadToEnd() } finally { $reader.Dispose() }
 } finally { $zip.Dispose() }
 $receipt = [ordered]@{
-  schema = 1; createdAt = [DateTimeOffset]::UtcNow
+  schema = 2; createdAt = [DateTimeOffset]::UtcNow
   mode = $(if ($PublishAot -eq 'true') { 'NativeAOT' } else { 'CoreCLR' })
+  requestedMode = $RequestedMode; strictAot = $StrictAot -eq 'true'; selfContained = $true
+  compatibility = @{
+    dependency = (Get-Content -LiteralPath (Join-Path $AttributionDirectory 'spar-compatibility-dependency.txt') -Raw)?.Trim()
+    reason = (Get-Content -LiteralPath (Join-Path $AttributionDirectory 'spar-compatibility-reason.txt') -Raw)?.Trim()
+  }
   configuration = $Configuration; runtimeIdentifier = $RuntimeIdentifier
   revision = $revision; workingTreeDirty = $status.Count -gt 0; sourceHashes = $sourceHashes
   dotnet = (dotnet --version); node = (node --version); npm = (npm --version); powershell = $PSVersionTable.PSVersion.ToString()
   assetArchiveSha256 = (Get-FileHash -LiteralPath $Archive).Hash
   contractFingerprint = $fingerprint
-  payload = @(Get-ChildItem -LiteralPath $directory -File | Where-Object Name -ne 'spar-publish.json' | ForEach-Object {
-    @{ name = $_.Name; bytes = $_.Length; sha256 = (Get-FileHash -LiteralPath $_.FullName).Hash }
+  payload = @(Get-ChildItem -LiteralPath $directory -Recurse -File | Where-Object FullName -ne (Join-Path $directory 'spar-publish.json') | ForEach-Object {
+    @{ name = [IO.Path]::GetRelativePath($directory, $_.FullName); bytes = $_.Length; sha256 = (Get-FileHash -LiteralPath $_.FullName).Hash }
   })
 }
 $receipt | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $directory 'spar-publish.json')

@@ -49,4 +49,4 @@ dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o a
 
 ## Remaining work
 
-Explicit dependency-driven CoreCLR compatibility and its failure-classification fixtures are #11 (A15/A16). External packages and the fresh consumer walkthrough are #12 (A18/A01). A machine without the .NET SDK/runtime was unavailable; developer-machine AOT execution does not certify clean-machine installation. Supported-machine coverage, installers, signing, and updates remain outside this slice.
+Explicit dependency-driven CoreCLR compatibility and strict failure checks are documented in the [compatibility guide](17-dependency-compatibility.md), #11 (A15/A16). External packages and the fresh consumer walkthrough remain #12 (A18/A01). A machine without the .NET SDK/runtime was unavailable; developer-machine execution does not certify clean-machine installation. Supported-machine coverage, installers, signing, and updates remain outside this slice.

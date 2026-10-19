@@ -28,6 +28,9 @@ function New-BackendFixture([string]$Name) {
   $contractXml.SelectSingleNode('/Project/PropertyGroup/SparClientOutputDirectory').InnerText = Join-Path $fixture.Frontend 'src/generated'
   $contractXml.Save($contractProject)
   $xml = [xml][IO.File]::ReadAllText($project)
+  foreach ($import in $xml.Project.Import) {
+    $import.Project = [IO.Path]::GetFullPath($import.Project, $original)
+  }
   foreach ($reference in $xml.Project.ItemGroup.ProjectReference) {
     if ($reference -is [Xml.XmlElement]) {
       $reference.Include = if ($reference.Include.Contains('Spar.NativeSample.Contracts')) { $contractProject }

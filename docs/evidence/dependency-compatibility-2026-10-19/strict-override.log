@@ -1,0 +1,25 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar delivery: NativeAOT; requested=CoreCLR; strict=true; dependency=Spar.DynamicDependency (repository fixture); reason=IL3050: RuntimeGreeting.Create emits and executes DynamicMethod IL.. Failures never select another mode.
+  Sotsera.Spar.Bridge -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Bridge\bin\Release\net10.0\Sotsera.Spar.Bridge.dll
+  Sotsera.Spar.Windows -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\src\Sotsera.Spar.Windows\bin\Release\net10.0-windows\Sotsera.Spar.Windows.dll
+  Spar.ContractGenerator -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\tools\Spar.ContractGenerator\bin\Release\net10.0\Spar.ContractGenerator.dll
+  Spar.NativeSample.Contracts -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample.Contracts\bin\Release\net10.0\Spar.NativeSample.Contracts.dll
+
+  added 24 packages, and audited 25 packages in 1s
+
+  8 packages are looking for funding
+    run `npm fund` for details
+
+  found 0 vulnerabilities
+
+  > build
+  > npm run check && vite build
+
+
+  > check
+  > tsc --project tsconfig.json
+
+  Spar.NativeSample -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\fixture-6fab23e03a434dca8e9c5a9ae45ef831\samples\Spar.NativeSample\bin\Release\net10.0-windows\win-x64\Spar.NativeSample.dll
+  Generating native code
+  Spar.NativeSample -> E:\Ghidello\Git\spar.v2\artifacts\compatibility\attempt-1\publish-strict-override\

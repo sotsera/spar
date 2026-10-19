@@ -1,0 +1,40 @@
+<Project>
+  <!-- Import after the application's persisted delivery selection, before SDK targets. -->
+  <PropertyGroup>
+    <SparDeliveryMode Condition="'$(SparDeliveryMode)' == ''">NativeAOT</SparDeliveryMode>
+    <SparStrictAot Condition="'$(SparStrictAot)' == ''">false</SparStrictAot>
+    <SparEffectiveDeliveryMode>$(SparDeliveryMode)</SparEffectiveDeliveryMode>
+    <SparEffectiveDeliveryMode Condition="'$(SparStrictAot)' == 'true'">NativeAOT</SparEffectiveDeliveryMode>
+
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <PublishAot Condition="'$(SparEffectiveDeliveryMode)' == 'NativeAOT'">true</PublishAot>
+    <PublishAot Condition="'$(SparEffectiveDeliveryMode)' == 'CoreCLR'">false</PublishAot>
+    <SelfContained>true</SelfContained>
+    <PublishTrimmed Condition="'$(SparEffectiveDeliveryMode)' == 'CoreCLR'">false</PublishTrimmed>
+    <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- Keep incompatibility visible while running on CoreCLR, including during development. -->
+  <PropertyGroup Condition="'$(PublishAot)' != 'true'">
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);IL3050;IL2026</WarningsNotAsErrors>
+  </PropertyGroup>
+
+  <Target Name="ValidateSparDelivery" BeforeTargets="PrepareForBuild;Publish">
+    <Error Code="SPAR1001" Condition="'$(SparDeliveryMode)' != 'NativeAOT' and '$(SparDeliveryMode)' != 'CoreCLR'"
+           Text="SparDeliveryMode must be NativeAOT or CoreCLR. No automatic fallback is performed." />
+    <Error Code="SPAR1002" Condition="'$(SparStrictAot)' != 'true' and '$(SparStrictAot)' != 'false'"
+           Text="SparStrictAot must be true or false." />
+    <Error Code="SPAR1003" Condition="'$(SparDeliveryMode)' == 'CoreCLR' and ('$(SparCompatibilityDependency)' == '' or '$(SparCompatibilityReason)' == '')"
+           Text="CoreCLR delivery requires SparCompatibilityDependency and SparCompatibilityReason identifying the application dependency and unsupported API/diagnostic. Persist the selection in the project before importing Spar.Delivery.targets." />
+    <Error Code="SPAR1004" Condition="'$(Configuration)' == 'Release' and (('$(SparEffectiveDeliveryMode)' == 'NativeAOT' and '$(PublishAot)' != 'true') or ('$(SparEffectiveDeliveryMode)' == 'CoreCLR' and '$(PublishAot)' != 'false'))"
+           Text="PublishAot conflicts with Spar delivery selection. Use SparDeliveryMode with dependency attribution, or SparStrictAot=true for strict CI verification." />
+    <Error Code="SPAR1005" Condition="'$(Configuration)' == 'Release' and ('$(SelfContained)' != 'true' or ('$(SparEffectiveDeliveryMode)' == 'CoreCLR' and '$(PublishTrimmed)' != 'false'))"
+           Text="Spar production delivery must be self-contained. CoreCLR compatibility delivery must be untrimmed." />
+    <Message Importance="high" Condition="'$(Configuration)' == 'Release'"
+             Text="Spar delivery: $(SparEffectiveDeliveryMode); requested=$(SparDeliveryMode); strict=$(SparStrictAot); dependency=$(SparCompatibilityDependency); reason=$(SparCompatibilityReason). Failures never select another mode." />
+  </Target>
+</Project>
