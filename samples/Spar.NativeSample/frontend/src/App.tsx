@@ -28,6 +28,7 @@ export default function App() {
   }, [readRevision]);
 
   useEffect(() => {
+    if (!import.meta.env.DEV) return;
     let current = true;
     const updated = async (event: { revision: number; contract: string; document: string }) => {
       const identity = await connect();
@@ -59,6 +60,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!import.meta.env.DEV) return;
     let current = true;
     const report = async () => {
       // Report committed DOM after a layout opportunity; desktop pixel verification is a separate check.
@@ -86,6 +88,7 @@ export default function App() {
   }, [mount, local, text, counter, greeting, status, backendRevision, developmentStatus]);
 
   useEffect(() => {
+    if (!import.meta.env.DEV) return;
     if (document.querySelector<HTMLMetaElement>('meta[name="spar-probe"]')?.content !== '1') return;
     const probe = (action: string) => {
       if (action === 'seed') {
@@ -110,8 +113,9 @@ export default function App() {
 
   return <main>
     <span className="mark">SPAR</span>
-    <h1>A live development loop.</h1>
-    <p>Edit this component or its CSS. Vite and React update this native window.</p>
+    <h1>{import.meta.env.DEV ? 'A live development loop.' : 'Your desktop. Your app.'}</h1>
+    <p>{import.meta.env.DEV ? 'Edit this component or its CSS. Vite and React update this native window.'
+      : 'A local web interface, connected to C#.'}</p>
     <div className="actions">
       <button id="local" onClick={() => setLocal(value => value + 1)}>Local counter: {local}</button>
       <button id="backend" onClick={async () => {
@@ -119,12 +123,13 @@ export default function App() {
         catch (error) { setStatus(String(error)); }
       }}>Backend counter: {counter}</button>
     </div>
-    <label>Local state <input value={text} onChange={event => setText(event.target.value)} placeholder="Type, then edit the component" /></label>
+    <label>Local state <input value={text} onChange={event => setText(event.target.value)}
+      placeholder={import.meta.env.DEV ? 'Type, then edit the component' : 'Type something'} /></label>
     <p id="greeting">{greeting}</p>
     <p id="status" role="status">{status}</p>
     <button id="refresh-backend" disabled={reading} onClick={() => setReadRevision(value => value + 1)}>
       {reading ? 'Reading backend data…' : 'Refresh backend data'}
     </button>
-    {developmentStatus && <p id="development-status" role="status">{developmentStatus}</p>}
+    {import.meta.env.DEV && developmentStatus && <p id="development-status" role="status">{developmentStatus}</p>}
   </main>;
 }

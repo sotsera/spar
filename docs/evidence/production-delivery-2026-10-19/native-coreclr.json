@@ -1,0 +1,250 @@
+{
+  "observedAt": "2026-10-19T21:19:51.710025+00:00",
+  "executable": "E:\\Ghidello\\Git\\spar.v2\\samples\\Spar.NativeSample\\bin\\Debug\\net10.0-windows\\win-x64\\Spar.NativeSample.exe",
+  "os": "Microsoft Windows 10.0.26220",
+  "powershell": "7.6.5",
+  "executableSha256": "E34134050D8F044DEABD74922A44387F84BBA995CB9A716588F56015FC691B52",
+  "payload": [
+    {
+      "name": "Sotsera.Spar.Bridge.dll",
+      "bytes": 55296,
+      "sha256": "9BD80FA35A90CDFAF00EF7493CD0C8E90069FC91083652C88D834AF6BE4FEE6D"
+    },
+    {
+      "name": "Sotsera.Spar.Development.dll",
+      "bytes": 251904,
+      "sha256": "58EC1AEA4F85889D072EE8155382C7FA2E89C37D1E4D57D901E0BF8B7D46FF2E"
+    },
+    {
+      "name": "Sotsera.Spar.Windows.dll",
+      "bytes": 157184,
+      "sha256": "EAAACF7F2D7472F5D6C26A0CA05A5CD87E13BBDFD551AD7009192E91860687BA"
+    },
+    {
+      "name": "Spar.NativeSample.Contracts.dll",
+      "bytes": 60928,
+      "sha256": "78352085D8674BCFA482E3CE30B675C6A4634534982982D6D929D4A191DA5AA9"
+    },
+    {
+      "name": "Spar.NativeSample.deps.json",
+      "bytes": 2302,
+      "sha256": "8212E7E922525DDE829EAAFFDFC5FD752296EFD1F13CC652F8E5616E0E87933B"
+    },
+    {
+      "name": "Spar.NativeSample.dll",
+      "bytes": 53248,
+      "sha256": "8E125DBB60D2F3BA283CC5EE615EE44F40625156C195C7E38889F3F01ACA8F2D"
+    },
+    {
+      "name": "Spar.NativeSample.exe",
+      "bytes": 162304,
+      "sha256": "E34134050D8F044DEABD74922A44387F84BBA995CB9A716588F56015FC691B52"
+    },
+    {
+      "name": "Spar.NativeSample.runtimeconfig.json",
+      "bytes": 405,
+      "sha256": "9179588432DC2044E2BE1436F4AD295FA35612FAE6E9549F90BC0B50220B1D88"
+    },
+    {
+      "name": "WebView2-LICENSE.txt",
+      "bytes": 1487,
+      "sha256": "0AF8F1B807512AAE39C2AC1AA4D0CAE65CABECB6FD554B8439A5162A0D6ECA55"
+    },
+    {
+      "name": "WebView2-NOTICE.txt",
+      "bytes": 3894,
+      "sha256": "106423785C5B7EBA0A8E61D1837F2132E9C828E20AD530F565D981C1DF60DD90"
+    },
+    {
+      "name": "WebView2Loader.dll",
+      "bytes": 194912,
+      "sha256": "3426DCC55FDFB8B5E7AC623CF33B4CCF283FBF68A0C5A65BDDFDB4D749A8ABEE"
+    }
+  ],
+  "expectedMode": "CoreCLR",
+  "renderRequested": false,
+  "scenarios": [
+    {
+      "scenario": "normal",
+      "passed": true,
+      "processId": 46536,
+      "processStartedAtUtc": "2026-10-19T21:19:33.1688985Z",
+      "mode": "CoreCLR",
+      "visibleRendering": "not-exercised",
+      "concurrentProfileRejected": true,
+      "profileDataPreserved": true,
+      "profileOverrideRejected": "not-exercised",
+      "attributedBrowserProcesses": [
+        {
+          "processId": 36412,
+          "processStartedAtUtc": "2026-10-19T21:19:33.9714983Z",
+          "exited": true
+        },
+        {
+          "processId": 29096,
+          "processStartedAtUtc": "2026-10-19T21:19:33.9955043Z",
+          "exited": true
+        },
+        {
+          "processId": 18352,
+          "processStartedAtUtc": "2026-10-19T21:19:34.0701447Z",
+          "exited": true
+        },
+        {
+          "processId": 56836,
+          "processStartedAtUtc": "2026-10-19T21:19:34.0739518Z",
+          "exited": true
+        },
+        {
+          "processId": 32424,
+          "processStartedAtUtc": "2026-10-19T21:19:34.0931963Z",
+          "exited": true
+        },
+        {
+          "processId": 39532,
+          "processStartedAtUtc": "2026-10-19T21:19:34.1498418Z",
+          "exited": true
+        }
+      ],
+      "exitCode": 0,
+      "forced": false
+    },
+    {
+      "scenario": "close-during-startup",
+      "passed": true,
+      "processId": 30160,
+      "processStartedAtUtc": "2026-10-19T21:19:35.2267425Z",
+      "mode": "CoreCLR",
+      "visibleRendering": "not-exercised",
+      "concurrentProfileRejected": "not-exercised",
+      "profileDataPreserved": true,
+      "profileOverrideRejected": "not-exercised",
+      "attributedBrowserProcesses": [],
+      "exitCode": 0,
+      "forced": false
+    },
+    {
+      "scenario": "worker-dispatch",
+      "passed": true,
+      "processId": 61144,
+      "processStartedAtUtc": "2026-10-19T21:19:36.1126666Z",
+      "mode": "CoreCLR",
+      "visibleRendering": "not-exercised",
+      "concurrentProfileRejected": "not-exercised",
+      "profileDataPreserved": true,
+      "profileOverrideRejected": "not-exercised",
+      "attributedBrowserProcesses": [
+        {
+          "processId": 43044,
+          "processStartedAtUtc": "2026-10-19T21:19:36.2728003Z",
+          "exited": true
+        },
+        {
+          "processId": 31076,
+          "processStartedAtUtc": "2026-10-19T21:19:36.3002006Z",
+          "exited": true
+        },
+        {
+          "processId": 48352,
+          "processStartedAtUtc": "2026-10-19T21:19:36.3803708Z",
+          "exited": true
+        },
+        {
+          "processId": 34240,
+          "processStartedAtUtc": "2026-10-19T21:19:36.3836567Z",
+          "exited": true
+        },
+        {
+          "processId": 45068,
+          "processStartedAtUtc": "2026-10-19T21:19:36.4045685Z",
+          "exited": true
+        }
+      ],
+      "exitCode": 0,
+      "forced": false
+    },
+    {
+      "scenario": "document-callback-error",
+      "passed": true,
+      "processId": 32424,
+      "processStartedAtUtc": "2026-10-19T21:19:42.9265038Z",
+      "mode": "CoreCLR",
+      "visibleRendering": "not-exercised",
+      "concurrentProfileRejected": "not-exercised",
+      "profileDataPreserved": true,
+      "profileOverrideRejected": "not-exercised",
+      "attributedBrowserProcesses": [
+        {
+          "processId": 63284,
+          "processStartedAtUtc": "2026-10-19T21:19:43.0731063Z",
+          "exited": true
+        },
+        {
+          "processId": 55092,
+          "processStartedAtUtc": "2026-10-19T21:19:43.0979452Z",
+          "exited": true
+        },
+        {
+          "processId": 49976,
+          "processStartedAtUtc": "2026-10-19T21:19:43.1792945Z",
+          "exited": true
+        },
+        {
+          "processId": 72308,
+          "processStartedAtUtc": "2026-10-19T21:19:43.1818705Z",
+          "exited": true
+        },
+        {
+          "processId": 69292,
+          "processStartedAtUtc": "2026-10-19T21:19:43.2029715Z",
+          "exited": true
+        }
+      ],
+      "exitCode": 1,
+      "forced": false
+    },
+    {
+      "scenario": "missing-runtime",
+      "passed": true,
+      "processId": 47688,
+      "processStartedAtUtc": "2026-10-19T21:19:49.8690452Z",
+      "mode": "CoreCLR",
+      "visibleRendering": "not-exercised",
+      "concurrentProfileRejected": "not-exercised",
+      "profileDataPreserved": true,
+      "profileOverrideRejected": "not-exercised",
+      "attributedBrowserProcesses": [],
+      "exitCode": 1,
+      "forced": false
+    },
+    {
+      "scenario": "redirected-profile",
+      "passed": true,
+      "processId": 50812,
+      "processStartedAtUtc": "2026-10-19T21:19:50.5539698Z",
+      "mode": "CoreCLR",
+      "visibleRendering": "not-exercised",
+      "concurrentProfileRejected": "not-exercised",
+      "profileDataPreserved": true,
+      "profileOverrideRejected": true,
+      "attributedBrowserProcesses": [],
+      "exitCode": 1,
+      "forced": false
+    },
+    {
+      "scenario": "invalid-profile",
+      "passed": true,
+      "processId": 74328,
+      "processStartedAtUtc": "2026-10-19T21:19:51.167559Z",
+      "mode": "CoreCLR",
+      "visibleRendering": "not-exercised",
+      "concurrentProfileRejected": "not-exercised",
+      "profileDataPreserved": "not-exercised",
+      "profileOverrideRejected": "not-exercised",
+      "attributedBrowserProcesses": [],
+      "exitCode": 1,
+      "forced": false
+    }
+  ],
+  "allScenariosPassed": true
+}

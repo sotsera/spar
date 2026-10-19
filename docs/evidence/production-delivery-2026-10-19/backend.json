@@ -1,0 +1,38 @@
+[
+  {
+    "scenario": "patch-error-restart",
+    "passed": true,
+    "coordinatorProcessId": 46364,
+    "startedAtUtc": "2026-10-19T21:18:40.6773723Z",
+    "actualExitCode": 0,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 45,
+    "unrelatedSurvived": true,
+    "rendering": "verified-pixels-review-captures"
+  },
+  {
+    "scenario": "startup-dependency-build-races",
+    "passed": true,
+    "coordinatorProcessId": 69764,
+    "startedAtUtc": "2026-10-19T21:19:41.9770932Z",
+    "actualExitCode": 0,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 87,
+    "unrelatedSurvived": true,
+    "rendering": "verified-pixels-review-captures"
+  },
+  {
+    "scenario": "explicit-force-during-retirement",
+    "passed": true,
+    "coordinatorProcessId": 67108,
+    "startedAtUtc": "2026-10-19T21:21:29.8071431Z",
+    "actualExitCode": 0,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": true,
+    "independentlyRetainedProcesses": 18,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised"
+  }
+]

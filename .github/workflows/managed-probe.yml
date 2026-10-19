@@ -80,12 +80,19 @@ jobs:
           -Executable samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
           -EvidenceDirectory artifacts/native/ci-coreclr
 
-      - name: Publish strict NativeAOT sample
-        run: dotnet publish samples/Spar.NativeSample -c Release -o artifacts/native/publish --disable-build-servers
+      - name: Publish production SPA as strict NativeAOT
+        run: dotnet publish samples/Spar.NativeSample -c Release -o artifacts/production/publish --disable-build-servers
 
-      - name: Verify inspection is absent from Release host
+      - name: Verify production build boundary
         shell: pwsh
-        run: ./eng/Test-InspectionBoundary.ps1
+        run: ./eng/Test-ProductionBoundary.ps1
+
+      - name: Test copied production SPA (desktop rendering checked separately)
+        shell: pwsh
+        run: ./eng/Test-Production.ps1 -EvidenceDirectory artifacts/production/ci
+
+      - name: Publish separate strict NativeAOT native test fixture
+        run: dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
 
       - name: Test copied NativeAOT lifecycle
         shell: pwsh
@@ -135,4 +142,6 @@ jobs:
             artifacts/inspection/ci/**/frontend-logs.json
             artifacts/inspection/ci/**/*.png
             artifacts/inspection/ci/**/*.log
+            artifacts/production/ci/**
+            artifacts/production/publish/spar-publish.json
           if-no-files-found: warn

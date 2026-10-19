@@ -30,6 +30,8 @@ The [Visual Studio project-launch guide](docs/14-visual-studio-development.md) d
 
 For structured inspection, use the [inspection guide](docs/15-development-inspection.md): run `eng/Test-DevelopmentInspection.ps1` against the actual WebView and review its PNGs. Verify Release exclusion with `eng/Test-InspectionBoundary.ps1` after building Release. Preserve target identity and unfinished-work ownership; click completion does not establish asynchronous backend completion.
 
+For production, use the [delivery guide](docs/16-production-delivery.md): normal Release publishing builds the SPA. Run `eng/Test-ProductionBoundary.ps1` before any separate probe build and `eng/Test-Production.ps1 -VerifyRender`, then review the captures. The old native/bridge drivers require an explicit `-p:SparNativeProbe=true` AOT test build in a separate output directory. Do not rebuild shared tool outputs while native development suites own running processes.
+
 ## C# readability and lifetime rules
 
 - Prefer clear statements, named intermediate values, and small methods over compressed expressions. Use LINQ when it describes one coherent transformation clearly.

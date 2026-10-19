@@ -13,6 +13,9 @@ public sealed class SparWindowOptions
     /// <summary>Optional owner-authorized loopback content. Local HTML is used when absent.</summary>
     public SparLoopbackContent? LoopbackContent { get; init; }
 
+    /// <summary>Packaged production assets, mutually exclusive with loopback content. Must match the bridge contract.</summary>
+    public SparAssetBundle? Assets { get; init; }
+
     public SparBridge? Bridge
     {
         get; init;
@@ -28,10 +31,10 @@ public sealed class SparWindowOptions
         get; init;
     }
 
-    public required string Html
+    public string Html
     {
         get; init;
-    }
+    } = "";
 
     /// <summary>An application-owned directory. Spar leases it exclusively and does not delete browser data.</summary>
     public required string UserDataFolder

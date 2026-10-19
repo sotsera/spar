@@ -8,6 +8,8 @@ Production targets NativeAOT by default, with CoreCLR compatibility for applicat
 
 ## Current status
 
+The same React sample now publishes as NativeAOT with embedded production assets and matching generated contracts. A copied application renders and calls C# without a frontend server, with production inspection/control exclusion checked. See the [production guide](docs/16-production-delivery.md) and its recorded evidence. Dependency-driven CoreCLR delivery and external package consumers remain open.
+
 The native sample runs React/Vite with generated, permission-checked C# calls in an owned development session. The terminal/AI watch lane and the local VS Code adapter apply supported backend edits in place and refresh read data while preserving state. Coordinated restart retains Vite, waits for actual retirement, and builds current sources; corrections recover stopped sessions automatically. The installed VS Code debugger lane now has native breakpoint, Hot Reload, diagnostic, relaunch, rendering, and Stop evidence. The Visual Studio project-launch lane now has a recorded native manual pass; the remaining milestone scenarios stay open. See the [backend update guide](docs/12-backend-updates.md), [VS Code debugger guide](docs/13-vscode-development.md), and [milestone status](docs/03-milestone-1.md).
 
 ## Run the first slice
@@ -47,7 +49,7 @@ dotnet run --project samples/Spar.NativeSample
 dotnet publish samples/Spar.NativeSample -c Release -o artifacts/native/publish --disable-build-servers
 ```
 
-The sample uses CoreCLR for Debug and NativeAOT for Release publishing. See the [native host guide](docs/09-native-host.md) for C++ prerequisites, copied-payload checks, and current limits.
+The sample uses CoreCLR for Debug and NativeAOT with the built React SPA for Release publishing. See the [production guide](docs/16-production-delivery.md) for prerequisites, copied-payload checks, receipts, and limits. The precursor native/bridge probes require a separate `-p:SparNativeProbe=true` Release test build.
 
 The [contract file](samples/Spar.NativeSample.Contracts/BackendContract.cs) generates the C# adapter, JSON metadata, and framework-neutral JavaScript/TypeScript bindings during the build. Its separate assembly keeps wire metadata outside implementation Hot Reload. See the [bridge guide](docs/10-typed-bridge.md) for the supported DTO surface and actual WebView checks.
 

@@ -11,6 +11,8 @@ public sealed class SparBridge
     private readonly HashSet<string> _permissions;
     private int _pending;
 
+    public string ContractFingerprint => _dispatcher.Fingerprint;
+
     public SparBridge(ISparBridgeDispatcher dispatcher, IEnumerable<string> permissions)
     {
         ArgumentNullException.ThrowIfNull(dispatcher);

@@ -10,7 +10,19 @@ public static class SparApplication
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentException.ThrowIfNullOrWhiteSpace(options.Title);
-        ArgumentException.ThrowIfNullOrWhiteSpace(options.Html);
+        if (options.Assets is { } assets)
+        {
+            if (options.LoopbackContent is not null || options.Html.Length != 0
+                || options.Bridge?.ContractFingerprint != assets.ContractFingerprint)
+            {
+                throw new ArgumentException("Production assets require a matching bridge and no HTML/loopback override.",
+                    nameof(options));
+            }
+        }
+        else
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(options.Html);
+        }
         ArgumentException.ThrowIfNullOrWhiteSpace(options.UserDataFolder);
         ArgumentOutOfRangeException.ThrowIfLessThan(options.Width, 320);
         ArgumentOutOfRangeException.ThrowIfLessThan(options.Height, 240);

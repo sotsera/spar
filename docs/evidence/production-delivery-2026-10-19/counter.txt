@@ -1,0 +1,43 @@
+Window: "Spar", App: Spar.NativeSample.exe.
+	0 window Spar Secondary Actions: Raise
+		7 pane Spar
+			14 pane (disabled)
+			8 region Spar - Web content
+				9 region
+					10 region
+					11 region
+						12 region
+							15 document Spar Value: https://036063e5d9464ab6a18e9dc56fc9e6d7.spar.invalid/index.html ID: RootWebArea
+								16 group ID: root
+									17 main
+										18 text SPAR
+										19 heading Your desktop. Your app.
+										20 text A local web interface, connected to C#.
+										21 button Local counter: 0 ID: local
+										22 button Backend counter: 1 ID: backend
+										23 text Local state
+										24 edit (settable, string) Local state Description: Type something
+										25 text Hello, Spar
+										26 status ID: status
+											27 text Connected
+										28 button Refresh backend data ID: refresh-backend
+							13 region
+		1 title bar (settable, string) Value: Spar
+			2 menu bar System ID: MenuBar
+				3 menu item System
+			4 button Minimize
+			5 button Maximize
+			6 button Close
+
+Document text: ```
+SPAR
+Your desktop. Your app.
+A local web interface, connected to C#.
+Local counter: 0
+Backend counter: 1
+Local state
+￼
+Hello, Spar
+Connected
+Refresh backend data
+```

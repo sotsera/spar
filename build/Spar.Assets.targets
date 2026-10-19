@@ -1,0 +1,22 @@
+<Project>
+  <!-- Build dependencies first: the frontend consumes the same contract that the native application references. -->
+  <Target Name="BuildSparAssets" BeforeTargets="AssignTargetPaths" DependsOnTargets="ResolveProjectReferences"
+          Condition="'$(SparProductionAssets)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <SparAssetArchive>$(IntermediateOutputPath)spar-assets.zip</SparAssetArchive>
+    </PropertyGroup>
+
+    <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm ci --ignore-scripts --include=optional" />
+    <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm run build" />
+    <Exec Command="pwsh -NoProfile -File &quot;$(MSBuildThisFileDirectory)../eng/Build-AssetBundle.ps1&quot; -Frontend &quot;$(SparFrontendDirectory)&quot; -Output &quot;$(MSBuildProjectDirectory)/$(SparAssetArchive)&quot;" />
+
+    <ItemGroup>
+      <EmbeddedResource Include="$(SparAssetArchive)" LogicalName="Spar.Production.Assets.zip" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="WriteSparPublishReceipt" AfterTargets="Publish"
+          Condition="'$(SparProductionAssets)' == 'true'">
+    <Exec Command="pwsh -NoProfile -File &quot;$(MSBuildThisFileDirectory)../eng/Write-PublishReceipt.ps1&quot; -PublishDirectory &quot;$(PublishDir)/.&quot; -Archive &quot;$(SparAssetArchive)&quot; -Configuration &quot;$(Configuration)&quot; -RuntimeIdentifier &quot;$(RuntimeIdentifier)&quot; -PublishAot &quot;$(PublishAot)&quot;" />
+  </Target>
+</Project>

@@ -14,6 +14,11 @@
     <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' and '$(SparNativeProbe)' != 'true'">
+    <SparProductionAssets>true</SparProductionAssets>
+    <SparFrontendDirectory>$(MSBuildProjectDirectory)/frontend</SparFrontendDirectory>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="../../src/Sotsera.Spar.Windows/Sotsera.Spar.Windows.csproj" />
   </ItemGroup>
@@ -41,9 +46,16 @@
     <Compile Remove="Program.Development.cs" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(SparProductionAssets)' != 'true'">
+    <Compile Remove="Program.Production.cs" />
     <EmbeddedResource Include="App.html" LogicalName="Spar.Sample.App.html" />
     <EmbeddedResource Include="App.js" LogicalName="Spar.Sample.App.js" />
     <EmbeddedResource Include="Probe.js" LogicalName="Spar.Sample.Probe.js" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(SparProductionAssets)' == 'true'">
+    <Compile Remove="Program.cs;SampleDocument.cs" />
+  </ItemGroup>
+
+  <Import Project="../../build/Spar.Assets.targets" Condition="'$(SparProductionAssets)' == 'true'" />
 </Project>

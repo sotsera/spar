@@ -1,5 +1,7 @@
 # Minimal Windows host and NativeAOT proof
 
+Current publishing behavior: normal Release now packages the React SPA. The precursor lifecycle driver below uses an explicit `-p:SparNativeProbe=true` Release test build. See [production delivery](16-production-delivery.md) for the shipped application and separate test commands.
+
 Date: 2026-10-18. Scope: M1.2 / [upstream issue #3](https://github.com/sotsera/spar/issues/3).
 
 This slice introduces `Sotsera.Spar.Windows` and the ordinary `Spar.NativeSample` consumer. It loads trusted local HTML in one Win32/WebView2 window. There is no application bridge, development coordinator, SPA server, general inspection API, or package/template delivery yet. The integrated A01–A18 scenarios remain open.
@@ -19,7 +21,7 @@ Prerequisites: Windows x64, SDK `10.0.402`, an installed [WebView2 Evergreen Run
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
 dotnet run --project samples/Spar.NativeSample --no-build
-dotnet publish samples/Spar.NativeSample -c Release -o artifacts/native/publish --disable-build-servers
+dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
 ```
 
 Debug uses CoreCLR; this sample defaults Release publishing to NativeAOT. AOT compilation warnings are errors. There is no automatic CoreCLR fallback. The published application needs its `WebView2Loader.dll` and the WebView2 license/notice files alongside the executable. PDBs are optional symbols. The browser engine remains a separately installed runtime with writable profile data; NativeAOT does not bundle it or make the app a single OS process.

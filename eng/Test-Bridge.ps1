@@ -30,13 +30,13 @@ function Wait-Until([scriptblock]$Condition, [string]$Description) {
   throw "Timed out: $Description. Outstanding work has not been proven complete."
 }
 
-foreach ($scenario in @('roundtrips', 'close-with-work')) {
+foreach ($scenario in @('roundtrips', 'asset-roundtrips', 'close-with-work')) {
   $directory = Join-Path $evidencePath $scenario
   New-Item -ItemType Directory -Path $directory -Force | Out-Null
   $profile = Join-Path $directory ('profile-' + [guid]::NewGuid().ToString('N'))
   $stdout = Join-Path $directory 'stdout.jsonl'
   $stderr = Join-Path $directory 'stderr.log'
-  $flag = if ($scenario -eq 'roundtrips') { '--bridge-probe' } else { '--bridge-probe-close' }
+  $flag = switch ($scenario) { 'roundtrips' { '--bridge-probe' }; 'asset-roundtrips' { '--asset-probe' }; default { '--bridge-probe-close' } }
   $process = $null
   $passed = $false
   $forced = $false
@@ -46,7 +46,7 @@ foreach ($scenario in @('roundtrips', 'close-with-work')) {
       -RedirectStandardOutput $stdout -RedirectStandardError $stderr
     $null = $process.Handle
     $started = $process.StartTime.ToUniversalTime()
-    if ($scenario -eq 'roundtrips') {
+    if ($scenario -ne 'close-with-work') {
       Wait-Until {
         $events = @(Read-Events $stdout)
         if ($process.HasExited -or @($events | Where-Object { $_.Stage -eq 'failed' -or $_.Stage -like 'report-bridge-failed:*' }).Count) {
@@ -99,7 +99,7 @@ foreach ($scenario in @('roundtrips', 'close-with-work')) {
       if (!$process.HasExited) { $forced = $true; $process.Kill($true); $process.WaitForExit(10000) | Out-Null }
       $results.Add([pscustomobject]@{
         scenario = $scenario; passed = $passed; forcedCleanup = $forced; processId = $process.Id
-        startedAtUtc = $started; mode = $ExpectedMode; render = $(if ($VerifyRender -and $scenario -eq 'roundtrips') { 'verified-pixels' } else { 'not-exercised' })
+        startedAtUtc = $started; mode = $ExpectedMode; render = $(if ($VerifyRender -and $scenario -ne 'close-with-work') { 'verified-pixels' } else { 'not-exercised' })
       })
       $process.Dispose()
     }

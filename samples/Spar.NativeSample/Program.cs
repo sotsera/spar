@@ -28,7 +28,8 @@ internal static partial class Program
         var closeFromWorker = args.Contains("--close-from-worker", StringComparer.Ordinal);
         var bridgeProbe = args.Contains("--bridge-probe", StringComparer.Ordinal);
         var bridgeClose = args.Contains("--bridge-probe-close", StringComparer.Ordinal);
-        var probe = bridgeProbe || bridgeClose;
+        var assetProbe = args.Contains("--asset-probe", StringComparer.Ordinal);
+        var probe = bridgeProbe || bridgeClose || assetProbe;
         if (args.Contains("--missing-runtime", StringComparer.Ordinal))
         {
             _runtimeFolder = Path.Combine(profile, "absent-webview-runtime");
@@ -62,7 +63,8 @@ internal static partial class Program
             SparApplication.Run(new SparWindowOptions
             {
                 Title = "Spar native host",
-                Html = SampleDocument.Create(probe, bridgeClose),
+                Html = assetProbe ? "" : SampleDocument.Create(probe, bridgeClose),
+                Assets = assetProbe ? SampleDocument.CreateAssets() : null,
                 Bridge = new SparBridge(new SampleBackendBridge(backend), grants),
                 BridgeEvent = value =>
                 {

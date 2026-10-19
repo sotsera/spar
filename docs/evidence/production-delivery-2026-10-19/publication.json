@@ -1,0 +1,1494 @@
+{
+  "schema": 1,
+  "createdAt": "2026-10-19T21:23:00.180073+00:00",
+  "mode": "NativeAOT",
+  "configuration": "Release",
+  "runtimeIdentifier": "win-x64",
+  "revision": "9c1f1833a21a4ae45b7d5f448545e4ca8a26e8b4",
+  "workingTreeDirty": true,
+  "sourceHashes": [
+    {
+      "path": "build/Spar.Assets.targets",
+      "sha256": "C32C17B6872409363EF97B59DCF8382C7F04BCA198B938616E623956C73958BE"
+    },
+    {
+      "path": "docs/16-production-delivery.md",
+      "sha256": "4E10931B99EADC0E94EA36D8A46FFDA121B2891678D7A2E4DC3A166B0610C33D"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/aot-asset-bridge.png",
+      "sha256": "76F65BE8A79ECABBC928F81D08423E4E41AB27C21ACD3DBCD59D1FF92DC8CCA2"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/aot-native-resized.png",
+      "sha256": "AE56A926A80A56894173DA1C3FD558FAF7321C8664DD78825E5738E5F3F1DA1F"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/backend-patched.png",
+      "sha256": "E5CC9554160EBCFE16C6B81594CC41E2D105D0A6698105F02A41D3D8D6F2BAB6"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/backend-recovered.png",
+      "sha256": "5B8D39225A79FDD007FB9D1BDAE802D5B5DE0AB204B4F1293E814CE20BF2682E"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/backend.json",
+      "sha256": "242D8ADC2FB4BEAB2D5A466DAD61051A60BD7982042ED6E13C8B68010C00DD5B"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/bridge-aot.json",
+      "sha256": "AA33D72E19134DEDE0C6AE8C7E340F2DEEB18660D5E257A2511FAED01BB793B2"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/bridge-coreclr.json",
+      "sha256": "FAC74E280811DD47A23DBA3D5D1409D4DA2C3F33645735E3D2031E7BD4B240D2"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/coreclr-asset-bridge.png",
+      "sha256": "76F65BE8A79ECABBC928F81D08423E4E41AB27C21ACD3DBCD59D1FF92DC8CCA2"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/development.json",
+      "sha256": "9C2AEE4364433791AC44DC2CE47A3F7FAAD84EBD8DE0E195B56A683E26AE816A"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/inspection-edited.png",
+      "sha256": "827B1F80AAB9C655601171C63581CA35D64A4B63D455422937E1D7CDA53A3958"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/inspection-restarted.png",
+      "sha256": "62289842B02D0F324EF4F576162A5FA5F7AAE6758E90B1ABB1F04A6735F81F69"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/inspection.json",
+      "sha256": "0D3C0DC991F13E1436C03D9DAA857D19D769A1496814F316462FBD5D4F8F8B4E"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/native-aot.json",
+      "sha256": "0E6912AF372AA40505C368AE572472C93B009AF04DA504F04D17CD1A2A5B907A"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/native-coreclr.json",
+      "sha256": "C9A7FC4B58D3D6672624DF5F266FFCA3D949293F1087994FD7092C2651040A67"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/project-launch.json",
+      "sha256": "BE9C60F3BCDF7EE49D6BA2CF56531EEFC0AAADEB2C812534D215B3EF1193EBD6"
+    },
+    {
+      "path": "docs/evidence/production-delivery-2026-10-19/publication-measurements.json",
+      "sha256": "55D0E1C42BF40016CCE756C61B28A72CF95ACD8AF0A748C51C855BA2EA1F08D1"
+    },
+    {
+      "path": "eng/Build-AssetBundle.ps1",
+      "sha256": "68029F8FC5E15430B78643FA0EA575536D6311395F8CF339B97D90C55B505B31"
+    },
+    {
+      "path": "eng/Test-Production.ps1",
+      "sha256": "973F405C271B11BD01CCE425519F46899B2E7A89FE4E96BB2712FD109E01A9F1"
+    },
+    {
+      "path": "eng/Test-ProductionBoundary.ps1",
+      "sha256": "A661431B7FC0663BF2298B4A4ADAC92B462003732918B475ACAFFAF135B9A0E9"
+    },
+    {
+      "path": "eng/Write-PublishReceipt.ps1",
+      "sha256": "D9806F8C1278550788C1F628711574E3B00E9C1F2214634548E09C2239A69AE8"
+    },
+    {
+      "path": "samples/Spar.NativeSample/Program.Production.cs",
+      "sha256": "845ADD12EB5BEC13C2E1557261FD31E20F3FF87CC4572D89995F231CB715ADF2"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/SparAssetBundle.cs",
+      "sha256": "ADA0FC4628A8A8C3718CDE69C8FDB471F26D689F39F76C6C5CA762313295980F"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Development.Tests/AssetBundleTests.cs",
+      "sha256": "703DA4898114B254C269F9FB5E1CC66423138CFF0F83F6CF43A55EB3AEFF7B10"
+    },
+    {
+      "path": ".editorconfig",
+      "sha256": "7EC617E672B835AA1F8BAD996B5015F700E414AFF7FF069DFB684364176BCD21"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "D60F352D0DB1404C70AFB4BB8B2CA3FD1C610572AA40720E8A0B7BAA7885418C"
+    },
+    {
+      "path": ".github/workflows/managed-probe.yml",
+      "sha256": "10042FDC0B83DEF79C69CF207E736A7FF387E2D74E9AC8AB4A6DE590D7C03C81"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "0484A6B1EA5FA60CCB0611654542CBF12364DA776B096FE0D4CBB427742E5F82"
+    },
+    {
+      "path": ".vscode/extensions.json",
+      "sha256": "A61E9564F1B22A8FC0668DDF6AA0C83316D4911AD676CD9D5B98E6A725FEE15C"
+    },
+    {
+      "path": ".vscode/launch.json",
+      "sha256": "F13E74A8789D88D776430FD1813EE247A342E78F932457C018775C4874DEC22E"
+    },
+    {
+      "path": ".vscode/tasks.json",
+      "sha256": "CF6180E965A3A94462B6D55B3FDA7AC9157D1A3821DBAC6B8599E5AF072F0002"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "56C91524A5C9ADA0E5EF1C120142674F3A559404814C83E5CBBDE1A7321F0F18"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "225C7DBE139B1C4CC0C9C3C452B0ED84F2634C3359A033E6DFBEA2FE4221317F"
+    },
+    {
+      "path": "Directory.Packages.props",
+      "sha256": "EED5F5A3AA61F5E6E8D67F72A81F2EDE5DE602E27B469AE6FFE53B06BCAEA341"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "337188DBCDA60972A23EFF5D94F2F6EDCE70DAC5ED4BFAFFAA74B3A655B315FD"
+    },
+    {
+      "path": "README.md",
+      "sha256": "BECDBEFAC091E4C9592A74DE360545E3717595ECB6B2C92F36E986098B3AB030"
+    },
+    {
+      "path": "Spar.slnx",
+      "sha256": "ADB1EB8744007623429BEBE8C0A905AF0A2559462FE903A0EEFD5927CAC90A9A"
+    },
+    {
+      "path": "build/Spar.Contracts.targets",
+      "sha256": "64A85909864D209D69F0DAAA235A64FCA322355595128E5CF074DECB2CED3E41"
+    },
+    {
+      "path": "docs/01-reference-projects.md",
+      "sha256": "4A2811D8A0544C788B651FB26A28358BD6058378E6C2FB6425BFAA778D190D7C"
+    },
+    {
+      "path": "docs/02-product-direction.md",
+      "sha256": "9E0159DFDC607A3639D1930691B323643D5B535F35EB30A3D4818371A6B33D42"
+    },
+    {
+      "path": "docs/03-milestone-1.md",
+      "sha256": "7D6E8D8B1F2171D5BA7FFC8F9AA8BF60AABDD755E75D07BDC01B369313304252"
+    },
+    {
+      "path": "docs/04-milestone-1-issues.md",
+      "sha256": "FF54C37C6803C1BD49E7DA9A46FA44528D0A5C11B82DDB49918AF46E6325A4AA"
+    },
+    {
+      "path": "docs/05-implementation-kickoff.md",
+      "sha256": "27D8C662BB9E7E0F33D3082E2F15C3676EFC6698ADB654BADBB2C0957797D3B0"
+    },
+    {
+      "path": "docs/06-backend-reload-research.md",
+      "sha256": "85CCAAE01073589C7D227EA1760CB1E2248E2D8FC7AA7659276B83D053E818F7"
+    },
+    {
+      "path": "docs/07-managed-probe.md",
+      "sha256": "560E5E041EB734EE1F3BE1221810D0ED30FE3A4DA193AE0F072CFA19C79C2D6E"
+    },
+    {
+      "path": "docs/08-ci-merge-gate.md",
+      "sha256": "203777D091E0AEDB9AE113BF928126EB5896BFDEA315752141448BADD0BC9FC9"
+    },
+    {
+      "path": "docs/09-native-host.md",
+      "sha256": "A07E4A956B2DE703D5A668F871B8BDFBCD22D684B3705D29E97BB0F3A1F005A2"
+    },
+    {
+      "path": "docs/10-typed-bridge.md",
+      "sha256": "E4FB797B6DBBA428048304A096644144B89D0CC7245E670879AE47C5E8EBC511"
+    },
+    {
+      "path": "docs/11-development-session.md",
+      "sha256": "8FA1426831A047C45CC3F0C872B997715DC4219990C767863D4E3BBF9848A7C5"
+    },
+    {
+      "path": "docs/12-backend-updates.md",
+      "sha256": "31A970ECFAA94263040EF8DCE2FB68375488386033A6A92F2983A234653F576C"
+    },
+    {
+      "path": "docs/13-vscode-development.md",
+      "sha256": "6E2C355CEACB6284575E3EDC822293B80D755FD66519116645AC4493F0AEE015"
+    },
+    {
+      "path": "docs/14-visual-studio-development.md",
+      "sha256": "25A74D23485B357512DFF0F9725947F34304F3C0799633FAA81C136762D3ED77"
+    },
+    {
+      "path": "docs/15-development-inspection.md",
+      "sha256": "D67E7C14A04ADE19F37D3423B61E2DB943F1DDB2E197016436352136B796D9A4"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/README.md",
+      "sha256": "6A73E892123685CB9D336C1FD0E047CE521B9EE3A344DB15A38A91396ED6AF51"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/aot-bridge.json",
+      "sha256": "FBC51D714C0FC298D6081A26E0BC269D82DF6F2172C6296C00158074E785F4CB"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/aot-copy.json",
+      "sha256": "4E4A2E713148B6D1E5E051D26AB105D79DE4D9966234654F58F7F22BA1A7BFED"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/aot-native.json",
+      "sha256": "979AF2739DE484114B54578AF17D51008B848AEB602C0D36899EF79C8A9A53A7"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/backend-sessions.json",
+      "sha256": "997F46C71936A2404BB0380309560ADD401E6BEBDA16F5CCC978F748EFCA8A3D"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/coreclr-bridge.json",
+      "sha256": "B050D64A556726DB6EE5469AF1E0C266D25692FF3EC59F5AADAF050E9641EAB3"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/coreclr-native.json",
+      "sha256": "4C578B9CA0DB8F700112D25FD2ADBFDCD0035DF349CAB32A2F61A4BB19858A5B"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/environment.json",
+      "sha256": "15A34E89BD569F99850C5562115C47B83CB4F9E69A19776264754AF0D025E4A2"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/explicit-force-during-retirement.initial.sha256",
+      "sha256": "46F607E2219A905D95FA3D9BFF85DE4D08F1898BD8FA0CC2D17F09014785D83E"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/explicit-force-during-retirement.jsonl",
+      "sha256": "5DCE618E93B3936934633F05B0605714A8647F3D5DD20E7BB616DAC91B31273C"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/patch-error-restart.initial.sha256",
+      "sha256": "46616A120441E64AF0C9F9AA1AAFD04C34FBA301FF40DB04BC54CA72A2204B46"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/patch-error-restart.jsonl",
+      "sha256": "5875D390B5B72A0718F991AD586DDEA80A60A9C9F889DC6D42717AC28A3C794B"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/patched.png",
+      "sha256": "FB688402DDA9F93431C6B12A3DB98E0AF90298D0A2E7887106C67FF7A3B895CF"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/sources.sha256",
+      "sha256": "0919B561EFFDBF5010C1B7F2F3210CC798435E03E0FB9A875A7F9467E014693B"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/spa-regressions.json",
+      "sha256": "34A4D8214CB2D9D91A8F474E051A4383D3388FCB30A651E83738EC57D983D579"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/steps.json",
+      "sha256": "DE58B1E499863703C3043F4C558C746189265E5A113A0199FB254C693C59C6BD"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/vscode-task-stop-coordinator.jsonl",
+      "sha256": "EF30992F68B5B0AD93078786FF566C54D30D722ACE4E249E15AD7CB14E31F569"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/vscode-task-stop-editor.jsonl",
+      "sha256": "63C34CBAD0ABCB6EAD66CF649070D1D79A20F6F153B6AC6B4A708A81A4323990"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/vscode-watch.json",
+      "sha256": "338B5A9D5FA5D0436F1A7CD144435F8B99663B233BD9DEC274E5F85A9A594403"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/vscode-window-close-coordinator.jsonl",
+      "sha256": "423E46B3235FB3F7EBC1CF91FB41CD0D8FABDC0EB0E6D390A766973A94C18CC2"
+    },
+    {
+      "path": "docs/evidence/backend-updates-2026-10-19/vscode-window-close-editor.jsonl",
+      "sha256": "B784573743EFB88279B93E5765A3A33E4D66482D7A2FACBBCFEB2033CE855407"
+    },
+    {
+      "path": "docs/evidence/ci-merge-gate-2026-10-18.json",
+      "sha256": "F19729E110E4215B48F6A9918CB5B8CD41AFACC5E661C0D1C00E3A96693EF417"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/README.md",
+      "sha256": "4BBBAE4366B48897885E8737757F183B89530927E48AC79A046CE3AAD33D6618"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/aot-bridge-bridge.png",
+      "sha256": "C8BCFF2A951F27B66BD5E857A9845FFA3A1A4841A9C0542263C2C92538C05A78"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/aot-bridge-receipt.json",
+      "sha256": "645A66A90DA253C929ADB72E937FE5CCFFD9A202CC4D3B489291B47D08EEA461"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/aot-host-initial.png",
+      "sha256": "ABC57ABC662EF5AAC4B6B1E49A3E44559204B46815A0924EE797738777574B1B"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/aot-host-receipt.json",
+      "sha256": "7156C061AB40A01D25FF2750752846C414F38FF5DD550A5B8D9A4AF3B8DD39B2"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/aot-host-resized.png",
+      "sha256": "BEEB28DC6E1043AA65475346E2555A814B527049D09D1D0007F998961E34A1CB"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/backend-patched.png",
+      "sha256": "F22D1203A608B8F8D95D32547950EADCFE8AC50AC4F6CD39ED265177120BF5C3"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/backend-receipt.json",
+      "sha256": "77E8C518BD974539ACBDCED860175B0D59A2A4FAE59CDC4C280BF8F971470B81"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/backend-recovered.png",
+      "sha256": "9F60906414C5A75FC57AA4C12FBB604414092B1A8571BD42B034AFF636BADA09"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/commands.jsonl",
+      "sha256": "45C3A1F4C609F52755D7B5E0AE2924C2A7FE9E47425C7F5F65BFCFCD46BC05A6"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/coordinator.jsonl",
+      "sha256": "F6A8C0719377C98F0A2D52969457E0815628E9EA60E0B5B9026D621505E48A73"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/coreclr-bridge-receipt.json",
+      "sha256": "36953A0AAB5817D3096D1BA5C9C345F921B9B30B9DD582714394E4F40E80ED79"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/coreclr-host-receipt.json",
+      "sha256": "945371DC706F24F77002CC9F40E8CB2F277482DF37278A385903CBCF226CF2A6"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/edited-snapshot.json",
+      "sha256": "9C3D6DCBD89C38CC763F7126FB1B24D0049B889CE43E5C35704146B91897D423"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/edited.png",
+      "sha256": "827B1F80AAB9C655601171C63581CA35D64A4B63D455422937E1D7CDA53A3958"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/failed-restart-commands.jsonl",
+      "sha256": "4EF43B417082DFE4CC6543A4766F191AB673752AB0E904122246104DAA83A207"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/failed-restart.jsonl",
+      "sha256": "566BB4118A2C6442C6A8500D63745ADD91FAC03DFFB57615AB085B2A6CD9B564"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/frontend-logs.json",
+      "sha256": "97F2A7DFEFBA1454F238B916D59654A62761E8D15B2C13C535ED993C6F02781B"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/implementation.sha256",
+      "sha256": "51D10EE912079747ECD2B3E3FF790B33055BA57741D0CFA4EB84839ACBF07829"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/initial-snapshot.json",
+      "sha256": "D3A5CFB5ACAE5E2055E4DB8FC2BE9ABDDB513605AA1038926E6BD841FB87A763"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/inspection-receipt.json",
+      "sha256": "F477951EF5AD6D01AE66503D4DD2110D386DE40FF9438ECA265248AF2394B038"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/project-launch-receipt.json",
+      "sha256": "4E48D279B36E5460879A4B62CD51D2C895BA5B0078A957AE4757CFFCB9A58F2E"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/release-boundary.json",
+      "sha256": "F5EB676CD96D6D2B6311D01F9DDDAC2BAC15DD493F25F4B670BD0D0EC09C64D0"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/restarted.png",
+      "sha256": "62289842B02D0F324EF4F576162A5FA5F7AAE6758E90B1ABB1F04A6735F81F69"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/session-receipt.json",
+      "sha256": "A8B0E1A784D532D2F52D0A5325D60D96743F9D10ED54E2B9531E487CB14F6A45"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/vscode-patched.png",
+      "sha256": "96C5E9AA792E8A323DCC78E47E7264C9E5DEDC54ACE0E87148A4F98C5BF09EED"
+    },
+    {
+      "path": "docs/evidence/development-inspection-2026-10-19/vscode-receipt.json",
+      "sha256": "96AB44B9519D392875B46AAB258B1C0BE0607C8AF006B77411AA3B5412A6EB33"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/README.md",
+      "sha256": "7C25FB32C0544281FE912B33D3714B841E3C3BB4D9818802B9D699EBEF6A1D28"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/abrupt-owner-kill.jsonl",
+      "sha256": "3DA50D5D4A8365A85DFC80C34564ACFB879C8C547D043606D3E736CE19101475"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/after.png",
+      "sha256": "6175DCD31899E33659C15A07D9A37AED419DCCFC99554198A85BE45D3D937EDD"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/aot-bridge.json",
+      "sha256": "AD67B6A22B52D3BA39077BE78B06E45DF2D4B08C53D58A6AD4D4C9A9749DB5FE"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/aot-copy.json",
+      "sha256": "70F794632D56D74801C0803497EE0EB0B8F6F14EABCBD2B6F37FF27FDC33B6E7"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/aot-native.json",
+      "sha256": "C43EAC65B5DF978583363CC7904454EAE79A6443108C03EBC5B5D0DE20C2414E"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/application-exit.jsonl",
+      "sha256": "FD2A67ABA69346167CE7A97D860C886E914DD3C42D4D89AA94D79833A0CB8230"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/application-start-failure.jsonl",
+      "sha256": "CD408493EFA3B6C04FCC27941C06600F741ED5ED306A90A451A91F522E1DD5A8"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/before.png",
+      "sha256": "F556102AAE10EE11435DD58F04D61ED749914B03ABA40C65A67BBE2A075165DE"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/client-credential-denied.jsonl",
+      "sha256": "38090E0ADD05AAAD897B0B2B02365256769AD3D0E8FE7D2A26D07E1B5E500439"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/coreclr-bridge.json",
+      "sha256": "0A6ADAFBC4596DE7AD057D295E263DA9D036A1A4A1BE3DC9A5E7D3DF85616594"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/coreclr-native.json",
+      "sha256": "ACCE9007DB30F1B5848B8438E34FACA27A88651341CD36D6AEAAB09C9401ED5A"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/environment.json",
+      "sha256": "C7A03E3BFD0FDF51C739593F2132298D5358E04C1AB4956945D40B9D48005072"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/frontend-exit.jsonl",
+      "sha256": "25D5E5E1177A878E5B9ED3AF142B6C45943719EF42C46CC9FBED701ED436070D"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/hmr-restart-close.jsonl",
+      "sha256": "096BB30B9E763FAF90F670631BFFCEFCC24ED382B89EE973A754978041FD55E2"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/malformed-owner-input.jsonl",
+      "sha256": "AD3BBA08B524CA8A885D9389E15C47C0A78EFD8A1F8CD1B2BE72BC40D6436EA8"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/owner-pipe-eof.jsonl",
+      "sha256": "8AAA8E9755B5FEDDDFD42E5335273BF6051E5693CE6B7B951D783AD87D8CE4A9"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/port-conflict.jsonl",
+      "sha256": "CA11CFCEE605D35AD34CCAE32508EED6D4828213988BDDD2EEF29F368D0BBBDE"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/sessions.json",
+      "sha256": "BFF92F9DBB05BDC5AA9CC0C697166A40F64A75588894C81D5BA0A5A3B9C3B872"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/sources.sha256",
+      "sha256": "B57796597E2B89F7339ABE5A7AE36AB6C30D718FB631E8704D6FF6CB4CDD7962"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/startup-timeout.jsonl",
+      "sha256": "6F4BE3303F136C035F3D166B17F32577A0CB12374E8E995BC98BF78752FBF706"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/vscode-task-stop-coordinator.jsonl",
+      "sha256": "C746DFA8F67FEAC452F4C73018406C510096655A301B4A40DD0AB4C46ED59F58"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/vscode-task-stop-editor.jsonl",
+      "sha256": "9636F214D57DB828754A5AC7C7B88D303ED1A15E197B96C3DE60BA0A94D7A1E0"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/vscode-window-close-coordinator.jsonl",
+      "sha256": "8511ABD27474363465EE8FC17EC3973DBF627452BF0DE1C4129FD2F1C96C2529"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/vscode-window-close-editor.jsonl",
+      "sha256": "A9E824706770E6C7D3DFFED8031B38C75FCD3D21955853A34D2051B5E5C03153"
+    },
+    {
+      "path": "docs/evidence/development-session-2026-10-19/vscode.json",
+      "sha256": "0EEA5EBE0ECDAE5B4C6F9B84677AA68F3737E9B0806B5A1CD4FC4C5217A207AC"
+    },
+    {
+      "path": "docs/evidence/managed-probe-2026-10-18.json",
+      "sha256": "651AFBBA0D361A43F483F43DAABD020823175BA8C1A18360E4B0AC9901C2759E"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/aot-initial.png",
+      "sha256": "999DB90E86251E06981BBE84214BE44D939EC7D647651BD09D8DEA2628E9145B"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/aot-resized.png",
+      "sha256": "5FBF38ADED45C33588E9C321E2388D829C2CE9E97DC3720E2696E2BF03E7F534"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/ci-aot.json",
+      "sha256": "A74043694CEA0152E654C75EBFC9B609F81BD918EC5D79A8C418DF416F808CF5"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/ci-coreclr.json",
+      "sha256": "B68666C55528387EAC99270320BF83535D07A9FABE5A89E8B32CFEBB16FC0489"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/coreclr-initial.png",
+      "sha256": "999DB90E86251E06981BBE84214BE44D939EC7D647651BD09D8DEA2628E9145B"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/coreclr-resized.png",
+      "sha256": "5FBF38ADED45C33588E9C321E2388D829C2CE9E97DC3720E2696E2BF03E7F534"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/harness-expected-failure.json",
+      "sha256": "66006C1C88B91D6186711CF91518DB3F44DA70475B3F9E9C92781FC1F8AD51AC"
+    },
+    {
+      "path": "docs/evidence/native-host-2026-10-18/receipt.json",
+      "sha256": "42D4AAB74EB4C3E55D692C921EFA24EE714EB7341C266A02E2922AFD29B45152"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/README.md",
+      "sha256": "5EF5E31ECB14B199CB9BEBE249AE43CC30F63A82293EA2EA429D5030F404BF5F"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/backend-patched-event.json",
+      "sha256": "A16F00DA533FE0075538C720D1E2FE7DAA8292184FAE4F66FC12CA273EB68E20"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/contract-change.jsonl",
+      "sha256": "0298C437C61EB8004192F1923F210A98A0A55349D59724FE955DBEB0E919EBCB"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/coordinator-crash.jsonl",
+      "sha256": "9941EFC1D1A4F04E6C535AC90B6C298C9481440F9CAA95C5A88F133075A3CF35"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/debugger-stop.jsonl",
+      "sha256": "C26966E226E50E1ED944341936DD4C8599607521A6156745394CABBBD09F8291"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-aot-bridge-receipt.json",
+      "sha256": "A0E9FA8D6070B893FCFE934710B24064333F47B2196F5F99ADAD3B4F1EDE5D9B"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-aot-bridge.png",
+      "sha256": "C8BCFF2A951F27B66BD5E857A9845FFA3A1A4841A9C0542263C2C92538C05A78"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-aot-host-receipt.json",
+      "sha256": "A2070A971181ACE47B2A33E1159FBA41A467FAF90ADEB11A77A2BDD238F57C49"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-aot-host.png",
+      "sha256": "ABC57ABC662EF5AAC4B6B1E49A3E44559204B46815A0924EE797738777574B1B"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-aot-resized.png",
+      "sha256": "BEEB28DC6E1043AA65475346E2555A814B527049D09D1D0007F998961E34A1CB"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-contract-change.jsonl",
+      "sha256": "9C61EC146F231C67DAE5ECCE9184DBBFA8AC70BFEA1A3804D96BE2912681352D"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-coordinator-crash.jsonl",
+      "sha256": "84E63A187718F646F0896ADCF0FABF94D150C460D7F09857D8836B925E07088D"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-coreclr-bridge-receipt.json",
+      "sha256": "40320DC93B9D3298FC0D129DD338E9FAC3993A89945F295C54297D51D0C20A6F"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-coreclr-bridge.png",
+      "sha256": "C8BCFF2A951F27B66BD5E857A9845FFA3A1A4841A9C0542263C2C92538C05A78"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-debugger-stop.jsonl",
+      "sha256": "AC13E5DB3A25345F50AA74E25A9F125C996D57A19C365FE0BD16B927EB1C2BD6"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-development-after.png",
+      "sha256": "879B5AC62C1970DE9ED1A88CD82C641F8923FD9940840C75CF81608FD3F6EDF7"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-development-before.png",
+      "sha256": "D7A83628B97A76304C91137E509E3DD60F205434DF2ABE6CA08C58BBF5D988A8"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-development-receipt.json",
+      "sha256": "A0A1DB11C7EE29F96DCE0523C995767AE2A78C4FF02BF5BE5C55BBDE304AAF9E"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-lifecycle-receipt.json",
+      "sha256": "CEFE353607D52CB18FCD41909F0DA55115DB3E454FDD84358810D7B576837678"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-native-close.jsonl",
+      "sha256": "090B79C429F7197CC47C32FA42AA983A4AF14B62CEB73DA76F7707CAC9498E28"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-native-ready.png",
+      "sha256": "CEC7152C69D824F59F4CD38662FED6D9AD224C09E69403114807EAD211887446"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-vscode-coordinator.jsonl",
+      "sha256": "24BE882E26F2A0B0FD27A4C3F9288CE8EC7D16AE909814CCF8902835AA3D9EE3"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-vscode-patched.png",
+      "sha256": "96C5E9AA792E8A323DCC78E47E7264C9E5DEDC54ACE0E87148A4F98C5BF09EED"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-vscode-regression.json",
+      "sha256": "FDEC615CA439A2F2179DEDB12F0E6A173841F367B3C07EA8F3BF62C40DD44D78"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-watcher-explicit-force-during-retirement.jsonl",
+      "sha256": "D8C5CD90904AFDEC0B08F50C366AD5090C42E6D81A313249FC6EB2A88DA99787"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-watcher-patch-error-restart.jsonl",
+      "sha256": "6D444C0D5114A5B51100F301DC0B4780B815D9AF79A9D156FCCE4DA0F0D83681"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-watcher-patched.png",
+      "sha256": "209CB0505E114E7E801819374829F147E651E6DA6766AB6350830EDA82984C92"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-watcher-receipt.json",
+      "sha256": "DDC383ACE0E2E031C16D6586EB85BF8C94A19D22CA9E37820B98EB0D394B249E"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-watcher-recovered.png",
+      "sha256": "EC34CC00BADCDAE3E4F7508A5373DCBE95E8D6BBAC94CF208F868D6D7EE2D970"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/final-watcher-startup-dependency-build-races.jsonl",
+      "sha256": "884B14A093DC85C0E732401FCB9153EE3CFA48C07B50D946477EA631BF1B88A7"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/frontend-hmr-event.json",
+      "sha256": "535911AD1730451BA2E36C464906D0361B6023B966394DF03378E8A22158576F"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/manual-fixture-final.sha256",
+      "sha256": "6D24F6560D72BD45087D763100D757D994B4CA4C9BF5843114055F51414DFC4C"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/manual-steps.jsonl",
+      "sha256": "329C15675CA00232E35C4F4530539547E2BCDE04393B96EFFE9B3DD35DC4E398"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/native-close.jsonl",
+      "sha256": "29A97935E5C7E1B80F5BEA69E5D8B51E0EC205673699E350E340F3029835BC31"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/native-ready.png",
+      "sha256": "DED3F263313D6818C3AC4619618273E78B5BB215CD923E0012484B51AC5B1D59"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/receipt.json",
+      "sha256": "CEFE353607D52CB18FCD41909F0DA55115DB3E454FDD84358810D7B576837678"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/sources.initial.sha256",
+      "sha256": "90FF5578220C98E48AD704F2D825F1B8E3F418B115F239405BB978BA794361F0"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/sources.sha256",
+      "sha256": "FE29ADC58DBA1A9C29C0997A0CEDF1115AE72355306A1506BF9E8CCDDF64735E"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-backend-patched.png",
+      "sha256": "01D98040D2AEBC36329AAC02A82039D351982CDA7B9DDB17DC730F6F16BBEAB5"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-compile-error.png",
+      "sha256": "4FCF311B4C98C9E136890DBD6C795512C287BA92AD62C7BE229BD7F80F1C81EC"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-contract-close.json",
+      "sha256": "D7B9DBA8C50E3FB35CA2C63D6A87E6ECA520399D79C38D329438E65714408432"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-contract-recovered-event.json",
+      "sha256": "79575E1CBF6B3130D89F3A178A1C2E2DB1B0E4D148FB8925B4FB4D87B57B3CCF"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-contract-recovered.png",
+      "sha256": "E9F10A98B18CC09E4087DC3B25FE7E0558C35B2B653246C5C5DAAB7763BDD4F3"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-contract-session.jsonl",
+      "sha256": "663F1C270A26222353255F07F275B2D9BA9D1558C83DCB5E81006440405269CD"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-css.png",
+      "sha256": "EA5313734EF68151217427D6BE021ED7F95BD1CC2DE7E30F7BA0F8C956911FA6"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-debugger-stop-session.jsonl",
+      "sha256": "3FFFEA8A6E91EF104DDA4358B9D5498F9708C7C9F07FD6BD7F9AA25A7B28E939"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-final-processes.json",
+      "sha256": "E37FD603C5B30D98BAF97D7DC3130E879875A9E5DBD094943EA8313581CBD553"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-first-close.json",
+      "sha256": "D07E3331EF3962EAE0EAAF0A541F7B4E29A09163A84014E327545FE9548E79BB"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-first-session.jsonl",
+      "sha256": "EE0EF4D45BBFED4E386DD436BD3E6176BAFF9C112B573AB7AF3B6309C78419EA"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-first-two-sessions-processes.json",
+      "sha256": "96C04EC0F31ADDF0C14C1826A7E344038FD62AC8C67F690F3ABB97C8B41AF4CC"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-generator-reference-error.png",
+      "sha256": "1D8CDBD34270541FF2311991EE0FD8DF4D13C0FBFCE9000CED99338E38196C02"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-paused-timeout.png",
+      "sha256": "4809575F5574EFBE1DD0491E769B5FAB2C7E4555C5B002E0A7E365A9B8CF7E93"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-recovered-event.json",
+      "sha256": "49EC94DD639AB01794524CDE483A3C246A09F9886DA333248901C526A02F8AB3"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-recovered.png",
+      "sha256": "6FF271805A759F9A58966B23165D4190AFC6B00FAB76649977F0371C8E89BA9B"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-relaunch-event.json",
+      "sha256": "777692774D9C110699268FD6985635019475F4CFDE8C2898980F2029B8833C5A"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-relaunched.png",
+      "sha256": "84A50F16A36DAB17C23CE77D095221C2525542FB69A0AD088C652DA1299E2215"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-second-session.jsonl",
+      "sha256": "D03836411851D93B48DC19F6B6240A45F07C5831F51AE7F87EB54A6271820D4A"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/visual-studio-unsupported-edit.png",
+      "sha256": "383282E1B122E3196D730482AC93DD9144B54F8B2C82E945D6E9D9926D2FC44F"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/vscode-coordinator.jsonl",
+      "sha256": "812E670F708C58B423432478E8CC4725C53A3C536628F9775F0C723271CEFFE6"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/vscode-focus-failure.json",
+      "sha256": "26ABFBA770312AA9221A718CC0E54DD56EBEEB21DBCE05375ADACAD510E7A625"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/vscode-patched.png",
+      "sha256": "9E19F9C2F7A156867C64A5CB0C5D4FB77187D78BBD85C63B482F2D5A2C5E35D3"
+    },
+    {
+      "path": "docs/evidence/project-launch-2026-10-19/vscode-regression.json",
+      "sha256": "434F0721FC99AF75F0713AF8F1A1ADA72416635FFBDBB5D7E81002F2E73A60D7"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/README.md",
+      "sha256": "177E2A72937782CB758AA44F172C0DB9ACDF109ED644DC4B3A485A4F5631940B"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/backend-sessions.json",
+      "sha256": "607C87096C088414407E028F5A21865EF2EE0EC84708859547F0EE38CA07386C"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/environment.json",
+      "sha256": "68F6BF684F2B8D34ECFBA5570B9908210ECF2EBD97174DB045527D0132FBA226"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/explicit-force-during-retirement.initial.sha256",
+      "sha256": "4556EB0A1716B8F40E2509E0935C5C1517933066447159D04601DA4CCEBEDFA6"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/explicit-force-during-retirement.jsonl",
+      "sha256": "49E12729B652252F720A65482EFC9B482A1BDDEA0DBEB224CCD331999EA7A1A8"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/patch-error-restart.initial.sha256",
+      "sha256": "EDA744FCDC70C72E09ED61F96D850BF1CDD0F95658D39AB3813A847DA0F3E6E7"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/patch-error-restart.jsonl",
+      "sha256": "540931DF0B842CADAF2401C0363C24EE8A7722FE4C6DDC1502B48E23C37AD087"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/patched.png",
+      "sha256": "FB688402DDA9F93431C6B12A3DB98E0AF90298D0A2E7887106C67FF7A3B895CF"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/recovered.png",
+      "sha256": "95919E069BEEB9CD3CF6411E54718DB5BD3AE29F07CA7EF477A46ADCBDCAD294"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/sources.sha256",
+      "sha256": "B89A56247AE30F42161303C696C6FC2F499A9288C4E604EE463357FDC126AFF2"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/spa-regressions.json",
+      "sha256": "921F889BB78DF81A75E0E43450F1FC07A2A6CB82283864305B599FF79E43901C"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/startup-dependency-build-races.initial.sha256",
+      "sha256": "FB45D42DA2F49BDFDC1F45B5A3BBD9306A5A02564C993A1DBECBEEB4EBEC9751"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/startup-dependency-build-races.jsonl",
+      "sha256": "59938A5204D1A1082B842E23240BDB162464D71976B3BDADF287BE56E58E934F"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/vscode-task-stop-coordinator.jsonl",
+      "sha256": "8CCD0947CA575AA1E3BD5CB2E769037E3DBAD2C70D03B953250B003A25267164"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/vscode-task-stop-editor.jsonl",
+      "sha256": "58D94BCA3F0B85949E6D5734DA6CC3C6F1B6E22CA8B3D45AFD4DDF5DF54A2291"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/vscode-watch.json",
+      "sha256": "3FE5CA71CF1DBECE7BAF57818306F1E0FB4FE8B663877E904767666C2466A05D"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/vscode-window-close-coordinator.jsonl",
+      "sha256": "F9193EBE325600A7E7F9D6A2228FE322CD4E8E1FF07C1A1CAFC302FAC378B987"
+    },
+    {
+      "path": "docs/evidence/restart-policy-2026-10-19/vscode-window-close-editor.jsonl",
+      "sha256": "30CF2F3CB465E242410EE8BB7D1F3483BCE007759A001FE91DF690CE6EF7F7D0"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/aot-close.jsonl",
+      "sha256": "1757C9E57865E6DD2CE23DEF8A39558E5A4E1DF044EC2942211138D8DB146692"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/aot.jsonl",
+      "sha256": "2FD2740C4D97D8DA939D3CB098A6B90B4900EF0CD70ED173D3FFE238B1368916"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/aot.png",
+      "sha256": "76F65BE8A79ECABBC928F81D08423E4E41AB27C21ACD3DBCD59D1FF92DC8CCA2"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/ci-close-driver.json",
+      "sha256": "1654F42C84FD80C773696CD83100086A516087103D1B23A4D3FC5C33111B2B14"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/coreclr-close.jsonl",
+      "sha256": "293745738A2CC35426413D6464A5EE3AD86A4E55CAAEE85998BE9036C0877691"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/coreclr.jsonl",
+      "sha256": "CD59EAC5E7259839C69F93C7D456FBB787B3DF18CFBEAC46D7D67EBE47DABE3C"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/coreclr.png",
+      "sha256": "76F65BE8A79ECABBC928F81D08423E4E41AB27C21ACD3DBCD59D1FF92DC8CCA2"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/generated/Contract.g.cs",
+      "sha256": "F118CA73F86E7306ADC8963B716098520B599B44E7C9C7F8FC15190BC0EB895B"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/generated/client.d.ts",
+      "sha256": "72702C5246994DEBFF74E779091559C01B300FD526D5B96152E241EE685BE462"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/generated/client.js",
+      "sha256": "0D5BEE15399AC413128F32841CF18A70E2B18D745BB86EF7C37FF7A51E2A5DC1"
+    },
+    {
+      "path": "docs/evidence/typed-bridge-2026-10-18/receipt.json",
+      "sha256": "B5874CC3CE1D6215ADC0070467D1F7244387A52876F5C0E4557D622BA63C4A64"
+    },
+    {
+      "path": "docs/evidence/visual-studio-2026-10-18/compilation-error.png",
+      "sha256": "9F7A7F54E30735851DB87E02EE70C11279B3A2A315D0C940FCBFBDB14111C23D"
+    },
+    {
+      "path": "docs/evidence/visual-studio-2026-10-18/receipt.json",
+      "sha256": "3E04FC1C097D6D37594B167A73B7C37070F6555A37A3A928DAC67C42215DBEBC"
+    },
+    {
+      "path": "docs/evidence/visual-studio-2026-10-18/settings.png",
+      "sha256": "D648B91C47CA617ECA01743A836FE55D43E3489D2BE61824BD0E8D613444B0C1"
+    },
+    {
+      "path": "docs/evidence/visual-studio-2026-10-18/unsupported-edit.png",
+      "sha256": "E03E6652842818A81D8D65DAD66873AD98D4D6A97D624DDCBC0D348966F3F892"
+    },
+    {
+      "path": "docs/evidence/visual-studio-2026-10-18/version.png",
+      "sha256": "401D622AD921FE0BAAD61619529FFD148A896C247E3B17F27DF0378A48F1321C"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/README.md",
+      "sha256": "CA3F28670C1CA5BF3413D6702341B998244E3DBEB967B80BB5BD4D54800CC44F"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/child-capture-failure.json",
+      "sha256": "4997D5B122BDB2341B46DB6F62D38B0EC3CD2262FE2D9C9E14A7269797CD362E"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/coordinator.jsonl",
+      "sha256": "A6AE4F2D0661E504C71367597F30BA6F3B0F2A868F78139F875C2C791BF8BA22"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/debugger-events.jsonl",
+      "sha256": "66E3A78939064E729B2BEE60E859B9C2EF512A22AD39D18D39707EE1F8089D36"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/debugger-patched.png",
+      "sha256": "9E19F9C2F7A156867C64A5CB0C5D4FB77187D78BBD85C63B482F2D5A2C5E35D3"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/debugger.json",
+      "sha256": "A35C33E3ED4529986110029E62E6902C8AA5A80B64791B5E05D6691B460F9A1A"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/early-save-failure.json",
+      "sha256": "39A42E3FB54B5088409C83C8EEB5266AE6A9F2E4A18F6B622C6BA198036080C0"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/first-launch-failure.json",
+      "sha256": "F4ED27DE5C15D154C69DC665B9211FA0E99D7061FC1B1E0BE18E704F8297A39C"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/fixture-sources.sha256",
+      "sha256": "47753023A0A27CBC5FBBA9D78C7FC8B3805ADC89A6F7867A8999FF42E12214A0"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/provider-order-failure.json",
+      "sha256": "6BA18A07A76D42E6881D6586B762C07F61FF8389239C3F78D260E0B3BCBE3224"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/sources.sha256",
+      "sha256": "7036C2EFE92AF956EDF234C6898C38D17AAB3A143FA99EA9E9E95357ED458A27"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/spa-regression.json",
+      "sha256": "0830FC1D3D5D1D3FC90225581C6C531361F93DA52CE67A313107EC284D387834"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/stale-snapshot-failure.json",
+      "sha256": "5BD7CB1929019564C7CCF9B08E4270A5B51FDC91B2D328551F20AF72233DAF67"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/watcher-patched.png",
+      "sha256": "C3CE8DCAF44B3B13DB19069ECBEBA93074504B5FC09DB96A48CFDA825312F0C4"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/watcher-recovered.png",
+      "sha256": "57F3055DAF624234B525E2F95D57EC08DA32E8A6E0DA6EFB7A0F6AF055D928F5"
+    },
+    {
+      "path": "docs/evidence/vscode-development-2026-10-19/watcher-regression.json",
+      "sha256": "8532F0DBCC9ACB674A9CE9E538E0792BB43B176D1ADC093C437799F622D2E2A5"
+    },
+    {
+      "path": "eng/Test-BackendUpdates.ps1",
+      "sha256": "5E8293F3096EF7EC91B5378B15EB8AED4A65B4A64C3F76560BF6ABEDC8B4F208"
+    },
+    {
+      "path": "eng/Test-Bridge.ps1",
+      "sha256": "EC9A590D6212DAAA2039BA030A99D55688B8A616CDC7DE66BC01F7C5CA1059FA"
+    },
+    {
+      "path": "eng/Test-DevelopmentInspection.ps1",
+      "sha256": "B5A02DEF625169221B948F5919AF24719A269F8F0545BC1BF974CE4C9C1722CC"
+    },
+    {
+      "path": "eng/Test-DevelopmentSession.ps1",
+      "sha256": "37C735EAAF457C6549B0D62C30C4A9C7D40AAD47E7DABC0FE8A689ABFAFD82B5"
+    },
+    {
+      "path": "eng/Test-InspectionBoundary.ps1",
+      "sha256": "AA28A6ED2C193DE1E9BDA9A7D70D6AAB45BE9479D3590F70EB2BFC5D57AAA7DC"
+    },
+    {
+      "path": "eng/Test-NativeHost.ps1",
+      "sha256": "22E5B716B97EA0E52D2D87E8A04CFFDD1B46E1DD5269862A240ABDD353B9F0FD"
+    },
+    {
+      "path": "eng/Test-ProjectLaunch.ps1",
+      "sha256": "69B64FA3BC2E08FD1D58A7C43F4C96748716A671B2EFD0DAB1E4762F75368C17"
+    },
+    {
+      "path": "eng/Test-VSCodeDevelopment.ps1",
+      "sha256": "89D4F6B5E66EE23754FA0CF2F87001D6876C66A2402BFF0FD76E1D68750A308E"
+    },
+    {
+      "path": "eng/Test-VSCodeProbe.ps1",
+      "sha256": "BB2E0301E0ADB82A630AD246C31EBF76DEC964A81CEA75F7679C7D93B589104B"
+    },
+    {
+      "path": "eng/Test-VSCodeSession.ps1",
+      "sha256": "69C616077B1BF875A6CA2FDE4DDCAA3ED3E9A481262ACF99D7CD76F5555DC9FA"
+    },
+    {
+      "path": "eng/bridge-client-tests/contract.test.ts",
+      "sha256": "44078C6EC843A842575C0B07BD19BADC14E66840187078265B76C4ECF24B1393"
+    },
+    {
+      "path": "eng/bridge-client-tests/package-lock.json",
+      "sha256": "A88586564BFA5033E8C088A3286742418D2CA3E2E27C5008259F2CEC2A5E831F"
+    },
+    {
+      "path": "eng/bridge-client-tests/package.json",
+      "sha256": "53536EF5969994412CBC568CD31A2BBB9ADA0EC5793D1D61450ED90FB37EC411"
+    },
+    {
+      "path": "eng/bridge-client-tests/tsconfig.json",
+      "sha256": "DFAFDCA80928769C2079216C445784DC0792E37669C51967AA17A65E9BC4C308"
+    },
+    {
+      "path": "eng/development-probe/frontend-wrapper.mjs",
+      "sha256": "CA5BD44604252C92352A0CC256D3988BA8B396FBC11AAE6285E14A2101689290"
+    },
+    {
+      "path": "eng/development-probe/helper.mjs",
+      "sha256": "33E45E74E0B2AB51DE9507C491322B4BF94F703135202A16B57FD91D20FAC476"
+    },
+    {
+      "path": "eng/native-probe/Desktop.cs",
+      "sha256": "7B76FF010F5B3FA55B2304812C6CE36D278657C57720078017C332AA3918202D"
+    },
+    {
+      "path": "eng/vscode-development/test.cjs",
+      "sha256": "831352FFCFD13969C8CDFC7126DA4DD9180857A80B913C3B3629B4888504D0E6"
+    },
+    {
+      "path": "eng/vscode-probe/extension.cjs",
+      "sha256": "8B05A0285511DF8920D94FBC17019D8CED8FFDA324E9698188329EC6E26E20C5"
+    },
+    {
+      "path": "eng/vscode-probe/package.json",
+      "sha256": "5B29A751D08D36D767154D045F869EF9712585F6EC1FB1942E75F08794824E8D"
+    },
+    {
+      "path": "eng/vscode-probe/test.cjs",
+      "sha256": "E9C83231C14634CA27DB89C85B40326E70833C96F0D7E8B90E89EF3FF3BB6E8F"
+    },
+    {
+      "path": "eng/vscode-session-probe/extension.cjs",
+      "sha256": "7F124E697809B58B39FD69DF685684D74F28AA4F8666628E84A33085E4661B91"
+    },
+    {
+      "path": "eng/vscode-session-probe/package.json",
+      "sha256": "2E1D29A90E5CE5F2FAE2C2E401684683E554DBF70EDFBB1BF87A517CB59279D0"
+    },
+    {
+      "path": "eng/vscode-session-probe/test.cjs",
+      "sha256": "3D84994D1B5E0F1E9542CEA352F7D6322AA11A91434726CC491DB37DB88C74AF"
+    },
+    {
+      "path": "experiments/Spar.HotReloadProbe/GreetingProvider.cs",
+      "sha256": "F7ADA3621E043F9645C22196DE4A5FD630ADF28330230C9A33B2859986140FC8"
+    },
+    {
+      "path": "experiments/Spar.HotReloadProbe/ProbeState.cs",
+      "sha256": "4ADD72F14FF9B63D16EB5F5DDEA3DFD5226B02DF1C67EC2D5B601434A8122A21"
+    },
+    {
+      "path": "experiments/Spar.HotReloadProbe/Program.cs",
+      "sha256": "799A1CC4D01836C311F26AA210B1E7A30D0817FF05AABB1977CCA3F49870B714"
+    },
+    {
+      "path": "experiments/Spar.HotReloadProbe/Spar.HotReloadProbe.csproj",
+      "sha256": "63F2AE7280A410C6342EC782188124D3091C068A63FF30A7811493879DEB9B18"
+    },
+    {
+      "path": "experiments/Spar.HotReloadProbe/UpdateObserver.cs",
+      "sha256": "CF440E01E7106F8957DE17ABC1892B6AB247D7087950FB4A90B81B5DAEC2184C"
+    },
+    {
+      "path": "global.json",
+      "sha256": "C694C80854BD9354239082BEBE920831C3E0130F12C2F9827FAD1D53869ED5F6"
+    },
+    {
+      "path": "samples/Spar.NativeSample.Contracts/BackendContract.cs",
+      "sha256": "BAAFD3F9FB28A53B574176E7ABF70E80760539B131295310A8EB889544DF373B"
+    },
+    {
+      "path": "samples/Spar.NativeSample.Contracts/Spar.NativeSample.Contracts.csproj",
+      "sha256": "6A71C008C6117CEBD0ED1776ACB572C732A3ED1AAE50120407D151D01490CBF0"
+    },
+    {
+      "path": "samples/Spar.NativeSample/App.html",
+      "sha256": "CCB7FEA9615055D0450E3D90306502F273BD379DEF3B2B319A9C7D67AB7706D5"
+    },
+    {
+      "path": "samples/Spar.NativeSample/App.js",
+      "sha256": "5A5945668151D3414DBCE6DFE0A5C78DD937FCA25F214298E4A7687C323EF7DB"
+    },
+    {
+      "path": "samples/Spar.NativeSample/Probe.js",
+      "sha256": "0E57307365E0DFCDA45B1621270514B738F4172BBDA9FCFAA11AC5208B165A02"
+    },
+    {
+      "path": "samples/Spar.NativeSample/Program.Development.cs",
+      "sha256": "4BFAD60B9CB04C135F36F91CC16EA9E4451D8F88AF1FFED296A8E75393D0394E"
+    },
+    {
+      "path": "samples/Spar.NativeSample/Program.cs",
+      "sha256": "6B5E25740C8CB9F419621BF9E84FBF1706EE9DC6817647948699244ACB987C3F"
+    },
+    {
+      "path": "samples/Spar.NativeSample/Properties/launchSettings.json",
+      "sha256": "1ABDA4F7B7B8521F09F2506DD96E97F492B44B10D7B5360F1934BF7413D0859B"
+    },
+    {
+      "path": "samples/Spar.NativeSample/SampleBackend.cs",
+      "sha256": "D1F02302B5532AE586E9592B2747D1DA54D6C71A63DAFB2240C9420E01F418F1"
+    },
+    {
+      "path": "samples/Spar.NativeSample/SampleDocument.cs",
+      "sha256": "70E80B824E534659FE183B5CB955D681C695314867256CFAC5B6B7014707980E"
+    },
+    {
+      "path": "samples/Spar.NativeSample/Spar.NativeSample.csproj",
+      "sha256": "1ED7FCB75640D65EEE266430FA5809EC0E772C3C6E9F0EB9C38A7D2AEF288622"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/index.html",
+      "sha256": "5A4BE681B74931D011743F5C23E3C51252A03C18E2E5F0229E3B4F7F8C2D876D"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/package-lock.json",
+      "sha256": "58A929C6B43834A21E03D5684E2C1D4FE068F3E7722D2D1CCB66A116B0E29042"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/package.json",
+      "sha256": "FB082FD86CB2ECBB42EFABB352C65B5C0D02B8DB4DAAE780CDE4841B3D6479F6"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/src/App.tsx",
+      "sha256": "3AD582A9E3E196EE478655426789D40BE35E3A385BE4A61EFD156F044C573BB6"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/src/main.tsx",
+      "sha256": "F2177D67D6F71EA06CA7C824AA268F3B3CE91ED9D804756FFCCB6EA6A6DCE602"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/src/styles.css",
+      "sha256": "49CDEC6489404A9032FB1C936755183DBEE724121BCEA21060931C39950A0F63"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/tsconfig.json",
+      "sha256": "E647A37B972967C33E0EEC8EA1870F0B9F7505D9EA5DFF521F2970640E87DC7D"
+    },
+    {
+      "path": "samples/Spar.NativeSample/frontend/vite.config.mjs",
+      "sha256": "D029F05A349135493C1E7D7FFE5A95554DD902506ACFF3CF79B79D7866543F7D"
+    },
+    {
+      "path": "samples/Spar.NativeSample/spar.dev.json",
+      "sha256": "DF41EF7AC5FE3F79A4811AC8D8025006D31FC89C1173E2F40674E9ECBE666C7A"
+    },
+    {
+      "path": "src/Sotsera.Spar.Bridge/BridgeCall.cs",
+      "sha256": "247764E9C90CAEB039774E80DBE70B1DB13A37DB989E00BEE633A5188BE21915"
+    },
+    {
+      "path": "src/Sotsera.Spar.Bridge/BridgeWire.cs",
+      "sha256": "F4BB05BA93CA54579DD8E98B9D1DB8301C68F6428FAF9862A42AA7B9FA7D91DA"
+    },
+    {
+      "path": "src/Sotsera.Spar.Bridge/Contracts.cs",
+      "sha256": "9DB179D87ADB641B605E6D84613692028088F0C1CBF2C74A708702393AFD4AB5"
+    },
+    {
+      "path": "src/Sotsera.Spar.Bridge/Sotsera.Spar.Bridge.csproj",
+      "sha256": "C71EFA2E1CBB8DC5F1F2B71CA569A86D2DBF2035413DAF2C1EC772554D3B5080"
+    },
+    {
+      "path": "src/Sotsera.Spar.Bridge/SparBridge.cs",
+      "sha256": "822DF2E93874343DDD22797608625DC1D8BA5A9369B93DDFA9C81AB19B5811CD"
+    },
+    {
+      "path": "src/Sotsera.Spar.Bridge/SparBridgeDocument.cs",
+      "sha256": "4770C68FC23AB9A79930ED70FD54025097179E30FFACB8E6C6A4467ACC32E615"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/BackendInputs.cs",
+      "sha256": "EB01E91F8A710A79B85CE9AAEDE9FDA731E78A549F701DF7771D6FD839F530E2"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentApplication.Inspection.cs",
+      "sha256": "A6E3622C2C29406173E5FE716A3DEC80ECB1219A5375C7E5A1EADA0604A074EB"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentApplication.cs",
+      "sha256": "FC6C5A87E1A87DF43440935E3DDB457171B4C1B018E8D90797298B7116E09BF1"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentContract.cs",
+      "sha256": "BEAB44E719EA06FD8871E4B0404E68916ED63320CC4830BB75C2AD6E090A997A"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentProjectLaunch.cs",
+      "sha256": "4C85726F755D25349110490AAFEAF0C2B37F45AB3A7279E1683B4CFE7DC56303"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentSession.Backend.cs",
+      "sha256": "500481688BFDBB1F4E47E8EC62DE69BF27F24555FBE704B3D609309FF699A13C"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentSession.Debugger.cs",
+      "sha256": "8206FED3366350C35A6A82605A3504DAD14D9F2FE4C15AC187957EF7340BA42E"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentSession.Inspection.cs",
+      "sha256": "48BE0D65F86C8459EC3BA76759963FF6342BE7BCCD3F075AE4F74E9C05906BD3"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentSession.cs",
+      "sha256": "C3E3B6DDB12D9C5A5B4A468F8065EF0C1D73FCE6A4AC84ABDB8C9A4756949E98"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentSettings.cs",
+      "sha256": "8A07927CF7C9DC337133A8C3BE488390775817A36680428A081057B7DC2C6ABE"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/DevelopmentUpdates.cs",
+      "sha256": "A2B81DEF050C7B6CF5E1FB5BF7D320374AFABD585DA3471D94FC12E775541669"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/Interop/ProcessNative.cs",
+      "sha256": "DA915ACDF07D55AD21793191B2AE446ADA4F88006FEDD4F80AD35A1F62367128"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/OwnedProcessJob.cs",
+      "sha256": "BB42B9030A324E190C58C3D05B68F10992FEA6822C29CCF8D28ECDF13E9E5215"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/SessionProtocol.cs",
+      "sha256": "39210CED8277934E9BD990FE908DC4C146D7FF045EFAFD71F6DCDE750828AE36"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/Sotsera.Spar.Development.csproj",
+      "sha256": "02796DE6465A4C9AEE8B7E161C173E44831983D1F1643CEB1F485E572FB90951"
+    },
+    {
+      "path": "src/Sotsera.Spar.Development/WatchOutput.cs",
+      "sha256": "E9790D4E7BC0F8223CA7775099BF98EB9D5868C2B2CB3C106A7479B5EB50944A"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Inspection.js",
+      "sha256": "50F44C034B56DB0EC2BBB2F80EE4E4BE5465A2F0107D4C53392B1F5E3883F3D3"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Interop/AssemblyInterop.cs",
+      "sha256": "C4BFF8A821B96E6DC721079A5468D31E9620F0EA8631D55E477374515B748729"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Interop/ComReferences.cs",
+      "sha256": "B2E8F78B055F88F9C5C846227C7F7FAA7A62A271BCEB8C4A3BF796105EFC6A56"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Interop/NativeMethods.cs",
+      "sha256": "EF2594A766D85073F3F814480C295BC4C3DF0D2090ED96B9AAE87E33DCB07FD8"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Interop/WebViewDocumentInterfaces.cs",
+      "sha256": "E86BC24615BA2192B73A5D12344AD78D26D7F0DD9B2E00A43A3D2C131E627555"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Interop/WebViewInspectionInterfaces.cs",
+      "sha256": "FBC49EC907195ED432FECE24315DFB5C76EC4AD63DCF1C741A0E82A552D56383"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Interop/WebViewInterfaces.cs",
+      "sha256": "00F8CF66C4880EBAE51CD716F47F4AC44AF0D0AD2E4B5FB3CB87EC39578B475E"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/Sotsera.Spar.Windows.csproj",
+      "sha256": "607B2357AE9BFD1882DF0D60D922CB15E3942F8AA4638D869B87AC6B71814F7E"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/SparApplication.cs",
+      "sha256": "E8A1AD7F73761BB9D67588ECDA86A551C09CE67BA225FA4C40443A751B6DB23D"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/SparLoopbackContent.cs",
+      "sha256": "029806D83464C65CCD0EA2E7B1A9D67DEBC2039CDB888E9EB5B4965B743CCDF4"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/SparWindow.Bridge.cs",
+      "sha256": "2802EB19E203E1F84BFCE26107E06C235C7664CA8DCC872A6BD4DBD335BAD88C"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/SparWindow.Inspection.cs",
+      "sha256": "DCEAD54803A966FEED907A9B242CCD44296BBF39E2FC1971B4CD290D980DE62D"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/SparWindow.cs",
+      "sha256": "015D92A759A96C6F2FEBA5D1CFF6E35D9EEBAE84908FE716F42CE977DD003824"
+    },
+    {
+      "path": "src/Sotsera.Spar.Windows/SparWindowOptions.cs",
+      "sha256": "0AC1E2D47FADE9DFD03FFC34AF67B7731FA3B5BD6124BAC85075BB1D76C97937"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Bridge.Tests/BridgeTests.cs",
+      "sha256": "5AEB84960DA6972188A7ECED274A62F052ECBF0CC79BF61B4185DE04E6BEFA31"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Bridge.Tests/GeneratorTests.cs",
+      "sha256": "676E86A6DAE7FD2F3D48422581DAEC57AD5BFDF19CC64316035483A1E1C7A5A1"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Bridge.Tests/Sotsera.Spar.Bridge.Tests.csproj",
+      "sha256": "656FDCFC89B58E01AF254AF0F4D5D20EDF4C8178D8CDE34DBB54F1F4E0210102"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Bridge.Tests/TestContract.cs",
+      "sha256": "F8CD33EDC2110EF6DC84B1604C9B0D354543969E4CB36D2440542B79CD839C95"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Development.Tests/BackendInputsTests.cs",
+      "sha256": "FB4F0ED4679C4DFA90E1DED29AA2FF756674DFF96BD9487C83A63B964BDC74C0"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Development.Tests/DevelopmentContractTests.cs",
+      "sha256": "3C270BEE26C6ED1092409C5B32236D47F369B347C68AC607EE57D1A1F64E7A37"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Development.Tests/DevelopmentTests.cs",
+      "sha256": "35C7B8157279A0993F3CD5646ABDCE01EC822E3D444059285E4E33C4753F996C"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Development.Tests/FingerprintContract.cs",
+      "sha256": "2575607D16FD607FCAF8C9761359093A6B2A1842E0DCD1EC5BC715B68E7FEFF1"
+    },
+    {
+      "path": "tests/Sotsera.Spar.Development.Tests/Sotsera.Spar.Development.Tests.csproj",
+      "sha256": "71CE5BE746CF8DA1EDD16FDF0FACD44F47548B3E2D49211A07C749A9A3ED1891"
+    },
+    {
+      "path": "tests/Spar.HotReloadProbe.Tests/HotReloadTests.cs",
+      "sha256": "2F8DA11658EA414D37FC7E2AE9D5F9F9DFDAAC9E7CCACF9BC240D539EF082402"
+    },
+    {
+      "path": "tests/Spar.HotReloadProbe.Tests/Spar.HotReloadProbe.Tests.csproj",
+      "sha256": "45B8900B351DDA7F7A779F6B6287585C47DAD5196331D6D5236631C530984128"
+    },
+    {
+      "path": "tests/Spar.HotReloadProbe.Tests/WatchSession.cs",
+      "sha256": "11803F811125BFA2C378C77B646B506C51311D48C1E7D397BB646B79BB3DADD1"
+    },
+    {
+      "path": "tests/Spar.HotReloadProbe.Tests/xunit.runner.json",
+      "sha256": "3B733061B42818499022B6462D68F4F6D52EE53B674E7E61497D1587FD13AE94"
+    },
+    {
+      "path": "third-party/webview2/LICENSE.txt",
+      "sha256": "0AF8F1B807512AAE39C2AC1AA4D0CAE65CABECB6FD554B8439A5162A0D6ECA55"
+    },
+    {
+      "path": "third-party/webview2/NOTICE.txt",
+      "sha256": "106423785C5B7EBA0A8E61D1837F2132E9C828E20AD530F565D981C1DF60DD90"
+    },
+    {
+      "path": "tools/Spar.ContractGenerator/ClientRuntime.js",
+      "sha256": "ADA626DCBD53A7C6C9B453FB16AC6C763B34554F88B2D160758044A595870DF0"
+    },
+    {
+      "path": "tools/Spar.ContractGenerator/ContractCompiler.cs",
+      "sha256": "6C83857B5352CD3514EEDCD71E681FE8EAE1252A6B0CD1180441B67CF1A85EA1"
+    },
+    {
+      "path": "tools/Spar.ContractGenerator/Program.cs",
+      "sha256": "3A5D3C1CDBF43D9A0E97949E72224552758D04A5841B97D3635A3BDCB8ED7183"
+    },
+    {
+      "path": "tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj",
+      "sha256": "3B2EA78F18D285B3923E5C63F8F1864F363075E0DD1EFF56BBE0FA0FF7487026"
+    },
+    {
+      "path": "tools/Spar.Dev/Program.cs",
+      "sha256": "2760E7AB45987ADF5684EAD442D9C9B6D7A3B4CF4E340664B573B90C730B0916"
+    },
+    {
+      "path": "tools/Spar.Dev/Spar.Dev.csproj",
+      "sha256": "B73E6C12C1844E2A9E173E093D649F38721F97E1643A8CEDE7A511DED39C8564"
+    },
+    {
+      "path": "tools/Spar.Dev/frontend/vite-session.mjs",
+      "sha256": "DEA0E0AE0AAD3D92C55E6582F0BA7C360970A9B52DC7F5A0569CA0BCD2E9ABBF"
+    },
+    {
+      "path": "tools/Spar.VSCode/extension.cjs",
+      "sha256": "03DAF3FF055E8361EE41187D19C83E5C4E9D6B02032CED58B7F82571A0FA72C7"
+    },
+    {
+      "path": "tools/Spar.VSCode/package.json",
+      "sha256": "68F9E6EEE8454F9B8A22386D7E5AB96BE3F187B2818DCE7E1626B6CD441CEB1F"
+    }
+  ],
+  "dotnet": "10.0.402",
+  "node": "v24.21.0",
+  "npm": "11.19.0",
+  "powershell": "7.6.5",
+  "assetArchiveSha256": "54A318E5ED063BE65894102B8B59BDD7F4C53DC284651C5D66514BC0A0F3690F",
+  "contractFingerprint": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+  "payload": [
+    {
+      "sha256": "1C4CA9622ED0A91376E4B804CAC23625DADCB80D7B6454FB1F9DB04AE512EB11",
+      "name": "Sotsera.Spar.Bridge.pdb",
+      "bytes": 31344
+    },
+    {
+      "sha256": "4796DD364F8A862BED0C74DB2930692B0D5DCF2AE079817A52659374DB1595CB",
+      "name": "Sotsera.Spar.Windows.pdb",
+      "bytes": 77432
+    },
+    {
+      "sha256": "04C0DBA86C36DAFE7CB43B26A51F80DEBA41EA92811E6BBE083CFEE09BA6E6D9",
+      "name": "Spar.NativeSample.Contracts.pdb",
+      "bytes": 43696
+    },
+    {
+      "sha256": "47B52FB91125400356DC8616B7863AE56D06A8ACBE00D5FFD292FECF0C1AB4A1",
+      "name": "Spar.NativeSample.exe",
+      "bytes": 3891200
+    },
+    {
+      "sha256": "0AF8F1B807512AAE39C2AC1AA4D0CAE65CABECB6FD554B8439A5162A0D6ECA55",
+      "name": "WebView2-LICENSE.txt",
+      "bytes": 1487
+    },
+    {
+      "sha256": "106423785C5B7EBA0A8E61D1837F2132E9C828E20AD530F565D981C1DF60DD90",
+      "name": "WebView2-NOTICE.txt",
+      "bytes": 3894
+    },
+    {
+      "sha256": "3426DCC55FDFB8B5E7AC623CF33B4CCF283FBF68A0C5A65BDDFDB4D749A8ABEE",
+      "name": "WebView2Loader.dll",
+      "bytes": 194912
+    }
+  ]
+}

@@ -51,6 +51,10 @@ public sealed unsafe partial class SparWindow
             Check(settings.SetAreHostObjectsAllowed(0), "Disable native host objects");
             Check(settings.SetAreDefaultScriptDialogsEnabled(0), "Disable script dialogs");
             Check(settings.SetIsWebMessageEnabled(_options.Bridge is null ? 0 : 1), "Configure bridge messages");
+#if !DEBUG
+            Check(settings.SetAreDevToolsEnabled(0), "Disable production browser developer tools");
+            Check(settings.SetAreDefaultContextMenusEnabled(0), "Disable production browser context menus");
+#endif
         }
         finally
         {
@@ -221,8 +225,35 @@ public sealed unsafe partial class SparWindow
                 return;
             }
 
-            var allowed = !_closeRequested && _trustedNavigation && uri == _localUri && method == "GET";
-            var content = allowed ? _localHtml! : "Blocked"u8.ToArray();
+            var allowed = false;
+            var content = "Blocked"u8.ToArray();
+            var contentType = "text/plain; charset=utf-8";
+            if (!_closeRequested && _trustedNavigation && method == "GET")
+            {
+                if (_options.Assets is { } assets)
+                {
+                    allowed = assets.TryGet(_localUri!, uri, out var assetBytes, out contentType);
+                    if (allowed)
+                    {
+                        content = assetBytes;
+                    }
+                }
+                else if (uri == _localUri)
+                {
+                    allowed = true;
+                    content = _localHtml!;
+                    contentType = "text/html; charset=utf-8";
+                }
+            }
+
+            var responseHeaders = "Content-Type: " + contentType
+                + "\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff";
+            if (_options.Assets is not null)
+            {
+                responseHeaders += "\r\nContent-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; "
+                    + "img-src 'self'; font-src 'self'; connect-src 'none'; frame-src 'none'; object-src 'none'; "
+                    + "base-uri 'none'; form-action 'none'; frame-ancestors 'none'\r\nReferrer-Policy: no-referrer";
+            }
             fixed (byte* bytes = content)
             {
                 // SHCreateMemStream copies the initial contents into native-owned storage.
@@ -235,7 +266,7 @@ public sealed unsafe partial class SparWindow
             }
 
             fixed (char* reason = allowed ? "OK" : "Forbidden")
-            fixed (char* headers = "Content-Type: text/html; charset=utf-8\r\nCache-Control: no-store\r\nX-Content-Type-Options: nosniff")
+            fixed (char* headers = responseHeaders)
             {
                 Check(_environment!.CreateWebResourceResponse(stream, allowed ? 200 : 403, (nint)reason,
                     (nint)headers, out response), "Create local resource response");

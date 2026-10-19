@@ -1,5 +1,7 @@
 # Typed, document-bound bridge
 
+Current publishing behavior: the inline probe below is a separate `-p:SparNativeProbe=true` Release test build. Default Release publishes the React SPA. The driver also exercises a packaged-resource bridge fixture; see [production delivery](16-production-delivery.md).
+
 Date: 2026-10-18. M1.3 implementation proof, Windows/x64, .NET SDK 10.0.402. This extends the [native host](09-native-host.md). The later [M1.4 development session](11-development-session.md) imports these generated bindings into React/Vite and adds explicit loopback/client authority. Backend debugger integration and packaged external consumers remain later work.
 
 ## Consumer contract
@@ -84,7 +86,7 @@ pwsh -NoProfile -File eng/Test-Bridge.ps1 `
   -Executable samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe `
   -EvidenceDirectory artifacts/bridge/coreclr -VerifyRender
 
-dotnet publish samples/Spar.NativeSample -c Release -o artifacts/bridge/publish --disable-build-servers
+dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/bridge/publish --disable-build-servers
 # Copy the non-PDB files outside the checkout, then point the same driver at that executable:
 pwsh -NoProfile -File eng/Test-Bridge.ps1 `
   -Executable C:/path/to/copied/Spar.NativeSample.exe -ExpectedMode NativeAOT `
