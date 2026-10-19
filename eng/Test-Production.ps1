@@ -136,3 +136,5 @@ try {
   } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $evidence 'receipt.json')
 }
 Write-Output "Production checks passed. Copied payload: $copy. Evidence: $evidence"
+# GitHub's PowerShell wrapper propagates LASTEXITCODE, including expected negative native launches.
+exit 0
