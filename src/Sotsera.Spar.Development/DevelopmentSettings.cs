@@ -31,6 +31,9 @@ public sealed record DevelopmentSettings
     {
         get; set;
     }
+    public string[] RestartFiles { get; set; } = [];
+    public string[] BackendSourceDirectories { get; set; } = [];
+    internal string? ConfigurationFile { get; init; }
 
     public static DevelopmentSettings Load(string path)
     {
@@ -42,6 +45,13 @@ public sealed record DevelopmentSettings
         var settings = JsonSerializer.Deserialize(File.ReadAllText(file.FullName), DevelopmentJsonContext.Default.DevelopmentSettings)
             ?? throw new InvalidDataException("Missing session configuration.");
         var directory = file.DirectoryName!;
+        if (settings.RestartFiles is null || settings.BackendSourceDirectories is null
+            || settings.RestartFiles.Length > 32 || settings.BackendSourceDirectories.Length > 16
+            || settings.RestartFiles.Concat(settings.BackendSourceDirectories)
+                .Any(value => string.IsNullOrWhiteSpace(value) || value.Contains('\0')))
+        {
+            throw new InvalidDataException("Backend input paths must be present; at most 32 restart files and 16 source directories are supported.");
+        }
         if (settings.WatchBackend && string.IsNullOrWhiteSpace(settings.ContractFile))
         {
             throw new InvalidDataException("Watch mode requires the separately compiled contract source path.");
@@ -72,11 +82,14 @@ public sealed record DevelopmentSettings
 
         return settings with
         {
+            ConfigurationFile = file.FullName,
             Project = Path.GetFullPath(settings.Project, directory),
             Application = Path.GetFullPath(settings.Application, directory),
             GeneratedClient = Path.GetFullPath(settings.GeneratedClient, directory),
             SessionDirectory = Path.GetFullPath(settings.SessionDirectory, directory),
             ContractFile = settings.ContractFile is null ? null : Path.GetFullPath(settings.ContractFile, directory),
+            RestartFiles = settings.RestartFiles.Select(value => Path.GetFullPath(value, directory)).ToArray(),
+            BackendSourceDirectories = settings.BackendSourceDirectories.Select(value => Path.GetFullPath(value, directory)).ToArray(),
             Frontend = settings.Frontend with
             {
                 WorkingDirectory = Path.GetFullPath(settings.Frontend.WorkingDirectory, directory)

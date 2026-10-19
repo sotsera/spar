@@ -44,6 +44,7 @@ foreach ($scenario in @('task-stop', 'window-close')) {
   $events = Join-Path $directory 'coordinator.jsonl'
   @{
     coordinator = $coordinator; session = $sessionPath; events = $events; repository = $repository; scenario = $scenario
+    watchBackend = $WatchBackend.IsPresent
   } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $workspace 'probe.json')
   $start = [Diagnostics.ProcessStartInfo]::new($codeExecutable)
   $start.UseShellExecute = $false

@@ -45,6 +45,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
     private Uri? _frontendUri;
     private DateTimeOffset _readyDeadline;
     private bool _applicationControlLost;
+    private bool _awaitingInitialReadiness;
     private int _generation = 1;
     private int _started;
     private int _forced;
@@ -121,22 +122,18 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 throw new SessionStoppedException();
             }
-            if (!skipBuild)
+            if (settings.WatchBackend)
             {
-                _build = Start("build", "dotnet", ["build", settings.Project, "--disable-build-servers"],
-                    Path.GetDirectoryName(settings.Project)!, new Dictionary<string, string>());
-                if (await Task.WhenAny(_build.Exited, _stop.Task).ConfigureAwait(false) != _build.Exited)
+                _backendInputs = new BackendInputs(settings);
+                if (skipBuild)
                 {
-                    throw new SessionStoppedException();
-                }
-
-                await _build.Exited.ConfigureAwait(false);
-                if (_build.Process.ExitCode != 0)
-                {
-                    throw new SessionFailure("build_failed", "Backend/contracts did not build; see build.stderr.log and build.stdout.log.");
+                    throw new SessionFailure("watch_build_required", "Watch mode requires a selected full build; omit --no-build.");
                 }
             }
-
+            if (!skipBuild && !await BuildSelectedApplicationAsync().ConfigureAwait(false))
+            {
+                throw new SessionFailure("build_failed", "Initial backend/contracts did not build; inspect build logs.");
+            }
             if (_stop.Task.IsCompleted)
             {
                 throw new SessionStoppedException();
@@ -144,12 +141,14 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             ReadContract();
             if (settings.WatchBackend)
             {
-                ContractSourceChanged();
                 await VerifyWatchSdkAsync().ConfigureAwait(false);
             }
             CheckPort();
             await StartFrontendAsync().ConfigureAwait(false);
-            await StartApplicationAsync().ConfigureAwait(false);
+            if (!await StartApplicationAsync().ConfigureAwait(false))
+            {
+                await RebuildApplicationAsync("source_changed_during_start").ConfigureAwait(false);
+            }
             await RunLoopAsync(commands).ConfigureAwait(false);
         }
         catch (SessionStoppedException) { }
@@ -247,7 +246,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         }
     }
 
-    private async Task StartApplicationAsync()
+    private async Task<bool> StartApplicationAsync()
     {
         if (_stop.Task.IsCompleted)
         {
@@ -256,6 +255,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         _currentDocument = null;
         _readyDocument = null;
         _applicationControlLost = false;
+        _awaitingInitialReadiness = true;
         _lastBackendRevision = 0;
         _pendingUpdate = 0;
         var name = "spar-app-" + Guid.NewGuid().ToString("N");
@@ -287,6 +287,12 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 Emit("process-started", "application", application);
                 ReadContract(); // The SDK's initial build must agree with the generated files it just produced.
             }
+            if (!SelectionIsCurrent())
+            {
+                Emit("build-superseded", code: "before_admission", detail: _selectedInputs?.Hash);
+                _applicationPeer.StartReading(_messages.Writer, "application", _generation);
+                return false;
+            }
             if (_applicationPeer.Hello.Contract != _contract)
             {
                 throw new SessionFailure("contract_mismatch", "The compiled backend and generated frontend contract do not match.");
@@ -298,6 +304,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 Generation: _generation), timeout.Token).ConfigureAwait(false);
             _applicationPeer.StartReading(_messages.Writer, "application", _generation);
             _readyDeadline = DateTimeOffset.UtcNow.AddSeconds(settings.StartupTimeoutSeconds);
+            return true;
         }
         catch
         {
@@ -354,10 +361,9 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 await tick.ConfigureAwait(false);
                 TrackProcesses();
-                if (ContractSourceChanged())
+                if (InputRestartReason() is { } reason)
                 {
-                    Emit("contract-source-changed");
-                    await RebuildApplicationAsync("contract_source_changed").ConfigureAwait(false);
+                    await RebuildApplicationAsync(reason).ConfigureAwait(false);
                 }
                 else if (ReadWatchOutput())
                 {
@@ -367,6 +373,11 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 tick = timer.WaitForNextTickAsync().AsTask();
             }
 
+            // Source selection takes precedence over queued readiness or update frames.
+            if (_backendInputs is not null && _application is not null && _awaitingInitialReadiness && !SelectionIsCurrent())
+            {
+                await RebuildApplicationAsync("source_changed_during_start").ConfigureAwait(false);
+            }
             while (_messages.Reader.TryRead(out var incoming))
             {
                 HandleMessage(incoming);
@@ -518,6 +529,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             if (_readyDocument is null)
             {
                 _readyDocument = message.Document;
+                _awaitingInitialReadiness = false;
                 Emit("application-ready", "application", _application!.Process, contract: _contract, document: _readyDocument);
                 if (_restartCorrelation is not null)
                 {
@@ -786,7 +798,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 observer(new DevelopmentEvent(kind, _session, _generation, DateTimeOffset.UtcNow, Environment.ProcessId,
                     role, process?.Id, process?.StartTime.ToUniversalTime(), code, detail, window, port, contract, document,
-                    correlation, updateRevision));
+                    correlation, updateRevision, _selectedInputs?.Hash, _selectedInputs?.Revision));
             }
             catch (Exception error)
             {

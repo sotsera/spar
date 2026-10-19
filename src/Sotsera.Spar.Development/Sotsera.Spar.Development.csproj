@@ -8,5 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../Sotsera.Spar.Windows/Sotsera.Spar.Windows.csproj" />
+    <InternalsVisibleTo Include="Sotsera.Spar.Development.Tests" />
   </ItemGroup>
 </Project>

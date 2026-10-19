@@ -8,7 +8,7 @@ Production targets NativeAOT by default, with CoreCLR compatibility for applicat
 
 ## Current status
 
-The native sample runs React/Vite with generated, permission-checked C# calls in an owned development session. The terminal/AI watch lane applies supported backend edits in place and refreshes read data while preserving state. Unsupported/contract updates use coordinated rebuild/restart with Vite retained. Editor task ownership works; integrated C# debugger lanes and the remaining milestone scenarios stay open. See the [backend update guide](docs/12-backend-updates.md) and [milestone status](docs/03-milestone-1.md).
+The native sample runs React/Vite with generated, permission-checked C# calls in an owned development session. The terminal/AI watch lane applies supported backend edits in place and refreshes read data while preserving state. Unsupported/contract updates and configured startup/dependency inputs use coordinated rebuild/restart with Vite retained. Full builds reject superseded source selections; corrections recover stopped sessions automatically. Editor task ownership works; integrated C# debugger lanes and the remaining milestone scenarios stay open. See the [backend update guide](docs/12-backend-updates.md) and [milestone status](docs/03-milestone-1.md).
 
 ## Run the first slice
 

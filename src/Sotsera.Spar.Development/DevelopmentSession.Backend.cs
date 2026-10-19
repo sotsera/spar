@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace Sotsera.Spar.Development;
@@ -7,7 +6,7 @@ namespace Sotsera.Spar.Development;
 public sealed partial class DevelopmentSession
 {
     private const string SupportedWatchSdk = "10.0.402";
-    private static readonly Regex _compilerDiagnostic = new(@"\berror (?:CS|ENC|MSB|NETSDK)\d+\b",
+    private static readonly Regex _compilerDiagnostic = new(@"\berror [A-Z]+\d+\b",
         RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
     private OwnedProcessJob? _watchJob;
     private Child? _watcher;
@@ -18,7 +17,9 @@ public sealed partial class DevelopmentSession
     private long _lastBackendRevision;
     private bool _watchReady;
     private bool _contractRestartPending;
-    private string? _contractSourceHash;
+    private BackendInputs? _backendInputs;
+    private BackendSelection? _selectedInputs;
+    private BackendSelection? _observedInputs;
 
     private async Task VerifyWatchSdkAsync()
     {
@@ -37,38 +38,109 @@ public sealed partial class DevelopmentSession
         Emit("backend-owner", code: "dotnet-watch", detail: version);
     }
 
-    private bool ContractSourceChanged()
+    private async Task<BackendSelection> SelectInputsAsync()
     {
-        if (!settings.WatchBackend || settings.ContractFile is null)
+        while (true)
         {
-            return false;
-        }
-
-        try
-        {
-            using var source = new FileStream(settings.ContractFile, FileMode.Open, FileAccess.Read,
-                FileShare.ReadWrite | FileShare.Delete);
-            if (source.Length > 1024 * 1024)
+            _startupStop.Token.ThrowIfCancellationRequested();
+            var selection = _backendInputs!.Capture();
+            await Task.Delay(300, _startupStop.Token).ConfigureAwait(false);
+            if (selection is not null && selection == _backendInputs.Capture())
             {
-                throw new SessionFailure("contract_input_limit", "The contract source exceeds 1 MiB.");
+                return selection;
             }
+        }
+    }
 
-            var bytes = new byte[checked((int)source.Length)];
-            source.ReadExactly(bytes);
-            if (source.ReadByte() != -1)
+    private bool SelectionIsCurrent()
+    {
+        return _backendInputs is null || _selectedInputs is not null && _selectedInputs == _backendInputs.Capture();
+    }
+
+    private string? InputRestartReason()
+    {
+        if (_backendInputs is null)
+        {
+            return null;
+        }
+        var current = _backendInputs.Capture();
+        if (current is null)
+        {
+            return _application is not null && _awaitingInitialReadiness ? "source_changed_during_start" : null;
+        }
+        var previous = _observedInputs;
+        _observedInputs = current;
+        if (previous is null || current == previous)
+        {
+            return null;
+        }
+        if (_application is null)
+        {
+            return "stopped_source_corrected";
+        }
+        if (current.ContractHash != previous.ContractHash)
+        {
+            Emit("contract-source-changed");
+            return "contract_source_changed";
+        }
+        if (current.RestartHash != previous.RestartHash)
+        {
+            return "startup_or_dependency_changed";
+        }
+        return _awaitingInitialReadiness ? "source_changed_during_start" : null;
+    }
+
+    private async Task<bool> BuildSelectedApplicationAsync()
+    {
+        while (true)
+        {
+            if (_backendInputs is not null)
             {
+                _selectedInputs = await SelectInputsAsync().ConfigureAwait(false);
+                _observedInputs = _selectedInputs;
+                Emit("source-selected", detail: _selectedInputs.Hash);
+            }
+            _build?.Process.Dispose();
+            _build = Start("build", "dotnet", ["build", settings.Project, "--disable-build-servers"],
+                Path.GetDirectoryName(settings.Project)!, new Dictionary<string, string>());
+            if (await Task.WhenAny(_build.Exited, _stop.Task).ConfigureAwait(false) != _build.Exited)
+            {
+                throw new SessionStoppedException();
+            }
+            await _build.Exited.ConfigureAwait(false);
+            if (!SelectionIsCurrent())
+            {
+                Emit("build-superseded", code: _build.Process.ExitCode == 0 ? "build_succeeded" : "build_failed",
+                    detail: _selectedInputs?.Hash);
+                _generation++;
+                continue;
+            }
+            if (_build.Process.ExitCode != 0)
+            {
+                PublishBuildDiagnostics();
+                Emit("backend-stopped", code: "build_failed",
+                    detail: "Edit not applied. Correct the source to rebuild automatically; inspect build logs.",
+                    correlation: _restartCorrelation);
+                _restartCorrelation = null;
                 return false;
             }
-
-            var hash = Convert.ToHexStringLower(SHA256.HashData(bytes));
-            var changed = _contractSourceHash is not null && hash != _contractSourceHash;
-            _contractSourceHash = hash;
-            return changed;
+            Emit("build-selected", detail: _selectedInputs?.Hash);
+            ReadContract();
+            return true;
         }
-        catch (IOException) when (_contractSourceHash is not null)
+    }
+
+    private void PublishBuildDiagnostics()
+    {
+        foreach (var suffix in new[] { ".stdout.log", ".stderr.log" })
         {
-            // Atomic editor saves can briefly remove/replace the file. The admitted binary remains unchanged.
-            return false;
+            var path = Path.Combine(_directory, "build-" + _generation.ToString(CultureInfo.InvariantCulture) + suffix);
+            using var output = new WatchOutput(path);
+            // Bounded diagnostic preview; the complete output remains in the generation's logs.
+            foreach (var line in output.ReadAvailable().Where(line => _compilerDiagnostic.IsMatch(line)).Take(16))
+            {
+                Emit("build-diagnostic", code: "compiler_error", detail: line.Length > 2048 ? line[..2048] : line);
+            }
         }
     }
 
@@ -173,32 +245,26 @@ public sealed partial class DevelopmentSession
             throw new SessionFailure("frontend_exited", "The frontend ended while the backend was retiring.");
         }
 
-        _generation++;
         _pendingUpdate = 0;
         _pendingDiagnostic = null;
-        _build?.Process.Dispose();
-        _build = Start("build", "dotnet", ["build", settings.Project, "--disable-build-servers"],
-            Path.GetDirectoryName(settings.Project)!, new Dictionary<string, string>());
-        if (await Task.WhenAny(_build.Exited, _stop.Task).ConfigureAwait(false) != _build.Exited)
+        do
         {
-            throw new SessionStoppedException();
-        }
-
-        await _build.Exited.ConfigureAwait(false);
-        if (_build.Process.ExitCode != 0)
-        {
-            Emit("backend-stopped", code: "build_failed", detail: "Edit not applied. Correct the build errors and request restart.",
-                correlation: _restartCorrelation);
-            _restartCorrelation = null;
-            return;
-        }
-
-        ReadContract();
-        if (settings.WatchBackend)
-        {
-            await VerifyWatchSdkAsync().ConfigureAwait(false);
-        }
-        await StartApplicationAsync().ConfigureAwait(false);
+            _generation++;
+            if (!await BuildSelectedApplicationAsync().ConfigureAwait(false))
+            {
+                return;
+            }
+            if (settings.WatchBackend)
+            {
+                await VerifyWatchSdkAsync().ConfigureAwait(false);
+            }
+            if (await StartApplicationAsync().ConfigureAwait(false))
+            {
+                return;
+            }
+            await StopApplicationAsync().ConfigureAwait(false);
+        } while (!_stop.Task.IsCompleted);
+        throw new SessionStoppedException();
     }
 
     private async Task StopWatcherAsync()
@@ -266,6 +332,7 @@ public sealed partial class DevelopmentSession
 
     private void DisposeWatchResources()
     {
+        _backendInputs?.Dispose();
         _watchStdout?.Dispose();
         _watchStderr?.Dispose();
         _watcher?.Process.Dispose();

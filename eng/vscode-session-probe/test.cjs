@@ -22,9 +22,11 @@ exports.run = async () => {
     }
   };
   try {
+    const args = [config.session, '--owner-stdin', '--events-file', config.events];
+    if (!config.watchBackend) args.push('--no-build');
     const task = new vscode.Task({ type: 'spar-session-probe' }, folder, 'Spar session probe', 'Spar',
       new vscode.ProcessExecution(config.coordinator,
-        [config.session, '--no-build', '--owner-stdin', '--events-file', config.events], { cwd: config.repository }), []);
+        args, { cwd: config.repository }), []);
     execution = await vscode.tasks.executeTask(task);
     log({ kind: 'task-started', scenario: config.scenario });
     // The external driver must retain actual process handles before the editor ends ownership.

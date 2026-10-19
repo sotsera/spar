@@ -15,7 +15,8 @@ public sealed record DevelopmentCommand(string Command, string? Id = null, strin
 public sealed record DevelopmentEvent(string Kind, string Session, int Generation, DateTimeOffset ObservedAt,
     int CoordinatorProcessId, string? Role = null, int? ProcessId = null, DateTime? ProcessStartedAtUtc = null,
     string? Code = null, string? Detail = null, long? Window = null, int? Port = null, string? Contract = null,
-    string? Document = null, string? Correlation = null, long? UpdateRevision = null);
+    string? Document = null, string? Correlation = null, long? UpdateRevision = null,
+    string? BuildSourceHash = null, long? SourceRevision = null);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, MaxDepth = 16,
     UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
