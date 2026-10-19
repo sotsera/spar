@@ -1,6 +1,6 @@
 # Typed, document-bound bridge
 
-Date: 2026-10-18. M1.3 implementation proof, Windows/x64, .NET SDK 10.0.402. This extends the [native host](09-native-host.md); it does not implement SPA HMR, backend/native debugger integration, development sessions, or packaged external consumers.
+Date: 2026-10-18. M1.3 implementation proof, Windows/x64, .NET SDK 10.0.402. This extends the [native host](09-native-host.md). The later [M1.4 development session](11-development-session.md) imports these generated bindings into React/Vite and adds explicit loopback/client authority. Backend debugger integration and packaged external consumers remain later work.
 
 ## Consumer contract
 

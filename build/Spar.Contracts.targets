@@ -22,5 +22,9 @@
       <Compile Include="$(SparGeneratedDirectory)Contract.g.cs" />
       <EmbeddedResource Include="$(SparGeneratedDirectory)client.js" LogicalName="Spar.Generated.Client.js" />
     </ItemGroup>
+
+    <Copy SourceFiles="$(SparGeneratedDirectory)client.js;$(SparGeneratedDirectory)client.d.ts"
+          DestinationFolder="$(SparClientOutputDirectory)" SkipUnchangedFiles="true"
+          Condition="'$(SparClientOutputDirectory)' != '' and '$(DesignTimeBuild)' != 'true'" />
   </Target>
 </Project>

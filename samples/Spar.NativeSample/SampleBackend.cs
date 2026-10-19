@@ -1,7 +1,7 @@
 namespace Spar.NativeSample;
 
 // Probe reports belong to this consumer, not the shipping host or bridge runtime.
-internal sealed class SampleBackend(Action<string> log, Action<string> control) : ISampleBackend
+internal sealed class SampleBackend(Action<string> log, Action<string> control, Action<ReportRequest>? report = null) : ISampleBackend
 {
     private int _counter;
     private int _activeDelays;
@@ -51,6 +51,7 @@ internal sealed class SampleBackend(Action<string> log, Action<string> control) 
 
     public Task<ReportReply> ReportAsync(ReportRequest request, CancellationToken cancellationToken)
     {
+        report?.Invoke(request);
         log("report-" + request.Stage + ":" + request.Detail);
         if (request.Stage == "reload")
         {

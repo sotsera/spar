@@ -165,6 +165,20 @@ public sealed class BridgeTests
         reply.Should().NotContain("private exception details");
     }
 
+    [Fact]
+    public async Task ALoopbackCapabilityMustBeProvedBeforeClientBindingOrHandlerEntry()
+    {
+        var credential = new string('b', 64);
+        var session = new Session(clientCredential: credential);
+        session.Events.Should().Contain(value => value.Code == "client_unauthorized");
+        session.Document.Dispatch(Session.Source, session.Message(1, "change"), session.Replies.Enqueue).Should().BeNull();
+        session.Backend.Entries.Should().Be(0);
+        session.Document.Dispatch(Session.Source, session.Message(0, null, kind: "hello", payload: "\"" + credential + "\""),
+            session.Replies.Enqueue).Should().BeNull();
+        await session.Document.Dispatch(Session.Source, session.Message(2, "change"), session.Replies.Enqueue)!;
+        session.Backend.Entries.Should().Be(1);
+    }
+
     private static async Task UntilAsync(Func<bool> condition)
     {
         using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
@@ -190,11 +204,11 @@ public sealed class BridgeTests
         internal ConcurrentQueue<SparBridgeEvent> Events { get; } = new();
         internal ConcurrentQueue<string> Replies { get; } = new();
 
-        internal Session(ISparBridgeDispatcher? dispatcher = null)
+        internal Session(ISparBridgeDispatcher? dispatcher = null, string? clientCredential = null)
         {
             Dispatcher = dispatcher ?? new TestBackendBridge(Backend);
             var bridge = new SparBridge(Dispatcher, ["counter.change", "work.run"]);
-            Document = bridge.OpenDocument(Source, 1, Events.Enqueue);
+            Document = bridge.OpenDocument(Source, 1, Events.Enqueue, clientCredential);
             Document.Dispatch(Source, Message(0, null, kind: "hello"), _ => { }).Should().BeNull();
         }
 

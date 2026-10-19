@@ -131,7 +131,9 @@ public sealed unsafe partial class SparWindow
         _document?.Retire();
         _reloadRequested = false;
         _trustedNavigation = false;
-        _localUri = $"https://{Guid.NewGuid():N}.spar.invalid/index.html";
+        _localUri = _options.LoopbackContent is { } content
+            ? content.BaseUri.AbsoluteUri + "?sparDocument=" + Guid.NewGuid().ToString("N")
+            : $"https://{Guid.NewGuid():N}.spar.invalid/index.html";
         _expectNavigation = true;
         fixed (char* uri = _localUri)
         {
@@ -155,6 +157,13 @@ public sealed unsafe partial class SparWindow
             if (frame || _closeRequested || !_expectNavigation || uri != _localUri)
             {
                 Check(args.SetCancel(1), "Cancel unauthorized navigation");
+                if (!frame && !_closeRequested && _options.LoopbackContent is not null && uri == _localUri)
+                {
+                    // A framework full-page reload retires first, drains work, then receives a fresh native URI.
+                    ReloadDocument();
+                    return;
+                }
+
                 BridgeEvent(new SparBridgeEvent("rejected", _document?.Id ?? "", 0, null, "navigation_denied"));
                 return;
             }
@@ -178,7 +187,8 @@ public sealed unsafe partial class SparWindow
             Check(args.GetIsErrorPage(out var isError), "Read loading error status");
             if (!_closeRequested && _trustedNavigation && id == _navigationId && isError == 0)
             {
-                _document = _options.Bridge?.OpenDocument(_localUri!, id, value => RunBridgeUi(() => BridgeEvent(value)));
+                _document = _options.Bridge?.OpenDocument(_localUri!, id, value => RunBridgeUi(() => BridgeEvent(value)),
+                    _options.LoopbackContent?.ClientCredential);
             }
         }
         finally
@@ -201,6 +211,13 @@ public sealed unsafe partial class SparWindow
             var uri = ReadNativeText(uriPointer, 2048);
             Check(request.GetMethod(out var methodPointer), "Read resource method");
             var method = ReadNativeText(methodPointer, 16);
+            if (!_closeRequested && _trustedNavigation && method == "GET"
+                && _options.LoopbackContent?.AllowsResource(uri) == true)
+            {
+                // Only this owner-scoped loopback origin/path may reach the actual SPA server.
+                return;
+            }
+
             var allowed = !_closeRequested && _trustedNavigation && uri == _localUri && method == "GET";
             var content = allowed ? _localHtml! : "Blocked"u8.ToArray();
             fixed (byte* bytes = content)

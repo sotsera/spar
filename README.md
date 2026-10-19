@@ -8,9 +8,23 @@ Production targets NativeAOT by default, with CoreCLR compatibility for applicat
 
 ## Current status
 
-The managed Hot Reload probe works under the watcher, VS Code, and Visual Studio. The Win32/WebView2 sample now calls a C# backend through generated, permission-checked contracts under CoreCLR and a copied NativeAOT executable. Document retirement retains unfinished work and suppresses stale replies. SPA-server coordination comes next. See the [typed bridge guide](docs/10-typed-bridge.md), [native host](docs/09-native-host.md), and [managed probe results](docs/07-managed-probe.md); no full milestone acceptance scenario is complete yet.
+The native sample now runs React/Vite with generated, permission-checked C# calls in an owned development session. Actual CSS/component HMR preserves local state; planned app restart retains Vite. Terminal/editor ownership and Windows jobs account for child cleanup. The managed Hot Reload probe works under the watcher, VS Code, and Visual Studio; integrating backend updates into this SPA session comes next. See the [development guide](docs/11-development-session.md) and [milestone status](docs/03-milestone-1.md).
 
 ## Run the first slice
+
+For the SPA development loop, install the pinned .NET SDK `10.0.402`, Node `24.21.0` / npm `11.19.0`, and WebView2 Runtime. Prepare dependencies, then start the coordinator:
+
+```powershell
+dotnet build tools/Spar.Dev --disable-build-servers
+Push-Location samples/Spar.NativeSample/frontend
+npm ci --ignore-scripts --include=optional
+Pop-Location
+./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe samples/Spar.NativeSample/spar.dev.json
+```
+
+Edit `App.tsx` or `styles.css` in the sample frontend. Type `stop` or press Ctrl+C to end the session. VS Code provides **Tasks: Run Task → Spar: development session**. See the [development guide](docs/11-development-session.md) for controls, verification, and current limits.
+
+For the precursor probes and full managed tests:
 
 Install SDK `10.0.402`, selected in `global.json`, then run from this checkout:
 

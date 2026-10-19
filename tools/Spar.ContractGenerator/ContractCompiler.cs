@@ -193,7 +193,7 @@ public static class ContractCompiler
     private static string GenerateTypeScript(Operation[] operations, Dto[] dtos)
     {
         var code = new StringBuilder("// Generated from the C# contract. Do not edit.\n");
-        code.AppendLine("export interface CallOptions { signal?: AbortSignal; timeoutMs?: number }\nexport interface BridgeIdentity { version: 1; contract: string; client: string; document: string }\nexport declare function connect(): Promise<BridgeIdentity>;");
+        code.AppendLine("export interface CallOptions { signal?: AbortSignal; timeoutMs?: number }\nexport interface BridgeIdentity { version: 1; contract: string; client: string; document: string }\nexport declare function connect(clientCredential?: string): Promise<BridgeIdentity>;");
         foreach (var dto in dtos)
         {
             code.AppendLine(CultureInfo.InvariantCulture, $"export interface {dto.Name} {{");

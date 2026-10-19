@@ -8,6 +8,7 @@
     <PublishAot Condition="'$(Configuration)' == 'Release'">true</PublishAot>
     <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
     <SparContractFile>$(MSBuildProjectDirectory)/BackendContract.cs</SparContractFile>
+    <SparClientOutputDirectory>$(MSBuildProjectDirectory)/frontend/src/generated</SparClientOutputDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +16,14 @@
     <ProjectReference Include="../../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj"
                       ReferenceOutputAssembly="false" Private="false" SkipGetTargetFrameworkProperties="true"
                       GlobalPropertiesToRemove="RuntimeIdentifier;PublishAot;SelfContained" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="../../src/Sotsera.Spar.Development/Sotsera.Spar.Development.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+    <Compile Remove="Program.Development.cs" />
   </ItemGroup>
 
   <ItemGroup>

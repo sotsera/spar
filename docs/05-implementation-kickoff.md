@@ -1,6 +1,6 @@
 # Implementation kickoff
 
-Date: 2026-10-18. Status: execution started; the [managed probe](07-managed-probe.md) records actual outcomes and remaining checks. This document remains the sequence for subsequent deliveries.
+Date: 2026-10-19. Status: the [managed probe](07-managed-probe.md) records backend editing experiments; the [development session](11-development-session.md) now pins and exercises the React/Vite baseline. This document preserves the initial kickoff sequence; the milestone and individual guides record current delivery status.
 
 Read with [product direction](02-product-direction.md), [milestone 1](03-milestone-1.md), and the [upstream issue breakdown](04-milestone-1-issues.md). This document breaks down the first engineering decisions; it does not replace A01–A18 or claim they pass.
 
@@ -36,7 +36,7 @@ These are discovery results, not compatibility evidence:
 
 Work against [upstream issue #2](https://github.com/sotsera/spar/issues/2). Foundation documentation was squash-merged in [PR #13](https://github.com/sotsera/spar/pull/13), upstream commit `ee94b70`. The implementation branch `feat/2-hot-reload-probe` initially depended on that documentation branch; its four subsequent commits were then replayed onto the new upstream `main`, excluding the old foundation commits. The refreshed implementation tree matched the pre-rebase tree exactly before this status update. Earlier source hashes, commit IDs, and CI receipts remain historical evidence.
 
-The first experiments used SDK `11.0.100-rc.2.26504.105` / `net11.0`; the same complete VS Code scenario also passed on SDK `10.0.402` / `net10.0`. No necessary .NET 11 advantage was demonstrated in this slice. `global.json` therefore selects stable SDK `10.0.402` with roll-forward disabled and previews excluded; both projects now target `net10.0`. Requiring .NET 11 remains an option when a concrete benefit is proved. The manual Visual Studio console probe now passes on this project baseline; the integrated consumer/native/AOT gates still precede a full product support promise. Central stable test dependencies are xUnit v3 `4.0.2` and AwesomeAssertions `9.6.0`; MTP is selected in `global.json`. No frontend toolchain has been scaffolded yet.
+The first experiments used SDK `11.0.100-rc.2.26504.105` / `net11.0`; the same complete VS Code scenario also passed on SDK `10.0.402` / `net10.0`. No necessary .NET 11 advantage was demonstrated in this slice. `global.json` therefore selects stable SDK `10.0.402` with roll-forward disabled and previews excluded; both probe projects target `net10.0`. Requiring .NET 11 remains an option when a concrete benefit is proved. The manual Visual Studio console probe passed on this baseline; full consumer/debugger integration remains open. Central stable test dependencies are xUnit v3 `4.0.2` and AwesomeAssertions `9.6.0`; MTP is selected in `global.json`. M1.4 now scaffolds the [pinned frontend toolchain](11-development-session.md#configuration-and-generated-output).
 
 Build one disposable CoreCLR console probe under `experiments/`, with no SPA, WebView, production framework packages, or custom compiler. It needs a greeting method, mutable counter, process/instance identity, and an update-observation hook. Commands should exercise the method repeatedly so the next invocation demonstrates new behavior.
 

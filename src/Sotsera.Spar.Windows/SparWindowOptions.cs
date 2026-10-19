@@ -5,6 +5,9 @@ namespace Sotsera.Spar.Windows;
 /// <summary>Initial, trusted local document and persistent browser profile for one Windows/x64 window.</summary>
 public sealed class SparWindowOptions
 {
+    /// <summary>Optional owner-authorized loopback content. Local HTML is used when absent.</summary>
+    public SparLoopbackContent? LoopbackContent { get; init; }
+
     public SparBridge? Bridge
     {
         get; init;

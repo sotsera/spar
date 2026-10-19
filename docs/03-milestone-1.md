@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-18. Status: managed console Hot Reload verified under the watcher, VS Code, and Visual Studio; native hosting and the typed bridge have CoreCLR/copied-AOT desktop evidence. See [managed evidence](07-managed-probe.md), the [native host](09-native-host.md), and the [bridge](10-typed-bridge.md). No integrated A01–A18 acceptance scenario is complete.
+Date: 2026-10-19. Status: managed console Hot Reload verified under the watcher, VS Code, and Visual Studio; native hosting and the typed bridge have CoreCLR/copied-AOT evidence. The [owned SPA session](11-development-session.md) adds actual React/Vite HMR with state retention (A02) and editor/owner cleanup. Backend update integration, debugger handoff, and remaining acceptance scenarios stay open.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -65,6 +65,8 @@ Track the frontend and application separately. Handle startup timeout, port conf
 Deliverables: one terminal/AI launch path, structured lifecycle events, CSS/component HMR demonstrations, and verified cleanup of owned processes. Full process-tree observations need PID plus creation identity, not an unqualified PID reuse assumption.
 
 Exercise terminal close, normal app close outside a planned restart, editor workspace/debug Stop, failed startup, and abrupt coordinator/owner exit. Keep the frontend alive across expected backend restarts, then observe all owned dev-server helpers exiting when the session ends. Test the process-lifetime safeguard independently from graceful shutdown; no unrelated Node/browser processes may be terminated. The early-window waiting/error page is polish after basic sequencing works, and does not count as application readiness.
+
+Progress: the [development session guide](11-development-session.md) and [desktop evidence](evidence/development-session-2026-10-19/README.md) cover the owned build/start path, private loopback/bridge authority, actual CSS/React HMR with retained state, frontend retention across explicit application restart, and actual process cleanup under native close, editor task Stop/window close, owner loss, and startup failure. A02 has direct evidence. The CLI restart relaunches the same compiled application; automatic backend updates, debugger Stop/relaunch integration, externally supplied servers, and waiting-window polish are not claimed.
 
 ### M1.5 — Integrate backend patches and coordinated restart
 

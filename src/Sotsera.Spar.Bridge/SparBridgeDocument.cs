@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
@@ -10,6 +11,7 @@ public sealed class SparBridgeDocument
     private readonly SparBridge _bridge;
     private readonly ISparBridgeDispatcher _dispatcher;
     private readonly Action<SparBridgeEvent>? _observer;
+    private readonly string? _clientCredential;
     private readonly Dictionary<int, BridgeCall> _calls = [];
     private string? _client;
     private int _highestRequestId;
@@ -39,13 +41,14 @@ public sealed class SparBridgeDocument
     }
 
     internal SparBridgeDocument(SparBridge bridge, ISparBridgeDispatcher dispatcher, string source, ulong navigationId,
-        Action<SparBridgeEvent>? observer)
+        Action<SparBridgeEvent>? observer, string? clientCredential)
     {
         _bridge = bridge;
         _dispatcher = dispatcher;
         Source = source;
         NavigationId = navigationId;
         _observer = observer;
+        _clientCredential = clientCredential;
     }
 
     /// <summary>Returns work only for an admitted call. Its task ends after the handler AND cancellation callbacks end.</summary>
@@ -100,6 +103,14 @@ public sealed class SparBridgeDocument
 
             if (request.Kind == "hello" && request.Id == 0)
             {
+                if (_clientCredential is not null && (request.Payload.ValueKind != JsonValueKind.String
+                    || !CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(_clientCredential),
+                        Encoding.UTF8.GetBytes(request.Payload.GetString()!))))
+                {
+                    Reject(request, "client_unauthorized", send);
+                    return null;
+                }
+
                 if (_client is not null && _client != request.Client)
                 {
                     Reject(request, "client_already_bound", send);

@@ -7,13 +7,20 @@ using Sotsera.Spar.Windows;
 
 namespace Spar.NativeSample;
 
-internal static class Program
+internal static partial class Program
 {
     private static string? _runtimeFolder;
 
     [STAThread]
     private static int Main(string[] args)
     {
+#if DEBUG
+        if (args.Contains("--spar-dev", StringComparer.Ordinal))
+        {
+            return RunDevelopment();
+        }
+#endif
+
         var profile = args.Length > 0 ? args[0] : Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Sotsera", "Spar.NativeSample");
         var closeDuringStartup = args.Contains("--close-during-startup", StringComparer.Ordinal);

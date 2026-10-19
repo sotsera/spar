@@ -20,6 +20,7 @@ Start with [product direction](docs/02-product-direction.md), then the relevant 
 - Run checks appropriate to the change. Native rendering, debugger Hot Reload, and published AOT behavior require actual integration evidence; mocks and historical results do not establish them.
 - For the native slice, use the [native host guide](docs/09-native-host.md): `eng/Test-NativeHost.ps1` requires PowerShell 7.4 or later and accepts the built/copied executable. Only `-VerifyRender` plus visual inspection supplies desktop rendering evidence; ordinary CI lifecycle checks do not.
 - For contracts, use the [typed bridge guide](docs/10-typed-bridge.md): build before running the TypeScript checks in `eng/bridge-client-tests`; run `eng/Test-Bridge.ps1` against both CoreCLR and a copied AOT executable. Keep build-only generator references private so compiler tooling never ships in the payload.
+- For SPA sessions, use the [development guide](docs/11-development-session.md): build before frontend checks, run `eng/Test-DevelopmentSession.ps1`, and use `-VerifyRender` plus image review for desktop evidence. `eng/Test-VSCodeSession.ps1` proves real task/window ownership, not integrated debugger Hot Reload. Never recursively delete fixture junctions as routine cleanup.
 - Record observed outcomes and unavailable checks. Keep milestone status and the README accurate; never mark skipped or unexecuted acceptance scenarios complete.
 - For upstream code adaptations, record source revision, paths, changes, and applicable license notices. Design inspiration alone does not require importing upstream code or dependencies.
 
@@ -67,6 +68,9 @@ Start with [product direction](docs/02-product-direction.md), then the relevant 
 - Never create issues, pull requests, or other GitHub resources
   using an unintended account.
 - Always request approval before publishing issues.
+- With each implementation PR, update the related existing issue's checklist, evidence links, and remaining work.
+  After merge, reconcile the milestone tracker with closed issues. Use `Refs` for partial deliveries and `Fixes` only
+  for completed issue scope; never infer integrated acceptance from a precursor probe.
 
 ## Branches and working directories
 

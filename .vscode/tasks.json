@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Spar: build development tool",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "tools/Spar.Dev/Spar.Dev.csproj", "--disable-build-servers"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Spar: development session",
+      "type": "process",
+      "command": "${workspaceFolder}/tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe",
+      "args": ["${workspaceFolder}/samples/Spar.NativeSample/spar.dev.json", "--owner-stdin"],
+      "dependsOn": "Spar: build development tool",
+      "isBackground": true,
+      "problemMatcher": {
+        "base": "$msCompile",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "\"kind\":\"session-started\"",
+          "endsPattern": "\"kind\":\"application-ready\""
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    }
+  ]
+}

@@ -37,6 +37,17 @@ jobs:
           npm ci --ignore-scripts
           npm test
 
+      - name: Install and check the sample SPA
+        working-directory: samples/Spar.NativeSample/frontend
+        run: |
+          npm ci --ignore-scripts --include=optional
+          npm run check
+          npm run build
+
+      - name: Test owned SPA session and HMR
+        shell: pwsh
+        run: ./eng/Test-DevelopmentSession.ps1 -EvidenceDirectory artifacts/development/ci
+
       - name: Test native CoreCLR bridge
         shell: pwsh
         run: >-
@@ -84,4 +95,7 @@ jobs:
             artifacts/bridge/ci-*/receipt.json
             artifacts/bridge/ci-*/**/*.jsonl
             artifacts/bridge/ci-*/**/*.log
+            artifacts/development/ci/receipt.json
+            artifacts/development/ci/**/coordinator.jsonl
+            artifacts/development/ci/**/*.log
           if-no-files-found: warn

@@ -25,10 +25,17 @@ public sealed class SparBridge
     }
 
     /// <summary>The native transport must supply the actual source and navigation ID, never renderer claims.</summary>
-    public SparBridgeDocument OpenDocument(string source, ulong navigationId, Action<SparBridgeEvent>? observer = null)
+    public SparBridgeDocument OpenDocument(string source, ulong navigationId, Action<SparBridgeEvent>? observer = null,
+        string? clientCredential = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(source);
-        return new SparBridgeDocument(this, _dispatcher, source, navigationId, observer);
+        if (clientCredential is not null && (clientCredential.Length != 64 || !clientCredential.All(char.IsAsciiHexDigit)))
+        {
+            throw new ArgumentException("A client credential must contain 32 random bytes encoded as 64 hex characters.",
+                nameof(clientCredential));
+        }
+
+        return new SparBridgeDocument(this, _dispatcher, source, navigationId, observer, clientCredential);
     }
 
     internal bool HasPermission(string permission)

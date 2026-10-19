@@ -43,13 +43,13 @@ channel?.addEventListener('message', event => {
   }
 });
 
-export function connect() {
+export function connect(clientCredential = null) {
   if (retired) return Promise.reject(failure('document_retired'));
   if (connectionPromise) return connectionPromise;
   connectionPromise = new Promise((resolve, reject) => {
     if (!channel) { reject(failure('bridge_unavailable')); return; }
     pending.set(0, { resolve, reject, timer: setTimeout(() => finish(0, null, 'handshake_timeout'), 10000) });
-    try { channel.postMessage(envelope('hello', 0)); }
+    try { channel.postMessage(envelope('hello', 0, null, clientCredential)); }
     catch (error) { finish(0, null, 'transport_failed'); }
   });
   return connectionPromise;
