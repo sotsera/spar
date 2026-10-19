@@ -8,6 +8,8 @@ export default function App() {
   const [greeting, setGreeting] = useState('Connecting…');
   const [mount] = useState(() => crypto.randomUUID());
   const [status, setStatus] = useState('Waiting for C#');
+  const [backendRevision, setBackendRevision] = useState(0);
+  const [developmentStatus, setDevelopmentStatus] = useState('');
 
   useEffect(() => {
     let current = true;
@@ -18,11 +20,42 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    let current = true;
+    const updated = async (event: { revision: number; contract: string; document: string }) => {
+      const identity = await connect();
+      if (event.contract !== identity.contract || event.document !== identity.document) return;
+      // An update invalidates read data. Never replay counter/delay or other mutations here.
+      const reply = await backend.greet({ name: 'Spar' });
+      if (!current) return;
+      setGreeting(reply.greeting);
+      setCounter(reply.counter);
+      setBackendRevision(event.revision);
+      setDevelopmentStatus(`Backend updated (revision ${event.revision})`);
+    };
+    const diagnostic = async (event: { detail: string; contract: string; document: string }) => {
+      const identity = await connect();
+      if (current && event.contract === identity.contract && event.document === identity.document) {
+        setDevelopmentStatus(`Edit not applied: ${event.detail}`);
+      }
+    };
+    const update = (event: Parameters<typeof updated>[0]) => { updated(event).catch(error => setStatus(String(error))); };
+    const report = (event: Parameters<typeof diagnostic>[0]) => { diagnostic(event).catch(error => setStatus(String(error))); };
+    import.meta.hot?.on('spar:backend-update', update);
+    import.meta.hot?.on('spar:backend-status', report);
+    return () => {
+      current = false;
+      import.meta.hot?.off('spar:backend-update', update);
+      import.meta.hot?.off('spar:backend-status', report);
+    };
+  }, []);
+
+  useEffect(() => {
     const report = async () => {
       // Report committed DOM after a layout opportunity; desktop pixel verification is a separate check.
       await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
       const identity = await connect();
       const detail = { mount, document: identity.document, contract: identity.contract, local, text, counter,
+        backendRevision, developmentStatus,
         greeting, heading: document.querySelector('h1')?.textContent,
         accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
         color: getComputedStyle(document.querySelector('button')!).backgroundColor };
@@ -37,7 +70,7 @@ export default function App() {
       import.meta.hot?.off('vite:beforeUpdate', beforeUpdate);
       import.meta.hot?.off('vite:afterUpdate', afterUpdate);
     };
-  }, [mount, local, text, counter, greeting, status]);
+  }, [mount, local, text, counter, greeting, status, backendRevision, developmentStatus]);
 
   useEffect(() => {
     if (document.querySelector<HTMLMetaElement>('meta[name="spar-probe"]')?.content !== '1') return;
@@ -46,6 +79,16 @@ export default function App() {
         setLocal(7);
         setText('Retain this text through HMR');
         backend.counter({ delta: 2 }).then(reply => setCounter(reply.value)).catch(error => setStatus(String(error)));
+      } else if (action === 'delay') {
+        backend.delay({ milliseconds: 12000, ignoreCancellation: true }, { timeoutMs: 30000 })
+          .catch(() => { /* Retirement rejects delivery; the native owner still waits for actual completion. */ });
+      } else if (action.startsWith('stale-contract:')) {
+        connect().then(identity => {
+          const channel = (window as Window & { chrome?: { webview?: { postMessage(value: unknown): void } } }).chrome?.webview;
+          channel?.postMessage({ version: 1, kind: 'call', id: 1, contract: action.slice('stale-contract:'.length),
+            client: crypto.randomUUID().replaceAll('-', ''), document: identity.document,
+            operation: 'counter', payload: { delta: 777 }, timeoutMs: 5000 });
+        }).catch(error => setStatus(String(error)));
       } else if (action === 'close') window.close();
     };
     import.meta.hot?.on('spar:sample-probe', probe);
@@ -66,5 +109,6 @@ export default function App() {
     <label>Local state <input value={text} onChange={event => setText(event.target.value)} placeholder="Type, then edit the component" /></label>
     <p id="greeting">{greeting}</p>
     <p id="status" role="status">{status}</p>
+    {developmentStatus && <p id="development-status" role="status">{developmentStatus}</p>}
   </main>;
 }

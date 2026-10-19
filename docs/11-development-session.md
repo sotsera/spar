@@ -1,6 +1,6 @@
 # Owned SPA development session
 
-Date: 2026-10-19. M1.4, Windows/x64, .NET 10. This integrates the ordinary native consumer with React/Vite and the generated typed bridge. Backend Hot Reload, automatic rebuild/restart, and debugger handoff remain M1.5 work.
+Date: 2026-10-19. M1.4, Windows/x64, .NET 10. This records the owned SPA/session foundation. The later [backend update guide](12-backend-updates.md) adds the sample's default watcher lane; the manual-mode behavior below remains available with `watchBackend: false`. Integrated debugger handoff remains open.
 
 ## Start and edit
 

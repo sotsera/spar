@@ -12,9 +12,15 @@ namespace Sotsera.Spar.Development;
 public sealed class OwnedProcessJob : IDisposable
 {
     private readonly SafeJobHandle _handle;
+    private readonly OwnedProcessJob? _parent;
 
-    public OwnedProcessJob()
+    public OwnedProcessJob() : this(null)
     {
+    }
+
+    internal OwnedProcessJob(OwnedProcessJob? parent)
+    {
+        _parent = parent;
         _handle = ProcessNative.CreateJobObject(0, 0);
         if (_handle.IsInvalid)
         {
@@ -56,9 +62,13 @@ public sealed class OwnedProcessJob : IDisposable
         {
             Check(ProcessNative.InitializeProcThreadAttributeList(list, 2, 0, ref size));
             initialized = true;
-            var job = _handle.DangerousGetHandle();
+            nint* jobs = stackalloc nint[2];
+            var jobCount = _parent is null ? 1 : 2;
+            jobs[0] = _parent?._handle.DangerousGetHandle() ?? _handle.DangerousGetHandle();
+            jobs[jobCount - 1] = _handle.DangerousGetHandle();
             // PROC_THREAD_ATTRIBUTE_JOB_LIST (13 | INPUT), HANDLE_LIST (2 | INPUT), pinned SDK definitions.
-            Check(ProcessNative.UpdateProcThreadAttribute(list, 0, 0x2000d, (nint)(&job), (nuint)sizeof(nint), 0, 0));
+            Check(ProcessNative.UpdateProcThreadAttribute(list, 0, 0x2000d, (nint)jobs,
+                (nuint)(jobCount * sizeof(nint)), 0, 0));
             Check(ProcessNative.UpdateProcThreadAttribute(list, 0, 0x20002, (nint)inherited, (nuint)(3 * sizeof(nint)), 0, 0));
             var startup = new StartupInfoEx
             {
@@ -107,6 +117,7 @@ public sealed class OwnedProcessJob : IDisposable
                     }
 
                     GC.KeepAlive(_handle);
+                    GC.KeepAlive(_parent);
                     return process;
                 }
                 catch

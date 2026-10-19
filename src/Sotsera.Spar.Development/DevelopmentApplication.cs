@@ -15,6 +15,7 @@ public sealed class DevelopmentApplication : IDisposable
     private readonly Task _reader;
     private readonly string _contract;
     private readonly int _generation;
+    private readonly Action<long, Type[]?> _updated;
     private SparWindow? _window;
     private string? _document;
     private Exception? _failure;
@@ -31,20 +32,29 @@ public sealed class DevelopmentApplication : IDisposable
         get;
     }
 
-    private DevelopmentApplication(SessionConnection connection, SessionMessage configuration, string contract)
+    private DevelopmentApplication(SessionConnection connection, SessionMessage configuration, string contract,
+        HashSet<Type> contractTypes)
     {
         _connection = connection;
         _contract = contract;
         _generation = configuration.Generation;
         Content = new SparLoopbackContent(new Uri(configuration.Url!), configuration.Credential!);
         UserDataFolder = configuration.Profile!;
+        _updated = (revision, types) =>
+        {
+            var contractChanged = types is null || types.Any(contractTypes.Contains);
+            Send(new SessionMessage(contractChanged ? "app-contract-update" : "app-update", Contract: _contract,
+                Generation: _generation, UpdateRevision: revision));
+        };
+        DevelopmentUpdates.Subscribe(_updated);
         _writer = WriteLoopAsync();
         _reader = ReadLoopAsync();
     }
 
-    public static DevelopmentApplication Connect(string contract)
+    public static DevelopmentApplication Connect(string contract, Type contractType)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(contract);
+        var contractTypes = GetContractTypes(contractType);
         var pipeName = Environment.GetEnvironmentVariable("SPAR_DEV_APP_PIPE")
             ?? throw new InvalidOperationException("Start the development application through Spar.Dev.");
         var token = Environment.GetEnvironmentVariable("SPAR_DEV_TOKEN");
@@ -65,7 +75,7 @@ public sealed class DevelopmentApplication : IDisposable
                 throw new InvalidDataException("The owning session did not supply a matching application configuration.");
             }
 
-            return new DevelopmentApplication(connection, configuration, contract);
+            return new DevelopmentApplication(connection, configuration, contract, contractTypes);
         }
         catch
         {
@@ -119,6 +129,7 @@ public sealed class DevelopmentApplication : IDisposable
 
     public void Dispose()
     {
+        DevelopmentUpdates.Unsubscribe(_updated);
         _ending = true;
         _outbound.Writer.TryComplete();
         _writer.GetAwaiter().GetResult();
@@ -128,6 +139,17 @@ public sealed class DevelopmentApplication : IDisposable
         {
             throw new InvalidOperationException("The owning development session disconnected.", _failure);
         }
+    }
+
+    public void ReportActivity(string stage)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(stage);
+        if (stage.Length > 256)
+        {
+            throw new ArgumentException("An activity label cannot exceed 256 characters.", nameof(stage));
+        }
+
+        Send(new SessionMessage("app-activity", Detail: stage, Generation: _generation));
     }
 
     private void Send(SessionMessage message)
@@ -189,5 +211,31 @@ public sealed class DevelopmentApplication : IDisposable
     {
         Interlocked.Exchange(ref _stopRequested, 1);
         _window?.Close();
+    }
+
+    private static HashSet<Type> GetContractTypes(Type contractType)
+    {
+        ArgumentNullException.ThrowIfNull(contractType);
+        var methods = contractType.GetMethods();
+        if (!contractType.IsInterface || methods.Length is < 1 or > 32)
+        {
+            throw new ArgumentException("Supply the compiled Spar export interface.", nameof(contractType));
+        }
+
+        var result = new HashSet<Type> { contractType };
+        foreach (var method in methods)
+        {
+            var parameters = method.GetParameters();
+            if (parameters.Length != 2 || parameters[1].ParameterType != typeof(CancellationToken)
+                || !method.ReturnType.IsGenericType || method.ReturnType.GetGenericTypeDefinition() != typeof(Task<>))
+            {
+                throw new ArgumentException("The export interface must match the generated flat Task-based contract.", nameof(contractType));
+            }
+
+            result.Add(parameters[0].ParameterType);
+            result.Add(method.ReturnType.GenericTypeArguments[0]);
+        }
+
+        return result;
     }
 }

@@ -48,6 +48,10 @@ jobs:
         shell: pwsh
         run: ./eng/Test-DevelopmentSession.ps1 -EvidenceDirectory artifacts/development/ci
 
+      - name: Test native backend Hot Reload and retirement
+        shell: pwsh
+        run: ./eng/Test-BackendUpdates.ps1 -EvidenceDirectory artifacts/backend-loop/ci
+
       - name: Test native CoreCLR bridge
         shell: pwsh
         run: >-
@@ -98,4 +102,9 @@ jobs:
             artifacts/development/ci/receipt.json
             artifacts/development/ci/**/coordinator.jsonl
             artifacts/development/ci/**/*.log
+            artifacts/backend-loop/ci/receipt.json
+            artifacts/backend-loop/ci/**/steps.json
+            artifacts/backend-loop/ci/**/sources.initial.sha256
+            artifacts/backend-loop/ci/**/coordinator.jsonl
+            artifacts/backend-loop/ci/**/*.log
           if-no-files-found: warn

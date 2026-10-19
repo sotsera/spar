@@ -61,6 +61,12 @@ export function sparSession() {
           let message;
           try { message = JSON.parse(line); } catch { socket.destroy(); return; }
           if (message.kind === 'stop') stop().catch(() => { process.exitCode = 1; socket.destroy(); });
+          else if (message.kind === 'backend-update' || message.kind === 'backend-status') {
+            server.ws.send({ type: 'custom', event: `spar:${message.kind}`, data: {
+              generation: message.generation, revision: message.updateRevision,
+              contract: message.contract, document: message.document, detail: message.detail,
+            } });
+          }
           else if (message.kind === 'probe' && env.SPAR_DEV_PROBE === '1') {
             server.ws.send({ type: 'custom', event: 'spar:sample-probe', data: message.detail });
           }

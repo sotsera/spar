@@ -15,7 +15,7 @@ using Sotsera.Spar.Windows;
 namespace Sotsera.Spar.Development;
 
 /// <summary>One owned SPA server and one application at a time. It does not apply C# patches or rebuild on edits.</summary>
-public sealed class DevelopmentSession(DevelopmentSettings settings, Action<DevelopmentEvent> observer, bool enableProbe = false) : IAsyncDisposable
+public sealed partial class DevelopmentSession(DevelopmentSettings settings, Action<DevelopmentEvent> observer, bool enableProbe = false) : IAsyncDisposable
 {
     private readonly object _eventGate = new();
     private readonly string _session = Guid.NewGuid().ToString("N");
@@ -141,14 +141,11 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
             {
                 throw new SessionStoppedException();
             }
-            var generated = File.ReadAllText(settings.GeneratedClient);
-            var match = Regex.Match(generated, "const fingerprint = '([0-9a-f]{64})';", RegexOptions.CultureInvariant,
-                TimeSpan.FromSeconds(1));
-            if (!match.Success)
+            ReadContract();
+            if (settings.WatchBackend)
             {
-                throw new SessionFailure("invalid_contract_output", "Build matching generated client bindings first.");
+                await VerifyWatchSdkAsync().ConfigureAwait(false);
             }
-            _contract = match.Groups[1].Value;
             CheckPort();
             await StartFrontendAsync().ConfigureAwait(false);
             await StartApplicationAsync().ConfigureAwait(false);
@@ -175,6 +172,7 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
             }
 
             _job.Dispose(); // The last resort remains active through every failure, including owner/process exit.
+            DisposeWatchResources();
             foreach (var process in _observed.Values)
             {
                 process.Dispose();
@@ -257,16 +255,37 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
         _currentDocument = null;
         _readyDocument = null;
         _applicationControlLost = false;
+        _lastBackendRevision = 0;
+        _pendingUpdate = 0;
         var name = "spar-app-" + Guid.NewGuid().ToString("N");
         var pipe = CreateServer(name);
         try
         {
-            _application = Start("application", settings.Application, ["--spar-dev"], Path.GetDirectoryName(settings.Application)!,
-                new Dictionary<string, string> { ["SPAR_DEV_APP_PIPE"] = name, ["SPAR_DEV_SESSION"] = _session, ["SPAR_DEV_TOKEN"] = _token });
+            var variables = new Dictionary<string, string>
+            {
+                ["SPAR_DEV_APP_PIPE"] = name,
+                ["SPAR_DEV_SESSION"] = _session,
+                ["SPAR_DEV_TOKEN"] = _token
+            };
+            var launcher = settings.WatchBackend
+                ? StartWatcher(variables)
+                : Start("application", settings.Application, ["--spar-dev"], Path.GetDirectoryName(settings.Application)!, variables);
+            if (!settings.WatchBackend)
+            {
+                _application = launcher;
+            }
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(_startupStop.Token);
             timeout.CancelAfter(TimeSpan.FromSeconds(settings.StartupTimeoutSeconds));
-            _applicationPeer = await AwaitStartupAsync(AcceptAsync(pipe, "app", timeout.Token), _application, timeout,
+            _applicationPeer = await AwaitStartupAsync(AcceptAsync(pipe, "app", timeout.Token), launcher, timeout,
                 "application_startup_timeout").ConfigureAwait(false);
+            if (settings.WatchBackend)
+            {
+                var application = Process.GetProcessById(_applicationPeer.Process.Id);
+                _ = application.Handle;
+                _application = new Child(application, "application", application.WaitForExitAsync());
+                Emit("process-started", "application", application);
+                ReadContract(); // The SDK's initial build must agree with the generated files it just produced.
+            }
             if (_applicationPeer.Hello.Contract != _contract)
             {
                 throw new SessionFailure("contract_mismatch", "The compiled backend and generated frontend contract do not match.");
@@ -302,7 +321,7 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
                 throw new SessionFailure("frontend_exited", "The owned frontend ended; the application is being stopped.");
             }
 
-            if (_application!.Exited.IsCompleted)
+            if (_application?.Exited.IsCompleted == true)
             {
                 Emit("application-exited", "application", _application.Process, code: _application.Process.ExitCode.ToString(CultureInfo.InvariantCulture));
                 if (_application.Process.ExitCode != 0)
@@ -315,7 +334,12 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
                 return;
             }
 
-            if (_readyDocument is null && DateTimeOffset.UtcNow > _readyDeadline)
+            if (_watcher?.Exited.IsCompleted == true)
+            {
+                throw new SessionFailure("watcher_exited", "The backend update owner exited; inspect its retained logs.");
+            }
+
+            if (_application is not null && _readyDocument is null && DateTimeOffset.UtcNow > _readyDeadline)
             {
                 if (_applicationControlLost)
                 {
@@ -329,6 +353,11 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
             {
                 await tick.ConfigureAwait(false);
                 TrackProcesses();
+                if (ReadWatchOutput())
+                {
+                    await RebuildApplicationAsync("unsupported_edit").ConfigureAwait(false);
+                }
+                await PublishWatchDiagnosticAsync().ConfigureAwait(false);
                 tick = timer.WaitForNextTickAsync().AsTask();
             }
 
@@ -336,24 +365,38 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
             {
                 HandleMessage(incoming);
             }
+            if (_contractRestartPending)
+            {
+                _contractRestartPending = false;
+                await RebuildApplicationAsync("contract_update").ConfigureAwait(false);
+            }
+            await PublishBackendUpdateAsync().ConfigureAwait(false);
             while (commands.TryRead(out var request))
             {
                 Emit("command-accepted", correlation: request.Id, detail: request.Command);
                 if (request.Command == "status")
                 {
                     TrackProcesses();
-                    Emit("command-completed", code: _readyDocument is null ? "starting" : "ready", correlation: request.Id);
+                    Emit("command-completed", code: _application is null ? "stopped" : _readyDocument is null ? "starting" : "ready",
+                        correlation: request.Id);
                 }
                 else if (request.Command == "restart")
                 {
                     _restartCorrelation = request.Id;
-                    await StopApplicationAsync().ConfigureAwait(false);
-                    if (_force.Task.IsCompleted)
+                    if (settings.WatchBackend)
                     {
-                        throw new SessionStoppedException();
+                        await RebuildApplicationAsync("owner_restart").ConfigureAwait(false);
                     }
-                    _generation++;
-                    await StartApplicationAsync().ConfigureAwait(false);
+                    else
+                    {
+                        await StopApplicationAsync().ConfigureAwait(false);
+                        if (_force.Task.IsCompleted)
+                        {
+                            throw new SessionStoppedException();
+                        }
+                        _generation++;
+                        await StartApplicationAsync().ConfigureAwait(false);
+                    }
                 }
                 else if (request.Command == "probe" && enableProbe)
                 {
@@ -375,7 +418,15 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
                 command = await command.ConfigureAwait(false) ? commands.WaitToReadAsync().AsTask() : null;
             }
 
-            var wait = new List<Task> { tick, messages, _application.Exited, _frontend.Exited, _frontendPeer.Reader, _stop.Task };
+            var wait = new List<Task> { tick, messages, _frontend.Exited, _frontendPeer.Reader, _stop.Task };
+            if (_application is not null)
+            {
+                wait.Add(_application.Exited);
+            }
+            if (_watcher is not null)
+            {
+                wait.Add(_watcher.Exited);
+            }
             if (command is not null)
             {
                 wait.Add(command);
@@ -432,6 +483,29 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
                 throw new SessionFailure("client_unauthorized", "The document did not prove the session's client capability.");
             }
         }
+        else if (message.Kind == "app-update" && message.Contract == _contract && message.UpdateRevision is { } revision)
+        {
+            if (revision <= _lastBackendRevision)
+            {
+                return;
+            }
+
+            _lastBackendRevision = revision;
+            Emit("backend-updated", "application", _application!.Process, contract: _contract,
+                document: _currentDocument, updateRevision: revision);
+            _pendingUpdate = revision;
+        }
+        else if (message.Kind == "app-contract-update" && message.Contract == _contract)
+        {
+            _contractRestartPending = true;
+            Emit("contract-update-observed", contract: _contract, document: _currentDocument,
+                updateRevision: message.UpdateRevision);
+        }
+        else if (message.Kind == "app-activity")
+        {
+            Emit("backend-activity", "application", _application!.Process, detail: message.Detail,
+                document: _currentDocument);
+        }
         else if (message.Kind == "app-ui" && message.Contract == _contract && message.Document == _currentDocument
             && _currentDocument is not null)
         {
@@ -456,6 +530,8 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
         {
             return;
         }
+        _currentDocument = null;
+        _readyDocument = null;
         if (!_application.Exited.IsCompleted)
         {
             Emit("application-stop-requested", "application", _application.Process);
@@ -471,14 +547,10 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
             {
                 ForceOwnedProcesses("application_startup_incomplete");
             }
-            if (await Task.WhenAny(_application.Exited, _force.Task).ConfigureAwait(false) == _force.Task)
-            {
-                ForceOwnedProcesses("explicit_force");
-            }
-
-            // No grace timeout authorizes dropping application work or starting a replacement.
-            await _application.Exited.ConfigureAwait(false);
         }
+
+        // No grace timeout authorizes dropping application work or starting a replacement.
+        await DrainApplicationExitAsync().ConfigureAwait(false);
 
         Emit("application-stopped", "application", _application.Process);
         if (_applicationPeer is not null)
@@ -488,12 +560,14 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
         }
         _application.Process.Dispose();
         _application = null;
+        await StopWatcherAsync().ConfigureAwait(false);
     }
 
     private async Task ShutdownAsync()
     {
         Emit("session-stopping", code: _stopReason, correlation: _stopCorrelation);
         await StopApplicationAsync().ConfigureAwait(false);
+        await StopWatcherAsync().ConfigureAwait(false);
         if (_frontendPeer is not null && !_frontend!.Exited.IsCompleted)
         {
             try
@@ -618,13 +692,13 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
     }
 
     private Child Start(string role, string executable, IReadOnlyList<string> arguments, string directory,
-        IReadOnlyDictionary<string, string> variables)
+        IReadOnlyDictionary<string, string> variables, OwnedProcessJob? job = null)
     {
         var stem = role + "-" + _generation.ToString(CultureInfo.InvariantCulture);
         Process process;
         try
         {
-            process = _job!.Start(executable, arguments, directory, variables,
+            process = (job ?? _job!).Start(executable, arguments, directory, variables,
                 Path.Combine(_directory, stem + ".stdout.log"), Path.Combine(_directory, stem + ".stderr.log"));
         }
         catch (Exception error) when (error is IOException or Win32Exception or ArgumentException)
@@ -697,14 +771,16 @@ public sealed class DevelopmentSession(DevelopmentSettings settings, Action<Deve
     }
 
     private void Emit(string kind, string? role = null, Process? process = null, string? code = null, string? detail = null,
-        long? window = null, int? port = null, string? contract = null, string? document = null, string? correlation = null)
+        long? window = null, int? port = null, string? contract = null, string? document = null, string? correlation = null,
+        long? updateRevision = null)
     {
         lock (_eventGate)
         {
             try
             {
                 observer(new DevelopmentEvent(kind, _session, _generation, DateTimeOffset.UtcNow, Environment.ProcessId,
-                    role, process?.Id, process?.StartTime.ToUniversalTime(), code, detail, window, port, contract, document, correlation));
+                    role, process?.Id, process?.StartTime.ToUniversalTime(), code, detail, window, port, contract, document,
+                    correlation, updateRevision));
             }
             catch (Exception error)
             {

@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-19. Status: managed console Hot Reload verified under the watcher, VS Code, and Visual Studio; native hosting and the typed bridge have CoreCLR/copied-AOT evidence. The [owned SPA session](11-development-session.md) adds actual React/Vite HMR with state retention (A02) and editor/owner cleanup. Backend update integration, debugger handoff, and remaining acceptance scenarios stay open.
+Date: 2026-10-19. Status: the [owned SPA session](11-development-session.md) supplies actual HMR/state retention (A02). The [native backend watcher lane](12-backend-updates.md) now supplies same-process edits and SPA read refresh (A03/A04), compiler recovery, contract rebuild, and actual retirement evidence. Console debugger precursors and native CoreCLR/copied-AOT checks remain recorded separately. Integrated debugger lanes and remaining acceptance scenarios stay open.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -79,6 +79,8 @@ Compile failure must remain visible and must not activate mismatched outputs. An
 Use one running backend and a failed-update status for compile errors; do not introduce concurrent version hosting, backend-state snapshots, or a rollback store. Retaining the current app is conditional on contract compatibility. A stopped/error outcome is acceptable when matching client/server activation cannot be maintained simply, with correction leading back to a usable app.
 
 Deliverables: supported body patch, contract restart, startup/dependency restart, compile-error recovery, rapid-edit behavior, and in-flight-operation retirement demonstrations.
+
+Progress: the [backend guide](12-backend-updates.md) and [native evidence](evidence/backend-updates-2026-10-19/README.md) connect the selected .NET watcher to the ordinary SPA consumer. Method patches and SPA read invalidation retain process/document/state; errors and corrections are visible. Unsupported/observed-contract updates retire before full rebuild, failed rebuilds remain stopped, and correction plus explicit restart establishes matching contracts. A 12-second cancellation-ignoring operation finishes before replacement; explicit forced stop is distinct and launches no replacement. A03/A04 have direct native evidence. Issue #6 remains open for startup/dependency input classification, selected-source activation across full-build races, and broader stopped-state recovery. The two-edit body test is not all of A08; task/window tests do not establish C# debugger lanes.
 
 ### M1.6 — Make VS Code and AI operation first-class
 

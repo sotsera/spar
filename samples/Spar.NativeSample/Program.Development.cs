@@ -12,9 +12,15 @@ internal static partial class Program
         {
             // Fingerprint is generated from this application's actual compiled contract.
             var fingerprint = new SampleBackendBridge(null!).Fingerprint;
-            using var session = DevelopmentApplication.Connect(fingerprint);
+            using var session = DevelopmentApplication.Connect(fingerprint, typeof(ISampleBackend));
             SparWindow? currentWindow = null;
-            var backend = new SampleBackend(_ => { }, stage =>
+            var backend = new SampleBackend(stage =>
+            {
+                if (stage is "counter-entered" or "delay-entered" or "delay-finished" or "denied-entered")
+                {
+                    session.ReportActivity(stage);
+                }
+            }, stage =>
             {
                 if (stage == "reload")
                 {

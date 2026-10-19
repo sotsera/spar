@@ -8,7 +8,7 @@ Production targets NativeAOT by default, with CoreCLR compatibility for applicat
 
 ## Current status
 
-The native sample now runs React/Vite with generated, permission-checked C# calls in an owned development session. Actual CSS/component HMR preserves local state; planned app restart retains Vite. Terminal/editor ownership and Windows jobs account for child cleanup. The managed Hot Reload probe works under the watcher, VS Code, and Visual Studio; integrating backend updates into this SPA session comes next. See the [development guide](docs/11-development-session.md) and [milestone status](docs/03-milestone-1.md).
+The native sample runs React/Vite with generated, permission-checked C# calls in an owned development session. The terminal/AI watch lane applies supported backend edits in place and refreshes read data while preserving state. Unsupported/contract updates use coordinated rebuild/restart with Vite retained. Editor task ownership works; integrated C# debugger lanes and the remaining milestone scenarios stay open. See the [backend update guide](docs/12-backend-updates.md) and [milestone status](docs/03-milestone-1.md).
 
 ## Run the first slice
 
@@ -22,7 +22,7 @@ Pop-Location
 ./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe samples/Spar.NativeSample/spar.dev.json
 ```
 
-Edit `App.tsx` or `styles.css` in the sample frontend. Type `stop` or press Ctrl+C to end the session. VS Code provides **Tasks: Run Task → Spar: development session**. See the [development guide](docs/11-development-session.md) for controls, verification, and current limits.
+Edit `App.tsx`/`styles.css` in the frontend or the greeting in `SampleBackend.cs`. Type `stop` or press Ctrl+C to end the session. VS Code provides **Tasks: Run Task → Spar: development session**. See the [backend update guide](docs/12-backend-updates.md) for controls, failed-build recovery, and current limits.
 
 For the precursor probes and full managed tests:
 

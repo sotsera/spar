@@ -23,6 +23,10 @@ public sealed record DevelopmentSettings
     public FrontendCommand Frontend { get; set; } = new();
     public int StartupTimeoutSeconds { get; set; } = 30;
     public int ShutdownTimeoutSeconds { get; set; } = 10;
+    public bool WatchBackend
+    {
+        get; set;
+    }
 
     public static DevelopmentSettings Load(string path)
     {

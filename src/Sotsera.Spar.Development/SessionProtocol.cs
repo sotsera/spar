@@ -7,14 +7,15 @@ namespace Sotsera.Spar.Development;
 
 internal sealed record SessionMessage(string Kind, string? Token = null, string? Session = null,
     int? ProcessId = null, string? Url = null, string? Contract = null, string? Document = null,
-    string? Detail = null, string? Credential = null, string? Profile = null, int Generation = 1, long? Window = null);
+    string? Detail = null, string? Credential = null, string? Profile = null, int Generation = 1, long? Window = null,
+    long? UpdateRevision = null);
 
 public sealed record DevelopmentCommand(string Command, string? Id = null, string? Detail = null, bool Force = false);
 
 public sealed record DevelopmentEvent(string Kind, string Session, int Generation, DateTimeOffset ObservedAt,
     int CoordinatorProcessId, string? Role = null, int? ProcessId = null, DateTime? ProcessStartedAtUtc = null,
     string? Code = null, string? Detail = null, long? Window = null, int? Port = null, string? Contract = null,
-    string? Document = null, string? Correlation = null);
+    string? Document = null, string? Correlation = null, long? UpdateRevision = null);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, MaxDepth = 16,
     UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]

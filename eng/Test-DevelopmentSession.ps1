@@ -3,7 +3,8 @@ param(
   [string]$Coordinator = 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe',
   [string]$Application = 'samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe',
   [string]$EvidenceDirectory = 'artifacts/development/probe',
-  [switch]$VerifyRender
+  [switch]$VerifyRender,
+  [switch]$LibraryOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -23,9 +24,9 @@ function Read-Shared([string]$Path) {
   try { $reader.ReadToEnd() } finally { $reader.Dispose() }
 }
 
-function New-Fixture([string]$Name) {
+function New-Fixture([string]$Name, [string]$FrontendDirectory = 'frontend') {
   $directory = Join-Path $evidencePath ($Name + '-' + [guid]::NewGuid().ToString('N'))
-  $frontend = Join-Path $directory 'frontend'
+  $frontend = Join-Path $directory $FrontendDirectory
   New-Item -ItemType Directory -Path $frontend -Force | Out-Null
   $original = Join-Path $repository 'samples/Spar.NativeSample/frontend'
   foreach ($file in @('package.json','package-lock.json','tsconfig.json','index.html')) {
@@ -149,6 +150,8 @@ function Confirm-Exit($Session, [int]$ExpectedCode = 0, [bool]$ForcedOwner = $fa
     rendering = $(if ($VerifyRender -and $Session.Fixture.Name -eq 'hmr-restart-close') { 'verified-pixels-review-captures' } else { 'not-exercised' })
   })
 }
+
+if ($LibraryOnly) { return }
 
 try {
   $unrelatedStart = [Diagnostics.ProcessStartInfo]::new('node')

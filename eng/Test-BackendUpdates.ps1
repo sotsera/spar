@@ -1,0 +1,151 @@
+#requires -Version 7.4
+param(
+  [string]$EvidenceDirectory = 'artifacts/backend-loop/probe',
+  [switch]$VerifyRender
+)
+
+. (Join-Path $PSScriptRoot 'Test-DevelopmentSession.ps1') -EvidenceDirectory $EvidenceDirectory -VerifyRender:$VerifyRender -LibraryOnly
+
+function New-BackendFixture([string]$Name) {
+  $fixture = New-Fixture $Name 'backend/frontend'
+  $backend = Join-Path $fixture.Directory 'backend'
+  $original = Join-Path $repository 'samples/Spar.NativeSample'
+  Get-ChildItem -LiteralPath $original -File | Where-Object Extension -in @('.cs','.csproj','.html','.js') |
+    Copy-Item -Destination $backend
+  $project = Join-Path $backend 'Spar.NativeSample.csproj'
+  $xml = [xml][IO.File]::ReadAllText($project)
+  foreach ($reference in $xml.Project.ItemGroup.ProjectReference) {
+    if ($reference -is [Xml.XmlElement]) { $reference.Include = [IO.Path]::GetFullPath($reference.Include, $original) }
+  }
+  $xml.Project.Import.Project = [IO.Path]::GetFullPath($xml.Project.Import.Project, $original)
+  $xml.Project.PropertyGroup.SparClientOutputDirectory = Join-Path $fixture.Frontend 'src/generated'
+  $xml.Save($project)
+  $source = Join-Path $backend 'SampleBackend.cs'
+  $text = [IO.File]::ReadAllText($source).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend')
+  $text = $text.Replace('> 5000', '> 15000') # Isolated fixture only: keep work alive beyond the SDK's 5-second cleanup timeout.
+  $text += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
+  [IO.File]::WriteAllText($source, $text)
+  $fixture.Settings.project = $project
+  $fixture.Settings.application = Join-Path $backend 'bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe'
+  $fixture.Settings['watchBackend'] = $true
+  $fixture.Settings.startupTimeoutSeconds = 90
+  $fixture | Add-Member -NotePropertyName Backend -NotePropertyValue $backend
+  Get-ChildItem -LiteralPath $backend -File | Sort-Object Name | ForEach-Object {
+    (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $_.Name
+  } | Set-Content -LiteralPath (Join-Path $fixture.Directory 'sources.initial.sha256')
+  return $fixture
+}
+
+function Replace-Source([string]$Path, [string]$Before, [string]$After) {
+  $source = [IO.File]::ReadAllText($Path)
+  if (!$source.Contains($Before)) { throw "Replacement input not found: $Before" }
+  [IO.File]::WriteAllText($Path, $source.Replace($Before,$After))
+}
+
+try {
+  $priorWatchLogLevel = [Environment]::GetEnvironmentVariable('DOTNET_WATCH_LOG_LEVEL')
+  [Environment]::SetEnvironmentVariable('DOTNET_WATCH_LOG_LEVEL','Critical')
+  $unrelatedStart = [Diagnostics.ProcessStartInfo]::new('node')
+  $unrelatedStart.UseShellExecute = $false
+  $unrelatedStart.CreateNoWindow = $true
+  foreach ($argument in @('-e','setInterval(() => {}, 1000)')) { $unrelatedStart.ArgumentList.Add($argument) }
+  $unrelated = [Diagnostics.Process]::Start($unrelatedStart)
+  $null = $unrelated.Handle
+
+  $fixture = New-BackendFixture 'patch-error-restart'
+  $session = Start-Session $fixture $true
+  Wait-Until $session { $null -ne (Latest-Snapshot $session) -and @($session.Events | Where-Object kind -eq 'watcher-ready').Count -eq 1 } 'native/typed and SDK watcher readiness' 120
+  $initial = Latest-Snapshot $session
+  $firstApplication = $session.Events | Where-Object kind -eq 'application-ready' | Select-Object -First 1
+  $frontend = $session.Events | Where-Object kind -eq 'frontend-ready' | Select-Object -First 1
+  Send-Command $session 'probe' 'seed'
+  Wait-Until $session { $state = Latest-Snapshot $session; $state.counter -eq 2 -and $state.local -eq 7 } 'seeded backend/frontend state'
+  $css = Join-Path $fixture.Frontend 'src/styles.css'
+  Replace-Source $css '#70e3bd' '#e9b44c'
+  Wait-Until $session { (Latest-Snapshot $session).color -eq 'rgb(233, 180, 76)' } 'frontend HMR alongside the C# watcher'
+  $source = Join-Path $fixture.Backend 'SampleBackend.cs'
+  Replace-Source $source '"Hello, " + request.Name' '"Hello after patch, " + request.Name'
+  Wait-Until $session { $state = Latest-Snapshot $session; $state.greeting -eq 'Hello after patch, Spar' -and $state.backendRevision -ge 1 } 'real .NET patch and SPA read refresh' 90
+  $patched = Latest-Snapshot $session
+  Assert-Condition ($patched.counter -eq 2 -and $patched.local -eq 7 -and $patched.text -eq 'Retain this text through HMR' -and $patched.mount -eq $initial.mount -and $patched.document -eq $initial.document) 'Backend patch/refresh lost state or replaced the document.'
+  Assert-Condition (@($session.Events | Where-Object kind -eq 'application-ready').Count -eq 1) 'A supported patch restarted the application.'
+  if ($VerifyRender) {
+    $window = [IntPtr]($session.Events | Where-Object kind -eq 'window-created' | Select-Object -Last 1).window
+    Wait-Until $session { [NativeProbeDesktop]::CaptureColor($window, (Join-Path $fixture.Directory 'patched.bmp'), 1000, 233, 180, 76) -gt 3000 } 'rendered patched greeting'
+  }
+
+  Replace-Source $source '"Hello after patch, " + request.Name' 'MissingGreetingSymbol + request.Name'
+  Wait-Until $session { $state = Latest-Snapshot $session; $state.developmentStatus -like '*Edit not applied:*CS0103*' } 'compiler diagnostic in the actual SPA' 90
+  $failed = Latest-Snapshot $session
+  Assert-Condition ($failed.greeting -eq $patched.greeting -and $failed.counter -eq 2 -and $failed.backendRevision -eq $patched.backendRevision) 'Failed compilation activated new behavior/state.'
+  Replace-Source $source 'MissingGreetingSymbol + request.Name' '"Hello after correction, " + request.Name'
+  Wait-Until $session { $state = Latest-Snapshot $session; $state.greeting -eq 'Hello after correction, Spar' -and $state.backendRevision -gt $patched.backendRevision } 'in-process correction recovery' 90
+  Replace-Source $source '"Hello after correction, " + request.Name' '"Hello rapid first, " + request.Name'
+  Start-Sleep -Milliseconds 30
+  Replace-Source $source '"Hello rapid first, " + request.Name' '"Hello rapid final, " + request.Name'
+  Wait-Until $session { (Latest-Snapshot $session).greeting -eq 'Hello rapid final, Spar' } 'latest rapid method edit' 90
+
+  Send-Command $session 'probe' 'delay'
+  Wait-Until $session { @($session.Events | Where-Object { $_.kind -eq 'backend-activity' -and $_.detail -eq 'delay-entered' }).Count -eq 1 } 'actual cancellation-ignoring backend operation'
+  Replace-Source $source ': InitialBackendBase, ISampleBackend' ': ReplacementBackendBase, ISampleBackend'
+  Wait-Until $session { $null -ne (Latest-Snapshot $session 2) } 'coordinated unsupported-edit rebuild/restart after actual old work completion' 120
+  $second = Latest-Snapshot $session 2
+  $stopped = $session.Events | Where-Object { $_.kind -eq 'application-stopped' -and $_.generation -eq 1 } | Select-Object -First 1
+  $started = $session.Events | Where-Object { $_.kind -eq 'process-started' -and $_.role -eq 'application' -and $_.generation -eq 2 } | Select-Object -First 1
+  $delayEnded = $session.Events | Where-Object { $_.kind -eq 'backend-activity' -and $_.detail -eq 'delay-finished' } | Select-Object -First 1
+  Assert-Condition ($delayEnded -and $stopped -and $started -and $delayEnded.observedAt -le $stopped.observedAt -and $stopped.observedAt -lt $started.observedAt) 'New application overlapped retiring execution or actual delay completion was lost.'
+  Assert-Condition ($second.counter -eq 0 -and $started.processId -ne $firstApplication.processId) 'Restart did not create fresh backend state.'
+  Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'backend-activity' -and $_.detail -eq 'delay-entered' }).Count -eq 1) 'Retirement replayed the operation.'
+  Assert-Condition (@($session.Events | Where-Object kind -eq 'forced-cleanup-requested').Count -eq 0) 'Unsupported edit forced termination of unfinished application work.'
+
+  # A failed full rebuild must stay stopped; correction plus explicit restart regenerates both contracts.
+  $contract = Join-Path $fixture.Backend 'BackendContract.cs'
+  Replace-Source $contract 'record CounterReply(int Value)' 'record CounterReply(int Value, int Revision)'
+  Wait-Until $session { @($session.Events | Where-Object { $_.kind -eq 'backend-stopped' -and $_.code -eq 'build_failed' }).Count -eq 1 } 'stopped failed rebuild' 90
+  Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'application-ready' -and $_.generation -eq 3 }).Count -eq 0) 'A broken build activated an application.'
+  Replace-Source $source 'new CounterReply(Interlocked.Add(ref _counter, request.Delta))' 'new CounterReply(Interlocked.Add(ref _counter, request.Delta), 7)'
+  Send-Command $session 'restart'
+  Wait-Until $session { $null -ne (Latest-Snapshot $session 4) } 'corrected matching-contract generation' 120
+  $corrected = Latest-Snapshot $session 4
+  Assert-Condition ($corrected.contract -ne $initial.contract -and $corrected.counter -eq 0) 'Contract regeneration did not change identity or reset backend state.'
+  Send-Command $session 'probe' ('stale-contract:' + $initial.contract)
+  Wait-Until $session { @($session.Events | Where-Object { $_.kind -eq 'bridge-diagnostic' -and $_.generation -eq 4 -and $_.code -eq 'contract_mismatch' }).Count -eq 1 } 'stale fingerprint rejection before mutation'
+  Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'backend-activity' -and $_.generation -eq 4 -and $_.detail -eq 'counter-entered' }).Count -eq 0) 'A stale contract entered the mutation handler.'
+  Assert-Condition (@($session.Events | Where-Object kind -eq 'frontend-ready').Count -eq 1) 'Backend update/rebuild restarted Vite.'
+  $originalFrontend = $session.Handles.Values | Where-Object Id -eq $frontend.processId | Select-Object -First 1
+  Assert-Condition ($originalFrontend -and !$originalFrontend.HasExited) 'Original frontend process did not survive backend changes.'
+  Send-Command $session 'stop'
+  Confirm-Exit $session
+  @{
+    initial = $initial; patched = $patched; failedEdit = $failed; correctedContract = $corrected
+    firstApplication = $firstApplication; originalFrontend = $frontend
+    delayFinished = $delayEnded; oldApplicationStopped = $stopped; replacementStarted = $started
+    mutationReplayed = $false; backendRestartOverlappedOldWork = $false
+  } | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $fixture.Directory 'steps.json')
+  if ($VerifyRender) { $results[$results.Count - 1].rendering = 'verified-pixels-review-captures' }
+
+  $fixture = New-BackendFixture 'explicit-force-during-retirement'
+  $session = Start-Session $fixture $true
+  Wait-Until $session { $null -ne (Latest-Snapshot $session) -and @($session.Events | Where-Object kind -eq 'watcher-ready').Count -eq 1 } 'force fixture watcher readiness' 120
+  Send-Command $session 'probe' 'delay'
+  Wait-Until $session { @($session.Events | Where-Object { $_.kind -eq 'backend-activity' -and $_.detail -eq 'delay-entered' }).Count -eq 1 } 'force fixture actual work'
+  Replace-Source (Join-Path $fixture.Backend 'SampleBackend.cs') ': InitialBackendBase, ISampleBackend' ': ReplacementBackendBase, ISampleBackend'
+  Wait-Until $session { @($session.Events | Where-Object kind -eq 'application-stop-requested').Count -eq 1 } 'graceful retirement waiting for work'
+  Send-Command $session 'stop' '' $true
+  Confirm-Exit $session
+  Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'session-stopped' -and $_.code -eq 'forced_cleanup' }).Count -eq 1) 'Explicit force was reported as graceful.'
+  Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'process-started' -and $_.role -eq 'application' -and $_.generation -gt 1 }).Count -eq 0) 'Force/stop launched a replacement application.'
+} finally {
+  [Environment]::SetEnvironmentVariable('DOTNET_WATCH_LOG_LEVEL',$priorWatchLogLevel)
+  foreach ($session in $sessions) {
+    if (!$session.Process.HasExited) { $session.Process.Kill(); $null = $session.Process.WaitForExit(10000) }
+    foreach ($owned in $session.Handles.Values) { $null = $owned.WaitForExit(10000); $owned.Dispose() }
+    $session.Process.Dispose()
+  }
+  if ($unrelated) {
+    if (!$unrelated.HasExited) { $unrelated.Kill(); $null = $unrelated.WaitForExit(10000) }
+    $unrelated.Dispose()
+  }
+  $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $evidencePath 'receipt.json')
+}
+$results | Format-Table

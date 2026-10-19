@@ -1,0 +1,64 @@
+# Backend updates in the native SPA session
+
+Date: 2026-10-19. First integrated M1.5 delivery, terminal/AI watcher lane. This extends the [owned SPA session](11-development-session.md) and uses the same native consumer. Issue #6 remains open for startup/dependency policy, source-generation selection across rebuild races, and further recovery automation. Debugger-owned lanes remain #8/#9 work.
+
+## Run and edit
+
+The sample's `spar.dev.json` selects `watchBackend: true`. Use the existing prerequisites and start command:
+
+```powershell
+dotnet build tools/Spar.Dev --disable-build-servers
+./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe samples/Spar.NativeSample/spar.dev.json
+```
+
+Install frontend dependencies as described in the [SPA guide](11-development-session.md#start-and-edit). VS Code's development task uses this configuration too. It owns a watcher session; it does not attach the C# debugger. Never attach a second update engine to that application.
+
+Edit the greeting expression in `SampleBackend.GreetAsync`. .NET applies a supported patch; a runtime notification reaches the SPA, which calls the read-only greeting operation again. The window, document, local counter/text, backend counter, and application process remain. CSS/component HMR still belongs to Vite/React. The sample excludes `frontend/**` from .NET's default items so frontend changes do not drive backend rebuilds.
+
+An invalid method edit displays the compiler's file/line diagnostic and **Edit not applied** in the SPA. Its existing process continues previous behavior. Correcting that edit can patch the same process. A callback revision identifies an observed runtime update, not an editor save or a transaction over all source files. Application code can execute updated methods before the callback arrives; status and read refresh do not promise atomic source activation. Mutations are never retried by the update hook.
+
+When the pinned watcher requests restart for an unsupported edit, Spar closes admission and requests native shutdown. It waits for actual application completion, stops that watcher's owned helpers, builds matching outputs, and starts another generation while retaining Vite. In-process revisions and process generations are separate identities. Old-generation UI/update frames cannot restore readiness in the replacement.
+
+An update callback involving the explicit export interface or its request/reply DTOs also requests a full rebuild/restart rather than a read refresh. This distinction matters: the observed delta engine accepted a record constructor change even though a fresh compile failed at an unchanged call site. The development adapter identifies contract types from the compiled export interface using bounded development-only reflection. It does not copy service graphs or redefine production serialization metadata.
+
+If a full rebuild fails after the old app has stopped, it remains **stopped**, with build diagnostics retained. Fix the source, then type `restart` to build and start a usable generation. There is no second running backend, rollback store, or silent launch of stale/mismatched full-build output. A fresh application proves its compiled fingerprint against the generated frontend before typed readiness; a stale fingerprint is rejected before handler entry.
+
+Type `restart` to request a full build/relaunch in watch mode. It is also the current explicit path for startup/configuration or dependency edits that need initialization rerun. Automatic classification of those inputs and automatic recovery while stopped remain follow-ups. Setting `watchBackend: false` preserves the earlier manual launch mode: no watcher, and `restart` relaunches the existing compiled executable. That setting alone is not a complete debugger adapter.
+
+## Update owner and retirement
+
+The coordinator launches the public `dotnet watch ... run` command inside a nested Windows job owned by the session job. The watcher supplies the startup agent and applies deltas. Spar never reads its private patch pipe or generates compiler deltas. The public `MetadataUpdateHandler` callback in `Sotsera.Spar.Development` supplies positive runtime notifications, coalesced by the coordinator with monotonic revision checks before SPA publication.
+
+Automatic SDK restart is disabled: no `--non-interactive`, `DOTNET_WATCH_RESTART_ON_RUDE_EDIT=0`, and `HotReloadAutoRestart=false`. Redirected input cannot answer the restart prompt. The SDK's public console prompt requests Spar's own retirement path; Spar never confirms it inside the SDK. Explicit `--verbose` also avoids the inspected SDK's quiet-option prompt path, which can auto-confirm a restart. A separate version-specific safeguard overrides inherited `DOTNET_WATCH_LOG_LEVEL` with `Debug` so logger overrides cannot hide compiler diagnostics/readiness. The real test deliberately inherits `Critical` to exercise diagnostic visibility while verifying that retirement still waits.
+
+The adapter verifies SDK `10.0.402` before each watcher launch. It uses English CLI output, a bounded log tail, the known restart prompt, and ordinary compiler diagnostic lines. This is an explicitly pinned console-output adapter, not a stable compiler/debugger status API. Unknown SDK versions fail with `watch_sdk_not_verified`; do not upgrade the pin without repeating the integration tests. Unknown/new message forms are not interpreted as successful patches. Actual runtime notifications plus typed observations establish successful behavior, not source saves or log text alone.
+
+Retirement keeps draining lifecycle receipts while waiting for actual exit and control-reader EOF. Cancellation/timeout does not release native/backend ownership. Retired UI frames are suppressed, while completion receipts remain observable. Only **after** the app has exited may its nested job terminate remaining SDK/browser helpers. `watcher-stopped` labels this as `owned_tool_stop`; it does not claim those helpers exited gracefully. The overall graceful receipt means application work was completed before cleanup. The frontend's separate scope survives a planned replacement.
+
+For an operation that ignores cancellation, a normal restart waits. A second Ctrl+C or `{"command":"stop","force":true}` explicitly ends owned work instead; it is recorded as forced cleanup and starts no replacement. The session's non-inherited job handles still contain watcher/app descendants if the coordinator or editor disappears. No process is killed by executable name.
+
+`DevelopmentApplication.Connect(fingerprint, typeof(ISampleBackend))` supplies the explicit compiled contract. The adapter, callback, reflection, watcher, and console parser stay outside Release application references. The generator reference removes inherited `TargetFramework`/`TargetFrameworks` in addition to RID/AOT properties: the watcher's framework-specific build must not retarget the build-only compiler tool. Strict AOT publication remains a separate gate.
+
+## Verification
+
+```powershell
+dotnet build Spar.slnx --disable-build-servers
+dotnet test --solution Spar.slnx --no-build
+pwsh -NoProfile -File eng/Test-BackendUpdates.ps1 -VerifyRender
+pwsh -NoProfile -File eng/Test-DevelopmentSession.ps1
+pwsh -NoProfile -File eng/Test-VSCodeSession.ps1 -WatchBackend
+```
+
+The backend driver copies the ordinary consumer and frontend into an isolated layout, references public framework APIs, and edits only those copies. Its first scenario covers frontend HMR beside watch, same-process greeting patches and read refresh with retained state, CS0103 recovery, rapid method edits, unsupported-edit retirement around a 12-second cancellation-ignoring operation, failed contract rebuild staying stopped, corrected matching contracts, stale-fingerprint rejection, and preservation of the original frontend process. A second scenario explicitly forces shutdown during retirement. An unrelated Node process must survive both, and retained process handles/creation times must actually end.
+
+The 12-second limit exists only in the isolated test consumer; the repository sample retains its normal delay bound. Pixel verification plus review of the captured native window establishes visible behavior. The CI lane runs these same actual watcher/WebView operations without claiming desktop pixel evidence. The editor driver verifies task/window ownership with watch mode enabled; it does not establish debugger F5, breakpoints, or debugger restart.
+
+See [retained evidence](evidence/backend-updates-2026-10-19/README.md) for commands, snapshots, hashes, process sequencing, and exact scope. Automatic source-input classification, latest-selected-source build activation under overlapping edits, full stopped-state recovery automation, and the installed debugger lanes remain open. Two rapid body edits reaching the last greeting do not establish every A08 race. Contract-update callbacks remain eventual notifications; this slice does not claim transactional rollback of arbitrary .NET patches.
+
+## Source review and first failures
+
+No upstream implementation was copied. Public .NET callback and CLI behavior informed this authored adapter. The inspected SDK is tag `v10.0.402`, revision `d037e5f857b35e7260f575ae026ef30511776c0f`, in the MIT-licensed [dotnet/sdk](https://github.com/dotnet/sdk/tree/v10.0.402/src/Dotnet.Watch) source. Relevant paths are `Watch/HotReload/HotReloadDotNetWatcher.cs`, `ProjectUpdatesBuilder.cs` in that directory, `Watch/UI/RestartPrompt.cs`, `ConsoleInputReader.cs`, `Watch/Process/ProcessRunner.cs`, `Watch/Build/ProjectGraphUtilities.cs`, and `dotnet-watch/Program.cs`. This review established the timeout/force behavior to avoid, the project restart preference, and the inherited logging hazard. It is not a support promise for other SDK releases.
+
+References: [dotnet watch CLI](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-watch), [MetadataUpdateHandler](https://learn.microsoft.com/en-us/dotnet/api/system.reflection.metadata.metadataupdatehandlerattribute), and [the earlier Reactor/NeoAstra/Tauri research](06-backend-reload-research.md). No private debugger service, SDK test-input hook, or custom delta engine is used.
+
+Failed runs are preserved under ignored `artifacts/backend-loop`: the watcher's forwarded framework caused NETSDK1005 in the generator reference; retirement initially dropped queued completion receipts; and the record test incorrectly expected a full-compilation diagnostic from the delta engine. An intermediate fixture also placed SDK logs/browser profiles inside its watched project, creating noisy self-observation; final fixtures keep evidence outside the source root. These failures drove the reference isolation, draining, contract classification, and fixture layout fixes. None is counted as a pass.
