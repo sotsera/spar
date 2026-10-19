@@ -151,6 +151,8 @@ The first workflow defines **Windows managed probe** for PRs and development-bra
 
 Current trigger policy (2026-10-19): run the same required job for pull requests and pushes to `main`. Feature-branch push runs are disabled to avoid duplicating the upstream PR run in the development fork; pre-PR pushes therefore do not start CI. The check name and branch-protection requirement remain unchanged. The `main` run validates the actual integrated commit after squash merge.
 
+New PR runs cancel superseded runs for the same PR. Each `main` push has its own concurrency group so another push does not replace its pending or running validation. Actions are pinned to full commit SHAs with readable version comments, and checkout does not persist credentials. Update the SHA and version comment together after verifying the upstream release. Full test coverage remains enabled for both events.
+
 [Fork run 39143727813](https://github.com/ghidello/spar/actions/runs/39143727813) passed the build, three real watcher tests (none skipped), and evidence upload on implementation commit `0be3b41`. Later upstream evidence and ruleset details are in the CI gate proof; a fork run alone does not establish upstream enforcement.
 
 When introducing CI during milestone 1, treat enforcement as part of delivering the workflow:
