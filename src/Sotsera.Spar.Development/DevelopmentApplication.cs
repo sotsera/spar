@@ -55,6 +55,7 @@ public sealed class DevelopmentApplication : IDisposable
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(contract);
         var contractTypes = GetContractTypes(contractType);
+        var compiledContract = DevelopmentContract.GetFingerprint(contractType);
         var pipeName = Environment.GetEnvironmentVariable("SPAR_DEV_APP_PIPE")
             ?? throw new InvalidOperationException("Start the development application through Spar.Dev.");
         var token = Environment.GetEnvironmentVariable("SPAR_DEV_TOKEN");
@@ -65,11 +66,12 @@ public sealed class DevelopmentApplication : IDisposable
         {
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));
             pipe.ConnectAsync(timeout.Token).GetAwaiter().GetResult();
-            connection.WriteAsync(new SessionMessage("app-hello", token, session, Environment.ProcessId, Contract: contract), timeout.Token)
+            connection.WriteAsync(new SessionMessage("app-hello", token, session, Environment.ProcessId, Contract: compiledContract), timeout.Token)
                 .GetAwaiter().GetResult();
             var configuration = connection.ReadAsync(timeout.Token).GetAwaiter().GetResult();
             if (configuration?.Kind != "configure" || configuration.Token != token || configuration.Session != session
-                || configuration.Contract != contract || configuration.Url is null || configuration.Credential is null
+                || configuration.Contract != contract || compiledContract != contract
+                || configuration.Url is null || configuration.Credential is null
                 || configuration.Profile is null)
             {
                 throw new InvalidDataException("The owning session did not supply a matching application configuration.");

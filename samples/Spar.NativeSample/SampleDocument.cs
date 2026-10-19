@@ -13,7 +13,8 @@ internal static class SampleDocument
 
     private static string Read(string name)
     {
-        using var stream = typeof(SampleDocument).Assembly.GetManifestResourceStream(name)
+        var assembly = name == "Spar.Generated.Client.js" ? typeof(SampleBackendBridge).Assembly : typeof(SampleDocument).Assembly;
+        using var stream = assembly.GetManifestResourceStream(name)
             ?? throw new InvalidOperationException("Missing sample resource: " + name);
         using var reader = new StreamReader(stream);
         return reader.ReadToEnd();

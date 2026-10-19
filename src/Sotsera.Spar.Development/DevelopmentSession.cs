@@ -14,7 +14,7 @@ using Sotsera.Spar.Windows;
 
 namespace Sotsera.Spar.Development;
 
-/// <summary>One owned SPA server and one application at a time. It does not apply C# patches or rebuild on edits.</summary>
+/// <summary>Owns one SPA server and one application at a time, with an optional SDK-owned backend watcher.</summary>
 public sealed partial class DevelopmentSession(DevelopmentSettings settings, Action<DevelopmentEvent> observer, bool enableProbe = false) : IAsyncDisposable
 {
     private readonly object _eventGate = new();
@@ -144,6 +144,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             ReadContract();
             if (settings.WatchBackend)
             {
+                ContractSourceChanged();
                 await VerifyWatchSdkAsync().ConfigureAwait(false);
             }
             CheckPort();
@@ -353,7 +354,12 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 await tick.ConfigureAwait(false);
                 TrackProcesses();
-                if (ReadWatchOutput())
+                if (ContractSourceChanged())
+                {
+                    Emit("contract-source-changed");
+                    await RebuildApplicationAsync("contract_source_changed").ConfigureAwait(false);
+                }
+                else if (ReadWatchOutput())
                 {
                     await RebuildApplicationAsync("unsupported_edit").ConfigureAwait(false);
                 }

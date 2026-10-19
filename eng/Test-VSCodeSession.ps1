@@ -38,6 +38,7 @@ foreach ($scenario in @('task-stop', 'window-close')) {
     project = Join-Path $repository 'samples/Spar.NativeSample/Spar.NativeSample.csproj'; application = $application
     generatedClient = Join-Path $frontend 'src/generated/client.js'; sessionDirectory = Join-Path $directory 'sessions'
     watchBackend = $WatchBackend.IsPresent
+    contractFile = Join-Path $repository 'samples/Spar.NativeSample.Contracts/BackendContract.cs'
     frontend = @{ fileName = 'cmd.exe'; arguments = @('/d','/c','npm','run','dev'); workingDirectory = $frontend; port = 0 }
   } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $sessionPath
   $events = Join-Path $directory 'coordinator.jsonl'

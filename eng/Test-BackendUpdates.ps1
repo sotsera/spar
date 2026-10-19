@@ -13,12 +13,25 @@ function New-BackendFixture([string]$Name) {
   Get-ChildItem -LiteralPath $original -File | Where-Object Extension -in @('.cs','.csproj','.html','.js') |
     Copy-Item -Destination $backend
   $project = Join-Path $backend 'Spar.NativeSample.csproj'
+  $contracts = Join-Path $fixture.Directory 'contracts'
+  New-Item -ItemType Directory -Path $contracts | Out-Null
+  $originalContracts = Join-Path $repository 'samples/Spar.NativeSample.Contracts'
+  Copy-Item -Path (Join-Path $originalContracts '*.cs'), (Join-Path $originalContracts '*.csproj') -Destination $contracts
+  $contractProject = Join-Path $contracts 'Spar.NativeSample.Contracts.csproj'
+  $contractXml = [xml][IO.File]::ReadAllText($contractProject)
+  foreach ($reference in $contractXml.Project.ItemGroup.ProjectReference) {
+    if ($reference -is [Xml.XmlElement]) { $reference.Include = [IO.Path]::GetFullPath($reference.Include, $originalContracts) }
+  }
+  $contractXml.Project.Import.Project = [IO.Path]::GetFullPath($contractXml.Project.Import.Project, $originalContracts)
+  $contractXml.Project.PropertyGroup.SparClientOutputDirectory = Join-Path $fixture.Frontend 'src/generated'
+  $contractXml.Save($contractProject)
   $xml = [xml][IO.File]::ReadAllText($project)
   foreach ($reference in $xml.Project.ItemGroup.ProjectReference) {
-    if ($reference -is [Xml.XmlElement]) { $reference.Include = [IO.Path]::GetFullPath($reference.Include, $original) }
+    if ($reference -is [Xml.XmlElement]) {
+      $reference.Include = if ($reference.Include.Contains('Spar.NativeSample.Contracts')) { $contractProject }
+        else { [IO.Path]::GetFullPath($reference.Include, $original) }
+    }
   }
-  $xml.Project.Import.Project = [IO.Path]::GetFullPath($xml.Project.Import.Project, $original)
-  $xml.Project.PropertyGroup.SparClientOutputDirectory = Join-Path $fixture.Frontend 'src/generated'
   $xml.Save($project)
   $source = Join-Path $backend 'SampleBackend.cs'
   $text = [IO.File]::ReadAllText($source).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend')
@@ -28,10 +41,11 @@ function New-BackendFixture([string]$Name) {
   $fixture.Settings.project = $project
   $fixture.Settings.application = Join-Path $backend 'bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe'
   $fixture.Settings['watchBackend'] = $true
+  $fixture.Settings['contractFile'] = Join-Path $contracts 'BackendContract.cs'
   $fixture.Settings.startupTimeoutSeconds = 90
   $fixture | Add-Member -NotePropertyName Backend -NotePropertyValue $backend
-  Get-ChildItem -LiteralPath $backend -File | Sort-Object Name | ForEach-Object {
-    (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $_.Name
+  Get-ChildItem -LiteralPath $backend, $contracts -File | Sort-Object FullName | ForEach-Object {
+    (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + [IO.Path]::GetRelativePath($fixture.Directory,$_.FullName)
   } | Set-Content -LiteralPath (Join-Path $fixture.Directory 'sources.initial.sha256')
   return $fixture
 }
@@ -99,9 +113,11 @@ try {
   Assert-Condition (@($session.Events | Where-Object kind -eq 'forced-cleanup-requested').Count -eq 0) 'Unsupported edit forced termination of unfinished application work.'
 
   # A failed full rebuild must stay stopped; correction plus explicit restart regenerates both contracts.
-  $contract = Join-Path $fixture.Backend 'BackendContract.cs'
+  $contract = $fixture.Settings.contractFile
   Replace-Source $contract 'record CounterReply(int Value)' 'record CounterReply(int Value, int Revision)'
   Wait-Until $session { @($session.Events | Where-Object { $_.kind -eq 'backend-stopped' -and $_.code -eq 'build_failed' }).Count -eq 1 } 'stopped failed rebuild' 90
+  Assert-Condition (@($session.Events | Where-Object kind -eq 'contract-source-changed').Count -eq 1) 'Contract source change bypassed the coordinator rebuild boundary.'
+  Assert-Condition (@($session.Events | Where-Object kind -eq 'contract-update-observed').Count -eq 0) 'Contract source entered the implementation patch workspace.'
   Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'application-ready' -and $_.generation -eq 3 }).Count -eq 0) 'A broken build activated an application.'
   Replace-Source $source 'new CounterReply(Interlocked.Add(ref _counter, request.Delta))' 'new CounterReply(Interlocked.Add(ref _counter, request.Delta), 7)'
   Send-Command $session 'restart'

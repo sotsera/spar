@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IsPackable>false</IsPackable>
+
+    <SparContractFile>$(MSBuildProjectDirectory)/BackendContract.cs</SparContractFile>
+    <SparClientOutputDirectory>$(MSBuildProjectDirectory)/../Spar.NativeSample/frontend/src/generated</SparClientOutputDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Sotsera.Spar.Bridge/Sotsera.Spar.Bridge.csproj" />
+    <ProjectReference Include="../../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj"
+                      ReferenceOutputAssembly="false" Private="false" SkipGetTargetFrameworkProperties="true"
+                      GlobalPropertiesToRemove="RuntimeIdentifier;PublishAot;SelfContained;TargetFramework;TargetFrameworks" />
+  </ItemGroup>
+
+  <Import Project="../../build/Spar.Contracts.targets" />
+</Project>

@@ -7,17 +7,27 @@
     <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
     <PublishAot Condition="'$(Configuration)' == 'Release'">true</PublishAot>
     <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
-    <SparContractFile>$(MSBuildProjectDirectory)/BackendContract.cs</SparContractFile>
-    <SparClientOutputDirectory>$(MSBuildProjectDirectory)/frontend/src/generated</SparClientOutputDirectory>
     <DefaultItemExcludes>$(DefaultItemExcludes);frontend/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../src/Sotsera.Spar.Windows/Sotsera.Spar.Windows.csproj" />
-    <ProjectReference Include="../../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj"
-                      ReferenceOutputAssembly="false" Private="false" SkipGetTargetFrameworkProperties="true"
-                      GlobalPropertiesToRemove="RuntimeIdentifier;PublishAot;SelfContained;TargetFramework;TargetFrameworks" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(DotNetWatchBuild)' != 'true'">
+    <ProjectReference Include="../Spar.NativeSample.Contracts/Spar.NativeSample.Contracts.csproj"
+                      GlobalPropertiesToRemove="RuntimeIdentifier;PublishAot;SelfContained" />
+  </ItemGroup>
+
+  <!-- The patch workspace sees an immutable contract binary, not its editable source project. -->
+  <Target Name="SparUseCompiledContracts" BeforeTargets="ResolveAssemblyReferences"
+          Condition="'$(DotNetWatchBuild)' == 'true'">
+    <ItemGroup>
+      <Reference Include="Spar.NativeSample.Contracts">
+        <HintPath>$(TargetDir)Spar.NativeSample.Contracts.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+  </Target>
 
   <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="../../src/Sotsera.Spar.Development/Sotsera.Spar.Development.csproj" />
@@ -32,7 +42,4 @@
     <EmbeddedResource Include="App.js" LogicalName="Spar.Sample.App.js" />
     <EmbeddedResource Include="Probe.js" LogicalName="Spar.Sample.Probe.js" />
   </ItemGroup>
-
-  <Import Project="../../build/Spar.Contracts.targets" />
-
 </Project>

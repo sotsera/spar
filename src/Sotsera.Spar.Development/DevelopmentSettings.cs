@@ -27,6 +27,10 @@ public sealed record DevelopmentSettings
     {
         get; set;
     }
+    public string? ContractFile
+    {
+        get; set;
+    }
 
     public static DevelopmentSettings Load(string path)
     {
@@ -38,6 +42,10 @@ public sealed record DevelopmentSettings
         var settings = JsonSerializer.Deserialize(File.ReadAllText(file.FullName), DevelopmentJsonContext.Default.DevelopmentSettings)
             ?? throw new InvalidDataException("Missing session configuration.");
         var directory = file.DirectoryName!;
+        if (settings.WatchBackend && string.IsNullOrWhiteSpace(settings.ContractFile))
+        {
+            throw new InvalidDataException("Watch mode requires the separately compiled contract source path.");
+        }
         if (settings.Frontend is null || settings.Frontend.Arguments is null || settings.Frontend.Environment is null)
         {
             throw new InvalidDataException("Frontend command, arguments, and environment must not be null.");
@@ -68,6 +76,7 @@ public sealed record DevelopmentSettings
             Application = Path.GetFullPath(settings.Application, directory),
             GeneratedClient = Path.GetFullPath(settings.GeneratedClient, directory),
             SessionDirectory = Path.GetFullPath(settings.SessionDirectory, directory),
+            ContractFile = settings.ContractFile is null ? null : Path.GetFullPath(settings.ContractFile, directory),
             Frontend = settings.Frontend with
             {
                 WorkingDirectory = Path.GetFullPath(settings.Frontend.WorkingDirectory, directory)

@@ -1,39 +1,44 @@
 {
-  "observedAt": "2026-10-19T11:44:25.513929+00:00",
+  "observedAt": "2026-10-19T12:10:58.7382326+00:00",
   "executable": "E:\\Ghidello\\Git\\spar.v2\\samples\\Spar.NativeSample\\bin\\Debug\\net10.0-windows\\win-x64\\Spar.NativeSample.exe",
   "os": "Microsoft Windows 10.0.26220",
   "powershell": "7.6.5",
-  "executableSha256": "2D0BFC5EA63D4292326032408818CF8F3DB721FD9CF289A0D6C85F139F876671",
+  "executableSha256": "DC22BE6F0BDFAB039CCD0B5C4FDF2D1A5EB5C610537F55B293E20B01A989711E",
   "payload": [
     {
       "name": "Sotsera.Spar.Bridge.dll",
       "bytes": 55296,
-      "sha256": "B1686210ECD4D2EB2D92F5C38A94D025D609F546F6754119C72B1B2546A56F09"
+      "sha256": "E98435F18A6DEAA1B5B7ED750ED940EE9A2F3412CD8B5BE3906AE7CE4B115A2D"
     },
     {
       "name": "Sotsera.Spar.Development.dll",
-      "bytes": 174080,
-      "sha256": "42F890CB6E8521A7FEF33D2B21DD212E040837B74FC6C36F901498F78C4017DC"
+      "bytes": 180224,
+      "sha256": "3ACBEACD723B46A42D7C1EF1DA55CB26B4F87C919509B6E5BC5A3F715E962DBD"
     },
     {
       "name": "Sotsera.Spar.Windows.dll",
       "bytes": 110592,
-      "sha256": "9EA5FB85012FE2B95AA6CFBC086E51AF776ED15BCC64DC92B59A44D1E0597670"
+      "sha256": "6AB6C4A2B6B7F677E73F4289699C95D814453225817AAC57A7DD3632C61E7322"
+    },
+    {
+      "name": "Spar.NativeSample.Contracts.dll",
+      "bytes": 60928,
+      "sha256": "69B172D14C3722C92D238608008FD6AF208EEA3C392DAD06BB0B8122DB0007E7"
     },
     {
       "name": "Spar.NativeSample.deps.json",
-      "bytes": 1812,
-      "sha256": "FC6948DD28DA1FEB2681D02C1ED334E9D9438867735E92590782E6983813EB56"
+      "bytes": 2302,
+      "sha256": "8212E7E922525DDE829EAAFFDFC5FD752296EFD1F13CC652F8E5616E0E87933B"
     },
     {
       "name": "Spar.NativeSample.dll",
-      "bytes": 99328,
-      "sha256": "3D0E38833EC5CC81B63AF2BB7BA4C891905DF47F930B9552CB33FCC75B8F8E95"
+      "bytes": 50176,
+      "sha256": "8E38D2FF07990154C4D2F742A727C26456B37404A7E8A61B9C8F095F75EAB6F9"
     },
     {
       "name": "Spar.NativeSample.exe",
       "bytes": 162304,
-      "sha256": "2D0BFC5EA63D4292326032408818CF8F3DB721FD9CF289A0D6C85F139F876671"
+      "sha256": "DC22BE6F0BDFAB039CCD0B5C4FDF2D1A5EB5C610537F55B293E20B01A989711E"
     },
     {
       "name": "Spar.NativeSample.runtimeconfig.json",
@@ -62,8 +67,8 @@
     {
       "scenario": "normal",
       "passed": true,
-      "processId": 49260,
-      "processStartedAtUtc": "2026-10-19T11:44:02.3136424Z",
+      "processId": 30700,
+      "processStartedAtUtc": "2026-10-19T12:10:35.394392Z",
       "mode": "CoreCLR",
       "visibleRendering": "not-exercised",
       "concurrentProfileRejected": true,
@@ -71,33 +76,33 @@
       "profileOverrideRejected": "not-exercised",
       "attributedBrowserProcesses": [
         {
-          "processId": 38532,
-          "processStartedAtUtc": "2026-10-19T11:44:02.4441457Z",
+          "processId": 62336,
+          "processStartedAtUtc": "2026-10-19T12:10:35.5270296Z",
           "exited": true
         },
         {
-          "processId": 52760,
-          "processStartedAtUtc": "2026-10-19T11:44:02.4704285Z",
+          "processId": 49216,
+          "processStartedAtUtc": "2026-10-19T12:10:35.5528879Z",
           "exited": true
         },
         {
-          "processId": 4772,
-          "processStartedAtUtc": "2026-10-19T11:44:02.5424601Z",
+          "processId": 3844,
+          "processStartedAtUtc": "2026-10-19T12:10:35.6251199Z",
           "exited": true
         },
         {
-          "processId": 56764,
-          "processStartedAtUtc": "2026-10-19T11:44:02.5453559Z",
+          "processId": 48348,
+          "processStartedAtUtc": "2026-10-19T12:10:35.6275437Z",
           "exited": true
         },
         {
-          "processId": 62160,
-          "processStartedAtUtc": "2026-10-19T11:44:02.5650374Z",
+          "processId": 54132,
+          "processStartedAtUtc": "2026-10-19T12:10:35.6466885Z",
           "exited": true
         },
         {
-          "processId": 33364,
-          "processStartedAtUtc": "2026-10-19T11:44:02.6222953Z",
+          "processId": 5048,
+          "processStartedAtUtc": "2026-10-19T12:10:35.6963483Z",
           "exited": true
         }
       ],
@@ -107,8 +112,8 @@
     {
       "scenario": "close-during-startup",
       "passed": true,
-      "processId": 23284,
-      "processStartedAtUtc": "2026-10-19T11:44:09.7544199Z",
+      "processId": 15956,
+      "processStartedAtUtc": "2026-10-19T12:10:42.8710486Z",
       "mode": "CoreCLR",
       "visibleRendering": "not-exercised",
       "concurrentProfileRejected": "not-exercised",
@@ -121,8 +126,8 @@
     {
       "scenario": "worker-dispatch",
       "passed": true,
-      "processId": 28756,
-      "processStartedAtUtc": "2026-10-19T11:44:10.3491503Z",
+      "processId": 43376,
+      "processStartedAtUtc": "2026-10-19T12:10:43.5579738Z",
       "mode": "CoreCLR",
       "visibleRendering": "not-exercised",
       "concurrentProfileRejected": "not-exercised",
@@ -130,28 +135,28 @@
       "profileOverrideRejected": "not-exercised",
       "attributedBrowserProcesses": [
         {
-          "processId": 52056,
-          "processStartedAtUtc": "2026-10-19T11:44:10.4804221Z",
+          "processId": 35648,
+          "processStartedAtUtc": "2026-10-19T12:10:43.6939505Z",
           "exited": true
         },
         {
-          "processId": 63596,
-          "processStartedAtUtc": "2026-10-19T11:44:10.502465Z",
+          "processId": 35948,
+          "processStartedAtUtc": "2026-10-19T12:10:43.7169791Z",
           "exited": true
         },
         {
-          "processId": 66596,
-          "processStartedAtUtc": "2026-10-19T11:44:10.5742506Z",
+          "processId": 15276,
+          "processStartedAtUtc": "2026-10-19T12:10:43.7899364Z",
           "exited": true
         },
         {
-          "processId": 34648,
-          "processStartedAtUtc": "2026-10-19T11:44:10.5770992Z",
+          "processId": 56400,
+          "processStartedAtUtc": "2026-10-19T12:10:43.7938449Z",
           "exited": true
         },
         {
-          "processId": 19232,
-          "processStartedAtUtc": "2026-10-19T11:44:10.5953462Z",
+          "processId": 62540,
+          "processStartedAtUtc": "2026-10-19T12:10:43.8126238Z",
           "exited": true
         }
       ],
@@ -161,8 +166,8 @@
     {
       "scenario": "document-callback-error",
       "passed": true,
-      "processId": 41192,
-      "processStartedAtUtc": "2026-10-19T11:44:17.2502468Z",
+      "processId": 3844,
+      "processStartedAtUtc": "2026-10-19T12:10:50.4278922Z",
       "mode": "CoreCLR",
       "visibleRendering": "not-exercised",
       "concurrentProfileRejected": "not-exercised",
@@ -170,28 +175,28 @@
       "profileOverrideRejected": "not-exercised",
       "attributedBrowserProcesses": [
         {
-          "processId": 34564,
-          "processStartedAtUtc": "2026-10-19T11:44:17.3850889Z",
+          "processId": 26632,
+          "processStartedAtUtc": "2026-10-19T12:10:50.5596552Z",
           "exited": true
         },
         {
-          "processId": 65436,
-          "processStartedAtUtc": "2026-10-19T11:44:17.4085316Z",
+          "processId": 67884,
+          "processStartedAtUtc": "2026-10-19T12:10:50.5820881Z",
           "exited": true
         },
         {
-          "processId": 11888,
-          "processStartedAtUtc": "2026-10-19T11:44:17.4832655Z",
+          "processId": 49796,
+          "processStartedAtUtc": "2026-10-19T12:10:50.6549501Z",
           "exited": true
         },
         {
-          "processId": 64184,
-          "processStartedAtUtc": "2026-10-19T11:44:17.4862125Z",
+          "processId": 27832,
+          "processStartedAtUtc": "2026-10-19T12:10:50.6576234Z",
           "exited": true
         },
         {
-          "processId": 9816,
-          "processStartedAtUtc": "2026-10-19T11:44:17.505073Z",
+          "processId": 56364,
+          "processStartedAtUtc": "2026-10-19T12:10:50.6781698Z",
           "exited": true
         }
       ],
@@ -201,8 +206,8 @@
     {
       "scenario": "missing-runtime",
       "passed": true,
-      "processId": 62692,
-      "processStartedAtUtc": "2026-10-19T11:44:24.1272225Z",
+      "processId": 14888,
+      "processStartedAtUtc": "2026-10-19T12:10:57.279455Z",
       "mode": "CoreCLR",
       "visibleRendering": "not-exercised",
       "concurrentProfileRejected": "not-exercised",
@@ -215,8 +220,8 @@
     {
       "scenario": "redirected-profile",
       "passed": true,
-      "processId": 41036,
-      "processStartedAtUtc": "2026-10-19T11:44:24.6062915Z",
+      "processId": 67680,
+      "processStartedAtUtc": "2026-10-19T12:10:57.7450323Z",
       "mode": "CoreCLR",
       "visibleRendering": "not-exercised",
       "concurrentProfileRejected": "not-exercised",
@@ -229,8 +234,8 @@
     {
       "scenario": "invalid-profile",
       "passed": true,
-      "processId": 21956,
-      "processStartedAtUtc": "2026-10-19T11:44:25.0825293Z",
+      "processId": 46648,
+      "processStartedAtUtc": "2026-10-19T12:10:58.2546626Z",
       "mode": "CoreCLR",
       "visibleRendering": "not-exercised",
       "concurrentProfileRejected": "not-exercised",

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace Sotsera.Spar.Development;
@@ -17,6 +18,7 @@ public sealed partial class DevelopmentSession
     private long _lastBackendRevision;
     private bool _watchReady;
     private bool _contractRestartPending;
+    private string? _contractSourceHash;
 
     private async Task VerifyWatchSdkAsync()
     {
@@ -33,6 +35,41 @@ public sealed partial class DevelopmentSession
         }
 
         Emit("backend-owner", code: "dotnet-watch", detail: version);
+    }
+
+    private bool ContractSourceChanged()
+    {
+        if (!settings.WatchBackend || settings.ContractFile is null)
+        {
+            return false;
+        }
+
+        try
+        {
+            using var source = new FileStream(settings.ContractFile, FileMode.Open, FileAccess.Read,
+                FileShare.ReadWrite | FileShare.Delete);
+            if (source.Length > 1024 * 1024)
+            {
+                throw new SessionFailure("contract_input_limit", "The contract source exceeds 1 MiB.");
+            }
+
+            var bytes = new byte[checked((int)source.Length)];
+            source.ReadExactly(bytes);
+            if (source.ReadByte() != -1)
+            {
+                return false;
+            }
+
+            var hash = Convert.ToHexStringLower(SHA256.HashData(bytes));
+            var changed = _contractSourceHash is not null && hash != _contractSourceHash;
+            _contractSourceHash = hash;
+            return changed;
+        }
+        catch (IOException) when (_contractSourceHash is not null)
+        {
+            // Atomic editor saves can briefly remove/replace the file. The admitted binary remains unchanged.
+            return false;
+        }
     }
 
     private Child StartWatcher(IReadOnlyDictionary<string, string> applicationVariables)
