@@ -1,6 +1,6 @@
 # External package consumer
 
-Local packages `0.1.0` expose the runtime, contract generation, build integration and development coordinator. They are a milestone baseline, not a public NuGet release. The [execution record](evidence/package-consumer-2026-10-20/README.md) distinguishes package execution from editor acceptance. Issue #12 remains open for its external Visual Studio walkthrough and final milestone reconciliation.
+Local packages `0.1.0` expose the runtime, contract generation, build integration and development coordinator. They are a milestone baseline, not a public NuGet release. The [execution record](evidence/package-consumer-2026-10-20/README.md) retains package and external VS Code acceptance; the [Visual Studio walkthrough](evidence/milestone-acceptance-2026-10-20/README.md) completes the other editor lane. The [milestone matrix](19-milestone-1-acceptance.md) links the integrated evidence and remaining release-readiness work.
 
 ## Prerequisites and a fresh application
 
@@ -61,7 +61,7 @@ The reusable acceptance driver supports `eng/Test-VSCodeDevelopment.ps1 -Consume
 
 Open `Consumer.slnx`, set `Spar.NativeSample` as startup project, select **Debug** and **Spar development**, then F5 with a breakpoint in `GreetAsync`. The initial build prepares the packaged coordinator; the ordinary project profile supplies its path. Continue to native readiness, remove the breakpoint, edit the frontend and greeting, and use **Apply Code Changes**. Visual Studio owns backend Hot Reload.
 
-For startup, contract or unsupported changes, close the native window, wait for session cleanup, rebuild both consumer projects, then F5. Debugger Stop is forced termination, separately recorded from graceful retirement. The [Visual Studio guide](14-visual-studio-development.md) explains these differences from VS Code and the manual scenarios. The earlier source-consumer IDE pass does not prove this package-consumer walkthrough. The external walkthrough remains pending because the desktop app-access request timed out during this run.
+For startup, contract or unsupported changes, close the native window, wait for session cleanup, rebuild both consumer projects, then F5. Debugger Stop is forced termination, separately recorded from graceful retirement. The [Visual Studio guide](14-visual-studio-development.md) explains these differences from VS Code and the manual scenarios. The [external walkthrough](evidence/milestone-acceptance-2026-10-20/README.md) passed on Visual Studio Community 2026 18.11.0 Stable: actual F5/breakpoint, CSS HMR, backend Hot Reload, invalid-edit recovery, unsupported/contract rebuild and relaunch, and Shift+F5. All 39 retained process handles exited across three sessions, and all three profile leases reopened exclusively.
 
 ## Publish
 

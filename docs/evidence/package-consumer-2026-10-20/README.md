@@ -2,6 +2,8 @@
 
 This is a partial delivery of issue #12. A18 has actual package-consumer execution and desktop evidence. The external Visual Studio guide walkthrough and final M1-00 reconciliation remain open; the prior source-consumer A13 pass is not reused as package acceptance.
 
+Follow-up: PR #26 merged as `d13238f` after its [corrected required CI passed](https://github.com/sotsera/spar/actions/runs/39377913914). The subsequent [external Visual Studio walkthrough](../milestone-acceptance-2026-10-20/README.md) passed, and the [milestone matrix](../../19-milestone-1-acceptance.md) reconciles the remaining acceptance evidence. The chronological pending statements below describe this earlier run.
+
 ## Baseline and reproduction
 
 Work began on PR #25 commit `07354da8f88623638812e0e712346f6290faea38` while its CI ran. That PR subsequently merged; this change is rebased onto the integrated main before submission. Package/runtime implementation hashes are retained in `sources.sha256`; package hashes in `receipt.json` identify the exact five tested `0.1.0` nupkgs. The package README was expanded after those artifacts were built; this does not change the tested binaries/targets. Nothing was published to public NuGet.
