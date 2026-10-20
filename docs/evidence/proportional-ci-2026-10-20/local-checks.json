@@ -1,0 +1,37 @@
+{
+  "implementation": "2294bcd",
+  "node": "24.21.0",
+  "sdk": "10.0.402",
+  "classifierTests": {
+    "failed": 0,
+    "command": "node --test eng/ci/selection.test.mjs",
+    "passed": 32,
+    "skipped": 0
+  },
+  "documentation": {
+    "localReferences": 191,
+    "command": "node eng/ci/Test-Documentation.mjs",
+    "guides": 23
+  },
+  "skills": {
+    "cases": 14,
+    "command": "node eng/Test-AgentSkills.mjs",
+    "skills": 6
+  },
+  "build": {
+    "warnings": 0,
+    "elapsedSeconds": 15.23,
+    "command": "dotnet build Spar.slnx --disable-build-servers",
+    "errors": 0,
+    "execution": "unrestricted retry"
+  },
+  "tests": {
+    "command": "dotnet test --solution Spar.slnx --no-build",
+    "total": 65,
+    "failed": 0,
+    "elapsedSeconds": 34.196,
+    "skipped": 0,
+    "passed": 65
+  },
+  "unavailableAttempt": "The initial sandboxed build exited 1 with zero errors/warnings and no diagnostic detail after 13.72 seconds; no acceptance was inferred from it."
+}

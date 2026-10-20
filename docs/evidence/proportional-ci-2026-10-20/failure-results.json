@@ -1,0 +1,207 @@
+{
+  "source": "f18db5f5fd864a23ed120621000e7c2dabe93adf",
+  "selection": {
+    "groups": [
+      "baseline",
+      "frontend",
+      "development",
+      "native",
+      "production",
+      "compatibility",
+      "packages",
+      "aot"
+    ],
+    "paths": [
+      ".github/workflows/managed-probe.yml",
+      "README.md",
+      "docs/03-milestone-1.md",
+      "docs/08-ci-merge-gate.md",
+      "docs/21-continuous-integration.md",
+      "eng/ci/Complete-Checks.mjs",
+      "eng/ci/Select-Checks.mjs",
+      "eng/ci/Test-Documentation.mjs",
+      "eng/ci/selection.mjs",
+      "eng/ci/selection.test.mjs"
+    ],
+    "reasons": [
+      ".github/workflows/managed-probe.yml: baseline, frontend, development, native, production, compatibility, packages, aot",
+      "README.md: lightweight",
+      "docs/03-milestone-1.md: lightweight",
+      "docs/08-ci-merge-gate.md: lightweight",
+      "docs/21-continuous-integration.md: lightweight",
+      "eng/ci/Complete-Checks.mjs: baseline, frontend, development, native, production, compatibility, packages, aot",
+      "eng/ci/Select-Checks.mjs: baseline, frontend, development, native, production, compatibility, packages, aot",
+      "eng/ci/Test-Documentation.mjs: baseline, frontend, development, native, production, compatibility, packages, aot",
+      "eng/ci/selection.mjs: baseline, frontend, development, native, production, compatibility, packages, aot",
+      "eng/ci/selection.test.mjs: baseline, frontend, development, native, production, compatibility, packages, aot"
+    ],
+    "event": "pull_request",
+    "base": "edfdf2537b8d3f27ba48494d34e1417b3c116586",
+    "head": "d5d223aed943718f4869987c3958c4399cd9f76c",
+    "source": "f18db5f5fd864a23ed120621000e7c2dabe93adf"
+  },
+  "results": [
+    {
+      "id": "selection_tests",
+      "group": "always",
+      "selected": true,
+      "outcome": "success",
+      "passed": true
+    },
+    {
+      "id": "documentation",
+      "group": "always",
+      "selected": true,
+      "outcome": "failure",
+      "passed": false
+    },
+    {
+      "id": "skills",
+      "group": "always",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "build",
+      "group": "baseline",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "managed",
+      "group": "baseline",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "framing",
+      "group": "baseline",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "client",
+      "group": "frontend",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "spa",
+      "group": "frontend",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "notices",
+      "group": "frontend",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "session",
+      "group": "development",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "backend",
+      "group": "development",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "project_launch",
+      "group": "development",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "inspection",
+      "group": "development",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "bridge",
+      "group": "native",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "lifecycle",
+      "group": "native",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "publish",
+      "group": "production",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "boundary",
+      "group": "production",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "production",
+      "group": "production",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "compatibility",
+      "group": "compatibility",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "pack",
+      "group": "packages",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "consumer",
+      "group": "packages",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "publish_probe",
+      "group": "aot",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    },
+    {
+      "id": "copied_probe",
+      "group": "aot",
+      "selected": true,
+      "outcome": "skipped",
+      "passed": false
+    }
+  ],
+  "passed": false
+}
