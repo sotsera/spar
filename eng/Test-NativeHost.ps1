@@ -17,13 +17,7 @@ Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $results = [Collections.Generic.List[object]]::new()
 $completed = $false
 
-function Read-Events([string]$Path) {
-  if (Test-Path -LiteralPath $Path) {
-    foreach ($line in Get-Content -LiteralPath $Path) {
-      if ($line) { $line | ConvertFrom-Json }
-    }
-  }
-}
+. (Join-Path $PSScriptRoot 'Read-ProbeEvents.ps1')
 
 function Wait-Until([scriptblock]$Condition, [string]$Description, [int]$Seconds = 30) {
   $deadline = [DateTime]::UtcNow.AddSeconds($Seconds)
@@ -87,9 +81,9 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
     if ($ExpectDocument) {
       Wait-Until {
         if ($process.HasExited) { throw "Host exited before document load: $(Get-Content $stdout -Raw)" }
-        @(Read-Events $stdout | Where-Object Stage -eq 'document-loaded').Count -gt 0
+        @(Read-ProbeEvents $stdout | Where-Object Stage -eq 'document-loaded').Count -gt 0
       } "$Name document load"
-      $loaded = Read-Events $stdout | Where-Object Stage -eq 'document-loaded' | Select-Object -Last 1
+      $loaded = Read-ProbeEvents $stdout | Where-Object Stage -eq 'document-loaded' | Select-Object -Last 1
       $window = [IntPtr]$loaded.Window
       $collisionLog = Join-Path $directory 'profile-collision.jsonl'
       $collision = Start-Process -FilePath $executablePath -WorkingDirectory (Split-Path $executablePath) `
@@ -101,7 +95,8 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
           $collision.WaitForExit()
           throw 'Concurrent profile attempt did not finish.'
         }
-        $collisionEvents = @(Read-Events $collisionLog)
+        $collision.WaitForExit()
+        $collisionEvents = @(Read-ProbeEvents $collisionLog -Completed)
         if ($collision.ExitCode -ne 1 -or $collisionEvents.Count -ne 1 -or $collisionEvents[0].Stage -ne 'failed') {
           throw 'Concurrent profile ownership was not rejected before native creation.'
         }
@@ -121,9 +116,9 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
     }
 
     if ($Name -eq 'redirected-profile') {
-      Wait-Until { $process.HasExited -or @(Read-Events $stdout | Where-Object Stage -eq 'document-loaded').Count -gt 0 } 'profile override outcome'
+      Wait-Until { $process.HasExited -or @(Read-ProbeEvents $stdout | Where-Object Stage -eq 'document-loaded').Count -gt 0 } 'profile override outcome'
       if (!$process.HasExited) {
-        $loaded = Read-Events $stdout | Where-Object Stage -eq 'document-loaded' | Select-Object -Last 1
+        $loaded = Read-ProbeEvents $stdout | Where-Object Stage -eq 'document-loaded' | Select-Object -Last 1
         if (![string]::Equals([IO.Path]::TrimEndingDirectorySeparator($loaded.UserDataFolder),
             [IO.Path]::TrimEndingDirectorySeparator($profile), [StringComparison]::OrdinalIgnoreCase)) {
           throw 'The host admitted a document outside its leased profile.'
@@ -136,14 +131,14 @@ function Invoke-Scenario([string]$Name, [string[]]$Arguments, [bool]$ExpectDocum
     }
 
     Wait-Until {
-      if ($Name -eq 'missing-runtime' -and @(Read-Events $stdout | Where-Object Stage -eq 'document-loaded').Count) {
+      if ($Name -eq 'missing-runtime' -and @(Read-ProbeEvents $stdout | Where-Object Stage -eq 'document-loaded').Count) {
         throw "Missing-runtime fixture unexpectedly loaded a document: $(Get-Content $stdout -Raw)"
       }
       $process.HasExited
     } "$Name host exit"
     $process.WaitForExit()
     if ($process.ExitCode -ne $ExitCode) { throw "Unexpected exit $($process.ExitCode): $(Get-Content $stdout -Raw)" }
-    $events = @(Read-Events $stdout)
+    $events = @(Read-ProbeEvents $stdout -Completed)
     if (@($events | Where-Object Mode -ne $ExpectedMode).Count) { throw 'Unexpected execution mode.' }
     $lastStage = if ($ExitCode -eq 0) { 'closed' } else { 'failed' }
     if ($events.Count -eq 0 -or $events[-1].Stage -ne $lastStage) { throw "Missing $lastStage receipt." }

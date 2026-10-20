@@ -40,7 +40,7 @@ $exe = Join-Path $copy 'Spar.NativeSample.exe'
 Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $results = [Collections.Generic.List[object]]::new()
 $allPassed = $false
-function Events($path) { if (Test-Path -LiteralPath $path) { Get-Content -LiteralPath $path | Where-Object { $_ } | ConvertFrom-Json } }
+. (Join-Path $PSScriptRoot 'Read-ProbeEvents.ps1')
 function Wait-Until([scriptblock]$condition, [string]$description) {
   $deadline = [DateTime]::UtcNow.AddSeconds(30)
   do { if (& $condition) { return }; Start-Sleep -Milliseconds 100 } while ([DateTime]::UtcNow -lt $deadline)
@@ -66,12 +66,12 @@ try {
       $null = $process.Handle
       Wait-Until {
         if ($process.HasExited) { throw "Production exited: $(Get-Content -LiteralPath $stdout -Raw)" }
-        $current = @(Events $stdout)
+        $current = @(Read-ProbeEvents $stdout)
         @($current | Where-Object { $_.Stage -eq 'bridge-completed' -and $_.Detail -like '*|greet|*' }).Count -gt 0 `
           -and @($current | Where-Object Stage -eq 'document-loaded').Count -gt 0
       } 'typed greeting completion'
       $readyMs = $watch.Elapsed.TotalMilliseconds
-      $events = @(Events $stdout)
+      $events = @(Read-ProbeEvents $stdout)
       $greeted = $events | Where-Object { $_.Stage -eq 'bridge-completed' -and $_.Detail -like '*|greet|*' } | Select-Object -First 1
       $processToGreetingMs = ([DateTimeOffset]$greeted.ObservedAt - [DateTimeOffset]$greeted.ProcessStartedAtUtc).TotalMilliseconds
       if (@($events | Where-Object Mode -ne $ExpectedMode).Count -gt 0) { throw 'Unexpected runtime mode.' }
@@ -114,7 +114,7 @@ try {
       Wait-Until { $process.HasExited } 'production shutdown'
       $process.WaitForExit()
       foreach ($browser in $browsers) { Wait-Until { $browser.HasExited } 'attributed browser exit' }
-      if ($process.ExitCode -ne 0 -or @(Events $stdout)[-1].Stage -ne 'closed') { throw 'Unclean production exit.' }
+      if ($process.ExitCode -ne 0 -or @(Read-ProbeEvents $stdout -Completed)[-1].Stage -ne 'closed') { throw 'Unclean production exit.' }
       $lease = [IO.File]::Open((Join-Path $profile '.spar-profile.lock'), 'Open', 'ReadWrite', 'None')
       $lease.Dispose()
       $passed = $true

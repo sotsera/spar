@@ -37,6 +37,10 @@ jobs:
       - name: Test bridge contracts and real dotnet watch behavior
         run: dotnet test --solution Spar.slnx --no-build
 
+      - name: Test probe log framing during partial writes
+        shell: pwsh
+        run: ./eng/Test-ProbeEvents.ps1
+
       - name: Check generated TypeScript client
         working-directory: eng/bridge-client-tests
         run: |

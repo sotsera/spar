@@ -1,0 +1,24 @@
+Windows managed probe	Test copied NativeAOT lifecycle	﻿2026-10-20T05:40:18.3432295Z ##[group]Run $copyPath = Join-Path $env:RUNNER_TEMP ('spar-native-' + [guid]::NewGuid().ToString('N'))
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3433572Z ^[[36;1m$copyPath = Join-Path $env:RUNNER_TEMP ('spar-native-' + [guid]::NewGuid().ToString('N'))^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3434492Z ^[[36;1mNew-Item -ItemType Directory -Path $copyPath | Out-Null^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3435238Z ^[[36;1mGet-ChildItem -LiteralPath artifacts/native/publish -File |^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3436050Z ^[[36;1m  Where-Object Extension -ne '.pdb' | Copy-Item -Destination $copyPath^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3437435Z ^[[36;1m$payload = @(Get-ChildItem -LiteralPath $copyPath -File | Sort-Object Name | Select-Object -ExpandProperty Name)^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3438851Z ^[[36;1m$expected = @('Spar.NativeSample.exe', 'WebView2-LICENSE.txt', 'WebView2-NOTICE.txt', 'WebView2Loader.dll') | Sort-Object^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3440288Z ^[[36;1mif (Compare-Object $payload $expected) { throw 'Unexpected AOT payload: build tools/managed runtime must not ship.' }^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3441887Z ^[[36;1m./eng/Test-NativeHost.ps1 -Executable (Join-Path $copyPath 'Spar.NativeSample.exe') `^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3442862Z ^[[36;1m  -ExpectedMode NativeAOT -EvidenceDirectory artifacts/native/ci-aot^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3443791Z ^[[36;1m./eng/Test-Bridge.ps1 -Executable (Join-Path $copyPath 'Spar.NativeSample.exe') `^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3444722Z ^[[36;1m  -ExpectedMode NativeAOT -EvidenceDirectory artifacts/bridge/ci-aot^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3549738Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3550302Z env:
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3550592Z   DOTNET_ROOT: C:\Program Files\dotnet
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:18.3550993Z ##[endgroup]
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:48.0636892Z Native host checks passed. Evidence: D:\a\spar\spar\artifacts\native\ci-aot
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:50.1526101Z ^[[31;1mConvertFrom-Json: ^[[0mD:\a\spar\spar\eng\Test-Bridge.ps1:19^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:50.1527058Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:50.1528015Z ^[[31;1m^[[0m^[[36;1m^[[36;1m  19 | ^[[0m       if ($line) { $line | ^[[36;1mConvertFrom-Json^[[0m }^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:50.1529416Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                            ~~~~~~~~~~~~~~~~^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:50.1531107Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mConversion from JSON failed with error: Unterminated string. Expected delimiter: ". Path 'UserDataFolder', line^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:50.1533351Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m^[[31;1m^[[36;1m     | ^[[31;1m1, position 256.^[[0m
+Windows managed probe	Test copied NativeAOT lifecycle	2026-10-20T05:40:50.1922730Z ##[error]Process completed with exit code 1.

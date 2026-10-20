@@ -12,14 +12,7 @@ $evidencePath = [IO.Path]::GetFullPath($EvidenceDirectory)
 New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
 Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $results = [Collections.Generic.List[object]]::new()
-
-function Read-Events([string]$Path) {
-  if (Test-Path -LiteralPath $Path) {
-    foreach ($line in Get-Content -LiteralPath $Path) {
-      if ($line) { $line | ConvertFrom-Json }
-    }
-  }
-}
+. (Join-Path $PSScriptRoot 'Read-ProbeEvents.ps1')
 
 function Wait-Until([scriptblock]$Condition, [string]$Description) {
   $deadline = [DateTime]::UtcNow.AddSeconds(40)
@@ -48,13 +41,13 @@ foreach ($scenario in @('roundtrips', 'asset-roundtrips', 'close-with-work')) {
     $started = $process.StartTime.ToUniversalTime()
     if ($scenario -ne 'close-with-work') {
       Wait-Until {
-        $events = @(Read-Events $stdout)
+        $events = @(Read-ProbeEvents $stdout)
         if ($process.HasExited -or @($events | Where-Object { $_.Stage -eq 'failed' -or $_.Stage -like 'report-bridge-failed:*' }).Count) {
           throw "Bridge probe failed: $(Get-Content -LiteralPath $stdout -Raw)"
         }
         @($events | Where-Object Stage -like 'report-client-pass:*').Count -eq 1
       } 'generated client roundtrips, retirement and navigation rejection'
-      $events = @(Read-Events $stdout)
+      $events = @(Read-ProbeEvents $stdout)
       foreach ($code in @('permission_denied', 'unknown_operation', 'contract_mismatch', 'document_rejected',
                            'invalid_payload', 'invalid_request_id', 'invalid_message', 'navigation_denied', 'timeout')) {
         if (!@($events | Where-Object { $_.Stage -eq 'bridge-rejected' -and $_.Error.StartsWith($code + '|') }).Count) {
@@ -78,7 +71,8 @@ foreach ($scenario in @('roundtrips', 'asset-roundtrips', 'close-with-work')) {
       [NativeProbeDesktop]::Close($window)
     }
     Wait-Until { $process.HasExited } "$scenario actual host exit"
-    $events = @(Read-Events $stdout)
+    $process.WaitForExit()
+    $events = @(Read-ProbeEvents $stdout -Completed)
     if ($process.ExitCode -ne 0 -or $events[-1].Stage -ne 'closed' -or @($events | Where-Object Mode -ne $ExpectedMode).Count) {
       throw 'Host exit/mode receipt failed.'
     }
