@@ -46,7 +46,7 @@ Watcher retirement distinguishes drained work from explicit forced termination. 
 Milestone acceptance is the demonstrated development loop on the selected Windows baseline. The following work remains:
 
 - Execute copied AOT on a clean Windows machine without the .NET SDK/runtime. No such machine was available; developer-machine execution is not that certification.
-- Finish comprehensive frontend distribution notices and package/release review before distributing a public product. Existing notice edits remain preserved separately; local `0.1.0` packages are not a public NuGet release.
+- The sample and fresh consumer now generate and carry their [frontend distribution notices](16-production-delivery.md). Complete the broader package/release review before distributing a public product; local `0.1.0` packages are not a public NuGet release.
 - Expand supported-machine, Visual Studio/VS Code version and WebView2 coverage. The current IDE versions and absolute launch-profile paths are recorded, not universal compatibility claims.
 - Define installation/signing/update delivery, repeatable performance budgets and broader consumer ergonomics as subsequent scope. Current payload/memory observations are single-fixture measurements.
 

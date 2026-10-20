@@ -13,7 +13,7 @@ New-Item -ItemType Directory -Path $evidence -Force | Out-Null
 $copy = Join-Path ([IO.Path]::GetTempPath()) ('spar-production-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $copy | Out-Null
 Get-ChildItem -LiteralPath $publish | Where-Object Extension -ne '.pdb' | Copy-Item -Destination $copy -Recurse
-$expected = @('Spar.NativeSample.exe', 'WebView2Loader.dll', 'WebView2-LICENSE.txt', 'WebView2-NOTICE.txt', 'spar-publish.json')
+$expected = @('Spar.NativeSample.exe', 'WebView2Loader.dll', 'WebView2-LICENSE.txt', 'WebView2-NOTICE.txt', 'spar-publish.json', 'frontend-LICENSES.txt')
 if ($ExpectedMode -eq 'NativeAOT') {
   if (Compare-Object @((Get-ChildItem -LiteralPath $copy -File).Name) $expected) { throw 'Unexpected production payload.' }
 } else {
@@ -25,6 +25,13 @@ if ($ExpectedMode -eq 'NativeAOT') {
   if (Get-ChildItem -LiteralPath $copy -Recurse -File | Where-Object Name -Match 'Spar.Development|Spar.Dev\.|CodeAnalysis|ContractGenerator') {
     throw 'Development/compiler tooling shipped in the compatibility payload.'
   }
+}
+$notices = Get-Content -LiteralPath (Join-Path $copy 'frontend-LICENSES.txt') -Raw
+foreach ($package in @('react', 'react-dom', 'scheduler', 'vite')) {
+  $sections = @([regex]::Matches($notices, "(?ms)^## $package - [^\r\n]+\r?\n.*?(?=^## |\z)"))
+  if ($sections.Count -ne 1 -or $sections[0].Value -notmatch 'Copyright' -or
+      $sections[0].Value -notmatch 'Permission is hereby granted' -or
+      $sections[0].Value -notmatch 'SOFTWARE\.') { throw "Missing or incomplete bundled notice: $package" }
 }
 $publication = Get-Content -LiteralPath (Join-Path $copy 'spar-publish.json') -Raw | ConvertFrom-Json
 if ($publication.mode -ne $ExpectedMode -or !$publication.selfContained) { throw 'Unexpected publication mode.' }

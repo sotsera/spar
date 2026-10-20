@@ -98,6 +98,8 @@ try {
 
   $aot = Join-Path $consumer 'artifacts/aot'
   Invoke-ExternalBuild 'publish-aot' @('publish', $project, '-c', 'Release', '-o', $aot, '--disable-build-servers')
+  & node (Join-Path $PSScriptRoot 'Test-FrontendNotices.mjs') $frontend
+  if ($LASTEXITCODE) { throw 'External frontend notices do not match installed package licenses.' }
   & (Join-Path $PSScriptRoot 'Test-ProductionBoundary.ps1') `
     -Assembly (Join-Path $consumer 'backend/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll') `
     -HostAssembly (Join-Path $consumer 'backend/bin/Release/net10.0-windows/win-x64/Sotsera.Spar.Windows.dll') *> (Join-Path $externalEvidence 'production-boundary.log')

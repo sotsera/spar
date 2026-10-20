@@ -1,0 +1,27 @@
+  Determining projects to restore...
+  Restored E:\Ghidello\Git\spar.v2\src\Sotsera.Spar.Windows\Sotsera.Spar.Windows.csproj (in 163 ms).
+  Restored E:\Ghidello\Git\spar.v2\samples\Spar.NativeSample\Spar.NativeSample.csproj (in 163 ms).
+  3 of 5 projects are up-to-date for restore.
+  Spar delivery: NativeAOT; requested=NativeAOT; strict=false; dependency=; reason=. Failures never select another mode.
+  Sotsera.Spar.Bridge -> E:\Ghidello\Git\spar.v2\src\Sotsera.Spar.Bridge\bin\Release\net10.0\Sotsera.Spar.Bridge.dll
+  Sotsera.Spar.Windows -> E:\Ghidello\Git\spar.v2\src\Sotsera.Spar.Windows\bin\Release\net10.0-windows\Sotsera.Spar.Windows.dll
+  Spar.ContractGenerator -> E:\Ghidello\Git\spar.v2\tools\Spar.ContractGenerator\bin\Release\net10.0\Spar.ContractGenerator.dll
+  Spar.NativeSample.Contracts -> E:\Ghidello\Git\spar.v2\samples\Spar.NativeSample.Contracts\bin\Release\net10.0\Spar.NativeSample.Contracts.dll
+  
+  added 24 packages, and audited 25 packages in 1s
+  
+  8 packages are looking for funding
+    run `npm fund` for details
+  
+  found 0 vulnerabilities
+  
+  > build
+  > npm run check && vite build && node write-notices.mjs
+  
+  
+  > check
+  > tsc --project tsconfig.json
+  
+  Spar.NativeSample -> E:\Ghidello\Git\spar.v2\samples\Spar.NativeSample\bin\Release\net10.0-windows\win-x64\Spar.NativeSample.dll
+  Generating native code
+  Spar.NativeSample -> E:\Ghidello\Git\spar.v2\artifacts\distribution-notices\publish\

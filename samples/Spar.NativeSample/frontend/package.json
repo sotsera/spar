@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "check": "tsc --project tsconfig.json",
-    "build": "npm run check && vite build"
+    "build": "npm run check && vite build && node write-notices.mjs"
   },
   "dependencies": {
     "react": "19.3.1",

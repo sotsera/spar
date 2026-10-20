@@ -1,0 +1,23 @@
+  Determining projects to restore...
+  Restored C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\backend\Spar.NativeSample.csproj (in 176 ms).
+  Restored C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\dependency\Spar.DynamicDependency.csproj (in 176 ms).
+  1 of 3 projects are up-to-date for restore.
+  Spar delivery: NativeAOT; requested=CoreCLR; strict=true; dependency=Spar.DynamicDependency (consumer fixture); reason=IL3050: RuntimeGreeting emits and executes DynamicMethod IL.. Failures never select another mode.
+  Spar.NativeSample.Contracts -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\contracts\bin\Release\net10.0\Spar.NativeSample.Contracts.dll
+  Spar.DynamicDependency -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\dependency\bin\Release\net10.0\Spar.DynamicDependency.dll
+  
+  added 24 packages, and audited 25 packages in 1s
+  
+  8 packages are looking for funding
+    run `npm fund` for details
+  
+  found 0 vulnerabilities
+  
+  > build
+  > npm run check && vite build && node write-notices.mjs
+  
+  
+  > check
+  > tsc --project tsconfig.json
+  
+C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\backend\SampleBackend.cs(13,50): error IL3050: Using member 'Spar.DynamicDependency.RuntimeGreeting.Create(String)' which has 'RequiresDynamicCodeAttribute' can break functionality when AOT compiling. RuntimeGreeting builds and executes a DynamicMethod; select explicit CoreCLR delivery or remove this dependency. [C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\backend\Spar.NativeSample.csproj]

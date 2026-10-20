@@ -54,6 +54,9 @@ jobs:
           npm run check
           npm run build
 
+      - name: Verify complete frontend distribution notices
+        run: node eng/Test-FrontendNotices.mjs
+
       - name: Test owned SPA session and HMR
         shell: pwsh
         run: ./eng/Test-DevelopmentSession.ps1 -EvidenceDirectory artifacts/development/ci

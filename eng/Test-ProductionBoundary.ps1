@@ -25,6 +25,13 @@ try {
   $memory = [IO.MemoryStream]::new($bytes, $false)
   $archive = [IO.Compression.ZipArchive]::new($memory)
   try {
+    $notice = $archive.GetEntry('frontend-LICENSES.txt')
+    if (!$notice) { throw 'Embedded frontend notices are missing.' }
+    $noticeStream = $notice.Open()
+    try { $noticeHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($noticeStream)) }
+    finally { $noticeStream.Dispose() }
+    $sidecar = Join-Path (Split-Path $path) 'frontend-LICENSES.txt'
+    if ((Get-FileHash -LiteralPath $sidecar).Hash -ne $noticeHash) { throw 'Embedded and sidecar frontend notices differ.' }
     foreach ($entry in $archive.Entries | Where-Object FullName -Match '\.(js|html)$') {
       $textReader = [IO.StreamReader]::new($entry.Open())
       try { $text = $textReader.ReadToEnd() } finally { $textReader.Dispose() }
@@ -34,5 +41,6 @@ try {
     }
   } finally { $archive.Dispose(); $memory.Dispose() }
   @{ assembly = $path; sha256 = (Get-FileHash -LiteralPath $path).Hash
-    productionEntryPoint = $true; probeResourcesAbsent = $true; developmentReferencesAbsent = $true; frontendDevelopmentCodeAbsent = $true } | ConvertTo-Json
+    productionEntryPoint = $true; probeResourcesAbsent = $true; developmentReferencesAbsent = $true; frontendDevelopmentCodeAbsent = $true
+    frontendNoticesSha256 = $noticeHash; embeddedNoticesMatchSidecar = $true } | ConvertTo-Json
 } finally { $pe.Dispose(); $stream.Dispose() }

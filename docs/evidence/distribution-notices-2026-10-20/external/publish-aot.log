@@ -1,0 +1,23 @@
+  Determining projects to restore...
+  Restored C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\backend\Spar.NativeSample.csproj (in 30,28 sec).
+  1 of 2 projects are up-to-date for restore.
+  Spar delivery: NativeAOT; requested=NativeAOT; strict=false; dependency=; reason=. Failures never select another mode.
+  Spar.NativeSample.Contracts -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\contracts\bin\Release\net10.0\Spar.NativeSample.Contracts.dll
+  
+  added 24 packages, and audited 25 packages in 2s
+  
+  8 packages are looking for funding
+    run `npm fund` for details
+  
+  found 0 vulnerabilities
+  
+  > build
+  > npm run check && vite build && node write-notices.mjs
+  
+  
+  > check
+  > tsc --project tsconfig.json
+  
+  Spar.NativeSample -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\backend\bin\Release\net10.0-windows\win-x64\Spar.NativeSample.dll
+  Generating native code
+  Spar.NativeSample -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-1de63c292939478ea1d508c96bb1b458\artifacts\aot\

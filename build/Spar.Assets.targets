@@ -12,10 +12,14 @@
 
     <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm ci --ignore-scripts --include=optional" />
     <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm run build" />
+    <Error Condition="!Exists('$(SparFrontendDirectory)/dist/frontend-LICENSES.txt')"
+           Text="The frontend build must emit dist/frontend-LICENSES.txt with the notices for its distributed code." />
     <Exec Command="pwsh -NoProfile -File &quot;$(SparBuildToolsDirectory)/Build-AssetBundle.ps1&quot; -Frontend &quot;$(SparFrontendDirectory)&quot; -Output &quot;$(MSBuildProjectDirectory)/$(SparAssetArchive)&quot;" />
 
     <ItemGroup>
       <EmbeddedResource Include="$(SparAssetArchive)" LogicalName="Spar.Production.Assets.zip" />
+      <Content Include="$(SparFrontendDirectory)/dist/frontend-LICENSES.txt" Link="frontend-LICENSES.txt"
+               CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
   </Target>
 

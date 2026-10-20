@@ -18,6 +18,7 @@ Copy the non-PDB files from the publish directory to a directory outside the che
 
 - `Spar.NativeSample.exe`, including the application, generated bridge, and production assets.
 - `WebView2Loader.dll`, `WebView2-LICENSE.txt`, and `WebView2-NOTICE.txt`.
+- `frontend-LICENSES.txt`, containing the bundled React, React DOM, scheduler, and emitted Vite helper notices. Identical text is embedded in the asset archive.
 - `spar-publish.json`, identifying selected mode, configuration, RID, source revision and hashes, dirty-tree status, tool versions, archive hash, and payload hashes. Actual execution receipts independently report runtime mode.
 
 Symbols are optional. The browser engine is installed separately; this is neither a single-process application nor an installer. The default persistent profile is `%LOCALAPPDATA%/Sotsera/Spar.NativeSample`. An optional first argument selects a different profile directory; profiles are leased exclusively and preserved on exit. `SPAR_WEBVIEW2_RUNTIME_FOLDER` selects an explicit runtime folder, primarily for a fixed-runtime deployment or the missing-runtime fixture. A redistributed fixed runtime has not been qualified. Missing WebView2 produces an error naming the Evergreen Runtime and native HRESULT.
@@ -30,7 +31,13 @@ The runtime owns a bounded immutable copy: at most 256 files, 16 MiB per decompr
 
 Each native document still receives a fresh `https://<random>.spar.invalid/index.html` address. WebView2 resource interception serves exact GET resources from that document's bundle, with MIME types, `nosniff`, and no caching. Unknown/query-alias/foreign resources are denied. A restrictive response CSP permits local scripts/styles/images/fonts and denies network connections, frames, objects, forms, and base-URL overrides. Resources never require DNS, a TLS connection, or a local HTTP server. Existing native top-level navigation, popup, permission, document retirement, and reply-delivery rules remain in force.
 
-The build helper is framework-neutral: the sample configures its frontend directory and build command through its ordinary project/targets. No Vite, Node, compiler, or ZIP-build tool is a production runtime dependency. Packaging these targets for external NuGet consumers belongs to #12.
+The build helper is framework-neutral: the sample configures its frontend directory and build command through its ordinary project/targets. No Vite, Node, compiler, or ZIP-build tool is a production runtime dependency. The same targets are distributed in the private build package for [external consumers](18-package-consumer.md).
+
+The frontend build must emit `dist/frontend-LICENSES.txt`; the shared targets fail if it is absent and copy it to build/publish outputs. Other frontend toolchains supply their own appropriate notices at that path. The React sample and fresh package consumer enable [Vite's bundled dependency license output](https://vite.dev/config/build-options.html#build-license), then run `write-notices.mjs` to retain the installed Vite core license for its emitted modulepreload helper. This step reads locked installed packages and adds no dependency. Vite itself remains build tooling. Dependency changes require reviewing the resulting inventory, including any emitted virtual helpers, assets, and additional notice obligations.
+
+After building the frontend, `node eng/Test-FrontendNotices.mjs` checks all four package versions and complete license texts against their installed licenses, plus repeated generation. The production boundary check compares the embedded notice with the sidecar by SHA-256; copied AOT and CoreCLR runs require the notices in the receipt-hashed payload. This covers the current sample's distributed frontend code, not arbitrary consumer dependencies or a complete public-release review.
+
+The [distribution-notice evidence](evidence/distribution-notices-2026-10-20/README.md) records the new sample and external-consumer executions separately from the original production baseline.
 
 ## Production boundary and test fixtures
 
@@ -49,4 +56,4 @@ dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o a
 
 ## Remaining work
 
-Explicit dependency-driven CoreCLR compatibility and strict failure checks are documented in the [compatibility guide](17-dependency-compatibility.md), #11 (A15/A16). External packages and the fresh consumer walkthrough remain #12 (A18/A01). A machine without the .NET SDK/runtime was unavailable; developer-machine execution does not certify clean-machine installation. Supported-machine coverage, installers, signing, and updates remain outside this slice.
+Explicit dependency-driven CoreCLR compatibility and strict failure checks are documented in the [compatibility guide](17-dependency-compatibility.md), #11 (A15/A16). External packages and the fresh consumer walkthrough are recorded in the [package guide](18-package-consumer.md) and [final acceptance matrix](19-milestone-1-acceptance.md), #12 (A18/A01). A machine without the .NET SDK/runtime was unavailable; developer-machine execution does not certify clean-machine installation. Broader package/release review, supported-machine coverage, installers, signing, and updates remain outside this slice.

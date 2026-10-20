@@ -20,7 +20,7 @@ $sample = Join-Path $repository 'samples/Spar.NativeSample'
 Get-ChildItem -LiteralPath $sample -File | Where-Object Extension -in @('.cs', '.html', '.js') |
   Copy-Item -Destination (Join-Path $root 'backend')
 Copy-Item -LiteralPath (Join-Path $repository 'samples/Spar.NativeSample.Contracts/BackendContract.cs') -Destination (Join-Path $root 'contracts')
-foreach ($name in @('package.json', 'package-lock.json', 'tsconfig.json', 'index.html')) {
+foreach ($name in @('package.json', 'package-lock.json', 'tsconfig.json', 'index.html', 'write-notices.mjs')) {
   Copy-Item -LiteralPath (Join-Path $sample "frontend/$name") -Destination (Join-Path $root 'backend/frontend')
 }
 Get-ChildItem -LiteralPath (Join-Path $sample 'frontend/src') -File | Copy-Item -Destination (Join-Path $root 'backend/frontend/src')
@@ -30,6 +30,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(async ({ command }) => ({
   plugins: [react(), ...(command === 'serve' ? [(await import('./.spar/vite-session.mjs')).sparSession()] : [])],
+  build: { license: { fileName: 'frontend-LICENSES.txt' } },
   cacheDir: '.vite-cache',
   clearScreen: false,
   logLevel: 'error',

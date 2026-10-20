@@ -4,6 +4,7 @@ import { sparSession } from '../../../tools/Spar.Dev/frontend/vite-session.mjs';
 
 export default defineConfig({
   plugins: [sparSession(), react()],
+  build: { license: { fileName: 'frontend-LICENSES.txt' } },
   cacheDir: '.vite-cache',
   clearScreen: false,
   logLevel: 'error',
