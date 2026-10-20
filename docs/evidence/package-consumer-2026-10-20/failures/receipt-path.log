@@ -1,0 +1,30 @@
+  Determining projects to restore...
+  Restored C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\backend\Spar.NativeSample.csproj (in 15,25 sec).
+  1 of 2 projects are up-to-date for restore.
+  Spar delivery: NativeAOT; requested=NativeAOT; strict=false; dependency=; reason=. Failures never select another mode.
+  Spar.NativeSample.Contracts -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\contracts\bin\Release\net10.0\Spar.NativeSample.Contracts.dll
+
+  added 24 packages, and audited 25 packages in 1s
+
+  8 packages are looking for funding
+    run `npm fund` for details
+
+  found 0 vulnerabilities
+
+  > build
+  > npm run check && vite build
+
+
+  > check
+  > tsc --project tsconfig.json
+
+  Spar.NativeSample -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\backend\bin\Release\net10.0-windows\win-x64\Spar.NativeSample.dll
+  Generating native code
+  Spar.NativeSample -> C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\artifacts\aot\
+  Resolve-Path: C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\.packages\sotsera.spar.build\0.1.0\tools\build\Write-PublishReceipt.ps1:15
+  Line |
+    15 |  . ourceDirectory) { (Resolve-Path -LiteralPath $SourceDirectory).Path }
+       |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+       | Cannot find path 'C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465"'
+       | because it does not exist.
+C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\.packages\sotsera.spar.build\0.1.0\build\Spar.Assets.targets(30,5): error MSB3073: The command "pwsh -NoProfile -File "C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\.packages\sotsera.spar.build\0.1.0\build\../tools/build/Write-PublishReceipt.ps1" -PublishDirectory "C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\artifacts\aot\/." -Archive "obj\Release\net10.0-windows\win-x64\spar-assets.zip" -Configuration "Release" -RuntimeIdentifier "win-x64" -PublishAot "true" -RequestedMode "NativeAOT" -StrictAot "false" -AttributionDirectory "obj\Release\net10.0-windows\win-x64\." -SourceDirectory "C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\"" exited with code 1. [C:\Users\Alessandro\AppData\Local\Temp\spar-consumer-6b1c7353b30b4969a8a9a904dff0f465\backend\Spar.NativeSample.csproj]

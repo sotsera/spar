@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <_SparDevelopmentHostPackage Condition="'$(MSBuildThisFileName)' == 'Sotsera.Spar.Windows.Development'">true</_SparDevelopmentHostPackage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)../licenses/*.txt"
+             Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="ValidateSparHostPackage" BeforeTargets="PrepareForBuild"
+          Condition="'$(_SparDevelopmentHostPackage)' == 'true' and '$(Configuration)' != 'Debug'">
+    <Error Text="The inspection-enabled Spar host package is development-only. Release must reference Sotsera.Spar.Windows." />
+  </Target>
+</Project>

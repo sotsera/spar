@@ -1,13 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/Spar.Package.props" />
+
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../Sotsera.Spar.Windows/Sotsera.Spar.Windows.csproj" />
     <InternalsVisibleTo Include="Sotsera.Spar.Development.Tests" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../tools/Spar.Dev/frontend/vite-session.mjs" Pack="true" PackagePath="frontend/" />
+    <None Include="../../build/Spar.DevelopmentPackage.targets" Pack="true" PackagePath="build/Sotsera.Spar.Development.targets" />
+  </ItemGroup>
+
+  <Target Name="ValidateDevelopmentPackage" BeforeTargets="Pack" Condition="'$(Configuration)' != 'Debug'">
+    <Error Text="Pack Sotsera.Spar.Development in Debug; its inspection-enabled host is development-only." />
+  </Target>
+
+  <Target Name="IncludeDevelopmentCoordinator" BeforeTargets="_GetPackageFiles">
+    <Error Condition="!Exists('../../tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe')"
+           Text="Build tools/Spar.Dev in Debug before packing the development package. Use eng/Pack-Local.ps1." />
+    <ItemGroup>
+      <None Include="../../tools/Spar.Dev/bin/Debug/net10.0-windows/*.dll;../../tools/Spar.Dev/bin/Debug/net10.0-windows/*.exe;../../tools/Spar.Dev/bin/Debug/net10.0-windows/*.json;../../tools/Spar.Dev/bin/Debug/net10.0-windows/*.txt"
+            Pack="true" PackagePath="tools/coordinator/" />
+    </ItemGroup>
+  </Target>
 </Project>

@@ -16,7 +16,7 @@ jobs:
   build-and-test:
     name: Windows managed probe
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -95,6 +95,14 @@ jobs:
         shell: pwsh
         run: ./eng/Test-Compatibility.ps1 -EvidenceDirectory artifacts/compatibility/ci
 
+      - name: Pack local consumer dependencies
+        shell: pwsh
+        run: ./eng/Pack-Local.ps1
+
+      - name: Test external package consumer (desktop and IDE checks run separately)
+        shell: pwsh
+        run: ./eng/Test-ExternalConsumer.ps1 -EvidenceDirectory artifacts/external-consumer/ci
+
       - name: Publish separate strict NativeAOT native test fixture
         run: dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
 
@@ -155,4 +163,6 @@ jobs:
             artifacts/compatibility/ci/*.cs
             artifacts/compatibility/ci/*-run/**
             artifacts/compatibility/ci/publish-*/spar-publish.json
+            artifacts/packages/packages.json
+            artifacts/external-consumer/ci/**
           if-no-files-found: warn

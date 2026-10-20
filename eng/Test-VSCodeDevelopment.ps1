@@ -1,18 +1,38 @@
 #requires -Version 7.4
-param([string]$CodeCommand = 'code', [switch]$VerifyRender)
+param([string]$CodeCommand = 'code', [switch]$VerifyRender, [string]$ConsumerDirectory)
 
 . (Join-Path $PSScriptRoot 'Test-BackendUpdates.ps1') -EvidenceDirectory 'artifacts/vscode-development' -VerifyRender:$VerifyRender -LibraryOnly
-$fixture = New-BackendFixture 'debugger'
+$extensionDirectory = Join-Path $repository 'tools/Spar.VSCode'
+if ($ConsumerDirectory) {
+  # TEMP can contain an 8.3 alias. The editor and project system must see the same source identity.
+  $consumerRoot = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $ConsumerDirectory).Path)
+  $coordinatorPath = Join-Path $consumerRoot '.tools/Spar.Dev.exe'
+  $extensionDirectory = Join-Path $consumerRoot '.vscode/spar-extension'
+  $consumerSettings = Get-Content -LiteralPath (Join-Path $consumerRoot 'spar.dev.json') -Raw | ConvertFrom-Json -AsHashtable
+  foreach ($key in @('project', 'application', 'generatedClient', 'contractFile')) {
+    $consumerSettings[$key] = [IO.Path]::GetFullPath($consumerSettings[$key], $consumerRoot)
+  }
+  $consumerSettings.sessionDirectory = Join-Path $consumerRoot 'artifacts/debugger-sessions'
+  $fixture = [pscustomobject]@{ Directory = $consumerRoot; Settings = $consumerSettings; Config = (Join-Path $consumerRoot 'spar.dev.json') }
+  $consumerSource = Join-Path $consumerRoot 'backend/SampleBackend.cs'
+  $source = [IO.File]::ReadAllText($consumerSource).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend').Replace('> 5000', '> 15000')
+  $source += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
+  [IO.File]::WriteAllText($consumerSource, $source)
+} else {
+  $fixture = New-BackendFixture 'debugger'
+}
 $fixture.Settings.watchBackend = $false
 $fixture.Settings['debuggerBackend'] = $true
 $fixture.Settings | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $fixture.Config
 @{ coordinator = $coordinatorPath; settings = $fixture.Config; project = $fixture.Settings.project; probe = $true; verifyRender = $VerifyRender.IsPresent } |
   ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixture.Directory 'owner.json')
-Set-Content -LiteralPath (Join-Path $fixture.Directory 'Fixture.slnx') -Value '<Solution><Project Path="backend/Spar.NativeSample.csproj" /></Solution>'
+if (!$ConsumerDirectory) {
+  Set-Content -LiteralPath (Join-Path $fixture.Directory 'Fixture.slnx') -Value '<Solution><Project Path="backend/Spar.NativeSample.csproj" /></Solution>'
+}
 $profile = Join-Path $fixture.Directory 'profile'
 New-Item -ItemType Directory -Path (Join-Path $profile 'User') -Force | Out-Null
 @{ 'csharp.experimental.debug.hotReload' = $true; 'csharp.debug.hotReloadOnSave' = $true;
-   'csharp.debug.hotReloadVerbosity' = 'diagnostic' } | ConvertTo-Json |
+   'csharp.debug.hotReloadVerbosity' = 'diagnostic'; 'extensions.autoUpdate' = $false } | ConvertTo-Json |
   Set-Content -LiteralPath (Join-Path $profile 'User/settings.json')
 dotnet build $fixture.Settings.project --disable-build-servers
 if ($LASTEXITCODE -ne 0) { throw 'Fixture build failed.' }
@@ -25,7 +45,7 @@ $start.RedirectStandardOutput = $true
 $start.RedirectStandardError = $true
 foreach ($argument in @('--new-window','--wait','--skip-welcome','--skip-release-notes','--disable-workspace-trust',
   '--user-data-dir',$profile,'--extensions-dir',(Join-Path $env:USERPROFILE '.vscode/extensions'),
-  '--extensionDevelopmentPath',(Join-Path $repository 'tools/Spar.VSCode'),
+  '--extensionDevelopmentPath',$extensionDirectory,
   '--extensionTestsPath',(Join-Path $PSScriptRoot 'vscode-development/test.cjs'),$fixture.Directory)) {
   $start.ArgumentList.Add($argument)
 }

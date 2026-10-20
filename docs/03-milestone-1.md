@@ -108,6 +108,8 @@ Add one deliberately incompatible dependency fixture that actually executes an u
 
 Restore dependencies and build the demonstration through local package references from an external directory. This catches hidden source-project/friend-assembly dependencies. A local feed is sufficient; public package release is not required.
 
+External consumer progress: the [package guide](18-package-consumer.md) and [execution record](evidence/package-consumer-2026-10-20/README.md) cover local runtime/build/development packages, a fresh application outside the checkout, generated bindings, native development updates, coordinated restart, copied AOT and attributed CoreCLR delivery. The package consumer uses public APIs and its own contract project. Its Visual Studio walkthrough and the final integrated acceptance reconciliation remain open in #12; earlier source-consumer IDE evidence does not close those requirements.
+
 Deliverables: AOT and CoreCLR artifacts with mode receipts, local external consumer, Visual Studio evidence, and a short start/edit/debug/publish guide.
 
 ## Acceptance matrix
@@ -162,7 +164,7 @@ When introducing CI during milestone 1, treat enforcement as part of delivering 
 - [x] Establish stable, unique check names and verify the workflows run on pull requests from the development fork.
 - [x] After observing real successful and failing runs, add the applicable build/test check names to upstream `protect-main` as required status checks. Enforced name: **Windows managed probe**, GitHub Actions integration `15368`, strict up-to-date requirement.
 - [x] Extend the existing required **Windows managed probe** job with native CoreCLR lifecycle, strict AOT publication, and copied AOT lifecycle execution. [Upstream run 39153778439](https://github.com/sotsera/spar/actions/runs/39153778439) passed all of these on the native-host implementation; see the [native guide](09-native-host.md). This does not claim CI desktop rendering.
-- [ ] Add external-package consumer coverage when available. Revisit the ruleset whenever required jobs are renamed or replaced; the existing required check name remains stable.
+- [x] Add external-package consumer coverage: local pack, clean external restore/build, actual development session, default AOT and attributed CoreCLR publication/run are included in **Windows managed probe**. The timeout is 30 minutes to accommodate the additional restores/publications. The new PR still needs its own successful upstream run; no job or ruleset name changed.
 - [ ] Keep interactive Windows rendering/debugger checks explicit about desktop availability. An unavailable or skipped acceptance scenario does not establish milestone completion; report its remaining evidence requirement separately from ordinary CI results.
 - [x] Verify the resulting policy blocks merging a PR with a failed required check without introducing a bypass. PR #15 was non-draft with `isRequired: true`, `conclusion: FAILURE`, and `mergeStateStatus: BLOCKED`; PR-only and squash-only policies remain intact.
 

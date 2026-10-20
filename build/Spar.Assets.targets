@@ -1,4 +1,8 @@
 <Project>
+  <PropertyGroup>
+    <SparBuildToolsDirectory Condition="'$(SparBuildToolsDirectory)' == ''">$(MSBuildThisFileDirectory)../eng</SparBuildToolsDirectory>
+  </PropertyGroup>
+
   <!-- Build dependencies first: the frontend consumes the same contract that the native application references. -->
   <Target Name="BuildSparAssets" BeforeTargets="AssignTargetPaths" DependsOnTargets="ResolveProjectReferences"
           Condition="'$(SparProductionAssets)' == 'true' and '$(DesignTimeBuild)' != 'true'">
@@ -8,7 +12,7 @@
 
     <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm ci --ignore-scripts --include=optional" />
     <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm run build" />
-    <Exec Command="pwsh -NoProfile -File &quot;$(MSBuildThisFileDirectory)../eng/Build-AssetBundle.ps1&quot; -Frontend &quot;$(SparFrontendDirectory)&quot; -Output &quot;$(MSBuildProjectDirectory)/$(SparAssetArchive)&quot;" />
+    <Exec Command="pwsh -NoProfile -File &quot;$(SparBuildToolsDirectory)/Build-AssetBundle.ps1&quot; -Frontend &quot;$(SparFrontendDirectory)&quot; -Output &quot;$(MSBuildProjectDirectory)/$(SparAssetArchive)&quot;" />
 
     <ItemGroup>
       <EmbeddedResource Include="$(SparAssetArchive)" LogicalName="Spar.Production.Assets.zip" />
@@ -17,12 +21,16 @@
 
   <Target Name="WriteSparPublishReceipt" AfterTargets="Publish"
           Condition="'$(SparProductionAssets)' == 'true'">
+    <PropertyGroup>
+      <_SparReceiptSourceArgument Condition="'$(SparSourceDirectory)' != ''">-SourceDirectory &quot;$(SparSourceDirectory)/.&quot;</_SparReceiptSourceArgument>
+    </PropertyGroup>
+
     <!-- Attribution is data, never interpolated into shell command text. -->
     <WriteLinesToFile File="$(IntermediateOutputPath)spar-compatibility-dependency.txt"
                       Lines="$(SparCompatibilityDependency)" Overwrite="true" Encoding="UTF-8" />
     <WriteLinesToFile File="$(IntermediateOutputPath)spar-compatibility-reason.txt"
                       Lines="$(SparCompatibilityReason)" Overwrite="true" Encoding="UTF-8" />
 
-    <Exec Command="pwsh -NoProfile -File &quot;$(MSBuildThisFileDirectory)../eng/Write-PublishReceipt.ps1&quot; -PublishDirectory &quot;$(PublishDir)/.&quot; -Archive &quot;$(SparAssetArchive)&quot; -Configuration &quot;$(Configuration)&quot; -RuntimeIdentifier &quot;$(RuntimeIdentifier)&quot; -PublishAot &quot;$(PublishAot)&quot; -RequestedMode &quot;$(SparDeliveryMode)&quot; -StrictAot &quot;$(SparStrictAot)&quot; -AttributionDirectory &quot;$(IntermediateOutputPath).&quot;" />
+    <Exec Command="pwsh -NoProfile -File &quot;$(SparBuildToolsDirectory)/Write-PublishReceipt.ps1&quot; -PublishDirectory &quot;$(PublishDir)/.&quot; -Archive &quot;$(SparAssetArchive)&quot; -Configuration &quot;$(Configuration)&quot; -RuntimeIdentifier &quot;$(RuntimeIdentifier)&quot; -PublishAot &quot;$(PublishAot)&quot; -RequestedMode &quot;$(SparDeliveryMode)&quot; -StrictAot &quot;$(SparStrictAot)&quot; -AttributionDirectory &quot;$(IntermediateOutputPath).&quot; $(_SparReceiptSourceArgument)" />
   </Target>
 </Project>

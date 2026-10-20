@@ -1,0 +1,24 @@
+{
+  "project": "backend/Spar.NativeSample.csproj",
+  "application": "backend/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe",
+  "generatedClient": "backend/frontend/src/generated/client.js",
+  "sessionDirectory": "artifacts/sessions",
+  "watchBackend": true,
+  "contractFile": "contracts/BackendContract.cs",
+  "restartFiles": [
+    "backend/Program.cs",
+    "backend/Program.Development.cs"
+  ],
+  "frontend": {
+    "arguments": [
+      "/d",
+      "/c",
+      "npm",
+      "run",
+      "dev"
+    ],
+    "workingDirectory": "backend/frontend",
+    "port": 0,
+    "fileName": "cmd.exe"
+  }
+}

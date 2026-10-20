@@ -1,0 +1,23 @@
+<Project>
+  <PropertyGroup>
+    <SparContractTool>$(MSBuildThisFileDirectory)../tools/generator/Spar.ContractGenerator.dll</SparContractTool>
+    <SparBuildToolsDirectory>$(MSBuildThisFileDirectory)../tools/build</SparBuildToolsDirectory>
+    <SparSourceDirectory Condition="'$(SparSourceDirectory)' == ''">$(MSBuildProjectDirectory)</SparSourceDirectory>
+    <SparProductionAssets Condition="'$(SparApplication)' == 'true' and '$(Configuration)' == 'Release'">true</SparProductionAssets>
+  </PropertyGroup>
+
+  <Target Name="UseSparImmutableContract" BeforeTargets="ResolveAssemblyReferences"
+          Condition="'$(SparContractProject)' != '' and '$(DotNetWatchBuild)' == 'true'">
+    <PropertyGroup>
+      <_SparContractAssembly>$([System.IO.Path]::GetFileNameWithoutExtension('$(SparContractProject)'))</_SparContractAssembly>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="$(_SparContractAssembly)" HintPath="$(TargetDir)$(_SparContractAssembly).dll" />
+    </ItemGroup>
+  </Target>
+
+  <Import Project="Spar.Delivery.targets" Condition="'$(SparApplication)' == 'true'" />
+  <Import Project="Spar.Contracts.targets" Condition="'$(SparContractFile)' != ''" />
+  <Import Project="Spar.Assets.targets" Condition="'$(SparProductionAssets)' == 'true'" />
+</Project>

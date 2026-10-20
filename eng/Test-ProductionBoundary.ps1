@@ -1,7 +1,10 @@
 #requires -Version 7.4
-param([string]$Assembly = 'samples/Spar.NativeSample/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll')
+param(
+  [string]$Assembly = 'samples/Spar.NativeSample/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll',
+  [string]$HostAssembly = 'src/Sotsera.Spar.Windows/bin/Release/net10.0-windows/Sotsera.Spar.Windows.dll'
+)
 $ErrorActionPreference = 'Stop'
-& (Join-Path $PSScriptRoot 'Test-InspectionBoundary.ps1')
+& (Join-Path $PSScriptRoot 'Test-InspectionBoundary.ps1') -Assembly $HostAssembly
 $path = (Resolve-Path -LiteralPath $Assembly).Path
 $stream = [IO.File]::OpenRead($path)
 $pe = [Reflection.PortableExecutable.PEReader]::new($stream)

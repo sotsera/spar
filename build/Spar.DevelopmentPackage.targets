@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <SparDevelopmentToolsDirectory Condition="'$(SparDevelopmentToolsDirectory)' == ''">$(MSBuildProjectDirectory)/.spar/tools</SparDevelopmentToolsDirectory>
+  </PropertyGroup>
+
+  <Target Name="PrepareSparDevelopmentTools" BeforeTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <_SparCoordinatorFiles Include="$(MSBuildThisFileDirectory)../tools/coordinator/*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_SparCoordinatorFiles)" DestinationFolder="$(SparDevelopmentToolsDirectory)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="PrepareSparFrontendAdapter" BeforeTargets="Build"
+          Condition="'$(SparFrontendDirectory)' != '' and '$(DesignTimeBuild)' != 'true'">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)../frontend/vite-session.mjs"
+          DestinationFolder="$(SparFrontendDirectory)/.spar" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="RejectProductionDevelopmentPackage" BeforeTargets="PrepareForBuild"
+          Condition="'$(Configuration)' != 'Debug'">
+    <Error Text="Reference Sotsera.Spar.Development only in Debug. Production uses Sotsera.Spar.Windows." />
+  </Target>
+</Project>

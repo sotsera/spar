@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/Spar.Package.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <!-- These scripts are invoked explicitly by MSBuild; they are not NuGet install hooks. -->
+    <NoWarn>$(NoWarn);NU5111</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Spar.ContractGenerator/Spar.ContractGenerator.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    <None Include="../../build/Spar.BuildPackage.targets" Pack="true" PackagePath="build/Sotsera.Spar.Build.targets" />
+    <None Include="../../build/Spar.Contracts.targets;../../build/Spar.Assets.targets;../../build/Spar.Delivery.targets"
+          Pack="true" PackagePath="build/" />
+    <None Include="../../eng/Build-AssetBundle.ps1;../../eng/Write-PublishReceipt.ps1" Pack="true" PackagePath="tools/build/" />
+  </ItemGroup>
+
+  <Target Name="IncludeContractTool" BeforeTargets="_GetPackageFiles" DependsOnTargets="Build">
+    <ItemGroup>
+      <None Include="../Spar.ContractGenerator/bin/$(Configuration)/net10.0/*.dll;../Spar.ContractGenerator/bin/$(Configuration)/net10.0/*.json"
+            Pack="true" PackagePath="tools/generator/" />
+      <None Include="$(NetCoreRoot)LICENSE.txt" Pack="true" PackagePath="tools/generator/dotnet-LICENSE.txt" />
+      <None Include="$(NetCoreRoot)ThirdPartyNotices.txt" Pack="true" PackagePath="tools/generator/dotnet-ThirdPartyNotices.txt" />
+    </ItemGroup>
+  </Target>
+</Project>

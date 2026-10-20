@@ -1,0 +1,88 @@
+{
+  "cases": [
+    {
+      "arguments": [
+        "build",
+        "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022\\backend\\Spar.NativeSample.csproj",
+        "--disable-build-servers"
+      ],
+      "name": "fresh-build",
+      "expectedSuccess": true,
+      "exitCode": 0,
+      "passed": true
+    },
+    {
+      "arguments": [
+        "publish",
+        "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022\\backend\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022\\artifacts\\aot",
+        "--disable-build-servers"
+      ],
+      "name": "publish-aot",
+      "expectedSuccess": true,
+      "exitCode": 0,
+      "passed": true
+    },
+    {
+      "arguments": [
+        "publish",
+        "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022\\backend\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-p:SparStrictAot=true",
+        "-o",
+        "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022\\artifacts\\strict",
+        "--disable-build-servers"
+      ],
+      "name": "strict-dependency",
+      "expectedSuccess": false,
+      "exitCode": 1,
+      "passed": true
+    },
+    {
+      "arguments": [
+        "publish",
+        "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022\\backend\\Spar.NativeSample.csproj",
+        "-c",
+        "Release",
+        "-o",
+        "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022\\artifacts\\coreclr",
+        "--disable-build-servers"
+      ],
+      "name": "publish-coreclr",
+      "expectedSuccess": true,
+      "exitCode": 0,
+      "passed": true
+    }
+  ],
+  "observedAt": "2026-10-19T22:27:45.2397314+00:00",
+  "sourceRevision": "07354da8f88623638812e0e712346f6290faea38",
+  "allPassed": true,
+  "rendering": true,
+  "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-53f366d3b07346b5b5dafa4235f63022",
+  "packages": [
+    {
+      "sha256": "F17B623492DA0217248E7F194AC108FF3F8B71E98E641F19E80DBACC38B59F2B",
+      "name": "Sotsera.Spar.Bridge.0.1.0.nupkg"
+    },
+    {
+      "sha256": "20A3A251F1C404A7AC11DA704307A144BAF4E33FF446BE63191E30729CBD64E4",
+      "name": "Sotsera.Spar.Build.0.1.0.nupkg"
+    },
+    {
+      "sha256": "E484407E573044F5FAA801CB09869F96B26ED12E94C2CC4178E045782F6D0853",
+      "name": "Sotsera.Spar.Development.0.1.0.nupkg"
+    },
+    {
+      "sha256": "BA0454F77259E0B34C16B8607C4190E42810CE679CE0F3F2E482150D6FEA12B5",
+      "name": "Sotsera.Spar.Windows.0.1.0.nupkg"
+    },
+    {
+      "sha256": "E3E98136D220ADD07F42B2F59BD82ECB620D627E89A475EB340567381CBBF769",
+      "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg"
+    }
+  ]
+}

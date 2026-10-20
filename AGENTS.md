@@ -34,6 +34,8 @@ For production, use the [delivery guide](docs/16-production-delivery.md): normal
 
 For dependency compatibility, use the [compatibility guide](docs/17-dependency-compatibility.md): run `eng/Test-Compatibility.ps1 -VerifyRender` and review both copied-mode captures. Keep attribution explicit, strict AOT overridable from CI, and unrelated failures fatal. The driver copies isolated sources and retains first-failure evidence; it does not alter or clean the primary projects.
 
+For external consumers, use the [package guide](docs/18-package-consumer.md): pack with `eng/Pack-Local.ps1`, then run `eng/Test-ExternalConsumer.ps1 -VerifyRender` and review the captures. Use a fresh directory outside the framework checkout and an isolated feed/cache. `eng/Test-VSCodeDevelopment.ps1 -ConsumerDirectory <fresh-consumer> -VerifyRender` exercises the actual package debugger lane; the external Visual Studio walkthrough remains a separate acceptance requirement. Never infer package IDE acceptance from earlier source-project evidence.
+
 ## C# readability and lifetime rules
 
 - Prefer clear statements, named intermediate values, and small methods over compressed expressions. Use LINQ when it describes one coherent transformation clearly.

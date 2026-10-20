@@ -7,15 +7,42 @@ param(
   [string]$PublishAot,
   [ValidateSet('NativeAOT', 'CoreCLR')][string]$RequestedMode,
   [ValidateSet('true', 'false')][string]$StrictAot,
-  [Parameter(Mandatory)][string]$AttributionDirectory
+  [Parameter(Mandatory)][string]$AttributionDirectory,
+  [string]$SourceDirectory
 )
 $ErrorActionPreference = 'Stop'
 $directory = (Resolve-Path -LiteralPath $PublishDirectory).Path
-$root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-$revision = git -C $root rev-parse HEAD
-if ($LASTEXITCODE) { throw 'Cannot identify publication source.' }
-$status = @(git -C $root status --porcelain)
-$sources = @(git -C $root ls-files --cached --others --exclude-standard)
+$root = if ($SourceDirectory) { (Resolve-Path -LiteralPath $SourceDirectory).Path }
+  else { (Resolve-Path (Join-Path $PSScriptRoot '..')).Path }
+$revision = $null
+$dirty = $null
+if (Get-Command git -ErrorAction SilentlyContinue) {
+  $gitRevision = git -C $root rev-parse HEAD 2>$null
+  if ($LASTEXITCODE -eq 0) {
+    $revision = $gitRevision
+    $dirty = @(git -C $root status --porcelain).Count -gt 0
+  }
+}
+if (!$SourceDirectory) {
+  $sources = @(git -C $root ls-files --cached --others --exclude-standard)
+  if ($LASTEXITCODE) { throw 'Cannot enumerate repository publication source.' }
+} else {
+  # External consumers need no Git checkout. Do not follow links or hash caches/build outputs.
+  $pending = [Collections.Generic.Queue[string]]::new()
+  $pending.Enqueue($root)
+  $sourceFiles = [Collections.Generic.List[string]]::new()
+  while ($pending.Count) {
+    foreach ($item in Get-ChildItem -LiteralPath $pending.Dequeue() -Force) {
+      if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { continue }
+      if ($item.PSIsContainer) {
+        if ($item.Name -notin @('bin', 'obj', '.git', '.vs', '.tools', '.packages', 'node_modules', 'dist', 'artifacts', '.vite-cache', '.spar')) {
+          $pending.Enqueue($item.FullName)
+        }
+      } else { $sourceFiles.Add([IO.Path]::GetRelativePath($root, $item.FullName)) }
+    }
+  }
+  $sources = @($sourceFiles | Sort-Object)
+}
 $sourceHashes = @($sources | ForEach-Object {
   $path = Join-Path $root $_
   if (Test-Path -LiteralPath $path -PathType Leaf) {
@@ -39,7 +66,7 @@ $receipt = [ordered]@{
     reason = (Get-Content -LiteralPath (Join-Path $AttributionDirectory 'spar-compatibility-reason.txt') -Raw)?.Trim()
   }
   configuration = $Configuration; runtimeIdentifier = $RuntimeIdentifier
-  revision = $revision; workingTreeDirty = $status.Count -gt 0; sourceHashes = $sourceHashes
+  revision = $revision; workingTreeDirty = $dirty; sourceDirectory = $root; sourceHashes = $sourceHashes
   dotnet = (dotnet --version); node = (node --version); npm = (npm --version); powershell = $PSVersionTable.PSVersion.ToString()
   assetArchiveSha256 = (Get-FileHash -LiteralPath $Archive).Hash
   contractFingerprint = $fingerprint

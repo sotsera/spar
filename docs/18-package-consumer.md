@@ -1,0 +1,97 @@
+# External package consumer
+
+Local packages `0.1.0` expose the runtime, contract generation, build integration and development coordinator. They are a milestone baseline, not a public NuGet release. The [execution record](evidence/package-consumer-2026-10-20/README.md) distinguishes package execution from editor acceptance. Issue #12 remains open for its external Visual Studio walkthrough and final milestone reconciliation.
+
+## Prerequisites and a fresh application
+
+Use Windows x64, SDK `10.0.402`, Node `24.21.0` / npm `11.19.0`, PowerShell 7.4 or newer, installed WebView2 Runtime, and the Visual Studio C++ native build tools required by the [production guide](16-production-delivery.md). The generated `global.json` retains the selected SDK. Internet access is needed for ordinary SDK/runtime NuGet dependencies and the frontend lock file; Spar itself restores from the copied local feed.
+
+From the framework checkout:
+
+```powershell
+pwsh -NoProfile -File eng/Pack-Local.ps1
+pwsh -NoProfile -File eng/New-PackageConsumer.ps1 -Directory C:/work/SparConsumer
+```
+
+Choose a new directory outside the checkout. The script copies application-owned sources, five local packages, and the small VS Code adapter. It writes ordinary projects, a solution containing both app and contract projects, central explicit package versions, and source mapping that resolves `Sotsera.Spar.*` only from `.feed`. There are no framework project references, absolute checkout imports, directory junctions, or references to the framework's output folders. The sole application project reference points to its own contract project.
+
+The scaffold command is a repository convenience, not a prerequisite for later builds. Its output is the inspectable integration example; the consumer can be moved with its `.feed`, then rebuilt. Regenerate the absolute paths in `backend/Properties/launchSettings.json` after moving it. Keep one canonical full directory path when opening the editor: mixing Windows 8.3 aliases with full project paths can make C# Dev Kit treat an edited file as a separate file-based program.
+
+From the consumer directory:
+
+```powershell
+dotnet build backend/Spar.NativeSample.csproj --disable-build-servers
+Push-Location backend/frontend
+npm ci --ignore-scripts --include=optional
+Pop-Location
+./.tools/Spar.Dev.exe spar.dev.json
+```
+
+The first direct application build restores the entire graph, generates C#/JavaScript/TypeScript bindings and prepares `.tools/Spar.Dev.exe` plus the Vite session adapter. No generated bindings or warmed NuGet cache are copied into the fixture. The terminal session builds before launch; edit `backend/frontend/src/styles.css` or `backend/SampleBackend.cs`, then use `restart` or `stop`. Supported updates retain document identity and state. A coordinated restart waits for actual retirement and resets backend state. See the [development ownership rules](12-backend-updates.md).
+
+## Package responsibilities
+
+| Package | Integration |
+| --- | --- |
+| `Sotsera.Spar.Bridge` | Public contract/transport APIs used by the consumer contract assembly. |
+| `Sotsera.Spar.Windows` | Release native host, x64 WebView2 loader and its notices; inspection code is excluded. |
+| `Sotsera.Spar.Windows.Development` | Debug native host, transitively selected by the development package; rejected in non-Debug builds. It has the same assembly identity as the Release host, so select only one per configuration. |
+| `Sotsera.Spar.Development` | Debug-only public session/bootstrap APIs, coordinator files and frontend adapter. Reference conditionally with `PrivateAssets="all"`. |
+| `Sotsera.Spar.Build` | Private build dependency containing contract generator, SDK Roslyn binaries, asset builder, delivery policy and receipt writer. No runtime library dependency. |
+
+The app sets `SparApplication`, `SparFrontendDirectory`, and `SparContractProject`. It declares an ordinary project reference to the contract except during `DotNetWatchBuild`; package targets then use the immutable contract assembly already copied into the application output. The contract project sets `SparContractFile` and `SparClientOutputDirectory` and disables Debug symbols so editor Hot Reload cannot patch wire metadata in place.
+
+Ordinary SDK restore properties (`EnableAotAnalyzer`, `EnableTrimAnalyzer`, conditional Release `PublishAot` and `SelfContained`) are declared in the application before the first restore. Package targets are not available early enough to establish the first restore graph on their own. Delivery policy still rejects inconsistent mode settings. `SparDevelopmentToolsDirectory` chooses the prepared coordinator directory; `SparSourceDirectory` bounds receipt source hashing. External receipts work without Git and omit caches/build outputs and reparse points.
+
+Build/development tooling never belongs in the Release payload. The production boundary check examines the actual package host assembly before the copied application test. The separate Debug host package avoids depending on a consumer's build configuration to change an already compiled Release library.
+
+## VS Code
+
+Install the C# and C# Dev Kit extensions. After the initial build/npm restore, launch the copied local adapter from the consumer:
+
+```powershell
+code --new-window --extensionDevelopmentPath "$PWD/.vscode/spar-extension" .
+```
+
+Open `Consumer.slnx`, choose **Spar development**, set a breakpoint in `GreetAsync`, and press F5. Continue to typed readiness, remove the breakpoint, then edit the CSS and greeting. Enable C# Hot Reload on save as described in the [debugger guide](13-vscode-development.md). Use **Spar: Restart backend** for coordinated restart, and debugger Stop to end the owned session. C# Dev Kit is the sole backend Hot Reload owner; the terminal watcher is not running alongside it.
+
+The reusable acceptance driver supports `eng/Test-VSCodeDevelopment.ps1 -ConsumerDirectory <fresh-consumer> -VerifyRender`. It deliberately edits the disposable consumer and uses an isolated profile. Do not run it on work you want to preserve. The recorded external pass used VS Code `1.142.0`, C# `2.160.4`, and C# Dev Kit `3.40.215`; it covers real breakpoints, updates, compiler recovery, restart, retirement and process exit. A failed or unavailable run does not establish acceptance.
+
+## Visual Studio
+
+Open `Consumer.slnx`, set `Spar.NativeSample` as startup project, select **Debug** and **Spar development**, then F5 with a breakpoint in `GreetAsync`. The initial build prepares the packaged coordinator; the ordinary project profile supplies its path. Continue to native readiness, remove the breakpoint, edit the frontend and greeting, and use **Apply Code Changes**. Visual Studio owns backend Hot Reload.
+
+For startup, contract or unsupported changes, close the native window, wait for session cleanup, rebuild both consumer projects, then F5. Debugger Stop is forced termination, separately recorded from graceful retirement. The [Visual Studio guide](14-visual-studio-development.md) explains these differences from VS Code and the manual scenarios. The earlier source-consumer IDE pass does not prove this package-consumer walkthrough. The external walkthrough remains pending because the desktop app-access request timed out during this run.
+
+## Publish
+
+Stop development before publishing. From the consumer:
+
+```powershell
+dotnet publish backend/Spar.NativeSample.csproj -c Release -o artifacts/aot --disable-build-servers
+```
+
+This restores/builds the frontend, generates matching contracts, embeds production assets and publishes NativeAOT by default. Copy the published payload to a separate directory and run `Spar.NativeSample.exe`; no frontend server or Node process is needed. `spar-publish.json` records actual/requested mode, tool versions, contract fingerprint, source and payload hashes. A developer machine run does not establish no-SDK-machine qualification.
+
+For an actual incompatible dependency, place these properties **before** the application's conditional `PublishAot` setting:
+
+```xml
+<SparDeliveryMode>CoreCLR</SparDeliveryMode>
+<SparCompatibilityDependency>Your incompatible dependency and version</SparCompatibilityDependency>
+<SparCompatibilityReason>The attributable unsupported mechanism/diagnostic</SparCompatibilityReason>
+```
+
+Publish to a separate `artifacts/coreclr` directory. Use `-p:SparStrictAot=true` to require NativeAOT despite the persisted compatibility selection. The acceptance fixture adds a consumer-owned dependency which actually emits and executes `DynamicMethod` IL; strict publication fails at its IL3050 call and explicit CoreCLR publication runs that code through the typed greeting. See the [compatibility guide](17-dependency-compatibility.md). There is no automatic fallback.
+
+## Verification and licenses
+
+```powershell
+dotnet build Spar.slnx --disable-build-servers
+dotnet test --solution Spar.slnx --no-build
+pwsh -NoProfile -File eng/Pack-Local.ps1
+pwsh -NoProfile -File eng/Test-ExternalConsumer.ps1 -VerifyRender
+```
+
+The external suite creates a new isolated directory, verifies its restore graph, runs frontend/backend updates and restart, checks Release exclusion, then executes copied AOT and dependency-driven CoreCLR publications. Review the native captures. CI runs the same package suite without desktop pixel assertions under the existing **Windows managed probe** check; it does not establish IDE or interactive rendering acceptance.
+
+The package baseline contains newly authored Spar code. WebView2 loader provenance and license are unchanged from the [native host guide](09-native-host.md#webview2-source-and-license-provenance); the loader's license and notice follow both host packages into application outputs. The build-only generator redistributes the unmodified `Microsoft.CodeAnalysis.dll` and `Microsoft.CodeAnalysis.CSharp.dll` selected from SDK `10.0.402` (`Roslyn/bincore`), with that installation's `LICENSE.txt` and `ThirdPartyNotices.txt`. These are tooling binaries, not imported upstream source or runtime payload dependencies. Frontend dependencies retain their existing lock file and upstream license obligations; this slice does not claim complete distributable frontend attribution or public-release readiness.

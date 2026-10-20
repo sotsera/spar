@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <SparContractToolProject>$(MSBuildThisFileDirectory)../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj</SparContractToolProject>
+    <SparContractToolProject Condition="'$(SparContractTool)' == ''">$(MSBuildThisFileDirectory)../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj</SparContractToolProject>
   </PropertyGroup>
 
   <Target Name="GenerateSparContract" BeforeTargets="AssignTargetPaths;CoreCompile" DependsOnTargets="ResolveProjectReferences">
@@ -11,9 +11,13 @@
     <MSBuild Projects="$(SparContractToolProject)" Targets="GetTargetPath"
              RemoveProperties="RuntimeIdentifier;PublishAot;SelfContained"
              Properties="Configuration=$(Configuration);TargetFramework=net10.0"
-             Condition="'$(DesignTimeBuild)' != 'true'">
+             Condition="'$(DesignTimeBuild)' != 'true' and '$(SparContractTool)' == ''">
       <Output TaskParameter="TargetOutputs" ItemName="_SparContractTool" />
     </MSBuild>
+
+    <ItemGroup Condition="'$(SparContractTool)' != ''">
+      <_SparContractTool Include="$(SparContractTool)" />
+    </ItemGroup>
 
     <Exec Command="dotnet &quot;@(_SparContractTool)&quot; &quot;$(SparContractFile)&quot; &quot;$(SparGeneratedDirectory)Contract.g.cs&quot; &quot;$(SparGeneratedDirectory)client.js&quot; &quot;$(SparGeneratedDirectory)client.d.ts&quot;"
           Condition="'$(DesignTimeBuild)' != 'true'" />

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+    <DefaultItemExcludes>$(DefaultItemExcludes);frontend/**</DefaultItemExcludes>
+    <SparApplication>true</SparApplication>
+    <SparFrontendDirectory>$(MSBuildProjectDirectory)/frontend</SparFrontendDirectory>
+    <SparContractProject>../contracts/Spar.NativeSample.Contracts.csproj</SparContractProject>
+    <!-- SDK restore must see these before package targets are available on the first build. -->
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <PublishAot Condition="'$(Configuration)' == 'Release' and ('$(SparDeliveryMode)' != 'CoreCLR' or '$(SparStrictAot)' == 'true')">true</PublishAot>
+    <SelfContained Condition="'$(Configuration)' == 'Release'">true</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sotsera.Spar.Build" PrivateAssets="all" />
+    <PackageReference Include="Sotsera.Spar.Windows" Condition="'$(Configuration)' != 'Debug'" />
+    <PackageReference Include="Sotsera.Spar.Development" Condition="'$(Configuration)' == 'Debug'" PrivateAssets="all" />
+    <ProjectReference Include="$(SparContractProject)" Condition="'$(DotNetWatchBuild)' != 'true'"
+                      GlobalPropertiesToRemove="RuntimeIdentifier;PublishAot;SelfContained" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <Compile Remove="Program.Production.cs" />
+    <EmbeddedResource Include="App.html" LogicalName="Spar.Sample.App.html" />
+    <EmbeddedResource Include="App.js" LogicalName="Spar.Sample.App.js" />
+    <EmbeddedResource Include="Probe.js" LogicalName="Spar.Sample.Probe.js" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Debug'">
+    <Compile Remove="Program.cs;Program.Development.cs;SampleDocument.cs" />
+  </ItemGroup>
+</Project>
