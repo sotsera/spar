@@ -34,9 +34,9 @@ Main retains the same selective checks on the actual integrated squash commit. F
 
 ## Full qualification and acceptance responsibilities
 
-Use **Actions → Managed probe → Run workflow**, selecting the exact ref to qualify. Manual dispatch always runs the full programme. Version tags (`v*`) also run full qualification. Toolchain, dependency, workflow and shared-configuration changes select full coverage automatically.
+Use `gh workflow run managed-probe.yml --repo sotsera/spar --ref <ref>` to qualify an exact ref. The **Actions → Managed probe → Run workflow** UI becomes available when the default branch declares manual dispatch. Manual dispatch always runs the full programme. Version tags (`v*`) also run full qualification. Toolchain, dependency, workflow and shared-configuration changes select full coverage automatically.
 
-Before distributing a release, the maintainer must verify a successful full run for the exact release SHA, inspect its receipts, and execute the relevant desktop/editor walkthroughs from the [acceptance matrix](19-milestone-1-acceptance.md). A tag run is qualification, not an automatic package publication. There is currently no release publisher to gate. Manual dispatch becomes available after this workflow change reaches the default branch.
+Before distributing a release, the maintainer must verify a successful full run for the exact release SHA, inspect its receipts, and execute the relevant desktop/editor walkthroughs from the [acceptance matrix](19-milestone-1-acceptance.md). A tag run is qualification, not an automatic package publication. There is currently no release publisher to gate. CLI dispatch to the feature ref was exercised in the fork before integration; the required upstream PR run remains separate.
 
 CI native tests do not establish reviewed pixels or debugger acceptance. `Test-VSCodeProbe.ps1`, `Test-VSCodeSession.ps1`, `Test-VSCodeDevelopment.ps1`, their external-consumer lane, `-VerifyRender` image review, and the manual Visual Studio walkthrough remain available through their existing guides. They were not in the old hosted workflow and are not silently promoted to hosted acceptance. Clean-machine verification remains deferred.
 
