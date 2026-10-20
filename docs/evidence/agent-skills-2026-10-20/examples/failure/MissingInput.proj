@@ -1,0 +1,7 @@
+<Project>
+  <Target Name="Build">
+    <WriteLinesToFile File="$(MSBuildThisFileDirectory)build-ran.txt" Lines="executed" Overwrite="true" />
+    <Error Condition="!Exists('$(MSBuildThisFileDirectory)inputs/required.txt')"
+           Text="Required input inputs/required.txt is missing." />
+  </Target>
+</Project>

@@ -2,6 +2,8 @@
 
 Start with [product direction](docs/02-product-direction.md), then the relevant step in [milestone 1](docs/03-milestone-1.md). Use [reference projects and licenses](docs/01-reference-projects.md) when evaluating upstream ideas or reuse. Distinguish confirmed requirements from proposals and unresolved decisions.
 
+Focused repository skills live in `.agents/skills/`; see the [skill guide](docs/20-agent-skills.md) for scope, provenance, and validation. Select them only when the task matches their descriptions. These adaptations supplement this file and the integration guides; they do not authorize extra execution, publication, dependency changes, or acceptance claims.
+
 ## Direction
 
 - Keep the Spar name, `Sotsera.Spar` identity, and existing repository identity. Target Windows only for now.

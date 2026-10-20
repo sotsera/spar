@@ -135,3 +135,7 @@ The likely value is stronger shutdown ordering and failure scenarios, rather tha
 The first implementation should be new, small, and independently verified. Borrowing a design does not require adopting the upstream dependency graph.
 
 The first actual runtime dependency/projection is the official WebView2 native SDK. Its pinned version, BSD-3-Clause license, retained notices, ABI paths, and adaptations are recorded in the [native host provenance](09-native-host.md#webview2-source-and-license-provenance). The SDK license and separately installed browser-runtime distribution terms are distinct.
+
+## Agent workflow guidance
+
+Six repository skills adapt MIT-licensed testing and MSBuild instructions from `dotnet/skills` revision `cbb2bb74cb70e0c5ee49cca10470a92da03d4b25`. The [skill guide](20-agent-skills.md) links exact source paths, hashes, adaptation notes, and the retained copyright/license notice. These are development instructions only; no upstream plugin server, executable, or runtime dependency is imported.

@@ -1,0 +1,86 @@
+[
+  {
+    "id": "one-project-command",
+    "selectedSkills": ["spar-run-tests"],
+    "response": "From the repository root: dotnet test --project tests/Sotsera.Spar.Bridge.Tests --configuration Debug --no-build. The runner binding matches global.json's native Microsoft.Testing.Platform mode and the xUnit v3 project configuration; no VSTest -- separator is needed.",
+    "limitations": "Command only; not executed. Requires existing matching Debug binaries. Missing or stale binaries would be reported rather than silently rebuilt."
+  },
+  {
+    "id": "specific-method",
+    "selectedSkills": ["spar-run-tests"],
+    "response": "Verify the existing build matches the requested source/configuration, then run: dotnet test --project tests/Sotsera.Spar.Bridge.Tests --no-build --filter-method Sotsera.Spar.Bridge.Tests.BridgeTests.RejectionPreventsHandlerEntry. The source confirms this fully qualified method is an xUnit theory, so its data rows are the intended selection. Report actual selected/executed, passed, failed, and skipped counts; zero selection or runner failure is not success.",
+    "limitations": "Simulation only: no command was executed and no test counts are claimed. Preserve the matching build configuration; do not build to repair absent/stale binaries."
+  },
+  {
+    "id": "regression-static",
+    "selectedSkills": ["spar-test-value-evidence"],
+    "response": "Yes, by static prediction. At count=16 the original <=16 condition admits a seventeenth request, contradicting the rejection expectation; the <16 fix rejects it. The rejection and no-handler-entry assertions distinguish the public bounded-admission requirement, provided the fixture exercises the real Admit path and reaches that branch. Record the base/head or patch identity and named test when available. Green CI alone does not establish that this test failed against the original defect.",
+    "limitations": "Static prediction only; no edits, paired execution, or executed defect-detection claim. The prompt supplies no revision identifiers or concrete test implementation."
+  },
+  {
+    "id": "refactor-evidence",
+    "selectedSkills": ["spar-test-value-evidence"],
+    "response": "No. For a behavior-preserving extraction, relevant tests passing before and after are appropriate evidence; a manufactured pre-fix failure is not required. Bind those runs to the base/head and verify that the same meaningful public outcomes and entry points remain covered. Report preservation within that tested scope.",
+    "limitations": "The passing runs are supplied claims, not independently executed or inspected results. No fault injection or edits are proposed."
+  },
+  {
+    "id": "capture-command",
+    "selectedSkills": ["spar-binlog-capture"],
+    "response": "PowerShell, from the repository root:\nNew-Item -ItemType Directory -Path artifacts/binlogs -Force | Out-Null\ndotnet build Spar.slnx --disable-build-servers '-bl:artifacts/binlogs/build-{}.binlog;ProjectImports=None'\nThe quoted switch preserves the semicolon and {} produces a unique log name. Retain the command, exit code, console failure, revision/working-tree identity, and resulting path. Keep raw logs local; ProjectImports=None does not remove sensitive properties or task arguments.",
+    "limitations": "Command only; nothing run or installed. Do not rebuild shared tools while an active native development session owns them."
+  },
+  {
+    "id": "existing-log",
+    "selectedSkills": ["spar-binlog-analysis"],
+    "response": "Use the surviving artifact without requiring the original checkout. With no connected binlog MCP server, create an unused local replay output directory and use the pinned SDK's MSBuild event replay, for example: dotnet msbuild artifacts/agent-skills/examples/failure/failure.binlog -noconlog -fl '-flp:verbosity=diagnostic;logfile=artifacts/agent-skills/replay-unique/full.log' -fl1 '-flp1:errorsonly;logfile=artifacts/agent-skills/replay-unique/errors.log'. Replay reads recorded events; it does not rebuild or execute recorded commands. Search the first causal failure, inspect relevant properties/items, prerequisites, imports, and task arguments, then report the smallest supported repair with evidence references. Keep raw logs local and redact derived findings.",
+    "limitations": "Simulation constraint prevents replay here, so no cause or diagnostic result is claimed. No rebuild, binary-to-text decoding, or installation. If the pinned SDK cannot replay the artifact, report that limitation rather than inventing a cause."
+  },
+  {
+    "id": "target-chain",
+    "selectedSkills": ["spar-msbuild-targets"],
+    "response": "Static review: assigning CompileDependsOn only GenerateBindings can discard existing SDK prerequisites, while a later SDK import may overwrite the assignment. Inspect imports in evaluation order. Prefer a named hook, or extend the existing dependency chain in the correct import location. BeforeTargets=CoreCompile only schedules GenerateBindings when that pipeline reaches CoreCompile; it is not an independently invoked prerequisite and may be too late for outputs consumed earlier. Put the generator's own prerequisites in DependsOnTargets, preserve contract-before-frontend order and design-time exclusions, and propose clean/repeated/changed-input checks when execution is authorized.",
+    "limitations": "No edits or builds. Exact failures depend on the surrounding imports and generated outputs, which the proposed snippet does not supply."
+  },
+  {
+    "id": "generated-resource",
+    "selectedSkills": ["spar-generated-files"],
+    "response": "Static diagnosis: the evaluation-time EmbeddedResource glob cannot see client.js created later during target execution; the previous build's file masks the defect. Generate under IntermediateOutputPath and add client.js to EmbeddedResource during target execution before AssignTargetPaths/resource processing. Add Contract.g.cs to Compile before compilation; a CoreCompile-only hook is insufficient for the shared producer. Track only owned outputs with FileWrites, preserve design-time exclusions and matching contract/client outputs, and ensure item declarations survive incremental skips. Propose clean first-build, repeated-build, changed-input, and owned-clean checks.",
+    "limitations": "Review only, with no edits or execution. This is a static diagnosis from the supplied timing and symptom, not a verified build result."
+  },
+  {
+    "id": "no-build-not-binlog",
+    "selectedSkills": ["spar-run-tests"],
+    "response": "From the repository root: dotnet test --solution Spar.slnx --no-build. This uses native Microsoft.Testing.Platform mode. Do not append /bl or a VSTest -- separator, run a diagnostic build, or start a persistent watcher.",
+    "limitations": "Command not executed. Requires matching existing solution test binaries; the managed tests themselves can launch isolated watcher fixtures."
+  },
+  {
+    "id": "green-not-pixels",
+    "selectedSkills": ["spar-test-value-evidence"],
+    "response": "No. A successful 65-test managed run does not establish the new WebView rendering acceptance. Keep rendering unverified for this PR until its actual native behavior is exercised on the tested revision with the applicable integration driver using -VerifyRender and the resulting captures are visually reviewed. For the native-host lane this is eng/Test-NativeHost.ps1 against the built/copied executable; select the matching development or production guide if that is the changed surface. Record revision, mode, commands, observed results, and image evidence.",
+    "limitations": "Evidence review only; no execution or rendering claim. Historical rendering evidence for other revisions does not prove this PR's new behavior."
+  },
+  {
+    "id": "frontend-style",
+    "selectedSkills": [],
+    "response": "Inspect the working-tree diff and change only the button background in samples/Spar.NativeSample/frontend/src/styles.css from var(--accent) to a suitable blue such as #60a5fa. The accent variable is also used by .mark, so changing the button declaration directly keeps the requested scope. Review the resulting diff; a generated-artifact or MSBuild skill is unnecessary.",
+    "limitations": "Simulation only: the CSS was inspected but not edited. No visual verification or test result is claimed."
+  },
+  {
+    "id": "npm-only",
+    "selectedSkills": [],
+    "response": "Vite cannot resolve the relative CSS import from src/App.tsx. Check whether src/missing.css exists with the exact spelling/case, whether the file moved, and whether the import should point elsewhere. Correct the source path or restore the intended CSS file after inspecting the frontend files. This is a frontend module-resolution problem; a .NET build log is not relevant.",
+    "limitations": "Explanation from the supplied error only; no frontend files were changed, packages installed, or commands executed."
+  },
+  {
+    "id": "native-ownership",
+    "selectedSkills": [],
+    "response": "An HWND belongs to its creating thread; DestroyWindow cannot safely serve as finalizer-thread cleanup for a UI-owned window. The finalizer thread also does not own Spar's STA WebView/COM lifetime. Use explicit shutdown marshalled to the owning UI thread, keep callbacks and pending bridge work alive until they actually finish, then release native resources there. SparWindow.Finish already waits for pending native callbacks and bridge work before its release/destroy sequence. A close request or timeout is not proof that cleanup finished.",
+    "limitations": "Read-only explanation; no code changes or native execution. None of the six focused repository skills covers general HWND ownership."
+  },
+  {
+    "id": "clean-machine-deferred",
+    "selectedSkills": [],
+    "response": "Inspect the README and its current diff, locate the spelling error, and make only that correction while preserving existing work. Keep clean-machine verification explicitly deferred and do not initiate machine qualification or update its status to complete. If no unambiguous typo is identifiable, ask for the intended word rather than changing substantive content.",
+    "limitations": "Simulation only: no README edit or clean-machine check was performed. The prompt does not identify the misspelled word."
+  }
+]

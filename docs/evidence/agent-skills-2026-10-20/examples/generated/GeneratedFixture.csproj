@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(FixedInclude)' != 'true'">
+    <Compile Include="$(MSBuildProjectDirectory)/obj/**/Generated.g.cs" />
+  </ItemGroup>
+
+  <Target Name="GenerateCode" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <GeneratedFile>$(IntermediateOutputPath)generated/Generated.g.cs</GeneratedFile>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(IntermediateOutputPath)generated" />
+    <WriteLinesToFile File="$(GeneratedFile)" Overwrite="true" WriteOnlyWhenDifferent="true"
+                      Lines="internal static class Generated { public static int Value =&gt; 42%3B }" />
+
+    <ItemGroup Condition="'$(FixedInclude)' == 'true'">
+      <Compile Include="$(GeneratedFile)" />
+      <FileWrites Include="$(GeneratedFile)" />
+    </ItemGroup>
+  </Target>
+</Project>

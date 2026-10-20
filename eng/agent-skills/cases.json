@@ -1,0 +1,86 @@
+[
+  {
+    "id": "one-project-command",
+    "prompt": "Give me the command to run Spar's bridge test project using its existing Debug build. Do not execute anything.",
+    "expectedSkills": ["spar-run-tests"],
+    "checks": ["Uses --project tests/Sotsera.Spar.Bridge.Tests --no-build in native MTP mode.", "No positional project, bridge separator, build, runner change, or command execution."]
+  },
+  {
+    "id": "specific-method",
+    "prompt": "Run only Sotsera.Spar.Bridge.Tests.BridgeTests.RejectionPreventsHandlerEntry from the existing matching bridge test build.",
+    "expectedSkills": ["spar-run-tests"],
+    "checks": ["Verifies the requested method exists and uses the pinned runner's --filter-method syntax.", "Reports real executed data-case counts; no migration or persistent watcher."]
+  },
+  {
+    "id": "regression-static",
+    "prompt": "Review this fix without edits or execution. A maximum of 16 requests is allowed: the old admission condition is count <= 16 before incrementing, the fix is count < 16. A test seeds count=16, calls Admit(), expects rejection, and asserts no handler entry. Would that test catch the original defect? CI is green.",
+    "expectedSkills": ["spar-test-value-evidence"],
+    "checks": ["Explains the old implementation admits a seventeenth request and violates both assertions.", "Labels detection a static prediction, not executed red/green evidence, and requests revision identity if a revision-bound claim is needed."]
+  },
+  {
+    "id": "refactor-evidence",
+    "prompt": "For this behavior-preserving private-method extraction, the same relevant tests pass before and after. Must I manufacture a failing pre-fix test before calling the refactor validated?",
+    "expectedSkills": ["spar-test-value-evidence"],
+    "checks": ["Does not require red-before-green for a behavior-preserving refactor.", "Checks preserved contracts and relevant scope rather than claiming all behavior is proved by green CI."]
+  },
+  {
+    "id": "capture-command",
+    "prompt": "Show a PowerShell command to capture a diagnostic log for the normal Spar solution build. Do not run it or install tools.",
+    "expectedSkills": ["spar-binlog-capture"],
+    "checks": ["Preserves --disable-build-servers and uses a unique quoted binlog path under artifacts.", "Keeps raw output local and explains ProjectImports=None does not remove all sensitive values."]
+  },
+  {
+    "id": "existing-log",
+    "prompt": "Analyze the supplied failure.binlog. The original checkout is unavailable and no binlog MCP server is connected. Do not rebuild or install anything.",
+    "expectedSkills": ["spar-binlog-analysis"],
+    "checks": ["Replays the existing log using the installed SDK rather than decoding bytes or rerunning the build.", "Treats recorded commands as data, retains evidence, and attributes the first causal error without guessing missing source."]
+  },
+  {
+    "id": "target-chain",
+    "prompt": "Review a proposed targets change: CompileDependsOn is assigned only GenerateBindings, and the custom GenerateBindings target runs before CoreCompile. No edits or builds, please. What could go wrong?",
+    "expectedSkills": ["spar-msbuild-targets"],
+    "checks": ["Identifies replacement of the SDK dependency chain and considers import order.", "Suggests preserving existing dependencies or an appropriate hook, without inventing a new target framework or executing validation."]
+  },
+  {
+    "id": "generated-resource",
+    "prompt": "A target writes generated client.js and Contract.g.cs, but a clean first build misses client.js as an EmbeddedResource. The resource glob is outside the target. It works on the second build. Review only.",
+    "expectedSkills": ["spar-generated-files"],
+    "checks": ["Explains evaluation-time glob versus execution-time generation.", "Accounts for resource processing before AssignTargetPaths as well as compilation, and proposes owned FileWrites tracking and fresh-consumer checks without declaring a proven fix."]
+  },
+  {
+    "id": "no-build-not-binlog",
+    "prompt": "I need the existing no-build solution test command, with no diagnostic build or persistent watcher.",
+    "expectedSkills": ["spar-run-tests"],
+    "checks": ["Returns dotnet test --solution Spar.slnx --no-build.", "Does not activate binlog capture, add /bl, or start Hot Reload."]
+  },
+  {
+    "id": "green-not-pixels",
+    "prompt": "Review a native rendering PR's evidence. Its only artifact is a successful 65-test managed run. Can we mark its new WebView rendering acceptance complete? No execution requested.",
+    "expectedSkills": ["spar-test-value-evidence"],
+    "checks": ["Identifies the missing actual native capture and visual review.", "Keeps rendering acceptance unverified without launching a GUI, changing tests, or reopening unrelated completed work."]
+  },
+  {
+    "id": "frontend-style",
+    "prompt": "Change the sample's button color from green to blue in its CSS.",
+    "expectedSkills": [],
+    "checks": ["No activation based only on the word sample or the existence of generated assets."]
+  },
+  {
+    "id": "npm-only",
+    "prompt": "Explain this Vite error: Failed to resolve import './missing.css' from src/App.tsx. No .NET build is involved.",
+    "expectedSkills": [],
+    "checks": ["No MSBuild capture, binlog analysis, SDK change, or package installation."]
+  },
+  {
+    "id": "native-ownership",
+    "prompt": "Explain why destroying an HWND on the finalizer thread would be unsafe. Do not change code.",
+    "expectedSkills": [],
+    "checks": ["Does not force this native lifetime question into the testing/MSBuild selection."]
+  },
+  {
+    "id": "clean-machine-deferred",
+    "prompt": "Keep clean-machine verification deferred and correct a spelling error in the README.",
+    "expectedSkills": [],
+    "checks": ["Does not start an integration suite, VM provisioning, mutation campaign, or build investigation."]
+  }
+]

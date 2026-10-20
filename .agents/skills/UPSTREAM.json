@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "repository": "https://github.com/dotnet/skills",
+  "revision": "cbb2bb74cb70e0c5ee49cca10470a92da03d4b25",
+  "hashEncoding": "UTF-8, CRLF normalized to LF, no BOM",
+  "license": {
+    "sourcePath": "LICENSE",
+    "localPath": "dotnet-skills-LICENSE.txt",
+    "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310"
+  },
+  "skills": [
+    {
+      "name": "spar-run-tests",
+      "sourcePath": "plugins/dotnet-test/skills/run-tests/SKILL.md",
+      "sourceSha256": "7b9698bb5c1f172ca35695dc3b614957c2cb8badf7b230a4b8118d173650fe2b",
+      "adaptation": "Reduced to Spar commands; repository overlay; no framework migration or persistent watcher."
+    },
+    {
+      "name": "spar-test-value-evidence",
+      "sourcePath": "plugins/dotnet-test/skills/test-value-evidence/SKILL.md",
+      "sourceSha256": "25199cc2c189957da34fd9fa417c582a0033d75cfb1772b91caac7d4a135b634",
+      "adaptation": "Condensed change-scoped evidence workflow; preserves static/executed distinction and native lifetime/package boundaries."
+    },
+    {
+      "name": "spar-binlog-capture",
+      "sourcePath": "plugins/dotnet-msbuild/skills/binlog-generation/SKILL.md",
+      "sourceSha256": "dce87c222945463e43c9fd03fbd6b2496e6ba5e91ee9127df5c0e82361f9ba87",
+      "adaptation": "On-demand capture with private local artifacts; removes universal binlog mandate, especially for no-build MTP."
+    },
+    {
+      "name": "spar-binlog-analysis",
+      "sourcePath": "plugins/dotnet-msbuild/skills/binlog-failure-analysis/SKILL.md",
+      "sourceSha256": "fad9baa1a00f1d2af4599118cd061260ee7c60b1ca7969e01e9110835d5b6ecd",
+      "adaptation": "Existing artifact first; SDK replay fallback; no bundled MCP installation; private capabilities stay local."
+    },
+    {
+      "name": "spar-msbuild-targets",
+      "sourcePath": "plugins/dotnet-msbuild/skills/target-authoring/SKILL.md",
+      "sourceSha256": "e39b9ad0bfe65746c8110f971847a1dd8988feccc10b8ad19674ab544926bcc0",
+      "adaptation": "Condensed hook/return/cleanup guidance; no forced abstraction; preserves deliberate frontend rebuilding."
+    },
+    {
+      "name": "spar-generated-files",
+      "sourcePath": "plugins/dotnet-msbuild/skills/including-generated-files/SKILL.md",
+      "sourceSha256": "8216b42f0b12361abc85ad4c439a4c90f728ceccaf7ff184898ff9a99b2336b9",
+      "adaptation": "Condensed generated-item guidance; adds Spar mixed resource/source timing, clean ownership, and external consumer verification."
+    }
+  ]
+}

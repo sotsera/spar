@@ -1,0 +1,41 @@
+#requires -Version 7.4
+$ErrorActionPreference = 'Stop'
+$exampleRoot = Join-Path $PSScriptRoot 'examples'
+$failure = Join-Path $exampleRoot 'failure'
+$generated = Join-Path $exampleRoot 'generated'
+$results = [Collections.Generic.List[object]]::new()
+
+dotnet msbuild "$failure/MissingInput.proj" '-bl:artifacts/agent-skills/examples/failure/failure.binlog;ProjectImports=None' *> "$failure/capture.log"
+$code = $LASTEXITCODE
+if ($code -eq 0 -or !(Get-Content "$failure/capture.log" -Raw).Contains('Required input inputs/required.txt is missing.')) {
+  throw 'Expected missing-input capture failed.'
+}
+$marker = Join-Path $failure 'build-ran.txt'
+if (!(Test-Path -LiteralPath $marker)) { throw 'Original target did not execute.' }
+Remove-Item -LiteralPath $marker
+New-Item -ItemType Directory -Path "$failure/replay" -Force | Out-Null
+dotnet msbuild "$failure/failure.binlog" -noconlog -fl "-flp:verbosity=diagnostic;logfile=$failure/replay/full.log" -fl1 "-flp1:errorsonly;logfile=$failure/replay/errors.log"
+$replayCode = $LASTEXITCODE
+if (!(Get-Content "$failure/replay/errors.log" -Raw).Contains('Required input inputs/required.txt is missing.')) {
+  throw 'Replay did not retain the causal diagnostic.'
+}
+if (Test-Path -LiteralPath $marker) { throw 'Replay unexpectedly executed a build task.' }
+$results.Add(@{ case='existing-log'; captureExit=$code; replayExit=$replayCode; diagnosticRetained=$true; buildTaskReexecuted=$false })
+
+$project = Join-Path $generated 'GeneratedFixture.csproj'
+dotnet build $project --disable-build-servers *> "$generated/first-build.log"
+$first = $LASTEXITCODE
+if ($first -eq 0 -or !(Get-Content "$generated/first-build.log" -Raw).Contains('CS0103')) { throw 'Cold build did not expose the missing generated item.' }
+dotnet build $project --disable-build-servers *> "$generated/second-build.log"
+if ($LASTEXITCODE) { throw 'Second build did not demonstrate the stale-file masking effect.' }
+$generatedSource = Join-Path $generated 'obj/Debug/net10.0/generated/Generated.g.cs'
+Remove-Item -LiteralPath $generatedSource
+dotnet build $project --disable-build-servers -p:FixedInclude=true *> "$generated/fixed-build.log"
+if ($LASTEXITCODE) { throw 'Corrected clean-first generation failed.' }
+$output = & dotnet "$generated/bin/Debug/net10.0/GeneratedFixture.dll"
+if ($LASTEXITCODE -or $output -ne '42') { throw 'Corrected executable did not use the generated value.' }
+dotnet clean $project -p:FixedInclude=true *> "$generated/clean.log"
+if ($LASTEXITCODE -or (Test-Path -LiteralPath $generatedSource)) { throw 'Owned generated file was not cleaned.' }
+$results.Add(@{ case='generated-file-compile-and-clean'; brokenColdExit=$first; brokenSecondExit=0; fixedColdExit=0; executableOutput=$output; generatedFileCleaned=$true })
+$results.ToArray() | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $PSScriptRoot 'examples.json')
+Write-Output 'Binlog replay and generated-file build/clean examples passed.'
