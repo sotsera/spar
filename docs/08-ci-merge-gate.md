@@ -1,5 +1,7 @@
 # Upstream CI merge gate
 
+**Historical enforcement proof.** The recorded API responses establish the policy at that revision. Current contributor obligations are in [PR workflow](24-contributing.md#pull-requests-and-upstream-history), and check selection/retention is in [CI policy](21-continuous-integration.md).
+
 Date: 2026-10-18. Upstream protection configured, failed-check blocking observed, and source recovery verified in [PR #15](https://github.com/sotsera/spar/pull/15). The PR's latest head must also pass the required check before merging.
 
 ## Enforced policy
@@ -23,6 +25,6 @@ The [structured receipt](evidence/ci-merge-gate-2026-10-18.json) preserves the r
 
 ## Ongoing maintenance
 
-Keep the job name stable. Before renaming or replacing a required check, prove its successor on upstream PRs and update the ruleset deliberately. Add the AOT and external-consumer checks when those implementations exist. Do not make unavailable desktop scenarios look successful or introduce a bypass to merge a failed check.
+Keep the job name stable. Before renaming or replacing a required check, prove its successor on upstream PRs and update the ruleset deliberately. AOT and external-consumer checks are now included in the [CI coverage map](21-continuous-integration.md#coverage-map). Do not make unavailable desktop scenarios look successful or introduce a bypass to merge a failed check.
 
 If a required PR check fails, fix the feature branch and let CI rerun. If the additional `main` run fails, investigate promptly and submit a fix or revert through a PR; do not bypass protection or treat the post-merge run as the first validation.

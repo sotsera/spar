@@ -4,7 +4,7 @@ This integration guide exercises the explicit acceptance application under `fixt
 
 Current publishing behavior: the inline probe below is a separate `-p:SparNativeProbe=true` Release test build. Default Release publishes the React SPA. The driver also exercises a packaged-resource bridge fixture; see [production delivery](16-production-delivery.md).
 
-Date: 2026-10-18. M1.3 implementation proof, Windows/x64, .NET SDK 10.0.402. This extends the [native host](09-native-host.md). The later [M1.4 development session](11-development-session.md) imports these generated bindings into React/Vite and adds explicit loopback/client authority. Backend debugger integration and packaged external consumers remain later work.
+This guide owns the contract surface, native authority and cancellation/retirement behavior. [Development sessions](11-development-session.md) use the generated bindings with loopback authority; [editor](13-vscode-development.md) and [package](18-package-consumer.md) guides cover their integration.
 
 ## Consumer contract
 
@@ -102,6 +102,8 @@ Deterministic xUnit tests cover pre-handler rejection, repeated-ID mutation prot
 The existing **Windows managed probe** required CI job now includes these checks plus the original watcher/native lifecycle checks and copied strict-AOT execution. Interactive screenshots, native debugger integration, full production assets, no-SDK machine qualification, and external NuGet consumption remain separate evidence requirements. No integrated A01–A18 scenario is marked complete by this slice.
 
 ## Recorded local evidence
+
+Historical execution, 2026-10-18. These results describe the source and tooling in the linked record.
 
 CoreCLR and copied NativeAOT passed both bridge scenarios with actual success pixels and no forced cleanup on Windows build 26220.9739 / WebView2 155.0.4283.62. The original seven native lifecycle scenarios were also rechecked. See the [retained receipt](evidence/typed-bridge-2026-10-18/receipt.json), generated examples, and CoreCLR/AOT captures in that directory. The copied AOT payload has the native executable, loader, and two notices; it contains no contract tool, Roslyn, managed app DLL, or runtime configuration. These are developer-machine observations, not clean-machine certification or performance benchmarks.
 

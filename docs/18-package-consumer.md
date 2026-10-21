@@ -6,7 +6,7 @@ The default scaffold now uses the ordinary [minimal application](23-minimal-appl
 
 ## Prerequisites and a fresh application
 
-Use Windows x64, SDK `10.0.402`, Node `24.21.0` / npm `11.19.0`, PowerShell 7.4 or newer, installed WebView2 Runtime, and the Visual Studio C++ native build tools required by the [production guide](16-production-delivery.md). The generated `global.json` retains the selected SDK. Internet access is needed for ordinary SDK/runtime NuGet dependencies and the frontend lock file; Spar itself restores from the copied local feed.
+Use the [selected prerequisites](23-minimal-application.md#prerequisites), including native build tools for publication. The generated `global.json` retains the selected SDK. Internet access is needed for ordinary SDK/runtime NuGet dependencies and the frontend lock file; Spar itself restores from the copied local feed.
 
 From the framework checkout:
 

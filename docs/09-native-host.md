@@ -4,9 +4,9 @@ This integration guide exercises the explicit acceptance application under `fixt
 
 Current publishing behavior: normal Release now packages the React SPA. The precursor lifecycle driver below uses an explicit `-p:SparNativeProbe=true` Release test build. See [production delivery](16-production-delivery.md) for the shipped application and separate test commands.
 
-Date: 2026-10-18. Scope: M1.2 / [upstream issue #3](https://github.com/sotsera/spar/issues/3).
+This guide owns the native host API, lifetime rules and host-only fixture checks. [Typed contracts](10-typed-bridge.md), [development sessions](11-development-session.md) and [package consumers](18-package-consumer.md) build on this host. See [current status](README.md#status-and-deferred-work) for acceptance scope.
 
-This slice introduces `Sotsera.Spar.Windows` and the ordinary `Spar.NativeSample` consumer. It loads trusted local HTML in one Win32/WebView2 window. There is no application bridge, development coordinator, SPA server, general inspection API, or package/template delivery yet. The integrated A01–A18 scenarios remain open.
+The embedded-document fixture exercises one Win32/WebView2 window. It deliberately differs from the ordinary SPA application; its standalone lifecycle receipts are test instrumentation.
 
 ## Public entry point
 
@@ -42,7 +42,7 @@ To verify the payload outside the checkout, copy the published files (PDBs optio
 - Before creating the controller, Spar reads the actual native profile directory through `ICoreWebView2Environment7`. A mismatch with the leased directory fails startup. Environment/policy redirection must not silently move the browser outside that lease. Runtimes lacking this interface receive an actionable update diagnostic.
 - The missing-runtime test passes an explicit nonexistent runtime directory to WebView2. It verifies an actual native startup failure and an actionable install/runtime diagnostic without uninstalling the developer's runtime.
 
-Admitted bridge operations and cancellation callbacks now remain owned through actual completion before close/reload. Arbitrary tasks started independently by application callbacks remain application-owned. Application-generation/restart coordination comes later. Keyboard/DPI polish, process-failure recovery, runtime installation, multi-window behavior, and clean-machine qualification remain follow-ups.
+Admitted bridge operations and cancellation callbacks now remain owned through actual completion before close/reload. Arbitrary tasks started independently by application callbacks remain application-owned. Application-generation/restart coordination is owned by the [development layer](12-backend-updates.md). Keyboard/DPI polish, process-failure recovery, runtime installation, multi-window behavior, and clean-machine qualification remain follow-ups.
 
 ## Repeatable native checks
 
@@ -84,9 +84,11 @@ The implementation uses the public [.NET COM source generator](https://learn.mic
 
 ## Recorded execution
 
+Historical execution, 2026-10-18. These results describe the source and tooling in the linked record.
+
 CoreCLR and copied NativeAOT desktop executions passed all seven driver scenarios, including a concurrent-profile subcheck in normal startup. The [desktop receipt](evidence/native-host-2026-10-18/receipt.json) records payload/source hashes and process identities; [CoreCLR](evidence/native-host-2026-10-18/coreclr-resized.png) and [AOT](evidence/native-host-2026-10-18/aot-resized.png) captures show the resized page. All four retained captures were visually inspected.
 
-The final no-symbol AOT payload contains the native executable, loader, and two notice files; no managed application DLL or runtime configuration is needed. Browser runtime/profile storage is additional. This is a single execution baseline, not a performance benchmark or clean-machine/no-.NET certification. The full milestone remains incomplete.
+The final no-symbol AOT payload contains the native executable, loader, and two notice files; no managed application DLL or runtime configuration is needed. Browser runtime/profile storage is additional. This is a single execution baseline, not a performance benchmark or clean-machine/no-.NET certification. This host-only run did not establish integrated milestone completion; see the later [acceptance matrix](19-milestone-1-acceptance.md).
 
 Earlier test-driver iterations exposed a PowerShell 5 process-API mismatch and a nonexistent `[nint]` PowerShell alias; those failed attempts were retained under ignored `artifacts/native/` and did not count as passes. Visual inspection then caught a stale browser frame immediately after resizing; the final check waits for the accent to move into the smaller layout before accepting the image. These were harness fixes, not substituted rendering evidence.
 

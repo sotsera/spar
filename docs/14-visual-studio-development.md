@@ -8,7 +8,7 @@ The [external package-consumer walkthrough](evidence/milestone-acceptance-2026-1
 
 ## Setup
 
-Use the repository's SDK `10.0.402`, Node `24.21.0` / npm `11.19.0`, and installed WebView2 Runtime. The native pass used Visual Studio Community 2026 stable (installed `devenv.exe` version `18.11.12306.390`, MSBuild `18.11.0-1.26475.11`). Prepare from the repository root:
+Use the [selected prerequisites](23-minimal-application.md#prerequisites). The native pass used Visual Studio Community 2026 stable (installed `devenv.exe` version `18.11.12306.390`, MSBuild `18.11.0-1.26475.11`). Prepare from the repository root:
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
@@ -17,7 +17,7 @@ npm ci --ignore-scripts --include=optional
 Pop-Location
 ```
 
-Open `Spar.slnx`, select `Spar.NativeSample` as the startup project, select **Debug** and the **Spar development** launch profile, then F5. The profile is an ordinary `commandName: Project` profile. Visual Studio builds the application; its debugger owns managed updates. Spar starts the shared coordinator and frontend through `DevelopmentProjectLaunch`, which is referenced only in Debug. No VSIX, second C# compiler, or watcher runs in this lane. The plain **Spar native host** profile remains available for the embedded-document host probe.
+Open `Spar.slnx`, select `Spar.NativeSample` under the **fixtures** folder as the startup project for this acceptance walkthrough (use **samples** for the ordinary app), select **Debug** and the **Spar development** launch profile, then F5. The profile is an ordinary `commandName: Project` profile. Visual Studio builds the application; its debugger owns managed updates. Spar starts the shared coordinator and frontend through `DevelopmentProjectLaunch`, which is referenced only in Debug. No VSIX, second C# compiler, or watcher runs in this lane. The plain **Spar native host** profile remains available for the embedded-document host probe.
 
 Enable Visual Studio's **Hot Reload and Edit and Continue when debugging**. The walkthrough uses explicit **Apply Code Changes** (flame button), so apply-on-save is optional. Keep automatic restart disabled for the acceptance pass. Never choose to launch the last successful build after a failed build. See Microsoft's [project launch profiles](https://github.com/dotnet/project-system/blob/main/docs/launch-profiles.md) and [Hot Reload guide](https://learn.microsoft.com/en-us/visualstudio/debugger/hot-reload).
 

@@ -1,5 +1,7 @@
 # Managed Hot Reload probe
 
+**Historical precursor experiment with reproduction commands.** This console proof is separate from the integrated app. Use the [VS Code guide](13-vscode-development.md) or [Visual Studio guide](14-visual-studio-development.md) for current application debugging, and [current status](README.md#status-and-deferred-work) for issue completion. Then-open statements below describe the original experiment.
+
 Date: 2026-10-18. Scope: the first part of [issue #2](https://github.com/sotsera/spar/issues/2) / M1.1. This console experiment precedes the native host; it does not complete an integrated milestone acceptance scenario.
 
 ## What exists

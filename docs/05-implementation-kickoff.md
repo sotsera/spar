@@ -1,6 +1,6 @@
 # Implementation kickoff
 
-Date: 2026-10-19. Status: the [managed probe](07-managed-probe.md) records backend editing experiments; the [development session](11-development-session.md) now pins and exercises the React/Vite baseline. This document preserves the initial kickoff sequence; the milestone and individual guides record current delivery status.
+**Historical kickoff, 2026-10-19.** This records initial experiments, decisions and then-open work. Use the [minimal application prerequisites](23-minimal-application.md#prerequisites) and [current documentation](README.md) for setup; this sequence is not an outstanding implementation plan.
 
 Read with [product direction](02-product-direction.md), [milestone 1](03-milestone-1.md), and the [upstream issue breakdown](04-milestone-1-issues.md). This document breaks down the first engineering decisions; it does not replace A01–A18 or claim they pass.
 

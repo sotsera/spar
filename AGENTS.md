@@ -1,106 +1,34 @@
 # Working on Spar
 
-Start with [product direction](docs/02-product-direction.md), then the relevant step in [milestone 1](docs/03-milestone-1.md). Use [reference projects and licenses](docs/01-reference-projects.md) when evaluating upstream ideas or reuse. Distinguish confirmed requirements from proposals and unresolved decisions.
+Read [product direction](docs/02-product-direction.md), then the relevant current guide in the
+[documentation map](docs/README.md). Follow [contributor policy](docs/24-contributing.md) for validation,
+C#/MSBuild style, test/dependency versions, GitHub identity, branches and PRs. Those linked rules apply
+to work in this repository; this entry point does not replace them. Milestone plans and evidence are historical.
 
-Focused repository skills live in `.agents/skills/`; see the [skill guide](docs/20-agent-skills.md) for scope, provenance, and validation. Select them only when the task matches their descriptions. These adaptations supplement this file and the integration guides; they do not authorize extra execution, publication, dependency changes, or acceptance claims.
+## Essential constraints
 
-## Direction
+- Keep Spar, `Sotsera.Spar`, repository identity and the Windows-only scope. Previous Spar is reference evidence,
+  not a source/build dependency; do not inherit its toolchain or completion claims.
+- Prioritize framework-native SPA HMR, supported backend Hot Reload and coordinated restart, usable by editors
+  and AI tools. Prioritize VS Code while preserving Visual Studio. One mechanism owns backend Hot Reload per session.
+- Use CoreCLR for development and NativeAOT by default for production. Dependency-driven CoreCLR selection
+  needs reproducible attribution; unrelated build failures and framework AOT regressions remain fatal.
+- Use the smallest integrated change, ordinary .NET projects and public APIs. Keep the SPA framework-neutral
+  and build, development and inspection tooling outside the production runtime.
+- Preserve explicit permissions, native document authority, contract matching, bounded work and native ownership.
+  Cancellation or timeout does not establish execution or cleanup completion. Never replay backend mutations automatically.
+- Preserve unrelated working-tree changes. Do not incidentally alter sibling checkouts or remotes. Do not discard
+  unfinished branches. Never recursively delete fixture junctions or rebuild shared tools while suites own processes.
+- Follow the [validation map](docs/24-contributing.md#prepare-and-choose-checks). Actual native/editor/AOT behavior
+  needs actual integration evidence. Record skipped/unavailable checks honestly; historical results do not verify a new change.
+- Use `sotsera/spar` for issues and PR targets, `ghidello/spar` for development branches. Identify the target and
+  run `gh auth status` before GitHub writes; ask before switching an incorrect account. Always request approval
+  before publishing issues. Update existing issue checklists/evidence with implementation PRs and reconcile after merge.
+- Start focused branches from latest upstream `main`; preserve changes, sync fork/local `main` after squash merge
+  and retire finished branches. Never push directly to upstream `main` or bypass its required check.
+- Follow the [PR and squash-message rules](docs/24-contributing.md#pull-requests-and-upstream-history).
+  Use qualified `Refs` for partial work and `Fixes` only for completed scope.
 
-- Keep the Spar name, `Sotsera.Spar` identity, and existing repository identity. Target Windows only for now.
-- Write the implementation afresh. Previous Spar is evidence and scenario reference, not a source/build dependency. Do not inherit its toolchain pins or completion claims.
-- Prioritize the development loop: framework-native SPA HMR, supported backend Hot Reload, and coordinated restart when needed.
-- Use CoreCLR during development and NativeAOT by default for production. Dependency-driven CoreCLR compatibility must be explained and reproducible; unrelated build failures or framework AOT regressions must not silently trigger fallback.
-- Make shared development controls usable by AI tools and editors. Prioritize VS Code while preserving a useful Visual Studio workflow. One mechanism owns backend Hot Reload per session.
-
-## Implementation and verification
-
-- Build the smallest integrated milestone slice. Use ordinary .NET projects, public consumer APIs, and generated contract glue. Add abstractions and dependencies only for concrete needs.
-- Keep build, inspection, and development tools outside the production runtime. Keep the SPA framework-neutral.
-- Preserve explicit permissions, native document authority, contract matching, bounded work, and native ownership. Cancellation or timeout does not prove execution or cleanup ended. Never replay backend mutations automatically.
-- Confirm the working-tree state and preserve unrelated changes. Keep changes within the requested scope; do not alter sibling checkouts or repository remotes incidentally.
-- Pin and verify tooling during milestone kickoff. Build with `dotnet build Spar.slnx --disable-build-servers`, then run `dotnet test --solution Spar.slnx --no-build`. The tests launch real watcher processes and edit isolated fixtures. See [the managed probe](docs/07-managed-probe.md) for editor verification; these commands do not verify native rendering or AOT.
-- Run checks appropriate to the change. Native rendering, debugger Hot Reload, and published AOT behavior require actual integration evidence; mocks and historical results do not establish them.
-- For the native slice, use the [native host guide](docs/09-native-host.md): `eng/Test-NativeHost.ps1` requires PowerShell 7.4 or later and accepts the built/copied executable. Only `-VerifyRender` plus visual inspection supplies desktop rendering evidence; ordinary CI lifecycle checks do not.
-- For contracts, use the [typed bridge guide](docs/10-typed-bridge.md): build before running the TypeScript checks in `eng/bridge-client-tests`; run `eng/Test-Bridge.ps1` against both CoreCLR and a copied AOT executable. Keep build-only generator references private so compiler tooling never ships in the payload.
-- For SPA sessions, use the [development guide](docs/11-development-session.md): build before frontend checks, run `eng/Test-DevelopmentSession.ps1`, and use `-VerifyRender` plus image review for desktop evidence. `eng/Test-VSCodeSession.ps1` proves real task/window ownership, not integrated debugger Hot Reload. Never recursively delete fixture junctions as routine cleanup.
-- For backend updates, use the [watcher guide](docs/12-backend-updates.md): run `eng/Test-BackendUpdates.ps1` and repeat native pixel review with `-VerifyRender`. The SDK/console adapter is pinned deliberately; do not enable SDK auto-restart or replace actual retirement completion with a timeout. `eng/Test-VSCodeSession.ps1 -WatchBackend` verifies watcher task ownership, not C# debugger ownership.
-- For the integrated VS Code debugger, use the [debugger guide](docs/13-vscode-development.md): run `eng/Test-VSCodeDevelopment.ps1 -VerifyRender` and review the native capture. Keep the editor as the sole Hot Reload owner, contract assemblies immutable, and private launch capabilities out of retained public logs. Use Spar's coordinated restart command; debugger toolbar restart and interactive rude-edit dialogs are not equivalent acceptance evidence.
-- Record observed outcomes and unavailable checks. Keep milestone status and the README accurate; never mark skipped or unexecuted acceptance scenarios complete.
-- For upstream code adaptations, record source revision, paths, changes, and applicable license notices. Design inspiration alone does not require importing upstream code or dependencies.
-
-The [Visual Studio project-launch guide](docs/14-visual-studio-development.md) distinguishes automated bootstrap ownership from actual IDE acceptance. Run `eng/Test-ProjectLaunch.ps1` for lifecycle changes; only an executed Visual Studio walkthrough establishes A13. Project launch ends the session for restart-required edits and relies on an IDE rebuild before fresh F5.
-
-For structured inspection, use the [inspection guide](docs/15-development-inspection.md): run `eng/Test-DevelopmentInspection.ps1` against the actual WebView and review its PNGs. Verify Release exclusion with `eng/Test-InspectionBoundary.ps1` after building Release. Preserve target identity and unfinished-work ownership; click completion does not establish asynchronous backend completion.
-
-For production, use the [delivery guide](docs/16-production-delivery.md): normal Release publishing builds the SPA. Run `eng/Test-ProductionBoundary.ps1` before any separate probe build and `eng/Test-Production.ps1 -VerifyRender`, then review the captures. The old native/bridge drivers require an explicit `-p:SparNativeProbe=true` AOT test build in a separate output directory. Do not rebuild shared tool outputs while native development suites own running processes.
-
-For dependency compatibility, use the [compatibility guide](docs/17-dependency-compatibility.md): run `eng/Test-Compatibility.ps1 -VerifyRender` and review both copied-mode captures. Keep attribution explicit, strict AOT overridable from CI, and unrelated failures fatal. The driver copies isolated sources and retains first-failure evidence; it does not alter or clean the primary projects.
-
-For external consumers, use the [package guide](docs/18-package-consumer.md): pack with `eng/Pack-Local.ps1`, then run `eng/Test-ExternalConsumer.ps1 -VerifyRender` and review the captures. Use a fresh directory outside the framework checkout and an isolated feed/cache. `eng/Test-VSCodeDevelopment.ps1 -ConsumerDirectory <fresh-consumer> -VerifyRender` exercises the actual package debugger lane; the external Visual Studio walkthrough remains a separate acceptance requirement. Never infer package IDE acceptance from earlier source-project evidence.
-
-## C# readability and lifetime rules
-
-- Prefer clear statements, named intermediate values, and small methods over compressed expressions. Use LINQ when it describes one coherent transformation clearly.
-- Use fluent chains for one coherent configuration, with one call per line when wrapping. Separate unrelated steps.
-- Use `var` for local variables wherever C# can infer the intended type. Use explicit types only when inference is unavailable or would change the intended semantics.
-- Use braces, one statement/declaration per line, and blank lines between logical steps. Aim around 120 characters without mechanically worsening readability.
-- Use expression bodies only for trivial accessors or forwarding members. Keep simple expression callbacks inline and multi-step callbacks as blocks or named methods.
-- Use `_camelCase` for private instance and static fields, including readonly fields; constants use `PascalCase`. Types/members use normal C# PascalCase and parameters/locals camelCase.
-- Group members consistently: constants, static fields, instance fields, properties/indexers/events, constructors, public/protected/internal/private methods, nested types. Never reorder fields for style when declaration order affects initialization, memory layout, or an interop/ABI contract.
-- Make ownership and disposal explicit for native handles, COM objects, subscriptions, and asynchronous operations. Keep resources alive until their actual use ends, including after cancellation or timeout.
-- Apply style rules to authored code; change generators when generated output needs improvement, and preserve upstream formatting in vendored code.
-
-## MSBuild XML readability
-
-- In `.props`, `.targets`, and `.csproj` files, separate main sections such as property groups, item groups, imports, and targets with blank lines.
-- Within each parent element, group children by purpose or semantic meaning. Keep framework and compiler settings together, analysis settings together, and package metadata together.
-- Separate distinct groups within a parent with blank lines, while keeping closely related elements adjacent.
-- Preserve evaluation order and conditions when organizing elements; formatting must not change build behavior.
-
-## Testing conventions
-
-- For .NET tests, use xUnit v3 through the `xunit.v3` package, version 4.0.1 or newer. Declare a compatible stable version using the dependency version policy below.
-- Select `Microsoft.Testing.Platform` through `test.runner` in the root `global.json`, alongside the SDK configuration. This runner selection requires the .NET 10 SDK or later.
-- The xUnit 4.x package supplies Microsoft.Testing.Platform v2 integration; `global.json` selects the runner for `dotnet test`. Recheck compatibility when upgrading the SDK or test packages.
-- Use AwesomeAssertions for .NET test assertions, with an explicit compatible stable package version.
-- Keep test dependencies outside shipping runtime packages. SPA and editor automation may use tooling appropriate to their environment; the .NET test conventions do not replace native integration or published AOT checks.
-
-## Dependency versions
-
-- Declare explicit stable versions for direct NuGet dependencies centrally in `Directory.Packages.props` when scaffolding the solution. Avoid floating versions such as `4.*`.
-- Upgrade dependencies deliberately and run checks relevant to the change, including AOT or development-loop checks when affected. Explicit versions establish a tested baseline; they do not prohibit upgrades.
-- Distinguish declared versions from a locked dependency graph. A normal NuGet version such as `4.0.2` expresses a minimum requirement; a lock file records the resolved direct and transitive versions. Where a committed lock file is used for repeatable builds, use locked restore in CI and update it as part of dependency changes.
-- For published Spar libraries, allow compatible dependency resolution by consuming applications. Use exact-version constraints or upper bounds only for a demonstrated compatibility requirement; a repository lock file does not constrain consumer restores.
-
-## GitHub identity and issue management
-
-- Use `sotsera/spar` as the canonical repository for issues, milestones, and pull request targets. Use `ghidello/spar` as the development fork. Resolve repository identity explicitly; the local remote named `origin` currently points to the fork.
-- Before any GitHub write operation, identify the target repository.
-- Verify the active GitHub CLI account using `gh auth status`.
-- Do not assume that the active account matches the Git repository.
-- If the account is incorrect, ask for approval before switching.
-- Never create issues, pull requests, or other GitHub resources
-  using an unintended account.
-- Always request approval before publishing issues.
-- With each implementation PR, update the related existing issue's checklist, evidence links, and remaining work.
-  After merge, reconcile the milestone tracker with closed issues. Use `Refs` for partial deliveries and `Fixes` only
-  for completed issue scope; never infer integrated acceptance from a precursor probe.
-
-## Branches and working directories
-
-- Keep `main` as the long-lived integration branch. Use short-lived, descriptive branches for focused pull requests; do not maintain a permanent `dev`/`develop` branch for the current workflow.
-- Start independent work from the latest upstream `main`, syncing the fork/local baseline as needed. Use a dependent branch only when the dependency is deliberate and documented in the PR.
-- Use names such as `docs/project-foundation`, `feat/2-hot-reload-probe`, `fix/6-restart-race`, or `chore/update-tooling`. Include the upstream issue number when useful. One issue may span several focused branches/PRs.
-- Commit during development as needed. After squash merging, sync the fork/local `main`, retire the finished branch, and start subsequent work on a fresh branch.
-- One checkout is sufficient for sequential work. Use separate Git worktrees when concurrent tasks need isolated files, each on its own branch. Coordinate shared tooling, ports, and application profiles when running multiple development sessions.
-- Preserve uncommitted and staged work when switching or renaming branches. Do not discard changes or delete unfinished branches as routine cleanup.
-
-## Pull requests and upstream history
-
-- Make changes on feature branches in the development fork and submit pull requests to `sotsera/spar` targeting `main`. Never push changes directly to upstream `main` or bypass its protection rules.
-- Merge accepted pull requests using squash merge. Keep each pull request focused so its resulting commit represents one coherent change.
-- Prefer **PR title + description** as the default squash commit message. Keep relevant implementation/commit details and validation in the PR description so the final commit is understandable without the branch's intermediate history.
-- Use a descriptive PR title and explain the problem, resulting behavior, relevant implementation decisions, validation, and known limitations in the PR description. Include useful commit details, but remove temporary/WIP history from the final summary.
-- Before merging, review the final squash commit title and body. The title should describe the final change; the body should retain the useful PR description, relevant commit details, validation, and issue references. GitHub's default message format may omit the PR description and must not be assumed to include it.
-- Use qualified upstream issue references, such as `Fixes sotsera/spar#2`, when closing a completed implementation issue. Do not close the milestone tracking issue until its integrated acceptance criteria have evidence.
-- Repository guidance records the workflow; GitHub branch rules enforce it. Upstream `main` requires a pull request and **Windows managed probe** from GitHub Actions, with an up-to-date branch, force-push/deletion protection, and no bypass entries. See the [CI gate proof](docs/08-ci-merge-gate.md). Keep required check names stable and verify replacements before changing the rule; extend coverage through the [milestone checklist](docs/03-milestone-1.md#ci-and-branch-protection-follow-up). Required external review approvals depend on reviewer availability and must not make a sole maintainer unable to merge their own PRs.
+Focused skills live in `.agents/skills/`; use the [skill guide](docs/20-agent-skills.md) for selection and provenance.
+For upstream ideas or reuse, use [reference projects and licenses](docs/01-reference-projects.md).
+Distinguish confirmed requirements, proposals and unresolved decisions.

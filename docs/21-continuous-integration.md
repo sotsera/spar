@@ -45,3 +45,33 @@ CI native tests do not establish reviewed pixels or debugger acceptance. `Test-V
 The job summary and `managed-probe-results` record source/event/range, changed paths, classification reasons, selected groups, and each check's success/failure/skipped outcome. Success artifacts retain compact native/integration/package/publication receipts for 14 days. Failed or cancelled runs retain these results and the previous detailed evidence paths as `managed-probe-diagnostics` for 30 days (logs, source hashes, test results, inspection snapshots/images and isolated failure evidence). Selection and gate reports never include environment dumps or launch credentials. Runner logs remain available under GitHub's repository retention policy.
 
 The [execution evidence](evidence/proportional-ci-2026-10-20/README.md) records actual 25s documentation, 24s skill and 2m29s managed-baseline runs, inspected artifact contents/retention, and upstream required-check failure blocking. Full recovery status belongs to the implementation PR's current check. Evidence upload is not the primary optimization: the pre-change [run 39492172536](https://github.com/sotsera/spar/actions/runs/39492172536) took 19m29s, including backend updates 5m16s, compatibility 3m20s, external consumer 2m26s and inspection 1m44s; upload took 20s. These are individual observations, not performance guarantees.
+
+
+## Evidence retention policy
+
+This section owns evidence retention. Topic guides specify what must be executed; the policy does not
+weaken their acceptance requirements or change the workflow's retention settings.
+
+| Evidence | Where and how long | What to preserve |
+| --- | --- | --- |
+| Routine successful run | CI summary and compact results: 14 days; detailed runner logs follow repository retention | Exact source/event/range, selected checks, outcomes and compact receipts. Do not commit every success log or screenshot. |
+| Failure, cancellation or unavailable check | CI diagnostics/results: 30 days; local ignored artifacts retained for investigation | First failure, diagnostics and the inputs needed to reproduce; distinguish expected negative tests from failures and skipped checks. Link the resolution/rerun without replacing the original outcome. |
+| Durable acceptance or decision | Concise dated record in Git under `docs/evidence/`, retained with repository history | Source revision or hashes, tested tooling/configuration, commands, expected/observed result, actual versus unavailable checks, first-failure explanation, and links to exact run/attempt and supporting files. |
+| Native/editor claims | Minimal reviewed captures/receipts needed to support the durable claim | Identify the review and source binding; a CI lifecycle result or DOM snapshot alone does not establish reviewed pixels or real debugger gestures. |
+| Reproducibility and provenance | Relevant sources, lock files, upstream revision/path/license notices and durable evidence | Keep enough to reproduce the scenario and understand its limits; do not turn a past tested version into an unsupported current compatibility claim. |
+
+Before an expiring artifact becomes the sole support for a durable claim, preserve the minimal relevant
+receipt, reviewed capture or diagnostic excerpt in Git with source/run identity and a content hash where useful.
+A checksum and expired URL identify missing bytes; they do not preserve evidence. If those bytes are already
+unavailable, mark the supporting artifact unavailable and narrow the claim or execute a fresh check. Never
+reconstruct a pass from memory. Keep large routine outputs out of Git; any later evidence migration or pruning
+needs an explicit scope and link-preservation plan. Existing acceptance evidence stays in place in this cleanup.
+
+Record only necessary public diagnostics. Exclude tokens, resolved debugger launch capabilities, environment
+dumps, browser profiles, dependency caches and unrelated local data from new durable records. Inspect retained
+files before committing them. Keep private raw evidence separate and name the omission without exposing it.
+
+Documentation changes require link/command inspection and lightweight validation from the
+[contributor guide](24-contributing.md#prepare-and-choose-checks), not a new native/AOT acceptance run.
+Do not claim that editing instructions re-executed their examples. New runtime, toolchain or packaging changes
+still require the affected integration evidence on their own revision.

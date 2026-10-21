@@ -20,9 +20,42 @@ independent of React and Vite.
 Generate bindings by building the application; do not handwrite dispatchers or edit
 `frontend/src/generated`. The separate contract assembly stays immutable during Hot Reload.
 
+## Prerequisites
+
+Use Windows x64, .NET SDK `10.0.402` (selected by [global.json](../global.json)),
+Node `24.21.0` / npm `11.19.0`, PowerShell 7.4 or newer and installed WebView2 Runtime.
+NativeAOT publication also requires Visual Studio C++ native build tools and the Windows SDK.
+These are the selected baseline, not a supported-machine matrix. See the [native host guide](09-native-host.md)
+for runtime distribution and tested-machine limits. Frontend dependency versions and lock files live with each app.
+
 ## Start, edit and publish
 
-Use the prerequisites and commands in the [README](../README.md). The coordinator builds
+From the checkout root:
+
+```powershell
+dotnet build tools/Spar.Dev --disable-build-servers
+Push-Location samples/Spar.NativeSample/frontend
+npm ci --ignore-scripts --include=optional
+Pop-Location
+./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe samples/Spar.NativeSample/spar.dev.json
+```
+
+Edit `frontend/src/App.tsx`, `frontend/src/styles.css` or the greeting in `SampleBackend.cs`.
+The configured watcher owns backend Hot Reload; Vite owns frontend HMR. Use `restart` for a coordinated
+rebuild/restart, and `stop` or Ctrl+C to end the session. VS Code's **Spar: development session** task
+starts this app with a terminal owner. Stop it before starting an editor-owned session or publishing.
+
+```powershell
+dotnet publish samples/Spar.NativeSample -c Release -o artifacts/minimal/publish --disable-build-servers
+```
+
+Copy the output directory and run `Spar.NativeSample.exe`. The SPA assets are embedded; Node and a frontend
+server are unnecessary. The installed WebView2 Runtime remains required. See [production delivery](16-production-delivery.md)
+for payload/boundary rules and [compatibility](17-dependency-compatibility.md) for an attributable CoreCLR choice.
+
+### Editors
+
+Use the prerequisites and commands above. The coordinator builds
 before launch. A bare Debug executable asks you to use the development entry point; it
 no longer starts the old static bridge probe. `-p:SparNativeProbe=true` belongs only to
 `fixtures/Spar.NativeSample`, where the native/bridge drivers still require it.

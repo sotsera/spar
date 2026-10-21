@@ -1,5 +1,7 @@
 # Backend reload: Reactor, NeoAstra, and Tauri
 
+**Dated research, not operating guidance.** Preserve the reviewed source revisions and license context below. Current update behavior is defined in the [backend guide](12-backend-updates.md); broader proposals remain subject to [product direction](02-product-direction.md).
+
 Reviewed: 2026-10-18. Status: source inspection and proposed Spar adaptations; upstream applications and tests were not executed.
 
 This supplements the [reference comparison](01-reference-projects.md) and [implementation kickoff](05-implementation-kickoff.md). HMR means frontend module replacement here; backend Hot Reload means applying supported managed code edits to an existing process. Page reload and process restart are separate outcomes.

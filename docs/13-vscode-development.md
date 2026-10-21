@@ -1,6 +1,6 @@
 # VS Code development adapter
 
-This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+The repository F5 configuration targets the ordinary `samples/` app. The comprehensive debugger driver uses the instrumented `fixtures/` app by default; `-MinimalApplication` selects the ordinary app. Historical captures retain their original paths.
 
 The local `tools/Spar.VSCode` extension connects ordinary C# Dev Kit debugging to the same coordinator used by the terminal lane. It uses public VS Code configuration providers, debug-session events, adapter trackers, diagnostics, and `startDebugging`/`stopDebugging`. It does not implement a debugger or a Hot Reload compiler.
 
@@ -8,15 +8,15 @@ API references: [VS Code debug configuration providers](https://code.visualstudi
 
 ## Start and operate
 
-Use the pinned SDK and Node versions from the [development guide](11-development-session.md), an interactive Windows desktop with WebView2, VS Code 1.142.0, C# 2.160.4, and C# Dev Kit 3.40.210. This is a local development extension, not a published marketplace package.
+Use the [selected prerequisites](23-minimal-application.md#prerequisites), an interactive Windows desktop with WebView2, VS Code 1.142.0, C# 2.160.4, and C# Dev Kit 3.40.210. This is a local development extension, not a published marketplace package.
 
-Build `Spar.slnx` and install the sample frontend dependencies as described in the README. Open a development-extension window from the repository root:
+Build `Spar.slnx` and install the sample frontend dependencies as described in the [minimal application guide](23-minimal-application.md#start-edit-and-publish). Open a development-extension window from the repository root:
 
 ```powershell
 code --new-window --extensionDevelopmentPath "$PWD/tools/Spar.VSCode" "$PWD"
 ```
 
-Enable C# Hot Reload and Hot Reload on Save in **user** settings, as in the [managed debugger guide](07-managed-probe.md). Dev Kit declares these settings at machine scope; workspace settings do not enable them. Select **Spar: native development (local adapter)** and press F5. Set a breakpoint in `SampleBackend.GreetAsync`, continue, and edit its greeting or the frontend CSS. The application must report matching typed readiness; a successful debugger launch alone is insufficient.
+Enable `csharp.experimental.debug.hotReload` and `csharp.debug.hotReloadOnSave` in **user** settings. Dev Kit declares these settings at machine scope; workspace settings do not enable them. Select **Spar: native development (local adapter)** and press F5. Set a breakpoint in `SampleBackend.GreetAsync`, continue, and edit its greeting or the frontend CSS. The application must report matching typed readiness; a successful debugger launch alone is insufficient.
 
 The adapter explicitly selects debugger ownership even though the shared sample configuration defaults to terminal watch mode. It starts no `dotnet watch` process. Dev Kit supplies patches; the existing metadata callback tells Spar to refresh frontend read data. Mutations are never replayed. Spar readiness is not a guarantee that Dev Kit has finished initializing Hot Reload; allow the editor to settle before the first save.
 
@@ -50,4 +50,4 @@ The test copies source/contracts/frontend into an isolated fixture and launches 
 
 `-VerifyRender` requires accent pixels from the actual native window and a retained BMP for visual review. Without it, the receipt explicitly says rendering was not exercised. A two-second settling interval after initial readiness and the CSS edit avoids saving immediately into Dev Kit initialization; this is a harness interval, not a public Hot Reload-ready signal. Failed attempts remain under `artifacts/vscode-development` and must not be counted as passing evidence.
 
-The required CI job continues to cover the managed, terminal watcher, native, and strict AOT lanes. The installed interactive debugger lane is local evidence, not a CI check. Visual Studio integration, broader project layouts, normal interactive rude-edit dialogs, and the remaining shared AI inspection surface are separate work. See the [milestone](03-milestone-1.md) for remaining acceptance.
+Hosted coverage is defined by the [CI policy](21-continuous-integration.md); the installed interactive debugger lane remains separate local evidence. [Visual Studio](14-visual-studio-development.md) and [inspection](15-development-inspection.md) have their own procedures. Broader project layouts and interactive rude-edit dialogs are not certified by this harness. See [current status](README.md#status-and-deferred-work) for qualification limits.

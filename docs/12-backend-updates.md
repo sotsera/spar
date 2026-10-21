@@ -2,7 +2,7 @@
 
 This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
 
-Date: 2026-10-19. M1.5 terminal/AI watcher lane, including explicit startup/dependency input policy and selected full-build activation. This extends the [owned SPA session](11-development-session.md) and uses the same native consumer. Debugger-owned lanes remain #8/#9 work.
+This guide owns the terminal/AI watcher lane, startup/dependency input policy and full-build activation. [VS Code](13-vscode-development.md) and [Visual Studio](14-visual-studio-development.md) use their editor as the sole Hot Reload owner instead.
 
 ## Run and edit
 
@@ -13,7 +13,7 @@ dotnet build tools/Spar.Dev --disable-build-servers
 ./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe fixtures/Spar.NativeSample/spar.dev.json
 ```
 
-Install frontend dependencies as described in the [SPA guide](11-development-session.md#start-and-edit). VS Code's development task uses this configuration too. It owns a watcher session; it does not attach the C# debugger. Never attach a second update engine to that application.
+Install frontend dependencies as described in the [SPA guide](11-development-session.md#start-and-edit). VS Code's development task targets the ordinary `samples/` app with the same watcher policy; it does not attach the C# debugger. Never attach a second update engine to that application.
 
 Edit the greeting expression in `SampleBackend.GreetAsync`. .NET applies a supported patch; a runtime notification reaches the SPA, which calls the read-only greeting operation again. The window, document, local counter/text, backend counter, and application process remain. CSS/component HMR still belongs to Vite/React. The sample excludes `frontend/**` from .NET's default items so frontend changes do not drive backend rebuilds.
 
@@ -73,7 +73,7 @@ The backend driver copies the ordinary consumer and frontend into an isolated la
 
 The 12-second limit exists only in the isolated test consumer; the repository sample retains its normal delay bound. Pixel verification plus review of the captured native window establishes visible behavior. The CI lane runs these same actual watcher/WebView operations without claiming desktop pixel evidence. The editor driver verifies task/window ownership with watch mode enabled; it does not establish debugger F5, breakpoints, or debugger restart.
 
-See [retained evidence](evidence/backend-updates-2026-10-19/README.md) for commands, snapshots, hashes, process sequencing, and exact scope. The [restart-policy evidence](evidence/restart-policy-2026-10-19/README.md) records the explicit input policy and deterministic full-build races that extend that first delivery. Installed debugger lanes remain open. Source selection covers the declared inputs; it does not infer arbitrary MSBuild dependencies or make in-process patches transactional. Implementation-update callbacks remain eventual notifications; this slice does not claim transactional rollback of arbitrary .NET patches.
+See [retained evidence](evidence/backend-updates-2026-10-19/README.md) for commands, snapshots, hashes, process sequencing, and exact scope. The [restart-policy evidence](evidence/restart-policy-2026-10-19/README.md) records the explicit input policy and deterministic full-build races that extend that first delivery. Actual debugger procedures and their separate evidence are in the [VS Code](13-vscode-development.md) and [Visual Studio](14-visual-studio-development.md) guides. Source selection covers the declared inputs; it does not infer arbitrary MSBuild dependencies or make in-process patches transactional. Implementation-update callbacks remain eventual notifications; this slice does not claim transactional rollback of arbitrary .NET patches.
 
 ## Source review and first failures
 

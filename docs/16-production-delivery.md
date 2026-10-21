@@ -2,7 +2,7 @@
 
 This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
 
-Issue [#10](https://github.com/sotsera/spar/issues/10), milestone M1.7 / A14. The ordinary native sample now publishes the same React application used in development, with generated bindings and local assets embedded in the NativeAOT executable. [Execution evidence](evidence/production-delivery-2026-10-19/README.md) records the actual copied application, screenshots, tests, measurements, and limitations.
+This guide owns asset publication, the shipped payload and production boundaries. Normal Release publishes the React application with generated bindings and embedded local assets. The commands below use the instrumented fixture; ordinary app commands are in the [minimal application guide](23-minimal-application.md#start-edit-and-publish). Historical [execution evidence](evidence/production-delivery-2026-10-19/README.md) is source-bound.
 
 ## Build and run
 
@@ -58,4 +58,4 @@ dotnet publish fixtures/Spar.NativeSample -c Release -p:SparNativeProbe=true -o 
 
 ## Remaining work
 
-Explicit dependency-driven CoreCLR compatibility and strict failure checks are documented in the [compatibility guide](17-dependency-compatibility.md), #11 (A15/A16). External packages and the fresh consumer walkthrough are recorded in the [package guide](18-package-consumer.md) and [final acceptance matrix](19-milestone-1-acceptance.md), #12 (A18/A01). A machine without the .NET SDK/runtime was unavailable; developer-machine execution does not certify clean-machine installation. Broader package/release review, supported-machine coverage, installers, signing, and updates remain outside this slice.
+Use [dependency compatibility](17-dependency-compatibility.md) for attributable CoreCLR selection and [packages](18-package-consumer.md) for a fresh external consumer. Current qualification limits and release work are maintained in [status and deferred work](README.md#status-and-deferred-work).

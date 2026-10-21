@@ -1,6 +1,6 @@
 # Milestone 1 acceptance
 
-Date: 2026-10-20. A01–A18 have execution evidence on the selected Windows development baseline. The final missing package-consumer editor walkthrough now has an [actual Visual Studio pass](evidence/milestone-acceptance-2026-10-20/README.md). The implementation baseline is merged PR #26, `d13238f70d59168891630e8ec0081f5f431aea42`; this follow-up records acceptance without changing runtime or tooling behavior. Issue closure follows integration of this evidence.
+**Historical acceptance matrix, 2026-10-20.** A01–A18 have execution evidence on the selected Windows development baseline. The final package-consumer editor walkthrough has an [actual Visual Studio pass](evidence/milestone-acceptance-2026-10-20/README.md). The implementation baseline is merged PR #26, `d13238f70d59168891630e8ec0081f5f431aea42`; this record did not change runtime or tooling behavior. Tracker #1 and #2–#12 closed after integration. See [current status](README.md#status-and-deferred-work) for later changes and their separate validation.
 
 The matrix combines explicitly recorded runs from the fresh implementation. It does not imply every suite was repeated in one command or that ordinary CI verified desktop pixels and debugger gestures. Each evidence record identifies its tested revision, failures and limits. PR #26's [required Windows managed probe](https://github.com/sotsera/spar/actions/runs/39377913914) passed after the partial-log-reader correction.
 

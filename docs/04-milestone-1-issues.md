@@ -1,6 +1,6 @@
 # Milestone 1 issues
 
-Status: published on 2026-10-18 after approval. Implementation and acceptance remain open.
+**Historical issue specifications, published 2026-10-18.** The unchecked lists below preserve the original scope, not current issue state. Tracker #1 and #2–#12 are now closed. See the [acceptance matrix](19-milestone-1-acceptance.md) and [current status](README.md#status-and-deferred-work).
 
 Target repository: `sotsera/spar` (upstream). Verified GitHub CLI account: `ghidello`.
 

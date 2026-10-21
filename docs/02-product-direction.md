@@ -25,7 +25,7 @@ Production applications default to NativeAOT. CoreCLR compatibility delivery exi
 
 The new implementation is being prepared in `E:\Ghidello\Git\spar.v2`, using the existing fork/upstream relationship. Previous source remains a separate reference checkout. Planning and subsequent implementation reach upstream through focused pull requests.
 
-## Proposed initial architecture
+## Architecture direction
 
 Use Win32 and WebView2 for a small Windows host. The browser engine is supplied by the installed WebView2 Runtime. AOT publication does not imply one OS process or eliminate writable browser data.
 
@@ -39,7 +39,7 @@ Separate responsibilities without pre-creating a project for each box:
 | Editor adapters | VS Code/Visual Studio launch/debug integration and presentation of common coordinator state |
 | Automation adapter | Structured session operations, UI inspection/actions, logs and evidence; CLI first, MCP adapter over the same services |
 
-Application code should use ordinary .NET projects. The reference SPA is proposed to use React and Vite; the runtime and client remain framework-neutral. Installed applications use packaged local frontend assets, with no required Node process or production UI HTTP server.
+Application code should use ordinary .NET projects. The reference SPA uses React and Vite; the runtime and client remain framework-neutral. Installed applications use packaged local frontend assets, with no required Node process or production UI HTTP server.
 
 The initial application has one native window and an in-process backend. If the backend cannot be hot-reloaded, restart the application process and recreate the window. Keeping a permanent shell while replacing backend workers is deferred until a concrete need justifies the extra transport and lifecycle model.
 
@@ -47,7 +47,7 @@ The initial application has one native window and an in-process backend. If the 
 
 There is one coordinator per development session and one authority applying C# updates to each application process.
 
-- Terminal/AI session: investigate supported `dotnet watch` integration first.
+- Terminal/AI session: the [watcher adapter](12-backend-updates.md) uses the selected `dotnet watch` integration.
 - VS Code session: the C# debugger owns supported code updates; SPAR coordinates frontend startup and whole-application restarts.
 - Visual Studio session: Visual Studio owns supported code updates; use the same session model and ordinary launch/build integration.
 
@@ -74,7 +74,7 @@ The [managed probe](07-managed-probe.md) observed changed method behavior before
 
 The selected .NET watcher or IDE debugger compiles and applies backend edits; Spar does not implement a second compiler or patch engine. An in-process update requires successful compilation and support from the active Hot Reload engine. A compilation failure supplies no new patch, so an existing process can keep its previously applied code. Successfully compiled but unsupported edits require restart; if that restart has already stopped the old process and rebuilding fails, remain stopped. Spar coordinates the frontend, matching contracts, session lifetime, and honest update status around these outcomes.
 
-Proposed restart sequence: coalesce edits; prepare a matching build; stop admission to the retiring generation; request owned shutdown; launch the new generation only after the old one has actually exited; wait for native and bridge readiness. Keep one running backend, not concurrent old/new backends or a rollback store. A compile failure before activation can leave that same process running its last successfully applied code with an explicit **edit not applied** status. Failed source/build output is never a second active version. Do not promise transactional rollback of arbitrary runtime edits.
+Coordinated restart sequence (see the [watcher](12-backend-updates.md) and [editor](13-vscode-development.md) policies for activation details): stop admission to the retiring generation; request owned shutdown and wait for actual exit; select and build current matching sources; launch the replacement and wait for native and bridge readiness. Keep one running backend, not concurrent old/new backends or a rollback store. A compile failure before activation can leave that same process running its last successfully applied code with an explicit **edit not applied** status. Failed source/build output is never a second active version. Do not promise transactional rollback of arbitrary runtime edits.
 
 Keeping the current application available is conditional on compatible client/server contracts. If new frontend/generated outputs could mismatch the running backend, reject mismatched calls and use a stopped/error state when a safe matching activation cannot be maintained simply. If the previous process has already stopped, remain stopped with actionable diagnostics. Never replay a backend mutation automatically.
 
@@ -139,11 +139,17 @@ Measure time from save to observable change, cold/warm start, restart, generatio
 
 Additional operating systems, mobile, multiple native windows, custom chrome, a native C# UI DSL, dynamic plugins, a persistent shell with backend workers, general streaming APIs, automatic state migration, installers, and signed self-updates are outside the first milestone. Native file pickers and broader desktop services can follow the development proof.
 
-## Decisions needed at milestone kickoff
+## Baseline decisions and remaining proposals
 
-Choose and pin the .NET SDK, C# version, Windows baseline, architecture, WebView2 SDK/runtime floor, frontend tooling, VS Code/C# extensions, and Visual Studio version. Previous SPAR's .NET 11 RC1/C# split is historical evidence, not an inherited requirement. Confirm that the same application language/API baseline works across both editor lanes.
+The [kickoff](05-implementation-kickoff.md) records how the initial baseline was selected.
+Use [current prerequisites](23-minimal-application.md#prerequisites), checked-in version manifests,
+and the editor guides for the tested implementation. Prior Spar's pins are not inherited requirements.
 
-Also settle the supported Hot Reload integration hooks, restart/debugger relaunch mechanism, production compatibility-mode configuration, minimum frontend adapter contract, and first consumer-facing launch API. Record tested decisions rather than expanding these into a general platform before the small application works.
+Terminal watcher, VS Code debugger, Visual Studio project launch, explicit compatibility selection,
+and local package consumers now have implementations and revision-bound evidence. The
+[documentation map](README.md) owns current delivery status. Early waiting-window feedback,
+optional memory observation, a general MCP adapter and broader consumer defaults remain proposals;
+they are not required to reinterpret the completed milestone proof.
 
 ## Primary technical references
 
