@@ -55,6 +55,12 @@ The adapter verifies SDK `10.0.402` before each watcher launch. It uses English 
 
 Retirement keeps draining lifecycle receipts while waiting for actual exit and control-reader EOF. Cancellation/timeout does not release native/backend ownership. Retired UI frames are suppressed, while completion receipts remain observable. Only **after** the app has exited may its nested job terminate remaining SDK/browser helpers. `watcher-stopped` labels this as `owned_tool_stop`; it does not claim those helpers exited gracefully. The overall graceful receipt means application work was completed before cleanup. The frontend's separate scope survives a planned replacement.
 
+The internal `WatcherProcess` owns this nested job, retained watcher process/exit task, bounded stdout/stderr
+readers and first-ready observation. The coordinator registers that owner before launch, so reader-open failure
+cannot lose ownership of an already started watcher. Restart/build/admission decisions and the application-exit
+barrier remain in `DevelopmentSession`; the session input monitor has its own lifetime. See the
+[watcher-owner execution record](evidence/watcher-owner-2026-10-21/README.md) for revision-bound verification.
+
 For an operation that ignores cancellation, a normal restart waits. A second Ctrl+C or `{"command":"stop","force":true}` explicitly ends owned work instead; it is recorded as forced cleanup and starts no replacement. The session's non-inherited job handles still contain watcher/app descendants if the coordinator or editor disappears. No process is killed by executable name.
 
 `DevelopmentApplication.Connect(fingerprint, typeof(ISampleBackend))` supplies the explicit compiled contract. The adapter, callback, reflection, watcher, and console parser stay outside Release application references. The contract project's generator reference is build-only and removes inherited framework/RID/AOT properties. The legitimate contract/dispatcher assembly remains an application dependency and is compiled into NativeAOT. Strict AOT publication remains a separate gate.

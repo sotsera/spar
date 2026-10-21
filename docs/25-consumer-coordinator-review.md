@@ -3,7 +3,7 @@
 Review for [#34](https://github.com/sotsera/spar/issues/34), reviewed against
 `7a0f482bb22dd9ef8bed3b9ed987dd5b254509b2` (2026-10-21). This is a source-based design
 review, not API documentation or integration acceptance for the remaining proposals. The maintainer
-accepted the sequence after merging PR #39; C1 and C2 are separate implementations below.
+accepted the sequence after merging PR #39; C1 and C2 are merged, and K1 is implemented separately below.
 Current commands remain in the [minimal application](23-minimal-application.md)
 and [package consumer](18-package-consumer.md) guides.
 
@@ -21,8 +21,10 @@ Keep the current package split, early restore properties, explicit contract proj
 sequencing. Defer a custom MSBuild SDK, inferred build output paths, a general lifecycle framework and
 additional extraction of already cohesive inspection logic. Neither fewer files nor fewer lines alone
 justifies a new abstraction. C1, C2 and K1 are separate PR scopes, not newly published issues.
-C1 removed the redundant scaffold values in PR #40. C2 adds the optional startup helper in a separate
-implementation; its validation is separate from this review. K1 remains future work.
+C1 removed the redundant scaffold values in PR #40. C2 added the optional startup helper in PR #41.
+K1 is the separate watcher-owner implementation; each scope records its own validation.
+The [K1 execution record](evidence/watcher-owner-2026-10-21/README.md) retains source-bound managed,
+native watcher/lifecycle/inspection, editor regression and fresh package/production evidence.
 
 ## Consumer: the current minimum
 
@@ -280,7 +282,7 @@ Closing a job handle as a last resort is not itself a successful cleanup receipt
 
 ## K1: one owner for watcher resources
 
-Current representation in the backend partial (while orchestration uses these across the core partial):
+Representation before K1 in the backend partial (used across the core partial):
 
 ```csharp
 private OwnedProcessJob? _watchJob;
@@ -293,17 +295,18 @@ private bool _watchReady;
 `StartWatcher`, `ReadWatchOutput`, `StopWatcherAsync` and final `DisposeWatchResources` coordinate this group.
 The last method also disposes the session-scoped `BackendInputs`, illustrating the different lifetimes.
 
-Proposed representation, **not implemented**:
+K1 representation, implemented by the internal [watcher owner](../src/Sotsera.Spar.Development/WatcherProcess.cs):
 
 ```csharp
 private WatcherProcess? _watcher;
 ```
 
-`WatcherProcess` would be one internal concrete owner of the nested job, retained process/exit task,
-stdout/stderr readers and first-ready observation. Its narrow surface would start one watcher, read bounded
-observations, expose process identity/exit, and complete helper retirement after the application has ended.
-It must not hold a `DevelopmentSession` reference, invoke parent callbacks, publish backend updates, choose
-builds, restart the app or introduce a background polling loop.
+`WatcherProcess` is one internal concrete owner of the nested job, retained process/exit task,
+stdout/stderr readers and first-ready observation. Its narrow surface starts one watcher, reads bounded
+observations, exposes process identity/exit, and completes helper retirement after the application has ended.
+The coordinator registers the owner before launch and opens the output readers afterward; either reader can
+fail while the same owner retains the job and process for cleanup. The owner has no `DevelopmentSession`
+reference or callbacks. Update publication, build selection and restart decisions stay in the coordinator.
 
 Before/after responsibility split:
 
@@ -369,5 +372,5 @@ C2's separate record supplies new source/package walkthroughs for the helper-bas
 
 Source inspection and documentation checks validate this review's references and consistency, not the proposed
 APIs or extracted lifetimes. Issue #34 is closed after review acceptance. Implementation PRs reference it
-and record their own evidence. C1 is merged; C2 in PR #41 has completed local acceptance, including the
-actual editor lanes, and awaits review/merge. K1 remains unimplemented.
+and record their own evidence. C1 and C2 are merged, including C2's actual source/package editor acceptance
+in PR #41. K1 is a separate implementation with its own verification; clean-machine qualification remains deferred.

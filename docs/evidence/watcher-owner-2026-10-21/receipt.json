@@ -1,0 +1,900 @@
+{
+  "implementationRevision": "374b17f070353009ff95d7a79403bbf134c4b675",
+  "baseRevision": "b9c2500f685d9fa4b441046d8c202ab9add5d4bd",
+  "observedAtUtc": "2026-10-21T16:46:33.9214520+00:00",
+  "sourceBinding": "Early suites ran on the baseline plus these source hashes; later suites ran after the implementation commit. No implementation changed between runs.",
+  "sources": [
+    {
+      "sha256": "FA02980D501BA70F4309F181BAC56AEFB6FFEDB6CE48D8F7075527742AF1596D",
+      "path": "src/Sotsera.Spar.Development/WatcherProcess.cs"
+    },
+    {
+      "sha256": "58C7FCBB10559CE9D3305899550F746795A39BE31A02A27D70CB4B76AEC5669B",
+      "path": "src/Sotsera.Spar.Development/DevelopmentSession.Backend.cs"
+    },
+    {
+      "sha256": "F558F36C86C5D88176BC79FF4F1006E23161022F6F6839D96E8BC24B63B62E7B",
+      "path": "src/Sotsera.Spar.Development/DevelopmentSession.cs"
+    },
+    {
+      "sha256": "70422CB307ADBF6F7F0A80C3560E971B66FBA37EF2D14631ECE56C29D815B2D9",
+      "path": "tests/Sotsera.Spar.Development.Tests/WatcherProcessTests.cs"
+    }
+  ],
+  "managed": {
+    "warnings": 0,
+    "passed": 73,
+    "errors": 0,
+    "skipped": 0,
+    "failed": 0
+  },
+  "suites": {
+    "debugger": {
+      "outcome": "passed",
+      "vscode": "1.143.0",
+      "csharp": "2.160.4",
+      "devkit": "3.40.215",
+      "independentlyRetainedProcesses": 22,
+      "observedProcessesExited": true
+    },
+    "development": [
+      {
+        "scenario": "hmr-restart-close",
+        "passed": true,
+        "coordinatorProcessId": 70688,
+        "startedAtUtc": "2026-10-21T16:39:02.5820566Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 22,
+        "unrelatedSurvived": true,
+        "rendering": "verified-pixels-review-captures"
+      },
+      {
+        "scenario": "owner-pipe-eof",
+        "passed": true,
+        "coordinatorProcessId": 66028,
+        "startedAtUtc": "2026-10-21T16:39:08.4692891Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": true,
+        "independentlyRetainedProcesses": 13,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "malformed-owner-input",
+        "passed": true,
+        "coordinatorProcessId": 25264,
+        "startedAtUtc": "2026-10-21T16:39:10.2019995Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": true,
+        "independentlyRetainedProcesses": 13,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "abrupt-owner-kill",
+        "passed": true,
+        "coordinatorProcessId": 7972,
+        "startedAtUtc": "2026-10-21T16:39:11.9652818Z",
+        "actualExitCode": -1,
+        "abruptOwnerKill": true,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 13,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "frontend-exit",
+        "passed": true,
+        "coordinatorProcessId": 40488,
+        "startedAtUtc": "2026-10-21T16:39:13.1861779Z",
+        "actualExitCode": 1,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 13,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "application-exit",
+        "passed": true,
+        "coordinatorProcessId": 27804,
+        "startedAtUtc": "2026-10-21T16:39:14.9596566Z",
+        "actualExitCode": 1,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 13,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "port-conflict",
+        "passed": true,
+        "coordinatorProcessId": 19200,
+        "startedAtUtc": "2026-10-21T16:39:16.8008248Z",
+        "actualExitCode": 1,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 0,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "startup-timeout",
+        "passed": true,
+        "coordinatorProcessId": 34632,
+        "startedAtUtc": "2026-10-21T16:39:17.0580947Z",
+        "actualExitCode": 1,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": true,
+        "independentlyRetainedProcesses": 2,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "application-start-failure",
+        "passed": true,
+        "coordinatorProcessId": 84100,
+        "startedAtUtc": "2026-10-21T16:39:22.3794704Z",
+        "actualExitCode": 1,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 5,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "client-credential-denied",
+        "passed": true,
+        "coordinatorProcessId": 18484,
+        "startedAtUtc": "2026-10-21T16:39:24.3192349Z",
+        "actualExitCode": 1,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 13,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      }
+    ],
+    "inspection": [
+      {
+        "scenario": "native-inspection",
+        "passed": true,
+        "coordinatorProcessId": 76260,
+        "startedAtUtc": "2026-10-21T16:39:26.7083555Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 31,
+        "unrelatedSurvived": true,
+        "rendering": "webview-png-captured-review-required",
+        "inspection": "actual-native-dom-actions-screenshots-logs-timeout-restart"
+      },
+      {
+        "scenario": "inspection-disabled",
+        "passed": true,
+        "coordinatorProcessId": 18772,
+        "startedAtUtc": "2026-10-21T16:39:56.5790045Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 13,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      },
+      {
+        "scenario": "failed-restart-completion",
+        "passed": true,
+        "coordinatorProcessId": 84356,
+        "startedAtUtc": "2026-10-21T16:39:58.4487888Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 19,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      }
+    ],
+    "backend": [
+      {
+        "scenario": "patch-error-restart",
+        "passed": true,
+        "coordinatorProcessId": 84400,
+        "startedAtUtc": "2026-10-21T16:35:24.4472491Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 45,
+        "unrelatedSurvived": true,
+        "rendering": "verified-pixels-review-captures"
+      },
+      {
+        "scenario": "startup-dependency-build-races",
+        "passed": true,
+        "coordinatorProcessId": 30812,
+        "startedAtUtc": "2026-10-21T16:36:26.8628343Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 87,
+        "unrelatedSurvived": true,
+        "rendering": "verified-pixels-review-captures"
+      },
+      {
+        "scenario": "explicit-force-during-retirement",
+        "passed": true,
+        "coordinatorProcessId": 82696,
+        "startedAtUtc": "2026-10-21T16:38:29.8839288Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": true,
+        "independentlyRetainedProcesses": 18,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      }
+    ],
+    "publication": {
+      "coreclr": {
+        "samples": [
+          {
+            "passed": true,
+            "processId": 86136,
+            "startedAtUtc": "2026-10-21T16:45:13.7062415Z",
+            "forcedCleanup": false,
+            "render": "pixels-captured-review-required"
+          }
+        ],
+        "manifest": {
+          "mode": "CoreCLR",
+          "requestedMode": "CoreCLR",
+          "strictAot": false,
+          "selfContained": true,
+          "compatibility": {
+            "reason": "IL3050: RuntimeGreeting emits and executes DynamicMethod IL.",
+            "dependency": "Spar.DynamicDependency (consumer fixture)"
+          },
+          "assetArchiveSha256": "19DE6BC0E29AAA71A603953C847447891185142D771DF08D2215ED2F1F014AE8",
+          "contractFingerprint": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d"
+        },
+        "copiedRun": {
+          "allPassed": true,
+          "mode": "CoreCLR",
+          "executableSha256": "E34134050D8F044DEABD74922A44387F84BBA995CB9A716588F56015FC691B52",
+          "renderRequested": true,
+          "noSdkMachine": "not-available"
+        }
+      },
+      "aot": {
+        "samples": [
+          {
+            "passed": true,
+            "processId": 79864,
+            "startedAtUtc": "2026-10-21T16:44:47.1266118Z",
+            "forcedCleanup": false,
+            "render": "pixels-captured-review-required"
+          }
+        ],
+        "manifest": {
+          "mode": "NativeAOT",
+          "requestedMode": "NativeAOT",
+          "strictAot": false,
+          "selfContained": true,
+          "compatibility": {
+            "reason": null,
+            "dependency": null
+          },
+          "assetArchiveSha256": "19DE6BC0E29AAA71A603953C847447891185142D771DF08D2215ED2F1F014AE8",
+          "contractFingerprint": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d"
+        },
+        "copiedRun": {
+          "allPassed": true,
+          "mode": "NativeAOT",
+          "executableSha256": "63A76DA562D9391FB8B54B67FD1D1C356711EAEDC39415500C516172D139A078",
+          "renderRequested": true,
+          "noSdkMachine": "not-available"
+        }
+      }
+    },
+    "consumerDevelopment": {
+      "scenario": "external-package",
+      "passed": true,
+      "coordinatorProcessId": 12864,
+      "startedAtUtc": "2026-10-21T16:43:53.4929575Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    },
+    "projectLaunch": [
+      {
+        "processes": 13,
+        "passed": true,
+        "cleanup": "graceful",
+        "scenario": "native-close"
+      },
+      {
+        "processes": 13,
+        "passed": true,
+        "cleanup": "forced_cleanup",
+        "scenario": "debugger-stop"
+      },
+      {
+        "processes": 13,
+        "passed": true,
+        "cleanup": "graceful",
+        "scenario": "contract-change"
+      },
+      {
+        "processes": 13,
+        "passed": true,
+        "cleanup": "kernel_job_close",
+        "scenario": "coordinator-crash"
+      }
+    ],
+    "consumer": {
+      "allPassed": true,
+      "observedAt": "2026-10-21T16:45:41.1995734+00:00",
+      "sourceRevision": "374b17f070353009ff95d7a79403bbf134c4b675",
+      "rendering": true,
+      "packages": [
+        {
+          "sha256": "7626BB6703B4F4E5EC2ECE4C3C16B10E088D1EE8104EFCE4095C7A56676488C1",
+          "name": "Sotsera.Spar.Bridge.0.1.0.nupkg"
+        },
+        {
+          "sha256": "21A4C8F7002488EFBD0E1E6F97F34837FDC27FCFC249A2208760960054641B1A",
+          "name": "Sotsera.Spar.Build.0.1.0.nupkg"
+        },
+        {
+          "sha256": "C397C91BDFF6BC115B3F5E61EF91FF2F9BF3546CCEBC612DDE04220AB7FF8507",
+          "name": "Sotsera.Spar.Development.0.1.0.nupkg"
+        },
+        {
+          "sha256": "73054526A6C8DE109181DB23CE527C02962784614F9F15AEFF6469EB281F4C61",
+          "name": "Sotsera.Spar.Windows.0.1.0.nupkg"
+        },
+        {
+          "sha256": "37E5F1EDF2B883FC3E1FC20AF8122FE70F6EEF3176A77A18D19FC831FF9EAD25",
+          "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg"
+        }
+      ],
+      "cases": [
+        {
+          "name": "fresh-build",
+          "passed": true,
+          "expectedSuccess": true,
+          "exitCode": 0
+        },
+        {
+          "name": "publish-aot",
+          "passed": true,
+          "expectedSuccess": true,
+          "exitCode": 0
+        },
+        {
+          "name": "strict-dependency",
+          "passed": true,
+          "expectedSuccess": false,
+          "exitCode": 1
+        },
+        {
+          "name": "publish-coreclr",
+          "passed": true,
+          "expectedSuccess": true,
+          "exitCode": 0
+        }
+      ]
+    },
+    "vscode-tasks": [
+      {
+        "debuggerHotReload": "not-exercised",
+        "scenario": "task-stop",
+        "passed": true,
+        "independentlyRetainedProcesses": 19,
+        "coordinatorAndObservedChildrenExited": true,
+        "editorExitCode": 0
+      },
+      {
+        "debuggerHotReload": "not-exercised",
+        "scenario": "window-close",
+        "passed": true,
+        "independentlyRetainedProcesses": 19,
+        "coordinatorAndObservedChildrenExited": true,
+        "editorExitCode": 0
+      }
+    ]
+  },
+  "reviewedCaptures": [
+    {
+      "visuallyReviewed": true,
+      "file": "backend-patched.png",
+      "sha256": "17062C5F7D8C40BCF2551D5D0614AEFB04674FDABED143149A22064611D3865C"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "backend-recovered.png",
+      "sha256": "EEEE24C01F2BE4C0D9E430EBD69092F5C0C8212A8BFEE59CB3041D2552B9DB75"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "frontend-updated.png",
+      "sha256": "FAA9EC70AF1C39F5DBDC28E261BF158DD601A7312F7B9B6E7517810DE1BC1804"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "inspection-updated.png",
+      "sha256": "827B1F80AAB9C655601171C63581CA35D64A4B63D455422937E1D7CDA53A3958"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "inspection-restarted.png",
+      "sha256": "62289842B02D0F324EF4F576162A5FA5F7AAE6758E90B1ABB1F04A6735F81F69"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "project-ready.png",
+      "sha256": "289DFA3D15D39EF06E3970851AF25425D66E76095F230A7C023CCD021906B325"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "debugger-patched.png",
+      "sha256": "CDE114EC23DC75A509BDBAB8C75D2E7D50FA82C848779B3036A41413080798DA"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "package-patched.png",
+      "sha256": "6A42100EC5F61C95E16E033F79CBA7A269AF09BBD6C5DE45DD8611227A15DF49"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "package-aot.png",
+      "sha256": "01ABEC555B719207FC56EC0FFFB5ADD85197F34A0A761E4FB91AF79008DFDFEE"
+    },
+    {
+      "visuallyReviewed": true,
+      "file": "package-coreclr.png",
+      "sha256": "F88B8740F67E62E6DC2F1E3D7AABEBD9A4C42702C31EA632BF8565EC67102CFA"
+    }
+  ],
+  "limitations": [
+    "Developer-machine baseline only; no clean Windows/no-SDK qualification.",
+    "Project launch simulates debugger termination; it is not an actual Visual Studio walkthrough.",
+    "Retained handles establish exits of observed owned processes; they do not count every unobserved short-lived helper."
+  ],
+  "retirementSequences": {
+    "patch-error-restart-3a7a9eabf4504b198ab454f496b89a2d": [
+      {
+        "kind": "backend-activity",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:35:38.726105+00:00",
+        "code": null,
+        "processId": 11920,
+        "processStartedAtUtc": "2026-10-21T16:35:36.8145399Z",
+        "buildSourceHash": "b6831dd0566789aa5217b289ac9be150a463c62812f77afdca9c12aa0f3a6011"
+      },
+      {
+        "kind": "backend-activity",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:35:40.3029278+00:00",
+        "code": null,
+        "processId": 11920,
+        "processStartedAtUtc": "2026-10-21T16:35:36.8145399Z",
+        "buildSourceHash": "b6831dd0566789aa5217b289ac9be150a463c62812f77afdca9c12aa0f3a6011"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:35:40.6332946+00:00",
+        "code": null,
+        "processId": 11920,
+        "processStartedAtUtc": "2026-10-21T16:35:36.8145399Z",
+        "buildSourceHash": "b6831dd0566789aa5217b289ac9be150a463c62812f77afdca9c12aa0f3a6011"
+      },
+      {
+        "kind": "backend-activity",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:35:52.323317+00:00",
+        "code": null,
+        "processId": 11920,
+        "processStartedAtUtc": "2026-10-21T16:35:36.8145399Z",
+        "buildSourceHash": "b6831dd0566789aa5217b289ac9be150a463c62812f77afdca9c12aa0f3a6011"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:35:52.3857081+00:00",
+        "code": null,
+        "processId": 11920,
+        "processStartedAtUtc": "2026-10-21T16:35:36.8145399Z",
+        "buildSourceHash": "b6831dd0566789aa5217b289ac9be150a463c62812f77afdca9c12aa0f3a6011"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:35:52.4018089+00:00",
+        "code": "owned_tool_stop",
+        "processId": 51256,
+        "processStartedAtUtc": "2026-10-21T16:35:31.9388286Z",
+        "buildSourceHash": "b6831dd0566789aa5217b289ac9be150a463c62812f77afdca9c12aa0f3a6011"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 2,
+        "observedAt": "2026-10-21T16:36:03.4288623+00:00",
+        "code": null,
+        "processId": 15348,
+        "processStartedAtUtc": "2026-10-21T16:36:01.9250765Z",
+        "buildSourceHash": "b0adb62eaf0da71403021350b9d28ba0060b8edfdd87e1a7d197986a3430e097"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 2,
+        "observedAt": "2026-10-21T16:36:03.4884394+00:00",
+        "code": null,
+        "processId": 15348,
+        "processStartedAtUtc": "2026-10-21T16:36:01.9250765Z",
+        "buildSourceHash": "b0adb62eaf0da71403021350b9d28ba0060b8edfdd87e1a7d197986a3430e097"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 2,
+        "observedAt": "2026-10-21T16:36:03.5005476+00:00",
+        "code": "owned_tool_stop",
+        "processId": 85120,
+        "processStartedAtUtc": "2026-10-21T16:35:56.113227Z",
+        "buildSourceHash": "b0adb62eaf0da71403021350b9d28ba0060b8edfdd87e1a7d197986a3430e097"
+      },
+      {
+        "kind": "backend-stopped",
+        "generation": 3,
+        "observedAt": "2026-10-21T16:36:14.5935294+00:00",
+        "code": "build_failed",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "5a2c17ed266d013b3b87e97724512b626c08718a4fc7b267d90e4a7e43b9df0f"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 4,
+        "observedAt": "2026-10-21T16:36:26.4698794+00:00",
+        "code": null,
+        "processId": 75048,
+        "processStartedAtUtc": "2026-10-21T16:36:24.0327711Z",
+        "buildSourceHash": "7ff52f9b34faf2e62e1086e8e97c5975d1b0fba39dc4751b26a2151f929f21c0"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 4,
+        "observedAt": "2026-10-21T16:36:26.5220507+00:00",
+        "code": null,
+        "processId": 75048,
+        "processStartedAtUtc": "2026-10-21T16:36:24.0327711Z",
+        "buildSourceHash": "7ff52f9b34faf2e62e1086e8e97c5975d1b0fba39dc4751b26a2151f929f21c0"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 4,
+        "observedAt": "2026-10-21T16:36:26.5336838+00:00",
+        "code": "owned_tool_stop",
+        "processId": 35308,
+        "processStartedAtUtc": "2026-10-21T16:36:19.0232643Z",
+        "buildSourceHash": "7ff52f9b34faf2e62e1086e8e97c5975d1b0fba39dc4751b26a2151f929f21c0"
+      },
+      {
+        "kind": "session-stopped",
+        "generation": 4,
+        "observedAt": "2026-10-21T16:36:26.6466918+00:00",
+        "code": "graceful",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "7ff52f9b34faf2e62e1086e8e97c5975d1b0fba39dc4751b26a2151f929f21c0"
+      }
+    ],
+    "startup-dependency-build-races-2dc6f1bc6c3449aa82d64ec25599fb7b": [
+      {
+        "kind": "application-stop-requested",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:36:53.968511+00:00",
+        "code": null,
+        "processId": 28080,
+        "processStartedAtUtc": "2026-10-21T16:36:44.2660396Z",
+        "buildSourceHash": "2a00716d7ad6f64e5d76ad475111753cbcb56ffe192a912da34e8e9fbe808e20"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:36:54.0285501+00:00",
+        "code": null,
+        "processId": 28080,
+        "processStartedAtUtc": "2026-10-21T16:36:44.2660396Z",
+        "buildSourceHash": "2a00716d7ad6f64e5d76ad475111753cbcb56ffe192a912da34e8e9fbe808e20"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:36:54.0402972+00:00",
+        "code": "owned_tool_stop",
+        "processId": 34860,
+        "processStartedAtUtc": "2026-10-21T16:36:33.876741Z",
+        "buildSourceHash": "2a00716d7ad6f64e5d76ad475111753cbcb56ffe192a912da34e8e9fbe808e20"
+      },
+      {
+        "kind": "backend-activity",
+        "generation": 2,
+        "observedAt": "2026-10-21T16:37:04.5347189+00:00",
+        "code": null,
+        "processId": 67260,
+        "processStartedAtUtc": "2026-10-21T16:37:03.478444Z",
+        "buildSourceHash": "e13d837c6a57a347f79008a1dfe3a2412291c9732dcdcef179f637e225ad9656"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 2,
+        "observedAt": "2026-10-21T16:37:05.1731109+00:00",
+        "code": null,
+        "processId": 67260,
+        "processStartedAtUtc": "2026-10-21T16:37:03.478444Z",
+        "buildSourceHash": "e13d837c6a57a347f79008a1dfe3a2412291c9732dcdcef179f637e225ad9656"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 2,
+        "observedAt": "2026-10-21T16:37:05.2326593+00:00",
+        "code": null,
+        "processId": 67260,
+        "processStartedAtUtc": "2026-10-21T16:37:03.478444Z",
+        "buildSourceHash": "e13d837c6a57a347f79008a1dfe3a2412291c9732dcdcef179f637e225ad9656"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 2,
+        "observedAt": "2026-10-21T16:37:05.2429967+00:00",
+        "code": "owned_tool_stop",
+        "processId": 58356,
+        "processStartedAtUtc": "2026-10-21T16:36:58.1432122Z",
+        "buildSourceHash": "e13d837c6a57a347f79008a1dfe3a2412291c9732dcdcef179f637e225ad9656"
+      },
+      {
+        "kind": "backend-activity",
+        "generation": 3,
+        "observedAt": "2026-10-21T16:37:17.3239202+00:00",
+        "code": null,
+        "processId": 34808,
+        "processStartedAtUtc": "2026-10-21T16:37:15.4576609Z",
+        "buildSourceHash": "89b68d1deec0b33112c8c4fff5b8b78de50022c33db45eb5f9ea653f116f27c1"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 3,
+        "observedAt": "2026-10-21T16:37:17.9675744+00:00",
+        "code": null,
+        "processId": 34808,
+        "processStartedAtUtc": "2026-10-21T16:37:15.4576609Z",
+        "buildSourceHash": "89b68d1deec0b33112c8c4fff5b8b78de50022c33db45eb5f9ea653f116f27c1"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 3,
+        "observedAt": "2026-10-21T16:37:18.0282863+00:00",
+        "code": null,
+        "processId": 34808,
+        "processStartedAtUtc": "2026-10-21T16:37:15.4576609Z",
+        "buildSourceHash": "89b68d1deec0b33112c8c4fff5b8b78de50022c33db45eb5f9ea653f116f27c1"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 3,
+        "observedAt": "2026-10-21T16:37:18.0418195+00:00",
+        "code": "owned_tool_stop",
+        "processId": 73488,
+        "processStartedAtUtc": "2026-10-21T16:37:10.0583659Z",
+        "buildSourceHash": "89b68d1deec0b33112c8c4fff5b8b78de50022c33db45eb5f9ea653f116f27c1"
+      },
+      {
+        "kind": "build-superseded",
+        "generation": 4,
+        "observedAt": "2026-10-21T16:37:22.09548+00:00",
+        "code": "build_succeeded",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "495fd405318d5e37c9d8aeed7f3918c9258a3a23b62327732d3c92e447a86e63"
+      },
+      {
+        "kind": "backend-activity",
+        "generation": 5,
+        "observedAt": "2026-10-21T16:37:32.4884839+00:00",
+        "code": null,
+        "processId": 40104,
+        "processStartedAtUtc": "2026-10-21T16:37:31.5793654Z",
+        "buildSourceHash": "a04f4ea50d18551b5eda9f0eafe7e68ea4e9442165e037490d0fb1d032e5e381"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 5,
+        "observedAt": "2026-10-21T16:37:33.1723495+00:00",
+        "code": null,
+        "processId": 40104,
+        "processStartedAtUtc": "2026-10-21T16:37:31.5793654Z",
+        "buildSourceHash": "a04f4ea50d18551b5eda9f0eafe7e68ea4e9442165e037490d0fb1d032e5e381"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 5,
+        "observedAt": "2026-10-21T16:37:33.2327171+00:00",
+        "code": null,
+        "processId": 40104,
+        "processStartedAtUtc": "2026-10-21T16:37:31.5793654Z",
+        "buildSourceHash": "a04f4ea50d18551b5eda9f0eafe7e68ea4e9442165e037490d0fb1d032e5e381"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 5,
+        "observedAt": "2026-10-21T16:37:33.2440792+00:00",
+        "code": "owned_tool_stop",
+        "processId": 16908,
+        "processStartedAtUtc": "2026-10-21T16:37:26.279041Z",
+        "buildSourceHash": "a04f4ea50d18551b5eda9f0eafe7e68ea4e9442165e037490d0fb1d032e5e381"
+      },
+      {
+        "kind": "build-superseded",
+        "generation": 6,
+        "observedAt": "2026-10-21T16:37:37.3808556+00:00",
+        "code": "build_succeeded",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "3f2289901f5e044aa429adbb50de16d2871186ecae8d10603252b4fbc93a4272"
+      },
+      {
+        "kind": "backend-stopped",
+        "generation": 7,
+        "observedAt": "2026-10-21T16:37:40.8854211+00:00",
+        "code": "build_failed",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "d348e21cffeae1b415200354bf1c47c956e27c4e8e1244322d0a2e386cc389b9"
+      },
+      {
+        "kind": "backend-activity",
+        "generation": 8,
+        "observedAt": "2026-10-21T16:38:00.7372185+00:00",
+        "code": null,
+        "processId": 12532,
+        "processStartedAtUtc": "2026-10-21T16:37:51.6035963Z",
+        "buildSourceHash": "fa4cd67c59f11f0aa3dcffdec4168ae6acd1306e81847eaefd7bf3bb857108e1"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 8,
+        "observedAt": "2026-10-21T16:38:01.3761571+00:00",
+        "code": null,
+        "processId": 12532,
+        "processStartedAtUtc": "2026-10-21T16:37:51.6035963Z",
+        "buildSourceHash": "fa4cd67c59f11f0aa3dcffdec4168ae6acd1306e81847eaefd7bf3bb857108e1"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 8,
+        "observedAt": "2026-10-21T16:38:01.4350897+00:00",
+        "code": null,
+        "processId": 12532,
+        "processStartedAtUtc": "2026-10-21T16:37:51.6035963Z",
+        "buildSourceHash": "fa4cd67c59f11f0aa3dcffdec4168ae6acd1306e81847eaefd7bf3bb857108e1"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 8,
+        "observedAt": "2026-10-21T16:38:01.4469252+00:00",
+        "code": "owned_tool_stop",
+        "processId": 52108,
+        "processStartedAtUtc": "2026-10-21T16:37:45.2633093Z",
+        "buildSourceHash": "fa4cd67c59f11f0aa3dcffdec4168ae6acd1306e81847eaefd7bf3bb857108e1"
+      },
+      {
+        "kind": "build-superseded",
+        "generation": 9,
+        "observedAt": "2026-10-21T16:38:05.5117913+00:00",
+        "code": "build_failed",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "813507a01070597585ce6143227d4527545e3d48978975bec2bc5f1e58598b02"
+      },
+      {
+        "kind": "backend-activity",
+        "generation": 10,
+        "observedAt": "2026-10-21T16:38:28.8492717+00:00",
+        "code": null,
+        "processId": 47384,
+        "processStartedAtUtc": "2026-10-21T16:38:19.9347719Z",
+        "buildSourceHash": "f6e79b4d8037c34e68459a27189e1ffc087088920dbaf91f2c1d76d184b56b44"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 10,
+        "observedAt": "2026-10-21T16:38:29.4417171+00:00",
+        "code": null,
+        "processId": 47384,
+        "processStartedAtUtc": "2026-10-21T16:38:19.9347719Z",
+        "buildSourceHash": "f6e79b4d8037c34e68459a27189e1ffc087088920dbaf91f2c1d76d184b56b44"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 10,
+        "observedAt": "2026-10-21T16:38:29.494904+00:00",
+        "code": null,
+        "processId": 47384,
+        "processStartedAtUtc": "2026-10-21T16:38:19.9347719Z",
+        "buildSourceHash": "f6e79b4d8037c34e68459a27189e1ffc087088920dbaf91f2c1d76d184b56b44"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 10,
+        "observedAt": "2026-10-21T16:38:29.5047662+00:00",
+        "code": "owned_tool_stop",
+        "processId": 64696,
+        "processStartedAtUtc": "2026-10-21T16:38:09.6021261Z",
+        "buildSourceHash": "f6e79b4d8037c34e68459a27189e1ffc087088920dbaf91f2c1d76d184b56b44"
+      },
+      {
+        "kind": "session-stopped",
+        "generation": 10,
+        "observedAt": "2026-10-21T16:38:29.6227361+00:00",
+        "code": "graceful",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "f6e79b4d8037c34e68459a27189e1ffc087088920dbaf91f2c1d76d184b56b44"
+      }
+    ],
+    "explicit-force-during-retirement-793d0ca539f34210928af29090da6131": [
+      {
+        "kind": "backend-activity",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:38:47.2877941+00:00",
+        "code": null,
+        "processId": 44804,
+        "processStartedAtUtc": "2026-10-21T16:38:45.762567Z",
+        "buildSourceHash": "5122a1b72fe521d2fbee14fc5383efe2f509fa2fc2ff542014544792f99ee045"
+      },
+      {
+        "kind": "application-stop-requested",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:38:48.0381903+00:00",
+        "code": null,
+        "processId": 44804,
+        "processStartedAtUtc": "2026-10-21T16:38:45.762567Z",
+        "buildSourceHash": "5122a1b72fe521d2fbee14fc5383efe2f509fa2fc2ff542014544792f99ee045"
+      },
+      {
+        "kind": "application-stopped",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:38:48.1583445+00:00",
+        "code": null,
+        "processId": 44804,
+        "processStartedAtUtc": "2026-10-21T16:38:45.762567Z",
+        "buildSourceHash": "5122a1b72fe521d2fbee14fc5383efe2f509fa2fc2ff542014544792f99ee045"
+      },
+      {
+        "kind": "watcher-stopped",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:38:48.1600088+00:00",
+        "code": "owned_tool_stop",
+        "processId": 28920,
+        "processStartedAtUtc": "2026-10-21T16:38:35.8911389Z",
+        "buildSourceHash": "5122a1b72fe521d2fbee14fc5383efe2f509fa2fc2ff542014544792f99ee045"
+      },
+      {
+        "kind": "session-stopped",
+        "generation": 1,
+        "observedAt": "2026-10-21T16:38:48.1908772+00:00",
+        "code": "forced_cleanup",
+        "processId": null,
+        "processStartedAtUtc": null,
+        "buildSourceHash": "5122a1b72fe521d2fbee14fc5383efe2f509fa2fc2ff542014544792f99ee045"
+      }
+    ]
+  }
+}
