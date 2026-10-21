@@ -26,13 +26,17 @@ VS Code and actual Visual Studio walkthroughs. K1 adds one internal watcher reso
 restart/build/admission decisions in the coordinator; its
 [verification record](evidence/watcher-owner-2026-10-21/README.md) is separate.
 
+Next review: [development startup and diagnostics](26-development-experience-review.md) records reproduced
+preflight/frontend failures and source-based presentation gaps. D1–D3 are proposed focused scopes;
+they are not implemented or acceptance requirements retroactively added to milestone 1.
+
 The minimal app is under `samples/`. Detailed acceptance drivers use the instrumented app under
 `fixtures/`; see the [migration map](23-minimal-application.md#scenario-migration-map). A fixture command
 is not the recommended starting application. Each topic owns its commands; this index and README link to them.
 
 ## Status and deferred work
 
-Status reconciled after [PR #41](https://github.com/sotsera/spar/pull/41), merged as `b9c2500` on 2026-10-21.
+Status reconciled after [PR #42](https://github.com/sotsera/spar/pull/42), merged as `e908e1a` on 2026-10-21.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)
@@ -43,7 +47,7 @@ This section owns the current repository status; individual evidence records rem
   [#34](https://github.com/sotsera/spar/issues/34) is also closed after acceptance of the
   [consumer/coordinator review](25-consumer-coordinator-review.md). Implementation is separately scoped:
   C1's scaffold defaults are merged in PR #40; C2's optional startup helper and its completed local acceptance
-  are merged in PR #41. K1's watcher resource ownership is a separate focused change.
+  are merged in PR #41. K1's watcher resource ownership is merged in PR #42. The agreed C1/C2/K1 sequence is complete.
 - The [minimal-app record](evidence/minimal-application-2026-10-21/README.md) covers actual source/package
   development, copied AOT and VS Code checks. The later
   [startup-helper record](evidence/development-startup-2026-10-21/README.md) adds actual source/package

@@ -1,0 +1,93 @@
+{
+  "sourceRevision": "e908e1a0aa5cbff9611a8848995ebc5d781055e0",
+  "observedAtUtc": "2026-10-21T20:13:47.6294116+00:00",
+  "method": "Actual isolated CLI subprocesses; actual coordinator exits awaited; no native app or debugger launch. Source inspection for editor presentation findings.",
+  "sources": [
+    {
+      "sha256": "2760E7AB45987ADF5684EAD442D9C9B6D7A3B4CF4E340664B573B90C730B0916",
+      "path": "tools/Spar.Dev/Program.cs"
+    },
+    {
+      "sha256": "8A07927CF7C9DC337133A8C3BE488390775817A36680428A081057B7DC2C6ABE",
+      "path": "src/Sotsera.Spar.Development/DevelopmentSettings.cs"
+    },
+    {
+      "sha256": "D90A9C372855AC7E03904B9CFCF92F96088619CABDC86CB5689E2B3B8F4F8DD9",
+      "path": "src/Sotsera.Spar.Development/DevelopmentSession.cs"
+    },
+    {
+      "sha256": "4C85726F755D25349110490AAFEAF0C2B37F45AB3A7279E1683B4CFE7DC56303",
+      "path": "src/Sotsera.Spar.Development/DevelopmentProjectLaunch.cs"
+    },
+    {
+      "sha256": "A4839530819831714D7DB1136A3B4064BBAAEEB1314139B8E4B94374E7D787A8",
+      "path": "tools/Spar.VSCode/extension.cjs"
+    },
+    {
+      "sha256": "CF6180E965A3A94462B6D55B3FDA7AC9157D1A3821DBAC6B8599E5AF072F0002",
+      "path": ".vscode/tasks.json"
+    }
+  ],
+  "binaries": [
+    {
+      "file": "Spar.Dev.exe",
+      "sha256": "5C51AEFE44AE06D6F58697342BBA2F1790E4D351A34F1F8E74F7F3F720D06661"
+    },
+    {
+      "file": "Spar.Dev.dll",
+      "sha256": "C3B33C9217ED23A75828E57DB3DC12212CEC4A52B4C558A4CE8B5DCAF1436483"
+    },
+    {
+      "file": "Sotsera.Spar.Development.dll",
+      "sha256": "9D42CFF4C84F60223587A27BBD3400FE8E9100CEA963C7E3B36223BC908B5A67"
+    }
+  ],
+  "cases": [
+    {
+      "stdoutLines": 0,
+      "frontendCauseInPublicOutput": false,
+      "stderrFirstLine": "Usage: Spar.Dev <spar.dev.json> [--no-build] [--owner-stdin] [--debugger] [--inspect] [--probe] [--events-file <path>]",
+      "name": "no-arguments",
+      "exitCode": 1
+    },
+    {
+      "stdoutLines": 0,
+      "frontendCauseInPublicOutput": false,
+      "stderrFirstLine": "Unhandled exception. System.IO.FileNotFoundException: Could not find file '[review directory]\\missing.json'.",
+      "name": "missing-config",
+      "exitCode": -532462766
+    },
+    {
+      "stdoutLines": 0,
+      "frontendCauseInPublicOutput": false,
+      "stderrFirstLine": "Unhandled exception. System.Text.Json.JsonException: Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. Path: $ | LineNumber: 1 | BytePositionInLine: 0.",
+      "name": "malformed-config",
+      "exitCode": -532462766
+    },
+    {
+      "stdoutLines": 0,
+      "frontendCauseInPublicOutput": false,
+      "stderrFirstLine": "Unhandled exception. System.IO.InvalidDataException: Invalid session limits: startup 0s, shutdown 2s, port 0, arguments 3, environment entries 0.",
+      "name": "invalid-limits",
+      "exitCode": -532462766
+    },
+    {
+      "stdoutLines": 6,
+      "frontendCauseInPublicOutput": false,
+      "stderrFirstLine": "",
+      "name": "frontend-failure",
+      "exitCode": 1
+    },
+    {
+      "stdoutLines": 6,
+      "frontendCauseInPublicOutput": false,
+      "stderrFirstLine": "",
+      "name": "unknown-option",
+      "exitCode": 1
+    }
+  ],
+  "editorPresentation": "Source-confirmed event-handler gaps; no new actual IDE reproduction.",
+  "expectedFrontendExitCode": 23,
+  "retainedFrontendErrorMarker": "SPAR_REVIEW_FRONTEND_FAILURE",
+  "noRuntimeChanges": true
+}

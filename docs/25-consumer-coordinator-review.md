@@ -372,5 +372,7 @@ C2's separate record supplies new source/package walkthroughs for the helper-bas
 
 Source inspection and documentation checks validate this review's references and consistency, not the proposed
 APIs or extracted lifetimes. Issue #34 is closed after review acceptance. Implementation PRs reference it
-and record their own evidence. C1 and C2 are merged, including C2's actual source/package editor acceptance
-in PR #41. K1 is a separate implementation with its own verification; clean-machine qualification remains deferred.
+and record their own evidence. C1, C2 and K1 are merged in PRs #40, #41 and #42 respectively, including
+C2's actual source/package editor acceptance and K1's separate verification. The agreed sequence is complete;
+clean-machine qualification remains deferred. The next [development-experience review](26-development-experience-review.md)
+proposes separately scoped startup/diagnostic improvements.

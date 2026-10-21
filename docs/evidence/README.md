@@ -7,9 +7,10 @@ does not relocate or reinterpret them. They are not current setup instructions o
 Start with the [documentation map](../README.md) for current guidance and status, or the
 [milestone acceptance matrix](../19-milestone-1-acceptance.md) for A01–A18 evidence.
 Later changes have their own dated records, including [CI selection](proportional-ci-2026-10-20/README.md),
-[test helpers](integration-helpers-2026-10-21/README.md), [minimal applications](minimal-application-2026-10-21/README.md)
+[test helpers](integration-helpers-2026-10-21/README.md), [minimal applications](minimal-application-2026-10-21/README.md),
 the [development startup helper](development-startup-2026-10-21/README.md), including actual source/package editor acceptance,
-and [watcher resource ownership](watcher-owner-2026-10-21/README.md).
+[watcher resource ownership](watcher-owner-2026-10-21/README.md) and the
+[development-experience review](development-experience-review-2026-10-21/README.md).
 
 Keep existing evidence links, provenance, first failures and unexecuted checks intact. This documentation
 cleanup neither deletes historical artifacts nor rewrites Git history. Apply the
