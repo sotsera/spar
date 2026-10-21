@@ -61,3 +61,12 @@ No general lifecycle framework, additional Hot Reload owner, automatic rude-edit
 evaluation, MCP adapter, installer or dependency upgrade is needed for D1–D3. Clean-machine qualification
 remains separate release-readiness work. These proposed scopes become implementation work after maintainer
 selection; merging this review does not establish their acceptance checks.
+
+## Selected implementation
+
+The maintainer selected D1 after merging this review in PR #43 (`4e82ce4`). D1 adds strict complete CLI
+argument validation, bounded public startup errors and exit `1`, expected preflight filesystem handling,
+VS Code Output visibility and project-launch error propagation. Its
+[execution record](evidence/startup-errors-2026-10-21/README.md) records the current implementation and
+actual editor/package checks. Implementation acceptance belongs to that record and its PR; the original
+review findings above remain observations of `e908e1a`. D2 and D3 remain separate future scopes.

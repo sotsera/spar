@@ -69,6 +69,37 @@ Stdout events identify session, generation, timestamps, process creation identit
 
 Test-only `--probe` enables the fixture's fixed seed/close HMR events. General UI automation uses the separate, explicit [inspection capability](15-development-inspection.md). Optional memory observation is still a proposal. External frontend servers are not supported by this adapter; an explicit observed/non-owned mode is needed before supporting that scenario.
 
+## Startup errors
+
+Supply the configuration path first. Unknown options, extra positional arguments, duplicate options and
+missing/empty option values fail before configuration loading or child launch. No arguments retains the
+usage message on stderr and exit code `1`. `--no-build` cannot select watcher/debugger updates; those
+modes require the initial full build. The private project-owner arguments remain reserved for IDE launch.
+
+Expected preflight errors return exit code `1`, one human-readable stderr line, and one public JSON line
+on stdout, for example:
+
+```json
+{"kind":"startup-error","code":"configuration_not_found","message":"Configuration file not found: missing.json. Check the supplied path."}
+```
+
+This happens before a session exists: there is no session or generation identity, and the record is not
+written to `--events-file`. The message is limited to 1,024 characters with line/control separators
+removed. It includes the relevant path or corrective action; raw configuration content and unknown
+argument values are not echoed. Expected input/filesystem errors have no CLI exception stack trace.
+Unexpected failures retain their normal failure behavior.
+
+Codes distinguish `invalid_arguments`, `configuration_not_found`, `configuration_invalid`,
+`configuration_unavailable`, `project_owner_unavailable`, `project_owner_mismatch`, `contract_required`,
+`build_required`, `events_file_unavailable` and `session_directory_unavailable`. Event files use exclusive
+creation: choose a new path in an existing writable directory; an existing file is never truncated.
+Human diagnostics stay on stderr so stdout remains JSON and private debugger handoffs remain separate.
+
+Run `pwsh -NoProfile -File eng/Test-DevelopmentStartup.ps1` after building to check the real CLI failure
+matrix. It retains each coordinator process and waits for its job to empty; no native application should
+start. The [D1 execution record](evidence/startup-errors-2026-10-21/README.md) identifies the tested sources
+and separate editor/package checks.
+
 ## Verification and evidence
 
 ```powershell

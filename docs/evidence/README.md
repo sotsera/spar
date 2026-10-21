@@ -11,6 +11,8 @@ Later changes have their own dated records, including [CI selection](proportiona
 the [development startup helper](development-startup-2026-10-21/README.md), including actual source/package editor acceptance,
 [watcher resource ownership](watcher-owner-2026-10-21/README.md) and the
 [development-experience review](development-experience-review-2026-10-21/README.md).
+The selected D1 implementation has its own [startup-error record](startup-errors-2026-10-21/README.md),
+including process-level negatives and actual source/package editor failure/recovery checks.
 
 Keep existing evidence links, provenance, first failures and unexecuted checks intact. This documentation
 cleanup neither deletes historical artifacts nor rewrites Git history. Apply the

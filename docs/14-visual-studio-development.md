@@ -45,6 +45,15 @@ Bridge requests retain their bounded 30-second timeout while the debugger is pau
 
 Public JSON events are written to `project-<id>.jsonl` in the configured session directory. The Debug output prints that path and events; stderr is retained beside it. `session-stopped` distinguishes graceful from forced cleanup. Process creation times and contract/document identities allow the evidence to be checked independently.
 
+Expected bootstrap configuration/path failures print `Spar startup failed [code]: ...` in Debug output.
+If the coordinator rejects preflight, the bootstrap relays its bounded `startup-error` message into the
+launch exception instead of reporting only that the coordinator ended. Correct the named problem and
+F5 again. A failure before session creation has no session/generation receipt. The bootstrap still throws
+an `InvalidOperationException`; Visual Studio may display normal first-chance exception diagnostics.
+The CLI's concise stderr contract does not suppress IDE exception reporting. The
+[D1 record](evidence/startup-errors-2026-10-21/README.md) distinguishes actual startup-failure/recovery
+gestures from the lifecycle-only driver.
+
 ## Isolated manual acceptance
 
 Create disposable source copies, an absolute-path launch profile, and a solution containing the complete project reference graph:

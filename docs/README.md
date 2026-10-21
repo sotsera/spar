@@ -26,9 +26,11 @@ VS Code and actual Visual Studio walkthroughs. K1 adds one internal watcher reso
 restart/build/admission decisions in the coordinator; its
 [verification record](evidence/watcher-owner-2026-10-21/README.md) is separate.
 
-Next review: [development startup and diagnostics](26-development-experience-review.md) records reproduced
-preflight/frontend failures and source-based presentation gaps. D1–D3 are proposed focused scopes;
-they are not implemented or acceptance requirements retroactively added to milestone 1.
+The accepted [development startup and diagnostics review](26-development-experience-review.md), merged
+in PR #43, records reproduced preflight/frontend failures and source-based presentation gaps. The
+maintainer selected D1 startup errors; its [execution record](evidence/startup-errors-2026-10-21/README.md)
+tracks implementation validation. D2 log discovery and D3 phase/readiness presentation remain separate
+future scopes, without changing milestone 1's historical acceptance requirements.
 
 The minimal app is under `samples/`. Detailed acceptance drivers use the instrumented app under
 `fixtures/`; see the [migration map](23-minimal-application.md#scenario-migration-map). A fixture command
@@ -36,7 +38,7 @@ is not the recommended starting application. Each topic owns its commands; this 
 
 ## Status and deferred work
 
-Status reconciled after [PR #42](https://github.com/sotsera/spar/pull/42), merged as `e908e1a` on 2026-10-21.
+Status reconciled after [PR #43](https://github.com/sotsera/spar/pull/43), merged as `4e82ce4` on 2026-10-21.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)

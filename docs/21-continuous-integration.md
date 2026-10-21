@@ -18,6 +18,10 @@ The map includes every check in the previous workflow. Groups are additive, and 
 | Packages | `Pack-Local.ps1`; `Test-ExternalConsumer.ps1`; `Test-MinimalConsumer.ps1` | Default ordinary consumer and explicit instrumented fixture; fresh external restore/build, public package references, packaged coordinator and contracts, development updates/restart, copied AOT/CoreCLR execution and boundary checks |
 | AOT probe | Separate `SparNativeProbe=true` publish; copied payload inventory; `Test-NativeHost.ps1` and `Test-Bridge.ps1` | Strict native test payload, copied AOT lifecycle and bridge scenarios. Runs after the normal production boundary check. |
 
+The existing helper/framing baseline step also runs `Test-DevelopmentStartup.ps1`: actual CLI preflight
+failures must return bounded useful output and exit `1`, preserve event destinations and leave owned jobs
+empty. Actual editor failure presentation remains a separate desktop check.
+
 ## Selection policy
 
 - Recognized documentation and repository skill changes use lightweight checks. Historical evidence under `docs/evidence/` is retained documentation, not an executable test input.

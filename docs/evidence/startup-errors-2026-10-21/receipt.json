@@ -1,0 +1,1369 @@
+{
+  "observedAtUtc": "2026-10-21T21:07:20.7528055Z",
+  "base": "4e82ce4160c466449f3cbefac34b4207c866fd57",
+  "implementation": "981810a55b8dd51163d34e761b9e7db40081ee46",
+  "sources": [
+    {
+      "sha256": "F486E555F7C5CD3F1B79A8D964A3B3740506C2E2FEAC240B154EDA66135DB0CC",
+      "path": "tools/Spar.Dev/Program.cs"
+    },
+    {
+      "sha256": "7CAD9D0F72B4FF64FE58E10A2CD5C9CA220B918EAB7722A98A848681EA20C842",
+      "path": "tools/Spar.Dev/StartupOptions.cs"
+    },
+    {
+      "sha256": "F66C2B0E7F5AC5817AA21E6072C56071179D36A789923218F03EF7B804262756",
+      "path": "tools/Spar.Dev/StartupFailure.cs"
+    },
+    {
+      "sha256": "01B515E9BAA398AD79117A1AC4250507B9B93FA4EE9843267F4C79201A341115",
+      "path": "src/Sotsera.Spar.Development/DevelopmentProjectLaunch.cs"
+    },
+    {
+      "sha256": "C835C0095C2127BA3E9DB0CADC1CAC3E238AB7177C0BD78B42531CB997947FDE",
+      "path": "tools/Spar.VSCode/extension.cjs"
+    },
+    {
+      "sha256": "113D9F63D46D068028265B04ED0FCB02C70613E3E963A98EEE66D51853C50CEC",
+      "path": "eng/Test-DevelopmentStartup.ps1"
+    },
+    {
+      "sha256": "AF733F72DB65282E93F7B321BF4CBB457F699CC8D0342B1909F6D6A47B5BB2E0",
+      "path": "eng/Test-VSCodeStartup.ps1"
+    },
+    {
+      "sha256": "114DB23FB58F8F59A42F52D00B0CCBACB4617AC756C26A8C792E6A4DEEA2DF4F",
+      "path": "eng/vscode-development/startup.cjs"
+    },
+    {
+      "sha256": "8565C059DF5D326FF075EE3AEB364B5AE9D06D1F40A693AF55FAB9E16E8CA792",
+      "path": ".github/workflows/managed-probe.yml"
+    }
+  ],
+  "build": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "managed": {
+    "runner": "Microsoft.Testing.Platform",
+    "sandboxedFinalAttempt": "named-pipe access denied before cases",
+    "failed": 0,
+    "unsandboxedFinalAttempt": "passed",
+    "skipped": 0,
+    "passed": 73
+  },
+  "sourcePreflight": {
+    "allPassed": true,
+    "coordinatorSha256": "4757A08C69D90454FD008ABF4EE54C7CCB21261C8F007578B62A521E6BE81BBC",
+    "cases": [
+      {
+        "observedApplicationChildren": 0,
+        "code": null,
+        "processId": 71388,
+        "processStartedAtUtc": "2026-10-21T21:07:42.1903811Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 0,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "usage"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_not_found",
+        "processId": 75916,
+        "processStartedAtUtc": "2026-10-21T21:07:42.2987819Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "missing-config"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_invalid",
+        "processId": 12460,
+        "processStartedAtUtc": "2026-10-21T21:07:42.4221705Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "malformed-config"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_invalid",
+        "processId": 77880,
+        "processStartedAtUtc": "2026-10-21T21:07:42.5345861Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "null-config"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_invalid",
+        "processId": 89308,
+        "processStartedAtUtc": "2026-10-21T21:07:42.6574264Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "oversized-config"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_invalid",
+        "processId": 30772,
+        "processStartedAtUtc": "2026-10-21T21:07:42.7661308Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "invalid-limits"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_not_found",
+        "processId": 8820,
+        "processStartedAtUtc": "2026-10-21T21:07:42.8883897Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "config-is-directory"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_unavailable",
+        "processId": 71708,
+        "processStartedAtUtc": "2026-10-21T21:07:42.9993134Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "locked-config"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_not_found",
+        "processId": 57724,
+        "processStartedAtUtc": "2026-10-21T21:07:43.1093893Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "bounded-message"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "configuration_invalid",
+        "processId": 34324,
+        "processStartedAtUtc": "2026-10-21T21:07:43.2278693Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "normalized-message"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 79568,
+        "processStartedAtUtc": "2026-10-21T21:07:43.3481014Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "unknown-before-config"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 70996,
+        "processStartedAtUtc": "2026-10-21T21:07:43.4503641Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "unknown-before-events"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 69384,
+        "processStartedAtUtc": "2026-10-21T21:07:43.5469517Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "duplicate-flag"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 32588,
+        "processStartedAtUtc": "2026-10-21T21:07:43.6522872Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "extra-positional"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 81276,
+        "processStartedAtUtc": "2026-10-21T21:07:43.7532573Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "option-first"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 76188,
+        "processStartedAtUtc": "2026-10-21T21:07:43.8600173Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "missing-events-value"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 3700,
+        "processStartedAtUtc": "2026-10-21T21:07:43.9643396Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "empty-events-value"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 9404,
+        "processStartedAtUtc": "2026-10-21T21:07:44.0602166Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "events-value-is-option"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 72520,
+        "processStartedAtUtc": "2026-10-21T21:07:44.155182Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "missing-owner-values"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 68440,
+        "processStartedAtUtc": "2026-10-21T21:07:44.2521832Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "missing-owner-ticks"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 7548,
+        "processStartedAtUtc": "2026-10-21T21:07:44.3535427Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "invalid-owner-pid"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 84376,
+        "processStartedAtUtc": "2026-10-21T21:07:44.460587Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "invalid-owner-ticks"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 76508,
+        "processStartedAtUtc": "2026-10-21T21:07:44.556642Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "owner-ticks-overflow"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "invalid_arguments",
+        "processId": 69248,
+        "processStartedAtUtc": "2026-10-21T21:07:44.6585666Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "duplicate-events-option"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "project_owner_unavailable",
+        "processId": 40124,
+        "processStartedAtUtc": "2026-10-21T21:07:44.7681352Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "owner-unavailable"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "project_owner_mismatch",
+        "processId": 46820,
+        "processStartedAtUtc": "2026-10-21T21:07:44.8848884Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "owner-mismatch"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "contract_required",
+        "processId": 88216,
+        "processStartedAtUtc": "2026-10-21T21:07:45.0096166Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "debugger-contract-required"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "build_required",
+        "processId": 31912,
+        "processStartedAtUtc": "2026-10-21T21:07:45.1262714Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "watch-build-required"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "build_required",
+        "processId": 54432,
+        "processStartedAtUtc": "2026-10-21T21:07:45.2415797Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "debugger-build-required"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "events_file_unavailable",
+        "processId": 79436,
+        "processStartedAtUtc": "2026-10-21T21:07:45.3518126Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "existing-event-file"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "events_file_unavailable",
+        "processId": 76848,
+        "processStartedAtUtc": "2026-10-21T21:07:45.4692512Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "event-destination-directory"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "events_file_unavailable",
+        "processId": 41524,
+        "processStartedAtUtc": "2026-10-21T21:07:45.5920255Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "missing-event-directory"
+      },
+      {
+        "observedApplicationChildren": 0,
+        "code": "session_directory_unavailable",
+        "processId": 36564,
+        "processStartedAtUtc": "2026-10-21T21:07:45.7117615Z",
+        "shortLivedIdentityUnavailable": 0,
+        "stdoutLines": 1,
+        "consoleHelpers": 1,
+        "passed": true,
+        "stderrLines": 1,
+        "exitCode": 1,
+        "ownedJobEmpty": true,
+        "name": "blocked-session-directory"
+      }
+    ]
+  },
+  "sourceVSCodeStartup": {
+    "outcome": "passed",
+    "vscode": "1.143.0",
+    "cases": [
+      {
+        "name": "missing-coordinator",
+        "exitCode": -4058,
+        "passed": true
+      },
+      {
+        "name": "missing-configuration",
+        "code": "configuration_not_found",
+        "exitCode": 1,
+        "passed": true
+      },
+      {
+        "name": "malformed-configuration",
+        "code": "configuration_invalid",
+        "exitCode": 1,
+        "passed": true
+      },
+      {
+        "name": "blocked-session-directory",
+        "code": "session_directory_unavailable",
+        "exitCode": 1,
+        "passed": true
+      }
+    ],
+    "debugSessionsStarted": 0,
+    "presentation": "output-panel-visually-reviewed"
+  },
+  "sourceVSCodeDebugger": {
+    "independentlyRetainedProcesses": 22,
+    "devkit": "3.40.215",
+    "outcome": "passed",
+    "rendering": "patched.bmp visually reviewed",
+    "vscode": "1.143.0",
+    "csharp": "2.160.4",
+    "events": 115,
+    "observedProcessesExited": true
+  },
+  "sourceProjectLaunch": [
+    {
+      "processes": 13,
+      "passed": true,
+      "cleanup": "graceful",
+      "scenario": "native-close"
+    },
+    {
+      "processes": 13,
+      "passed": true,
+      "cleanup": "forced_cleanup",
+      "scenario": "debugger-stop"
+    },
+    {
+      "processes": 13,
+      "passed": true,
+      "cleanup": "graceful",
+      "scenario": "contract-change"
+    },
+    {
+      "processes": 13,
+      "passed": true,
+      "cleanup": "kernel_job_close",
+      "scenario": "coordinator-crash"
+    }
+  ],
+  "sourceVisualStudio": {
+    "cleanup": {
+      "observedAtUtc": "2026-10-21T21:02:36.3105246Z",
+      "startedAtUtc": "2026-10-21T20:58:06.3222531Z",
+      "processes": [
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.0521234Z",
+          "processId": 4544,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.7609517Z",
+          "processId": 48372,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.8655626Z",
+          "processId": 42096,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:01.8638484Z",
+          "processId": 77848,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.2202923Z",
+          "processId": 18208,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.6347622Z",
+          "processId": 73812,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:01.3701344Z",
+          "processId": 15088,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.7585993Z",
+          "processId": 33220,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.262326Z",
+          "processId": 53324,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:01.0249026Z",
+          "processId": 53032,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:01.8548844Z",
+          "processId": 88476,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.6673142Z",
+          "processId": 68092,
+          "exited": true
+        },
+        {
+          "log": "project-b16df8dc265b453386fc651acf88235f.jsonl",
+          "startedAtUtc": "2026-10-21T21:02:02.784068Z",
+          "processId": 57272,
+          "exited": true
+        }
+      ],
+      "failures": []
+    },
+    "negativeCases": [
+      {
+        "ideReportedExit": 1,
+        "independentHandleRetained": false,
+        "processId": 41860,
+        "code": "contract_required"
+      },
+      {
+        "ideReportedExit": 1,
+        "independentHandleRetained": false,
+        "processId": 16724,
+        "code": "configuration_invalid"
+      }
+    ],
+    "installedFileVersion": "18.11.12306.390 built by: stable",
+    "correctedF5": "Connected native application; screenshot reviewed"
+  },
+  "packages": [
+    {
+      "bytes": 25576,
+      "sha256": "205E3E89A47463B44289739CEDB0363D2B6A6ACFDDC9138EE2335D8C9392095F",
+      "name": "Sotsera.Spar.Bridge.0.1.0.nupkg"
+    },
+    {
+      "bytes": 12074198,
+      "sha256": "2D17389BC50913A072C19F7DD7F018496DDC3FA8F196998BD18F4788EF62D635",
+      "name": "Sotsera.Spar.Build.0.1.0.nupkg"
+    },
+    {
+      "bytes": 472503,
+      "sha256": "F0B23B644A1D9F4F98DADC758256CE2B610A8313441EF892EDEDB0FE539883B5",
+      "name": "Sotsera.Spar.Development.0.1.0.nupkg"
+    },
+    {
+      "bytes": 143991,
+      "sha256": "E6DF112ACD6AD3D71FE3C9D259EBFA7E06EBA5EF4014622CFB25EADC61162AAC",
+      "name": "Sotsera.Spar.Windows.0.1.0.nupkg"
+    },
+    {
+      "bytes": 161266,
+      "sha256": "7D58051E1E1A13698897CBB46D33E9E7DD2EEABAB385E6E22EDCD5645B161782",
+      "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg"
+    }
+  ],
+  "lightweight": {
+    "skillCaseDefinitions": 14,
+    "selectorTests": 34,
+    "agentSkills": 6
+  },
+  "cleanMachine": "unverified",
+  "packagePreflight": {
+    "coordinatorSha256": "4757A08C69D90454FD008ABF4EE54C7CCB21261C8F007578B62A521E6BE81BBC",
+    "cases": [
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:46.1836567Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "usage",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 57860,
+        "stdoutLines": 0,
+        "code": null,
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:46.2901912Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "missing-config",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 10544,
+        "stdoutLines": 1,
+        "code": "configuration_not_found",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:46.4180757Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "malformed-config",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 20484,
+        "stdoutLines": 1,
+        "code": "configuration_invalid",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:46.5392004Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "null-config",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 17048,
+        "stdoutLines": 1,
+        "code": "configuration_invalid",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:46.6676181Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "oversized-config",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 27248,
+        "stdoutLines": 1,
+        "code": "configuration_invalid",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:46.7760591Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "invalid-limits",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 18272,
+        "stdoutLines": 1,
+        "code": "configuration_invalid",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:46.9050165Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "config-is-directory",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 89284,
+        "stdoutLines": 1,
+        "code": "configuration_not_found",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.0240255Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "locked-config",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 28268,
+        "stdoutLines": 1,
+        "code": "configuration_unavailable",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.1369661Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "bounded-message",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 39580,
+        "stdoutLines": 1,
+        "code": "configuration_not_found",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.2573579Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "normalized-message",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 17832,
+        "stdoutLines": 1,
+        "code": "configuration_invalid",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.382534Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "unknown-before-config",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 13704,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.4817905Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "unknown-before-events",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 58404,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.5795846Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "duplicate-flag",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 33952,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.6864619Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "extra-positional",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 69832,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.7818849Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "option-first",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 4060,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.8873501Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "missing-events-value",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 67540,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:47.9974114Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "empty-events-value",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 54244,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.1049457Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "events-value-is-option",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 46544,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.1996196Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "missing-owner-values",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 60492,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.2947947Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "missing-owner-ticks",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 32060,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.3921857Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "invalid-owner-pid",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 33384,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.5018256Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "invalid-owner-ticks",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 83684,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.6052189Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "owner-ticks-overflow",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 68064,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.722462Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "duplicate-events-option",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 77296,
+        "stdoutLines": 1,
+        "code": "invalid_arguments",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.8328551Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "owner-unavailable",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 40428,
+        "stdoutLines": 1,
+        "code": "project_owner_unavailable",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:48.9639849Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "owner-mismatch",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 9880,
+        "stdoutLines": 1,
+        "code": "project_owner_mismatch",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:49.0920102Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "debugger-contract-required",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 44976,
+        "stdoutLines": 1,
+        "code": "contract_required",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:49.2156843Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "watch-build-required",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 22964,
+        "stdoutLines": 1,
+        "code": "build_required",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:49.3301917Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "debugger-build-required",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 88900,
+        "stdoutLines": 1,
+        "code": "build_required",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:49.4513096Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "existing-event-file",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 53424,
+        "stdoutLines": 1,
+        "code": "events_file_unavailable",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:49.5718629Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "event-destination-directory",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 83972,
+        "stdoutLines": 1,
+        "code": "events_file_unavailable",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:49.692632Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "missing-event-directory",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 19136,
+        "stdoutLines": 1,
+        "code": "events_file_unavailable",
+        "passed": true,
+        "stderrLines": 1
+      },
+      {
+        "processStartedAtUtc": "2026-10-21T21:07:49.8164693Z",
+        "ownedJobEmpty": true,
+        "consoleHelpers": 1,
+        "observedApplicationChildren": 0,
+        "name": "blocked-session-directory",
+        "shortLivedIdentityUnavailable": 0,
+        "exitCode": 1,
+        "processId": 52768,
+        "stdoutLines": 1,
+        "code": "session_directory_unavailable",
+        "passed": true,
+        "stderrLines": 1
+      }
+    ],
+    "allPassed": true
+  },
+  "packageVSCodeStartup": {
+    "outcome": "passed",
+    "vscode": "1.143.0",
+    "cases": [
+      {
+        "name": "missing-coordinator",
+        "exitCode": -4058,
+        "passed": true
+      },
+      {
+        "name": "missing-configuration",
+        "code": "configuration_not_found",
+        "exitCode": 1,
+        "passed": true
+      },
+      {
+        "name": "malformed-configuration",
+        "code": "configuration_invalid",
+        "exitCode": 1,
+        "passed": true
+      },
+      {
+        "name": "blocked-session-directory",
+        "code": "session_directory_unavailable",
+        "exitCode": 1,
+        "passed": true
+      }
+    ],
+    "debugSessionsStarted": 0,
+    "presentation": "output-panel-visually-reviewed"
+  },
+  "packageConsumer": {
+    "observedAt": "2026-10-21T23:07:11.2815655+02:00",
+    "passed": true,
+    "kind": "minimal-application",
+    "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-consumer-31cb817e5e28412189edd5b0df34e09c"
+  },
+  "packageDevelopment": {
+    "scenario": "minimal-package",
+    "passed": true,
+    "coordinatorProcessId": 79536,
+    "startedAtUtc": "2026-10-21T21:06:08.1801534Z",
+    "actualExitCode": 0,
+    "abruptOwnerKill": false,
+    "forcedCleanupRequested": false,
+    "independentlyRetainedProcesses": 31,
+    "unrelatedSurvived": true,
+    "rendering": "not-exercised",
+    "observation": "public-inspection-no-probe-commands; PNG review required"
+  },
+  "packageProduction": {
+    "rendering": "pixels-captured-greeting-review-required",
+    "retainedDescendants": 7,
+    "retainedBrowserProcesses": 6,
+    "mode": "NativeAOT",
+    "noSdkMachine": "not-exercised",
+    "observedAt": "2026-10-21T23:07:11.2793903+02:00",
+    "passed": true,
+    "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-published-f195b087b27447e789765b37cab12670",
+    "executableSha256": "AC3D3AA0993D64ADE341DEE7DAAAABD8CD70548F8D47FD6F40C035DDB152B4E2"
+  },
+  "packageVisualStudio": {
+    "correctedF5": "Connected native application; screenshot reviewed",
+    "negativeCases": [
+      {
+        "independentHandleRetained": false,
+        "ideReportedExit": 1,
+        "code": "contract_required",
+        "processId": 46928
+      },
+      {
+        "independentHandleRetained": false,
+        "ideReportedExit": 1,
+        "code": "configuration_invalid",
+        "processId": 86544
+      }
+    ],
+    "sandboxedMonitor": "unavailable; empty result not counted",
+    "cleanup": {
+      "processes": [
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:07.1801802Z",
+          "processId": 23396
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:06.4826241Z",
+          "processId": 76452
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:07.0519043Z",
+          "processId": 49292
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:07.1575904Z",
+          "processId": 23304
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:05.386437Z",
+          "processId": 40928
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:06.2952307Z",
+          "processId": 64648
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:07.0765417Z",
+          "processId": 79224
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:06.2856478Z",
+          "processId": 36356
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:07.2355306Z",
+          "processId": 81700
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:06.6935635Z",
+          "processId": 38264
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:07.1605514Z",
+          "processId": 46304
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:05.7862143Z",
+          "processId": 34784
+        },
+        {
+          "exited": true,
+          "log": "project-9097e111f82f4dac9df90f643012f4f0.jsonl",
+          "startedAtUtc": "2026-10-21T21:11:06.6527265Z",
+          "processId": 86540
+        }
+      ],
+      "failures": [],
+      "startedAtUtc": "2026-10-21T21:11:33.6436174Z",
+      "observedAtUtc": "2026-10-21T21:12:14.8887406Z"
+    }
+  },
+  "releaseBoundaryLogSha256": "D5B75B6FCAFB83C78B737348630ADC4F2B5E2BCC2DE5F2A1C8B15C93970393D1",
+  "packageVSCodeDebugger": {
+    "outcome": "passed",
+    "observedProcessesExited": true,
+    "vscode": "1.143.0",
+    "events": 115,
+    "rendering": "patched.bmp visually reviewed",
+    "csharp": "2.160.4",
+    "devkit": "3.40.215",
+    "independentlyRetainedProcesses": 22
+  }
+}

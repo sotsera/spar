@@ -23,6 +23,12 @@ Choose a new directory outside the checkout. The script copies application-owned
 
 The scaffold command is a repository convenience, not a prerequisite for later builds. Its output is the inspectable integration example; the consumer can be moved with its `.feed`, then rebuilt. Regenerate the absolute paths in `backend/Properties/launchSettings.json` after moving it. Keep one canonical full directory path when opening the editor: mixing Windows 8.3 aliases with full project paths can make C# Dev Kit treat an edited file as a separate file-based program.
 
+The packaged coordinator uses the same [startup-error contract](11-development-session.md#startup-errors)
+as source output: strict CLI options, bounded actionable diagnostics and exit `1` for expected preflight
+failures. Its copied VS Code adapter reveals Output automatically; the Visual Studio bootstrap relays
+coordinator errors into Debug output. The [D1 record](evidence/startup-errors-2026-10-21/README.md) retains
+fresh package CLI and actual editor failure/recovery checks separately from historical acceptance.
+
 In `spar.dev.json`, the scaffold sets `frontend.workingDirectory` to `backend/frontend` and uses the existing
 defaults for `fileName` (`cmd.exe`), `arguments` (`/d /c npm run dev`) and `port` (`0`, chosen dynamically).
 Explicit values remain supported for a different frontend command or port. Paths remain relative to the

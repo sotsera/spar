@@ -26,6 +26,12 @@ Use the debugger's **Stop**, or **Spar: Stop development session**, to force ter
 
 The **Spar development** output retains structured public events; the status item distinguishes ready, rejected edits, updating/restarting, and failed builds. C# diagnostics retain their normal source navigation in Problems. Full-build compiler diagnostics are also placed in the **Spar build** diagnostic collection with file/line/column. Unsupported Hot Reload edits may be reported only in Dev Kit's **.NET Hot Reload** output: inspect that output and invoke the explicit Spar restart command. Spar does not parse Dev Kit's private logs or certify its interactive modal decisions.
 
+Preflight `startup-error` records automatically reveal **Spar development**, even before a session starts.
+A nonzero coordinator exit also reveals it and prints the exit result, including stderr-only failures.
+Correct the reported configuration/path/access problem and launch again. No debugger session or native
+readiness is implied by that error. The [startup-error guide](11-development-session.md#startup-errors)
+describes its JSON and exit contract.
+
 ## Ownership and immutable contracts
 
 The coordinator first builds and starts the authenticated frontend. A private stdout handoff gives the editor the application project, generation, arguments, and capability environment. These capability frames are excluded from `--events-file` and extension output. Do not record the raw debugger-owner stdout stream or resolved launch configuration as public evidence.
@@ -47,6 +53,13 @@ pwsh -NoProfile -File eng/Test-VSCodeDevelopment.ps1 -VerifyRender
 ```
 
 The test copies source/contracts/frontend into an isolated fixture and launches the actual installed extensions in an Extension Development Host. It exercises backend breakpoints before and after relaunch, frontend HMR, debugger-owned method patch, state retention, compiler rejection/recovery, source-located full-build errors, delayed retirement, a failed contract rebuild and correction, debugger Stop, and graceful native close in a second session. A separate PowerShell supervisor retains OS process handles and checks actual exit. Fixtures contain a `node_modules` junction; do not recursively delete them as routine cleanup.
+
+For startup failures, run `pwsh -NoProfile -File eng/Test-VSCodeStartup.ps1 -PauseForVisualReview`.
+Review the automatically revealed Output panel, then create the printed workspace's `reviewed` file.
+The isolated window closes after review. Without that switch the receipt claims API checks only.
+`-Coordinator` and `-ExtensionDirectory` select a fresh consumer's packaged tool and copied adapter.
+These negative cases check that no actual debug session starts; the positive debugger driver remains
+separate. See the [D1 record](evidence/startup-errors-2026-10-21/README.md) for current evidence.
 
 `-VerifyRender` requires accent pixels from the actual native window and a retained BMP for visual review. Without it, the receipt explicitly says rendering was not exercised. A two-second settling interval after initial readiness and the CSS edit avoids saving immediately into Dev Kit initialization; this is a harness interval, not a public Hot Reload-ready signal. Failed attempts remain under `artifacts/vscode-development` and must not be counted as passing evidence.
 
