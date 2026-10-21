@@ -8,6 +8,12 @@ The [external package-consumer walkthrough](evidence/milestone-acceptance-2026-1
 
 ## Setup
 
+The later [startup-helper execution record](evidence/development-startup-2026-10-21/README.md) exercises
+the ordinary minimal application in both a disposable source solution and a fresh two-project package
+consumer on Visual Studio Community 2026 18.11.0 Stable. Actual IDE gestures, native state retention,
+compiler/unsupported-edit diagnostics, contract rebuild/relaunch and debugger Stop passed. Each lane
+verified 40 retained process exits across three sessions and three exclusive profile-lease opens.
+
 Use the [selected prerequisites](23-minimal-application.md#prerequisites). The native pass used Visual Studio Community 2026 stable (installed `devenv.exe` version `18.11.12306.390`, MSBuild `18.11.0-1.26475.11`). Prepare from the repository root:
 
 ```powershell

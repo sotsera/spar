@@ -89,8 +89,9 @@ Hot Reload owner in this lane.
 For Visual Studio, choose the project under the solution's **samples** folder (the
 **fixtures** folder has the same preserved assembly name), then **Spar development**.
 Build the development tool and install frontend dependencies first. For restart-required
-edits, close, wait for cleanup, rebuild and F5. Historical fixture walkthroughs do not
-establish a new minimal-app Visual Studio acceptance pass.
+edits, close, wait for cleanup, rebuild and F5. The
+[startup-helper record](evidence/development-startup-2026-10-21/README.md) supplies actual source/package
+minimal-app Visual Studio acceptance, with native captures and retained process exits.
 
 For an ordinary package application, `eng/New-PackageConsumer.ps1` defaults to the minimal
 source and writes `consumer.json` identifying that choice. Follow the [package guide](18-package-consumer.md)

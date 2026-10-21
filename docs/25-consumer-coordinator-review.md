@@ -77,7 +77,8 @@ The commands and ownership choice remain unchanged in all proposals:
 | Production | `dotnet publish backend/Spar.NativeSample.csproj -c Release -o artifacts/aot --disable-build-servers` | None; copied payload runs without coordinator or Node |
 
 The [package guide](18-package-consumer.md) owns preparation, launch-profile relocation and full commands.
-Neither this table nor the proposed helper establishes a new minimal-app Visual Studio pass.
+The [C2 execution record](evidence/development-startup-2026-10-21/README.md) supplies the later
+minimal-app Visual Studio pass; the setup table alone is not execution evidence.
 
 ## C1: remove redundant values, preserve paths and ownership
 
@@ -186,8 +187,8 @@ custom window sizing/callbacks can retain the existing `Connect`/`SparApplicatio
 
 Implementation contract:
 
-The [C2 execution record](evidence/development-startup-2026-10-21/README.md) separates passing automated
-checks from pending package VS Code and actual Visual Studio acceptance.
+The [C2 execution record](evidence/development-startup-2026-10-21/README.md) records passing automated
+checks, source/package VS Code and actual source/package Visual Studio acceptance.
 
 - Synchronous, called on the existing STA entry thread. Never put the native message pump on `Task.Run`.
 - Start project bootstrap only under the same current environment conditions; an existing owner wins.
@@ -356,7 +357,7 @@ conditions; add a narrowly controlled case only for a missing failure boundary. 
 only assert the new class shape do not establish value.
 
 Clean-machine qualification remains deferred. The prior minimal-app record did not execute Visual Studio;
-C2 requires that new walkthrough rather than inheriting the old fixture's acceptance.
+C2's separate record supplies new source/package walkthroughs for the helper-based application.
 
 ## Review status
 
@@ -368,5 +369,5 @@ C2 requires that new walkthrough rather than inheriting the old fixture's accept
 
 Source inspection and documentation checks validate this review's references and consistency, not the proposed
 APIs or extracted lifetimes. Issue #34 is closed after review acceptance. Implementation PRs reference it
-and record their own evidence. C1 is merged; C2 implementation does not imply completed IDE acceptance;
-K1 remains unimplemented.
+and record their own evidence. C1 is merged; C2 in PR #41 has completed local acceptance, including the
+actual editor lanes, and awaits review/merge. K1 remains unimplemented.
