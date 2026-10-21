@@ -6,6 +6,25 @@ Executed on 2026-10-21 on the selected Windows developer machine. Base: merged P
 included in this branch's 73-test baseline. Source/package hashes and compact observed results are in
 [receipt.json](receipt.json). This record adds no clean-machine or public-release qualification.
 
+Final filesystem hardening: `7901c33` changes only CLI pre-session error handling and its process driver.
+An existing root can deny creation of the first random session subdirectory even though creating/opening
+the root itself succeeds. A real ACL reproduction failed with exit `-532462766` before the correction;
+its original [failure receipt](denied-first-failure.json) is retained. The CLI now maps IO/access failures
+only before its first public session event; errors after that point keep the existing session behavior.
+The final build had no warnings/errors, all 73 managed tests passed, and all **34** source CLI cases
+passed. The denied-directory fixture restores its original ACL in `finally`. Earlier 33-case receipts
+and editor walkthroughs below remain bound to `981810a`; the follow-up receipt records final checks
+separately instead of reinterpreting those runs.
+
+The final packages were restored into another new isolated consumer. All **34 packaged CLI cases**
+passed, including the real create-directory denial with restored ACL, and valid native development /
+updates / restart passed again with all 31 retained processes exited. Earlier Release exclusion and
+copied AOT evidence remains bound to the first package set; the follow-up changes no production code.
+The final packaged VS Code debugger regression also passed, with 22 retained process exits. Its final
+BMP showed only a title bar when inspected, despite the driver's passing pixel assertion, and is not
+counted as reviewed native-rendering evidence. The earlier complete source/package captures remain
+scoped to their original builds; the follow-up alters no rendering code or editor presentation.
+
 ## Behavior and scope
 
 The complete CLI argument list is validated before configuration access or startup. Expected input,
