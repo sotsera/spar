@@ -19,6 +19,11 @@ Choose a new directory outside the checkout. The script copies application-owned
 
 The scaffold command is a repository convenience, not a prerequisite for later builds. Its output is the inspectable integration example; the consumer can be moved with its `.feed`, then rebuilt. Regenerate the absolute paths in `backend/Properties/launchSettings.json` after moving it. Keep one canonical full directory path when opening the editor: mixing Windows 8.3 aliases with full project paths can make C# Dev Kit treat an edited file as a separate file-based program.
 
+In `spar.dev.json`, the scaffold sets `frontend.workingDirectory` to `backend/frontend` and uses the existing
+defaults for `fileName` (`cmd.exe`), `arguments` (`/d /c npm run dev`) and `port` (`0`, chosen dynamically).
+Explicit values remain supported for a different frontend command or port. Paths remain relative to the
+configuration file; backend watching, contract/startup files and output paths are still explicit.
+
 From the consumer directory:
 
 ```powershell

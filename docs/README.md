@@ -19,8 +19,8 @@ not a reading order. Historical records remain at their existing paths.
 | Work on test helpers or agent skills | [Integration helpers](22-integration-test-helpers.md), [repository skills](20-agent-skills.md) |
 | Understand product constraints or upstream provenance | [Product direction](02-product-direction.md), [reference/license review](01-reference-projects.md) |
 
-Active proposal: [consumer setup and coordinator review](25-consumer-coordinator-review.md).
-Its before/after APIs and resource ownership changes await maintainer decisions; they are not current commands.
+Accepted review: [consumer setup and coordinator review](25-consumer-coordinator-review.md).
+C1 trims redundant scaffold settings. Its proposed startup API (C2) and watcher owner (K1) remain future work.
 
 The minimal app is under `samples/`. Detailed acceptance drivers use the instrumented app under
 `fixtures/`; see the [migration map](23-minimal-application.md#scenario-migration-map). A fixture command
@@ -28,7 +28,7 @@ is not the recommended starting application. Each topic owns its commands; this 
 
 ## Status and deferred work
 
-Status reconciled after [PR #38](https://github.com/sotsera/spar/pull/38), merged as `7a0f482` on 2026-10-21.
+Status reconciled after [PR #39](https://github.com/sotsera/spar/pull/39), merged as `197b48c` on 2026-10-21.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)
@@ -36,8 +36,9 @@ This section owns the current repository status; individual evidence records rem
 - Simplification [#30](https://github.com/sotsera/spar/issues/30), [#31](https://github.com/sotsera/spar/issues/31),
   [#32](https://github.com/sotsera/spar/issues/32) and [#33](https://github.com/sotsera/spar/issues/33) are merged
   and closed: proportional CI, explicit test helpers, ordinary application/fixture separation and current guidance.
-  [#34](https://github.com/sotsera/spar/issues/34) now has a [consumer/coordinator proposal](25-consumer-coordinator-review.md)
-  awaiting maintainer review. Implementation remains separately scoped; no broad runtime rewrite is authorized.
+  [#34](https://github.com/sotsera/spar/issues/34) is also closed after acceptance of the
+  [consumer/coordinator review](25-consumer-coordinator-review.md). Implementation is separately scoped:
+  C1 trims scaffold defaults first; C2 and K1 remain future PRs.
 - The [minimal-app record](evidence/minimal-application-2026-10-21/README.md) covers actual source/package
   development, copied AOT and VS Code checks. Visual Studio was **not rerun for the new minimal app**.
   Earlier fixture IDE acceptance does not establish that new pass.

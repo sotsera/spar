@@ -153,7 +153,7 @@ $settings = [ordered]@{
   generatedClient = 'backend/frontend/src/generated/client.js'; sessionDirectory = 'artifacts/sessions'
   watchBackend = $true; contractFile = 'contracts/BackendContract.cs'
   restartFiles = @('backend/Program.cs', 'backend/Program.Development.cs')
-  frontend = @{ fileName = 'cmd.exe'; arguments = @('/d', '/c', 'npm', 'run', 'dev'); workingDirectory = 'backend/frontend'; port = 0 }
+  frontend = @{ workingDirectory = 'backend/frontend' }
 }
 $settings | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root 'spar.dev.json')
 $coordinator = Join-Path $root '.tools/Spar.Dev.exe'

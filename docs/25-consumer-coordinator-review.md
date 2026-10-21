@@ -1,9 +1,10 @@
 # Consumer setup and coordinator review
 
-Proposal for [#34](https://github.com/sotsera/spar/issues/34), reviewed against
+Review for [#34](https://github.com/sotsera/spar/issues/34), reviewed against
 `7a0f482bb22dd9ef8bed3b9ed987dd5b254509b2` (2026-10-21). This is a source-based design
-review, not implemented API documentation or new integration acceptance. Maintainer decisions
-are pending. Current commands remain in the [minimal application](23-minimal-application.md)
+review, not API documentation or integration acceptance for the remaining proposals. The maintainer
+accepted the sequence after merging PR #39; C1 is the first separate implementation below.
+Current commands remain in the [minimal application](23-minimal-application.md)
 and [package consumer](18-package-consumer.md) guides.
 
 ## Recommendation and delivery boundaries
@@ -19,8 +20,8 @@ Proceed in small, separately reviewable steps:
 Keep the current package split, early restore properties, explicit contract project and central coordinator
 sequencing. Defer a custom MSBuild SDK, inferred build output paths, a general lifecycle framework and
 additional extraction of already cohesive inspection logic. Neither fewer files nor fewer lines alone
-justifies a new abstraction. C1, C2 and K1 are proposed PR scopes, not newly published issues or authorized
-implementation. Accepting this review should record which scopes to pursue; they need their own validation.
+justifies a new abstraction. C1, C2 and K1 are separate PR scopes, not newly published issues.
+C1 removes the redundant scaffold values; C2 and K1 remain future changes with their own validation.
 
 ## Consumer: the current minimum
 
@@ -79,7 +80,7 @@ Neither this table nor the proposed helper establishes a new minimal-app Visual 
 
 ## C1: remove redundant values, preserve paths and ownership
 
-Current external `spar.dev.json` (property order normalized):
+External `spar.dev.json` at the reviewed baseline (property order normalized):
 
 ```json
 {
@@ -99,7 +100,7 @@ Current external `spar.dev.json` (property order normalized):
 }
 ```
 
-Proposed scaffold output, using defaults already present in
+Scaffold output after C1, using defaults already present in
 [DevelopmentSettings](../src/Sotsera.Spar.Development/DevelopmentSettings.cs):
 
 ```json
@@ -339,7 +340,7 @@ where Debug tooling ships. The following are required checks, not a request to r
 
 | Scope | Compatibility risks | Required implementation evidence |
 | --- | --- | --- |
-| C1: scaffold defaults | Omitted values deserialize differently; custom commands or config-relative paths change | Compare old/new loaded settings, keep explicit/custom command cases; fresh minimal external consumer build/develop/publish with isolated feed/cache. Existing comprehensive fixture scaffold remains explicit and works. |
+| C1: scaffold defaults | Omitted values deserialize differently; custom commands or config-relative paths change | Compare old/new loaded settings, keep explicit/custom command cases; fresh minimal external consumer build/develop/publish with isolated feed/cache. The comprehensive fixture remains an explicit scaffold option and works. |
 | C2: Debug startup helper | Early handler construction, double ownership, changed disposal order, STA violation, accidentally enabled inspection, lost project-launch completion | Build/managed tests; minimal readiness rejection/reload, source and fresh package development; disabled inspection and authority checks; actual source/package VS Code; project-launch lifecycle and actual source/package minimal-app Visual Studio walkthrough. Verify Release exclusion and copied AOT after package changes. An unavailable IDE check stays unavailable. |
 | K1: watcher resource owner | Partial-start resource leak, premature nested-job termination, lost diagnostics, changed rude-edit handling, lost force responsiveness | Real watcher patch/error/recovery, startup/dependency/build races, uncancellable retirement and explicit force; owned SPA/owner-loss suites; inspection timeout during retirement; project-launch and VS Code regressions for shared loop changes; fresh package watcher and production-boundary checks. Verify actual retained-handle exits, not only events. |
 | Any later build convention | Cold restore differs from warm builds, custom output/configuration breaks, contract becomes patchable, production tools leak | Fresh empty-cache direct app restore/build, generated contract/TypeScript, custom paths/configurations, immutable debugger contracts, strict AOT and attributed CoreCLR negatives, copied payload inspection; separate proposal before code. |
@@ -358,9 +359,9 @@ C2 would require that new walkthrough rather than inheriting the old fixture's a
 - [x] Current consumer setup and concrete before/after proposals recorded.
 - [x] Current transition/event/ownership boundaries mapped to source.
 - [x] Benefits, rejected alternatives, migration risks and affected evidence identified.
-- [ ] Maintainer selects, changes or rejects C1, C2 and K1.
-- [ ] Agreed implementation is scoped separately; this review does not implement it.
+- [x] Maintainer accepts C1, then C2, then K1 as separate scopes after merging PR #39.
+- [x] Agreed implementation is scoped separately; the review PR implements none of it.
 
 Source inspection and documentation checks validate this review's references and consistency, not the proposed
-APIs or extracted lifetimes. Keep #34 open while the maintainer decision is pending; use `Refs`, not `Fixes`,
-for the proposal PR.
+APIs or extracted lifetimes. Issue #34 is closed after review acceptance. Implementation PRs reference it
+and record their own evidence; C2 and K1 remain unimplemented.
