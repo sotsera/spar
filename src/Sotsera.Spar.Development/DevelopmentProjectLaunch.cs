@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
@@ -23,18 +24,26 @@ public sealed class DevelopmentProjectLaunch : IDisposable
 
     public static DevelopmentProjectLaunch Start(string settingsPath, string coordinatorPath)
     {
-        var settings = DevelopmentSettings.Load(settingsPath);
+        var settings = LoadSettings(settingsPath);
         using var application = Process.GetCurrentProcess();
         if (!string.Equals(application.MainModule?.FileName, settings.Application, StringComparison.OrdinalIgnoreCase))
         {
-            throw new InvalidOperationException("Project launch must run the configured application executable.");
+            throw StartupFailure("project_owner_mismatch", "Project launch must run the configured application executable.");
         }
         if (Environment.GetEnvironmentVariable("SPAR_DEV_APP_PIPE") is not null)
         {
-            throw new InvalidOperationException("The application already has a development owner.");
+            throw StartupFailure("owner_already_present", "The application already has a development owner.");
         }
 
-        Directory.CreateDirectory(settings.SessionDirectory);
+        try
+        {
+            Directory.CreateDirectory(settings.SessionDirectory);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+        {
+            throw StartupFailure("session_directory_unavailable", "Cannot create the session directory. Check write access to "
+                + settings.SessionDirectory);
+        }
         var eventsFile = Path.Combine(settings.SessionDirectory, "project-" + Guid.NewGuid().ToString("N") + ".jsonl");
         var start = new ProcessStartInfo(Path.GetFullPath(coordinatorPath))
         {
@@ -56,7 +65,7 @@ public sealed class DevelopmentProjectLaunch : IDisposable
         {
             start.Environment.Remove(variable);
         }
-        var coordinator = Process.Start(start) ?? throw new InvalidOperationException("Coordinator did not start.");
+        var coordinator = StartCoordinator(start);
         var owner = new DevelopmentProjectLaunch(coordinator, eventsFile);
         var launch = new TaskCompletionSource<DevelopmentDebugLaunch>(TaskCreationOptions.RunContinuationsAsynchronously);
         var output = owner.ReadOutputAsync(launch);
@@ -102,6 +111,48 @@ public sealed class DevelopmentProjectLaunch : IDisposable
         // The coordinator waits for this process's actual exit; waiting here would deadlock its retirement.
     }
 
+    private static DevelopmentSettings LoadSettings(string path)
+    {
+        try
+        {
+            return DevelopmentSettings.Load(path);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException or JsonException
+            or ArgumentException or InvalidDataException or NotSupportedException)
+        {
+            var code = error is FileNotFoundException or DirectoryNotFoundException
+                ? "configuration_not_found" : "configuration_invalid";
+            throw StartupFailure(code, "Cannot load session configuration: " + path
+                + ". Check the path, JSON, settings and read access.");
+        }
+    }
+
+    private static Process StartCoordinator(ProcessStartInfo start)
+    {
+        try
+        {
+            return Process.Start(start) ?? throw StartupFailure("coordinator_unavailable", "Coordinator did not start.");
+        }
+        catch (Exception error) when (error is Win32Exception or IOException or UnauthorizedAccessException)
+        {
+            throw StartupFailure("coordinator_unavailable", "Cannot start the coordinator: " + start.FileName
+                + ". Build the development tool and check its configured path.");
+        }
+    }
+
+    private static InvalidOperationException StartupFailure(string code, string message)
+    {
+        var text = new string(message.Select(value => char.IsControl(value) || value is '\u2028' or '\u2029'
+            ? ' ' : value).ToArray());
+        if (text.Length > 1024)
+        {
+            text = text[..1021] + "...";
+        }
+        var failure = $"Spar startup failed [{code}]: {text}";
+        Debug.WriteLine(failure);
+        return new InvalidOperationException(failure);
+    }
+
     private async Task ReadOutputAsync(TaskCompletionSource<DevelopmentDebugLaunch> launch)
     {
         try
@@ -110,6 +161,18 @@ public sealed class DevelopmentProjectLaunch : IDisposable
             while (await reader.ReadAsync().ConfigureAwait(false) is { } line)
             {
                 using var document = JsonDocument.Parse(line);
+                if (document.RootElement.GetProperty("kind").GetString() == "startup-error")
+                {
+                    var code = document.RootElement.GetProperty("code").GetString();
+                    var message = document.RootElement.GetProperty("message").GetString();
+                    if (string.IsNullOrWhiteSpace(code) || code.Length > 64
+                        || !code.All(value => value is >= 'a' and <= 'z' or '_') || string.IsNullOrWhiteSpace(message)
+                        || message.Length > 1024)
+                    {
+                        throw new InvalidDataException("Invalid coordinator startup error.");
+                    }
+                    throw StartupFailure(code, message);
+                }
                 if (document.RootElement.GetProperty("kind").GetString() == "debug-launch")
                 {
                     var value = JsonSerializer.Deserialize(line, DevelopmentJsonContext.Default.DevelopmentDebugLaunch)

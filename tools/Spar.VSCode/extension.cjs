@@ -68,6 +68,10 @@ exports.activate = (context) => {
         process.once("close", (code) => {
           if (owner === current) owner = undefined;
           status.hide();
+          if (code !== 0) {
+            output.appendLine(`Spar coordinator ended with ${code === null ? "a termination signal" : `exit code ${code}`}. Check the startup or session error above.`);
+            output.show(true);
+          }
           if (current.debug) vscode.debug.stopDebugging(current.debug);
           events.fire({ kind: "coordinator-exited", code });
         });
@@ -100,7 +104,7 @@ exports.activate = (context) => {
             if (event.kind === "backend-stopped") status.text = "Spar: build failed";
             if (event.kind === "debugger-diagnostic") status.text = "Spar: edit rejected";
             if (event.kind === "backend-updated") status.text = "Spar: updated";
-            if (event.kind === "session-failed") output.show(true);
+            if (event.kind === "session-failed" || event.kind === "startup-error") output.show(true);
             output.appendLine(line);
             events.fire(event);
           } catch (error) { output.appendLine("Invalid coordinator event: " + error.message); stop(); }

@@ -70,6 +70,7 @@ jobs:
         run: |
           ./eng/Test-IntegrationHelpers.ps1
           ./eng/Test-ProbeEvents.ps1
+          ./eng/Test-DevelopmentStartup.ps1
 
       - name: Check generated TypeScript client
         id: client
