@@ -1,5 +1,7 @@
 # Minimal Windows host and NativeAOT proof
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 Current publishing behavior: normal Release now packages the React SPA. The precursor lifecycle driver below uses an explicit `-p:SparNativeProbe=true` Release test build. See [production delivery](16-production-delivery.md) for the shipped application and separate test commands.
 
 Date: 2026-10-18. Scope: M1.2 / [upstream issue #3](https://github.com/sotsera/spar/issues/3).
@@ -20,8 +22,8 @@ Prerequisites: Windows x64, SDK `10.0.402`, an installed [WebView2 Evergreen Run
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet run --project samples/Spar.NativeSample --no-build
-dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
+dotnet run --project fixtures/Spar.NativeSample --no-build
+dotnet publish fixtures/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
 ```
 
 Debug uses CoreCLR; this sample defaults Release publishing to NativeAOT. AOT compilation warnings are errors. There is no automatic CoreCLR fallback. The published application needs its `WebView2Loader.dll` and the WebView2 license/notice files alongside the executable. PDBs are optional symbols. The browser engine remains a separately installed runtime with writable profile data; NativeAOT does not bundle it or make the app a single OS process.
@@ -48,7 +50,7 @@ Use PowerShell 7.4 or later for the test driver. The sample reports the explicit
 
 ```powershell
 pwsh -NoProfile -File eng/Test-NativeHost.ps1 `
-  -Executable samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe `
+  -Executable fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe `
   -ExpectedMode CoreCLR -VerifyRender
 
 # Point this at the copied published executable, outside the checkout.

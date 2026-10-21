@@ -12,6 +12,8 @@ try {
   $resources = foreach ($handle in $metadata.ManifestResources) { $metadata.GetString($metadata.GetManifestResource($handle).Name) }
   if ($types -match 'Inspection|ProtocolCompleted|ScriptCompleted|ProtocolReceiver|ProtocolReceived|ProtocolEventArgs') { throw 'Inspection types exist in Release.' }
   if ($methods -contains 'InspectAsync' -or $methods -contains 'get_EnableDevelopmentInspection') { throw 'Inspection API exists in Release.' }
+  if ($methods -contains 'get_EnableDevelopmentReadiness' -or $methods -contains 'ScheduleDevelopmentReadiness' -or
+      $methods -contains 'AcceptDevelopmentReadiness') { throw 'Development readiness exists in Release.' }
   if ($resources -contains 'Spar.Inspection.js') { throw 'Inspection script exists in Release.' }
   @{ assembly = $path; sha256 = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash;
     inspectionApiAbsent = $true; inspectionTypesAbsent = $true; inspectionScriptAbsent = $true } | ConvertTo-Json

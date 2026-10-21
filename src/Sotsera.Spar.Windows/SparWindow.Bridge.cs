@@ -306,6 +306,12 @@ public sealed unsafe partial class SparWindow
                 return;
             }
 
+#if DEBUG
+            if (AcceptDevelopmentReadiness(document, source, message))
+            {
+                return;
+            }
+#endif
             var work = document.Dispatch(source, message, reply => RunBridgeUi(() => SendReply(document, reply)));
             if (work is not null)
             {
@@ -355,6 +361,9 @@ public sealed unsafe partial class SparWindow
         {
             Check(_webView.PostWebMessageAsJson((nint)json), "Post a document-bound bridge reply");
         }
+#if DEBUG
+        ScheduleDevelopmentReadiness(document.Id, reply);
+#endif
     }
 
     private void RunBridgeUi(Action action)

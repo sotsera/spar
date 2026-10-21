@@ -7,12 +7,14 @@ function New-Fixture {
     [string]$FrontendDirectory = 'frontend',
     [Parameter(Mandatory)][string]$Repository,
     [Parameter(Mandatory)][string]$Application,
-    [Parameter(Mandatory)][string]$EvidenceDirectory
+    [Parameter(Mandatory)][string]$EvidenceDirectory,
+    [switch]$MinimalApplication
   )
   $directory = Join-Path $EvidenceDirectory ($Name + '-' + [guid]::NewGuid().ToString('N'))
   $frontend = Join-Path $directory $FrontendDirectory
   New-Item -ItemType Directory -Path $frontend -Force | Out-Null
-  $original = Join-Path $repository 'samples/Spar.NativeSample/frontend'
+  $sourceRoot = if ($MinimalApplication) { 'samples' } else { 'fixtures' }
+  $original = Join-Path $repository "$sourceRoot/Spar.NativeSample/frontend"
   foreach ($file in @('package.json','package-lock.json','tsconfig.json','index.html')) {
     Copy-Item -LiteralPath (Join-Path $original $file) -Destination $frontend
   }
@@ -22,7 +24,7 @@ function New-Fixture {
   $config = [IO.File]::ReadAllText((Join-Path $original 'vite.config.mjs')).Replace('../../../tools/Spar.Dev/frontend/vite-session.mjs', './vite-session.mjs')
   [IO.File]::WriteAllText((Join-Path $frontend 'vite.config.mjs'), $config)
   $settings = [ordered]@{
-    project = Join-Path $repository 'samples/Spar.NativeSample/Spar.NativeSample.csproj'
+    project = Join-Path $repository "$sourceRoot/Spar.NativeSample/Spar.NativeSample.csproj"
     application = $Application
     generatedClient = Join-Path $frontend 'src/generated/client.js'
     sessionDirectory = Join-Path $directory 'sessions'
@@ -37,17 +39,19 @@ function New-BackendFixture {
     [Parameter(Mandatory)][string]$Name,
     [Parameter(Mandatory)][string]$Repository,
     [Parameter(Mandatory)][string]$Application,
-    [Parameter(Mandatory)][string]$EvidenceDirectory
+    [Parameter(Mandatory)][string]$EvidenceDirectory,
+    [switch]$MinimalApplication
   )
-  $fixture = New-Fixture $Name 'backend/frontend' -Repository $Repository -Application $Application -EvidenceDirectory $EvidenceDirectory
+  $fixture = New-Fixture $Name 'backend/frontend' -Repository $Repository -Application $Application -EvidenceDirectory $EvidenceDirectory -MinimalApplication:$MinimalApplication
   $backend = Join-Path $fixture.Directory 'backend'
-  $original = Join-Path $repository 'samples/Spar.NativeSample'
+  $sourceRoot = if ($MinimalApplication) { 'samples' } else { 'fixtures' }
+  $original = Join-Path $repository "$sourceRoot/Spar.NativeSample"
   Get-ChildItem -LiteralPath $original -File | Where-Object Extension -in @('.cs','.csproj','.html','.js') |
     Copy-Item -Destination $backend
   $project = Join-Path $backend 'Spar.NativeSample.csproj'
   $contracts = Join-Path $fixture.Directory 'contracts'
   New-Item -ItemType Directory -Path $contracts | Out-Null
-  $originalContracts = Join-Path $repository 'samples/Spar.NativeSample.Contracts'
+  $originalContracts = Join-Path $repository "$sourceRoot/Spar.NativeSample.Contracts"
   Copy-Item -Path (Join-Path $originalContracts '*.cs'), (Join-Path $originalContracts '*.csproj') -Destination $contracts
   $contractProject = Join-Path $contracts 'Spar.NativeSample.Contracts.csproj'
   $contractXml = [xml][IO.File]::ReadAllText($contractProject)
@@ -69,10 +73,12 @@ function New-BackendFixture {
   }
   $xml.Save($project)
   $source = Join-Path $backend 'SampleBackend.cs'
-  $text = [IO.File]::ReadAllText($source).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend')
-  $text = $text.Replace('> 5000', '> 15000') # Isolated fixture only: keep work alive beyond the SDK's 5-second cleanup timeout.
-  $text += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
-  [IO.File]::WriteAllText($source, $text)
+  if (!$MinimalApplication) {
+    $text = [IO.File]::ReadAllText($source).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend')
+    $text = $text.Replace('> 5000', '> 15000') # Isolated fixture only: keep work alive beyond the SDK's 5-second cleanup timeout.
+    $text += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
+    [IO.File]::WriteAllText($source, $text)
+  }
   $fixture.Settings.project = $project
   $fixture.Settings.application = Join-Path $backend 'bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe'
   $fixture.Settings['watchBackend'] = $true

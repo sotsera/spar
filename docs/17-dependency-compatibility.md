@@ -1,5 +1,7 @@
 # Dependency-driven CoreCLR delivery
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 Issue [#11](https://github.com/sotsera/spar/issues/11), M1.7 / A15–A16. NativeAOT is the default production mode. An application that adds a dependency requiring runtime code generation can explicitly select self-contained, untrimmed CoreCLR. Development still uses CoreCLR independently of production selection. There is no automatic fallback, dependency classifier, or cached incompatibility decision.
 
 ## Persist the decision
@@ -19,7 +21,7 @@ In the application project, before its `Spar.Delivery.targets` import:
 This is a recorded application decision based on the dependency's actual API/diagnostic. The build requires attribution; it does not independently certify the explanation. The import currently lives in this repository; packaging it for external consumers belongs to #12. Keep the selection before this import, rather than in a late-loaded publish profile. Ordinary Release publishing then uses the selection:
 
 ```powershell
-dotnet publish samples/Spar.NativeSample -c Release -o artifacts/compatibility/publish --disable-build-servers
+dotnet publish fixtures/Spar.NativeSample -c Release -o artifacts/compatibility/publish --disable-build-servers
 ```
 
 `SparDeliveryMode` accepts only `NativeAOT` and `CoreCLR`. Omitting it selects NativeAOT. CoreCLR requires both attribution fields, self-contained publication, and no trimming. A conflicting direct `PublishAot` override fails with SPAR1004. Syntax, restore, compiler, linker and missing-tool failures remain failures in the selected mode.
@@ -27,7 +29,7 @@ dotnet publish samples/Spar.NativeSample -c Release -o artifacts/compatibility/p
 To reevaluate a persisted compatibility choice in CI:
 
 ```powershell
-dotnet publish samples/Spar.NativeSample -c Release -p:SparStrictAot=true -o artifacts/compatibility/strict --disable-build-servers
+dotnet publish fixtures/Spar.NativeSample -c Release -p:SparStrictAot=true -o artifacts/compatibility/strict --disable-build-servers
 ```
 
 This selects NativeAOT even when the project requests CoreCLR. It does not suppress diagnostics. When removing the incompatible dependency and call, remove the compatibility properties too; normal publishing immediately returns to NativeAOT. Strict checks can also run before removing the recorded selection.

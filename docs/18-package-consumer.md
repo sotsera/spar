@@ -2,6 +2,8 @@
 
 Local packages `0.1.0` expose the runtime, contract generation, build integration and development coordinator. They are a milestone baseline, not a public NuGet release. The [execution record](evidence/package-consumer-2026-10-20/README.md) retains package and external VS Code acceptance; the [Visual Studio walkthrough](evidence/milestone-acceptance-2026-10-20/README.md) completes the other editor lane. The [milestone matrix](19-milestone-1-acceptance.md) links the integrated evidence and remaining release-readiness work.
 
+The default scaffold now uses the ordinary [minimal application](23-minimal-application.md), with greeting/counter operations and no probe reporting. Historical editor acceptance above exercised the instrumented milestone application, now available explicitly with `-IntegrationFixture`.
+
 ## Prerequisites and a fresh application
 
 Use Windows x64, SDK `10.0.402`, Node `24.21.0` / npm `11.19.0`, PowerShell 7.4 or newer, installed WebView2 Runtime, and the Visual Studio C++ native build tools required by the [production guide](16-production-delivery.md). The generated `global.json` retains the selected SDK. Internet access is needed for ordinary SDK/runtime NuGet dependencies and the frontend lock file; Spar itself restores from the copied local feed.
@@ -55,7 +57,7 @@ code --new-window --extensionDevelopmentPath "$PWD/.vscode/spar-extension" .
 
 Open `Consumer.slnx`, choose **Spar development**, set a breakpoint in `GreetAsync`, and press F5. Continue to typed readiness, remove the breakpoint, then edit the CSS and greeting. Enable C# Hot Reload on save as described in the [debugger guide](13-vscode-development.md). Use **Spar: Restart backend** for coordinated restart, and debugger Stop to end the owned session. C# Dev Kit is the sole backend Hot Reload owner; the terminal watcher is not running alongside it.
 
-The reusable acceptance driver supports `eng/Test-VSCodeDevelopment.ps1 -ConsumerDirectory <fresh-consumer> -VerifyRender`. It deliberately edits the disposable consumer and uses an isolated profile. Do not run it on work you want to preserve. The recorded external pass used VS Code `1.142.0`, C# `2.160.4`, and C# Dev Kit `3.40.215`; it covers real breakpoints, updates, compiler recovery, restart, retirement and process exit. A failed or unavailable run does not establish acceptance.
+The reusable acceptance driver supports `eng/Test-VSCodeDevelopment.ps1 -ConsumerDirectory <fresh-consumer> -MinimalApplication -VerifyRender` for the default application. Omit `-MinimalApplication` only for a fresh consumer created with `New-PackageConsumer.ps1 -IntegrationFixture`. It deliberately edits the disposable consumer and uses an isolated profile. Do not run it on work you want to preserve. The recorded external pass used VS Code `1.142.0`, C# `2.160.4`, and C# Dev Kit `3.40.215`; it covers real breakpoints, updates, compiler recovery, restart, retirement and process exit. A failed or unavailable run does not establish acceptance.
 
 ## Visual Studio
 
@@ -89,11 +91,14 @@ Publish to a separate `artifacts/coreclr` directory. Use `-p:SparStrictAot=true`
 dotnet build Spar.slnx --disable-build-servers
 dotnet test --solution Spar.slnx --no-build
 pwsh -NoProfile -File eng/Pack-Local.ps1
+pwsh -NoProfile -File eng/Test-MinimalConsumer.ps1 -VerifyRender
 pwsh -NoProfile -File eng/Test-ExternalConsumer.ps1 -VerifyRender
 ```
 
-The external suite creates a new isolated directory, verifies its restore graph, runs frontend/backend updates and restart, checks Release exclusion, then executes copied AOT and dependency-driven CoreCLR publications. Review the native captures. CI runs the same package suite without desktop pixel assertions under the existing **Windows managed probe** check; it does not establish IDE or interactive rendering acceptance.
+The minimal suite verifies the default scaffold through public inspection, updates/restart, Release exclusion and copied AOT execution. The comprehensive external suite explicitly selects the integration fixture and creates a new isolated directory, verifies its restore graph, runs frontend/backend updates and restart, checks Release exclusion, then executes copied AOT and dependency-driven CoreCLR publications. Review the native captures. CI runs the same package suite without desktop pixel assertions under the existing **Windows managed probe** check; it does not establish IDE or interactive rendering acceptance.
 
 The package baseline contains newly authored Spar code. WebView2 loader provenance and license are unchanged from the [native host guide](09-native-host.md#webview2-source-and-license-provenance); the loader's license and notice follow both host packages into application outputs. The build-only generator redistributes the unmodified `Microsoft.CodeAnalysis.dll` and `Microsoft.CodeAnalysis.CSharp.dll` selected from SDK `10.0.402` (`Roslyn/bincore`), with that installation's `LICENSE.txt` and `ThirdPartyNotices.txt`. These are tooling binaries, not imported upstream source or runtime payload dependencies.
 
 The generated consumer includes the same frontend notice build as the sample: complete locked React/React DOM/scheduler licenses and the emitted Vite helper's core license. The private build package requires `dist/frontend-LICENSES.txt`, embeds it with the assets, and copies it alongside AOT and CoreCLR publications. The [production guide](16-production-delivery.md) describes verification and obligations when replacing or extending the frontend. Broader package/release review and public-release readiness remain separate work.
+
+The [separation execution record](evidence/minimal-application-2026-10-21/README.md) verifies both current package variants and both VS Code lanes. The scaffold clears inherited NuGet fallback folders as well as setting its private package cache. No new Visual Studio walkthrough or clean-machine pass is claimed.

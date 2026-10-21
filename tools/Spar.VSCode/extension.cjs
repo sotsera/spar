@@ -51,6 +51,7 @@ exports.activate = (context) => {
         const settings = path.resolve(root, options.settings);
         const args = [settings, "--debugger", "--owner-stdin"];
         if (options.probe) args.push("--probe");
+        if (options.inspect) args.push("--inspect");
         const process = spawn(coordinator, args, { cwd: root, windowsHide: true, stdio: "pipe" });
         const current = { process, folder, generation: 0, retiring: false, debug: undefined };
         owner = current;

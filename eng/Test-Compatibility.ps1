@@ -12,7 +12,7 @@ New-Item -ItemType Directory -Path $fixture | Out-Null
 # Copy source files only. No shared outputs, junctions, generated clients, or dependency caches.
 $paths = @('Directory.Build.props', 'Directory.Packages.props', 'global.json', 'build', 'eng/Build-AssetBundle.ps1',
   'eng/Write-PublishReceipt.ps1', 'eng/Test-InspectionBoundary.ps1', 'eng/Test-ProductionBoundary.ps1',
-  'eng/compatibility-probe', 'src', 'samples/Spar.NativeSample', 'samples/Spar.NativeSample.Contracts',
+  'eng/compatibility-probe', 'src', 'fixtures/Spar.NativeSample', 'fixtures/Spar.NativeSample.Contracts',
   'tools/Spar.ContractGenerator', 'tools/Spar.Dev/frontend')
 $files = @(git -C $repository ls-files --cached --others --exclude-standard -- @paths)
 if ($LASTEXITCODE) { throw 'Cannot enumerate fixture source.' }
@@ -21,8 +21,8 @@ foreach ($file in $files) {
   New-Item -ItemType Directory -Path (Split-Path $destination) -Force | Out-Null
   Copy-Item -LiteralPath (Join-Path $repository $file) -Destination $destination
 }
-$project = Join-Path $fixture 'samples/Spar.NativeSample/Spar.NativeSample.csproj'
-$backend = Join-Path $fixture 'samples/Spar.NativeSample/SampleBackend.cs'
+$project = Join-Path $fixture 'fixtures/Spar.NativeSample/Spar.NativeSample.csproj'
+$backend = Join-Path $fixture 'fixtures/Spar.NativeSample/SampleBackend.cs'
 $originalProject = [IO.File]::ReadAllText($project)
 $originalBackend = [IO.File]::ReadAllText($backend)
 $selection = @'

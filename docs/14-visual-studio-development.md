@@ -1,5 +1,7 @@
 # Visual Studio project launch
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 Status: the [manual native acceptance](evidence/project-launch-2026-10-19/README.md) covers issue #9 / A13: F5 and breakpoint, frontend HMR, supported backend Hot Reload, compiler recovery, documented unsupported/contract relaunch, and debugger Stop with actual process cleanup. Lifecycle automation separately covers owner loss and coordinator crash.
 
 The [external package-consumer walkthrough](evidence/milestone-acceptance-2026-10-20/README.md) also passed on Visual Studio Community 2026 18.11.0 Stable. It loads only the consumer application and its contract project, uses the packaged development coordinator, and verifies the same update/relaunch/Stop path. Use the [package guide](18-package-consumer.md) for that setup.
@@ -10,7 +12,7 @@ Use the repository's SDK `10.0.402`, Node `24.21.0` / npm `11.19.0`, and install
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-Push-Location samples/Spar.NativeSample/frontend
+Push-Location fixtures/Spar.NativeSample/frontend
 npm ci --ignore-scripts --include=optional
 Pop-Location
 ```

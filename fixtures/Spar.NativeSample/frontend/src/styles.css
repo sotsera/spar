@@ -1,0 +1,12 @@
+:root { --accent: #70e3bd; color-scheme: dark; font: 18px system-ui; background: #101827; color: #e6edf7 }
+body { margin: 0; min-height: 100vh; display: grid; place-items: center }
+main { max-width: 39rem; padding: 3rem }
+.mark { color: var(--accent); letter-spacing: .16em; font-weight: 700 }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1 }
+p { line-height: 1.6; color: #b3bfd2 }
+.actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-block: 1.5rem }
+button { font: inherit; color: #101827; background: var(--accent); border: 0; border-radius: .5rem; padding: .7rem 1rem; cursor: pointer }
+label { display: grid; gap: .5rem; color: #b3bfd2 }
+input { font: inherit; background: #17243a; color: #e6edf7; border: 1px solid #53657f; border-radius: .5rem; padding: .7rem }
+#status { font-size: .9rem }
+#development-status { overflow-wrap: anywhere; font-size: 0.85rem; }

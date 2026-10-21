@@ -1,5 +1,7 @@
 # VS Code development adapter
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 The local `tools/Spar.VSCode` extension connects ordinary C# Dev Kit debugging to the same coordinator used by the terminal lane. It uses public VS Code configuration providers, debug-session events, adapter trackers, diagnostics, and `startDebugging`/`stopDebugging`. It does not implement a debugger or a Hot Reload compiler.
 
 API references: [VS Code debug configuration providers](https://code.visualstudio.com/api/references/vscode-api#DebugConfigurationProvider) and [C# debugger settings](https://code.visualstudio.com/docs/csharp/debugger-settings). The installed-version evidence below verifies the composed behavior; API availability alone does not prove it.

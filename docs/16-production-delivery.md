@@ -1,5 +1,7 @@
 # Production SPA delivery
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 Issue [#10](https://github.com/sotsera/spar/issues/10), milestone M1.7 / A14. The ordinary native sample now publishes the same React application used in development, with generated bindings and local assets embedded in the NativeAOT executable. [Execution evidence](evidence/production-delivery-2026-10-19/README.md) records the actual copied application, screenshots, tests, measurements, and limitations.
 
 ## Build and run
@@ -7,7 +9,7 @@ Issue [#10](https://github.com/sotsera/spar/issues/10), milestone M1.7 / A14. Th
 Build prerequisites remain the pinned .NET SDK 10.0.402, Node 24.21.0/npm 11.19.0, PowerShell 7.4 or later, and the Visual Studio C++/Windows SDK NativeAOT tools. The installed application requires Windows x64, WebView2 Evergreen Runtime, and a writable browser profile. Node, npm, the .NET SDK, and a frontend server are build/development prerequisites, not application processes or payload dependencies.
 
 ```powershell
-dotnet publish samples/Spar.NativeSample -c Release -o artifacts/production/publish --disable-build-servers
+dotnet publish fixtures/Spar.NativeSample -c Release -o artifacts/production/publish --disable-build-servers
 pwsh -NoProfile -File eng/Test-ProductionBoundary.ps1
 pwsh -NoProfile -File eng/Test-Production.ps1 -VerifyRender
 ```
@@ -48,7 +50,7 @@ The production entry point accepts no development or probe switches. It grants o
 The old native/bridge probes are now an explicit **separate test build**, never the default production output:
 
 ```powershell
-dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/probe-publish --disable-build-servers
+dotnet publish fixtures/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/probe-publish --disable-build-servers
 # Copy those fixture files separately, then use Test-NativeHost.ps1 and Test-Bridge.ps1.
 ```
 

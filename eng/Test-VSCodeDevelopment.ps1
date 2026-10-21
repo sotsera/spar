@@ -1,17 +1,22 @@
 #requires -Version 7.4
-param([string]$CodeCommand = 'code', [switch]$VerifyRender, [string]$ConsumerDirectory)
+param([string]$CodeCommand = 'code', [switch]$VerifyRender, [string]$ConsumerDirectory, [switch]$MinimalApplication)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'integration/Fixtures.ps1')
 . (Join-Path $PSScriptRoot 'integration/Sessions.ps1')
 $repository = Split-Path $PSScriptRoot
 $coordinatorPath = (Resolve-Path -LiteralPath 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe').Path
-$applicationPath = (Resolve-Path -LiteralPath 'samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
+$applicationPath = (Resolve-Path -LiteralPath 'fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
 $evidencePath = [IO.Path]::GetFullPath('artifacts/vscode-development')
 New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
 Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $extensionDirectory = Join-Path $repository 'tools/Spar.VSCode'
 if ($ConsumerDirectory) {
+  $consumerKind = Get-Content -LiteralPath (Join-Path $ConsumerDirectory 'consumer.json') -Raw | ConvertFrom-Json
+  $expectedKind = if ($MinimalApplication) { 'minimal-application' } else { 'integration-fixture' }
+  if ($consumerKind.kind -ne $expectedKind) {
+    throw "This acceptance lane requires a fresh $expectedKind package consumer."
+  }
   # TEMP can contain an 8.3 alias. The editor and project system must see the same source identity.
   $consumerRoot = [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $ConsumerDirectory).Path)
   $coordinatorPath = Join-Path $consumerRoot '.tools/Spar.Dev.exe'
@@ -23,16 +28,18 @@ if ($ConsumerDirectory) {
   $consumerSettings.sessionDirectory = Join-Path $consumerRoot 'artifacts/debugger-sessions'
   $fixture = [pscustomobject]@{ Directory = $consumerRoot; Settings = $consumerSettings; Config = (Join-Path $consumerRoot 'spar.dev.json') }
   $consumerSource = Join-Path $consumerRoot 'backend/SampleBackend.cs'
-  $source = [IO.File]::ReadAllText($consumerSource).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend').Replace('> 5000', '> 15000')
-  $source += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
-  [IO.File]::WriteAllText($consumerSource, $source)
+  if (!$MinimalApplication) {
+    $source = [IO.File]::ReadAllText($consumerSource).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend').Replace('> 5000', '> 15000')
+    $source += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
+    [IO.File]::WriteAllText($consumerSource, $source)
+  }
 } else {
-  $fixture = New-BackendFixture 'debugger' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
+  $fixture = New-BackendFixture 'debugger' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath -MinimalApplication:$MinimalApplication
 }
 $fixture.Settings.watchBackend = $false
 $fixture.Settings['debuggerBackend'] = $true
 $fixture.Settings | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $fixture.Config
-@{ coordinator = $coordinatorPath; settings = $fixture.Config; project = $fixture.Settings.project; probe = $true; verifyRender = $VerifyRender.IsPresent } |
+@{ coordinator = $coordinatorPath; settings = $fixture.Config; project = $fixture.Settings.project; probe = !$MinimalApplication; inspect = $MinimalApplication.IsPresent; verifyRender = $VerifyRender.IsPresent } |
   ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixture.Directory 'owner.json')
 if (!$ConsumerDirectory) {
   Set-Content -LiteralPath (Join-Path $fixture.Directory 'Fixture.slnx') -Value '<Solution><Project Path="backend/Spar.NativeSample.csproj" /></Solution>'
@@ -51,10 +58,11 @@ $start = [Diagnostics.ProcessStartInfo]::new($codeExecutable)
 $start.UseShellExecute = $false
 $start.RedirectStandardOutput = $true
 $start.RedirectStandardError = $true
+$testEntry = if ($MinimalApplication) { 'vscode-development/minimal.cjs' } else { 'vscode-development/test.cjs' }
 foreach ($argument in @('--new-window','--wait','--skip-welcome','--skip-release-notes','--disable-workspace-trust',
   '--user-data-dir',$profile,'--extensions-dir',(Join-Path $env:USERPROFILE '.vscode/extensions'),
   '--extensionDevelopmentPath',$extensionDirectory,
-  '--extensionTestsPath',(Join-Path $PSScriptRoot 'vscode-development/test.cjs'),$fixture.Directory)) {
+  '--extensionTestsPath',(Join-Path $PSScriptRoot $testEntry),$fixture.Directory)) {
   $start.ArgumentList.Add($argument)
 }
 $handles = [Collections.Generic.Dictionary[string,Diagnostics.Process]]::new()

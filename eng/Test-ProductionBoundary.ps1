@@ -1,7 +1,8 @@
 #requires -Version 7.4
 param(
-  [string]$Assembly = 'samples/Spar.NativeSample/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll',
-  [string]$HostAssembly = 'src/Sotsera.Spar.Windows/bin/Release/net10.0-windows/Sotsera.Spar.Windows.dll'
+  [string]$Assembly = 'fixtures/Spar.NativeSample/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll',
+  [string]$HostAssembly = 'src/Sotsera.Spar.Windows/bin/Release/net10.0-windows/Sotsera.Spar.Windows.dll',
+  [switch]$MinimalApplication
 )
 $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'Test-InspectionBoundary.ps1') -Assembly $HostAssembly
@@ -13,7 +14,10 @@ try {
   $types = @($metadata.TypeDefinitions | ForEach-Object { $metadata.GetString($metadata.GetTypeDefinition($_).Name) })
   $resources = @($metadata.ManifestResources | ForEach-Object { $metadata.GetString($metadata.GetManifestResource($_).Name) })
   $references = @($metadata.AssemblyReferences | ForEach-Object { $metadata.GetString($metadata.GetAssemblyReference($_).Name) })
-  if ($types -contains 'SampleDocument' -or $types -contains 'NativeReceipt' -or $types -notcontains 'ProductionReceipt') { throw 'Wrong sample entry point.' }
+  if ($types -contains 'SampleDocument' -or $types -contains 'NativeReceipt') { throw 'Probe entry point shipped.' }
+  if ($MinimalApplication) {
+    if ($types -contains 'ProductionReceipt') { throw 'Test reporting shipped in the minimal application.' }
+  } elseif ($types -notcontains 'ProductionReceipt') { throw 'Wrong fixture entry point.' }
   if ($resources.Count -ne 1 -or $resources[0] -ne 'Spar.Production.Assets.zip') { throw 'Probe resources shipped.' }
   if ($references -match 'Development|CodeAnalysis|ContractGenerator') { throw 'Development/build reference shipped.' }
   # Read the actual embedded archive from the PE resource table without loading application code.

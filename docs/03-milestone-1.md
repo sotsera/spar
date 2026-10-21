@@ -1,6 +1,6 @@
 # Milestone 1: prove the SPAR development loop
 
-Date: 2026-10-20. Status: A01–A18 have execution evidence on the selected Windows baseline. The [acceptance matrix](19-milestone-1-acceptance.md) links native development updates, both debugger lanes, structured inspection, copied NativeAOT delivery, explicit dependency compatibility, authority/lifetime checks and external packages. The [external Visual Studio walkthrough](evidence/milestone-acceptance-2026-10-20/README.md) supplies the final missing editor execution. Tracker closure follows integration of this evidence; clean-machine and distribution-readiness work remains explicit follow-up.
+Date: 2026-10-20. Status: A01–A18 have execution evidence on the selected Windows baseline. The [acceptance matrix](19-milestone-1-acceptance.md) links native development updates, both debugger lanes, structured inspection, copied NativeAOT delivery, explicit dependency compatibility, authority/lifetime checks and external packages. The [external Visual Studio walkthrough](evidence/milestone-acceptance-2026-10-20/README.md) supplies the final missing editor execution. Tracker #1 and implementation issues #2–#12 are closed after integration of this evidence; clean-machine and distribution-readiness work remains explicit follow-up.
 
 Inputs: [product direction](02-product-direction.md), [reference projects and license review](01-reference-projects.md).
 
@@ -9,6 +9,8 @@ Inputs: [product direction](02-product-direction.md), [reference projects and li
 A developer or AI agent can launch one small Windows application, edit its SPA and C# backend, observe the result, recover from an invalid edit, debug it in VS Code, and publish the same application as NativeAOT. A supported Visual Studio path exercises the same application. An intentionally incompatible application dependency demonstrates the CoreCLR compatibility route without weakening framework AOT requirements.
 
 The milestone is an integrated product proof, not a checklist of individually working libraries. The previous SPAR's tests and recorded passes do not count as completion.
+
+Post-milestone simplification: [#30](https://github.com/sotsera/spar/issues/30) and [#31](https://github.com/sotsera/spar/issues/31) are merged and closed. [#32](https://github.com/sotsera/spar/issues/32) separates the ordinary application from the original acceptance fixture; its [migration map](23-minimal-application.md) preserves the milestone scenarios. This work does not change historical editor or clean-machine claims.
 
 ## Demonstration application
 

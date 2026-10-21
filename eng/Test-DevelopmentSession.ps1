@@ -2,7 +2,7 @@
 [CmdletBinding()]
 param(
   [string]$Coordinator = 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe',
-  [string]$Application = 'samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe',
+  [string]$Application = 'fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe',
   [string]$EvidenceDirectory = 'artifacts/development/probe',
   [switch]$VerifyRender
 )
@@ -85,7 +85,7 @@ try {
   $tree = Join-Path $fixture.Directory 'helper-tree.jsonl'
   $fixture.Settings.frontend.fileName = 'node'
   $fixture.Settings.frontend.arguments = @((Join-Path $PSScriptRoot 'development-probe/frontend-wrapper.mjs'))
-  $fixture.Settings.frontend.environment = @{ SPAR_TEST_TREE = $tree; SPAR_TEST_VITE = Join-Path $repository 'samples/Spar.NativeSample/frontend/node_modules/vite/bin/vite.js' }
+  $fixture.Settings.frontend.environment = @{ SPAR_TEST_TREE = $tree; SPAR_TEST_VITE = Join-Path $repository 'fixtures/Spar.NativeSample/frontend/node_modules/vite/bin/vite.js' }
   $session = Start-Session $fixture -Coordinator $coordinatorPath -WorkingDirectory $repository
   $sessions.Add($session)
   Wait-Until $session { $null -ne (Latest-Snapshot $session) -and (Test-Path -LiteralPath $tree) -and @(Get-Content -LiteralPath $tree).Count -ge 2 } 'owned helper/grandchild and real frontend'

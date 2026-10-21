@@ -38,6 +38,29 @@ public static class NativeProbeDesktop
     [DllImport("gdi32.dll")] private static extern bool DeleteDC(IntPtr dc);
     [DllImport("gdi32.dll")] private static extern int GetDIBits(IntPtr dc, IntPtr bitmap, uint start, uint lines,
         byte[] bits, ref BitmapInfo info, uint usage);
+    private delegate bool WindowCallback(IntPtr window, IntPtr state);
+    [DllImport("user32.dll")] private static extern bool EnumWindows(WindowCallback callback, IntPtr state);
+    [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
+
+    // Process.MainWindowHandle omits a window launched with WindowStyle.Hidden.
+    // The caller retains and verifies the owning process; no title/name-based targeting.
+    public static IntPtr FindWindow(int processId)
+    {
+        var result = IntPtr.Zero;
+        EnumWindows((window, _) =>
+        {
+            uint owner;
+            GetWindowThreadProcessId(window, out owner);
+            if (owner != processId)
+            {
+                return true;
+            }
+
+            result = window;
+            return false;
+        }, IntPtr.Zero);
+        return result;
+    }
 
     public static void Close(IntPtr window)
     {

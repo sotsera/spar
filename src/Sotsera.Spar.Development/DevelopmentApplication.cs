@@ -116,6 +116,10 @@ public sealed partial class DevelopmentApplication : IDisposable
             Volatile.Write(ref _document, value.Document);
             Send(new SessionMessage("app-bridge", Contract: _contract, Document: value.Document, Generation: _generation));
         }
+        else if (value.Stage == "development-ready" && value.Document == Volatile.Read(ref _document))
+        {
+            Send(new SessionMessage("app-ready", Contract: _contract, Document: value.Document, Generation: _generation));
+        }
         else if (value.Code is not null)
         {
             Send(new SessionMessage("app-diagnostic", Document: value.Document, Detail: value.Code, Generation: _generation));

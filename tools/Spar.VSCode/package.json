@@ -21,7 +21,8 @@
               "required": ["coordinator", "settings"],
               "properties": {
                 "coordinator": { "type": "string", "description": "Path to the built Spar.Dev executable, relative to the workspace." },
-                "settings": { "type": "string", "description": "Path to spar.dev.json, relative to the workspace." }
+                "settings": { "type": "string", "description": "Path to spar.dev.json, relative to the workspace." },
+                "inspect": { "type": "boolean", "default": false, "description": "Enable bounded development inspection for this owned debugger session." }
               }
             }
           }

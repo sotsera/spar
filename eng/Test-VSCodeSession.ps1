@@ -13,8 +13,8 @@ $codeScript = (Get-Command $CodeCommand).Source
 $codeExecutable = [IO.Path]::GetFullPath((Join-Path (Split-Path $codeScript) '../Code.exe'))
 if (!(Test-Path -LiteralPath $codeExecutable)) { throw 'Pass the installed VS Code CLI command; Code.exe was not found beside bin.' }
 $coordinator = (Resolve-Path -LiteralPath 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe').Path
-$application = (Resolve-Path -LiteralPath 'samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
-$frontend = Join-Path $repository 'samples/Spar.NativeSample/frontend'
+$application = (Resolve-Path -LiteralPath 'fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
+$frontend = Join-Path $repository 'fixtures/Spar.NativeSample/frontend'
 $results = [Collections.Generic.List[object]]::new()
 
 function Read-Shared([string]$Path) {
@@ -35,10 +35,10 @@ foreach ($scenario in @('task-stop', 'window-close')) {
   } | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $profile 'User/settings.json')
   $sessionPath = Join-Path $directory 'spar.dev.json'
   @{
-    project = Join-Path $repository 'samples/Spar.NativeSample/Spar.NativeSample.csproj'; application = $application
+    project = Join-Path $repository 'fixtures/Spar.NativeSample/Spar.NativeSample.csproj'; application = $application
     generatedClient = Join-Path $frontend 'src/generated/client.js'; sessionDirectory = Join-Path $directory 'sessions'
     watchBackend = $WatchBackend.IsPresent
-    contractFile = Join-Path $repository 'samples/Spar.NativeSample.Contracts/BackendContract.cs'
+    contractFile = Join-Path $repository 'fixtures/Spar.NativeSample.Contracts/BackendContract.cs'
     frontend = @{ fileName = 'cmd.exe'; arguments = @('/d','/c','npm','run','dev'); workingDirectory = $frontend; port = 0 }
   } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $sessionPath
   $events = Join-Path $directory 'coordinator.jsonl'

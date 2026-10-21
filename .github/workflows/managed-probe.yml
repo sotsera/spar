@@ -79,10 +79,10 @@ jobs:
           npm ci --ignore-scripts
           npm test
 
-      - name: Install and check the sample SPA
+      - name: Install and check the integration fixture SPA
         id: spa
         if: steps.selection.outputs.frontend != 'false'
-        working-directory: samples/Spar.NativeSample/frontend
+        working-directory: fixtures/Spar.NativeSample/frontend
         run: |
           npm ci --ignore-scripts --include=optional
           npm run check
@@ -92,6 +92,18 @@ jobs:
         id: notices
         if: steps.selection.outputs.frontend != 'false'
         run: node eng/Test-FrontendNotices.mjs
+
+      - name: Test ordinary application development without probe exports
+        id: minimal
+        if: steps.selection.outputs.development != 'false'
+        shell: pwsh
+        run: |
+          npm ci --prefix samples/Spar.NativeSample/frontend --ignore-scripts --include=optional
+          if ($LASTEXITCODE) { throw 'Minimal frontend restore failed.' }
+          npm run check --prefix samples/Spar.NativeSample/frontend
+          if ($LASTEXITCODE) { throw 'Minimal frontend check failed.' }
+          ./eng/Test-MinimalApplication.ps1 -EvidenceDirectory artifacts/minimal/ci-development
+          ./eng/Test-DevelopmentReadiness.ps1 -EvidenceDirectory artifacts/minimal/ci-readiness
 
       - name: Test owned SPA session and HMR
         id: session
@@ -123,7 +135,7 @@ jobs:
         shell: pwsh
         run: >-
           ./eng/Test-Bridge.ps1
-          -Executable samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
+          -Executable fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
           -EvidenceDirectory artifacts/bridge/ci-coreclr
 
       - name: Test native CoreCLR lifecycle
@@ -132,13 +144,13 @@ jobs:
         shell: pwsh
         run: >-
           ./eng/Test-NativeHost.ps1
-          -Executable samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
+          -Executable fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
           -EvidenceDirectory artifacts/native/ci-coreclr
 
       - name: Publish production SPA as strict NativeAOT
         id: publish
         if: steps.selection.outputs.production != 'false'
-        run: dotnet publish samples/Spar.NativeSample -c Release -o artifacts/production/publish --disable-build-servers
+        run: dotnet publish fixtures/Spar.NativeSample -c Release -o artifacts/production/publish --disable-build-servers
 
       - name: Verify production build boundary
         id: boundary
@@ -158,6 +170,16 @@ jobs:
         shell: pwsh
         run: ./eng/Test-Compatibility.ps1 -EvidenceDirectory artifacts/compatibility/ci
 
+      - name: Publish and run the ordinary application
+        id: minimal_publish
+        if: steps.selection.outputs.production != 'false'
+        shell: pwsh
+        run: |
+          dotnet publish samples/Spar.NativeSample -c Release -o artifacts/minimal/publish --disable-build-servers
+          if ($LASTEXITCODE) { throw 'Minimal publication failed.' }
+          ./eng/Test-ProductionBoundary.ps1 -MinimalApplication -Assembly samples/Spar.NativeSample/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll
+          ./eng/Test-MinimalPublication.ps1 -PublishDirectory artifacts/minimal/publish -EvidenceDirectory artifacts/minimal/ci-production
+
       - name: Pack local consumer dependencies
         id: pack
         if: steps.selection.outputs.packages != 'false'
@@ -170,10 +192,16 @@ jobs:
         shell: pwsh
         run: ./eng/Test-ExternalConsumer.ps1 -EvidenceDirectory artifacts/external-consumer/ci
 
+      - name: Test the default minimal package consumer
+        id: minimal_consumer
+        if: steps.selection.outputs.packages != 'false'
+        shell: pwsh
+        run: ./eng/Test-MinimalConsumer.ps1 -EvidenceDirectory artifacts/minimal/ci-consumer
+
       - name: Publish separate strict NativeAOT native test fixture
         id: publish_probe
         if: steps.selection.outputs.aot != 'false'
-        run: dotnet publish samples/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
+        run: dotnet publish fixtures/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
 
       - name: Test copied NativeAOT lifecycle
         id: copied_probe
@@ -206,6 +234,8 @@ jobs:
           retention-days: ${{ job.status == 'success' && 14 || 30 }}
           path: |
             artifacts/ci/*.json
+            artifacts/minimal/**/receipt.json
+            artifacts/minimal/publish/spar-publish.json
             artifacts/native/ci-*/receipt.json
             artifacts/bridge/ci-*/receipt.json
             artifacts/development/ci/receipt.json
@@ -228,6 +258,15 @@ jobs:
           retention-days: 30
           path: |
             artifacts/ci/*.json
+            artifacts/minimal/**/receipt.json
+            artifacts/minimal/**/*.log
+            artifacts/minimal/**/coordinator.jsonl
+            artifacts/minimal/**/commands.jsonl
+            artifacts/minimal/**/*-snapshot.json
+            artifacts/minimal/**/consumer-path.txt
+            artifacts/minimal/**/*.png
+            artifacts/minimal/**/*.bmp
+            artifacts/minimal/publish/spar-publish.json
             artifacts/hot-reload/**/watch.log
             artifacts/hot-reload/**/sources.sha256
             **/TestResults/**

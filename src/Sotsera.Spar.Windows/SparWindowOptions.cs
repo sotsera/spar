@@ -6,6 +6,9 @@ namespace Sotsera.Spar.Windows;
 public sealed class SparWindowOptions
 {
 #if DEBUG
+    /// <summary>Observe a frame opportunity after the first completed typed call, without application test exports.</summary>
+    public bool EnableDevelopmentReadiness { get; init; }
+
     /// <summary>Explicit opt-in to bounded inspection. This property and its implementation do not exist in Release.</summary>
     public bool EnableDevelopmentInspection { get; init; }
 #endif

@@ -8,6 +8,7 @@ application paths, create fixtures, load native capture support, start processes
 | --- | --- |
 | `Fixtures.ps1` | `New-Fixture` and `New-BackendFixture` receive the repository, application and evidence paths. They return the isolated fixture and configuration. `Replace-Source` requires the expected original text. |
 | `Sessions.ps1` | `Start-Session` receives the fixture, coordinator executable and working directory. The caller immediately retains the returned session. Event reading, waiting and commands receive that session. `Confirm-Exit` receives the unrelated process and returns a receipt for the caller to retain. |
+| `Inspection.ps1` | Target-bound requests and correlated results receive the session explicitly; callers import `Sessions.ps1` and retain its command log. |
 | `Processes.ps1` | `Start-UnrelatedProcess` returns the sentinel owned by the scenario. `Stop-TestProcess` forces only the supplied process to exit. `Close-TestSessions` takes the caller's retained sessions, closes coordinators and observes the previously retained child handles. |
 
 `Confirm-Exit` still requires actual coordinator exit, stdout EOF, the expected exit code,
@@ -20,6 +21,8 @@ It attempts all retained sessions, reports unfinished cleanup, and does not disp
 for processes whose exit remains unverified. A timeout does not transfer ownership or prove
 completion. Fixtures and their `node_modules` junctions remain for inspection; helpers never
 recursively delete them.
+
+The default fixtures come from `fixtures/Spar.NativeSample`. `-MinimalApplication` selects the ordinary source without adding failure operations. See the [migration map](23-minimal-application.md#scenario-migration-map).
 
 ## Driver map and commands
 

@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 
 // Run after the real frontend build. Compare entire notices with the installed,
 // lockfile-selected package licenses, including copyright and warranty text.
-const frontend = resolve(process.argv[2] ?? 'samples/Spar.NativeSample/frontend');
+const frontend = resolve(process.argv[2] ?? 'fixtures/Spar.NativeSample/frontend');
 const read = (path) => readFile(resolve(frontend, path), 'utf8');
 const normalize = (text) => text.replaceAll('\r\n', '\n').trim();
 const original = await read('dist/frontend-LICENSES.txt');

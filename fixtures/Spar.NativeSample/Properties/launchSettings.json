@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Spar native host": {
+      "commandName": "Project"
+    },
+    "Spar development": {
+      "commandName": "Project",
+      "commandLineArgs": "--spar-dev",
+      "workingDirectory": "$(MSBuildProjectDirectory)",
+      "environmentVariables": {
+        "SPAR_DEV_PROJECT": "$(MSBuildProjectDirectory)/spar.dev.json",
+        "SPAR_DEV_COORDINATOR": "$(MSBuildProjectDirectory)/../../tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe"
+      }
+    }
+  }
+}

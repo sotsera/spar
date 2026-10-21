@@ -18,6 +18,9 @@ export const checks = {
   backend: 'development',
   project_launch: 'development',
   inspection: 'development',
+  minimal: 'development',
+  minimal_publish: 'production',
+  minimal_consumer: 'packages',
   bridge: 'native',
   lifecycle: 'native',
   publish: 'production',
@@ -45,6 +48,10 @@ const drivers = {
   'eng/Test-Compatibility.ps1': ['compatibility'],
   'eng/Test-ExternalConsumer.ps1': ['packages'],
   'eng/New-PackageConsumer.ps1': ['packages'],
+  'eng/Test-MinimalApplication.ps1': development,
+  'eng/Test-DevelopmentReadiness.ps1': development,
+  'eng/Test-MinimalConsumer.ps1': ['packages'],
+  'eng/Test-MinimalPublication.ps1': ['production', 'packages'],
   'eng/Pack-Local.ps1': ['packages'],
   'eng/Test-VSCodeProbe.ps1': development,
   'eng/Test-VSCodeSession.ps1': development,
@@ -72,13 +79,13 @@ export function classify(paths) {
     } else if (Object.hasOwn(drivers, path)) {
       matched = drivers[path];
     } else if (/^(src\/Sotsera\.Spar\.Development\/|tools\/Spar\.(Dev|VSCode)\/|\.vscode\/|eng\/vscode-[^/]+\/)/.test(path)
-      || /^samples\/Spar\.NativeSample\/(spar\.dev\.json|Properties\/launchSettings\.json)$/.test(path)) {
+      || /^(samples|fixtures)\/Spar\.NativeSample\/(spar\.dev\.json|Properties\/launchSettings\.json)$/.test(path)) {
       matched = development;
-    } else if (path.startsWith('samples/Spar.NativeSample/frontend/')) {
+    } else if (/^(samples|fixtures)\/Spar\.NativeSample\/frontend\//.test(path)) {
       matched = development;
     } else if (/^(tests\/|experiments\/Spar\.HotReloadProbe\/|eng\/bridge-client-tests\/)/.test(path)) {
       matched = ['baseline', 'frontend'];
-    } else if (/^(src\/Sotsera\.Spar\.(Windows|Bridge)\/|tools\/Spar\.ContractGenerator\/|tools\/Sotsera\.Spar\.Build\/|samples\/Spar\.NativeSample(?:\.Contracts)?\/|build\/|third-party\/|eng\/compatibility-probe\/|eng\/native-probe\/|eng\/development-probe\/)/.test(path)
+    } else if (/^(src\/Sotsera\.Spar\.(Windows|Bridge)\/|tools\/Spar\.ContractGenerator\/|tools\/Sotsera\.Spar\.Build\/|fixtures\/Spar\.NativeSample(?:\.Contracts)?\/|build\/|third-party\/|eng\/compatibility-probe\/|eng\/native-probe\/|eng\/development-probe\/)/.test(path)
       || ['LICENSE', 'eng/Read-ProbeEvents.ps1', 'eng/Test-DevelopmentSession.ps1', 'eng/Build-AssetBundle.ps1', 'eng/Write-PublishReceipt.ps1'].includes(path)) {
       matched = groups;
     } else {

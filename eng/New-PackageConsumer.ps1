@@ -1,7 +1,8 @@
 #requires -Version 7.4
 param(
   [Parameter(Mandatory)][string]$Directory,
-  [string]$Feed = 'artifacts/packages'
+  [string]$Feed = 'artifacts/packages',
+  [switch]$IntegrationFixture
 )
 $ErrorActionPreference = 'Stop'
 $repository = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
@@ -16,10 +17,11 @@ foreach ($folder in @('', 'backend', 'backend/frontend/src', 'backend/Properties
 }
 Copy-Item -Path (Join-Path $feedPath '*.nupkg') -Destination (Join-Path $root '.feed')
 Copy-Item -LiteralPath (Join-Path $repository 'global.json') -Destination $root
-$sample = Join-Path $repository 'samples/Spar.NativeSample'
+$sourceRoot = if ($IntegrationFixture) { 'fixtures' } else { 'samples' }
+$sample = Join-Path $repository "$sourceRoot/Spar.NativeSample"
 Get-ChildItem -LiteralPath $sample -File | Where-Object Extension -in @('.cs', '.html', '.js') |
   Copy-Item -Destination (Join-Path $root 'backend')
-Copy-Item -LiteralPath (Join-Path $repository 'samples/Spar.NativeSample.Contracts/BackendContract.cs') -Destination (Join-Path $root 'contracts')
+Copy-Item -LiteralPath (Join-Path $repository "$sourceRoot/Spar.NativeSample.Contracts/BackendContract.cs") -Destination (Join-Path $root 'contracts')
 foreach ($name in @('package.json', 'package-lock.json', 'tsconfig.json', 'index.html', 'write-notices.mjs')) {
   Copy-Item -LiteralPath (Join-Path $sample "frontend/$name") -Destination (Join-Path $root 'backend/frontend')
 }
@@ -47,6 +49,7 @@ export default defineConfig(async ({ command }) => ({
     <packageSource key="spar-local"><package pattern="Sotsera.Spar.*" /></packageSource>
     <packageSource key="nuget"><package pattern="*" /></packageSource>
   </packageSourceMapping>
+  <fallbackPackageFolders><clear /></fallbackPackageFolders>
   <config><add key="globalPackagesFolder" value=".packages" /></config>
 </configuration>
 '@ | Set-Content -LiteralPath (Join-Path $root 'NuGet.Config')
@@ -114,6 +117,15 @@ export default defineConfig(async ({ command }) => ({
   </ItemGroup>
 </Project>
 '@ | Set-Content -LiteralPath (Join-Path $root 'backend/Spar.NativeSample.csproj')
+if (!$IntegrationFixture) {
+  $projectPath = Join-Path $root 'backend/Spar.NativeSample.csproj'
+  $project = [IO.File]::ReadAllText($projectPath)
+  $project = [regex]::Replace($project, '(?m)^    <EmbeddedResource[^\r\n]+\r?\n', '')
+  $project = $project.Replace('Remove="Program.cs;Program.Development.cs;SampleDocument.cs"', 'Remove="Program.Development.cs"')
+  [IO.File]::WriteAllText($projectPath, $project)
+}
+@{ kind = $(if ($IntegrationFixture) { 'integration-fixture' } else { 'minimal-application' }) } |
+  ConvertTo-Json | Set-Content -LiteralPath (Join-Path $root 'consumer.json')
 @'
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>

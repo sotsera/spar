@@ -596,7 +596,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             Emit("backend-activity", "application", _application!.Process, detail: message.Detail,
                 document: _currentDocument);
         }
-        else if (message.Kind == "app-ui" && message.Contract == _contract && message.Document == _currentDocument
+        else if (message.Kind is "app-ui" or "app-ready" && message.Contract == _contract && message.Document == _currentDocument
             && _currentDocument is not null)
         {
             if (_readyDocument is null)
@@ -613,7 +613,10 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 }
             }
 
-            Emit("ui-snapshot", "application", _application!.Process, detail: message.Detail, document: message.Document);
+            if (message.Kind == "app-ui")
+            {
+                Emit("ui-snapshot", "application", _application!.Process, detail: message.Detail, document: message.Document);
+            }
         }
     }
 

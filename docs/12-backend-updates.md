@@ -1,5 +1,7 @@
 # Backend updates in the native SPA session
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 Date: 2026-10-19. M1.5 terminal/AI watcher lane, including explicit startup/dependency input policy and selected full-build activation. This extends the [owned SPA session](11-development-session.md) and uses the same native consumer. Debugger-owned lanes remain #8/#9 work.
 
 ## Run and edit
@@ -8,7 +10,7 @@ The sample's `spar.dev.json` selects `watchBackend: true`. Use the existing prer
 
 ```powershell
 dotnet build tools/Spar.Dev --disable-build-servers
-./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe samples/Spar.NativeSample/spar.dev.json
+./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe fixtures/Spar.NativeSample/spar.dev.json
 ```
 
 Install frontend dependencies as described in the [SPA guide](11-development-session.md#start-and-edit). VS Code's development task uses this configuration too. It owns a watcher session; it does not attach the C# debugger. Never attach a second update engine to that application.

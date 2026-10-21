@@ -1,5 +1,7 @@
 # Structured development inspection
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 This implements the AI portion of M1.6 / A12 using the existing development coordinator and the actual native WebView. It requires a Debug host and explicit owner opt-in. The [acceptance evidence](evidence/development-inspection-2026-10-19/README.md) records executed scenarios and limits.
 
 ## Start and identify a target
@@ -7,7 +9,7 @@ This implements the AI portion of M1.6 / A12 using the existing development coor
 Build the solution and install the sample frontend dependencies as described in the [development guide](11-development-session.md). Launch the CLI with redirected stdin/stdout:
 
 ```powershell
-./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe samples/Spar.NativeSample/spar.dev.json --owner-stdin --inspect
+./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe fixtures/Spar.NativeSample/spar.dev.json --owner-stdin --inspect
 ```
 
 Starting this process starts one owned session. Keep stdin open; owner EOF ends the session and cleans up its children. Each stdout line is a JSON event. Wait for `application-ready`, which includes `session`, `generation`, `processId`, `processStartedAtUtc`, `document`, and `contract`. A process start or listening port alone is not readiness. `--probe` is unnecessary: inspection works without the sample's fixed test actions.

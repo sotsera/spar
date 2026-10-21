@@ -1,0 +1,414 @@
+{
+  "observedAt": "2026-10-21T07:19:04.403Z",
+  "baseline": "75885b2b22bed832e24cbdb665644fe370491989",
+  "binding": "Validated working-tree implementation, normalized UTF-8/LF SHA-256 below. Receipt sourceRevision fields name the baseline because validation preceded the implementation commit.",
+  "tools": {
+    "dotnet": "10.0.402",
+    "node": "24.21.0",
+    "powershell": "7.6.5",
+    "vscode": "1.142.0",
+    "csharp": "2.160.4",
+    "devkit": "3.40.215"
+  },
+  "baselineChecks": {
+    "solutionBuild": "passed, zero warnings/errors",
+    "managed": "65 passed, zero failed/skipped",
+    "ciSelection": "34 passed",
+    "helpers": "passed",
+    "generatedClientAndBothFrontends": "passed",
+    "frontendNotices": "passed for both applications",
+    "originalFixtureFiles": "22 preserved byte-for-byte (Git blob audit)",
+    "originalAssertionWaitCalls": "141 retained; zero missing"
+  },
+  "limitations": [
+    "Hosted PR CI pending at record time",
+    "Visual Studio walkthrough not rerun for the minimal application",
+    "Clean-machine/no-SDK qualification remains deferred",
+    "A frame readiness signal is not visual proof; captures were reviewed separately"
+  ],
+  "retainedFailures": [
+    {
+      "path": "artifacts/issue32/minimal-source",
+      "result": "Initial application_ready_timeout exposed dependency on fixture Report; native document readiness removed that dependency. Final run and negative boundary checks passed."
+    },
+    {
+      "path": "artifacts/issue32/minimal-production",
+      "result": "New test used MainWindowHandle on a hidden launch; fixed with retained-owner window enumeration."
+    },
+    {
+      "path": "artifacts/issue32/minimal-production-retry",
+      "result": "New test rejected an owned conhost.exe; it now explicitly retains console and browser descendants. Final run passed."
+    },
+    {
+      "path": "artifacts/issue32/minimal-consumer",
+      "result": "Fresh-cache assertion exposed inherited Visual Studio fallback folder. Scaffold now clears fallback folders; a fresh isolated consumer passed."
+    }
+  ],
+  "sourceFiles": {
+    ".github/workflows/managed-probe.yml": "1bbf62dde5b74e96eef96834c62f29a48b31498ef97194ea7efeeaeb2615c10d",
+    ".gitignore": "1f0bf516cbf0d2563db0f54a7c8eecb3a388b8ddd7296f23041eaad411e08391",
+    "Spar.slnx": "136008f9208c4f655abe3ee8258f0af0d64b7870d90bd0669785f392a069c62a",
+    "eng/New-PackageConsumer.ps1": "b0c0ab94efbcf636279e60e992fa9d3c9cc6f0576929edcfba461e10144a327a",
+    "eng/Test-BackendUpdates.ps1": "f26198793736fecf70866b88cd2c08972f4426f537a72f95e8498d4c27e2e394",
+    "eng/Test-Compatibility.ps1": "d990d8463b0933c60c636c6dfe2c39d2f07603d3e0e54a45a29978d779c7aa43",
+    "eng/Test-DevelopmentInspection.ps1": "1486a88d93e21e3af486be89eb8f2a7a25e26d1af590c548df994aeafb068d6d",
+    "eng/Test-DevelopmentReadiness.ps1": "ccd29d3fc8da748ddd6e39755bdd27aff83114fb5e897d85cc01e28d60bd416b",
+    "eng/Test-DevelopmentSession.ps1": "c35f2f167e8c9aa6c99a0d2d4e4f60d7c98a1d301729fad3f8e100486401497e",
+    "eng/Test-ExternalConsumer.ps1": "0fc887b3549820495624116dd09642f50cf4a659d428da50172119d1fe5c1ae0",
+    "eng/Test-FrontendNotices.mjs": "f7f6c0f64b3a5db12e061c8517f05aa0a20b130c5d52e58b59ed0e79e0e907b2",
+    "eng/Test-InspectionBoundary.ps1": "0719ebc795417ea234dfaa8dea69072cda061483200ee4d6493695ef7168db13",
+    "eng/Test-MinimalApplication.ps1": "73f7dd85ff85c62f5e2960658cca1c05664c1943e619b6c1851b647d011666f3",
+    "eng/Test-MinimalConsumer.ps1": "2353cb5d6d171f3313f7f48f3a77c74eca4009e4358fb303861518caf0f2fb69",
+    "eng/Test-MinimalPublication.ps1": "77da6a45744de7a4ddce6a76974d58a759338e03175e431851cf942ba9c835ed",
+    "eng/Test-ProductionBoundary.ps1": "3d488b42994b91e0a124fd8b4d35729e3c6cf48ed369445171200d3ce296018b",
+    "eng/Test-ProjectLaunch.ps1": "8b5c8e857efa45181772ff96d96eb746f082eb0b5b84f0f119114795c7fc1266",
+    "eng/Test-VSCodeDevelopment.ps1": "29531cd62a0ccd412a3d77ce84811d366652670290993242ba1789382b5cace7",
+    "eng/Test-VSCodeSession.ps1": "22f495ab24ebc6164461d07563e7cbd5a8305815879168f6531e0c8786764783",
+    "eng/bridge-client-tests/contract.test.ts": "74efdddef27c99ab876b4dd0caa539b0aba7e378ffe16c1f5440013da953624c",
+    "eng/ci/selection.mjs": "ada4c00275e2d487f1b4e2b3490d836f9c27220409079d6afbb981d84a664b17",
+    "eng/ci/selection.test.mjs": "5946b3b599f1d7f012e841130a5096e9ee4ac6222abcb0e40af2d848b5882e41",
+    "eng/integration/Fixtures.ps1": "b02c6dc78120197a0d7e7335f39e75056c21302574160e3b423395ca2f4eba09",
+    "eng/integration/Inspection.ps1": "980c20a7775a3405b0fa141bd8507164c137a7982b441226e9ea00381f3872ad",
+    "eng/native-probe/Desktop.cs": "aaf955cfe9c85fd0cb9c003322467bcc710d6f0781705c281966c3155faa4212",
+    "eng/vscode-development/minimal.cjs": "8088a7335e8414ad9f04c3a737b332fa018444d1e39681e720eb58c6c298470d",
+    "fixtures/Spar.NativeSample.Contracts/BackendContract.cs": "baafd3f9fb28a53b574176e7abf70e80760539b131295310a8eb889544df373b",
+    "fixtures/Spar.NativeSample.Contracts/Spar.NativeSample.Contracts.csproj": "6a71c008c6117cebd0ed1776acb572c732a3ed1aae50120407d151d01490cbf0",
+    "fixtures/Spar.NativeSample/App.html": "ccb7fea9615055d0450e3d90306502f273bd379def3b2b319a9c7d67ab7706d5",
+    "fixtures/Spar.NativeSample/App.js": "5a5945668151d3414dbce6dfe0a5c78dd937fca25f214298e4a7687c323ef7db",
+    "fixtures/Spar.NativeSample/Probe.js": "0e57307365e0dfcda45b1621270514b738f4172bbda9fcfaa11ac5208b165a02",
+    "fixtures/Spar.NativeSample/Program.Development.cs": "4bfad60b9cb04c135f36f91cc16ea9e4451d8f88af1ffed296a8e75393d0394e",
+    "fixtures/Spar.NativeSample/Program.Production.cs": "845add12eb5bec13c2e1557261fd31e20f3ff87cc4572d89995f231cb715adf2",
+    "fixtures/Spar.NativeSample/Program.cs": "6b5e25740c8cb9f419621bf9e84fbf1706ee9dc6817647948699244acb987c3f",
+    "fixtures/Spar.NativeSample/Properties/launchSettings.json": "1abda4f7b7b8521f09f2506dd96e97f492b44b10d7b5360f1934bf7413d0859b",
+    "fixtures/Spar.NativeSample/SampleBackend.cs": "d1f02302b5532ae586e9592b2747d1da54d6c71a63dafb2240c9420e01f418f1",
+    "fixtures/Spar.NativeSample/SampleDocument.cs": "70e80b824e534659fe183b5cb955d681c695314867256cfac5b6b7014707980e",
+    "fixtures/Spar.NativeSample/Spar.NativeSample.csproj": "17c417cd2409b2494e9da154af87317ef85462cd728ec7e7209a631204e661d1",
+    "fixtures/Spar.NativeSample/frontend/index.html": "5a4be681b74931d011743f5c23e3c51252a03c18e2e5f0229e3b4f7f8c2d876d",
+    "fixtures/Spar.NativeSample/frontend/package-lock.json": "58a929c6b43834a21e03d5684e2c1d4fe068f3e7722d2d1ccb66a116b0e29042",
+    "fixtures/Spar.NativeSample/frontend/package.json": "2e7587891673f0003bb50d043b1581010af69edf6cb007ff2a7470dda659f5bd",
+    "fixtures/Spar.NativeSample/frontend/src/App.tsx": "3ad582a9e3e196ee478655426789d40be35e3a385be4a61efd156f044c573bb6",
+    "fixtures/Spar.NativeSample/frontend/src/main.tsx": "f2177d67d6f71ea06ca7c824aa268f3b3ce91ed9d804756ffccb6ea6a6dce602",
+    "fixtures/Spar.NativeSample/frontend/src/styles.css": "49cdec6489404a9032fb1c936755183dbee724121bcea21060931c39950a0f63",
+    "fixtures/Spar.NativeSample/frontend/tsconfig.json": "e647a37b972967c33e0eec8ea1870f0b9f7505d9ea5dff521f2970640e87dc7d",
+    "fixtures/Spar.NativeSample/frontend/vite.config.mjs": "efe330f1eb299eae15d8c3b039a44c2c2e5240ae7cc41502c555d11817811330",
+    "fixtures/Spar.NativeSample/frontend/write-notices.mjs": "70a23f61dfb6ab550b13c3435fd7ff89994f4f01297e9644a867b6556bfc4226",
+    "fixtures/Spar.NativeSample/spar.dev.json": "df41ef7ac5fe3f79a4811ac8d8025006d31fc89c1173e2f40674e9ecbe666c7a",
+    "samples/Spar.NativeSample.Contracts/BackendContract.cs": "a431eab029d26bff7bad0b605da54743b0187d3e923b3df60debd31a4a6ceb3d",
+    "samples/Spar.NativeSample/Program.Development.cs": "83861ab0f3956600f8998f3611ed157cc0f6c7190cb5915693247bd5385e96ce",
+    "samples/Spar.NativeSample/Program.Production.cs": "b53a47039e6b555730f80a313e53c3ea38aeb6475f52d5244c98c24b76260b09",
+    "samples/Spar.NativeSample/Program.cs": "e74f9ce7c7544d199e4f359115e8e8969587a7b3ecc3333cd831f8545e8ac6c0",
+    "samples/Spar.NativeSample/Properties/launchSettings.json": "f818af7469a86d252a8c54344bc9ffb4aa856a7bbc7828941ada120e64e58676",
+    "samples/Spar.NativeSample/SampleBackend.cs": "f25149058ae4a853e799a665b4e5ec67541db10fc319ffffa1fb4b535be377c0",
+    "samples/Spar.NativeSample/Spar.NativeSample.csproj": "6bc35d2d94d36a5eea0415b6cf92ce76cb72097ed27de4e64f3d3771804f50b3",
+    "samples/Spar.NativeSample/frontend/src/App.tsx": "efc4860f5ab46e7b2ed6c1f87bac59623138c8ddc292f4e96815c6f5474c8251",
+    "src/Sotsera.Spar.Development/DevelopmentApplication.cs": "f7c14c4a53a25d1053b4b885a20735b4827788d89ec27fad7fe866d97c1e6324",
+    "src/Sotsera.Spar.Development/DevelopmentSession.cs": "15628ddd6fbd263359dc15c27f030f81367abcf76732a30c40ef3a04084777f4",
+    "src/Sotsera.Spar.Windows/SparWindow.Bridge.cs": "b2713aec36e454cadc9ac0663f39140bd8562a985632d787c0fb18f5fb65394f",
+    "src/Sotsera.Spar.Windows/SparWindow.DevelopmentReadiness.cs": "fcc6c05b8d51493d0e02760e06d43e6479549bf24dcb3a8a2eb07c9b3307def5",
+    "src/Sotsera.Spar.Windows/SparWindowOptions.cs": "61aa7e7fb60846813ba724fc91b37c6894350f4077928aeb28a663067b3d872c",
+    "tests/Sotsera.Spar.Development.Tests/Sotsera.Spar.Development.Tests.csproj": "20ca9070fec6919ad2ad2ac8bda8640d56d265e39d72ea709fbcb4e4228433a8",
+    "tools/Spar.VSCode/extension.cjs": "a4839530819831714d7db1136a3b4064bbaaeeb1314139b8e4b94374e7d787a8",
+    "tools/Spar.VSCode/package.json": "a9e0a2e1f5838f9e40ffcdb2007621e47a5c523cd95b114dfa80ada9ec47b484"
+  },
+  "receipts": [
+    {
+      "path": "artifacts/issue32/development/receipt.json",
+      "sha256": "bc35ccadd80862b27326b1bf708ba3039a14ad4d14ca3c10265a8359bae2cacf",
+      "passed": true,
+      "scenarios": 10
+    },
+    {
+      "path": "artifacts/issue32/backend/receipt.json",
+      "sha256": "3251eac774166a7c099e1a0a228b6c97ff9778c2b3d789943094fbdf85c9dfbe",
+      "passed": true,
+      "scenarios": 3
+    },
+    {
+      "path": "artifacts/issue32/inspection/receipt.json",
+      "sha256": "a3417222b6b44740a8d7e51cf657cadb5ee0756fb7143643ab1535ac7f588d73",
+      "passed": true,
+      "scenarios": 3
+    },
+    {
+      "path": "artifacts/project-launch/project-ff647250089e48ad84e4a87d569a403d/receipt.json",
+      "sha256": "988eb2dea237c1e2805dde8082ae9928bc5e4bfe340b480ae7d3cba8bb28e577",
+      "passed": true,
+      "scenarios": 4
+    },
+    {
+      "path": "artifacts/vscode-development/debugger-957f05c82d7a41658f15257c1fd44c87/receipt.json",
+      "sha256": "6a81897f2e346c57d5decd31d976d46a54dc1b19ff38aca3e3020e0ee15054a6",
+      "passed": true,
+      "retainedProcesses": 45
+    },
+    {
+      "path": "artifacts/issue32/readiness/receipt.json",
+      "sha256": "08518b9c83743f29efcf7a1e19cff9af494a75efdcf62c1dce1c2010d6194ead",
+      "passed": true,
+      "retainedProcesses": 18
+    },
+    {
+      "path": "artifacts/issue32/minimal-final/receipt.json",
+      "sha256": "60f6b8ceb387e9ce2db28a06767c955ef136e0db32a956ffb9c9f1ed92aa7551",
+      "passed": true,
+      "retainedProcesses": 31
+    },
+    {
+      "path": "artifacts/vscode-development/debugger-0e2a15eadfc346cf8b90f406b51864cf/receipt.json",
+      "sha256": "c3922fdbbcd37566dbc00b1509a1878a6c2b7808ddf070fa3c15b4269331533d",
+      "passed": true,
+      "retainedProcesses": 22
+    },
+    {
+      "path": "artifacts/issue32/native-coreclr/receipt.json",
+      "sha256": "b801a27186405789834a2d9cde405ab821f139527d7962f48238dc55343817ad",
+      "passed": true,
+      "scenarios": 7
+    },
+    {
+      "path": "artifacts/issue32/bridge-coreclr/receipt.json",
+      "sha256": "11e2a292027db6eab988b00afc7e54885f6bb76f82c13824da8a58fe535128e0",
+      "passed": true,
+      "scenarios": 3
+    },
+    {
+      "path": "artifacts/issue32/native-aot/receipt.json",
+      "sha256": "428d5d159ecda4c11ded2688fd87a2c8b442828fcb36315092dd3d5b40af8a98",
+      "passed": true,
+      "scenarios": 7
+    },
+    {
+      "path": "artifacts/issue32/bridge-aot/receipt.json",
+      "sha256": "ed459f22d26be2b662a4adfe9c150373f470db6c55d015358c613942a7c9e1ad",
+      "passed": true,
+      "scenarios": 3
+    },
+    {
+      "path": "artifacts/issue32/minimal-production-final/receipt.json",
+      "sha256": "3febbf1b1a5994487fbae8fea5ec7be01fdbae1bc99534a88412880836af508c",
+      "passed": true
+    },
+    {
+      "path": "artifacts/issue32/fixture-production/receipt.json",
+      "sha256": "72e3dfdc194c21bf81292ad2b602f07fc69f00f83b3bc5605d9337ec2607a6de",
+      "passed": true,
+      "scenarios": 1
+    },
+    {
+      "path": "artifacts/issue32/minimal-consumer-isolated/receipt.json",
+      "sha256": "dcc9eddd8f3b450d9c1c8412d5f471ac5572dafdac3d6b79be634ebfe85b5a45",
+      "passed": true
+    },
+    {
+      "path": "artifacts/issue32/minimal-consumer-isolated/development/receipt.json",
+      "sha256": "0493e7b5aef3e81a84eeb005bb693a63e33f498e8314fe1e3a7373f4095e68dd",
+      "passed": true,
+      "retainedProcesses": 31
+    },
+    {
+      "path": "artifacts/issue32/minimal-consumer-isolated/production/receipt.json",
+      "sha256": "b2655ecebc20a7f19b418f5cf593edec3934d3f515fac9abb13c5bd0bc576931",
+      "passed": true
+    },
+    {
+      "path": "artifacts/issue32/fixture-consumer/receipt.json",
+      "sha256": "2de189a07e97654ac80082967d3da61986081376b75a88553bd161396591ac92",
+      "passed": true,
+      "scenarios": 4
+    },
+    {
+      "path": "artifacts/issue32/fixture-consumer/aot-run/receipt.json",
+      "sha256": "0e604b4384550fc0af0a58d9b928274206509878aa69cad3676641c33d337b34",
+      "passed": true,
+      "scenarios": 1
+    },
+    {
+      "path": "artifacts/issue32/fixture-consumer/coreclr-run/receipt.json",
+      "sha256": "dbbf740f0cddc4a17286623f5620a76f28f06aa49c7d8a7616f2cf7c1966e35f",
+      "passed": true,
+      "scenarios": 1
+    },
+    {
+      "path": "artifacts/issue32/compatibility/receipt.json",
+      "sha256": "0307eed7c77c2e6c891c365afc6969cdc0480b6ca47b7e0a45ea8f1df6ef830d",
+      "passed": true,
+      "scenarios": 13
+    },
+    {
+      "path": "artifacts/issue32/compatibility/coreclr-run/receipt.json",
+      "sha256": "c067dc620dd3b827fe83cba3a7afe83406b8c7275a702976bcaf887b6f36c8d8",
+      "passed": true,
+      "scenarios": 1
+    },
+    {
+      "path": "artifacts/issue32/compatibility/aot-run/receipt.json",
+      "sha256": "e56ce3c13c1a1f2ffd6c10b5fa68bfc9f31c3a84d532e179e492bf36787ba22a",
+      "passed": true,
+      "scenarios": 1
+    },
+    {
+      "path": "C:/Users/Alessandro/AppData/Local/Temp/spar-issue32-editor-minimal-afbfaa023ecb4860b820cabf03344e90/receipt.json",
+      "sha256": "75c1d7a7393349979bd2203da7b520188a9bb68364b9825720c6fb5d1a3c2b81",
+      "passed": true,
+      "retainedProcesses": 22
+    },
+    {
+      "path": "C:/Users/Alessandro/AppData/Local/Temp/spar-issue32-editor-fixture-1163e9910ac5460293d3d9d723666508/receipt.json",
+      "sha256": "56093be83f829074f20d723ce62c1559181ce59c8321cbc47eb2a83021e7b099",
+      "passed": true,
+      "retainedProcesses": 45
+    }
+  ],
+  "captures": [
+    {
+      "path": "artifacts/issue32/development/hmr-restart-close-82af6a67233b4aba9b40d143f54f9a45/before.bmp",
+      "sha256": "ea15238c2faaa50c0882f3127c441b3a55c59172d47a18501e9f7b8dc4a7f8c1",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/development/hmr-restart-close-82af6a67233b4aba9b40d143f54f9a45/after.bmp",
+      "sha256": "3361187177fb428fb1e0496e5faa3e280b16618195cb4e3d8babb123c95e69e8",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/backend/patch-error-restart-236b81cb6eaa4ca1b5a84e3cde28e89f/patched.bmp",
+      "sha256": "d0277fcc7c1a91d8f788688968f4ec8c74c95045fa330ef11186b5cad830851e",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/backend/startup-dependency-build-races-3121436fd1374e0c99b6f619ba84835f/recovered.bmp",
+      "sha256": "f395bc72f7a1aaecf329499d35b302e90329fcaba4a6c3bac4372904600bd4fb",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/inspection/native-inspection-2917c51744a14c7287ebf0b48ab5052f/edited.png",
+      "sha256": "827b1f80aab9c655601171c63581ca35d64a4b63d455422937e1d7cda53a3958",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/inspection/native-inspection-2917c51744a14c7287ebf0b48ab5052f/restarted.png",
+      "sha256": "62289842b02d0f324ef4f576162a5fa5f7aae6758e90b1abb1f04a6735f81f69",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/project-launch/project-ff647250089e48ad84e4a87d569a403d/native-close/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/project-launch/project-ff647250089e48ad84e4a87d569a403d/debugger-stop/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/project-launch/project-ff647250089e48ad84e4a87d569a403d/contract-change/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/project-launch/project-ff647250089e48ad84e4a87d569a403d/coordinator-crash/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/vscode-development/debugger-957f05c82d7a41658f15257c1fd44c87/patched.bmp",
+      "sha256": "6cbc058784a16a1a814c2f6d9f0cc547510e7d7fc7beded20298f672c57f2dc5",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/minimal-final/minimal-source-edf895cbfc1f4748b3793041dd12077a/updated.png",
+      "sha256": "e78ffbd69b004e5281433244b91f30cded441b4f09ac94ba30df26eb9eb4adaa",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/minimal-final/minimal-source-edf895cbfc1f4748b3793041dd12077a/restarted.png",
+      "sha256": "fbb90e368a5d43828fc7b86b40b73f412dbef00afea8e6aea0eb953f0971d97f",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/vscode-development/debugger-0e2a15eadfc346cf8b90f406b51864cf/patched.bmp",
+      "sha256": "da99fd635297ea3d41dc5473b5a94ef99d818b19e747ff7924f89d1863685eea",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/native-coreclr/normal/initial.bmp",
+      "sha256": "9ffe6c07c4e08fe69b29cf0b1f1bdbfb1faf167a4db607cd70e5b2926e799fd6",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/native-coreclr/normal/resized.bmp",
+      "sha256": "d049dbafdd2653064c447f239b8049cf8592a9de1caa00927547f26baf31187f",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/native-aot/normal/initial.bmp",
+      "sha256": "5cfd1b18034e4aabb754515af4e008d5560b917d57c747754c0e3b7c5a0b0ccb",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/native-aot/normal/resized.bmp",
+      "sha256": "b7a320eca04854a835266ab49dbe1a042d8bc39e107a63ffde09e84a43fe9e3b",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/minimal-production-final/published.bmp",
+      "sha256": "844b238b7a566fc11dbafb3cd131d0edc69b98f7bd0e0e132cd5e0ba961aefb3",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/fixture-production/run-1.bmp",
+      "sha256": "844b238b7a566fc11dbafb3cd131d0edc69b98f7bd0e0e132cd5e0ba961aefb3",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/minimal-consumer-isolated/development/updated.png",
+      "sha256": "e78ffbd69b004e5281433244b91f30cded441b4f09ac94ba30df26eb9eb4adaa",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/minimal-consumer-isolated/development/restarted.png",
+      "sha256": "fbb90e368a5d43828fc7b86b40b73f412dbef00afea8e6aea0eb953f0971d97f",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/minimal-consumer-isolated/production/published.bmp",
+      "sha256": "844b238b7a566fc11dbafb3cd131d0edc69b98f7bd0e0e132cd5e0ba961aefb3",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/fixture-consumer/patched.bmp",
+      "sha256": "e72f17b2f6dd05bc0ef289737c268d820df3968ffb807de68497051ef2b51f92",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/fixture-consumer/aot-run/run-1.bmp",
+      "sha256": "844b238b7a566fc11dbafb3cd131d0edc69b98f7bd0e0e132cd5e0ba961aefb3",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/fixture-consumer/coreclr-run/run-1.bmp",
+      "sha256": "7a45371f21bcaaaae53a36b94a7f254e303e2db7df9914e214ebbdd674e9367e",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/compatibility/aot-run/run-1.bmp",
+      "sha256": "844b238b7a566fc11dbafb3cd131d0edc69b98f7bd0e0e132cd5e0ba961aefb3",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "artifacts/issue32/compatibility/coreclr-run/run-1.bmp",
+      "sha256": "7a45371f21bcaaaae53a36b94a7f254e303e2db7df9914e214ebbdd674e9367e",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "C:/Users/Alessandro/AppData/Local/Temp/spar-issue32-editor-minimal-afbfaa023ecb4860b820cabf03344e90/patched.bmp",
+      "sha256": "76a93cb19dac04840ec5a8a11951a97e5f1790daa7fa93322fc88193834075ed",
+      "visuallyReviewed": true
+    },
+    {
+      "path": "C:/Users/Alessandro/AppData/Local/Temp/spar-issue32-editor-fixture-1163e9910ac5460293d3d9d723666508/patched.bmp",
+      "sha256": "3eeb5aa8b59712b0dc40d7aa2331f76b290410ab101ab5fb499edc8f8b9a1a88",
+      "visuallyReviewed": true
+    }
+  ]
+}

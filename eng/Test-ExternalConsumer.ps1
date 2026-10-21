@@ -11,7 +11,7 @@ $sourceRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $externalEvidence = [IO.Path]::GetFullPath($EvidenceDirectory)
 New-Item -ItemType Directory -Path $externalEvidence -Force | Out-Null
 $consumer = Join-Path ([IO.Path]::GetTempPath()) ('spar-consumer-' + [guid]::NewGuid().ToString('N'))
-& (Join-Path $PSScriptRoot 'New-PackageConsumer.ps1') -Directory $consumer -Feed $Feed
+& (Join-Path $PSScriptRoot 'New-PackageConsumer.ps1') -Directory $consumer -Feed $Feed -IntegrationFixture
 $consumer | Set-Content -LiteralPath (Join-Path $externalEvidence 'consumer-path.txt')
 $project = Join-Path $consumer 'backend/Spar.NativeSample.csproj'
 $backend = Join-Path $consumer 'backend/SampleBackend.cs'

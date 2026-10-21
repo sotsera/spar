@@ -1,5 +1,7 @@
 # Owned SPA development session
 
+This integration guide exercises the explicit acceptance application under `fixtures/`. For ordinary application startup and publication, start with the [minimal application guide](23-minimal-application.md). Historical captures retain their original paths.
+
 Date: 2026-10-19. M1.4, Windows/x64, .NET 10. This records the owned SPA/session foundation. The later [backend update guide](12-backend-updates.md) adds the sample's default watcher lane; the manual-mode behavior below remains available with `watchBackend: false`. Integrated debugger handoff remains open.
 
 ## Start and edit
@@ -10,7 +12,7 @@ From the repository root, prepare the development tool and frontend dependencies
 
 ```powershell
 dotnet build tools/Spar.Dev --disable-build-servers
-Push-Location samples/Spar.NativeSample/frontend
+Push-Location fixtures/Spar.NativeSample/frontend
 npm ci --ignore-scripts --include=optional
 Pop-Location
 ```
@@ -18,12 +20,12 @@ Pop-Location
 Then one start action builds the consumer and contracts, starts the configured SPA command, verifies its actual readiness, and opens the native application:
 
 ```powershell
-./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe samples/Spar.NativeSample/spar.dev.json
+./tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe fixtures/Spar.NativeSample/spar.dev.json
 ```
 
 Alternatively, run **Tasks: Run Task → Spar: development session** in VS Code. It builds the tool first and launches its executable directly, so task termination ends the owning coordinator. This is a task workflow; it does not yet launch the C# debugger. Install frontend dependencies before the first run. Keep the existing console debugger probe separate.
 
-Edit `samples/Spar.NativeSample/frontend/src/styles.css` or `App.tsx`. Vite and the React plugin perform normal CSS HMR/Fast Refresh. Supported local state survives. Backend mutations run only when requested; HMR does not replay them. Changing Vite/server configuration currently ends the session; start it again after that change.
+Edit `fixtures/Spar.NativeSample/frontend/src/styles.css` or `App.tsx`. Vite and the React plugin perform normal CSS HMR/Fast Refresh. Supported local state survives. Backend mutations run only when requested; HMR does not replay them. Changing Vite/server configuration currently ends the session; start it again after that change.
 
 Type `status`, `restart`, or `stop` in the coordinator terminal, each followed by Enter. The first Ctrl+C requests graceful stop; a second requests forced termination of owned work. Closing the native application normally ends the session. `restart` waits for actual application exit, then launches the **same compiled executable** with a new generation/profile while retaining Vite. It does not rebuild or apply C# edits. Use a new session after building changed backend code until M1.5 supplies the supported update owner.
 
@@ -31,7 +33,7 @@ The initial implementation waits for verified frontend readiness before opening 
 
 ## Configuration and generated output
 
-[`spar.dev.json`](../samples/Spar.NativeSample/spar.dev.json) resolves paths relative to itself. Configure the consumer project, built executable, generated JavaScript path, session output directory, frontend executable/arguments/working directory/environment, and startup/shutdown limits. Startup defaults to 30 seconds; helper shutdown defaults to 10 seconds. Configuration is limited to 64 KiB and rejects unknown fields, invalid limits, and malformed command/environment inputs.
+[`spar.dev.json`](../fixtures/Spar.NativeSample/spar.dev.json) resolves paths relative to itself. Configure the consumer project, built executable, generated JavaScript path, session output directory, frontend executable/arguments/working directory/environment, and startup/shutdown limits. Startup defaults to 30 seconds; helper shutdown defaults to 10 seconds. Configuration is limited to 64 KiB and rejects unknown fields, invalid limits, and malformed command/environment inputs.
 
 The reference command is `cmd.exe /d /c npm run dev`; package scripts are not assumed to be native executables. Another package manager can be configured explicitly. Port `0` asks Vite for an available port; a fixed port is optional and uses strict binding. The adapter reports the actual bound address through its private control connection. There is no fixed-port polling or scraping of terminal output. A detected conflict, timeout, unexpected frontend exit, application launch failure, contract mismatch, and denied client capability have distinct event codes.
 
@@ -72,7 +74,7 @@ Test-only `--probe` enables the sample's fixed seed/close HMR events, not arbitr
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
 dotnet test --solution Spar.slnx --no-build
-Push-Location samples/Spar.NativeSample/frontend
+Push-Location fixtures/Spar.NativeSample/frontend
 npm run check
 npm run build
 Pop-Location
