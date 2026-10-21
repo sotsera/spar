@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -5,17 +6,10 @@ namespace Sotsera.Spar.Development;
 
 public sealed partial class DevelopmentSession
 {
-    private const string SupportedWatchSdk = "10.0.402";
-    private static readonly Regex _compilerDiagnostic = new(@"\berror [A-Z]+\d+\b",
-        RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));
-    private OwnedProcessJob? _watchJob;
-    private Child? _watcher;
-    private WatchOutput? _watchStdout;
-    private WatchOutput? _watchStderr;
+    private WatcherProcess? _watcher;
     private string? _pendingDiagnostic;
     private long _pendingUpdate;
     private long _lastBackendRevision;
-    private bool _watchReady;
     private bool _contractRestartPending;
     private BackendInputs? _backendInputs;
     private BackendSelection? _selectedInputs;
@@ -30,9 +24,9 @@ public sealed partial class DevelopmentSession
             .ConfigureAwait(false);
         var version = File.ReadAllText(Path.Combine(_directory,
             "sdk-check-" + _generation.ToString(CultureInfo.InvariantCulture) + ".stdout.log")).Trim();
-        if (_build.Process.ExitCode != 0 || version != SupportedWatchSdk)
+        if (_build.Process.ExitCode != 0 || version != WatcherProcess.SupportedSdk)
         {
-            throw new SessionFailure("watch_sdk_not_verified", $"Backend watch mode requires the verified SDK {SupportedWatchSdk}.");
+            throw new SessionFailure("watch_sdk_not_verified", $"Backend watch mode requires the verified SDK {WatcherProcess.SupportedSdk}.");
         }
 
         Emit("backend-owner", code: "dotnet-watch", detail: version);
@@ -142,7 +136,7 @@ public sealed partial class DevelopmentSession
             var path = Path.Combine(_directory, "build-" + _generation.ToString(CultureInfo.InvariantCulture) + suffix);
             using var output = new WatchOutput(path);
             // Bounded diagnostic preview; the complete output remains in the generation's logs.
-            foreach (var line in output.ReadAvailable().Where(line => _compilerDiagnostic.IsMatch(line)).Take(16))
+            foreach (var line in output.ReadAvailable().Where(line => WatcherProcess.IsCompilerDiagnostic(line)).Take(16))
             {
                 Emit("build-diagnostic", code: "compiler_error", detail: line.Length > 2048 ? line[..2048] : line);
             }
@@ -154,29 +148,25 @@ public sealed partial class DevelopmentSession
         _pendingUpdate = 0;
         _lastBackendRevision = 0;
         _pendingDiagnostic = null;
-        _watchReady = false;
         _contractRestartPending = false;
-        _watchJob = new OwnedProcessJob(_job!);
-        var variables = new Dictionary<string, string>(applicationVariables)
+        _watcher = new WatcherProcess(_job!);
+        try
         {
-            ["DOTNET_WATCH_RESTART_ON_RUDE_EDIT"] = "0",
-            ["DOTNET_WATCH_SUPPRESS_BROWSER_REFRESH"] = "1",
-            ["DOTNET_WATCH_SUPPRESS_LAUNCH_BROWSER"] = "1",
-            ["DOTNET_WATCH_SUPPRESS_EMOJIS"] = "1",
-            ["DOTNET_WATCH_LOG_LEVEL"] = "Debug",
-            ["DOTNET_CLI_UI_LANGUAGE"] = "en-US",
-            ["MSBUILDDISABLENODEREUSE"] = "1"
-        };
-        // Keep prompting enabled with redirected input. Never confirm a restart in the SDK: Spar drains first.
-        _watcher = Start("watcher", "dotnet",
-            ["watch", "--project", settings.Project, "--verbose", "run", "--no-launch-profile",
-                "--disable-build-servers", "--property:UseSharedCompilation=false",
-                "--property:HotReloadAutoRestart=false", "--", "--spar-dev"],
-            Path.GetDirectoryName(settings.Project)!, variables, _watchJob);
-        var stem = "watcher-" + _generation.ToString(CultureInfo.InvariantCulture);
-        _watchStdout = new WatchOutput(Path.Combine(_directory, stem + ".stdout.log"));
-        _watchStderr = new WatchOutput(Path.Combine(_directory, stem + ".stderr.log"));
-        return _watcher;
+            _watcher.Start(settings.Project, _directory, _generation, applicationVariables);
+        }
+        catch (Exception error) when (error is IOException or Win32Exception or ArgumentException)
+        {
+            throw new SessionFailure("watcher_launch_failed", error.Message);
+        }
+        finally
+        {
+            if (_watcher.Process is not null)
+            {
+                Emit("process-started", "watcher", _watcher.Process);
+            }
+        }
+        _watcher.OpenOutput(_directory, _generation);
+        return new Child(_watcher.Process!, "watcher", _watcher.Exited!);
     }
 
     private bool ReadWatchOutput()
@@ -187,26 +177,23 @@ public sealed partial class DevelopmentSession
         }
 
         var restart = false;
-        foreach (var line in _watchStdout!.ReadAvailable().Concat(_watchStderr!.ReadAvailable()))
+        foreach (var observation in _watcher.ReadAvailable())
         {
-            if (!_watchReady && line.Contains("dotnet watch", StringComparison.Ordinal)
-                && line.Contains("Waiting for changes", StringComparison.Ordinal))
+            switch (observation.Kind)
             {
-                _watchReady = true;
-                Emit("watcher-ready", "watcher", _watcher.Process);
-            }
-            if (_compilerDiagnostic.IsMatch(line))
-            {
-                _pendingDiagnostic = line.Length > 2048 ? line[..2048] : line;
-                Emit("watcher-diagnostic", code: "compiler_error", detail: _pendingDiagnostic);
-            }
-            if (line.TrimStart().StartsWith("? Do you want to restart your app?", StringComparison.Ordinal))
-            {
-                restart = true;
-                Emit("restart-required", code: "unsupported_edit");
+                case "ready":
+                    Emit("watcher-ready", "watcher", _watcher.Process);
+                    break;
+                case "diagnostic":
+                    _pendingDiagnostic = observation.Detail;
+                    Emit("watcher-diagnostic", code: "compiler_error", detail: _pendingDiagnostic);
+                    break;
+                case "restart":
+                    restart = true;
+                    Emit("restart-required", code: "unsupported_edit");
+                    break;
             }
         }
-
         return restart;
     }
 
@@ -280,35 +267,17 @@ public sealed partial class DevelopmentSession
 
     private async Task StopWatcherAsync()
     {
-        if (_watchJob is null)
+        if (_watcher is null)
         {
             return;
         }
-        if (_application is not null && !_application.Exited.IsCompleted)
+        await _watcher.RetireAsync(_application?.Exited).ConfigureAwait(false);
+        if (_watcher.Process is not null)
         {
-            throw new InvalidOperationException("The watcher must remain owned until actual application completion.");
-        }
-
-        // The application has actually ended. Only its SDK/watch helpers are in this nested scope.
-        _watchJob.Terminate();
-        while (_watchJob.ActiveProcessIds().Length != 0)
-        {
-            await Task.Delay(50).ConfigureAwait(false);
-        }
-        if (_watcher is not null)
-        {
-            await _watcher.Exited.ConfigureAwait(false);
             Emit("watcher-stopped", "watcher", _watcher.Process, code: "owned_tool_stop");
-            _watcher.Process.Dispose();
-            _watcher = null;
         }
-
-        _watchStdout?.Dispose();
-        _watchStderr?.Dispose();
-        _watchStdout = null;
-        _watchStderr = null;
-        _watchJob.Dispose();
-        _watchJob = null;
+        _watcher.Dispose();
+        _watcher = null;
     }
 
     private async Task DrainApplicationExitAsync()
@@ -345,15 +314,6 @@ public sealed partial class DevelopmentSession
             }
             // Retiring UI/update frames cannot restore readiness or refresh data for another generation.
         }
-    }
-
-    private void DisposeWatchResources()
-    {
-        _backendInputs?.Dispose();
-        _watchStdout?.Dispose();
-        _watchStderr?.Dispose();
-        _watcher?.Process.Dispose();
-        _watchJob?.Dispose();
     }
 
     private void ReadContract()

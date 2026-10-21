@@ -203,7 +203,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             }
 
             _job.Dispose(); // The last resort remains active through every failure, including owner/process exit.
-            DisposeWatchResources();
+            _backendInputs?.Dispose();
+            _watcher?.Dispose();
             foreach (var process in _observed.Values)
             {
                 process.Dispose();
@@ -380,7 +381,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 return;
             }
 
-            if (_watcher?.Exited.IsCompleted == true)
+            if (_watcher?.Exited?.IsCompleted == true)
             {
                 throw new SessionFailure("watcher_exited", "The backend update owner exited; inspect its retained logs.");
             }
@@ -511,7 +512,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             }
             if (_watcher is not null)
             {
-                wait.Add(_watcher.Exited);
+                wait.Add(_watcher.Exited!);
             }
             if (command is not null)
             {
