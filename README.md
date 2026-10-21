@@ -67,3 +67,4 @@ The tests edit disposable copies under `artifacts/` and launch real `dotnet watc
 - [Agent guidance](AGENTS.md) — working rules for this repository.
 - [Repository skills](docs/20-agent-skills.md) — focused testing/MSBuild workflows, pinned provenance, and validation limits.
 - [Continuous integration](docs/21-continuous-integration.md) — change selection, retained coverage, full qualification and artifacts.
+- [Integration test helpers](docs/22-integration-test-helpers.md) — explicit fixture/session ownership and standalone scenario commands.

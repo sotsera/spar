@@ -63,11 +63,13 @@ jobs:
         if: steps.selection.outputs.baseline != 'false'
         run: dotnet test --solution Spar.slnx --no-build
 
-      - name: Test probe log framing during partial writes
+      - name: Test integration helpers and probe log framing
         id: framing
         if: steps.selection.outputs.baseline != 'false'
         shell: pwsh
-        run: ./eng/Test-ProbeEvents.ps1
+        run: |
+          ./eng/Test-IntegrationHelpers.ps1
+          ./eng/Test-ProbeEvents.ps1
 
       - name: Check generated TypeScript client
         id: client

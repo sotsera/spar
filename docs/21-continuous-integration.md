@@ -9,7 +9,7 @@ The map includes every check in the previous workflow. Groups are additive, and 
 | Group | Checks / retained execution path | Protected behavior and inputs |
 | --- | --- | --- |
 | Always | `Test-AgentSkills.mjs`, documentation reference validation, classifier and gate tests | Skill inventory/provenance/references; authored guide references; selection and result auditing |
-| Baseline | `dotnet build Spar.slnx --disable-build-servers`; `dotnet test --solution Spar.slnx --no-build`; `Test-ProbeEvents.ps1` | All managed bridge/generator/asset/development tests and real watcher tests; shared log framing. Ordinary code changes retain all of these. |
+| Baseline | `dotnet build Spar.slnx --disable-build-servers`; `dotnet test --solution Spar.slnx --no-build`; `Test-IntegrationHelpers.ps1`; `Test-ProbeEvents.ps1` | All managed bridge/generator/asset/development tests and real watcher tests; helper import/ownership checks and shared log framing. Ordinary code changes retain all of these. |
 | Frontend | `eng/bridge-client-tests`: install and test; sample SPA: install, check and build; `Test-FrontendNotices.mjs` | Generated JS/TypeScript contracts, React/Vite compilation, complete bundled licenses. Build must precede generated-client checks. |
 | Development | `Test-DevelopmentSession.ps1`; `Test-BackendUpdates.ps1`; `Test-ProjectLaunch.ps1`; `Test-DevelopmentInspection.ps1` | Owned SPA/HMR, backend patches and actual retirement, restart/compile recovery, IDE bootstrap lifetime, actual WebView inspection and bounded asynchronous actions |
 | Native | `Test-Bridge.ps1` and `Test-NativeHost.ps1` against Debug | Native document/permission/contract authority, cancellation and response lifetime, COM/window/profile ownership, CoreCLR lifecycle and errors |

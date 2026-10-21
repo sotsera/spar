@@ -5,6 +5,8 @@ param(
   [switch]$VerifyRender
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'integration/Sessions.ps1')
+. (Join-Path $PSScriptRoot 'integration/Processes.ps1')
 $sourceRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $externalEvidence = [IO.Path]::GetFullPath($EvidenceDirectory)
 New-Item -ItemType Directory -Path $externalEvidence -Force | Out-Null
@@ -43,25 +45,24 @@ try {
   try { npm ci --ignore-scripts --include=optional *> (Join-Path $externalEvidence 'npm.log'); if ($LASTEXITCODE) { throw 'Frontend restore failed.' } }
   finally { Pop-Location }
   $externalCoordinator = Join-Path $consumer '.tools/Spar.Dev.exe'
-  $externalApplication = Join-Path $consumer 'backend/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe'
-  . (Join-Path $PSScriptRoot 'Test-DevelopmentSession.ps1') -Coordinator $externalCoordinator -Application $externalApplication `
-    -EvidenceDirectory (Join-Path $externalEvidence 'development') -VerifyRender:$VerifyRender -LibraryOnly
+  $coordinatorPath = (Resolve-Path -LiteralPath $externalCoordinator).Path
+  New-Item -ItemType Directory -Path (Join-Path $externalEvidence 'development') -Force | Out-Null
+  Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
+  $sessions = [Collections.Generic.List[object]]::new()
+  $results = [Collections.Generic.List[object]]::new()
+  $unrelated = $null
   $settings = Get-Content -LiteralPath (Join-Path $consumer 'spar.dev.json') -Raw | ConvertFrom-Json -AsHashtable
   $settings.sessionDirectory = Join-Path $externalEvidence 'development/sessions'
   $fixture = [pscustomobject]@{ Name = 'external-package'; Directory = (Join-Path $externalEvidence 'development');
     Frontend = $frontend; Settings = $settings; Config = (Join-Path $consumer 'spar.dev.json') }
-  $unrelatedStart = [Diagnostics.ProcessStartInfo]::new('node')
-  $unrelatedStart.UseShellExecute = $false
-  $unrelatedStart.CreateNoWindow = $true
-  $unrelatedStart.ArgumentList.Add('-e')
-  $unrelatedStart.ArgumentList.Add('setInterval(() => {}, 1000)')
-  $unrelated = [Diagnostics.Process]::Start($unrelatedStart)
-  $null = $unrelated.Handle
-  $session = Start-Session $fixture $true
   $originalBackend = [IO.File]::ReadAllText($backend)
   $css = Join-Path $frontend 'src/styles.css'
   $originalCss = [IO.File]::ReadAllText($css)
+  $session = $null
   try {
+    $unrelated = Start-UnrelatedProcess
+    $session = Start-Session $fixture $true -Coordinator $coordinatorPath -WorkingDirectory $consumer
+    $sessions.Add($session)
     Wait-Until $session { $null -ne (Latest-Snapshot $session) } 'external package typed readiness' 120
     $initial = Latest-Snapshot $session
     Send-Command $session 'probe' 'seed'
@@ -81,18 +82,23 @@ try {
     Wait-Until $session { $null -ne (Latest-Snapshot $session 2) } 'external coordinated rebuild/restart' 120
     Assert-Condition ((Latest-Snapshot $session 2).counter -eq 0) 'External restart did not reset backend state.'
     Send-Command $session 'stop'
-    Confirm-Exit $session
+    $results.Add((Confirm-Exit $session -Unrelated $unrelated))
   } finally {
-    if (!$session.Process.HasExited) {
-      Send-Command $session 'stop' '' $true
-      Confirm-Exit $session
+    try {
+      if ($session -and !$session.Process.HasExited) {
+        Send-Command $session 'stop' '' $true
+        $null = Confirm-Exit $session -Unrelated $unrelated
+      }
+    } finally {
+      try { Close-TestSessions $sessions }
+      finally {
+        try { if ($unrelated) { Stop-TestProcess $unrelated } }
+        finally {
+          [IO.File]::WriteAllText($backend, $originalBackend)
+          [IO.File]::WriteAllText($css, $originalCss)
+        }
+      }
     }
-    foreach ($handle in $session.Handles.Values) { $handle.Dispose() }
-    $session.Process.Dispose()
-    if (!$unrelated.HasExited) { $unrelated.Kill(); $unrelated.WaitForExit() }
-    $unrelated.Dispose()
-    [IO.File]::WriteAllText($backend, $originalBackend)
-    [IO.File]::WriteAllText($css, $originalCss)
   }
   $results.ToArray() | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $externalEvidence 'development.json')
 

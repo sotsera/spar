@@ -1,0 +1,296 @@
+{
+  "observedAtUtc": "2026-10-20T23:46:29.680Z",
+  "baseRevision": "f316fd9c300094ac4ab193ae6ce13ef765a17a32",
+  "revisionBinding": "SHA-256 of validated implementation files in the working tree; evidence documents are excluded",
+  "implementation": [
+    {
+      "file": ".github/workflows/managed-probe.yml",
+      "sha256": "88219a904ef76ef6e2e15a8e87403eb7f005555b0411a22bb3cdc00ca3376af5"
+    },
+    {
+      "file": "eng/Test-BackendUpdates.ps1",
+      "sha256": "2041092e2741e1ec74025cc7b06666a97d029ca9f8147b5fe6a992ebc45554db"
+    },
+    {
+      "file": "eng/Test-DevelopmentInspection.ps1",
+      "sha256": "4c9286de0e31bd57f9d54aa9267712ff9fb6ff1c7d26602c6267c3b0fbeff439"
+    },
+    {
+      "file": "eng/Test-DevelopmentSession.ps1",
+      "sha256": "622ae04a402d6e7ed3fc1398e557f0ad9b873288e637aed3cf52ff1b9dfa2a10"
+    },
+    {
+      "file": "eng/Test-ExternalConsumer.ps1",
+      "sha256": "3108b41189997e28286f5c8d1845c8fa31587d6fd272f5326805dbac8cc7300d"
+    },
+    {
+      "file": "eng/Test-IntegrationHelpers.ps1",
+      "sha256": "ccaeeb6ce2c014ecb7e1b5ff3b434e7f648f289ce92752183c44109254260e56"
+    },
+    {
+      "file": "eng/Test-ProjectLaunch.ps1",
+      "sha256": "b71dc7ea6ddde43573cec382cf38e63b921d5dbb0c747b85ea046675875d02f5"
+    },
+    {
+      "file": "eng/Test-VSCodeDevelopment.ps1",
+      "sha256": "035381729f15bf0ae11f8f2e44f57a580569a219ff6bf219baa73e446f14a0f6"
+    },
+    {
+      "file": "eng/integration/Fixtures.ps1",
+      "sha256": "0af09575975f59d5222eda7bd1544744e39c33e3368a9af221894979715dee35"
+    },
+    {
+      "file": "eng/integration/Processes.ps1",
+      "sha256": "4021c72adf0a7a8dd41c844d39043fe12f1457df68ffc1c512c0c2b4d4ee67af"
+    },
+    {
+      "file": "eng/integration/Sessions.ps1",
+      "sha256": "d64c9aa97483eaa39d851bffc18aed9210f066d8961fd9530c0afbb1a7630d10"
+    }
+  ],
+  "tooling": {
+    "sdk": "10.0.402",
+    "node": "24.21.0",
+    "powershell": "7.6.5",
+    "vscode": "1.142.0",
+    "csharp": "2.160.4",
+    "devkit": "3.40.215"
+  },
+  "checks": {
+    "build": {
+      "passed": true,
+      "warnings": 0,
+      "errors": 0
+    },
+    "managed": {
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0
+    },
+    "classifier": {
+      "passed": 32
+    },
+    "helpers": "definition-only imports; removed-switch rejection; real forced exit; live handle retained after timeout",
+    "preservedAssertionAndWaitCallSites": 141
+  },
+  "runs": [
+    {
+      "name": "development",
+      "file": "artifacts/issue31/development-final/receipt.json",
+      "sha256": "bf9bf0a02a697b3687b16e01458a62d173b207873e6e48e6a07ec3d5655b54f1",
+      "passed": true,
+      "scenarios": [
+        "hmr-restart-close",
+        "owner-pipe-eof",
+        "malformed-owner-input",
+        "abrupt-owner-kill",
+        "frontend-exit",
+        "application-exit",
+        "port-conflict",
+        "startup-timeout",
+        "application-start-failure",
+        "client-credential-denied"
+      ],
+      "independentlyRetainedProcesses": 107
+    },
+    {
+      "name": "backend",
+      "file": "artifacts/issue31/backend-final/receipt.json",
+      "sha256": "0cae7a33a3526061fd9dfdf2f5e42894da144918f816f39a2bc0c10b7174f395",
+      "passed": true,
+      "scenarios": [
+        "patch-error-restart",
+        "startup-dependency-build-races",
+        "explicit-force-during-retirement"
+      ],
+      "independentlyRetainedProcesses": 150
+    },
+    {
+      "name": "projectLaunch",
+      "file": "artifacts/project-launch/project-36379af147af444cbb2022f6d228455c/receipt.json",
+      "sha256": "0b5c100056daaf196473a515b2b2914a6451c1c68231388d2bedcd3aec3541d0",
+      "passed": true,
+      "scenarios": [
+        "native-close",
+        "debugger-stop",
+        "contract-change",
+        "coordinator-crash"
+      ],
+      "independentlyRetainedProcesses": 52
+    },
+    {
+      "name": "inspection",
+      "file": "artifacts/issue31/inspection/receipt.json",
+      "sha256": "2ab01b773a5281e44b123cb957548a9541e1206c5261b8cd1ecdf35b7ef006e1",
+      "passed": true,
+      "scenarios": [
+        "native-inspection",
+        "inspection-disabled",
+        "failed-restart-completion"
+      ],
+      "independentlyRetainedProcesses": 63
+    },
+    {
+      "name": "sourceDebugger",
+      "file": "artifacts/vscode-development/debugger-9e50c717084549ba8e1a7dad3b3bb335/receipt.json",
+      "sha256": "fa455963fcfa7205ae1239b400299d76789ebe939369e7014df730b840c2238d",
+      "passed": true,
+      "scenarios": [],
+      "independentlyRetainedProcesses": 45
+    },
+    {
+      "name": "externalDevelopment",
+      "file": "artifacts/issue31/external/development.json",
+      "sha256": "f59b7e6e2c0dcaed87622ac82458acfe6e7d0397728c93f6d11a5f0d7c18a87f",
+      "passed": true,
+      "scenarios": [
+        "external-package"
+      ],
+      "independentlyRetainedProcesses": 31
+    },
+    {
+      "name": "externalDelivery",
+      "file": "artifacts/issue31/external/receipt.json",
+      "sha256": "085d353037ddfbaea439a73db4b207cb978d4ae580a5fc1b8df01e0bc5936df7",
+      "passed": true,
+      "scenarios": [],
+      "cases": [
+        {
+          "name": "fresh-build",
+          "passed": true,
+          "expectedSuccess": true,
+          "exitCode": 0
+        },
+        {
+          "name": "publish-aot",
+          "passed": true,
+          "expectedSuccess": true,
+          "exitCode": 0
+        },
+        {
+          "name": "strict-dependency",
+          "passed": true,
+          "expectedSuccess": false,
+          "exitCode": 1
+        },
+        {
+          "name": "publish-coreclr",
+          "passed": true,
+          "expectedSuccess": true,
+          "exitCode": 0
+        }
+      ]
+    },
+    {
+      "name": "externalAot",
+      "file": "artifacts/issue31/external/aot-run/receipt.json",
+      "sha256": "a68c63632b7566865cef51d7260abebd000b4cab52e1c4fafce199bce831f9b3",
+      "passed": true,
+      "scenarios": [],
+      "mode": "NativeAOT"
+    },
+    {
+      "name": "externalCoreclr",
+      "file": "artifacts/issue31/external/coreclr-run/receipt.json",
+      "sha256": "31298977c5b71c50dbf4c2bf2aff57039335d8cc0fc824a98bff3f6e0804ad0d",
+      "passed": true,
+      "scenarios": [],
+      "mode": "CoreCLR"
+    },
+    {
+      "name": "packageDebugger",
+      "file": "C:/Users/Alessandro/AppData/Local/Temp/spar-issue31-editor-0e9a197f231a41ca8d6750e68b32b322/receipt.json",
+      "sha256": "23596cf681a99881168a409987ad8e9a5d892bbc341424ffdd728771410d8c94",
+      "passed": true,
+      "scenarios": [],
+      "independentlyRetainedProcesses": 45
+    }
+  ],
+  "captures": [
+    {
+      "file": "artifacts/issue31/development-final/hmr-restart-close-dd9a616676da4fad8851511aca551939/before.bmp",
+      "sha256": "ea15238c2faaa50c0882f3127c441b3a55c59172d47a18501e9f7b8dc4a7f8c1",
+      "review": "HMR heading/accent changes; counters 7/2 and text retained"
+    },
+    {
+      "file": "artifacts/issue31/development-final/hmr-restart-close-dd9a616676da4fad8851511aca551939/after.bmp",
+      "sha256": "3361187177fb428fb1e0496e5faa3e280b16618195cb4e3d8babb123c95e69e8",
+      "review": "HMR heading/accent changes; counters 7/2 and text retained"
+    },
+    {
+      "file": "artifacts/issue31/backend-final/patch-error-restart-3effe6bb0e4347caa4ead2ed50404aa4/patched.bmp",
+      "sha256": "d0277fcc7c1a91d8f788688968f4ec8c74c95045fa330ef11186b5cad830851e",
+      "review": "Patched greeting with counters 7/2 and retained text"
+    },
+    {
+      "file": "artifacts/issue31/backend-final/startup-dependency-build-races-d82db87d1942432da1a55d98d2dd5443/recovered.bmp",
+      "sha256": "f395bc72f7a1aaecf329499d35b302e90329fcaba4a6c3bac4372904600bd4fb",
+      "review": "Latest recovered greeting and backend counter 61"
+    },
+    {
+      "file": "artifacts/project-launch/project-36379af147af444cbb2022f6d228455c/native-close/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "review": "Rendered native SPA and typed greeting before lifecycle action"
+    },
+    {
+      "file": "artifacts/project-launch/project-36379af147af444cbb2022f6d228455c/debugger-stop/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "review": "Rendered native SPA and typed greeting before lifecycle action"
+    },
+    {
+      "file": "artifacts/project-launch/project-36379af147af444cbb2022f6d228455c/contract-change/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "review": "Rendered native SPA and typed greeting before lifecycle action"
+    },
+    {
+      "file": "artifacts/project-launch/project-36379af147af444cbb2022f6d228455c/coordinator-crash/ready.bmp",
+      "sha256": "d572f6e238782f25d8d94199830f150c6ee0c6d96b2717390f052086bf099b96",
+      "review": "Rendered native SPA and typed greeting before lifecycle action"
+    },
+    {
+      "file": "artifacts/issue31/inspection/native-inspection-47e54526c4ed4aee90c14dadda8abd14/edited.png",
+      "sha256": "827b1f80aab9c655601171c63581ca35d64a4b63d455422937e1d7cda53a3958",
+      "review": "Actual inspected UI; edited state then reset/recovered replacement"
+    },
+    {
+      "file": "artifacts/issue31/inspection/native-inspection-47e54526c4ed4aee90c14dadda8abd14/restarted.png",
+      "sha256": "62289842b02d0f324ef4f576162a5fa5f7aae6758e90b1abb1f04a6735f81f69",
+      "review": "Actual inspected UI; edited state then reset/recovered replacement"
+    },
+    {
+      "file": "artifacts/vscode-development/debugger-9e50c717084549ba8e1a7dad3b3bb335/patched.bmp",
+      "sha256": "6cbc058784a16a1a814c2f6d9f0cc547510e7d7fc7beded20298f672c57f2dc5",
+      "review": "Debugger patch and retained state"
+    },
+    {
+      "file": "artifacts/issue31/external/patched.bmp",
+      "sha256": "e72f17b2f6dd05bc0ef289737c268d820df3968ffb807de68497051ef2b51f92",
+      "review": "Package backend patch and retained state"
+    },
+    {
+      "file": "artifacts/issue31/external/aot-run/run-1.bmp",
+      "sha256": "844b238b7a566fc11dbafb3cd131d0edc69b98f7bd0e0e132cd5e0ba961aefb3",
+      "review": "Copied production SPA, Hello Spar"
+    },
+    {
+      "file": "artifacts/issue31/external/coreclr-run/run-1.bmp",
+      "sha256": "7a45371f21bcaaaae53a36b94a7f254e303e2db7df9914e214ebbdd674e9367e",
+      "review": "Copied production SPA, Hello from generated code"
+    },
+    {
+      "file": "C:/Users/Alessandro/AppData/Local/Temp/spar-issue31-editor-0e9a197f231a41ca8d6750e68b32b322/patched.bmp",
+      "sha256": "6cbc058784a16a1a814c2f6d9f0cc547510e7d7fc7beded20298f672c57f2dc5",
+      "review": "Package debugger patch and retained state"
+    }
+  ],
+  "firstFailure": {
+    "file": "artifacts/issue31/development/abrupt-owner-kill-5a5c11379c03454e9faf6c1314cf2146/coordinator.jsonl",
+    "code": "application_ready_timeout",
+    "outcome": "failed; owned-processes-ended observed; unchanged fresh retry passed; cause not established"
+  },
+  "limits": [
+    "Visual Studio walkthrough and clean-machine qualification were not rerun",
+    "Hosted CI has not run for this unpublished branch",
+    "No runtime cleanup-race fix is claimed"
+  ]
+}

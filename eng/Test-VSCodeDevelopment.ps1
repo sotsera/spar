@@ -1,7 +1,15 @@
 #requires -Version 7.4
 param([string]$CodeCommand = 'code', [switch]$VerifyRender, [string]$ConsumerDirectory)
 
-. (Join-Path $PSScriptRoot 'Test-BackendUpdates.ps1') -EvidenceDirectory 'artifacts/vscode-development' -VerifyRender:$VerifyRender -LibraryOnly
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'integration/Fixtures.ps1')
+. (Join-Path $PSScriptRoot 'integration/Sessions.ps1')
+$repository = Split-Path $PSScriptRoot
+$coordinatorPath = (Resolve-Path -LiteralPath 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe').Path
+$applicationPath = (Resolve-Path -LiteralPath 'samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
+$evidencePath = [IO.Path]::GetFullPath('artifacts/vscode-development')
+New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
+Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $extensionDirectory = Join-Path $repository 'tools/Spar.VSCode'
 if ($ConsumerDirectory) {
   # TEMP can contain an 8.3 alias. The editor and project system must see the same source identity.
@@ -19,7 +27,7 @@ if ($ConsumerDirectory) {
   $source += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
   [IO.File]::WriteAllText($consumerSource, $source)
 } else {
-  $fixture = New-BackendFixture 'debugger'
+  $fixture = New-BackendFixture 'debugger' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
 }
 $fixture.Settings.watchBackend = $false
 $fixture.Settings['debuggerBackend'] = $true

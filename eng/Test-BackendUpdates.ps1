@@ -1,81 +1,32 @@
 #requires -Version 7.4
+[CmdletBinding()]
 param(
   [string]$EvidenceDirectory = 'artifacts/backend-loop/probe',
-  [switch]$VerifyRender,
-  [switch]$LibraryOnly
+  [switch]$VerifyRender
 )
 
-$backendLibraryOnly = $LibraryOnly.IsPresent
-. (Join-Path $PSScriptRoot 'Test-DevelopmentSession.ps1') -EvidenceDirectory $EvidenceDirectory -VerifyRender:$VerifyRender -LibraryOnly
-
-function New-BackendFixture([string]$Name) {
-  $fixture = New-Fixture $Name 'backend/frontend'
-  $backend = Join-Path $fixture.Directory 'backend'
-  $original = Join-Path $repository 'samples/Spar.NativeSample'
-  Get-ChildItem -LiteralPath $original -File | Where-Object Extension -in @('.cs','.csproj','.html','.js') |
-    Copy-Item -Destination $backend
-  $project = Join-Path $backend 'Spar.NativeSample.csproj'
-  $contracts = Join-Path $fixture.Directory 'contracts'
-  New-Item -ItemType Directory -Path $contracts | Out-Null
-  $originalContracts = Join-Path $repository 'samples/Spar.NativeSample.Contracts'
-  Copy-Item -Path (Join-Path $originalContracts '*.cs'), (Join-Path $originalContracts '*.csproj') -Destination $contracts
-  $contractProject = Join-Path $contracts 'Spar.NativeSample.Contracts.csproj'
-  $contractXml = [xml][IO.File]::ReadAllText($contractProject)
-  foreach ($reference in $contractXml.Project.ItemGroup.ProjectReference) {
-    if ($reference -is [Xml.XmlElement]) { $reference.Include = [IO.Path]::GetFullPath($reference.Include, $originalContracts) }
-  }
-  $contractXml.Project.Import.Project = [IO.Path]::GetFullPath($contractXml.Project.Import.Project, $originalContracts)
-  $contractXml.SelectSingleNode('/Project/PropertyGroup/SparClientOutputDirectory').InnerText = Join-Path $fixture.Frontend 'src/generated'
-  $contractXml.Save($contractProject)
-  $xml = [xml][IO.File]::ReadAllText($project)
-  foreach ($import in $xml.Project.Import) {
-    $import.Project = [IO.Path]::GetFullPath($import.Project, $original)
-  }
-  foreach ($reference in $xml.Project.ItemGroup.ProjectReference) {
-    if ($reference -is [Xml.XmlElement]) {
-      $reference.Include = if ($reference.Include.Contains('Spar.NativeSample.Contracts')) { $contractProject }
-        else { [IO.Path]::GetFullPath($reference.Include, $original) }
-    }
-  }
-  $xml.Save($project)
-  $source = Join-Path $backend 'SampleBackend.cs'
-  $text = [IO.File]::ReadAllText($source).Replace(': ISampleBackend', ': InitialBackendBase, ISampleBackend')
-  $text = $text.Replace('> 5000', '> 15000') # Isolated fixture only: keep work alive beyond the SDK's 5-second cleanup timeout.
-  $text += "`npublic class InitialBackendBase;`npublic class ReplacementBackendBase;`n"
-  [IO.File]::WriteAllText($source, $text)
-  $fixture.Settings.project = $project
-  $fixture.Settings.application = Join-Path $backend 'bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe'
-  $fixture.Settings['watchBackend'] = $true
-  $fixture.Settings['contractFile'] = Join-Path $contracts 'BackendContract.cs'
-  $fixture.Settings['restartFiles'] = @((Join-Path $backend 'Program.cs'), (Join-Path $backend 'Program.Development.cs'))
-  $fixture.Settings.startupTimeoutSeconds = 90
-  $fixture | Add-Member -NotePropertyName Backend -NotePropertyValue $backend
-  Get-ChildItem -LiteralPath $backend, $contracts -File | Sort-Object FullName | ForEach-Object {
-    (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + [IO.Path]::GetRelativePath($fixture.Directory,$_.FullName)
-  } | Set-Content -LiteralPath (Join-Path $fixture.Directory 'sources.initial.sha256')
-  return $fixture
-}
-
-function Replace-Source([string]$Path, [string]$Before, [string]$After) {
-  $source = [IO.File]::ReadAllText($Path)
-  if (!$source.Contains($Before)) { throw "Replacement input not found: $Before" }
-  [IO.File]::WriteAllText($Path, $source.Replace($Before,$After))
-}
-
-if ($backendLibraryOnly) { return }
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'integration/Fixtures.ps1')
+. (Join-Path $PSScriptRoot 'integration/Sessions.ps1')
+. (Join-Path $PSScriptRoot 'integration/Processes.ps1')
+$repository = Split-Path $PSScriptRoot
+$coordinatorPath = (Resolve-Path -LiteralPath 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe').Path
+$applicationPath = (Resolve-Path -LiteralPath 'samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
+$evidencePath = [IO.Path]::GetFullPath($EvidenceDirectory)
+New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
+Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
+$sessions = [Collections.Generic.List[object]]::new()
+$results = [Collections.Generic.List[object]]::new()
+$unrelated = $null
 
 try {
   $priorWatchLogLevel = [Environment]::GetEnvironmentVariable('DOTNET_WATCH_LOG_LEVEL')
   [Environment]::SetEnvironmentVariable('DOTNET_WATCH_LOG_LEVEL','Critical')
-  $unrelatedStart = [Diagnostics.ProcessStartInfo]::new('node')
-  $unrelatedStart.UseShellExecute = $false
-  $unrelatedStart.CreateNoWindow = $true
-  foreach ($argument in @('-e','setInterval(() => {}, 1000)')) { $unrelatedStart.ArgumentList.Add($argument) }
-  $unrelated = [Diagnostics.Process]::Start($unrelatedStart)
-  $null = $unrelated.Handle
+  $unrelated = Start-UnrelatedProcess
 
-  $fixture = New-BackendFixture 'patch-error-restart'
-  $session = Start-Session $fixture $true
+  $fixture = New-BackendFixture 'patch-error-restart' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
+  $session = Start-Session $fixture $true -Coordinator $coordinatorPath -WorkingDirectory $repository
+  $sessions.Add($session)
   Wait-Until $session { $null -ne (Latest-Snapshot $session) -and @($session.Events | Where-Object kind -eq 'watcher-ready').Count -eq 1 } 'native/typed and SDK watcher readiness' 120
   $initial = Latest-Snapshot $session
   $firstApplication = $session.Events | Where-Object kind -eq 'application-ready' | Select-Object -First 1
@@ -138,7 +89,7 @@ try {
   $originalFrontend = $session.Handles.Values | Where-Object Id -eq $frontend.processId | Select-Object -First 1
   Assert-Condition ($originalFrontend -and !$originalFrontend.HasExited) 'Original frontend process did not survive backend changes.'
   Send-Command $session 'stop'
-  Confirm-Exit $session
+  $results.Add((Confirm-Exit $session -Unrelated $unrelated))
   @{
     initial = $initial; patched = $patched; failedEdit = $failed; correctedContract = $corrected
     firstApplication = $firstApplication; originalFrontend = $frontend
@@ -148,7 +99,7 @@ try {
   if ($VerifyRender) { $results[$results.Count - 1].rendering = 'verified-pixels-review-captures' }
 
   # Pause a real full build after compilation to make overlapping edits deterministic.
-  $fixture = New-BackendFixture 'startup-dependency-build-races'
+  $fixture = New-BackendFixture 'startup-dependency-build-races' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
   $gateScript = Join-Path $fixture.Directory 'build-gate.ps1'
   $gateFlag = Join-Path $fixture.Directory 'build.pause'
   $gateEntered = Join-Path $fixture.Directory 'build.entered'
@@ -205,7 +156,8 @@ public static class DependencyValue
     Sort-Object FullName | ForEach-Object {
       (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + [IO.Path]::GetRelativePath($fixture.Directory,$_.FullName)
     } | Set-Content -LiteralPath (Join-Path $fixture.Directory 'sources.initial.sha256')
-  $session = Start-Session $fixture $true
+  $session = Start-Session $fixture $true -Coordinator $coordinatorPath -WorkingDirectory $repository
+  $sessions.Add($session)
   Wait-Until $session { $null -ne (Latest-Snapshot $session) } 'race fixture readiness' 120
   $startup = Join-Path $fixture.Backend 'Program.Development.cs'
   Replace-Source $startup '            SparApplication.Run(new SparWindowOptions' '            backend.CounterAsync(new CounterRequest(DependencyValue.InitialCounter), CancellationToken.None).GetAwaiter().GetResult();
@@ -256,31 +208,28 @@ public static class DependencyValue
   }
   Assert-Condition (@($session.Events | Where-Object kind -eq 'frontend-ready').Count -eq 1) 'Races replaced the frontend process.'
   Send-Command $session 'stop'
-  Confirm-Exit $session
+  $results.Add((Confirm-Exit $session -Unrelated $unrelated))
   if ($VerifyRender) { $results[$results.Count - 1].rendering = 'verified-pixels-review-captures' }
 
-  $fixture = New-BackendFixture 'explicit-force-during-retirement'
-  $session = Start-Session $fixture $true
+  $fixture = New-BackendFixture 'explicit-force-during-retirement' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
+  $session = Start-Session $fixture $true -Coordinator $coordinatorPath -WorkingDirectory $repository
+  $sessions.Add($session)
   Wait-Until $session { $null -ne (Latest-Snapshot $session) -and @($session.Events | Where-Object kind -eq 'watcher-ready').Count -eq 1 } 'force fixture watcher readiness' 120
   Send-Command $session 'probe' 'delay'
   Wait-Until $session { @($session.Events | Where-Object { $_.kind -eq 'backend-activity' -and $_.detail -eq 'delay-entered' }).Count -eq 1 } 'force fixture actual work'
   Replace-Source (Join-Path $fixture.Backend 'SampleBackend.cs') ': InitialBackendBase, ISampleBackend' ': ReplacementBackendBase, ISampleBackend'
   Wait-Until $session { @($session.Events | Where-Object kind -eq 'application-stop-requested').Count -eq 1 } 'graceful retirement waiting for work'
   Send-Command $session 'stop' '' $true
-  Confirm-Exit $session
+  $results.Add((Confirm-Exit $session -Unrelated $unrelated))
   Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'session-stopped' -and $_.code -eq 'forced_cleanup' }).Count -eq 1) 'Explicit force was reported as graceful.'
   Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'process-started' -and $_.role -eq 'application' -and $_.generation -gt 1 }).Count -eq 0) 'Force/stop launched a replacement application.'
 } finally {
   [Environment]::SetEnvironmentVariable('DOTNET_WATCH_LOG_LEVEL',$priorWatchLogLevel)
-  foreach ($session in $sessions) {
-    if (!$session.Process.HasExited) { $session.Process.Kill(); $null = $session.Process.WaitForExit(10000) }
-    foreach ($owned in $session.Handles.Values) { $null = $owned.WaitForExit(10000); $owned.Dispose() }
-    $session.Process.Dispose()
+  try {
+    Close-TestSessions $sessions
+  } finally {
+    try { if ($unrelated) { Stop-TestProcess $unrelated } }
+    finally { $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $evidencePath 'receipt.json') }
   }
-  if ($unrelated) {
-    if (!$unrelated.HasExited) { $unrelated.Kill(); $null = $unrelated.WaitForExit(10000) }
-    $unrelated.Dispose()
-  }
-  $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $evidencePath 'receipt.json')
 }
 $results | Format-Table

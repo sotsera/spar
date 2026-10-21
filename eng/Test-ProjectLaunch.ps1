@@ -2,8 +2,18 @@
 param([switch]$PrepareOnly, [switch]$VerifyRender)
 
 $prepareProjectOnly = $PrepareOnly.IsPresent
-. (Join-Path $PSScriptRoot 'Test-BackendUpdates.ps1') -EvidenceDirectory 'artifacts/project-launch' -VerifyRender:$VerifyRender -LibraryOnly
-$fixture = New-BackendFixture 'project'
+
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'integration/Fixtures.ps1')
+. (Join-Path $PSScriptRoot 'integration/Sessions.ps1')
+$repository = Split-Path $PSScriptRoot
+$coordinatorPath = (Resolve-Path -LiteralPath 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe').Path
+$applicationPath = (Resolve-Path -LiteralPath 'samples/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
+$evidencePath = [IO.Path]::GetFullPath('artifacts/project-launch')
+New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
+Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
+$results = [Collections.Generic.List[object]]::new()
+$fixture = New-BackendFixture 'project' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
 $fixture.Settings | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $fixture.Config
 $properties = Join-Path $fixture.Backend 'Properties'
 New-Item -ItemType Directory -Path $properties | Out-Null
