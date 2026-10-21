@@ -4,6 +4,10 @@ Local packages `0.1.0` expose the runtime, contract generation, build integratio
 
 The default scaffold now uses the ordinary [minimal application](23-minimal-application.md), with greeting/counter operations and no probe reporting. Historical editor acceptance above exercised the instrumented milestone application, now available explicitly with `-IntegrationFixture`.
 
+Its Debug entry point uses the optional [development startup helper](23-minimal-application.md#application-code).
+The factory still supplies the backend and explicit permissions. Existing consumers can retain their
+`Connect`/`SparApplication.Run` startup; no project or package-reference migration is required.
+
 ## Prerequisites and a fresh application
 
 Use the [selected prerequisites](23-minimal-application.md#prerequisites), including native build tools for publication. The generated `global.json` retains the selected SDK. Internet access is needed for ordinary SDK/runtime NuGet dependencies and the frontend lock file; Spar itself restores from the copied local feed.

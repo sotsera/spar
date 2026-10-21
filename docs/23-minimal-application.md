@@ -11,14 +11,34 @@ independent of React and Vite.
 - `BackendContract.cs` exports only `greet` and `counter`, with their DTOs and permissions.
 - `SampleBackend.cs` implements those operations and owns the backend counter.
 - `Program.cs` selects Debug development or Release production startup.
-- `Program.Development.cs` connects to the owning coordinator, configures the native
-  bridge and attaches the window. The same bootstrap supports project F5.
+- `Program.Development.cs` uses the optional `DevelopmentApplication.Run` helper to
+  connect to the owning coordinator and run the native window. The same helper supports project F5.
 - `Program.Production.cs` loads the embedded assets and runs the native window.
 - `frontend/src/App.tsx` displays typed results, local state and development diagnostics.
   Backend updates invalidate reads; mutations are never replayed automatically.
 
 Generate bindings by building the application; do not handwrite dispatchers or edit
 `frontend/src/generated`. The separate contract assembly stays immutable during Hot Reload.
+
+The Debug entry point calls the helper synchronously on its `[STAThread]` thread:
+
+```csharp
+DevelopmentApplication.Run(
+    title: "Spar development",
+    fingerprint: new SampleBackendBridge(null!).Fingerprint,
+    contractType: typeof(ISampleBackend),
+    createBridge: CreateBridge);
+```
+
+`CreateBridge` retains the application's backend and explicit permission grants. The helper verifies
+the owning session and compiled/generated contract before invoking that factory. It uses the session's
+loopback content and profile, enables readiness, and enables inspection only when the owner requests it.
+It waits for the native window's actual completion, disposes the connection, then completes any project
+bootstrap. It does not wait for the coordinator to exit inside the application.
+
+Existing applications need no migration. Keep `DevelopmentApplication.Connect` and `SparApplication.Run`
+for custom window options or callbacks, as the integration fixture does. Reference development tooling
+only in Debug and keep `Program.Development.cs` excluded from Release.
 
 ## Prerequisites
 

@@ -1,5 +1,5 @@
 #requires -Version 7.4
-param([switch]$PrepareOnly, [switch]$VerifyRender)
+param([switch]$PrepareOnly, [switch]$VerifyRender, [switch]$MinimalApplication)
 
 $prepareProjectOnly = $PrepareOnly.IsPresent
 
@@ -8,12 +8,13 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'integration/Sessions.ps1')
 $repository = Split-Path $PSScriptRoot
 $coordinatorPath = (Resolve-Path -LiteralPath 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe').Path
-$applicationPath = (Resolve-Path -LiteralPath 'fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe').Path
+$sourceRoot = if ($MinimalApplication) { 'samples' } else { 'fixtures' }
+$applicationPath = (Resolve-Path -LiteralPath "$sourceRoot/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe").Path
 $evidencePath = [IO.Path]::GetFullPath('artifacts/project-launch')
 New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
 Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $results = [Collections.Generic.List[object]]::new()
-$fixture = New-BackendFixture 'project' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
+$fixture = New-BackendFixture 'project' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath -MinimalApplication:$MinimalApplication
 $fixture.Settings | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $fixture.Config
 $properties = Join-Path $fixture.Backend 'Properties'
 New-Item -ItemType Directory -Path $properties | Out-Null

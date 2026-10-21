@@ -47,6 +47,10 @@ Create disposable source copies, an absolute-path launch profile, and a solution
 pwsh -NoProfile -File eng/Test-ProjectLaunch.ps1 -PrepareOnly
 ```
 
+Add `-MinimalApplication` to prepare or test the ordinary application and its `DevelopmentApplication.Run`
+helper. This selects `samples/` sources; the default continues to exercise the explicit integration fixture.
+Lifecycle automation remains separate from the actual Visual Studio walkthrough for either variant.
+
 Open the printed fixture's `Fixture.slnx` and set `Spar.NativeSample` as the startup project. The contract project must be loaded alongside the app so IDE builds compile its edited source. The first fixture omitted it, and Visual Studio rebuilt the app against an old contract DLL without the expected compiler error; that failure is retained in the evidence. Shared framework/tool projects are included for build ordering; all deliberate edits below belong inside the fixture's backend/contracts/frontend copies. Its frontend uses a `node_modules` junction; never recursively delete the fixture as routine cleanup.
 
 The generator resolves Roslyn from the selected .NET SDK after SDK imports, independent of whether MSBuild runs inside Visual Studio or `dotnet`. These compiler references belong only to build tooling and do not ship with the native application. If an open IDE retains the old generator reference configuration after an update, reload the solution before rebuilding. The acceptance pass used the fixture's absolute-path profile; the repository profile's MSBuild-property expansion was not separately exercised in the IDE.

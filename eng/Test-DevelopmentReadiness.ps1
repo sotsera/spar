@@ -48,6 +48,18 @@ try {
   $receipt = Confirm-Exit $session -Unrelated $unrelated
   $receipt | Add-Member -NotePropertyName assertions -NotePropertyValue 'failed call and forged signal not ready; successful call/frame ready; reload retires target'
   $receipt | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $evidence 'receipt.json')
+
+  $fixture = New-Fixture 'minimal-inspection-disabled' -Repository $repository -Application $application -EvidenceDirectory $evidence -MinimalApplication
+  $session = Start-Session $fixture $false $false $false -Coordinator (Join-Path $repository 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe') -WorkingDirectory $repository
+  $sessions.Add($session)
+  Wait-Until $session { @($session.Events | Where-Object kind -eq 'application-ready').Count -eq 1 } 'minimal readiness without inspection'
+  $disabled = New-InspectionRequest $session 'snapshot'
+  Write-InspectionRequest $session $disabled
+  Assert-Condition ((Wait-InspectionResult $session $disabled.id).code -eq 'inspection_disabled') 'Minimal startup enabled inspection without owner opt-in.'
+  Send-Command $session 'stop'
+  $receipt = Confirm-Exit $session -Unrelated $unrelated
+  $receipt | Add-Member -NotePropertyName assertions -NotePropertyValue 'minimal startup ready with inspection disabled'
+  $receipt | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $evidence 'inspection-disabled.json')
 } finally {
   try { Close-TestSessions $sessions }
   finally { if ($unrelated) { Stop-TestProcess $unrelated } }

@@ -55,6 +55,44 @@ public sealed partial class DevelopmentApplication : IDisposable
         _reader = ReadLoopAsync();
     }
 
+    /// <summary>Runs a development window using the owning session's content, profile and controls.</summary>
+    /// <remarks>
+    /// Call synchronously from an STA entry point. The bridge factory runs only after contract verification.
+    /// Native work finishes before the connection and optional project bootstrap are disposed.
+    /// Use Connect and SparApplication.Run directly for custom window options or callbacks.
+    /// </remarks>
+    public static void Run(string title, string fingerprint, Type contractType, Func<SparBridge> createBridge)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(title);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fingerprint);
+        ArgumentNullException.ThrowIfNull(contractType);
+        ArgumentNullException.ThrowIfNull(createBridge);
+        if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
+        {
+            throw new InvalidOperationException("Run Spar from an STA entry point, marked with [STAThread].");
+        }
+
+        var project = Environment.GetEnvironmentVariable("SPAR_DEV_PROJECT");
+        var hasSessionOwner = Environment.GetEnvironmentVariable("SPAR_DEV_APP_PIPE") is not null;
+        using var projectLaunch = project is null || hasSessionOwner ? null : DevelopmentProjectLaunch.Start(project,
+            Environment.GetEnvironmentVariable("SPAR_DEV_COORDINATOR")
+                ?? throw new InvalidOperationException("Project launch requires the development coordinator path."));
+        using var session = Connect(fingerprint, contractType);
+        var bridge = createBridge() ?? throw new InvalidOperationException("The bridge factory must return a bridge.");
+        SparApplication.Run(new SparWindowOptions
+        {
+            Title = title,
+            Html = "<!doctype html><title>Spar development</title>",
+            LoopbackContent = session.Content,
+            EnableDevelopmentInspection = session.InspectionEnabled,
+            EnableDevelopmentReadiness = true,
+            Bridge = bridge,
+            BridgeEvent = session.ObserveBridge,
+            UserDataFolder = session.UserDataFolder,
+            Created = session.Attach
+        });
+    }
+
     public static DevelopmentApplication Connect(string contract, Type contractType)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(contract);

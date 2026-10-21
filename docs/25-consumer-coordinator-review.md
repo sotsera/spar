@@ -3,7 +3,7 @@
 Review for [#34](https://github.com/sotsera/spar/issues/34), reviewed against
 `7a0f482bb22dd9ef8bed3b9ed987dd5b254509b2` (2026-10-21). This is a source-based design
 review, not API documentation or integration acceptance for the remaining proposals. The maintainer
-accepted the sequence after merging PR #39; C1 is the first separate implementation below.
+accepted the sequence after merging PR #39; C1 and C2 are separate implementations below.
 Current commands remain in the [minimal application](23-minimal-application.md)
 and [package consumer](18-package-consumer.md) guides.
 
@@ -21,7 +21,8 @@ Keep the current package split, early restore properties, explicit contract proj
 sequencing. Defer a custom MSBuild SDK, inferred build output paths, a general lifecycle framework and
 additional extraction of already cohesive inspection logic. Neither fewer files nor fewer lines alone
 justifies a new abstraction. C1, C2 and K1 are separate PR scopes, not newly published issues.
-C1 removes the redundant scaffold values; C2 and K1 remain future changes with their own validation.
+C1 removed the redundant scaffold values in PR #40. C2 adds the optional startup helper in a separate
+implementation; its validation is separate from this review. K1 remains future work.
 
 ## Consumer: the current minimum
 
@@ -142,8 +143,8 @@ must not be reinterpreted. Keep the existing explicit `.tools` override because 
 
 ## C2: centralize the repeated Debug bootstrap
 
-Current [RunDevelopment](../samples/Spar.NativeSample/Program.Development.cs) performs framework wiring
-that is identical in the sample and copied default consumer:
+At the reviewed baseline, `RunDevelopment` performed identical framework wiring in the sample and
+copied default consumer:
 
 ```csharp
 var project = Environment.GetEnvironmentVariable("SPAR_DEV_PROJECT");
@@ -167,7 +168,7 @@ SparApplication.Run(new SparWindowOptions
 });
 ```
 
-Proposed convenience API; **does not exist yet**:
+The C2 convenience API, now used by [RunDevelopment](../samples/Spar.NativeSample/Program.Development.cs):
 
 ```csharp
 DevelopmentApplication.Run(
@@ -179,11 +180,14 @@ DevelopmentApplication.Run(
 
 **Benefit:** the caller supplies four application choices instead of copying three environment-variable
 names, two disposable scopes and nine window-option assignments. Contract type/fingerprint remain explicit;
-`CreateBridge` still supplies the backend and `greeting.read` / `counter.change` permissions. The proposed
+`CreateBridge` still supplies the backend and `greeting.read` / `counter.change` permissions. The
 method has no new options builder, service container, source generator, package or thread. It is optional:
 custom window sizing/callbacks can retain the existing `Connect`/`SparApplication.Run` path.
 
-Proposed implementation contract:
+Implementation contract:
+
+The [C2 execution record](evidence/development-startup-2026-10-21/README.md) separates passing automated
+checks from pending package VS Code and actual Visual Studio acceptance.
 
 - Synchronous, called on the existing STA entry thread. Never put the native message pump on `Task.Run`.
 - Start project bootstrap only under the same current environment conditions; an existing owner wins.
@@ -199,7 +203,7 @@ Proposed implementation contract:
   `Program.cs` dispatch, the private bridge factory, production startup and package references stay unchanged.
 
 **Tradeoff/migration:** one additional public method must be maintained, and the default path hides wiring that
-is currently visible. Existing consumers require no migration; replace only the Debug method body when opting in.
+was previously copied by the default app. Existing consumers require no migration; replace only the Debug method body when opting in.
 Preserve the explicit fixture path and its reports; do not route instrumented test callbacks through this helper
 merely to reduce duplication. Custom startup remains supported by the existing primitives.
 
@@ -352,7 +356,7 @@ conditions; add a narrowly controlled case only for a missing failure boundary. 
 only assert the new class shape do not establish value.
 
 Clean-machine qualification remains deferred. The prior minimal-app record did not execute Visual Studio;
-C2 would require that new walkthrough rather than inheriting the old fixture's acceptance.
+C2 requires that new walkthrough rather than inheriting the old fixture's acceptance.
 
 ## Review status
 
@@ -364,4 +368,5 @@ C2 would require that new walkthrough rather than inheriting the old fixture's a
 
 Source inspection and documentation checks validate this review's references and consistency, not the proposed
 APIs or extracted lifetimes. Issue #34 is closed after review acceptance. Implementation PRs reference it
-and record their own evidence; C2 and K1 remain unimplemented.
+and record their own evidence. C1 is merged; C2 implementation does not imply completed IDE acceptance;
+K1 remains unimplemented.

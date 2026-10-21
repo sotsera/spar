@@ -1,0 +1,398 @@
+{
+  "baseRevision": "d68715b01cd0e3d63ade428ddb7e4ba42ae1f977",
+  "binding": "Base revision plus implementation file hashes below; executed before the implementation commit.",
+  "sourceFiles": [
+    {
+      "sha256": "FEFA72B3BAA79E671143A32A8655D49973F99978827E6DC354843558F42A6EA7",
+      "path": "src/Sotsera.Spar.Development/DevelopmentApplication.cs"
+    },
+    {
+      "sha256": "ED417E88EF19F78B237AD664D6143B954EB51931A44C6ED6ED09D327B967D930",
+      "path": "samples/Spar.NativeSample/Program.Development.cs"
+    },
+    {
+      "sha256": "FDEEFD5E75DB2E8111D42B5397CD95B16A5C90E483976EC5E028BECE9AECD915",
+      "path": "tests/Sotsera.Spar.Development.Tests/DevelopmentApplicationTests.cs"
+    },
+    {
+      "sha256": "994F1D12B1D64A1155C6FE2082C2D2718C5858B4A1805C7222E9F1691F56BC7D",
+      "path": "eng/Test-DevelopmentReadiness.ps1"
+    },
+    {
+      "sha256": "69EB6897F9511724772EE6A78E8F5A8271AE6DEF1D98C14A25F40B0AC39DB00A",
+      "path": "eng/Test-ProjectLaunch.ps1"
+    }
+  ],
+  "observedAt": "2026-10-21T12:35:27.1081943+00:00",
+  "managed": {
+    "failed": 0,
+    "passed": 70,
+    "total": 70,
+    "skipped": 0
+  },
+  "packages": [
+    {
+      "name": "Sotsera.Spar.Bridge.0.1.0.nupkg",
+      "sha256": "7A01FAEDE502AC982A364C510934F9CA057998C462EA1A005EC8FDA8FA093CED",
+      "bytes": 25572
+    },
+    {
+      "name": "Sotsera.Spar.Build.0.1.0.nupkg",
+      "sha256": "327ABE7E975EE025ED54325BCAE02C6B7776DFC6DBA85F58AAFE69A8C7856CD0",
+      "bytes": 12074196
+    },
+    {
+      "name": "Sotsera.Spar.Development.0.1.0.nupkg",
+      "sha256": "CF337636DE3FACDC93FBE14D6791D33DC2449881EB5BC3B07A30D0DB540C128E",
+      "bytes": 458102
+    },
+    {
+      "name": "Sotsera.Spar.Windows.0.1.0.nupkg",
+      "sha256": "9381B4A5BB953D614022B7C43396D7A66BA3F6F3E2DCB326F01CE9D0477F54E7",
+      "bytes": 143990
+    },
+    {
+      "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg",
+      "sha256": "04D154A508C15687BB556AA4F59798A342F3B831D848700E0D8385FFC4188B10",
+      "bytes": 161266
+    }
+  ],
+  "results": {
+    "readiness": {
+      "scenario": "readiness-boundary",
+      "passed": true,
+      "coordinatorProcessId": 75584,
+      "startedAtUtc": "2026-10-21T11:12:21.4970366Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 18,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised",
+      "assertions": "failed call and forged signal not ready; successful call/frame ready; reload retires target"
+    },
+    "inspectionDisabled": {
+      "scenario": "minimal-inspection-disabled",
+      "passed": true,
+      "coordinatorProcessId": 64656,
+      "startedAtUtc": "2026-10-21T11:12:55.2227245Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 13,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised",
+      "assertions": "minimal startup ready with inspection disabled"
+    },
+    "sourceDevelopment": {
+      "scenario": "minimal-source",
+      "passed": true,
+      "coordinatorProcessId": 56552,
+      "startedAtUtc": "2026-10-21T11:12:57.9747793Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised",
+      "observation": "public-inspection-no-probe-commands; PNG review required"
+    },
+    "sourceDebugger": {
+      "outcome": "passed",
+      "vscode": "1.142.0",
+      "csharp": "2.160.4",
+      "devkit": "3.40.215",
+      "patched": {
+        "code": "ok",
+        "elements": [
+          {
+            "disabled": false,
+            "role": null,
+            "selector": "html>body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>h1:nth-of-type(1)",
+            "tag": "h1",
+            "text": "A live development loop.",
+            "value": ""
+          },
+          {
+            "disabled": false,
+            "role": null,
+            "selector": "#local",
+            "tag": "button",
+            "text": "Local counter: 1",
+            "value": ""
+          },
+          {
+            "disabled": false,
+            "role": null,
+            "selector": "#backend",
+            "tag": "button",
+            "text": "Backend counter: 1",
+            "value": ""
+          },
+          {
+            "disabled": false,
+            "role": null,
+            "selector": "html>body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>label:nth-of-type(1)",
+            "tag": "label",
+            "text": "Local state",
+            "value": ""
+          },
+          {
+            "disabled": false,
+            "role": null,
+            "selector": "html>body:nth-of-type(1)>div:nth-of-type(1)>main:nth-of-type(1)>label:nth-of-type(1)>input:nth-of-type(1)",
+            "tag": "input",
+            "text": "",
+            "value": ""
+          },
+          {
+            "disabled": false,
+            "role": "status",
+            "selector": "#status",
+            "tag": "p",
+            "text": "Connected",
+            "value": ""
+          },
+          {
+            "disabled": false,
+            "role": null,
+            "selector": "#refresh-backend",
+            "tag": "button",
+            "text": "Refresh backend data",
+            "value": ""
+          },
+          {
+            "disabled": false,
+            "role": "status",
+            "selector": "#development-status",
+            "tag": "p",
+            "text": "Backend updated (revision 1)",
+            "value": ""
+          }
+        ],
+        "text": "\n    SPARA live development loop.Edit this component or its CSS. Vite and React update this native window.Local counter: 1Backend counter: 1Local state Hello debugger, SparConnectedRefresh backend dataBackend updated (revision 1)\n    \n  \n\n",
+        "title": "Spar",
+        "truncated": false
+      },
+      "lane": "minimal-application-public-inspection",
+      "rendering": "pixels-captured-review-required",
+      "events": 115,
+      "independentlyRetainedProcesses": 22,
+      "observedProcessesExited": true
+    },
+    "projectLifecycle": [
+      {
+        "passed": true,
+        "scenario": "native-close",
+        "processes": 13,
+        "cleanup": "graceful"
+      },
+      {
+        "passed": true,
+        "scenario": "debugger-stop",
+        "processes": 13,
+        "cleanup": "forced_cleanup"
+      },
+      {
+        "passed": true,
+        "scenario": "contract-change",
+        "processes": 13,
+        "cleanup": "graceful"
+      },
+      {
+        "passed": true,
+        "scenario": "coordinator-crash",
+        "processes": 13,
+        "cleanup": "kernel_job_close"
+      }
+    ],
+    "sourcePublication": {
+      "noSdkMachine": "not-exercised",
+      "executableSha256": "9337719C7812A10FA65D72D2168A8892012C56D1E194D7E68757D52458D09B86",
+      "rendering": "pixels-captured-greeting-review-required",
+      "passed": true,
+      "retainedBrowserProcesses": 6,
+      "retainedDescendants": 7,
+      "observedAt": "2026-10-21T13:16:30.4685074+02:00",
+      "mode": "NativeAOT",
+      "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-published-dd974745ec3045ff898dde5265a3b14a"
+    },
+    "minimalConsumer": {
+      "observedAt": "2026-10-21T13:19:00.5393161+02:00",
+      "passed": true,
+      "kind": "minimal-application",
+      "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-consumer-0107a5ef7d6f4d4faf21e340e576759a"
+    },
+    "packageDevelopment": {
+      "scenario": "minimal-package",
+      "passed": true,
+      "coordinatorProcessId": 10320,
+      "startedAtUtc": "2026-10-21T11:17:29.1975467Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised",
+      "observation": "public-inspection-no-probe-commands; PNG review required"
+    },
+    "packagePublication": {
+      "passed": true,
+      "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-published-2f1f4cde9ebe4e9a87df0ca111167088",
+      "rendering": "pixels-captured-greeting-review-required",
+      "observedAt": "2026-10-21T13:19:00.5374992+02:00",
+      "noSdkMachine": "not-exercised",
+      "mode": "NativeAOT",
+      "retainedDescendants": 7,
+      "retainedBrowserProcesses": 6,
+      "executableSha256": "44E89923D2380483E4D3449162BFB0E40F0677892297AF51A382539FECAC232E"
+    },
+    "explicitConsumer": {
+      "observedAt": "2026-10-21T14:28:22.7188295+02:00",
+      "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e",
+      "packages": [
+        {
+          "sha256": "7A01FAEDE502AC982A364C510934F9CA057998C462EA1A005EC8FDA8FA093CED",
+          "name": "Sotsera.Spar.Bridge.0.1.0.nupkg"
+        },
+        {
+          "sha256": "327ABE7E975EE025ED54325BCAE02C6B7776DFC6DBA85F58AAFE69A8C7856CD0",
+          "name": "Sotsera.Spar.Build.0.1.0.nupkg"
+        },
+        {
+          "sha256": "CF337636DE3FACDC93FBE14D6791D33DC2449881EB5BC3B07A30D0DB540C128E",
+          "name": "Sotsera.Spar.Development.0.1.0.nupkg"
+        },
+        {
+          "sha256": "9381B4A5BB953D614022B7C43396D7A66BA3F6F3E2DCB326F01CE9D0477F54E7",
+          "name": "Sotsera.Spar.Windows.0.1.0.nupkg"
+        },
+        {
+          "sha256": "04D154A508C15687BB556AA4F59798A342F3B831D848700E0D8385FFC4188B10",
+          "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg"
+        }
+      ],
+      "rendering": true,
+      "cases": [
+        {
+          "arguments": [
+            "build",
+            "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e\\backend\\Spar.NativeSample.csproj",
+            "--disable-build-servers"
+          ],
+          "exitCode": 0,
+          "name": "fresh-build",
+          "expectedSuccess": true,
+          "passed": true
+        },
+        {
+          "arguments": [
+            "publish",
+            "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e\\backend\\Spar.NativeSample.csproj",
+            "-c",
+            "Release",
+            "-o",
+            "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e\\artifacts\\aot",
+            "--disable-build-servers"
+          ],
+          "exitCode": 0,
+          "name": "publish-aot",
+          "expectedSuccess": true,
+          "passed": true
+        },
+        {
+          "arguments": [
+            "publish",
+            "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e\\backend\\Spar.NativeSample.csproj",
+            "-c",
+            "Release",
+            "-p:SparStrictAot=true",
+            "-o",
+            "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e\\artifacts\\strict",
+            "--disable-build-servers"
+          ],
+          "exitCode": 1,
+          "name": "strict-dependency",
+          "expectedSuccess": false,
+          "passed": true
+        },
+        {
+          "arguments": [
+            "publish",
+            "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e\\backend\\Spar.NativeSample.csproj",
+            "-c",
+            "Release",
+            "-o",
+            "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-consumer-64966ab6a7a14a9ebf211f4022ca769e\\artifacts\\coreclr",
+            "--disable-build-servers"
+          ],
+          "exitCode": 0,
+          "name": "publish-coreclr",
+          "expectedSuccess": true,
+          "passed": true
+        }
+      ],
+      "sourceRevision": "d68715b01cd0e3d63ade428ddb7e4ba42ae1f977",
+      "allPassed": true
+    },
+    "explicitConsumerDevelopment": {
+      "scenario": "external-package",
+      "passed": true,
+      "coordinatorProcessId": 70880,
+      "startedAtUtc": "2026-10-21T12:26:47.3459158Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    }
+  },
+  "captures": [
+    {
+      "visuallyReviewed": true,
+      "sha256": "E78FFBD69B004E5281433244B91F30CDED441B4F09AC94BA30DF26EB9EB4ADAA",
+      "file": "source-updated.png"
+    },
+    {
+      "visuallyReviewed": true,
+      "sha256": "FBB90E368A5D43828FC7B86B40B73F412DBEF00AFEA8E6AEA0EB953F0971D97F",
+      "file": "source-restarted.png"
+    },
+    {
+      "visuallyReviewed": true,
+      "sha256": "CDE114EC23DC75A509BDBAB8C75D2E7D50FA82C848779B3036A41413080798DA",
+      "file": "source-debugger.png"
+    },
+    {
+      "visuallyReviewed": true,
+      "sha256": "3201EA0A67D2713C45F8350825CC381519992D319416AB055013CE23753784BD",
+      "file": "project-ready.png"
+    },
+    {
+      "visuallyReviewed": true,
+      "sha256": "01ABEC555B719207FC56EC0FFFB5ADD85197F34A0A761E4FB91AF79008DFDFEE",
+      "file": "source-production.png"
+    },
+    {
+      "visuallyReviewed": true,
+      "sha256": "E78FFBD69B004E5281433244B91F30CDED441B4F09AC94BA30DF26EB9EB4ADAA",
+      "file": "package-updated.png"
+    },
+    {
+      "visuallyReviewed": true,
+      "sha256": "FBB90E368A5D43828FC7B86B40B73F412DBEF00AFEA8E6AEA0EB953F0971D97F",
+      "file": "package-restarted.png"
+    },
+    {
+      "visuallyReviewed": true,
+      "sha256": "01ABEC555B719207FC56EC0FFFB5ADD85197F34A0A761E4FB91AF79008DFDFEE",
+      "file": "package-production.png"
+    }
+  ],
+  "pending": [
+    "Package VS Code: updater mutex prevented editor startup; no Spar session or acceptance receipt.",
+    "Source and package Visual Studio: Computer Use app approval timed out before walkthrough.",
+    "No-SDK machine qualification remains unavailable."
+  ]
+}
