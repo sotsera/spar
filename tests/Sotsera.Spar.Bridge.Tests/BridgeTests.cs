@@ -124,8 +124,10 @@ public sealed class BridgeTests
         session.Backend.Entries.Should().Be(1);
     }
 
-    [Fact]
-    public async Task CancellationCallbacksAreAlsoOwnedUntilTheyReturn()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task CancellationCallbacksAreAlsoOwnedUntilTheyReturn(bool waitForCancellationReply)
     {
         var session = new Session();
         session.Backend.BlockCancellation = true;
@@ -135,6 +137,10 @@ public sealed class BridgeTests
             await session.Backend.Started.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
             session.Document.Dispatch(Session.Source, session.Message(1, null, kind: "cancel"), session.Replies.Enqueue).Should().BeNull();
             await session.Backend.CallbackStarted.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+            if (waitForCancellationReply)
+            {
+                await UntilAsync(() => !session.Replies.IsEmpty);
+            }
             session.Backend.Release.TrySetResult();
             await session.Backend.HandlerFinished.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
             work.IsCompleted.Should().BeFalse("cancellation callbacks still own application resources");
@@ -146,7 +152,14 @@ public sealed class BridgeTests
             await work.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
         }
 
-        session.Events.Should().Contain(item => item.Code == "cancelled");
+        // Both the cancellation-first and invocation-result paths return a cancelled wire reply.
+        // Only cancellation-first also emits a rejected event; callback ownership must not depend on that race.
+        session.Replies.Should().ContainSingle();
+        using var reply = JsonDocument.Parse(session.Replies.Single());
+        reply.RootElement.GetProperty("status").GetString().Should().Be("error");
+        reply.RootElement.GetProperty("code").GetString().Should().Be("cancelled");
+        session.Events.Should().Contain(item => item.Stage == "completed");
+        session.Backend.Entries.Should().Be(1);
     }
 
     [Theory]
