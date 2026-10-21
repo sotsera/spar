@@ -44,9 +44,11 @@ static async Task<int> RunAsync(StartupOptions options)
     using var eventsFile = StartupPreparation.OpenEventsFile(options.EventsFile);
     StartupPreparation.PrepareSessionDirectory(settings.SessionDirectory);
     var commands = Channel.CreateBounded<DevelopmentCommand>(16);
+    var sessionObserved = false;
     await using var session = new DevelopmentSession(settings,
         value =>
         {
+            sessionObserved = true;
             var line = JsonSerializer.Serialize(value, DevelopmentJsonContext.Default.DevelopmentEvent);
             eventsFile?.WriteLine(line);
             Console.WriteLine(line);
@@ -111,5 +113,14 @@ static async Task<int> RunAsync(StartupOptions options)
         }
         finally { commands.Writer.TryComplete(); }
     });
-    return await session.RunAsync(commands.Reader, projectOwner is not null || options.NoBuild);
+    try
+    {
+        return await session.RunAsync(commands.Reader, projectOwner is not null || options.NoBuild);
+    }
+    catch (Exception error) when (!sessionObserved && error is IOException or UnauthorizedAccessException)
+    {
+        // The root can exist while denying creation of the first session subdirectory.
+        throw new StartupFailure("session_directory_unavailable", "Cannot create the session output directory under "
+            + settings.SessionDirectory + ". Check write access and the configured path.");
+    }
 }

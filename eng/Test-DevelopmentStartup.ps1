@@ -30,6 +30,16 @@ $watch | ConvertTo-Json -Depth 5 | Set-Content "$root/watch.json"
 $longMissing = "$root/" + ((1..20 | ForEach-Object { 'x' * 100 }) -join '/') + '/missing.json'
 $settings.sessionDirectory = "$root/session-file"
 $settings | ConvertTo-Json -Depth 5 | Set-Content "$root/blocked-session.json"
+$denied = Join-Path $root 'denied-session'
+New-Item -ItemType Directory -Force $denied | Out-Null
+$originalAcl = Get-Acl -LiteralPath $denied
+$restrictedAcl = Get-Acl -LiteralPath $denied
+$identity = [Security.Principal.WindowsIdentity]::GetCurrent().User
+$restriction = [Security.AccessControl.FileSystemAccessRule]::new($identity,
+  [Security.AccessControl.FileSystemRights]::CreateDirectories, [Security.AccessControl.AccessControlType]::Deny)
+$restrictedAcl.AddAccessRule($restriction)
+$settings.sessionDirectory = $denied
+$settings | ConvertTo-Json -Depth 5 | Set-Content "$root/denied-session.json"
 $prospective = "$root/must-not-create.jsonl"
 $cases = @(
   @{ name = 'usage'; arguments = @(); code = $null },
@@ -64,7 +74,8 @@ $cases = @(
   @{ name = 'existing-event-file'; arguments = @($valid,'--events-file',"$root/existing.jsonl"); code = 'events_file_unavailable' },
   @{ name = 'event-destination-directory'; arguments = @($valid,'--events-file',$root); code = 'events_file_unavailable' },
   @{ name = 'missing-event-directory'; arguments = @($valid,'--events-file',"$root/absent/events.jsonl"); code = 'events_file_unavailable' },
-  @{ name = 'blocked-session-directory'; arguments = @("$root/blocked-session.json"); code = 'session_directory_unavailable' }
+  @{ name = 'blocked-session-directory'; arguments = @("$root/blocked-session.json"); code = 'session_directory_unavailable' },
+  @{ name = 'denied-session-subdirectory'; arguments = @("$root/denied-session.json"); code = 'session_directory_unavailable' }
 )
 $results = [Collections.Generic.List[object]]::new()
 function Observe-Children($Job, $Coordinator, $Children, $Helpers, $Unclassified) {
@@ -86,6 +97,7 @@ function Observe-Children($Job, $Coordinator, $Children, $Helpers, $Unclassified
   }
 }
 try {
+  Set-Acl -LiteralPath $denied -AclObject $restrictedAcl
   foreach ($case in $cases) {
     $job = [Sotsera.Spar.Development.OwnedProcessJob]::new()
     $process = $null
@@ -136,6 +148,7 @@ try {
       if ($children.Count -ne 0 -or $job.ActiveProcessIds().Length -ne 0 -or (Test-Path $prospective) -or
         (Test-Path "$root/must-not-exist")) { throw "Rejected startup $($case.name) created child/session resources: $($children -join ',')." }
       if ((Get-Content "$root/existing.jsonl" -Raw).Trim() -ne 'preserve event file') { throw 'Existing event file was modified.' }
+      if (@(Get-ChildItem -LiteralPath $denied -Force).Count) { throw 'Denied startup created a session subdirectory.' }
       $results.Add(@{ name = $case.name; passed = $true; exitCode = $process.ExitCode; code = $case.code
         processId = $process.Id; processStartedAtUtc = $process.StartTime.ToUniversalTime().ToString('o')
         observedApplicationChildren = $children.Count; consoleHelpers = $helpers.Count
@@ -160,6 +173,7 @@ try {
     }
   }
 } finally {
+  Set-Acl -LiteralPath $denied -AclObject $originalAcl
   @{ allPassed = ($results.Count -eq $cases.Count); cases = $results.ToArray(); coordinatorSha256 = (Get-FileHash $tool).Hash } |
     ConvertTo-Json -Depth 7 | Set-Content (Join-Path $root 'receipt.json')
 }
