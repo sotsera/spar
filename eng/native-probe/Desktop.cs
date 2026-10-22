@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 // Test-only Win32 desktop inspection. No dependency on Spar internals or a browser debug port.
 public static class NativeProbeDesktop
@@ -41,9 +42,11 @@ public static class NativeProbeDesktop
     private delegate bool WindowCallback(IntPtr window, IntPtr state);
     [DllImport("user32.dll")] private static extern bool EnumWindows(WindowCallback callback, IntPtr state);
     [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
+    [DllImport("user32.dll", EntryPoint = "GetClassNameW", CharSet = CharSet.Unicode)]
+    private static extern int GetClassName(IntPtr window, StringBuilder name, int capacity);
 
     // Process.MainWindowHandle omits a window launched with WindowStyle.Hidden.
-    // The caller retains and verifies the owning process; no title/name-based targeting.
+    // The caller retains the process. WebView helper windows in that same process are not the app window.
     public static IntPtr FindWindow(int processId)
     {
         var result = IntPtr.Zero;
@@ -51,7 +54,7 @@ public static class NativeProbeDesktop
         {
             uint owner;
             GetWindowThreadProcessId(window, out owner);
-            if (owner != processId)
+            if (owner != processId || WindowClass(window)?.StartsWith("Sotsera.Spar.", StringComparison.Ordinal) != true)
             {
                 return true;
             }
@@ -60,6 +63,12 @@ public static class NativeProbeDesktop
             return false;
         }, IntPtr.Zero);
         return result;
+    }
+
+    public static string WindowClass(IntPtr window)
+    {
+        var name = new StringBuilder(256);
+        return GetClassName(window, name, name.Capacity) == 0 ? null : name.ToString();
     }
 
     public static void Close(IntPtr window)

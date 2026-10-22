@@ -110,11 +110,13 @@ For timing reproduction, prepare one ordinary source or package project, run
 and keep configurations, outputs, caches and tool binaries fixed between variants. The manual
 driver retains source/binary/driver identities, every phase and cleanup outcome. No timing or
 source-path selection was added to CI: the fixed Processes and Packages suites each gain one
-explicit incrementality check, making 51 catalog checks.
+explicit incrementality check. The window-selection regression below adds a third new entry,
+making 52 fixed catalog checks in the final change.
 
 ## Local implementation qualification
 
-Local runs used the base commit above plus the working changes bound by [source hashes](sources.sha256).
+The initial optimization runs used the base commit above plus the working changes bound by
+[source hashes](sources.sha256), committed as `4d15b935eb801eacb7df9f93780ca69034592a2c`.
 [Compact checks and package identities](checks.json) retain 21 passing incrementality checks in each
 of the source and fresh-package variants. Both loaded target SHA-256
 `91D7B51442D64A9AD4E7D82FCB5D3DFB47A56AE70FB5B057B16F07012E7CE85F`.
@@ -137,3 +139,34 @@ Documentation checked 376 references; six skills/14 case definitions and all six
 
 Hosted CI qualifies the committed PR head separately. No new editor gesture, no-SDK machine result
 or machine-independent latency promise is inferred.
+
+## First CI failure and test-helper repair
+
+[Run 39849395183](https://github.com/sotsera/spar/actions/runs/39849395183), head `4d15b93`, tested merge
+`6f9a38d96fbf47e3a8e83557cf8f86f24a50f20e`, passed Fast, Processes, Development and Delivery. Packages
+passed the new incrementality check and full instrumented consumer, then failed the ordinary copied
+AOT app's close check. The required aggregate correctly failed. [Retained failure details](ci-repair.json)
+include its suite status, production receipt, stderr and original assertion. The old receipt conflates
+a timeout and nonzero/unavailable exit code and records no selected window class. The exact original
+shutdown cause is unknown; the WebView class-unregistration stderr alone does not establish it.
+
+Investigation reproduced a separate concrete defect in the close helper: it selected the first window
+owned by the PID, including same-process helper windows. A deterministic Win32 fixture creates two
+hidden windows, puts the decoy first, and calls the actual selection helper. The same regression
+fails its selected-handle assertion with the original helper and passes with the repair. It selects
+the owned `Sotsera.Spar.*` class; both fixture windows are explicitly destroyed. No production/runtime
+code or generator target changed in this repair.
+
+The publication driver now records PID/start identity, selected handle/class, close-wait completion,
+observed exit/code before forced cleanup, failure and actual cleanup outcomes. Timeout, unavailable
+code and nonzero code remain failures with separate messages and retained log paths. Failure teardown
+waits for the explicitly retained root/descendants and records forced termination separately from
+graceful close. No timeout increase or automatic retry was added.
+
+[Repair source hashes](repair-sources.sha256) bind the changed helper, fixture, driver and 52-check
+catalog separately from the initial measurements. Helper ownership checks passed. Three local checks
+of the **same unchanged AOT executable hash** selected Spar's actual class, observed exit code 0,
+verified all seven retained descendants exited and required no forced cleanup. The second capture
+was reviewed with the expected connected app/greeting. The first and third final captures were blank
+and are explicitly not visual acceptance; all samples remain recorded. Earlier reviewed images bind
+the same product payload. These process passes do not prove the cause of the original CI exit.

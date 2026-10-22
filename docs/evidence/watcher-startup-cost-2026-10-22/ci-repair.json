@@ -1,0 +1,147 @@
+{
+  "base": "4d15b935eb801eacb7df9f93780ca69034592a2c",
+  "firstCi": {
+    "exactExitCode": "not recorded",
+    "source": "6f9a38d96fbf47e3a8e83557cf8f86f24a50f20e",
+    "stderr": "[1022/203622.315:ERROR:ui\\gfx\\win\\window_impl.cc:172] Failed to unregister class Chrome_WidgetWin_0. Error = 1411\r\n",
+    "selectedWindowClass": "not recorded",
+    "production": {
+      "observedAt": "2026-10-22T22:36:22.3361939+02:00",
+      "retainedBrowserProcesses": 5,
+      "retainedDescendants": 6,
+      "copiedDirectory": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\spar-minimal-published-eed840bd845345bf85225270d8f7aadf",
+      "passed": false,
+      "mode": "NativeAOT",
+      "executableSha256": "E26D303AA888C41A69C8F556F894E73A38E3AA7B86F19FCFCA449BCE292CA0CE",
+      "rendering": "not-exercised",
+      "noSdkMachine": "not-exercised"
+    },
+    "attempt": 1,
+    "failure": "Test-MinimalPublication.ps1:78: Production did not exit gracefully.",
+    "run": "https://github.com/sotsera/spar/actions/runs/39849395183",
+    "status": {
+      "schema": 1,
+      "suite": "packages",
+      "source": "6f9a38d96fbf47e3a8e83557cf8f86f24a50f20e",
+      "observedAt": "2026-10-22T22:36:23.6257012+02:00",
+      "workingTreeDirty": false,
+      "runId": "39849395183",
+      "attempt": "1",
+      "catalogSha256": "751352bd3996af50f9e8e38631331a1cd73c4171af49ae7d5bec6ba23d67db15",
+      "passed": false,
+      "checks": [
+        {
+          "id": "pack",
+          "outcome": "success",
+          "elapsedMs": 56325.149
+        },
+        {
+          "id": "contract-incrementality",
+          "outcome": "success",
+          "elapsedMs": 59912.578
+        },
+        {
+          "id": "instrumented-consumer",
+          "outcome": "success",
+          "elapsedMs": 144519.9193
+        },
+        {
+          "id": "minimal-consumer",
+          "outcome": "failure",
+          "elapsedMs": 89967.8068
+        }
+      ],
+      "evidence": "D:\\a\\spar\\spar\\artifacts\\suites\\packages\\7f31e74605a74d11b724a84a2fa2ddd1"
+    }
+  },
+  "windowRegression": {
+    "originalLog": "Exception: E:\\Ghidello\\Git\\spar.v2\\eng\\Test-NativeWindowSelection.ps1:11\r\nLine |\r\n  11 |      throw \"Selected a helper window instead of the owned Spar applica …\r\n     |      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n     | Selected a helper window instead of the owned Spar application (handle 4786600, expected 1903576).\r\n",
+    "fixed": "selected actual Spar window; fixture windows destroyed",
+    "original": "failed selected-window assertion after creating two actual hidden windows",
+    "fixedLog": "Selected the hidden Spar application with a same-process decoy first in enumeration.\r\n",
+    "driverSha256": "9D54798A81E79CE5BD2159E0B07FBC59EFC69E60BACE7A0E3E5ACCA6D0B10BDA"
+  },
+  "aotChecks": [
+    {
+      "name": "aot-selection-fixed",
+      "captureSha256": "844B238B7A566FC11DBAFB3CD131D0EDC69B98F7BD0E0E132CD5E0BA961AEFB3",
+      "visualReview": "not accepted: final captured frame blank",
+      "receipt": {
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-published-92a9a7ec0b304d9d8c225079bdfc672c",
+        "executableSha256": "4FE169CD00ABF1B73E2C946B9DF3C770DEB2D5CF681BA7BA111473D83F6AB5D7",
+        "failure": null,
+        "passed": true,
+        "rendering": "pixels-captured-greeting-review-required",
+        "retainedDescendants": 7,
+        "closeRequested": true,
+        "retainedBrowserProcesses": 6,
+        "mode": "NativeAOT",
+        "exitCodeBeforeCleanup": 0,
+        "observedAt": "2026-10-22T22:41:22.8347682+02:00",
+        "forcedDescendants": [],
+        "windowClass": "Sotsera.Spar.1a490c0bd6174dcca5ce31601533831b",
+        "forcedRootCleanup": false,
+        "cleanupCompleted": true,
+        "window": 13633752,
+        "noSdkMachine": "not-exercised",
+        "cleanupErrors": [],
+        "exitObservedBeforeCleanup": true
+      }
+    },
+    {
+      "name": "aot-selection-confirmation",
+      "captureSha256": "844B238B7A566FC11DBAFB3CD131D0EDC69B98F7BD0E0E132CD5E0BA961AEFB3",
+      "visualReview": "accepted: expected connected app and greeting",
+      "receipt": {
+        "exitObservedBeforeCleanup": true,
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-published-7379dbefeaae49ec9f36f46bf18ab8da",
+        "noSdkMachine": "not-exercised",
+        "observedAt": "2026-10-22T22:42:41.6438652+02:00",
+        "forcedDescendants": [],
+        "cleanupErrors": [],
+        "closeRequested": true,
+        "window": 9439794,
+        "retainedBrowserProcesses": 6,
+        "executableSha256": "4FE169CD00ABF1B73E2C946B9DF3C770DEB2D5CF681BA7BA111473D83F6AB5D7",
+        "rendering": "pixels-captured-greeting-review-required",
+        "mode": "NativeAOT",
+        "exitCodeBeforeCleanup": 0,
+        "passed": true,
+        "retainedDescendants": 7,
+        "forcedRootCleanup": false,
+        "windowClass": "Sotsera.Spar.7a3b2be131a54e3f963dff07eebb600d",
+        "cleanupCompleted": true,
+        "failure": null
+      }
+    },
+    {
+      "name": "aot-selection-final",
+      "captureSha256": "844B238B7A566FC11DBAFB3CD131D0EDC69B98F7BD0E0E132CD5E0BA961AEFB3",
+      "visualReview": "not accepted: final captured frame blank",
+      "receipt": {
+        "failure": null,
+        "executableSha256": "4FE169CD00ABF1B73E2C946B9DF3C770DEB2D5CF681BA7BA111473D83F6AB5D7",
+        "windowClass": "Sotsera.Spar.a0e23533c4a94464adf389bb0d205d7e",
+        "startedAtUtc": "2026-10-22T20:44:15.2745422Z",
+        "mode": "NativeAOT",
+        "exitCodeBeforeCleanup": 0,
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-published-72d3f439610f496ba9057affb9579a97",
+        "processId": 39600,
+        "cleanupErrors": [],
+        "closeWaitCompleted": true,
+        "passed": true,
+        "closeRequested": true,
+        "rendering": "pixels-captured-greeting-review-required",
+        "retainedDescendants": 7,
+        "cleanupCompleted": true,
+        "observedAt": "2026-10-22T22:44:18.4306151+02:00",
+        "exitObservedBeforeCleanup": true,
+        "window": 4917672,
+        "noSdkMachine": "not-exercised",
+        "retainedBrowserProcesses": 6,
+        "forcedRootCleanup": false,
+        "forcedDescendants": []
+      }
+    }
+  ]
+}

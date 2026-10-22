@@ -159,6 +159,11 @@
       "description": "Real watcher, Windows process ownership, helper teardown and CLI startup failures.",
       "steps": [
         {
+          "id": "native-window-selection",
+          "command": "pwsh",
+          "arguments": ["-NoProfile", "-File", "eng/Test-NativeWindowSelection.ps1"]
+        },
+        {
           "id": "contract-incrementality",
           "command": "pwsh",
           "arguments": ["-NoProfile", "-File", "eng/Test-ContractIncrementality.ps1", "-EvidenceDirectory", "{evidence}/contract-incrementality"]
