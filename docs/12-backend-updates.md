@@ -69,7 +69,7 @@ For an operation that ignores cancellation, a normal restart waits. A second Ctr
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 pwsh -NoProfile -File eng/Test-BackendUpdates.ps1 -VerifyRender
 pwsh -NoProfile -File eng/Test-DevelopmentSession.ps1
 pwsh -NoProfile -File eng/Test-VSCodeSession.ps1 -WatchBackend

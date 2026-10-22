@@ -104,7 +104,7 @@ and separate editor/package checks.
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 Push-Location fixtures/Spar.NativeSample/frontend
 npm run check
 npm run build

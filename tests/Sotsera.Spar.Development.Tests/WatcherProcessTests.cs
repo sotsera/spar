@@ -2,6 +2,7 @@ using AwesomeAssertions;
 
 namespace Sotsera.Spar.Development.Tests;
 
+[Trait("LongRunning", "true")]
 public sealed class WatcherProcessTests
 {
     [Theory(Timeout = 30000)]

@@ -48,7 +48,7 @@ The sample also disables Git source-root mapping in Debug to keep compiled sourc
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 pwsh -NoProfile -File eng/Test-VSCodeDevelopment.ps1 -VerifyRender
 ```
 

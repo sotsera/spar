@@ -1,5 +1,6 @@
 #requires -Version 7.4
-param([switch]$PrepareOnly, [switch]$VerifyRender, [switch]$MinimalApplication)
+param([switch]$PrepareOnly, [switch]$VerifyRender, [switch]$MinimalApplication,
+  [string]$EvidenceDirectory = 'artifacts/project-launch')
 
 $prepareProjectOnly = $PrepareOnly.IsPresent
 
@@ -10,7 +11,7 @@ $repository = Split-Path $PSScriptRoot
 $coordinatorPath = (Resolve-Path -LiteralPath 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe').Path
 $sourceRoot = if ($MinimalApplication) { 'samples' } else { 'fixtures' }
 $applicationPath = (Resolve-Path -LiteralPath "$sourceRoot/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe").Path
-$evidencePath = [IO.Path]::GetFullPath('artifacts/project-launch')
+$evidencePath = [IO.Path]::GetFullPath($EvidenceDirectory)
 New-Item -ItemType Directory -Path $evidencePath -Force | Out-Null
 Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $results = [Collections.Generic.List[object]]::new()

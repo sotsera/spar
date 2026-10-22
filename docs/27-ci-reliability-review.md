@@ -53,6 +53,11 @@ excerpts and the exact repair run. Public npm timings are not native/editor acce
 
 ## Proposed next scopes
 
+The maintainer subsequently selected fixed suites and explicit local entry points. The current
+[suite policy](21-continuous-integration.md) supersedes this review's path-selection preservation
+proposal while retaining isolated jobs, fatal child failures and unchanged native/package coverage.
+The observations below remain bound to their original runs.
+
 1. **Isolate independent CI lifetimes.** Split baseline/frontend, development, delivery/compatibility,
    and fresh-package checks onto separate Windows jobs. Each job builds its own required outputs;
    native scenarios remain sequential within that runner. Keep the required **Windows managed probe**

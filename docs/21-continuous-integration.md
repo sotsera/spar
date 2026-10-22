@@ -1,63 +1,143 @@
-# Change-proportional continuous integration
+# Fixed test suites and continuous integration
 
-Issue [#30](https://github.com/sotsera/spar/issues/30) preserves the milestone checks while selecting them by their inputs. `Windows managed probe` remains one always-present, sequential Windows job. Its final audit requires every selected check to succeed; skipped selected checks are failures. No branch-protection change is needed.
+Every PR, integrated `main` push, version tag and manual dispatch runs the same five automatic
+suites. CI does not inspect changed paths or infer dependencies. The required **Windows managed probe**
+check remains the merge gate; it now audits independent Windows jobs.
 
-## Coverage map
+## Local entry points and execution requirements
 
-The map includes every check in the previous workflow. Groups are additive, and each non-lightweight group requires the baseline and frontend prerequisites. Full qualification selects every group. The scripts retain their existing scenarios, expected-failure cases and ownership assertions.
+Run from the repository root with the [current prerequisites](23-minimal-application.md#prerequisites):
 
-| Group | Checks / retained execution path | Protected behavior and inputs |
-| --- | --- | --- |
-| Always | `Test-AgentSkills.mjs`, documentation reference validation, classifier and gate tests | Skill inventory/provenance/references; authored guide references; selection and result auditing |
-| Baseline | `dotnet build Spar.slnx --disable-build-servers`; `dotnet test --solution Spar.slnx --no-build`; `Test-IntegrationHelpers.ps1`; `Test-ProbeEvents.ps1` | All managed bridge/generator/asset/development tests and real watcher tests; helper import/ownership checks and shared log framing. Ordinary code changes retain all of these. |
-| Frontend | `eng/bridge-client-tests`: install and test; integration fixture SPA: install, check and build; `Test-FrontendNotices.mjs` | Generated JS/TypeScript contracts, React/Vite compilation, complete bundled licenses. Build must precede generated-client checks. |
-| Development | `Test-DevelopmentSession.ps1`; `Test-BackendUpdates.ps1`; `Test-ProjectLaunch.ps1`; `Test-DevelopmentInspection.ps1`; `Test-MinimalApplication.ps1`; `Test-DevelopmentReadiness.ps1` | Ordinary app startup/update/restart without test reports; native readiness rejection/renewal; owned SPA/HMR, backend patches and actual retirement, restart/compile recovery, IDE bootstrap lifetime, actual WebView inspection and bounded asynchronous actions |
-| Native | `Test-Bridge.ps1` and `Test-NativeHost.ps1` against Debug | Native document/permission/contract authority, cancellation and response lifetime, COM/window/profile ownership, CoreCLR lifecycle and errors |
-| Production | Normal Release publish; `Test-ProductionBoundary.ps1` (includes `Test-InspectionBoundary.ps1`); `Test-Production.ps1`; ordinary sample publication/boundary and `Test-MinimalPublication.ps1` | Real SPA/assets/notices, copied AOT execution, contract matching, missing-runtime diagnostics, exclusion of probe/inspection/development code |
-| Compatibility | `Test-Compatibility.ps1` | Attributable dynamic dependency, copied CoreCLR execution, strict AOT rejection, dependency removal and unrelated-failure rejection |
-| Packages | `Pack-Local.ps1`; `Test-ExternalConsumer.ps1`; `Test-MinimalConsumer.ps1` | Default ordinary consumer and explicit instrumented fixture; fresh external restore/build, public package references, packaged coordinator and contracts, development updates/restart, copied AOT/CoreCLR execution and boundary checks |
-| AOT probe | Separate `SparNativeProbe=true` publish; copied payload inventory; `Test-NativeHost.ps1` and `Test-Bridge.ps1` | Strict native test payload, copied AOT lifecycle and bridge scenarios. Runs after the normal production boundary check. |
+```powershell
+# Default: build the relevant managed tests, then run fast managed/frontend/tooling checks.
+pwsh -NoProfile -File eng/Test.ps1
+# Inspect membership without building or starting a scenario.
+pwsh -NoProfile -File eng/Test.ps1 -Suite all -List
+# Each suite owns its preparation and runs its scenarios sequentially.
+pwsh -NoProfile -File eng/Test.ps1 -Suite processes
+pwsh -NoProfile -File eng/Test.ps1 -Suite development
+pwsh -NoProfile -File eng/Test.ps1 -Suite delivery
+pwsh -NoProfile -File eng/Test.ps1 -Suite packages
+# Run all automatic suites sequentially in one checkout.
+pwsh -NoProfile -File eng/Test.ps1 -Suite all
+```
 
-The existing helper/framing baseline step also runs `Test-DevelopmentStartup.ps1`: actual CLI preflight
-failures must return bounded useful output and exit `1`, preserve event destinations and leave owned jobs
-empty. Actual editor failure presentation remains a separate desktop check.
+[eng/test-suites.json](../eng/test-suites.json) is the executable inventory: fixed commands, arguments
+and check identities, shared by the local entry point and hosted jobs. Build, install and publish
+failures propagate immediately; later checks remain `not-run`, and the suite fails. Each invocation
+uses a fresh evidence directory and writes `artifacts/ci/suite-<name>.json` with source/run identity,
+catalog hash, per-check outcomes and timings. No test framework migration is implied for native or
+editor drivers. Their assertions and process ownership remain in their existing scripts.
 
-## Selection policy
+| Suite | Requirements and retained coverage |
+| --- | --- |
+| Fast | .NET/Node on Windows; bridge/generator, configuration, assets, contract and bounded-frame tests; generated TypeScript, fixture SPA compilation/notices, documentation, skills and gate checks. Builds the two relevant managed test projects, not the whole solution. |
+| Processes | Actual watchers and Windows jobs; managed process ownership/retirement, the three precursor watcher cases, helper import/teardown and actual CLI startup-error cases. No editor or WebView session. |
+| Development | Actual native WebView sessions; ordinary application HMR/state, readiness rejection/renewal, fixture SPA/owner lifetime, backend patches and rebuild races, project-launch lifetime and bounded inspection. |
+| Delivery | Actual CoreCLR native bridge/lifecycle; normal Release assets/boundary/copied AOT; ordinary sample publication; attributable compatibility and fatal unrelated failures; separate copied AOT probe bridge/lifecycle. Normal production boundary runs before the explicit probe publication. |
+| Packages | One newly packed feed, then fresh instrumented and ordinary consumers outside the checkout with isolated NuGet caches; public package references, packaged tools/contracts, native updates/restart and copied AOT/CoreCLR delivery. |
 
-- Recognized documentation and repository skill changes use lightweight checks. Historical evidence under `docs/evidence/` is retained documentation, not an executable test input.
-- Managed test/precursor probe changes use baseline plus frontend checks.
-- Sample or fixture frontend changes use baseline/frontend, development, production and package checks: the native drivers and external scaffold consume that frontend.
-- Development coordinator, CLI, editor and session configuration changes also use development, production and packages. The coordinator and Vite adapter ship in the development package; development exclusion remains a Release assertion.
-- Runtime, bridge, contract generator, sample backend/contracts, build targets, third-party notices, dependency manifests/locks, and shared fixtures select full coverage. These feed multiple development and delivery paths.
-- A known standalone test driver selects its group and prerequisites. Shared helpers (`Read-ProbeEvents`, native desktop helper, development fixture helpers and the development-session library) select full coverage because other drivers call them.
-- CI/classifier changes, shared configuration, unknown paths and failed classification select full coverage. New files are not silently assumed to be harmless. Mixed changes take the union.
+Integration is a coverage level, not a synonym for slow or manual. Source/package and CoreCLR/AOT are
+distinct variants. Automatic checks include native integration; actual debugger gestures, Visual Studio
+walkthroughs and reviewed pixels remain separate [acceptance responsibilities](19-milestone-1-acceptance.md).
+Use the existing [VS Code](13-vscode-development.md), [Visual Studio](14-visual-studio-development.md)
+and [integration helper](22-integration-test-helpers.md) procedures for explicit desktop runs. Hosted
+project-launch tests do not establish debugger acceptance, and captures alone do not establish reviewed pixels.
 
-PR classification uses the merge base of the event's base/head SHAs and the PR head. Main pushes use the event's before/after range, including every commit in a push. Rename detection is disabled so both the deleted source and added destination contribute. Missing commits, empty/unusable ranges and unsupported events select full coverage. Paths are passed as data, never interpolated into shell code.
+## xUnit selection
 
-Main retains the same selective checks on the actual integrated squash commit. Feature pushes do not duplicate PR runs. PR updates cancel superseded runs; independent main pushes retain independent validation.
+All test projects remain in `Spar.slnx`. Shared [test properties](../tests/Directory.Build.props) preserve
+the root properties and supply native MTP configuration. Ordinary `dotnet test` excludes
+`LongRunning=true`; expensive process tests use method/class traits, and the wholly expensive watcher
+project uses `LongRunningTestProject=true` to generate the assembly trait.
 
-## Full qualification and acceptance responsibilities
+```powershell
+dotnet build Spar.slnx --disable-build-servers
+# Ordinary managed tests; this does not run the PowerShell/Node integration suites.
+dotnet test --solution Spar.slnx --no-build --minimum-expected-tests 1
+# All managed tests, including real process/watcher tests.
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
+# Only long-running managed tests; empty ordinary modules are intentional.
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --filter-trait LongRunning=true --ignore-exit-code 8 --minimum-expected-tests 1
+```
 
-Use `gh workflow run managed-probe.yml --repo sotsera/spar --ref <ref>` to qualify an exact ref. The **Actions → Managed probe → Run workflow** UI becomes available when the default branch declares manual dispatch. Manual dispatch always runs the full programme. Version tags (`v*`) also run full qualification. Toolchain, dependency, workflow and shared-configuration changes select full coverage automatically.
+The checked-in baseline initially partitions 74 cases into 67 ordinary and seven process cases.
+The catalog names each managed module explicitly, enables TRX output, treats skips as failures and
+requires at least one selected test per invocation. Counts may grow; the initial numbers are evidence,
+not permanently fixed test-count thresholds.
 
-Before distributing a release, the maintainer must verify a successful full run for the exact release SHA, inspect its receipts, and execute the relevant desktop/editor walkthroughs from the [acceptance matrix](19-milestone-1-acceptance.md). A tag run is qualification, not an automatic package publication. There is currently no release publisher to gate. CLI dispatch to the feature ref was exercised in the fork before integration; the required upstream PR run remains separate.
+`IncludeLongRunningTests=true` includes both kinds; it does not mean long-only. The default
+exit-code-8 exception applies only to a wholly long-running project deliberately excluded by policy.
+An explicitly enabled module must fail if empty. Long-only solution execution requires the explicit
+exception plus a global minimum before any `--` separator. A minimum of one does not verify every
+intended module; hosted suite membership and individual module invocations provide that additional guard.
 
-CI native tests do not establish reviewed pixels or debugger acceptance. `Test-VSCodeProbe.ps1`, `Test-VSCodeSession.ps1`, `Test-VSCodeDevelopment.ps1`, their external-consumer lane, `-VerifyRender` image review, and the manual Visual Studio walkthrough remain available through their existing guides. They were not in the old hosted workflow and are not silently promoted to hosted acceptance. Clean-machine verification remains deferred.
+Filtering does not avoid project/dependency builds. The fast suite limits its builds explicitly.
+Filter arguments are reevaluated with `--no-build`; trait changes need a rebuild. Shared
+`testconfig.json` controls the default result directory; the catalog explicitly enables reports and
+assigns distinct filenames in its fresh evidence directory. Direct executables, `dotnet run`,
+`--test-modules` and IDE runners do not automatically inherit the project-based selection policy.
+Use explicit equivalent filters and verify discovery/execution before claiming parity.
+
+## Hosted jobs and required gate
+
+The matrix runs all five suites on separate Windows runners with `fail-fast: false`. Native scenarios
+within a job stay sequential. Do not launch suites concurrently in one checkout, rebuild tools while
+they own processes, or share mutable build outputs between jobs. PR updates cancel superseded runs;
+independent main pushes retain independent validation.
+
+The always-running aggregate checks the matrix result and exactly one report per expected suite.
+Every catalog check must have succeeded in order. Failed/cancelled/skipped jobs, missing/malformed
+reports, mismatched source/run/catalog or unexecuted checks fail the gate. No `continue-on-error`,
+changed-path classifier or fallback coverage mode exists. The branch-protection name and GitHub
+Actions identity are unchanged.
+
+Rerunning failed jobs can reuse a successful suite from an earlier attempt of the same run, source and
+catalog. Its original attempt stays recorded. Current status/results artifacts are replaced on a rerun;
+failure diagnostics include the attempt number and preserve the first failure separately.
+
+This trades additional provisioning/build work and full execution on documentation PRs for predictable
+coverage and shorter independent lifetimes. Compare critical-path time and total runner minutes across
+several runs before claiming a performance improvement. The prior
+[timeout review](27-ci-reliability-review.md) explains the measured motivation; its selection-preservation
+proposal is superseded by this fixed-suite policy.
+
+Use manual dispatch to qualify an exact ref:
+
+```powershell
+gh workflow run managed-probe.yml --repo sotsera/spar --ref <ref>
+```
+
+Before distribution, verify a full successful run for the exact release SHA and perform relevant desktop
+acceptance. Tags qualify; there is no automatic release publisher.
+
+## Repetition and precursor tests
+
+The classifier and its path-mapping tests are retired; focused aggregate/entry-point failure tests
+replace the gate coverage. Native scripts are retained with their current assertions. The copied probe
+step is now an ordinary executable driver rather than workflow-only PowerShell.
+
+The early watcher and VS Code probes are toolchain evidence, not substitutes for Spar's actual native
+coordinator/debugger tests. The watcher cases still run in Processes; explicit editor probes remain
+available. Their metadata callback and unsupported-edit observations need an assertion map before
+retirement. Task Stop/window-close tests likewise cover a distinct editor owner lifetime.
+
+Keep source/package, ordinary/fixture and CoreCLR/AOT boundaries. Production sampling currently
+retains fresh/reused profiles and the additional measurement sample. Any later reduction must preserve
+those distinct behaviors and separate extra performance sampling deliberately. Reusing build/download
+work must not bypass real rebuild races, clean consumer restores or production's deliberate frontend
+rebuild. No broad scenario deletion or speculative build cache is included here.
 
 ## Results and artifacts
 
-The hosted job disables npm's automatic install-time advisory request with `NPM_CONFIG_AUDIT=false`.
-Locked dependency installation, compilation and their failure results remain required. This avoids
-making those checks wait on an advisory service; it does not claim a vulnerability scan. npm timing
-JSON is retained with concise results, and npm debug/timing logs with failure diagnostics. An absolute
-log directory also captures installs inside external consumers. The
-[2026-10-22 review](27-ci-reliability-review.md) records the timeout, repair evidence and proposed job
-isolation; those broader structural changes are not implemented by this repair.
+Hosted installs retain `NPM_CONFIG_AUDIT=false` and npm timing logs from the focused network repair.
+Dependency installation/compilation failures remain fatal. This is not a vulnerability gate.
 
-The job summary and `managed-probe-results` record source/event/range, changed paths, classification reasons, selected groups, and each check's success/failure/skipped outcome. Success artifacts retain compact native/integration/package/publication receipts for 14 days. Failed or cancelled runs retain these results and the previous detailed evidence paths as `managed-probe-diagnostics` for 30 days (logs, source hashes, test results, inspection snapshots/images and isolated failure evidence). Selection and gate reports never include environment dumps or launch credentials. Runner logs remain available under GitHub's repository retention policy.
-
-The [execution evidence](evidence/proportional-ci-2026-10-20/README.md) records actual 25s documentation, 24s skill and 2m29s managed-baseline runs, inspected artifact contents/retention, and upstream required-check failure blocking. Full recovery status belongs to the implementation PR's current check. Evidence upload is not the primary optimization: the pre-change [run 39492172536](https://github.com/sotsera/spar/actions/runs/39492172536) took 19m29s, including backend updates 5m16s, compatibility 3m20s, external consumer 2m26s and inspection 1m44s; upload took 20s. These are individual observations, not performance guarantees.
-
+Each suite uploads its status separately for the aggregate, plus concise receipts, publish/package
+manifests, managed TRX reports and npm timings. Failure diagnostics retain logs, source hashes,
+inspection evidence and the original failed status. Success retention is 14 days; failures/cancellation
+use 30 days. No environment dumps, resolved launch credentials, browser profiles or dependency caches
+are uploaded. Routine local outputs remain ignored. The aggregate publishes its own report and summary.
 
 ## Evidence retention policy
 

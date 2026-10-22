@@ -44,7 +44,7 @@ From the repository root, build before the managed tests and run native suites s
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 pwsh -NoProfile -File eng/Test-IntegrationHelpers.ps1
 pwsh -NoProfile -File eng/Test-DevelopmentSession.ps1 -VerifyRender
 pwsh -NoProfile -File eng/Test-BackendUpdates.ps1 -VerifyRender
@@ -57,9 +57,8 @@ pwsh -NoProfile -File eng/Test-ExternalConsumer.ps1 -VerifyRender
 
 The helper check verifies definition-only imports, absence of executable scenario imports,
 real forced process exit and retention of a live handle after an unfinished-cleanup timeout.
-It does not replace the actual native/editor suites. Shared helper changes conservatively
-select full [CI coverage](21-continuous-integration.md); CI runs the helper check with the
-existing baseline checks.
+It does not replace the actual native/editor suites. All changes run the fixed
+[CI suites](21-continuous-integration.md); Processes runs the helper check.
 
 Review native captures as required by the [SPA](11-development-session.md),
 [backend](12-backend-updates.md), [debugger](13-vscode-development.md),

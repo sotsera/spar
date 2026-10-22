@@ -104,7 +104,7 @@ Publish to a separate `artifacts/coreclr` directory. Use `-p:SparStrictAot=true`
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 pwsh -NoProfile -File eng/Pack-Local.ps1
 pwsh -NoProfile -File eng/Test-MinimalConsumer.ps1 -VerifyRender
 pwsh -NoProfile -File eng/Test-ExternalConsumer.ps1 -VerifyRender

@@ -15,304 +15,122 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build-and-test:
-    name: Windows managed probe
+  suites:
+    name: Tests (${{ matrix.suite }})
     runs-on: windows-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [fast, processes, development, delivery, packages]
     env:
-      # Dependency installation and compilation must not wait on the advisory service.
-      # Vulnerability auditing is an explicit operation, not an install side effect.
       NPM_CONFIG_AUDIT: 'false'
       NPM_CONFIG_TIMING: 'true'
       NPM_CONFIG_LOGS_DIR: ${{ github.workspace }}/artifacts/npm
       NPM_CONFIG_LOGS_MAX: '200'
-
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 0
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24.21.0'
 
-      - name: Select checks from changed inputs
-        id: selection
-        # Missing outputs enable every group. The final gate audits that fallback.
-        continue-on-error: true
-        run: node eng/ci/Select-Checks.mjs
-
-      - name: Test CI selection and gate
-        id: selection_tests
-        run: node --test eng/ci/selection.test.mjs
-
-      - name: Validate documentation references
-        id: documentation
-        run: node eng/ci/Test-Documentation.mjs
-
-      - name: Validate repository agent skills
-        id: skills
-        run: node eng/Test-AgentSkills.mjs
-
       - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
-        if: steps.selection.outputs.baseline != 'false'
         with:
           global-json-file: global.json
 
-      - name: Build
-        id: build
-        if: steps.selection.outputs.baseline != 'false'
-        run: dotnet build Spar.slnx --disable-build-servers
-
-      - name: Test bridge contracts and real dotnet watch behavior
-        id: managed
-        if: steps.selection.outputs.baseline != 'false'
-        run: dotnet test --solution Spar.slnx --no-build
-
-      - name: Test integration helpers and probe log framing
-        id: framing
-        if: steps.selection.outputs.baseline != 'false'
+      - name: Run fixed suite
         shell: pwsh
-        run: |
-          ./eng/Test-IntegrationHelpers.ps1
-          ./eng/Test-ProbeEvents.ps1
-          ./eng/Test-DevelopmentStartup.ps1
+        run: ./eng/Test.ps1 -Suite ${{ matrix.suite }}
 
-      - name: Check generated TypeScript client
-        id: client
-        if: steps.selection.outputs.frontend != 'false'
-        working-directory: eng/bridge-client-tests
-        run: |
-          npm ci --ignore-scripts
-          npm test
-
-      - name: Install and check the integration fixture SPA
-        id: spa
-        if: steps.selection.outputs.frontend != 'false'
-        working-directory: fixtures/Spar.NativeSample/frontend
-        run: |
-          npm ci --ignore-scripts --include=optional
-          npm run check
-          npm run build
-
-      - name: Verify complete frontend distribution notices
-        id: notices
-        if: steps.selection.outputs.frontend != 'false'
-        run: node eng/Test-FrontendNotices.mjs
-
-      - name: Test ordinary application development without probe exports
-        id: minimal
-        if: steps.selection.outputs.development != 'false'
-        shell: pwsh
-        run: |
-          npm ci --prefix samples/Spar.NativeSample/frontend --ignore-scripts --include=optional
-          if ($LASTEXITCODE) { throw 'Minimal frontend restore failed.' }
-          npm run check --prefix samples/Spar.NativeSample/frontend
-          if ($LASTEXITCODE) { throw 'Minimal frontend check failed.' }
-          ./eng/Test-MinimalApplication.ps1 -EvidenceDirectory artifacts/minimal/ci-development
-          ./eng/Test-DevelopmentReadiness.ps1 -EvidenceDirectory artifacts/minimal/ci-readiness
-
-      - name: Test owned SPA session and HMR
-        id: session
-        if: steps.selection.outputs.development != 'false'
-        shell: pwsh
-        run: ./eng/Test-DevelopmentSession.ps1 -EvidenceDirectory artifacts/development/ci
-
-      - name: Test native backend Hot Reload and retirement
-        id: backend
-        if: steps.selection.outputs.development != 'false'
-        shell: pwsh
-        run: ./eng/Test-BackendUpdates.ps1 -EvidenceDirectory artifacts/backend-loop/ci
-
-      - name: Test IDE project launch ownership (not debugger acceptance)
-        id: project_launch
-        if: steps.selection.outputs.development != 'false'
-        shell: pwsh
-        run: ./eng/Test-ProjectLaunch.ps1
-
-      - name: Test actual WebView inspection and bounded actions
-        id: inspection
-        if: steps.selection.outputs.development != 'false'
-        shell: pwsh
-        run: ./eng/Test-DevelopmentInspection.ps1 -EvidenceDirectory artifacts/inspection/ci
-
-      - name: Test native CoreCLR bridge
-        id: bridge
-        if: steps.selection.outputs.native != 'false'
-        shell: pwsh
-        run: >-
-          ./eng/Test-Bridge.ps1
-          -Executable fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
-          -EvidenceDirectory artifacts/bridge/ci-coreclr
-
-      - name: Test native CoreCLR lifecycle
-        id: lifecycle
-        if: steps.selection.outputs.native != 'false'
-        shell: pwsh
-        run: >-
-          ./eng/Test-NativeHost.ps1
-          -Executable fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe
-          -EvidenceDirectory artifacts/native/ci-coreclr
-
-      - name: Publish production SPA as strict NativeAOT
-        id: publish
-        if: steps.selection.outputs.production != 'false'
-        run: dotnet publish fixtures/Spar.NativeSample -c Release -o artifacts/production/publish --disable-build-servers
-
-      - name: Verify production build boundary
-        id: boundary
-        if: steps.selection.outputs.production != 'false'
-        shell: pwsh
-        run: ./eng/Test-ProductionBoundary.ps1
-
-      - name: Test copied production SPA (desktop rendering checked separately)
-        id: production
-        if: steps.selection.outputs.production != 'false'
-        shell: pwsh
-        run: ./eng/Test-Production.ps1 -EvidenceDirectory artifacts/production/ci
-
-      - name: Test explicit dependency compatibility and strict AOT failures
-        id: compatibility
-        if: steps.selection.outputs.compatibility != 'false'
-        shell: pwsh
-        run: ./eng/Test-Compatibility.ps1 -EvidenceDirectory artifacts/compatibility/ci
-
-      - name: Publish and run the ordinary application
-        id: minimal_publish
-        if: steps.selection.outputs.production != 'false'
-        shell: pwsh
-        run: |
-          dotnet publish samples/Spar.NativeSample -c Release -o artifacts/minimal/publish --disable-build-servers
-          if ($LASTEXITCODE) { throw 'Minimal publication failed.' }
-          ./eng/Test-ProductionBoundary.ps1 -MinimalApplication -Assembly samples/Spar.NativeSample/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll
-          ./eng/Test-MinimalPublication.ps1 -PublishDirectory artifacts/minimal/publish -EvidenceDirectory artifacts/minimal/ci-production
-
-      - name: Pack local consumer dependencies
-        id: pack
-        if: steps.selection.outputs.packages != 'false'
-        shell: pwsh
-        run: ./eng/Pack-Local.ps1
-
-      - name: Test external package consumer (desktop and IDE checks run separately)
-        id: consumer
-        if: steps.selection.outputs.packages != 'false'
-        shell: pwsh
-        run: ./eng/Test-ExternalConsumer.ps1 -EvidenceDirectory artifacts/external-consumer/ci
-
-      - name: Test the default minimal package consumer
-        id: minimal_consumer
-        if: steps.selection.outputs.packages != 'false'
-        shell: pwsh
-        run: ./eng/Test-MinimalConsumer.ps1 -EvidenceDirectory artifacts/minimal/ci-consumer
-
-      - name: Publish separate strict NativeAOT native test fixture
-        id: publish_probe
-        if: steps.selection.outputs.aot != 'false'
-        run: dotnet publish fixtures/Spar.NativeSample -c Release -p:SparNativeProbe=true -o artifacts/native/publish --disable-build-servers
-
-      - name: Test copied NativeAOT lifecycle
-        id: copied_probe
-        if: steps.selection.outputs.aot != 'false'
-        shell: pwsh
-        run: |
-          $copyPath = Join-Path $env:RUNNER_TEMP ('spar-native-' + [guid]::NewGuid().ToString('N'))
-          New-Item -ItemType Directory -Path $copyPath | Out-Null
-          Get-ChildItem -LiteralPath artifacts/native/publish -File |
-            Where-Object Extension -ne '.pdb' | Copy-Item -Destination $copyPath
-          $payload = @(Get-ChildItem -LiteralPath $copyPath -File | Sort-Object Name | Select-Object -ExpandProperty Name)
-          $expected = @('Spar.NativeSample.exe', 'WebView2-LICENSE.txt', 'WebView2-NOTICE.txt', 'WebView2Loader.dll') | Sort-Object
-          if (Compare-Object $payload $expected) { throw 'Unexpected AOT payload: build tools/managed runtime must not ship.' }
-          ./eng/Test-NativeHost.ps1 -Executable (Join-Path $copyPath 'Spar.NativeSample.exe') `
-            -ExpectedMode NativeAOT -EvidenceDirectory artifacts/native/ci-aot
-          ./eng/Test-Bridge.ps1 -Executable (Join-Path $copyPath 'Spar.NativeSample.exe') `
-            -ExpectedMode NativeAOT -EvidenceDirectory artifacts/bridge/ci-aot
-
-      - name: Audit all selected check results
-        if: always()
-        env:
-          CI_STEP_RESULTS: ${{ toJSON(steps) }}
-        run: node eng/ci/Complete-Checks.mjs
-
-      - name: Preserve concise results
+      - name: Preserve suite status
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: managed-probe-results
+          name: test-suite-${{ matrix.suite }}-status
+          overwrite: true
+          path: artifacts/ci/suite-${{ matrix.suite }}.json
+          retention-days: ${{ job.status == 'success' && 14 || 30 }}
+          if-no-files-found: error
+
+      - name: Preserve concise evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-suite-${{ matrix.suite }}-results
+          overwrite: true
           retention-days: ${{ job.status == 'success' && 14 || 30 }}
           path: |
-            artifacts/ci/*.json
+            artifacts/suites/**/receipt.json
+            artifacts/suites/**/results.json
+            artifacts/suites/**/inspection-disabled.json
+            artifacts/suites/**/packages.json
+            artifacts/suites/**/spar-publish.json
+            artifacts/suites/**/test-results/**
             artifacts/npm/*-timing.json
-            artifacts/minimal/**/receipt.json
-            artifacts/minimal/publish/spar-publish.json
-            artifacts/native/ci-*/receipt.json
-            artifacts/bridge/ci-*/receipt.json
-            artifacts/development/ci/receipt.json
-            artifacts/backend-loop/ci/receipt.json
-            artifacts/project-launch/**/receipt.json
-            artifacts/inspection/ci/receipt.json
-            artifacts/production/ci/**/receipt.json
-            artifacts/production/publish/spar-publish.json
-            artifacts/compatibility/ci/*.json
-            artifacts/compatibility/ci/*-run/**/receipt.json
-            artifacts/packages/packages.json
-            artifacts/external-consumer/ci/**/receipt.json
-          if-no-files-found: error
+          if-no-files-found: warn
 
       - name: Preserve failure diagnostics
         if: failure() || cancelled()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: managed-probe-diagnostics
+          name: test-suite-${{ matrix.suite }}-diagnostics-${{ github.run_attempt }}
           retention-days: 30
           path: |
-            artifacts/ci/*.json
+            artifacts/ci/suite-*.json
             artifacts/npm/*
-            artifacts/minimal/**/receipt.json
-            artifacts/minimal/**/*.log
-            artifacts/minimal/**/coordinator.jsonl
-            artifacts/minimal/**/commands.jsonl
-            artifacts/minimal/**/*-snapshot.json
-            artifacts/minimal/**/consumer-path.txt
-            artifacts/minimal/**/*.png
-            artifacts/minimal/**/*.bmp
-            artifacts/minimal/publish/spar-publish.json
+            artifacts/suites/**/receipt.json
+            artifacts/suites/**/results.json
+            artifacts/suites/**/*.log
+            artifacts/suites/**/*.jsonl
+            artifacts/suites/**/steps.json
+            artifacts/suites/**/*.sha256
+            artifacts/suites/**/*-snapshot.json
+            artifacts/suites/**/frontend-logs.json
+            artifacts/suites/**/consumer-path.txt
+            artifacts/suites/**/*.png
+            artifacts/suites/**/*.bmp
+            artifacts/suites/**/spar-publish.json
+            artifacts/suites/**/test-results/**
             artifacts/hot-reload/**/watch.log
             artifacts/hot-reload/**/sources.sha256
-            **/TestResults/**
-            artifacts/native/ci-*/receipt.json
-            artifacts/native/ci-*/**/*.jsonl
-            artifacts/native/ci-*/**/*.log
-            artifacts/bridge/ci-*/receipt.json
-            artifacts/bridge/ci-*/**/*.jsonl
-            artifacts/bridge/ci-*/**/*.log
-            artifacts/development/ci/receipt.json
-            artifacts/development/ci/**/coordinator.jsonl
-            artifacts/development/ci/**/*.log
-            artifacts/backend-loop/ci/receipt.json
-            artifacts/backend-loop/ci/**/steps.json
-            artifacts/backend-loop/ci/**/sources.initial.sha256
-            artifacts/backend-loop/ci/**/coordinator.jsonl
-            artifacts/backend-loop/ci/**/*.log
-            artifacts/project-launch/**/receipt.json
-            artifacts/project-launch/**/project-*.jsonl
-            artifacts/project-launch/**/*.log
-            artifacts/inspection/ci/receipt.json
-            artifacts/inspection/ci/**/coordinator.jsonl
-            artifacts/inspection/ci/**/commands.jsonl
-            artifacts/inspection/ci/**/*-snapshot.json
-            artifacts/inspection/ci/**/frontend-logs.json
-            artifacts/inspection/ci/**/*.png
-            artifacts/inspection/ci/**/*.log
-            artifacts/production/ci/**
-            artifacts/production/publish/spar-publish.json
-            artifacts/compatibility/ci/*.log
-            artifacts/compatibility/ci/*.json
-            artifacts/compatibility/ci/*.sha256
-            artifacts/compatibility/ci/*.csproj
-            artifacts/compatibility/ci/*.cs
-            artifacts/compatibility/ci/*-run/**
-            artifacts/compatibility/ci/publish-*/spar-publish.json
-            artifacts/packages/packages.json
-            artifacts/external-consumer/ci/**
+          if-no-files-found: warn
+
+  gate:
+    name: Windows managed probe
+    needs: [suites]
+    if: always()
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24.21.0'
+
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          pattern: test-suite-*-status
+          merge-multiple: true
+          path: artifacts/ci/suites
+
+      - name: Audit every required suite
+        if: always()
+        env:
+          CI_JOB_RESULTS: ${{ toJSON(needs) }}
+        run: node eng/ci/gate.mjs
+
+      - name: Preserve aggregate result
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: managed-probe-results
+          overwrite: true
+          path: artifacts/ci/results.json
+          retention-days: ${{ job.status == 'success' && 14 || 30 }}
           if-no-files-found: warn

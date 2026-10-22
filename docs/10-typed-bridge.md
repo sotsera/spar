@@ -80,7 +80,7 @@ Diagnostics contain stage, document token, request ID, operation, and code. The 
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 npm ci --ignore-scripts --prefix eng/bridge-client-tests
 npm test --prefix eng/bridge-client-tests
 

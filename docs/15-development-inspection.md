@@ -61,7 +61,7 @@ The callback ABI projections follow the pinned Microsoft.Web.WebView2 `1.0.4258.
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 ./eng/Test-DevelopmentInspection.ps1 -EvidenceDirectory artifacts/inspection/probe
 dotnet build src/Sotsera.Spar.Windows -c Release --disable-build-servers
 ./eng/Test-InspectionBoundary.ps1

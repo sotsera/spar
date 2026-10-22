@@ -8,19 +8,22 @@ This is the authoritative contributor workflow, coding/dependency policy and val
 
 Confirm the working tree and preserve unrelated changes. Use the selected prerequisites in the
 [minimal application guide](23-minimal-application.md#prerequisites); do not inherit tools or acceptance claims
-from the previous Spar checkout. For an implementation change, build before tests:
+from the previous Spar checkout. The fixed suite entry point builds before tests:
 
 ```powershell
-dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+pwsh -NoProfile -File eng/Test.ps1
+pwsh -NoProfile -File eng/Test.ps1 -Suite processes
 ```
 
-The tests start real watchers and edit isolated fixtures. They do not establish native rendering,
+Processes starts real watchers and edits isolated fixtures. Ordinary `dotnet test` excludes
+`LongRunning=true`; use `-p:IncludeLongRunningTests=true` for all managed tests after a matching build.
+The [suite guide](21-continuous-integration.md) owns selection and execution requirements.
+Managed tests do not establish native rendering,
 debugger Hot Reload or published AOT behavior. Choose additional checks by the behavior changed:
 
 | Change | Authoritative procedure and evidence requirement |
 | --- | --- |
-| Documentation or skill guidance | Run `node eng/ci/Test-Documentation.mjs`, `node eng/Test-AgentSkills.mjs` and `node --test eng/ci/selection.test.mjs`. Inspect changed commands against the named script/configuration; the link check does not validate remote URLs, anchors or executable examples. No unrelated integration run is required. |
+| Documentation or skill guidance | Run `node eng/ci/Test-Documentation.mjs`, `node eng/Test-AgentSkills.mjs` and `node --test eng/ci/gate.test.mjs`. Inspect changed commands against the named script/configuration; the link check does not validate remote URLs, anchors or executable examples. No unrelated local integration run is required; hosted CI always runs the fixed suites. |
 | Native lifetime, navigation or bridge | [Native host](09-native-host.md) and [typed bridge](10-typed-bridge.md): actual CoreCLR and copied AOT drivers, plus `-VerifyRender` and image review where rendering changes. Build before TypeScript checks. |
 | SPA, watcher or restart ownership | [SPA sessions](11-development-session.md), [backend updates](12-backend-updates.md) and [helper ownership](22-integration-test-helpers.md): real processes, retained state and actual retirement/cleanup. The task-only VS Code checks do not prove debugger ownership. |
 | VS Code debugger or project launch | [VS Code](13-vscode-development.md) and [Visual Studio](14-visual-studio-development.md): actual editor acceptance. `Test-ProjectLaunch.ps1` proves lifecycle only; it cannot replace a Visual Studio walkthrough. |

@@ -87,6 +87,16 @@ function Observe-Children($Job, $Coordinator, $Children, $Helpers, $Unclassified
       $null = $child.Handle
       if (!$Job.Contains($child)) { continue }
       $image = $child.MainModule.FileName
+      $exited = $child.HasExited
+      @{ coordinator = $Coordinator.Id; processId = $id; image = $image; exitedAtObservation = $exited } |
+        ConvertTo-Json -Compress | Add-Content (Join-Path $root 'child-observations.jsonl')
+      # MainModule can be null after actual exit without throwing either exception below.
+      # Keep that unavailable identity distinct from a positively observed application child.
+      if ([string]::IsNullOrEmpty($image)) {
+        if (!$exited) { throw "Live owned child image unavailable: $id" }
+        $null = $Unclassified.Add($id)
+        continue
+      }
       $consoleHost = Join-Path ([Environment]::SystemDirectory) 'conhost.exe'
       if ([string]::Equals($image, $consoleHost, [StringComparison]::OrdinalIgnoreCase)) {
         $null = $Helpers.Add($id)

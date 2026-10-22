@@ -1,0 +1,563 @@
+{
+  "schema": 1,
+  "suites": {
+    "fast": {
+      "description": "Managed tests without child processes; contracts, frontend, documentation and tooling.",
+      "steps": [
+        {
+          "id": "gate-tests",
+          "command": "node",
+          "arguments": [
+            "--test",
+            "eng/ci/gate.test.mjs"
+          ]
+        },
+        {
+          "id": "documentation",
+          "command": "node",
+          "arguments": [
+            "eng/ci/Test-Documentation.mjs"
+          ]
+        },
+        {
+          "id": "skills",
+          "command": "node",
+          "arguments": [
+            "eng/Test-AgentSkills.mjs"
+          ]
+        },
+        {
+          "id": "build-bridge-tests",
+          "command": "dotnet",
+          "arguments": [
+            "build",
+            "tests/Sotsera.Spar.Bridge.Tests",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "build-development-tests",
+          "command": "dotnet",
+          "arguments": [
+            "build",
+            "tests/Sotsera.Spar.Development.Tests",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "bridge-fast",
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "--project",
+            "tests/Sotsera.Spar.Bridge.Tests",
+            "--no-build",
+            "--minimum-expected-tests",
+            "1",
+            "--fail-skips",
+            "on",
+            "--report-xunit-trx",
+            "--report-xunit-trx-filename",
+            "bridge-fast.trx",
+            "--results-directory",
+            "{evidence}/test-results"
+          ]
+        },
+        {
+          "id": "development-fast",
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "--project",
+            "tests/Sotsera.Spar.Development.Tests",
+            "--no-build",
+            "--minimum-expected-tests",
+            "1",
+            "--fail-skips",
+            "on",
+            "--report-xunit-trx",
+            "--report-xunit-trx-filename",
+            "development-fast.trx",
+            "--results-directory",
+            "{evidence}/test-results"
+          ]
+        },
+        {
+          "id": "client-install",
+          "command": "npm",
+          "arguments": [
+            "ci",
+            "--prefix",
+            "eng/bridge-client-tests",
+            "--ignore-scripts"
+          ]
+        },
+        {
+          "id": "client-tests",
+          "command": "npm",
+          "arguments": [
+            "test",
+            "--prefix",
+            "eng/bridge-client-tests"
+          ]
+        },
+        {
+          "id": "fixture-install",
+          "command": "npm",
+          "arguments": [
+            "ci",
+            "--prefix",
+            "fixtures/Spar.NativeSample/frontend",
+            "--ignore-scripts",
+            "--include=optional"
+          ]
+        },
+        {
+          "id": "fixture-check",
+          "command": "npm",
+          "arguments": [
+            "run",
+            "check",
+            "--prefix",
+            "fixtures/Spar.NativeSample/frontend"
+          ]
+        },
+        {
+          "id": "fixture-build",
+          "command": "npm",
+          "arguments": [
+            "run",
+            "build",
+            "--prefix",
+            "fixtures/Spar.NativeSample/frontend"
+          ]
+        },
+        {
+          "id": "notices",
+          "command": "node",
+          "arguments": [
+            "eng/Test-FrontendNotices.mjs"
+          ]
+        },
+        {
+          "id": "framing",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ProbeEvents.ps1"
+          ]
+        }
+      ]
+    },
+    "processes": {
+      "description": "Real watcher, Windows process ownership, helper teardown and CLI startup failures.",
+      "steps": [
+        {
+          "id": "build-development-tests",
+          "command": "dotnet",
+          "arguments": [
+            "build",
+            "tests/Sotsera.Spar.Development.Tests",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "build-watcher-tests",
+          "command": "dotnet",
+          "arguments": [
+            "build",
+            "tests/Spar.HotReloadProbe.Tests",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "build-coordinator",
+          "command": "dotnet",
+          "arguments": [
+            "build",
+            "tools/Spar.Dev",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "development-processes",
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "--project",
+            "tests/Sotsera.Spar.Development.Tests",
+            "--no-build",
+            "--minimum-expected-tests",
+            "1",
+            "--fail-skips",
+            "on",
+            "--report-xunit-trx",
+            "--report-xunit-trx-filename",
+            "development-processes.trx",
+            "--results-directory",
+            "{evidence}/test-results",
+            "-p:IncludeLongRunningTests=true",
+            "--filter-trait",
+            "LongRunning=true"
+          ]
+        },
+        {
+          "id": "watcher-processes",
+          "command": "dotnet",
+          "arguments": [
+            "test",
+            "--project",
+            "tests/Spar.HotReloadProbe.Tests",
+            "--no-build",
+            "--minimum-expected-tests",
+            "1",
+            "--fail-skips",
+            "on",
+            "--report-xunit-trx",
+            "--report-xunit-trx-filename",
+            "watcher-processes.trx",
+            "--results-directory",
+            "{evidence}/test-results",
+            "-p:IncludeLongRunningTests=true"
+          ]
+        },
+        {
+          "id": "helpers",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-IntegrationHelpers.ps1"
+          ]
+        },
+        {
+          "id": "startup",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-DevelopmentStartup.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/startup"
+          ]
+        }
+      ]
+    },
+    "development": {
+      "description": "Native SPA/backend updates, readiness, restart, project launch and WebView inspection.",
+      "steps": [
+        {
+          "id": "build-applications",
+          "command": "dotnet",
+          "arguments": [
+            "build",
+            "Spar.slnx",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "fixture-install",
+          "command": "npm",
+          "arguments": [
+            "ci",
+            "--prefix",
+            "fixtures/Spar.NativeSample/frontend",
+            "--ignore-scripts",
+            "--include=optional"
+          ]
+        },
+        {
+          "id": "fixture-check",
+          "command": "npm",
+          "arguments": [
+            "run",
+            "check",
+            "--prefix",
+            "fixtures/Spar.NativeSample/frontend"
+          ]
+        },
+        {
+          "id": "minimal-install",
+          "command": "npm",
+          "arguments": [
+            "ci",
+            "--prefix",
+            "samples/Spar.NativeSample/frontend",
+            "--ignore-scripts",
+            "--include=optional"
+          ]
+        },
+        {
+          "id": "minimal-check",
+          "command": "npm",
+          "arguments": [
+            "run",
+            "check",
+            "--prefix",
+            "samples/Spar.NativeSample/frontend"
+          ]
+        },
+        {
+          "id": "minimal",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-MinimalApplication.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/minimal"
+          ]
+        },
+        {
+          "id": "readiness",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-DevelopmentReadiness.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/readiness"
+          ]
+        },
+        {
+          "id": "session",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-DevelopmentSession.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/session"
+          ]
+        },
+        {
+          "id": "backend",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-BackendUpdates.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/backend"
+          ]
+        },
+        {
+          "id": "project-launch",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ProjectLaunch.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/project-launch"
+          ]
+        },
+        {
+          "id": "inspection",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-DevelopmentInspection.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/inspection"
+          ]
+        }
+      ]
+    },
+    "delivery": {
+      "description": "CoreCLR/native lifecycle and bridge, production boundaries, copied AOT and attributable compatibility.",
+      "steps": [
+        {
+          "id": "build-applications",
+          "command": "dotnet",
+          "arguments": [
+            "build",
+            "Spar.slnx",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "bridge-coreclr",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-Bridge.ps1",
+            "-Executable",
+            "fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe",
+            "-EvidenceDirectory",
+            "{evidence}/bridge-coreclr"
+          ]
+        },
+        {
+          "id": "lifecycle-coreclr",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-NativeHost.ps1",
+            "-Executable",
+            "fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe",
+            "-EvidenceDirectory",
+            "{evidence}/native-coreclr"
+          ]
+        },
+        {
+          "id": "publish-production",
+          "command": "dotnet",
+          "arguments": [
+            "publish",
+            "fixtures/Spar.NativeSample",
+            "-c",
+            "Release",
+            "-o",
+            "{evidence}/publish",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "production-boundary",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ProductionBoundary.ps1"
+          ]
+        },
+        {
+          "id": "production",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-Production.ps1",
+            "-PublishDirectory",
+            "{evidence}/publish",
+            "-EvidenceDirectory",
+            "{evidence}/production"
+          ]
+        },
+        {
+          "id": "compatibility",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-Compatibility.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/compatibility"
+          ]
+        },
+        {
+          "id": "publish-minimal",
+          "command": "dotnet",
+          "arguments": [
+            "publish",
+            "samples/Spar.NativeSample",
+            "-c",
+            "Release",
+            "-o",
+            "{evidence}/minimal-publish",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "minimal-boundary",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ProductionBoundary.ps1",
+            "-MinimalApplication",
+            "-Assembly",
+            "samples/Spar.NativeSample/bin/Release/net10.0-windows/win-x64/Spar.NativeSample.dll"
+          ]
+        },
+        {
+          "id": "minimal-production",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-MinimalPublication.ps1",
+            "-PublishDirectory",
+            "{evidence}/minimal-publish",
+            "-EvidenceDirectory",
+            "{evidence}/minimal-production"
+          ]
+        },
+        {
+          "id": "publish-probe",
+          "command": "dotnet",
+          "arguments": [
+            "publish",
+            "fixtures/Spar.NativeSample",
+            "-c",
+            "Release",
+            "-p:SparNativeProbe=true",
+            "-o",
+            "{evidence}/probe-publish",
+            "--disable-build-servers"
+          ]
+        },
+        {
+          "id": "copied-probe",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/ci/Test-CopiedProbe.ps1",
+            "-PublishDirectory",
+            "{evidence}/probe-publish",
+            "-EvidenceDirectory",
+            "{evidence}/aot-probe"
+          ]
+        }
+      ]
+    },
+    "packages": {
+      "description": "One fresh local feed; instrumented and ordinary external consumers with isolated package caches.",
+      "steps": [
+        {
+          "id": "pack",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Pack-Local.ps1",
+            "-Output",
+            "{evidence}/feed"
+          ]
+        },
+        {
+          "id": "instrumented-consumer",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ExternalConsumer.ps1",
+            "-Feed",
+            "{evidence}/feed",
+            "-EvidenceDirectory",
+            "{evidence}/instrumented"
+          ]
+        },
+        {
+          "id": "minimal-consumer",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-MinimalConsumer.ps1",
+            "-Feed",
+            "{evidence}/feed",
+            "-EvidenceDirectory",
+            "{evidence}/minimal"
+          ]
+        }
+      ]
+    }
+  }
+}

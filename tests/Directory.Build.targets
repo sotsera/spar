@@ -1,0 +1,15 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory)../Directory.Build.targets"
+          Condition="Exists('$(MSBuildThisFileDirectory)../Directory.Build.targets')" />
+
+  <ItemGroup Condition="'$(LongRunningTestProject)' == 'true'">
+    <AssemblyAttribute Include="Xunit.TraitAttribute">
+      <_Parameter1>LongRunning</_Parameter1>
+      <_Parameter2>true</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(LongRunningTestProject)' == 'true' And '$(IncludeLongRunningTests)' != 'true'">
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --ignore-exit-code 8</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+</Project>

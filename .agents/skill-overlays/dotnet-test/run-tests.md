@@ -8,13 +8,14 @@ mode: extend
 
 Run from the repository root. Read [AGENTS.md](../../../AGENTS.md) and verify `global.json`, `Directory.Packages.props`, and the selected test project if runner configuration has changed. The current baseline is SDK 10.0.402, native Microsoft.Testing.Platform command mode, xUnit v3 package 4.0.2, and AwesomeAssertions 9.6.0. These are observations, not an instruction to undo a deliberate upgrade.
 
-Normal implementation validation:
+Default local suite (builds its managed test projects first):
 
 ```powershell
-dotnet build Spar.slnx --disable-build-servers
-# Run only if the build succeeded.
-dotnet test --solution Spar.slnx --no-build
+pwsh -NoProfile -File eng/Test.ps1
+pwsh -NoProfile -File eng/Test.ps1 -Suite processes
 ```
+
+Ordinary `dotnet test` excludes `LongRunning=true`. After a matching solution build, use `dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1` to run all managed tests. The fixed suite catalog runs ordinary and real-process cases explicitly. See [CI and suite policy](../../../docs/21-continuous-integration.md) for all automatic suites and zero-selection safeguards. MSBuild filters do not automatically apply to direct executable or IDE runners.
 
 For a named project use `--project`, not a positional path. Native MTP arguments follow directly, without the VSTest bridge `--` separator. For example, after a matching build:
 

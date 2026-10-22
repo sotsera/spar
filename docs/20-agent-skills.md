@@ -37,7 +37,7 @@ node eng/Test-AgentSkills.mjs
 node eng/Test-AgentSkills.mjs artifacts/dotnet-skills-review
 ```
 
-The dependency-free Node check validates the inventory, constrained scalar frontmatter, license digest, local links, runner overlay, provenance fields, and evaluation-case references. It runs in the existing **Windows managed probe** job. It does not execute skill prompts, grade answers by keyword, fetch upstream, or install tooling.
+The dependency-free Node check validates the inventory, constrained scalar frontmatter, license digest, local links, runner overlay, provenance fields, and evaluation-case references. It runs in the Fast suite behind **Windows managed probe**. It does not execute skill prompts, grade answers by keyword, fetch upstream, or install tooling.
 
 [cases.json](../eng/agent-skills/cases.json) supplies positive, boundary, and dormancy prompts with review criteria. To evaluate selection, give an evaluator the catalog names/descriptions and the prompt first, withholding `expectedSkills` and `checks`; then load only selected skills and assess its proposed actions against the criteria. Use an isolated fixture for permitted execution. Record selection and semantic behavior separately from structural checks, and do not claim automatic host discovery or general model reliability from a manual walkthrough.
 

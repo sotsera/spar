@@ -59,6 +59,7 @@ public sealed class DevelopmentTests
     }
 
     [Fact(Timeout = 30000)]
+    [Trait("LongRunning", "true")]
     public async Task CreatedChildBelongsToJobAndJobCloseTerminatesOnlyOwnedWork()
     {
         var directory = Path.Combine(Path.GetTempPath(), "spar-job-" + Guid.NewGuid().ToString("N"));

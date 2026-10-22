@@ -83,7 +83,7 @@ The operator's debugger gestures and diagnostics, native screenshots, actual pro
 
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
-dotnet test --solution Spar.slnx --no-build
+dotnet test --solution Spar.slnx --no-build -p:IncludeLongRunningTests=true --minimum-expected-tests 1
 pwsh -NoProfile -File eng/Test-ProjectLaunch.ps1 -VerifyRender
 pwsh -NoProfile -File eng/Test-VSCodeDevelopment.ps1 -VerifyRender
 ```

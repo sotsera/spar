@@ -17,7 +17,7 @@ For a fresh app outside the framework checkout, use the [package consumer guide]
 - [Documentation map and current status](docs/README.md) — application, development, runtime and delivery guides; deferred work.
 - [Contributing](docs/24-contributing.md) — validation commands, coding/dependency policy and PR workflow.
 - [Product direction](docs/02-product-direction.md) — confirmed requirements, proposals and deferred scope.
-- [CI and evidence policy](docs/21-continuous-integration.md) — selected checks, full qualification and retention.
+- [CI and evidence policy](docs/21-continuous-integration.md) — fixed automatic suites, desktop qualification and retention.
 - [Agent entry point](AGENTS.md) — essential constraints and links to contributor policy.
 
 Milestone 1 has [revision-bound acceptance evidence](docs/19-milestone-1-acceptance.md) on the selected Windows
