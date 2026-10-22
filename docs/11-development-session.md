@@ -67,6 +67,14 @@ Automation sends bounded UTF-8 JSON lines on stdin:
 
 Stdout events identify session, generation, timestamps, process creation identity, contract/document, and command correlation when applicable. Child logs live in the session directory. `--events-file <new-path>` mirrors events to an exclusively created, shared-readable file. `--no-build` requires an already matching build. `--owner-stdin` makes EOF or invalid owner input end ownership with the forced policy; use it for editor/AI pipe ownership. Without it, stdin EOF alone does not end a session.
 
+Process failures and selected-build rejection include a `diagnostic` object: failed `role`, `exitCode`
+when actual exit has been observed, exact retained `stdoutLog`/`stderrLog` paths, and `nextAction`.
+The failure detail repeats these locations for existing terminal and editor event views. A timeout
+does not imply exit: its exit code can be absent even if cleanup later terminates the process.
+Rejected executables may have no log files; debugger-owned application output belongs in the IDE
+and is not claimed as coordinator-captured output. Watcher-owned applications use the watcher logs.
+Raw frontend/application output remains in those files and is not copied into public events.
+
 Test-only `--probe` enables the fixture's fixed seed/close HMR events. General UI automation uses the separate, explicit [inspection capability](15-development-inspection.md). Optional memory observation is still a proposal. External frontend servers are not supported by this adapter; an explicit observed/non-owned mode is needed before supporting that scenario.
 
 ## Startup errors

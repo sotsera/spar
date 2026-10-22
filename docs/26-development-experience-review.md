@@ -69,4 +69,10 @@ argument validation, bounded public startup errors and exit `1`, expected prefli
 VS Code Output visibility and project-launch error propagation. Its
 [execution record](evidence/startup-errors-2026-10-21/README.md) records the current implementation and
 actual editor/package checks. Implementation acceptance belongs to that record and its PR; the original
-review findings above remain observations of `e908e1a`. D2 and D3 remain separate future scopes.
+review findings above remain observations of `e908e1a`.
+
+After PR #47, the maintainer selected D2 followed by D3 in separate focused changes. D2 adds
+process role, observed exit status, retained log locations and a next action to failure events. Its
+[execution record](evidence/failure-diagnostics-2026-10-22/README.md) separates native, editor and boundary checks.
+D3 follows with truthful progress and withdrawn-readiness presentation. Selection authorizes
+implementation; current implementation PRs and their revision-bound checks establish acceptance.

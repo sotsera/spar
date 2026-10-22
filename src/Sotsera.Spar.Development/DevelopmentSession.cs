@@ -163,7 +163,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             }
             if (!skipBuild && !await BuildSelectedApplicationAsync().ConfigureAwait(false))
             {
-                throw new SessionFailure("build_failed", "Initial backend/contracts did not build; inspect build logs.");
+                throw Failure("build_failed", "Initial backend/contracts did not build.", _build,
+                    "Correct the reported build errors and start the session again.");
             }
             if (_stop.Task.IsCompleted)
             {
@@ -187,7 +188,9 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         catch (Exception error)
         {
             result = 1;
-            Emit("session-failed", code: error is SessionFailure failure ? failure.Code : "session_error", detail: error.Message);
+            var failure = error as SessionFailure;
+            Emit("session-failed", failure?.Diagnostic?.Role, failure?.Child?.Process,
+                code: failure?.Code ?? "session_error", detail: error.Message, diagnostic: failure?.Diagnostic);
         }
         finally
         {
@@ -268,11 +271,19 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             Emit("frontend-ready", "frontend", _frontendPeer.Process, port: _frontendUri.Port, contract: _contract);
             _frontendPeer.StartReading(_messages.Writer, "frontend", 0);
         }
-        catch
+        catch (Exception error)
         {
             if (_frontendPeer is null)
             {
                 pipe.Dispose();
+            }
+            if (_frontend is not null && !_stop.Task.IsCompleted
+                && error is not SessionFailure { Diagnostic: not null })
+            {
+                throw Failure(error is SessionFailure failure ? failure.Code
+                    : error is OperationCanceledException ? "frontend_startup_timeout" : "frontend_start_failed",
+                    error is SessionFailure ? error.Message : "The frontend did not establish authenticated readiness.", _frontend,
+                    "Inspect the frontend logs and adapter configuration before starting again.");
             }
             throw;
         }
@@ -322,7 +333,9 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 var application = Process.GetProcessById(_applicationPeer.Process.Id);
                 _ = application.Handle;
-                _application = new Child(application, "application", application.WaitForExitAsync());
+                var watcher = settings.WatchBackend ? WatcherChild() : null;
+                _application = new Child(application, "application", application.WaitForExitAsync(),
+                    watcher?.StdoutLog, watcher?.StderrLog);
                 Emit("process-started", "application", application);
                 ReadContract(); // The SDK's initial build must agree with the generated files it just produced.
             }
@@ -365,7 +378,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         {
             if (_frontend!.Exited.IsCompleted || _frontendPeer!.Reader!.IsCompleted)
             {
-                throw new SessionFailure("frontend_exited", "The owned frontend ended; the application is being stopped.");
+                throw Failure("frontend_exited", "The owned frontend ended; the application is being stopped.", _frontend,
+                    "Inspect the frontend logs, correct the failure and start the session again.");
             }
 
             if (_application?.Exited.IsCompleted == true)
@@ -374,7 +388,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 if (_application.Process.ExitCode != 0)
                 {
                     _stopReason = "application_failed";
-                    throw new SessionFailure("application_exited", "The owned application exited unexpectedly; inspect application stdout/stderr logs.");
+                    throw Failure("application_exited", "The owned application exited unexpectedly.", _application,
+                        "Inspect the application logs and correct the failure before starting again.");
                 }
 
                 _stopReason = "application_closed";
@@ -383,7 +398,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
 
             if (_watcher?.Exited?.IsCompleted == true)
             {
-                throw new SessionFailure("watcher_exited", "The backend update owner exited; inspect its retained logs.");
+                throw Failure("watcher_exited", "The backend update owner exited.", WatcherChild(),
+                    "Inspect the watcher logs and correct the failure before starting again.");
             }
 
             if (settings.DebuggerBackend && Volatile.Read(ref _debuggerPaused) != 0)
@@ -398,7 +414,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                     throw new SessionFailure("application_disconnected", "Application control ended without confirmed process exit.");
                 }
 
-                throw new SessionFailure("application_ready_timeout", "The native application did not confirm rendered DOM and a typed call.");
+                throw Failure("application_ready_timeout", "The native application did not confirm rendered DOM and a typed call.", _application,
+                    "Check application startup, document errors and contract matching; inspect the application output in the debugger when debugger-owned.");
             }
 
             if (tick.IsCompleted)
@@ -526,7 +543,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
     {
         if (incoming.Role == "frontend")
         {
-            throw new SessionFailure("frontend_disconnected", "The frontend adapter's ownership connection ended.");
+            throw Failure("frontend_disconnected", "The frontend adapter's ownership connection ended.", _frontend,
+                "Inspect the frontend logs and adapter configuration before starting again.");
         }
 
         if (incoming.Generation != _generation)
@@ -740,7 +758,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 throw new SessionStoppedException();
             }
-            throw new SessionFailure(child.Role + "_start_failed", "The process exited before readiness; inspect its stdout/stderr logs.");
+            throw Failure(child.Role + "_start_failed", "The process exited before readiness.", child,
+                "Inspect the retained logs and correct the startup failure before starting again.");
         }
 
         try
@@ -753,7 +772,8 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
             {
                 throw new SessionStoppedException();
             }
-            throw new SessionFailure(timeoutCode, "The adapter did not establish readiness before the startup deadline.");
+            throw Failure(timeoutCode, "The adapter did not establish readiness before the startup deadline.", child,
+                "Inspect the retained logs and check the adapter startup and ownership configuration.");
         }
     }
 
@@ -800,18 +820,22 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         IReadOnlyDictionary<string, string> variables, OwnedProcessJob? job = null)
     {
         var stem = role + "-" + _generation.ToString(CultureInfo.InvariantCulture);
+        var stdout = Path.Combine(_directory, stem + ".stdout.log");
+        var stderr = Path.Combine(_directory, stem + ".stderr.log");
         Process process;
         try
         {
             process = (job ?? _job!).Start(executable, arguments, directory, variables,
-                Path.Combine(_directory, stem + ".stdout.log"), Path.Combine(_directory, stem + ".stderr.log"));
+                stdout, stderr);
         }
         catch (Exception error) when (error is IOException or Win32Exception or ArgumentException)
         {
-            throw new SessionFailure(role + "_launch_failed", error.Message);
+            throw new SessionFailure(role + "_launch_failed", $"Could not launch the {role} process.",
+                new DevelopmentProcessDiagnostic(role, null, File.Exists(stdout) ? stdout : null,
+                    File.Exists(stderr) ? stderr : null, "Check the configured executable, working directory and access permissions."));
         }
         Emit("process-started", role, process);
-        return new Child(process, role, process.WaitForExitAsync());
+        return new Child(process, role, process.WaitForExitAsync(), stdout, stderr);
     }
 
     private void TrackProcesses()
@@ -877,18 +901,23 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
 
     private void Emit(string kind, string? role = null, Process? process = null, string? code = null, string? detail = null,
         long? window = null, int? port = null, string? contract = null, string? document = null, string? correlation = null,
-        long? updateRevision = null)
+        long? updateRevision = null, DevelopmentProcessDiagnostic? diagnostic = null)
     {
-        detail = detail?.Replace(_token, "[redacted]", StringComparison.Ordinal)
-            .Replace(_credential, "[redacted]", StringComparison.Ordinal)
-            .Replace(_httpScope, "[session-path]", StringComparison.Ordinal);
+        if (diagnostic is not null)
+        {
+            diagnostic = diagnostic with { StdoutLog = Redact(diagnostic.StdoutLog), StderrLog = Redact(diagnostic.StderrLog) };
+            detail += $" Role: {diagnostic.Role}. Exit code: {diagnostic.ExitCode?.ToString(CultureInfo.InvariantCulture) ?? "unavailable"}."
+                + $" Stdout: {diagnostic.StdoutLog ?? "not captured by coordinator"}. Stderr: {diagnostic.StderrLog ?? "not captured by coordinator"}."
+                + " " + diagnostic.NextAction;
+        }
+        detail = Redact(detail);
         lock (_eventGate)
         {
             try
             {
                 observer(new DevelopmentEvent(kind, _session, _generation, DateTimeOffset.UtcNow, Environment.ProcessId,
                     role, process?.Id, process?.StartTime.ToUniversalTime(), code, detail, window, port, contract, document,
-                    correlation, updateRevision, _selectedInputs?.Hash, _selectedInputs?.Revision));
+                    correlation, updateRevision, _selectedInputs?.Hash, _selectedInputs?.Revision, diagnostic));
             }
             catch (Exception error)
             {
@@ -898,12 +927,33 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         }
     }
 
-    private sealed record Child(Process Process, string Role, Task Exited);
+    private string? Redact(string? value)
+    {
+        return value?.Replace(_token, "[redacted]", StringComparison.Ordinal)
+            .Replace(_credential, "[redacted]", StringComparison.Ordinal)
+            .Replace(_httpScope, "[session-path]", StringComparison.Ordinal);
+    }
+
+    private static DevelopmentProcessDiagnostic Describe(Child child, string nextAction)
+    {
+        return new DevelopmentProcessDiagnostic(child.Role, child.Process.HasExited ? child.Process.ExitCode : null,
+            child.StdoutLog, child.StderrLog, nextAction);
+    }
+
+    private static SessionFailure Failure(string code, string message, Child? child, string nextAction)
+    {
+        return new SessionFailure(code, message, child is null ? null : Describe(child, nextAction), child);
+    }
+
+    private sealed record Child(Process Process, string Role, Task Exited, string? StdoutLog = null, string? StderrLog = null);
     private sealed record Incoming(string Role, int Generation, SessionMessage? Message);
     private sealed class SessionStoppedException : Exception;
-    private sealed class SessionFailure(string code, string message) : Exception(message)
+    private sealed class SessionFailure(string code, string message, DevelopmentProcessDiagnostic? diagnostic = null,
+        Child? child = null) : Exception(message)
     {
         internal string Code { get; } = code;
+        internal DevelopmentProcessDiagnostic? Diagnostic { get; } = diagnostic;
+        internal Child? Child { get; } = child;
     }
 
     private sealed class Peer(SessionConnection connection, Process process, SessionMessage hello) : IAsyncDisposable

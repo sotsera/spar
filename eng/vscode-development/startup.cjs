@@ -28,6 +28,8 @@ exports.run = async () => {
       { name: "malformed-configuration", settings: configuration.malformed, code: "configuration_invalid" },
       { name: "blocked-session-directory", settings: configuration.blocked, code: "session_directory_unavailable" },
     ];
+    if (configuration.sessionFailure) cases.push({ name: "frontend-session-failure", settings: configuration.sessionFailure,
+      sessionFailure: true, code: "frontend_start_failed" });
     for (const scenario of cases) {
       const first = events.length;
       await vscode.debug.startDebugging(folder, { type: "spar", request: "launch", name: "Spar startup failure",
@@ -36,13 +38,25 @@ exports.run = async () => {
       const current = events.slice(first);
       const exited = current.find((event) => event.kind === "coordinator-exited");
       assert.notEqual(exited.code, 0);
-      assert(!current.some((event) => event.kind === "session-started" || event.kind === "application-ready"));
+      assert(!current.some((event) => event.kind === "application-ready"));
+      assert.equal(current.some((event) => event.kind === "session-started"), !!scenario.sessionFailure);
       if (scenario.code) {
-        const failure = current.find((event) => event.kind === "startup-error");
+        const failure = current.find((event) => event.kind === (scenario.sessionFailure ? "session-failed" : "startup-error"));
         assert(failure);
         assert.equal(failure.code, scenario.code);
-        assert(!("session" in failure) && !("generation" in failure));
-        assert(failure.message.length <= 1024);
+        if (scenario.sessionFailure) {
+          assert.equal(failure.diagnostic.role, "frontend");
+          assert.equal(failure.diagnostic.exitCode, 23);
+          for (const log of [failure.diagnostic.stdoutLog, failure.diagnostic.stderrLog]) {
+            assert(fs.existsSync(log));
+            assert(failure.detail.includes(log));
+          }
+          assert(!JSON.stringify(current).includes("D2-private-child-output"));
+          assert(current.some((event) => event.kind === "owned-processes-ended"));
+        } else {
+          assert(!("session" in failure) && !("generation" in failure));
+          assert(failure.message.length <= 1024);
+        }
       }
       receipt.cases.push({ name: scenario.name, code: scenario.code, exitCode: exited.code, passed: true });
     }

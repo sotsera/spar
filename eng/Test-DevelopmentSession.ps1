@@ -21,6 +21,23 @@ $sessions = [Collections.Generic.List[object]]::new()
 $results = [Collections.Generic.List[object]]::new()
 $unrelated = $null
 
+function Assert-FailureDiagnostic($Session, [string]$Role, $ExitCode, [switch]$NoLogs) {
+  $failure = $Session.Events | Where-Object kind -eq 'session-failed' | Select-Object -Last 1
+  Assert-Condition ($failure.role -eq $Role -and $failure.diagnostic.role -eq $Role) 'Failure omitted the actual process role.'
+  Assert-Condition ($failure.diagnostic.exitCode -eq $ExitCode) 'Failure invented or omitted the observed exit code.'
+  Assert-Condition ($failure.diagnostic.nextAction.Length -gt 0) 'Failure omitted its next action.'
+  foreach ($stream in @('stdout','stderr')) {
+    $path = $failure.diagnostic."${stream}Log"
+    if ($NoLogs) {
+      Assert-Condition ($null -eq $path) 'A launch rejected before opening output invented a log path.'
+      continue
+    }
+    Assert-Condition ($path -and (Test-Path -LiteralPath $path)) 'Failure did not point to a retained log.'
+    Assert-Condition ($failure.detail.Contains($path)) 'Failure presentation did not name its exact log.'
+  }
+  Assert-Condition (!(Read-Shared $Session.Log).Contains('D2-private-child-output')) 'Raw child output leaked into public events.'
+}
+
 try {
   $unrelated = Start-UnrelatedProcess
 
@@ -105,6 +122,8 @@ try {
   $owned.Kill()
   $results.Add((Confirm-Exit $session 1 -Unrelated $unrelated -VerifyRender:($VerifyRender -and $fixture.Name -eq 'hmr-restart-close')))
   Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'session-failed' -and $_.code -in @('frontend_exited','frontend_disconnected') }).Count -eq 1) 'Frontend exit had no distinct diagnostic.'
+  $failure = $session.Events | Where-Object kind -eq 'session-failed' | Select-Object -Last 1
+  Assert-Condition ($failure.diagnostic.role -eq 'frontend' -and (Test-Path -LiteralPath $failure.diagnostic.stderrLog)) 'Post-readiness failure omitted its frontend log.'
 
   $fixture = New-Fixture 'application-exit' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
   $session = Start-Session $fixture -Coordinator $coordinatorPath -WorkingDirectory $repository
@@ -137,6 +156,27 @@ try {
   $sessions.Add($session)
   $results.Add((Confirm-Exit $session 1 -Unrelated $unrelated -VerifyRender:($VerifyRender -and $fixture.Name -eq 'hmr-restart-close')))
   Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'session-failed' -and $_.code -eq 'frontend_startup_timeout' }).Count -eq 1) 'Startup timeout had no distinct diagnostic.'
+  Assert-FailureDiagnostic $session 'frontend' $null
+
+  $fixture = New-Fixture 'frontend-start-failure' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
+  $fixture.Settings.frontend.fileName = 'node'
+  $fixture.Settings.frontend.arguments = @('-e', 'console.error("D2-private-child-output " + process.env.SPAR_DEV_TOKEN); process.exit(23)')
+  $session = Start-Session $fixture -Coordinator $coordinatorPath -WorkingDirectory $repository
+  $sessions.Add($session)
+  $results.Add((Confirm-Exit $session 1 -Unrelated $unrelated))
+  Assert-FailureDiagnostic $session 'frontend' 23
+  $failure = $session.Events | Where-Object kind -eq 'session-failed' | Select-Object -Last 1
+  Assert-Condition ((Read-Shared $failure.diagnostic.stderrLog).Contains('D2-private-child-output')) 'The raw child log was not retained.'
+
+  $fixture = New-Fixture 'selected-build-failure' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
+  $fixture.Settings.project = Join-Path $fixture.Directory 'Fail.csproj'
+  '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup><Target Name="FailForTest" BeforeTargets="BeforeBuild"><Error Text="D2-private-child-output" /></Target></Project>' |
+    Set-Content -LiteralPath $fixture.Settings.project
+  $session = Start-Session $fixture $true -Coordinator $coordinatorPath -WorkingDirectory $repository
+  $sessions.Add($session)
+  $results.Add((Confirm-Exit $session 1 -Unrelated $unrelated))
+  Assert-FailureDiagnostic $session 'build' 1
+  Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'process-started' -and $_.role -eq 'frontend' }).Count -eq 0) 'A failed selected build launched a frontend.'
 
   $fixture = New-Fixture 'application-start-failure' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
   $fixture.Settings.application = Join-Path $fixture.Directory 'missing-application.exe'
@@ -144,6 +184,7 @@ try {
   $sessions.Add($session)
   $results.Add((Confirm-Exit $session 1 -Unrelated $unrelated -VerifyRender:($VerifyRender -and $fixture.Name -eq 'hmr-restart-close')))
   Assert-Condition (@($session.Events | Where-Object { $_.kind -eq 'session-failed' -and $_.code -eq 'application_launch_failed' }).Count -eq 1) 'Application launch failure had no distinct diagnostic.'
+  Assert-FailureDiagnostic $session 'application' $null -NoLogs
 
   $fixture = New-Fixture 'client-credential-denied' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
   $main = Join-Path $fixture.Frontend 'src/main.tsx'

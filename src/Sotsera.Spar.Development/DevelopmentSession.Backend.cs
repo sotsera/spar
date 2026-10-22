@@ -112,9 +112,9 @@ public sealed partial class DevelopmentSession
             if (_build.Process.ExitCode != 0)
             {
                 PublishBuildDiagnostics();
-                Emit("backend-stopped", code: "build_failed",
-                    detail: "Edit not applied. Correct the source to rebuild automatically; inspect build logs.",
-                    correlation: _restartCorrelation);
+                Emit("backend-stopped", "build", _build.Process, code: "build_failed",
+                    detail: "Edit not applied.", correlation: _restartCorrelation,
+                    diagnostic: Describe(_build, "Correct the source to rebuild automatically; for initial startup, start the session again."));
                 if (_restartPending)
                 {
                     Emit("command-completed", code: "build_failed", correlation: _restartCorrelation);
@@ -156,7 +156,9 @@ public sealed partial class DevelopmentSession
         }
         catch (Exception error) when (error is IOException or Win32Exception or ArgumentException)
         {
-            throw new SessionFailure("watcher_launch_failed", error.Message);
+            throw new SessionFailure("watcher_launch_failed", "Could not launch the backend watcher.",
+                new DevelopmentProcessDiagnostic("watcher", null, null, null,
+                    "Check the dotnet executable, working directory and access permissions."));
         }
         finally
         {
@@ -166,7 +168,13 @@ public sealed partial class DevelopmentSession
             }
         }
         _watcher.OpenOutput(_directory, _generation);
-        return new Child(_watcher.Process!, "watcher", _watcher.Exited!);
+        return WatcherChild();
+    }
+
+    private Child WatcherChild()
+    {
+        var stem = Path.Combine(_directory, "watcher-" + _generation.ToString(CultureInfo.InvariantCulture));
+        return new Child(_watcher!.Process!, "watcher", _watcher.Exited!, stem + ".stdout.log", stem + ".stderr.log");
     }
 
     private bool ReadWatchOutput()
@@ -240,7 +248,8 @@ public sealed partial class DevelopmentSession
         }
         if (_frontend!.Exited.IsCompleted || _frontendPeer!.Reader!.IsCompleted)
         {
-            throw new SessionFailure("frontend_exited", "The frontend ended while the backend was retiring.");
+            throw Failure("frontend_exited", "The frontend ended while the backend was retiring.", _frontend,
+                "Inspect the frontend logs and correct the failure before starting again.");
         }
 
         _pendingUpdate = 0;

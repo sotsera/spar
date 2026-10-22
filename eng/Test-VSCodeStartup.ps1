@@ -4,7 +4,8 @@ param(
   [string]$Coordinator = 'tools/Spar.Dev/bin/Debug/net10.0-windows/Spar.Dev.exe',
   [string]$ExtensionDirectory = "$PSScriptRoot/../tools/Spar.VSCode",
   [string]$EvidenceDirectory = 'artifacts/vscode-startup',
-  [switch]$PauseForVisualReview
+  [switch]$PauseForVisualReview,
+  [switch]$IncludeSessionFailure
 )
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $EvidenceDirectory ('startup-' + [guid]::NewGuid().ToString('N'))))
@@ -15,13 +16,26 @@ New-Item -ItemType Directory -Force $workspace, (Join-Path $profile 'User') | Ou
   Set-Content (Join-Path $profile 'User/settings.json')
 $coordinator = (Resolve-Path -LiteralPath $Coordinator).Path
 $extension = (Resolve-Path -LiteralPath $ExtensionDirectory).Path
+$sessionFailure = $null
+if ($IncludeSessionFailure) {
+  $repository = Split-Path $PSScriptRoot
+  $sessionFailure = Join-Path $workspace 'frontend-failure.json'
+  @{ project = Join-Path $repository 'fixtures/Spar.NativeSample/Spar.NativeSample.csproj'
+    application = Join-Path $repository 'fixtures/Spar.NativeSample/bin/Debug/net10.0-windows/win-x64/Spar.NativeSample.exe'
+    contractFile = Join-Path $repository 'fixtures/Spar.NativeSample.Contracts/BackendContract.cs'
+    generatedClient = Join-Path $repository 'fixtures/Spar.NativeSample/frontend/src/generated/client.js'
+    sessionDirectory = Join-Path $workspace 'sessions'; shutdownTimeoutSeconds = 2
+    frontend = @{ fileName = 'node'; workingDirectory = $workspace
+      arguments = @('-e', 'console.error("D2-private-child-output"); process.exit(23)') } } |
+    ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $sessionFailure
+}
 '{' | Set-Content (Join-Path $workspace 'malformed.json')
 'This is a file, not a directory.' | Set-Content (Join-Path $workspace 'session-file')
 @{ project = "$workspace/app.csproj"; application = "$workspace/app.exe"; contractFile = "$workspace/contract.cs"
   sessionDirectory = "$workspace/session-file"; frontend = @{ workingDirectory = $workspace } } | ConvertTo-Json -Depth 5 |
   Set-Content (Join-Path $workspace 'blocked.json')
 @{ coordinator = $coordinator; missing = "$workspace/absent.json"; malformed = "$workspace/malformed.json"
-  blocked = "$workspace/blocked.json"; pauseForVisualReview = $PauseForVisualReview.IsPresent } | ConvertTo-Json |
+  blocked = "$workspace/blocked.json"; sessionFailure = $sessionFailure; pauseForVisualReview = $PauseForVisualReview.IsPresent } | ConvertTo-Json |
   Set-Content (Join-Path $workspace 'probe.json')
 $codeScript = (Get-Command $CodeCommand).Source
 $codeExecutable = [IO.Path]::GetFullPath((Join-Path (Split-Path $codeScript) '../Code.exe'))

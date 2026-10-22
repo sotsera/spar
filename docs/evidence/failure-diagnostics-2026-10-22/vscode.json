@@ -1,0 +1,37 @@
+{
+  "outcome": "passed",
+  "vscode": "1.143.0",
+  "cases": [
+    {
+      "name": "missing-coordinator",
+      "exitCode": -4058,
+      "passed": true
+    },
+    {
+      "name": "missing-configuration",
+      "code": "configuration_not_found",
+      "exitCode": 1,
+      "passed": true
+    },
+    {
+      "name": "malformed-configuration",
+      "code": "configuration_invalid",
+      "exitCode": 1,
+      "passed": true
+    },
+    {
+      "name": "blocked-session-directory",
+      "code": "session_directory_unavailable",
+      "exitCode": 1,
+      "passed": true
+    },
+    {
+      "name": "frontend-session-failure",
+      "code": "frontend_start_failed",
+      "exitCode": 1,
+      "passed": true
+    }
+  ],
+  "debugSessionsStarted": 0,
+  "presentation": "output-panel-visually-reviewed"
+}

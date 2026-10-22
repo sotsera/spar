@@ -23,7 +23,11 @@ public sealed record DevelopmentEvent(string Kind, string Session, int Generatio
     int CoordinatorProcessId, string? Role = null, int? ProcessId = null, DateTime? ProcessStartedAtUtc = null,
     string? Code = null, string? Detail = null, long? Window = null, int? Port = null, string? Contract = null,
     string? Document = null, string? Correlation = null, long? UpdateRevision = null,
-    string? BuildSourceHash = null, long? SourceRevision = null);
+    string? BuildSourceHash = null, long? SourceRevision = null, DevelopmentProcessDiagnostic? Diagnostic = null);
+
+/// <summary>Retained process output locations. A missing exit code means exit was not observed at failure time.</summary>
+public sealed record DevelopmentProcessDiagnostic(string Role, int? ExitCode, string? StdoutLog, string? StderrLog,
+    string NextAction);
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, MaxDepth = 16,
     UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
