@@ -37,6 +37,8 @@ The default fixtures come from `fixtures/Spar.NativeSample`. `-MinimalApplicatio
 | `Test-ExternalConsumer.ps1` | Sessions, processes | Fresh package consumer updates/restart followed by copied AOT and explicit CoreCLR delivery |
 | `Test-ProcessImage.ps1` | Process image query, suspended native fixture | Exact image paths for live system console and ordinary executable children before their loaders run; termination followed by actual exit |
 | `Measure-DevelopmentLatency.ps1` | Backend fixtures, sessions, processes | Explicit startup/CSS/backend/rebuild latency samples, preserved patch state and actual replacement/session exit; no automatic timing threshold |
+| `Measure-StartupCost.ps1` | Sessions, processes; caller-prepared source or package config | Repeated native/typed startup and explicit-command rebuild, retained phase events and actual exit; no timing threshold |
+| `Test-ContractIncrementality.ps1` | Isolated contracts and forwarding generator probe | Source or fresh-package repeated builds, generated assembly/resource contents, changed inputs, missing outputs, design-time and clean behavior |
 
 Existing executable commands and evidence destinations remain available. The internal
 `-LibraryOnly` switches were removed and are rejected before setup: import the helper files

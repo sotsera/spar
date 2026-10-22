@@ -92,6 +92,19 @@ include file writes, public-event logging and the existing 50 ms polling. Pinned
 log durations provide diagnostic attribution only. Machine-dependent measurements are explicit
 and have no automatic CI time budget. See the [baseline and next target](evidence/development-latency-2026-10-22/README.md).
 
+For startup/build attribution over a caller-prepared ordinary source or fresh package project,
+use the separate explicit driver:
+
+```powershell
+pwsh -NoProfile -File eng/Measure-StartupCost.ps1 -SettingsFile C:/work/SparConsumer/spar.dev.json -Coordinator C:/work/SparConsumer/.tools/Spar.Dev.exe -Sessions 3 -EvidenceDirectory artifacts/startup-cost/consumer
+```
+
+It copies the configuration into a new evidence location, preserving absolute project/frontend paths.
+Each session waits for native/typed and watcher readiness, requests an unchanged-source `restart`,
+and verifies retirement, frontend survival and final process exit. This measures command rebuild,
+not source-save latency. Dependencies and matching tools must already be prepared, with no other
+suite rebuilding shared outputs. Every sample and phase event is retained; caches are not cleared.
+
 Process failures and selected-build rejection include a `diagnostic` object: failed `role`, `exitCode`
 when actual exit has been observed, exact retained `stdoutLog`/`stderrLog` paths, and `nextAction`.
 The failure detail repeats these locations for existing terminal and editor event views. A timeout

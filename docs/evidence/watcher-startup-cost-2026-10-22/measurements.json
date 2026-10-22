@@ -1,0 +1,1193 @@
+{
+  "base": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+  "ordinaryBuilds": [
+    {
+      "run": 1,
+      "execSummary": [
+        "      162 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 3113.3002,
+      "variant": "baseline-a"
+    },
+    {
+      "run": 2,
+      "execSummary": [
+        "      158 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 2011.9942,
+      "variant": "baseline-a"
+    },
+    {
+      "run": 3,
+      "execSummary": [
+        "      159 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 2020.1137,
+      "variant": "baseline-a"
+    },
+    {
+      "run": 4,
+      "execSummary": [
+        "      163 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 1967.931,
+      "variant": "baseline-a"
+    },
+    {
+      "run": 5,
+      "execSummary": [
+        "      162 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 1973.1547,
+      "variant": "baseline-a"
+    },
+    {
+      "run": 1,
+      "execSummary": [],
+      "elapsedMs": 1881.5347,
+      "variant": "candidate"
+    },
+    {
+      "run": 2,
+      "execSummary": [],
+      "elapsedMs": 1852.8327,
+      "variant": "candidate"
+    },
+    {
+      "run": 3,
+      "execSummary": [],
+      "elapsedMs": 1819.128,
+      "variant": "candidate"
+    },
+    {
+      "run": 4,
+      "execSummary": [],
+      "elapsedMs": 1815.8342,
+      "variant": "candidate"
+    },
+    {
+      "run": 5,
+      "execSummary": [],
+      "elapsedMs": 1815.3448,
+      "variant": "candidate"
+    },
+    {
+      "run": 1,
+      "execSummary": [
+        "      161 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 8100.6401,
+      "variant": "baseline-b"
+    },
+    {
+      "run": 2,
+      "execSummary": [
+        "      160 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 1972.7672,
+      "variant": "baseline-b"
+    },
+    {
+      "run": 3,
+      "execSummary": [
+        "      160 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 2009.2849,
+      "variant": "baseline-b"
+    },
+    {
+      "run": 4,
+      "execSummary": [
+        "      158 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 1954.3111,
+      "variant": "baseline-b"
+    },
+    {
+      "run": 5,
+      "execSummary": [
+        "      159 ms  Exec                                       1 calls"
+      ],
+      "elapsedMs": 1985.3408,
+      "variant": "baseline-b"
+    }
+  ],
+  "nativeSeries": [
+    {
+      "name": "source-before",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "AE6E6C13C803344C9A24DA53D9B2FCAC7ADC7A85C001A8C81A868511D875E0A3",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "0C2FCBBEBD83FC40CC17DD9017230FACBF460672AD090C06F6C1FDDCCDA68DE7",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 53517.727,
+          "commandRebuildMs": 12935.5849,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 4948,
+            "startedAtUtc": "2026-10-22T19:52:51.4012188Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 2,
+          "startupMs": 8719.6321,
+          "commandRebuildMs": 7912.4713,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 52228,
+            "startedAtUtc": "2026-10-22T19:53:42.1945254Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 3,
+          "startupMs": 13704.1616,
+          "commandRebuildMs": 7906.3321,
+          "cleanup": {
+            "scenario": "startup-cost-3",
+            "passed": true,
+            "coordinatorProcessId": 44008,
+            "startedAtUtc": "2026-10-22T19:53:59.2176035Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        }
+      ]
+    },
+    {
+      "name": "package-before",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "AE6E6C13C803344C9A24DA53D9B2FCAC7ADC7A85C001A8C81A868511D875E0A3",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "0C2FCBBEBD83FC40CC17DD9017230FACBF460672AD090C06F6C1FDDCCDA68DE7",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 10625.6181,
+          "commandRebuildMs": 5722.3727,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 73152,
+            "startedAtUtc": "2026-10-22T19:54:21.6942061Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 2,
+          "startupMs": 7383.0982,
+          "commandRebuildMs": 7373.572,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 60376,
+            "startedAtUtc": "2026-10-22T19:54:38.4257898Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 3,
+          "startupMs": 12662.9556,
+          "commandRebuildMs": 6665.453,
+          "cleanup": {
+            "scenario": "startup-cost-3",
+            "passed": true,
+            "coordinatorProcessId": 67672,
+            "startedAtUtc": "2026-10-22T19:54:53.6265341Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        }
+      ]
+    },
+    {
+      "name": "source-after",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "AE6E6C13C803344C9A24DA53D9B2FCAC7ADC7A85C001A8C81A868511D875E0A3",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "C4E541967B007024FC2887FEDBA36A67A7B4200E02BD186D6AE07243A8CCC98A",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 12199.0481,
+          "commandRebuildMs": 8106.249,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 63596,
+            "startedAtUtc": "2026-10-22T19:58:17.7275952Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 2,
+          "startupMs": 8953.6872,
+          "commandRebuildMs": 9048.7466,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 21892,
+            "startedAtUtc": "2026-10-22T19:58:38.3281554Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 3,
+          "startupMs": 10002.1271,
+          "commandRebuildMs": 18308.2019,
+          "cleanup": {
+            "scenario": "startup-cost-3",
+            "passed": true,
+            "coordinatorProcessId": 62456,
+            "startedAtUtc": "2026-10-22T19:58:56.7341204Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        }
+      ]
+    },
+    {
+      "name": "package-after",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "AE6E6C13C803344C9A24DA53D9B2FCAC7ADC7A85C001A8C81A868511D875E0A3",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "C4E541967B007024FC2887FEDBA36A67A7B4200E02BD186D6AE07243A8CCC98A",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 6493.8854,
+          "commandRebuildMs": 5595.1903,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 59728,
+            "startedAtUtc": "2026-10-22T19:59:25.8033099Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 2,
+          "startupMs": 6469.8364,
+          "commandRebuildMs": 5608.7124,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 25912,
+            "startedAtUtc": "2026-10-22T19:59:38.2948047Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 3,
+          "startupMs": 6392.7608,
+          "commandRebuildMs": 5662.2835,
+          "cleanup": {
+            "scenario": "startup-cost-3",
+            "passed": true,
+            "coordinatorProcessId": 51804,
+            "startedAtUtc": "2026-10-22T19:59:50.6983896Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        }
+      ]
+    },
+    {
+      "name": "package-return-control",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "AE6E6C13C803344C9A24DA53D9B2FCAC7ADC7A85C001A8C81A868511D875E0A3",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "0C2FCBBEBD83FC40CC17DD9017230FACBF460672AD090C06F6C1FDDCCDA68DE7",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 6460.8406,
+          "commandRebuildMs": 5584.2882,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 59156,
+            "startedAtUtc": "2026-10-22T20:00:03.5833972Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        },
+        {
+          "run": 2,
+          "startupMs": 6501.7243,
+          "commandRebuildMs": 5662.2201,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 66416,
+            "startedAtUtc": "2026-10-22T20:00:15.9695857Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": null
+        }
+      ]
+    },
+    {
+      "name": "incremental-baseline-a",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "19B0EBC30B7A726FA614E92565F57E7A5625D3A93BC8F16516D2301E6FBA254C",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "0C2FCBBEBD83FC40CC17DD9017230FACBF460672AD090C06F6C1FDDCCDA68DE7",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 9118.4446,
+          "commandRebuildMs": 8002.1993,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 11348,
+            "startedAtUtc": "2026-10-22T20:17:37.0268236Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": [
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:37.570741+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:39.6046673+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "starting-frontend",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:39.7679551+02:00"
+            },
+            {
+              "kind": "frontend-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:40.3556325+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:40.3583932+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:45.4484037+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:46.0243892+02:00"
+            },
+            {
+              "kind": "backend-restarting",
+              "code": "owner_restart",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:46.1050975+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:46.1715629+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:46.1817417+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:17:46.4981434+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:17:48.5277718+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:17:48.662925+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:17:53.6141162+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:17:54.0235961+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:17:54.1689304+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:17:54.1776647+02:00"
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "startupMs": 18717.6388,
+          "commandRebuildMs": 8050.6188,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 50848,
+            "startedAtUtc": "2026-10-22T20:17:54.4968102Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": [
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:54.9326926+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:56.9107819+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "starting-frontend",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:57.0562726+02:00"
+            },
+            {
+              "kind": "frontend-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:57.6313099+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:17:57.6337794+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:12.5827455+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:13.1415334+02:00"
+            },
+            {
+              "kind": "backend-restarting",
+              "code": "owner_restart",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:13.2164188+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:13.2742614+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:13.28389+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:13.5978518+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:15.5888394+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:15.7241775+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:20.7305993+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:21.1454663+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:21.3191205+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:21.3292253+02:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "incremental-candidate",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "19B0EBC30B7A726FA614E92565F57E7A5625D3A93BC8F16516D2301E6FBA254C",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "0C2FCBBEBD83FC40CC17DD9017230FACBF460672AD090C06F6C1FDDCCDA68DE7",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 8501.1861,
+          "commandRebuildMs": 7660.3891,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 65436,
+            "startedAtUtc": "2026-10-22T20:18:34.4545325Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": [
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:34.8958327+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:36.7189174+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "starting-frontend",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:36.8631582+02:00"
+            },
+            {
+              "kind": "frontend-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:37.4627459+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:37.4652532+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:42.2988356+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:42.8249402+02:00"
+            },
+            {
+              "kind": "backend-restarting",
+              "code": "owner_restart",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:42.9554843+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:43.0224587+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:43.0331829+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:43.3500826+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:45.1525324+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:45.2868073+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:50.1084338+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:50.5089368+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:50.6721664+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:50.6916855+02:00"
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "startupMs": 8397.6566,
+          "commandRebuildMs": 7635.3735,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 8624,
+            "startedAtUtc": "2026-10-22T20:18:50.9558336Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": [
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:51.3901241+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:53.2004121+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "starting-frontend",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:53.3471567+02:00"
+            },
+            {
+              "kind": "frontend-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:53.9267075+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:53.9291798+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:58.7311996+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:59.2595235+02:00"
+            },
+            {
+              "kind": "backend-restarting",
+              "code": "owner_restart",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:59.3557725+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:59.4137715+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:18:59.424987+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:18:59.7407614+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:01.5493498+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:01.6842002+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:06.5184637+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:06.9123436+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:07.0409769+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:07.0561382+02:00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "incremental-baseline-b",
+      "passed": true,
+      "source": "92772675c4a82fc13a747d1f8ea1470f5d7e479c",
+      "workingTreeDirty": true,
+      "driverSha256": "19B0EBC30B7A726FA614E92565F57E7A5625D3A93BC8F16516D2301E6FBA254C",
+      "coordinatorSha256": "C587CC2C5DCADBBD46DD0A7B5C7E146E7AC204EF64E8B294F9F76BA6ADC9755B",
+      "developmentSha256": "0C2FCBBEBD83FC40CC17DD9017230FACBF460672AD090C06F6C1FDDCCDA68DE7",
+      "cleaned": true,
+      "runs": [
+        {
+          "run": 1,
+          "startupMs": 8871.2464,
+          "commandRebuildMs": 8004.3292,
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 42632,
+            "startedAtUtc": "2026-10-22T20:19:25.7977351Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": [
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:26.233394+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:28.2634818+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "starting-frontend",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:28.4096173+02:00"
+            },
+            {
+              "kind": "frontend-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:28.9812769+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:28.9837771+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:34.0111324+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:34.5602721+02:00"
+            },
+            {
+              "kind": "backend-restarting",
+              "code": "owner_restart",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:34.6695693+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:34.7344123+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:34.7453964+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:35.060485+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:37.0410704+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:37.1758716+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:42.1627436+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:42.5763597+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:42.7360514+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:42.7455404+02:00"
+            }
+          ]
+        },
+        {
+          "run": 2,
+          "startupMs": 8706.7485,
+          "commandRebuildMs": 7985.7138,
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 53304,
+            "startedAtUtc": "2026-10-22T20:19:43.0984211Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "events": [
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:43.5329139+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:45.5276807+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "starting-frontend",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:45.6731291+02:00"
+            },
+            {
+              "kind": "frontend-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:46.2505823+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:46.2530634+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:51.2002407+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:51.7607862+02:00"
+            },
+            {
+              "kind": "backend-restarting",
+              "code": "owner_restart",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:51.806985+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:51.8664937+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 1,
+              "observedAt": "2026-10-22T22:19:51.8778461+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "building",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:52.1906895+02:00"
+            },
+            {
+              "kind": "build-selected",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:54.2073449+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "launching-application",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:54.3406494+02:00"
+            },
+            {
+              "kind": "session-phase",
+              "code": "awaiting-readiness",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:59.2849628+02:00"
+            },
+            {
+              "kind": "application-ready",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:59.6829275+02:00"
+            },
+            {
+              "kind": "application-stopped",
+              "code": null,
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:59.8460551+02:00"
+            },
+            {
+              "kind": "watcher-stopped",
+              "code": "owned_tool_stop",
+              "generation": 2,
+              "observedAt": "2026-10-22T22:19:59.8553502+02:00"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "baselineTargetsSha256": "BDE20F33538E76C314410CD684D97781CF6FECE63C376DD66B738F4DA8E3FADB",
+  "candidateTargetsSha256": "91D7B51442D64A9AD4E7D82FCB5D3DFB47A56AE70FB5B057B16F07012E7CE85F"
+}

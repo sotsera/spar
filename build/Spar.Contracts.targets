@@ -1,17 +1,25 @@
 <Project>
   <PropertyGroup>
     <SparContractToolProject Condition="'$(SparContractTool)' == ''">$(MSBuildThisFileDirectory)../tools/Spar.ContractGenerator/Spar.ContractGenerator.csproj</SparContractToolProject>
+    <_SparContractTargetsFile>$(MSBuildThisFileFullPath)</_SparContractTargetsFile>
   </PropertyGroup>
 
-  <Target Name="GenerateSparContract" BeforeTargets="AssignTargetPaths;CoreCompile" DependsOnTargets="ResolveProjectReferences">
+  <Target Name="_RegisterSparContractFiles" BeforeTargets="BeforeClean">
     <PropertyGroup>
       <SparGeneratedDirectory>$(IntermediateOutputPath)spar/</SparGeneratedDirectory>
     </PropertyGroup>
 
+    <ItemGroup>
+      <_SparContractOutputs Include="$(SparGeneratedDirectory)Contract.g.cs;$(SparGeneratedDirectory)client.js;$(SparGeneratedDirectory)client.d.ts" />
+      <FileWrites Include="@(_SparContractOutputs);$(SparGeneratedDirectory)generator.inputs;$(SparGeneratedDirectory)generation.complete" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_PrepareSparContractGeneration" Condition="'$(DesignTimeBuild)' != 'true'">
     <MSBuild Projects="$(SparContractToolProject)" Targets="GetTargetPath"
              RemoveProperties="RuntimeIdentifier;PublishAot;SelfContained"
              Properties="Configuration=$(Configuration);TargetFramework=net10.0"
-             Condition="'$(DesignTimeBuild)' != 'true' and '$(SparContractTool)' == ''">
+             Condition="'$(SparContractTool)' == ''">
       <Output TaskParameter="TargetOutputs" ItemName="_SparContractTool" />
     </MSBuild>
 
@@ -19,8 +27,35 @@
       <_SparContractTool Include="$(SparContractTool)" />
     </ItemGroup>
 
-    <Exec Command="dotnet &quot;@(_SparContractTool)&quot; &quot;$(SparContractFile)&quot; &quot;$(SparGeneratedDirectory)Contract.g.cs&quot; &quot;$(SparGeneratedDirectory)client.js&quot; &quot;$(SparGeneratedDirectory)client.d.ts&quot;"
-          Condition="'$(DesignTimeBuild)' != 'true'" />
+    <PropertyGroup>
+      <_SparContractToolDirectory>@(_SparContractTool->'%(RootDir)%(Directory)')</_SparContractToolDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_SparContractToolInputs Include="$(_SparContractToolDirectory)*" />
+    </ItemGroup>
+
+    <!-- Identity changes also invalidate generation when a replacement input has an older timestamp. -->
+    <MakeDir Directories="$(SparGeneratedDirectory)" />
+    <WriteLinesToFile File="$(SparGeneratedDirectory)generator.inputs"
+                      Lines="$(SparContractFile);@(_SparContractTool);@(_SparContractToolInputs);$(_SparContractTargetsFile);$(NETCoreSdkVersion)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <Delete Files="$(SparGeneratedDirectory)generation.complete"
+            Condition="!Exists('$(SparGeneratedDirectory)Contract.g.cs') or !Exists('$(SparGeneratedDirectory)client.js') or !Exists('$(SparGeneratedDirectory)client.d.ts')" />
+  </Target>
+
+  <Target Name="_GenerateSparContractOutputs" Condition="'$(DesignTimeBuild)' != 'true'"
+          Inputs="$(SparContractFile);@(_SparContractToolInputs);$(_SparContractTargetsFile);$(SparGeneratedDirectory)generator.inputs"
+          Outputs="$(SparGeneratedDirectory)generation.complete">
+    <Exec Command="dotnet &quot;@(_SparContractTool)&quot; &quot;$(SparContractFile)&quot; &quot;$(SparGeneratedDirectory)Contract.g.cs&quot; &quot;$(SparGeneratedDirectory)client.js&quot; &quot;$(SparGeneratedDirectory)client.d.ts&quot;" />
+    <Error Condition="!Exists('$(SparGeneratedDirectory)Contract.g.cs') or !Exists('$(SparGeneratedDirectory)client.js') or !Exists('$(SparGeneratedDirectory)client.d.ts')"
+           Text="Contract generation did not create all three outputs." />
+    <Touch Files="$(SparGeneratedDirectory)generation.complete" AlwaysCreate="true" />
+  </Target>
+
+  <!-- Registration and client copying run even when generation is up to date. -->
+  <Target Name="GenerateSparContract" BeforeTargets="AssignTargetPaths;CoreCompile"
+          DependsOnTargets="ResolveProjectReferences;_RegisterSparContractFiles;_PrepareSparContractGeneration;_GenerateSparContractOutputs">
 
     <ItemGroup Condition="Exists('$(SparGeneratedDirectory)Contract.g.cs')">
       <Compile Include="$(SparGeneratedDirectory)Contract.g.cs" />
