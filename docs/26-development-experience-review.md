@@ -78,3 +78,11 @@ D3 follows with truthful progress and withdrawn-readiness presentation. Selectio
 implementation; current implementation PRs and their revision-bound checks establish acceptance.
 Its [execution record](evidence/progress-readiness-2026-10-22/README.md) retains actual terminal/native
 and VS Code status/recovery checks, visual review, original interrupted attempts and validation limits.
+
+D2 merged in [PR #48](https://github.com/sotsera/spar/pull/48) as `20dc5a5`; D3 merged in
+[PR #49](https://github.com/sotsera/spar/pull/49) as `0f65de5`. The selected D1–D3 sequence is complete.
+The [documentation status](README.md#status-and-deferred-work) owns current integration status;
+the original findings and evidence above retain their source revisions. After D3, the maintainer selected
+startup and save-to-change latency measurement before choosing a performance change.
+The [measured baseline](evidence/development-latency-2026-10-22/README.md) identifies full-build and SDK
+watcher startup as the next investigation target, with all samples and cleanup evidence retained.

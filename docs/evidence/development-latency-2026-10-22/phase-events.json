@@ -1,0 +1,542 @@
+[
+  {
+    "run": "run-1",
+    "sweep": "baseline",
+    "events": [
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:20:49.4650068+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:20:54.2681587+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "starting-frontend",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:20:55.4883135+02:00"
+      },
+      {
+        "kind": "frontend-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:20:56.0901565+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:20:56.0928364+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:08.6724257+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:09.2285503+02:00"
+      },
+      {
+        "kind": "backend-restarting",
+        "code": "startup_or_dependency_changed",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:10.6889797+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:10.7508765+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:10.7632829+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:11.0788999+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:14.3234852+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:14.4578266+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:20.1038751+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:20.5285142+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:20.7209691+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:20.7352112+02:00"
+      }
+    ]
+  },
+  {
+    "run": "run-2",
+    "sweep": "baseline",
+    "events": [
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:21.4964943+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:23.4981141+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "starting-frontend",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:23.6419759+02:00"
+      },
+      {
+        "kind": "frontend-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:24.2226843+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:24.2251562+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:29.1576289+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:29.7128306+02:00"
+      },
+      {
+        "kind": "backend-restarting",
+        "code": "startup_or_dependency_changed",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:31.3760995+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:31.4365824+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:31.4541995+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:31.7632843+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:35.0210284+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:35.1548158+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:40.8720837+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:41.2674528+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:41.4190983+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:41.4273903+02:00"
+      }
+    ]
+  },
+  {
+    "run": "run-3",
+    "sweep": "baseline",
+    "events": [
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:42.1309301+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:44.1111214+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "starting-frontend",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:44.2551897+02:00"
+      },
+      {
+        "kind": "frontend-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:44.8285942+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:44.8311389+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:49.7589857+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:50.2793129+02:00"
+      },
+      {
+        "kind": "backend-restarting",
+        "code": "startup_or_dependency_changed",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:51.9767041+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:52.0374694+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:21:52.0570671+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:52.3626894+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:55.5564714+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:21:55.6941576+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:22:01.4688396+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:22:01.8799103+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:22:02.0406407+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:22:02.0600279+02:00"
+      }
+    ]
+  },
+  {
+    "run": "run-1",
+    "sweep": "confirmation",
+    "events": [
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:24:58.8415957+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:03.603941+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "starting-frontend",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:03.7529673+02:00"
+      },
+      {
+        "kind": "frontend-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:04.3514836+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:04.3540427+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:10.5006243+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:11.0853619+02:00"
+      },
+      {
+        "kind": "backend-restarting",
+        "code": "startup_or_dependency_changed",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:12.7113681+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:12.7727363+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:12.7833797+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:13.1007983+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:16.3330674+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:16.4680786+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:22.4559241+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:22.8847748+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:23.0387601+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:23.0472049+02:00"
+      }
+    ]
+  },
+  {
+    "run": "run-2",
+    "sweep": "confirmation",
+    "events": [
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:23.8782194+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:25.8815739+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "starting-frontend",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:26.0288721+02:00"
+      },
+      {
+        "kind": "frontend-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:26.607065+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:26.609487+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:31.6096304+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:32.1513519+02:00"
+      },
+      {
+        "kind": "backend-restarting",
+        "code": "startup_or_dependency_changed",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:33.8243788+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:33.8839664+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 1,
+        "observedAt": "2026-10-22T21:25:33.8936552+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "building",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:34.2096592+02:00"
+      },
+      {
+        "kind": "build-selected",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:42.4973891+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "launching-application",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:42.6332222+02:00"
+      },
+      {
+        "kind": "session-phase",
+        "code": "awaiting-readiness",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:49.7824837+02:00"
+      },
+      {
+        "kind": "application-ready",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:50.209498+02:00"
+      },
+      {
+        "kind": "application-stopped",
+        "code": null,
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:50.3545156+02:00"
+      },
+      {
+        "kind": "watcher-stopped",
+        "code": "owned_tool_stop",
+        "generation": 2,
+        "observedAt": "2026-10-22T21:25:50.365336+02:00"
+      }
+    ]
+  }
+]

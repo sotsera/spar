@@ -1,0 +1,586 @@
+{
+  "schema": 1,
+  "startupTimelines": [
+    {
+      "events": [
+        {
+          "kind": "session-started",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:20:49.1353968+02:00",
+          "coordinatorProcessId": 54436,
+          "detail": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\development-latency\\baseline\\latency-6cd719a632e74cf0a4b6371ce9cadf6a\\sessions\\0fc7050f932044e8b4bd2f2519ea76e2"
+        },
+        {
+          "kind": "session-phase",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:20:49.4650068+02:00",
+          "coordinatorProcessId": 54436,
+          "code": "building",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "build-selected",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:20:54.2681587+02:00",
+          "coordinatorProcessId": 54436,
+          "detail": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:20:55.4883135+02:00",
+          "coordinatorProcessId": 54436,
+          "code": "starting-frontend",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "frontend-ready",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:20:56.0901565+02:00",
+          "coordinatorProcessId": 54436,
+          "role": "frontend",
+          "processId": 64880,
+          "processStartedAtUtc": "2026-10-22T19:20:55.8452177Z",
+          "port": 50330,
+          "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:20:56.0928364+02:00",
+          "coordinatorProcessId": 54436,
+          "code": "launching-application",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:08.6724257+02:00",
+          "coordinatorProcessId": 54436,
+          "code": "awaiting-readiness",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "watcher-ready",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:08.9310617+02:00",
+          "coordinatorProcessId": 54436,
+          "role": "watcher",
+          "processId": 72692,
+          "processStartedAtUtc": "2026-10-22T19:20:56.0943584Z",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "application-ready",
+          "session": "0fc7050f932044e8b4bd2f2519ea76e2",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:09.2285503+02:00",
+          "coordinatorProcessId": 54436,
+          "role": "application",
+          "processId": 66412,
+          "processStartedAtUtc": "2026-10-22T19:21:06.2391355Z",
+          "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+          "document": "5e4ea3328e9045c28606af56524652d9",
+          "buildSourceHash": "8a1109ced9bc5f5e1104117db69f98c25f0defde009283c7662de8df61fef3f8",
+          "sourceRevision": 0
+        }
+      ],
+      "run": 1
+    },
+    {
+      "events": [
+        {
+          "kind": "session-started",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:21.1622309+02:00",
+          "coordinatorProcessId": 47116,
+          "detail": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\development-latency\\baseline\\latency-6cd719a632e74cf0a4b6371ce9cadf6a\\sessions\\df88b9f73dda4091aa6deb8b1d3ef3f7"
+        },
+        {
+          "kind": "session-phase",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:21.4964943+02:00",
+          "coordinatorProcessId": 47116,
+          "code": "building",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "build-selected",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:23.4981141+02:00",
+          "coordinatorProcessId": 47116,
+          "detail": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:23.6419759+02:00",
+          "coordinatorProcessId": 47116,
+          "code": "starting-frontend",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "frontend-ready",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:24.2226843+02:00",
+          "coordinatorProcessId": 47116,
+          "role": "frontend",
+          "processId": 65608,
+          "processStartedAtUtc": "2026-10-22T19:21:24.0112203Z",
+          "port": 54218,
+          "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:24.2251562+02:00",
+          "coordinatorProcessId": 47116,
+          "code": "launching-application",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:29.1576289+02:00",
+          "coordinatorProcessId": 47116,
+          "code": "awaiting-readiness",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "watcher-ready",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:29.4386269+02:00",
+          "coordinatorProcessId": 47116,
+          "role": "watcher",
+          "processId": 41988,
+          "processStartedAtUtc": "2026-10-22T19:21:24.2267686Z",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "application-ready",
+          "session": "df88b9f73dda4091aa6deb8b1d3ef3f7",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:29.7128306+02:00",
+          "coordinatorProcessId": 47116,
+          "role": "application",
+          "processId": 24112,
+          "processStartedAtUtc": "2026-10-22T19:21:29.0465923Z",
+          "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+          "document": "68fc6043ee044f92b6ac07bb4e98df8e",
+          "buildSourceHash": "a80f300e9452ee36b89d99a8a528cadb5dadcbc8d5ea4269d62bee4c98b18ae3",
+          "sourceRevision": 0
+        }
+      ],
+      "run": 2
+    },
+    {
+      "events": [
+        {
+          "kind": "session-started",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:41.8013201+02:00",
+          "coordinatorProcessId": 46732,
+          "detail": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\development-latency\\baseline\\latency-6cd719a632e74cf0a4b6371ce9cadf6a\\sessions\\a1098effb86643a9867725842293d4fb"
+        },
+        {
+          "kind": "session-phase",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:42.1309301+02:00",
+          "coordinatorProcessId": 46732,
+          "code": "building",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "build-selected",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:44.1111214+02:00",
+          "coordinatorProcessId": 46732,
+          "detail": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:44.2551897+02:00",
+          "coordinatorProcessId": 46732,
+          "code": "starting-frontend",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "frontend-ready",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:44.8285942+02:00",
+          "coordinatorProcessId": 46732,
+          "role": "frontend",
+          "processId": 71424,
+          "processStartedAtUtc": "2026-10-22T19:21:44.6152513Z",
+          "port": 60266,
+          "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:44.8311389+02:00",
+          "coordinatorProcessId": 46732,
+          "code": "launching-application",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "session-phase",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:49.7589857+02:00",
+          "coordinatorProcessId": 46732,
+          "code": "awaiting-readiness",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "watcher-ready",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:50.0323043+02:00",
+          "coordinatorProcessId": 46732,
+          "role": "watcher",
+          "processId": 37408,
+          "processStartedAtUtc": "2026-10-22T19:21:44.8328437Z",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        },
+        {
+          "kind": "application-ready",
+          "session": "a1098effb86643a9867725842293d4fb",
+          "generation": 1,
+          "observedAt": "2026-10-22T21:21:50.2793129+02:00",
+          "coordinatorProcessId": 46732,
+          "role": "application",
+          "processId": 47784,
+          "processStartedAtUtc": "2026-10-22T19:21:49.6470671Z",
+          "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+          "document": "b0e5a29f9aee4200b566f166c8093a34",
+          "buildSourceHash": "3bef1fa8f25c666a4d7c7432bf9e21ba9aa23c75c0b73cdf7f5b0ebd9cce1b0f",
+          "sourceRevision": 0
+        }
+      ],
+      "run": 3
+    }
+  ],
+  "sessionsClosed": true,
+  "endpoint": "Typed UI snapshot after committed native WebView DOM/layout opportunity; not pixel latency",
+  "samples": [
+    {
+      "metric": "startup-first-ready",
+      "run": 1,
+      "edit": 0,
+      "elapsedMs": 22157.46
+    },
+    {
+      "metric": "startup-first-update-ready",
+      "run": 1,
+      "edit": 0,
+      "elapsedMs": 22168.55
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 1,
+      "edit": 1,
+      "elapsedMs": 64.29
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 1,
+      "edit": 1,
+      "elapsedMs": 641.24
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 1,
+      "edit": 2,
+      "elapsedMs": 71.46
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 1,
+      "edit": 2,
+      "elapsedMs": 129.34
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 1,
+      "edit": 3,
+      "elapsedMs": 71.34
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 1,
+      "edit": 3,
+      "elapsedMs": 184.78
+    },
+    {
+      "metric": "startup-save-to-replacement-dom",
+      "run": 1,
+      "edit": 1,
+      "elapsedMs": 9994.71
+    },
+    {
+      "metric": "startup-repeated-ready",
+      "run": 2,
+      "edit": 0,
+      "elapsedMs": 8779.98
+    },
+    {
+      "metric": "startup-repeated-update-ready",
+      "run": 2,
+      "edit": 0,
+      "elapsedMs": 8780.14
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 2,
+      "edit": 1,
+      "elapsedMs": 65.59
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 2,
+      "edit": 1,
+      "elapsedMs": 708.52
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 2,
+      "edit": 2,
+      "elapsedMs": 72.43
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 2,
+      "edit": 2,
+      "elapsedMs": 191.77
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 2,
+      "edit": 3,
+      "elapsedMs": 71.56
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 2,
+      "edit": 3,
+      "elapsedMs": 185.17
+    },
+    {
+      "metric": "startup-save-to-replacement-dom",
+      "run": 2,
+      "edit": 1,
+      "elapsedMs": 10083.79
+    },
+    {
+      "metric": "startup-repeated-ready",
+      "run": 3,
+      "edit": 0,
+      "elapsedMs": 8670.19
+    },
+    {
+      "metric": "startup-repeated-update-ready",
+      "run": 3,
+      "edit": 0,
+      "elapsedMs": 8670.36
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 3,
+      "edit": 1,
+      "elapsedMs": 54.4
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 3,
+      "edit": 1,
+      "elapsedMs": 872.87
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 3,
+      "edit": 2,
+      "elapsedMs": 61.62
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 3,
+      "edit": 2,
+      "elapsedMs": 221.24
+    },
+    {
+      "metric": "css-save-to-dom",
+      "run": 3,
+      "edit": 3,
+      "elapsedMs": 57.81
+    },
+    {
+      "metric": "backend-save-to-dom",
+      "run": 3,
+      "edit": 3,
+      "elapsedMs": 146.45
+    },
+    {
+      "metric": "startup-save-to-replacement-dom",
+      "run": 3,
+      "edit": 1,
+      "elapsedMs": 10066.77
+    }
+  ],
+  "cache": "Shared tools/dependencies prebuilt; isolated app first build, then same app incremental builds; fresh session profile each time; no OS/cache reset",
+  "sentinelClosed": true,
+  "tooling": {
+    "driverSha256": "F26E8162E33A9B6D154A2EA81D43DCA99D96896B77D81C4CCA79211113285422",
+    "node": "v24.21.0",
+    "os": "Microsoft Windows 10.0.26220",
+    "dotnet": "10.0.402",
+    "npm": "11.19.0",
+    "powershell": "7.6.5",
+    "coordinatorSha256": "BA2056734B714C6AD5575D0E77D96D35B3E0D829DEA7B7F6E322422815D66230",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "developmentSha256": "9CC0A5D41367B52596CC68240ED9F41C8496341F460F8D43D0F2965D3FB186B1"
+  },
+  "clock": "Stopwatch; includes file write, 50ms observer polling and public event logging",
+  "summary": [
+    {
+      "metric": "backend-save-to-dom",
+      "count": 9,
+      "minMs": 129.34,
+      "maxMs": 872.87,
+      "medianMs": 191.77
+    },
+    {
+      "metric": "css-save-to-dom",
+      "count": 9,
+      "minMs": 54.4,
+      "maxMs": 72.43,
+      "medianMs": 65.59
+    },
+    {
+      "metric": "startup-first-ready",
+      "count": 1,
+      "minMs": 22157.46,
+      "maxMs": 22157.46,
+      "medianMs": 22157.46
+    },
+    {
+      "metric": "startup-first-update-ready",
+      "count": 1,
+      "minMs": 22168.55,
+      "maxMs": 22168.55,
+      "medianMs": 22168.55
+    },
+    {
+      "metric": "startup-repeated-ready",
+      "count": 2,
+      "minMs": 8670.19,
+      "maxMs": 8779.98,
+      "medianMs": 8725.085
+    },
+    {
+      "metric": "startup-repeated-update-ready",
+      "count": 2,
+      "minMs": 8670.36,
+      "maxMs": 8780.14,
+      "medianMs": 8725.25
+    },
+    {
+      "metric": "startup-save-to-replacement-dom",
+      "count": 3,
+      "minMs": 9994.71,
+      "maxMs": 10083.79,
+      "medianMs": 10066.77
+    }
+  ],
+  "passed": true,
+  "workingTreeDirty": true,
+  "source": "0f65de55fa4bf6e2817df6cd144f9d2264321754",
+  "cleanup": [
+    {
+      "scenario": "latency-1",
+      "passed": true,
+      "coordinatorProcessId": 54436,
+      "startedAtUtc": "2026-10-22T19:20:47.6989279Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    },
+    {
+      "scenario": "latency-2",
+      "passed": true,
+      "coordinatorProcessId": 47116,
+      "startedAtUtc": "2026-10-22T19:21:21.0588228Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    },
+    {
+      "scenario": "latency-3",
+      "passed": true,
+      "coordinatorProcessId": 46732,
+      "startedAtUtc": "2026-10-22T19:21:41.6987282Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    }
+  ]
+}

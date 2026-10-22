@@ -67,6 +67,31 @@ Automation sends bounded UTF-8 JSON lines on stdin:
 
 Stdout events identify session, generation, timestamps, process creation identity, contract/document, and command correlation when applicable. Child logs live in the session directory. `--events-file <new-path>` mirrors events to an exclusively created, shared-readable file. `--no-build` requires an already matching build. `--owner-stdin` makes EOF or invalid owner input end ownership with the forced policy; use it for editor/AI pipe ownership. Without it, stdin EOF alone does not end a session.
 
+## Measure development latency
+
+After a matching solution build and fixture dependency installation, run this from the repository root
+with no other local suite owning shared tool outputs:
+
+```powershell
+dotnet build Spar.slnx --disable-build-servers
+npm ci --prefix fixtures/Spar.NativeSample/frontend --ignore-scripts --include=optional
+pwsh -NoProfile -File eng/Measure-DevelopmentLatency.ps1 -EvidenceDirectory artifacts/development-latency/local
+```
+
+The explicit measurement driver runs three terminal watcher sessions over one isolated project,
+with three CSS and supported backend edits per session and one startup-source rebuild per session.
+It times source writes through a typed snapshot of the changed native WebView DOM after a layout
+opportunity, checks retained state for patches and actual retirement for replacements, and verifies
+all retained process exits and unrelated-process survival. It does not time pixels or editor saves.
+`-Sessions` (2–10) and `-EditsPerSession` (1–10) bound the sample count.
+
+The receipt retains every sample, min/median/max, tooling/binary identities, startup events and
+cleanup receipts, including partial data on failure. First project builds and repeated incremental
+builds are separate; caches are not cleared and every session has a fresh profile. Stopwatch timings
+include file writes, public-event logging and the existing 50 ms polling. Pinned SDK restore/build
+log durations provide diagnostic attribution only. Machine-dependent measurements are explicit
+and have no automatic CI time budget. See the [baseline and next target](evidence/development-latency-2026-10-22/README.md).
+
 Process failures and selected-build rejection include a `diagnostic` object: failed `role`, `exitCode`
 when actual exit has been observed, exact retained `stdoutLog`/`stderrLog` paths, and `nextAction`.
 The failure detail repeats these locations for existing terminal and editor event views. A timeout

@@ -1,0 +1,52 @@
+diff --git a/eng/Measure-DevelopmentLatency.ps1 b/artifacts/development-latency/initial-driver.ps1
+index 911b76d..5912e00 100644
+--- a/eng/Measure-DevelopmentLatency.ps1
++++ b/artifacts/development-latency/initial-driver.ps1
+@@ -18,7 +18,6 @@ $owned = [Collections.Generic.List[object]]::new()
+ $samples = [Collections.Generic.List[object]]::new()
+ $receipts = [Collections.Generic.List[object]]::new()
+ $timelines = [Collections.Generic.List[object]]::new()
+-$watcherBuilds = [Collections.Generic.List[object]]::new()
+ $unrelated = $null
+ $completed = $false
+ $sessionsClosed = $false
+@@ -105,22 +104,6 @@ try {
+     Assert-Condition ($frontendProcess -and !$frontendProcess.HasExited) 'Original frontend did not survive replacement.'
+     Send-Command $session 'stop'
+     $receipts.Add((Confirm-Exit $session -Unrelated $unrelated))
+-    $sessionDirectory = ($session.Events | Where-Object kind -eq 'session-started' | Select-Object -First 1).detail
+-    foreach ($log in Get-ChildItem -LiteralPath $sessionDirectory -Filter 'watcher-*.stderr.log') {
+-      $commands = @{}
+-      foreach ($line in Get-Content -LiteralPath $log.FullName) {
+-        # Diagnostic attribution for the pinned SDK; never a readiness or acceptance condition.
+-        if ($line -match "arguments '(restore|build) .*: process id (\d+)$") {
+-          $commands[$Matches[2]] = $Matches[1]
+-        } elseif ($line -match 'Process id (\d+) ran for (\d+)ms and exited with exit code (\d+)\.') {
+-          $id = $Matches[1]
+-          if ($commands.ContainsKey($id)) {
+-            $watcherBuilds.Add(@{ run = $run; watcher = $log.BaseName; command = $commands[$id]
+-              elapsedMs = [int]$Matches[2]; exitCode = [int]$Matches[3] })
+-          }
+-        }
+-      }
+-    }
+     Write-Output "Measured session $run/$Sessions; actual owned exit verified."
+   }
+   $completed = $true
+@@ -137,7 +120,7 @@ try {
+         $values = @($_.Group.elapsedMs | Sort-Object)
+         $middle = [int][Math]::Floor($values.Count / 2)
+         $median = if ($values.Count % 2) { $values[$middle] } else { ($values[$middle - 1] + $values[$middle]) / 2 }
+-        [pscustomobject]@{ metric = $_.Name; count = $values.Count; minMs = $values[0]; medianMs = $median; maxMs = $values[-1] }
++        @{ metric = $_.Name; count = $values.Count; minMs = $values[0]; medianMs = $median; maxMs = $values[-1] }
+       })
+       @{ schema = 1; source = $source; workingTreeDirty = $dirty; tooling = $tooling
+         passed = ($completed -and $sessionsClosed -and $sentinelClosed -and $receipts.Count -eq $Sessions)
+@@ -145,7 +128,6 @@ try {
+         cache = 'Shared tools/dependencies prebuilt; isolated app first build, then same app incremental builds; fresh session profile each time; no OS/cache reset'
+         endpoint = 'Typed UI snapshot after committed native WebView DOM/layout opportunity; not pixel latency'
+         samples = $samples.ToArray(); summary = $summary; startupTimelines = $timelines.ToArray()
+-        watcherBuilds = $watcherBuilds.ToArray()
+         cleanup = $receipts.ToArray(); sessionsClosed = $sessionsClosed; sentinelClosed = $sentinelClosed
+       } | ConvertTo-Json -Depth 12 | Set-Content (Join-Path $root 'receipt.json')
+     }
