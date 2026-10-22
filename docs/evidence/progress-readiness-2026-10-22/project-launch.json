@@ -1,0 +1,26 @@
+[
+  {
+    "scenario": "native-close",
+    "cleanup": "graceful",
+    "processes": 13,
+    "passed": true
+  },
+  {
+    "scenario": "debugger-stop",
+    "cleanup": "forced_cleanup",
+    "processes": 13,
+    "passed": true
+  },
+  {
+    "scenario": "contract-change",
+    "cleanup": "graceful",
+    "processes": 13,
+    "passed": true
+  },
+  {
+    "scenario": "coordinator-crash",
+    "cleanup": "kernel_job_close",
+    "processes": 13,
+    "passed": true
+  }
+]

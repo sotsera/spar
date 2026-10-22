@@ -24,7 +24,15 @@ Use **Spar: Restart backend** (also available from the Spar status item) after a
 
 Use the debugger's **Stop**, or **Spar: Stop development session**, to force termination of owned work and processes. This is explicitly recorded as forced cleanup; it is different from coordinated retirement. Native window close uses the ordinary graceful application-close path. The debugger toolbar's Restart is not the coordinated restart command: do not use it to preserve retirement semantics. The adapter treats a debugger restart/disconnect request as a stop when it observes one; only Spar's command supplies the verified relaunch flow.
 
-The **Spar development** output retains structured public events; the status item distinguishes ready, rejected edits, updating/restarting, and failed builds. C# diagnostics retain their normal source navigation in Problems. Full-build compiler diagnostics are also placed in the **Spar build** diagnostic collection with file/line/column. Unsupported Hot Reload edits may be reported only in Dev Kit's **.NET Hot Reload** output: inspect that output and invoke the explicit Spar restart command. Spar does not parse Dev Kit's private logs or certify its interactive modal decisions.
+The **Spar development** output summarizes public phases and diagnostics; the status item distinguishes
+building, frontend startup, debugger launch/pause, waiting for application readiness, ready, rejected edits,
+retirement and failed builds. A new bridge connection or withdrawn readiness clears ready/updated;
+metadata updates cannot restore readiness before the current document confirms it. Public events remain
+available through the adapter event API; the CLI can retain them with `--events-file`. Private launch
+capabilities never enter this output. C# diagnostics retain their normal source navigation in Problems.
+Full-build errors appear in **Spar build** with file/line/column. Unsupported edits may be reported only
+in Dev Kit's **.NET Hot Reload** output: inspect it and invoke explicit Spar restart. Spar does not parse
+Dev Kit's private logs or certify its modal decisions.
 
 Preflight `startup-error` records automatically reveal **Spar development**, even before a session starts.
 A nonzero coordinator exit also reveals it and prints the exit result, including stderr-only failures.

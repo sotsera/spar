@@ -29,8 +29,10 @@ restart/build/admission decisions in the coordinator; its
 The accepted [development startup and diagnostics review](26-development-experience-review.md), merged
 in PR #43, records reproduced preflight/frontend failures and source-based presentation gaps. The
 maintainer selected D1 startup errors; its [execution record](evidence/startup-errors-2026-10-21/README.md)
-tracks implementation validation. D2 log discovery and D3 phase/readiness presentation remain separate
-future scopes, without changing milestone 1's historical acceptance requirements.
+tracks implementation validation. The maintainer subsequently selected D2 log discovery followed by
+D3 phase/readiness presentation in separate changes. D2 is in [PR #48](https://github.com/sotsera/spar/pull/48)
+with [local evidence](evidence/failure-diagnostics-2026-10-22/README.md); implementation PRs and exact-run
+results establish acceptance without changing milestone 1's historical requirements.
 
 The [CI reliability review](27-ci-reliability-review.md) traces the later D1 run's timeout to slow
 repeated npm installs and records the advisory-network/timing repair. The current
@@ -44,7 +46,7 @@ is not the recommended starting application. Each topic owns its commands; this 
 
 ## Status and deferred work
 
-Status reconciled after [PR #45](https://github.com/sotsera/spar/pull/45), merged as `4331e53` on 2026-10-22.
+Status reconciled after [PR #47](https://github.com/sotsera/spar/pull/47), merged as `ce290da` on 2026-10-22.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)
@@ -65,8 +67,10 @@ This section owns the current repository status; individual evidence records rem
   Supported-machine/editor/WebView2 coverage, distribution/license review, installers/signing/updates and
   performance budgets remain release-readiness work. See the [original acceptance limits](19-milestone-1-acceptance.md#release-readiness-follow-up).
 - D1 startup errors and the focused npm-network/timing repair are merged in PR #45. Its full required
-  [repair run](https://github.com/sotsera/spar/actions/runs/39743204775) passed before merge. D2/D3 remain
-  separate scopes; the fixed-suite reorganization addresses CI execution and test selection first.
+  [repair run](https://github.com/sotsera/spar/actions/runs/39743204775) passed before merge. Fixed suites
+  merged in PR #46; PR #47 skips automatic fork push jobs. Its [upstream main run](https://github.com/sotsera/spar/actions/runs/39810559292)
+  passed, and the [fork sync run](https://github.com/ghidello/spar/actions/runs/39812901885) skipped both jobs.
+  D2/D3 are selected separately; neither implementation acceptance nor merge follows from that CI cleanup.
 - The [product direction](02-product-direction.md#deferred-scope) defines deferred features; MCP and optional
   memory observation are proposals, not shipped capabilities or prerequisites retroactively added to milestone 1.
 

@@ -224,6 +224,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
 
     private async Task StartFrontendAsync()
     {
+        Emit("session-phase", code: "starting-frontend");
         var name = "spar-frontend-" + Guid.NewGuid().ToString("N");
         var pipe = CreateServer(name);
         var variables = new Dictionary<string, string>(settings.Frontend.Environment, StringComparer.OrdinalIgnoreCase)
@@ -301,6 +302,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
         _awaitingInitialReadiness = true;
         _lastBackendRevision = 0;
         _pendingUpdate = 0;
+        Emit("session-phase", code: "launching-application");
         var name = "spar-app-" + Guid.NewGuid().ToString("N");
         var pipe = CreateServer(name);
         try
@@ -356,6 +358,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
                 Generation: _generation, InspectionEnabled: enableInspection), timeout.Token).ConfigureAwait(false);
             _applicationPeer.StartReading(_messages.Writer, "application", _generation);
             _readyDeadline = DateTimeOffset.UtcNow.AddSeconds(settings.StartupTimeoutSeconds);
+            Emit("session-phase", code: "awaiting-readiness");
             return true;
         }
         catch
@@ -819,6 +822,7 @@ public sealed partial class DevelopmentSession(DevelopmentSettings settings, Act
     private Child Start(string role, string executable, IReadOnlyList<string> arguments, string directory,
         IReadOnlyDictionary<string, string> variables, OwnedProcessJob? job = null)
     {
+        _startupStop.Token.ThrowIfCancellationRequested();
         var stem = role + "-" + _generation.ToString(CultureInfo.InvariantCulture);
         var stdout = Path.Combine(_directory, stem + ".stdout.log");
         var stderr = Path.Combine(_directory, stem + ".stderr.log");

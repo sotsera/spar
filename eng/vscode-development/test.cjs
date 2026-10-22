@@ -8,6 +8,7 @@ exports.run = async () => {
   const root = folder.uri.fsPath;
   const events = [];
   const stops = [];
+  const statuses = [];
   const receipt = { outcome: "running", vscode: vscode.version,
     csharp: vscode.extensions.getExtension("ms-dotnettools.csharp")?.packageJSON.version,
     devkit: vscode.extensions.getExtension("ms-dotnettools.csdevkit")?.packageJSON.version };
@@ -52,6 +53,7 @@ exports.run = async () => {
     api = await vscode.extensions.getExtension("sotsera.spar-development").activate();
     api.onEvent((event) => {
       events.push(event);
+      statuses.push({ kind: event.kind, code: event.code, generation: event.generation, text: api.getStatus() });
       fs.appendFileSync(path.join(root, "coordinator.ndjson"), JSON.stringify(event) + "\n");
     });
     await waitFor(async () => (await vscode.tasks.fetchTasks({ type: "dotnet" })).length, "project system");
@@ -70,9 +72,35 @@ exports.run = async () => {
     const options = JSON.parse(fs.readFileSync(path.join(root, "owner.json"), "utf8").replace(/^\uFEFF/, ""));
     await vscode.debug.startDebugging(folder, { name: "Spar integrated", type: "spar", request: "launch", spar: options });
     const stopped = await waitFor(() => stops.find((item) => item.reason === "breakpoint"), "native backend breakpoint");
+    await waitFor(() => api.getStatus() === "Spar: debugger paused", "paused status");
     vscode.debug.removeBreakpoints([breakpoint]);
     await stopped.session.customRequest("continue", { threadId: stopped.threadId });
     await waitFor(() => snapshot(), "typed readiness");
+    assert.equal(api.getStatus(), "Spar: ready");
+    if (options.reviewPresentation) {
+      // Review after the initial typed read completed, so human inspection cannot expire that request.
+      const threads = await stopped.session.customRequest('threads');
+      const firstStop = stops.length;
+      await stopped.session.customRequest('pause', { threadId: threads.threads[0].id });
+      const reviewStop = await waitFor(() => stops.slice(firstStop).find(item => item.reason === 'pause'), 'review pause');
+      await waitFor(() => api.getStatus() === 'Spar: debugger paused', 'review pause status');
+      fs.writeFileSync(path.join(root, 'review-paused'), 'Review debugger paused after initial typed readiness');
+      await waitFor(() => fs.existsSync(path.join(root, 'review-paused.done')), 'paused status visual review', 180);
+      await reviewStop.session.customRequest('continue', { threadId: reviewStop.threadId });
+      await waitFor(() => api.getStatus() === 'Spar: ready', 'ready status after Continue');
+      // Pause may select generated framework source; restore the consumer editor for its public diagnostics.
+      await vscode.window.showTextDocument(source);
+    }
+    if (options.reloadStatus) {
+      const old = events.findLast(item => item.kind === 'application-ready');
+      api.send({ command: 'inspect', detail: 'click', id: 'reload-status', session: old.session, generation: old.generation,
+        document: old.document, contract: old.contract, selector: '#reload-status' });
+      await waitFor(() => events.some(item => item.kind === 'application-ready' && item.document !== old.document), 'reload readiness');
+      assert(statuses.filter(item => item.kind === 'bridge-connected').length >= 2);
+      assert(statuses.filter(item => item.kind === 'bridge-connected').every(item => !['Spar: ready','Spar: updated'].includes(item.text)));
+      assert.equal(api.getStatus(), 'Spar: ready');
+      await waitFor(() => snapshot()?.document !== old.document, 'replacement document snapshot');
+    }
     // Public typed readiness is not a C# Dev Kit Hot Reload initialization receipt.
     // Match the precursor's settling period; retain failures rather than retrying mutations.
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -123,6 +151,7 @@ exports.run = async () => {
     assert.equal(events.filter((item) => item.kind === "debugger-process-owned").length, 2);
     await edit(vscode.Uri.file(path.join(root, "contracts/BackendContract.cs")), "record CounterReply(int Value)", "record CounterReply(int Value, int Revision)");
     await waitFor(() => events.some((item) => item.kind === "backend-stopped" && item.code === "build_failed"), "contract rebuild failure stays stopped");
+    assert.equal(api.getStatus(), 'Spar: build failed');
     const buildDiagnostic = await waitFor(() => vscode.languages.getDiagnostics(source).find((item) => item.source === "Spar build"), "build diagnostic with source location");
     const diagnosticEditor = await vscode.window.showTextDocument(source, { selection: buildDiagnostic.range });
     assert.equal(diagnosticEditor.document.uri.toString(), source.toString());
@@ -130,6 +159,10 @@ exports.run = async () => {
     assert(vscode.window.visibleTextEditors.some((editor) => editor.document.uri.toString() === source.toString()),
       "Diagnostic source must be visible even when Dev Kit focuses its output pane");
     receipt.buildDiagnostic = { code: buildDiagnostic.code, line: buildDiagnostic.range.start.line + 1 };
+    if (options.reviewPresentation) {
+      fs.writeFileSync(path.join(root, 'review-build-failed'), 'Review failed build status and source-linked diagnostic');
+      await waitFor(() => fs.existsSync(path.join(root, 'review-build-failed.done')), 'failed build visual review', 180);
+    }
     assert(!events.some((item) => item.kind === "contract-update-observed"), "Contracts must never enter debugger delta application");
     await edit(source, "new CounterReply(Interlocked.Add(ref _counter, request.Delta))", "new CounterReply(Interlocked.Add(ref _counter, request.Delta), 7)");
     await waitFor(() => snapshot(4), "corrected contract rebuild and relaunch");
@@ -160,6 +193,7 @@ exports.run = async () => {
     if (api) await waitFor(() => events.some((item) => item.kind === "coordinator-exited"), "coordinator exit", 30).catch(() => {});
     tracker.dispose();
     receipt.events = events.length;
+    receipt.statuses = statuses.filter(item => item.kind === 'session-phase' || ['application-ready','application-not-ready','bridge-connected','backend-stopped','debugger-state'].includes(item.kind));
     fs.writeFileSync(path.join(root, "receipt.json"), JSON.stringify(receipt, null, 2));
   }
 };

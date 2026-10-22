@@ -95,6 +95,7 @@ public sealed partial class DevelopmentSession
                 Emit("source-selected", detail: _selectedInputs.Hash);
             }
             _build?.Process.Dispose();
+            Emit("session-phase", code: "building");
             _build = Start("build", "dotnet", ["build", settings.Project, "--disable-build-servers"],
                 Path.GetDirectoryName(settings.Project)!, new Dictionary<string, string>());
             if (await Task.WhenAny(_build.Exited, _stop.Task).ConfigureAwait(false) != _build.Exited)
@@ -145,6 +146,7 @@ public sealed partial class DevelopmentSession
 
     private Child StartWatcher(IReadOnlyDictionary<string, string> applicationVariables)
     {
+        _startupStop.Token.ThrowIfCancellationRequested();
         _pendingUpdate = 0;
         _lastBackendRevision = 0;
         _pendingDiagnostic = null;

@@ -5,6 +5,11 @@
       "description": "Managed tests without child processes; contracts, frontend, documentation and tooling.",
       "steps": [
         {
+          "id": "editor-presentation",
+          "command": "node",
+          "arguments": ["--test", "tools/Spar.VSCode/presentation.test.cjs"]
+        },
+        {
           "id": "gate-tests",
           "command": "node",
           "arguments": [

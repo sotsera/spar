@@ -1,5 +1,6 @@
 #requires -Version 7.4
-param([string]$CodeCommand = 'code', [switch]$VerifyRender, [string]$ConsumerDirectory, [switch]$MinimalApplication)
+param([string]$CodeCommand = 'code', [switch]$VerifyRender, [string]$ConsumerDirectory, [switch]$MinimalApplication,
+  [switch]$ReviewPresentation)
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'integration/Fixtures.ps1')
@@ -38,8 +39,11 @@ if ($ConsumerDirectory) {
 }
 $fixture.Settings.watchBackend = $false
 $fixture.Settings['debuggerBackend'] = $true
+if (!$MinimalApplication -and !$ConsumerDirectory) {
+  Replace-Source (Join-Path $fixture.Frontend 'src/App.tsx') '  return <main>' '  return <main><button id="reload-status" onClick={() => location.reload()}>Reload document for acceptance</button>'
+}
 $fixture.Settings | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $fixture.Config
-@{ coordinator = $coordinatorPath; settings = $fixture.Config; project = $fixture.Settings.project; probe = !$MinimalApplication; inspect = $MinimalApplication.IsPresent; verifyRender = $VerifyRender.IsPresent } |
+@{ coordinator = $coordinatorPath; settings = $fixture.Config; project = $fixture.Settings.project; probe = !$MinimalApplication; inspect = $true; verifyRender = $VerifyRender.IsPresent; reviewPresentation = $ReviewPresentation.IsPresent; reloadStatus = (!$MinimalApplication -and !$ConsumerDirectory) } |
   ConvertTo-Json | Set-Content -LiteralPath (Join-Path $fixture.Directory 'owner.json')
 if (!$ConsumerDirectory) {
   Set-Content -LiteralPath (Join-Path $fixture.Directory 'Fixture.slnx') -Value '<Solution><Project Path="backend/Spar.NativeSample.csproj" /></Solution>'

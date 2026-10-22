@@ -45,6 +45,8 @@ public sealed partial class DevelopmentSession
         {
             variables["SPAR_DEV_BACKEND_OWNER"] = "debugger";
             Emit("backend-owner", code: "debugger");
+            Emit("session-phase", code: "waiting-debugger");
+            timeout.Token.ThrowIfCancellationRequested();
             await launchDebugger!(new DevelopmentDebugLaunch("debug-launch", _session, _generation,
                 settings.Project, settings.Application, variables, ["--spar-dev"])).ConfigureAwait(false);
             var elapsed = TimeSpan.Zero;

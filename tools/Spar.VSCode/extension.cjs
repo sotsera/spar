@@ -2,6 +2,7 @@ const vscode = require("vscode");
 const { spawn } = require("node:child_process");
 const readline = require("node:readline");
 const path = require("node:path");
+const { createPresentation } = require("./presentation.cjs");
 
 let owner;
 
@@ -53,7 +54,7 @@ exports.activate = (context) => {
         if (options.probe) args.push("--probe");
         if (options.inspect) args.push("--inspect");
         const process = spawn(coordinator, args, { cwd: root, windowsHide: true, stdio: "pipe" });
-        const current = { process, folder, generation: 0, retiring: false, debug: undefined };
+        const current = { process, folder, generation: 0, retiring: false, debug: undefined, present: createPresentation() };
         owner = current;
         status.text = "Spar: starting";
         status.show();
@@ -99,13 +100,12 @@ exports.activate = (context) => {
                 diagnostics.set(uri, [...(diagnostics.get(uri) || []).slice(-15), diagnostic]);
               }
             }
-            if (event.kind === "application-ready") status.text = "Spar: ready";
-            if (event.kind === "backend-restarting") status.text = "Spar: restarting";
-            if (event.kind === "backend-stopped") status.text = "Spar: build failed";
-            if (event.kind === "debugger-diagnostic") status.text = "Spar: edit rejected";
-            if (event.kind === "backend-updated") status.text = "Spar: updated";
+            const view = current.present(event);
+            if (owner === current && view) {
+              status.text = view.text;
+              if (view.message) output.appendLine(view.message);
+            }
             if (event.kind === "session-failed" || event.kind === "startup-error") output.show(true);
-            output.appendLine(line);
             events.fire(event);
           } catch (error) { output.appendLine("Invalid coordinator event: " + error.message); stop(); }
         });
@@ -157,7 +157,7 @@ exports.activate = (context) => {
     vscode.commands.registerCommand("spar.restart", () => send({ command: "restart" })),
     vscode.commands.registerCommand("spar.stop", stop),
   );
-  return { onEvent: events.event, send };
+  return { onEvent: events.event, send, getStatus: () => status.text };
 };
 
 exports.deactivate = () => {

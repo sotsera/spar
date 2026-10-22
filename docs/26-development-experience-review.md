@@ -76,3 +76,5 @@ process role, observed exit status, retained log locations and a next action to 
 [execution record](evidence/failure-diagnostics-2026-10-22/README.md) separates native, editor and boundary checks.
 D3 follows with truthful progress and withdrawn-readiness presentation. Selection authorizes
 implementation; current implementation PRs and their revision-bound checks establish acceptance.
+Its [execution record](evidence/progress-readiness-2026-10-22/README.md) retains actual terminal/native
+and VS Code status/recovery checks, visual review, original interrupted attempts and validation limits.

@@ -103,6 +103,13 @@ Codes distinguish `invalid_arguments`, `configuration_not_found`, `configuration
 creation: choose a new path in an existing writable directory; an existing file is never truncated.
 Human diagnostics stay on stderr so stdout remains JSON and private debugger handoffs remain separate.
 
+Terminal sessions also print bounded progress lines on stderr: selected build, frontend startup,
+application launch and waiting for native/typed readiness, followed by readiness, restart and stop facts.
+The `session-phase` JSON event carries the corresponding phase in `code`. A phase is progress, not
+readiness. Human lines replace control characters and are limited to 4,096 characters; complete
+structured events and retained logs remain authoritative. Debugger-owned sessions leave presentation
+to the editor, preserving the private stdout owner channel.
+
 Run `pwsh -NoProfile -File eng/Test-DevelopmentStartup.ps1` after building to check the real CLI failure
 matrix. It retains each coordinator process and waits for its job to empty; no native application should
 start. The [D1 execution record](evidence/startup-errors-2026-10-21/README.md) identifies the tested sources

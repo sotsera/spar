@@ -81,6 +81,11 @@ try {
   [NativeProbeDesktop]::Close($window)
   $results.Add((Confirm-Exit $session -Unrelated $unrelated -VerifyRender:($VerifyRender -and $fixture.Name -eq 'hmr-restart-close')))
 
+  $phases = @($session.Events | Where-Object kind -eq 'session-phase' | Select-Object -ExpandProperty code)
+  Assert-Condition (($phases -join ',') -eq 'building,starting-frontend,launching-application,awaiting-readiness,launching-application,awaiting-readiness') 'Progress did not follow the actual build/frontend/application work.'
+  $human = Read-Shared (Join-Path $fixture.Directory 'coordinator.stderr.log')
+  Assert-Condition ($human.Contains('Building backend and contracts') -and $human.Contains('Starting frontend') -and $human.Contains('Application ready')) 'Terminal omitted human-readable progress alongside JSON events.'
+
   $fixture = New-Fixture 'owner-pipe-eof' -Repository $repository -Application $applicationPath -EvidenceDirectory $evidencePath
   $session = Start-Session $fixture -Coordinator $coordinatorPath -WorkingDirectory $repository
   $sessions.Add($session)

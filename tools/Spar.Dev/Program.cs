@@ -52,6 +52,10 @@ static async Task<int> RunAsync(StartupOptions options)
             var line = JsonSerializer.Serialize(value, DevelopmentJsonContext.Default.DevelopmentEvent);
             eventsFile?.WriteLine(line);
             Console.WriteLine(line);
+            if (!settings.DebuggerBackend && SessionPresentation.Format(value) is { } progress)
+            {
+                Console.Error.WriteLine(progress);
+            }
         },
         options.Probe,
         launch =>

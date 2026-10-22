@@ -1,0 +1,265 @@
+{
+  "outcome": "passed",
+  "vscode": "1.143.0",
+  "csharp": "2.160.4",
+  "devkit": "3.40.215",
+  "initial": {
+    "mount": "70486fba-c5e3-490f-8f35-7a5a9b0a2c54",
+    "document": "25e14a111df248cbb41610332b6e0b2a",
+    "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+    "local": 7,
+    "text": "Retain this text through HMR",
+    "counter": 2,
+    "backendRevision": 0,
+    "developmentStatus": "",
+    "greeting": "Hello, Spar",
+    "heading": "A live development loop.",
+    "accent": "#70e3bd",
+    "color": "rgb(112, 227, 189)"
+  },
+  "patched": {
+    "mount": "70486fba-c5e3-490f-8f35-7a5a9b0a2c54",
+    "document": "25e14a111df248cbb41610332b6e0b2a",
+    "contract": "5f384a796cdfac56662f2a8e4e88daceef82abfdf9d3720b904da302e912ca0d",
+    "local": 7,
+    "text": "Retain this text through HMR",
+    "counter": 2,
+    "backendRevision": 1,
+    "developmentStatus": "Backend updated (revision 1)",
+    "greeting": "Hello debugger, Spar",
+    "heading": "A live development loop.",
+    "accent": "#e9b44c",
+    "color": "rgb(233, 180, 76)"
+  },
+  "rendering": "not-exercised",
+  "unsupportedEdit": "2026-10-22 18:55:08.485 [error]  ❌ E:\\Ghidello\\Git\\spar.v2\\artifacts\\vscode-development\\debugger-ef77188f03e046bf9c3546d6e1e5dd81\\backend\\SampleBackend.cs (line 4): error ENC0014: Updating the base class and/or base interface(s) of class requires restarting the application.",
+  "buildDiagnostic": {
+    "code": "CS7036",
+    "line": 20
+  },
+  "contractRestart": {
+    "mount": "15a61f2e-718e-4901-8b3f-fe0885a406ae",
+    "document": "139fc8b966614816be240069946c7067",
+    "contract": "9ed337f2bfae07213041ca561feab350835c41df4abbeaf99ed1c3d44e8ca43e",
+    "local": 0,
+    "text": "",
+    "counter": 0,
+    "backendRevision": 0,
+    "developmentStatus": "",
+    "greeting": "Hello corrected, Spar",
+    "heading": "A live development loop.",
+    "accent": "#e9b44c",
+    "color": "rgb(233, 180, 76)"
+  },
+  "nativeClose": "graceful",
+  "events": 224,
+  "statuses": [
+    {
+      "kind": "session-phase",
+      "code": "building",
+      "generation": 1,
+      "text": "Spar: building"
+    },
+    {
+      "kind": "session-phase",
+      "code": "starting-frontend",
+      "generation": 1,
+      "text": "Spar: starting frontend"
+    },
+    {
+      "kind": "session-phase",
+      "code": "launching-application",
+      "generation": 1,
+      "text": "Spar: launching application"
+    },
+    {
+      "kind": "session-phase",
+      "code": "waiting-debugger",
+      "generation": 1,
+      "text": "Spar: waiting for debugger"
+    },
+    {
+      "kind": "session-phase",
+      "code": "awaiting-readiness",
+      "generation": 1,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "bridge-connected",
+      "generation": 1,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "debugger-state",
+      "code": "paused",
+      "generation": 1,
+      "text": "Spar: debugger paused"
+    },
+    {
+      "kind": "debugger-state",
+      "code": "running",
+      "generation": 1,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "application-ready",
+      "generation": 1,
+      "text": "Spar: ready"
+    },
+    {
+      "kind": "bridge-connected",
+      "generation": 1,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "application-ready",
+      "generation": 1,
+      "text": "Spar: ready"
+    },
+    {
+      "kind": "session-phase",
+      "code": "building",
+      "generation": 2,
+      "text": "Spar: building"
+    },
+    {
+      "kind": "session-phase",
+      "code": "launching-application",
+      "generation": 2,
+      "text": "Spar: launching application"
+    },
+    {
+      "kind": "session-phase",
+      "code": "waiting-debugger",
+      "generation": 2,
+      "text": "Spar: waiting for debugger"
+    },
+    {
+      "kind": "session-phase",
+      "code": "awaiting-readiness",
+      "generation": 2,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "bridge-connected",
+      "generation": 2,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "debugger-state",
+      "code": "paused",
+      "generation": 2,
+      "text": "Spar: debugger paused"
+    },
+    {
+      "kind": "debugger-state",
+      "code": "running",
+      "generation": 2,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "application-ready",
+      "generation": 2,
+      "text": "Spar: ready"
+    },
+    {
+      "kind": "session-phase",
+      "code": "building",
+      "generation": 3,
+      "text": "Spar: building"
+    },
+    {
+      "kind": "backend-stopped",
+      "code": "build_failed",
+      "generation": 3,
+      "text": "Spar: build failed"
+    },
+    {
+      "kind": "session-phase",
+      "code": "building",
+      "generation": 4,
+      "text": "Spar: building"
+    },
+    {
+      "kind": "session-phase",
+      "code": "launching-application",
+      "generation": 4,
+      "text": "Spar: launching application"
+    },
+    {
+      "kind": "session-phase",
+      "code": "waiting-debugger",
+      "generation": 4,
+      "text": "Spar: waiting for debugger"
+    },
+    {
+      "kind": "session-phase",
+      "code": "awaiting-readiness",
+      "generation": 4,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "bridge-connected",
+      "generation": 4,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "bridge-connected",
+      "generation": 4,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "application-ready",
+      "generation": 4,
+      "text": "Spar: ready"
+    },
+    {
+      "kind": "session-phase",
+      "code": "building",
+      "generation": 1,
+      "text": "Spar: building"
+    },
+    {
+      "kind": "session-phase",
+      "code": "starting-frontend",
+      "generation": 1,
+      "text": "Spar: starting frontend"
+    },
+    {
+      "kind": "session-phase",
+      "code": "launching-application",
+      "generation": 1,
+      "text": "Spar: launching application"
+    },
+    {
+      "kind": "session-phase",
+      "code": "waiting-debugger",
+      "generation": 1,
+      "text": "Spar: waiting for debugger"
+    },
+    {
+      "kind": "session-phase",
+      "code": "awaiting-readiness",
+      "generation": 1,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "bridge-connected",
+      "generation": 1,
+      "text": "Spar: waiting for application readiness"
+    },
+    {
+      "kind": "application-ready",
+      "generation": 1,
+      "text": "Spar: ready"
+    },
+    {
+      "kind": "application-not-ready",
+      "code": "control_disconnected",
+      "generation": 1,
+      "text": "Spar: waiting for application readiness"
+    }
+  ],
+  "independentlyRetainedProcesses": 45,
+  "observedProcessesExited": true
+}
