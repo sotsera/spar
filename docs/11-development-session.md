@@ -104,6 +104,14 @@ Each session waits for native/typed and watcher readiness, requests an unchanged
 and verifies retirement, frontend survival and final process exit. This measures command rebuild,
 not source-save latency. Dependencies and matching tools must already be prepared, with no other
 suite rebuilding shared outputs. Every sample and phase event is retained; caches are not cleared.
+The receipt also extracts each generation's initial successful restore/build process durations,
+project-graph loading, design-time build and project count from the pinned SDK's verbose stderr.
+Graph/design-time values have 0.1-second precision; process durations include MSBuild evaluation.
+These are diagnostic observations, separate from native/typed readiness and cleanup acceptance.
+An unrecognized or incomplete trace warns and records missing observations; it never becomes zero
+or changes a readiness decision. Raw launch arguments and pipe names are not copied into the timing
+summary. The [SDK overhead investigation](evidence/sdk-watcher-startup-2026-10-22/README.md) records
+source/package comparisons and the rejected static-graph restore candidate.
 
 Process failures and selected-build rejection include a `diagnostic` object: failed `role`, `exitCode`
 when actual exit has been observed, exact retained `stdoutLog`/`stderrLog` paths, and `nextAction`.

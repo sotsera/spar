@@ -9,6 +9,7 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'integration/Sessions.ps1')
 . (Join-Path $PSScriptRoot 'integration/Processes.ps1')
+. (Join-Path $PSScriptRoot 'integration/WatcherTimings.ps1')
 $configuration = (Resolve-Path -LiteralPath $SettingsFile).Path
 $configurationRoot = Split-Path $configuration
 $settings = Get-Content -LiteralPath $configuration -Raw | ConvertFrom-Json -AsHashtable
@@ -52,7 +53,16 @@ try {
     Assert-Condition (@($session.Events | Where-Object kind -eq 'frontend-ready').Count -eq 1) 'Restart replaced the frontend.'
     Send-Command $session 'stop'
     $exit = Confirm-Exit $session -Unrelated $unrelated
+    $started = $session.Events | Where-Object kind -eq 'session-started' | Select-Object -First 1
+    $watcherTimings = foreach ($generation in @(1, 2)) {
+      $path = Join-Path $settings.sessionDirectory "$($started.session)/watcher-$generation.stderr.log"
+      $timing = Read-WatcherTimings $path
+      $timing.generation = $generation
+      if (!$timing.complete) { Write-Warning "Incomplete SDK timing attribution: $path" }
+      $timing
+    }
     $results.Add(@{ run = $run; startupMs = $startupMs; commandRebuildMs = $restartMs; cleanup = $exit
+      watcherTimings = @($watcherTimings)
       events = @($session.Events | Where-Object { $_.kind -in @('session-phase','build-selected','frontend-ready',
         'application-ready','backend-restarting','application-stopped','watcher-stopped') } |
         Select-Object kind,code,generation,observedAt) })
@@ -72,8 +82,10 @@ try {
         workingTreeDirty = [bool](& git status --porcelain); coordinatorSha256 = (Get-FileHash $tool).Hash
         developmentSha256 = (Get-FileHash (Join-Path (Split-Path $tool) 'Sotsera.Spar.Development.dll')).Hash
         driverSha256 = (Get-FileHash $PSCommandPath).Hash; settingsFile = $configuration
+        watcherTimingDriverSha256 = (Get-FileHash (Join-Path $PSScriptRoot 'integration/WatcherTimings.ps1')).Hash
         endpoint = 'Native/typed application-ready; startup also waits for watcher-ready; 50ms observer polling'
         restart = 'Explicit command rebuild with unchanged source, not source-save latency'
+        watcherTimingScope = 'Pinned SDK verbose stderr before first ready; process wall time includes MSBuild evaluation; graph/design-time values rounded to 0.1s. Missing fields are unobserved, not zero. No runtime launch duration is inferred.'
         cache = 'Caller prepares dependencies and outputs; no caches cleared; new session profile on every start'
         runs = $results.ToArray(); cleaned = $cleaned
       } | ConvertTo-Json -Depth 10 | Set-Content (Join-Path $root 'receipt.json')

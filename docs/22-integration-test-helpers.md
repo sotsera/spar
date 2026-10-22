@@ -11,6 +11,7 @@ application paths, create fixtures, load native capture support, start processes
 | `Inspection.ps1` | Target-bound requests and correlated results receive the session explicitly; callers import `Sessions.ps1` and retain its command log. |
 | `Processes.ps1` | `Start-UnrelatedProcess` returns the sentinel owned by the scenario. `Stop-TestProcess` forces only the supplied process to exit. `Close-TestSessions` takes the caller's retained sessions, closes coordinators and observes the previously retained child handles. |
 | `ProcessImage.cs` | Explicitly loaded by the startup/image drivers. Queries the executable through the caller's retained process handle without waiting for its module loader; a failed query on a live process is fatal. |
+| `WatcherTimings.ps1` | Reads a caller-supplied, completed watcher stderr log for diagnostic timing attribution. Returns only numeric observations, completeness and the log path; it starts no processes and makes no lifecycle decisions. |
 
 `Confirm-Exit` still requires actual coordinator exit, stdout EOF, the expected exit code,
 no cleanup-failure event, an owned-job completion receipt, exit of independently retained

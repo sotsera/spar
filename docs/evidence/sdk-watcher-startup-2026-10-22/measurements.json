@@ -1,0 +1,771 @@
+{
+  "rawEvidenceRoot": "artifacts/sdk-watcher-startup",
+  "runtime": "10.0.13",
+  "coldConsumer": {
+    "cscTotalMs": 2805,
+    "privateEmptyNugetCache": true,
+    "generatorExecMs": 901,
+    "restoreTaskMs": 68747,
+    "msbuildElapsedMs": 73380,
+    "warnings": 0,
+    "errors": 0
+  },
+  "sdk": "10.0.402",
+  "sdkSources": [
+    {
+      "name": "dotnet-watch-CommandLine-CommandLineOptions.cs",
+      "sha256": "3306342AFBBA040C55476EA6CFA84B42CF77CD82010F82C743D6F626C7F87F05"
+    },
+    {
+      "name": "dotnet-watch-CommandLine-DotnetWatchCommandDefinition.cs",
+      "sha256": "72E89B52996784424A77FEC23600E0314A7EC1DBF92D5B8780E24D4BF61D9D80"
+    },
+    {
+      "name": "dotnet-watch-Program.cs",
+      "sha256": "B4347B59E438D9E0A9CD8EC72B697635A80145DDE7CE897E777A95FE11A3C30F"
+    },
+    {
+      "name": "Watch-AppModels-DefaultAppModel.cs",
+      "sha256": "FD492A7AADE1D56271E7E830C1801E1E295C60454868A627210DD5903BC8AF9B"
+    },
+    {
+      "name": "Watch-Build-BuildReporter.cs",
+      "sha256": "F5D41EA632A599CA23F5CFCCF7A8F24FBC79403F02914B7869CDB555905986BF"
+    },
+    {
+      "name": "Watch-Build-EvaluationResult.cs",
+      "sha256": "8B4BAE0DF1CE9F30445E18D3A45C96A5F0F0F91577CAE4E53BD3A04DED90C988"
+    },
+    {
+      "name": "Watch-Build-LoadedProjectGraph.cs",
+      "sha256": "1E0ADDA601ED71EF238E7E2F32429C9814E4CEB4B32CB0BFEB75AB2660988C01"
+    },
+    {
+      "name": "Watch-Build-ProjectBuildManager.cs",
+      "sha256": "014181E5B06C2AD0448C96E881D241AFE33636D3069C3928A2821AEFABA1432F"
+    },
+    {
+      "name": "Watch-Build-ProjectGraphFactory.cs",
+      "sha256": "C5AB8E6B2B64BFB13F68A953AA7FAB1A9D73A7AD11B7402679213F7BE771C759"
+    },
+    {
+      "name": "Watch-Context-EnvironmentOptions.cs",
+      "sha256": "93DB6BAAEFA4D271A023B0EEF3B408E83553857097BAFDF2865E492DD866F8BB"
+    },
+    {
+      "name": "Watch-Context-EnvironmentVariables.cs",
+      "sha256": "0D0052009A18ACD350FCFA1CD0F40BAF24D839320ED2EF4B63822E2A624BCD83"
+    },
+    {
+      "name": "Watch-Context-GlobalOptions.cs",
+      "sha256": "A303AD61D05646454620D94CB4B12E745F97E5C121F17EA5776F0A078385089B"
+    },
+    {
+      "name": "Watch-HotReload-HotReloadDotNetWatcher.cs",
+      "sha256": "850FD34DF7608E01F52CBD3A00F379F28D9B935F801D08E95B84FE8B2AE024F1"
+    },
+    {
+      "name": "Watch-Process-ProjectLauncher.cs",
+      "sha256": "A90D30BD9D01A29D73050DA51500B3B771024A48C18BEA57D93EA0D90016B1B9"
+    }
+  ],
+  "nativeSessions": [
+    {
+      "coordinatorSha256": "5296EA7F81B4388BCF47F7854EC7A626471AF94F8BC9CF4C33DED075EABEA8A0",
+      "developmentSha256": "13E5DCC71927C2DE40974AAB926AD9FA7CFAB558C0CB076CF583BBA299915EDC",
+      "source": "2ef5c462d46121ef3bbbddb9eb94c21ac4c305ba",
+      "runs": [
+        {
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 71812,
+            "startedAtUtc": "2026-10-22T21:14:10.7268622Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "run": 1,
+          "commandRebuildMs": 7598.6536,
+          "startupMs": 17837.1496,
+          "watcherTimings": [
+            {
+              "generation": 1,
+              "complete": true,
+              "restoreProcessMs": [
+                1014
+              ],
+              "buildProcessMs": [
+                1484
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                400.0
+              ],
+              "projectCount": 4
+            },
+            {
+              "generation": 2,
+              "complete": true,
+              "restoreProcessMs": [
+                1027
+              ],
+              "buildProcessMs": [
+                1455
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                400.0
+              ],
+              "projectCount": 4
+            }
+          ]
+        },
+        {
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 70444,
+            "startedAtUtc": "2026-10-22T21:14:35.9590788Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "run": 2,
+          "commandRebuildMs": 7588.9567,
+          "startupMs": 8409.4278,
+          "watcherTimings": [
+            {
+              "generation": 1,
+              "complete": true,
+              "restoreProcessMs": [
+                1012
+              ],
+              "buildProcessMs": [
+                1473
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                400.0
+              ],
+              "projectCount": 4
+            },
+            {
+              "generation": 2,
+              "complete": true,
+              "restoreProcessMs": [
+                1010
+              ],
+              "buildProcessMs": [
+                1504
+              ],
+              "graphLoadApproxMs": [
+                400.0
+              ],
+              "designTimeBuildApproxMs": [
+                400.0
+              ],
+              "projectCount": 4
+            }
+          ]
+        }
+      ],
+      "cleaned": true,
+      "name": "source-current",
+      "watcherTimingDriverSha256": null,
+      "passed": true,
+      "recordedDriverSha256": "0FDA38821AB96FD092DD8E724E372B07650EA0BB31303467D373B87D0CAE6677",
+      "executionMetadataNote": "The helper-hash receipt field was added while this initial source invocation was running. Its recorded driver hash reads the later file, not the exact executed script. Timing logic/product binaries were unchanged; source-final reruns the final complete driver. Preserve these initial samples without treating that driver hash as exact execution provenance."
+    },
+    {
+      "coordinatorSha256": "5296EA7F81B4388BCF47F7854EC7A626471AF94F8BC9CF4C33DED075EABEA8A0",
+      "driverSha256": "0FDA38821AB96FD092DD8E724E372B07650EA0BB31303467D373B87D0CAE6677",
+      "developmentSha256": "13E5DCC71927C2DE40974AAB926AD9FA7CFAB558C0CB076CF583BBA299915EDC",
+      "source": "2ef5c462d46121ef3bbbddb9eb94c21ac4c305ba",
+      "runs": [
+        {
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 60072,
+            "startedAtUtc": "2026-10-22T21:14:52.8067893Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "run": 1,
+          "commandRebuildMs": 5205.0178,
+          "startupMs": 7596.1747,
+          "watcherTimings": [
+            {
+              "generation": 1,
+              "complete": true,
+              "restoreProcessMs": [
+                624
+              ],
+              "buildProcessMs": [
+                663
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                200.0
+              ],
+              "projectCount": 1
+            },
+            {
+              "generation": 2,
+              "complete": true,
+              "restoreProcessMs": [
+                619
+              ],
+              "buildProcessMs": [
+                653
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                200.0
+              ],
+              "projectCount": 1
+            }
+          ]
+        },
+        {
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 50256,
+            "startedAtUtc": "2026-10-22T21:15:06.0024172Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "run": 2,
+          "commandRebuildMs": 5227.3233,
+          "startupMs": 6045.7856,
+          "watcherTimings": [
+            {
+              "generation": 1,
+              "complete": true,
+              "restoreProcessMs": [
+                637
+              ],
+              "buildProcessMs": [
+                652
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                200.0
+              ],
+              "projectCount": 1
+            },
+            {
+              "generation": 2,
+              "complete": true,
+              "restoreProcessMs": [
+                618
+              ],
+              "buildProcessMs": [
+                649
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                200.0
+              ],
+              "projectCount": 1
+            }
+          ]
+        }
+      ],
+      "cleaned": true,
+      "name": "package-current",
+      "watcherTimingDriverSha256": "1E562308480EDED3E8547197ACD3B2B6FDAD3B84DBD4E391BA955F34EB65FD71",
+      "passed": true
+    },
+    {
+      "coordinatorSha256": "5296EA7F81B4388BCF47F7854EC7A626471AF94F8BC9CF4C33DED075EABEA8A0",
+      "driverSha256": "0FDA38821AB96FD092DD8E724E372B07650EA0BB31303467D373B87D0CAE6677",
+      "developmentSha256": "13E5DCC71927C2DE40974AAB926AD9FA7CFAB558C0CB076CF583BBA299915EDC",
+      "source": "2ef5c462d46121ef3bbbddb9eb94c21ac4c305ba",
+      "runs": [
+        {
+          "cleanup": {
+            "scenario": "startup-cost-1",
+            "passed": true,
+            "coordinatorProcessId": 55928,
+            "startedAtUtc": "2026-10-22T21:15:29.3497167Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "run": 1,
+          "commandRebuildMs": 7974.978,
+          "startupMs": 8549.8884,
+          "watcherTimings": [
+            {
+              "generation": 1,
+              "complete": true,
+              "restoreProcessMs": [
+                1015
+              ],
+              "buildProcessMs": [
+                1528
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                400.0
+              ],
+              "projectCount": 4
+            },
+            {
+              "generation": 2,
+              "complete": true,
+              "restoreProcessMs": [
+                1049
+              ],
+              "buildProcessMs": [
+                1567
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                500.0
+              ],
+              "projectCount": 4
+            }
+          ]
+        },
+        {
+          "cleanup": {
+            "scenario": "startup-cost-2",
+            "passed": true,
+            "coordinatorProcessId": 74032,
+            "startedAtUtc": "2026-10-22T21:15:46.3066788Z",
+            "actualExitCode": 0,
+            "abruptOwnerKill": false,
+            "forcedCleanupRequested": false,
+            "independentlyRetainedProcesses": 31,
+            "unrelatedSurvived": true,
+            "rendering": "not-exercised"
+          },
+          "run": 2,
+          "commandRebuildMs": 9431.5665,
+          "startupMs": 8772.6077,
+          "watcherTimings": [
+            {
+              "generation": 1,
+              "complete": true,
+              "restoreProcessMs": [
+                1090
+              ],
+              "buildProcessMs": [
+                1576
+              ],
+              "graphLoadApproxMs": [
+                300.0
+              ],
+              "designTimeBuildApproxMs": [
+                400.0
+              ],
+              "projectCount": 4
+            },
+            {
+              "generation": 2,
+              "complete": true,
+              "restoreProcessMs": [
+                1060
+              ],
+              "buildProcessMs": [
+                2817
+              ],
+              "graphLoadApproxMs": [
+                400.0
+              ],
+              "designTimeBuildApproxMs": [
+                600.0
+              ],
+              "projectCount": 4
+            }
+          ]
+        }
+      ],
+      "cleaned": true,
+      "name": "source-final",
+      "watcherTimingDriverSha256": "1E562308480EDED3E8547197ACD3B2B6FDAD3B84DBD4E391BA955F34EB65FD71",
+      "passed": true
+    }
+  ],
+  "source": "2ef5c462d46121ef3bbbddb9eb94c21ac4c305ba",
+  "restoreComparisons": [
+    {
+      "medians": [
+        {
+          "mode": "normal",
+          "medianMs": 1055.9553,
+          "consumer": "source"
+        },
+        {
+          "mode": "static",
+          "medianMs": 1007.7179,
+          "consumer": "source"
+        },
+        {
+          "mode": "normal",
+          "medianMs": 635.9620500000001,
+          "consumer": "package"
+        },
+        {
+          "mode": "static",
+          "medianMs": 1007.3555,
+          "consumer": "package"
+        }
+      ],
+      "samples": [
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 1,
+          "elapsedMs": 1068.4973,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 2,
+          "elapsedMs": 1048.8462,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 3,
+          "elapsedMs": 1008.8176,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 4,
+          "elapsedMs": 1043.4133,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 5,
+          "elapsedMs": 6032.2912,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 6,
+          "elapsedMs": 1006.6182,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 7,
+          "elapsedMs": 1003.6741,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 8,
+          "elapsedMs": 1042.1721,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 9,
+          "elapsedMs": 662.9451,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 10,
+          "elapsedMs": 1008.9723,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 11,
+          "elapsedMs": 1007.114,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 12,
+          "elapsedMs": 639.4637,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 13,
+          "elapsedMs": 632.4604,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 14,
+          "elapsedMs": 1007.597,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 15,
+          "elapsedMs": 979.7292,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 16,
+          "elapsedMs": 626.967,
+          "exitCode": 0,
+          "assetsSha256": "A5FA25C1CE9AE70AD8EDD6E16B7B712E8318D0CDFBA6A2E4872DB89EFF657520"
+        }
+      ],
+      "name": "pilot"
+    },
+    {
+      "medians": [
+        {
+          "mode": "normal",
+          "medianMs": 1017.59355,
+          "consumer": "source"
+        },
+        {
+          "mode": "static",
+          "medianMs": 988.57805,
+          "consumer": "source"
+        },
+        {
+          "mode": "normal",
+          "medianMs": 625.10685,
+          "consumer": "package"
+        },
+        {
+          "mode": "static",
+          "medianMs": 977.06295,
+          "consumer": "package"
+        }
+      ],
+      "samples": [
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 1,
+          "elapsedMs": 1078.8749,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 2,
+          "elapsedMs": 1019.8336,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 3,
+          "elapsedMs": 981.1333,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 4,
+          "elapsedMs": 1021.4295,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 5,
+          "elapsedMs": 1009.5542,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 6,
+          "elapsedMs": 996.0228,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "static",
+          "number": 7,
+          "elapsedMs": 978.9783,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "source",
+          "mode": "normal",
+          "number": 8,
+          "elapsedMs": 1013.7576,
+          "exitCode": 0,
+          "assetsSha256": "C5D5068E1FB018A72364D57576F6D8FCC03CE05A19044311691AF1278A1010F3"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 9,
+          "elapsedMs": 617.8254,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 10,
+          "elapsedMs": 974.1688,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 11,
+          "elapsedMs": 975.1797,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 12,
+          "elapsedMs": 628.6176,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 13,
+          "elapsedMs": 621.5961,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 14,
+          "elapsedMs": 978.9462,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        },
+        {
+          "consumer": "package",
+          "mode": "static",
+          "number": 15,
+          "elapsedMs": 992.3686,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        },
+        {
+          "consumer": "package",
+          "mode": "normal",
+          "number": 16,
+          "elapsedMs": 633.4822,
+          "exitCode": 0,
+          "assetsSha256": "C056A74E1D7E9C432DC5C375C074349BBF8BDE6DF7F6DFF5BA51EE8ACDE86351"
+        }
+      ],
+      "name": "current"
+    }
+  ],
+  "packages": [
+    {
+      "name": "Sotsera.Spar.Bridge.0.1.0.nupkg",
+      "sha256": "C14334F1A35839AA1A80E969EC8311EB8331CEE8199ADE9A6411483775F5E803",
+      "bytes": 25571
+    },
+    {
+      "name": "Sotsera.Spar.Build.0.1.0.nupkg",
+      "sha256": "AFB4323DA5AE0C175CB5FC0E98BCDEADA777665011C5D39E71C401C52FCF2C6D",
+      "bytes": 12074686
+    },
+    {
+      "name": "Sotsera.Spar.Development.0.1.0.nupkg",
+      "sha256": "23E46D68E8C23238F24AE318C1CEC725721758A734CD2F4CB91C35D6472AB7D4",
+      "bytes": 481814
+    },
+    {
+      "name": "Sotsera.Spar.Windows.0.1.0.nupkg",
+      "sha256": "50FA1777D28A04C948B3E79D5B5D03B5F238151C00F6DABC8B2EC8EC8ED774F6",
+      "bytes": 143987
+    },
+    {
+      "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg",
+      "sha256": "86637497880C30F7AAEC38201D7A4960B1295A66B20AF278459BFCBAE3CE37BA",
+      "bytes": 161270
+    }
+  ],
+  "sdkVmrRevision": "a8dd0577c5c13f43a2f57fe33b4ff11b90f6371e",
+  "productChanges": false
+}
