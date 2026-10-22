@@ -1,5 +1,7 @@
 # Spar
 
+[Temporary required-gate proof](docs/ci-deliberately-missing.md)
+
 Spar (`Sotsera.Spar`) is a Windows desktop framework with a C# backend and a framework-neutral web SPA.
 It prioritizes SPA HMR, supported C# Hot Reload, coordinated restarts, and controls usable by editors and AI tools.
 Development uses CoreCLR; production defaults to NativeAOT, with explicit attributed CoreCLR compatibility.
