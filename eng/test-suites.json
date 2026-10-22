@@ -237,6 +237,17 @@
           ]
         },
         {
+          "id": "process-image",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ProcessImage.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/process-image"
+          ]
+        },
+        {
           "id": "startup",
           "command": "pwsh",
           "arguments": [

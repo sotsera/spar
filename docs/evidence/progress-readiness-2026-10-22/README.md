@@ -65,3 +65,47 @@ Its unchanged presenter handled actual bridge withdrawal/recovery, failed rebuil
 The optional visual-review harness restoration is separate from this unattended run. The two copied
 package adapters match the tested presenter byte-for-byte (copied-adapter.json); no actual package
 editor gesture is inferred from the copy check. Exact final package qualification remains hosted CI.
+
+## Dependency merge and startup-observer CI repair
+
+D2 merged in [PR #48](https://github.com/sotsera/spar/pull/48) as
+`20dc5a5ff4fdaab9bd4779f547187232466f9826`. D3 was rebased onto that squash merge as
+`cd8345a430e3b84b368c3898fdb8eee4ca3c2cbd`. Comparing the old D3 head `0e9a758` to the
+rebased commit shows no differences in `src/`, `tools/` or `tests/`. The following repair changes
+test observation, its deterministic regression and suite membership; it changes no product binary.
+
+Original [PR run 39818477833](https://github.com/sotsera/spar/actions/runs/39818477833) on
+`0e9a7585608b3f454ed5312f79bb9e679bdfadf1` passed Fast, Development, Delivery and Packages.
+All eight managed process cases passed, but the startup driver failed on a
+[live owned PID with no MainModule image](ci-repair/original-ci-observation.json).
+Processes and the required aggregate correctly failed. The original PID's image is unknown;
+the suspended-child reproduction does not establish that it was a console host.
+
+The failure mechanism is consistent with the documented
+[MainModule loader window](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.process.mainmodule?view=net-10.0).
+The observer now uses
+[QueryFullProcessImageNameW](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
+through its retained process handle. It still requires the exact system console-host path;
+unidentified live processes and non-console children are not allowed. Only actual exit permits
+unavailable identity. No retry, delay, timeout increase, path classifier or gate change was added.
+
+`eng/Test-ProcessImage.ps1` creates real `conhost.exe` and `cmd.exe` children suspended before
+their loaders run, checks the exact image path, then terminates and waits for actual exit.
+The [fixed run](ci-repair/image-fixed.json) identifies both while the legacy lookup reports null.
+Restoring only the [original module lookup](ci-repair/original-lookup.patch) makes the same regression
+fail with [partial-copy module-enumeration failure](ci-repair/original-lookup.txt);
+its [failure receipt](ci-repair/image-original.json) confirms actual exit of the fixture.
+Restoring the fixed bytes passes again. The fault is not part of the delivered implementation.
+
+Local validation on rebased `cd8345a` plus the [bound repair sources](ci-repair/sources.sha256):
+the [full Processes suite](ci-repair/processes-suite.json) passed all eight catalog checks,
+including eight managed process cases with no skips, helper ownership checks, both suspended image
+cases and [all 34 startup rejections](ci-repair/startup.json) with empty owned jobs.
+All three builds were warning-free. Nine Node presentation/gate tests and documentation/skills
+checks also passed. Detailed local logs and the downloaded original CI artifact remain under
+`artifacts/d3-ci-repair` and `artifacts/d3-ci-original-processes`. Original diagnostics artifact
+`12442933142` has ZIP SHA256 `e5d9c3df332cb947d5765e9bbf4f225f430e5b51bd967e8c0e8be0ea02289fe0`.
+
+The original hosted Packages pass qualifies the original final-guard product source. Current-head
+hosted CI must still qualify the rebase and observer repair. No new editor gesture or product
+runtime fix is claimed from this test-only repair; the editor evidence above retains its binding.

@@ -9,6 +9,7 @@ New-Item -ItemType Directory -Force $root | Out-Null
 $tool = (Resolve-Path $Coordinator).Path
 $library = Join-Path (Split-Path $tool) 'Sotsera.Spar.Development.dll'
 Add-Type -Path $library
+Add-Type -Path (Join-Path $PSScriptRoot 'integration/ProcessImage.cs')
 $settings = @{
   project = "$root/app.csproj"; application = "$root/app.exe"
   generatedClient = "$root/client.js"; sessionDirectory = "$root/must-not-exist"
@@ -86,12 +87,11 @@ function Observe-Children($Job, $Coordinator, $Children, $Helpers, $Unclassified
       $child = [Diagnostics.Process]::GetProcessById($id)
       $null = $child.Handle
       if (!$Job.Contains($child)) { continue }
-      $image = $child.MainModule.FileName
+      $image = [Spar.Integration.ProcessImage]::Read($child)
       $exited = $child.HasExited
       @{ coordinator = $Coordinator.Id; processId = $id; image = $image; exitedAtObservation = $exited } |
         ConvertTo-Json -Compress | Add-Content (Join-Path $root 'child-observations.jsonl')
-      # MainModule can be null after actual exit without throwing either exception below.
-      # Keep that unavailable identity distinct from a positively observed application child.
+      # Only actual exit permits unavailable identity. Live image-query failures remain fatal.
       if ([string]::IsNullOrEmpty($image)) {
         if (!$exited) { throw "Live owned child image unavailable: $id" }
         $null = $Unclassified.Add($id)

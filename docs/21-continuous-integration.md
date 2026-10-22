@@ -35,7 +35,7 @@ editor drivers. Their assertions and process ownership remain in their existing 
 | Suite | Requirements and retained coverage |
 | --- | --- |
 | Fast | .NET/Node on Windows; bridge/generator, configuration, assets, contract and bounded-frame tests; generated TypeScript, fixture SPA compilation/notices, documentation, skills and gate checks. Builds the two relevant managed test projects, not the whole solution. |
-| Processes | Actual watchers and Windows jobs; managed process ownership/retirement, the three precursor watcher cases, helper import/teardown and actual CLI startup-error cases. No editor or WebView session. |
+| Processes | Actual watchers and Windows jobs; managed process ownership/retirement, the three precursor watcher cases, helper import/teardown, suspended-child image identity and actual CLI startup-error cases. No editor or WebView session. |
 | Development | Actual native WebView sessions; ordinary application HMR/state, readiness rejection/renewal, fixture SPA/owner lifetime, backend patches and rebuild races, project-launch lifetime and bounded inspection. |
 | Delivery | Actual CoreCLR native bridge/lifecycle; normal Release assets/boundary/copied AOT; ordinary sample publication; attributable compatibility and fatal unrelated failures; separate copied AOT probe bridge/lifecycle. Normal production boundary runs before the explicit probe publication. |
 | Packages | One newly packed feed, then fresh instrumented and ordinary consumers outside the checkout with isolated NuGet caches; public package references, packaged tools/contracts, native updates/restart and copied AOT/CoreCLR delivery. |

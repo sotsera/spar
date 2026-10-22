@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "suite": "processes",
+  "source": "cd8345a430e3b84b368c3898fdb8eee4ca3c2cbd",
+  "observedAt": "2026-10-22T18:56:05.1190676+00:00",
+  "workingTreeDirty": true,
+  "runId": null,
+  "attempt": null,
+  "catalogSha256": "bca647a58ba486e3bf22a4106a4b648af7a0a11cbd867cde3f0e5c0b94f76dd7",
+  "passed": true,
+  "checks": [
+    {
+      "id": "build-development-tests",
+      "outcome": "success",
+      "elapsedMs": 8213.0127
+    },
+    {
+      "id": "build-watcher-tests",
+      "outcome": "success",
+      "elapsedMs": 1945.9285
+    },
+    {
+      "id": "build-coordinator",
+      "outcome": "success",
+      "elapsedMs": 2739.5155
+    },
+    {
+      "id": "development-processes",
+      "outcome": "success",
+      "elapsedMs": 11689.6663
+    },
+    {
+      "id": "watcher-processes",
+      "outcome": "success",
+      "elapsedMs": 25505.254
+    },
+    {
+      "id": "helpers",
+      "outcome": "success",
+      "elapsedMs": 11170.2629
+    },
+    {
+      "id": "process-image",
+      "outcome": "success",
+      "elapsedMs": 2318.1115
+    },
+    {
+      "id": "startup",
+      "outcome": "success",
+      "elapsedMs": 14286.8627
+    }
+  ],
+  "evidence": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\suites\\processes\\c0a1a8e1ba3e4e93836916d7b610107f"
+}

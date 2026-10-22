@@ -1,0 +1,27 @@
+diff --git a/artifacts/d3-ci-repair/ProcessImage.fixed.cs b/artifacts/d3-ci-repair/ProcessImage.original-lookup.cs
+index acf3ab8..2f2d088 100644
+--- a/artifacts/d3-ci-repair/ProcessImage.fixed.cs
++++ b/artifacts/d3-ci-repair/ProcessImage.original-lookup.cs
+@@ -11,21 +11,7 @@ public static class ProcessImage
+ {
+     public static string Read(Process process)
+     {
+-        // Module enumeration depends on the child loader having run. Image identity does not.
+-        var image = new StringBuilder(32768);
+-        var length = image.Capacity;
+-        if (QueryFullProcessImageNameW(process.SafeHandle, 0, image, ref length))
+-        {
+-            return image.ToString();
+-        }
+-
+-        var error = Marshal.GetLastWin32Error();
+-        if (process.HasExited)
+-        {
+-            return null;
+-        }
+-
+-        throw new Win32Exception(error, $"Cannot query live owned process {process.Id} image.");
++        return process.MainModule?.FileName;
+     }
+ 
+     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]

@@ -10,6 +10,7 @@ application paths, create fixtures, load native capture support, start processes
 | `Sessions.ps1` | `Start-Session` receives the fixture, coordinator executable and working directory. The caller immediately retains the returned session. Event reading, waiting and commands receive that session. `Confirm-Exit` receives the unrelated process and returns a receipt for the caller to retain. |
 | `Inspection.ps1` | Target-bound requests and correlated results receive the session explicitly; callers import `Sessions.ps1` and retain its command log. |
 | `Processes.ps1` | `Start-UnrelatedProcess` returns the sentinel owned by the scenario. `Stop-TestProcess` forces only the supplied process to exit. `Close-TestSessions` takes the caller's retained sessions, closes coordinators and observes the previously retained child handles. |
+| `ProcessImage.cs` | Explicitly loaded by the startup/image drivers. Queries the executable through the caller's retained process handle without waiting for its module loader; a failed query on a live process is fatal. |
 
 `Confirm-Exit` still requires actual coordinator exit, stdout EOF, the expected exit code,
 no cleanup-failure event, an owned-job completion receipt, exit of independently retained
@@ -34,6 +35,7 @@ The default fixtures come from `fixtures/Spar.NativeSample`. `-MinimalApplicatio
 | `Test-ProjectLaunch.ps1` | Backend fixtures, shared reading/assertions | Project bootstrap, native close, debugger stop, contract change and coordinator crash |
 | `Test-VSCodeDevelopment.ps1` | Backend fixtures, shared reading | Actual debugger ownership, updates/recovery, coordinated restart and process exit; also accepts an external consumer |
 | `Test-ExternalConsumer.ps1` | Sessions, processes | Fresh package consumer updates/restart followed by copied AOT and explicit CoreCLR delivery |
+| `Test-ProcessImage.ps1` | Process image query, suspended native fixture | Exact image paths for live system console and ordinary executable children before their loaders run; termination followed by actual exit |
 
 Existing executable commands and evidence destinations remain available. The internal
 `-LibraryOnly` switches were removed and are rejected before setup: import the helper files
@@ -59,6 +61,14 @@ The helper check verifies definition-only imports, absence of executable scenari
 real forced process exit and retention of a live handle after an unfinished-cleanup timeout.
 It does not replace the actual native/editor suites. All changes run the fixed
 [CI suites](21-continuous-integration.md); Processes runs the helper check.
+
+The startup driver allows a console helper only after positively identifying the full system
+`conhost.exe` path. It queries `QueryFullProcessImageNameW` through a retained process handle:
+`MainModule` can be unavailable while a live child's loader has not run. Only actual exit permits
+unavailable identity; a live query failure still fails the check. `Test-ProcessImage.ps1` holds
+two real children suspended to cover this window deterministically, then terminates and waits
+for both. Processes runs this regression explicitly before the startup matrix; no path-based
+selection, retry delay or timeout increase is involved.
 
 Review native captures as required by the [SPA](11-development-session.md),
 [backend](12-backend-updates.md), [debugger](13-vscode-development.md),
