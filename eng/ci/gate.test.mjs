@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 import { audit, catalog, catalogSha256 } from './gate.mjs';
 
 const source = 'a'.repeat(40);
@@ -103,7 +104,7 @@ test('workflow runs the fixed catalog and always audits it under the protected n
   assert.ok(workflow.includes('suite: [fast, processes, development, delivery, packages]'));
   assert.ok(workflow.includes('fail-fast: false'));
   assert.ok(workflow.includes('name: Windows managed probe\n'));
-  assert.ok(workflow.includes('needs: [suites]\n    if: always()'));
+  assert.match(workflow, /needs: \[suites\]\n    if: always\(\) &&/);
   assert.ok(workflow.includes('CI_JOB_RESULTS: ${{ toJSON(needs) }}'));
   assert.ok(!/paths(?:-ignore)?:|Select-Checks|continue-on-error/.test(workflow));
   const steps = catalog.suites.delivery.steps.map(step => step.id);
@@ -111,5 +112,32 @@ test('workflow runs the fixed catalog and always audits it under the protected n
   for (const definition of Object.values(catalog.suites)) {
     assert.ok(definition.steps.length > 0);
     assert.equal(new Set(definition.steps.map(step => step.id)).size, definition.steps.length);
+  }
+});
+
+test('fork pushes skip both jobs while PRs and manual runs retain the failure gate', () => {
+  const workflow = readFileSync('.github/workflows/managed-probe.yml', 'utf8');
+  const conditions = Object.fromEntries(['suites', 'gate'].map(job => {
+    const section = workflow.split(`\n  ${job}:\n`)[1]?.split(/\n  \w+:\n/)[0];
+    const condition = section?.match(/^    if: (.+)$/m)?.[1];
+    assert.ok(condition, `Missing condition for ${job}`);
+    return [job, condition];
+  }));
+  for (const repository of ['sotsera/spar', 'ghidello/spar', 'contributor/spar']) {
+    for (const event_name of ['pull_request', 'workflow_dispatch', 'push']) {
+      for (const ref of ['refs/heads/main', 'refs/tags/v1.0.0']) {
+        const expected = repository === 'sotsera/spar' || event_name !== 'push';
+        const github = { repository, event_name, ref };
+        assert.equal(runInNewContext(conditions.suites, { github }), expected);
+        // A real failure/cancellation must still reach the aggregate on enabled runs.
+        for (const result of ['success', 'failure', 'cancelled', 'skipped']) {
+          assert.equal(runInNewContext(conditions.gate, {
+            github, needs: { suites: { result } }, always: () => true,
+            success: () => result === 'success', failure: () => result === 'failure',
+            cancelled: () => result === 'cancelled',
+          }), expected);
+        }
+      }
+    }
   }
 });

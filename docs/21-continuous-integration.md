@@ -1,7 +1,10 @@
 # Fixed test suites and continuous integration
 
-Every PR, integrated `main` push, version tag and manual dispatch runs the same five automatic
-suites. CI does not inspect changed paths or infer dependencies. The required **Windows managed probe**
+Every PR, upstream (`sotsera/spar`) `main` push or version tag, and manual dispatch runs the same five
+automatic suites. Fork `main` and tag pushes skip both jobs before allocating runners; GitHub may
+still display a skipped workflow entry. Manual dispatch remains available in forks. PRs from forks
+continue to run in the target repository. CI does not inspect changed paths or infer dependencies.
+The required **Windows managed probe**
 check remains the merge gate; it now audits independent Windows jobs.
 
 ## Local entry points and execution requirements
@@ -86,7 +89,8 @@ within a job stay sequential. Do not launch suites concurrently in one checkout,
 they own processes, or share mutable build outputs between jobs. PR updates cancel superseded runs;
 independent main pushes retain independent validation.
 
-The always-running aggregate checks the matrix result and exactly one report per expected suite.
+For enabled runs, the aggregate always checks the matrix result and exactly one report per expected suite,
+even after suite failure or cancellation. Fork push runs skip the aggregate as well as the matrix.
 Every catalog check must have succeeded in order. Failed/cancelled/skipped jobs, missing/malformed
 reports, mismatched source/run/catalog or unexecuted checks fail the gate. No `continue-on-error`,
 changed-path classifier or fallback coverage mode exists. The branch-protection name and GitHub

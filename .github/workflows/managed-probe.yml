@@ -17,6 +17,8 @@ concurrency:
 jobs:
   suites:
     name: Tests (${{ matrix.suite }})
+    # Fork main/tag pushes skip runners; PRs and manual dispatch remain available.
+    if: github.repository == 'sotsera/spar' || github.event_name != 'push'
     runs-on: windows-latest
     timeout-minutes: 30
     strategy:
@@ -101,7 +103,7 @@ jobs:
   gate:
     name: Windows managed probe
     needs: [suites]
-    if: always()
+    if: always() && (github.repository == 'sotsera/spar' || github.event_name != 'push')
     runs-on: windows-latest
     timeout-minutes: 5
     steps:
