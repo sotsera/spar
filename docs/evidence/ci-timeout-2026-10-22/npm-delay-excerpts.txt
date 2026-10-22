@@ -1,0 +1,12 @@
+GitHub annotation: The job has exceeded the maximum execution time of 30m0s
+
+Original missing-toolchain log (excerpt):
+  added 24 packages in 5m
+  Generating native code
+C:\Users\runneradmin\.nuget\packages\microsoft.dotnet.ilcompiler\10.0.13\build\Microsoft.NETCore.Native.targets(330,5): error MSB3073: The command ""D:\a\spar\spar\artifacts\compatibility\ci\fixture-283d11f54cbc4aa1ad74c473535248bd\absent-native-compiler/\ilc" @"obj\Release\net10.0-windows\win-x64\native\Spar.NativeSample.ilc.rsp"" exited with code 3. [D:\a\spar\spar\artifacts\compatibility\ci\fixture-283d11f54cbc4aa1ad74c473535248bd\fixtures\Spar.NativeSample\Spar.NativeSample.csproj]
+
+Original native-link-error log (excerpt):
+  added 24 packages in 5m
+  Generating native code
+LINK : error LNK2001: unresolved external symbol SparDeliberatelyMissingNativeSymbol [D:\a\spar\spar\artifacts\compatibility\ci\fixture-283d11f54cbc4aa1ad74c473535248bd\fixtures\Spar.NativeSample\Spar.NativeSample.csproj]
+bin\Release\net10.0-windows\win-x64\native\Spar.NativeSample.exe : fatal error LNK1120: 1 unresolved externals [D:\a\spar\spar\artifacts\compatibility\ci\fixture-283d11f54cbc4aa1ad74c473535248bd\fixtures\Spar.NativeSample\Spar.NativeSample.csproj]

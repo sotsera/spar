@@ -1,0 +1,896 @@
+{
+  "priorRun": {
+    "id": 39678014157,
+    "steps": [
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Set up job"
+      },
+      {
+        "seconds": 6.0,
+        "conclusion": "success",
+        "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+      },
+      {
+        "seconds": 6.0,
+        "conclusion": "success",
+        "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Select checks from changed inputs"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Test CI selection and gate"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "success",
+        "name": "Validate documentation references"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Validate repository agent skills"
+      },
+      {
+        "seconds": 2.0,
+        "conclusion": "success",
+        "name": "Run actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68"
+      },
+      {
+        "seconds": 40.0,
+        "conclusion": "success",
+        "name": "Build"
+      },
+      {
+        "seconds": 25.0,
+        "conclusion": "success",
+        "name": "Test bridge contracts and real dotnet watch behavior"
+      },
+      {
+        "seconds": 14.0,
+        "conclusion": "success",
+        "name": "Test integration helpers and probe log framing"
+      },
+      {
+        "seconds": 3.0,
+        "conclusion": "success",
+        "name": "Check generated TypeScript client"
+      },
+      {
+        "seconds": 4.0,
+        "conclusion": "success",
+        "name": "Install and check the integration fixture SPA"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "success",
+        "name": "Verify complete frontend distribution notices"
+      },
+      {
+        "seconds": 55.0,
+        "conclusion": "success",
+        "name": "Test ordinary application development without probe exports"
+      },
+      {
+        "seconds": 26.0,
+        "conclusion": "success",
+        "name": "Test owned SPA session and HMR"
+      },
+      {
+        "seconds": 173.0,
+        "conclusion": "success",
+        "name": "Test native backend Hot Reload and retirement"
+      },
+      {
+        "seconds": 15.0,
+        "conclusion": "success",
+        "name": "Test IDE project launch ownership (not debugger acceptance)"
+      },
+      {
+        "seconds": 56.0,
+        "conclusion": "success",
+        "name": "Test actual WebView inspection and bounded actions"
+      },
+      {
+        "seconds": 8.0,
+        "conclusion": "success",
+        "name": "Test native CoreCLR bridge"
+      },
+      {
+        "seconds": 22.0,
+        "conclusion": "success",
+        "name": "Test native CoreCLR lifecycle"
+      },
+      {
+        "seconds": 69.0,
+        "conclusion": "success",
+        "name": "Publish production SPA as strict NativeAOT"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Verify production build boundary"
+      },
+      {
+        "seconds": 5.0,
+        "conclusion": "success",
+        "name": "Test copied production SPA (desktop rendering checked separately)"
+      },
+      {
+        "seconds": 109.0,
+        "conclusion": "success",
+        "name": "Test explicit dependency compatibility and strict AOT failures"
+      },
+      {
+        "seconds": 16.0,
+        "conclusion": "success",
+        "name": "Publish and run the ordinary application"
+      },
+      {
+        "seconds": 11.0,
+        "conclusion": "success",
+        "name": "Pack local consumer dependencies"
+      },
+      {
+        "seconds": 104.0,
+        "conclusion": "success",
+        "name": "Test external package consumer (desktop and IDE checks run separately)"
+      },
+      {
+        "seconds": 71.0,
+        "conclusion": "success",
+        "name": "Test the default minimal package consumer"
+      },
+      {
+        "seconds": 9.0,
+        "conclusion": "success",
+        "name": "Publish separate strict NativeAOT native test fixture"
+      },
+      {
+        "seconds": 33.0,
+        "conclusion": "success",
+        "name": "Test copied NativeAOT lifecycle"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Audit all selected check results"
+      },
+      {
+        "seconds": 2.0,
+        "conclusion": "success",
+        "name": "Preserve concise results"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "skipped",
+        "name": "Preserve failure diagnostics"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "success",
+        "name": "Post Run actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "success",
+        "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      },
+      {
+        "seconds": 2.0,
+        "conclusion": "success",
+        "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "success",
+        "name": "Complete job"
+      }
+    ],
+    "conclusion": "success",
+    "seconds": 895
+  },
+  "selectorTests": {
+    "failed": 0,
+    "passed": 34
+  },
+  "localProductionFirstAttempt": {
+    "noSdkMachine": "not-available",
+    "allPassed": false,
+    "mode": "CoreCLR",
+    "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-production-60ae12a979b544528e726e9c4d48ac51",
+    "samples": [
+      {
+        "hostMemory": null,
+        "render": "not-exercised",
+        "forcedCleanup": true,
+        "profile": "fresh",
+        "passed": false,
+        "sample": 1,
+        "startedAtUtc": "2026-10-22T07:41:59.2484872Z",
+        "processToGreetingMs": null,
+        "greetingCompletionMs": null,
+        "browserVersion": null,
+        "browserMemory": [],
+        "processId": 3744
+      }
+    ],
+    "payloadBytes": 81145131.0,
+    "executableSha256": "FF09A4B7FE6C5D0D4BB18ADBAD1F3D18171B3FA79BE4804EC0F403CF769A61AD",
+    "observedAt": "2026-10-22T09:42:29.3992743+02:00",
+    "renderRequested": false
+  },
+  "npmProbe": {
+    "passed": true,
+    "node": "v24.21.0",
+    "results": [
+      {
+        "name": "audit-on",
+        "code": 0,
+        "elapsedMs": 1727,
+        "requests": [
+          {
+            "method": "POST",
+            "url": "/-/npm/v1/security/advisories/bulk"
+          }
+        ]
+      },
+      {
+        "name": "audit-off",
+        "code": 0,
+        "elapsedMs": 654,
+        "requests": []
+      },
+      {
+        "name": "missing-dependency",
+        "code": 1,
+        "elapsedMs": 666,
+        "requests": [
+          {
+            "method": "GET",
+            "url": "/package.tgz"
+          }
+        ]
+      }
+    ]
+  },
+  "base": "a4c8d1ed40d92175654d701785743bae23f01de3",
+  "failedRun": {
+    "id": 39737327607,
+    "annotation": "The job has exceeded the maximum execution time of 30m0s",
+    "conclusion": "cancelled",
+    "steps": [
+      {
+        "seconds": 2.0,
+        "conclusion": "success",
+        "name": "Set up job"
+      },
+      {
+        "seconds": 8.0,
+        "conclusion": "success",
+        "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+      },
+      {
+        "seconds": 5.0,
+        "conclusion": "success",
+        "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Select checks from changed inputs"
+      },
+      {
+        "seconds": 2.0,
+        "conclusion": "success",
+        "name": "Test CI selection and gate"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "success",
+        "name": "Validate documentation references"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Validate repository agent skills"
+      },
+      {
+        "seconds": 31.0,
+        "conclusion": "success",
+        "name": "Run actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68"
+      },
+      {
+        "seconds": 48.0,
+        "conclusion": "success",
+        "name": "Build"
+      },
+      {
+        "seconds": 37.0,
+        "conclusion": "success",
+        "name": "Test bridge contracts and real dotnet watch behavior"
+      },
+      {
+        "seconds": 16.0,
+        "conclusion": "success",
+        "name": "Test integration helpers and probe log framing"
+      },
+      {
+        "seconds": 5.0,
+        "conclusion": "success",
+        "name": "Check generated TypeScript client"
+      },
+      {
+        "seconds": 6.0,
+        "conclusion": "success",
+        "name": "Install and check the integration fixture SPA"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Verify complete frontend distribution notices"
+      },
+      {
+        "seconds": 81.0,
+        "conclusion": "success",
+        "name": "Test ordinary application development without probe exports"
+      },
+      {
+        "seconds": 38.0,
+        "conclusion": "success",
+        "name": "Test owned SPA session and HMR"
+      },
+      {
+        "seconds": 332.0,
+        "conclusion": "success",
+        "name": "Test native backend Hot Reload and retirement"
+      },
+      {
+        "seconds": 25.0,
+        "conclusion": "success",
+        "name": "Test IDE project launch ownership (not debugger acceptance)"
+      },
+      {
+        "seconds": 95.0,
+        "conclusion": "success",
+        "name": "Test actual WebView inspection and bounded actions"
+      },
+      {
+        "seconds": 10.0,
+        "conclusion": "success",
+        "name": "Test native CoreCLR bridge"
+      },
+      {
+        "seconds": 20.0,
+        "conclusion": "success",
+        "name": "Test native CoreCLR lifecycle"
+      },
+      {
+        "seconds": 53.0,
+        "conclusion": "success",
+        "name": "Publish production SPA as strict NativeAOT"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "success",
+        "name": "Verify production build boundary"
+      },
+      {
+        "seconds": 6.0,
+        "conclusion": "success",
+        "name": "Test copied production SPA (desktop rendering checked separately)"
+      },
+      {
+        "seconds": 886.0,
+        "conclusion": "success",
+        "name": "Test explicit dependency compatibility and strict AOT failures"
+      },
+      {
+        "seconds": 36.0,
+        "conclusion": "success",
+        "name": "Publish and run the ordinary application"
+      },
+      {
+        "seconds": 23.0,
+        "conclusion": "success",
+        "name": "Pack local consumer dependencies"
+      },
+      {
+        "seconds": 32.0,
+        "conclusion": "cancelled",
+        "name": "Test external package consumer (desktop and IDE checks run separately)"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "skipped",
+        "name": "Test the default minimal package consumer"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "skipped",
+        "name": "Publish separate strict NativeAOT native test fixture"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "skipped",
+        "name": "Test copied NativeAOT lifecycle"
+      },
+      {
+        "seconds": 1.0,
+        "conclusion": "failure",
+        "name": "Audit all selected check results"
+      },
+      {
+        "seconds": 4.0,
+        "conclusion": "success",
+        "name": "Preserve concise results"
+      },
+      {
+        "seconds": 31.0,
+        "conclusion": "success",
+        "name": "Preserve failure diagnostics"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "skipped",
+        "name": "Post Run actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "skipped",
+        "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      },
+      {
+        "seconds": 3.0,
+        "conclusion": "success",
+        "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1"
+      },
+      {
+        "seconds": 0.0,
+        "conclusion": "success",
+        "name": "Complete job"
+      }
+    ],
+    "seconds": 1842
+  },
+  "localCompatibilityFirstAttempt": {
+    "dotnet": "10.0.402",
+    "powershell": "7.6.5",
+    "allPassed": false,
+    "fixture": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\fixture-53a798daef344deba06e71a96a2f7829",
+    "renderRequested": false,
+    "observedAt": "2026-10-22T09:42:29.4061399+02:00",
+    "sourceRevision": "a4c8d1ed40d92175654d701785743bae23f01de3",
+    "cases": [
+      {
+        "elapsedMs": 19007.7493,
+        "name": "development-diagnostic",
+        "exitCode": 0,
+        "arguments": [
+          "build",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\fixture-53a798daef344deba06e71a96a2f7829\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Debug",
+          "--disable-build-servers"
+        ],
+        "expectedSuccess": true,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\development-diagnostic.log",
+        "passed": true,
+        "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create"
+      },
+      {
+        "elapsedMs": 15522.9752,
+        "name": "strict-dependency",
+        "exitCode": 1,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\fixture-53a798daef344deba06e71a96a2f7829\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\publish-strict-dependency",
+          "--disable-build-servers",
+          "-p:SparStrictAot=true"
+        ],
+        "expectedSuccess": false,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\strict-dependency.log",
+        "passed": true,
+        "expectedDiagnostic": "error IL3050.*RuntimeGreeting.Create"
+      },
+      {
+        "elapsedMs": 13912.225,
+        "name": "coreclr",
+        "exitCode": 0,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\fixture-53a798daef344deba06e71a96a2f7829\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\publish-coreclr",
+          "--disable-build-servers"
+        ],
+        "expectedSuccess": true,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-repair\\coreclr.log",
+        "passed": true,
+        "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create"
+      }
+    ]
+  },
+  "localSamePayload": {
+    "executableSha256": "FF09A4B7FE6C5D0D4BB18ADBAD1F3D18171B3FA79BE4804EC0F403CF769A61AD",
+    "payloadBytes": 81145131.0,
+    "allPassed": true,
+    "noSdkMachine": "not-available",
+    "mode": "CoreCLR",
+    "samples": [
+      {
+        "processId": 63940,
+        "processToGreetingMs": 1197.5296,
+        "browserVersion": "155.0.4283.62",
+        "hostMemory": {
+          "workingSet": 48144384,
+          "privateBytes": 13733888
+        },
+        "profile": "fresh",
+        "startedAtUtc": "2026-10-22T07:45:23.0916251Z",
+        "render": "not-exercised",
+        "browserMemory": [
+          {
+            "privateBytes": 42491904,
+            "startedAtUtc": "2026-10-22T07:45:23.8322453Z",
+            "id": 88868,
+            "workingSet": 130334720
+          },
+          {
+            "privateBytes": 4075520,
+            "startedAtUtc": "2026-10-22T07:45:23.8595841Z",
+            "id": 4636,
+            "workingSet": 12935168
+          },
+          {
+            "privateBytes": 80515072,
+            "startedAtUtc": "2026-10-22T07:45:23.9418501Z",
+            "id": 43440,
+            "workingSet": 72081408
+          },
+          {
+            "privateBytes": 14663680,
+            "startedAtUtc": "2026-10-22T07:45:23.944603Z",
+            "id": 11944,
+            "workingSet": 44670976
+          },
+          {
+            "privateBytes": 9555968,
+            "startedAtUtc": "2026-10-22T07:45:23.9659883Z",
+            "id": 55932,
+            "workingSet": 23707648
+          },
+          {
+            "privateBytes": 24195072,
+            "startedAtUtc": "2026-10-22T07:45:24.0245917Z",
+            "id": 32956,
+            "workingSet": 60608512
+          }
+        ],
+        "forcedCleanup": false,
+        "passed": true,
+        "greetingCompletionMs": 1332.5534,
+        "sample": 1
+      }
+    ],
+    "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-production-4237b190821f420ea8e7bcc257a11a92",
+    "observedAt": "2026-10-22T09:45:28.9203769+02:00",
+    "renderRequested": false
+  },
+  "samePayloadHash": true,
+  "npm": "11.19.0",
+  "workflowSha256": "F6E6A38B702DBB8E9476B6E395C649E589356079C6C31D854B81F56A27180747",
+  "probeScriptSha256": "F1F1DC0AF338690AA0447FA8C2BE3285E67E87425175EDD0E511D9E92D5162A3",
+  "localCompatibilityConfirmation": {
+    "allPassed": true,
+    "powershell": "7.6.5",
+    "renderRequested": false,
+    "fixture": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934",
+    "sourceRevision": "a4c8d1ed40d92175654d701785743bae23f01de3",
+    "cases": [
+      {
+        "elapsedMs": 12436.321,
+        "arguments": [
+          "build",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Debug",
+          "--disable-build-servers"
+        ],
+        "expectedSuccess": true,
+        "name": "development-diagnostic",
+        "passed": true,
+        "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+        "exitCode": 0,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\development-diagnostic.log"
+      },
+      {
+        "elapsedMs": 16335.6848,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-strict-dependency",
+          "--disable-build-servers",
+          "-p:SparStrictAot=true"
+        ],
+        "expectedSuccess": false,
+        "name": "strict-dependency",
+        "passed": true,
+        "expectedDiagnostic": "error IL3050.*RuntimeGreeting.Create",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\strict-dependency.log"
+      },
+      {
+        "elapsedMs": 13878.8249,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-coreclr",
+          "--disable-build-servers"
+        ],
+        "expectedSuccess": true,
+        "name": "coreclr",
+        "passed": true,
+        "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+        "exitCode": 0,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\coreclr.log"
+      },
+      {
+        "elapsedMs": 7170.1434,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-syntax-error",
+          "--disable-build-servers"
+        ],
+        "expectedSuccess": false,
+        "name": "syntax-error",
+        "passed": true,
+        "expectedDiagnostic": "error CS",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\syntax-error.log"
+      },
+      {
+        "elapsedMs": 1222.0392,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-conflicting-aot",
+          "--disable-build-servers",
+          "-p:SparStrictAot=true",
+          "-p:PublishAot=false"
+        ],
+        "expectedSuccess": false,
+        "name": "conflicting-aot",
+        "passed": true,
+        "expectedDiagnostic": "SPAR1004",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\conflicting-aot.log"
+      },
+      {
+        "elapsedMs": 1216.9482,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-missing-attribution",
+          "--disable-build-servers",
+          "-p:SparCompatibilityReason="
+        ],
+        "expectedSuccess": false,
+        "name": "missing-attribution",
+        "passed": true,
+        "expectedDiagnostic": "SPAR1003",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\missing-attribution.log"
+      },
+      {
+        "elapsedMs": 1175.2296,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-invalid-mode",
+          "--disable-build-servers",
+          "-p:SparDeliveryMode=Automatic"
+        ],
+        "expectedSuccess": false,
+        "name": "invalid-mode",
+        "passed": true,
+        "expectedDiagnostic": "SPAR1001",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\invalid-mode.log"
+      },
+      {
+        "elapsedMs": 14328.0362,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-dependency-removed",
+          "--disable-build-servers"
+        ],
+        "expectedSuccess": true,
+        "name": "dependency-removed",
+        "passed": true,
+        "expectedDiagnostic": "",
+        "exitCode": 0,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\dependency-removed.log"
+      },
+      {
+        "elapsedMs": 14000.47,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-strict-override",
+          "--disable-build-servers",
+          "-p:SparStrictAot=true"
+        ],
+        "expectedSuccess": true,
+        "name": "strict-override",
+        "passed": true,
+        "expectedDiagnostic": "",
+        "exitCode": 0,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\strict-override.log"
+      },
+      {
+        "elapsedMs": 3315.1529,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-framework-regression-coreclr",
+          "--disable-build-servers"
+        ],
+        "expectedSuccess": false,
+        "name": "framework-regression-coreclr",
+        "passed": true,
+        "expectedDiagnostic": "SparAssetBundle.cs.*error IL3050",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\framework-regression-coreclr.log"
+      },
+      {
+        "elapsedMs": 3286.5787,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-framework-regression-aot",
+          "--disable-build-servers",
+          "-p:SparStrictAot=true"
+        ],
+        "expectedSuccess": false,
+        "name": "framework-regression-aot",
+        "passed": true,
+        "expectedDiagnostic": "SparAssetBundle.cs.*error IL3050",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\framework-regression-aot.log"
+      },
+      {
+        "elapsedMs": 12550.3672,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-missing-toolchain",
+          "--disable-build-servers",
+          "-p:IlcToolsPath=E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\absent-native-compiler/",
+          "-t:Rebuild,Publish"
+        ],
+        "expectedSuccess": false,
+        "name": "missing-toolchain",
+        "passed": true,
+        "expectedDiagnostic": "error MSB3073.*absent-native-compiler",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\missing-toolchain.log"
+      },
+      {
+        "elapsedMs": 13655.552,
+        "arguments": [
+          "publish",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\fixture-31903d4fd0284fd5bbc1e4be396f8934\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+          "-c",
+          "Release",
+          "-o",
+          "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\publish-native-link-error",
+          "--disable-build-servers",
+          "-t:Rebuild,Publish"
+        ],
+        "expectedSuccess": false,
+        "name": "native-link-error",
+        "passed": true,
+        "expectedDiagnostic": "LNK2001|LNK1120",
+        "exitCode": 1,
+        "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\ci-39737327607\\compatibility-confirmation\\native-link-error.log"
+      }
+    ],
+    "observedAt": "2026-10-22T09:48:28.094867+02:00",
+    "dotnet": "10.0.402"
+  },
+  "localNpmInstallTimings": [
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1285,
+      "name": "2026-10-22T07_41_35_959Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1178,
+      "name": "2026-10-22T07_41_44_361Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1196,
+      "name": "2026-10-22T07_46_26_704Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1277,
+      "name": "2026-10-22T07_46_36_308Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1202,
+      "name": "2026-10-22T07_47_15_149Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1205,
+      "name": "2026-10-22T07_47_25_938Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1207,
+      "name": "2026-10-22T07_47_43_523Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1670,
+      "name": "2026-10-22T07_48_05_832Z-timing.json"
+    },
+    {
+      "hasAuditTimer": false,
+      "milliseconds": 1684,
+      "name": "2026-10-22T07_48_16_657Z-timing.json"
+    }
+  ]
+}

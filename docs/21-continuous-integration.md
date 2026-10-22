@@ -46,6 +46,14 @@ CI native tests do not establish reviewed pixels or debugger acceptance. `Test-V
 
 ## Results and artifacts
 
+The hosted job disables npm's automatic install-time advisory request with `NPM_CONFIG_AUDIT=false`.
+Locked dependency installation, compilation and their failure results remain required. This avoids
+making those checks wait on an advisory service; it does not claim a vulnerability scan. npm timing
+JSON is retained with concise results, and npm debug/timing logs with failure diagnostics. An absolute
+log directory also captures installs inside external consumers. The
+[2026-10-22 review](27-ci-reliability-review.md) records the timeout, repair evidence and proposed job
+isolation; those broader structural changes are not implemented by this repair.
+
 The job summary and `managed-probe-results` record source/event/range, changed paths, classification reasons, selected groups, and each check's success/failure/skipped outcome. Success artifacts retain compact native/integration/package/publication receipts for 14 days. Failed or cancelled runs retain these results and the previous detailed evidence paths as `managed-probe-diagnostics` for 30 days (logs, source hashes, test results, inspection snapshots/images and isolated failure evidence). Selection and gate reports never include environment dumps or launch credentials. Runner logs remain available under GitHub's repository retention policy.
 
 The [execution evidence](evidence/proportional-ci-2026-10-20/README.md) records actual 25s documentation, 24s skill and 2m29s managed-baseline runs, inspected artifact contents/retention, and upstream required-check failure blocking. Full recovery status belongs to the implementation PR's current check. Evidence upload is not the primary optimization: the pre-change [run 39492172536](https://github.com/sotsera/spar/actions/runs/39492172536) took 19m29s, including backend updates 5m16s, compatibility 3m20s, external consumer 2m26s and inspection 1m44s; upload took 20s. These are individual observations, not performance guarantees.

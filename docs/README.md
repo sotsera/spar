@@ -32,6 +32,10 @@ maintainer selected D1 startup errors; its [execution record](evidence/startup-e
 tracks implementation validation. D2 log discovery and D3 phase/readiness presentation remain separate
 future scopes, without changing milestone 1's historical acceptance requirements.
 
+The [CI reliability review](27-ci-reliability-review.md) traces the later D1 run's job timeout to slow
+repeated npm installs, records the focused advisory-network/timing repair, and proposes independent
+jobs under the existing required gate. The job split remains a proposal.
+
 The minimal app is under `samples/`. Detailed acceptance drivers use the instrumented app under
 `fixtures/`; see the [migration map](23-minimal-application.md#scenario-migration-map). A fixture command
 is not the recommended starting application. Each topic owns its commands; this index and README link to them.

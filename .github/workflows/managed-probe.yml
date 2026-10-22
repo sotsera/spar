@@ -19,6 +19,13 @@ jobs:
     name: Windows managed probe
     runs-on: windows-latest
     timeout-minutes: 30
+    env:
+      # Dependency installation and compilation must not wait on the advisory service.
+      # Vulnerability auditing is an explicit operation, not an install side effect.
+      NPM_CONFIG_AUDIT: 'false'
+      NPM_CONFIG_TIMING: 'true'
+      NPM_CONFIG_LOGS_DIR: ${{ github.workspace }}/artifacts/npm
+      NPM_CONFIG_LOGS_MAX: '200'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -235,6 +242,7 @@ jobs:
           retention-days: ${{ job.status == 'success' && 14 || 30 }}
           path: |
             artifacts/ci/*.json
+            artifacts/npm/*-timing.json
             artifacts/minimal/**/receipt.json
             artifacts/minimal/publish/spar-publish.json
             artifacts/native/ci-*/receipt.json
@@ -259,6 +267,7 @@ jobs:
           retention-days: 30
           path: |
             artifacts/ci/*.json
+            artifacts/npm/*
             artifacts/minimal/**/receipt.json
             artifacts/minimal/**/*.log
             artifacts/minimal/**/coordinator.jsonl
