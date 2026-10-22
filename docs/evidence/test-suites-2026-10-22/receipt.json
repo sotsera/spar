@@ -1,0 +1,439 @@
+{
+  "base": "4331e53d303bdef878c58c6ce67047f139f9e635",
+  "implementation": "57e82848db1ab063e7906c2fb168cdca88ad9ae9",
+  "tooling": {
+    "awesomeAssertions": "9.6.0",
+    "npm": "11.19.0",
+    "node": "24.21.0",
+    "xunit": "4.0.2",
+    "dotnet": "10.0.402"
+  },
+  "localManaged": {
+    "skipped": 0,
+    "ordinary": 67,
+    "partitionOverlap": 0,
+    "processes": 7,
+    "full": 74
+  },
+  "localSelection": {
+    "defaultExcludedExit": 0,
+    "enabledAssertionExit": 2,
+    "emptyGuardExit": 9
+  },
+  "firstStartupFailure": {
+    "instrumentedPasses": 442,
+    "reportedChild": 27820,
+    "case": "unknown-before-events",
+    "exactCause": "unproven",
+    "imageUnavailableInOriginalEvidence": true
+  },
+  "controlledExitedImage": {
+    "before": "failed usage case",
+    "afterCasesPassed": 34,
+    "unavailableImages": 34,
+    "allOwnedJobsEmpty": true,
+    "runtimeSourceChanged": false
+  },
+  "hostedProof": {
+    "testedMerge": "0e4c0efb726e33abd990a30f0c2720374f5e2390",
+    "reports": [
+      {
+        "suite": "delivery",
+        "source": "0e4c0efb726e33abd990a30f0c2720374f5e2390",
+        "runId": "39782199572",
+        "attempt": "1",
+        "workingTreeDirty": false,
+        "catalogSha256": "28f80b0d5450f2414a59214024642b466d0dcb5e057c6a03d1af85fa8c947273",
+        "passed": true,
+        "checks": [
+          {
+            "id": "build-applications",
+            "outcome": "success",
+            "elapsedMs": 75923.3809
+          },
+          {
+            "id": "bridge-coreclr",
+            "outcome": "success",
+            "elapsedMs": 27441.9463
+          },
+          {
+            "id": "lifecycle-coreclr",
+            "outcome": "success",
+            "elapsedMs": 23218.2671
+          },
+          {
+            "id": "publish-production",
+            "outcome": "success",
+            "elapsedMs": 47191.3429
+          },
+          {
+            "id": "production-boundary",
+            "outcome": "success",
+            "elapsedMs": 475.4135
+          },
+          {
+            "id": "production",
+            "outcome": "success",
+            "elapsedMs": 5015.8535
+          },
+          {
+            "id": "compatibility",
+            "outcome": "success",
+            "elapsedMs": 130641.8752
+          },
+          {
+            "id": "publish-minimal",
+            "outcome": "success",
+            "elapsedMs": 16769.2733
+          },
+          {
+            "id": "minimal-boundary",
+            "outcome": "success",
+            "elapsedMs": 438.0642
+          },
+          {
+            "id": "minimal-production",
+            "outcome": "success",
+            "elapsedMs": 3685.0411
+          },
+          {
+            "id": "publish-probe",
+            "outcome": "success",
+            "elapsedMs": 10926.7386
+          },
+          {
+            "id": "copied-probe",
+            "outcome": "success",
+            "elapsedMs": 35224.3968
+          }
+        ]
+      },
+      {
+        "suite": "development",
+        "source": "0e4c0efb726e33abd990a30f0c2720374f5e2390",
+        "runId": "39782199572",
+        "attempt": "1",
+        "workingTreeDirty": false,
+        "catalogSha256": "28f80b0d5450f2414a59214024642b466d0dcb5e057c6a03d1af85fa8c947273",
+        "passed": true,
+        "checks": [
+          {
+            "id": "build-applications",
+            "outcome": "success",
+            "elapsedMs": 45663.6762
+          },
+          {
+            "id": "fixture-install",
+            "outcome": "success",
+            "elapsedMs": 5132.9855
+          },
+          {
+            "id": "fixture-check",
+            "outcome": "success",
+            "elapsedMs": 921.6021
+          },
+          {
+            "id": "minimal-install",
+            "outcome": "success",
+            "elapsedMs": 1744.0227
+          },
+          {
+            "id": "minimal-check",
+            "outcome": "success",
+            "elapsedMs": 898.2106
+          },
+          {
+            "id": "minimal",
+            "outcome": "success",
+            "elapsedMs": 50258.9202
+          },
+          {
+            "id": "readiness",
+            "outcome": "success",
+            "elapsedMs": 33037.5133
+          },
+          {
+            "id": "session",
+            "outcome": "success",
+            "elapsedMs": 54238.0208
+          },
+          {
+            "id": "backend",
+            "outcome": "success",
+            "elapsedMs": 312745.8668
+          },
+          {
+            "id": "project-launch",
+            "outcome": "success",
+            "elapsedMs": 25063.3689
+          },
+          {
+            "id": "inspection",
+            "outcome": "success",
+            "elapsedMs": 93607.2869
+          }
+        ]
+      },
+      {
+        "suite": "fast",
+        "source": "0e4c0efb726e33abd990a30f0c2720374f5e2390",
+        "runId": "39782199572",
+        "attempt": "1",
+        "workingTreeDirty": false,
+        "catalogSha256": "28f80b0d5450f2414a59214024642b466d0dcb5e057c6a03d1af85fa8c947273",
+        "passed": false,
+        "checks": [
+          {
+            "id": "gate-tests",
+            "outcome": "success",
+            "elapsedMs": 1397.575
+          },
+          {
+            "id": "documentation",
+            "outcome": "failure",
+            "elapsedMs": 120.0018
+          },
+          {
+            "id": "skills",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "build-bridge-tests",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "build-development-tests",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "bridge-fast",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "development-fast",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "client-install",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "client-tests",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "fixture-install",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "fixture-check",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "fixture-build",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "notices",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          },
+          {
+            "id": "framing",
+            "outcome": "not-run",
+            "elapsedMs": 0
+          }
+        ]
+      },
+      {
+        "suite": "packages",
+        "source": "0e4c0efb726e33abd990a30f0c2720374f5e2390",
+        "runId": "39782199572",
+        "attempt": "1",
+        "workingTreeDirty": false,
+        "catalogSha256": "28f80b0d5450f2414a59214024642b466d0dcb5e057c6a03d1af85fa8c947273",
+        "passed": true,
+        "checks": [
+          {
+            "id": "pack",
+            "outcome": "success",
+            "elapsedMs": 64070.3461
+          },
+          {
+            "id": "instrumented-consumer",
+            "outcome": "success",
+            "elapsedMs": 173830.1497
+          },
+          {
+            "id": "minimal-consumer",
+            "outcome": "success",
+            "elapsedMs": 98258.3773
+          }
+        ]
+      },
+      {
+        "suite": "processes",
+        "source": "0e4c0efb726e33abd990a30f0c2720374f5e2390",
+        "runId": "39782199572",
+        "attempt": "1",
+        "workingTreeDirty": false,
+        "catalogSha256": "28f80b0d5450f2414a59214024642b466d0dcb5e057c6a03d1af85fa8c947273",
+        "passed": true,
+        "checks": [
+          {
+            "id": "build-development-tests",
+            "outcome": "success",
+            "elapsedMs": 26176.5714
+          },
+          {
+            "id": "build-watcher-tests",
+            "outcome": "success",
+            "elapsedMs": 3766.136
+          },
+          {
+            "id": "build-coordinator",
+            "outcome": "success",
+            "elapsedMs": 4527.0633
+          },
+          {
+            "id": "development-processes",
+            "outcome": "success",
+            "elapsedMs": 1535.4588
+          },
+          {
+            "id": "watcher-processes",
+            "outcome": "success",
+            "elapsedMs": 27798.0918
+          },
+          {
+            "id": "helpers",
+            "outcome": "success",
+            "elapsedMs": 10885.6265
+          },
+          {
+            "id": "startup",
+            "outcome": "success",
+            "elapsedMs": 4284.3187
+          }
+        ]
+      }
+    ],
+    "aggregatePassed": false,
+    "head": "612fa8ad3ebbf29ae64893f2c74f8161bd7fc02b",
+    "runId": 39782199572,
+    "url": "https://github.com/sotsera/spar/actions/runs/39782199572",
+    "errors": [
+      "Suite jobs did not all succeed.",
+      "fast: failed report or source/run/catalog mismatch.",
+      "fast: missing, failed or unexpected checks."
+    ],
+    "jobs": [
+      {
+        "id": 119836021321,
+        "name": "Tests (packages)",
+        "conclusion": "success",
+        "completedAt": "2026-10-22T13:01:07Z",
+        "startedAt": "2026-10-22T12:54:12Z"
+      },
+      {
+        "id": 119836021363,
+        "name": "Tests (delivery)",
+        "conclusion": "success",
+        "completedAt": "2026-10-22T13:01:01Z",
+        "startedAt": "2026-10-22T12:54:12Z"
+      },
+      {
+        "id": 119836021505,
+        "name": "Tests (development)",
+        "conclusion": "success",
+        "completedAt": "2026-10-22T13:05:52Z",
+        "startedAt": "2026-10-22T12:54:12Z"
+      },
+      {
+        "id": 119836021553,
+        "name": "Tests (processes)",
+        "conclusion": "success",
+        "completedAt": "2026-10-22T12:57:20Z",
+        "startedAt": "2026-10-22T12:54:11Z"
+      },
+      {
+        "id": 119836021756,
+        "name": "Tests (fast)",
+        "conclusion": "failure",
+        "completedAt": "2026-10-22T12:54:44Z",
+        "startedAt": "2026-10-22T12:54:12Z"
+      },
+      {
+        "id": 119841792474,
+        "name": "Windows managed probe",
+        "conclusion": "failure",
+        "completedAt": "2026-10-22T13:06:23Z",
+        "startedAt": "2026-10-22T13:05:54Z"
+      }
+    ]
+  },
+  "rule": {
+    "check": "Windows managed probe",
+    "id": 25345567,
+    "integrationId": 15368,
+    "bypassActors": [],
+    "strict": true
+  },
+  "files": [
+    {
+      "path": "eng/Test.ps1",
+      "sha256": "5946cae3d34a07cfb0553989c015bfa7a31b08f95ec4333bfd7736a7d946571f"
+    },
+    {
+      "path": "eng/test-suites.json",
+      "sha256": "28f80b0d5450f2414a59214024642b466d0dcb5e057c6a03d1af85fa8c947273"
+    },
+    {
+      "path": "eng/ci/gate.mjs",
+      "sha256": "ad93c68a6cdbbd4293e887d9959430337a7f1a7d10e0ae77a80b9a5814408939"
+    },
+    {
+      "path": "eng/ci/gate.test.mjs",
+      "sha256": "fda8fbedeb653500331ea79b7ba58186c7b02f4dedb9f14a2a8f6c9e483fbd9a"
+    },
+    {
+      "path": "eng/ci/Test-CopiedProbe.ps1",
+      "sha256": "6df0d53599da840c82bc2fee92b6b82118efbae451b36d93c115dd08d6511f48"
+    },
+    {
+      "path": "eng/Test-DevelopmentStartup.ps1",
+      "sha256": "6046599947c4ac673df5fb0cac4c8e77776ff8ef682d49a71b22f766abffcdbb"
+    },
+    {
+      "path": "eng/Test-ProjectLaunch.ps1",
+      "sha256": "2fb8caf15fe4c1482f57ebdaa4e34209b53b37646b935665ce009e2f4bbdca62"
+    },
+    {
+      "path": "tests/Directory.Build.props",
+      "sha256": "3ed345e592992d2782f0b2a6b08733eba303ff2f5754c8f494758595451943e7"
+    },
+    {
+      "path": "tests/Directory.Build.targets",
+      "sha256": "888268d3321965f05f0f891b95cb39300558d5f8af60c54953701dcbb1bc206f"
+    },
+    {
+      "path": "tests/testconfig.json",
+      "sha256": "128f1bfbe1799ce77de1be7a933ee48c12f1ec5f13c211b5a271643ee6197c2e"
+    },
+    {
+      "path": ".github/workflows/managed-probe.yml",
+      "sha256": "d113b4d3207ef5cda8e7f35e9cdd6dad8a156fe342a0fc93b6abb5b0ce6d32a1"
+    }
+  ],
+  "recovery": "Required on final PR head; see PR #46 current run. No future success inferred."
+}

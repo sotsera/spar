@@ -128,6 +128,11 @@ those distinct behaviors and separate extra performance sampling deliberately. R
 work must not bypass real rebuild races, clean consumer restores or production's deliberate frontend
 rebuild. No broad scenario deletion or speculative build cache is included here.
 
+The [execution record](evidence/test-suites-2026-10-22/README.md) retains local selection/ownership
+results, the first startup observation failure and the actual required-gate failure proof. Final
+recovery belongs to the implementation PR's exact current run; an earlier passing suite is not a
+pass for a later revision.
+
 ## Results and artifacts
 
 Hosted installs retain `NPM_CONFIG_AUDIT=false` and npm timing logs from the focused network repair.

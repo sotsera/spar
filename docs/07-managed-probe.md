@@ -18,6 +18,12 @@ No upstream source was copied or adapted for this slice. Reactor's metadata-upda
 
 Run from the repository root on Windows, with the exact SDK in `global.json` installed:
 
+The commands below record the precursor's original default. Current managed runs exclude expensive
+cases unless `-p:IncludeLongRunningTests=true --minimum-expected-tests 1` is supplied. Use
+`pwsh -NoProfile -File eng/Test.ps1 -Suite processes` for the current automated process suite; see
+the [suite guide](21-continuous-integration.md). The old .NET 11 preview comparison remains research,
+not an additional supported production baseline.
+
 ```powershell
 dotnet build Spar.slnx --disable-build-servers
 dotnet test --solution Spar.slnx --no-build
