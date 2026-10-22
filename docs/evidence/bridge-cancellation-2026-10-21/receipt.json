@@ -1,0 +1,43 @@
+{
+  "baseRevision": "4e82ce4160c466449f3cbefac34b4207c866fd57",
+  "failedRun": "https://github.com/ghidello/spar/actions/runs/39667782254",
+  "failedSource": "e908e1a0aa5cbff9611a8848995ebc5d781055e0",
+  "originalFailure": {
+    "method": "CancellationCallbacksAreAlsoOwnedUntilTheyReturn",
+    "managedPassed": 72,
+    "sourceLine": 149,
+    "managedFailed": 1,
+    "rawLogSha256": "120A015312604E63FBEB2BA9371B3DD5FF8E831A69FAB89E82DC9E4FF4D74FB6",
+    "observedStages": [
+      "connected",
+      "admitted",
+      "completed"
+    ],
+    "assertion": "Observer events contain Code cancelled"
+  },
+  "modifiedTest": {
+    "path": "tests/Sotsera.Spar.Bridge.Tests/BridgeTests.cs",
+    "sha256": "F06C3C27B29D3D979B411E719210D1193B06D85232E42ECDF19F12112C59445C"
+  },
+  "build": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "managed": {
+    "total": 74,
+    "failed": 0,
+    "passed": 74,
+    "skipped": 0
+  },
+  "targeted": {
+    "casesPerRepetition": 2,
+    "repetitions": 30,
+    "failed": 0,
+    "totalPassed": 60,
+    "skipped": 0
+  },
+  "oldTestReproducedLocally": false,
+  "oldTestPassingRepetitions": 20,
+  "runtimeModified": false,
+  "originalFailedAttemptRerun": false
+}
