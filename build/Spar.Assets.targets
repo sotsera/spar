@@ -8,9 +8,14 @@
           Condition="'$(SparProductionAssets)' == 'true' and '$(DesignTimeBuild)' != 'true'">
     <PropertyGroup>
       <SparAssetArchive>$(IntermediateOutputPath)spar-assets.zip</SparAssetArchive>
+      <_SparFrontendRestoreState>$([System.IO.Path]::GetFullPath('$(IntermediateOutputPath)spar-frontend-restore.json', '$(MSBuildProjectDirectory)'))</_SparFrontendRestoreState>
+      <_SparFrontendRestoreForce Condition="'$(SparForceFrontendRestore)' == 'true'">-Force</_SparFrontendRestoreForce>
     </PropertyGroup>
 
-    <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm ci --ignore-scripts --include=optional" />
+    <ItemGroup>
+      <FileWrites Include="$(_SparFrontendRestoreState)" />
+    </ItemGroup>
+    <Exec Command="pwsh -NoProfile -File &quot;$(SparBuildToolsDirectory)/Restore-Frontend.ps1&quot; -Frontend &quot;$(SparFrontendDirectory)&quot; -StateFile &quot;$(_SparFrontendRestoreState)&quot; $(_SparFrontendRestoreForce)" />
     <Exec WorkingDirectory="$(SparFrontendDirectory)" Command="npm run build" />
     <Error Condition="!Exists('$(SparFrontendDirectory)/dist/frontend-LICENSES.txt')"
            Text="The frontend build must emit dist/frontend-LICENSES.txt with the notices for its distributed code." />

@@ -93,6 +93,7 @@ export default defineConfig(async ({ command }) => ({
     <!-- SDK restore must see these before package targets are available on the first build. -->
     <EnableAotAnalyzer>true</EnableAotAnalyzer>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <DisableTransitiveFrameworkReferenceDownloads Condition="'$(DisableTransitiveFrameworkReferenceDownloads)' == '' and '$(Configuration)' == 'Debug' and '$(SelfContained)' != 'true' and '$(PublishAot)' != 'true' and '$(PublishReadyToRun)' != 'true'">true</DisableTransitiveFrameworkReferenceDownloads>
     <PublishAot Condition="'$(Configuration)' == 'Release' and ('$(SparDeliveryMode)' != 'CoreCLR' or '$(SparStrictAot)' == 'true')">true</PublishAot>
     <SelfContained Condition="'$(Configuration)' == 'Release'">true</SelfContained>
   </PropertyGroup>

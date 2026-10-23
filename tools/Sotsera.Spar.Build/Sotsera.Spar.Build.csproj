@@ -15,7 +15,7 @@
     <None Include="../../build/Spar.BuildPackage.targets" Pack="true" PackagePath="build/Sotsera.Spar.Build.targets" />
     <None Include="../../build/Spar.Contracts.targets;../../build/Spar.Assets.targets;../../build/Spar.Delivery.targets"
           Pack="true" PackagePath="build/" />
-    <None Include="../../eng/Build-AssetBundle.ps1;../../eng/Write-PublishReceipt.ps1" Pack="true" PackagePath="tools/build/" />
+    <None Include="../../eng/Build-AssetBundle.ps1;../../eng/Write-PublishReceipt.ps1;../../eng/Restore-Frontend.ps1" Pack="true" PackagePath="tools/build/" />
   </ItemGroup>
 
   <Target Name="IncludeContractTool" BeforeTargets="_GetPackageFiles" DependsOnTargets="Build">

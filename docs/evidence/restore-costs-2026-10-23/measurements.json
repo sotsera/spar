@@ -1,0 +1,1065 @@
+{
+  "base": "b2418796a3e4b956a40e50e5b523cce9056f4853",
+  "nativeDevelopment": [
+    {
+      "variant": "minimal-source",
+      "result": {
+        "scenario": "minimal-source",
+        "passed": true,
+        "coordinatorProcessId": 71668,
+        "startedAtUtc": "2026-10-23T09:59:36.2316217Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 31,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised",
+        "observation": "public-inspection-no-probe-commands; PNG review required"
+      }
+    },
+    {
+      "variant": "minimal-consumer/development",
+      "result": {
+        "scenario": "minimal-package",
+        "passed": true,
+        "coordinatorProcessId": 62272,
+        "startedAtUtc": "2026-10-23T09:57:51.7563759Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 31,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised",
+        "observation": "public-inspection-no-probe-commands; PNG review required"
+      }
+    },
+    {
+      "variant": "external-consumer/development.json",
+      "result": {
+        "scenario": "external-package",
+        "passed": true,
+        "coordinatorProcessId": 51400,
+        "startedAtUtc": "2026-10-23T10:00:37.384058Z",
+        "actualExitCode": 0,
+        "abruptOwnerKill": false,
+        "forcedCleanupRequested": false,
+        "independentlyRetainedProcesses": 31,
+        "unrelatedSurvived": true,
+        "rendering": "not-exercised"
+      }
+    }
+  ],
+  "fullLocalSourceCompatibilityPassed": false,
+  "publication": [
+    {
+      "variant": "minimal-consumer/production",
+      "result": {
+        "window": 1314516,
+        "observedAt": "2026-10-23T11:58:49.334872+02:00",
+        "executableSha256": "D62BD1516C32DA4CE34318F59FA21EDA92DC1528D6FF33F54ABF1A502F5BD536",
+        "closeWaitCompleted": true,
+        "exitCodeBeforeCleanup": 0,
+        "noSdkMachine": "not-exercised",
+        "cleanupCompleted": true,
+        "passed": true,
+        "cleanupErrors": [],
+        "rendering": "pixels-captured-greeting-review-required",
+        "startedAtUtc": "2026-10-23T09:58:46.2584822Z",
+        "processId": 21944,
+        "closeRequested": true,
+        "forcedRootCleanup": false,
+        "windowClass": "Sotsera.Spar.36b57fa088544d168608c08dcf9ae64b",
+        "retainedDescendants": 7,
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-published-6f14f1ad1b924153b5c7a540c926eff9",
+        "failure": null,
+        "forcedDescendants": [],
+        "exitObservedBeforeCleanup": true,
+        "mode": "NativeAOT",
+        "retainedBrowserProcesses": 6
+      }
+    },
+    {
+      "variant": "external-consumer/aot-run",
+      "result": {
+        "executableSha256": "0E5F67008BE81C90203245EC7A1FFBBA5B125A6B4C74969B8806B1431BA063C7",
+        "renderRequested": true,
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-production-e47031b45e3746b1bd5e946735cac698",
+        "noSdkMachine": "not-available",
+        "allPassed": true,
+        "observedAt": "2026-10-23T12:01:35.1499749+02:00",
+        "samples": [
+          {
+            "passed": true,
+            "processId": 35160,
+            "greetingCompletionMs": 10229.9775,
+            "hostMemory": {
+              "privateBytes": 8396800,
+              "workingSet": 25391104
+            },
+            "processToGreetingMs": 429.2483,
+            "forcedCleanup": false,
+            "browserVersion": "155.0.4283.62",
+            "startedAtUtc": "2026-10-23T10:01:31.2862349Z",
+            "sample": 1,
+            "browserMemory": [
+              {
+                "privateBytes": 43069440,
+                "id": 57404,
+                "startedAtUtc": "2026-10-23T10:01:31.3873645Z",
+                "workingSet": 133849088
+              },
+              {
+                "privateBytes": 3964928,
+                "id": 11912,
+                "startedAtUtc": "2026-10-23T10:01:31.4112014Z",
+                "workingSet": 16113664
+              },
+              {
+                "privateBytes": 77860864,
+                "id": 48112,
+                "startedAtUtc": "2026-10-23T10:01:31.4919495Z",
+                "workingSet": 75014144
+              },
+              {
+                "privateBytes": 14716928,
+                "id": 20360,
+                "startedAtUtc": "2026-10-23T10:01:31.4949162Z",
+                "workingSet": 46354432
+              },
+              {
+                "privateBytes": 10047488,
+                "id": 62804,
+                "startedAtUtc": "2026-10-23T10:01:31.5160498Z",
+                "workingSet": 27308032
+              },
+              {
+                "privateBytes": 23957504,
+                "id": 34280,
+                "startedAtUtc": "2026-10-23T10:01:31.5733762Z",
+                "workingSet": 63016960
+              }
+            ],
+            "profile": "fresh",
+            "render": "pixels-captured-review-required"
+          }
+        ],
+        "payloadBytes": 4104365.0,
+        "mode": "NativeAOT"
+      }
+    },
+    {
+      "variant": "external-consumer/coreclr-run",
+      "result": {
+        "executableSha256": "E34134050D8F044DEABD74922A44387F84BBA995CB9A716588F56015FC691B52",
+        "renderRequested": true,
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-production-8ce600e745c74cc6ab1ead9dfc8c3fba",
+        "noSdkMachine": "not-available",
+        "allPassed": true,
+        "observedAt": "2026-10-23T12:02:17.0911558+02:00",
+        "samples": [
+          {
+            "passed": true,
+            "processId": 57464,
+            "greetingCompletionMs": 20032.5339,
+            "hostMemory": {
+              "privateBytes": 13873152,
+              "workingSet": 48590848
+            },
+            "processToGreetingMs": 19928.0746,
+            "forcedCleanup": false,
+            "browserVersion": "155.0.4283.62",
+            "startedAtUtc": "2026-10-23T10:01:53.5603674Z",
+            "sample": 1,
+            "browserMemory": [
+              {
+                "privateBytes": 43745280,
+                "id": 26784,
+                "startedAtUtc": "2026-10-23T10:02:12.0114021Z",
+                "workingSet": 134610944
+              },
+              {
+                "privateBytes": 3964928,
+                "id": 32112,
+                "startedAtUtc": "2026-10-23T10:02:12.0363125Z",
+                "workingSet": 16125952
+              },
+              {
+                "privateBytes": 80138240,
+                "id": 63836,
+                "startedAtUtc": "2026-10-23T10:02:12.1137138Z",
+                "workingSet": 75350016
+              },
+              {
+                "privateBytes": 14471168,
+                "id": 34408,
+                "startedAtUtc": "2026-10-23T10:02:12.1174019Z",
+                "workingSet": 46096384
+              },
+              {
+                "privateBytes": 9625600,
+                "id": 36152,
+                "startedAtUtc": "2026-10-23T10:02:12.1378055Z",
+                "workingSet": 26955776
+              },
+              {
+                "privateBytes": 23941120,
+                "id": 18580,
+                "startedAtUtc": "2026-10-23T10:02:12.1985663Z",
+                "workingSet": 63352832
+              }
+            ],
+            "profile": "fresh",
+            "render": "pixels-captured-review-required"
+          }
+        ],
+        "payloadBytes": 81150524.0,
+        "mode": "CoreCLR"
+      }
+    },
+    {
+      "variant": "coreclr-diagnostic",
+      "result": {
+        "payloadBytes": 81145123.0,
+        "renderRequested": true,
+        "samples": [
+          {
+            "browserMemory": [
+              {
+                "privateBytes": 43982848,
+                "id": 61096,
+                "workingSet": 134864896,
+                "startedAtUtc": "2026-10-23T10:11:01.3913186Z"
+              },
+              {
+                "privateBytes": 3969024,
+                "id": 30676,
+                "workingSet": 16125952,
+                "startedAtUtc": "2026-10-23T10:11:01.4194397Z"
+              },
+              {
+                "privateBytes": 80728064,
+                "id": 34140,
+                "workingSet": 75603968,
+                "startedAtUtc": "2026-10-23T10:11:01.5005292Z"
+              },
+              {
+                "privateBytes": 14548992,
+                "id": 66796,
+                "workingSet": 46153728,
+                "startedAtUtc": "2026-10-23T10:11:01.5041541Z"
+              },
+              {
+                "privateBytes": 9613312,
+                "id": 62848,
+                "workingSet": 26976256,
+                "startedAtUtc": "2026-10-23T10:11:01.5251698Z"
+              },
+              {
+                "privateBytes": 25145344,
+                "id": 38500,
+                "workingSet": 63500288,
+                "startedAtUtc": "2026-10-23T10:11:01.6098808Z"
+              }
+            ],
+            "profile": "fresh",
+            "forcedCleanup": false,
+            "browserVersion": "155.0.4283.62",
+            "passed": true,
+            "processToGreetingMs": 4282.7254,
+            "sample": 1,
+            "hostMemory": {
+              "workingSet": 48418816,
+              "privateBytes": 13770752
+            },
+            "processId": 25724,
+            "greetingCompletionMs": 4350.6323,
+            "render": "pixels-captured-review-required",
+            "startedAtUtc": "2026-10-23T10:10:58.8791726Z"
+          }
+        ],
+        "observedAt": "2026-10-23T12:11:09.6636147+02:00",
+        "noSdkMachine": "not-available",
+        "executableSha256": "5C2F1A932891D3EDC3FB777580553EC3F3B5E96E1F57BBE35E4A9BF841D2410B",
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-production-35d081e1661a48eca3061bea9bb78f52",
+        "mode": "CoreCLR",
+        "allPassed": true
+      }
+    }
+  ],
+  "reviewedImages": [
+    {
+      "sha256": "E78FFBD69B004E5281433244B91F30CDED441B4F09AC94BA30DF26EB9EB4ADAA",
+      "reviewed": true,
+      "path": "artifacts/restore-costs/minimal-consumer/development/updated.png"
+    },
+    {
+      "sha256": "FBB90E368A5D43828FC7B86B40B73F412DBEF00AFEA8E6AEA0EB953F0971D97F",
+      "reviewed": true,
+      "path": "artifacts/restore-costs/minimal-consumer/development/restarted.png"
+    },
+    {
+      "sha256": "844B238B7A566FC11DBAFB3CD131D0EDC69B98F7BD0E0E132CD5E0BA961AEFB3",
+      "reviewed": true,
+      "path": "artifacts/restore-costs/minimal-consumer/production/published.bmp"
+    },
+    {
+      "sha256": "E78FFBD69B004E5281433244B91F30CDED441B4F09AC94BA30DF26EB9EB4ADAA",
+      "reviewed": true,
+      "path": "artifacts/restore-costs/minimal-source/minimal-source-648aa67c5b344c3299dbc5a270d40f3d/updated.png"
+    },
+    {
+      "sha256": "844B238B7A566FC11DBAFB3CD131D0EDC69B98F7BD0E0E132CD5E0BA961AEFB3",
+      "reviewed": true,
+      "path": "artifacts/restore-costs/external-consumer/aot-run/run-1.bmp"
+    },
+    {
+      "sha256": "7A45371F21BCAAAAE53A36B94A7F254E303E2DB7DF9914E214EBBDD674E9367E",
+      "reviewed": true,
+      "path": "artifacts/restore-costs/external-consumer/coreclr-run/run-1.bmp"
+    },
+    {
+      "sha256": "DA99FD635297EA3D41DC5473B5A94EF99D818B19E747FF7924F89D1863685EEA",
+      "reviewed": true,
+      "path": "artifacts/vscode-development/debugger-a1c9d5a694c6422e82679f97432e6deb/patched.bmp"
+    },
+    {
+      "sha256": "DA99FD635297EA3D41DC5473B5A94EF99D818B19E747FF7924F89D1863685EEA",
+      "reviewed": true,
+      "path": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-minimal-consumer-fa875f89346346e6885c073722b88840\\patched.bmp"
+    }
+  ],
+  "npm": "11.19.0",
+  "node": "v24.21.0",
+  "runtimeRegression": [
+    {
+      "deliverySha256": "DA8DB6BCF198AE9B2707E9800AC27D1EF726818EECE3700E61F4D6A7A03AE61A",
+      "checkpoints": [
+        {
+          "passed": true,
+          "name": "framework-dependent Debug",
+          "packs": [
+            "Microsoft.NETCore.App.Runtime.win-x64"
+          ]
+        },
+        {
+          "passed": true,
+          "name": "explicit opt out",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64"
+          ]
+        },
+        {
+          "passed": true,
+          "name": "Release retains runtime discovery",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Runtime.NativeAOT.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+            "runtime.win-x64.Microsoft.DotNet.ILCompiler"
+          ]
+        },
+        {
+          "passed": true,
+          "name": "self-contained Debug retains runtime discovery",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64"
+          ]
+        },
+        {
+          "passed": true,
+          "name": "ReadyToRun Debug retains runtime discovery",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Crossgen2.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64"
+          ]
+        },
+        {
+          "passed": true,
+          "name": "cold transitive framework and dynamic dependency publish/execute",
+          "result": "Hello from generated code, Spar/200"
+        }
+      ],
+      "passed": true,
+      "variant": "runtime-source-corrected"
+    },
+    {
+      "deliverySha256": "DA8DB6BCF198AE9B2707E9800AC27D1EF726818EECE3700E61F4D6A7A03AE61A",
+      "checkpoints": [
+        {
+          "name": "framework-dependent Debug",
+          "packs": [
+            "Microsoft.NETCore.App.Runtime.win-x64"
+          ],
+          "passed": true
+        },
+        {
+          "name": "explicit opt out",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64"
+          ],
+          "passed": true
+        },
+        {
+          "name": "Release retains runtime discovery",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Runtime.NativeAOT.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+            "runtime.win-x64.Microsoft.DotNet.ILCompiler"
+          ],
+          "passed": true
+        },
+        {
+          "name": "self-contained Debug retains runtime discovery",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64"
+          ],
+          "passed": true
+        },
+        {
+          "name": "ReadyToRun Debug retains runtime discovery",
+          "packs": [
+            "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "Microsoft.NETCore.App.Crossgen2.win-x64",
+            "Microsoft.NETCore.App.Runtime.win-x64",
+            "Microsoft.WindowsDesktop.App.Runtime.win-x64"
+          ],
+          "passed": true
+        },
+        {
+          "name": "cold transitive framework and dynamic dependency publish/execute",
+          "passed": true,
+          "result": "Hello from generated code, Spar/200"
+        }
+      ],
+      "passed": true,
+      "variant": "runtime-package"
+    }
+  ],
+  "editors": [
+    {
+      "outcome": "passed",
+      "vscode": "1.143.0",
+      "csharp": "2.160.4",
+      "devkit": "3.40.215",
+      "lane": "minimal-application-public-inspection",
+      "rendering": "pixels-captured-review-required",
+      "events": 124,
+      "independentlyRetainedProcesses": 22,
+      "observedProcessesExited": true
+    },
+    {
+      "outcome": "passed",
+      "vscode": "1.143.0",
+      "csharp": "2.160.4",
+      "devkit": "3.40.215",
+      "lane": "minimal-application-public-inspection",
+      "rendering": "pixels-captured-review-required",
+      "events": 124,
+      "independentlyRetainedProcesses": 22,
+      "observedProcessesExited": true
+    }
+  ],
+  "coldRestore": {
+    "cache": "New empty private packages and HTTP caches for every sample; default audit and signature verification retained",
+    "source": "b2418796a3e4b956a40e50e5b523cce9056f4853",
+    "samples": [
+      {
+        "frameworkReferences": [
+          "Microsoft.NETCore.App"
+        ],
+        "filesBytes": 366822714.0,
+        "run": 1,
+        "httpCache": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\cold-1-normal\\http-cache",
+        "exitCode": 0,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          }
+        ],
+        "mode": "normal",
+        "elapsedMs": 62464.1911,
+        "packagesCache": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-bc53b2482ca54bf1817192c6844c54e0\\.packages",
+        "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-bc53b2482ca54bf1817192c6844c54e0"
+      },
+      {
+        "frameworkReferences": [
+          "Microsoft.NETCore.App"
+        ],
+        "filesBytes": 185711279.0,
+        "run": 2,
+        "httpCache": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\cold-2-reduced\\http-cache",
+        "exitCode": 0,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          }
+        ],
+        "mode": "reduced",
+        "elapsedMs": 33079.4485,
+        "packagesCache": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-f1295a8be0414b0899b4b510733ed064\\.packages",
+        "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-f1295a8be0414b0899b4b510733ed064"
+      },
+      {
+        "frameworkReferences": [
+          "Microsoft.NETCore.App"
+        ],
+        "filesBytes": 185711279.0,
+        "run": 3,
+        "httpCache": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\cold-3-reduced\\http-cache",
+        "exitCode": 0,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          }
+        ],
+        "mode": "reduced",
+        "elapsedMs": 22701.9429,
+        "packagesCache": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-f43e1555eee543a080ff0defaefda04e\\.packages",
+        "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-f43e1555eee543a080ff0defaefda04e"
+      },
+      {
+        "frameworkReferences": [
+          "Microsoft.NETCore.App"
+        ],
+        "filesBytes": 366822714.0,
+        "run": 4,
+        "httpCache": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\cold-4-normal\\http-cache",
+        "exitCode": 0,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          }
+        ],
+        "mode": "normal",
+        "elapsedMs": 30292.8438,
+        "packagesCache": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-fa5b21b20d5d4a1c9ab678cde5b210dc\\.packages",
+        "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-fa5b21b20d5d4a1c9ab678cde5b210dc"
+      },
+      {
+        "httpCache": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\cold-5-normal\\http-cache",
+        "mode": "normal",
+        "filesBytes": 366822714.0,
+        "run": 5,
+        "elapsedMs": 37908.1073,
+        "frameworkReferences": [
+          "Microsoft.NETCore.App"
+        ],
+        "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-64911375f3e74a818386d358e7e548aa",
+        "packagesCache": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-64911375f3e74a818386d358e7e548aa\\.packages",
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          }
+        ],
+        "exitCode": 0
+      },
+      {
+        "httpCache": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\cold-6-reduced\\http-cache",
+        "mode": "reduced",
+        "filesBytes": 185711279.0,
+        "run": 6,
+        "elapsedMs": 20661.054,
+        "frameworkReferences": [
+          "Microsoft.NETCore.App"
+        ],
+        "consumer": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-4871ebbb48f246bf951a3e6eceb42ede",
+        "packagesCache": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-cold-restore-4871ebbb48f246bf951a3e6eceb42ede\\.packages",
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Runtime.win-x64",
+            "version": "[10.0.13, 10.0.13]"
+          }
+        ],
+        "exitCode": 0
+      }
+    ],
+    "packages": [
+      {
+        "bytes": 25581,
+        "name": "Sotsera.Spar.Bridge.0.1.0.nupkg",
+        "sha256": "F00DAE7E8577F2E7A3B3B4732034CEC079DC3387F8DD358D904F2F9B22945557"
+      },
+      {
+        "bytes": 12074696,
+        "name": "Sotsera.Spar.Build.0.1.0.nupkg",
+        "sha256": "639F01C4EB393CFB9228B6C00CFD79619CA85BA39806C1FACA67A157A52D4509"
+      },
+      {
+        "bytes": 481846,
+        "name": "Sotsera.Spar.Development.0.1.0.nupkg",
+        "sha256": "7A7ADE5EF45F865D8964C651615D1D571DA6D38738212987EA06E2F827EAA223"
+      },
+      {
+        "bytes": 143997,
+        "name": "Sotsera.Spar.Windows.0.1.0.nupkg",
+        "sha256": "30F60ED8A6CC653EA234503FD90C811361FD19874AE05DA8114C011E43244B64"
+      },
+      {
+        "bytes": 161274,
+        "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg",
+        "sha256": "121588FD3A0C2E1A5FEC2201633F4847DC6B166137B604652433602DE307EDA1"
+      }
+    ],
+    "sdk": "10.0.402"
+  },
+  "npmRegression": [
+    {
+      "passed": true,
+      "finalProbeHelperSha256": "073889DBB6BDB1D0D18D67B7AE5AA563C8B3A1C291EE92142748048D0914CD98",
+      "variant": "npm-content-source",
+      "note": "Probe helper was deliberately changed to verify payload invalidation. Shipping helper hash is in sources.sha256.",
+      "checkpoints": [
+        {
+          "passed": true,
+          "actualInstalls": 1,
+          "name": "first clean install"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 1,
+          "name": "unchanged build reuses dependencies"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 1,
+          "name": "frontend source does not reinstall dependencies"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 2,
+          "name": "manifest change reinstalls"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 3,
+          "name": "lock change reinstalls"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 4,
+          "name": "npm configuration change reinstalls"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 5,
+          "name": "missing package file repairs installation"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 6,
+          "name": "modified package file repairs installation"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 7,
+          "name": "missing install lock repairs installation"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 8,
+          "name": "explicit clean install"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 9,
+          "name": "restore helper change reinstalls"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 11,
+          "name": "failed restore cannot become a cache hit"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 11,
+          "name": "design-time runs no frontend tools"
+        },
+        {
+          "passed": true,
+          "actualInstalls": 12,
+          "name": "clean invalidates only owned state"
+        }
+      ],
+      "targetsSha256": "D68280C443CCF520C42667068AB57F540DC07A505DC08027E0D1B7DBFF9BCB90"
+    },
+    {
+      "passed": true,
+      "finalProbeHelperSha256": "073889DBB6BDB1D0D18D67B7AE5AA563C8B3A1C291EE92142748048D0914CD98",
+      "variant": "npm-content-package",
+      "note": "Probe helper was deliberately changed to verify payload invalidation. Shipping helper hash is in sources.sha256.",
+      "checkpoints": [
+        {
+          "passed": true,
+          "name": "first clean install",
+          "actualInstalls": 1
+        },
+        {
+          "passed": true,
+          "name": "unchanged build reuses dependencies",
+          "actualInstalls": 1
+        },
+        {
+          "passed": true,
+          "name": "frontend source does not reinstall dependencies",
+          "actualInstalls": 1
+        },
+        {
+          "passed": true,
+          "name": "manifest change reinstalls",
+          "actualInstalls": 2
+        },
+        {
+          "passed": true,
+          "name": "lock change reinstalls",
+          "actualInstalls": 3
+        },
+        {
+          "passed": true,
+          "name": "npm configuration change reinstalls",
+          "actualInstalls": 4
+        },
+        {
+          "passed": true,
+          "name": "missing package file repairs installation",
+          "actualInstalls": 5
+        },
+        {
+          "passed": true,
+          "name": "modified package file repairs installation",
+          "actualInstalls": 6
+        },
+        {
+          "passed": true,
+          "name": "missing install lock repairs installation",
+          "actualInstalls": 7
+        },
+        {
+          "passed": true,
+          "name": "explicit clean install",
+          "actualInstalls": 8
+        },
+        {
+          "passed": true,
+          "name": "restore helper change reinstalls",
+          "actualInstalls": 9
+        },
+        {
+          "passed": true,
+          "name": "failed restore cannot become a cache hit",
+          "actualInstalls": 11
+        },
+        {
+          "passed": true,
+          "name": "design-time runs no frontend tools",
+          "actualInstalls": 11
+        },
+        {
+          "passed": true,
+          "name": "clean invalidates only owned state",
+          "actualInstalls": 12
+        }
+      ],
+      "targetsSha256": "D68280C443CCF520C42667068AB57F540DC07A505DC08027E0D1B7DBFF9BCB90"
+    }
+  ],
+  "originalDetection": {
+    "runtime": "Original target fails Debug graph assertion with all three runtime packs",
+    "frontend": "Original target fails second unchanged-build assertion: expected 1 actual ci invocation, observed 2"
+  },
+  "npmHelperTimings": [
+    {
+      "elapsedMs": 2748.5492,
+      "mode": "force"
+    },
+    {
+      "elapsedMs": 958.8035,
+      "mode": "reuse"
+    },
+    {
+      "elapsedMs": 958.6012,
+      "mode": "reuse"
+    },
+    {
+      "elapsedMs": 2658.2386,
+      "mode": "force"
+    },
+    {
+      "elapsedMs": 2674.8575,
+      "mode": "force"
+    },
+    {
+      "elapsedMs": 966.9423,
+      "mode": "reuse"
+    }
+  ],
+  "rawEvidence": "artifacts/restore-costs; editor profile/source paths above",
+  "sourceCompatibilityFailures": [
+    {
+      "cause": "Unresolved; copied CoreCLR greeting exceeded the unchanged 30-second driver budget. First emitted no probe event; follow-up window at 27.43 s and document at 27.99 s.",
+      "residualProcessesCheckedAbsent": true,
+      "suite": {
+        "dotnet": "10.0.402",
+        "sourceRevision": "b2418796a3e4b956a40e50e5b523cce9056f4853",
+        "renderRequested": true,
+        "allPassed": false,
+        "powershell": "7.6.5",
+        "fixture": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\fixture-ec7f9eab5cab44ed8f05dd9d37880500",
+        "observedAt": "2026-10-23T12:04:10.2122969+02:00",
+        "cases": [
+          {
+            "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\development-diagnostic.log",
+            "passed": true,
+            "expectedSuccess": true,
+            "elapsedMs": 20151.6004,
+            "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+            "exitCode": 0,
+            "arguments": [
+              "build",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\fixture-ec7f9eab5cab44ed8f05dd9d37880500\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+              "-c",
+              "Debug",
+              "--disable-build-servers"
+            ],
+            "name": "development-diagnostic"
+          },
+          {
+            "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\strict-dependency.log",
+            "passed": true,
+            "expectedSuccess": false,
+            "elapsedMs": 16360.999,
+            "expectedDiagnostic": "error IL3050.*RuntimeGreeting.Create",
+            "exitCode": 1,
+            "arguments": [
+              "publish",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\fixture-ec7f9eab5cab44ed8f05dd9d37880500\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+              "-c",
+              "Release",
+              "-o",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\publish-strict-dependency",
+              "--disable-build-servers",
+              "-p:SparStrictAot=true"
+            ],
+            "name": "strict-dependency"
+          },
+          {
+            "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\coreclr.log",
+            "passed": true,
+            "expectedSuccess": true,
+            "elapsedMs": 12040.7628,
+            "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+            "exitCode": 0,
+            "arguments": [
+              "publish",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\fixture-ec7f9eab5cab44ed8f05dd9d37880500\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+              "-c",
+              "Release",
+              "-o",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility\\publish-coreclr",
+              "--disable-build-servers"
+            ],
+            "name": "coreclr"
+          }
+        ]
+      },
+      "copiedRun": {
+        "executableSha256": "5C2F1A932891D3EDC3FB777580553EC3F3B5E96E1F57BBE35E4A9BF841D2410B",
+        "mode": "CoreCLR",
+        "allPassed": false,
+        "noSdkMachine": "not-available",
+        "renderRequested": true,
+        "payloadBytes": 81145123.0,
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-production-efd018ad1fb44743a7ea288261f6f103",
+        "observedAt": "2026-10-23T12:04:10.2065781+02:00",
+        "samples": [
+          {
+            "profile": "fresh",
+            "forcedCleanup": true,
+            "sample": 1,
+            "hostMemory": null,
+            "browserVersion": null,
+            "passed": false,
+            "render": "pixels-captured-review-required",
+            "greetingCompletionMs": null,
+            "startedAtUtc": "2026-10-23T10:03:33.9695789Z",
+            "processId": 15140,
+            "browserMemory": [],
+            "processToGreetingMs": null
+          }
+        ]
+      },
+      "variant": "compatibility"
+    },
+    {
+      "cause": "Unresolved; copied CoreCLR greeting exceeded the unchanged 30-second driver budget. First emitted no probe event; follow-up window at 27.43 s and document at 27.99 s.",
+      "residualProcessesCheckedAbsent": true,
+      "suite": {
+        "sourceRevision": "b2418796a3e4b956a40e50e5b523cce9056f4853",
+        "allPassed": false,
+        "cases": [
+          {
+            "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\development-diagnostic.log",
+            "arguments": [
+              "build",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\fixture-8ea8e78ad71f46c98bd42bb5066f4386\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+              "-c",
+              "Debug",
+              "--disable-build-servers"
+            ],
+            "exitCode": 0,
+            "expectedSuccess": true,
+            "elapsedMs": 11662.9212,
+            "name": "development-diagnostic",
+            "passed": true,
+            "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create"
+          },
+          {
+            "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\strict-dependency.log",
+            "arguments": [
+              "publish",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\fixture-8ea8e78ad71f46c98bd42bb5066f4386\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+              "-c",
+              "Release",
+              "-o",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\publish-strict-dependency",
+              "--disable-build-servers",
+              "-p:SparStrictAot=true"
+            ],
+            "exitCode": 1,
+            "expectedSuccess": false,
+            "elapsedMs": 15820.1833,
+            "name": "strict-dependency",
+            "passed": true,
+            "expectedDiagnostic": "error IL3050.*RuntimeGreeting.Create"
+          },
+          {
+            "log": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\coreclr.log",
+            "arguments": [
+              "publish",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\fixture-8ea8e78ad71f46c98bd42bb5066f4386\\fixtures\\Spar.NativeSample\\Spar.NativeSample.csproj",
+              "-c",
+              "Release",
+              "-o",
+              "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\publish-coreclr",
+              "--disable-build-servers"
+            ],
+            "exitCode": 0,
+            "expectedSuccess": true,
+            "elapsedMs": 17222.2854,
+            "name": "coreclr",
+            "passed": true,
+            "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create"
+          }
+        ],
+        "powershell": "7.6.5",
+        "fixture": "E:\\Ghidello\\Git\\spar.v2\\artifacts\\restore-costs\\compatibility-followup\\fixture-8ea8e78ad71f46c98bd42bb5066f4386",
+        "dotnet": "10.0.402",
+        "renderRequested": true,
+        "observedAt": "2026-10-23T12:13:16.898506+02:00"
+      },
+      "copiedRun": {
+        "payloadBytes": 81145132.0,
+        "allPassed": false,
+        "samples": [
+          {
+            "passed": false,
+            "forcedCleanup": true,
+            "hostMemory": null,
+            "profile": "fresh",
+            "browserVersion": null,
+            "sample": 1,
+            "greetingCompletionMs": null,
+            "browserMemory": [],
+            "processId": 67452,
+            "render": "pixels-captured-review-required",
+            "processToGreetingMs": null,
+            "startedAtUtc": "2026-10-23T10:12:40.3459172Z"
+          }
+        ],
+        "renderRequested": true,
+        "executableSha256": "5C2F1A932891D3EDC3FB777580553EC3F3B5E96E1F57BBE35E4A9BF841D2410B",
+        "copiedDirectory": "C:\\Users\\Alessandro\\AppData\\Local\\Temp\\spar-production-00063c839de74f77b5e91322b38f7e11",
+        "mode": "CoreCLR",
+        "noSdkMachine": "not-available",
+        "observedAt": "2026-10-23T12:13:16.8878799+02:00"
+      },
+      "variant": "compatibility-followup"
+    }
+  ],
+  "managed": {
+    "total": 75,
+    "matchingBuildWarnings": 0,
+    "skipped": 0,
+    "failed": 0,
+    "passed": 75
+  },
+  "candidatePackages": [
+    {
+      "name": "Sotsera.Spar.Bridge.0.1.0.nupkg",
+      "bytes": 25581,
+      "sha256": "47331D0ED75C42F673B7A0B0127B4972142289E745096031255F4BEE7FD4F53D"
+    },
+    {
+      "name": "Sotsera.Spar.Build.0.1.0.nupkg",
+      "bytes": 12076906,
+      "sha256": "92291BC7D672A82913F83EC30CE941B132A0B74FE865E9BC100D53EFF37CD169"
+    },
+    {
+      "name": "Sotsera.Spar.Development.0.1.0.nupkg",
+      "bytes": 481846,
+      "sha256": "CD1B4060727073F87D44CA2ED05472D9B3A0F55401B190CF9B22553B11D96666"
+    },
+    {
+      "name": "Sotsera.Spar.Windows.0.1.0.nupkg",
+      "bytes": 143997,
+      "sha256": "2E49AD98B8A810840BD117562F8D19E529D0B3347FCEB49FA21F7F9E19DB0922"
+    },
+    {
+      "name": "Sotsera.Spar.Windows.Development.0.1.0.nupkg",
+      "bytes": 161274,
+      "sha256": "E88E68CEEC4B17A4FD8D92E0EE691CFECDBDB4FE97A89E50E9298FF5DF0FFEA4"
+    }
+  ],
+  "sdk": "10.0.402"
+}

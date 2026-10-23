@@ -47,7 +47,7 @@ is not the recommended starting application. Each topic owns its commands; this 
 
 ## Status and deferred work
 
-Status reconciled after [PR #51](https://github.com/sotsera/spar/pull/51), merged as `2ef5c46` on 2026-10-22.
+Status reconciled after [PR #52](https://github.com/sotsera/spar/pull/52), merged as `b241879` on 2026-10-23.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)
@@ -86,6 +86,10 @@ This section owns the current repository status; individual evidence records rem
   its [integrated-main run](https://github.com/sotsera/spar/actions/runs/39854037011) passed all six checks.
   The [SDK restore/evaluation follow-up](evidence/sdk-watcher-startup-2026-10-22/README.md) rejects
   static-graph restore after a fresh-package regression and adds explicit watcher timing attribution.
+  PR #52's [integrated-main run](https://github.com/sotsera/spar/actions/runs/39929947247) passed all six checks.
+  The [restore-cost follow-up](evidence/restore-costs-2026-10-23/README.md) measures the guarded Debug
+  runtime-pack reduction and verifies frontend dependency reuse while retaining clean installation,
+  frontend rebuilding and production runtime-pack discovery.
   Current implementation qualification remains revision-bound; there is no automatic timing budget.
 - The [product direction](02-product-direction.md#deferred-scope) defines deferred features; MCP and optional
   memory observation are proposals, not shipped capabilities or prerequisites retroactively added to milestone 1.

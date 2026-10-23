@@ -14,7 +14,20 @@ pwsh -NoProfile -File eng/Test-ProductionBoundary.ps1
 pwsh -NoProfile -File eng/Test-Production.ps1 -VerifyRender
 ```
 
-The normal Release build resolves the contract project first, regenerates C#/JavaScript/TypeScript, restores the locked frontend dependency graph with `npm ci --ignore-scripts --include=optional`, type-checks/builds Vite output, and embeds its archive. It rebuilds the frontend deliberately rather than trusting a previous `dist` directory. Build/publish failures remain failures; no compatibility fallback is introduced. Use a normal publish with its build enabled.
+The normal Release build resolves the contract project first, regenerates C#/JavaScript/TypeScript,
+prepares the locked frontend dependency graph, type-checks/builds Vite output, and embeds its archive.
+The dependency helper runs `npm ci --ignore-scripts --include=optional` initially and after a changed
+manifest, lockfile, effective npm configuration, Node/npm identity, helper payload or installed file.
+It hashes installed file contents before reuse; missing or modified files require a clean install.
+Its intermediate receipt contains hashes, never raw npm configuration or credentials. Failed installs
+cannot leave a successful receipt. `dotnet clean` removes the receipt, not `node_modules`.
+
+It rebuilds the frontend deliberately rather than trusting a previous `dist` directory. Dependency
+reuse does not skip frontend compilation, contract matching, notices or archive generation. To require
+a clean install explicitly, pass `-p:SparForceFrontendRestore=true`. Linked/workspace installations
+inside `node_modules` retain clean installs on every build; a junction/symlink replacing the entire
+`node_modules` directory is rejected before an installer can replace it. Build/publish failures remain
+failures; no compatibility fallback is introduced. Use a normal publish with its build enabled.
 
 Copy the non-PDB files from the publish directory to a directory outside the checkout and run `Spar.NativeSample.exe` there. The payload contains:
 

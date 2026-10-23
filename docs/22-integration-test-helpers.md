@@ -40,6 +40,8 @@ The default fixtures come from `fixtures/Spar.NativeSample`. `-MinimalApplicatio
 | `Measure-DevelopmentLatency.ps1` | Backend fixtures, sessions, processes | Explicit startup/CSS/backend/rebuild latency samples, preserved patch state and actual replacement/session exit; no automatic timing threshold |
 | `Measure-StartupCost.ps1` | Sessions, processes; caller-prepared source or package config | Repeated native/typed startup and explicit-command rebuild, retained phase events and actual exit; no timing threshold |
 | `Test-ContractIncrementality.ps1` | Isolated contracts and forwarding generator probe | Source or fresh-package repeated builds, generated assembly/resource contents, changed inputs, missing outputs, design-time and clean behavior |
+| `Test-FrontendRestore.ps1` | Local npm tarball, real MSBuild asset target and npm timing records | Source/packaged reuse, changed inputs and installed files, failed-install recovery, forced install, clean and current frontend output |
+| `Test-RuntimePackRestore.ps1` | Ordinary source/package restore graphs and a transitive framework dependency | Debug reduction, explicit opt out, production/ReadyToRun/self-contained guards and cold CoreCLR publication/execution |
 | `Test-NativeWindowSelection.ps1` | Desktop helper, two hidden fixture windows | Select the actual Spar window with a same-process decoy first; destroy only the fixture's two windows |
 
 Existing executable commands and evidence destinations remain available. The internal

@@ -8,6 +8,9 @@
 
     <EnableAotAnalyzer>true</EnableAotAnalyzer>
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+
+    <!-- Keep production/transitive-framework discovery; trim speculative downloads during CoreCLR development. -->
+    <DisableTransitiveFrameworkReferenceDownloads Condition="'$(DisableTransitiveFrameworkReferenceDownloads)' == '' and '$(Configuration)' == 'Debug' and '$(SelfContained)' != 'true' and '$(PublishAot)' != 'true' and '$(PublishReadyToRun)' != 'true'">true</DisableTransitiveFrameworkReferenceDownloads>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

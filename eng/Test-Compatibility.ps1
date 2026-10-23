@@ -11,7 +11,7 @@ $fixture = Join-Path $evidence ('fixture-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $fixture | Out-Null
 # Copy source files only. No shared outputs, junctions, generated clients, or dependency caches.
 $paths = @('Directory.Build.props', 'Directory.Packages.props', 'global.json', 'build', 'eng/Build-AssetBundle.ps1',
-  'eng/Write-PublishReceipt.ps1', 'eng/Test-InspectionBoundary.ps1', 'eng/Test-ProductionBoundary.ps1',
+  'eng/Write-PublishReceipt.ps1', 'eng/Restore-Frontend.ps1', 'eng/Test-InspectionBoundary.ps1', 'eng/Test-ProductionBoundary.ps1',
   'eng/compatibility-probe', 'src', 'fixtures/Spar.NativeSample', 'fixtures/Spar.NativeSample.Contracts',
   'tools/Spar.ContractGenerator', 'tools/Spar.Dev/frontend')
 $files = @(git -C $repository ls-files --cached --others --exclude-standard -- @paths)

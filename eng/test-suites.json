@@ -267,6 +267,28 @@
             "-EvidenceDirectory",
             "{evidence}/startup"
           ]
+        },
+        {
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-FrontendRestore.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/frontend-restore"
+          ],
+          "command": "pwsh",
+          "id": "frontend-restore"
+        },
+        {
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-RuntimePackRestore.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/runtime-pack-restore"
+          ],
+          "command": "pwsh",
+          "id": "runtime-pack-restore"
         }
       ]
     },
@@ -558,9 +580,43 @@
           ]
         },
         {
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-FrontendRestore.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/frontend-restore",
+            "-Feed",
+            "{evidence}/feed"
+          ],
+          "command": "pwsh",
+          "id": "frontend-restore"
+        },
+        {
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-RuntimePackRestore.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/runtime-pack-restore",
+            "-Feed",
+            "{evidence}/feed"
+          ],
+          "command": "pwsh",
+          "id": "runtime-pack-restore"
+        },
+        {
           "id": "contract-incrementality",
           "command": "pwsh",
-          "arguments": ["-NoProfile", "-File", "eng/Test-ContractIncrementality.ps1", "-Feed", "{evidence}/feed", "-EvidenceDirectory", "{evidence}/contract-incrementality"]
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ContractIncrementality.ps1",
+            "-Feed",
+            "{evidence}/feed",
+            "-EvidenceDirectory",
+            "{evidence}/contract-incrementality"
+          ]
         },
         {
           "id": "instrumented-consumer",
