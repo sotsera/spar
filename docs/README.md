@@ -47,7 +47,7 @@ is not the recommended starting application. Each topic owns its commands; this 
 
 ## Status and deferred work
 
-Status reconciled after [PR #53](https://github.com/sotsera/spar/pull/53), merged as `e8cfc7d` on 2026-10-23.
+Status reconciled after [PR #54](https://github.com/sotsera/spar/pull/54), merged as `f0def53` on 2026-10-23.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)
@@ -98,10 +98,16 @@ CI is revision-specific: use the [PR/main run results](https://github.com/sotser
 A merged issue or this status page does not assert that every later commit passed. Retain a first failure
 even when a rerun succeeds; follow the [evidence policy](21-continuous-integration.md#evidence-retention-policy).
 
-The [startup timeout investigation](evidence/startup-diagnostics-2026-10-23/README.md) records the
-subsequent local loader/Defender attribution and fixture build identity experiment. Its implementation
-and validation remain bound to the stated sources. PR #53's
-[integrated-main run](https://github.com/sotsera/spar/actions/runs/39942070283) passed all six checks.
+The [startup timeout investigation](evidence/startup-diagnostics-2026-10-23/README.md) records local
+loader/Defender attribution and fixture build identity. Its diagnostics and private Release mapping
+merged in PR #54; [integrated-main CI](https://github.com/sotsera/spar/actions/runs/39960760572) passed
+all six checks. The [current-main latency comparison](evidence/development-latency-comparison-2026-10-23/README.md)
+repeats the original five-session protocol. All 155 retained process instances exited, but these
+observations do not demonstrate an end-to-end speedup: build selection is shorter while watcher
+launch/admission and unattributed first-start gaps mask the saving. The first supported C# save also
+took 1.01–2.09 s, versus 0.64–0.87 s originally, while later saves remained close. The next measured
+targets are watcher launch and first-update preparation. All individual samples, including outliers,
+remain in the dated records.
 
 ## History and research
 

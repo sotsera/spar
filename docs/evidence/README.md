@@ -19,6 +19,8 @@ startup-observer evidence and the actual failed-child/required-gate proof for PR
 
 The [startup diagnostics investigation](startup-diagnostics-2026-10-23/README.md) retains loader/Defender
 correlation, independent fixture identity measurements and timeout regression detection.
+The [current-main latency comparison](development-latency-comparison-2026-10-23/README.md) repeats
+the original five-session protocol after those changes, retaining all samples and phase attribution.
 
 Keep existing evidence links, provenance, first failures and unexecuted checks intact. This documentation
 cleanup neither deletes historical artifacts nor rewrites Git history. Apply the
