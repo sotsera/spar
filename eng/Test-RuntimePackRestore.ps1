@@ -15,17 +15,20 @@ if ($Feed) {
   & (Join-Path $PSScriptRoot 'New-PackageConsumer.ps1') -Directory $root -Feed $Feed
   $project = Join-Path $root 'backend/Spar.NativeSample.csproj'
 } else {
-  . (Join-Path $PSScriptRoot 'integration/Fixtures.ps1')
-  $fixture = New-BackendFixture 'runtime-pack' -Repository $repository -Application 'unused' -EvidenceDirectory $evidence -MinimalApplication
-  $root = $fixture.Directory
-  $project = $fixture.Settings.project
-  if ($DeliveryTargets) {
-    $xml = [xml][IO.File]::ReadAllText($project)
-    foreach ($import in $xml.Project.Import) {
-      if ($import.Project.EndsWith('Spar.Delivery.targets')) { $import.Project = $delivery }
-    }
-    $xml.Save($project)
+  # Restore needs the project graph, not a running-app fixture or installed frontend modules.
+  $source = Join-Path $repository 'samples/Spar.NativeSample'
+  $root = Join-Path $evidence ('application-' + [guid]::NewGuid().ToString('N'))
+  New-Item -ItemType Directory $root | Out-Null
+  $project = Join-Path $root 'Spar.NativeSample.csproj'
+  $xml = [xml][IO.File]::ReadAllText((Join-Path $source 'Spar.NativeSample.csproj'))
+  foreach ($import in $xml.Project.Import) {
+    $import.Project = if ($import.Project.EndsWith('Spar.Delivery.targets')) { $delivery }
+      else { [IO.Path]::GetFullPath($import.Project, $source) }
   }
+  foreach ($reference in $xml.Project.ItemGroup.ProjectReference) {
+    if ($reference -is [Xml.XmlElement]) { $reference.Include = [IO.Path]::GetFullPath($reference.Include, $source) }
+  }
+  $xml.Save($project)
 }
 $checks = [Collections.Generic.List[object]]::new()
 $passed = $false

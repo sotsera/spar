@@ -122,6 +122,22 @@ C# Dev Kit 3.40.215. Each verified 22 retained process exits. Reviewed captures 
 updates, `Hello debugger, Spar`, retained counters and connected state. Hosted results are recorded
 with the final PR; no new Visual Studio walkthrough or clean-machine execution is claimed.
 
+### First hosted run and standalone source-fixture repair
+
+[Run 39938407432](https://github.com/sotsera/spar/actions/runs/39938407432), signed head `c860ea4`,
+tested merge `3fcf7f0db93072413be69941458451aa8c8d6e55`, passed Fast, Packages and Delivery,
+including full source compatibility. All 75 managed cases passed without skips. Processes passed
+its new npm check but the source runtime-pack check failed before assertions: `New-BackendFixture`
+tried to create a junction to absent sample `node_modules`. Processes deliberately has no SPA install.
+This was an accidental harness dependency, not runtime-pack regression evidence.
+
+The repaired source check copies only the ordinary SDK project and resolves its imports/references
+to the source graph. Restore does not require a frontend fixture or junction. Its six checks pass
+locally, and the same original-target comparison still fails on the extra Debug runtime packs.
+No assertion, suite membership or installer requirement was weakened. The first run's failed status
+and diagnostics are retained; a new exact-head run must qualify the repair. Development and the
+aggregate had not finished at repair publication; normal PR concurrency may cancel superseded work.
+
 Normal reproduction uses the [suite entry points](../../21-continuous-integration.md). Focused commands:
 
 ```powershell
