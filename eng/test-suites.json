@@ -247,6 +247,26 @@
           ]
         },
         {
+          "id": "production-diagnostics",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-ProductionDiagnostics.ps1"
+          ]
+        },
+        {
+          "id": "compatibility-build-paths",
+          "command": "pwsh",
+          "arguments": [
+            "-NoProfile",
+            "-File",
+            "eng/Test-CompatibilityBuildPaths.ps1",
+            "-EvidenceDirectory",
+            "{evidence}/compatibility-build-paths"
+          ]
+        },
+        {
           "id": "process-image",
           "command": "pwsh",
           "arguments": [

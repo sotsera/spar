@@ -1,0 +1,20 @@
+[
+  {
+    "originalDefectDetected": false,
+    "phase": "before-first-application-event",
+    "mode": "before-event",
+    "expectedTimeout": true
+  },
+  {
+    "originalDefectDetected": false,
+    "phase": "waiting-for-document",
+    "mode": "after-window",
+    "expectedTimeout": true
+  },
+  {
+    "originalDefectDetected": true,
+    "phase": null,
+    "mode": "baseline-before-event",
+    "expectedTimeout": true
+  }
+]

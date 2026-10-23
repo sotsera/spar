@@ -48,13 +48,17 @@ Add-Type -Path (Join-Path $PSScriptRoot 'native-probe/Desktop.cs')
 $results = [Collections.Generic.List[object]]::new()
 $allPassed = $false
 . (Join-Path $PSScriptRoot 'Read-ProbeEvents.ps1')
+. (Join-Path $PSScriptRoot 'integration/ProductionObservation.ps1')
+$waitState = @{ phase = 'starting-process' }
 function Wait-Until([scriptblock]$condition, [string]$description) {
+  $waitState.phase = $description
   $deadline = [DateTime]::UtcNow.AddSeconds(30)
   do { if (& $condition) { return }; Start-Sleep -Milliseconds 100 } while ([DateTime]::UtcNow -lt $deadline)
   throw "Timed out: $description. Actual completion is unproven."
 }
 try {
   foreach ($sample in 1..$Samples) {
+    $waitState.phase = 'starting-process'
     $stdout = Join-Path $evidence "run-$sample.jsonl"
     $profile = Join-Path $copy 'profile'
     $process = $null
@@ -66,19 +70,28 @@ try {
     $loaded = $null
     $hostMemory = $null
     $memory = @()
+    $startup = $null
+    $failure = $null
+    $renderCaptured = $false
+    $rootExitObserved = $null
+    $cleanupError = $null
     $watch = [Diagnostics.Stopwatch]::StartNew()
     try {
       $process = Start-Process -FilePath $exe -WorkingDirectory $copy -ArgumentList ('"' + $profile + '"') `
         -WindowStyle Hidden -PassThru -RedirectStandardOutput $stdout -RedirectStandardError (Join-Path $evidence "run-$sample.log")
       $null = $process.Handle
+      $startup = New-ProductionObservation $process
       Wait-Until {
         if ($process.HasExited) { throw "Production exited: $(Get-Content -LiteralPath $stdout -Raw)" }
         $current = @(Read-ProbeEvents $stdout)
+        Update-ProductionObservation $startup $process $watch.Elapsed.TotalMilliseconds -Events $current
         @($current | Where-Object { $_.Stage -eq 'bridge-completed' -and $_.Detail -like '*|greet|*' }).Count -gt 0 `
           -and @($current | Where-Object Stage -eq 'document-loaded').Count -gt 0
       } 'typed greeting completion'
+      $waitState.phase = 'validating-greeting'
       $readyMs = $watch.Elapsed.TotalMilliseconds
       $events = @(Read-ProbeEvents $stdout)
+      Update-ProductionObservation $startup $process $watch.Elapsed.TotalMilliseconds -Events $events -Force
       $greeted = $events | Where-Object { $_.Stage -eq 'bridge-completed' -and $_.Detail -like '*|greet|*' } | Select-Object -First 1
       $processToGreetingMs = ([DateTimeOffset]$greeted.ObservedAt - [DateTimeOffset]$greeted.ProcessStartedAtUtc).TotalMilliseconds
       if (@($events | Where-Object Mode -ne $ExpectedMode).Count -gt 0) { throw 'Unexpected runtime mode.' }
@@ -88,8 +101,10 @@ try {
       if ($VerifyRender) {
         [NativeProbeDesktop]::ShowWindow($window, 5) | Out-Null
         Wait-Until { [NativeProbeDesktop]::Capture($window, (Join-Path $evidence "run-$sample.bmp"), 1000) -gt 500 } 'production pixels'
+        $renderCaptured = $true
       }
       # Attribute the browser by its profile, then retain and verify creation identities for descendants.
+      $waitState.phase = 'observing-descendants'
       $all = @(Get-CimInstance Win32_Process)
       $ids = [Collections.Generic.HashSet[int]]::new()
       $null = $ids.Add($process.Id)
@@ -122,18 +137,44 @@ try {
       $process.WaitForExit()
       foreach ($browser in $browsers) { Wait-Until { $browser.HasExited } 'attributed browser exit' }
       if ($process.ExitCode -ne 0 -or @(Read-ProbeEvents $stdout -Completed)[-1].Stage -ne 'closed') { throw 'Unclean production exit.' }
+      $waitState.phase = 'validating-cleanup'
       $lease = [IO.File]::Open((Join-Path $profile '.spar-profile.lock'), 'Open', 'ReadWrite', 'None')
       $lease.Dispose()
       $passed = $true
+    } catch {
+      $scenarioFailure = $_
+      $failure = @{ phase = $waitState.phase; message = $scenarioFailure.Exception.Message }
+      if ($startup) {
+        try {
+          Update-ProductionObservation $startup $process $watch.Elapsed.TotalMilliseconds -Events @(Read-ProbeEvents $stdout) -Force
+        } catch { $failure.observationErrorType = $_.Exception.GetType().FullName }
+      }
+      Write-Host "Production failure diagnostics: $(Join-Path $evidence "run-$sample-startup.json")"
+      throw $scenarioFailure
     } finally {
-      if ($process -and !$process.HasExited) { $forced = $true; $process.Kill($true); $null = $process.WaitForExit(10000) }
+      if ($process) {
+        if (!$process.HasExited) {
+          $forced = $true
+          try { $process.Kill($true); $null = $process.WaitForExit(10000) }
+          catch { $cleanupError = $_.Exception.Message }
+        }
+        $rootExitObserved = $process.HasExited
+        if (!$rootExitObserved) { Write-Warning 'Production root exit remains unproven after teardown.' }
+      }
+      $browserExitObservation = if (!$browsers.Count) { 'not-retained' }
+        elseif (@($browsers | Where-Object { !$_.HasExited }).Count) { 'unfinished-retained' } else { 'all-retained-exited' }
+      $diagnostics = if ($startup) { Get-ProductionObservation $startup } else { $null }
+      @{ startup = $diagnostics; failure = $failure; rootExitObserved = $rootExitObserved
+        browserExitObservation = $browserExitObservation; cleanupError = $cleanupError
+      } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $evidence "run-$sample-startup.json")
       $results.Add(@{ sample = $sample; passed = $passed; forcedCleanup = $forced; greetingCompletionMs = $readyMs
         processToGreetingMs = $processToGreetingMs
+        failure = $failure; startup = $diagnostics; rootExitObserved = $rootExitObserved; browserExitObservation = $browserExitObservation
         profile = $(if ($sample -eq 1) { 'fresh' } else { 'reused' }); processId = $process.Id
         startedAtUtc = $(if ($process) { $process.StartTime.ToUniversalTime() } else { $null }); hostMemory = $hostMemory; browserMemory = $memory
-        browserVersion = $loaded.BrowserVersion; render = $(if ($VerifyRender) { 'pixels-captured-review-required' } else { 'not-exercised' }) })
-      foreach ($browser in $browsers) { $browser.Dispose() }
-      if ($process) { $process.Dispose() }
+        browserVersion = $loaded.BrowserVersion; render = $(if ($renderCaptured) { 'pixels-captured-review-required' } else { 'not-exercised' }) })
+      foreach ($browser in $browsers) { if ($browser.HasExited) { $browser.Dispose() } }
+      if ($process -and $rootExitObserved) { $process.Dispose() }
     }
   }
   # Production accepts no development/probe command switches.

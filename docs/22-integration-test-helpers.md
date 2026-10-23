@@ -26,6 +26,11 @@ recursively delete them.
 
 The default fixtures come from `fixtures/Spar.NativeSample`. `-MinimalApplication` selects the ordinary source without adding failure operations. See the [migration map](23-minimal-application.md#scenario-migration-map).
 
+`integration/ProductionObservation.ps1` owns sanitized, bounded progress observations only. The
+production driver owns readiness, deadlines, retained handles and teardown. Importing the helper
+starts no process and does not infer an antivirus cause. `integration/CompatibilityBuildPaths.ps1`
+changes only a caller-supplied private fixture's Release compiler paths; it does not build or cache.
+
 ## Driver map and commands
 
 | Driver | Shared operations | Retained scenarios |
@@ -42,6 +47,8 @@ The default fixtures come from `fixtures/Spar.NativeSample`. `-MinimalApplicatio
 | `Test-ContractIncrementality.ps1` | Isolated contracts and forwarding generator probe | Source or fresh-package repeated builds, generated assembly/resource contents, changed inputs, missing outputs, design-time and clean behavior |
 | `Test-FrontendRestore.ps1` | Local npm tarball, real MSBuild asset target and npm timing records | Source/packaged reuse, changed inputs and installed files, failed-install recovery, forced install, clean and current frontend output |
 | `Test-RuntimePackRestore.ps1` | Ordinary source/package restore graphs and a transitive framework dependency | Debug reduction, explicit opt out, production/ReadyToRun/self-contained guards and cold CoreCLR publication/execution |
+| `Test-ProductionDiagnostics.ps1` | Retained sleeping process and application-event observations | Creation identity, phase, privacy, bounded samples, unknown cause and actual exit |
+| `Test-CompatibilityBuildPaths.ps1` | Two independently compiled fixture roots | Equal Release bytes, changed executable behavior, physical Debug paths and explicit override |
 | `Test-NativeWindowSelection.ps1` | Desktop helper, two hidden fixture windows | Select the actual Spar window with a same-process decoy first; destroy only the fixture's two windows |
 
 Existing executable commands and evidence destinations remain available. The internal

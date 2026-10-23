@@ -1,0 +1,132 @@
+{
+  "allPassed": true,
+  "cases": [
+    {
+      "name": "development-diagnostic",
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+      "passed": true
+    },
+    {
+      "name": "strict-dependency",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "error IL3050.*RuntimeGreeting.Create",
+      "passed": true
+    },
+    {
+      "name": "coreclr",
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "expectedDiagnostic": "warning IL3050.*RuntimeGreeting.Create",
+      "passed": true
+    },
+    {
+      "name": "syntax-error",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "error CS",
+      "passed": true
+    },
+    {
+      "name": "conflicting-aot",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "SPAR1004",
+      "passed": true
+    },
+    {
+      "name": "missing-attribution",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "SPAR1003",
+      "passed": true
+    },
+    {
+      "name": "invalid-mode",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "SPAR1001",
+      "passed": true
+    },
+    {
+      "name": "dependency-removed",
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "expectedDiagnostic": "",
+      "passed": true
+    },
+    {
+      "name": "strict-override",
+      "exitCode": 0,
+      "expectedSuccess": true,
+      "expectedDiagnostic": "",
+      "passed": true
+    },
+    {
+      "name": "framework-regression-coreclr",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "SparAssetBundle.cs.*error IL3050",
+      "passed": true
+    },
+    {
+      "name": "framework-regression-aot",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "SparAssetBundle.cs.*error IL3050",
+      "passed": true
+    },
+    {
+      "name": "missing-toolchain",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "error MSB3073.*absent-native-compiler",
+      "passed": true
+    },
+    {
+      "name": "native-link-error",
+      "exitCode": 1,
+      "expectedSuccess": false,
+      "expectedDiagnostic": "LNK2001|LNK1120",
+      "passed": true
+    }
+  ],
+  "native": [
+    {
+      "lane": "coreclr-run",
+      "samples": [
+        {
+          "passed": true,
+          "forcedCleanup": false,
+          "processToGreetingMs": 1241.9706,
+          "processId": 28536,
+          "startedAtUtc": "2026-10-23T12:42:59.14374Z",
+          "rootExitObserved": true,
+          "browserExitObservation": "all-retained-exited",
+          "render": "pixels-captured-review-required"
+        }
+      ],
+      "executableSha256": "C3D5561787ADA63663119CCF1100FAED660BE072EB361187CCACE2DC66C7F2FA",
+      "passed": true
+    },
+    {
+      "lane": "aot-run",
+      "samples": [
+        {
+          "passed": true,
+          "forcedCleanup": false,
+          "processToGreetingMs": 412.26,
+          "processId": 73324,
+          "startedAtUtc": "2026-10-23T12:43:25.2924343Z",
+          "rootExitObserved": true,
+          "browserExitObservation": "all-retained-exited",
+          "render": "pixels-captured-review-required"
+        }
+      ],
+      "executableSha256": "075B109EB41752411DA2B9D57FF19FB09FEEBB9FA0E69ED45BDD9947F9F9CFC8",
+      "passed": true
+    }
+  ]
+}

@@ -44,6 +44,20 @@ Successful SPA publication writes `spar-publish.json` schema 2, including reques
 
 The CoreCLR payload includes the app assemblies, .NET runtime, WebView2 loader/notices, and embedded SPA. Copy the complete directory, excluding optional PDBs. It needs neither an installed .NET runtime nor Node by construction, but execution on a machine without .NET has not been qualified. The same Windows/WebView2/profile prerequisites and production authority/control exclusions from the [production guide](16-production-delivery.md) apply. It is larger than the NativeAOT payload; no installer or single-file compatibility delivery is introduced.
 
+## Isolated fixture build identity
+
+The compatibility driver adds a compiler `PathMap` to its private copied `Directory.Build.props`
+for Release only: the unique fixture root maps to `/_/spar-compatibility/`. Explicit `PathMap`
+values win, and Debug retains physical paths for local debugging. Ordinary projects and package
+consumers are unchanged. Each fixture still restores and compiles independently; no compiled output
+or dependency cache is shared. Changed code must produce and execute the changed implementation.
+
+This removes random fixture paths from otherwise identical application assemblies, allowing
+security scanners to recognize repeated image content. It does not promise faster cold startup.
+See [startup diagnostics and attribution](16-production-delivery.md#startup-delays-and-antivirus-attribution)
+and the compiler's [PathMap guidance](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/advanced#pathmap),
+including its local-debugging caveat.
+
 ## Executed acceptance driver
 
 ```powershell

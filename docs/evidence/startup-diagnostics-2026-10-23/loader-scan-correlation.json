@@ -1,0 +1,91 @@
+{
+  "source": "e8cfc7d66c7e647689705917cf23a3e3b488ea6f",
+  "processStartedAtUtc": "2026-10-23T12:12:59.4415326+00:00",
+  "comparisons": [
+    {
+      "file": "Sotsera.Spar.Windows.dll",
+      "loaderStartUtc": "2026-10-23T12:13:08.6708852+00:00",
+      "loaderEndUtc": "2026-10-23T12:13:09.257954+00:00",
+      "loaderMs": 587.0689,
+      "defenderChecks": [
+        {
+          "startUtc": "2026-10-23T12:13:08.6738958Z",
+          "endUtc": "2026-10-23T12:13:09.2581598Z",
+          "durationMs": 584.264,
+          "reason": "TrustCheck"
+        }
+      ],
+      "defenderOverlapMs": 584.0582,
+      "overlapPercent": 99.48716411310497
+    },
+    {
+      "file": "Sotsera.Spar.Bridge.dll",
+      "loaderStartUtc": "2026-10-23T12:13:09.2580585+00:00",
+      "loaderEndUtc": "2026-10-23T12:13:09.8608412+00:00",
+      "loaderMs": 602.7828,
+      "defenderChecks": [
+        {
+          "startUtc": "2026-10-23T12:13:09.2619599Z",
+          "endUtc": "2026-10-23T12:13:09.8606158Z",
+          "durationMs": 598.6559,
+          "reason": "TrustCheck"
+        }
+      ],
+      "defenderOverlapMs": 598.6559,
+      "overlapPercent": 99.3153586996842
+    },
+    {
+      "file": "Spar.NativeSample.Contracts.dll",
+      "loaderStartUtc": "2026-10-23T12:13:09.8612964+00:00",
+      "loaderEndUtc": "2026-10-23T12:13:18.4320518+00:00",
+      "loaderMs": 8570.7555,
+      "defenderChecks": [
+        {
+          "startUtc": "2026-10-23T12:13:09.866747Z",
+          "endUtc": "2026-10-23T12:13:19.9495249Z",
+          "durationMs": 10082.7779,
+          "reason": "TrustCheck"
+        },
+        {
+          "startUtc": "2026-10-23T12:13:17.8683186Z",
+          "endUtc": "2026-10-23T12:13:18.432051Z",
+          "durationMs": 563.7324,
+          "reason": "TrustCheck"
+        }
+      ],
+      "defenderOverlapMs": 8565.3048,
+      "overlapPercent": 99.93640350608533
+    },
+    {
+      "file": "Spar.DynamicDependency.dll",
+      "loaderStartUtc": "2026-10-23T12:13:19.1747228+00:00",
+      "loaderEndUtc": "2026-10-23T12:13:27.6816787+00:00",
+      "loaderMs": 8506.9559,
+      "defenderChecks": [
+        {
+          "startUtc": "2026-10-23T12:13:19.1786628Z",
+          "endUtc": "2026-10-23T12:13:29.2137626Z",
+          "durationMs": 10035.0998,
+          "reason": "TrustCheck"
+        },
+        {
+          "startUtc": "2026-10-23T12:13:27.1787816Z",
+          "endUtc": "2026-10-23T12:13:27.6816096Z",
+          "durationMs": 502.828,
+          "reason": "TrustCheck"
+        }
+      ],
+      "defenderOverlapMs": 8503.0159,
+      "overlapPercent": 99.95368496032758
+    }
+  ],
+  "processId": 46232,
+  "qualification": "Diagnostic-only fixture markers and EventPipe are present. Compare overlapping intervals, not the sum of possibly nested/asynchronous scan durations. Original failures had no Defender recording.",
+  "greetingMs": 28313.0398,
+  "etw": {
+    "eventsLost": 0,
+    "startUtc": "2026-10-23T12:12:56.8696559Z",
+    "endUtc": "2026-10-23T12:13:42.31121Z"
+  },
+  "testPassed": true
+}

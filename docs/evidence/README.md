@@ -17,6 +17,9 @@ including process-level negatives and actual source/package editor failure/recov
 The [fixed-suite execution record](test-suites-2026-10-22/README.md) retains local xUnit selection,
 startup-observer evidence and the actual failed-child/required-gate proof for PR #46.
 
+The [startup diagnostics investigation](startup-diagnostics-2026-10-23/README.md) retains loader/Defender
+correlation, independent fixture identity measurements and timeout regression detection.
+
 Keep existing evidence links, provenance, first failures and unexecuted checks intact. This documentation
 cleanup neither deletes historical artifacts nor rewrites Git history. Apply the
 [retention policy](../21-continuous-integration.md#evidence-retention-policy) to new evidence: concise durable

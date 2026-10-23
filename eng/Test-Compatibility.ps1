@@ -4,6 +4,7 @@ param(
   [switch]$VerifyRender
 )
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'integration/CompatibilityBuildPaths.ps1')
 $repository = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $evidence = [IO.Path]::GetFullPath($EvidenceDirectory)
 New-Item -ItemType Directory -Path $evidence -Force | Out-Null
@@ -21,6 +22,7 @@ foreach ($file in $files) {
   New-Item -ItemType Directory -Path (Split-Path $destination) -Force | Out-Null
   Copy-Item -LiteralPath (Join-Path $repository $file) -Destination $destination
 }
+Set-CompatibilityBuildPaths $fixture
 $project = Join-Path $fixture 'fixtures/Spar.NativeSample/Spar.NativeSample.csproj'
 $backend = Join-Path $fixture 'fixtures/Spar.NativeSample/SampleBackend.cs'
 $originalProject = [IO.File]::ReadAllText($project)

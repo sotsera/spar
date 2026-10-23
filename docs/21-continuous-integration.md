@@ -47,6 +47,10 @@ Use the existing [VS Code](13-vscode-development.md), [Visual Studio](14-visual-
 and [integration helper](22-integration-test-helpers.md) procedures for explicit desktop runs. Hosted
 project-launch tests do not establish debugger acceptance, and captures alone do not establish reviewed pixels.
 
+Processes also checks production-observation identity, privacy, bounded CPU samples and actual
+process exit, plus independently compiled Release fixture identity, changed implementation, Debug
+paths and explicit overrides. These are fixed catalog entries, not runtime test classification.
+
 ## xUnit selection
 
 All test projects remain in `Spar.slnx`. Shared [test properties](../tests/Directory.Build.props) preserve

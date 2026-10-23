@@ -47,7 +47,7 @@ is not the recommended starting application. Each topic owns its commands; this 
 
 ## Status and deferred work
 
-Status reconciled after [PR #52](https://github.com/sotsera/spar/pull/52), merged as `b241879` on 2026-10-23.
+Status reconciled after [PR #53](https://github.com/sotsera/spar/pull/53), merged as `e8cfc7d` on 2026-10-23.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)
@@ -97,6 +97,11 @@ This section owns the current repository status; individual evidence records rem
 CI is revision-specific: use the [PR/main run results](https://github.com/sotsera/spar/actions/workflows/managed-probe.yml).
 A merged issue or this status page does not assert that every later commit passed. Retain a first failure
 even when a rerun succeeds; follow the [evidence policy](21-continuous-integration.md#evidence-retention-policy).
+
+The [startup timeout investigation](evidence/startup-diagnostics-2026-10-23/README.md) records the
+subsequent local loader/Defender attribution and fixture build identity experiment. Its implementation
+and validation remain bound to the stated sources. PR #53's
+[integrated-main run](https://github.com/sotsera/spar/actions/runs/39942070283) passed all six checks.
 
 ## History and research
 

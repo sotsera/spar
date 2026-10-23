@@ -69,6 +69,54 @@ dotnet publish fixtures/Spar.NativeSample -c Release -p:SparNativeProbe=true -o 
 
 `Test-Bridge.ps1` now also runs a packaged-asset fixture through the same public bundle API and real WebView. It exercises local CSS/JS, denied missing/query/foreign/metadata resources, typed calls, stale fingerprints, denied handlers, document retirement, navigation rejection, and close with unfinished work. The required **Windows managed probe** job checks both the production application and the separate AOT fixture. CI does not claim desktop rendering or manual UI interaction.
 
+## Startup delays and antivirus attribution
+
+`Test-Production.ps1` retains `run-N-startup.json` on success and failure. It records the retained
+process identity, sanitized first/last application event, startup phase, bounded one-second CPU and
+working-set observations, failed wait and observed teardown. Pending messages every ten seconds do
+not extend the existing 30-second deadline or retry the application. No events means no application
+event was observed; it does not establish that `Main` was never entered. Rendering is recorded as
+captured only after capture succeeds. Root exit and retained browser exits are separate observations;
+`not-retained` is not evidence that no descendants survived.
+
+These vendor-independent observations leave antivirus attribution `unattributed` and evidence
+`not-collected`. Low CPU, an installed antivirus, or a security DLL in the process does not establish
+the cause. Windows Security Center's [product API](https://learn.microsoft.com/en-us/windows/win32/api/iwscapi/nn-iwscapi-iwscproduct)
+reports protection identity/state, not which file operation is blocking.
+
+| Evidence | What it can establish |
+| --- | --- |
+| Process samples and application events | Where observable progress stopped; not the cause of a wait |
+| CoreCLR EventPipe loader events | Assembly-loading intervals; not why the loader waited. NativeAOT needs native tracing. |
+| Defender performance recording | Matching file/process scan intervals that can be correlated with loader waits |
+| Other vendor performance providers or kernel/filter tracing | A blocking driver or scan when the provider exposes it; otherwise attribution remains unknown |
+
+Prepare the publication before recording. Retain file hashes, process creation identity, exact copy
+paths, recording coverage and lost-event counts. Compare overlapping intervals; nested or asynchronous
+scans must not be summed as startup delay. For Defender, run this in a separate elevated PowerShell
+from the repository root, then launch the prepared production driver from a normal terminal after
+the recorder acknowledges that recording has started:
+
+```powershell
+$recordingDirectory = Join-Path (Get-Location) 'artifacts/antivirus'
+New-Item -ItemType Directory -Path $recordingDirectory -Force | Out-Null
+$recording = Join-Path $recordingDirectory ('startup-' + [guid]::NewGuid().ToString('N') + '.etl')
+New-MpPerformanceRecording -RecordTo $recording -Seconds 45
+Get-MpPerformanceReport -Path $recording -TopScans 1000 -Raw
+```
+
+See the [Defender performance reference](https://learn.microsoft.com/en-us/defender-endpoint/performance-analyzer-reference).
+Require the saved recording and actual recorder completion; do not stop another recording session.
+Raw traces contain machine activity and should remain private. Other antivirus products need their
+supported performance provider or a bounded [WPR](https://learn.microsoft.com/en-us/windows-hardware/test/wpt/windows-performance-recorder)
+file-I/O/wait recording. [Minifilter diagnostics](https://learn.microsoft.com/en-us/windows-hardware/test/assessments/minifilter-diagnostics)
+can distinguish individual blocking filter drivers, including antivirus, backup and encryption;
+availability and attribution vary by product. Spar does not automatically elevate, change protection
+settings or exclusions, or change a test outcome because antivirus involvement is suspected.
+
+The [startup investigation](evidence/startup-diagnostics-2026-10-23/README.md) records the measured
+Defender correlation, fixture identity experiment and their limits.
+
 ## Remaining work
 
 Use [dependency compatibility](17-dependency-compatibility.md) for attributable CoreCLR selection and [packages](18-package-consumer.md) for a fresh external consumer. Current qualification limits and release work are maintained in [status and deferred work](README.md#status-and-deferred-work).
