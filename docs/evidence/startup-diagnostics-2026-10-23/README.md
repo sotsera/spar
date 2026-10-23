@@ -43,7 +43,8 @@ successful-start message. Neither failure changed security settings or test expe
 Six separate source copies restored, compiled and published independently. The experimental
 mapping normalized the unique fixture root to `/_/spar-compatibility/`; all measured builds were
 Release. The delivered helper applies it only to private Release fixtures, preserves explicit
-overrides and keeps Debug physical paths. No source, dependency cache or compiled output was reused.
+overrides and keeps Debug physical paths. Sources were copied separately and no compiled output
+was reused. NuGet used its ordinary existing caches; this was not a cold-restore comparison.
 
 | Build identity | Process-to-greeting observations | Unique hashes per application DLL |
 | --- | --- | --- |

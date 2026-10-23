@@ -50,7 +50,8 @@ The compatibility driver adds a compiler `PathMap` to its private copied `Direct
 for Release only: the unique fixture root maps to `/_/spar-compatibility/`. Explicit `PathMap`
 values win, and Debug retains physical paths for local debugging. Ordinary projects and package
 consumers are unchanged. Each fixture still restores and compiles independently; no compiled output
-or dependency cache is shared. Changed code must produce and execute the changed implementation.
+is reused. Ordinary NuGet download/package-cache behavior is unchanged. Changed code must produce
+and execute the changed implementation.
 
 This removes random fixture paths from otherwise identical application assemblies, allowing
 security scanners to recognize repeated image content. It does not promise faster cold startup.
