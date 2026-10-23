@@ -72,6 +72,7 @@ jobs:
           path: |
             artifacts/suites/**/receipt.json
             artifacts/suites/**/results.json
+            artifacts/suites/**/*-startup.json
             artifacts/suites/**/inspection-disabled.json
             artifacts/suites/**/packages.json
             artifacts/suites/**/spar-publish.json
@@ -92,6 +93,7 @@ jobs:
             artifacts/suites/**/results.json
             artifacts/suites/**/*.log
             artifacts/suites/**/*.jsonl
+            artifacts/suites/**/*-startup.json
             artifacts/suites/**/steps.json
             artifacts/suites/**/*.sha256
             artifacts/suites/**/*-snapshot.json
