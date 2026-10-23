@@ -1,0 +1,791 @@
+[
+  {
+    "name": "control-immediate",
+    "source": "1d5e05eecf12a29d1873f3b332eccd492ae79c66",
+    "passed": true,
+    "traceRequested": false,
+    "idleMs": 0,
+    "cpuScope": "launcher counter excluded: wrong process for SDK CPU",
+    "edits": [
+      {
+        "generation": 1,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:28:15.3725486+02:00",
+        "savedAtUtc": "2026-10-23T16:28:15.3746455+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:28:16.3597816+02:00",
+        "publishedAt": "2026-10-23T16:28:16.3601894+02:00",
+        "domEventAt": "2026-10-23T16:28:16.3812842+02:00",
+        "elapsedMs": 1101.4772,
+        "workerCpuMs": null,
+        "runtimeToDomMs": 21.5026
+      },
+      {
+        "generation": 1,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:28:16.5700655+02:00",
+        "savedAtUtc": "2026-10-23T16:28:16.5707041+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:28:16.6485066+02:00",
+        "publishedAt": "2026-10-23T16:28:16.6487169+02:00",
+        "domEventAt": "2026-10-23T16:28:16.6636759+02:00",
+        "elapsedMs": 163.2737,
+        "workerCpuMs": null,
+        "runtimeToDomMs": 15.1693
+      },
+      {
+        "generation": 1,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:28:16.7898638+02:00",
+        "savedAtUtc": "2026-10-23T16:28:16.7904986+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:28:16.859754+02:00",
+        "publishedAt": "2026-10-23T16:28:16.8600406+02:00",
+        "domEventAt": "2026-10-23T16:28:16.8632227+02:00",
+        "elapsedMs": 164.4154,
+        "workerCpuMs": null,
+        "runtimeToDomMs": 3.4687
+      },
+      {
+        "generation": 2,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:28:27.7931893+02:00",
+        "savedAtUtc": "2026-10-23T16:28:27.793754+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:28:30.0296003+02:00",
+        "publishedAt": "2026-10-23T16:28:30.0297706+02:00",
+        "domEventAt": "2026-10-23T16:28:30.0470848+02:00",
+        "elapsedMs": 2347.2537,
+        "workerCpuMs": null,
+        "runtimeToDomMs": 17.4845
+      },
+      {
+        "generation": 2,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:28:30.1880788+02:00",
+        "savedAtUtc": "2026-10-23T16:28:30.1887155+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:28:30.2890801+02:00",
+        "publishedAt": "2026-10-23T16:28:30.2893497+02:00",
+        "domEventAt": "2026-10-23T16:28:30.2970715+02:00",
+        "elapsedMs": 213.6099,
+        "workerCpuMs": null,
+        "runtimeToDomMs": 7.9914
+      },
+      {
+        "generation": 2,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:28:30.4531266+02:00",
+        "savedAtUtc": "2026-10-23T16:28:30.4536903+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:28:30.4913+02:00",
+        "publishedAt": "2026-10-23T16:28:30.4914354+02:00",
+        "domEventAt": "2026-10-23T16:28:30.4970385+02:00",
+        "elapsedMs": 79.1422,
+        "workerCpuMs": null,
+        "runtimeToDomMs": 5.7385
+      }
+    ],
+    "background": [],
+    "sdk": [
+      {
+        "durationMs": 704,
+        "phase": "sdk-update-complete",
+        "generation": 1,
+        "childProcessId": null,
+        "observedAtUtc": "2026-10-23T16:28:16.3845184+02:00"
+      },
+      {
+        "durationMs": 65,
+        "phase": "sdk-update-complete",
+        "generation": 1,
+        "childProcessId": null,
+        "observedAtUtc": "2026-10-23T16:28:16.6870052+02:00"
+      },
+      {
+        "durationMs": 24,
+        "phase": "sdk-update-complete",
+        "generation": 1,
+        "childProcessId": null,
+        "observedAtUtc": "2026-10-23T16:28:16.8923221+02:00"
+      },
+      {
+        "durationMs": 2119,
+        "phase": "sdk-update-complete",
+        "generation": 2,
+        "childProcessId": null,
+        "observedAtUtc": "2026-10-23T16:28:30.052065+02:00"
+      },
+      {
+        "durationMs": 41,
+        "phase": "sdk-update-complete",
+        "generation": 2,
+        "childProcessId": null,
+        "observedAtUtc": "2026-10-23T16:28:30.3036912+02:00"
+      },
+      {
+        "durationMs": 25,
+        "phase": "sdk-update-complete",
+        "generation": 2,
+        "childProcessId": null,
+        "observedAtUtc": "2026-10-23T16:28:30.5210389+02:00"
+      }
+    ],
+    "frontendStarts": 1,
+    "frontendReady": 1,
+    "cleanup": {
+      "scenario": "control-immediate",
+      "passed": true,
+      "coordinatorProcessId": 46728,
+      "startedAtUtc": "2026-10-23T14:27:38.2729156Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    }
+  },
+  {
+    "name": "traced-worker",
+    "source": "1d5e05eecf12a29d1873f3b332eccd492ae79c66",
+    "passed": true,
+    "traceRequested": true,
+    "idleMs": 0,
+    "cpuScope": "retained SDK worker",
+    "edits": [
+      {
+        "generation": 1,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:31:14.4278766+02:00",
+        "savedAtUtc": "2026-10-23T16:31:14.4298034+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:31:16.4147752+02:00",
+        "publishedAt": "2026-10-23T16:31:16.4151965+02:00",
+        "domEventAt": "2026-10-23T16:31:16.4345574+02:00",
+        "elapsedMs": 2076.668,
+        "workerCpuMs": 2296.875,
+        "runtimeToDomMs": 19.7822
+      },
+      {
+        "generation": 1,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:31:16.5658643+02:00",
+        "savedAtUtc": "2026-10-23T16:31:16.5665203+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:31:16.6674691+02:00",
+        "publishedAt": "2026-10-23T16:31:16.6676496+02:00",
+        "domEventAt": "2026-10-23T16:31:16.6846008+02:00",
+        "elapsedMs": 203.5784,
+        "workerCpuMs": 31.25,
+        "runtimeToDomMs": 17.1317
+      },
+      {
+        "generation": 1,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:31:16.8135852+02:00",
+        "savedAtUtc": "2026-10-23T16:31:16.8141754+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:31:16.8885457+02:00",
+        "publishedAt": "2026-10-23T16:31:16.8889512+02:00",
+        "domEventAt": "2026-10-23T16:31:16.9009776+02:00",
+        "elapsedMs": 159.0282,
+        "workerCpuMs": 62.5,
+        "runtimeToDomMs": 12.4319
+      },
+      {
+        "generation": 2,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:31:52.1420188+02:00",
+        "savedAtUtc": "2026-10-23T16:31:52.1427001+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:31:54.3587099+02:00",
+        "publishedAt": "2026-10-23T16:31:54.3591706+02:00",
+        "domEventAt": "2026-10-23T16:31:54.3686811+02:00",
+        "elapsedMs": 2313.582,
+        "workerCpuMs": 2484.375,
+        "runtimeToDomMs": 9.9712
+      },
+      {
+        "generation": 2,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:31:54.507181+02:00",
+        "savedAtUtc": "2026-10-23T16:31:54.5077932+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:31:54.6165236+02:00",
+        "publishedAt": "2026-10-23T16:31:54.6167577+02:00",
+        "domEventAt": "2026-10-23T16:31:54.6351848+02:00",
+        "elapsedMs": 208.4392,
+        "workerCpuMs": 93.75,
+        "runtimeToDomMs": 18.6612
+      },
+      {
+        "generation": 2,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:31:54.7710663+02:00",
+        "savedAtUtc": "2026-10-23T16:31:54.7716288+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:31:54.8286483+02:00",
+        "publishedAt": "2026-10-23T16:31:54.8288875+02:00",
+        "domEventAt": "2026-10-23T16:31:54.835062+02:00",
+        "elapsedMs": 148.5849,
+        "workerCpuMs": 62.5,
+        "runtimeToDomMs": 6.4137
+      }
+    ],
+    "background": [
+      {
+        "generation": 1,
+        "workerProcessId": 24856,
+        "domReadyAt": "2026-10-23T16:31:14.2044802+02:00",
+        "firstEditStartedAt": "2026-10-23T16:31:14.4278766+02:00",
+        "readyToFirstEditMs": 223.3964,
+        "firstCpuSampleAt": "2026-10-23T16:31:14.2291281+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:31:14.3607122+02:00",
+        "sampledBackgroundCpuMs": 125.0
+      },
+      {
+        "generation": 2,
+        "workerProcessId": 52168,
+        "domReadyAt": "2026-10-23T16:31:51.9092434+02:00",
+        "firstEditStartedAt": "2026-10-23T16:31:52.1420188+02:00",
+        "readyToFirstEditMs": 232.7754,
+        "firstCpuSampleAt": "2026-10-23T16:31:51.974868+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:31:52.0891713+02:00",
+        "sampledBackgroundCpuMs": 109.375
+      }
+    ],
+    "sdk": [
+      {
+        "childProcessId": null,
+        "durationMs": 1662,
+        "observedAtUtc": "2026-10-23T16:31:16.4482842+02:00",
+        "phase": "sdk-update-complete",
+        "generation": 1
+      },
+      {
+        "childProcessId": null,
+        "durationMs": 41,
+        "observedAtUtc": "2026-10-23T16:31:16.7130029+02:00",
+        "phase": "sdk-update-complete",
+        "generation": 1
+      },
+      {
+        "childProcessId": null,
+        "durationMs": 47,
+        "observedAtUtc": "2026-10-23T16:31:16.914274+02:00",
+        "phase": "sdk-update-complete",
+        "generation": 1
+      },
+      {
+        "childProcessId": null,
+        "durationMs": 1860,
+        "observedAtUtc": "2026-10-23T16:31:54.4026154+02:00",
+        "phase": "sdk-update-complete",
+        "generation": 2
+      },
+      {
+        "childProcessId": null,
+        "durationMs": 52,
+        "observedAtUtc": "2026-10-23T16:31:54.6643035+02:00",
+        "phase": "sdk-update-complete",
+        "generation": 2
+      },
+      {
+        "childProcessId": null,
+        "durationMs": 31,
+        "observedAtUtc": "2026-10-23T16:31:54.868174+02:00",
+        "phase": "sdk-update-complete",
+        "generation": 2
+      }
+    ],
+    "frontendStarts": 1,
+    "frontendReady": 1,
+    "cleanup": {
+      "scenario": "traced-worker",
+      "passed": true,
+      "coordinatorProcessId": 64288,
+      "startedAtUtc": "2026-10-23T14:30:48.3907584Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    }
+  },
+  {
+    "name": "idle-ten-seconds",
+    "source": "1d5e05eecf12a29d1873f3b332eccd492ae79c66",
+    "passed": true,
+    "traceRequested": false,
+    "idleMs": 10000,
+    "cpuScope": "retained SDK worker",
+    "edits": [
+      {
+        "generation": 1,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:33:29.9173658+02:00",
+        "savedAtUtc": "2026-10-23T16:33:29.9195874+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:33:30.7050515+02:00",
+        "publishedAt": "2026-10-23T16:33:30.7055651+02:00",
+        "domEventAt": "2026-10-23T16:33:30.7209573+02:00",
+        "elapsedMs": 894.1939,
+        "workerCpuMs": 750.0,
+        "runtimeToDomMs": 15.9058
+      },
+      {
+        "generation": 1,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:33:30.8574653+02:00",
+        "savedAtUtc": "2026-10-23T16:33:30.8581302+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:33:30.9812229+02:00",
+        "publishedAt": "2026-10-23T16:33:30.9814001+02:00",
+        "domEventAt": "2026-10-23T16:33:30.9875804+02:00",
+        "elapsedMs": 206.4215,
+        "workerCpuMs": 171.875,
+        "runtimeToDomMs": 6.3575
+      },
+      {
+        "generation": 1,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:33:31.1195723+02:00",
+        "savedAtUtc": "2026-10-23T16:33:31.1203498+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:33:31.1909278+02:00",
+        "publishedAt": "2026-10-23T16:33:31.191172+02:00",
+        "domEventAt": "2026-10-23T16:33:31.2042084+02:00",
+        "elapsedMs": 162.7294,
+        "workerCpuMs": 78.125,
+        "runtimeToDomMs": 13.2806
+      },
+      {
+        "generation": 2,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:33:56.9874948+02:00",
+        "savedAtUtc": "2026-10-23T16:33:56.9882731+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:33:57.8734443+02:00",
+        "publishedAt": "2026-10-23T16:33:57.8736024+02:00",
+        "domEventAt": "2026-10-23T16:33:57.8881879+02:00",
+        "elapsedMs": 997.2839,
+        "workerCpuMs": 828.125,
+        "runtimeToDomMs": 14.7436
+      },
+      {
+        "generation": 2,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:33:58.0251194+02:00",
+        "savedAtUtc": "2026-10-23T16:33:58.0257093+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:33:58.1267953+02:00",
+        "publishedAt": "2026-10-23T16:33:58.1269492+02:00",
+        "domEventAt": "2026-10-23T16:33:58.1384721+02:00",
+        "elapsedMs": 205.8034,
+        "workerCpuMs": 93.75,
+        "runtimeToDomMs": 11.6768
+      },
+      {
+        "generation": 2,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:33:58.2776288+02:00",
+        "savedAtUtc": "2026-10-23T16:33:58.2788053+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:33:58.361952+02:00",
+        "publishedAt": "2026-10-23T16:33:58.3624754+02:00",
+        "domEventAt": "2026-10-23T16:33:58.3717076+02:00",
+        "elapsedMs": 161.4221,
+        "workerCpuMs": 46.875,
+        "runtimeToDomMs": 9.7556
+      }
+    ],
+    "background": [
+      {
+        "generation": 1,
+        "workerProcessId": 32088,
+        "domReadyAt": "2026-10-23T16:33:19.658292+02:00",
+        "firstEditStartedAt": "2026-10-23T16:33:29.9173658+02:00",
+        "readyToFirstEditMs": 10259.0738,
+        "firstCpuSampleAt": "2026-10-23T16:33:19.6755859+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:33:29.8106463+02:00",
+        "sampledBackgroundCpuMs": 1843.75
+      },
+      {
+        "generation": 2,
+        "workerProcessId": 65936,
+        "domReadyAt": "2026-10-23T16:33:46.6635644+02:00",
+        "firstEditStartedAt": "2026-10-23T16:33:56.9874948+02:00",
+        "readyToFirstEditMs": 10323.9304,
+        "firstCpuSampleAt": "2026-10-23T16:33:46.7578825+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:33:56.9388079+02:00",
+        "sampledBackgroundCpuMs": 3156.25
+      }
+    ],
+    "sdk": [
+      {
+        "phase": "sdk-update-complete",
+        "childProcessId": null,
+        "durationMs": 700,
+        "generation": 1,
+        "observedAtUtc": "2026-10-23T16:33:30.7555285+02:00"
+      },
+      {
+        "phase": "sdk-update-complete",
+        "childProcessId": null,
+        "durationMs": 69,
+        "generation": 1,
+        "observedAtUtc": "2026-10-23T16:33:31.0177162+02:00"
+      },
+      {
+        "phase": "sdk-update-complete",
+        "childProcessId": null,
+        "durationMs": 27,
+        "generation": 1,
+        "observedAtUtc": "2026-10-23T16:33:31.2193953+02:00"
+      },
+      {
+        "phase": "sdk-update-complete",
+        "childProcessId": null,
+        "durationMs": 727,
+        "generation": 2,
+        "observedAtUtc": "2026-10-23T16:33:57.919799+02:00"
+      },
+      {
+        "phase": "sdk-update-complete",
+        "childProcessId": null,
+        "durationMs": 41,
+        "generation": 2,
+        "observedAtUtc": "2026-10-23T16:33:58.1419956+02:00"
+      },
+      {
+        "phase": "sdk-update-complete",
+        "childProcessId": null,
+        "durationMs": 56,
+        "generation": 2,
+        "observedAtUtc": "2026-10-23T16:33:58.395663+02:00"
+      }
+    ],
+    "frontendStarts": 1,
+    "frontendReady": 1,
+    "cleanup": {
+      "scenario": "idle-ten-seconds",
+      "passed": true,
+      "coordinatorProcessId": 47400,
+      "startedAtUtc": "2026-10-23T14:32:58.3703988Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    }
+  },
+  {
+    "name": "control-worker",
+    "source": "1d5e05eecf12a29d1873f3b332eccd492ae79c66",
+    "passed": true,
+    "traceRequested": false,
+    "idleMs": 0,
+    "cpuScope": "retained SDK worker",
+    "edits": [
+      {
+        "generation": 1,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:34:12.8050269+02:00",
+        "savedAtUtc": "2026-10-23T16:34:12.8071197+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:34:14.7631202+02:00",
+        "publishedAt": "2026-10-23T16:34:14.7634851+02:00",
+        "domEventAt": "2026-10-23T16:34:14.7725874+02:00",
+        "elapsedMs": 2053.6266,
+        "workerCpuMs": 2218.75,
+        "runtimeToDomMs": 9.4672
+      },
+      {
+        "generation": 1,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:34:14.9241365+02:00",
+        "savedAtUtc": "2026-10-23T16:34:14.9250684+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:34:15.0190279+02:00",
+        "publishedAt": "2026-10-23T16:34:15.019201+02:00",
+        "domEventAt": "2026-10-23T16:34:15.0396402+02:00",
+        "elapsedMs": 207.5923,
+        "workerCpuMs": 93.75,
+        "runtimeToDomMs": 20.6123
+      },
+      {
+        "generation": 1,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:34:15.1880859+02:00",
+        "savedAtUtc": "2026-10-23T16:34:15.1888328+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:34:15.2263953+02:00",
+        "publishedAt": "2026-10-23T16:34:15.2266353+02:00",
+        "domEventAt": "2026-10-23T16:34:15.2388934+02:00",
+        "elapsedMs": 118.4978,
+        "workerCpuMs": 46.875,
+        "runtimeToDomMs": 12.4981
+      },
+      {
+        "generation": 2,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:34:34.4153259+02:00",
+        "savedAtUtc": "2026-10-23T16:34:34.4192774+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:34:36.5638135+02:00",
+        "publishedAt": "2026-10-23T16:34:36.5639657+02:00",
+        "domEventAt": "2026-10-23T16:34:36.5894427+02:00",
+        "elapsedMs": 2239.338,
+        "workerCpuMs": 2453.125,
+        "runtimeToDomMs": 25.6292
+      },
+      {
+        "generation": 2,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:34:36.7103456+02:00",
+        "savedAtUtc": "2026-10-23T16:34:36.7110895+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:34:36.7675894+02:00",
+        "publishedAt": "2026-10-23T16:34:36.7677918+02:00",
+        "domEventAt": "2026-10-23T16:34:36.7723709+02:00",
+        "elapsedMs": 159.3419,
+        "workerCpuMs": 46.875,
+        "runtimeToDomMs": 4.7815
+      },
+      {
+        "generation": 2,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:34:36.9111708+02:00",
+        "savedAtUtc": "2026-10-23T16:34:36.9118018+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:34:36.9854837+02:00",
+        "publishedAt": "2026-10-23T16:34:36.9856458+02:00",
+        "domEventAt": "2026-10-23T16:34:36.9890276+02:00",
+        "elapsedMs": 167.2347,
+        "workerCpuMs": 78.125,
+        "runtimeToDomMs": 3.5439
+      }
+    ],
+    "background": [
+      {
+        "generation": 1,
+        "workerProcessId": 47780,
+        "domReadyAt": "2026-10-23T16:34:12.5917881+02:00",
+        "firstEditStartedAt": "2026-10-23T16:34:12.8050269+02:00",
+        "readyToFirstEditMs": 213.2388,
+        "firstCpuSampleAt": "2026-10-23T16:34:12.6250981+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:34:12.7508354+02:00",
+        "sampledBackgroundCpuMs": 125.0
+      },
+      {
+        "generation": 2,
+        "workerProcessId": 29940,
+        "domReadyAt": "2026-10-23T16:34:34.1932767+02:00",
+        "firstEditStartedAt": "2026-10-23T16:34:34.4153259+02:00",
+        "readyToFirstEditMs": 222.0492,
+        "firstCpuSampleAt": "2026-10-23T16:34:34.2269518+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:34:34.3682645+02:00",
+        "sampledBackgroundCpuMs": 140.625
+      }
+    ],
+    "sdk": [
+      {
+        "durationMs": 1801,
+        "generation": 1,
+        "childProcessId": null,
+        "phase": "sdk-update-complete",
+        "observedAtUtc": "2026-10-23T16:34:14.7970287+02:00"
+      },
+      {
+        "durationMs": 49,
+        "generation": 1,
+        "childProcessId": null,
+        "phase": "sdk-update-complete",
+        "observedAtUtc": "2026-10-23T16:34:15.0287954+02:00"
+      },
+      {
+        "durationMs": 28,
+        "generation": 1,
+        "childProcessId": null,
+        "phase": "sdk-update-complete",
+        "observedAtUtc": "2026-10-23T16:34:15.2480133+02:00"
+      },
+      {
+        "durationMs": 1788,
+        "generation": 2,
+        "childProcessId": null,
+        "phase": "sdk-update-complete",
+        "observedAtUtc": "2026-10-23T16:34:36.6071558+02:00"
+      },
+      {
+        "durationMs": 45,
+        "generation": 2,
+        "childProcessId": null,
+        "phase": "sdk-update-complete",
+        "observedAtUtc": "2026-10-23T16:34:36.8087462+02:00"
+      },
+      {
+        "durationMs": 33,
+        "generation": 2,
+        "childProcessId": null,
+        "phase": "sdk-update-complete",
+        "observedAtUtc": "2026-10-23T16:34:37.0242046+02:00"
+      }
+    ],
+    "frontendStarts": 1,
+    "frontendReady": 1,
+    "cleanup": {
+      "scenario": "control-worker",
+      "passed": true,
+      "coordinatorProcessId": 64980,
+      "startedAtUtc": "2026-10-23T14:33:59.3018936Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    }
+  },
+  {
+    "name": "package-immediate",
+    "source": "1d5e05eecf12a29d1873f3b332eccd492ae79c66",
+    "passed": true,
+    "traceRequested": false,
+    "idleMs": 0,
+    "cpuScope": "retained SDK worker",
+    "edits": [
+      {
+        "generation": 1,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:41:51.3681595+02:00",
+        "savedAtUtc": "2026-10-23T16:41:51.3705984+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:41:52.2096841+02:00",
+        "publishedAt": "2026-10-23T16:41:52.2102153+02:00",
+        "domEventAt": "2026-10-23T16:41:52.2162802+02:00",
+        "elapsedMs": 926.1501,
+        "workerCpuMs": 750.0,
+        "runtimeToDomMs": 6.5961
+      },
+      {
+        "generation": 1,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:41:52.3482807+02:00",
+        "savedAtUtc": "2026-10-23T16:41:52.349031+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:41:52.4062869+02:00",
+        "publishedAt": "2026-10-23T16:41:52.4064811+02:00",
+        "domEventAt": "2026-10-23T16:41:52.4162565+02:00",
+        "elapsedMs": 164.2657,
+        "workerCpuMs": 46.875,
+        "runtimeToDomMs": 9.9696
+      },
+      {
+        "generation": 1,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:41:52.568529+02:00",
+        "savedAtUtc": "2026-10-23T16:41:52.5695665+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:41:52.6081695+02:00",
+        "publishedAt": "2026-10-23T16:41:52.6084959+02:00",
+        "domEventAt": "2026-10-23T16:41:52.6163064+02:00",
+        "elapsedMs": 139.1012,
+        "workerCpuMs": 46.875,
+        "runtimeToDomMs": 8.1369
+      },
+      {
+        "generation": 2,
+        "edit": 1,
+        "startedAtUtc": "2026-10-23T16:42:00.0620538+02:00",
+        "savedAtUtc": "2026-10-23T16:42:00.0631638+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:42:01.1456936+02:00",
+        "publishedAt": "2026-10-23T16:42:01.1461197+02:00",
+        "domEventAt": "2026-10-23T16:42:01.1662472+02:00",
+        "elapsedMs": 1194.3532,
+        "workerCpuMs": 1218.75,
+        "runtimeToDomMs": 20.5536
+      },
+      {
+        "generation": 2,
+        "edit": 2,
+        "startedAtUtc": "2026-10-23T16:42:01.3074345+02:00",
+        "savedAtUtc": "2026-10-23T16:42:01.3085121+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:42:01.4153978+02:00",
+        "publishedAt": "2026-10-23T16:42:01.4155329+02:00",
+        "domEventAt": "2026-10-23T16:42:01.4329488+02:00",
+        "elapsedMs": 213.1425,
+        "workerCpuMs": 109.375,
+        "runtimeToDomMs": 17.551
+      },
+      {
+        "generation": 2,
+        "edit": 3,
+        "startedAtUtc": "2026-10-23T16:42:01.5732557+02:00",
+        "savedAtUtc": "2026-10-23T16:42:01.5743175+02:00",
+        "runtimeUpdateAt": "2026-10-23T16:42:01.6273625+02:00",
+        "publishedAt": "2026-10-23T16:42:01.6274977+02:00",
+        "domEventAt": "2026-10-23T16:42:01.6332813+02:00",
+        "elapsedMs": 161.6583,
+        "workerCpuMs": 62.5,
+        "runtimeToDomMs": 5.9188
+      }
+    ],
+    "background": [
+      {
+        "generation": 1,
+        "workerProcessId": 32228,
+        "domReadyAt": "2026-10-23T16:41:51.1264941+02:00",
+        "firstEditStartedAt": "2026-10-23T16:41:51.3681595+02:00",
+        "readyToFirstEditMs": 241.6654,
+        "firstCpuSampleAt": "2026-10-23T16:41:51.1867971+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:41:51.3007312+02:00",
+        "sampledBackgroundCpuMs": 0.0
+      },
+      {
+        "generation": 2,
+        "workerProcessId": 13400,
+        "domReadyAt": "2026-10-23T16:41:59.8424436+02:00",
+        "firstEditStartedAt": "2026-10-23T16:42:00.0620538+02:00",
+        "readyToFirstEditMs": 219.6102,
+        "firstCpuSampleAt": "2026-10-23T16:41:59.9038333+02:00",
+        "lastCpuSampleAt": "2026-10-23T16:42:00.0143048+02:00",
+        "sampledBackgroundCpuMs": 125.0
+      }
+    ],
+    "sdk": [
+      {
+        "observedAtUtc": "2026-10-23T16:41:52.2334942+02:00",
+        "durationMs": 746,
+        "generation": 1,
+        "phase": "sdk-update-complete",
+        "childProcessId": null
+      },
+      {
+        "observedAtUtc": "2026-10-23T16:41:52.4658185+02:00",
+        "durationMs": 45,
+        "generation": 1,
+        "phase": "sdk-update-complete",
+        "childProcessId": null
+      },
+      {
+        "observedAtUtc": "2026-10-23T16:41:52.6239961+02:00",
+        "durationMs": 27,
+        "generation": 1,
+        "phase": "sdk-update-complete",
+        "childProcessId": null
+      },
+      {
+        "observedAtUtc": "2026-10-23T16:42:01.1590981+02:00",
+        "durationMs": 1027,
+        "generation": 2,
+        "phase": "sdk-update-complete",
+        "childProcessId": null
+      },
+      {
+        "observedAtUtc": "2026-10-23T16:42:01.4245639+02:00",
+        "durationMs": 51,
+        "generation": 2,
+        "phase": "sdk-update-complete",
+        "childProcessId": null
+      },
+      {
+        "observedAtUtc": "2026-10-23T16:42:01.6899771+02:00",
+        "durationMs": 27,
+        "generation": 2,
+        "phase": "sdk-update-complete",
+        "childProcessId": null
+      }
+    ],
+    "frontendStarts": 1,
+    "frontendReady": 1,
+    "cleanup": {
+      "scenario": "package-immediate",
+      "passed": true,
+      "coordinatorProcessId": 54004,
+      "startedAtUtc": "2026-10-23T14:41:33.7896919Z",
+      "actualExitCode": 0,
+      "abruptOwnerKill": false,
+      "forcedCleanupRequested": false,
+      "independentlyRetainedProcesses": 31,
+      "unrelatedSurvived": true,
+      "rendering": "not-exercised"
+    }
+  }
+]

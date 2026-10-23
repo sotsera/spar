@@ -47,7 +47,7 @@ is not the recommended starting application. Each topic owns its commands; this 
 
 ## Status and deferred work
 
-Status reconciled after [PR #54](https://github.com/sotsera/spar/pull/54), merged as `f0def53` on 2026-10-23.
+Status reconciled after [PR #55](https://github.com/sotsera/spar/pull/55), merged as `1d5e05e` on 2026-10-23.
 This section owns the current repository status; individual evidence records remain bound to their tested sources.
 
 - Milestone 1 tracker #1 and implementation issues #2–#12 are closed. The [acceptance matrix](19-milestone-1-acceptance.md)
@@ -105,9 +105,13 @@ all six checks. The [current-main latency comparison](evidence/development-laten
 repeats the original five-session protocol. All 155 retained process instances exited, but these
 observations do not demonstrate an end-to-end speedup: build selection is shorter while watcher
 launch/admission and unattributed first-start gaps mask the saving. The first supported C# save also
-took 1.01–2.09 s, versus 0.64–0.87 s originally, while later saves remained close. The next measured
-targets are watcher launch and first-update preparation. All individual samples, including outliers,
-remain in the dated records.
+took 1.01–2.09 s, versus 0.64–0.87 s originally, while later saves remained close. PR #55's
+[integrated-main run](https://github.com/sotsera/spar/actions/runs/39968791351) passed all six checks.
+The subsequent [watcher/first-update profile](evidence/watcher-profile-2026-10-23/README.md) separates
+SDK compiler/source-generator preparation from native launch/admission waits, with a fresh package
+fixture comparison. It identifies native pre-admission outliers as the next trace target; source
+workspace reduction remains an experiment, not an implemented optimization. All individual samples,
+including outliers, remain in the dated records.
 
 ## History and research
 

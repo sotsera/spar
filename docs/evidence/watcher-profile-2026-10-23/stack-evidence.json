@@ -1,0 +1,376 @@
+[
+  {
+    "generation": 1,
+    "coverage": {
+      "startUtc": "2026-10-23T14:30:55.55Z",
+      "endUtc": "2026-10-23T14:31:40.911393Z",
+      "eventsLost": 0,
+      "firstSample": "2026-10-23T16:30:55.5506815+02:00",
+      "lastSample": "2026-10-23T16:31:40.570699+02:00",
+      "processIds": [
+        24856
+      ]
+    },
+    "windows": [
+      {
+        "Name": "startup",
+        "Start": "2026-10-23T16:30:54.8251455+02:00",
+        "End": "2026-10-23T16:31:14.2044802+02:00",
+        "Samples": 15220,
+        "ManagedSamples": 203,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 15017,
+          "Managed": 203
+        },
+        "work": {
+          "edit-and-continue": 4,
+          "generator-pipeline": 29
+        },
+        "namedGeneratorFrames": [
+          {
+            "method": "Microsoft.CodeAnalysis.BatchNode`1[System.ValueTuple`2[System.__Canon,Microsoft.Interop.SequenceEqualImmutableArray`1[System.__Canon]]].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.Collections.Immutable.ImmutableArray`1<!0>>,value class System.Threading.CancellationToken)",
+            "samples": 2
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.Collections.Immutable.ImmutableArray`1[System.ValueTuple`2[System.__Canon,Microsoft.Interop.SequenceEqualImmutableArray`1[System.__Canon]]],System.__Canon].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 2
+          },
+          {
+            "method": "Microsoft.Interop.ComClassGenerator.Initialize(value class Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.Interop.ComInterfaceGenerator.Initialize(value class Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.Interop.JavaScript.JSExportGenerator.Initialize(value class Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.Collections.Immutable.ImmutableArray`1[System.Boolean],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[System.__Canon,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[System.__Canon,Microsoft.Interop.EnvironmentFlags],System.__Canon].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[System.__Canon,System.__Canon],Microsoft.Interop.SequenceEqualImmutableArray`1[System.__Canon]].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[Microsoft.Interop.SequenceEqualImmutableArray`1[System.__Canon],System.__Canon].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "System.Collections.Generic.EqualityComparer`1[System.ValueTuple`2[System.Collections.Immutable.ImmutableArray`1[System.__Canon],System.Collections.Immutable.ImmutableArray`1[Microsoft.Interop.SequenceEqualImmutableArray`1[System.__Canon]]]]..cctor()",
+            "samples": 1
+          },
+          {
+            "method": "System.Collections.Generic.EqualityComparer`1[System.ValueTuple`2[System.Collections.Immutable.ImmutableArray`1[System.__Canon],System.Collections.Immutable.ImmutableArray`1[Microsoft.Interop.SequenceEqualImmutableArray`1[System.__Canon]]]].get_Default()",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.WrappedUserComparer`1[System.ValueTuple`2[System.Collections.Immutable.ImmutableArray`1[System.__Canon],System.Collections.Immutable.ImmutableArray`1[Microsoft.Interop.SequenceEqualImmutableArray`1[System.__Canon]]]]..cctor()",
+            "samples": 1
+          }
+        ]
+      },
+      {
+        "Name": "edit-1",
+        "Start": "2026-10-23T16:31:14.4278766+02:00",
+        "End": "2026-10-23T16:31:16.4147752+02:00",
+        "Samples": 3633,
+        "ManagedSamples": 115,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 3518,
+          "Managed": 115
+        },
+        "work": {
+          "generator-pipeline": 62,
+          "edit-and-continue": 23
+        },
+        "namedGeneratorFrames": [
+          {
+            "method": "Microsoft.Interop.IncrementalValuesProviderExtensions+<>c__1`1[System.__Canon].<SelectNormalized>b__1_0(!0,value class System.Threading.CancellationToken)",
+            "samples": 12
+          },
+          {
+            "method": "Microsoft.Interop.SignatureContext.Create(class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.MarshallingInfoParser,class Microsoft.Interop.StubEnvironment,value class Microsoft.Interop.CodeEmitOptions,class System.Reflection.Assembly)",
+            "samples": 7
+          },
+          {
+            "method": "Microsoft.Interop.MarshallingInfoParser.GetMarshallingInfo(class Microsoft.CodeAnalysis.ITypeSymbol,class Microsoft.Interop.UseSiteAttributeProvider,int32)",
+            "samples": 6
+          },
+          {
+            "method": "Microsoft.Interop.MarshallingInfoParser.ParseMarshallingInfo(class Microsoft.CodeAnalysis.ITypeSymbol,class System.Collections.Generic.IEnumerable`1<class Microsoft.CodeAnalysis.AttributeData>)",
+            "samples": 6
+          },
+          {
+            "method": "Microsoft.Interop.SignatureContext.GenerateTypeInformation(class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.MarshallingInfoParser,class Microsoft.Interop.StubEnvironment)",
+            "samples": 6
+          },
+          {
+            "method": "Microsoft.Interop.LibraryImportGenerator.CalculateStubInformation(class Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax,class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.StubEnvironment,class Microsoft.Interop.LibraryImportGeneratorOptions,value class System.Threading.CancellationToken)",
+            "samples": 5
+          },
+          {
+            "method": "Microsoft.Interop.LibraryImportGenerator+<>c.<Initialize>b__2_8(class <>f__AnonymousType1`4<class Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax,class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.StubEnvironment,class Microsoft.Interop.LibraryImportGeneratorOptions>,value class System.Threading.CancellationToken)",
+            "samples": 5
+          },
+          {
+            "method": "System.Text.Json.SourceGeneration.JsonSourceGenerator+<>c.<Initialize>b__5_3(value class System.ValueTuple`2<value class System.ValueTuple`2<class Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax,class Microsoft.CodeAnalysis.SemanticModel>,class System.Text.Json.SourceGeneration.KnownTypeSymbols>,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.Collections.Immutable.ImmutableArray`1[System.Boolean],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[System.__Canon,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[System.__Canon,Microsoft.Interop.EnvironmentFlags],System.__Canon].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.Interop.MarshallingInfoParser.GetMarshallingInfoForType(class Microsoft.CodeAnalysis.ITypeSymbol,int32,class Microsoft.Interop.UseSiteAttributeProvider,class Microsoft.Interop.GetMarshallingInfoCallback)",
+            "samples": 4
+          },
+          {
+            "method": "System.Text.Json.SourceGeneration.JsonSourceGenerator+Parser.ParseTypeGenerationSpec(value class TypeToGenerate&,class Microsoft.CodeAnalysis.INamedTypeSymbol,class System.Text.Json.SourceGeneration.SourceGenerationOptionsSpec)",
+            "samples": 3
+          }
+        ]
+      },
+      {
+        "Name": "edit-2",
+        "Start": "2026-10-23T16:31:16.5658643+02:00",
+        "End": "2026-10-23T16:31:16.6674691+02:00",
+        "Samples": 198,
+        "ManagedSamples": 4,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 194,
+          "Managed": 4
+        },
+        "work": {
+          "edit-and-continue": 2
+        },
+        "namedGeneratorFrames": []
+      },
+      {
+        "Name": "edit-3",
+        "Start": "2026-10-23T16:31:16.8135852+02:00",
+        "End": "2026-10-23T16:31:16.8885457+02:00",
+        "Samples": 165,
+        "ManagedSamples": 7,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 158,
+          "Managed": 7
+        },
+        "work": {
+          "edit-and-continue": 1
+        },
+        "namedGeneratorFrames": []
+      }
+    ]
+  },
+  {
+    "generation": 2,
+    "coverage": {
+      "startUtc": "2026-10-23T14:31:45.281Z",
+      "endUtc": "2026-10-23T14:32:30.6151839Z",
+      "eventsLost": 0,
+      "firstSample": "2026-10-23T16:31:45.2817108+02:00",
+      "lastSample": "2026-10-23T16:32:30.2904725+02:00",
+      "processIds": [
+        52168
+      ]
+    },
+    "windows": [
+      {
+        "Name": "startup",
+        "Start": "2026-10-23T16:31:44.7149658+02:00",
+        "End": "2026-10-23T16:31:51.9092434+02:00",
+        "Samples": 25736,
+        "ManagedSamples": 318,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 25418,
+          "Managed": 318
+        },
+        "work": {
+          "edit-and-continue": 4,
+          "generator-pipeline": 15
+        },
+        "namedGeneratorFrames": [
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[System.__Canon,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 2
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[System.__Canon,Microsoft.Interop.EnvironmentFlags],System.__Canon].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 2
+          },
+          {
+            "method": "Microsoft.Interop.ComClassGenerator.Initialize(value class Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.Interop.JavaScript.JSExportGenerator.Initialize(value class Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.Collections.Immutable.ImmutableArray`1[System.Boolean],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 1
+          }
+        ]
+      },
+      {
+        "Name": "edit-1",
+        "Start": "2026-10-23T16:31:52.1420188+02:00",
+        "End": "2026-10-23T16:31:54.3587099+02:00",
+        "Samples": 6031,
+        "ManagedSamples": 151,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 5880,
+          "Managed": 151
+        },
+        "work": {
+          "generator-pipeline": 75,
+          "edit-and-continue": 40
+        },
+        "namedGeneratorFrames": [
+          {
+            "method": "Microsoft.Interop.IncrementalValuesProviderExtensions+<>c__1`1[System.__Canon].<SelectNormalized>b__1_0(!0,value class System.Threading.CancellationToken)",
+            "samples": 12
+          },
+          {
+            "method": "System.Text.Json.SourceGeneration.JsonSourceGenerator+<>c.<Initialize>b__5_3(value class System.ValueTuple`2<value class System.ValueTuple`2<class Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax,class Microsoft.CodeAnalysis.SemanticModel>,class System.Text.Json.SourceGeneration.KnownTypeSymbols>,value class System.Threading.CancellationToken)",
+            "samples": 5
+          },
+          {
+            "method": "Microsoft.Interop.SignatureContext.GenerateTypeInformation(class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.MarshallingInfoParser,class Microsoft.Interop.StubEnvironment)",
+            "samples": 5
+          },
+          {
+            "method": "Microsoft.Interop.SignatureContext.Create(class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.MarshallingInfoParser,class Microsoft.Interop.StubEnvironment,value class Microsoft.Interop.CodeEmitOptions,class System.Reflection.Assembly)",
+            "samples": 5
+          },
+          {
+            "method": "Microsoft.Interop.LibraryImportGenerator+<>c.<Initialize>b__2_8(class <>f__AnonymousType1`4<class Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax,class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.StubEnvironment,class Microsoft.Interop.LibraryImportGeneratorOptions>,value class System.Threading.CancellationToken)",
+            "samples": 5
+          },
+          {
+            "method": "System.Text.Json.SourceGeneration.JsonSourceGenerator+Parser.ParseTypeGenerationSpec(value class TypeToGenerate&,class Microsoft.CodeAnalysis.INamedTypeSymbol,class System.Text.Json.SourceGeneration.SourceGenerationOptionsSpec)",
+            "samples": 4
+          },
+          {
+            "method": "System.Text.Json.SourceGeneration.JsonSourceGenerator+Parser.ParseContextGenerationSpec(class Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax,class Microsoft.CodeAnalysis.SemanticModel,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.Interop.MarshallingInfoParser.GetMarshallingInfo(class Microsoft.CodeAnalysis.ITypeSymbol,class Microsoft.Interop.UseSiteAttributeProvider,int32)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.Interop.MarshallingInfoParser.ParseMarshallingInfo(class Microsoft.CodeAnalysis.ITypeSymbol,class System.Collections.Generic.IEnumerable`1<class Microsoft.CodeAnalysis.AttributeData>)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.Interop.LibraryImportGenerator.CalculateStubInformation(class Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax,class Microsoft.CodeAnalysis.IMethodSymbol,class Microsoft.Interop.StubEnvironment,class Microsoft.Interop.LibraryImportGeneratorOptions,value class System.Threading.CancellationToken)",
+            "samples": 4
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.Collections.Immutable.ImmutableArray`1[System.Boolean],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 3
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 3
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[Microsoft.Interop.EnvironmentFlags,Microsoft.Interop.EnvironmentFlags],Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 3
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.CombineNode`2[System.__Canon,Microsoft.Interop.EnvironmentFlags].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<value class System.ValueTuple`2<!0,!1>>,value class System.Threading.CancellationToken)",
+            "samples": 3
+          },
+          {
+            "method": "Microsoft.CodeAnalysis.TransformNode`2[System.ValueTuple`2[System.__Canon,Microsoft.Interop.EnvironmentFlags],System.__Canon].UpdateStateTable(class Builder,class Microsoft.CodeAnalysis.NodeStateTable`1<!1>,value class System.Threading.CancellationToken)",
+            "samples": 3
+          }
+        ]
+      },
+      {
+        "Name": "edit-2",
+        "Start": "2026-10-23T16:31:54.507181+02:00",
+        "End": "2026-10-23T16:31:54.6165236+02:00",
+        "Samples": 315,
+        "ManagedSamples": 6,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 309,
+          "Managed": 6
+        },
+        "work": {
+          "edit-and-continue": 3
+        },
+        "namedGeneratorFrames": []
+      },
+      {
+        "Name": "edit-3",
+        "Start": "2026-10-23T16:31:54.7710663+02:00",
+        "End": "2026-10-23T16:31:54.8286483+02:00",
+        "Samples": 135,
+        "ManagedSamples": 2,
+        "WithoutStack": 0,
+        "sampleTypes": {
+          "External": 133,
+          "Managed": 2
+        },
+        "work": {
+          "edit-and-continue": 1
+        },
+        "namedGeneratorFrames": []
+      }
+    ]
+  }
+]
