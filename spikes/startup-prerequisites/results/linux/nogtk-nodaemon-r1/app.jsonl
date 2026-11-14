@@ -1,0 +1,20 @@
+{"t":43.97,"evt":"main","label":"nogtk-nodaemon","ui":"auto","processAgeMs":80,"uid":1000,"desktop":null}
+{"t":48.12,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":50.42,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":52.67,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":1.842}
+{"t":55.85,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":1.941}
+{"t":57.06,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.658}
+{"t":64.03,"evt":"library","file":"libgtk-4.so.1","ok":false,"reason":"libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":71.21,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libgtk-4.so.1): libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":78.74,"evt":"stderr","isatty":"redirected"}
+{"t":83.22,"evt":"journal","result":"journal-socket"}
+{"t":84.16,"evt":"graphical","way":"gtk","shown":false,"detail":"GTK 4 not initialised","ms":0}
+{"t":86.05,"evt":"graphical","way":"zenity","shown":false,"detail":"not installed","ms":0.179}
+{"t":86.47,"evt":"graphical","way":"kdialog","shown":false,"detail":"not installed","ms":0.019}
+{"t":86.72,"evt":"graphical","way":"yad","shown":false,"detail":"not installed","ms":0.018}
+{"t":149.14,"evt":"graphical","way":"dbus","shown":false,"detail":"Notify failed: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildSignaled: Process org.freedesktop.Notifications received signal 5","ms":62.197}
+{"t":303.3,"evt":"helper-exit","tool":"notify-send","exit":1,"ms":153.795,"stderr":"Error calling StartServiceByName for org.freedesktop.Notifications: Process org.freedesktop.Notifications received signal 5"}
+{"t":304,"evt":"graphical","way":"notify-send","shown":false,"detail":"exit 1 after 154 ms Error calling StartServiceByName for org.freedesktop.Notifications: Process org.freedesktop.Notifications received signal 5","ms":154.536}
+{"t":1433.58,"evt":"helper-exit","tool":"xmessage","exit":0,"ms":1129.258,"stderr":""}
+{"t":1434.82,"evt":"graphical","way":"xmessage","shown":true,"detail":"exit 0 after 1130 ms","ms":1130.525}
+{"t":1435.25,"evt":"exit","code":3}

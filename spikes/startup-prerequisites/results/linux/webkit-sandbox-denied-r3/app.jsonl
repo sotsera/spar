@@ -1,0 +1,18 @@
+{"t":46.32,"evt":"main","label":"webkit-sandbox-denied","ui":"auto","processAgeMs":100,"uid":1000,"desktop":null}
+{"t":50.34,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":50.76,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":54.71,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":3.194}
+{"t":58.34,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":0.388}
+{"t":59.25,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.549}
+{"t":63.29,"evt":"library","file":"libgtk-4.so.1","ok":true,"ms":3.734}
+{"t":99.39,"evt":"gtk-init","ok":true,"ms":32.928,"gtk":"4.14.5"}
+{"t":107.69,"evt":"library","file":"libwebkitgtk-6.0.so.4","ok":true,"ms":7.925}
+{"t":110.5,"evt":"webkit-version","found":"2.52.6","minimum":"2.40.0"}
+{"t":112.65,"evt":"webkit-helpers","library":"/usr/lib/x86_64-linux-gnu/libwebkitgtk-6.0.so.4.16.10","folder":"/usr/lib/x86_64-linux-gnu/webkitgtk-6.0","missing":""}
+{"t":113.76,"evt":"sandbox-tools","missing":""}
+{"t":118.74,"evt":"sandbox-trial","exit":1,"ms":4.283,"stderr":"bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See \u003Chttps://deb.li/bubblewrap\u003E or \u003Cfile:///usr/share/doc/bubblewrap/README.Debian.gz\u003E.","uid":1000}
+{"t":119.09,"evt":"problem","kind":"Broken","exit":5,"details":"bwrap trial exited 1: bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See \u003Chttps://deb.li/bubblewrap\u003E or \u003Cfile:///usr/share/doc/bubblewrap/README.Debian.gz\u003E."}
+{"t":121.69,"evt":"stderr","isatty":"redirected"}
+{"t":122.17,"evt":"journal","result":"journal-socket"}
+{"t":1757.81,"evt":"graphical","way":"gtk","shown":true,"detail":"button=0","ms":1635.103}
+{"t":1758.82,"evt":"exit","code":5}

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The shape Spar's task project will have: net11.0, warnings as errors and code style from the repository props,
+    central package versions, compile-time MSBuild references, and the analyzer as a private build-time dependency.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" ExcludeAssets="runtime" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" ExcludeAssets="runtime" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- -p:ProbeNoAnalyzer=true builds without the analyzer, for the cost comparison. -->
+  <ItemGroup Condition="'$(ProbeNoAnalyzer)' != 'true'">
+    <PackageReference Include="Microsoft.Build.TaskAuthoring.Analyzer" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

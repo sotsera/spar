@@ -1,0 +1,16 @@
+exit 0 wallMs 5502
+RUN runtime=jit mode=bulk-cancel arg=batch0-external sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+CANCEL variant=batch0-external trigger=rows rowsAtCancel=310000 lastNotified=310000 rowsCopied64=310022 elapsedMs=4679 cancelToExceptionMs=806.4
+CANCEL outcome=TaskCanceledException: A task was canceled.
+CANCEL targetConnection=Open transactionConnection=set
+SERVER-B target spid request gone after 11.3 ms (last seen: ); now request=none session=sleeping/opentran=1 locks=1713
+SERVER-B any bulk request: 0
+SERVER-A source spid before reader dispose: request=SELECT/suspended/ASYNC_NETWORK_IO/cpu=233 session=running/opentran=0 locks=2
+CANCEL external transaction Rollback(): ok
+SERVER-B after rollback request=none session=sleeping/opentran=0 locks=0
+CANCEL target connection reusable: SELECT 1 -> 1
+RESULT bulk-cancel variant=batch0-external committedRowsOnB=0 rowsAtCancel=310000 cancelToExceptionMs=806.4 requestGoneMs=11.3
+SOURCE reader dispose (after SqlCommand.Cancel) took 58.1 ms; source spid now request=none session=sleeping/opentran=0 locks=0
+SERVER-B rows after target connection closed: 0
+MEM end peakWorkingSetMB=76.2 workingSetMB=76.2 peakPrivateMB=38.8 allocatedMB=566.8 gc0=32 gc1=1 gc2=0 cpuMs=11266
+

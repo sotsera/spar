@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Size.props" />
+
+  <ItemGroup>
+    <Compile Include="..\Shared\BenchContract.cs" LinkBase="Shared" />
+    <ProjectReference Include="..\Bench.Generator\Bench.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Bench.Runtime\Bench.Runtime.csproj" />
+  </ItemGroup>
+</Project>

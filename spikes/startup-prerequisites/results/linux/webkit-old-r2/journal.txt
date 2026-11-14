@@ -1,0 +1,9 @@
+MESSAGE
+^O^A??????Spar Sample cannot start: Spar Sample needs WebKitGTK 2.46 or later. This system has WebKitGTK 2.44.0.
+Update your system (sudo apt update && sudo apt upgrade), or use a newer release of your distribution.
+Details: webkit_get_*_version = 2.44.0, minimum 2.46
+Exit code 4.
+PRIORITY=3
+SYSLOG_IDENTIFIER=spar-sample
+SPAR_STARTUP_PROBLEM=TooOld
+SPAR_EXIT_CODE=4

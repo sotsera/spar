@@ -1,0 +1,28 @@
+# Runtime probes, .NET 11.0.0, .NET 11.0.0
+default(Result).IsSuccess => default (throws InvalidOperationException)
+default(Result).ToString() => default(Result): neither a value nor an error
+switch over default(Result) => InvalidOperationException: default(Result) is neither a value nor an error. Return a value or an error case.
+Equals(default(Result)) on a default / on a value => True / False
+Library Factory.Make() (unannotated default) => default (throws InvalidOperationException)
+Library Generic.Make<Result>() (unannotated default!) => default (throws InvalidOperationException)
+Library new Holder().Last (unassigned public field) => default (throws InvalidOperationException)
+Interlocked.Exchange(ref field, value) => NotSupportedException: The specified type must be a reference type, a primitive type, or an enum type.
+MemoryMarshal.Cast<byte, Result> => ArgumentException: The type 'Spar.Result`2[System.String,Library.LibError]' is not supported because it contains references.
+Unsafe.As<Zeroed, Result> => default (throws InvalidOperationException)
+List<Result>.Enumerator.Current before MoveNext => default (throws InvalidOperationException)
+MaxBy over an empty sequence of Results => InvalidOperationException: Sequence contains no elements
+FirstOrDefault() over an empty sequence => default (throws InvalidOperationException)
+new Lazy<Result>().Value => default (throws InvalidOperationException)
+new ThreadLocal<Result>().Value => default (throws InvalidOperationException)
+new AsyncLocal<Result>().Value => default (throws InvalidOperationException)
+new StrongBox<Result>().Value => default (throws InvalidOperationException)
+[ThreadStatic] set by the static constructor, read on another thread => this thread: success (set by the static constructor); other thread: default (throws InvalidOperationException)
+static initializer reading a later static field => default (throws InvalidOperationException)
+await default(ValueTask<Result>) => default (throws InvalidOperationException)
+Array.Resize growth slot => default (throws InvalidOperationException)
+ArrayPool Rent after a Return without clearing => same array: True; [0] = success (left by the previous renter); [1] = default (throws InvalidOperationException)
+ImmutableArray builder Count = 2 => default (throws InvalidOperationException)
+CollectionsMarshal.GetValueRefOrAddDefault on a missing key => default (throws InvalidOperationException)
+RuntimeHelpers.GetUninitializedObject(typeof(Result)) => default (throws InvalidOperationException)
+Activator.CreateInstance<Result>() => default (throws InvalidOperationException)
+Nullable<Result>.Value when null => InvalidOperationException: Cannot read the Value property of a Nullable object that has no value. Check HasValue before reading Value.

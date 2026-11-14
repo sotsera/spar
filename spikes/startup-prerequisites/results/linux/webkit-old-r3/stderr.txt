@@ -1,0 +1,9 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+Spar Sample cannot start: Spar Sample needs WebKitGTK 2.46 or later. This system has WebKitGTK 2.44.0.
+Update your system (sudo apt update && sudo apt upgrade), or use a newer release of your distribution.
+Details: webkit_get_*_version = 2.44.0, minimum 2.46
+Exit code 4.
+
+(spar-sample:41): Gtk-WARNING **: 14:55:24.419: Unable to acquire the address of the accessibility bus: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files. If you are attempting to run GTK without a11y support, GTK_A11Y should be set to 'none'.
+Gtk-Message: 14:55:24.731: GtkDialog mapped without a transient parent. This is discouraged.

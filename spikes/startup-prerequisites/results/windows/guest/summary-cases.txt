@@ -1,0 +1,15 @@
+case | kind | HRESULT of the last step | exit codes | probe: launch to dialog, ms | app: process creation to dialog, ms
+broken-fakeexe | Broken | 0x800700AA | 5,5,5 | 319 (268-324) | 245 (182-285)
+broken-killed | Broken | 0x800700AA | 5,5,5 | 229 (206-234) | 168 (144-192)
+broken-noexe | Broken | 0x80070002 | 5,5,5 | 115 (111-143) | 79 (71-110)
+eventlog | Missing | 0x80070002 | 3,3,3 | 113 (90-138) | 53 (46-60)
+evergreen-default | Missing | 0x80070002 | 3,3,3 | 173 (125-247) | 81 (68-102)
+mb-missing | Missing | 0x80070002 | 3,3,3 | 152 (93-168) | 53 (25-81)
+mb-os | OsTooOld | - | 7,7,7 | 97 (85-150) | 38 (35-44)
+missing-fixed | Missing | 0x80070002 | 3,3,3 | 99 (97-195) | 54 (46-112)
+missing-noclient | Missing | 0x80070002 | 3,3,3 | 124 (95-194) | 58 (50-108)
+nomanifest-auto | Missing | 0x80070002 | 3,3,3 | 92 (82-108) | 35 (35-48)
+nomanifest-taskdialog | Missing | 0x80070002 | 3,3,3 | - | -
+ok-controller | none | 0x00000000 | 0,0,0 | - | -
+os | OsTooOld | - | 7,7,7 | 175 (101-256) | 112 (50-123)
+tooold | TooOld | 0x00000000 | 4,4,4 | 110 (92-141) | 66 (49-104)

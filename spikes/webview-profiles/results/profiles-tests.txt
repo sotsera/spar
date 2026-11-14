@@ -1,0 +1,50 @@
+== in-process mode=freshudf
+TEST ft=134391299332079780 mode=freshudf i=0 fresh=True envMs=6.2 controllerMs=212.2 pageMs=110.0 browser-exited=True exitMs=170.6 gone=True goneMs=174.2 deleted=True deleteMs=11.8 totalMs=514.4
+TEST ft=134391299336882003 mode=freshudf i=1 fresh=True envMs=0.5 controllerMs=181.0 pageMs=125.6 browser-exited=True exitMs=159.0 gone=True goneMs=161.8 deleted=True deleteMs=11.3 totalMs=480.2
+TEST ft=134391299341829271 mode=freshudf i=2 fresh=True envMs=0.5 controllerMs=206.9 pageMs=92.8 browser-exited=True exitMs=180.0 gone=True goneMs=182.8 deleted=True deleteMs=11.8 totalMs=494.7
+TEST ft=134391299346608206 mode=freshudf i=3 fresh=True envMs=0.5 controllerMs=192.7 pageMs=106.9 browser-exited=True exitMs=162.7 gone=True goneMs=166.4 deleted=True deleteMs=11.3 totalMs=477.9
+TEST ft=134391299351723811 mode=freshudf i=4 fresh=True envMs=0.4 controllerMs=193.2 pageMs=110.7 browser-exited=True exitMs=192.9 gone=True goneMs=196.4 deleted=True deleteMs=10.8 totalMs=511.6
+TEST ft=134391299356416379 mode=freshudf i=5 fresh=True envMs=0.4 controllerMs=177.0 pageMs=107.6 browser-exited=True exitMs=166.1 gone=True goneMs=170.2 deleted=True deleteMs=14.0 totalMs=469.2
+TEST ft=134391299361776769 mode=freshudf i=6 fresh=True envMs=0.5 controllerMs=245.8 pageMs=108.8 browser-exited=True exitMs=166.4 gone=True goneMs=170.3 deleted=True deleteMs=10.7 totalMs=536.0
+TEST ft=134391299366903710 mode=freshudf i=7 fresh=True envMs=0.5 controllerMs=198.8 pageMs=118.9 browser-exited=True exitMs=177.4 gone=True goneMs=181.0 deleted=True deleteMs=13.6 totalMs=512.7
+TEST ft=134391299371856654 mode=freshudf i=8 fresh=True envMs=0.5 controllerMs=196.6 pageMs=109.2 browser-exited=True exitMs=169.2 gone=True goneMs=173.5 deleted=True deleteMs=15.5 totalMs=495.3
+TEST ft=134391299376751409 mode=freshudf i=9 fresh=True envMs=0.5 controllerMs=201.4 pageMs=96.4 browser-exited=True exitMs=176.6 gone=True goneMs=179.7 deleted=True deleteMs=11.4 totalMs=489.5
+left-over profile folders: 0
+== in-process mode=freshprofile
+TEST-ENV ft=134391299379548685 ms=6.2
+TEST ft=134391299383436968 mode=freshprofile i=0 fresh=True envMs=0.0 controllerMs=232.5 pageMs=140.8 deleted-event=True cleanupMs=15.5 totalMs=388.8
+TEST ft=134391299385503772 mode=freshprofile i=1 fresh=True envMs=0.0 controllerMs=52.4 pageMs=142.6 deleted-event=True cleanupMs=11.7 totalMs=206.7
+TEST ft=134391299387433492 mode=freshprofile i=2 fresh=True envMs=0.0 controllerMs=49.8 pageMs=130.6 deleted-event=True cleanupMs=12.5 totalMs=193.0
+TEST ft=134391299389642454 mode=freshprofile i=3 fresh=True envMs=0.0 controllerMs=82.8 pageMs=125.5 deleted-event=True cleanupMs=12.6 totalMs=220.9
+TEST ft=134391299393331438 mode=freshprofile i=4 fresh=True envMs=0.0 controllerMs=57.4 pageMs=299.1 deleted-event=True cleanupMs=12.4 totalMs=368.9
+TEST ft=134391299395527444 mode=freshprofile i=5 fresh=True envMs=0.0 controllerMs=90.3 pageMs=116.3 deleted-event=True cleanupMs=13.0 totalMs=219.6
+TEST ft=134391299397482847 mode=freshprofile i=6 fresh=True envMs=0.0 controllerMs=56.4 pageMs=126.5 deleted-event=True cleanupMs=12.6 totalMs=195.5
+TEST ft=134391299399571467 mode=freshprofile i=7 fresh=True envMs=0.0 controllerMs=88.6 pageMs=108.1 deleted-event=True cleanupMs=12.1 totalMs=208.9
+TEST ft=134391299401581206 mode=freshprofile i=8 fresh=True envMs=0.0 controllerMs=70.1 pageMs=117.8 deleted-event=True cleanupMs=13.0 totalMs=201.0
+TEST ft=134391299403667735 mode=freshprofile i=9 fresh=True envMs=0.0 controllerMs=73.5 pageMs=122.4 deleted-event=True cleanupMs=12.7 totalMs=208.6
+WAITED ft=134391299406912463 udf=q5-freshprofile browser-exited=True
+left-over profile folders: 0
+== in-process mode=inprivate
+TEST-ENV ft=134391299409712980 ms=5.8
+TEST ft=134391299412333537 mode=inprivate i=0 fresh=True envMs=0.0 controllerMs=192.4 pageMs=58.3 cleanupMs=11.3 totalMs=262.1
+TEST ft=134391299413144410 mode=inprivate i=1 fresh=True envMs=0.0 controllerMs=25.7 pageMs=43.3 cleanupMs=12.1 totalMs=81.1
+TEST ft=134391299413928963 mode=inprivate i=2 fresh=True envMs=0.0 controllerMs=28.5 pageMs=39.0 cleanupMs=10.9 totalMs=78.4
+TEST ft=134391299414694048 mode=inprivate i=3 fresh=True envMs=0.0 controllerMs=26.6 pageMs=38.8 cleanupMs=11.1 totalMs=76.5
+TEST ft=134391299415462834 mode=inprivate i=4 fresh=True envMs=0.0 controllerMs=26.4 pageMs=40.0 cleanupMs=10.4 totalMs=76.9
+TEST ft=134391299416230724 mode=inprivate i=5 fresh=True envMs=0.0 controllerMs=26.1 pageMs=39.5 cleanupMs=11.2 totalMs=76.8
+TEST ft=134391299416993207 mode=inprivate i=6 fresh=True envMs=0.0 controllerMs=27.2 pageMs=38.1 cleanupMs=11.0 totalMs=76.2
+TEST ft=134391299417771609 mode=inprivate i=7 fresh=True envMs=0.0 controllerMs=26.0 pageMs=40.0 cleanupMs=11.8 totalMs=77.8
+TEST ft=134391299418553380 mode=inprivate i=8 fresh=True envMs=0.0 controllerMs=27.4 pageMs=39.0 cleanupMs=11.7 totalMs=78.2
+TEST ft=134391299419341612 mode=inprivate i=9 fresh=True envMs=0.0 controllerMs=28.5 pageMs=39.1 cleanupMs=11.2 totalMs=78.8
+WAITED ft=134391299421255716 udf=q5-inprivate browser-exited=True
+left-over profile folders: 0
+== per-process: fresh UDF per test (host waits for BrowserProcessExited, harness deletes the folder)
+SUMMARY variant=per-process-fresh-udf runs=10
+  all processes exited: n=10 min=152 p50=168 p90=179 max=433 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=10 min=141 p50=157 p90=168 max=395 ms
+  host exited after Close: n=10 min=169 p50=334 p90=365 max=706 ms
+  launch to READY: n=10 min=338 p50=349 p90=355 max=361 ms; launch to all processes gone: n=10 min=539 p50=701 p90=745 max=1074 ms; folder clean before run: n=9 min=14 p50=15 p90=16 max=16 ms
+  slowest process kinds: crashpad-handler=10
+  data: first=10
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:9 <=500:1 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0

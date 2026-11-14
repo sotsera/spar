@@ -1,0 +1,14 @@
+{
+  "lone-high": "a\ud800b",
+  "lone-highUnits": [97,55296,98],
+  "lone-low": "a\udc00b",
+  "lone-lowUnits": [97,56320,98],
+  "reversed": "\udc00\ud800",
+  "reversedUnits": [56320,55296],
+  "trailing-high": "abc\ud83d",
+  "trailing-highUnits": [97,98,99,55357],
+  "valid-pair": "\uD83D\uDE00",
+  "valid-pairUnits": [55357,56832],
+  "plain": "plain \u0022text\u0022 \u00E9",
+  "plainUnits": [112,108,97,105,110,32,34,116,101,120,116,34,32,233]
+}

@@ -1,0 +1,176 @@
+# 20-command sample, SDK 11.0.100, 2026-11-14, default ILC settings, dispatch OneSwitch
+size Plain : 1482240 bytes, publish warnings: 0
+size Class : 1564672 bytes, publish warnings: 0
+size Struct : 1581056 bytes, publish warnings: 0
+size UnionStruct : 1583616 bytes, publish warnings: 0
+size UnionClass : 1566208 bytes, publish warnings: 0
+delta Plain vs Plain : 0 bytes
+delta Class vs Plain : 82432 bytes
+delta Struct vs Plain : 98816 bytes
+delta UnionStruct vs Plain : 101376 bytes
+delta UnionClass vs Plain : 83968 bytes
+
+## Plain, NativeAOT
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":true,"value":{"name":"id-22","count":"1","tags":["a","b"]}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":true,"value":"1234567890123"}
+json hash: e25a63d617c3bd2c
+bytes/call sync success, Task commands: 120.0
+bytes/call sync success, ValueTask commands: 60.0
+bytes/call sync error, Task commands: 120.0
+bytes/call sync error, ValueTask commands: 60.0
+bytes/call async success, all commands: 594.8
+bytes/call async error, all commands: 594.0
+ns/call sync success: 159.9
+ns/call sync error: 160.5
+## Plain, JIT (dotnet run -c Release)
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":true,"value":{"name":"id-22","count":"1","tags":["a","b"]}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":true,"value":"1234567890123"}
+json hash: e25a63d617c3bd2c
+bytes/call sync success, Task commands: 120.0
+bytes/call sync success, ValueTask commands: 60.0
+bytes/call sync error, Task commands: 120.0
+bytes/call sync error, ValueTask commands: 60.0
+bytes/call async success, all commands: 574.6
+bytes/call async error, all commands: 574.6
+ns/call sync success: 382.8
+ns/call sync error: 355.8
+
+## Class, NativeAOT
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 159.2
+bytes/call sync success, ValueTask commands: 92.8
+bytes/call sync error, Task commands: 128.0
+bytes/call sync error, ValueTask commands: 56.8
+bytes/call async success, all commands: 625.0
+bytes/call async error, all commands: 592.6
+ns/call sync success: 167.6
+ns/call sync error: 119.7
+## Class, JIT (dotnet run -c Release)
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 159.2
+bytes/call sync success, ValueTask commands: 92.8
+bytes/call sync error, Task commands: 128.0
+bytes/call sync error, ValueTask commands: 56.8
+bytes/call async success, all commands: 617.7
+bytes/call async error, all commands: 573.9
+ns/call sync success: 402.8
+ns/call sync error: 281.1
+
+## Struct, NativeAOT
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 142.4
+bytes/call sync success, ValueTask commands: 60.0
+bytes/call sync error, Task commands: 111.2
+bytes/call sync error, ValueTask commands: 24.0
+bytes/call async success, all commands: 775.3
+bytes/call async error, all commands: 743.6
+ns/call sync success: 178.7
+ns/call sync error: 132.6
+## Struct, JIT (dotnet run -c Release)
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 142.4
+bytes/call sync success, ValueTask commands: 60.0
+bytes/call sync error, Task commands: 111.2
+bytes/call sync error, ValueTask commands: 24.0
+bytes/call async success, all commands: 767.3
+bytes/call async error, all commands: 730.0
+ns/call sync success: 461.3
+ns/call sync error: 345.0
+
+## UnionStruct, NativeAOT
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 142.4
+bytes/call sync success, ValueTask commands: 60.0
+bytes/call sync error, Task commands: 111.2
+bytes/call sync error, ValueTask commands: 24.0
+bytes/call async success, all commands: 772.4
+bytes/call async error, all commands: 738.2
+ns/call sync success: 206.5
+ns/call sync error: 213.6
+## UnionStruct, JIT (dotnet run -c Release)
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 149.6
+bytes/call sync success, ValueTask commands: 65.6
+bytes/call sync error, Task commands: 111.2
+bytes/call sync error, ValueTask commands: 24.0
+bytes/call async success, all commands: 779.5
+bytes/call async error, all commands: 735.8
+ns/call sync success: 506.9
+ns/call sync error: 354.4
+
+## UnionClass, NativeAOT
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 166.4
+bytes/call sync success, ValueTask commands: 100.0
+bytes/call sync error, Task commands: 135.2
+bytes/call sync error, ValueTask commands: 64.0
+bytes/call async success, all commands: 634.5
+bytes/call async error, all commands: 599.0
+ns/call sync success: 175.7
+ns/call sync error: 129.8
+## UnionClass, JIT (dotnet run -c Release)
+json 1 fail=False: {"ok":true,"value":{"name":"id-1","count":"1","tags":["a","b"]}}
+json 1 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 1 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"1"}}
+json 15 fail=False: {"ok":true,"value":"1234567890123"}
+json 15 fail=True: {"ok":false,"error":{"code":"notFound","id":"id-1"}}
+json 15 fail=True: {"ok":false,"error":{"code":"conflict","id":"id-22","version":"15"}}
+json hash: d2042e6edab2b416
+bytes/call sync success, Task commands: 173.6
+bytes/call sync success, ValueTask commands: 105.6
+bytes/call sync error, Task commands: 135.2
+bytes/call sync error, ValueTask commands: 64.0
+bytes/call async success, all commands: 632.7
+bytes/call async error, all commands: 588.4
+ns/call sync success: 462.3
+ns/call sync error: 315.8

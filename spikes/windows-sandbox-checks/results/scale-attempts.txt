@@ -1,0 +1,28 @@
+# Display scale attempts in the guest (exe --scale)
+11:02:33.933 --scale 125!: set=5 relative=1 now: current=125% recommended=100% range=100..100% primaryDpi=96
+11:02:38.130 --scale get: current=125% recommended=100% range=100..100% primaryDpi=96
+screen {X=0,Y=0,Width=1520,Height=823}
+11:03:18.629 --scale 150!: set=5 relative=2 now: current=150% recommended=100% range=100..100% primaryDpi=96
+11:03:22.771 --scale get: current=150% recommended=100% range=100..100% primaryDpi=96
+screen {X=0,Y=0,Width=1520,Height=823}
+11:03:46.158 --scale 125!: set=5 spi=0 spiError=0 remoteSession=1 relative=1 now: current=125% recommended=100% range=100..100% primaryDpi=96
+11:03:50.500 --scale get: current=125% recommended=100% range=100..100% primaryDpi=96
+screen {X=0,Y=0,Width=1520,Height=823}
+# After LogPixels=120 and sign-out
+11:04:46.526 --scale get: current=100% recommended=100% range=100..100% primaryDpi=96
+# After IgnoreClientDesktopScaleFactor=1, LogPixels=120 and sign-out
+11:08:47.234 --scale get: current=100% recommended=100% range=100..100% primaryDpi=96
+# Guest registry and sessions after the first sign-out
+
+HKEY_CURRENT_USER\Control Panel\Desktop
+    LogPixels    REG_DWORD    0x78
+
+
+HKEY_CURRENT_USER\Control Panel\Desktop
+    Win8DpiScaling    REG_DWORD    0x1
+
+ SESSIONNAME               USERNAME                 ID  STATE   TYPE        DEVICE 
+ services                                            0  Disc                        
+>31c5ce94259d4006a9e4#0    WDAGUtilityAccount        2  Active                      
+ 31c5ce94259d4006a9e4                            65536  Listen                      
+ERROR: The system was unable to find the specified registry key or value.

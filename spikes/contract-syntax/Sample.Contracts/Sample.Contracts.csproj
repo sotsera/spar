@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- A class library of contracts, DTOs and errors. It references only the runtime; the app's generator exports it. -->
+  <PropertyGroup>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar.Runtime\Spar.Runtime.csproj" />
+  </ItemGroup>
+</Project>

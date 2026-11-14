@@ -1,0 +1,2021 @@
+C:\Program Files\dotnet\sdk\11.0.100\MSBuild.exe --nologo --property:ProbeTaskAssembly=E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll --property:ProbeDelay=0 --property:ProbeKinds=threadsafe --verbosity:m --verbosity:diag -maxcpucount -m:8 -nodeReuse:false -tlp:default=auto -tlp:DISABLENODEDISPLAY E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj
+Build started 14/11/2026 15:18:48.
+Environment at start of build:
+DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+DOTNET_CLI_TELEMETRY_OPTOUT = 1
+MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+MSBUILDUSESERVER = 0
+MSBuildLoadMicrosoftTargetsReadOnly = true
+DOTNET_CLI_USE_MSBUILD_SERVER = 0
+
+15:18:48.551     0>Enabled loggers: ConsoleLogger, CentralForwardingLogger, CentralForwardingLogger, ConfigurableForwardingLogger
+                   Terminal Logger was not used because the output is being redirected to a file.
+                   Process = "C:\Program Files\dotnet\dotnet.exe"
+                   MSBuild executable path = "C:\Program Files\dotnet\sdk\11.0.100\MSBuild.exe"
+                   Command line arguments = "C:\Program Files\dotnet\sdk\11.0.100\MSBuild.exe -maxcpucount --verbosity:m -tlp:default=auto --property:ProbeTaskAssembly=E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll --property:ProbeDelay=0 --property:ProbeKinds=threadsafe --verbosity:diag --nologo E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj -nodeReuse:false -m:8 -tlp:DISABLENODEDISPLAY"
+                   Current directory = "E:\Ghidello\Git\spar.v7"
+                   MSBuild version = "18.12.2-1.26529.118+297acf930"
+                   Based on the Windows registry key LongPathsEnabled, the LongPaths feature is disabled.
+                   Based on the Windows registry key VerifiedAndReputablePolicyState, SAC state = 0: turned off.
+                   Assembly loaded during Evaluation: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+                   Assembly loaded during Evaluation: System.Threading.Tasks.Parallel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Threading.Tasks.Parallel.dll, MVID: 8534e538-9421-4718-8a0e-8024d456e10e, AssemblyLoadContext: Default)
+15:18:48.593     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Build.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj
+                   MSBuildProjectName = Build
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.593     0>Initial Items:
+                   ProbeLeafProject
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-01\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-02\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-03\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-04\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-05\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-06\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-07\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-08\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-09\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-10\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-11\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-12\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-13\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-14\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-15\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-16\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-17\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-18\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-19\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-20\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-21\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-22\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-23\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-24\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-25\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-26\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-27\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-28\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-29\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-30\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-31\Leaf.proj
+                       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-32\Leaf.proj
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" on node 1 (default targets).
+15:18:48.596     1>Target "Build: (TargetId:2)" in project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (entry point):
+15:18:48.605     1>Using "MSBuild" task from assembly "Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a".
+                   Task "MSBuild" (TaskId:2)
+                     Task Parameter:
+                         Projects=
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-01\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-02\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-03\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-04\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-05\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-06\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-07\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-08\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-09\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-10\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-11\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-12\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-13\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-14\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-15\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-16\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-17\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-18\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-19\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-20\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-21\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-22\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-23\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-24\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-25\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-26\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-27\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-28\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-29\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-30\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-31\Leaf.proj
+                             E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\..\obj\leaves\leaf-32\Leaf.proj (TaskId:2)
+                     Task Parameter:BuildInParallel=True (TaskId:2)
+15:18:48.612     0>Assembly loaded during Evaluation: System.Security.Claims, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Security.Claims.dll, MVID: 44490e8e-7c42-4fc9-875d-bb2f24668132, AssemblyLoadContext: Default)
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:48.613     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-01
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj" (2) on node 1 (default targets).
+15:18:48.613     2>Target "Build: (TargetId:3)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj" (entry point):
+15:18:48.614     2>Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:3)
+                     Task Parameter:Label=leaf-01 (TaskId:3)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:3)
+                     Task Parameter:OutputFile=obj\probe-leaf-01.txt (TaskId:3)
+                     PROBE|threadsafe|leaf-01|14636|27|dotnet|entry|1|14:18:48.619|14:18:48.619|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01|<null> (TaskId:3)
+                   Done executing task "ThreadSafeProbe". (TaskId:3)
+15:18:48.620     2>Done building target "Build" in project "Leaf.proj".: (TargetId:3)
+15:18:48.621     2>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj" (default targets).
+15:18:48.765     0>Enabled loggers: CentralForwardingLogger, ConfigurableForwardingLogger
+                   Enabled loggers: CentralForwardingLogger, ConfigurableForwardingLogger
+                   Enabled loggers: CentralForwardingLogger, ConfigurableForwardingLogger
+                   Enabled loggers: CentralForwardingLogger, ConfigurableForwardingLogger
+                   Enabled loggers: CentralForwardingLogger, ConfigurableForwardingLogger
+                   Enabled loggers: CentralForwardingLogger, ConfigurableForwardingLogger
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.825     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-09
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj" (3) on node 1 (default targets).
+15:18:53.825     3>Target "Build: (TargetId:4)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj" (entry point):
+15:18:53.825     3>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:4)
+                     Task Parameter:Label=leaf-09 (TaskId:4)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:4)
+                     Task Parameter:OutputFile=obj\probe-leaf-09.txt (TaskId:4)
+                     PROBE|threadsafe|leaf-09|14636|12|dotnet|entry|2|14:18:53.825|14:18:53.826|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09|<null> (TaskId:4)
+                   Done executing task "ThreadSafeProbe". (TaskId:4)
+15:18:53.826     3>Done building target "Build" in project "Leaf.proj".: (TargetId:4)
+15:18:53.826     3>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj" (default targets).
+15:18:53.826     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.827     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-10
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj" (4) on node 1 (default targets).
+15:18:53.827     4>Target "Build: (TargetId:5)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj" (entry point):
+15:18:53.827     4>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:5)
+                     Task Parameter:Label=leaf-10 (TaskId:5)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:5)
+                     Task Parameter:OutputFile=obj\probe-leaf-10.txt (TaskId:5)
+                     PROBE|threadsafe|leaf-10|14636|27|dotnet|entry|3|14:18:53.827|14:18:53.827|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10|<null> (TaskId:5)
+                   Done executing task "ThreadSafeProbe". (TaskId:5)
+15:18:53.827     4>Done building target "Build" in project "Leaf.proj".: (TargetId:5)
+15:18:53.827     4>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj" (default targets).
+15:18:53.828     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.828     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-11
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj" (5) on node 1 (default targets).
+15:18:53.828     5>Target "Build: (TargetId:6)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj" (entry point):
+15:18:53.829     5>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:6)
+                     Task Parameter:Label=leaf-11 (TaskId:6)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:6)
+                     Task Parameter:OutputFile=obj\probe-leaf-11.txt (TaskId:6)
+                     PROBE|threadsafe|leaf-11|14636|12|dotnet|entry|4|14:18:53.829|14:18:53.829|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11|<null> (TaskId:6)
+                   Done executing task "ThreadSafeProbe". (TaskId:6)
+15:18:53.829     5>Done building target "Build" in project "Leaf.proj".: (TargetId:6)
+15:18:53.829     5>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj" (default targets).
+15:18:53.830     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.830     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-12
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj" (6) on node 1 (default targets).
+15:18:53.830     6>Target "Build: (TargetId:7)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj" (entry point):
+15:18:53.830     6>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:7)
+                     Task Parameter:Label=leaf-12 (TaskId:7)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:7)
+                     Task Parameter:OutputFile=obj\probe-leaf-12.txt (TaskId:7)
+                     PROBE|threadsafe|leaf-12|14636|27|dotnet|entry|5|14:18:53.830|14:18:53.830|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12|<null> (TaskId:7)
+                   Done executing task "ThreadSafeProbe". (TaskId:7)
+15:18:53.830     6>Done building target "Build" in project "Leaf.proj".: (TargetId:7)
+15:18:53.830     6>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj" (default targets).
+15:18:53.831     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.831     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-13
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj" (7) on node 1 (default targets).
+15:18:53.831     7>Target "Build: (TargetId:8)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj" (entry point):
+15:18:53.831     7>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:8)
+                     Task Parameter:Label=leaf-13 (TaskId:8)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:8)
+                     Task Parameter:OutputFile=obj\probe-leaf-13.txt (TaskId:8)
+                     PROBE|threadsafe|leaf-13|14636|12|dotnet|entry|6|14:18:53.831|14:18:53.831|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13|<null> (TaskId:8)
+                   Done executing task "ThreadSafeProbe". (TaskId:8)
+15:18:53.831     7>Done building target "Build" in project "Leaf.proj".: (TargetId:8)
+15:18:53.831     7>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj" (default targets).
+15:18:53.832     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.832     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-14
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj" (8) on node 1 (default targets).
+15:18:53.832     8>Target "Build: (TargetId:9)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj" (entry point):
+15:18:53.832     8>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:9)
+                     Task Parameter:Label=leaf-14 (TaskId:9)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:9)
+                     Task Parameter:OutputFile=obj\probe-leaf-14.txt (TaskId:9)
+                     PROBE|threadsafe|leaf-14|14636|27|dotnet|entry|7|14:18:53.832|14:18:53.832|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14|<null> (TaskId:9)
+                   Done executing task "ThreadSafeProbe". (TaskId:9)
+15:18:53.833     8>Done building target "Build" in project "Leaf.proj".: (TargetId:9)
+15:18:53.833     8>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj" (default targets).
+15:18:53.833     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.833     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-15
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj" (9) on node 1 (default targets).
+15:18:53.833     9>Target "Build: (TargetId:10)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj" (entry point):
+15:18:53.833     9>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:10)
+                     Task Parameter:Label=leaf-15 (TaskId:10)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:10)
+                     Task Parameter:OutputFile=obj\probe-leaf-15.txt (TaskId:10)
+                     PROBE|threadsafe|leaf-15|14636|12|dotnet|entry|8|14:18:53.834|14:18:53.834|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15|<null> (TaskId:10)
+                   Done executing task "ThreadSafeProbe". (TaskId:10)
+15:18:53.834     9>Done building target "Build" in project "Leaf.proj".: (TargetId:10)
+15:18:53.834     9>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj" (default targets).
+15:18:53.834     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.834     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-16
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj" (10) on node 1 (default targets).
+15:18:53.834    10>Target "Build: (TargetId:11)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj" (entry point):
+15:18:53.835    10>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:11)
+                     Task Parameter:Label=leaf-16 (TaskId:11)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:11)
+                     Task Parameter:OutputFile=obj\probe-leaf-16.txt (TaskId:11)
+                     PROBE|threadsafe|leaf-16|14636|27|dotnet|entry|9|14:18:53.835|14:18:53.835|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16|<null> (TaskId:11)
+                   Done executing task "ThreadSafeProbe". (TaskId:11)
+15:18:53.835    10>Done building target "Build" in project "Leaf.proj".: (TargetId:11)
+15:18:53.835    10>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj" (default targets).
+15:18:53.835     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.835     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-17
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj" (11) on node 1 (default targets).
+15:18:53.835    11>Target "Build: (TargetId:12)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj" (entry point):
+15:18:53.835    11>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:12)
+                     Task Parameter:Label=leaf-17 (TaskId:12)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:12)
+                     Task Parameter:OutputFile=obj\probe-leaf-17.txt (TaskId:12)
+                     PROBE|threadsafe|leaf-17|14636|12|dotnet|entry|10|14:18:53.836|14:18:53.836|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17|<null> (TaskId:12)
+                   Done executing task "ThreadSafeProbe". (TaskId:12)
+15:18:53.836    11>Done building target "Build" in project "Leaf.proj".: (TargetId:12)
+15:18:53.836    11>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj" (default targets).
+15:18:53.836     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.836     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-18
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj" (12) on node 1 (default targets).
+15:18:53.836    12>Target "Build: (TargetId:13)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj" (entry point):
+15:18:53.836    12>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:13)
+                     Task Parameter:Label=leaf-18 (TaskId:13)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:13)
+                     Task Parameter:OutputFile=obj\probe-leaf-18.txt (TaskId:13)
+                     PROBE|threadsafe|leaf-18|14636|27|dotnet|entry|11|14:18:53.837|14:18:53.837|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18|<null> (TaskId:13)
+                   Done executing task "ThreadSafeProbe". (TaskId:13)
+15:18:53.837    12>Done building target "Build" in project "Leaf.proj".: (TargetId:13)
+15:18:53.837    12>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj" (default targets).
+15:18:53.837     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.837     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-19
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj" (13) on node 1 (default targets).
+15:18:53.837    13>Target "Build: (TargetId:14)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj" (entry point):
+15:18:53.837    13>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:14)
+                     Task Parameter:Label=leaf-19 (TaskId:14)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:14)
+                     Task Parameter:OutputFile=obj\probe-leaf-19.txt (TaskId:14)
+                     PROBE|threadsafe|leaf-19|14636|12|dotnet|entry|12|14:18:53.838|14:18:53.838|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19|<null> (TaskId:14)
+                   Done executing task "ThreadSafeProbe". (TaskId:14)
+15:18:53.838    13>Done building target "Build" in project "Leaf.proj".: (TargetId:14)
+15:18:53.838    13>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj" (default targets).
+15:18:53.838     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.838     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-20
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj" (14) on node 1 (default targets).
+15:18:53.838    14>Target "Build: (TargetId:15)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj" (entry point):
+15:18:53.838    14>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:15)
+                     Task Parameter:Label=leaf-20 (TaskId:15)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:15)
+                     Task Parameter:OutputFile=obj\probe-leaf-20.txt (TaskId:15)
+                     PROBE|threadsafe|leaf-20|14636|27|dotnet|entry|13|14:18:53.839|14:18:53.839|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20|<null> (TaskId:15)
+                   Done executing task "ThreadSafeProbe". (TaskId:15)
+15:18:53.839    14>Done building target "Build" in project "Leaf.proj".: (TargetId:15)
+15:18:53.839    14>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj" (default targets).
+15:18:53.839     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.839     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-21
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj" (15) on node 1 (default targets).
+15:18:53.839    15>Target "Build: (TargetId:16)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj" (entry point):
+15:18:53.839    15>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:16)
+                     Task Parameter:Label=leaf-21 (TaskId:16)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:16)
+                     Task Parameter:OutputFile=obj\probe-leaf-21.txt (TaskId:16)
+                     PROBE|threadsafe|leaf-21|14636|12|dotnet|entry|14|14:18:53.839|14:18:53.840|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21|<null> (TaskId:16)
+                   Done executing task "ThreadSafeProbe". (TaskId:16)
+15:18:53.840    15>Done building target "Build" in project "Leaf.proj".: (TargetId:16)
+15:18:53.840    15>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj" (default targets).
+15:18:53.840     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.840     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-22
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj" (16) on node 1 (default targets).
+15:18:53.840    16>Target "Build: (TargetId:17)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj" (entry point):
+15:18:53.841    16>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:17)
+                     Task Parameter:Label=leaf-22 (TaskId:17)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:17)
+                     Task Parameter:OutputFile=obj\probe-leaf-22.txt (TaskId:17)
+                     PROBE|threadsafe|leaf-22|14636|27|dotnet|entry|15|14:18:53.841|14:18:53.841|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22|<null> (TaskId:17)
+                   Done executing task "ThreadSafeProbe". (TaskId:17)
+15:18:53.841    16>Done building target "Build" in project "Leaf.proj".: (TargetId:17)
+15:18:53.841    16>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj" (default targets).
+15:18:53.841     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.842     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-23
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj" (17) on node 1 (default targets).
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+15:18:53.842    17>Target "Build: (TargetId:18)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj" (entry point):
+15:18:53.842    17>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:18)
+15:18:53.842     0>The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.842    17>Build: (TargetId:18)
+                     Task Parameter:Label=leaf-23 (TaskId:18)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:18)
+                     Task Parameter:OutputFile=obj\probe-leaf-23.txt (TaskId:18)
+                     PROBE|threadsafe|leaf-23|14636|12|dotnet|entry|16|14:18:53.842|14:18:53.843|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23|<null> (TaskId:18)
+                   Done executing task "ThreadSafeProbe". (TaskId:18)
+15:18:53.843    17>Done building target "Build" in project "Leaf.proj".: (TargetId:18)
+15:18:53.843    17>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj" (default targets).
+15:18:53.843     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.844     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-24
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj" (18) on node 1 (default targets).
+15:18:53.844    18>Target "Build: (TargetId:19)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj" (entry point):
+15:18:53.844    18>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:19)
+                     Task Parameter:Label=leaf-24 (TaskId:19)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:19)
+                     Task Parameter:OutputFile=obj\probe-leaf-24.txt (TaskId:19)
+                     PROBE|threadsafe|leaf-24|14636|27|dotnet|entry|17|14:18:53.844|14:18:53.844|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24|<null> (TaskId:19)
+                   Done executing task "ThreadSafeProbe". (TaskId:19)
+15:18:53.845    18>Done building target "Build" in project "Leaf.proj".: (TargetId:19)
+15:18:53.845    18>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj" (default targets).
+15:18:53.844     0>Enabled loggers: CentralForwardingLogger, ConfigurableForwardingLogger
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.845     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-25
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj" (19) on node 1 (default targets).
+15:18:53.845    19>Target "Build: (TargetId:20)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj" (entry point):
+15:18:53.845    19>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:20)
+                     Task Parameter:Label=leaf-25 (TaskId:20)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:20)
+                     Task Parameter:OutputFile=obj\probe-leaf-25.txt (TaskId:20)
+                     PROBE|threadsafe|leaf-25|14636|12|dotnet|entry|18|14:18:53.845|14:18:53.845|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25|<null> (TaskId:20)
+                   Done executing task "ThreadSafeProbe". (TaskId:20)
+15:18:53.846    19>Done building target "Build" in project "Leaf.proj".: (TargetId:20)
+15:18:53.845     0>The "ProbeDelay" property is a global property, and cannot be modified.
+15:18:53.846    19>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj" (default targets).
+15:18:53.845     0>The "ProbeKinds" property is a global property, and cannot be modified.
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.847     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-26
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj" (20) on node 1 (default targets).
+                   The "ProbeDelay" property is a global property, and cannot be modified.
+15:18:53.847    20>Target "Build: (TargetId:21)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj" (entry point):
+15:18:53.847    20>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:21)
+15:18:53.847     0>The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.847    20>Build: (TargetId:21)
+                     Task Parameter:Label=leaf-26 (TaskId:21)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:21)
+                     Task Parameter:OutputFile=obj\probe-leaf-26.txt (TaskId:21)
+                     PROBE|threadsafe|leaf-26|14636|27|dotnet|entry|19|14:18:53.847|14:18:53.847|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26|<null> (TaskId:21)
+                   Done executing task "ThreadSafeProbe". (TaskId:21)
+15:18:53.847    20>Done building target "Build" in project "Leaf.proj".: (TargetId:21)
+15:18:53.847    20>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj" (default targets).
+15:18:53.848     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.848     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-27
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj" (21) on node 1 (default targets).
+15:18:53.848    21>Target "Build: (TargetId:22)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj" (entry point):
+15:18:53.848    21>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:22)
+                     Task Parameter:Label=leaf-27 (TaskId:22)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:22)
+                     Task Parameter:OutputFile=obj\probe-leaf-27.txt (TaskId:22)
+                     PROBE|threadsafe|leaf-27|14636|12|dotnet|entry|20|14:18:53.848|14:18:53.848|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27|<null> (TaskId:22)
+                   Done executing task "ThreadSafeProbe". (TaskId:22)
+15:18:53.848    21>Done building target "Build" in project "Leaf.proj".: (TargetId:22)
+15:18:53.849    21>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj" (default targets).
+15:18:53.849     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.850     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-28
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj" (22) on node 1 (default targets).
+15:18:53.850    22>Target "Build: (TargetId:23)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj" (entry point):
+15:18:53.850    22>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:23)
+                     Task Parameter:Label=leaf-28 (TaskId:23)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:23)
+                     Task Parameter:OutputFile=obj\probe-leaf-28.txt (TaskId:23)
+                     PROBE|threadsafe|leaf-28|14636|27|dotnet|entry|21|14:18:53.850|14:18:53.850|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28|<null> (TaskId:23)
+                   Done executing task "ThreadSafeProbe". (TaskId:23)
+15:18:53.850    22>Done building target "Build" in project "Leaf.proj".: (TargetId:23)
+15:18:53.850    22>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj" (default targets).
+15:18:53.851     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.851     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-29
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj" (23) on node 1 (default targets).
+15:18:53.851    23>Target "Build: (TargetId:24)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj" (entry point):
+15:18:53.851    23>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:24)
+                     Task Parameter:Label=leaf-29 (TaskId:24)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:24)
+                     Task Parameter:OutputFile=obj\probe-leaf-29.txt (TaskId:24)
+                     PROBE|threadsafe|leaf-29|14636|12|dotnet|entry|22|14:18:53.851|14:18:53.851|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29|<null> (TaskId:24)
+                   Done executing task "ThreadSafeProbe". (TaskId:24)
+15:18:53.851    23>Done building target "Build" in project "Leaf.proj".: (TargetId:24)
+15:18:53.851    23>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj" (default targets).
+15:18:53.852     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.852     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-30
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj" (24) on node 1 (default targets).
+15:18:53.852    24>Target "Build: (TargetId:25)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj" (entry point):
+15:18:53.852    24>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:25)
+                     Task Parameter:Label=leaf-30 (TaskId:25)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:25)
+                     Task Parameter:OutputFile=obj\probe-leaf-30.txt (TaskId:25)
+                     PROBE|threadsafe|leaf-30|14636|27|dotnet|entry|23|14:18:53.852|14:18:53.852|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30|<null> (TaskId:25)
+                   Done executing task "ThreadSafeProbe". (TaskId:25)
+15:18:53.852    24>Done building target "Build" in project "Leaf.proj".: (TargetId:25)
+15:18:53.852    24>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj" (default targets).
+15:18:53.853     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.853     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-31
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj" (25) on node 1 (default targets).
+15:18:53.853    25>Target "Build: (TargetId:26)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj" (entry point):
+15:18:53.853    25>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:26)
+                     Task Parameter:Label=leaf-31 (TaskId:26)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:26)
+                     Task Parameter:OutputFile=obj\probe-leaf-31.txt (TaskId:26)
+                     PROBE|threadsafe|leaf-31|14636|12|dotnet|entry|24|14:18:53.853|14:18:53.853|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31|<null> (TaskId:26)
+                   Done executing task "ThreadSafeProbe". (TaskId:26)
+15:18:53.854    25>Done building target "Build" in project "Leaf.proj".: (TargetId:26)
+15:18:53.854    25>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj" (default targets).
+15:18:53.854     0>The "ProbeDelay" property is a global property, and cannot be modified.
+                   The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.854     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-32
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj" (26) on node 1 (default targets).
+15:18:53.851     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-06
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:53.854    26>Target "Build: (TargetId:27)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj" (entry point):
+15:18:53.854    26>Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:27)
+                     Task Parameter:Label=leaf-32 (TaskId:27)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:27)
+                     Task Parameter:OutputFile=obj\probe-leaf-32.txt (TaskId:27)
+                     PROBE|threadsafe|leaf-32|14636|27|dotnet|entry|25|14:18:53.854|14:18:53.855|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32|<null> (TaskId:27)
+                   Done executing task "ThreadSafeProbe". (TaskId:27)
+15:18:53.855    26>Done building target "Build" in project "Leaf.proj".: (TargetId:27)
+15:18:53.855    26>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj" (default targets).
+15:18:53.852     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-05
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:53.852     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-04
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj" (27) on node 7 (default targets).
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj" (28) on node 2 (default targets).
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj" (29) on node 5 (default targets).
+15:18:53.856     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-03
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj" (30) on node 4 (default targets).
+15:18:53.858     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-07
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj" (31) on node 6 (default targets).
+15:18:53.855    27>Target "Build: (TargetId:2)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj" (entry point):
+15:18:53.863    27>Assembly loaded during TaskRun: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.IO.MemoryMappedFiles, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.IO.MemoryMappedFiles.dll, MVID: 74eb8be6-3f86-4a1c-8b74-7cc1092c72a8, AssemblyLoadContext: Default)
+15:18:53.856    29>Target "Build: (TargetId:2)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj" (entry point):
+15:18:53.864    29>Assembly loaded during TaskRun: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+15:18:53.863     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-02
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj" (32) on node 8 (default targets).
+15:18:53.865     0>The "ProbeDelay" property is a global property, and cannot be modified.
+15:18:53.856    29>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: System.IO.MemoryMappedFiles, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.IO.MemoryMappedFiles.dll, MVID: 74eb8be6-3f86-4a1c-8b74-7cc1092c72a8, AssemblyLoadContext: Default)
+15:18:53.865     0>The "ProbeKinds" property is a global property, and cannot be modified.
+15:18:53.856    28>Target "Build: (TargetId:2)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj" (entry point):
+15:18:53.866    28>Assembly loaded during TaskRun: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.IO.MemoryMappedFiles, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.IO.MemoryMappedFiles.dll, MVID: 74eb8be6-3f86-4a1c-8b74-7cc1092c72a8, AssemblyLoadContext: Default)
+15:18:53.855    27>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+15:18:53.859    30>Target "Build: (TargetId:2)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj" (entry point):
+15:18:53.868    30>Assembly loaded during TaskRun: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+15:18:53.855    27>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Utilities.Core.dll, MVID: 0ec3c725-ff3e-4215-befc-3a60ee106d74, AssemblyLoadContext: Default)
+15:18:53.859    30>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+15:18:53.855    27>Build: (TargetId:2)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:2)
+15:18:53.859    30>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: System.IO.MemoryMappedFiles, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.IO.MemoryMappedFiles.dll, MVID: 74eb8be6-3f86-4a1c-8b74-7cc1092c72a8, AssemblyLoadContext: Default)
+15:18:53.856    29>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+                   Assembly loaded during TaskRun: Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Utilities.Core.dll, MVID: 0ec3c725-ff3e-4215-befc-3a60ee106d74, AssemblyLoadContext: Default)
+15:18:53.856    28>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+15:18:53.856    29>Build: (TargetId:2)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+15:18:53.855    27>Build: (TargetId:2)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:2)
+15:18:53.870    29>Task "ThreadSafeProbe" (TaskId:2)
+15:18:53.855    27>Build: (TargetId:2)
+                     Task Parameter:OutputFile=obj\probe-leaf-06.txt (TaskId:2)
+15:18:53.856    28>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Utilities.Core.dll, MVID: 0ec3c725-ff3e-4215-befc-3a60ee106d74, AssemblyLoadContext: Default)
+15:18:53.855    27>Build: (TargetId:2)
+                     Task Parameter:Label=leaf-06 (TaskId:2)
+15:18:53.856    28>Build: (TargetId:2)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:2)
+15:18:53.861    31>Target "Build: (TargetId:2)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj" (entry point):
+15:18:53.871    31>Assembly loaded during TaskRun: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+15:18:53.856    29>Build: (TargetId:2)
+                     Task Parameter:OutputFile=obj\probe-leaf-04.txt (TaskId:2)
+15:18:53.861    31>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+15:18:53.856    29>Build: (TargetId:2)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:2)
+                     Task Parameter:Label=leaf-04 (TaskId:2)
+15:18:53.855    27>Build: (TargetId:2)
+                     PROBE|threadsafe|leaf-06|59956|14|dotnet|nodemode:1|1|14:18:53.870|14:18:53.871|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06|<null> (TaskId:2)
+15:18:53.861    31>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: System.IO.MemoryMappedFiles, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.IO.MemoryMappedFiles.dll, MVID: 74eb8be6-3f86-4a1c-8b74-7cc1092c72a8, AssemblyLoadContext: Default)
+15:18:53.856    28>Build: (TargetId:2)
+                     Task Parameter:Label=leaf-05 (TaskId:2)
+15:18:53.859    30>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+15:18:53.856    28>Build: (TargetId:2)
+                     Task Parameter:OutputFile=obj\probe-leaf-05.txt (TaskId:2)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:2)
+15:18:53.859    30>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Utilities.Core.dll, MVID: 0ec3c725-ff3e-4215-befc-3a60ee106d74, AssemblyLoadContext: Default)
+15:18:53.873    27>Done executing task "ThreadSafeProbe". (TaskId:2)
+15:18:53.859    30>Build: (TargetId:2)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+15:18:53.856    29>Build: (TargetId:2)
+                     PROBE|threadsafe|leaf-04|25908|14|dotnet|nodemode:1|1|14:18:53.872|14:18:53.872|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04|<null> (TaskId:2)
+15:18:53.873    30>Task "ThreadSafeProbe" (TaskId:2)
+15:18:53.873    27>Done building target "Build" in project "Leaf.proj".: (TargetId:2)
+15:18:53.856    28>Build: (TargetId:2)
+                     PROBE|threadsafe|leaf-05|17840|14|dotnet|nodemode:1|1|14:18:53.872|14:18:53.873|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05|<null> (TaskId:2)
+15:18:53.874    29>Done executing task "ThreadSafeProbe". (TaskId:2)
+15:18:53.874    27>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj" (default targets).
+15:18:53.874    29>Done building target "Build" in project "Leaf.proj".: (TargetId:2)
+15:18:53.875    28>Done executing task "ThreadSafeProbe". (TaskId:2)
+15:18:53.859    30>Build: (TargetId:2)
+                     Task Parameter:OutputFile=obj\probe-leaf-03.txt (TaskId:2)
+15:18:53.875    28>Done building target "Build" in project "Leaf.proj".: (TargetId:2)
+15:18:53.859    30>Build: (TargetId:2)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:2)
+                     Task Parameter:Label=leaf-03 (TaskId:2)
+15:18:53.861    31>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+15:18:53.875    29>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj" (default targets).
+15:18:53.861    31>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Utilities.Core.dll, MVID: 0ec3c725-ff3e-4215-befc-3a60ee106d74, AssemblyLoadContext: Default)
+15:18:53.876    28>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj" (default targets).
+15:18:53.861    31>Build: (TargetId:2)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:2)
+15:18:53.859    30>Build: (TargetId:2)
+                     PROBE|threadsafe|leaf-03|31496|14|dotnet|nodemode:1|1|14:18:53.875|14:18:53.876|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03|<null> (TaskId:2)
+                   Done executing task "ThreadSafeProbe". (TaskId:2)
+15:18:53.876     0>Initial Properties:
+                   DOTNET_CLI_TELEMETRY_OPTOUT = 1
+                   DOTNET_CLI_USE_MSBUILD_SERVER = 0
+                   DOTNET_HOST_PATH = C:\Program Files\dotnet\dotnet.exe
+                   MSBuildAllProjects = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj
+                   MSBuildAssemblyVersion = 18.0
+                   MSBuildBinPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildDisableFeaturesFromVersion = 999.999
+                   MSBuildExtensionsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath32 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildExtensionsPath64 = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBUILDFAILONDRIVEENUMERATINGWILDCARD = 1
+                   MSBuildFileVersion = 18.12.2.53018
+                   MSBuildLoadMicrosoftTargetsReadOnly = true
+                   MSBuildNodeCount = 8
+                   MSBuildProgramFiles32 = C:\Program Files (x86)
+                   MSBuildProjectDirectory = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08
+                   MSBuildProjectDirectoryNoRoot = Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08
+                   MSBuildProjectExtension = .proj
+                   MSBuildProjectFile = Leaf.proj
+                   MSBuildProjectFullPath = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj
+                   MSBuildProjectName = Leaf
+                   MSBuildRuntimeType = Core
+                   MSBuildSDKsPath = C:\Program Files\dotnet\sdk\11.0.100\Sdks
+                   MSBuildSemanticVersion = 18.12.2-1.26529.118+297acf930
+                   MSBuildStartupDirectory = E:\Ghidello\Git\spar.v7
+                   MSBuildToolsPath = C:\Program Files\dotnet\sdk\11.0.100
+                   MSBuildToolsVersion = Current
+                   MSBuildUserExtensionsPath = C:\Users\Alessandro\AppData\Local\Microsoft\MSBuild
+                   MSBUILDUSESERVER = 0
+                   MSBuildVersion = 18.12.2
+                   ProbeDelay = 0
+                   ProbeKinds = threadsafe
+                   ProbeLeaf = leaf-08
+                   ProbeTaskAssembly = E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll
+                   RoslynTargetsPath = C:\Program Files\dotnet\sdk\11.0.100\Roslyn
+                   VisualStudioVersion = 18.0
+
+15:18:53.861    31>Build: (TargetId:2)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:2)
+15:18:48.594     1>Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (1) is building "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj" (33) on node 3 (default targets).
+                   Build: (TargetId:2)
+                     Task Parameter:OutputFile=obj\probe-leaf-07.txt (TaskId:2)
+                     Task Parameter:Label=leaf-07 (TaskId:2)
+15:18:53.878    30>Done building target "Build" in project "Leaf.proj".: (TargetId:2)
+15:18:53.879    30>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj" (default targets).
+15:18:53.861    31>Build: (TargetId:2)
+                     PROBE|threadsafe|leaf-07|49100|14|dotnet|nodemode:1|1|14:18:53.878|14:18:53.879|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07|<null> (TaskId:2)
+15:18:53.867    32>Target "Build: (TargetId:2)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj" (entry point):
+15:18:53.880    32>Assembly loaded during TaskRun: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+15:18:53.881    31>Done executing task "ThreadSafeProbe". (TaskId:2)
+15:18:53.867    32>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: System.IO.MemoryMappedFiles, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.IO.MemoryMappedFiles.dll, MVID: 74eb8be6-3f86-4a1c-8b74-7cc1092c72a8, AssemblyLoadContext: Default)
+15:18:53.881    31>Done building target "Build" in project "Leaf.proj".: (TargetId:2)
+15:18:53.882    31>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj" (default targets).
+15:18:53.867    32>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+                   Assembly loaded during TaskRun: Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Utilities.Core.dll, MVID: 0ec3c725-ff3e-4215-befc-3a60ee106d74, AssemblyLoadContext: Default)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:2)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:2)
+                     Task Parameter:OutputFile=obj\probe-leaf-02.txt (TaskId:2)
+                     Task Parameter:Label=leaf-02 (TaskId:2)
+15:18:53.879    33>Target "Build: (TargetId:2)" in file "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Leaf.targets" from project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj" (entry point):
+15:18:53.888    33>Assembly loaded during TaskRun: System.Runtime.Loader, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Runtime.Loader.dll, MVID: 395a54b1-5bf4-4601-9b43-b5d2edcb8b5c, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.Reflection.Metadata, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.Reflection.Metadata.dll, MVID: 40fedb58-c0c9-48a8-a85b-70a703279257, AssemblyLoadContext: Default)
+                   Assembly loaded during TaskRun: System.IO.MemoryMappedFiles, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\11.0.0\System.IO.MemoryMappedFiles.dll, MVID: 74eb8be6-3f86-4a1c-8b74-7cc1092c72a8, AssemblyLoadContext: Default)
+15:18:53.867    32>Build: (TargetId:2)
+                     PROBE|threadsafe|leaf-02|54192|14|dotnet|nodemode:1|1|14:18:53.887|14:18:53.888|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02|<null> (TaskId:2)
+                   Done executing task "ThreadSafeProbe". (TaskId:2)
+15:18:53.890    32>Done building target "Build" in project "Leaf.proj".: (TargetId:2)
+15:18:53.891    32>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj" (default targets).
+15:18:53.879    33>Build: (TargetId:2)
+                   Assembly loaded during TaskRun: Probe.Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null (location: E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll, MVID: 7c6de1ac-159b-4be1-a94b-15ee29202a55, AssemblyLoadContext: MSBuild plugin E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll)
+                   Assembly loaded during TaskRun: Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a (location: C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Utilities.Core.dll, MVID: 0ec3c725-ff3e-4215-befc-3a60ee106d74, AssemblyLoadContext: Default)
+                   Using "ThreadSafeProbe" task from assembly "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Tasks\bin\Debug\net11.0\Probe.Tasks.dll".
+                   Task "ThreadSafeProbe" (TaskId:2)
+                     Task Parameter:OutputFile=obj\probe-leaf-08.txt (TaskId:2)
+                     Task Parameter:Label=leaf-08 (TaskId:2)
+                     Task Parameter:DelayMilliseconds=0 (TaskId:2)
+                     PROBE|threadsafe|leaf-08|40120|14|dotnet|nodemode:1|1|14:18:53.895|14:18:53.895|E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08|<null> (TaskId:2)
+                   Done executing task "ThreadSafeProbe". (TaskId:2)
+15:18:53.897    33>Done building target "Build" in project "Leaf.proj".: (TargetId:2)
+15:18:53.898    33>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj" (default targets).
+15:18:53.902     1>Done executing task "MSBuild". (TaskId:2)
+15:18:53.903     1>Done building target "Build" in project "Build.proj".: (TargetId:2)
+15:18:53.904     1>Done Building Project "E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj" (default targets).
+Deferred Messages
+15:18:53.904     0>
+Detailed Build Summary
+======================
+     (TaskId:0)
+                     
+                     ============================== Build Hierarchy (IDs represent configurations) =====================================================
+                     Id                  : Exclusive Time   Total Time   Path (Targets)
+                     ----------------------------------------------------------------------------------------------------------------------------------- (TaskId:0)
+                     0                   : 0.053s           5.342s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj ()  (TaskId:0)
+                     | 1                 : 5.212s           5.212s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj ()  (TaskId:0)
+                     | 3                 : 0.057s           0.057s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj ()  (TaskId:0)
+                     | 4                 : 0.054s           0.054s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj ()  (TaskId:0)
+                     | 5                 : 0.054s           0.054s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj ()  (TaskId:0)
+                     | 6                 : 0.053s           0.053s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj ()  (TaskId:0)
+                     | 7                 : 0.060s           0.060s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj ()  (TaskId:0)
+                     | 8                 : 0.076s           0.076s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj ()  (TaskId:0)
+                     | 2                 : 0.069s           0.069s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj ()  (TaskId:0)
+                     | 9                 : 0.003s           0.003s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj ()  (TaskId:0)
+                     | 10                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj ()  (TaskId:0)
+                     | 11                : 0.002s           0.002s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj ()  (TaskId:0)
+                     | 12                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj ()  (TaskId:0)
+                     | 13                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj ()  (TaskId:0)
+                     | 14                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj ()  (TaskId:0)
+                     | 15                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj ()  (TaskId:0)
+                     | 16                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj ()  (TaskId:0)
+                     | 17                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj ()  (TaskId:0)
+                     | 18                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj ()  (TaskId:0)
+                     | 19                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj ()  (TaskId:0)
+                     | 20                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj ()  (TaskId:0)
+                     | 21                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj ()  (TaskId:0)
+                     | 22                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj ()  (TaskId:0)
+                     | 23                : 0.002s           0.002s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj ()  (TaskId:0)
+                     | 24                : 0.002s           0.002s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj ()  (TaskId:0)
+                     | 25                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj ()  (TaskId:0)
+                     | 26                : 0.002s           0.002s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj ()  (TaskId:0)
+                     | 27                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj ()  (TaskId:0)
+                     | 28                : 0.002s           0.002s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj ()  (TaskId:0)
+                     | 29                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj ()  (TaskId:0)
+                     | 30                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj ()  (TaskId:0)
+                     | 31                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj ()  (TaskId:0)
+                     . 32                : 0.001s           0.001s       E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj ()  (TaskId:0)
+                     
+                     ============================== Node Utilization (IDs represent configurations) ====================================================
+                     Timestamp:            1       8       4       5       2       7       6       3        Duration   Cumulative
+                     ----------------------------------------------------------------------------------------------------------------------------------- (TaskId:0)
+                     639302627285608342:   0       x       x       x       x       x       x       x        0,050s     0,050s . (TaskId:0)
+                     639302627286111699:   1       x       x       x       x       x       x       x        5,212s     5,263s + (scale 1:100) (TaskId:0)
+                     639302627338233360:   |       2       3       4       5       6       7       8        0,000s     5,263s  (TaskId:0)
+                     639302627338235004:   9       |       |       |       |       |       |       |        0,003s     5,266s  (TaskId:0)
+                     639302627338264326:   10      |       |       |       |       |       |       |        0,001s     5,267s  (TaskId:0)
+                     639302627338278906:   11      |       |       |       |       |       |       |        0,002s     5,269s  (TaskId:0)
+                     639302627338299295:   12      |       |       |       |       |       |       |        0,001s     5,270s  (TaskId:0)
+                     639302627338309982:   13      |       |       |       |       |       |       |        0,001s     5,271s  (TaskId:0)
+                     639302627338320584:   14      |       |       |       |       |       |       |        0,001s     5,272s  (TaskId:0)
+                     639302627338331740:   15      |       |       |       |       |       |       |        0,001s     5,274s  (TaskId:0)
+                     639302627338343390:   16      |       |       |       |       |       |       |        0,001s     5,275s  (TaskId:0)
+                     639302627338353654:   17      |       |       |       |       |       |       |        0,001s     5,275s  (TaskId:0)
+                     639302627338363017:   18      |       |       |       |       |       |       |        0,001s     5,277s  (TaskId:0)
+                     639302627338373536:   19      |       |       |       |       |       |       |        0,001s     5,277s  (TaskId:0)
+                     639302627338383335:   20      |       |       |       |       |       |       |        0,001s     5,278s  (TaskId:0)
+                     639302627338393062:   21      |       |       |       |       |       |       |        0,001s     5,280s  (TaskId:0)
+                     639302627338404159:   22      |       |       |       |       |       |       |        0,001s     5,281s  (TaskId:0)
+                     639302627338413845:   23      |       |       |       |       |       |       |        0,002s     5,283s  (TaskId:0)
+                     639302627338434891:   24      |       |       |       |       |       |       |        0,002s     5,284s  (TaskId:0)
+                     639302627338451583:   25      |       |       |       |       |       |       |        0,001s     5,285s  (TaskId:0)
+                     639302627338461219:   26      |       |       |       |       |       |       |        0,002s     5,287s  (TaskId:0)
+                     639302627338478293:   27      |       |       |       |       |       |       |        0,001s     5,288s  (TaskId:0)
+                     639302627338490933:   28      |       |       |       |       |       |       |        0,002s     5,290s  (TaskId:0)
+                     639302627338509560:   29      |       |       |       |       |       |       |        0,001s     5,291s  (TaskId:0)
+                     639302627338519175:   30      |       |       |       |       |       |       |        0,001s     5,292s  (TaskId:0)
+                     639302627338530485:   31      |       |       |       |       |       |       |        0,001s     5,293s  (TaskId:0)
+                     639302627338542579:   32      |       |       |       |       |       |       |        0,001s     5,294s  (TaskId:0)
+                     639302627338552691:   x       |       |       |       |       |       |       |        0,021s     5,316s  (TaskId:0)
+                     639302627338767669:   x       |       |       |       |       x       |       |        0,001s     5,316s  (TaskId:0)
+                     639302627338772927:   x       |       |       x       |       x       |       |        0,000s     5,317s  (TaskId:0)
+                     639302627338776202:   x       |       |       x       x       x       |       |        0,003s     5,320s  (TaskId:0)
+                     639302627338807082:   x       |       x       x       x       x       |       |        0,003s     5,323s  (TaskId:0)
+                     639302627338834987:   x       |       x       x       x       x       x       |        0,009s     5,332s  (TaskId:0)
+                     639302627338925176:   x       x       x       x       x       x       x       |        0,007s     5,339s  (TaskId:0)
+                     639302627338996059:   0       x       x       x       x       x       x       x        0,005s     5,343s  (TaskId:0)
+                     -----------------------------------------------------------------------------------------------------------------------------------
+                     Utilization:          99,2    85,5    70,9    66,7    67,1    66,0    74,3    94,2     Average Utilization: 78,0 (TaskId:0)
+
+Project Evaluation Performance Summary:
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj   1 calls
+        2 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj   1 calls
+       14 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj   1 calls
+       14 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj   1 calls
+       14 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj   1 calls
+       15 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj   1 calls
+       17 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj   1 calls
+       17 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj   1 calls
+       23 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj   1 calls
+       23 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj   1 calls
+
+Project Performance Summary:
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-17\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-29\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-20\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-22\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-16\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-19\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-25\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-15\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-32\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-12\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-14\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-13\Leaf.proj   1 calls
+        0 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-18\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-21\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-31\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-30\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-27\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-26\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-24\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-10\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-28\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-11\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-23\Leaf.proj   1 calls
+        1 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-09\Leaf.proj   1 calls
+        8 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-01\Leaf.proj   1 calls
+       22 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-08\Leaf.proj   1 calls
+       22 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-06\Leaf.proj   1 calls
+       22 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-04\Leaf.proj   1 calls
+       23 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-03\Leaf.proj   1 calls
+       23 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-05\Leaf.proj   1 calls
+       23 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-07\Leaf.proj   1 calls
+       27 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\obj\leaves\leaf-02\Leaf.proj   1 calls
+     5310 ms  E:\Ghidello\Git\spar.v7\spikes\msbuild-task-analyzer\Probe.Build\Build.proj   1 calls
+
+Target Performance Summary:
+     5461 ms  Build                                     33 calls
+
+Task Performance Summary:
+       38 ms  ThreadSafeProbe                           32 calls
+     5296 ms  MSBuild                                    1 calls
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:05.36

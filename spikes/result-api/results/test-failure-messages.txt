@@ -1,0 +1,22 @@
+# Deliberately failing tests (Explicit), UnionStruct form, xunit.v3 4.0.3 via MTP. Stack frames removed.
+failed Tests.CopyJobsTests.FailingIsTypeOnSuccess (11ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidOperationException : The result is a value, not an error: CopyPlan { PlanId = 01a1d97d-926f-7715-b77d-5ca6f0d5de2f, Steps = System.Collections.Generic.List`1[SqlTool.CopyJobs.PlanStep] }.
+failed Tests.CopyJobsTests.FailingIsTypeOnOtherCase (2ms)
+  Assert.IsType() Failure: Value is not the exact type
+  Expected: typeof(SqlTool.CopyJobs.PlanError+ConnectionNotFound)
+  Actual:   typeof(SqlTool.CopyJobs.PlanError+TableMissing)
+failed Tests.CopyJobsTests.FailingEqualOnResult (3ms)
+  Assert.Equal() Failure: Values differ
+  Expected: TableMissing { Connection = src, Table = dbo.Other }
+  Actual:   TableMissing { Connection = src, Table = dbo.Gone }
+failed Tests.CopyJobsTests.FailingValueOnError (0ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidOperationException : The result is an error, not a value: TableMissing { Connection = src, Table = dbo.Gone }.
+Tests\bin\Debug\UnionStruct\net11.0\Tests.dll (net11.0|x64) failed with 4 error(s) [+0/x4/?18] (241ms)
+Exit code: 2
+Test run summary: Failed!
+  total: 22
+  failed: 4
+  succeeded: 0
+  skipped: 18
+  duration: 397ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes

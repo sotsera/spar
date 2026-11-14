@@ -1,0 +1,192 @@
+
+** (process:16654): WARNING **: 16:57:28.910: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+START ms=50.5 data=/home/alessandro/spar-spikes/resource-usage/repo/artifacts/resource-usage/linux/disk-large-3 pid=16654
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=16654 comm="/home/alessandro/spar-spikes/resource-usage/repo/s" label="kernel")
+dbus-daemon[16653]: [session uid=1000 pid=16653] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.3' (uid=1000 pid=16748 comm="/usr/bin/xdg-dbus-proxy --args=20" label="kernel")
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.portal.Documents' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.5' (uid=1000 pid=16785 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[16653]: [session uid=1000 pid=16653] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[16653]: [session uid=1000 pid=16653] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.962: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.962: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16801): Gtk-WARNING **: 16:57:28.967: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.975: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.975: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.975: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.975: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.975: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16805): Gtk-WARNING **: 16:57:28.980: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.981: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.981: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.981: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16807): Gtk-WARNING **: 16:57:28.985: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.986: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.986: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.986: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16809): Gtk-WARNING **: 16:57:28.991: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.991: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.991: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.991: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16811): Gtk-WARNING **: 16:57:28.996: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.997: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.997: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:28.997: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16813): Gtk-WARNING **: 16:57:29.002: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.003: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.003: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.003: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16815): Gtk-WARNING **: 16:57:29.007: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.008: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.008: No skeleton to export
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16817): Gtk-WARNING **: 16:57:29.013: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16819): Gtk-WARNING **: 16:57:29.019: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.019: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.019: No skeleton to export
+[W][01771.685509] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][01771.685556] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.020: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.020: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16821): Gtk-WARNING **: 16:57:29.025: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.025: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.025: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.025: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16823): Gtk-WARNING **: 16:57:29.030: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.031: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.031: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.031: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=16779 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:16825): Gtk-WARNING **: 16:57:29.036: cannot open display: :0
+dbus-daemon[16653]: [session uid=1000 pid=16653] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.037: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:16779): xdg-desktop-portal-WARNING **: 16:57:29.037: No skeleton to export
+dbus-daemon[16653]: [session uid=1000 pid=16653] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[16741]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=16748 comm="/usr/bin/xdg-dbus-proxy --args=20" label="kernel")
+
+** (process:16654): WARNING **: 16:57:29.067: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend
+dbus-daemon[16741]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+PAGE uri=http://127.0.0.1:42293/fill.html?ls=4096&idb=64&cache=32&http=400&size=100 ms=1510.5 message={"kind":"filled","origin":"http://127.0.0.1:42293","steps":{"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000},"fillMs":1344}
+WALK label=running target=data method=FileInfo first=(files=7 dirs=-1 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.11) files=7 dirs=-1 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.02 repeat=(n=10 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=running target=data method=FileSystemEnumerator first=(files=7 dirs=8 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.03) files=7 dirs=8 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.03 repeat=(n=10 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=running target=data method=lstat-blocks first=(files=7 dirs=8 logicalKB=82260 allocatedKB=82312 errors=0 ms=0.19) files=7 dirs=8 logicalKB=82260 allocatedKB=82312 errors=0 ms=0.03 repeat=(n=10 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=running target=cache method=FileInfo first=(files=1272 dirs=-1 logicalKB=113069 allocatedKB=-1 errors=0 ms=1.84) files=1272 dirs=-1 logicalKB=113069 allocatedKB=-1 errors=0 ms=1.55 repeat=(n=10 median=1.5ms p90=1.8ms min=1.5ms max=1.8ms)
+WALK label=running target=cache method=FileSystemEnumerator first=(files=1272 dirs=13 logicalKB=113069 allocatedKB=-1 errors=0 ms=1.09) files=1272 dirs=13 logicalKB=113069 allocatedKB=-1 errors=0 ms=1.14 repeat=(n=10 median=1.1ms p90=1.3ms min=1.1ms max=1.7ms)
+WALK label=running target=cache method=lstat-blocks first=(files=1272 dirs=13 logicalKB=113069 allocatedKB=114684 errors=0 ms=1.41) files=1272 dirs=13 logicalKB=113069 allocatedKB=114684 errors=0 ms=1.51 repeat=(n=10 median=1.4ms p90=1.6ms min=1.3ms max=1.6ms)
+WALK label=running target=both method=FileInfo first=(files=1279 dirs=-1 logicalKB=195330 allocatedKB=-1 errors=0 ms=2.23) files=1279 dirs=-1 logicalKB=195330 allocatedKB=-1 errors=0 ms=1.44 repeat=(n=10 median=1.4ms p90=1.4ms min=1.3ms max=2.6ms)
+WALK label=running target=both method=FileSystemEnumerator first=(files=1279 dirs=23 logicalKB=195330 allocatedKB=-1 errors=0 ms=1.18) files=1279 dirs=23 logicalKB=195330 allocatedKB=-1 errors=0 ms=1.37 repeat=(n=10 median=1.1ms p90=1.2ms min=1.1ms max=1.4ms)
+WALK label=running target=both method=lstat-blocks first=(files=1279 dirs=23 logicalKB=195330 allocatedKB=197004 errors=0 ms=1.17) files=1279 dirs=23 logicalKB=195330 allocatedKB=197004 errors=0 ms=1.19 repeat=(n=10 median=1.2ms p90=1.2ms min=1.1ms max=1.3ms)
+WALK-PART label=running folder=data/storage files=6 dirs=5 logicalKB=82260 allocatedKB=82296 errors=0 ms=0.05
+WALK-PART label=running folder=data/mediakeys files=1 dirs=1 logicalKB=0 allocatedKB=8 errors=0 ms=0.01
+WALK-PART label=running folder=cache/HSTS files=1 dirs=0 logicalKB=12 allocatedKB=12 errors=0 ms=0.00
+WALK-PART label=running folder=cache/WebKitCache files=1201 dirs=5 logicalKB=80270 allocatedKB=81720 errors=0 ms=1.07
+WALK-PART label=running folder=cache/CacheStorage files=70 dirs=5 logicalKB=32787 allocatedKB=32940 errors=0 ms=0.09
+FETCH label=running first ms=13.00 entries=1 totalBytes=158939730 error=False [127.0.0.1: memory-cache=0,disk-cache=41150690,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+COST what=website_data_manager_fetch(ALL)-to-callback label=running n=10 median=12.6ms p90=13.3ms min=12.0ms max=13.8ms syncPartOnMain=(n=11 median=0.0ms p90=0.0ms min=0.0ms max=0.4ms)
+WALK label=running-later target=data method=FileInfo first=(files=7 dirs=-1 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.09) files=7 dirs=-1 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.03 repeat=(n=3 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=running-later target=data method=FileSystemEnumerator first=(files=7 dirs=10 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.03) files=7 dirs=10 logicalKB=82260 allocatedKB=-1 errors=0 ms=0.03 repeat=(n=3 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=running-later target=data method=lstat-blocks first=(files=7 dirs=10 logicalKB=82260 allocatedKB=82320 errors=0 ms=0.04) files=7 dirs=10 logicalKB=82260 allocatedKB=82320 errors=0 ms=0.03 repeat=(n=3 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=running-later target=cache method=FileInfo first=(files=1273 dirs=-1 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.62) files=1273 dirs=-1 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.32 repeat=(n=3 median=1.4ms p90=1.6ms min=1.3ms max=1.6ms)
+WALK label=running-later target=cache method=FileSystemEnumerator first=(files=1273 dirs=14 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.13) files=1273 dirs=14 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.07 repeat=(n=3 median=1.1ms p90=1.1ms min=1.1ms max=1.1ms)
+WALK label=running-later target=cache method=lstat-blocks first=(files=1273 dirs=14 logicalKB=113070 allocatedKB=114692 errors=0 ms=1.13) files=1273 dirs=14 logicalKB=113070 allocatedKB=114692 errors=0 ms=1.13 repeat=(n=3 median=1.1ms p90=1.1ms min=1.1ms max=1.1ms)
+WALK label=running-later target=both method=FileInfo first=(files=1280 dirs=-1 logicalKB=195330 allocatedKB=-1 errors=0 ms=1.32) files=1280 dirs=-1 logicalKB=195330 allocatedKB=-1 errors=0 ms=1.28 repeat=(n=3 median=1.3ms p90=1.3ms min=1.3ms max=1.3ms)
+WALK label=running-later target=both method=FileSystemEnumerator first=(files=1280 dirs=26 logicalKB=195330 allocatedKB=-1 errors=0 ms=1.13) files=1280 dirs=26 logicalKB=195330 allocatedKB=-1 errors=0 ms=1.09 repeat=(n=3 median=1.1ms p90=1.1ms min=1.1ms max=1.1ms)
+WALK label=running-later target=both method=lstat-blocks first=(files=1280 dirs=26 logicalKB=195330 allocatedKB=197020 errors=0 ms=1.13) files=1280 dirs=26 logicalKB=195330 allocatedKB=197020 errors=0 ms=1.16 repeat=(n=3 median=1.2ms p90=1.2ms min=1.2ms max=1.2ms)
+WALK-PART label=running-later folder=data/storage files=6 dirs=5 logicalKB=82260 allocatedKB=82296 errors=0 ms=0.03
+WALK-PART label=running-later folder=data/mediakeys files=1 dirs=1 logicalKB=0 allocatedKB=8 errors=0 ms=0.01
+WALK-PART label=running-later folder=data/deviceidhashsalts files=0 dirs=1 logicalKB=0 allocatedKB=4 errors=0 ms=0.01
+WALK-PART label=running-later folder=cache/HSTS files=1 dirs=0 logicalKB=12 allocatedKB=12 errors=0 ms=0.00
+WALK-PART label=running-later folder=cache/WebKitCache files=1202 dirs=6 logicalKB=80270 allocatedKB=81728 errors=0 ms=1.03
+WALK-PART label=running-later folder=cache/CacheStorage files=70 dirs=5 logicalKB=32787 allocatedKB=32940 errors=0 ms=0.08
+FETCH label=running-later first ms=12.65 entries=1 totalBytes=158939730 error=False [127.0.0.1: memory-cache=0,disk-cache=41150690,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+COST what=website_data_manager_fetch(ALL)-to-callback label=running-later n=3 median=14.2ms p90=15.3ms min=13.0ms max=15.3ms syncPartOnMain=(n=4 median=0.0ms p90=0.1ms min=0.0ms max=0.1ms)
+VIEW-GONE ms=10000.2 webkitChildren=2
+WALK label=view-gone target=data method=FileInfo first=(files=5 dirs=-1 logicalKB=73932 allocatedKB=-1 errors=0 ms=0.08) files=5 dirs=-1 logicalKB=73932 allocatedKB=-1 errors=0 ms=0.02 repeat=(n=3 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=view-gone target=data method=FileSystemEnumerator first=(files=5 dirs=10 logicalKB=73932 allocatedKB=-1 errors=0 ms=0.03) files=5 dirs=10 logicalKB=73932 allocatedKB=-1 errors=0 ms=0.03 repeat=(n=3 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=view-gone target=data method=lstat-blocks first=(files=5 dirs=10 logicalKB=73932 allocatedKB=73988 errors=0 ms=0.04) files=5 dirs=10 logicalKB=73932 allocatedKB=73988 errors=0 ms=0.04 repeat=(n=3 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+WALK label=view-gone target=cache method=FileInfo first=(files=1273 dirs=-1 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.72) files=1273 dirs=-1 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.36 repeat=(n=3 median=1.4ms p90=1.5ms min=1.4ms max=1.5ms)
+WALK label=view-gone target=cache method=FileSystemEnumerator first=(files=1273 dirs=14 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.15) files=1273 dirs=14 logicalKB=113070 allocatedKB=-1 errors=0 ms=1.18 repeat=(n=3 median=1.2ms p90=1.2ms min=1.1ms max=1.2ms)
+WALK label=view-gone target=cache method=lstat-blocks first=(files=1273 dirs=14 logicalKB=113070 allocatedKB=114692 errors=0 ms=1.29) files=1273 dirs=14 logicalKB=113070 allocatedKB=114692 errors=0 ms=1.28 repeat=(n=3 median=1.3ms p90=1.3ms min=1.3ms max=1.3ms)
+WALK label=view-gone target=both method=FileInfo first=(files=1278 dirs=-1 logicalKB=187002 allocatedKB=-1 errors=0 ms=1.41) files=1278 dirs=-1 logicalKB=187002 allocatedKB=-1 errors=0 ms=1.46 repeat=(n=3 median=1.5ms p90=1.5ms min=1.4ms max=1.5ms)
+WALK label=view-gone target=both method=FileSystemEnumerator first=(files=1278 dirs=26 logicalKB=187002 allocatedKB=-1 errors=0 ms=1.24) files=1278 dirs=26 logicalKB=187002 allocatedKB=-1 errors=0 ms=1.20 repeat=(n=3 median=1.2ms p90=1.2ms min=1.2ms max=1.2ms)
+WALK label=view-gone target=both method=lstat-blocks first=(files=1278 dirs=26 logicalKB=187002 allocatedKB=188688 errors=0 ms=1.24) files=1278 dirs=26 logicalKB=187002 allocatedKB=188688 errors=0 ms=1.23 repeat=(n=3 median=1.2ms p90=1.2ms min=1.2ms max=1.2ms)
+WALK-PART label=view-gone folder=data/storage files=4 dirs=5 logicalKB=73932 allocatedKB=73964 errors=0 ms=0.03
+WALK-PART label=view-gone folder=data/mediakeys files=1 dirs=1 logicalKB=0 allocatedKB=8 errors=0 ms=0.01
+WALK-PART label=view-gone folder=data/deviceidhashsalts files=0 dirs=1 logicalKB=0 allocatedKB=4 errors=0 ms=0.01
+WALK-PART label=view-gone folder=cache/HSTS files=1 dirs=0 logicalKB=12 allocatedKB=12 errors=0 ms=0.00
+WALK-PART label=view-gone folder=cache/WebKitCache files=1202 dirs=6 logicalKB=80270 allocatedKB=81728 errors=0 ms=1.13
+WALK-PART label=view-gone folder=cache/CacheStorage files=70 dirs=5 logicalKB=32787 allocatedKB=32940 errors=0 ms=0.10
+
+(process:2): GLib-GIO-WARNING **: 16:57:55.206: Error releasing name org.webkit.app-6dc4d0cdd09785e7d8be67a0635fe0160fbabd291663b5e4643fed4f2c47b948.Sandboxed.WebProcess-35e7c979-fe49-4d3e-8ff6-46a3b2ee277d: The connection is closed
+HOST-EXIT code=0

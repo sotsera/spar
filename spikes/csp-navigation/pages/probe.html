@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>probe</title>
+  <script src="/order-head.js"></script>
+  <script>(window.__sparOrder = window.__sparOrder || []).push("head-inline");</script>
+  <link rel="stylesheet" href="/probe.css">
+  <style>#inline-style { color: rgb(1, 2, 3); }</style>
+</head>
+<body>
+  <div id="self-css">self css</div>
+  <div id="inline-style">inline style element</div>
+  <div id="attr-style" style="color: rgb(4, 5, 6)">style attribute</div>
+  <div id="cssom">cssom</div>
+  <img id="handler" src="/pixel.svg" onload="window.__handlerRan = true" alt="">
+  <iframe name="sink" id="sink" src="about:blank"></iframe>
+  <script type="module" src="/probe.js"></script>
+</body>
+</html>

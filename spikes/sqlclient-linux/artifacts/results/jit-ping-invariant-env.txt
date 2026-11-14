@@ -1,0 +1,9 @@
+exit 1 wallMs 70
+RUN runtime=jit mode=ping arg= sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+FAIL unhandled NotSupportedException: Globalization Invariant Mode is not supported.
+   at Microsoft.Data.SqlClient.SqlConnection.TryOpen(TaskCompletionSource`1 retry, Boolean forceNewConnection, SqlConnectionOverrides overrides)
+   at Microsoft.Data.SqlClient.SqlConnection.InternalOpenAsync(SqlConnectionOverrides overrides, Boolean forceNewConnection, CancellationToken cancellationToken)
+--- End of stack trace from previous location ---
+   at SqlTool.Db.OpenAsync(String connectionString) in /work/spikes/sqlclient-linux/SqlTool.App/Program.cs:line 120
+   at SqlTool.Program.Main(String[] args) in /work/spikes/sqlclient-linux/SqlTool.App/Program.cs:line 41
+MEM end peakWorkingSetMB=50.8 workingSetMB=50.9 rssAnonMB=4.6 allocatedMB=0.3 gc0=0 gc1=0 gc2=0 cpuMs=61

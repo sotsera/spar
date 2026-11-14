@@ -1,0 +1,7 @@
+exit 0 wallMs 13396
+RUN runtime=jit mode=bulk arg=default sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+MEM before peakWorkingSetMB=68.9 workingSetMB=68.9 rssAnonMB=8.9 allocatedMB=1.6 gc0=0 gc1=0 gc2=0 cpuMs=187
+MEM after-copy peakWorkingSetMB=96.9 workingSetMB=96.9 rssAnonMB=32.0 allocatedMB=1830.1 gc0=103 gc1=1 gc2=0 cpuMs=30064
+RESULT bulk variant=default rows=1000000 copyMs=11311 totalMs=11311 rowsPerSec=88411 payloadMBps=17.3 progressEvents=0 maxProgressGapMs=0 identical=True
+TARGET log usedMB=90.3
+MEM end peakWorkingSetMB=97.2 workingSetMB=97.2 rssAnonMB=32.0 allocatedMB=1830.1 gc0=103 gc1=1 gc2=0 cpuMs=30077

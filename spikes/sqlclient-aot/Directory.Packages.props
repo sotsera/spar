@@ -1,0 +1,15 @@
+<Project>
+  <!-- Repository central versions first, then the spike's own. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
+
+  <PropertyGroup>
+    <!-- Spike knob: -p:SqlClientVersion=... (default: latest stable on NuGet on 2026-11-13). -->
+    <SqlClientVersion Condition="'$(SqlClientVersion)' == ''">7.1.2</SqlClientVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="$(SqlClientVersion)" />
+    <PackageVersion Include="System.Data.SqlClient" Version="4.9.1" />
+    <PackageVersion Include="Microsoft.Data.SqlClient.SNI.runtime" Version="$(SqlClientVersion)" />
+  </ItemGroup>
+</Project>

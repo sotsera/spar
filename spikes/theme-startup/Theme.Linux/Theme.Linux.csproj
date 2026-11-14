@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Theme start-up spike, Linux host: a GTK window with a WebKitGTK view, each theme layer behind a switch, the page
+    served from the built frontend folder through spar://app/. -p:SparGtk=4 builds GTK4 + WebKitGTK 6.0; the default
+    is GTK3 + WebKitGTK 4.1. Frames are captured by linux/xcap.c, outside the process.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Theme.Linux</RootNamespace>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparGtk)' == '4'">
+    <DefineConstants>$(DefineConstants);SPAR_GTK4</DefineConstants>
+  </PropertyGroup>
+</Project>

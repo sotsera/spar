@@ -1,0 +1,4 @@
+<Project>
+  <!-- Inherit the repository policy (warnings as errors, code style), then add spike settings. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))" />
+</Project>

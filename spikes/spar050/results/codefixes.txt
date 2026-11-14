@@ -1,0 +1,41 @@
+# Code fixes, Roslyn 5.9.0.0 in an AdhocWorkspace
+pass | Result<TError> => default | SPAR050 | offered: Use Result.Success; Use error case 'CancelError.Forbidden'
+    before: public static class A { public static CancelResult M() => default; }
+    after:  public static class A { public static CancelResult M() => Result.Success; }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | Result<TError> default, error case | SPAR050 | offered: Use Result.Success; Use error case 'CancelError.Forbidden'
+    before: public static class A { public static CancelResult M() => default; }
+    after:  public static class A { public static CancelResult M() => new CancelError.Forbidden(); }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | var x = default(Result<TError>) | SPAR050 | offered: Use Result.Success; Use error case 'CancelError.Forbidden'
+    before: public static class A { public static CancelResult M() { var x = default(CancelResult); return x; } }
+    after:  public static class A { public static CancelResult M() { var x = (CancelResult)Result.Success; return x; } }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | return new() in async | SPAR050 | offered: Use Result.Success; Use error case 'CancelError.Forbidden'
+    before: public static class A { public static async Task<CancelResult> M() { await Task.Yield(); return new(); } }
+    after:  public static class A { public static async Task<CancelResult> M() { await Task.Yield(); return Result.Success; } }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | Result<T, TError> default: no case without arguments | SPAR050 | offered: none
+    before: public static class A { public static PlanResult M() => default; }
+    after:  public static class A { public static PlanResult M() => default; }
+    note:   no fix expected
+pass | FirstOrDefault() | SPAR051 | offered: Use First() (throws when nothing is found)
+    before: public static class A { public static PlanResult M(IEnumerable<PlanResult> r) => r.FirstOrDefault(); }
+    after:  public static class A { public static PlanResult M(IEnumerable<PlanResult> r) => r.First(); }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | SingleOrDefault(predicate) | SPAR051 | offered: Use Single() (throws when nothing is found)
+    before: public static class A { public static PlanResult M(IEnumerable<PlanResult> r) => r.SingleOrDefault(x => x.IsError); }
+    after:  public static class A { public static PlanResult M(IEnumerable<PlanResult> r) => r.Single(x => x.IsError); }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | Nullable GetValueOrDefault() | SPAR051 | offered: Use .Value (throws when there is no value)
+    before: public static class A { public static PlanResult M(PlanResult? r) => r.GetValueOrDefault(); }
+    after:  public static class A { public static PlanResult M(PlanResult? r) => r.Value; }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | field not assigned by the constructor | SPAR053 | offered: Declare as Result? (unset is null)
+    before: public sealed class H { private PlanResult _last; public void Set(PlanResult v) => _last = v; public override string ToString() => _last.ToString(); }
+    after:  public sealed class H { private PlanResult? _last; public void Set(PlanResult v) => _last = v; public override string ToString() => _last.ToString(); }
+    note:   (compiler errors in the probe before/after: 0/0)
+pass | auto-property, make required | SPAR053 | offered: Declare as Result? (unset is null); Make the property required
+    before: public sealed class H { public PlanResult Last { get; init; } }
+    after:  public sealed class H { public required PlanResult Last { get; init; } }
+    note:   (compiler errors in the probe before/after: 0/0)

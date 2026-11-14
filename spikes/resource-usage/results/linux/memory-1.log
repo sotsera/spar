@@ -1,0 +1,200 @@
+
+** (process:383): WARNING **: 16:50:40.288: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+START ms=173.6 data=/home/alessandro/spar-spikes/resource-usage/repo/artifacts/resource-usage/linux/mem-1 pid=383
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=383 comm="/home/alessandro/spar-spikes/resource-usage/repo/s" label="kernel")
+dbus-daemon[382]: [session uid=1000 pid=382] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.2' (uid=1000 pid=478 comm="/usr/bin/xdg-dbus-proxy --args=20" label="kernel")
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.portal.Documents' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.4' (uid=1000 pid=513 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[382]: [session uid=1000 pid=382] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[382]: [session uid=1000 pid=382] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.355: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.355: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:529): Gtk-WARNING **: 16:50:40.364: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.374: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.374: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.374: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.374: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.374: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:533): Gtk-WARNING **: 16:50:40.379: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.380: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.380: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.380: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:535): Gtk-WARNING **: 16:50:40.385: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.386: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.386: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.386: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:537): Gtk-WARNING **: 16:50:40.390: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.391: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.391: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.391: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:539): Gtk-WARNING **: 16:50:40.397: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.398: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.398: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.398: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:541): Gtk-WARNING **: 16:50:40.402: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.403: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.403: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.403: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:543): Gtk-WARNING **: 16:50:40.408: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.409: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.409: No skeleton to export
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:545): Gtk-WARNING **: 16:50:40.413: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:547): Gtk-WARNING **: 16:50:40.419: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.419: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.419: No skeleton to export
+[W][01362.275748] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][01362.275792] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.420: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.420: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:549): Gtk-WARNING **: 16:50:40.425: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.425: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.426: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.426: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:551): Gtk-WARNING **: 16:50:40.430: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.431: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.431: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.431: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[382]: [session uid=1000 pid=382] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.3' (uid=1000 pid=507 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(xdg-desktop-portal-gtk:553): Gtk-WARNING **: 16:50:40.435: cannot open display: :0
+dbus-daemon[382]: [session uid=1000 pid=382] Activated service 'org.freedesktop.impl.portal.desktop.gtk' failed: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.436: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+
+(/usr/libexec/xdg-desktop-portal:507): xdg-desktop-portal-WARNING **: 16:50:40.436: No skeleton to export
+dbus-daemon[382]: [session uid=1000 pid=382] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[475]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=478 comm="/usr/bin/xdg-dbus-proxy --args=20" label="kernel")
+
+** (process:383): WARNING **: 16:50:40.464: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend
+dbus-daemon[475]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+PAGE uri=spar://app/small.html ms=179.4 message=SPAR_READY /small.html
+PROCESSES source=proc-scan WebKitNetworkPr:460<383 bwrap:476<383 bwrap:481<383 bwrap:477<476 bwrap:482<481 xdg-dbus-proxy:478<477 WebKitWebProces:486<482
+PROCESSES source=task-children WebKitNetworkPr:460<383 bwrap:476<383 bwrap:481<383 bwrap:477<476 bwrap:482<481 xdg-dbus-proxy:478<477 WebKitWebProces:486<482
+PROCESSES source=compare scanCount=7 childrenCount=7 same=True allProcesses=77
+NSPID pid=460 name=WebKitNetworkPr nspid=460 rollupReadable=True
+NSPID pid=476 name=bwrap nspid=476 rollupReadable=True
+NSPID pid=481 name=bwrap nspid=481 rollupReadable=True
+NSPID pid=477 name=bwrap nspid=477/1 rollupReadable=True
+NSPID pid=482 name=bwrap nspid=482/1 rollupReadable=True
+NSPID pid=478 name=xdg-dbus-proxy nspid=478/2 rollupReadable=True
+NSPID pid=486 name=WebKitWebProces nspid=486/2 rollupReadable=True
+COST what=descendants-by-proc-scan thread=main n=50 median=439.3us p90=768.9us min=199.0us max=989.0us allocB=187159
+COST what=descendants-by-task-children thread=main n=200 median=124.2us p90=144.6us min=106.3us max=236.8us allocB=13432
+MEM label=loaded pid=460 name=WebKitNetworkPr readable=True rssKB=49596 pssKB=21862 pssAnonKB=7636 pssFileKB=14226 pssShmemKB=0 sharedCleanKB=39152 sharedDirtyKB=0 privateCleanKB=2808 privateDirtyKB=7636 ussKB=10444 swapKB=0 statmResidentKB=49596 statmSharedKB=41960 statmAnonKB=7636
+MEM label=loaded pid=476 name=bwrap readable=True rssKB=2048 pssKB=163 pssAnonKB=92 pssFileKB=71 pssShmemKB=0 sharedCleanKB=1908 sharedDirtyKB=96 privateCleanKB=0 privateDirtyKB=44 ussKB=44 swapKB=0 statmResidentKB=2048 statmSharedKB=1908 statmAnonKB=140
+MEM label=loaded pid=481 name=bwrap readable=True rssKB=2060 pssKB=171 pssAnonKB=100 pssFileKB=71 pssShmemKB=0 sharedCleanKB=1908 sharedDirtyKB=104 privateCleanKB=0 privateDirtyKB=48 ussKB=48 swapKB=0 statmResidentKB=2060 statmSharedKB=1908 statmAnonKB=152
+MEM label=loaded pid=477 name=bwrap readable=True rssKB=1588 pssKB=194 pssAnonKB=140 pssFileKB=54 pssShmemKB=0 sharedCleanKB=1400 sharedDirtyKB=96 privateCleanKB=0 privateDirtyKB=92 ussKB=92 swapKB=0 statmResidentKB=1588 statmSharedKB=1400 statmAnonKB=188
+MEM label=loaded pid=482 name=bwrap readable=True rssKB=1600 pssKB=202 pssAnonKB=148 pssFileKB=54 pssShmemKB=0 sharedCleanKB=1400 sharedDirtyKB=104 privateCleanKB=0 privateDirtyKB=96 ussKB=96 swapKB=0 statmResidentKB=1600 statmSharedKB=1400 statmAnonKB=200
+MEM label=loaded pid=478 name=xdg-dbus-proxy readable=True rssKB=5684 pssKB=857 pssAnonKB=444 pssFileKB=413 pssShmemKB=0 sharedCleanKB=5188 sharedDirtyKB=0 privateCleanKB=52 privateDirtyKB=444 ussKB=496 swapKB=0 statmResidentKB=5684 statmSharedKB=5240 statmAnonKB=444
+MEM label=loaded pid=486 name=WebKitWebProces readable=True rssKB=146400 pssKB=88893 pssAnonKB=20196 pssFileKB=68697 pssShmemKB=0 sharedCleanKB=98192 sharedDirtyKB=0 privateCleanKB=28012 privateDirtyKB=20196 ussKB=48208 swapKB=0 statmResidentKB=146400 statmSharedKB=126204 statmAnonKB=20196
+MEM-TOTAL label=loaded processes=7 rssMB=204.1 pssMB=109.7 ussMB=58.0 privateDirtyMB=27.9 pssAnonMB=28.1 pssFileMB=81.6 pssShmemMB=0.0 hostRssMB=167.2 hostPssMB=110.9 hostUssMB=71.1 hostPrivateDirtyMB=44.4 statmAnonMB=28.3 hostStatmAnonMB=44.4
+COST what=smaps_rollup-all thread=main n=200 median=565.7us p90=616.5us min=507.0us max=839.1us allocB=896
+COST what=smaps_rollup-all thread=pool n=200 median=559.5us p90=607.6us min=510.7us max=765.1us allocB=896
+COST what=statm-all thread=pool n=200 median=16.0us p90=18.0us min=15.1us max=39.9us allocB=784
+COST what=children+smaps_rollup-all thread=pool n=200 median=688.3us p90=762.6us min=630.1us max=1082.5us allocB=14328
+COST what=scan+smaps_rollup-all thread=pool n=50 median=753.2us p90=962.0us min=724.4us max=2111.1us allocB=143712
+COST what=smaps_rollup-self thread=pool n=200 median=426.9us p90=471.1us min=398.3us max=832.5us allocB=56
+COST what=Process.GetProcessById.PrivateMemorySize64-all thread=pool n=50 median=192.7us p90=231.0us min=180.4us max=411.2us allocB=71032
+PREAD-CHECK freshPssKB=112342 keptHandlePssKB=112342 keptPrivateDirtyKB=28556 statmAnonKB=28956 processes=7
+COST what=kept-handles-statm-all thread=pool n=200 median=4.6us p90=4.7us min=4.2us max=10.2us allocB=0
+COST what=kept-handles-smaps_rollup-all thread=pool n=200 median=523.5us p90=566.9us min=477.1us max=829.2us allocB=0
+COST what=refresh-tree-and-open-handles thread=pool n=50 median=126.4us p90=136.2us min=124.5us max=232.7us allocB=15528
+UI-PING label=idle n=2955 median=0.0ms p90=0.1ms min=0.0ms max=0.3ms samples=0 sampleCost=(n=0)
+UI-PING label=sample-on-main-every-100ms n=2954 median=0.0ms p90=0.1ms min=0.0ms max=1.6ms samples=30 sampleCost=(n=30 median=1.4ms p90=1.5ms min=1.4ms max=1.6ms)
+UI-PING label=sample-on-pool-every-100ms n=2958 median=0.0ms p90=0.1ms min=0.0ms max=0.4ms samples=30 sampleCost=(n=30 median=1.4ms p90=1.5ms min=1.4ms max=1.5ms)
+BACKEND-VALUES label=host workingSetMB=173.7 gcHeapMB=0.1 gcCommittedMB=18.3 gcIndex=1 gcTotalMemoryMB=11.0 gcFragmentedMB=0.0 totalAllocatedMB=28.7 processPrivateMB=70628.1 processWorkingSetMB=173.7 rollupPssMB=117.2 rollupUssMB=77.5 rollupPrivateDirtyMB=50.6 statmResidentMB=173.7
+BACKEND-VALUES label=host-after-gc workingSetMB=173.8 gcHeapMB=0.2 gcCommittedMB=18.5 gcIndex=2 gcTotalMemoryMB=0.2 gcFragmentedMB=0.0 totalAllocatedMB=28.7 processPrivateMB=70628.3 processWorkingSetMB=173.8 rollupPssMB=117.4 rollupUssMB=77.6 rollupPrivateDirtyMB=50.7 statmResidentMB=173.8
+BACKEND-COST label=host read=Environment.WorkingSet n=20 median=5274.8ns p90=5686.3ns min=5078.8ns max=6032.3ns allocB=3120
+BACKEND-COST label=host read=GC.GetGCMemoryInfo n=20 median=25.1ns p90=27.1ns min=23.2ns max=41.8ns allocB=288
+BACKEND-COST label=host read=GC.GetTotalMemory(false) n=20 median=12.2ns p90=12.2ns min=12.1ns max=12.3ns allocB=0
+BACKEND-COST label=host read=GC.GetTotalAllocatedBytes n=20 median=3.2ns p90=3.3ns min=3.2ns max=10.6ns allocB=0
+BACKEND-COST label=host read=Process.GetCurrentProcess().PrivateMemorySize64 n=200 median=79.5us p90=86.6us min=77.9us max=102.5us allocB=28744
+BACKEND-COST label=host read=cachedProcess.Refresh+PrivateMemorySize64 n=200 median=79.9us p90=96.9us min=77.8us max=436.7us allocB=28472
+BACKEND-COST label=host read=rollupPss n=20 median=428967.5ns p90=433506.9ns min=418259.6ns max=435358.8ns allocB=56
+BACKEND-COST label=host read=rollupUss n=20 median=422883.9ns p90=427724.0ns min=393953.4ns max=429613.1ns allocB=56
+BACKEND-COST label=host read=rollupPrivateDirty n=20 median=394563.0ns p90=411288.2ns min=391446.2ns max=418465.1ns allocB=56
+BACKEND-COST label=host read=statmResident n=20 median=2297.7ns p90=2333.0ns min=2254.7ns max=2453.0ns allocB=112
+SAMPLER label=engine-every-tick seconds=5.0 ticks=51 written=51 dropped=33 received=17 allocatedB=754272 steadyAllocatedBPerTick=14459 readWriteAllocatedBPerTick=14154
+SAMPLER label=engine-kept-statm-every-tick seconds=5.0 ticks=51 written=51 dropped=33 received=17 allocatedB=6040 steadyAllocatedBPerTick=76 readWriteAllocatedBPerTick=0
+SAMPLER label=engine-threshold-1%-1MB seconds=5.0 ticks=51 written=1 dropped=0 received=1 allocatedB=662536 steadyAllocatedBPerTick=13260 readWriteAllocatedBPerTick=12928
+MEM label=end pid=460 name=WebKitNetworkPr readable=True rssKB=49724 pssKB=21876 pssAnonKB=7636 pssFileKB=14240 pssShmemKB=0 sharedCleanKB=39280 sharedDirtyKB=0 privateCleanKB=2808 privateDirtyKB=7636 ussKB=10444 swapKB=0 statmResidentKB=49724 statmSharedKB=42088 statmAnonKB=7636
+MEM label=end pid=476 name=bwrap readable=True rssKB=2048 pssKB=166 pssAnonKB=92 pssFileKB=74 pssShmemKB=0 sharedCleanKB=1908 sharedDirtyKB=96 privateCleanKB=0 privateDirtyKB=44 ussKB=44 swapKB=0 statmResidentKB=2048 statmSharedKB=1908 statmAnonKB=140
+MEM label=end pid=481 name=bwrap readable=True rssKB=2060 pssKB=174 pssAnonKB=100 pssFileKB=74 pssShmemKB=0 sharedCleanKB=1908 sharedDirtyKB=104 privateCleanKB=0 privateDirtyKB=48 ussKB=48 swapKB=0 statmResidentKB=2060 statmSharedKB=1908 statmAnonKB=152
+MEM label=end pid=477 name=bwrap readable=True rssKB=1588 pssKB=196 pssAnonKB=140 pssFileKB=56 pssShmemKB=0 sharedCleanKB=1400 sharedDirtyKB=96 privateCleanKB=0 privateDirtyKB=92 ussKB=92 swapKB=0 statmResidentKB=1588 statmSharedKB=1400 statmAnonKB=188
+MEM label=end pid=482 name=bwrap readable=True rssKB=1600 pssKB=204 pssAnonKB=148 pssFileKB=56 pssShmemKB=0 sharedCleanKB=1400 sharedDirtyKB=104 privateCleanKB=0 privateDirtyKB=96 ussKB=96 swapKB=0 statmResidentKB=1600 statmSharedKB=1400 statmAnonKB=200
+MEM label=end pid=478 name=xdg-dbus-proxy readable=True rssKB=5812 pssKB=869 pssAnonKB=444 pssFileKB=425 pssShmemKB=0 sharedCleanKB=5316 sharedDirtyKB=0 privateCleanKB=52 privateDirtyKB=444 ussKB=496 swapKB=0 statmResidentKB=5812 statmSharedKB=5368 statmAnonKB=444
+MEM label=end pid=486 name=WebKitWebProces readable=True rssKB=146096 pssKB=88467 pssAnonKB=19764 pssFileKB=68703 pssShmemKB=0 sharedCleanKB=98384 sharedDirtyKB=0 privateCleanKB=27948 privateDirtyKB=19764 ussKB=47712 swapKB=0 statmResidentKB=146096 statmSharedKB=126332 statmAnonKB=19764
+MEM-TOTAL label=end processes=7 rssMB=204.0 pssMB=109.3 ussMB=57.6 privateDirtyMB=27.5 pssAnonMB=27.7 pssFileMB=81.7 pssShmemMB=0.0 hostRssMB=175.1 hostPssMB=118.7 hostUssMB=78.9 hostPrivateDirtyMB=52.0 statmAnonMB=27.9 hostStatmAnonMB=52.0
+
+(process:2): GLib-GIO-WARNING **: 16:51:34.140: Error releasing name org.webkit.app-6dc4d0cdd09785e7d8be67a0635fe0160fbabd291663b5e4643fed4f2c47b948.Sandboxed.WebProcess-045110d3-f428-4951-b4a7-d2c59dc652f8: The connection is closed
+HOST-EXIT code=0

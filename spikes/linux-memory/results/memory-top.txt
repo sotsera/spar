@@ -1,0 +1,577 @@
+Largest mappings by PSS (KB) per process, from the last round. Columns: PSS, USS, RSS, class, name. Selected configurations; the full file is artifacts/linux-memory/memory-top-full.txt.
+
+== electron-wayland-def-r3 ready
+  -- electron-main (electron) PSS 103672 KB, USS 73444 KB
+        54467    32080   105940 file electron
+        15816    15816    15816 anon [anon:partition_alloc]
+         6144     6144     6144 anon [anon:v8-sandbox]
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         3392     1736     5444 file libgtk-3.so.0.2409.32
+         1531       88     2976 shm  memfd:shared-memory-region
+         1460     1460     1460 anon [anon:v8]
+         1407     1152     1992 file icudtl.dat
+         1344     1344     1344 anon [anon]
+         1192     1192     1192 file libsqlite3.so.0.8.6
+     largest anonymous mappings (size KB / PSS KB): 5632/5260 rw-p [anon:v8-sandbox]
+  -- electron-zygote (electron) PSS 14799 KB, USS 904 KB
+        11005      320    40108 file electron
+  -- electron-zygote (electron) PSS 12963 KB, USS 312 KB
+         9847      148    40468 file electron
+  -- electron-utility:NetworkService (electron) PSS 29511 KB, USS 14192 KB
+        22372     9236    62272 file electron
+         2364     2364     2364 anon [anon:partition_alloc]
+  -- electron-zygote (electron) PSS 4514 KB, USS 248 KB
+         3238        4    11816 file electron
+  -- electron-gpu-process (electron) PSS 96294 KB, USS 77484 KB
+        49736    49736    49736 file libLLVM.so.20.1
+        15543     2452    47308 file electron
+        11118    10892    11344 anon [anon:partition_alloc]
+        10136    10136    10136 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         2859       88     5632 shm  memfd:shared-memory-region
+         2124     2008     2240 anon [anon]
+  -- electron-renderer (electron) PSS 42893 KB, USS 21656 KB
+        30468    11924    71412 file electron
+         6047     5900     6344 anon [anon:partition_alloc]
+         1164     1164     1164 anon [anon:v8-sandbox]
+
+== electron-wayland-def-r3 heavy
+  -- electron-main (electron) PSS 100730 KB, USS 68664 KB
+        52652    28064   107156 file electron
+        15468    15468    15468 anon [anon:partition_alloc]
+         5488     5488     5488 anon [anon:v8-sandbox]
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         3392     1736     5444 file libgtk-3.so.0.2409.32
+         1628     1628     1628 anon [anon:v8]
+         1403     1152     1992 file icudtl.dat
+         1352     1352     1352 anon [anon]
+         1192     1192     1192 file libsqlite3.so.0.8.6
+         1175       88     2264 shm  memfd:shared-memory-region
+  -- electron-zygote (electron) PSS 14765 KB, USS 904 KB
+        10977      320    40108 file electron
+  -- electron-zygote (electron) PSS 12905 KB, USS 260 KB
+         9795       96    40468 file electron
+  -- electron-utility:NetworkService (electron) PSS 29458 KB, USS 14136 KB
+        22353     9208    62656 file electron
+         2336     2336     2336 anon [anon:partition_alloc]
+  -- electron-zygote (electron) PSS 4515 KB, USS 248 KB
+         3239        4    11816 file electron
+  -- electron-gpu-process (electron) PSS 96732 KB, USS 77500 KB
+        49736    49736    49736 file libLLVM.so.20.1
+        15616     2360    48204 file electron
+        11226    11000    11452 anon [anon:partition_alloc]
+        10136    10136    10136 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         3119       88     6152 shm  memfd:shared-memory-region
+         2124     2008     2240 anon [anon]
+  -- electron-renderer (electron) PSS 468680 KB, USS 443776 KB
+       370840   370840   370840 anon [anon:v8]
+        42681    21116    87812 file electron
+        40407    40260    40704 anon [anon:partition_alloc]
+         6968     6968     6968 anon [anon:v8-sandbox]
+         2221      792     3652 shm  memfd:shared-memory-region
+         1271     1188     1476 anon [anon]
+         1152     1152     1152 anon [anon:v8-pointer-table]
+     largest anonymous mappings (size KB / PSS KB): 278272/277856 rw-p [anon:v8], 64000/64000 rw-p [anon:v8], 28544/28352 rw-p [anon:v8], 7168/6500 rw-p [anon:v8-sandbox], 5628/5628 rw-p [anon:partition_alloc]
+
+== electron-wayland-empty-r3 ready
+  -- electron-main (electron) PSS 104562 KB, USS 75552 KB
+        55262    33888   105764 file electron
+        15812    15812    15812 anon [anon:partition_alloc]
+         6132     6132     6132 anon [anon:v8-sandbox]
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         3392     1736     5444 file libgtk-3.so.0.2409.32
+         1525       76     2976 shm  memfd:shared-memory-region
+         1401     1152     1992 file icudtl.dat
+         1392     1392     1392 anon [anon:v8]
+         1328     1328     1328 anon [anon]
+         1284     1284     1284 file libsqlite3.so.0.8.6
+     largest anonymous mappings (size KB / PSS KB): 5632/5248 rw-p [anon:v8-sandbox]
+  -- electron-zygote (electron) PSS 15109 KB, USS 980 KB
+        11282      388    40880 file electron
+  -- electron-zygote (electron) PSS 13220 KB, USS 332 KB
+        10072      168    41584 file electron
+  -- electron-utility:NetworkService (electron) PSS 29242 KB, USS 13992 KB
+        22181     9084    62492 file electron
+         2328     2328     2328 anon [anon:partition_alloc]
+  -- electron-zygote (electron) PSS 4502 KB, USS 228 KB
+         3225        4    11828 file electron
+  -- electron-gpu-process (electron) PSS 95828 KB, USS 77864 KB
+        49736    49736    49736 file libLLVM.so.20.1
+        15603     2592    46688 file electron
+        11086    10860    11312 anon [anon:partition_alloc]
+        10136    10136    10136 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         2433      404     4464 shm  memfd:shared-memory-region
+         2124     2008     2240 anon [anon]
+  -- electron-renderer (electron) PSS 36446 KB, USS 17712 KB
+        25586     8708    64800 file electron
+         5555     5408     5852 anon [anon:partition_alloc]
+         1156     1156     1156 anon [anon:v8-sandbox]
+
+== floor-gtk3-x11-def-r3 ready
+  -- ui (floor-gtk3) PSS 18596 KB, USS 16796 KB
+         4548     4548     4548 file libgtk-3.so.0.2409.32
+         2628     2628     2628 anon [heap]
+
+== floor-gtk4-wayland-def-r3 ready
+  -- ui (floor-gtk4) PSS 189554 KB, USS 186476 KB
+        70876    70876    70876 anon [heap]
+        59912    59912    59912 file libLLVM.so.20.1
+        12232    12232    12232 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+        10528    10528    10528 anon [anon]
+         8256     8256     8256 file libgtk-4.so.1.1400.5
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1284     1284     1284 file index
+         1148     1148     1148 file libxml2.so.2.9.14
+     largest anonymous mappings (size KB / PSS KB): 150560/70876 rw-p [heap]
+
+== gtk3-wayland-def-r5 ready
+  -- ui (Mem.Linux) PSS 118012 KB, USS 71576 KB
+        35108    35108    35108 anon [anon]
+        28432     6760    50104 file libLLVM.so.20.1
+        12665     5424    24384 file libwebkit2gtk-4.1.so.0.21.10
+         5918     1500    10336 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5912     5700     6340 file libgtk-3.so.0.2409.32
+         5598      656    12288 file libjavascriptcoregtk-4.1.so.0.10.14
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1488     1488     1488 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 60780/28740 rw-p
+  -- network (WebKitNetworkPr) PSS 22006 KB, USS 10348 KB
+         9235     4244    18704 file libwebkit2gtk-4.1.so.0.21.10
+         2334      592     5824 file libjavascriptcoregtk-4.1.so.0.10.14
+         1344     1344     1344 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 187277 KB, USS 141172 KB
+        63000    63000    63000 anon [anon]
+        40580    18908    62252 file libLLVM.so.20.1
+        38101    30532    50148 file libwebkit2gtk-4.1.so.0.21.10
+        17624    17624    17624 anon [heap]
+         8006     3064    14696 file libjavascriptcoregtk-4.1.so.0.10.14
+         7082     2664    11500 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+     largest anonymous mappings (size KB / PSS KB): 45064/23144 rw-p, 57592/17624 rw-p [heap], 30708/9620 rw-p, 28412/7836 rw-p, 7516/7508 rw-p
+
+== gtk3-wayland-def-r5 heavy
+  -- ui (Mem.Linux) PSS 118366 KB, USS 71952 KB
+        35444    35444    35444 anon [anon]
+        28432     6760    50104 file libLLVM.so.20.1
+        12636     5472    24256 file libwebkit2gtk-4.1.so.0.21.10
+         5918     1500    10336 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5912     5700     6340 file libgtk-3.so.0.2409.32
+         5619      592    12384 file libjavascriptcoregtk-4.1.so.0.10.14
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1488     1488     1488 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 60780/28804 rw-p
+  -- network (WebKitNetworkPr) PSS 21814 KB, USS 10108 KB
+         9070     4064    18532 file libwebkit2gtk-4.1.so.0.21.10
+         2291      528     5792 file libjavascriptcoregtk-4.1.so.0.10.14
+         1348     1348     1348 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 438111 KB, USS 391516 KB
+       292152   292152   292152 anon [anon]
+        43344    35800    55344 file libwebkit2gtk-4.1.so.0.21.10
+        40580    18908    62252 file libLLVM.so.20.1
+        26760    26760    26760 anon [heap]
+        13467     8408    20264 file libjavascriptcoregtk-4.1.so.0.10.14
+         7082     2664    11500 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+         1064      980     1236 file libgstreamer-1.0.so.0.2402.0
+     largest anonymous mappings (size KB / PSS KB): 42048/42012 rw-p, 57184/32872 rw-p, 67932/26760 rw-p [heap], 45888/23672 rw-p, 20100/18040 rw-p, 23328/12292 rw-p
+
+== gtk3-wayland-empty-r3 ready
+  -- ui (Mem.Linux) PSS 114470 KB, USS 71424 KB
+        34232    34232    34232 anon [anon]
+        28330     6760    49900 file libLLVM.so.20.1
+        12772     5616    24384 file libwebkit2gtk-4.1.so.0.21.10
+         5946     1500    10392 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5916     5704     6344 file libgtk-3.so.0.2409.32
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         2569      656     6208 file libjavascriptcoregtk-4.1.so.0.10.14
+         1492     1488     1496 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 60780/28704 rw-p
+  -- network (WebKitNetworkPr) PSS 22048 KB, USS 10368 KB
+         9246     4244    18704 file libwebkit2gtk-4.1.so.0.21.10
+         2313      592     5760 file libjavascriptcoregtk-4.1.so.0.10.14
+         1288     1288     1288 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 161585 KB, USS 119136 KB
+        49628    49628    49628 anon [anon]
+        38446    16876    60016 file libLLVM.so.20.1
+        33028    25576    44936 file libwebkit2gtk-4.1.so.0.21.10
+        17336    17336    17336 anon [heap]
+         6698     2252    11144 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         6217     4304     9856 file libjavascriptcoregtk-4.1.so.0.10.14
+     largest anonymous mappings (size KB / PSS KB): 38772/17684 rw-p, 57592/17336 rw-p [heap], 28420/7852 rw-p, 28412/7836 rw-p
+
+== gtk3-wayland-empty-noaccel-r3 ready
+  -- ui (Mem.Linux) PSS 110388 KB, USS 72520 KB
+        30346    10792    49900 file libLLVM.so.20.1
+        25400    25400    25400 anon [anon]
+        13308     5776    25324 file libwebkit2gtk-4.1.so.0.21.10
+         8602     6812    10392 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5916     5704     6344 file libgtk-3.so.0.2409.32
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         2579      656     6208 file libjavascriptcoregtk-4.1.so.0.10.14
+         1476     1472     1480 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 58696/19416 rw-p
+  -- network (WebKitNetworkPr) PSS 22045 KB, USS 10400 KB
+         9266     4276    18740 file libwebkit2gtk-4.1.so.0.21.10
+         2355      592     5824 file libjavascriptcoregtk-4.1.so.0.10.14
+         1284     1284     1284 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 80464 KB, USS 43176 KB
+        30884    23096    43156 file libwebkit2gtk-4.1.so.0.21.10
+        26314     6760    45868 file libLLVM.so.20.1
+         6163     4240     9792 file libjavascriptcoregtk-4.1.so.0.10.14
+         4080     4080     4080 anon [anon]
+         2970     1180     4760 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1164     1164     1164 anon [heap]
+
+== gtk3-wayland-gtkonly-r3 ready
+  -- ui (Mem.Linux) PSS 30907 KB, USS 27728 KB
+         5960     5960     5960 file libgtk-3.so.0.2409.32
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         4728     4728     4728 anon [anon]
+         1476     1476     1476 file Mem.Linux
+         1028     1028     1028 file libharfbuzz.so.0.60830.0
+
+== gtk3-wayland-noaccel-r5 ready
+  -- ui (Mem.Linux) PSS 114109 KB, USS 72724 KB
+        30448    10792    50104 file libLLVM.so.20.1
+        26224    26224    26224 anon [anon]
+        13204     5584    25328 file libwebkit2gtk-4.1.so.0.21.10
+         8558     6768    10348 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5912     5700     6340 file libgtk-3.so.0.2409.32
+         5631      656    12324 file libjavascriptcoregtk-4.1.so.0.10.14
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1476     1476     1476 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 58688/19412 rw-p
+  -- network (WebKitNetworkPr) PSS 22103 KB, USS 10440 KB
+         9284     4304    18768 file libwebkit2gtk-4.1.so.0.21.10
+         2335      592     5796 file libjavascriptcoregtk-4.1.so.0.10.14
+         1288     1288     1288 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 89674 KB, USS 48844 KB
+        35540    27632    47952 file libwebkit2gtk-4.1.so.0.21.10
+        26416     6760    46072 file libLLVM.so.20.1
+         8007     3064    14668 file libjavascriptcoregtk-4.1.so.0.10.14
+         4760     4760     4760 anon [anon]
+         2970     1180     4760 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+         1272     1272     1272 anon [heap]
+
+== gtk3-wayland-noaccel-r5 heavy
+  -- ui (Mem.Linux) PSS 114594 KB, USS 73112 KB
+        30448    10792    50104 file libLLVM.so.20.1
+        26628    26628    26628 anon [anon]
+        13214     5584    25392 file libwebkit2gtk-4.1.so.0.21.10
+         8558     6768    10348 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5912     5700     6340 file libgtk-3.so.0.2409.32
+         5685      592    12516 file libjavascriptcoregtk-4.1.so.0.10.14
+         4768     4768     4768 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1476     1476     1476 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 58688/19568 rw-p
+  -- network (WebKitNetworkPr) PSS 22055 KB, USS 10252 KB
+         9262     4176    18896 file libwebkit2gtk-4.1.so.0.21.10
+         2293      528     5796 file libjavascriptcoregtk-4.1.so.0.10.14
+         1292     1292     1292 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 322897 KB, USS 281396 KB
+       223736   223736   223736 anon [anon]
+        40978    32996    53508 file libwebkit2gtk-4.1.so.0.21.10
+        26416     6760    46072 file libLLVM.so.20.1
+        13941     8816    20804 file libjavascriptcoregtk-4.1.so.0.10.14
+         2970     1180     4760 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         2456     2456     2456 anon [heap]
+         1475     1316     1796 file libicuuc.so.74.2
+         1064      980     1236 file libgstreamer-1.0.so.0.2402.0
+     largest anonymous mappings (size KB / PSS KB): 25520/25512 rw-p, 18064/17968 rw-p, 45264/16468 rw-p, 24576/16384 rw-p, 15984/15984 rw-p, 10244/10244 rw-p
+
+== gtk3-x11-gtkonly-r3 ready
+  -- ui (Mem.Linux) PSS 20641 KB, USS 18808 KB
+         4548     4548     4548 file libgtk-3.so.0.2409.32
+         4044     4044     4044 anon [anon]
+         1480     1480     1480 file Mem.Linux
+         1056     1056     1056 file libharfbuzz.so.0.60830.0
+
+== gtk4-wayland-cairo-r5 ready
+  -- ui (Mem.Linux) PSS 109059 KB, USS 62312 KB
+        28432     6760    50104 file libLLVM.so.20.1
+        27476    27476    27476 anon [anon]
+        12721     5448    24392 file libwebkitgtk-6.0.so.4.16.10
+         6404     6040     7140 file libgtk-4.so.1.1400.5
+         5860     1500    10220 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5615      656    12308 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1488     1484     1492 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 58884/19968 rw-p
+  -- network (WebKitNetworkPr) PSS 21674 KB, USS 10552 KB
+         9137     4296    18376 file libwebkitgtk-6.0.so.4.16.10
+         2319      592     5780 file libjavascriptcoregtk-6.0.so.1.7.14
+         1296     1296     1296 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 185580 KB, USS 140044 KB
+        62320    62320    62320 anon [anon]
+        40580    18908    62252 file libLLVM.so.20.1
+        37581    29988    49572 file libwebkitgtk-6.0.so.4.16.10
+        17580    17580    17580 anon [heap]
+         8023     3064    14716 file libjavascriptcoregtk-6.0.so.1.7.14
+         7140     2780    11500 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+     largest anonymous mappings (size KB / PSS KB): 45060/23040 rw-p, 57732/17580 rw-p [heap], 30640/9572 rw-p, 28412/7836 rw-p, 4100/4100 rw-p
+
+== gtk4-wayland-cairo-r5 heavy
+  -- ui (Mem.Linux) PSS 109028 KB, USS 61728 KB
+        28432     6760    50104 file libLLVM.so.20.1
+        27852    27852    27852 anon [anon]
+        12668     5384    24392 file libwebkitgtk-6.0.so.4.16.10
+         6404     6040     7140 file libgtk-4.so.1.1400.5
+         5860     1500    10220 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5679      592    12500 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1488     1484     1492 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 58884/20132 rw-p
+  -- network (WebKitNetworkPr) PSS 21698 KB, USS 10364 KB
+         9180     4168    18632 file libwebkitgtk-6.0.so.4.16.10
+         2287      528     5780 file libjavascriptcoregtk-6.0.so.1.7.14
+         1300     1300     1300 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 435674 KB, USS 389420 KB
+       291512   291512   291512 anon [anon]
+        42712    34980    54884 file libwebkitgtk-6.0.so.4.16.10
+        40580    18908    62252 file libLLVM.so.20.1
+        26000    26000    26000 anon [heap]
+        13559     8440    20412 file libjavascriptcoregtk-6.0.so.1.7.14
+         7140     2780    11500 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+         1064      980     1236 file libgstreamer-1.0.so.0.2402.0
+     largest anonymous mappings (size KB / PSS KB): 35748/33700 rw-p, 67572/26000 rw-p [heap], 24992/24984 rw-p, 45936/23544 rw-p, 30704/19076 rw-p, 16528/16528 rw-p
+
+== gtk4-wayland-def-r5 ready
+  -- ui (Mem.Linux) PSS 185109 KB, USS 132324 KB
+        95160    95160    95160 anon [anon]
+        33386     6760    60012 file libLLVM.so.20.1
+        12622     5416    24196 file libwebkitgtk-6.0.so.4.16.10
+         7620     7256     8356 file libgtk-4.so.1.1400.5
+         7008     1848    12168 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5609      656    12288 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1492     1492     1492 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 65524/34676 rw-p, 65536/30092 rw-p, 28168/19664 rw-p
+  -- network (WebKitNetworkPr) PSS 21570 KB, USS 10432 KB
+         9094     4240    18316 file libwebkitgtk-6.0.so.4.16.10
+         2313      592     5760 file libjavascriptcoregtk-6.0.so.1.7.14
+         1300     1300     1300 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 179448 KB, USS 127732 KB
+        62296    62296    62296 anon [anon]
+        37474    29904    49412 file libwebkitgtk-6.0.so.4.16.10
+        35626     9000    62252 file libLLVM.so.20.1
+        17724    17724    17724 anon [heap]
+         8017     3064    14696 file libjavascriptcoregtk-6.0.so.1.7.14
+         6340     1180    11500 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+     largest anonymous mappings (size KB / PSS KB): 45060/23120 rw-p, 57736/17724 rw-p [heap], 30640/9572 rw-p, 28420/7844 rw-p, 5576/5328 rw-p
+
+== gtk4-wayland-def-r5 heavy
+  -- ui (Mem.Linux) PSS 185524 KB, USS 132156 KB
+        96016    96016    96016 anon [anon]
+        33386     6760    60012 file libLLVM.so.20.1
+        12569     5352    24196 file libwebkitgtk-6.0.so.4.16.10
+         7620     7256     8356 file libgtk-4.so.1.1400.5
+         7008     1848    12168 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         5673      592    12480 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1492     1492     1492 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 65524/34676 rw-p, 65536/30092 rw-p, 29380/20320 rw-p
+  -- network (WebKitNetworkPr) PSS 21603 KB, USS 10268 KB
+         9151     4140    18572 file libwebkitgtk-6.0.so.4.16.10
+         2281      528     5760 file libjavascriptcoregtk-6.0.so.1.7.14
+         1300     1300     1300 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 430106 KB, USS 377656 KB
+       291516   291516   291516 anon [anon]
+        42683    34988    54788 file libwebkitgtk-6.0.so.4.16.10
+        35626     9000    62252 file libLLVM.so.20.1
+        26212    26212    26212 anon [heap]
+        13957     8844    20796 file libjavascriptcoregtk-6.0.so.1.7.14
+         6340     1180    11500 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+         1084     1000     1256 file libgstreamer-1.0.so.0.2402.0
+     largest anonymous mappings (size KB / PSS KB): 40320/28628 rw-p, 67532/26212 rw-p [heap], 25376/25364 rw-p, 23984/23960 rw-p, 45904/23580 rw-p, 16128/16128 rw-p
+
+== gtk4-wayland-empty-r3 ready
+  -- ui (Mem.Linux) PSS 182510 KB, USS 133472 KB
+        94828    94828    94828 anon [anon]
+        33388     6760    60016 file libLLVM.so.20.1
+        12729     5608    24196 file libwebkitgtk-6.0.so.4.16.10
+         7616     7252     8352 file libgtk-4.so.1.1400.5
+         7250     2268    12232 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         2633      720     6272 file libjavascriptcoregtk-6.0.so.1.7.14
+         1500     1496     1504 file Mem.Linux
+         1220     1156     1284 file index
+     largest anonymous mappings (size KB / PSS KB): 65532/34660 rw-p, 65536/30580 rw-p, 28092/19696 rw-p
+  -- network (WebKitNetworkPr) PSS 21631 KB, USS 10544 KB
+         9137     4304    18316 file libwebkitgtk-6.0.so.4.16.10
+         2313      592     5760 file libjavascriptcoregtk-6.0.so.1.7.14
+         1296     1296     1296 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 154495 KB, USS 106672 KB
+        48948    48948    48948 anon [anon]
+        33388     6760    60016 file libLLVM.so.20.1
+        32445    25024    44212 file libwebkitgtk-6.0.so.4.16.10
+        17636    17636    17636 anon [heap]
+         6217     4304     9856 file libjavascriptcoregtk-6.0.so.1.7.14
+         6162     1180    11144 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+     largest anonymous mappings (size KB / PSS KB): 38900/17808 rw-p, 57736/17636 rw-p [heap], 28420/7852 rw-p, 28412/7836 rw-p
+
+== gtk4-wayland-gtkonly-r3 ready
+  -- ui (Mem.Linux) PSS 191108 KB, USS 188004 KB
+        81436    81436    81436 anon [anon]
+        60016    60016    60016 file libLLVM.so.20.1
+        12232    12232    12232 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         8288     8288     8288 file libgtk-4.so.1.1400.5
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1500     1496     1504 file Mem.Linux
+         1220     1220     1220 file index
+         1056     1056     1056 file libharfbuzz.so.0.60830.0
+     largest anonymous mappings (size KB / PSS KB): 65536/33724 rw-p, 65536/25076 rw-p, 19480/11724 rw-p
+
+== gtk4-wayland-gtkonly-cairo-r3 ready
+  -- ui (Mem.Linux) PSS 34762 KB, USS 31756 KB
+         7072     7072     7072 file libgtk-4.so.1.1400.5
+         4896     4896     4896 anon [anon]
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         1484     1480     1488 file Mem.Linux
+         1124     1124     1124 file libxml2.so.2.9.14
+
+== gtk4-wayland-noaccel-r5 ready
+  -- ui (Mem.Linux) PSS 190489 KB, USS 148692 KB
+        89608    89608    89608 anon [anon]
+        40356    20700    60012 file libLLVM.so.20.1
+        13251     5576    25324 file libwebkitgtk-6.0.so.4.16.10
+        10414     8624    12204 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         7620     7256     8356 file libgtk-4.so.1.1400.5
+         5626      656    12308 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1500     1496     1504 file Mem.Linux
+         1284     1284     1284 file index
+     largest anonymous mappings (size KB / PSS KB): 65516/33932 rw-p, 65536/25148 rw-p, 25304/17268 rw-p
+  -- network (WebKitNetworkPr) PSS 21654 KB, USS 10488 KB
+         9137     4296    18376 file libwebkitgtk-6.0.so.4.16.10
+         2330      592     5780 file libjavascriptcoregtk-6.0.so.1.7.14
+         1296     1296     1296 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 88801 KB, USS 48400 KB
+        34939    26944    47332 file libwebkitgtk-6.0.so.4.16.10
+        26416     6760    46072 file libLLVM.so.20.1
+         8002     3064    14652 file libjavascriptcoregtk-6.0.so.1.7.14
+         4836     4836     4836 anon [anon]
+         2970     1180     4760 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+         1276     1276     1276 anon [heap]
+
+== gtk4-wayland-noaccel-r5 heavy
+  -- ui (Mem.Linux) PSS 190492 KB, USS 149848 KB
+        91592    91592    91592 anon [anon]
+        40356    20700    60012 file libLLVM.so.20.1
+        13198     5512    25324 file libwebkitgtk-6.0.so.4.16.10
+        10414     8624    12204 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         7620     7256     8356 file libgtk-4.so.1.1400.5
+         5679      592    12500 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1500     1496     1504 file Mem.Linux
+         1284     1284     1284 file index
+     largest anonymous mappings (size KB / PSS KB): 65516/33932 rw-p, 65536/25148 rw-p, 27064/19068 rw-p
+  -- network (WebKitNetworkPr) PSS 21667 KB, USS 10300 KB
+         9180     4168    18632 file libwebkitgtk-6.0.so.4.16.10
+         2287      528     5780 file libjavascriptcoregtk-6.0.so.1.7.14
+         1300     1300     1300 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 321388 KB, USS 280312 KB
+       223812   223812   223812 anon [anon]
+        40070    31936    52644 file libwebkitgtk-6.0.so.4.16.10
+        26416     6760    46072 file libLLVM.so.20.1
+        13559     8440    20412 file libjavascriptcoregtk-6.0.so.1.7.14
+         2970     1180     4760 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         2440     2440     2440 anon [heap]
+         1475     1316     1796 file libicuuc.so.74.2
+         1064      980     1236 file libgstreamer-1.0.so.0.2402.0
+     largest anonymous mappings (size KB / PSS KB): 57584/32888 rw-p, 24640/16448 rw-p, 15840/15840 rw-p, 14072/13992 rw-p, 10244/10244 rw-p, 9248/9236 rw-p
+
+== gtk4-wayland-noaccel-cairo-r5 ready
+  -- ui (Mem.Linux) PSS 106606 KB, USS 64852 KB
+        30448    10792    50104 file libLLVM.so.20.1
+        20808    20808    20808 anon [anon]
+        13251     5576    25324 file libwebkitgtk-6.0.so.4.16.10
+         8154     6364     9944 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         6404     6040     7140 file libgtk-4.so.1.1400.5
+         5626      656    12308 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1500     1496     1504 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 32928/12876 rw-p
+  -- network (WebKitNetworkPr) PSS 21665 KB, USS 10504 KB
+         9137     4296    18376 file libwebkitgtk-6.0.so.4.16.10
+         2330      592     5780 file libjavascriptcoregtk-6.0.so.1.7.14
+         1292     1292     1292 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 88748 KB, USS 48332 KB
+        34939    26944    47332 file libwebkitgtk-6.0.so.4.16.10
+        26416     6760    46072 file libLLVM.so.20.1
+         8002     3064    14652 file libjavascriptcoregtk-6.0.so.1.7.14
+         4756     4756     4756 anon [anon]
+         2970     1180     4760 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         1475     1316     1796 file libicuuc.so.74.2
+         1276     1276     1276 anon [heap]
+
+== gtk4-wayland-noaccel-cairo-r5 heavy
+  -- ui (Mem.Linux) PSS 106348 KB, USS 64044 KB
+        30448    10792    50104 file libLLVM.so.20.1
+        20980    20980    20980 anon [anon]
+        13198     5512    25324 file libwebkitgtk-6.0.so.4.16.10
+         8154     6364     9944 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         6404     6040     7140 file libgtk-4.so.1.1400.5
+         5679      592    12500 file libjavascriptcoregtk-6.0.so.1.7.14
+         4640     4640     4640 file librsvg-2.so.2.50.0
+         2640     2640     2640 file libvulkan_asahi.so
+         1500     1496     1504 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 32928/12876 rw-p
+  -- network (WebKitNetworkPr) PSS 21675 KB, USS 10316 KB
+         9180     4168    18632 file libwebkitgtk-6.0.so.4.16.10
+         2287      528     5780 file libjavascriptcoregtk-6.0.so.1.7.14
+         1296     1296     1296 anon [anon]
+         1151     1088     1280 file libsqlite3.so.0.8.6
+  -- web (WebKitWebProces) PSS 321597 KB, USS 280440 KB
+       223616   223616   223616 anon [anon]
+        40070    31936    52644 file libwebkitgtk-6.0.so.4.16.10
+        26416     6760    46072 file libLLVM.so.20.1
+        13943     8824    20796 file libjavascriptcoregtk-6.0.so.1.7.14
+         2970     1180     4760 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         2440     2440     2440 anon [heap]
+         1475     1316     1796 file libicuuc.so.74.2
+         1064      980     1236 file libgstreamer-1.0.so.0.2402.0
+     largest anonymous mappings (size KB / PSS KB): 57616/32916 rw-p, 32352/32352 rw-p, 22672/11880 rw-p, 10244/10244 rw-p, 9184/9176 rw-p, 8752/8720 rw-p
+
+== gtk4-x11-gtkonly-cairo-r3 ready
+  -- ui (Mem.Linux) PSS 100932 KB, USS 98356 KB
+        49900    49900    49900 file libLLVM.so.20.1
+        15816    15816    15816 anon [anon]
+         9624     9624     9624 file libgallium-25.2.8-0ubuntu0.24.04.4.so
+         7392     7392     7392 file libgtk-4.so.1.1400.5
+         1500     1496     1504 file Mem.Linux
+     largest anonymous mappings (size KB / PSS KB): 31068/10692 rw-p

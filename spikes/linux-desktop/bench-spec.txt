@@ -1,0 +1,22 @@
+# One bench call per line: <window.sparBench function> <options>. Run by the self-test on the React spike's bench page.
+unary {transport:"message",n:300,size:0}
+unary {transport:"fetch",n:300,size:0}
+unary {transport:"message",n:300,size:1024}
+unary {transport:"fetch",n:300,size:1024}
+unary {transport:"message",n:100,size:65536}
+unary {transport:"fetch",n:100,size:65536}
+unary {transport:"message",n:20,size:1048576}
+unary {transport:"fetch",n:20,size:1048576}
+stream {rows:100000,batch:100,transport:"channel"}
+stream {rows:100000,batch:1000,transport:"channel"}
+stream {rows:100000,batch:100,transport:"fetch"}
+stream {rows:100000,batch:1000,transport:"fetch"}
+stream {rows:2000,batch:100,transport:"fetch",delayEveryRows:100,delayMs:20}
+stream {rows:2000,batch:100,transport:"channel",delayEveryRows:100,delayMs:20}
+backpressure {batch:100,transport:"channel"}
+backpressure {batch:100,transport:"fetch"}
+cancelUnary {transport:"message",honor:true}
+cancelUnary {transport:"fetch",honor:true}
+cancelStream {transport:"channel",how:"abort",honor:true}
+cancelStream {transport:"fetch",how:"abort",honor:true}
+push {transport:"channel",rate:20000,seconds:3}

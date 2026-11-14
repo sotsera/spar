@@ -1,0 +1,242 @@
+13.0 WM-SIZE type=0
+13.1 WINDOW hwnd=0x46A0E56 placement=-32000,-32000
+26.6 ENV ms=13.3 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\page-heartbeat\stress-healthy-2 sandbox=False cpus=32
+236.2 PROCESS-INFOS-CHANGED browser:63372
+239.4 PROCESS-INFOS-CHANGED gpu:50452 browser:63372
+240.4 PROCESS-INFOS-CHANGED gpu:50452 utility:55344 browser:63372
+240.5 PROCESS-INFOS-CHANGED gpu:50452 utility:55344 browser:63372 utility:66408
+240.7 PROCESS-INFOS-CHANGED renderer:28664 gpu:50452 utility:55344 browser:63372 utility:66408
+287.8 INJECT hr=0x00000000
+288.1 CONTROLLER ms=274.7 browserPid=63372 webView3=True webView19=True processes=[renderer:28664 gpu:50452 utility:55344 browser:63372 utility:66408]
+288.5 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=1000 onUnresponsive=none options=[--profile stress-healthy-2 --log results/win/stress-healthy-2.log --actions 3000:memory:before,6000:stress-on:1000/1024,36000:stress-off,37000:memory:after,45000:memory:later --duration 46000 --timeout 90]
+288.7 HB-ARM hb=probe reason=start
+288.9 NAVIGATE uri=https://app.localhost/index.html
+290.9 NAV-STARTING id=2 uri=https://app.localhost/index.html
+300.7 CONTENT-LOADING id=2 errorPage=0
+304.1 DOC path=/index.html vis=visible
+304.1 HB-ARM hb=ping reason=doc
+305.7 READY path=/index.html pagePerf=15.8 vis=visible
+311.3 NAV-COMPLETED id=2 success=True status=0
+311.4 PAGE state-seen:1
+1290.0 HB-PING hb=probe seq=1 postUs=27 hr=0x00000000 outstanding=1
+1290.2 HB-PONG hb=probe seq=1 rttMs=0.1 vis=visible latest=True
+1306.2 TICK n=1 dtMs=0 vis=visible frames=55
+2289.5 HB-PING hb=probe seq=2 postUs=26 hr=0x00000000 outstanding=1
+2289.7 HB-PONG hb=probe seq=2 rttMs=0.2 vis=visible latest=True
+2306.2 TICK n=2 dtMs=1000 vis=visible frames=60
+3300.5 HB-PING hb=probe seq=3 postUs=30 hr=0x00000000 outstanding=1
+3300.7 HB-PONG hb=probe seq=3 rttMs=0.2 vis=visible latest=True
+3316.0 ACTION verb=memory arg=before
+3316.2 MEMORY label=before hostKb=4680 renderer:11684 gpu:20004 utility:8716 browser:30688 utility:4264
+3316.2 TICK n=3 dtMs=1010 vis=visible frames=60
+4296.2 HB-PING hb=probe seq=4 postUs=28 hr=0x00000000 outstanding=1
+4296.4 HB-PONG hb=probe seq=4 rttMs=0.2 vis=visible latest=True
+4311.5 TICK n=4 dtMs=995 vis=visible frames=60
+5292.5 HB-PING hb=probe seq=5 postUs=36 hr=0x00000000 outstanding=1
+5292.5 PUMP phase=memory-before n=323 median=0.07ms p99=0.26ms min=0.02ms max=0.31ms
+5292.6 HB-PING hb=ping seq=1 postUs=11 hr=0x00000000 outstanding=1
+5292.7 HB-PONG hb=probe seq=5 rttMs=0.2 vis=visible latest=True
+5292.7 HB-PONG hb=ping seq=1 rttMs=0.1 vis=visible latest=True
+5308.0 TICK n=5 dtMs=996 vis=visible frames=60
+6303.3 HB-PING hb=probe seq=6 postUs=26 hr=0x00000000 outstanding=1
+6303.5 HB-PONG hb=probe seq=6 rttMs=0.2 vis=visible latest=True
+6318.8 ACTION verb=stress-on arg=1000/1024
+6319.0 TICK n=6 dtMs=1011 vis=visible frames=60
+7300.0 HB-PING hb=probe seq=7 postUs=28 hr=0x00000000 outstanding=1
+7300.2 HB-PONG hb=probe seq=7 rttMs=0.2 vis=visible latest=True
+7316.4 TICK n=7 dtMs=997 vis=visible frames=60
+7864.1 STRESS sent=1000 meanPostUs=12.9 maxPostUs=164 mb=1.0
+7864.2 MEMORY label=stress hostKb=4876 renderer:16404 gpu:20044 utility:8716 browser:30748 utility:4264
+8299.7 HB-PING hb=probe seq=8 postUs=21 hr=0x00000000 outstanding=1
+8300.0 HB-PONG hb=probe seq=8 rttMs=0.2 vis=visible latest=True
+8306.3 TICK n=8 dtMs=990 vis=visible frames=60
+9298.8 HB-PING hb=probe seq=9 postUs=4 hr=0x00000000 outstanding=1
+9299.0 HB-PONG hb=probe seq=9 rttMs=0.3 vis=visible latest=True
+9314.5 TICK n=9 dtMs=1008 vis=visible frames=60
+9422.9 STRESS sent=2000 meanPostUs=12.0 maxPostUs=164 mb=2.0
+9423.1 MEMORY label=stress hostKb=4928 renderer:19504 gpu:20044 utility:8800 browser:30748 utility:4264
+10300.5 PUMP phase=stress-on-1000/1024 n=321 median=0.07ms p99=0.32ms min=0.02ms max=0.35ms
+10300.7 HB-PING hb=probe seq=10 postUs=32 hr=0x00000000 outstanding=1
+10300.7 HB-PING hb=ping seq=2 postUs=7 hr=0x00000000 outstanding=1
+10301.2 HB-PONG hb=probe seq=10 rttMs=0.5 vis=visible latest=True
+10301.2 HB-PONG hb=ping seq=2 rttMs=0.6 vis=visible latest=True
+10316.7 TICK n=10 dtMs=1002 vis=visible frames=60
+10984.7 STRESS sent=3000 meanPostUs=11.7 maxPostUs=164 mb=2.9
+10984.8 MEMORY label=stress hostKb=5072 renderer:24116 gpu:20044 utility:8808 browser:30800 utility:4264
+11294.0 HB-PING hb=probe seq=11 postUs=25 hr=0x00000000 outstanding=1
+11294.2 HB-PONG hb=probe seq=11 rttMs=0.3 vis=visible latest=True
+11309.5 TICK n=11 dtMs=993 vis=visible frames=60
+12299.7 HB-PING hb=probe seq=12 postUs=122 hr=0x00000000 outstanding=1
+12299.9 HB-PONG hb=probe seq=12 rttMs=0.3 vis=visible latest=True
+12315.3 TICK n=12 dtMs=1006 vis=visible frames=60
+12536.2 STRESS sent=4000 meanPostUs=11.6 maxPostUs=164 mb=3.9
+12536.3 MEMORY label=stress hostKb=5128 renderer:26016 gpu:20044 utility:8804 browser:30800 utility:4264
+13297.3 HB-PING hb=probe seq=13 postUs=25 hr=0x00000000 outstanding=1
+13297.6 HB-PONG hb=probe seq=13 rttMs=0.3 vis=visible latest=True
+13313.4 TICK n=13 dtMs=998 vis=visible frames=60
+14091.4 STRESS sent=5000 meanPostUs=11.8 maxPostUs=164 mb=4.9
+14091.6 MEMORY label=stress hostKb=5184 renderer:29072 gpu:20044 utility:8804 browser:30800 utility:4264
+14291.5 HB-PING hb=probe seq=14 postUs=7 hr=0x00000000 outstanding=1
+14291.6 HB-PONG hb=probe seq=14 rttMs=0.1 vis=visible latest=True
+14306.4 TICK n=14 dtMs=993 vis=visible frames=60
+15295.6 HB-PING hb=probe seq=15 postUs=27 hr=0x00000000 outstanding=1
+15295.7 HB-PING hb=ping seq=3 postUs=6 hr=0x00000000 outstanding=1
+15295.8 HB-PONG hb=probe seq=15 rttMs=0.2 vis=visible latest=True
+15295.9 HB-PONG hb=ping seq=3 rttMs=0.2 vis=visible latest=True
+15311.4 PUMP phase=stress-on-1000/1024 n=323 median=0.09ms p99=0.34ms min=0.02ms max=0.43ms
+15311.4 TICK n=15 dtMs=1005 vis=visible frames=60
+15635.0 STRESS sent=6000 meanPostUs=11.9 maxPostUs=164 mb=5.9
+15635.1 MEMORY label=stress hostKb=5264 renderer:36420 gpu:20044 utility:8804 browser:30804 utility:4264
+16301.3 HB-PING hb=probe seq=16 postUs=30 hr=0x00000000 outstanding=1
+16301.5 HB-PONG hb=probe seq=16 rttMs=0.2 vis=visible latest=True
+16316.5 TICK n=16 dtMs=1005 vis=visible frames=60
+17187.6 STRESS sent=7000 meanPostUs=11.8 maxPostUs=164 mb=6.8
+17187.8 MEMORY label=stress hostKb=5316 renderer:38352 gpu:20044 utility:8804 browser:30804 utility:4264
+17297.4 HB-PING hb=probe seq=17 postUs=23 hr=0x00000000 outstanding=1
+17297.5 HB-PONG hb=probe seq=17 rttMs=0.2 vis=visible latest=True
+17313.2 TICK n=17 dtMs=997 vis=visible frames=60
+18296.6 HB-PING hb=probe seq=18 postUs=20 hr=0x00000000 outstanding=1
+18296.8 HB-PONG hb=probe seq=18 rttMs=0.2 vis=visible latest=True
+18311.9 TICK n=18 dtMs=999 vis=visible frames=60
+18746.3 STRESS sent=8000 meanPostUs=11.6 maxPostUs=164 mb=7.8
+18746.5 MEMORY label=stress hostKb=5372 renderer:40224 gpu:20044 utility:8804 browser:30804 utility:4264
+19291.9 HB-PING hb=probe seq=19 postUs=6 hr=0x00000000 outstanding=1
+19292.1 HB-PONG hb=probe seq=19 rttMs=0.2 vis=visible latest=True
+19307.2 TICK n=19 dtMs=995 vis=visible frames=60
+20290.6 HB-PING hb=probe seq=20 postUs=11 hr=0x00000000 outstanding=1
+20290.6 HB-PING hb=ping seq=4 postUs=9 hr=0x00000000 outstanding=1
+20290.7 HB-PONG hb=probe seq=20 rttMs=0.1 vis=visible latest=True
+20290.8 HB-PONG hb=ping seq=4 rttMs=0.2 vis=visible latest=True
+20306.7 STRESS sent=9000 meanPostUs=11.6 maxPostUs=230 mb=8.8
+20306.9 MEMORY label=stress hostKb=5436 renderer:43084 gpu:20044 utility:8804 browser:30808 utility:4264
+20306.9 TICK n=20 dtMs=1000 vis=visible frames=60
+20322.4 PUMP phase=stress-on-1000/1024 n=322 median=0.08ms p99=0.30ms min=0.02ms max=0.40ms
+21289.4 HB-PING hb=probe seq=21 postUs=3 hr=0x00000000 outstanding=1
+21289.7 HB-PONG hb=probe seq=21 rttMs=0.3 vis=visible latest=True
+21305.6 TICK n=21 dtMs=999 vis=visible frames=60
+21869.5 STRESS sent=10000 meanPostUs=11.6 maxPostUs=230 mb=9.8
+21869.7 MEMORY label=stress hostKb=5492 renderer:46120 gpu:20048 utility:8804 browser:30804 utility:4264
+22302.6 HB-PING hb=probe seq=22 postUs=24 hr=0x00000000 outstanding=1
+22302.9 HB-PONG hb=probe seq=22 rttMs=0.3 vis=visible latest=True
+22319.0 TICK n=22 dtMs=1013 vis=visible frames=60
+23297.8 HB-PING hb=probe seq=23 postUs=43 hr=0x00000000 outstanding=1
+23298.1 HB-PONG hb=probe seq=23 rttMs=0.3 vis=visible latest=True
+23313.3 TICK n=23 dtMs=994 vis=visible frames=60
+23421.5 STRESS sent=11000 meanPostUs=11.5 maxPostUs=230 mb=10.7
+23421.6 MEMORY label=stress hostKb=5568 renderer:52676 gpu:20048 utility:8804 browser:30872 utility:4264
+24294.7 HB-PING hb=probe seq=24 postUs=11 hr=0x00000000 outstanding=1
+24295.0 HB-PONG hb=probe seq=24 rttMs=0.3 vis=visible latest=True
+24307.9 TICK n=24 dtMs=995 vis=visible frames=60
+24981.0 STRESS sent=12000 meanPostUs=11.4 maxPostUs=230 mb=11.7
+24981.1 MEMORY label=stress hostKb=5620 renderer:61652 gpu:20048 utility:8804 browser:30824 utility:4264
+25295.3 HB-PING hb=probe seq=25 postUs=4 hr=0x00000000 outstanding=1
+25295.3 HB-PING hb=ping seq=5 postUs=4 hr=0x00000000 outstanding=1
+25295.5 HB-PONG hb=probe seq=25 rttMs=0.2 vis=visible latest=True
+25295.5 HB-PONG hb=ping seq=5 rttMs=0.2 vis=visible latest=True
+25310.7 TICK n=25 dtMs=1003 vis=visible frames=60
+25326.9 PUMP phase=stress-on-1000/1024 n=321 median=0.08ms p99=0.35ms min=0.02ms max=0.38ms
+26301.2 HB-PING hb=probe seq=26 postUs=30 hr=0x00000000 outstanding=1
+26301.4 HB-PONG hb=probe seq=26 rttMs=0.2 vis=visible latest=True
+26316.7 TICK n=26 dtMs=1006 vis=visible frames=60
+26552.8 STRESS sent=13000 meanPostUs=11.4 maxPostUs=230 mb=12.7
+26552.9 MEMORY label=stress hostKb=5688 renderer:63392 gpu:20048 utility:8804 browser:30824 utility:4264
+27303.1 HB-PING hb=probe seq=27 postUs=23 hr=0x00000000 outstanding=1
+27303.3 HB-PONG hb=probe seq=27 rttMs=0.2 vis=visible latest=True
+27318.8 TICK n=27 dtMs=1002 vis=visible frames=60
+28110.1 STRESS sent=14000 meanPostUs=11.4 maxPostUs=230 mb=13.7
+28110.2 MEMORY label=stress hostKb=5740 renderer:65272 gpu:20048 utility:8804 browser:30824 utility:4264
+28296.8 HB-PING hb=probe seq=28 postUs=25 hr=0x00000000 outstanding=1
+28297.0 HB-PONG hb=probe seq=28 rttMs=0.2 vis=visible latest=True
+28312.6 TICK n=28 dtMs=994 vis=visible frames=60
+29297.4 HB-PING hb=probe seq=29 postUs=26 hr=0x00000000 outstanding=1
+29297.6 HB-PONG hb=probe seq=29 rttMs=0.2 vis=visible latest=True
+29313.3 TICK n=29 dtMs=1001 vis=visible frames=60
+29672.8 STRESS sent=15000 meanPostUs=11.3 maxPostUs=230 mb=14.6
+29672.9 MEMORY label=stress hostKb=5800 renderer:67144 gpu:20048 utility:8804 browser:30824 utility:4264
+30298.8 HB-PING hb=probe seq=30 postUs=27 hr=0x00000000 outstanding=1
+30299.0 HB-PING hb=ping seq=6 postUs=5 hr=0x00000000 outstanding=1
+30299.0 HB-PONG hb=probe seq=30 rttMs=0.2 vis=visible latest=True
+30299.1 HB-PONG hb=ping seq=6 rttMs=0.1 vis=visible latest=True
+30314.4 TICK n=30 dtMs=1001 vis=visible frames=60
+30330.0 PUMP phase=stress-on-1000/1024 n=320 median=0.08ms p99=0.30ms min=0.02ms max=0.35ms
+31233.7 STRESS sent=16000 meanPostUs=11.3 maxPostUs=230 mb=15.6
+31233.9 MEMORY label=stress hostKb=5860 renderer:20800 gpu:20040 utility:8676 browser:30752 utility:4264
+31296.7 HB-PING hb=probe seq=31 postUs=21 hr=0x00000000 outstanding=1
+31297.0 HB-PONG hb=probe seq=31 rttMs=0.3 vis=visible latest=True
+31313.0 TICK n=31 dtMs=998 vis=visible frames=60
+32296.6 HB-PING hb=probe seq=32 postUs=22 hr=0x00000000 outstanding=1
+32296.7 HB-PONG hb=probe seq=32 rttMs=0.2 vis=visible latest=True
+32312.1 TICK n=32 dtMs=999 vis=visible frames=60
+32792.3 STRESS sent=17000 meanPostUs=11.3 maxPostUs=230 mb=16.6
+32792.4 MEMORY label=stress hostKb=5920 renderer:25060 gpu:20040 utility:8676 browser:30752 utility:4264
+33294.6 HB-PING hb=probe seq=33 postUs=12 hr=0x00000000 outstanding=1
+33294.8 HB-PONG hb=probe seq=33 rttMs=0.2 vis=visible latest=True
+33310.6 TICK n=33 dtMs=999 vis=visible frames=60
+34289.6 HB-PING hb=probe seq=34 postUs=6 hr=0x00000000 outstanding=1
+34289.7 HB-PONG hb=probe seq=34 rttMs=0.1 vis=visible latest=True
+34305.4 TICK n=34 dtMs=995 vis=visible frames=60
+34351.2 STRESS sent=18000 meanPostUs=11.3 maxPostUs=230 mb=17.6
+34351.3 MEMORY label=stress hostKb=5968 renderer:27532 gpu:20040 utility:8676 browser:30752 utility:4264
+35302.7 HB-PING hb=probe seq=35 postUs=3 hr=0x00000000 outstanding=1
+35302.9 HB-PING hb=ping seq=7 postUs=79 hr=0x00000000 outstanding=1
+35303.0 HB-PONG hb=probe seq=35 rttMs=0.2 vis=visible latest=True
+35303.0 HB-PONG hb=ping seq=7 rttMs=0.1 vis=visible latest=True
+35318.9 TICK n=35 dtMs=1013 vis=visible frames=60
+35334.2 PUMP phase=stress-on-1000/1024 n=321 median=0.08ms p99=0.33ms min=0.02ms max=0.52ms
+35911.4 STRESS sent=19000 meanPostUs=11.3 maxPostUs=230 mb=18.6
+35911.5 MEMORY label=stress hostKb=6032 renderer:29308 gpu:20040 utility:8676 browser:30752 utility:4264
+36288.7 HB-PING hb=probe seq=36 postUs=3 hr=0x00000000 outstanding=1
+36288.8 HB-PONG hb=probe seq=36 rttMs=0.1 vis=visible latest=True
+36319.6 ACTION verb=stress-off arg=
+36319.6 STRESS-END sent=19250 meanPostUs=11.3 maxPostUs=230
+36319.7 TICK n=36 dtMs=1001 vis=visible frames=60
+37302.5 HB-PING hb=probe seq=37 postUs=27 hr=0x00000000 outstanding=1
+37302.7 HB-PONG hb=probe seq=37 rttMs=0.2 vis=visible latest=True
+37318.0 ACTION verb=memory arg=after
+37318.2 MEMORY label=after hostKb=6068 renderer:29976 gpu:20040 utility:8676 browser:30752 utility:4264
+37318.2 TICK n=37 dtMs=998 vis=visible frames=60
+38301.9 HB-PING hb=probe seq=38 postUs=25 hr=0x00000000 outstanding=1
+38302.1 HB-PONG hb=probe seq=38 rttMs=0.2 vis=visible latest=True
+38318.1 TICK n=38 dtMs=1000 vis=visible frames=60
+39302.2 HB-PING hb=probe seq=39 postUs=25 hr=0x00000000 outstanding=1
+39302.5 HB-PONG hb=probe seq=39 rttMs=0.2 vis=visible latest=True
+39306.9 TICK n=39 dtMs=989 vis=visible frames=60
+40295.2 HB-PING hb=probe seq=40 postUs=25 hr=0x00000000 outstanding=1
+40295.2 HB-PING hb=ping seq=8 postUs=6 hr=0x00000000 outstanding=1
+40295.3 HB-PONG hb=probe seq=40 rttMs=0.1 vis=visible latest=True
+40295.3 HB-PONG hb=ping seq=8 rttMs=0.1 vis=visible latest=True
+40310.4 TICK n=40 dtMs=1003 vis=visible frames=60
+40341.5 PUMP phase=memory-after n=321 median=0.06ms p99=0.25ms min=0.02ms max=0.30ms
+41295.3 HB-PING hb=probe seq=41 postUs=34 hr=0x00000000 outstanding=1
+41295.4 HB-PONG hb=probe seq=41 rttMs=0.2 vis=visible latest=True
+41305.8 TICK n=41 dtMs=995 vis=visible frames=60
+42295.1 HB-PING hb=probe seq=42 postUs=26 hr=0x00000000 outstanding=1
+42295.3 HB-PONG hb=probe seq=42 rttMs=0.2 vis=visible latest=True
+42310.6 TICK n=42 dtMs=1005 vis=visible frames=60
+43296.8 HB-PING hb=probe seq=43 postUs=26 hr=0x00000000 outstanding=1
+43296.9 HB-PONG hb=probe seq=43 rttMs=0.2 vis=visible latest=True
+43312.6 TICK n=43 dtMs=1002 vis=visible frames=60
+44296.8 HB-PING hb=probe seq=44 postUs=25 hr=0x00000000 outstanding=1
+44297.0 HB-PONG hb=probe seq=44 rttMs=0.2 vis=visible latest=True
+44312.9 TICK n=44 dtMs=1001 vis=visible frames=60
+45289.7 HB-PING hb=ping seq=9 postUs=26 hr=0x00000000 outstanding=1
+45289.8 HB-PING hb=probe seq=45 postUs=6 hr=0x00000000 outstanding=1
+45290.0 HB-PONG hb=ping seq=9 rttMs=0.3 vis=visible latest=True
+45290.0 HB-PONG hb=probe seq=45 rttMs=0.3 vis=visible latest=True
+45305.5 ACTION verb=memory arg=later
+45305.7 MEMORY label=later hostKb=6228 renderer:30156 gpu:20040 utility:8676 browser:30756 utility:4264
+45321.1 TICK n=45 dtMs=1008 vis=visible frames=60
+45352.9 PUMP phase=memory-later n=321 median=0.06ms p99=0.28ms min=0.02ms max=0.34ms
+46302.0 HB-PING hb=probe seq=46 postUs=42 hr=0x00000000 outstanding=1
+46302.1 HB-PONG hb=probe seq=46 rttMs=0.2 vis=visible latest=True
+46305.8 TICK n=46 dtMs=985 vis=visible frames=60
+46318.5 PUMP-PHASE phase=start n=196 median=0.07ms p99=0.27ms min=0.02ms max=0.31ms
+46318.5 PUMP-PHASE phase=memory-before n=193 median=0.05ms p99=0.25ms min=0.02ms max=0.31ms
+46318.6 PUMP-PHASE phase=stress-on-1000/1024 n=1925 median=0.08ms p99=0.33ms min=0.02ms max=0.52ms
+46318.6 PUMP-PHASE phase=stress-off n=64 median=0.06ms p99=0.24ms min=0.02ms max=0.25ms
+46318.7 PUMP-PHASE phase=memory-after n=511 median=0.06ms p99=0.24ms min=0.02ms max=0.34ms
+46318.7 PUMP-PHASE phase=memory-later n=65 median=0.06ms p99=0.28ms min=0.03ms max=0.29ms
+46318.7 FINISH backendCounter=1
+46329.7 PROCESS-INFOS-CHANGED 
+46514.1 BROWSER-EXITED 
+46519.3 HOST-EXIT code=0

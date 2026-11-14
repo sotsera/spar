@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!--
+      MSBuild, SDK and NuGet warnings (MSB*, NETSDK*, NU*) fail the build too, which TreatWarningsAsErrors does not cover
+      (user decision 2026-11-14). Exceptions are agreed with the user, ID by ID, and listed with their reason in
+      MSBuildWarningsNotAsErrors. Spikes are throwaway and keep plain warnings.
+    -->
+    <MSBuildTreatWarningsAsErrors Condition="!$(MSBuildProjectDirectory.Contains('\spikes\')) and !$(MSBuildProjectDirectory.Contains('/spikes/'))">true</MSBuildTreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

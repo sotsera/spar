@@ -1,0 +1,4 @@
+<Project>
+  <!-- Repository versions (Roslyn 5.9, DI, xunit.v3, MSBuild); the spike adds none. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
+</Project>

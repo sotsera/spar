@@ -1,0 +1,9 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+Spar Sample cannot start: The web content sandbox cannot start on this system: bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.
+The system does not allow unprivileged user namespaces (for example inside a container, or under a security policy). Ask your administrator to allow them for bubblewrap.
+Details: bwrap trial exited 1: bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.
+Exit code 5.
+
+(spar-sample:41): Gtk-WARNING **: 14:53:41.892: Unable to acquire the address of the accessibility bus: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files. If you are attempting to run GTK without a11y support, GTK_A11Y should be set to 'none'.
+Gtk-Message: 14:53:42.271: GtkDialog mapped without a transient parent. This is discouraged.

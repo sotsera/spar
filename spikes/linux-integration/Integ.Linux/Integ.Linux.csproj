@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Desktop-integration spike, Linux host: custom title bar, tray (StatusNotifierItem + dbusmenu over GDBus), close to
+    tray, placement, pickers, clipboard, single instance, printing and presence checks. -p:SparGtk=4 builds GTK4 +
+    WebKitGTK 6.0; the default is GTK3 + WebKitGTK 4.1.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Integ.Linux</RootNamespace>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparGtk)' == '4'">
+    <DefineConstants>$(DefineConstants);SPAR_GTK4</DefineConstants>
+  </PropertyGroup>
+</Project>

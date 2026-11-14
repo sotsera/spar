@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Page-heartbeat spike, Windows host: one NativeAOT executable with one WebView2 window (offscreen and never activated
+    by default; on screen only inside Windows Sandbox). Window, loader and interop pieces are copied from
+    spikes/resource-usage (originally spikes/desktop-origin and spikes/webview-profiles). GUI subsystem: logs go to the
+    file given by the log option (Windows Sandbox relays no stdout) and to stdout when a handle is inherited.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Spar.PageHeartbeat</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <IsAotCompatible>true</IsAotCompatible>
+    <!-- Common Controls 6 (TaskDialogIndirect) and per-monitor DPI awareness. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../Shared/*.cs" LinkBase="Shared" />
+    <EmbeddedResource Include="../www/**" LogicalName="www/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <Import Project="Desktop.targets" />
+</Project>

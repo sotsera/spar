@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The timing sample: generate.ps1 writes about 200 ordinary Spar service files into obj/sample/. Built with
+    -p:Analyzer=None|Baseline|New and -p:ReportAnalyzer=true by run-timing.ps1. Must stay free of diagnostics.
+  -->
+  <PropertyGroup>
+    <Analyzer Condition="'$(Analyzer)' == ''">New</Analyzer>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <IntermediateOutputPath>obj\$(Configuration)\$(Analyzer)\</IntermediateOutputPath>
+    <OutputPath>bin\$(Configuration)\$(Analyzer)\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(BaseIntermediateOutputPath)sample\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Result\Spar050.Result.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Analyzer)' == 'Baseline'">
+    <ProjectReference Include="..\Baseline\Spar050.Baseline.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Analyzer)' == 'New'">
+    <ProjectReference Include="..\Analyzers\Spar050.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+</Project>

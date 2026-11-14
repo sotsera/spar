@@ -1,0 +1,18 @@
+{"t":38.17,"evt":"main","label":"nogtk-bare","ui":"auto","processAgeMs":40,"uid":1000,"desktop":null}
+{"t":42.72,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":43.71,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":50.45,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":6.36}
+{"t":58.49,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":3.898}
+{"t":62.66,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":3.267}
+{"t":73.98,"evt":"library","file":"libgtk-4.so.1","ok":false,"reason":"libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":78.17,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libgtk-4.so.1): libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":86.69,"evt":"stderr","isatty":"redirected"}
+{"t":92.06,"evt":"journal","result":"journal-socket"}
+{"t":94.64,"evt":"graphical","way":"gtk","shown":false,"detail":"GTK 4 not initialised","ms":0.001}
+{"t":101.08,"evt":"graphical","way":"zenity","shown":false,"detail":"not installed","ms":2.438}
+{"t":101.54,"evt":"graphical","way":"kdialog","shown":false,"detail":"not installed","ms":0.011}
+{"t":102.52,"evt":"graphical","way":"yad","shown":false,"detail":"not installed","ms":0.015}
+{"t":104.74,"evt":"graphical","way":"dbus","shown":false,"detail":"Notify failed: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files","ms":1.316}
+{"t":105.01,"evt":"graphical","way":"notify-send","shown":false,"detail":"not installed","ms":0.022}
+{"t":105.24,"evt":"graphical","way":"xmessage","shown":false,"detail":"not installed","ms":0.014}
+{"t":105.48,"evt":"exit","code":3}

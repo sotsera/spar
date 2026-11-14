@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- No RuntimeIdentifier here: the normal build is portable; the AOT variant passes win-x64. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>D3.App</RootNamespace>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

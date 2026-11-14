@@ -1,0 +1,50 @@
+
+
+react [base] done=true pass=23 fail=0 violations=0 reports=0 pageErrors=0
+react [trustedTypes] done=true pass=23 fail=0 violations=0 reports=0 pageErrors=0
+react-dev [base] done=true pass=23 fail=0 violations=0 reports=0 pageErrors=0
+react-dev [trustedTypes] done=true pass=23 fail=0 violations=0 reports=0 pageErrors=0
+vue [base] done=true pass=13 fail=0 violations=0 reports=0 pageErrors=0
+vue [trustedTypes] done=true pass=13 fail=0 violations=0 reports=0 pageErrors=0
+vue-full [base] done=true pass=1 fail=0 violations=1 reports=1 pageErrors=0
+  CSP script-src blocked=eval sample= at http://127.0.0.1:56373/assets/full-DyOP9d6a.js:10
+vue-full [trustedTypes] done=true pass=1 fail=0 violations=1 reports=1 pageErrors=0
+  CSP require-trusted-types-for blocked=trusted-types-sink sample=Function|(Vue
+) {
+const _Vue = Vue
+
+return functi at http://127.0.0.1:59777/assets/full-DyOP9d6a.js:10
+angular-zoneless [base] done=true pass=15 fail=0 violations=2 reports=2 pageErrors=0
+  CSP base-uri blocked=http://127.0.0.1:52662/ sample= at http://127.0.0.1:52662/:6
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:52662/main-YSRXLZBA.js:3
+angular-zoneless [trustedTypes] done=true pass=15 fail=0 violations=2 reports=2 pageErrors=0
+  CSP base-uri blocked=http://127.0.0.1:51561/ sample= at http://127.0.0.1:51561/:6
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:51561/main-YSRXLZBA.js:3
+angular-zone [base] done=true pass=15 fail=0 violations=2 reports=2 pageErrors=0
+  CSP base-uri blocked=http://127.0.0.1:54799/ sample= at http://127.0.0.1:54799/:6
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:54799/main-RAZL3RNM.js:3
+angular-zone [trustedTypes] done=true pass=15 fail=0 violations=2 reports=2 pageErrors=0
+  CSP base-uri blocked=http://127.0.0.1:59295/ sample= at http://127.0.0.1:59295/:6
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:59295/main-RAZL3RNM.js:3
+angular-jit [base] done=false pass=0 fail=0 violations=2 reports=2 pageErrors=1
+  CSP base-uri blocked=http://127.0.0.1:54047/ sample= at http://127.0.0.1:54047/:6
+  CSP script-src blocked=eval sample= at http://127.0.0.1:54047/polyfills-5FMTHGQT.js:14
+  PAGEERROR EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self'".
+
+angular-jit [trustedTypes] done=false pass=0 fail=0 violations=2 reports=2 pageErrors=1
+  CSP base-uri blocked=http://127.0.0.1:63054/ sample= at http://127.0.0.1:63054/:6
+  CSP script-src blocked=eval sample= at http://127.0.0.1:63054/polyfills-5FMTHGQT.js:14
+  PAGEERROR EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self'".
+
+angular-default-optimization [base] done=true pass=15 fail=0 violations=4 reports=4 pageErrors=0
+  CSP base-uri blocked=http://127.0.0.1:53586/ sample= at http://127.0.0.1:53586/:6
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:53586/:7
+  CSP script-src-elem blocked=inline sample= at http://127.0.0.1:53586/:10
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:53586/main-YSRXLZBA.js:3
+angular-default-optimization [trustedTypes] done=true pass=15 fail=0 violations=4 reports=4 pageErrors=0
+  CSP base-uri blocked=http://127.0.0.1:59296/ sample= at http://127.0.0.1:59296/:6
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:59296/:7
+  CSP script-src-elem blocked=inline sample= at http://127.0.0.1:59296/:10
+  CSP style-src-elem blocked=inline sample= at http://127.0.0.1:59296/main-YSRXLZBA.js:3
+angular-csp-clean [base] done=true pass=15 fail=0 violations=0 reports=0 pageErrors=0
+angular-csp-clean [trustedTypes] done=true pass=15 fail=0 violations=0 reports=0 pageErrors=0

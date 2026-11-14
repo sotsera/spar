@@ -1,0 +1,31 @@
+pid=688 dynamicCodeCompiled=False mode=all parts=Dialogs,Grants
+[PASS] open: accept via SetFileName + IDOK, DefaultFolder honoured: hr=0x00000000 cancelled=False paths=[C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-688\a.sparrecipe] show=245.9ms class=#32770 title="Spike: open recipe (default folder)" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=172.9ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,FileOk] seenOnScreen=[]
+[PASS] open: title and owner applied: title="Spike: open recipe (default folder)" ownerMatches=True
+[PASS] open: multi-select returns both paths: hr=0x00000000 cancelled=False paths=[C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-688\a.sparrecipe | C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-688\b.sparrecipe] show=165.2ms class=#32770 title="Spike: open recipes (multi)" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=93.6ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,FileOk] seenOnScreen=[]
+[PASS] open: IDCANCEL returns HRESULT_FROM_WIN32(ERROR_CANCELLED): hr=0x800704C7 cancelled=True paths=[] show=142.7ms class=#32770 title="Spike: cancel" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=95.5ms watchdog=False events=[TypeChange,FolderChanging,FolderChange] seenOnScreen=[]
+[PASS] open: IFileDialog::Close(E_ABORT) from OnFolderChange makes Show return E_ABORT: hr=0x80004004 cancelled=False paths=[] show=150.5ms class=#32770 title="Spike: close E_ABORT" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=102.2ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,Close=0x00000000] seenOnScreen=[]
+[PASS] open: IFileDialog::Close(ERROR_CANCELLED) reads as a cancel: hr=0x800704C7 cancelled=True paths=[] show=162.5ms class=#32770 title="Spike: close cancelled" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=102.4ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,Close=0x00000000] seenOnScreen=[]
+[PASS] open: FOS_FILEMUSTEXIST blocks a missing name (native error box; watchdog dismisses): hr=0x800704C7 cancelled=True paths=[] show=2060.1ms class=#32770 title="Spike: missing file" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=154.0ms watchdog=True events=[TypeChange,FolderChanging,FolderChange,SelectionChange,dismiss:"Spike: missing file",dismiss:"Spike: missing file"] seenOnScreen=[]
+[PASS] save: default extension appended to a new name: hr=0x00000000 cancelled=False paths=[C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-688\export.csv] show=239.9ms class=#32770 title="Spike: export" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=148.8ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,FileOk] seenOnScreen=[]
+[PASS] save: OnOverwrite answering FDEOR_ACCEPT skips the native prompt: hr=0x00000000 cancelled=False paths=[C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-688\existing.csv] show=206.6ms class=#32770 title="Spike: overwrite accepted" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=136.0ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,Overwrite,FileOk] seenOnScreen=[]
+[PASS] save: default OnOverwrite shows the native confirmation (watchdog dismisses both): hr=0x800704C7 cancelled=True paths=[] show=2072.7ms class=#32770 title="Spike: overwrite prompt" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=133.0ms watchdog=True events=[TypeChange,FolderChanging,FolderChange,Overwrite,SelectionChange,dismiss:"Confirm Save As",dismiss:"Spike: overwrite prompt"] seenOnScreen=[]
+[TIME] dialog CoCreateInstance(FileOpenDialog)+FinalRelease: n=20 first=2.461ms median=0.050ms p95=0.075ms max=2.461ms
+[TIME] dialog Show -> first OnFolderChange (window exists): n=10 first=110.800ms median=91.461ms p95=110.800ms max=110.800ms
+[TIME] dialog Show -> automated IDOK -> Show returns: n=10 first=187.679ms median=150.196ms p95=187.679ms max=187.679ms
+       hide operations by the WH_CBT hook so far (create + re-hide on activate): 42
+[PASS] MTA caller: observed behaviour (informational): apartment=MTA CoCreateInstance hr=0x00000000 Show hr=0x800704C7 callerThread=68744 dialogThread=44956 class=#32770 title="Spike: shown from MTA" ownerMatches=True visibleWhenFound=False rect=(0,0)-(664,510) foundAfter=25.1ms watchdog=False events=[] seenOnScreen=[]
+[PASS] grant: handle is opaque (no path), 128-bit random: fg_k3tAIBvxyWAwbHMO6JuQsg
+[PASS] grant: read through a read grant: ok
+[PASS] grant: write through a read grant is refused: Forbidden
+[PASS] grant: 10,000 handles are distinct: 10000
+[PASS] grant: expired handle refused and removed: count=0
+[PASS] grant: revoked handle is unknown: Unknown
+[PASS] grant: a new process (new table) does not know old handles: Unknown
+[TIME] grant Issue (random handle + dictionary add): n=1000 first=0.001ms median=0.000ms p95=0.000ms max=0.017ms
+[TIME] grant Require (lookup + expiry + access check): n=1000 first=0.000ms median=0.000ms p95=0.000ms max=0.000ms
+[PASS] files.pickOpen -> handle + name only: PickedFile { Handle = fg_APuyfLvBpUFRAi6xufV7Yw, Name = granted.sparrecipe }
+[PASS] files.readText(handle): ok
+[PASS] files.pickSave + writeText(handle): PickedFile { Handle = fg_yaiy7CxbQaigAZoPrKJczQ, Name = results.csv }
+[PASS] files.release(handle) then write is refused: Unknown
+[PASS] files.pickOpen cancelled -> null, no grant: grants=1
+passed=23 failed=0 elapsed=8.1s tempRemoved=True

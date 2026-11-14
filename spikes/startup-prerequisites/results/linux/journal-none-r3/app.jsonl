@@ -1,0 +1,12 @@
+{"t":16.78,"evt":"main","label":"journal-none","ui":"auto","processAgeMs":80,"uid":1000,"desktop":null}
+{"t":22.34,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":22.77,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":null,"x11Socket":null,"x11Ok":false}
+{"t":24.27,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":0.764}
+{"t":24.94,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":0.335}
+{"t":25.89,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.61}
+{"t":30.49,"evt":"library","file":"libgtk-4.so.1","ok":false,"reason":"libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":39.77,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libgtk-4.so.1): libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":43.66,"evt":"stderr","isatty":"redirected"}
+{"t":45.56,"evt":"journal","result":"none (journal socket: AddressNotAvailable; /dev/log: AddressNotAvailable)"}
+{"t":46.09,"evt":"graphical","skipped":"no display"}
+{"t":46.43,"evt":"exit","code":3}

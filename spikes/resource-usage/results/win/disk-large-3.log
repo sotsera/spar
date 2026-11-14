@@ -1,0 +1,195 @@
+ENV ms=5.8 version=157.0.4341.46 env8=True env13=True folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\resource-usage\disk-large-3
+PROCESS-INFOS-CHANGED count=1 onUi=True
+CONTROLLER ms=198.0 browserPid=21012 profile=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\resource-usage\disk-large-3\EBWebView\Default
+PROCESS-INFOS-CHANGED count=2 onUi=True
+PROCESS-INFOS-CHANGED count=3 onUi=True
+PROCESS-INFOS-CHANGED count=4 onUi=True
+PROCESS-INFOS-CHANGED count=5 onUi=True
+PAGE uri=http://127.0.0.1:64691/fill.html?ls=4096&idb=64&cache=32&http=400&size=100 ms=968.8 message={"kind":"filled","origin":"http://127.0.0.1:64691","steps":{"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000},"fillMs":797,"estimate":{"usage":100722574,"quota":10838140814,"usageDetails":{"caches":33570816,"indexedDB":67151758}}}
+WALK label=running target=udf method=FileInfo first=(files=673 dirs=-1 logicalKB=148582 allocatedKB=-1 errors=0 ms=3.62) files=673 dirs=-1 logicalKB=148582 allocatedKB=-1 errors=0 ms=1.02 repeat=(n=10 median=1.0ms p90=1.1ms min=1.0ms max=1.2ms)
+WALK label=running target=udf method=FileSystemEnumerator first=(files=673 dirs=80 logicalKB=148582 allocatedKB=-1 errors=0 ms=0.92) files=673 dirs=80 logicalKB=148582 allocatedKB=-1 errors=0 ms=0.90 repeat=(n=10 median=0.9ms p90=0.9ms min=0.9ms max=1.0ms)
+WALK label=running target=udf method=FindFirstFileEx first=(files=673 dirs=80 logicalKB=148582 allocatedKB=-1 errors=0 ms=9.73) files=673 dirs=80 logicalKB=148582 allocatedKB=-1 errors=0 ms=1.04 repeat=(n=10 median=1.1ms p90=1.1ms min=1.0ms max=1.2ms)
+WALK label=running target=udf method=FileFullDirectoryInfo first=(files=673 dirs=80 logicalKB=148582 allocatedKB=149331 errors=0 ms=0.94) files=673 dirs=80 logicalKB=148582 allocatedKB=149331 errors=0 ms=0.90 repeat=(n=10 median=0.9ms p90=0.9ms min=0.9ms max=0.9ms)
+WALK label=running target=udf method=PerFileAttributes first=(files=673 dirs=-1 logicalKB=148721 allocatedKB=-1 errors=0 ms=3.11) files=673 dirs=-1 logicalKB=148721 allocatedKB=-1 errors=0 ms=2.85 repeat=(n=10 median=3.0ms p90=3.1ms min=2.9ms max=3.2ms)
+WALK label=running target=profile method=FileInfo first=(files=647 dirs=-1 logicalKB=142060 allocatedKB=-1 errors=0 ms=0.81) files=647 dirs=-1 logicalKB=142060 allocatedKB=-1 errors=0 ms=0.79 repeat=(n=10 median=0.8ms p90=0.8ms min=0.8ms max=0.9ms)
+WALK label=running target=profile method=FileSystemEnumerator first=(files=647 dirs=56 logicalKB=142060 allocatedKB=-1 errors=0 ms=0.69) files=647 dirs=56 logicalKB=142060 allocatedKB=-1 errors=0 ms=0.66 repeat=(n=10 median=0.7ms p90=0.7ms min=0.7ms max=0.7ms)
+WALK label=running target=profile method=FindFirstFileEx first=(files=647 dirs=56 logicalKB=142060 allocatedKB=-1 errors=0 ms=0.84) files=647 dirs=56 logicalKB=142060 allocatedKB=-1 errors=0 ms=0.90 repeat=(n=10 median=0.8ms p90=0.9ms min=0.8ms max=0.9ms)
+WALK label=running target=profile method=FileFullDirectoryInfo first=(files=647 dirs=56 logicalKB=142060 allocatedKB=142798 errors=0 ms=0.73) files=647 dirs=56 logicalKB=142060 allocatedKB=142798 errors=0 ms=0.69 repeat=(n=10 median=0.7ms p90=0.7ms min=0.7ms max=0.7ms)
+WALK label=running target=profile method=PerFileAttributes first=(files=647 dirs=-1 logicalKB=142200 allocatedKB=-1 errors=0 ms=2.92) files=647 dirs=-1 logicalKB=142200 allocatedKB=-1 errors=0 ms=2.62 repeat=(n=10 median=2.6ms p90=2.8ms min=2.5ms max=3.0ms)
+WALK-PART label=running folder=AutofillAiModelCache files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=AutofillStrikeDatabase files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=blob_storage files=0 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running folder=BudgetDatabase files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Cache files=407 dirs=2 logicalKB=41092 allocatedKB=41096 errors=0 ms=0.08
+WALK-PART label=running folder=ClientCertificates files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Code Cache files=5 dirs=4 logicalKB=0 allocatedKB=0 errors=0 ms=0.06
+WALK-PART label=running folder=commerce_subscription_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=DawnGraphiteCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running folder=DawnWebGPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running folder=discounts_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=discount_infos_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EdgeSessions files=1 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Extension Rules files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Extension Scripts files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Extension State files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Feature Engagement Tracker files=4 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.03
+WALK-PART label=running folder=GPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running folder=IndexedDB files=69 dirs=4 logicalKB=65577 allocatedKB=65836 errors=0 ms=0.07
+WALK-PART label=running folder=JumpListIconsRecentWorkspacesV2 files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Local Storage files=5 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running folder=Network files=10 dirs=0 logicalKB=112 allocatedKB=244 errors=0 ms=0.01
+WALK-PART label=running folder=optimization_guide_hint_cache_store files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=parcel_tracking_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=PersistentOriginTrials files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Service Worker files=35 dirs=4 logicalKB=32776 allocatedKB=32896 errors=0 ms=0.09
+WALK-PART label=running folder=Session Storage files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Sessions files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Sessions_Encrypted files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Shared Dictionary files=4 dirs=2 logicalKB=44 allocatedKB=64 errors=0 ms=0.03
+WALK-PART label=running folder=shared_proto_db files=10 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running folder=Site Characteristics Database files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=Sync Data files=5 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running folder=WebStorage files=2 dirs=0 logicalKB=40 allocatedKB=64 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/AutoLaunchProtocolsComponent files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/BrowserMetrics files=1 dirs=0 logicalKB=1280 allocatedKB=1280 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/CertificateRevocation files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/component_crx_cache files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/Crashpad files=3 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.04
+WALK-PART label=running folder=EBWebView/GPUPersistentCache files=3 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.04
+WALK-PART label=running folder=EBWebView/GrShaderCache files=5 dirs=0 logicalKB=4676 allocatedKB=4680 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/hyphen-data files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/MEIPreload files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/OriginTrials files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/PKIMetadata files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/ShaderCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/Speech Recognition files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/Subresource Filter files=0 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running folder=EBWebView/Trust Protection Lists files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/TrustTokenKeyCommitments files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running folder=EBWebView/WidevineCdm files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+LOCKED label=running files=673 cannotOpenForRead=2 ms=3178.1
+WALK label=running-later target=udf method=FileInfo first=(files=678 dirs=-1 logicalKB=152777 allocatedKB=-1 errors=0 ms=1.34) files=678 dirs=-1 logicalKB=152777 allocatedKB=-1 errors=0 ms=3.33 repeat=(n=3 median=2.9ms p90=3.3ms min=2.4ms max=3.3ms)
+WALK label=running-later target=udf method=FileSystemEnumerator first=(files=678 dirs=80 logicalKB=152777 allocatedKB=-1 errors=0 ms=1.41) files=678 dirs=80 logicalKB=152777 allocatedKB=-1 errors=0 ms=0.92 repeat=(n=3 median=0.9ms p90=1.0ms min=0.9ms max=1.0ms)
+WALK label=running-later target=udf method=FindFirstFileEx first=(files=678 dirs=80 logicalKB=152777 allocatedKB=-1 errors=0 ms=1.18) files=678 dirs=80 logicalKB=152777 allocatedKB=-1 errors=0 ms=1.09 repeat=(n=3 median=1.1ms p90=1.1ms min=1.1ms max=1.1ms)
+WALK label=running-later target=udf method=FileFullDirectoryInfo first=(files=678 dirs=80 logicalKB=152777 allocatedKB=153978 errors=0 ms=0.97) files=678 dirs=80 logicalKB=152777 allocatedKB=153978 errors=0 ms=1.02 repeat=(n=3 median=1.0ms p90=1.0ms min=0.9ms max=1.0ms)
+WALK label=running-later target=udf method=PerFileAttributes first=(files=678 dirs=-1 logicalKB=152777 allocatedKB=-1 errors=0 ms=3.40) files=678 dirs=-1 logicalKB=152777 allocatedKB=-1 errors=0 ms=2.93 repeat=(n=3 median=3.0ms p90=3.1ms min=2.9ms max=3.1ms)
+WALK label=running-later target=profile method=FileInfo first=(files=651 dirs=-1 logicalKB=146252 allocatedKB=-1 errors=0 ms=0.80) files=651 dirs=-1 logicalKB=146252 allocatedKB=-1 errors=0 ms=0.72 repeat=(n=3 median=0.8ms p90=1.4ms min=0.7ms max=1.4ms)
+WALK label=running-later target=profile method=FileSystemEnumerator first=(files=651 dirs=56 logicalKB=146252 allocatedKB=-1 errors=0 ms=0.66) files=651 dirs=56 logicalKB=146252 allocatedKB=-1 errors=0 ms=0.66 repeat=(n=3 median=0.7ms p90=0.7ms min=0.6ms max=0.7ms)
+WALK label=running-later target=profile method=FindFirstFileEx first=(files=651 dirs=56 logicalKB=146252 allocatedKB=-1 errors=0 ms=0.81) files=651 dirs=56 logicalKB=146252 allocatedKB=-1 errors=0 ms=0.79 repeat=(n=3 median=0.8ms p90=0.8ms min=0.8ms max=0.8ms)
+WALK label=running-later target=profile method=FileFullDirectoryInfo first=(files=651 dirs=56 logicalKB=146252 allocatedKB=147441 errors=0 ms=0.67) files=651 dirs=56 logicalKB=146252 allocatedKB=147441 errors=0 ms=0.64 repeat=(n=3 median=0.6ms p90=0.7ms min=0.6ms max=0.7ms)
+WALK label=running-later target=profile method=PerFileAttributes first=(files=651 dirs=-1 logicalKB=146252 allocatedKB=-1 errors=0 ms=2.74) files=651 dirs=-1 logicalKB=146252 allocatedKB=-1 errors=0 ms=2.46 repeat=(n=3 median=2.5ms p90=2.7ms min=2.5ms max=2.7ms)
+WALK-PART label=running-later folder=AutofillAiModelCache files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=AutofillStrikeDatabase files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=blob_storage files=0 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running-later folder=BudgetDatabase files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running-later folder=Cache files=407 dirs=2 logicalKB=41092 allocatedKB=41096 errors=0 ms=0.08
+WALK-PART label=running-later folder=ClientCertificates files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Code Cache files=5 dirs=4 logicalKB=0 allocatedKB=0 errors=0 ms=0.06
+WALK-PART label=running-later folder=commerce_subscription_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=DawnGraphiteCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running-later folder=DawnWebGPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running-later folder=discounts_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=discount_infos_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EdgeSessions files=1 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Extension Rules files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Extension Scripts files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Extension State files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Feature Engagement Tracker files=4 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.03
+WALK-PART label=running-later folder=GPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running-later folder=IndexedDB files=69 dirs=4 logicalKB=65577 allocatedKB=65836 errors=0 ms=0.06
+WALK-PART label=running-later folder=JumpListIconsRecentWorkspacesV2 files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Local Storage files=5 dirs=1 logicalKB=4099 allocatedKB=4480 errors=0 ms=0.04
+WALK-PART label=running-later folder=Network files=12 dirs=0 logicalKB=112 allocatedKB=244 errors=0 ms=0.01
+WALK-PART label=running-later folder=optimization_guide_hint_cache_store files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=parcel_tracking_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=PersistentOriginTrials files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Service Worker files=35 dirs=4 logicalKB=32776 allocatedKB=32896 errors=0 ms=0.06
+WALK-PART label=running-later folder=Session Storage files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Sessions files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Sessions_Encrypted files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Shared Dictionary files=4 dirs=2 logicalKB=44 allocatedKB=64 errors=0 ms=0.03
+WALK-PART label=running-later folder=shared_proto_db files=10 dirs=1 logicalKB=7 allocatedKB=12 errors=0 ms=0.04
+WALK-PART label=running-later folder=Site Characteristics Database files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=Sync Data files=5 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running-later folder=WebStorage files=2 dirs=0 logicalKB=60 allocatedKB=128 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/AutoLaunchProtocolsComponent files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/BrowserMetrics files=1 dirs=0 logicalKB=1280 allocatedKB=1280 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/CertificateRevocation files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/component_crx_cache files=1 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/Crashpad files=3 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.04
+WALK-PART label=running-later folder=EBWebView/GPUPersistentCache files=3 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.04
+WALK-PART label=running-later folder=EBWebView/GrShaderCache files=5 dirs=0 logicalKB=4676 allocatedKB=4680 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/hyphen-data files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/MEIPreload files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/OriginTrials files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/PKIMetadata files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/ShaderCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/Speech Recognition files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/Subresource Filter files=0 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=running-later folder=EBWebView/Trust Protection Lists files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/TrustTokenKeyCommitments files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=running-later folder=EBWebView/WidevineCdm files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+PROCESS-INFOS-CHANGED count=6 onUi=True
+BROWSER-EXITED ok=True
+WALK label=exited target=udf method=FileInfo first=(files=676 dirs=-1 logicalKB=152748 allocatedKB=-1 errors=0 ms=1.40) files=676 dirs=-1 logicalKB=152748 allocatedKB=-1 errors=0 ms=0.98 repeat=(n=3 median=1.0ms p90=1.0ms min=1.0ms max=1.0ms)
+WALK label=exited target=udf method=FileSystemEnumerator first=(files=676 dirs=80 logicalKB=152748 allocatedKB=-1 errors=0 ms=0.93) files=676 dirs=80 logicalKB=152748 allocatedKB=-1 errors=0 ms=0.91 repeat=(n=3 median=0.9ms p90=0.9ms min=0.9ms max=0.9ms)
+WALK label=exited target=udf method=FindFirstFileEx first=(files=676 dirs=80 logicalKB=152748 allocatedKB=-1 errors=0 ms=1.14) files=676 dirs=80 logicalKB=152748 allocatedKB=-1 errors=0 ms=1.08 repeat=(n=3 median=1.1ms p90=1.1ms min=1.1ms max=1.1ms)
+WALK label=exited target=udf method=FileFullDirectoryInfo first=(files=676 dirs=80 logicalKB=152748 allocatedKB=153174 errors=0 ms=0.92) files=676 dirs=80 logicalKB=152748 allocatedKB=153174 errors=0 ms=0.95 repeat=(n=3 median=0.9ms p90=1.0ms min=0.9ms max=1.0ms)
+WALK label=exited target=udf method=PerFileAttributes first=(files=676 dirs=-1 logicalKB=152748 allocatedKB=-1 errors=0 ms=3.13) files=676 dirs=-1 logicalKB=152748 allocatedKB=-1 errors=0 ms=2.75 repeat=(n=3 median=2.8ms p90=2.9ms min=2.7ms max=2.9ms)
+WALK label=exited target=profile method=FileInfo first=(files=650 dirs=-1 logicalKB=146222 allocatedKB=-1 errors=0 ms=0.73) files=650 dirs=-1 logicalKB=146222 allocatedKB=-1 errors=0 ms=0.69 repeat=(n=3 median=0.7ms p90=0.7ms min=0.7ms max=0.7ms)
+WALK label=exited target=profile method=FileSystemEnumerator first=(files=650 dirs=56 logicalKB=146222 allocatedKB=-1 errors=0 ms=0.64) files=650 dirs=56 logicalKB=146222 allocatedKB=-1 errors=0 ms=0.64 repeat=(n=3 median=0.6ms p90=0.7ms min=0.6ms max=0.7ms)
+WALK label=exited target=profile method=FindFirstFileEx first=(files=650 dirs=56 logicalKB=146222 allocatedKB=-1 errors=0 ms=0.94) files=650 dirs=56 logicalKB=146222 allocatedKB=-1 errors=0 ms=0.76 repeat=(n=3 median=0.8ms p90=0.8ms min=0.8ms max=0.8ms)
+WALK label=exited target=profile method=FileFullDirectoryInfo first=(files=650 dirs=56 logicalKB=146222 allocatedKB=146637 errors=0 ms=0.66) files=650 dirs=56 logicalKB=146222 allocatedKB=146637 errors=0 ms=0.65 repeat=(n=3 median=0.6ms p90=0.7ms min=0.6ms max=0.7ms)
+WALK label=exited target=profile method=PerFileAttributes first=(files=650 dirs=-1 logicalKB=146222 allocatedKB=-1 errors=0 ms=2.50) files=650 dirs=-1 logicalKB=146222 allocatedKB=-1 errors=0 ms=2.41 repeat=(n=3 median=2.5ms p90=2.5ms min=2.4ms max=2.5ms)
+WALK-PART label=exited folder=AutofillAiModelCache files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=AutofillStrikeDatabase files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=blob_storage files=0 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=exited folder=BudgetDatabase files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Cache files=407 dirs=2 logicalKB=41092 allocatedKB=41096 errors=0 ms=0.08
+WALK-PART label=exited folder=ClientCertificates files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Code Cache files=5 dirs=4 logicalKB=0 allocatedKB=0 errors=0 ms=0.05
+WALK-PART label=exited folder=commerce_subscription_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=DawnGraphiteCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=exited folder=DawnWebGPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=exited folder=discounts_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=discount_infos_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EdgeSessions files=1 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Extension Rules files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Extension Scripts files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Extension State files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Feature Engagement Tracker files=4 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.05
+WALK-PART label=exited folder=GPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=exited folder=IndexedDB files=69 dirs=4 logicalKB=65577 allocatedKB=65836 errors=0 ms=0.06
+WALK-PART label=exited folder=JumpListIconsRecentWorkspacesV2 files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Local Storage files=5 dirs=1 logicalKB=4099 allocatedKB=4100 errors=0 ms=0.02
+WALK-PART label=exited folder=Network files=12 dirs=0 logicalKB=112 allocatedKB=112 errors=0 ms=0.01
+WALK-PART label=exited folder=optimization_guide_hint_cache_store files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=parcel_tracking_db files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=PersistentOriginTrials files=2 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Service Worker files=35 dirs=4 logicalKB=32777 allocatedKB=32900 errors=0 ms=0.06
+WALK-PART label=exited folder=Session Storage files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Sessions files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Sessions_Encrypted files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Shared Dictionary files=4 dirs=2 logicalKB=44 allocatedKB=44 errors=0 ms=0.03
+WALK-PART label=exited folder=shared_proto_db files=10 dirs=1 logicalKB=7 allocatedKB=12 errors=0 ms=0.02
+WALK-PART label=exited folder=Site Characteristics Database files=5 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=Sync Data files=5 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=exited folder=WebStorage files=2 dirs=0 logicalKB=40 allocatedKB=40 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/AutoLaunchProtocolsComponent files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/BrowserMetrics files=1 dirs=0 logicalKB=1280 allocatedKB=1280 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/CertificateRevocation files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/component_crx_cache files=1 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/Crashpad files=3 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.04
+WALK-PART label=exited folder=EBWebView/GPUPersistentCache files=3 dirs=2 logicalKB=0 allocatedKB=0 errors=0 ms=0.04
+WALK-PART label=exited folder=EBWebView/GrShaderCache files=5 dirs=0 logicalKB=4676 allocatedKB=4680 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/hyphen-data files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/MEIPreload files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/OriginTrials files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/PKIMetadata files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/ShaderCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/Speech Recognition files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/Subresource Filter files=0 dirs=1 logicalKB=0 allocatedKB=0 errors=0 ms=0.02
+WALK-PART label=exited folder=EBWebView/Trust Protection Lists files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/TrustTokenKeyCommitments files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+WALK-PART label=exited folder=EBWebView/WidevineCdm files=0 dirs=0 logicalKB=0 allocatedKB=0 errors=0 ms=0.01
+HOST-EXIT code=0

@@ -1,0 +1,41 @@
+diff -ru a/spikes/loopback/Loop.App/Loop.App.csproj b/spikes/loopback/Loop.App/Loop.App.csproj
+--- a/spikes/loopback/Loop.App/Loop.App.csproj	2026-11-13 09:15:22.891363700 +0100
++++ b/spikes/loopback/Loop.App/Loop.App.csproj	2026-11-13 09:15:42.678676400 +0100
+@@ -2,7 +2,8 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <RootNamespace>Loop.App</RootNamespace>
+-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
++    <!-- The build machine's own RID (win-x64 on the Windows dev box, linux-x64 in the container), so the apphost runs there. -->
++    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+     <PublishAot>true</PublishAot>
+     <InvariantGlobalization>true</InvariantGlobalization>
+     <!-- Tasks are built in this same graph (source checkout), so use a short-lived task host: no locked DLLs. -->
+diff -ru a/spikes/loopback/Loop.Tests/BrowserJourneyTests.cs b/spikes/loopback/Loop.Tests/BrowserJourneyTests.cs
+--- a/spikes/loopback/Loop.Tests/BrowserJourneyTests.cs	2026-11-13 09:15:22.871363700 +0100
++++ b/spikes/loopback/Loop.Tests/BrowserJourneyTests.cs	2026-11-13 09:15:42.889329900 +0100
+@@ -12,6 +12,11 @@
+     [MemberData(nameof(Browsers))]
+     public async Task Saves_a_note_through_the_real_backend(string browserKind)
+     {
++        if (browserKind == "msedge-headless" && !OperatingSystem.IsWindows())
++        {
++            Assert.Skip("Microsoft Edge is not installed in the Linux image.");
++        }
++
+         var token = TestContext.Current.CancellationToken;
+         var total = Stopwatch.StartNew();
+         await using var app = await LoopbackApp.StartAsync(token);
+diff -ru a/spikes/loopback/Loop.Tests/Loop.Tests.csproj b/spikes/loopback/Loop.Tests/Loop.Tests.csproj
+--- a/spikes/loopback/Loop.Tests/Loop.Tests.csproj	2026-11-13 09:15:22.873372100 +0100
++++ b/spikes/loopback/Loop.Tests/Loop.Tests.csproj	2026-11-13 09:15:52.192015000 +0100
+@@ -2,7 +2,8 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <IsPackable>false</IsPackable>
+-    <LoopAppPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\Loop.App\bin\$(Configuration)\net11.0\win-x64\Loop.App.exe'))</LoopAppPath>
++    <_LoopAppExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</_LoopAppExtension>
++    <LoopAppPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\Loop.App\bin\$(Configuration)\net11.0\$(NETCoreSdkRuntimeIdentifier)\Loop.App$(_LoopAppExtension)'))</LoopAppPath>
+   </PropertyGroup>
+ 
+   <ItemGroup>

@@ -1,0 +1,14 @@
+exit 0 wallMs 43
+RUN runtime=jit mode=probe arg=env sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+ENV os=Ubuntu 24.04.5 LTS rid=linux-x64 framework=.NET 11.0.0
+ENV LANG=C.UTF-8 currentCulture= (harness sets invariant) installedUICulture=
+ENV icu turkishUpper(i)=U+0130 (ICU) jaNative=日本語 (日本)
+ENV codepage 1252 unavailable: NotSupportedException: No data is available for encoding 1252. For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.
+ENV codepage 932 unavailable: NotSupportedException: No data is available for encoding 932. For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.
+ENV codepage 936 unavailable: NotSupportedException: No data is available for encoding 936. For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.
+ENV codepage 949 unavailable: NotSupportedException: No data is available for encoding 949. For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.
+ENV codepage 950 unavailable: NotSupportedException: No data is available for encoding 950. For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.
+ENV codepage 1250 unavailable: NotSupportedException: No data is available for encoding 1250. For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.
+ENV codepage 1251 unavailable: NotSupportedException: No data is available for encoding 1251. For information on defining a custom encoding, see the documentation for the Encoding.RegisterProvider method.
+LIBS libSystem.Native.so libicudata.so.74.2 libicui18n.so.74.2 libicuuc.so.74.2
+MEM end peakWorkingSetMB=35.8 workingSetMB=36.1 rssAnonMB=3.3 allocatedMB=0.2 gc0=0 gc1=0 gc2=0 cpuMs=31

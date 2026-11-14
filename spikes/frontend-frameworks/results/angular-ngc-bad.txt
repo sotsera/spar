@@ -1,0 +1,16 @@
+src/bad/bad.ts:22:49 - error TS2339: Property 'value' does not exist on type 'Result<CopyPlan, PlanError>'.
+
+22   template: `@if (call | async; as r) { <p>{{ r.value }}</p> }`,
+                                                   ~~~~~
+
+src/bad/bad.ts:31:65 - error TS2741: Property 'tableMissing' is missing in type '{ connectionNotFound: (e: { readonly connectionId: string; }) => number; }' but required in type 'ErrorHandlers<PlanError>'.
+
+31   template: `<p>{{ result.match({ success: p => p.steps.length, errors: { connectionNotFound: e => 0 } }) }}</p>
+                                                                   ~~~~~~
+
+src/bad/bad.ts:32:94 - error TS2353: Object literal may only specify known properties, and '"tableMising"' does not exist in type 'ErrorHandlers<PlanError>'.
+
+32     <p>{{ result.match({ success: p => p.steps.length, errors: { connectionNotFound: e => 0, tableMising: e => 0 } }) }}</p>`,
+                                                                                                ~~~~~~~~~~~
+
+

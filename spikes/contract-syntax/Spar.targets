@@ -1,0 +1,55 @@
+<Project>
+  <!--
+    Contract pipeline (spike):
+      ResolveReferences
+        -> SparWriteContractInventory   (sources, references, defines; written only when changed)
+        -> SparGenerateClient           (MSBuild task in a task host: contracts.json + TypeScript packages)
+      CoreCompile (the source generator emits all C#; the analyzer reports contract diagnostics)
+  -->
+  <PropertyGroup>
+    <_SparTasksPath>$(MSBuildThisFileDirectory)Spar.Tasks/bin/$(Configuration)/net11.0/Spar.Tasks.dll</_SparTasksPath>
+  </PropertyGroup>
+
+  <!-- TaskHostFactory: the task assembly is built in this graph, and a warm node would lock it (MSB3027). -->
+  <UsingTask TaskName="Spar.Tasks.GenerateContractClient" AssemblyFile="$(_SparTasksPath)"
+             TaskFactory="TaskHostFactory" Runtime="NET" />
+
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Spar.Generator/Spar.Generator.csproj"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Spar.Runtime/Spar.Runtime.csproj" />
+    <ProjectReference Include="$(MSBuildThisFileDirectory)Spar.Tasks/Spar.Tasks.csproj"
+                      ReferenceOutputAssembly="false" Private="false"
+                      GlobalPropertiesToRemove="RuntimeIdentifier;SelfContained;PublishAot"
+                      SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+
+  <Target Name="SparWriteContractInventory" DependsOnTargets="ResolveReferences"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_SparDir>$(IntermediateOutputPath)spar/</_SparDir>
+      <!-- The generated client is the same for every configuration: one location. -->
+      <_SparClientDir>$(BaseIntermediateOutputPath)spar/client</_SparClientDir>
+      <_SparInventory>$(_SparDir)contracts.inventory</_SparInventory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_SparInventoryLine Include="assembly=$(AssemblyName)" />
+      <_SparInventoryLine Include="nullable=$(Nullable)" />
+      <_SparInventoryLine Include="define=$(DefineConstants)" />
+      <_SparInventoryLine Include="@(Compile->'source=%(FullPath)')" />
+      <_SparInventoryLine Include="@(ReferencePath->'reference=%(FullPath)')" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(_SparDir)" />
+    <WriteLinesToFile File="$(_SparInventory)" Lines="@(_SparInventoryLine)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+
+  <!-- Referenced assemblies are inputs too: their contracts and types are part of the client. -->
+  <Target Name="SparGenerateClient" DependsOnTargets="SparWriteContractInventory" BeforeTargets="CoreCompile"
+          Condition="'$(DesignTimeBuild)' != 'true'"
+          Inputs="$(_SparInventory);@(Compile);@(ReferencePath);$(_SparTasksPath)" Outputs="$(_SparDir)client.stamp">
+    <GenerateContractClient InventoryFile="$(_SparInventory)" OutputDirectory="$(_SparClientDir)" />
+    <Touch Files="$(_SparDir)client.stamp" AlwaysCreate="true" />
+  </Target>
+</Project>

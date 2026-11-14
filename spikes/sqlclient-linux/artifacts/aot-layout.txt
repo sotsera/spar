@@ -1,0 +1,53 @@
+== publish folder
+total 40836
+drwxr-xr-x  2 root root     4096 Nov 13 21:32 .
+drwxr-xr-x 17 root root    16384 Nov 13 21:32 ..
+-rwxr-xr-x  1 root root 17409064 Nov 13 21:32 SqlTool.App
+-rwxr-xr-x  1 root root 24380216 Nov 13 21:32 SqlTool.App.dbg
+== ELF header
+  Class:                             ELF64
+  Type:                              DYN (Position-Independent Executable file)
+  Machine:                           Advanced Micro Devices X86-64
+== NEEDED
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [ld-linux-x86-64.so.2]
+== ldd
+	linux-vdso.so.1 (0x0000703f8656a000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x0000703f850b5000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000703f84ea2000)
+	/lib64/ld-linux-x86-64.so.2 (0x0000703f8656c000)
+== shared-object names embedded in the exe (dlopen candidates)
+libc.so.6
+libglib-2.0.so.0
+libgssapi_krb5.so.2
+libicui18n.so
+libicuuc.so
+libm.so.6
+libsecret-1.so.0
+libssl.so.1.1
+libssl.so.3
+libssl.so.4
+== jit output
+36
+5.6M	SqlTool.App/bin/jit/Release/net11.0/linux-x64
+== SqlClient assembly used (jit)
+-rwxr--r-- 1 root root   23488 Nov 13 00:08 SqlTool.App/bin/jit/Release/net11.0/linux-x64/Microsoft.Data.SqlClient.Extensions.Abstractions.dll
+-rwxr--r-- 1 root root   53696 Nov 12 23:44 SqlTool.App/bin/jit/Release/net11.0/linux-x64/Microsoft.Data.SqlClient.Internal.Logging.dll
+-rwxr--r-- 1 root root 1676184 Nov 13 00:36 SqlTool.App/bin/jit/Release/net11.0/linux-x64/Microsoft.Data.SqlClient.dll
+== package runtimes
+microsoft.data.sqlclient/7.1.2/runtimes/unix/lib/net8.0/Microsoft.Data.SqlClient.dll
+microsoft.data.sqlclient/7.1.2/runtimes/unix/lib/net9.0/Microsoft.Data.SqlClient.dll
+microsoft.data.sqlclient/7.1.2/runtimes/win/lib/net462/Microsoft.Data.SqlClient.dll
+microsoft.data.sqlclient/7.1.2/runtimes/win/lib/net8.0/Microsoft.Data.SqlClient.dll
+microsoft.data.sqlclient/7.1.2/runtimes/win/lib/net9.0/Microsoft.Data.SqlClient.dll
+microsoft.data.sqlclient.sni.runtime/7.1.2/runtimes/win-arm64/native/Microsoft.Data.SqlClient.SNI.dll
+microsoft.data.sqlclient.sni.runtime/7.1.2/runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll
+microsoft.data.sqlclient.sni.runtime/7.1.2/runtimes/win-x64/native/Microsoft.Data.SqlClient.SNI.dll
+microsoft.data.sqlclient.sni.runtime/7.1.2/microsoft.data.sqlclient.sni.runtime.nuspec
+microsoft.data.sqlclient.sni.runtime/7.1.2/LICENSE.txt
+microsoft.data.sqlclient.sni.runtime/7.1.2/microsoft.data.sqlclient.sni.runtime.7.1.2.nupkg.sha512
+microsoft.data.sqlclient.sni.runtime/7.1.2/dotnet.png
+microsoft.data.sqlclient.sni.runtime/7.1.2/microsoft.data.sqlclient.sni.runtime.7.1.2.nupkg
+microsoft.data.sqlclient.sni.runtime/7.1.2/.nupkg.metadata
+microsoft.data.sqlclient.sni.runtime/7.1.2/.signature.p7s

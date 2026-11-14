@@ -1,0 +1,7 @@
+exit 0 wallMs 12198
+RUN runtime=aot mode=bulk arg=default-tablock sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+MEM before peakWorkingSetMB=31.4 workingSetMB=31.4 rssAnonMB=7.3 allocatedMB=1.6 gc0=0 gc1=0 gc2=0 cpuMs=50
+MEM after-copy peakWorkingSetMB=53.2 workingSetMB=53.2 rssAnonMB=27.7 allocatedMB=1823.7 gc0=104 gc1=1 gc2=0 cpuMs=28652
+RESULT bulk variant=default-tablock rows=1000000 copyMs=10241 totalMs=10241 rowsPerSec=97645 payloadMBps=19.1 progressEvents=10 maxProgressGapMs=930 identical=True
+TARGET log usedMB=40.5
+MEM end peakWorkingSetMB=53.2 workingSetMB=53.2 rssAnonMB=27.7 allocatedMB=1823.8 gc0=104 gc1=1 gc2=0 cpuMs=28653

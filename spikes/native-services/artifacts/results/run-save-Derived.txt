@@ -1,0 +1,31 @@
+pid=63564 dynamicCodeCompiled=False mode=dialogs parts=Dialogs
+[PASS] open: accept via SetFileName + IDOK, DefaultFolder honoured: hr=0x00000000 cancelled=False paths=[C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-63564\a.sparrecipe] show=279.0ms class=#32770 title="Spike: open recipe (default folder)" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=197.3ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,FileOk] seenOnScreen=[]
+[PASS] open: title and owner applied: title="Spike: open recipe (default folder)" ownerMatches=True
+[PASS] open: multi-select returns both paths: hr=0x00000000 cancelled=False paths=[C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-63564\a.sparrecipe | C:\Users\Alessandro\AppData\Local\Temp\spar-native-services-63564\b.sparrecipe] show=204.1ms class=#32770 title="Spike: open recipes (multi)" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=131.5ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,FileOk] seenOnScreen=[]
+[PASS] open: IDCANCEL returns HRESULT_FROM_WIN32(ERROR_CANCELLED): hr=0x800704C7 cancelled=True paths=[] show=153.9ms class=#32770 title="Spike: cancel" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=102.0ms watchdog=False events=[TypeChange,FolderChanging,FolderChange] seenOnScreen=[]
+[PASS] open: IFileDialog::Close(E_ABORT) from OnFolderChange makes Show return E_ABORT: hr=0x80004004 cancelled=False paths=[] show=154.6ms class=#32770 title="Spike: close E_ABORT" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=108.0ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,Close=0x00000000] seenOnScreen=[]
+[PASS] open: IFileDialog::Close(ERROR_CANCELLED) reads as a cancel: hr=0x800704C7 cancelled=True paths=[] show=144.8ms class=#32770 title="Spike: close cancelled" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=96.8ms watchdog=False events=[TypeChange,FolderChanging,FolderChange,Close=0x00000000] seenOnScreen=[]
+[PASS] open: FOS_FILEMUSTEXIST blocks a missing name (native error box; watchdog dismisses): hr=0x800704C7 cancelled=True paths=[] show=2062.3ms class=#32770 title="Spike: missing file" ownerMatches=True visibleWhenFound=False rect=(-32000,-32000)-(-31336,-31490) foundAfter=119.0ms watchdog=True events=[TypeChange,FolderChanging,FolderChange,SelectionChange,dismiss:"Spike: missing file",dismiss:"Spike: missing file"] seenOnScreen=[]
+[FAIL] dialogs: section completed: System.InvalidOperationException: STA body failed
+ ---> System.InvalidOperationException: Operation is not valid due to the current state of the object.
+   at Internal.Reflection.Execution.ExecutionEnvironmentImplementation.GetMetadataForNamedType(RuntimeTypeHandle)
+   at Internal.Reflection.Core.Execution.ExecutionDomain.GetNamedTypeForHandle(RuntimeTypeHandle)
+   at Internal.Reflection.Core.Execution.ExecutionDomain.GetRuntimeTypeInfo(MethodTable*)
+   at System.RuntimeType.InitializeRuntimeTypeInfoHandle()
+   at System.RuntimeType.get_CustomAttributes()
+   at Internal.Reflection.Extensions.NonPortable.CustomAttributeSearcher`1.<GetMatchingCustomAttributesIterator>d__2.MoveNext()
+   at System.Attribute.OneOrNull(IEnumerable`1)
+   at System.Runtime.InteropServices.Marshalling.IIUnknownDerivedDetails.GetFromAttribute(RuntimeTypeHandle)
+   at System.Runtime.InteropServices.Marshalling.ComObject.LookUpVTableInfo(RuntimeTypeHandle, IIUnknownCacheStrategy.TableInfo&, Int32&)
+   at System.Runtime.InteropServices.Marshalling.ComObject.System.Runtime.InteropServices.IDynamicInterfaceCastable.IsInterfaceImplemented(RuntimeTypeHandle, Boolean)
+   at NativeServices.App.Dialogs.ShellCom.Wrap[T](IntPtr)
+   at NativeServices.App.Dialogs.ShellCom.Create[T](Guid, Guid)
+   at NativeServices.App.Dialogs.FileDialogs.Create(FileDialogKind)
+   at NativeServices.App.Dialogs.FileDialogs.Show(IntPtr, UInt32, FileDialogRequest, DialogScript)
+   at NativeServices.App.Dialogs.DialogWindows.<>c__DisplayClass14_0`1.<RunOnSta>b__0()
+   --- End of inner exception stack trace ---
+   at NativeServices.App.Dialogs.DialogWindows.RunOnSta[T](Func`3)
+   at NativeServices.App.Dialogs.DialogChecks.RunHandDeclared(String)
+   at NativeServices.App.Dialogs.DialogChecks.Run(String)
+   at NativeServices.App.Program.Section(String, Action)
+passed=7 failed=1

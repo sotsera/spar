@@ -1,0 +1,204 @@
+77.6 START ms=38.4 pid=234 cpus=32 responsive=1 gsk=cairo
+79.1 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=1000 onUnresponsive=none options=[--www /spike/www/ --data /tmp/u/data-stress-hung-2 --log /out/stress-hung-2.log --actions 3000:memory:before,4000:hang-idle,6000:stress-on:1000/1024,36000:stress-off,37000:memory:after,45000:memory:later --duration 46000 --timeout 90]
+80.3 HB-ARM hb=probe reason=start
+80.9 NAVIGATE uri=spar://app/index.html
+137.5 LOAD-CHANGED event=started
+143.2 LOAD-CHANGED event=committed
+145.4 DOC path=/index.html vis=visible
+145.8 HB-ARM hb=ping reason=doc
+151.2 READY path=/index.html pagePerf=14.0 vis=visible
+155.5 LOAD-CHANGED event=finished
+158.6 PAGE state-seen:1
+1081.3 HB-PING hb=probe seq=1 postUs=40 hr=0x00000000 outstanding=1
+1082.1 HB-PONG hb=probe seq=1 rttMs=0.9 vis=visible latest=True
+1151.7 TICK n=1 dtMs=0 vis=visible frames=64
+2080.6 HB-PING hb=probe seq=2 postUs=38 hr=0x00000000 outstanding=1
+2081.2 HB-PONG hb=probe seq=2 rttMs=0.6 vis=visible latest=True
+2151.1 TICK n=2 dtMs=999 vis=visible frames=62
+3080.4 HB-PING hb=probe seq=3 postUs=38 hr=0x00000000 outstanding=1
+3083.9 HB-PONG hb=probe seq=3 rttMs=3.4 vis=visible latest=True
+3151.2 TICK n=3 dtMs=1000 vis=visible frames=62
+3155.7 ACTION verb=memory arg=before
+3156.5 MEMORY label=before hostKb=44104 web:19972
+4081.1 HB-PING hb=probe seq=4 postUs=57 hr=0x00000000 outstanding=1
+4083.9 HB-PONG hb=probe seq=4 rttMs=2.8 vis=visible latest=True
+4151.2 TICK n=4 dtMs=1001 vis=visible frames=62
+4155.4 ACTION verb=hang-idle arg=
+4156.4 HANG kind=idle pagePerf=4019.0
+5080.9 HB-PING hb=probe seq=5 postUs=35 hr=0x00000000 outstanding=1
+5081.5 HB-PING hb=ping seq=1 postUs=22 hr=0x00000000 outstanding=1
+5083.3 PUMP phase=hang-idle n=4385 median=0.02ms p99=0.09ms min=0.01ms max=7.64ms
+6080.5 HB-MISS hb=probe seq=5 missed=1
+6081.0 HB-PING hb=probe seq=6 postUs=40 hr=0x00000000 outstanding=2
+6155.8 ACTION verb=stress-on arg=1000/1024
+7080.3 HB-MISS hb=probe seq=6 missed=2
+7081.0 HB-PING hb=probe seq=7 postUs=21 hr=0x00000000 outstanding=3
+7345.0 STRESS sent=1000 meanPostUs=9.8 maxPostUs=106 mb=1.0
+7346.0 MEMORY label=stress hostKb=48772 web:22068
+8081.6 HB-MISS hb=probe seq=7 missed=3
+8083.1 HB-PING hb=probe seq=8 postUs=32 hr=0x00000000 outstanding=4
+8543.8 STRESS sent=2000 meanPostUs=10.5 maxPostUs=135 mb=2.0
+8544.8 MEMORY label=stress hostKb=52684 web:23460
+9080.4 HB-MISS hb=probe seq=8 missed=4
+9081.0 HB-PING hb=probe seq=9 postUs=48 hr=0x00000000 outstanding=5
+9744.7 STRESS sent=3000 meanPostUs=10.4 maxPostUs=173 mb=2.9
+9745.7 MEMORY label=stress hostKb=56552 web:24868
+10080.9 HB-MISS hb=probe seq=9 missed=5
+10081.4 HB-PING hb=probe seq=10 postUs=24 hr=0x00000000 outstanding=6
+10081.8 HB-MISS hb=ping seq=1 missed=1
+10082.1 HB-PING hb=ping seq=2 postUs=16 hr=0x00000000 outstanding=2
+10087.2 PUMP phase=stress-on-1000/1024 n=4414 median=0.02ms p99=0.10ms min=0.00ms max=3.31ms
+10944.9 STRESS sent=4000 meanPostUs=10.9 maxPostUs=173 mb=3.9
+10945.8 MEMORY label=stress hostKb=60492 web:26268
+11080.8 HB-MISS hb=probe seq=10 missed=6
+11081.5 HB-PING hb=probe seq=11 postUs=37 hr=0x00000000 outstanding=7
+12080.2 HB-MISS hb=probe seq=11 missed=7
+12080.8 HB-PING hb=probe seq=12 postUs=37 hr=0x00000000 outstanding=8
+12144.2 STRESS sent=5000 meanPostUs=11.9 maxPostUs=3326 mb=4.9
+12145.1 MEMORY label=stress hostKb=63952 web:27676
+13079.8 HB-MISS hb=probe seq=12 missed=8
+13080.3 HB-PING hb=probe seq=13 postUs=27 hr=0x00000000 outstanding=9
+13343.6 STRESS sent=6000 meanPostUs=11.2 maxPostUs=3326 mb=5.9
+13344.4 MEMORY label=stress hostKb=64120 web:29092
+14079.7 HB-MISS hb=probe seq=13 missed=9
+14080.4 HB-PING hb=probe seq=14 postUs=37 hr=0x00000000 outstanding=10
+14544.5 STRESS sent=7000 meanPostUs=10.7 maxPostUs=3326 mb=6.8
+14545.2 MEMORY label=stress hostKb=63892 web:30016
+15080.6 HB-MISS hb=probe seq=14 missed=10
+15081.1 HB-PING hb=probe seq=15 postUs=43 hr=0x00000000 outstanding=11
+15081.5 HB-MISS hb=ping seq=2 missed=2
+15081.9 HB-PING hb=ping seq=3 postUs=23 hr=0x00000000 outstanding=3
+15088.2 PUMP phase=stress-on-1000/1024 n=4488 median=0.02ms p99=0.09ms min=0.00ms max=1.05ms
+15744.6 STRESS sent=8000 meanPostUs=10.4 maxPostUs=3326 mb=7.8
+15745.3 MEMORY label=stress hostKb=64196 web:31412
+16081.3 HB-MISS hb=probe seq=15 missed=11
+16081.8 HB-PING hb=probe seq=16 postUs=26 hr=0x00000000 outstanding=12
+16943.5 STRESS sent=9000 meanPostUs=10.2 maxPostUs=3326 mb=8.8
+16944.8 MEMORY label=stress hostKb=64932 web:32836
+17079.9 HB-MISS hb=probe seq=16 missed=12
+17080.4 HB-PING hb=probe seq=17 postUs=38 hr=0x00000000 outstanding=13
+18080.0 HB-MISS hb=probe seq=17 missed=13
+18080.7 HB-PING hb=probe seq=18 postUs=31 hr=0x00000000 outstanding=14
+18144.5 STRESS sent=10000 meanPostUs=10.0 maxPostUs=3326 mb=9.8
+18145.2 MEMORY label=stress hostKb=65524 web:34232
+19080.3 HB-MISS hb=probe seq=18 missed=14
+19080.8 HB-PING hb=probe seq=19 postUs=25 hr=0x00000000 outstanding=15
+19343.7 STRESS sent=11000 meanPostUs=9.8 maxPostUs=3326 mb=10.7
+19344.4 MEMORY label=stress hostKb=65768 web:35624
+20081.4 HB-MISS hb=ping seq=3 missed=3
+20083.8 HB-UNRESPONSIVE hb=ping missed=3 intervalMs=5000
+20086.1 HOOK-UNRESPONSIVE missed=3 action=none
+20086.7 HB-PING hb=ping seq=4 postUs=39 hr=0x00000000 outstanding=4
+20088.9 HB-MISS hb=probe seq=19 missed=15
+20090.2 HB-PING hb=probe seq=20 postUs=26 hr=0x00000000 outstanding=16
+20092.0 PUMP phase=stress-on-1000/1024 n=4435 median=0.02ms p99=0.10ms min=0.00ms max=10.24ms
+20548.9 STRESS sent=12000 meanPostUs=9.5 maxPostUs=3326 mb=11.7
+20549.6 MEMORY label=stress hostKb=66060 web:37032
+21079.9 HB-MISS hb=probe seq=20 missed=16
+21082.2 HB-PING hb=probe seq=21 postUs=37 hr=0x00000000 outstanding=17
+21747.5 STRESS sent=13000 meanPostUs=9.3 maxPostUs=3326 mb=12.7
+21748.3 MEMORY label=stress hostKb=66272 web:38436
+22081.1 HB-MISS hb=probe seq=21 missed=17
+22082.1 HB-PING hb=probe seq=22 postUs=38 hr=0x00000000 outstanding=18
+22948.1 STRESS sent=14000 meanPostUs=9.1 maxPostUs=3326 mb=13.7
+22948.9 MEMORY label=stress hostKb=66580 web:39884
+23081.0 HB-MISS hb=probe seq=22 missed=18
+23081.5 HB-PING hb=probe seq=23 postUs=26 hr=0x00000000 outstanding=19
+24081.2 HB-MISS hb=probe seq=23 missed=19
+24082.4 HB-PING hb=probe seq=24 postUs=29 hr=0x00000000 outstanding=20
+24149.3 STRESS sent=15000 meanPostUs=9.0 maxPostUs=3326 mb=14.6
+24150.6 MEMORY label=stress hostKb=66900 web:41276
+25081.6 HB-MISS hb=ping seq=4 missed=4
+25082.1 HB-PING hb=ping seq=5 postUs=19 hr=0x00000000 outstanding=5
+25083.5 HB-MISS hb=probe seq=24 missed=20
+25086.0 HB-PING hb=probe seq=25 postUs=20 hr=0x00000000 outstanding=21
+25096.5 PUMP phase=stress-on-1000/1024 n=4401 median=0.03ms p99=0.10ms min=0.00ms max=7.24ms
+25352.3 STRESS sent=16000 meanPostUs=8.9 maxPostUs=3326 mb=15.6
+25353.1 MEMORY label=stress hostKb=67340 web:42672
+26079.7 HB-MISS hb=probe seq=25 missed=21
+26080.3 HB-PING hb=probe seq=26 postUs=47 hr=0x00000000 outstanding=22
+26551.8 STRESS sent=17000 meanPostUs=8.9 maxPostUs=3326 mb=16.6
+26552.5 MEMORY label=stress hostKb=68420 web:44076
+27079.6 HB-MISS hb=probe seq=26 missed=22
+27080.1 HB-PING hb=probe seq=27 postUs=25 hr=0x00000000 outstanding=23
+27751.4 STRESS sent=18000 meanPostUs=8.9 maxPostUs=3326 mb=17.6
+27752.3 MEMORY label=stress hostKb=68724 web:45484
+28079.5 HB-MISS hb=probe seq=27 missed=23
+28080.0 HB-PING hb=probe seq=28 postUs=32 hr=0x00000000 outstanding=24
+28951.5 STRESS sent=19000 meanPostUs=8.8 maxPostUs=3326 mb=18.6
+28952.2 MEMORY label=stress hostKb=69032 web:46884
+29079.7 HB-MISS hb=probe seq=28 missed=24
+29080.5 HB-PING hb=probe seq=29 postUs=49 hr=0x00000000 outstanding=25
+30081.1 HB-MISS hb=probe seq=29 missed=25
+30081.7 HB-PING hb=probe seq=30 postUs=18 hr=0x00000000 outstanding=26
+30082.1 HB-MISS hb=ping seq=5 missed=5
+30082.4 HB-PING hb=ping seq=6 postUs=15 hr=0x00000000 outstanding=6
+30099.6 PUMP phase=stress-on-1000/1024 n=4419 median=0.03ms p99=0.10ms min=0.00ms max=1.53ms
+30152.9 STRESS sent=20000 meanPostUs=8.7 maxPostUs=3326 mb=19.5
+30153.7 MEMORY label=stress hostKb=69332 web:48292
+31080.2 HB-MISS hb=probe seq=30 missed=26
+31080.9 HB-PING hb=probe seq=31 postUs=23 hr=0x00000000 outstanding=27
+31352.4 STRESS sent=21000 meanPostUs=8.6 maxPostUs=3326 mb=20.5
+31353.2 MEMORY label=stress hostKb=69652 web:49700
+32080.0 HB-MISS hb=probe seq=31 missed=27
+32080.7 HB-PING hb=probe seq=32 postUs=46 hr=0x00000000 outstanding=28
+32552.6 STRESS sent=22000 meanPostUs=8.5 maxPostUs=3326 mb=21.5
+32553.5 MEMORY label=stress hostKb=69960 web:51144
+33080.2 HB-MISS hb=probe seq=32 missed=28
+33080.8 HB-PING hb=probe seq=33 postUs=26 hr=0x00000000 outstanding=29
+33753.0 STRESS sent=23000 meanPostUs=8.4 maxPostUs=3326 mb=22.5
+33753.8 MEMORY label=stress hostKb=70280 web:52544
+34080.9 HB-MISS hb=probe seq=33 missed=29
+34081.6 HB-PING hb=probe seq=34 postUs=25 hr=0x00000000 outstanding=30
+34952.3 STRESS sent=24000 meanPostUs=8.3 maxPostUs=3326 mb=23.4
+34953.0 MEMORY label=stress hostKb=70596 web:53936
+35080.8 HB-MISS hb=probe seq=34 missed=30
+35081.3 HB-PING hb=probe seq=35 postUs=23 hr=0x00000000 outstanding=31
+35081.6 HB-MISS hb=ping seq=6 missed=6
+35081.9 HB-PING hb=ping seq=7 postUs=12 hr=0x00000000 outstanding=7
+35101.4 PUMP phase=stress-on-1000/1024 n=4496 median=0.02ms p99=0.08ms min=0.00ms max=1.25ms
+36079.4 HB-MISS hb=probe seq=35 missed=31
+36079.9 HB-PING hb=probe seq=36 postUs=29 hr=0x00000000 outstanding=32
+36151.5 STRESS sent=25000 meanPostUs=8.3 maxPostUs=3326 mb=24.4
+36152.2 MEMORY label=stress hostKb=70900 web:55336
+36156.8 ACTION verb=stress-off arg=
+36164.9 STRESS-END sent=25000 meanPostUs=8.3 maxPostUs=3326
+37080.6 HB-MISS hb=probe seq=36 missed=32
+37081.5 HB-PING hb=probe seq=37 postUs=37 hr=0x00000000 outstanding=33
+37157.2 ACTION verb=memory arg=after
+37158.1 MEMORY label=after hostKb=70816 web:55340
+38081.2 HB-MISS hb=probe seq=37 missed=33
+38082.0 HB-PING hb=probe seq=38 postUs=37 hr=0x00000000 outstanding=34
+39081.1 HB-MISS hb=probe seq=38 missed=34
+39081.5 HB-PING hb=probe seq=39 postUs=32 hr=0x00000000 outstanding=35
+40080.9 HB-MISS hb=probe seq=39 missed=35
+40081.7 HB-PING hb=probe seq=40 postUs=36 hr=0x00000000 outstanding=36
+40083.7 HB-MISS hb=ping seq=7 missed=7
+40085.8 HB-PING hb=ping seq=8 postUs=27 hr=0x00000000 outstanding=8
+40102.9 PUMP phase=memory-after n=4454 median=0.03ms p99=0.08ms min=0.00ms max=5.61ms
+41080.6 HB-MISS hb=probe seq=40 missed=36
+41083.9 HB-PING hb=probe seq=41 postUs=39 hr=0x00000000 outstanding=37
+42080.3 HB-MISS hb=probe seq=41 missed=37
+42080.7 HB-PING hb=probe seq=42 postUs=35 hr=0x00000000 outstanding=38
+43080.3 HB-MISS hb=probe seq=42 missed=38
+43081.3 HB-PING hb=probe seq=43 postUs=33 hr=0x00000000 outstanding=39
+44080.0 HB-MISS hb=probe seq=43 missed=39
+44083.9 HB-PING hb=probe seq=44 postUs=41 hr=0x00000000 outstanding=40
+45079.7 HB-MISS hb=probe seq=44 missed=40
+45080.5 HB-PING hb=probe seq=45 postUs=36 hr=0x00000000 outstanding=41
+45080.8 HB-MISS hb=ping seq=8 missed=8
+45081.5 HB-PING hb=ping seq=9 postUs=44 hr=0x00000000 outstanding=9
+45105.1 PUMP phase=memory-after n=4446 median=0.02ms p99=0.08ms min=0.01ms max=8.04ms
+45157.9 ACTION verb=memory arg=later
+45159.7 MEMORY label=later hostKb=70824 web:55432
+46079.5 HB-MISS hb=probe seq=45 missed=41
+46081.7 HB-PING hb=probe seq=46 postUs=52 hr=0x00000000 outstanding=42
+46162.7 PUMP-PHASE phase=start n=2688 median=0.02ms p99=0.10ms min=0.01ms max=7.64ms
+46163.7 PUMP-PHASE phase=memory-before n=876 median=0.02ms p99=0.08ms min=0.01ms max=3.19ms
+46166.5 PUMP-PHASE phase=hang-idle n=1763 median=0.02ms p99=0.08ms min=0.01ms max=1.48ms
+46169.9 PUMP-PHASE phase=stress-on-1000/1024 n=26649 median=0.02ms p99=0.10ms min=0.00ms max=10.24ms
+46171.5 PUMP-PHASE phase=stress-off n=893 median=0.03ms p99=0.08ms min=0.01ms max=1.97ms
+46182.0 PUMP-PHASE phase=memory-after n=7116 median=0.02ms p99=0.08ms min=0.01ms max=8.04ms
+46183.7 PUMP-PHASE phase=memory-later n=882 median=0.02ms p99=0.08ms min=0.01ms max=5.15ms
+46184.3 FINISH backendCounter=1
+48263.9 HOST-EXIT code=0

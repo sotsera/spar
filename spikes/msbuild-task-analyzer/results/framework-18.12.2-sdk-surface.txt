@@ -1,0 +1,52 @@
+# Microsoft.Build.Framework 15.1.0.0 (18.12.2-1.26529.118+297acf930fb0f5c07fd4e51d78e521b4ad2e5d1f)
+# C:\Program Files\dotnet\sdk\11.0.100\Microsoft.Build.Framework.dll
+
+struct Microsoft.Build.Framework.AbsolutePath : IEquatable<Microsoft.Build.Framework.AbsolutePath>  [NullableContextAttribute(1)]  [NullableAttribute(0)]  [IsReadOnlyAttribute()]
+  ctor(String path)
+  ctor(String path, Microsoft.Build.Framework.AbsolutePath basePath)
+  Boolean Equals(Object obj)
+  Boolean Equals(Microsoft.Build.Framework.AbsolutePath other)
+  Microsoft.Build.Framework.AbsolutePath GetCanonicalForm()
+  Int32 GetHashCode()
+  String ToString()
+  static Boolean op_Equality(Microsoft.Build.Framework.AbsolutePath left, Microsoft.Build.Framework.AbsolutePath right)
+  static String op_Implicit(Microsoft.Build.Framework.AbsolutePath path)
+  static Boolean op_Inequality(Microsoft.Build.Framework.AbsolutePath left, Microsoft.Build.Framework.AbsolutePath right)
+  String OriginalValue { get; }
+  String Value { get; }
+
+interface Microsoft.Build.Framework.IMultiThreadableTask : Microsoft.Build.Framework.ITask  [NullableContextAttribute(1)]
+  Microsoft.Build.Framework.TaskEnvironment TaskEnvironment { get; set; }
+
+interface Microsoft.Build.Framework.ITaskItem  [ComVisibleAttribute(True)]  [GuidAttribute(8661674F-2148-4F71-A92A-49875511C528)]
+  IDictionary CloneCustomMetadata()
+  Void CopyMetadataTo(Microsoft.Build.Framework.ITaskItem destinationItem)
+  String GetMetadata(String metadataName)
+  Void RemoveMetadata(String metadataName)
+  Void SetMetadata(String metadataName, String metadataValue)
+  String ItemSpec { get; set; }
+  Int32 MetadataCount { get; }
+  ICollection MetadataNames { get; }
+
+interface Microsoft.Build.Framework.ITaskItem2 : Microsoft.Build.Framework.ITaskItem  [ComVisibleAttribute(True)]  [GuidAttribute(ac6d5a59-f877-461b-88e3-b2f06fce0cb9)]
+  IDictionary CloneCustomMetadataEscaped()
+  String GetMetadataValueEscaped(String metadataName)
+  Void SetMetadataValueLiteral(String metadataName, String metadataValue)
+  String EvaluatedIncludeEscaped { get; set; }
+
+interface ITaskItem<T> : Microsoft.Build.Framework.ITaskItem2, Microsoft.Build.Framework.ITaskItem
+  T Value { get; }
+
+class Microsoft.Build.Framework.MSBuildMultiThreadableTaskAttribute : Attribute  [AttributeUsageAttribute(4, AllowMultiple=False, Inherited=False)]
+  ctor()
+
+sealed class Microsoft.Build.Framework.TaskEnvironment  [NullableContextAttribute(1)]  [NullableAttribute(0)]
+  static Microsoft.Build.Framework.TaskEnvironment CreateWithProjectDirectoryAndEnvironment(String projectDirectory, IDictionary<String, String> environmentVariables)
+  Microsoft.Build.Framework.AbsolutePath GetAbsolutePath(String path)
+  String GetEnvironmentVariable(String name)
+  IReadOnlyDictionary<String, String> GetEnvironmentVariables()
+  ProcessStartInfo GetProcessStartInfo()
+  Microsoft.Build.Framework.AbsolutePath GetTempPath()
+  Void SetEnvironmentVariable(String name, String value)
+  static Microsoft.Build.Framework.TaskEnvironment Fallback { get; }
+  Microsoft.Build.Framework.AbsolutePath ProjectDirectory { get; }

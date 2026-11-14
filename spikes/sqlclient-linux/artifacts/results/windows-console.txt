@@ -1,0 +1,36 @@
+[win-aot-bulk-b100k-r1] 14310 ms
+  RESULT bulk variant=b100k rows=1000000 copyMs=12120 totalMs=12120 rowsPerSec=82505 payloadMBps=16.1 progressEvents=10 maxProgressGapMs=1347 identical=True
+  MEM end peakWorkingSetMB=43.6 workingSetMB=43.6 peakPrivateMB=30.7 allocatedMB=1834.8 gc0=102 gc1=2 gc2=1 cpuMs=11859
+[win-jit-bulk-b100k-r1] 13513 ms
+  RESULT bulk variant=b100k rows=1000000 copyMs=10690 totalMs=10690 rowsPerSec=93547 payloadMBps=18.3 progressEvents=10 maxProgressGapMs=1711 identical=True
+  MEM end peakWorkingSetMB=75.7 workingSetMB=74.5 peakPrivateMB=37.7 allocatedMB=1830.2 gc0=104 gc1=1 gc2=0 cpuMs=25000
+[win-aot-bulk-b100k-r2] 13157 ms
+  RESULT bulk variant=b100k rows=1000000 copyMs=11141 totalMs=11141 rowsPerSec=89758 payloadMBps=17.5 progressEvents=10 maxProgressGapMs=1232 identical=True
+  MEM end peakWorkingSetMB=43.5 workingSetMB=43.5 peakPrivateMB=30.7 allocatedMB=1834.7 gc0=102 gc1=2 gc2=1 cpuMs=10906
+[win-jit-bulk-b100k-r2] 12441 ms
+  RESULT bulk variant=b100k rows=1000000 copyMs=10229 totalMs=10229 rowsPerSec=97759 payloadMBps=19.1 progressEvents=10 maxProgressGapMs=1772 identical=True
+  MEM end peakWorkingSetMB=75.5 workingSetMB=75.5 peakPrivateMB=38.3 allocatedMB=1832.8 gc0=104 gc1=1 gc2=0 cpuMs=23891
+[win-aot-bulk-b100k-r3] 13056 ms
+  RESULT bulk variant=b100k rows=1000000 copyMs=11024 totalMs=11024 rowsPerSec=90712 payloadMBps=17.7 progressEvents=10 maxProgressGapMs=1232 identical=True
+  MEM end peakWorkingSetMB=43.9 workingSetMB=43.9 peakPrivateMB=31.1 allocatedMB=1834.8 gc0=102 gc1=2 gc2=1 cpuMs=10922
+[win-jit-bulk-b100k-r3] 11984 ms
+  RESULT bulk variant=b100k rows=1000000 copyMs=9633 totalMs=9633 rowsPerSec=103811 payloadMBps=20.3 progressEvents=10 maxProgressGapMs=1896 identical=True
+  MEM end peakWorkingSetMB=75.3 workingSetMB=75.3 peakPrivateMB=37.2 allocatedMB=1838.1 gc0=104 gc1=1 gc2=0 cpuMs=28953
+[win-aot-read-typed-sync] 3082 ms
+  RESULT read variant=typed-sync rows=1000000 medianMs=979 rowsPerSec=1021249 payloadMBps=199.6 runsMs=[988, 979, 970] checksum=532994389691
+  MEM end peakWorkingSetMB=40.7 workingSetMB=40.7 peakPrivateMB=28.2 allocatedMB=980.2 gc0=54 gc1=1 gc2=0 cpuMs=2844
+[win-jit-read-typed-sync] 3289 ms
+  RESULT read variant=typed-sync rows=1000000 medianMs=897 rowsPerSec=1114345 payloadMBps=217.8 runsMs=[1258, 897, 845] checksum=532994389691
+  MEM end peakWorkingSetMB=77.1 workingSetMB=77.1 peakPrivateMB=40.5 allocatedMB=980.7 gc0=54 gc1=2 gc2=1 cpuMs=3031
+[win-aot-read-seq-async] 3166 ms
+  RESULT read variant=seq-async rows=1000000 medianMs=995 rowsPerSec=1004978 payloadMBps=196.5 runsMs=[966, 1076, 995] checksum=532994389691
+  MEM end peakWorkingSetMB=42.9 workingSetMB=42.9 peakPrivateMB=30.3 allocatedMB=992.9 gc0=55 gc1=1 gc2=0 cpuMs=2812
+[win-jit-read-seq-async] 3615 ms
+  RESULT read variant=seq-async rows=1000000 medianMs=897 rowsPerSec=1115265 payloadMBps=218.0 runsMs=[1602, 897, 832] checksum=532994389691
+  MEM end peakWorkingSetMB=80.2 workingSetMB=80.2 peakPrivateMB=43.3 allocatedMB=993.5 gc0=55 gc1=1 gc2=0 cpuMs=3547
+[win-aot-query-cancel-waitfor-async] 1180 ms
+  RESULT query-cancel case=waitfor-async cancelToExceptionMs=1.0 requestGoneAfterCancelMs=1.6 connectionState=Open reusable=yes (0.6 ms, SELECT 1 -> 1)
+  MEM end peakWorkingSetMB=22.5 workingSetMB=22.5 peakPrivateMB=10.0 allocatedMB=0.5 gc0=0 gc1=0 gc2=0 cpuMs=62
+[win-jit-query-cancel-waitfor-async] 1337 ms
+  RESULT query-cancel case=waitfor-async cancelToExceptionMs=5.3 requestGoneAfterCancelMs=8.2 connectionState=Open reusable=yes (1.3 ms, SELECT 1 -> 1)
+  MEM end peakWorkingSetMB=49.3 workingSetMB=49.3 peakPrivateMB=14.6 allocatedMB=1.0 gc0=0 gc1=0 gc2=0 cpuMs=234

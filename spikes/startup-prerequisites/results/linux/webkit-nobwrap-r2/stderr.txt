@@ -1,0 +1,9 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+Spar Sample cannot start: Spar Sample needs bwrap to run its web content safely, and they are not installed.
+Install them with: sudo apt install bubblewrap xdg-dbus-proxy
+Details: not found on PATH or in /usr/bin: bwrap
+Exit code 3.
+
+(spar-sample:41): Gtk-WARNING **: 14:53:34.402: Unable to acquire the address of the accessibility bus: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files. If you are attempting to run GTK without a11y support, GTK_A11Y should be set to 'none'.
+Gtk-Message: 14:53:34.729: GtkDialog mapped without a transient parent. This is discouraged.

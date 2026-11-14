@@ -1,0 +1,48 @@
+4.7 WM-SIZE type=0
+5.1 WINDOW hwnd=0x2801DA placement=100,80
+82.2 ENV ms=76.9 version=157.0.4341.46 folder=C:\spar\profiles\input-click-quiet-2 sandbox=True cpus=32
+2468.9 PROCESS-INFOS-CHANGED browser:1888
+2473.7 PROCESS-INFOS-CHANGED browser:1888 gpu:5532
+2473.9 PROCESS-INFOS-CHANGED browser:1888 gpu:5532 utility:6908
+2474.2 PROCESS-INFOS-CHANGED browser:1888 gpu:5532 utility:6908 utility:7228
+2476.7 PROCESS-INFOS-CHANGED browser:1888 gpu:5532 utility:6908 utility:7228 renderer:7500
+2553.4 INJECT hr=0x00000000
+2553.9 CONTROLLER ms=2548.3 browserPid=1888 webView3=True webView19=True processes=[browser:1888 gpu:5532 utility:6908 utility:7228 renderer:7500]
+2554.1 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=0 onUnresponsive=none options=[--log C:\spar\out\input\input-click-quiet-2.log --profile-root C:\spar\profiles --profile input-click-quiet-2 --placement 100,80 --browser-folder C:\Program Files (x86)\Microsoft\EdgeWebView\Application\157.0.4341.46 --no-ping --probe-interval 0 --actions 3000:hang-idle,8000:click --duration 75000 --timeout 150]
+2554.6 NAVIGATE uri=https://app.localhost/index.html
+2557.0 NAV-STARTING id=2 uri=https://app.localhost/index.html
+2576.6 CONTENT-LOADING id=2 errorPage=0
+2579.9 DOC path=/index.html vis=visible
+2580.1 HB-ARM hb=ping reason=doc
+2581.9 READY path=/index.html pagePerf=26.1 vis=visible
+2589.3 NAV-COMPLETED id=2 success=True status=0
+2589.6 PAGE state-seen:1
+3582.6 TICK n=1 dtMs=0 vis=visible frames=30
+4594.8 TICK n=2 dtMs=1012 vis=visible frames=32
+5592.8 ACTION verb=hang-idle arg=
+5593.4 TICK n=3 dtMs=998 vis=visible frames=32
+5593.8 HANG kind=idle pagePerf=3037.7
+7555.5 PUMP phase=hang-idle n=323 median=0.07ms p99=0.23ms min=0.03ms max=0.32ms
+10591.4 ACTION verb=click arg=
+10607.9 INPUT kind=click sent=3 at=420,290
+12560.5 PUMP phase=click n=321 median=0.07ms p99=0.19ms min=0.01ms max=0.70ms
+17575.4 PUMP phase=click n=321 median=0.07ms p99=0.19ms min=0.03ms max=0.22ms
+22576.1 PUMP phase=click n=320 median=0.07ms p99=0.19ms min=0.03ms max=0.25ms
+26623.5 PROCESS-FAILED kind=render-unresponsive reason=unresponsive exitCode=259 description= processes=[browser:1888 gpu:5532 utility:6908 utility:7228 renderer:7500]
+27591.5 PUMP phase=click n=321 median=0.08ms p99=0.21ms min=0.02ms max=0.33ms
+32607.4 PUMP phase=click n=321 median=0.07ms p99=0.20ms min=0.03ms max=0.28ms
+37622.9 PUMP phase=click n=321 median=0.08ms p99=0.19ms min=0.04ms max=0.31ms
+42638.9 PUMP phase=click n=321 median=0.08ms p99=0.18ms min=0.02ms max=0.21ms
+47654.0 PUMP phase=click n=321 median=0.07ms p99=0.18ms min=0.02ms max=0.22ms
+52670.2 PUMP phase=click n=321 median=0.07ms p99=0.18ms min=0.04ms max=0.23ms
+57685.4 PUMP phase=click n=321 median=0.08ms p99=0.23ms min=0.04ms max=0.26ms
+62701.3 PUMP phase=click n=321 median=0.08ms p99=0.20ms min=0.04ms max=0.28ms
+67716.5 PUMP phase=click n=321 median=0.07ms p99=0.17ms min=0.03ms max=0.28ms
+72732.4 PUMP phase=click n=321 median=0.07ms p99=0.19ms min=0.02ms max=0.31ms
+77591.9 PUMP-PHASE phase=start n=198 median=0.07ms p99=0.24ms min=0.03ms max=0.32ms
+77592.2 PUMP-PHASE phase=hang-idle n=319 median=0.07ms p99=0.16ms min=0.03ms max=0.21ms
+77592.7 PUMP-PHASE phase=click n=4288 median=0.08ms p99=0.20ms min=0.01ms max=0.70ms
+77592.8 FINISH backendCounter=1
+77606.0 PROCESS-INFOS-CHANGED 
+77847.5 BROWSER-EXITED 
+77851.1 HOST-EXIT code=0

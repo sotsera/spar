@@ -1,0 +1,35 @@
+none parts=None exe=992256 warnings=0
+com-baseline parts=ComBaseline exe=1899520 warnings=0
+dialogs parts=Dialogs exe=2095104 warnings=0
+com-baseline-dialogs parts=ComBaseline;Dialogs exe=2096128 warnings=0
+cswin32-dialogs parts=CsWin32Dialogs exe=1488896 warnings=0
+com-baseline-cswin32-dialogs parts=ComBaseline;CsWin32Dialogs exe=2037248 warnings=0
+dialogs-grants parts=Dialogs;Grants exe=2298880 warnings=0
+credman parts=CredMan exe=1311744 warnings=0
+dpapi parts=Dpapi exe=1193472 warnings=0
+protecteddata parts=ProtectedData exe=1019904 warnings=0
+all parts=Dialogs;CsWin32Dialogs;Grants;CredMan;Dpapi;ProtectedData exe=2371584 warnings=0
+passed=0 failed=0 elapsed=0.0s tempRemoved=True
+passed=1 failed=0 elapsed=0.1s tempRemoved=True
+passed=11 failed=0 elapsed=7.4s tempRemoved=True
+passed=2 failed=0 elapsed=0.5s tempRemoved=True
+passed=23 failed=0 elapsed=8.1s tempRemoved=True
+passed=9 failed=0 elapsed=0.7s tempRemoved=True
+passed=4 failed=0 elapsed=0.3s tempRemoved=True
+passed=1 failed=0 elapsed=0.0s tempRemoved=True
+passed=40 failed=0 elapsed=9.5s tempRemoved=True
+pid=55664 dynamicCodeCompiled=False mode=cred-write-peer parts=Dialogs,CsWin32Dialogs,Grants,CredMan,Dpapi,ProtectedData
+wrote SparSpike/native-services/peer
+
+Currently stored credentials for SparSpike/native-services/*:
+
+    Target: SparSpike/native-services/peer
+    Type: Generic 
+    User: spike_user
+    Saved for this logon only
+    
+pid=71568 dynamicCodeCompiled=False mode=cred-read-peer parts=Dialogs,CsWin32Dialogs,Grants,CredMan,Dpapi,ProtectedData
+[PASS] credman: a different process of the same user reads the secret: deleted=True
+[PASS] credman: nothing left under SparSpike/*: 
+pid=14664 dynamicCodeCompiled=False mode=cred-verify parts=Dialogs,CsWin32Dialogs,Grants,CredMan,Dpapi,ProtectedData
+[PASS] credman: CredEnumerate("SparSpike/*") is empty: 

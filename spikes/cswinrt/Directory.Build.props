@@ -1,0 +1,17 @@
+<Project>
+  <!-- Inherit the repository policy (warnings as errors, code style), then add the spike's CsWinRT 3.0 settings. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))" />
+
+  <PropertyGroup>
+    <!-- The '.1' revision selects CsWinRT 3.0 in the .NET SDK; '.0' would select CsWinRT 2.x. -->
+    <SpikeWindowsTfm>net11.0-windows10.0.26100.1</SpikeWindowsTfm>
+    <!-- The SDK's bundled 10.0.26100.87 has no CsWinRT 3.0 profile; the preview projection is needed. -->
+    <WindowsSdkPackageVersion>10.0.26100.88-preview</WindowsSdkPackageVersion>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+</Project>

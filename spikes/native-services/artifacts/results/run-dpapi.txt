@@ -1,0 +1,9 @@
+pid=52096 dynamicCodeCompiled=False mode=all parts=Dpapi
+[PASS] dpapi: protect -> file -> unprotect round trip: plain=177B sealed=458B overhead=281B
+[PASS] dpapi: the description is stored in the blob in clear text (do not put secrets in it): 52 bytes found
+[PASS] dpapi: wrong entropy refused: win32 error=13
+[PASS] dpapi: tampered blob refused: win32 error=13
+[TIME] dpapi Protect 1 MiB: n=5 first=46.238ms median=46.167ms p95=47.407ms max=47.407ms
+[TIME] dpapi Protect (connection string): n=200 first=0.336ms median=0.099ms p95=0.116ms max=0.651ms
+[TIME] dpapi Unprotect (connection string): n=200 first=0.101ms median=0.074ms p95=0.174ms max=0.476ms
+passed=4 failed=0 elapsed=0.3s tempRemoved=True

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <title>Title bar spike</title>
+  <link rel="stylesheet" href="app.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header id="bar" class="bar">
+    <button id="menu" class="nodrag icon" aria-label="App menu" aria-haspopup="menu">&#9776;</button>
+    <span id="title" class="title">Instances</span>
+    <div class="tabs nodrag" role="tablist" aria-label="Views">
+      <button id="tab1" role="tab" aria-selected="true">Monitor</button>
+      <button id="tab2" role="tab" aria-selected="false">Compare</button>
+    </div>
+    <input id="search" class="nodrag" type="search" placeholder="Search" aria-label="Search">
+    <div id="drag" class="drag"></div>
+    <div id="reserve" class="reserve" hidden></div>
+    <div id="caption" class="caption nodrag" hidden>
+      <button id="min" class="cap" aria-label="Minimize" tabindex="-1"><span aria-hidden="true">&#xE921;</span></button>
+      <button id="max" class="cap" aria-label="Maximize" tabindex="-1"><span aria-hidden="true">&#xE922;</span></button>
+      <button id="close" class="cap close" aria-label="Close" tabindex="-1"><span aria-hidden="true">&#xE8BB;</span></button>
+    </div>
+  </header>
+  <main id="main">
+    <h1>Custom title bar</h1>
+    <p>Static text, so the first frame is not held. Drag the empty part of the bar to move the window.</p>
+    <p id="status">starting</p>
+  </main>
+</body>
+</html>

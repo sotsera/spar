@@ -1,0 +1,35 @@
+<Project>
+  <!-- Inherit the repository policy (warnings as errors, code style), then add the variant settings. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))" />
+
+  <!--
+    One variant property. This file is imported at the top of Microsoft.Common.props, so the paths below are set
+    before the SDK derives MSBuildProjectExtensionsPath, IntermediateOutputPath and OutputPath from them.
+    Each variant therefore has its own restore output (project.assets.json), obj and bin.
+  -->
+  <PropertyGroup>
+    <SparVariant Condition="'$(SparVariant)' == ''">Production</SparVariant>
+    <_SparVariantKnown Condition="'$(SparVariant)' == 'Production' or '$(SparVariant)' == 'Development' or '$(SparVariant)' == 'DesktopTest'">true</_SparVariantKnown>
+
+    <BaseIntermediateOutputPath>obj\$(SparVariant)\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin\$(SparVariant)\</BaseOutputPath>
+
+    <!-- The SDK excludes only this variant's bin/obj from the default globs; another variant's generated
+         sources (AssemblyInfo, global usings) would otherwise be compiled into this one. -->
+    <!-- D3KeepVariantGlobs=true drops the exclusion, to show the failure it prevents. -->
+    <DefaultItemExcludes Condition="'$(D3KeepVariantGlobs)' != 'true'">$(DefaultItemExcludes);bin\**;obj\**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparVariant)' == 'Development'">
+    <DefineConstants>$(DefineConstants);SPAR_VARIANT_DEVELOPMENT</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparVariant)' == 'DesktopTest'">
+    <DefineConstants>$(DefineConstants);SPAR_VARIANT_DESKTOPTEST</DefineConstants>
+  </PropertyGroup>
+
+  <Target Name="_SparCheckVariant" BeforeTargets="Restore;_CheckForInvalidConfigurationAndPlatform"
+          Condition="'$(_SparVariantKnown)' != 'true'">
+    <Error Text="SparVariant '$(SparVariant)' is not one of Production, Development, DesktopTest." />
+  </Target>
+</Project>

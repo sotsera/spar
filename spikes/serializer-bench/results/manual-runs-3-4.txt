@@ -1,0 +1,42 @@
+CoreCLR, 15 rounds, 32 logical CPUs
+| small   serialize reused A | 536.3 | 526.3 | 610.7 | 15.7 % | 64 | 1.05 |
+| small   serialize reused B | 508.8 | 497.8 | 551.9 | 10.6 % | 64 |  |
+| small   serialize tuned A2 | 444.9 | 429.6 | 467.6 | 8.5 % | 0 | 0.87 |
+| 50      serialize reused A | 18,859.0 | 18,312.4 | 19,215.1 | 4.8 % | 1,824 | 1.07 |
+| 50      serialize reused B | 17,706.3 | 17,396.1 | 20,127.5 | 15.4 % | 1,824 |  |
+| 50      serialize tuned A2 | 15,508.1 | 14,913.6 | 17,420.6 | 16.2 % | 0 | 0.88 |
+| 2000    serialize reused A | 844,435.0 | 832,437.6 | 955,507.7 | 14.6 % | 72,544 | 1.02 |
+| 2000    serialize reused B | 830,671.8 | 799,523.1 | 875,262.4 | 9.1 % | 72,544 |  |
+| 2000    serialize tuned A2 | 716,465.5 | 664,735.3 | 799,225.9 | 18.8 % | 0 | 0.86 |
+NativeAOT, 15 rounds, 32 logical CPUs
+| small   serialize reused A | 801.6 | 784.7 | 856.8 | 9.0 % | 64 | 1.12 |
+| small   serialize reused B | 716.4 | 697.0 | 771.2 | 10.4 % | 64 |  |
+| small   serialize tuned A2 | 611.0 | 594.7 | 741.6 | 24.0 % | 0 | 0.85 |
+| 50      serialize reused A | 27,773.2 | 27,428.8 | 31,556.0 | 14.9 % | 1,824 | 1.11 |
+| 50      serialize reused B | 24,914.9 | 24,542.2 | 27,105.3 | 10.3 % | 1,824 |  |
+| 50      serialize tuned A2 | 21,245.5 | 20,805.1 | 23,218.8 | 11.4 % | 0 | 0.85 |
+| 2000    serialize reused A | 1,156,031.4 | 1,136,103.5 | 1,302,407.0 | 14.4 % | 72,607 | 1.05 |
+| 2000    serialize reused B | 1,101,318.3 | 1,033,789.2 | 1,203,720.4 | 15.4 % | 72,544 |  |
+| 2000    serialize tuned A2 | 911,810.2 | 897,179.6 | 1,069,050.0 | 18.8 % | 0 | 0.83 |
+CoreCLR, 15 rounds, 32 logical CPUs
+| small   serialize reused A | 540.8 | 530.4 | 665.9 | 25.0 % | 64 | 1.06 |
+| small   serialize reused B | 510.0 | 501.3 | 580.6 | 15.6 % | 64 |  |
+| small   serialize tuned A2 | 439.8 | 431.1 | 491.7 | 13.8 % | 0 | 0.86 |
+| 50      serialize reused A | 18,543.8 | 18,368.5 | 18,956.4 | 3.2 % | 1,824 | 1.05 |
+| 50      serialize reused B | 17,737.6 | 17,421.7 | 18,927.1 | 8.5 % | 1,824 |  |
+| 50      serialize tuned A2 | 15,300.1 | 14,795.1 | 16,596.3 | 11.8 % | 0 | 0.86 |
+| 2000    serialize reused A | 851,157.6 | 832,378.8 | 955,595.8 | 14.5 % | 72,544 | 1.04 |
+| 2000    serialize reused B | 820,050.0 | 803,145.9 | 870,293.4 | 8.2 % | 72,544 |  |
+| 2000    serialize tuned A2 | 717,873.6 | 694,114.3 | 786,166.4 | 12.8 % | 0 | 0.88 |
+NativeAOT, 15 rounds, 32 logical CPUs
+| small   serialize reused A | 831.0 | 807.4 | 1,092.6 | 34.3 % | 64 | 1.18 |
+| small   serialize reused B | 705.6 | 690.1 | 770.8 | 11.4 % | 64 |  |
+| small   serialize tuned A2 | 614.8 | 598.2 | 823.2 | 36.6 % | 0 | 0.87 |
+| 50      serialize reused A | 28,733.6 | 27,973.2 | 34,995.2 | 24.4 % | 1,824 | 1.16 |
+| 50      serialize reused B | 24,810.6 | 24,245.5 | 26,161.8 | 7.7 % | 1,824 |  |
+| 50      serialize tuned A2 | 21,238.5 | 20,934.5 | 27,296.8 | 30.0 % | 0 | 0.86 |
+| 2000    serialize reused A | 1,202,178.0 | 1,174,593.9 | 1,447,991.5 | 22.7 % | 72,544 | 1.11 |
+| 2000    serialize reused B | 1,078,409.7 | 1,035,505.4 | 1,271,818.3 | 21.9 % | 72,544 |  |
+| 2000    serialize tuned A2 | 924,052.3 | 894,553.3 | 1,176,996.3 | 30.6 % | 0 | 0.86 |
+
+[exited with code 0]

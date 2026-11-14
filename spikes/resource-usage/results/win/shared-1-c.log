@@ -1,0 +1,50 @@
+ENV ms=6.1 version=157.0.4341.46 env8=True env13=True folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\resource-usage\shared-y
+PROCESS-INFOS-CHANGED count=1 onUi=True
+CONTROLLER ms=227.3 browserPid=36852 profile=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\resource-usage\shared-y\EBWebView\Default
+PROCESS-INFOS-CHANGED count=2 onUi=True
+PROCESS-INFOS-CHANGED count=3 onUi=True
+PROCESS-INFOS-CHANGED count=4 onUi=True
+PROCESS-INFOS-CHANGED count=5 onUi=True
+PAGE uri=https://app.localhost/small.html?instance=c ms=160.2 message=SPAR_READY /small.html?instance=c
+SHARED-LIST instance=c t=0 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+SHARED-FRAMES instance=c t=0 72916=[https://app.localhost/small.html?instance=c]
+MEM label=shared-c pid=6880 kind=gpu ex2-error=0 workingSetKB=74856 privateWorkingSetKB=19492 privateUsageKB=68264 sharedCommitKB=15512 dotnetPrivateKB=70424 qws-error=0 qwsPages=18711 qwsPrivateKB=19416 qwsSharedKB=55428 qwsSharedOnceKB=0 qwsProportionalKB=27334 qwsMs=1.53
+MEM label=shared-c pid=9312 kind=utility ex2-error=0 workingSetKB=44856 privateWorkingSetKB=8564 privateUsageKB=14136 sharedCommitKB=9356 dotnetPrivateKB=14136 qws-error=0 qwsPages=11195 qwsPrivateKB=8488 qwsSharedKB=36292 qwsSharedOnceKB=0 qwsProportionalKB=13672 qwsMs=1.01
+MEM label=shared-c pid=36852 kind=browser ex2-error=0 workingSetKB=111352 privateWorkingSetKB=28576 privateUsageKB=34788 sharedCommitKB=32748 dotnetPrivateKB=34892 qws-error=0 qwsPages=27820 qwsPrivateKB=28504 qwsSharedKB=82776 qwsSharedOnceKB=0 qwsProportionalKB=40329 qwsMs=1.79
+MEM label=shared-c pid=64248 kind=utility ex2-error=0 workingSetKB=26028 privateWorkingSetKB=4288 privateUsageKB=9372 sharedCommitKB=6152 dotnetPrivateKB=9372 qws-error=0 qwsPages=6489 qwsPrivateKB=4216 qwsSharedKB=21740 qwsSharedOnceKB=0 qwsProportionalKB=7321 qwsMs=0.68
+MEM label=shared-c pid=72916 kind=renderer ex2-error=0 workingSetKB=55416 privateWorkingSetKB=11360 privateUsageKB=21064 sharedCommitKB=9876 dotnetPrivateKB=21064 qws-error=0 qwsPages=13832 qwsPrivateKB=11272 qwsSharedKB=44056 qwsSharedOnceKB=0 qwsProportionalKB=17565 qwsMs=0.89
+MEM-TOTAL label=shared-c processes=5 workingSetMB=305.2 privateWorkingSetMB=70.6 privateUsageMB=144.2 sharedCommitMB=71.9 dotnetPrivateMB=146.4 qwsPrivateMB=70.2 qwsProportionalMB=103.7 hostWorkingSetMB=24.8 hostPrivateWorkingSetMB=5.5 hostPrivateUsageMB=8.3 hostPid=6432
+SHARED-LIST instance=c t=1035 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+SHARED-FRAMES instance=c t=1035 72916=[https://app.localhost/small.html?instance=c]
+MEM label=shared-c pid=6880 kind=gpu ex2-error=0 workingSetKB=79072 privateWorkingSetKB=21796 privateUsageKB=69936 sharedCommitKB=15712 dotnetPrivateKB=69936 qws-error=0 qwsPages=19749 qwsPrivateKB=21720 qwsSharedKB=57276 qwsSharedOnceKB=0 qwsProportionalKB=29902 qwsMs=1.45
+MEM label=shared-c pid=9312 kind=utility ex2-error=0 workingSetKB=44684 privateWorkingSetKB=8380 privateUsageKB=13972 sharedCommitKB=9356 dotnetPrivateKB=13972 qws-error=0 qwsPages=11152 qwsPrivateKB=8304 qwsSharedKB=36304 qwsSharedOnceKB=0 qwsProportionalKB=13490 qwsMs=0.99
+MEM label=shared-c pid=36852 kind=browser ex2-error=0 workingSetKB=111324 privateWorkingSetKB=28380 privateUsageKB=34684 sharedCommitKB=31660 dotnetPrivateKB=34684 qws-error=0 qwsPages=27813 qwsPrivateKB=28308 qwsSharedKB=82944 qwsSharedOnceKB=0 qwsProportionalKB=40157 qwsMs=1.79
+MEM label=shared-c pid=64248 kind=utility ex2-error=0 workingSetKB=26012 privateWorkingSetKB=4272 privateUsageKB=9380 sharedCommitKB=6152 dotnetPrivateKB=9380 qws-error=0 qwsPages=6485 qwsPrivateKB=4200 qwsSharedKB=21740 qwsSharedOnceKB=0 qwsProportionalKB=7305 qwsMs=0.71
+MEM label=shared-c pid=72916 kind=renderer ex2-error=0 workingSetKB=55600 privateWorkingSetKB=11296 privateUsageKB=20980 sharedCommitKB=9876 dotnetPrivateKB=20980 qws-error=0 qwsPages=13878 qwsPrivateKB=11208 qwsSharedKB=44304 qwsSharedOnceKB=0 qwsProportionalKB=17537 qwsMs=0.90
+MEM-TOTAL label=shared-c processes=5 workingSetMB=309.3 privateWorkingSetMB=72.4 privateUsageMB=145.5 sharedCommitMB=71.1 dotnetPrivateMB=145.5 qwsPrivateMB=72.0 qwsProportionalMB=105.9 hostWorkingSetMB=24.9 hostPrivateWorkingSetMB=5.6 hostPrivateUsageMB=8.3 hostPid=6432
+SHARED-LIST instance=c t=2072 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+SHARED-FRAMES instance=c t=2072 72916=[https://app.localhost/small.html?instance=c]
+MEM label=shared-c pid=6880 kind=gpu ex2-error=0 workingSetKB=79108 privateWorkingSetKB=21788 privateUsageKB=69928 sharedCommitKB=13536 dotnetPrivateKB=69928 qws-error=0 qwsPages=19758 qwsPrivateKB=21712 qwsSharedKB=57320 qwsSharedOnceKB=0 qwsProportionalKB=29900 qwsMs=1.49
+MEM label=shared-c pid=9312 kind=utility ex2-error=0 workingSetKB=45228 privateWorkingSetKB=8428 privateUsageKB=14020 sharedCommitKB=9356 dotnetPrivateKB=14020 qws-error=0 qwsPages=11288 qwsPrivateKB=8352 qwsSharedKB=36800 qwsSharedOnceKB=0 qwsProportionalKB=13609 qwsMs=1.06
+MEM label=shared-c pid=36852 kind=browser ex2-error=0 workingSetKB=125512 privateWorkingSetKB=30772 privateUsageKB=39416 sharedCommitKB=32020 dotnetPrivateKB=39416 qws-error=0 qwsPages=31358 qwsPrivateKB=30692 qwsSharedKB=94740 qwsSharedOnceKB=0 qwsProportionalKB=44226 qwsMs=2.06
+MEM label=shared-c pid=64248 kind=utility ex2-error=0 workingSetKB=26012 privateWorkingSetKB=4272 privateUsageKB=9380 sharedCommitKB=6152 dotnetPrivateKB=9380 qws-error=0 qwsPages=6485 qwsPrivateKB=4200 qwsSharedKB=21740 qwsSharedOnceKB=0 qwsProportionalKB=7305 qwsMs=0.71
+MEM label=shared-c pid=72916 kind=renderer ex2-error=0 workingSetKB=55600 privateWorkingSetKB=11300 privateUsageKB=20984 sharedCommitKB=7700 dotnetPrivateKB=20984 qws-error=0 qwsPages=13878 qwsPrivateKB=11212 qwsSharedKB=44300 qwsSharedOnceKB=0 qwsProportionalKB=17540 qwsMs=0.89
+MEM-TOTAL label=shared-c processes=5 workingSetMB=323.7 privateWorkingSetMB=74.8 privateUsageMB=150.1 sharedCommitMB=67.2 dotnetPrivateMB=150.1 qwsPrivateMB=74.4 qwsProportionalMB=109.9 hostWorkingSetMB=25.0 hostPrivateWorkingSetMB=5.7 hostPrivateUsageMB=8.5 hostPid=6432
+SHARED-LIST instance=c t=3107 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+SHARED-FRAMES instance=c t=3108 72916=[https://app.localhost/small.html?instance=c]
+MEM label=shared-c pid=6880 kind=gpu ex2-error=0 workingSetKB=79108 privateWorkingSetKB=21788 privateUsageKB=69928 sharedCommitKB=13536 dotnetPrivateKB=69928 qws-error=0 qwsPages=19758 qwsPrivateKB=21712 qwsSharedKB=57320 qwsSharedOnceKB=0 qwsProportionalKB=29900 qwsMs=1.45
+MEM label=shared-c pid=9312 kind=utility ex2-error=0 workingSetKB=45400 privateWorkingSetKB=8448 privateUsageKB=14040 sharedCommitKB=9356 dotnetPrivateKB=14040 qws-error=0 qwsPages=11331 qwsPrivateKB=8372 qwsSharedKB=36952 qwsSharedOnceKB=0 qwsProportionalKB=13650 qwsMs=1.04
+MEM label=shared-c pid=36852 kind=browser ex2-error=0 workingSetKB=125404 privateWorkingSetKB=30664 privateUsageKB=39308 sharedCommitKB=32020 dotnetPrivateKB=39308 qws-error=0 qwsPages=31331 qwsPrivateKB=30584 qwsSharedKB=94740 qwsSharedOnceKB=0 qwsProportionalKB=44118 qwsMs=2.08
+MEM label=shared-c pid=64248 kind=utility ex2-error=0 workingSetKB=26012 privateWorkingSetKB=4272 privateUsageKB=9380 sharedCommitKB=6152 dotnetPrivateKB=9380 qws-error=0 qwsPages=6485 qwsPrivateKB=4200 qwsSharedKB=21740 qwsSharedOnceKB=0 qwsProportionalKB=7305 qwsMs=0.73
+MEM label=shared-c pid=72916 kind=renderer ex2-error=0 workingSetKB=55600 privateWorkingSetKB=11300 privateUsageKB=20984 sharedCommitKB=7700 dotnetPrivateKB=20984 qws-error=0 qwsPages=13878 qwsPrivateKB=11212 qwsSharedKB=44300 qwsSharedOnceKB=0 qwsProportionalKB=17540 qwsMs=0.91
+MEM-TOTAL label=shared-c processes=5 workingSetMB=323.8 privateWorkingSetMB=74.7 privateUsageMB=150.0 sharedCommitMB=67.2 dotnetPrivateMB=150.0 qwsPrivateMB=74.3 qwsProportionalMB=109.9 hostWorkingSetMB=25.1 hostPrivateWorkingSetMB=5.8 hostPrivateUsageMB=8.5 hostPid=6432
+SHARED-LIST instance=c t=4138 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+SHARED-FRAMES instance=c t=4139 72916=[https://app.localhost/small.html?instance=c]
+MEM label=shared-c pid=6880 kind=gpu ex2-error=0 workingSetKB=79108 privateWorkingSetKB=21788 privateUsageKB=69928 sharedCommitKB=13536 dotnetPrivateKB=69928 qws-error=0 qwsPages=19758 qwsPrivateKB=21712 qwsSharedKB=57320 qwsSharedOnceKB=0 qwsProportionalKB=29900 qwsMs=1.46
+MEM label=shared-c pid=9312 kind=utility ex2-error=0 workingSetKB=45540 privateWorkingSetKB=8452 privateUsageKB=14044 sharedCommitKB=9356 dotnetPrivateKB=14044 qws-error=0 qwsPages=11366 qwsPrivateKB=8376 qwsSharedKB=37088 qwsSharedOnceKB=0 qwsProportionalKB=13674 qwsMs=1.06
+MEM label=shared-c pid=36852 kind=browser ex2-error=0 workingSetKB=125404 privateWorkingSetKB=30664 privateUsageKB=39308 sharedCommitKB=32020 dotnetPrivateKB=39308 qws-error=0 qwsPages=31331 qwsPrivateKB=30584 qwsSharedKB=94740 qwsSharedOnceKB=0 qwsProportionalKB=44118 qwsMs=2.17
+MEM label=shared-c pid=64248 kind=utility ex2-error=0 workingSetKB=26012 privateWorkingSetKB=4272 privateUsageKB=9380 sharedCommitKB=6152 dotnetPrivateKB=9380 qws-error=0 qwsPages=6485 qwsPrivateKB=4200 qwsSharedKB=21740 qwsSharedOnceKB=0 qwsProportionalKB=7305 qwsMs=0.74
+MEM label=shared-c pid=72916 kind=renderer ex2-error=0 workingSetKB=55600 privateWorkingSetKB=11300 privateUsageKB=20984 sharedCommitKB=7700 dotnetPrivateKB=20984 qws-error=0 qwsPages=13878 qwsPrivateKB=11212 qwsSharedKB=44300 qwsSharedOnceKB=0 qwsProportionalKB=17540 qwsMs=0.90
+MEM-TOTAL label=shared-c processes=5 workingSetMB=323.9 privateWorkingSetMB=74.7 privateUsageMB=150.0 sharedCommitMB=67.2 dotnetPrivateMB=150.0 qwsPrivateMB=74.3 qwsProportionalMB=109.9 hostWorkingSetMB=25.2 hostPrivateWorkingSetMB=5.9 hostPrivateUsageMB=8.6 hostPid=6432
+PROCESS-INFOS-CHANGED count=6 onUi=True
+HOST-EXIT code=0

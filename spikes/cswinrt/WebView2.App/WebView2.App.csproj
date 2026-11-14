@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Minimal NativeAOT Win32 + WebView2 host with two interchangeable bindings (pass with -p:):
+      SpikeWebView2 = WinRT (default): a CsWinRT 3.0 projection generated from Microsoft.Web.WebView2.Core.winmd.
+      SpikeWebView2 = Com: the hand-written [GeneratedComInterface] declarations copied from spikes/react.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Spike</RootNamespace>
+    <SpikeWebView2 Condition="'$(SpikeWebView2)' == ''">WinRT</SpikeWebView2>
+    <TargetFramework Condition="'$(SpikeWebView2)' == 'WinRT'">$(SpikeWindowsTfm)</TargetFramework>
+    <TargetFramework Condition="'$(SpikeWebView2)' == 'Com'">net11.0-windows</TargetFramework>
+    <DefineConstants Condition="'$(SpikeWebView2)' == 'Com'">$(DefineConstants);SPIKE_COM</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+    <!-- The package's own targets would pick the classic .NET wrapper or a CsWinRT 2.x projection; neither is used. -->
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <_WebView2Root>$(PkgMicrosoft_Web_WebView2)\</_WebView2Root>
+  </PropertyGroup>
+
+  <!-- CsWinRT 3.0: reference the projection library and ship the component's implementation DLL beside the exe. -->
+  <ItemGroup Condition="'$(SpikeWebView2)' == 'WinRT'">
+    <PackageReference Include="Microsoft.Windows.CsWinRT" />
+    <ProjectReference Include="..\WebView2.Projection\WebView2.Projection.csproj" />
+    <None Include="$(_WebView2Root)runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll" Link="Microsoft.Web.WebView2.Core.dll"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <!-- Hand-written COM: the loader is linked statically under NativeAOT, as in spikes/react. -->
+  <ItemGroup Condition="'$(SpikeWebView2)' == 'Com'">
+    <None Include="$(_WebView2Root)build\native\x64\WebView2Loader.dll" Link="WebView2Loader.dll"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" Visible="false" />
+    <DirectPInvoke Include="WebView2Loader" />
+    <NativeLibrary Include="$(_WebView2Root)build\native\x64\WebView2LoaderStatic.lib" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,92 @@
+== relaunch young-close
+SUMMARY relaunch variant=young-close runs=30 previous-browser-alive-at-start=29 attached-to-previous-browser=0 new-browser=30 failed=0 data-ok=29/29 all-gone-at-end=True
+  environment creation: n=30 min=6 p50=8 p90=11 max=11 ms
+  controller creation: n=30 min=203 p50=6464 p90=6489 max=6511 ms
+  launch to READY: n=30 min=348 p50=6611 p90=6645 max=6652 ms
+== relaunch reputation-off
+SUMMARY relaunch variant=reputation-off runs=30 previous-browser-alive-at-start=29 attached-to-previous-browser=0 new-browser=30 failed=0 data-ok=29/29 all-gone-at-end=True
+  environment creation: n=30 min=5 p50=6 p90=6 max=7 ms
+  controller creation: n=30 min=174 p50=191 p90=200 max=212 ms
+  launch to READY: n=30 min=290 p50=310 p90=328 max=343 ms
+== relaunch alt-args-young
+SUMMARY relaunch variant=alt-args-young runs=10 previous-browser-alive-at-start=9 attached-to-previous-browser=0 new-browser=10 failed=0 data-ok=9/9 all-gone-at-end=True
+  environment creation: n=10 min=6 p50=6 p90=10 max=11 ms
+  controller creation: n=10 min=180 p50=6444 p90=6504 max=6530 ms
+  launch to READY: n=10 min=315 p50=6572 p90=6623 max=6676 ms
+== relaunch alt-args-rep-off
+SUMMARY relaunch variant=alt-args-rep-off runs=10 previous-browser-alive-at-start=9 attached-to-previous-browser=0 new-browser=10 failed=0 data-ok=9/9 all-gone-at-end=True
+  environment creation: n=10 min=6 p50=6 p90=6 max=6 ms
+  controller creation: n=10 min=177 p50=187 p90=198 max=202 ms
+  launch to READY: n=10 min=291 p50=314 p90=321 max=352 ms
+== concurrent same
+run 0: variant=same A-pid=72980 B-ready=True B-pid=72980 shared=True B-env-ms=6 B-exit=0 A-alive-after-B=True gone=True
+  B: ENV ft=134391295804992303 udf=q2-conc ms=6.0 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER ft=134391295805642343 view=0 udf=q2-conc profile=default ms=61.3 browserPid=72980 reputation=1
+run 1: variant=same A-pid=65336 B-ready=True B-pid=65336 shared=True B-env-ms=6 B-exit=0 A-alive-after-B=True gone=True
+  B: ENV ft=134391295874308015 udf=q2-conc ms=6.3 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER ft=134391295875038289 view=0 udf=q2-conc profile=default ms=69.5 browserPid=65336 reputation=1
+run 2: variant=same A-pid=36620 B-ready=True B-pid=36620 shared=True B-env-ms=6 B-exit=0 A-alive-after-B=True gone=True
+  B: ENV ft=134391295943610410 udf=q2-conc ms=5.7 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER ft=134391295944205032 view=0 udf=q2-conc profile=default ms=56.1 browserPid=36620 reputation=1
+== concurrent args
+run 0: variant=args A-pid=56532 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296015417448 udf=q2-conc ms=6.3 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[--disable-features=msSmartScreenProtection] language=[] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296015836869 view=0 profile=default hr=0x8007139F ms=38.4
+  B failure: HOST-FAILURE ft=134391296015853666 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 1: variant=args A-pid=5396 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296083919320 udf=q2-conc ms=5.9 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[--disable-features=msSmartScreenProtection] language=[] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296084321922 view=0 profile=default hr=0x8007139F ms=35.4
+  B failure: HOST-FAILURE ft=134391296084343977 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 2: variant=args A-pid=24228 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296152613024 udf=q2-conc ms=5.7 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[--disable-features=msSmartScreenProtection] language=[] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296153036703 view=0 profile=default hr=0x8007139F ms=39.1
+  B failure: HOST-FAILURE ft=134391296153049847 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+== concurrent language
+run 0: variant=language A-pid=57936 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296223571389 udf=q2-conc ms=6.3 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[de-DE] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296223971144 view=0 profile=default hr=0x8007139F ms=36.6
+  B failure: HOST-FAILURE ft=134391296223984069 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 1: variant=language A-pid=40380 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296291773466 udf=q2-conc ms=6.1 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[de-DE] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296292151747 view=0 profile=default hr=0x8007139F ms=34.4
+  B failure: HOST-FAILURE ft=134391296292167891 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 2: variant=language A-pid=33076 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296360346444 udf=q2-conc ms=5.9 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[de-DE] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296360753456 view=0 profile=default hr=0x8007139F ms=37.1
+  B failure: HOST-FAILURE ft=134391296360770109 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+== concurrent exclusiveB
+run 0: variant=exclusiveB A-pid=12840 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296431313711 udf=q2-conc ms=6.0 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=True
+  B: CONTROLLER-FAIL ft=134391296431774219 view=0 profile=default hr=0x8007139F ms=37.7
+  B failure: HOST-FAILURE ft=134391296431792159 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 1: variant=exclusiveB A-pid=59432 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296499857337 udf=q2-conc ms=5.9 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=True
+  B: CONTROLLER-FAIL ft=134391296500257255 view=0 profile=default hr=0x8007139F ms=35.6
+  B failure: HOST-FAILURE ft=134391296500275175 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 2: variant=exclusiveB A-pid=61532 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296568030914 udf=q2-conc ms=5.6 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=True
+  B: CONTROLLER-FAIL ft=134391296568410013 view=0 profile=default hr=0x8007139F ms=34.6
+  B failure: HOST-FAILURE ft=134391296568424708 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8007139F |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+== concurrent exclusiveA
+run 0: variant=exclusiveA A-pid=8696 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296638582707 udf=q2-conc ms=6.3 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296639092986 view=0 profile=default hr=0x8000FFFF ms=37.6
+  B failure: HOST-FAILURE ft=134391296639108634 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8000FFFF |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 1: variant=exclusiveA A-pid=75804 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296706962089 udf=q2-conc ms=5.9 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296707342528 view=0 profile=default hr=0x8000FFFF ms=34.8
+  B failure: HOST-FAILURE ft=134391296707356391 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8000FFFF |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+run 2: variant=exclusiveA A-pid=56736 B-ready=False B-pid=0 shared=False B-env-ms=6 B-exit=2 A-alive-after-B=True gone=True
+  B: ENV ft=134391296775243228 udf=q2-conc ms=5.7 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER-FAIL ft=134391296775631531 view=0 profile=default hr=0x8000FFFF ms=35.4
+  B failure: HOST-FAILURE ft=134391296775648678 Spar.WebViewProfiles.Interop.ComFailureException: CreateCoreWebView2Controller failed: 0x8000FFFF |    at Spar.WebViewProfiles.Host.View.<InitializeAsync>d__34.MoveNext() | --- End of stack trace from previous location --- |    at Spar.WebViewProfiles.Host.View.<Cr
+== concurrent profile
+run 0: variant=profile A-pid=37584 B-ready=True B-pid=37584 shared=True B-env-ms=6 B-exit=0 A-alive-after-B=True gone=True
+  B: ENV ft=134391296846373104 udf=q2-conc ms=6.4 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER ft=134391296847217575 view=0 udf=q2-conc profile=second ms=79.9 browserPid=37584 reputation=1
+run 1: variant=profile A-pid=51908 B-ready=True B-pid=51908 shared=True B-env-ms=6 B-exit=0 A-alive-after-B=True gone=True
+  B: ENV ft=134391296916673041 udf=q2-conc ms=5.7 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER ft=134391296917510393 view=0 udf=q2-conc profile=second ms=80.4 browserPid=51908 reputation=1
+run 2: variant=profile A-pid=42420 B-ready=True B-pid=42420 shared=True B-env-ms=6 B-exit=0 A-alive-after-B=True gone=True
+  B: ENV ft=134391296986119015 udf=q2-conc ms=5.7 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\webview-profiles\q2-conc args=[] language=[] exclusive=False
+  B: CONTROLLER ft=134391296986917004 view=0 udf=q2-conc profile=second ms=76.7 browserPid=42420 reputation=1

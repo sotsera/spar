@@ -1,0 +1,9 @@
+MESSAGE
+M-D^B??????Spar Sample cannot start: The web content sandbox cannot start on this system: bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.
+The system does not allow unprivileged user namespaces (for example inside a container, or under a security policy). Ask your administrator to allow them for bubblewrap.
+Details: bwrap trial exited 1: bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces. See <https://deb.li/bubblewrap> or <file:///usr/share/doc/bubblewrap/README.Debian.gz>.
+Exit code 5.
+PRIORITY=3
+SYSLOG_IDENTIFIER=spar-sample
+SPAR_STARTUP_PROBLEM=Broken
+SPAR_EXIT_CODE=5

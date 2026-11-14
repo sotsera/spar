@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Stands for a referenced assembly built without Spar's analyzer (a NuGet package, an older project). -->
+  <ItemGroup>
+    <ProjectReference Include="..\Result\Spar050.Result.csproj" />
+  </ItemGroup>
+</Project>

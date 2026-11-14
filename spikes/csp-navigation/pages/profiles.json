@@ -1,0 +1,34 @@
+{
+  "comment": "Header profiles shared by every host in this spike (WebView2, WebKitGTK, loopback). {ORIGIN} is the app origin, {EXT} the second local server, {IMPORTMAP} the CSP hash of the SRI import map (from sri.json in a served root). 'other' adds the plan 3b headers.",
+  "base": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'",
+  "other": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()"
+  },
+  "profiles": {
+    "none": {},
+    "base": { "csp": "{BASE}", "other": true },
+    "meta": { "meta": "{BASE}", "other": true },
+    "ext": {
+      "csp": "default-src 'none'; script-src 'self' {EXT}; style-src 'self'; img-src 'self' {EXT}; font-src 'self' {EXT}; connect-src 'self' {EXT}; worker-src 'self'; manifest-src 'self'; frame-src 'self' {EXT}; base-uri 'none'; form-action 'self' {EXT}; frame-ancestors 'none'; object-src 'none'",
+      "other": true
+    },
+    "coep": { "csp": "{BASE}", "other": true, "headers": { "Cross-Origin-Embedder-Policy": "require-corp" } },
+    "tt": { "csp": "{BASE}; require-trusted-types-for 'script'", "other": true },
+    "report-uri": { "csp": "{BASE}; report-uri {ORIGIN}/_spar/report {EXT}/report", "other": true },
+    "report-to": {
+      "csp": "{BASE}; report-to spar",
+      "other": true,
+      "headers": { "Reporting-Endpoints": "spar=\"{ORIGIN}/_spar/report-to\"" }
+    },
+    "report-to-ext": {
+      "csp": "{BASE}; report-to spar",
+      "other": true,
+      "headers": { "Reporting-Endpoints": "spar=\"{EXT}/report-to\"" }
+    },
+    "sri": { "csp": "default-src 'none'; script-src 'self' {IMPORTMAP}; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'", "other": true }
+  }
+}

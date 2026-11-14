@@ -1,0 +1,33 @@
+82.8 START ms=46.7 pid=1015 cpus=32 responsive=1 gsk=cairo
+83.9 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=0 onUnresponsive=none options=[--www /spike/www/ --data /tmp/u/data-wk-quiet-3 --log /out/wk-quiet-3.log --actions 3000:hang-idle --duration 75000 --timeout 120 --no-ping --probe-interval 0]
+84.9 NAVIGATE uri=spar://app/index.html
+143.6 LOAD-CHANGED event=started
+149.0 LOAD-CHANGED event=committed
+151.5 DOC path=/index.html vis=visible
+151.8 HB-ARM hb=ping reason=doc
+157.3 READY path=/index.html pagePerf=14.0 vis=visible
+157.9 LOAD-CHANGED event=finished
+159.2 PAGE state-seen:1
+1157.5 TICK n=1 dtMs=0 vis=visible frames=64
+2157.2 TICK n=2 dtMs=1000 vis=visible frames=62
+3155.4 ACTION verb=hang-idle arg=
+3157.0 HANG kind=idle pagePerf=3013.0
+5086.3 PUMP phase=hang-idle n=4457 median=0.02ms p99=0.09ms min=0.00ms max=8.58ms
+10088.3 PUMP phase=hang-idle n=4463 median=0.02ms p99=0.09ms min=0.01ms max=0.17ms
+15090.0 PUMP phase=hang-idle n=4516 median=0.02ms p99=0.07ms min=0.01ms max=0.15ms
+20091.0 PUMP phase=hang-idle n=4498 median=0.02ms p99=0.08ms min=0.01ms max=0.14ms
+25092.8 PUMP phase=hang-idle n=4467 median=0.02ms p99=0.08ms min=0.01ms max=0.17ms
+30101.5 PUMP phase=hang-idle n=4457 median=0.02ms p99=0.08ms min=0.01ms max=0.16ms
+35102.9 PUMP phase=hang-idle n=4460 median=0.02ms p99=0.08ms min=0.01ms max=0.17ms
+40106.8 PUMP phase=hang-idle n=4459 median=0.02ms p99=0.08ms min=0.00ms max=0.18ms
+45108.0 PUMP phase=hang-idle n=4462 median=0.02ms p99=0.08ms min=0.01ms max=0.16ms
+50109.1 PUMP phase=hang-idle n=4431 median=0.03ms p99=0.08ms min=0.01ms max=0.27ms
+55110.8 PUMP phase=hang-idle n=4418 median=0.03ms p99=0.08ms min=0.01ms max=0.13ms
+60112.2 PUMP phase=hang-idle n=4424 median=0.03ms p99=0.08ms min=0.01ms max=0.26ms
+65114.1 PUMP phase=hang-idle n=4439 median=0.02ms p99=0.08ms min=0.00ms max=0.26ms
+70116.0 PUMP phase=hang-idle n=4440 median=0.02ms p99=0.08ms min=0.01ms max=0.16ms
+75120.0 PUMP phase=hang-idle n=4424 median=0.02ms p99=0.09ms min=0.01ms max=0.14ms
+75159.9 PUMP-PHASE phase=start n=2723 median=0.02ms p99=0.11ms min=0.01ms max=8.58ms
+75167.1 PUMP-PHASE phase=hang-idle n=64122 median=0.02ms p99=0.08ms min=0.00ms max=0.63ms
+75169.7 FINISH backendCounter=1
+77252.1 HOST-EXIT code=0

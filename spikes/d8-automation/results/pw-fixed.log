@@ -1,0 +1,4 @@
+A answers on 9333 after 542 ms; A port file: (none)
+B started: B exited=False; B port file: (none); port 9333 still served by A's browser: True
+/json/list on 9333 has 1 page(s): B's page has no debugging endpoint and nothing tells B or the client that the bind failed
+after A exits, 9333 is dead although B is still running: True

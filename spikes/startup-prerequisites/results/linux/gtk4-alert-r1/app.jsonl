@@ -1,0 +1,14 @@
+{"t":21.35,"evt":"main","label":"gtk4-alert","ui":"auto","processAgeMs":50,"uid":1000,"desktop":null}
+{"t":24.69,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":25.08,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":27.04,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":1.585}
+{"t":27.66,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":0.284}
+{"t":28.35,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.465}
+{"t":32.14,"evt":"library","file":"libgtk-4.so.1","ok":true,"ms":3.494}
+{"t":64.95,"evt":"gtk-init","ok":true,"ms":31.861,"gtk":"4.14.5"}
+{"t":69,"evt":"library","file":"libwebkitgtk-6.0.so.4","ok":false,"reason":"libwebkitgtk-6.0.so.4: cannot open shared object file: No such file or directory"}
+{"t":70.61,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libwebkitgtk-6.0.so.4): libwebkitgtk-6.0.so.4: cannot open shared object file: No such file or directory"}
+{"t":84.98,"evt":"stderr","isatty":"redirected"}
+{"t":86.36,"evt":"journal","result":"journal-socket"}
+{"t":1618.81,"evt":"graphical","way":"gtk","shown":true,"detail":"button=0","ms":1532.133}
+{"t":1621.04,"evt":"exit","code":3}

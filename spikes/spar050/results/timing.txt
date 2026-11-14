@@ -1,0 +1,75 @@
+# Analyzer timing, SDK 11.0.100, 2026-11-14, 200 files, 17200 lines, 9 runs each
+# Each run: dotnet build -t:Rebuild -p:BuildProjectReferences=false -p:ReportAnalyzer=true (compiler server warm).
+None run 1 : Spar analyzer 0 s, all analyzers 1.087 s, Csc task 1030 ms
+None run 2 : Spar analyzer 0 s, all analyzers 1.154 s, Csc task 954 ms
+None run 3 : Spar analyzer 0 s, all analyzers 0.766 s, Csc task 912 ms
+None run 4 : Spar analyzer 0 s, all analyzers 0.894 s, Csc task 882 ms
+None run 5 : Spar analyzer 0 s, all analyzers 0.578 s, Csc task 547 ms
+None run 6 : Spar analyzer 0 s, all analyzers 0.628 s, Csc task 565 ms
+None run 7 : Spar analyzer 0 s, all analyzers 0.59 s, Csc task 536 ms
+None run 8 : Spar analyzer 0 s, all analyzers 0.932 s, Csc task 547 ms
+None run 9 : Spar analyzer 0 s, all analyzers 0.706 s, Csc task 556 ms
+None median : Spar analyzer 0 s, all analyzers 0.766 s, Csc task 565 ms
+Baseline run 1 : Spar analyzer 0.001 s, all analyzers 1.418 s, Csc task 533 ms
+Baseline run 2 : Spar analyzer 0.001 s, all analyzers 0.69 s, Csc task 518 ms
+Baseline run 3 : Spar analyzer 0.001 s, all analyzers 0.569 s, Csc task 488 ms
+Baseline run 4 : Spar analyzer 0.001 s, all analyzers 1.098 s, Csc task 574 ms
+Baseline run 5 : Spar analyzer 0.001 s, all analyzers 0.505 s, Csc task 504 ms
+Baseline run 6 : Spar analyzer 0.001 s, all analyzers 0.971 s, Csc task 561 ms
+Baseline run 7 : Spar analyzer 0.001 s, all analyzers 0.717 s, Csc task 521 ms
+Baseline run 8 : Spar analyzer 0.001 s, all analyzers 0.594 s, Csc task 543 ms
+Baseline run 9 : Spar analyzer 0.001 s, all analyzers 0.603 s, Csc task 511 ms
+Baseline median : Spar analyzer 0.001 s, all analyzers 0.69 s, Csc task 521 ms
+New run 1 : Spar analyzer 0.032 s, all analyzers 0.545 s, Csc task 517 ms
+New run 2 : Spar analyzer 0.057 s, all analyzers 0.791 s, Csc task 544 ms
+New run 3 : Spar analyzer 0.05 s, all analyzers 0.845 s, Csc task 540 ms
+New run 4 : Spar analyzer 0.036 s, all analyzers 0.699 s, Csc task 565 ms
+New run 5 : Spar analyzer 0.051 s, all analyzers 1.041 s, Csc task 565 ms
+New run 6 : Spar analyzer 0.031 s, all analyzers 0.64 s, Csc task 536 ms
+New run 7 : Spar analyzer 0.032 s, all analyzers 0.912 s, Csc task 548 ms
+New run 8 : Spar analyzer 0.035 s, all analyzers 0.641 s, Csc task 576 ms
+New run 9 : Spar analyzer 0.063 s, all analyzers 0.662 s, Csc task 501 ms
+New median : Spar analyzer 0.036 s, all analyzers 0.699 s, Csc task 544 ms
+# Per-analyzer table of one more New run (csc output)
+    Total analyzer execution time: 0.820 seconds.
+    Time (s)    %   Analyzer
+    0.312   38   Microsoft.CodeAnalysis.CSharp.CodeStyle, Version=5.12.15.3018, Culture=neutral, PublicKeyToken=31bf3856ad364e35
+    0.079    9      Microsoft.CodeAnalysis.CSharp.Diagnostics.TypeStyle.CSharpUseExplicitTypeDiagnosticAnalyzer (IDE0008)
+    0.071    8      Microsoft.CodeAnalysis.CSharp.RemoveUnusedParametersAndValues.CSharpRemoveUnusedParametersAndValuesDiagnosticAnalyzer (IDE0058, IDE0059, IDE0060)
+    0.040    4      Microsoft.CodeAnalysis.CSharp.RemoveUnnecessaryImports.CSharpRemoveUnnecessaryImportsDiagnosticAnalyzer (EnableGenerateDocumentationFile, IDE0005, IDE0005_gen, RemoveUnnecessaryImportsFixable)
+    0.017    2      Microsoft.CodeAnalysis.CSharp.UseExpressionBody.UseExpressionBodyDiagnosticAnalyzer (IDE0021, IDE0022, IDE0023, IDE0024, IDE0025, IDE0026, IDE0027, IDE0061)
+    0.014    1      Microsoft.CodeAnalysis.CSharp.UseCollectionInitializer.CSharpUseCollectionInitializerDiagnosticAnalyzer (IDE0028)
+    0.011    1      Microsoft.CodeAnalysis.CSharp.QualifyMemberAccess.CSharpQualifyMemberAccessDiagnosticAnalyzer (IDE0009)
+    0.007   <1      Microsoft.CodeAnalysis.CSharp.Analyzers.MakeFieldReadonly.CSharpMakeFieldReadonlyDiagnosticAnalyzer (IDE0044)
+    0.006   <1      Microsoft.CodeAnalysis.CSharp.UseCollectionExpression.CSharpUseCollectionExpressionForEmptyDiagnosticAnalyzer (IDE0301)
+    0.006   <1      Microsoft.CodeAnalysis.CSharp.UseCollectionExpression.CSharpUseCollectionExpressionForFluentDiagnosticAnalyzer (IDE0305)
+    0.005   <1      Microsoft.CodeAnalysis.CSharp.InlineDeclaration.CSharpInlineDeclarationDiagnosticAnalyzer (IDE0018)
+    0.004   <1      Microsoft.CodeAnalysis.CSharp.UseIndexOrRangeOperator.CSharpUseRangeOperatorDiagnosticAnalyzer (IDE0057)
+    0.003   <1      Microsoft.CodeAnalysis.CSharp.UseAutoProperty.CSharpUseAutoPropertyAnalyzer (IDE0032)
+    0.003   <1      Microsoft.CodeAnalysis.CSharp.UseCollectionExpression.CSharpUseCollectionExpressionForBuilderDiagnosticAnalyzer (IDE0304)
+    0.003   <1      Microsoft.CodeAnalysis.CSharp.UseCollectionExpression.CSharpUseCollectionExpressionForCreateDiagnosticAnalyzer (IDE0303)
+    0.003   <1      Microsoft.CodeAnalysis.CSharp.UseDeconstruction.CSharpUseDeconstructionDiagnosticAnalyzer (IDE0042)
+    0.003   <1      Microsoft.CodeAnalysis.CSharp.UseIsNullCheck.CSharpUseIsNullCheckForReferenceEqualsDiagnosticAnalyzer (IDE0041)
+    0.002   <1      Microsoft.CodeAnalysis.CSharp.UseUnboundGenericTypeInNameOf.CSharpUseUnboundGenericTypeInNameOfDiagnosticAnalyzer (IDE0340)
+    0.002   <1      Microsoft.CodeAnalysis.CSharp.Diagnostics.AddBraces.CSharpAddBracesDiagnosticAnalyzer (IDE0011)
+    0.002   <1      Microsoft.CodeAnalysis.CSharp.UseCompoundAssignment.CSharpUseCompoundAssignmentDiagnosticAnalyzer (IDE0054)
+    0.002   <1      Microsoft.CodeAnalysis.CSharp.UseObjectInitializer.CSharpUseObjectInitializerDiagnosticAnalyzer (IDE0017)
+    0.002   <1      Microsoft.CodeAnalysis.CSharp.UseCollectionExpression.CSharpUseCollectionExpressionForNewDiagnosticAnalyzer (IDE0306)
+    0.002   <1      Microsoft.CodeAnalysis.CSharp.UseSystemThreadingLock.CSharpUseSystemThreadingLockDiagnosticAnalyzer (IDE0330)
+    0.002   <1      Microsoft.CodeAnalysis.CSharp.UseCollectionExpression.CSharpUseCollectionExpressionForArrayDiagnosticAnalyzer (IDE0300)
+    0.001   <1      Microsoft.CodeAnalysis.CSharp.UsePrimaryConstructor.CSharpUsePrimaryConstructorDiagnosticAnalyzer (IDE0290)
+    0.001   <1      Microsoft.CodeAnalysis.CSharp.UseIndexOrRangeOperator.CSharpUseIndexOperatorDiagnosticAnalyzer (IDE0056)
+    0.001   <1      Microsoft.CodeAnalysis.CSharp.SimplifyInterpolation.CSharpSimplifyInterpolationDiagnosticAnalyzer (IDE0071)
+    0.001   <1      Microsoft.CodeAnalysis.CSharp.UseLocalFunction.CSharpUseLocalFunctionDiagnosticAnalyzer (IDE0039)
+    0.001   <1      Microsoft.CodeAnalysis.CSharp.UseNullPropagation.CSharpUseNullPropagationDiagnosticAnalyzer (IDE0031)
+    0.001   <1      Microsoft.CodeAnalysis.CSharp.UseTupleSwap.CSharpUseTupleSwapDiagnosticAnalyzer (IDE0180)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.UseImplicitObjectCreation.CSharpUseImplicitObjectCreationDiagnosticAnalyzer (IDE0090)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.Analyzers.ForEachCast.CSharpForEachCastDiagnosticAnalyzer (IDE0220)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.Analyzers.UseCoalesceExpression.CSharpUseCoalesceExpressionForIfNullStatementCheckDiagnosticAnalyzer (IDE0270)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.SimplifyBooleanExpression.CSharpSimplifyConditionalDiagnosticAnalyzer (IDE0075)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.UseExpressionBodyForLambda.UseExpressionBodyForLambdaDiagnosticAnalyzer (IDE0053)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.RemoveUnnecessaryParentheses.CSharpRemoveUnnecessaryExpressionParenthesesDiagnosticAnalyzer (IDE0047)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.MakeAnonymousFunctionStatic.MakeAnonymousFunctionStaticDiagnosticAnalyzer (IDE0320)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.UseCollectionExpression.CSharpUseCollectionExpressionForStackAllocDiagnosticAnalyzer (IDE0302)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.UseConditionalExpression.CSharpUseConditionalExpressionForAssignmentDiagnosticAnalyzer (IDE0045)
+    <0.001   <1      Microsoft.CodeAnalysis.CSharp.InvokeDelegateWithConditionalAccess.InvokeDelegateWithConditionalAccessAnalyzer (IDE1005)

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    WebView2 host for the bridge-encoding bench: an offscreen, never activated window; the page is served from
+    WebResourceRequested; bridge frames travel over postMessage (strings, or JSON for the "Bj" variant).
+    NativeAOT with the static WebView2 loader, as in spikes/react and spikes/cswinrt.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0-windows</TargetFramework>
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bridge.Core\Bridge.Core.csproj" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <_WebView2Root>$(PkgMicrosoft_Web_WebView2)\</_WebView2Root>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(_WebView2Root)build\native\x64\WebView2Loader.dll" Link="WebView2Loader.dll"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" Visible="false" />
+    <DirectPInvoke Include="WebView2Loader" />
+    <NativeLibrary Include="$(_WebView2Root)build\native\x64\WebView2LoaderStatic.lib" />
+  </ItemGroup>
+</Project>

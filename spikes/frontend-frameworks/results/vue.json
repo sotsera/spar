@@ -1,0 +1,258 @@
+{
+  "base": {
+    "done": true,
+    "ms": 628,
+    "passed": 13,
+    "failed": 0,
+    "results": [
+      {
+        "name": "environment",
+        "ok": true,
+        "detail": {
+          "vue": "3.5.45",
+          "prod": true,
+          "logo": "/assets/logo-CZ_AYDM5.svg"
+        }
+      },
+      {
+        "name": "ref(result).value.match: Vue proxies the Result, #private read fails",
+        "ok": true,
+        "detail": {
+          "isReactive": true,
+          "match": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "unwrap": "TypeError: Cannot read private member #e from an object whose class did not declare it"
+        }
+      },
+      {
+        "name": "reactive({ result }).result.match",
+        "ok": true,
+        "detail": {
+          "match": "TypeError: Cannot read private member #e from an object whose class did not declare it"
+        }
+      },
+      {
+        "name": "ref(call): await and match through the proxy",
+        "ok": true,
+        "detail": {
+          "isProxy": true,
+          "await": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "match": "TypeError: Cannot read private member #e from an object whose class did not declare it"
+        }
+      },
+      {
+        "name": "fixes without SDK change: shallowRef, markRaw, toRaw",
+        "ok": true,
+        "detail": {
+          "shallowRef": "ok: 1",
+          "markRaw": "ok: 1",
+          "toRaw": "ok: 1"
+        }
+      },
+      {
+        "name": "stream items pushed into ref([]) and read back",
+        "ok": true,
+        "detail": {
+          "refArray": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "shallowRefArray": "ok: a",
+          "plainValues": "a,b"
+        }
+      },
+      {
+        "name": "candidate SDK changes in ref()/reactive(): Symbol.toStringTag, frozen Result, Promise subclass",
+        "ok": true,
+        "detail": {
+          "tagged": "false ok: planned 1",
+          "taggedInReactiveArray": "ok: planned 1",
+          "taggedCallAwait": "ok: planned 1",
+          "taggedCallMatch": "ok: 1",
+          "frozen": "false ok: planned 1",
+          "promiseSubclassAwait": "false ok: planned 1"
+        }
+      },
+      {
+        "name": "Pinia: a Result in an option store's state, markRaw, and a setup store with shallowRef",
+        "ok": true,
+        "detail": {
+          "optionStore": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "optionStoreMarkRaw": "ok: planned 1",
+          "setupStoreShallowRef": "ok: planned 1",
+          "optionStoreTagged": "ok: planned 1"
+        }
+      },
+      {
+        "name": "component: Result in ref, rendered with match in the template",
+        "ok": true,
+        "detail": {
+          "shown": "",
+          "errors": [
+            "TypeError: Cannot read private member #e from an object whose class did not declare it"
+          ]
+        }
+      },
+      {
+        "name": "component: Result in shallowRef, rendered with match in the template",
+        "ok": true,
+        "detail": {
+          "shown": "planned 1",
+          "errors": []
+        }
+      },
+      {
+        "name": "<Suspense> with top-level await of a Call in <script setup>",
+        "ok": true,
+        "detail": {
+          "errors": []
+        }
+      },
+      {
+        "name": "composables: subscription and call end with the component (onScopeDispose aborts)",
+        "ok": true,
+        "detail": {
+          "progressAborted": 1,
+          "planAborted": 1,
+          "errors": []
+        }
+      },
+      {
+        "name": ":style string binding and v-bind() in <style> under the CSP",
+        "ok": true,
+        "detail": {
+          "color": "rgb(255, 0, 0)",
+          "borderTopWidth": "3px"
+        }
+      }
+    ],
+    "violations": [],
+    "reports": [],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  "trustedTypes": {
+    "done": true,
+    "ms": 587,
+    "passed": 13,
+    "failed": 0,
+    "results": [
+      {
+        "name": "environment",
+        "ok": true,
+        "detail": {
+          "vue": "3.5.45",
+          "prod": true,
+          "logo": "/assets/logo-CZ_AYDM5.svg"
+        }
+      },
+      {
+        "name": "ref(result).value.match: Vue proxies the Result, #private read fails",
+        "ok": true,
+        "detail": {
+          "isReactive": true,
+          "match": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "unwrap": "TypeError: Cannot read private member #e from an object whose class did not declare it"
+        }
+      },
+      {
+        "name": "reactive({ result }).result.match",
+        "ok": true,
+        "detail": {
+          "match": "TypeError: Cannot read private member #e from an object whose class did not declare it"
+        }
+      },
+      {
+        "name": "ref(call): await and match through the proxy",
+        "ok": true,
+        "detail": {
+          "isProxy": true,
+          "await": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "match": "TypeError: Cannot read private member #e from an object whose class did not declare it"
+        }
+      },
+      {
+        "name": "fixes without SDK change: shallowRef, markRaw, toRaw",
+        "ok": true,
+        "detail": {
+          "shallowRef": "ok: 1",
+          "markRaw": "ok: 1",
+          "toRaw": "ok: 1"
+        }
+      },
+      {
+        "name": "stream items pushed into ref([]) and read back",
+        "ok": true,
+        "detail": {
+          "refArray": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "shallowRefArray": "ok: a",
+          "plainValues": "a,b"
+        }
+      },
+      {
+        "name": "candidate SDK changes in ref()/reactive(): Symbol.toStringTag, frozen Result, Promise subclass",
+        "ok": true,
+        "detail": {
+          "tagged": "false ok: planned 1",
+          "taggedInReactiveArray": "ok: planned 1",
+          "taggedCallAwait": "ok: planned 1",
+          "taggedCallMatch": "ok: 1",
+          "frozen": "false ok: planned 1",
+          "promiseSubclassAwait": "false ok: planned 1"
+        }
+      },
+      {
+        "name": "Pinia: a Result in an option store's state, markRaw, and a setup store with shallowRef",
+        "ok": true,
+        "detail": {
+          "optionStore": "TypeError: Cannot read private member #e from an object whose class did not declare it",
+          "optionStoreMarkRaw": "ok: planned 1",
+          "setupStoreShallowRef": "ok: planned 1",
+          "optionStoreTagged": "ok: planned 1"
+        }
+      },
+      {
+        "name": "component: Result in ref, rendered with match in the template",
+        "ok": true,
+        "detail": {
+          "shown": "",
+          "errors": [
+            "TypeError: Cannot read private member #e from an object whose class did not declare it"
+          ]
+        }
+      },
+      {
+        "name": "component: Result in shallowRef, rendered with match in the template",
+        "ok": true,
+        "detail": {
+          "shown": "planned 1",
+          "errors": []
+        }
+      },
+      {
+        "name": "<Suspense> with top-level await of a Call in <script setup>",
+        "ok": true,
+        "detail": {
+          "errors": []
+        }
+      },
+      {
+        "name": "composables: subscription and call end with the component (onScopeDispose aborts)",
+        "ok": true,
+        "detail": {
+          "progressAborted": 1,
+          "planAborted": 1,
+          "errors": []
+        }
+      },
+      {
+        "name": ":style string binding and v-bind() in <style> under the CSP",
+        "ok": true,
+        "detail": {
+          "color": "rgb(255, 0, 0)",
+          "borderTopWidth": "3px"
+        }
+      }
+    ],
+    "violations": [],
+    "reports": [],
+    "consoleMessages": [],
+    "pageErrors": []
+  }
+}

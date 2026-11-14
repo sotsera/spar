@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Startup prerequisites spike, Linux: checks the display, GTK 4, WebKitGTK 6.0 (libraries, version, helper
+    executables, bubblewrap and the sandbox) and reports a failure on stderr, to the journal or syslog, and in the
+    best graphical way available (GtkAlertDialog, zenity, kdialog, yad, a desktop notification, xmessage), with a
+    defined exit code. The executable links only glibc; every GLib, GTK and WebKit import is called only after the
+    library was found with NativeLibrary.TryLoad.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Startup.Linux</RootNamespace>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+</Project>

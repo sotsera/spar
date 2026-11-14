@@ -1,0 +1,4 @@
+exit 0 wallMs 213
+RUN runtime=jit mode=query-cancel arg=dispose-cancel sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+RESULT query-cancel case=dispose-cancel readerDisposeMs=8.4 connectionReusable=True
+MEM end peakWorkingSetMB=67.8 workingSetMB=67.8 rssAnonMB=9.1 allocatedMB=2.0 gc0=0 gc1=0 gc2=0 cpuMs=204

@@ -1,0 +1,285 @@
+{
+ "label": "us-delete-none",
+ "profile": "none",
+ "origin": "spar",
+ "userScript": "delete",
+ "extension": null,
+ "setenv": [],
+ "jscUi": [],
+ "uiProcessUseWasm": true,
+ "webkitgtk": "2.52.6",
+ "gtk": "4.14.5",
+ "hostMs": {
+  "reportAt": 192.5,
+  "progress": [
+   [
+    "start",
+    139.1
+   ],
+   [
+    "main",
+    140.0
+   ],
+   [
+    "esm",
+    140.5
+   ],
+   [
+    "workers",
+    152.8
+   ],
+   [
+    "posted",
+    152.8
+   ],
+   [
+    "frames",
+    158.9
+   ]
+  ]
+ },
+ "served": [
+  "probe.html?label=us-delete-none csp=0",
+  "suite.js csp=0",
+  "probe.js csp=0",
+  "add.wasm csp=0",
+  "worker.js?csp=1 csp=0",
+  "suite.js csp=0",
+  "add.wasm csp=0",
+  "add.wasm csp=0",
+  "worker.js?csp=0 csp=0",
+  "add.wasm csp=0",
+  "add.wasm csp=0",
+  "frame.html csp=0"
+ ],
+ "cspReportsReceived": 0,
+ "webkitProcesses": [
+  {
+   "process": "WebKitNetworkProcess",
+   "jscEnv": [],
+   "envCount": 26
+  },
+  {
+   "process": "WebKitWebProcess",
+   "jscEnv": [],
+   "envCount": 27
+  }
+ ],
+ "report": {
+  "initial": {
+   "typeofWebAssembly": "undefined",
+   "descriptor": null,
+   "hostMarker": "string",
+   "extension": null
+  },
+  "location": "spar://app/probe.html?label=us-delete-none",
+  "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15",
+  "evalChecks": {
+   "eval": {
+    "ok": true,
+    "value": 2
+   },
+   "newFunction": {
+    "ok": true,
+    "value": 2
+   }
+  },
+  "main": {
+   "typeofWebAssembly": "undefined"
+  },
+  "esmImportWasm": {
+   "ok": false,
+   "error": "TypeError: 'application/wasm' is not a valid JavaScript MIME type."
+  },
+  "workerWithCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "workerWithoutCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "postedModule": {
+   "compileInPage": "ReferenceError: Can't find variable: WebAssembly"
+  },
+  "blobWorker": {
+   "ok": true,
+   "value": {
+    "created": true,
+    "event": "message",
+    "data": "object"
+   }
+  },
+  "frames": {
+   "aboutBlank": {
+    "url": "about:blank",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   },
+   "srcdoc": {
+    "load": "load",
+    "url": "about:srcdoc",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   },
+   "sameOrigin": {
+    "load": "load",
+    "url": "spar://app/frame.html",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   }
+  },
+  "recovery": {
+   "inGlobalThis": {
+    "ok": true,
+    "value": false
+   },
+   "reflectGet": {
+    "ok": true,
+    "value": "undefined"
+   },
+   "windowPrototypeChain": {
+    "ok": true,
+    "value": []
+   },
+   "redefine": {
+    "ok": true,
+    "value": "number"
+   },
+   "windowOpen": {
+    "ok": true,
+    "value": "null"
+   }
+  },
+  "jsWork": [
+   {
+    "ms": 11,
+    "acc": 829569472
+   },
+   {
+    "ms": 10,
+    "acc": 829569472
+   },
+   {
+    "ms": 11,
+    "acc": 829569472
+   }
+  ],
+  "timing": {
+   "probeStartMs": 4,
+   "domContentLoadedMs": 5,
+   "probeTotalMs": 53
+  },
+  "violations": [],
+  "query": {
+   "label": "us-delete-none"
+  }
+ }
+}

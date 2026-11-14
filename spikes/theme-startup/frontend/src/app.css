@@ -1,0 +1,43 @@
+/* The app's own theme, from the bundle. The header colour (#2563eb) is the capture's "app visible" marker. */
+:root {
+  color-scheme: light dark;
+  --bg: #f3f3f3;
+  --fg: #1b1b1b;
+  --card: #fafafa;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f1f1f;
+    --fg: #f0f0f0;
+    --card: #2b2b2b;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px system-ui, sans-serif;
+}
+
+header {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+main {
+  padding: 16px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 8px;
+  padding: 16px;
+}

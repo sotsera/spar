@@ -1,0 +1,8 @@
+{
+  "ok": {"id":7,"ok":true,"value":"fine"},
+  "NaN": {"id":7,"ok":false,"failure":{"kind":"response-serialization","execution":"completed","detail":"ArgumentException"}},
+  "depth-65": {"id":7,"ok":false,"failure":{"kind":"response-serialization","execution":"completed","detail":"InvalidOperationException"}},
+  "lone-surrogate": {"id":7,"ok":true,"value":"a\uFFFD"},
+  "user-getter-throws": {"id":7,"ok":false,"failure":{"kind":"response-serialization","execution":"completed","detail":"InvalidOperationException"}},
+  "invalid-UTF-8-bytes": {"id":7,"ok":true,"value":"\uFFFD"}
+}

@@ -1,0 +1,215 @@
+{
+ "label": "env-useWasm-false-none",
+ "profile": "none",
+ "origin": "spar",
+ "userScript": "none",
+ "extension": null,
+ "setenv": [
+  "JSC_useWasm=false"
+ ],
+ "jscUi": [],
+ "uiProcessUseWasm": false,
+ "webkitgtk": "2.52.6",
+ "gtk": "4.14.5",
+ "hostMs": {
+  "reportAt": 192.1,
+  "progress": [
+   [
+    "start",
+    145.1
+   ],
+   [
+    "main",
+    146.4
+   ],
+   [
+    "esm",
+    147.0
+   ],
+   [
+    "workers",
+    152.5
+   ],
+   [
+    "posted",
+    152.5
+   ],
+   [
+    "frames",
+    157.9
+   ]
+  ]
+ },
+ "served": [
+  "probe.html?label=env-useWasm-false-none csp=0",
+  "suite.js csp=0",
+  "probe.js csp=0",
+  "add.wasm csp=0",
+  "worker.js?csp=1 csp=0",
+  "suite.js csp=0",
+  "worker.js?csp=0 csp=0",
+  "frame.html csp=0"
+ ],
+ "cspReportsReceived": 0,
+ "webkitProcesses": [
+  {
+   "process": "WebKitNetworkProcess",
+   "jscEnv": [
+    "JSC_useWasm=false"
+   ],
+   "envCount": 27
+  },
+  {
+   "process": "WebKitWebProcess",
+   "jscEnv": [
+    "JSC_useWasm=false"
+   ],
+   "envCount": 28
+  }
+ ],
+ "report": {
+  "initial": {
+   "typeofWebAssembly": "undefined",
+   "descriptor": null,
+   "hostMarker": "undefined",
+   "extension": null
+  },
+  "location": "spar://app/probe.html?label=env-useWasm-false-none",
+  "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15",
+  "evalChecks": {
+   "eval": {
+    "ok": true,
+    "value": 2
+   },
+   "newFunction": {
+    "ok": true,
+    "value": 2
+   }
+  },
+  "main": {
+   "typeofWebAssembly": "undefined"
+  },
+  "esmImportWasm": {
+   "ok": false,
+   "error": "TypeError: 'application/wasm' is not a valid JavaScript MIME type."
+  },
+  "workerWithCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "workerWithoutCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "postedModule": {
+   "compileInPage": "ReferenceError: Can't find variable: WebAssembly"
+  },
+  "blobWorker": {
+   "ok": true,
+   "value": {
+    "created": true,
+    "event": "message",
+    "data": "undefined"
+   }
+  },
+  "frames": {
+   "aboutBlank": {
+    "url": "about:blank",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   },
+   "srcdoc": {
+    "load": "load",
+    "url": "about:srcdoc",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   },
+   "sameOrigin": {
+    "load": "load",
+    "url": "spar://app/frame.html",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   }
+  },
+  "recovery": {
+   "inGlobalThis": {
+    "ok": true,
+    "value": false
+   },
+   "reflectGet": {
+    "ok": true,
+    "value": "undefined"
+   },
+   "windowPrototypeChain": {
+    "ok": true,
+    "value": []
+   },
+   "redefine": {
+    "ok": true,
+    "value": "number"
+   },
+   "windowOpen": {
+    "ok": true,
+    "value": "null"
+   }
+  },
+  "jsWork": [
+   {
+    "ms": 11,
+    "acc": 829569472
+   },
+   {
+    "ms": 10,
+    "acc": 829569472
+   },
+   {
+    "ms": 11,
+    "acc": 829569472
+   }
+  ],
+  "timing": {
+   "probeStartMs": 4,
+   "domContentLoadedMs": 5,
+   "probeTotalMs": 46
+  },
+  "violations": [],
+  "query": {
+   "label": "env-useWasm-false-none"
+  }
+ }
+}

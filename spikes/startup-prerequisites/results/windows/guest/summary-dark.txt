@@ -1,0 +1,4 @@
+case | kind | HRESULT of the last step | exit codes | probe: launch to dialog, ms | app: process creation to dialog, ms
+mb-missing | Missing | 0x80070002 | 3 | 160 (160-160) | 82 (82-82)
+missing-fixed | Missing | 0x80070002 | 3 | 195 (195-195) | 106 (106-106)
+nomanifest-auto | Missing | 0x80070002 | 3 | 74 (74-74) | 27 (27-27)

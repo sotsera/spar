@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SqlTool</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar.Stubs\Spar.Stubs.csproj" />
+  </ItemGroup>
+
+  <!--
+    Failing/ holds code that must not compile. Each file is compiled only when its switch is set:
+    -p:SparCheckMissingCase=true  a PlanError switch with one case missing (expected CS8509)
+  -->
+  <ItemGroup>
+    <Compile Remove="Failing/**" />
+    <Compile Include="Failing/ExhaustiveMissingCase.cs" Condition="'$(SparCheckMissingCase)' == 'true'" />
+  </ItemGroup>
+</Project>

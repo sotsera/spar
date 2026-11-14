@@ -1,0 +1,17 @@
+<Project>
+  <!-- One NativeAOT app per Result form, all compiling the same 20-command sample (generate.ps1). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PublishAot>true</PublishAot>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RootNamespace>Sample</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\Program.cs" LinkBase="Shared" />
+    <Compile Include="obj\generated\Sample.g.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\Forms\$(ResultForm)\Result.cs" LinkBase="Form" Condition="'$(ResultForm)' != ''" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,4 @@
+exit 0 wallMs 200
+RUN runtime=jit mode=ping arg= sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+PING 11
+MEM end peakWorkingSetMB=67.6 workingSetMB=67.6 rssAnonMB=8.4 allocatedMB=1.5 gc0=0 gc1=0 gc2=0 cpuMs=191

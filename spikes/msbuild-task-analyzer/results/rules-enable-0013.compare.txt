@@ -1,0 +1,112 @@
+# config=enable-0013 exit=0 diagnostics=84 relevant=84
+R_Scope.cs:16                      expect: none / all-tasks: MSBuildTask0002                  actual: 
+R_Scope.cs:17                      expect: none / all-tasks: MSBuildTask0003                  actual: 
+R_Scope.cs:25                      expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R_Scope.cs:34                      expect: ?                                                  actual: 
+R_Scope.cs:35                      expect: ?                                                  actual: 
+R_Scope.cs:36                      expect: ?                                                  actual: 
+R_Scope.cs:37                      expect: ?                                                  actual: 
+R_Scope.cs:38                      expect: ?                                                  actual: 
+R_Scope.cs:39                      expect: ?                                                  actual: 
+R_Scope.cs:40                      expect: ?                                                  actual: 
+R_Scope.cs:41                      expect: ?                                                  actual: 
+R_Scope.cs:51                      expect: none (CS8618 suppressed)                           actual: CS8618(suppressed)
+R_Scope.cs:53                      expect: CS8618                                             actual: CS8618
+R_StrictMode.cs:18                 expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R_StrictMode.cs:19                 expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R_StrictMode.cs:24                 expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R_StrictMode.cs:25                 expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R_StrictMode.cs:9                  expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0001_NeverSafe.cs:12              expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0001_NeverSafe.cs:18              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:19              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:20              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:21              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:22              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:23              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:24              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:25              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:26              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:29              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:34              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:35              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:47              expect: MSBuildTask0001                                    actual: MSBuildTask0001
+R0001_NeverSafe.cs:55              expect: none                                               actual: 
+R0002_TaskEnvironment.cs:15        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:16        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:17        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:18        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:19        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:20        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:21        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:22        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:23        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:24        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:25        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:26        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:27        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:28        expect: none                                               actual: 
+R0002_TaskEnvironment.cs:29        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:30        expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0002_TaskEnvironment.cs:33        expect: none                                               actual: 
+R0002_TaskEnvironment.cs:9         expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0003_AbsolutePaths.cs:17          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:18          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:19          expect: MSBuildTask0003 (one per call, not per argument)   actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:20          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:21          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:22          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:23          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:24          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:25          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:26          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:27          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:33          expect: none                                               actual: 
+R0003_AbsolutePaths.cs:35          expect: none                                               actual: 
+R0003_AbsolutePaths.cs:36          expect: none                                               actual: 
+R0003_AbsolutePaths.cs:37          expect: none                                               actual: 
+R0003_AbsolutePaths.cs:40          expect: MSBuildTask0007                                    actual: MSBuildTask0007
+R0003_AbsolutePaths.cs:41          expect: MSBuildTask0003 MSBuildTask0007                    actual: MSBuildTask0003 MSBuildTask0007
+R0003_AbsolutePaths.cs:46          expect: ?                                                  actual: 
+R0003_AbsolutePaths.cs:47          expect: ?                                                  actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:48          expect: MSBuildTask0003                                    actual: MSBuildTask0003
+R0003_AbsolutePaths.cs:50          expect: none                                               actual: 
+R0003_AbsolutePaths.cs:56          expect: none                                               actual: 
+R0003_AbsolutePaths.cs:8           expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0004_Review.cs:16                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:17                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:18                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:19                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:21                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:23                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:24                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:25                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:26                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:27                 expect: MSBuildTask0004                                    actual: MSBuildTask0004
+R0004_Review.cs:30                 expect: ?                                                  actual: 
+R0004_Review.cs:31                 expect: ?                                                  actual: 
+R0004_Review.cs:9                  expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0005_Transitive.cs:21             expect: MSBuildTask0005                                    actual: MSBuildTask0005
+R0005_Transitive.cs:25             expect: MSBuildTask0005                                    actual: MSBuildTask0005
+R0005_Transitive.cs:26             expect: MSBuildTask0005                                    actual: MSBuildTask0005
+R0005_Transitive.cs:30             expect: none                                               actual: 
+R0005_Transitive.cs:37             expect: MSBuildTask0002                                    actual: MSBuildTask0002
+R0005_Transitive.cs:8              expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0006_TypedParameters.cs:12        expect: none (0006 is reported where the value is converted) actual: 
+R0006_TypedParameters.cs:14        expect: none                                               actual: 
+R0006_TypedParameters.cs:16        expect: MSBuildTask0008                                    actual: MSBuildTask0008
+R0006_TypedParameters.cs:18        expect: none (0007 is reported where ItemSpec is parsed)   actual: 
+R0006_TypedParameters.cs:22        expect: MSBuildTask0006                                    actual: MSBuildTask0006
+R0006_TypedParameters.cs:23        expect: MSBuildTask0006                                    actual: MSBuildTask0006
+R0006_TypedParameters.cs:25        expect: MSBuildTask0007                                    actual: MSBuildTask0007
+R0006_TypedParameters.cs:33        expect: MSBuildTask0009                                    actual: MSBuildTask0009
+R0006_TypedParameters.cs:35        expect: MSBuildTask0010                                    actual: MSBuildTask0010
+R0006_TypedParameters.cs:37        expect: none                                               actual: 
+R0006_TypedParameters.cs:8         expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0011_Shape.cs:10                  expect: none                                               actual: 
+R0011_Shape.cs:26                  expect: MSBuildTask0012                                    actual: MSBuildTask0012
+R0011_Shape.cs:34                  expect: MSBuildTask0011                                    actual: MSBuildTask0013 MSBuildTask0011
+R0011_Shape.cs:43                  expect: MSBuildTask0014                                    actual: MSBuildTask0014
+R0011_Shape.cs:49                  expect: MSBuildTask0014                                    actual: MSBuildTask0014
+R0011_Shape.cs:59                  expect: MSBuildTask0011                                    actual: MSBuildTask0011
+R0011_Shape.cs:65                  expect: none                                               actual: 

@@ -1,0 +1,553 @@
+# Known pitfalls
+
+Surprising behaviours found while building the M0 spikes. Each one was observed while running something. The evidence, with numbers, is in `docs/decisions.md` and in each spike's `RESULTS.md` (`spikes/<name>/`). Check this list before designing or debugging the area it covers, and add to it when you find a new one.
+
+## Build, MSBuild and packages
+
+- **Warm MSBuild nodes lock a task DLL** built in the same source checkout (MSB3027 on the next build). Run Spar's own tasks through `TaskHostFactory` in the repository. Package consumers don't need it: a package folder never changes. (`d1-pipeline`, `package-consumer`)
+- **`Microsoft.Extensions.DependencyInjection.Abstractions` is part of the `net11.0` shared framework.** Restore prunes the package, and a direct `PackageReference` fails under the repository's settings with NU1510 ("will not be pruned"). Reference nothing; the types are already there. (`app-model-check`)
+- **Never reuse a package version.** Deleting a cached `Spar.Sdk` version while the MSBuild server was warm stopped partway on a locked DLL and left the package half-deleted. The warm server still reported the next `dotnet build` as succeeded; only a fresh evaluation failed, with MSB4019. (`package-consumer`)
+- **A write-if-changed output cannot be a target's `Outputs`.** The file can stay older than its inputs, so the target runs on every build. Use a separate stamp file. (`react`)
+- **MSBuild misses a file restored with an older timestamp.** It skipped both the client step and CoreCompile, so the build went stale without a message. A normal editor save is detected. Scripts and agents that copy files with their original timestamps hit this. (`d1-pipeline`)
+- **Exclude every `bin/` and `obj/` from the default globs,** not only the current variant's. Otherwise one variant compiles another's generated `AssemblyInfo` (CS0579). Also exclude `frontend/node_modules`, `dist` and the frontend's own `obj/` and `bin/`, from the globs, from the frontend target's input glob and from `dotnet watch`. (`d3-variants`, `react`, `esproj`)
+- **`-p:PublishAot=true` on the command line fails with NETSDK1207,** because the global property flows to the netstandard2.0 generator project. The `MSBuild` task forwards global properties too: use `RemoveProperties`, and pass `Configuration` and `_IsPublishing` explicitly. (`react`, `d3-variants`)
+- **MSBuild splits `-p:` values on `;`.** `-p:SpikeParts=A;B` was rejected as an invalid switch. Escape the semicolon as `%3B`. (`native-services`)
+- **Concurrent restores of one variant race** unless they share a deterministic `MSBuildRestoreSessionId`. (`d3-variants`)
+- **Two processes building the same variant clash** (6 of 10 runs in-proc, with the MSBuild server off). A `FileShare.None` lock file in the variant's `obj` fixes it. (`d3-variants`)
+- **The MSBuild server hides concurrency.** On SDK 11.0.100, `dotnet build` and `dotnet publish` use the MSBuild server (`MSBuild.exe /nodemode:8`) by default; `dotnet msbuild` does not. A second `dotnet build` cannot use the busy server, so it starts cold and finishes after the first: no real overlap. Concurrency tests need `DOTNET_CLI_USE_MSBUILD_SERVER=false`. (`d3-variants`, `package-consumer`)
+- **Inline `RoslynCodeTaskFactory` tasks failed with MSB0001** under `-mt` after a `-m` build in the same server ("created a task but returned null/empty assembly path"). They passed in a fresh server. Spar's tasks are compiled, so this affects only inline tasks in spikes and tests. (`d3-variants`)
+- **`NUGET_PACKAGES` does not isolate NuGet's HTTP cache.** Isolation tests must also set `NUGET_HTTP_CACHE_PATH`, or they write to the user's `%LOCALAPPDATA%\NuGet\v3-cache`. (`package-consumer`)
+- **NuGet audit fails builds** (warnings are errors) on vulnerable transitive packages.
+  - Microsoft.Data.SqlClient 7.1.0 pulls System.Security.Cryptography.Pkcs 9.0.18, which is flagged; 10.0.12 is flagged too. Use SqlClient 7.1.2 or later.
+  - Aspire 13.1.2 is flagged (GHSA-f7vh-h5g3-7jrh, plus MessagePack). Use 13.6.5 or later.
+
+  (`react`, `aspire`)
+- **`TreatWarningsAsErrors` does not fail SDK or MSBuild warnings.** NETSDK1229 (an MSBuild `Warning` from `Microsoft.NET.Windows.targets`) passed every build under the repository's settings. `MSBuildTreatWarningsAsErrors` or `-warnaserror` is the switch for those. A probe warning (MSB9999) then failed a build under `tests/`, and the root `Directory.Build.props` now sets it outside `spikes/` (decision "MSBuild and SDK warnings fail the build"). (`cswinrt`)
+- **The SDK default `TrimmerSingleWarn=true` collapses a package's trim and AOT warnings to one per assembly.** SqlClient 7.1.2 then showed 4 (IL2104 ×3, IL3053) instead of 49. Suppressing those 4 would hide whole assemblies. Set `TrimmerSingleWarn=false` to see each warning. (`sqlclient-aot`)
+- **With `IsAotCompatible=true`, the app's own IL2026 fails the C# compile** under warnings-as-errors, so ILC never runs and its diagnostics stay unseen. To see the ILC result, compile with warnings allowed and set `IlcTreatWarningsAsErrors=true` (52 errors for the SQL tool). (`sqlclient-linux`)
+- **AOT-unsafe code passes a normal build** unless the AOT and trim analyzers are on. TUnit's `IsEquivalentTo` without a comparer (`[RequiresUnreferencedCode]`) failed only at AOT publish (IL2026); `-p:EnableAotAnalyzer=true -p:EnableTrimAnalyzer=true` surfaced it in a normal build. (`test-frameworks`)
+- **On a `netstandard2.0` project, `EnableAotAnalyzer` or `IsAotCompatible` gives NETSDK1210,** which fails the build under `MSBuildTreatWarningsAsErrors`. Set the analyzers in `Directory.Build.targets`, under a target-framework condition (`net8.0` or later): there the `netstandard2.0` project built with 0 warnings, and a `net11.0` probe with AOT-unsafe code failed on IL2026 and IL3000, as intended. (guidance review probe)
+- **A `netstandard2.0` project defaults to C# 7.3,** so file-scoped namespaces and later syntax fail with CS8370. The generator sets `LangVersion` explicitly. (guidance review probe)
+- **The Aspire AppHost SDK references `Aspire.Hosting.AppHost` implicitly.** Listing it in `Directory.Packages.props` fails with NU1009. Without the Aspire CLI the build warns ASPIRE010. (`aspire`)
+- **Generated sources must use `\n` line endings.** Mixing in `AppendLine` makes Visual Studio show "Inconsistent Line Endings". (`d1-pipeline`)
+- **Visual Studio shows generator diagnostics in the Error List, but draws no squiggle.** Report located diagnostics from a `DiagnosticAnalyzer`. (`d1-pipeline`)
+- **Roslyn 5.9's closed-type API is `[Experimental]`** (RSEXPERIMENTAL006). The suppression is agreed and scoped to `src/Spar.Generator/**.cs`. Roslyn 5.9 hosts accept `closed` only at `LanguageVersion.Preview` (CS8652); the SDK 11.0.100 compiler doesn't need it. (`contract-syntax`)
+- **The client step and the generator parse with the Roslyn they reference.** The spike's client step used Roslyn 5.9 at `LanguageVersion.Preview`. A contract written in syntax that this Roslyn does not know is skipped without a diagnostic. Parse errors in other files are ignored, because only contract types are read. The generator has the same limit inside an older IDE. Raise the referenced Roslyn with the supported C# version. (`d1-pipeline`, reasoned from the design, not provoked)
+- **C# does not chain two user-defined conversions.** Returning a union case where a `Result<T, TUnion>` is expected fails with CS0029; a `closed record` case converts directly. (contract syntax discussion)
+- **C# 15 rejects `await` inside a type marked `unsafe`** (CS8652). Mark only the members that use pointers. (`d8-automation`, `linux-desktop`)
+- **A `ReadOnlySpan<string>` collection expression used as a `foreach` source cannot cross an `await`** (CS4007). Use a static array. (`d8-automation`)
+- **With `PublishAot=true`, `RuntimeFeature.IsDynamicCodeSupported` is false even under the JIT.** To detect a real AOT process, use `IsDynamicCodeCompiled`. The property also turns off reflection-based JSON under the JIT, so a library that needs it (Playwright) fails in any project that sets it. (`d8-automation`, `serializer-bench`)
+- **Generic strings in binaries give false positives in boundary scans:** `LoopbackHost` is a `System.Uri` flag name. Scan for markers unique to Spar. (`react`)
+- **A Linux NativeAOT publish writes a `.dbg` symbol file beside the executable:** 10.6 MB for the desktop spike, 24.4 MB beside the 17.4 MB SQL tool. It is not needed to run. (`linux-desktop`, `sqlclient-linux`)
+- **To see where NativeAOT image size goes,** publish with `-p:IlcGenerateMapFile=true` and read the ILC map. (`cswinrt`, `result-api`)
+- **Measured AOT size costs:**
+  - the zip reader: +493 KB;
+  - a Brotli decoder: +173 KB;
+  - Microsoft DI: +0.3–0.9 MB;
+  - the OpenTelemetry layer: +4.3 MB on an app that already uses HTTPS (logs alone +1.3 MB);
+  - CsWinRT 3.0: +10–23 MB.
+
+  (`react`, `cswinrt`)
+
+- **The MSBuild task analyzer** (`Microsoft.Build.TaskAuthoring.Analyzer` 18.13.0):
+  - **Its Info rules, including MSBuildTask0001** (`Console`, `Environment.Exit`, `SetCurrentDirectory`), never appear in command-line build output; only SARIF shows them.
+  - **The option is `msbuild_task_analyzer.run_mt_analyzers_on_all_tasks`.** An unknown key such as `msbuild_task_analyzer.scope` is ignored silently.
+  - **Its code fixes are not shipped** (dotnet/msbuild PR #15402). Applied by hand, some 0002 fixes don't compile (CS0200, CS1501), and the 0003 fix wraps only the first `File.Copy` argument.
+  - **It does not see** static mutable state, `AppContext` switches, culture setters or assembly-load hooks.
+  - `MSBuildMultiThreadableTaskAnalyzedAttribute` is missing from Framework 18.12.2. A local `internal` copy in the `Microsoft.Build.Framework` namespace works with the analyzer.
+
+  (`msbuild-task-analyzer`)
+
+- **Under `-mt`, a task without `[MSBuildMultiThreadableTask]` runs in a TaskHost** (`/nodemode:2`, one per thread node), even when it implements `IMultiThreadableTask`. (`msbuild-task-analyzer`)
+- **`-mt` strict mode moves the working directory to a temp sentinel.** Relative paths that work under `-m` miss under `-mt`. A working-directory change is error MSB4286, and a write to the sentinel is warning MSB4287. `TreatWarningsAsErrors` doesn't cover MSB warnings, so pass `-warnAsError` where `MSBuildTreatWarningsAsErrors` is off (in `spikes/`). (`msbuild-task-analyzer`)
+- **About 29 % of builds that launched new MSBuild processes with `-nodeReuse:false` stalled about 5 s** at node start, cause unknown. Report timing ranges, not single runs. (`msbuild-task-analyzer`)
+
+## dotnet watch and the development loop
+
+- **`dotnet watch` (SDK 11.0.100) does not mark its builds.** There is no property and no variable, and the builds run in reused MSBuild nodes. `CustomCollectWatchItems` runs in dotnet-watch's own process, after each build. The app process does get `DOTNET_WATCH=1`. (`react`)
+- **`dotnet watch -p` means `--project`.** Pass properties with `--property:`. (`react`)
+- **Stopping `dotnet watch` through a shell wrapper** (`shell: true` plus `taskkill /T`) left `dotnet watch`, `dotnet run` and the app running. Start the real process directly, and stop its tree. (`react`)
+- **Vite exits when its standard input ends** (unless `CI=true`). A Vite started through `cmd start /b` inherits its launcher's input, so it lives as long as the `dotnet watch` session, or the pipe. (`react`)
+- **Git Bash rewrites POSIX-looking paths:** `docker exec … /opt/...` and `devenv /Build`. Set `MSYS_NO_PATHCONV=1`. (`react`, IDE checks)
+
+## npm, Vite and TypeScript
+
+- **Vue's reactivity wraps class instances in Proxies, and `#private` fields throw through them** (`TypeError: Cannot read private member`). This happens with `ref`, `reactive`, Pinia stores and templates. A `Symbol.toStringTag` getter stops Vue proxying the object; `shallowRef`, `markRaw` and `toRaw` work in app code. A WeakMap keyed by the instance fails the same way. (`frontend-frameworks`)
+- **React's `use()` writes `status`, `value` and `_debugInfo` onto the thenable,** so a frozen thenable throws. (`frontend-frameworks`)
+- **`no-floating-promises` ignores a floating thenable** unless `checkThenables: true`. A `Promise` subclass is flagged by default. (`frontend-frameworks`)
+- **TanStack Query retries a rejected `queryFn` 3 times by default,** which re-runs the backend command. Also, its `queryFn` type `T | Promise<T>` types a returned thenable as the data itself. (`frontend-frameworks`)
+- **RxJS `from(asyncIterable)` does not abort on unsubscribe;** the producer runs until its next item. (`frontend-frameworks`)
+- **React StrictMode's first, aborted effect ends a subscription with an in-band `cancelled` failure,** which shows briefly unless the handler ignores its own abort. (`frontend-frameworks`)
+- **Angular under a strict CSP** needs all of the following, or the page breaks:
+  - AOT, since JIT is blocked as `eval` and the app does not start;
+  - no `<base href>`, which violates `base-uri 'none'`;
+  - no component `styles`, which are injected as `<style>`;
+  - `inlineCritical: false`, because the inlined script that switches the stylesheet from `media="print"` is blocked, and the global CSS then never applies.
+
+  Angular 22 also makes `OnPush` the default, which can look like a stale view. (`frontend-frameworks`)
+- **Vue's full build compiles templates at run time** and is blocked as `eval`; use the runtime-only build. (`frontend-frameworks`)
+
+- **npm deletes what it does not know in `node_modules`.** A private junction to the generated client was pruned by `npm i`, deleting the files through it, and `npm ci` wipes everything. Link the client as a declared `file:` dependency outside `node_modules`. (`react`)
+- **The generated client path must not depend on the configuration.** With an `obj/Debug/…` path, a clean clone running only `dotnet publish -c Release` fails (TS2307). (`react`)
+- **Vite pre-bundles and caches `node_modules`,** so regenerated code there would miss hot updates. `file:` packages outside `node_modules` are treated as source. (`react`)
+- **Rolldown could not resolve a bare `@spar/sdk` import through a junction.** The generated packages import each other relatively. (`react`)
+- **`skipLibCheck` skips only `.d.ts` files.** A `.ts` dependency is checked under the app's own flags: an unused local in generated `.ts` fails the user's build. A broken `.d.ts` is silent under `skipLibCheck: true`. (`ts-compiled-contracts`)
+- **A `.ts` file beside a `.d.ts` of the same name wins module resolution.** A `core.ts` next to `core.d.ts` would be picked instead of the declaration. Ship the SDK's sources in `sdk/src/`. (`ts-compiled-contracts`)
+- **VS Code uses its bundled TypeScript 6.0.3, not 7** (unless the Native Preview extension is installed). TypeScript 7's npm package has no `tsserver.js`, so `typescript.tsdk` cannot point at it. TypeScript 7.0.2's language server offers no quick fixes and no object-literal method snippets for these cases, and its completion details carry no doc comments (`completionItem/resolve` returns `detail` only). (`ts-results`)
+- **Rename and some quick fixes edit generated files,** because the package's real path is outside `node_modules`. With a declaration map to C#, TypeScript 7 renames the C# identifier only, not its C# references. Rename in C#, then regenerate. `"preserveSymlinks": true` is no fix: rename was then refused for some symbols and allowed for others. (`ts-results`, `ts-compiled-contracts`)
+- **A generic `match` infers its return type from `success` only,** unless each handler group has its own type parameter. Typos give misleading "not assignable to 'never'" errors unless `NoInfer` guards the error keys. Variants that failed: one type parameter per error slot (TS2322 with mixed return types); the exactness check without `NoInfer` (handlers lost contextual typing, TS7006); error handlers not intersected with the generated `ErrorHandlers<E>` (no hover docs, and rename found 3 of 10 locations). (`ts-results`)
+- **TypeScript 6.0.3's "Add missing properties" writes stubs that return `unknown`** (`function(error: …): unknown { throw new Error("Function not implemented."); }`), which widens the `match` result to `unknown` until each stub is edited. (`ts-results`)
+- **Bundlers keep every method of a class,** and every property of an exported object literal: all six commands of an imported contract stayed in the bundle. Only free functions and unused modules are tree-shaken. (`ts-results`, `ts-compiled-contracts`)
+- **WebView2 web messages:**
+  - a string containing NUL is cut off at the NUL, in both directions;
+  - a page string with a lone surrogate cannot be read with `TryGetWebMessageAsString` (`E_INVALIDARG`);
+  - a host string with a lone surrogate arrives with U+FFFD;
+  - `PostWebMessageAsJson` halved stream throughput, cost about 50% more host CPU, and threw on a `\ud800` escape that `JSON.parse` accepts.
+
+  (`bridge-encoding`)
+- **JSON numbers as ids:** the page parsed a 10,000-digit id as Infinity and 2^53+1 as 2^53. Check ids with `Number.isSafeInteger`. Duplicate keys resolve to the last one, so `{"type":"cancel","id":7,"id":8}` cancels call 8. (`bridge-encoding`)
+- **`encodeURIComponent` throws `URIError` on a lone surrogate,** and the .NET reader throws on a lone-surrogate escape inside a string you then read as text. Trace fields need a tolerant read. (`bridge-encoding`)
+- **` `/` ` written through agent tool input can land in source files as raw characters,** which broke a C# build (CS1010). Write them as escapes and check the bytes. (`bridge-encoding`)
+- **Playwright's `WaitForFunctionAsync` with an async predicate passes immediately.** Poll instead. (`react`)
+- **Playwright for .NET cannot run inside a NativeAOT process** (reflection JSON), so browser journeys stay on CoreCLR test projects. (`d8-automation`, `test-frameworks`)
+- **A browser allows 6 HTTP/1.1 connections per host** (loopback cannot use HTTP/2). Six open per-call streams blocked a unary call for more than 3 s, and even the cancels. Use one channel per document. (`react`)
+- **`@opentelemetry/sdk-trace-web` is deprecated in OpenTelemetry JS 3.x,** and its last release doesn't work with the current exporters. Use `@opentelemetry/sdk-trace`. (`browser-telemetry`)
+- **Vite's default `build.assetsInlineLimit` turns small assets into `data:` URLs,** which a strict CSP blocks. Set it to 0. (`csp-navigation`)
+- **SRI fails open when the import map is blocked.** An inline import map is an inline script: without its hash in `script-src` it is blocked, and a tampered lazy chunk then loaded. SRI failures are not CSP violations either, so CSP listeners and reports miss them; only the console and an `error` listener see them. (`csp-navigation`)
+- **Vite's watcher coalesces quick successive writes.** A fix written milliseconds after a broken file was never applied; a 1 s pause between the writes fixed it. Matters for HMR test harnesses. (`csp-navigation`)
+- **A C# extractor that binds a project's code needs its implicit global usings,** or binding fails. (`csp-navigation`)
+- **`ignore-scripts`, in `.npmrc` or passed to `npm run`, also skips the app's own `pre`/`post` script hooks.** Pass `--ignore-scripts` on the `npm ci` command line only. (`npm-ignore-scripts`)
+- **`npm ci` audits by default, with a 5-minute network timeout;** an earlier version's CI job hung for 30 minutes. Use `--no-audit` and check vulnerabilities as a separate step. (earlier version)
+- **An inherited stdin stalled `npm install`.** Give child processes a closed, redirected stdin. (earlier version)
+- **Rolldown's optional native packages need optional dependencies installed** (`--include=optional` when they are omitted). (earlier version)
+- **Logs or profiles inside a folder that Vite or `dotnet watch` watches make the watcher react to its own output;** Vite once watched a locked browser cookie database. (earlier version)
+
+- **Async iteration in the generated client:**
+  - **Async generators layered over another async iterable cost about +100 ns and +320 B per item** on WebView2. Generate hand-written iterators.
+  - **Wrap stream items when the iterator hands them out,** not when a batch is decoded. Wrapping at decode makes a stalled consumer hold about 40 % more memory per buffered row.
+
+  (`stream-result-cost`)
+
+## Windows host (WebView2)
+
+- **`WebResourceRequested` cannot stream.** `IStream::Read` runs on the UI thread (8,664 of 8,664 calls), the whole response is read before the page sees it, `E_PENDING` ends it, and there is no back-pressure. WebView2 also calls `Seek(0, STREAM_SEEK_SET)`, and never `Stat`. (`react`)
+- **Custom responses are never decoded:** with `Content-Encoding: br` or `gzip`, the page receives the compressed bytes. (`react`)
+- **Custom responses are always copied on Windows.** `SHCreateMemStream` copies its input, and with `CreateWebResourceResponse` it cost about 2.5 ms for 2 requests, even with nothing to decode. WebKitGTK's `g_bytes_new_static` serves the image in place. (`asset-packing`)
+- **Under NativeAOT, `GetManifestResourceStream` returns an `UnmanagedMemoryStream` over the image,** on both OSes. Stored entries need no managed copy, but `SHCreateMemStream` still copies them on Windows. (`asset-packing`)
+- **A hidden or minimized window breaks automation:** trusted input hangs and timers are throttled. `--disable-background-timer-throttling --disable-renderer-backgrounding --disable-backgrounding-occluded-windows` restore the timers in a hidden window, but trusted input still never completes and `requestAnimationFrame` never fires. Minimized, a click took about 940 ms and screenshots never completed. Use a shown window placed offscreen. (`d8-automation`)
+- **The first trusted input after navigation can stall for 5 s.** Wait two animation frames first. (`d8-automation`)
+- **Rare 5 s stalls, unexplained:** once in about 400 runs between `NavigationStarting` and the HTML request, and once in 5 background Brotli decodes (5,012 ms against 66–78 ms). (`theme-startup`, `asset-packing`)
+- **The browser process can take about 6.5 s to exit** after close, with any binding: 12 of 12 AOT runs in `cswinrt` (6.44–6.53 s, both bindings), 23 of 104 runs in `asset-packing`, 2 of 14 in `react`; the other runs took 235–284 ms.
+  - **Cause, confirmed:** SmartScreen. A close within about 0.5 s of a navigation finds its reputation request (`nav-edge.smartscreen.microsoft.com`) still in its TLS connect, and the browser waits for it (6.40–6.49 s, 30 of 30). Closing 0.75 s or more after the navigation took 120–167 ms.
+  - **Fixes:** `IsReputationCheckingRequired = false` (52–67 ms), `--disable-features=msSmartScreenProtection`, or `MAP * ~NOTFOUND`. `MAP app.localhost ~NOTFOUND`, `--no-proxy-server` and `--disable-background-networking` do not help.
+  - **Exiting without waiting** lost no data in 330 runs, even with the host killed.
+  - Wait for the exit, not for the window, only before reusing or deleting a profile.
+
+  (`react`, `cswinrt`, `asset-packing`, `webview-profiles`)
+- **`BrowserProcessExited` fires about 160 ms after the real kernel exit, and never after a failed controller creation.** A host that waits for it exits after about 326 ms instead of 20 ms. (`webview-profiles`)
+- **`ICoreWebView2Profile8.Delete` poisons the profile name for good:** creating it again fails with `0x8007012F` (`ERROR_DELETE_PENDING`) at every later start (8 of 8), because `Local State` keeps it in `profile_basenames_deleted`. Use `ClearBrowsingDataAll` instead. (`webview-profiles`)
+- **`ClearBrowsingData(ALL_SITE)` keeps the `History` file,** which can hold data from page URLs. Add `BROWSING_HISTORY`, or use `ClearBrowsingDataAll`. (`webview-profiles`)
+- **A second app instance with different environment options** creates its environment, then fails at controller creation with `0x8007139F` after about 37 ms. If the first instance is exclusive, it fails with `0x8000FFFF`. Map both to a clear "another instance with different settings is running" error. (`webview-profiles`)
+- **InPrivate's `ProfilePath` reports the parent profile's folder,** but InPrivate writes no site data. Its data is shared by the InPrivate windows of that profile and dropped when the last of them closes. (`webview-profiles`)
+- **`WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS` is appended even in Production,** so remote debugging can be enabled from outside. `DevToolsActivePort` goes stale, and a fixed port fails silently. (`d8-automation`)
+- **`AreDevToolsEnabled=false` does not gate in-process CDP.** Every automation call worked the same with it off. Only a compile-time or trim-time exclusion keeps automation out of a build. (`d8-automation`)
+- **A page `fetch` abort is invisible to the host.** Cancellation needs an explicit message. (`react`)
+- **Hand-written COM:**
+  - a missing vtable slot shifts every later method and crashes. A base interface must declare every slot: `IFileDialog` without its last slot (`SetFilter`, slot 26) put every `IFileOpenDialog` method one slot off (segfault under AOT, `0xC0000005` under the JIT);
+  - an interface whose methods are never reachable fails its cast only under AOT, at run time, with no warning (`IFileSaveDialog`). Ask for the interface whose methods you call.
+
+  Test slot order. (`native-services`)
+- **The static WebView2 loader exists only under NativeAOT.** Link it with `<DirectPInvoke Include="WebView2Loader" />` and a `NativeLibrary` item for `WebView2LoaderStatic.lib`, from `Microsoft.Web.WebView2` referenced with `ExcludeAssets="all" GeneratePathProperty="true"`. The link needs no extra libraries, and the publish folder then has no `WebView2Loader.dll`. CoreCLR publications must ship `WebView2Loader.dll`. (`react`, `d8-automation`, `bridge-encoding`)
+- **`CREDENTIALW` is 80 bytes on x64,** with `FILETIME` declared as `long` at offset 24. Assert the size at run time. (`native-services`)
+- **Kestrel (loopback): cancelling a blocked response flush aborts the connection,** and the cancel confirmation is lost. Transport flushes must not take the command's token. (`react`)
+- **A `.local` app origin goes to name resolution.** After the machine's network changed (hotspot, VPN), `https://app.spar.local` added about 2 s to every page load; `app.localhost` loaded in 54 ms and `app.spar.invalid` in 89 ms. Use a name that never resolves. (`asset-packing`)
+- **A window class with no brush is shown white by DWM until something paints it.** That, not the WebView, is the startup flash. (`theme-startup`)
+- **In dark mode WebView2 paints Chromium's `#121212` before any document has painted,** for about 900 ms, whatever opaque `DefaultBackgroundColor` is set. Use a transparent default background over a painted window. (`theme-startup`)
+- **A WebView2 controller under a hidden parent window does not render,** so the page never reaches `ui-ready`, not even after `ShowWindow`. Toggling the controller's visibility (`put_IsVisible(false)`, then `true`) after the show makes it render (the app was visible 20–40 ms after the show), but a start hidden until `ui-ready` still always waits for its timeout. Cloak the window with DWM instead. (`theme-startup`)
+- **Chromium holds the first frame of a page with nothing contentful** until contentful paint or about 500 ms: `first-paint` came 576–604 ms after navigation, against `domInteractive` at about 40 ms. Static text in the HTML brought the first frame to 172 ms. (`theme-startup`)
+- **`PrintWindow` waits for the window's thread:** joining the capture thread from the window thread deadlocked. A print that races the first paint returns an empty surface. Windows.Graphics.Capture rejects a hidden window, but a cloaked one works. (`theme-startup`)
+- **An unanswered request to the app origin leaves the machine's loopback:** each opened 2 TLS connections to `[::1]:443`. Answer every request, with a 404 for unknown paths. A `sendBeacon` to an unanswered path still reports `queued=true`, so the page never learns. (`desktop-origin`)
+- **Every navigation preconnects to `[::1]:443`** even when the host answers every request. Only `--host-resolver-rules="MAP app.localhost ~NOTFOUND"` stopped it, and its value must be quoted inside the argument: unquoted, Chromium kept only the first word. (`desktop-origin`)
+- **The runtime makes requests the app never asked for.** The net logs showed SmartScreen (`nav-edge.smartscreen.microsoft.com/.../navigate/3`) on navigation to the app origin, `data-edge` and `telem-edge` SmartScreen hosts, `config.edge.skype.com/config/v1/Edge/…`, and 5 `wpad` lookups per run. Whether `IsReputationCheckingRequired=false` stops the SmartScreen calls is untested. (`desktop-origin`)
+- **The legacy `AddWebResourceRequestedFilter` misses shared and service workers:** service-worker registration fails, and shared-worker fetches leak. Use the source-kinds filter (`ICoreWebView2_22`). (`desktop-origin`)
+- **WebSockets are never intercepted, and CSP `'self'` in `connect-src` allows `wss://` to the same host.** `http://` and `ws://` to `*.localhost` are not mixed content, so they leave in plaintext. Name the origin with its scheme. (`desktop-origin`)
+- **Local network access checks do nothing for host-served pages** (address space `unknown`): loopback fetches succeed with no prompt. (`desktop-origin`)
+- **`clipboard.readText()` fails with "Document is not focused" in an offscreen window,** before any permission event. `getScreenDetails()` needs a user gesture; `Notification.requestPermission()` does not. (`desktop-origin`)
+- **Behind a proxy, Vite's default HMR client connects to `wss://<page origin>`.** Point `server.hmr` at the dev server. (`desktop-origin`)
+- **Cancelling a navigation does not stop its request.** Every cancelled GET navigation still reached the external server until the host registered `AddWebResourceRequestedFilter("*", DOCUMENT)` and answered foreign documents itself. (`csp-navigation`)
+- **The camera does not raise `PermissionRequested`.** A `getUserMedia` call without `Permissions-Policy: camera=()` hung, and a prompt reached the user's desktop, most likely the Windows privacy prompt for unpackaged apps. Deny powerful features with the header, and never call the camera or microphone in an unattended test on a machine with a person. (`csp-navigation`)
+  - In Windows Sandbox with fake devices, `PermissionRequested` does fire per kind (camera 2, microphone 1). So the earlier hang was probably the real device's path, which is still untested.
+  - `SavesInProfile` defaults to true, so a remembered allow later starts the camera with no host event.
+  - `--use-fake-ui-for-media-stream` bypasses the handler.
+
+  (`windows-sandbox-checks`)
+- **Vite's ETag is computed before a nonce is swapped in,** so a cached dev page kept an old nonce and its styles were blocked. Send the dev HTML `no-store`, without an ETag. (`csp-navigation`)
+- **A CSP listener in a module misses violations raised while the HTML is parsed.** Listen in the host-injected script, or use `report-uri`; `report-to` delivered only on WebKitGTK. (`csp-navigation`)
+- **Shell file dialogs:**
+  - `ClearClientData` returns `E_FAIL` when nothing is stored for the client GUID, so declare it `[PreserveSig]`;
+  - `Close(E_ABORT)` from `OnFolderChange` makes `Show` return `0x80004004` without ever showing the window;
+  - `FOS_FILEMUSTEXIST` shows a native error box for a missing name;
+  - Save's default overwrite confirmation is a task dialog with Yes and No only, and it ignores `IDCANCEL`. Answering `OnOverwrite` with `FDEOR_ACCEPT` suppresses it;
+  - an MTA caller works, but COM runs the dialog on its own host STA, on another thread.
+
+  (`native-services`)
+- **Automating native dialogs in tests:**
+  - commands posted before the dialog is visible are ignored: the first `OnFolderChange` arrives before the show, so wait for `IsWindowVisible`;
+  - a dialog moved offscreen repositions itself onto the desktop at (0,0) when shown. Make it transparent (`WS_EX_LAYERED`, alpha 0) instead;
+  - message boxes and task dialogs reset `WS_EX_LAYERED` while initialising, and appeared centred on screen until a thread-local `WH_CBT` hook re-hid them on `HCBT_CREATEWND` and `HCBT_ACTIVATE`;
+  - the WinRT `FileOpenPicker` is brokered: its dialog belongs to `PickerHost.exe`, so a watcher of your own process's windows hangs. Find it by owner HWND.
+
+  (`native-services`, `cswinrt`)
+- **WinRT toasts need an app identity.** In an unpackaged app, `CreateToastNotifier()` throws `0x80070490`, also when given an AUMID that is not registered, and `Package.Current` throws `0x80073D54`. A registered AUMID (shortcut or registry) was not tried. (`cswinrt`)
+
+The entries below come from earlier Spar versions and other frameworks (`docs/research-review.md`). They have not been rechecked on the current Runtime.
+
+- **A WebView closed shortly after it became ready takes about 6.4 s to exit;** closing later takes about 210 ms. ETW showed SmartScreen's shutdown work, about 101 sleeps of about 60 ms each. `IsReputationCheckingRequired=false` removed it in 18 of 18 runs. Desktop tests that close right after `ui-ready` pay this every time.
+- **An idle hung page raises no event.** `ProcessFailed(RenderProcessUnresponsive)` fires only when input goes unacknowledged; an idle hang produced nothing in 60 s.
+- **A confirmed `WM_ENDSESSION` was ignored** by a window that accepted `WM_QUERYENDSESSION`, so nothing was cleaned up at sign-out or shutdown.
+- **Focus:** without forwarding `WM_SETFOCUS` to `MoveFocus(Programmatic)`, Tab never reaches the page. Playwright's CDP focus emulation hides `visibilityState` bugs.
+- **WebView2 sends a navigation's request before the host cancels the navigation,** which uses up one-time links. Answer it with an empty response.
+- **WebView2 counts any navigation within about 5 s after `ExecuteScript` as user-initiated.**
+- **Environments sharing one profile folder must use identical options** (including additional browser arguments), or creation fails.
+- **A file sitting where the profile folder should be** caused a startup delay of about 65 s.
+- **A long data path** (the root lengthened from 114 to 169 characters) broke PDF staging and `localStorage` persistence.
+- **`PrintWindow` screenshots of hidden windows are black,** and a screenshot right after a resize shows the old frame.
+- **`Process.CloseMainWindow()` does not find hidden or offscreen windows.** Post `WM_CLOSE` to the recorded window handle.
+- **Choosing `ICoreWebView2Environment5` without declaring slots 2–4 shifted the vtable** and crashed: the slot-order rule also covers inherited interfaces.
+- **Returning directly from `WM_NCCREATE` broke the window title.**
+- **The CI runner ignored the WebView2 runtime-folder environment variable;** only the API parameter worked. In an elevated process (the Windows Sandbox runner), WebView2 ignores environment overrides altogether.
+- **A visible-window teardown leaked handles in WebView2's network service** that hidden-window tests never showed. The mitigation: hide the controller before `Close`, navigate to a blank page, and post the final close outside the callback.
+- **Once a CSP directive contains a hash or nonce, browsers ignore its `'unsafe-inline'`.** A Spar-added hash would silently break an app's CSS-in-JS.
+- **Unpackaged Windows apps get balloon notifications only;** in development, notifications show PowerShell's name and icon.
+- **Every notification-area icon leaves a permanent per-user entry,** listed in the taskbar settings, even after its executable is deleted. Spar v5's tests left one for each test executable, and the user removed them from the registry by hand.
+  - **Where Windows keeps them (Windows 11):** `HKCU\Control Panel\NotifyIconSettings\<number>`. Each key holds the values `ExecutablePath`, `UID` or `IconGuid`, `InitialTooltip`, `IsPromoted`, `IconSnapshot` and `Publisher`. On 2026-11-14 this machine had 40 entries and none from Spar.
+  - **How an icon is identified:** by the executable path plus the `uID`, or by `guidItem` when `NIF_GUID` is set. A GUID is tied to the executable's path ([`NOTIFYICONDATA`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)). So every new test path, such as a temporary folder or a per-run publish folder, creates a new entry.
+  - **Rules for Spar's tests and spikes:**
+    - Prefer Windows Sandbox or a fake shell for anything that calls `Shell_NotifyIcon`.
+    - If a real icon must appear on the developer's machine, give it one fixed executable path under `artifacts/`, so that it reuses one entry.
+    - Clean up only the keys whose `ExecutablePath` lies under this repository's `artifacts/` or `spikes/`. Never delete other keys.
+    - Whether Explorer rewrites a deleted key from memory, and whether a cleanup needs Explorer to restart, is unverified; restarting Explorer needs the user's consent.
+- **Custom title bar:**
+  - **The first click on a page-drawn caption button of an inactive window is lost** if the host clears the press on `WM_NCMOUSELEAVE`: activation sends it between press and release. (`windows-sandbox-checks`)
+  - **UIA: `ProviderOptions_RefuseNonClientSupport` on a top-level provider removes the phantom native title bar;** `IAccPropServices` annotation reports success and changes nothing, and answering `WM_GETTITLEBARINFOEX` only moves the phantom buttons. (`windows-sandbox-checks`)
+  - **WebView2's windowed drag regions are child windows that rewrite hit codes.** About 14 transparent windows, one per drag rectangle, forward `WM_NCHITTEST` to the parent but return `HTCAPTION` for everything except resize codes. Caption-button codes need a host-owned window above the WebView.
+  - **`HTTRANSPARENT` from a child window passes only to windows of the same thread,** so it never reaches past the WebView's window, which belongs to another process.
+  - **A `WS_EX_NOREDIRECTIONBITMAP` child above the windowed WebView hides it;** `WS_EX_TRANSPARENT` does not, and still receives hit tests.
+  - **`DwmDefWindowProc` stops reporting the caption buttons when the window is maximized** with a custom `WM_NCCALCSIZE`. Clicks on the visible restore button do nothing, with either controller.
+  - **GDI paints alpha 0 in an extended frame:** a dark brush showed DWM's `#4a4a4a` until the page painted.
+  - **Visual hosting shows no system menu on right-click** in a drag region, neither with `SendMouseInput` forwarding nor with `DefWindowProc` (no `WM_CONTEXTMENU`). The host must show it.
+  - **`GetNonClientRegionAtPoint` reports only caption or client:** no CSS value marks the minimize, maximize or close regions.
+
+  (`windows-titlebar`)
+- **The managed UI Automation client (`System.Windows.Automation`) is misleading:** it showed no title bar even for a standard window, and none of the page under visual hosting. Use the native UI Automation client for accessibility checks. (`windows-titlebar`)
+- **Windows Sandbox:**
+  - The guest's DPI follows the client window's monitor: DisplayConfig is denied (100 % only), `SPI_SETLOGICALDPIOVERRIDE` fails, and `LogPixels` with `IgnoreClientDesktopScaleFactor` is ignored. After `wsb connect` the client window restores and activates itself on the host. (`windows-sandbox-checks`)
+  - `wsb exec -r ExistingLogin` fails with 0x80070520 until a session exists. A `wsb connect`, minimized at once, creates one, and the guest keeps rendering and accepting `SendInput` while minimized.
+  - The guest's WebView2 registration (157.0.4341.42) pointed at files that were not there (157.0.4341.46), so environment creation failed with 0x80070002 until the runtime folder was passed explicitly.
+  - Files added to a mapped folder appear in the guest after a few seconds, and a file replaced in place is reported as "not a valid application". Stage new file names and poll for them.
+  - `Start-Process -WindowStyle Hidden` makes the app's first `ShowWindow` hide the window.
+  - `wsb exec` with `powershell -File` cannot pass an array parameter.
+  - `SendInput` arrow keys need `KEYEVENTF_EXTENDEDKEY` for the `Win+arrow` shortcuts.
+
+  (`windows-titlebar`)
+
+- **Timing and memory inside the page:**
+  - `performance.now()` resolves 100 µs in WebView2 and Chromium unless the page is cross-origin isolated (COOP + COEP), and then 5 µs.
+  - `performance.memory` returns a new snapshot on every read; a cached object reads the same numbers forever.
+
+  (`call-promise-cost`)
+
+- **Detecting a missing or broken WebView2 Runtime:**
+  - **Environment creation doesn't start the browser.** It succeeded with the browser deleted or replaced. Only controller creation fails (`0x80070002`, `0x800700AA`), and `BrowserProcessExited` never fires.
+  - **The loader follows `ClientState\…\EBWebView`.** A stale path reads as "not found" while the registry version looks right, so a registry check would say "installed". This is the cause behind the Sandbox registration mismatch.
+  - **A runtime folder missing `EmbeddedBrowserWebView.dll`** is reported as not found, not as broken.
+  - **Without `[STAThread]`, environment creation fails with `0x80010106`,** which looks like a runtime problem.
+
+  (`startup-prerequisites`)
+
+- **Native dialogs from a NativeAOT exe:**
+  - **`TaskDialogIndirect` needs a Common Controls 6 manifest.** Without one it throws `EntryPointNotFoundException`, and the exe still starts.
+  - **`MessageBoxW` is only system-DPI-aware** in a per-monitor-aware process. Neither dialog follows dark mode.
+  - **The task dialog never opens links.** The host calls `ShellExecuteW`. Returning `S_FALSE` from a button click keeps the dialog open.
+  - **An unregistered event-log source** writes, but viewers prefix "description cannot be found", and `Get-WinEvent` can't find it.
+  - **A GUI-subsystem exe gets standard handles only when they are inherited.** It must attach to the parent console to write there. `%ERRORLEVEL%` on a single `cmd` line is expanded before the app runs.
+
+  (`startup-prerequisites`)
+
+- **Reading WebView2 process memory:**
+  - **`GetProcessInfos` fails off the STA** with `0x802A000C` (`UI_E_WRONG_THREAD`).
+  - **It omits the crashpad handler,** and counts per user-data folder, not per app: a second instance on the same folder counts both renderers.
+  - **`Process.PrivateMemorySize64` costs 3.2 ms on Windows** for one process. `PROCESS_MEMORY_COUNTERS_EX2` with a kept handle costs 135 ns, and its `PrivateWorkingSetSize` is what Task Manager shows.
+  - **`GC.GetGCMemoryInfo` reports 0 before the first GC.**
+  - **NTFS directory-entry sizes lag for files open for writing.** They were 1.0 MB short 13 s after the write.
+  - **`EnumerationOptions` skips Hidden and System files by default.** A size walk must set `AttributesToSkip = 0`.
+  - **`navigator.storage.estimate()` covers only IndexedDB and Cache Storage on WebView2** (12.6 of 26 MB), and is missing on WebKitGTK.
+
+  (`resource-usage`)
+
+- **A hung page:**
+  - **Reload, Stop + Reload, same-site navigation and `edge://kill` do not recover a hung WebView2 renderer.** Terminate its process (the id comes from `GetProcessInfos`; there is no API), then reload once.
+  - **WebView2 raises `ProcessFailed(RenderProcessUnresponsive)` only about 16 s after input reaches a hung page,** a dialog's focus change included. It never does for an idle hang, and 30 s after a reload into one.
+  - **A suspended WebView answers no web messages,** and on resume they all arrive at once. Never ping a suspended or hidden WebView.
+  - **Messages posted to a hung page queue in its renderer,** about 1.6 kB each for 1 KiB. Keep one outstanding.
+  - **An endless microtask chain makes the renderer exit with out-of-memory** after about 20 s, rather than hang.
+
+  (`page-heartbeat`)
+
+## Linux host (WebKitGTK)
+
+- **A second instance on the same WebKitGTK data folders starts without any error and corrupts data:** after both exited, `localStorage` was empty, and both instances' writes were lost (2 of 2 on each API). Enforce single instance before creating the web context. (`webview-profiles`)
+- **On a custom scheme (`spar://`), WebKitGTK stores no cookies, and Cache Storage rejects the requests.** (`webview-profiles`)
+- **WebKit's website-data type constants differ between the APIs:** `ALL` is `0xFFF` on 6.0 and `0x3FFF` on 4.1. (`webview-profiles`)
+- **Destroying a WebKitGTK window runs `pagehide`, `visibilitychange` and `unload`, but not `beforeunload`.** (`webview-profiles`)
+- **GTK and its dialogs write to the real user config.** A GTK3 file chooser run without private folders created `~/.config/dconf/user` and `~/.config/gtk-3.0`. Printing added `~/.local/share/recently-used.xbel`, and restore added `~/.nuget/NuGet/NuGet.Config`. In tests and spikes, point `HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `XDG_CACHE_HOME` and `XDG_STATE_HOME` at a private folder before starting anything. (`linux-integration`)
+- **WebKitGTK ignores `app-region` / `-webkit-app-region`:** `CSS.supports` is false and the computed value is empty. A page-drawn title bar needs the host to start the move. Start it after a small threshold (4 px), because starting on press lost the double-click on GTK4. (`linux-integration`)
+- **GTK4: web processes outlive the window after a window-manager move or resize,** for more than 10 s in 5 of 5 runs, until the next click in the page. GTK3 is not affected. **Cause:** the window manager grabs the pointer, so the release never arrives. Two WebKit gestures on the view keep an open press, a GTK4 gesture holds a strong reference on its widget while pressed, and destroying a GTK4 window only detaches the view. **Fix:** call `gtk_event_controller_reset` on every controller of the view right after `gdk_toplevel_begin_move`/`begin_resize`; the processes then exit in 24–26 ms, 5 of 5. Disabling the view before destroying the window also works. `webkit_web_view_terminate_web_process` leaves the network process alive. After any window-manager drag the page also sees a mousedown with no mouseup, on both APIs. (`linux-integration`, `linux-memory`)
+- **Memory on a software GPU (llvmpipe):** WebKit's accelerated path costs about 90 MB per web process, and GTK4's default GL renderer about 75 MB in the app process. `GSK_RENDERER=cairo` removes the second. libLLVM and Mesa stay partly resident even with everything off, because WebKit sets up an EGL display anyway, as does GTK4 on X11. (`linux-memory`)
+- **Memory readings are distorted by other WebKit apps in the same distribution:** shared libraries split their PSS, and two runs read up to 66 MB low. Record foreign processes at every snapshot and discard affected runs. (`linux-memory`)
+- **Electron in WSL needs NSS and NSPR,** which a minimal Ubuntu lacks. `apt-get download` plus extraction works without root. (`linux-memory`)
+- **WSLg Wayland, GTK4:**
+  - A window started maximized is killed by the compositor (Wayland error 71, 2 of 2). Maximize after the window first maps.
+  - A hidden window keeps showing its last frame. Unrealize it after hiding; it then comes back without its shadow.
+
+  Probably compositor behaviour; not checked on a real desktop. (`linux-integration`)
+- **Window position:** Wayland gives none. On X11, GTK3's position API drifts by the frame size at each restart, and GTK4 needs Xlib's `XMoveWindow`. (`linux-integration`)
+- **Tray hosts call the grouped dbusmenu methods** (`EventGroup`, `AboutToShowGroup`; xfce4-panel). An item that implements only `Event` and `AboutToShow` gets no menu clicks. (`linux-integration`)
+- **WebKit's `javascript-can-access-clipboard` bypasses the clipboard permission check entirely.** Keep it off; pasting outside text then raises a permission request, which the strict default denies. (`linux-integration`)
+- **GApplication uniqueness waits forever when the first instance hangs,** and a launch during the first instance's exit is lost. A lock file plus a Unix socket fails clearly after its timeout. (`linux-integration`)
+- **WSLg cannot test window moves with synthetic input:** nothing moved, not even weston's own title bar. Use a real X11 window manager (openbox in a container). (`linux-integration`)
+- **No origin information:** `fetch` requests to the custom scheme carry no `Origin`, and script messages don't say which frame sent them. (`linux-desktop`)
+- **Custom-scheme responses stream, but with no back-pressure:** a paused reader grew the web process by 826 MB. (`linux-desktop`)
+- **The GTK4 web process is always sandboxed:** it needs a non-root user and user namespaces (in containers, `seccomp=unconfined`). As root under Docker's defaults, `bwrap` cannot create its namespace and the app aborts with SIGTRAP (exit 133). (`linux-desktop`)
+- **`WEBKIT_INSPECTOR_SERVER` opens a local TCP port** even in a production-style run, so clear it. `WEBKIT_INSPECTOR_HTTP_SERVER` hung the app. (`linux-desktop`)
+- **Missing WebKit pieces fail late and unclearly,** so check them at startup and report clearly:
+  - a missing `libwebkit2gtk` throws an unhandled `DllNotFoundException` on the UI thread after the window exists (exit 134, 253–813 ms). The loader probes the app folder before the system;
+  - a missing helper folder (`WebKitNetworkProcess`, `WebKitWebProcess`) gives a GLib error and SIGTRAP (exit 133) after 1.9–3.5 s;
+  - a missing `bwrap` (GTK4) gives "Permission denied" and SIGTRAP after 3.0–4.3 s.
+
+  (`linux-desktop`, `linux-wsl-desktop`)
+- **The web processes stay alive** unless the GLib main loop keeps running until they exit. (`linux-desktop`)
+- **GStreamer, Mesa, dconf and the GTK4 sandbox write to `$HOME/.cache`,** whatever data directory WebKit is given. A crashed 6.0 run leaves `$HOME/.cache/.flatpak/webkit-<pid>-*` behind. Tests should point `HOME` or `XDG_CACHE_HOME` at a disposable folder. (`linux-desktop`)
+- **There is no in-process trusted input** (no CDP). WebKitWebDriver types and clicks only on GTK3. XTEST works under X11, including XWayland, on GTK3 and GTK4. Native Wayland has none: WSLg's weston offers no virtual-keyboard, virtual-pointer or EI protocol. (`linux-desktop`, `linux-wsl-desktop`)
+- **`performance.now()` on WebKitGTK had 1 ms granularity,** so page-side medians of short calls read 0 or 1 ms. Time from the host, or use means. (`linux-desktop`)
+- **Show the window only after the web view is attached and loading.** Shown first, GTK3 on X11 without the sandbox stalled about 0.5 s: WebKit's draw handler waits for a first frame the web process cannot produce yet. This is the 686–711 ms (against 201–244 ms sandboxed) start seen under Xvfb. The page also lacks focus, and the first Tab is lost. (`linux-wsl-desktop`, `linux-desktop`)
+- **On a software GPU (llvmpipe), WebKit's accelerated path costs about 300 ms on the cold first frame,** and GTK4's GL renderer adds more (`GSK_RENDERER=cairo` removes it). `WEBKIT_DISABLE_DMABUF_RENDERER=1` turns acceleration off entirely in 2.52. (`linux-wsl-desktop`)
+- **WSLg without `render` group access uses llvmpipe.** Forcing `GALLIUM_DRIVER=d3d12` crashed GTK3 at exit (segfault, exit 139, in 4 of 4 runs). On GTK4 the sandbox blocks `/dev/dxg`: the web process could not create its EGL display and crashed, the window stayed blank, and `web-process-terminated` fired after 8.8 s. (`linux-wsl-desktop`)
+- **The Settings portal can be absent:** under WSLg, `xdg-desktop-portal` runs without a Settings interface, so `ReadOne` fails with `UnknownMethod`. The cause: `XDG_CURRENT_DESKTOP` is empty, `gtk.portal` declares `UseIn=gnome`, and the fallback does not cover Settings; it needs a desktop name and a `portals.conf` (`[preferred] default=gtk`). With no session bus, `g_bus_get_sync` fails ("Failed to execute child process dbus-launch"); with a bus but no portal, `ServiceUnknown` comes after 1.9 ms. GTK settings also differ by backend: Wayland reads GSettings, X11 uses defaults. (`linux-wsl-desktop`, `theme-startup`)
+- **Scaling and decorations:** `GDK_SCALE` applies only to X11, and `GDK_DPI_SCALE` becomes a page zoom on 4.1 (ignored on 6.0). On Wayland under WSLg, GTK's title bar has only a close button, and GTK3's client-side decorations add a 26 px shadow margin (a 1012×809 window for 960×720 content). (`linux-wsl-desktop`)
+- **On X11 the window is black until GTK's first paint,** and GTK4's surface `mapped` notification is unusable as a map signal: it came at 405–1112 ms, after `ui-ready`, while the window was viewable at 81–101 ms. (`linux-wsl-desktop`)
+- **Bind `dlerror` before the first `dlopen`,** or the first failure's reason comes back empty. (`linux-wsl-desktop`)
+- **WebKit's release log goes to journald,** and only with `WEBKIT_DEBUG` set. (`linux-wsl-desktop`)
+- **The WSL distribution stops between `wsl` calls,** so the first window of a new call takes about 3.5 s longer. (`linux-wsl-desktop`)
+- **A transparent WebView background is black on GTK3/X11 without a compositor.** Use an opaque background colour on Linux. (`theme-startup`)
+- **Ubuntu's Yaru theme keeps the GTK3 header bar light** despite the dark preference; GTK4's follows it. (`theme-startup`)
+- **Under Xvfb, the DMA-BUF renderer's output never reaches the window;** disable it for captures. Run Xvfb as the app's user, or Mesa cannot attach shared memory and GTK4 shows nothing. (`theme-startup`)
+- **`nosniff` silently blocks the app's own CSS, classic scripts and workers** unless `Content-Type` is also in the header set passed to `webkit_uri_scheme_response_set_http_headers`. Setting the content type alone is not enough. (`csp-navigation`)
+- **WebKitGTK ignores `Permissions-Policy`, CORP and COEP isolation;** the `permission-request` handler is the only gate. WebKitGTK 2.52 checks the CSP's `'wasm-unsafe-eval'` only when a module is instantiated, so `compile` succeeds where Chromium refuses it; probe instantiation (`webkit-wasm-off`, which corrected the earlier "WebAssembly runs anyway" reading). (`csp-navigation`)
+- **A redirect answered by a scheme handler is not followed:** the 302 body becomes the page. (`csp-navigation`)
+- **Injected user scripts are subject to the page's `eval` ban** on WebKitGTK; WebView2 exempts its injected scripts. (`csp-navigation`)
+- **A reload under `Cache-Control: no-store` skipped a modulepreloaded chunk:** `webkit_web_view_reload` re-requested `index.html` and the entry chunk, but not the preloaded one (1 run, cause not investigated). WebView2 re-requested everything. (`linux-desktop`)
+
+These entries come from other frameworks (`docs/research-review.md`) and have not been rechecked here:
+
+- **NVIDIA with DMABUF gives blank or white windows, flicker, or crashes on resize** (Wayland Error 71). Try the fixes in this order: `__NV_DISABLE_EXPLICIT_SYNC=1`, then `WEBKIT_DISABLE_DMABUF_RENDERER=1` (slower), then `WEBKIT_DISABLE_COMPOSITING_MODE=1` (last resort). Production must not strip these variables.
+- **Without an explicit data manager or program name,** WebKitGTK falls back to a shared `webkitgtk` data folder.
+- **Service workers don't work on custom schemes** (`spar://`).
+- **On Linux, an iframe's message can't be told apart from the window's.**
+- **The tray needs a StatusNotifierWatcher,** which GNOME lacks, and it gets no click events (menu only). Global shortcuts work in practice only on X11.
+
+- **Measuring in the page on WebKitGTK:**
+  - `performance.now()` resolves only 1 ms;
+  - there is no `performance.memory`, so per-call memory needs process RSS;
+  - `navigator.hardwareConcurrency` is capped at 8.
+
+  (`call-promise-cost`)
+
+- **Start-up messages on Linux:**
+  - **GTK 4 dialogs take 420–820 ms on a software GPU,** and 91–212 ms with `GSK_RENDERER=cairo`.
+  - **Without `g_set_prgname`, windows have no class or app id.** The window manager showed "Unnamed Window".
+  - **A denied web-process sandbox also happens as a normal user under Docker's default profile.** It ends in exit 133 after 4–7 s with no message, unless a trial `bwrap` run catches it first.
+  - **zenity needs GTK 4** on Ubuntu 24.04, so it is missing exactly when GTK 4 is.
+  - **D-Bus can start an installed but stopped notification daemon** when there is no display. It crashes and costs up to 730 ms, so check the display first.
+  - **Kubuntu 24.04 lacks WebKitGTK 6.0 and `xdg-dbus-proxy`.**
+
+  (`startup-prerequisites`)
+
+- **A `WebKitWebView` that is never presented is a hidden page.** After the first few timers, they are throttled to about one per second, and `MessageChannel` hops take about 85 µs (3.3 µs on WebView2). Headless benchmarks must avoid timers or present the view. (`stream-result-cost`)
+
+- **WebAssembly and CSP on WebKitGTK:**
+  - **A worker script served without a CSP header escapes the page's policy.** It ran `eval` and every WebAssembly path under a page with a strict CSP. Send the CSP on every response.
+  - **Blocked WebAssembly raises no `securitypolicyviolation` event** and sends no report.
+  - **The JavaScriptCore option is `useWasm`** (2.48 and later; `useWebAssembly` up to 2.44). A wrong `JSC_*` name is only logged as "invalid option".
+  - **`JSC_*` variables also affect the UI process.** An incoherent set (`JSC_useWasmIPInt=false` with `JSC_useBBQJIT=false`) aborted the app with exit 134, and `JSC_useJIT=false` from a user's shell made JS about 35 times slower.
+  - **Setting the web extensions directory inside `initialize-web-process-extensions` is too late under bubblewrap.** The extension is silently never loaded.
+
+  (`webkit-wasm-off`)
+
+- **On Linux, `Environment.SetEnvironmentVariable` does not reach native `getenv` or child processes.** Use libc `setenv`, before other threads start. (`webkit-wasm-off`, JIT run)
+
+- **Reading WebKitGTK process memory:**
+  - **`Process.PrivateMemorySize64` reads a ~70 GB virtual size on Linux.** Use `statm` resident − shared (about 1 µs, within 0.4 MB of `Private_Dirty`). `smaps_rollup` costs about 70 µs per process and 0.4 ms for the .NET app process.
+  - **WebKit has no API for its process ids.** Walk `/proc/PID/task/*/children`.
+  - **In 2.52, `webkit_website_data_manager_fetch` reports sizes for four data types:** disk cache, localStorage (in UTF-16 bytes), IndexedDB and the DOM cache.
+
+  (`resource-usage`)
+
+- **A hung WebKitGTK page:**
+  - **`is-web-process-responsive` stays true for an idle hang.** It turns false only 3 s after a reload or `load_uri`.
+  - **`webkit_web_view_reload` and `load_uri` do not recover it.**
+  - **A hung web process outlives the app by about 10 s** at exit, then logs "WebProcess didn't exit as expected". Terminate it before quitting.
+  - **Hidden pages run timers every 2 s,** but message handlers still answer in about 1 ms.
+
+  (`page-heartbeat`)
+
+## SQL Server client (Microsoft.Data.SqlClient)
+
+- **SqlClient is not NativeAOT-clean:** 27–53 unique ILC diagnostics in every version and app tried. 6.1.8 to 7.1.2 gave 43–49 (43 for an app that only opens a connection), 8.0.0-preview1 gave 27, and the SQL tool gave 53 (the earlier 49 counted two IL2067 lines as one, `GetSchema` adds an IL2072, and 2 lines are the app's own). It works when the app accepts the warnings. (`sqlclient-aot`, `sqlclient-tool`)
+- **`InvariantGlobalization` must be `false`.** Otherwise `SqlConnection.Open` throws `NotSupportedException`, even under the JIT. `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1` in the environment has the same effect, under AOT and the JIT. (`sqlclient-aot`, `sqlclient-linux`)
+- **Native SNI is a sidecar DLL.** An AOT exe copied without `Microsoft.Data.SqlClient.SNI.dll` fails at the first `Open` with `TypeInitializationException` → `DllNotFoundException`. The SNI package has no static `.lib`; the single-file option is managed SNI. (`sqlclient-aot`)
+- **A bulk copy without a transaction keeps every row already sent when cancelled,** including part of the batch in flight. `BatchSize = 0` is not one atomic batch either: a cancel still kept about 310,000 rows, and took 0.8–1.0 s against 34–51 ms with 50,000-row batches. Use `UseInternalTransaction` (whole batches only) or an external transaction, and bounded batches when a cancel must be quick. (`sqlclient-tool`)
+- **An external transaction holds its locks until `Rollback()`:** 9,880 locks at `BatchSize` 50,000 (1,713 at 0), with the session `sleeping` and one open transaction. (`sqlclient-tool`)
+- **Cancelling a bulk copy does not stop its source query.** Call `SqlCommand.Cancel()` on the source. (`sqlclient-tool`)
+- **Cancellation surfaces as different exceptions:** a cancelled command is `SqlException` Number 0 (Class 11), not `OperationCanceledException`; a cancelled bulk copy and `ReadAsync(token)` throw `TaskCanceledException`; `SqlRowsCopiedEventArgs.Abort` gives `OperationAbortedException`; a token cancelled before the call gives `TaskCanceledException`. Check your own token. (`sqlclient-tool`, `sqlclient-aot`, `sqlclient-linux`)
+- **`ReadAsync(token)` cancels only on the client.** Disposing a reader early reads the rest of the result (about 1 s for 999k rows); call `SqlCommand.Cancel()` first. (`sqlclient-tool`)
+- **Async reads with the default `CommandBehavior` are 1.5–1.7× slower** and allocate about twice as much as `SequentialAccess` or sync reads. `EnableStreaming`, `GetStream` and `GetTextReader` allocated 6–17 GB per million rows; use them only for large values. (`sqlclient-tool`)
+- **Explicit `VarChar` parameters are encoded with the database's code page.** A copy tool should send `nvarchar`. (`sqlclient-linux`)
+- **Managed SNI** (the single-file exe on Windows, always on Linux) has no shared memory. On Windows it was 18–24% slower than native SNI, and local integrated authentication then needs `np:`. On Linux it read as fast as native SNI on Windows in the same session. (`sqlclient-tool`, `sqlclient-linux`)
+- **TLS errors and defaults mislead:**
+  - the default is `Encrypt=Mandatory`, so a server with an untrusted certificate fails; managed SNI reports that as "TCP Provider, error: 35";
+  - `HostNameInCertificate` is not checked when `TrustServerCertificate=true`;
+  - `Encrypt=Optional` encrypts only the login;
+  - the deprecated System.Data.SqlClient 4.9.1 connects unencrypted by default.
+
+  (`sqlclient-aot`, `sqlclient-linux`)
+- **A refused TCP connection took about 4.5 s of a 5 s `ConnectTimeout`** to fail on Linux, not milliseconds. A monitor that probes many instances needs short connect timeouts. Not compared on Windows. (`sqlclient-linux`)
+- **On Linux:**
+  - TCP only: remote `np:` throws `PlatformNotSupportedException` at once, and `.`, `(local)` and `localhost` mean TCP to the local machine;
+  - integrated authentication is Kerberos only (no NTLM). Without `libgssapi_krb5.so.2` it fails with a type-initializer `SqlException`, not an abort;
+  - missing ICU or `libssl` aborts the process (exit 134) instead of throwing;
+  - bulk copy used about 2.3× the CPU of Windows, apparently spin-waiting (`DOTNET_ThreadPool_UnfairSemaphoreSpinLimit=0` brought it down; not profiled).
+
+  (`sqlclient-linux`)
+- **Development containers:** `Encrypt=Strict` fails against the `mssql/server` image, so use `Encrypt=true;TrustServerCertificate=true` locally. (`sqlclient-aot`, `sqlclient-linux`)
+- **`sys.dm_os_performance_counters` returns about 2,000 rows** (3.4 MB allocated per poll). Filter the counters you need. (`sqlclient-tool`)
+- **System-named constraints differ between databases** (`PK__OnlyLeft__3214EC06…`). A schema comparer must key primary keys by table, not by name. (`sqlclient-tool`)
+- **Connecting to LocalDB's automatic `MSSQLLocalDB` instance creates it** when it does not exist. On this machine `SqlLocalDB.exe` is installed without that instance, so tests must not connect to it. (`sqlclient-tool`)
+
+## Wire format and serialization
+
+- **Roslyn: a constructor's operation blocks are its body and its `: this(…)`/`: base(…)` initializer, separately;** their parent is the `IConstructorBodyOperation`. An analyzer that looks for that among the blocks finds nothing and reports every constructor-assigned field. (`spar050`)
+- **CS0649 covers only private and internal fields** (static ones too), never public fields or auto-properties. CA2019, CA1825, CA1855 and CA2263 are on by default in SDK 11. (`spar050`)
+- **`Interlocked.Exchange<T>` on a struct compiles** (its `T` is unconstrained since .NET 9) but throws `NotSupportedException` at run time. (`spar050`)
+- **`ArrayPool<T>.Rent` can return the previous renter's values,** not only defaults. For a `Result`, a stale success leaks between callers. Clear on return or don't pool results. (`spar050`)
+- **`MaxBy`/`MinBy` are annotated `T?` but throw on an empty sequence** for value types. (`spar050`)
+- **C# implicit conversion operators do not convert from an interface-typed expression:** `Result<IReadOnlyList<PlanStep>, E> r = steps;` is CS0029 in both the class and the struct form. C# 15 union conversions do. (`result-api`)
+- **A C# 15 union's own `Value` property must be `object`** (CS9386). Put the union members on a nested member-provider interface to keep a typed `Value`. (`result-api`)
+- **One generated async method that awaits every command** keeps an awaiter for every result type in its state machine, which doubled async allocations to about 600 B per call. Emit one small async method per command. (`result-api`)
+- **Tier-0 JIT code boxes a value-type `T` for `is not null`,** which breaks allocation assertions in Debug tests. Compute such checks once, in the constructor. (`result-api`)
+- The first generated serializer (fixed in the fuzzing spike's copy):
+  - accepted trailing content after the object;
+  - threw `InvalidOperationException` or `FormatException` instead of `JsonException`;
+  - wrote depths up to 1000, while readers stop at 64;
+  - accepted number literals that overflow to infinity.
+
+  (`serializer-fuzz`)
+- **JavaScript's `JSON.parse` loses precision on `long` values above 2^53,** and lone UTF-16 surrogates are silently written as U+FFFD by every writer. Both are decided: `long` and `ulong` travel as canonical decimal strings (`bigint` in TypeScript), and lone surrogates become U+FFFD in both directions (decision "Wire format choices"). (`serializer-fuzz`)
+- **The first contract fingerprint hashed only type names,** so adding a DTO field did not change it. (`react`)
+- **JavaScript numbers lose 64-bit integers and decimals.** Only 603 of 100,000 random 64-bit ids survived `JSON.parse`; it also changed 5 of 7 `decimal` samples (`1.50` became `1.5`). (`wire-details`)
+- **`JSON.stringify` turns NaN and ±Infinity into `null`** without an error; in a nullable field that silently changes data. (`wire-details`)
+- **`JSON.stringify` throws on a `bigint`** (`TypeError: Do not know how to serialize a BigInt`), so only a generated encoder can send one. In TypeScript, `id + 1` is TS2365 and a `(a, b) => a.id - b.id` comparator is TS2345. (`wire-details`)
+- **`JSON.stringify` sends lone surrogates as `"\ud800"`, which every .NET reader rejects;** .NET writers already replace them with U+FFFD. SqlClient also replaces them in `nvarchar`, in both directions. (`wire-details`)
+- **Copying a parsed object can change its prototype.** `JSON.parse('{"__proto__":{"x":1}}')` creates an own `__proto__` key, and `Object.assign({}, it)` then sets the copy's prototype. Build objects field by field. (`wire-details`)
+- **`new Date()` on a date without an offset uses the page's time zone:** `"2026-11-14"` is 13 November in Los Angeles. SqlClient returns `datetime2`, even `SYSUTCDATETIME()`, as `Kind=Unspecified`. (`wire-details`)
+- **SQL `decimal(38)` overflows `System.Decimal`:** `GetDecimal` and `GetValue` throw; only `GetSqlDecimal` reads it. (`wire-details`)
+- **Lenient System.Text.Json readers:** `TryGetSingle` returns `Infinity` for `3.5e38`; `TryGetBytesFromBase64` accepts embedded whitespace; enum reading is case-insensitive and accepts numbers. (`wire-details`)
+- **The .NET integer parsers are not canonical.** `Utf8Parser.TryParse` and `long.TryParse` accept `+1`, `007` and `-0`, and `Utf8Parser` stops early on `1 ` and `1e3` (it reports partial consumption). Check `-?(0|[1-9][0-9]*)`, at most 19 digits, then require full consumption. (`wire-details`)
+- **System.Text.Json throws more than `JsonException`:**
+  - `Utf8JsonReader.GetString()` throws `InvalidOperationException` on invalid UTF-8 and on unpaired `\u` surrogates;
+  - `JsonEncodedText.Encode` throws `ArgumentException` on a lone surrogate;
+  - `WriteNumberValue` throws `ArgumentException` on NaN and ±Infinity;
+  - a writer at `MaxDepth` throws `InvalidOperationException`, even with `SkipValidation = true`.
+
+  A pooled writer is reusable after any of these: `BytesCommitted` stays 0, and `Reset(buffer)` plus `ResetWrittenCount()` give a clean writer. (`wire-details`, `serializer-fuzz`)
+- **Skipped values are not validated.** Every reader tested, System.Text.Json included, accepts invalid UTF-8 and lone-surrogate escapes inside an unknown property's value, because skipping does not decode strings. Every reader rejects a leading BOM. (`serializer-fuzz`)
+- **An unbuffered writer that fails mid-response has already sent invalid JSON** (278,560 bytes in the test). Buffer unary responses and each stream item. (`wire-details`)
+- **`foreach` over an `IReadOnlyList<T>` boxes its enumerator:** 64 B per `Note`, 70.8 KB at 2,000 records. Generated code uses indexed loops. (`serializer-bench`)
+- **The compiler does not narrow an indexer:** `list[i] is null ? … : list[i].Value` gives CS8629 for `long?[]` and CS8604 for `IReadOnlyList<Wide?>`. Assign each element to a local first. (`serializer-fuzz`)
+- **NativeAOT words some exception messages differently from CoreCLR.** Tests that compare messages must normalise them. (`serializer-fuzz`)
+
+## Observability
+
+- **Page spans are lost when a desktop window closes:** none delivered in 2 of 2 runs with the default 5 s batch delay. The host must ask the page to flush and wait (bounded, 1 s); the flush took 9–22 ms. A headless `page.close` on loopback also delivered nothing; navigating away flushed. (`browser-telemetry`)
+- **A collector that is down stalls the page and the relay.** The JS SDK's `forceFlush` rejects, and each relay attempt waits about 2 s for a refused connection. Make the flush never reject, and have the relay answer 503 at once for a while after a failure. (`browser-telemetry`)
+- **A hard-coded service name splits one app in two under Aspire.** Read `OTEL_SERVICE_NAME` (and name the page `<name>-page`). (`browser-telemetry`)
+- **React produces 2–3 nested `click` spans per click,** and click spans need telemetry loaded before React mounts. (`browser-telemetry`)
+- **The Aspire dashboard writes data-protection keys to `%LOCALAPPDATA%\ASP.NET\DataProtection-Keys`,** even with `LOCALAPPDATA` redirected. (`browser-telemetry`)
+
+## Tooling and environment
+
+- **BenchmarkDotNet needs project names that are unique across the repository:** `Bench.csproj` in two spikes clashed. An analyzer whose descriptor uses a literal ID also needs `AnalyzerReleases.Shipped.md`/`Unshipped.md` (RS2008). (`result-api`)
+- **Aspire names endpoints `localhost`,** which Node resolves to `::1`. A backend that listens on `127.0.0.1` only, and checks its origin, then hangs every proxied call. (`aspire`)
+- **Aspire's SQL Server health probes log "pre-login handshake" errors** while the container starts. That is noise, not a failure. (`aspire`)
+- **WebView2 and process tools on this machine:** never kill processes or containers that the current session did not start. The permission classifier blocks it. (session)
+- **Isolating builds from other sessions:** a private `MSBUILDNODEHANDSHAKESALT` and a private `SharedCompilationId` keep a build off other sessions' MSBuild server, nodes and compiler server. Give each step that must start cold its own salt: with one salt for packing and the consumer, the consumer's "cold" build reused the warm server. A Windows job object does not contain the processes, because the host's job allows silent breakaway; stop the process tree you started (by parent id and start time). (`d3-variants`, `package-consumer`)
+- **File-based apps (`#:`):**
+  - inside the repository, central package management rejects `#:package` (NU1008). Set `#:property ManagePackageVersionsCentrally=false`, or run the app from outside;
+  - they default to `PublishAot=true`, which turns off reflection JSON even under `dotnet run`; Playwright needed `#:property PublishAot=false`;
+  - an `MSBuildWorkspace` probe needs `Microsoft.Build.Locator` and `DisableMSBuildAssemblyCopyCheck=true` (MSBL001).
+
+  (`d1-pipeline`, `package-consumer`, `contract-syntax`, `d8-automation`)
+- **Test runner output:**
+  - `dotnet test` (MTP) leaves an empty `TestResults/` in the working directory, and TUnit writes HTML and JSON reports there on every run. Pass `--results-directory`;
+  - xUnit v3 prints `Console.WriteLine` raw, with no test attribution, unless the assembly has `[assembly: CaptureConsole]`;
+  - MTP hides a passing test's output unless `--output Detailed`;
+  - an `xunit.v3` exe started directly uses xUnit's console runner, not MTP, and rejects MTP options such as `--list-tests`.
+
+  (`d3-variants`, `test-frameworks`)
+- **The first `dotnet test` after a build was about 1–2.4 s slower** for all three frameworks, with or without browsers. Unexplained; possibly first loads of freshly written binaries. Discard the first run when timing. (`test-frameworks`)
+- **A NativeAOT test exe (`xunit.v3.aot`) prints no stack frames on failure.** It also needs the `XUNIT_AOT` define and allows no generic test methods and no `params`. (`test-frameworks`)
+- **BenchmarkDotNet switches the Windows power plan by default,** a system setting. Always use `DontEnforcePowerPlan()`. BenchmarkDotNet 0.15.8 on .NET 11 also needs `.NET 10.0` job labels with `net11.0` toolchains and `IlcInstructionSet=native`. Its NativeAOT jobs build with `IlcOptimizationPreference=Speed`, warnings not as errors and no `Directory.Build.props`, so they are not shipping builds: with default ILC settings one serializer gap grew from 1–2% to 7–13%. (`serializer-bench`)
+- **IDE behaviour seen in the checks:**
+  - Visual Studio regenerated source-generator output only after Save, "Rerun generator" or a build, never after an edit made on disk from outside;
+  - when a contract became invalid, VS turned the open generated tab red ("has stopped generating this file");
+  - VS's Solution Explorer ignored clicks for about 3 minutes after the solution opened;
+  - VS Code opens an untrusted folder in Restricted Mode, and the project does not load until the folder is trusted;
+  - one `devenv.com /Build` run sat idle with no output, probably on a dialog.
+
+  (`d1-pipeline`)
+- **Driving TypeScript 7's language server over several projects in one Node process hit the client's 5 s shutdown timeout,** and the run was lost. One process per project worked. (`ts-compiled-contracts`)
+- **`performance.memory` stays 0 in `chromium-headless-shell`.** Read heap figures through CDP. (`react`)
+- **Linux NativeAOT needs `clang` and `zlib1g-dev`.** The Playwright .NET image lacks them ("Platform linker ('clang' or 'gcc') not found"); installing them took 93 s. (`linux-loopback`)
+- **`KillOnParentExit` works on Linux** (the app exited 2 ms after its parent's SIGKILL). In a container whose PID 1 is `sleep infinity`, the exited app stays a zombie, and `kill -0` reports it alive. Check `/proc/<pid>/stat`, or run the container with `--init`. (`linux-loopback`)
+- **`pgrep -f` also matches the shell running the probe.** Count processes with `pgrep -x` on the process name. (`linux-desktop`)
+- **A `node` process started in the background from Git Bash can survive `kill`.** Stop it by its Windows PID and wait until its port is free. (`desktop-origin`)
+- **A loopback listener in a test also receives connections from other apps on the same origin** (other WebView2 apps' preconnects). Attribute connections by process. (`desktop-origin`)
+
+These entries come from earlier Spar versions (`docs/research-review.md`) and have not been rechecked on .NET 11:
+
+- **Antivirus:** Defender trust checks made up 99% of loader waits (process to first call went from 1.28 s to 13.7 s), because randomized test-fixture paths defeated its caching. A Release-only `PathMap` fixed it.
+- **Hot Reload accepted a DTO change that a fresh compile rejected;** setting `Watch=false` on the items was not enough. Contract edits must force a restart.
+- **A drive-letter case mismatch (`e:\` in the PDB, `E:\` in the project system) broke Hot Reload** in VS Code; `PathMap` fixed it. C# Dev Kit's Hot Reload settings are machine-scoped, and mixed path casing gave ENC1008.
+- **Passing `-m:1` through to Microsoft.Testing.Platform ran zero tests** and exited with code 5.
+- **JSONL written by a child process inherited the console code page** and corrupted non-ASCII text (`caffè`).
+- **Running `dotnet msbuild` as a child process was 61% slower** than calling the MSBuild APIs in-process.
+- **Windows Sandbox:**
+  - give the guest an ID before starting it; only one Sandbox runs per user session;
+  - `wsb exec` relays no stdout, so read the exit code from its JSON result;
+  - the guest's WebView2 registration (156) disagreed with the files on disk (157);
+  - CDP inside the guest failed because the remote-debugging flags were dropped; use UI Automation;
+  - the guest's colour mode cannot be set from `.wsb`.
+- **Windows environment variables do not reach `wsl … -- bash`.** Pass values as arguments, or list them in `WSLENV`. (`call-promise-cost`)
+- **Test-harness surprises on Linux:**
+  - dunst popups don't appear in the window manager's client list;
+  - `swaymsg` needs `SWAYSOCK`;
+  - `wsl.exe -- bash -c` expands variables in the outer shell, and Git Bash rewrites `/mnt` paths (`MSYS_NO_PATHCONV=1`).
+
+  (`startup-prerequisites`)
+- **Benchmark clocks:**
+  - On Windows, Node's `setTimeout(1)` fires only about every 15 ms.
+  - A clock-resolution probe that loops until it sees a sub-microsecond step never ends on a 1 ms clock (WebKitGTK). Bound it by iterations.
+
+  (`stream-result-cost`)
+- **`dotnet run` of a file-based app in a container can hang.** Use `docker run --init` and `UseSharedCompilation=false`. (`webkit-wasm-off`)
+- **A heartbeat armed at `NavigationCompleted` misses hangs during load,** and one armed on a page without the injected script reports a healthy page after 20 s. Arm at document creation and only with the script. (`page-heartbeat`)

@@ -1,0 +1,5 @@
+# repetitions=7, 2026-11-14T15:20:07. Rebuild = dotnet build --no-restore --no-incremental -nodeReuse:false --disable-build-servers.
+# 'csc' is the Csc task time from the performance summary; 'analyzers' is Roslyn's total analyzer time (ReportAnalyzer).
+Probe.Tasks  with     wall ms 1389,1386,1407,1368,1393,1372,1369 (median 1386) | csc ms 847,838,870,828,856,836,835 (median 838) | all analyzers ms median 1193 | TaskAuthoring analyzer ms 34,37,37,34,34,37,36 (median 36) | warning lines 0,0,0,0,0,0,0
+Probe.Tasks  without  wall ms 1394,1402,1366,1385,1385,1350,1395 (median 1385) | csc ms 855,847,836,856,848,818,838 (median 847) | all analyzers ms median 1187 | TaskAuthoring analyzer ms 0,0,0,0,0,0,0 (median 0) | warning lines 0,0,0,0,0,0,0
+Probe.Rules  with     wall ms 1301,1315,1313,1302,1286,1336,1293 (median 1302) | csc ms 756,772,769,765,761,773,750 (median 765) | all analyzers ms median 356 | TaskAuthoring analyzer ms 74,72,73,70,68,75,67 (median 72) | warning lines 100,100,100,100,100,100,100

@@ -1,0 +1,131 @@
+# leaves=8 delay=300ms per task, kinds=all, repetitions=5, 2026-11-14T15:15:57
+
+## m1 rep 1  exit=0 wall=7781 ms  entry pid=33696  probes=24
+  interface-only  processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m1 rep 2  exit=0 wall=7686 ms  entry pid=55992  probes=24
+  interface-only  processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m1 rep 3  exit=0 wall=7740 ms  entry pid=64056  probes=24
+  interface-only  processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m1 rep 4  exit=0 wall=7742 ms  entry pid=71184  probes=24
+  interface-only  processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m1 rep 5  exit=0 wall=7770 ms  entry pid=5680  probes=24
+  interface-only  processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=1 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+=> m1 wall ms: 7781, 7686, 7740, 7742, 7770 (median 7742)
+
+## m8 rep 1  exit=0 wall=6394 ms  entry pid=8736  probes=24
+  interface-only  processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8 rep 2  exit=0 wall=1415 ms  entry pid=36036  probes=24
+  interface-only  processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8 rep 3  exit=0 wall=6378 ms  entry pid=38900  probes=24
+  interface-only  processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8 rep 4  exit=0 wall=1401 ms  entry pid=40304  probes=24
+  interface-only  processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8 rep 5  exit=0 wall=6390 ms  entry pid=57440  probes=24
+  interface-only  processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (dotnet) in-entry=1/8 nodes=[entry x1, nodemode:1 x7] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+=> m8 wall ms: 6394, 1415, 6378, 1401, 6390 (median 6378)
+
+## mt8 rep 1  exit=0 wall=6343 ms  entry pid=4620  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8 rep 2  exit=0 wall=1374 ms  entry pid=71192  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8 rep 3  exit=0 wall=1370 ms  entry pid=48136  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8 rep 4  exit=0 wall=1363 ms  entry pid=64992  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8 rep 5  exit=0 wall=6357 ms  entry pid=15144  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=1 (dotnet) in-entry=8/8 nodes=[entry x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+=> mt8 wall ms: 6343, 1374, 1370, 1363, 6357 (median 1374)
+
+## m8-taskhost rep 1  exit=0 wall=1615 ms  entry pid=61244  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8-taskhost rep 2  exit=0 wall=1614 ms  entry pid=54084  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8-taskhost rep 3  exit=0 wall=6637 ms  entry pid=73272  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=7 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8-taskhost rep 4  exit=0 wall=1630 ms  entry pid=46564  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## m8-taskhost rep 5  exit=0 wall=1670 ms  entry pid=66952  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+=> m8-taskhost wall ms: 1615, 1614, 6637, 1630, 1670 (median 1630)
+
+## mt8-taskhost rep 1  exit=0 wall=1517 ms  entry pid=4756  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8-taskhost rep 2  exit=0 wall=1508 ms  entry pid=45020  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8-taskhost rep 3  exit=0 wall=1418 ms  entry pid=42824  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8-taskhost rep 4  exit=0 wall=1474 ms  entry pid=4948  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+
+## mt8-taskhost rep 5  exit=0 wall=1465 ms  entry pid=35424  probes=24
+  interface-only  processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  legacy          processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+  threadsafe      processes=8 (MSBuild) in-entry=0/8 nodes=[nodemode:2 x8] peak-concurrent=8 dir=own-leaf 8/8 (8 distinct) env=from-entry-process
+=> mt8-taskhost wall ms: 1517, 1508, 1418, 1474, 1465 (median 1474)

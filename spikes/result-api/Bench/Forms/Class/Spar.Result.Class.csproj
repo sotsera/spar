@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The Class form as its own assembly, so the benchmark can reference all four forms through extern aliases. -->
+  <PropertyGroup>
+    <IsAotCompatible>true</IsAotCompatible>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\Forms\Class\Result.cs" LinkBase="Form" />
+  </ItemGroup>
+</Project>

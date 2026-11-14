@@ -1,0 +1,21 @@
+== relaunch
+SUMMARY relaunch api=gtk3 runs=30 ready=30 started-while-previous-children-alive=0 data-ok=29/29
+  launch to READY: n=30 min=115 p50=119 p90=122 max=249 ms
+== concurrent 1
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+B ready=True B saw: ls=null idb=A1 cookie=[] cache=null
+A after B exited saw: ls=A1 idb=B1 cookie=[] cache=null
+C after both saw: ls=null idb=B1 cookie=[] cache=null
+stderr lines (A+B+C, distinct, first 15): 3
+  ** (Profiles.Linux:88335): WARNING **: 12:44:46.677: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (Profiles.Linux:88503): WARNING **: 12:44:46.905: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (Profiles.Linux:88627): WARNING **: 12:44:47.060: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+== concurrent 2
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+B ready=True B saw: ls=null idb=A1 cookie=[] cache=null
+A after B exited saw: ls=A1 idb=B1 cookie=[] cache=null
+C after both saw: ls=null idb=B1 cookie=[] cache=null
+stderr lines (A+B+C, distinct, first 15): 3
+  ** (Profiles.Linux:88790): WARNING **: 12:44:47.809: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (Profiles.Linux:88958): WARNING **: 12:44:48.050: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (Profiles.Linux:89082): WARNING **: 12:44:48.188: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.

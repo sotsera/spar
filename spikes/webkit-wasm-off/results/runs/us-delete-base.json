@@ -1,0 +1,336 @@
+{
+ "label": "us-delete-base",
+ "profile": "base",
+ "origin": "spar",
+ "userScript": "delete",
+ "extension": null,
+ "setenv": [],
+ "jscUi": [],
+ "uiProcessUseWasm": true,
+ "webkitgtk": "2.52.6",
+ "gtk": "4.14.5",
+ "hostMs": {
+  "reportAt": 196.6,
+  "progress": [
+   [
+    "start",
+    144.0
+   ],
+   [
+    "main",
+    145.1
+   ],
+   [
+    "esm",
+    145.4
+   ],
+   [
+    "workers",
+    158.0
+   ],
+   [
+    "posted",
+    158.1
+   ],
+   [
+    "frames",
+    164.0
+   ]
+  ]
+ },
+ "served": [
+  "probe.html?label=us-delete-base csp=1",
+  "suite.js csp=1",
+  "probe.js csp=1",
+  "add.wasm csp=1",
+  "worker.js?csp=1 csp=1",
+  "suite.js csp=1",
+  "add.wasm csp=1",
+  "add.wasm csp=1",
+  "worker.js?csp=0 csp=0",
+  "add.wasm csp=1",
+  "add.wasm csp=1"
+ ],
+ "cspReportsReceived": 4,
+ "webkitProcesses": [
+  {
+   "process": "WebKitNetworkProcess",
+   "jscEnv": [],
+   "envCount": 26
+  },
+  {
+   "process": "WebKitWebProcess",
+   "jscEnv": [],
+   "envCount": 27
+  }
+ ],
+ "report": {
+  "initial": {
+   "typeofWebAssembly": "undefined",
+   "descriptor": null,
+   "hostMarker": "string",
+   "extension": null
+  },
+  "location": "spar://app/probe.html?label=us-delete-base",
+  "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15",
+  "evalChecks": {
+   "eval": {
+    "ok": false,
+    "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n"
+   },
+   "newFunction": {
+    "ok": false,
+    "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n"
+   }
+  },
+  "main": {
+   "typeofWebAssembly": "undefined"
+  },
+  "esmImportWasm": {
+   "ok": false,
+   "error": "TypeError: 'application/wasm' is not a valid JavaScript MIME type."
+  },
+  "workerWithCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": false,
+      "error": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n (evaluating 'new W.Instance(new W.Module(bytes))')"
+     },
+     "instantiateBytes": {
+      "ok": false,
+      "error": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n"
+     },
+     "instantiateModule": {
+      "ok": false,
+      "error": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n (evaluating 'W.instantiate(module)')"
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": false,
+      "error": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n"
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": false,
+      "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n"
+     },
+     "newFunction": {
+      "ok": false,
+      "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n"
+     }
+    },
+    "violations": []
+   }
+  },
+  "workerWithoutCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "postedModule": {
+   "compileInPage": "ReferenceError: Can't find variable: WebAssembly"
+  },
+  "blobWorker": {
+   "ok": true,
+   "value": {
+    "created": true,
+    "event": "error"
+   }
+  },
+  "frames": {
+   "aboutBlank": {
+    "url": "about:blank",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   },
+   "srcdoc": {
+    "load": "load",
+    "url": "about:srcdoc",
+    "suite": {
+     "typeofWebAssembly": "undefined"
+    }
+   },
+   "sameOrigin": {
+    "load": "load",
+    "url": "about:blank",
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": false,
+      "error": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n (evaluating 'new W.Instance(new W.Module(bytes))')"
+     },
+     "instantiateBytes": {
+      "ok": false,
+      "error": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n"
+     },
+     "instantiateModule": {
+      "ok": false,
+      "error": "CompileError: Refused to create a WebAssembly object because 'unsafe-eval' or 'wasm-unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self'\".\n (evaluating 'W.instantiate(module)')"
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    }
+   }
+  },
+  "recovery": {
+   "inGlobalThis": {
+    "ok": true,
+    "value": false
+   },
+   "reflectGet": {
+    "ok": true,
+    "value": "undefined"
+   },
+   "windowPrototypeChain": {
+    "ok": true,
+    "value": []
+   },
+   "redefine": {
+    "ok": true,
+    "value": "number"
+   },
+   "windowOpen": {
+    "ok": true,
+    "value": "null"
+   }
+  },
+  "jsWork": [
+   {
+    "ms": 10,
+    "acc": 829569472
+   },
+   {
+    "ms": 11,
+    "acc": 829569472
+   },
+   {
+    "ms": 10,
+    "acc": 829569472
+   }
+  ],
+  "timing": {
+   "probeStartMs": 3,
+   "domContentLoadedMs": 5,
+   "probeTotalMs": 53
+  },
+  "violations": [
+   {
+    "directive": "script-src",
+    "blocked": "eval",
+    "sample": "",
+    "disposition": "enforce"
+   },
+   {
+    "directive": "script-src",
+    "blocked": "eval",
+    "sample": "",
+    "disposition": "enforce"
+   },
+   {
+    "directive": "worker-src",
+    "blocked": "blob",
+    "sample": "",
+    "disposition": "enforce"
+   },
+   {
+    "directive": "frame-src",
+    "blocked": "spar://app/frame.html",
+    "sample": "",
+    "disposition": "enforce"
+   }
+  ],
+  "query": {
+   "label": "us-delete-base"
+  }
+ }
+}

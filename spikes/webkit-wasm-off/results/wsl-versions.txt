@@ -1,0 +1,31 @@
+distro: Ubuntu 24.04.5 LTS
+6.18.58.1-microsoft-standard-WSL2
+bubblewrap 0.9.0-1ubuntu0.3
+gir1.2-javascriptcoregtk-6.0 2.52.6-0ubuntu0.24.04.1
+gir1.2-webkit-6.0 2.52.6-0ubuntu0.24.04.1
+libgtk-4-0 
+libgtk-4-1 4.14.5+ds-0ubuntu0.10
+libgtk-4-bin 4.14.5+ds-0ubuntu0.10
+libgtk-4-common 4.14.5+ds-0ubuntu0.10
+libgtk-4-dev 4.14.5+ds-0ubuntu0.10
+libgtk-4-doc 
+libgtk-4-media-gstreamer 4.14.5+ds-0ubuntu0.10
+libjavascriptcoregtk-6.0-1 2.52.6-0ubuntu0.24.04.1
+libjavascriptcoregtk-6.0-dev 2.52.6-0ubuntu0.24.04.1
+libwebkitgtk-6.0-4 2.52.6-0ubuntu0.24.04.1
+libwebkitgtk-6.0-dev 2.52.6-0ubuntu0.24.04.1
+xdg-dbus-proxy 0.1.5-1ubuntu0.2
+gcc: missing
+cc: /usr/bin/cc
+pkg-config: /usr/bin/pkg-config
+bwrap: /usr/bin/bwrap
+python3: /usr/bin/python3
+Xvfb: missing
+weston: missing
+2.52.6
+MiniBrowser
+WebKitGPUProcess
+WebKitNetworkProcess
+WebKitWebProcess
+injected-bundle
+WAYLAND_DISPLAY=wayland-0 DISPLAY=:0 XDG_RUNTIME_DIR=/run/user/1000

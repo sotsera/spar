@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Two checks that need a process: "codefix <spike folder>" applies each code fix in an AdhocWorkspace and recompiles;
+    "runtime" runs the default-producing constructs against the real Result and prints what a reader observes.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Analyzers\Spar050.Analyzers.csproj" />
+    <ProjectReference Include="..\CodeFixes\Spar050.CodeFixes.csproj" />
+    <ProjectReference Include="..\Result\Spar050.Result.csproj" />
+    <ProjectReference Include="..\CorpusLibrary\Spar050.CorpusLibrary.csproj" />
+  </ItemGroup>
+</Project>

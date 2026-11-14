@@ -1,0 +1,38 @@
+[
+ {
+  "group": "timing-default",
+  "runs": 7,
+  "typeofWebAssembly": "object",
+  "hostStartToFirstPageScriptMs": {
+   "median": 149.7,
+   "min": 140,
+   "max": 472.1
+  },
+  "domContentLoadedMedianMs": 8,
+  "jsWorkBestOf3MedianMs": 10
+ },
+ {
+  "group": "timing-ext-off",
+  "runs": 7,
+  "typeofWebAssembly": "undefined",
+  "hostStartToFirstPageScriptMs": {
+   "median": 151,
+   "min": 139.7,
+   "max": 160.7
+  },
+  "domContentLoadedMedianMs": 5,
+  "jsWorkBestOf3MedianMs": 10
+ },
+ {
+  "group": "timing-useWasm-false",
+  "runs": 7,
+  "typeofWebAssembly": "undefined",
+  "hostStartToFirstPageScriptMs": {
+   "median": 146,
+   "min": 138.5,
+   "max": 164
+  },
+  "domContentLoadedMedianMs": 6,
+  "jsWorkBestOf3MedianMs": 10
+ }
+]

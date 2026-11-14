@@ -1,0 +1,110 @@
+== default
+SUMMARY variant=default runs=30
+  all processes exited: n=30 min=6403 p50=6423 p90=6456 max=6491 ms; over 2 s: 30; not exited in 30 s: 0
+  browser process exited: n=30 min=6393 p50=6410 p90=6445 max=6461 ms
+  host exited after Close: n=30 min=19 p50=20 p90=21 max=21 ms
+  launch to READY: n=30 min=288 p50=298 p90=318 max=366 ms; launch to all processes gone: n=30 min=6725 p50=6743 p90=6788 max=6809 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:0 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:30 <=10000:0 <=30000:0
+== reputation-off
+SUMMARY variant=reputation-off runs=30
+  all processes exited: n=30 min=52 p50=59 p90=62 max=67 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=41 p50=48 p90=51 max=56 ms
+  host exited after Close: n=30 min=19 p50=20 p90=21 max=22 ms
+  launch to READY: n=30 min=288 p50=298 p90=315 max=370 ms; launch to all processes gone: n=30 min=365 p50=376 p90=400 max=450 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:30 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== linger-2s
+SUMMARY variant=linger-2s runs=30
+  all processes exited: n=30 min=77 p50=139 p90=151 max=1004 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=64 p50=125 p90=139 max=990 ms
+  host exited after Close: n=30 min=19 p50=21 p90=33 max=37 ms
+  launch to READY: n=30 min=270 p50=291 p90=310 max=381 ms; launch to all processes gone: n=30 min=2379 p50=2458 p90=2483 max=3335 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:29 <=500:0 <=1000:0 <=2000:1 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== block-network
+SUMMARY variant=block-network runs=30
+  all processes exited: n=30 min=113 p50=129 p90=137 max=139 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=102 p50=117 p90=125 max=128 ms
+  host exited after Close: n=30 min=19 p50=20 p90=21 max=23 ms
+  launch to READY: n=30 min=288 p50=304 p90=317 max=346 ms; launch to all processes gone: n=30 min=418 p50=455 p90=467 max=495 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:30 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== unload
+SUMMARY variant=unload runs=30
+  all processes exited: n=30 min=52 p50=62 p90=71 max=90 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=41 p50=52 p90=60 max=79 ms
+  host exited after Close: n=30 min=13 p50=14 p90=16 max=16 ms
+  launch to READY: n=30 min=285 p50=295 p90=320 max=350 ms; launch to all processes gone: n=30 min=361 p50=378 p90=401 max=432 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok+unload:beforeunload/pagehide/visibilitychange/unload=26 ok+unload:beforeunload/visibilitychange/unload=3
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:30 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== service-worker
+SUMMARY variant=service-worker runs=30
+  all processes exited: n=30 min=53 p50=58 p90=65 max=73 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=42 p50=47 p90=54 max=62 ms
+  host exited after Close: n=30 min=19 p50=20 p90=21 max=23 ms
+  launch to READY: n=30 min=286 p50=303 p90=319 max=366 ms; launch to all processes gone: n=30 min=359 p50=381 p90=403 max=448 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:30 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== idb-stream
+SUMMARY variant=idb-stream runs=30
+  all processes exited: n=30 min=66 p50=76 p90=86 max=143 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=55 p50=65 p90=74 max=131 ms
+  host exited after Close: n=30 min=20 p50=23 p90=25 max=48 ms
+  launch to READY: n=30 min=608 p50=646 p90=673 max=683 ms; launch to all processes gone: n=30 min=693 p50=741 p90=776 max=822 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:30 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== kill-host
+SUMMARY variant=kill-host runs=30
+  all processes exited: n=30 min=49 p50=59 p90=70 max=82 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=39 p50=47 p90=59 max=70 ms
+  host exited after Close: n=30 min=2 p50=3 p90=3 max=4 ms
+  launch to READY: n=30 min=285 p50=299 p90=321 max=367 ms; launch to all processes gone: n=30 min=352 p50=380 p90=408 max=443 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:30 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== kill-host-young
+SUMMARY variant=kill-host-young runs=30
+  all processes exited: n=30 min=6398 p50=6423 p90=6442 max=6479 ms; over 2 s: 30; not exited in 30 s: 0
+  browser process exited: n=30 min=6386 p50=6412 p90=6428 max=6454 ms
+  host exited after Close: n=30 min=2 p50=3 p90=4 max=4 ms
+  launch to READY: n=30 min=290 p50=306 p90=338 max=394 ms; launch to all processes gone: n=30 min=6716 p50=6749 p90=6799 max=6861 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:0 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:30 <=10000:0 <=30000:0
+== wait-exit
+SUMMARY variant=wait-exit runs=30
+  all processes exited: n=30 min=154 p50=170 p90=181 max=194 ms; over 2 s: 0; not exited in 30 s: 0
+  browser process exited: n=30 min=143 p50=158 p90=170 max=183 ms
+  host exited after Close: n=30 min=180 p50=326 p90=345 max=389 ms
+  launch to READY: n=30 min=285 p50=315 p90=338 max=365 ms; launch to all processes gone: n=30 min=497 p50=655 p90=701 max=727 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:30 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:0 <=10000:0 <=30000:0
+== wait-exit-young
+SUMMARY variant=wait-exit-young runs=30
+  all processes exited: n=30 min=6489 p50=6517 p90=6539 max=6552 ms; over 2 s: 30; not exited in 30 s: 0
+  browser process exited: n=30 min=6476 p50=6506 p90=6527 max=6541 ms
+  host exited after Close: n=30 min=6516 p50=6676 p90=6707 max=6735 ms
+  launch to READY: n=30 min=287 p50=310 p90=338 max=414 ms; launch to all processes gone: n=30 min=6837 p50=7015 p90=7063 max=7103 ms; folder clean before run: n=0
+  slowest process kinds: crashpad-handler=30
+  data: first=1 ok=29
+  leftovers after exit wait: 0
+  histogram (all exited, ms): <=250:0 <=500:0 <=1000:0 <=2000:0 <=4000:0 <=6000:0 <=7000:30 <=10000:0 <=30000:0

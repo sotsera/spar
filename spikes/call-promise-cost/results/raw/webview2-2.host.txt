@@ -1,0 +1,6 @@
+exit=0 seconds=51.4
+RUNTIME 157.0.4341.46
+FILTER extra uri=http://127.0.0.1:56814/_spar/*
+FILTER mode=legacy uri=https://app.localhost/*
+NAVIGATE url=http://127.0.0.1:56814/bench.html?engine=webview2
+HOST exit=0 version=1.0.0.0 origin=https://app.localhost close->browser-exited=223

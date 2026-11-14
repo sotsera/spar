@@ -1,0 +1,84 @@
+{
+  "base": {
+    "done": false,
+    "ms": 20390,
+    "passed": 0,
+    "failed": 0,
+    "results": [],
+    "violations": [
+      {
+        "directive": "base-uri",
+        "blocked": "http://127.0.0.1:54047/",
+        "sample": "",
+        "source": "http://127.0.0.1:54047/",
+        "line": 6
+      },
+      {
+        "directive": "script-src",
+        "blocked": "eval",
+        "sample": "",
+        "source": "http://127.0.0.1:54047/polyfills-5FMTHGQT.js",
+        "line": 14
+      }
+    ],
+    "reports": [
+      {
+        "directive": "base-uri",
+        "blocked": "http://127.0.0.1:54047/",
+        "sample": ""
+      },
+      {
+        "directive": "script-src",
+        "blocked": "eval",
+        "sample": ""
+      }
+    ],
+    "consoleMessages": [
+      "error: Setting the document's base URI to 'http://127.0.0.1:54047/' violates the following Content Security Policy directive: \"base-uri 'none'\". The action has been blocked."
+    ],
+    "pageErrors": [
+      "EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self'\".\n"
+    ]
+  },
+  "trustedTypes": {
+    "done": false,
+    "ms": 20347,
+    "passed": 0,
+    "failed": 0,
+    "results": [],
+    "violations": [
+      {
+        "directive": "base-uri",
+        "blocked": "http://127.0.0.1:63054/",
+        "sample": "",
+        "source": "http://127.0.0.1:63054/",
+        "line": 6
+      },
+      {
+        "directive": "script-src",
+        "blocked": "eval",
+        "sample": "",
+        "source": "http://127.0.0.1:63054/polyfills-5FMTHGQT.js",
+        "line": 14
+      }
+    ],
+    "reports": [
+      {
+        "directive": "base-uri",
+        "blocked": "http://127.0.0.1:63054/",
+        "sample": ""
+      },
+      {
+        "directive": "script-src",
+        "blocked": "eval",
+        "sample": ""
+      }
+    ],
+    "consoleMessages": [
+      "error: Setting the document's base URI to 'http://127.0.0.1:63054/' violates the following Content Security Policy directive: \"base-uri 'none'\". The action has been blocked."
+    ],
+    "pageErrors": [
+      "EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self'\".\n"
+    ]
+  }
+}

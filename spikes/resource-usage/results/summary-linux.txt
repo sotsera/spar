@@ -1,0 +1,162 @@
+# Linux memory scenario: 5 runs
+  memory-1.log: source=proc-scan WebKitNetworkPr:460<383 bwrap:476<383 bwrap:481<383 bwrap:477<476 bwrap:482<481 xdg-dbus-proxy:478<477 WebKitWebProces:486<482
+  memory-1.log: source=task-children WebKitNetworkPr:460<383 bwrap:476<383 bwrap:481<383 bwrap:477<476 bwrap:482<481 xdg-dbus-proxy:478<477 WebKitWebProces:486<482
+  memory-1.log: source=compare scanCount=7 childrenCount=7 same=True allProcesses=77
+  memory-2.log: source=proc-scan WebKitNetworkPr:711<634 bwrap:722<634 bwrap:727<634 bwrap:723<722 bwrap:728<727 xdg-dbus-proxy:724<723 WebKitWebProces:737<728
+  memory-2.log: source=task-children WebKitNetworkPr:711<634 bwrap:722<634 bwrap:727<634 bwrap:723<722 bwrap:728<727 xdg-dbus-proxy:724<723 WebKitWebProces:737<728
+  memory-2.log: source=compare scanCount=7 childrenCount=7 same=True allProcesses=43
+  memory-3.log: source=proc-scan WebKitNetworkPr:953<876 bwrap:964<876 bwrap:974<876 bwrap:965<964 bwrap:976<974 xdg-dbus-proxy:969<965 WebKitWebProces:979<976
+  memory-3.log: source=task-children WebKitNetworkPr:953<876 bwrap:964<876 bwrap:974<876 bwrap:965<964 bwrap:976<974 xdg-dbus-proxy:969<965 WebKitWebProces:979<976
+  memory-3.log: source=compare scanCount=7 childrenCount=7 same=True allProcesses=43
+  memory-4.log: source=proc-scan WebKitNetworkPr:1197<1120 bwrap:1208<1120 bwrap:1218<1120 bwrap:1209<1208 bwrap:1219<1218 xdg-dbus-proxy:1213<1209 WebKitWebProces:1223<1219
+  memory-4.log: source=task-children WebKitNetworkPr:1197<1120 bwrap:1208<1120 bwrap:1218<1120 bwrap:1209<1208 bwrap:1219<1218 xdg-dbus-proxy:1213<1209 WebKitWebProces:1223<1219
+  memory-4.log: source=compare scanCount=7 childrenCount=7 same=True allProcesses=43
+  memory-5.log: source=proc-scan WebKitNetworkPr:1439<1362 bwrap:1450<1362 bwrap:1460<1362 bwrap:1451<1450 bwrap:1461<1460 xdg-dbus-proxy:1456<1451 WebKitWebProces:1465<1461
+  memory-5.log: source=task-children WebKitNetworkPr:1439<1362 bwrap:1450<1362 bwrap:1460<1362 bwrap:1451<1450 bwrap:1461<1460 xdg-dbus-proxy:1456<1451 WebKitWebProces:1465<1461
+  memory-5.log: source=compare scanCount=7 childrenCount=7 same=True allProcesses=43
+  memory-1.log: NSPID pid=460 name=WebKitNetworkPr nspid=460 rollupReadable=True
+  memory-1.log: NSPID pid=476 name=bwrap nspid=476 rollupReadable=True
+  memory-1.log: NSPID pid=481 name=bwrap nspid=481 rollupReadable=True
+  memory-1.log: NSPID pid=477 name=bwrap nspid=477/1 rollupReadable=True
+  memory-1.log: NSPID pid=482 name=bwrap nspid=482/1 rollupReadable=True
+  memory-1.log: NSPID pid=478 name=xdg-dbus-proxy nspid=478/2 rollupReadable=True
+  memory-1.log: NSPID pid=486 name=WebKitWebProces nspid=486/2 rollupReadable=True
+## Totals over the descendants (MB)
+  loaded (n=5): processes 7.00 [7.00–7.00]; rssMB 204 [204–204]; pssMB 110 [110–110]; ussMB 58.0 [58.0–58.1]; privateDirtyMB 27.9 [27.8–27.9]; pssAnonMB 28.1 [28.0–28.1]; pssFileMB 81.6 [81.5–81.7]; pssShmemMB 0.00 [0.00–0.00]; hostRssMB 165 [165–167]; hostPssMB 109 [108–111]; hostUssMB 69.0 [68.4–71.1]; hostPrivateDirtyMB 42.4 [41.9–44.4]
+## Per process name, PSS / USS / Private_Dirty / RSS (kB)
+  WebKitNetworkPr (n=5): PSS 21850 [21823–21882]; USS 10496 [10444–10540]; private dirty 7636 [7636–7648]; RSS 49508 [49468–49672]
+  bwrap (n=20): PSS 184 [163–210]; USS 70.0 [44.0–100]; private dirty 70.0 [44.0–100]; RSS 1826 [1588–2060]
+  xdg-dbus-proxy (n=5): PSS 853 [848–864]; USS 492 [492–496]; private dirty 440 [440–444]; RSS 5728 [5684–5812]
+  WebKitWebProces (n=5): PSS 88822 [88758–88975]; USS 48152 [48112–48264]; private dirty 20176 [20108–20200]; RSS 146400 [146284–146636]
+## Costs
+  descendants-by-proc-scan thread=main: median 215 [201–439] us, p90 236 [219–769], max 346 [284–989], alloc/call 140112 [139824–187159] B
+  descendants-by-task-children thread=main: median 107 [102–124] us, p90 129 [116–145], max 186 [166–299], alloc/call 13432 [13432–13432] B
+  smaps_rollup-all thread=main: median 564 [520–580] us, p90 607 [561–628], max 735 [712–839], alloc/call 896 [896–896] B
+  smaps_rollup-all thread=pool: median 554 [514–571] us, p90 587 [541–618], max 722 [679–1244], alloc/call 896 [896–896] B
+  statm-all thread=pool: median 15.7 [14.8–16.1] us, p90 17.8 [16.6–18.3], max 39.9 [25.4–226], alloc/call 784 [784–784] B
+  children+smaps_rollup-all thread=pool: median 688 [646–706] us, p90 763 [702–790], max 1083 [819–1224], alloc/call 14328 [14328–14328] B
+  scan+smaps_rollup-all thread=pool: median 795 [736–841] us, p90 962 [815–973], max 1755 [1592–2111], alloc/call 141176 [138208–143712] B
+  smaps_rollup-self thread=pool: median 420 [388–435] us, p90 468 [421–471], max 728 [626–894], alloc/call 56.0 [56.0–56.0] B
+  Process.GetProcessById.PrivateMemorySize64-all thread=pool: median 178 [169–193] us, p90 195 [190–231], max 254 [217–411], alloc/call 71032 [70792–71104] B
+  kept-handles-statm-all thread=pool: median 4.60 [4.30–4.70] us, p90 4.60 [4.30–4.70], max 10.4 [4.80–26.0], alloc/call 0.00 [0.00–0.00] B
+  kept-handles-smaps_rollup-all thread=pool: median 516 [497–531] us, p90 554 [532–567], max 829 [630–1200], alloc/call 0.00 [0.00–0.00] B
+  refresh-tree-and-open-handles thread=pool: median 126 [116–127] us, p90 138 [124–160], max 233 [168–282], alloc/call 15528 [15528–15528] B
+## Main-loop ping latency
+  idle: ping median 0.00 [0.00–0.00] ms, p90 0.10 [0.10–0.10], max 0.20 [0.10–1.00]
+  sample-on-main-every-100ms: ping median 0.00 [0.00–0.00] ms, p90 0.10 [0.10–0.10], max 1.60 [1.50–2.00]; sample median 1.40 [1.40–1.50] ms
+  sample-on-pool-every-100ms: ping median 0.00 [0.00–0.00] ms, p90 0.10 [0.10–0.10], max 0.40 [0.30–0.50]; sample median 1.40 [1.30–1.50] ms
+## Backend
+  values host: workingSetMB 174 [174–174]; gcHeapMB 0.10 [0.10–2.20]; gcCommittedMB 18.3 [18.2–18.3]; gcTotalMemoryMB 8.50 [8.30–11.0]; gcFragmentedMB 0.00 [0.00–2.10]; totalAllocatedMB 26.2 [26.0–28.7]; processPrivateMB 69923 [67140–70931]; processWorkingSetMB 174 [174–174]; rollupPssMB 117 [117–117]; rollupUssMB 77.5 [77.3–77.5]; rollupPrivateDirtyMB 50.5 [50.4–50.7]; statmResidentMB 174 [174–174]
+  values host-after-gc: workingSetMB 174 [174–174]; gcHeapMB 0.20 [0.20–0.30]; gcCommittedMB 18.5 [18.3–18.5]; gcTotalMemoryMB 0.30 [0.20–0.30]; gcFragmentedMB 0.00 [0.00–0.00]; totalAllocatedMB 26.2 [26.0–28.7]; processPrivateMB 69923 [67140–70931]; processWorkingSetMB 174 [174–174]; rollupPssMB 117 [117–118]; rollupUssMB 77.6 [77.5–77.7]; rollupPrivateDirtyMB 50.6 [50.5–50.8]; statmResidentMB 174 [174–174]
+  cost Environment.WorkingSet: 5011 [4611–5275] ns, alloc 3120 [3120–3128] B
+  cost GC.GetGCMemoryInfo: 25.0 [21.5–25.7] ns, alloc 288 [288–288] B
+  cost GC.GetTotalMemory(false): 12.2 [10.6–12.4] ns, alloc 0.00 [0.00–0.00] B
+  cost GC.GetTotalAllocatedBytes: 3.10 [2.80–3.20] ns, alloc 0.00 [0.00–0.00] B
+  cost Process.GetCurrentProcess().PrivateMemorySize64: 78.9 [68.5–83.8] us, alloc 28760 [28520–29976] B
+  cost cachedProcess.Refresh+PrivateMemorySize64: 79.1 [68.1–79.9] us, alloc 28488 [28248–29704] B
+  cost rollupPss: 412449 [401084–432364] ns, alloc 56.0 [56.0–56.0] B
+  cost rollupUss: 422768 [418176–437238] ns, alloc 56.0 [56.0–56.0] B
+  cost rollupPrivateDirty: 416673 [394563–424381] ns, alloc 56.0 [56.0–56.0] B
+  cost statmResident: 2278 [2175–2298] ns, alloc 112 [112–112] B
+## Sampler sketch
+  engine-every-tick: ticks 51.0 [50.0–51.0], written 51.0 [50.0–51.0], dropped 33.0 [32.0–33.0], received 17.0 [17.0–17.0], read+write alloc/tick 14154 [13841–14354] B, process-wide steady alloc/tick 14374 [13729–16648] B
+  engine-kept-statm-every-tick: ticks 50.0 [50.0–51.0], written 50.0 [50.0–51.0], dropped 32.0 [32.0–33.0], received 17.0 [17.0–17.0], read+write alloc/tick 0.00 [0.00–0.00] B, process-wide steady alloc/tick 3517 [76.0–3517] B
+  engine-threshold-1%-1MB: ticks 51.0 [50.0–51.0], written 1.00 [1.00–1.00], dropped 0.00 [0.00–0.00], received 1.00 [1.00–1.00], read+write alloc/tick 12976 [12928–13468] B, process-wide steady alloc/tick 13276 [13259–13876] B
+
+# Linux disk scenario: 6 runs
+  disk-large-1.log: fillMs=1342 estimate usage=undefined details=undefined steps={"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000}
+  disk-large-2.log: fillMs=1277 estimate usage=undefined details=undefined steps={"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000}
+  disk-large-3.log: fillMs=1344 estimate usage=undefined details=undefined steps={"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000}
+  disk-realistic-1.log: fillMs=242 estimate usage=undefined details=undefined steps={"localStorageChars":1048576,"indexedDbBytes":8388608,"cacheStorageBytes":4194304,"httpBytes":4096000}
+  disk-realistic-2.log: fillMs=250 estimate usage=undefined details=undefined steps={"localStorageChars":1048576,"indexedDbBytes":8388608,"cacheStorageBytes":4194304,"httpBytes":4096000}
+  disk-realistic-3.log: fillMs=224 estimate usage=undefined details=undefined steps={"localStorageChars":1048576,"indexedDbBytes":8388608,"cacheStorageBytes":4194304,"httpBytes":4096000}
+  disk-large-1.log: FETCH label=running first ms=14.30 entries=1 totalBytes=158939330 error=False [127.0.0.1: memory-cache=0,disk-cache=41150290,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+  disk-large-1.log: FETCH label=running-later first ms=14.49 entries=1 totalBytes=158939330 error=False [127.0.0.1: memory-cache=0,disk-cache=41150290,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+  disk-large-2.log: FETCH label=running first ms=14.96 entries=1 totalBytes=158939730 error=False [127.0.0.1: memory-cache=0,disk-cache=41150690,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+  disk-large-2.log: FETCH label=running-later first ms=13.35 entries=1 totalBytes=158939730 error=False [127.0.0.1: memory-cache=0,disk-cache=41150690,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+  disk-large-3.log: FETCH label=running first ms=13.00 entries=1 totalBytes=158939730 error=False [127.0.0.1: memory-cache=0,disk-cache=41150690,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+  disk-large-3.log: FETCH label=running-later first ms=12.65 entries=1 totalBytes=158939730 error=False [127.0.0.1: memory-cache=0,disk-cache=41150690,local-storage=16961904,indexeddb=67272704,dom-cache=33554432]
+  disk-realistic-1.log: FETCH label=running first ms=2.44 entries=1 totalBytes=18987974 error=False [127.0.0.1: memory-cache=0,disk-cache=4115030,local-storage=2204016,indexeddb=8474624,dom-cache=4194304]
+  disk-realistic-1.log: FETCH label=running-later first ms=2.75 entries=1 totalBytes=18987974 error=False [127.0.0.1: memory-cache=0,disk-cache=4115030,local-storage=2204016,indexeddb=8474624,dom-cache=4194304]
+  disk-realistic-2.log: FETCH label=running first ms=2.50 entries=1 totalBytes=18987974 error=False [127.0.0.1: memory-cache=0,disk-cache=4115030,local-storage=2204016,indexeddb=8474624,dom-cache=4194304]
+  disk-realistic-2.log: FETCH label=running-later first ms=2.51 entries=1 totalBytes=18987974 error=False [127.0.0.1: memory-cache=0,disk-cache=4115030,local-storage=2204016,indexeddb=8474624,dom-cache=4194304]
+  disk-realistic-3.log: FETCH label=running first ms=2.09 entries=1 totalBytes=18987974 error=False [127.0.0.1: memory-cache=0,disk-cache=4115030,local-storage=2204016,indexeddb=8474624,dom-cache=4194304]
+  disk-realistic-3.log: FETCH label=running-later first ms=2.27 entries=1 totalBytes=18987974 error=False [127.0.0.1: memory-cache=0,disk-cache=4115030,local-storage=2204016,indexeddb=8474624,dom-cache=4194304]
+  website_data_manager_fetch (running) thread=-: median 7.30 [1.70–13.9] ms, p90 7.75 [1.70–14.7], max 8.00 [1.70–16.0]; synchronous part on the main thread median 0.00 [0.00–0.00] ms, max 0.40 [0.30–0.60] ms
+  website_data_manager_fetch (running-later) thread=-: median 7.60 [1.60–14.7] ms, p90 7.95 [1.70–15.3], max 7.95 [1.70–15.3]; synchronous part on the main thread median 0.00 [0.00–0.00] ms, max 0.10 [0.10–0.20] ms
+  disk-large-1.log: VIEW-GONE ms=10006.3 webkitChildren=2
+  disk-large-2.log: VIEW-GONE ms=10010.1 webkitChildren=2
+  disk-large-3.log: VIEW-GONE ms=10000.2 webkitChildren=2
+  disk-realistic-1.log: VIEW-GONE ms=10001.7 webkitChildren=2
+  disk-realistic-2.log: VIEW-GONE ms=10013.9 webkitChildren=2
+  disk-realistic-3.log: VIEW-GONE ms=10002.3 webkitChildren=2
+  realistic (runs=3):
+    running data FileInfo: files 7.00 [7.00–7.00], logical 10428 [10428–10428] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.13 [0.11–0.14] ms, repeat median 0.00 [0.00–0.00] ms
+    running data FileSystemEnumerator: files 7.00 [7.00–7.00], logical 10428 [10428–10428] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.03 [0.03–0.03] ms, repeat median 0.00 [0.00–0.00] ms
+    running data lstat-blocks: files 7.00 [7.00–7.00], logical 10428 [10428–10428] kB, allocated 10476 [10476–10476] kB, errors 0.00 [0.00–0.00], first 0.20 [0.20–0.69] ms, repeat median 0.00 [0.00–0.00] ms
+    running cache FileInfo: files 136 [136–136], logical 12137 [12137–12137] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.27 [0.25–0.30] ms, repeat median 0.20 [0.20–0.20] ms
+    running cache FileSystemEnumerator: files 136 [136–136], logical 12137 [12137–12137] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.16 [0.15–0.16] ms, repeat median 0.10 [0.10–0.20] ms
+    running cache lstat-blocks: files 136 [136–136], logical 12137 [12137–12137] kB, allocated 12372 [12372–12372] kB, errors 0.00 [0.00–0.00], first 0.21 [0.18–0.28] ms, repeat median 0.20 [0.20–0.20] ms
+    running both FileInfo: files 143 [143–143], logical 22565 [22565–22565] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.26 [0.23–0.29] ms, repeat median 0.20 [0.20–0.20] ms
+    running both FileSystemEnumerator: files 143 [143–143], logical 22565 [22565–22565] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.18 [0.18–0.19] ms, repeat median 0.20 [0.20–0.20] ms
+    running both lstat-blocks: files 143 [143–143], logical 22565 [22565–22565] kB, allocated 22856 [22856–22856] kB, errors 0.00 [0.00–0.00], first 0.21 [0.21–0.22] ms, repeat median 0.20 [0.20–0.20] ms
+    running-later data FileInfo: files 7.00 [7.00–7.00], logical 10428 [10428–10428] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.16 [0.15–0.18] ms, repeat median 0.00 [0.00–0.00] ms
+    running-later data FileSystemEnumerator: files 7.00 [7.00–7.00], logical 10428 [10428–10428] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.04 [0.04–0.04] ms, repeat median 0.00 [0.00–0.00] ms
+    running-later data lstat-blocks: files 7.00 [7.00–7.00], logical 10428 [10428–10428] kB, allocated 10484 [10484–10484] kB, errors 0.00 [0.00–0.00], first 0.04 [0.04–0.05] ms, repeat median 0.00 [0.00–0.00] ms
+    running-later cache FileInfo: files 137 [137–137], logical 12138 [12138–12138] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.27 [0.25–0.30] ms, repeat median 0.20 [0.20–0.20] ms
+    running-later cache FileSystemEnumerator: files 137 [137–137], logical 12138 [12138–12138] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.15 [0.15–0.17] ms, repeat median 0.10 [0.10–0.20] ms
+    running-later cache lstat-blocks: files 137 [137–137], logical 12138 [12138–12138] kB, allocated 12380 [12380–12380] kB, errors 0.00 [0.00–0.00], first 0.19 [0.18–0.20] ms, repeat median 0.20 [0.20–0.20] ms
+    running-later both FileInfo: files 144 [144–144], logical 22566 [22566–22566] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.24 [0.22–0.32] ms, repeat median 0.20 [0.20–0.30] ms
+    running-later both FileSystemEnumerator: files 144 [144–144], logical 22566 [22566–22566] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.19 [0.18–0.19] ms, repeat median 0.20 [0.20–0.20] ms
+    running-later both lstat-blocks: files 144 [144–144], logical 22566 [22566–22566] kB, allocated 22872 [22872–22872] kB, errors 0.00 [0.00–0.00], first 0.23 [0.22–0.27] ms, repeat median 0.20 [0.20–0.20] ms
+    view-gone data FileInfo: files 5.00 [5.00–5.00], logical 10368 [10368–10368] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.11 [0.10–0.13] ms, repeat median 0.00 [0.00–0.00] ms
+    view-gone data FileSystemEnumerator: files 5.00 [5.00–5.00], logical 10368 [10368–10368] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.03 [0.03–0.04] ms, repeat median 0.00 [0.00–0.00] ms
+    view-gone data lstat-blocks: files 5.00 [5.00–5.00], logical 10368 [10368–10368] kB, allocated 10420 [10420–10420] kB, errors 0.00 [0.00–0.00], first 0.04 [0.04–0.04] ms, repeat median 0.00 [0.00–0.00] ms
+    view-gone cache FileInfo: files 137 [137–137], logical 12138 [12138–12138] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.24 [0.22–0.29] ms, repeat median 0.20 [0.20–0.20] ms
+    view-gone cache FileSystemEnumerator: files 137 [137–137], logical 12138 [12138–12138] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.14 [0.14–0.15] ms, repeat median 0.10 [0.10–0.10] ms
+    view-gone cache lstat-blocks: files 137 [137–137], logical 12138 [12138–12138] kB, allocated 12380 [12380–12380] kB, errors 0.00 [0.00–0.00], first 0.16 [0.15–0.16] ms, repeat median 0.20 [0.10–0.20] ms
+    view-gone both FileInfo: files 142 [142–142], logical 22506 [22506–22506] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.23 [0.18–0.24] ms, repeat median 0.20 [0.20–0.20] ms
+    view-gone both FileSystemEnumerator: files 142 [142–142], logical 22506 [22506–22506] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.18 [0.18–0.21] ms, repeat median 0.20 [0.20–0.20] ms
+    view-gone both lstat-blocks: files 142 [142–142], logical 22506 [22506–22506] kB, allocated 22808 [22808–22808] kB, errors 0.00 [0.00–0.00], first 0.19 [0.19–0.19] ms, repeat median 0.20 [0.20–0.20] ms
+  large (runs=3):
+    running data FileInfo: files 7.00 [7.00–7.00], logical 82260 [82260–82260] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.11 [0.11–0.14] ms, repeat median 0.00 [0.00–0.00] ms
+    running data FileSystemEnumerator: files 7.00 [7.00–7.00], logical 82260 [82260–82260] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.03 [0.03–0.03] ms, repeat median 0.00 [0.00–0.00] ms
+    running data lstat-blocks: files 7.00 [7.00–7.00], logical 82260 [82260–82260] kB, allocated 82312 [82308–82312] kB, errors 0.00 [0.00–0.00], first 0.19 [0.18–0.19] ms, repeat median 0.00 [0.00–0.00] ms
+    running cache FileInfo: files 1272 [1272–1272], logical 113069 [113068–113069] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 2.03 [1.84–2.27] ms, repeat median 1.60 [1.50–1.70] ms
+    running cache FileSystemEnumerator: files 1272 [1272–1272], logical 113069 [113068–113069] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.13 [1.09–1.21] ms, repeat median 1.10 [1.10–1.10] ms
+    running cache lstat-blocks: files 1272 [1272–1272], logical 113069 [113068–113069] kB, allocated 114688 [114684–114692] kB, errors 0.00 [0.00–0.00], first 1.45 [1.41–1.62] ms, repeat median 1.40 [1.40–1.50] ms
+    running both FileInfo: files 1279 [1279–1279], logical 195330 [195329–195330] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.65 [1.60–2.23] ms, repeat median 1.40 [1.30–1.40] ms
+    running both FileSystemEnumerator: files 1279 [1279–1279], logical 195330 [195329–195330] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.17 [1.17–1.18] ms, repeat median 1.20 [1.10–1.20] ms
+    running both lstat-blocks: files 1279 [1279–1279], logical 195330 [195329–195330] kB, allocated 197008 [197004–197008] kB, errors 0.00 [0.00–0.00], first 1.25 [1.17–1.41] ms, repeat median 1.20 [1.20–1.30] ms
+    running-later data FileInfo: files 7.00 [7.00–7.00], logical 82260 [82260–82260] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.12 [0.09–0.16] ms, repeat median 0.00 [0.00–0.00] ms
+    running-later data FileSystemEnumerator: files 7.00 [7.00–7.00], logical 82260 [82260–82260] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.03 [0.03–0.03] ms, repeat median 0.00 [0.00–0.00] ms
+    running-later data lstat-blocks: files 7.00 [7.00–7.00], logical 82260 [82260–82260] kB, allocated 82320 [82316–82320] kB, errors 0.00 [0.00–0.00], first 0.04 [0.04–0.05] ms, repeat median 0.00 [0.00–0.00] ms
+    running-later cache FileInfo: files 1273 [1273–1273], logical 113070 [113069–113070] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.70 [1.62–1.80] ms, repeat median 1.50 [1.40–1.70] ms
+    running-later cache FileSystemEnumerator: files 1273 [1273–1273], logical 113070 [113069–113070] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.13 [1.13–1.23] ms, repeat median 1.10 [1.10–1.10] ms
+    running-later cache lstat-blocks: files 1273 [1273–1273], logical 113070 [113069–113070] kB, allocated 114696 [114692–114700] kB, errors 0.00 [0.00–0.00], first 1.16 [1.13–1.18] ms, repeat median 1.20 [1.10–1.20] ms
+    running-later both FileInfo: files 1280 [1280–1280], logical 195330 [195330–195330] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.33 [1.32–1.52] ms, repeat median 1.50 [1.30–1.50] ms
+    running-later both FileSystemEnumerator: files 1280 [1280–1280], logical 195330 [195330–195330] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.13 [1.12–1.16] ms, repeat median 1.10 [1.10–1.10] ms
+    running-later both lstat-blocks: files 1280 [1280–1280], logical 195330 [195330–195330] kB, allocated 197024 [197020–197024] kB, errors 0.00 [0.00–0.00], first 1.21 [1.13–1.27] ms, repeat median 1.30 [1.20–1.30] ms
+    view-gone data FileInfo: files 5.00 [5.00–5.00], logical 73932 [73932–73932] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.12 [0.08–0.15] ms, repeat median 0.00 [0.00–0.00] ms
+    view-gone data FileSystemEnumerator: files 5.00 [5.00–5.00], logical 73932 [73932–73932] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.03 [0.03–0.04] ms, repeat median 0.00 [0.00–0.00] ms
+    view-gone data lstat-blocks: files 5.00 [5.00–5.00], logical 73932 [73932–73932] kB, allocated 73988 [73984–73988] kB, errors 0.00 [0.00–0.00], first 0.04 [0.04–0.04] ms, repeat median 0.00 [0.00–0.00] ms
+    view-gone cache FileInfo: files 1273 [1273–1273], logical 113070 [113069–113070] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.75 [1.72–2.83] ms, repeat median 1.40 [1.30–1.40] ms
+    view-gone cache FileSystemEnumerator: files 1273 [1273–1273], logical 113070 [113069–113070] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.14 [1.12–1.15] ms, repeat median 1.10 [1.10–1.20] ms
+    view-gone cache lstat-blocks: files 1273 [1273–1273], logical 113070 [113069–113070] kB, allocated 114696 [114692–114700] kB, errors 0.00 [0.00–0.00], first 1.20 [1.17–1.29] ms, repeat median 1.30 [1.20–1.30] ms
+    view-gone both FileInfo: files 1278 [1278–1278], logical 187002 [187001–187002] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.41 [1.38–1.43] ms, repeat median 1.40 [1.40–1.50] ms
+    view-gone both FileSystemEnumerator: files 1278 [1278–1278], logical 187002 [187001–187002] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.16 [1.14–1.24] ms, repeat median 1.10 [1.10–1.20] ms
+    view-gone both lstat-blocks: files 1278 [1278–1278], logical 187002 [187001–187002] kB, allocated 188692 [188688–188692] kB, errors 0.00 [0.00–0.00], first 1.24 [1.21–1.24] ms, repeat median 1.20 [1.20–1.20] ms
+## Parts, realistic run 1
+  WALK-PART label=running folder=data/storage files=6 dirs=5 logicalKB=10428 allocatedKB=10460 errors=0 ms=0.03
+  WALK-PART label=running folder=cache/HSTS files=1 dirs=0 logicalKB=12 allocatedKB=12 errors=0 ms=0.00
+  WALK-PART label=running folder=cache/WebKitCache files=121 dirs=5 logicalKB=8026 allocatedKB=8192 errors=0 ms=0.17
+  WALK-PART label=running folder=cache/CacheStorage files=14 dirs=5 logicalKB=4098 allocatedKB=4156 errors=0 ms=0.04
+  WALK-PART label=running-later folder=data/storage files=6 dirs=5 logicalKB=10428 allocatedKB=10460 errors=0 ms=0.05
+  WALK-PART label=running-later folder=cache/HSTS files=1 dirs=0 logicalKB=12 allocatedKB=12 errors=0 ms=0.00
+  WALK-PART label=running-later folder=cache/WebKitCache files=122 dirs=6 logicalKB=8027 allocatedKB=8200 errors=0 ms=0.15
+  WALK-PART label=running-later folder=cache/CacheStorage files=14 dirs=5 logicalKB=4098 allocatedKB=4156 errors=0 ms=0.04
+  WALK-PART label=view-gone folder=data/storage files=4 dirs=5 logicalKB=10368 allocatedKB=10396 errors=0 ms=0.03
+  WALK-PART label=view-gone folder=cache/HSTS files=1 dirs=0 logicalKB=12 allocatedKB=12 errors=0 ms=0.00
+  WALK-PART label=view-gone folder=cache/WebKitCache files=122 dirs=6 logicalKB=8027 allocatedKB=8200 errors=0 ms=0.12
+  WALK-PART label=view-gone folder=cache/CacheStorage files=14 dirs=5 logicalKB=4098 allocatedKB=4156 errors=0 ms=0.03
+

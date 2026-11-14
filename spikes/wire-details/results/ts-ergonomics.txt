@@ -1,0 +1,10 @@
+ergonomics.ts(15,7): error TS2322: Type 'string' is not assignable to type 'number'.
+ergonomics.ts(16,43): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+ergonomics.ts(16,47): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+ergonomics.ts(19,15): error TS2365: Operator '+' cannot be applied to types 'string | number' and 'number'.
+ergonomics.ts(20,44): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+ergonomics.ts(23,15): error TS2365: Operator '+' cannot be applied to types 'bigint' and '1'.
+ergonomics.ts(26,23): error TS2345: Argument of type 'bigint' is not assignable to parameter of type 'number'.
+ergonomics.ts(27,32): error TS2345: Argument of type '(a: { readonly id: bigint; }, b: { readonly id: bigint; }) => bigint' is not assignable to parameter of type '(a: { readonly id: bigint; }, b: { readonly id: bigint; }) => number'.
+  Type 'bigint' is not assignable to type 'number'.

@@ -1,0 +1,44 @@
+# Nodes whose name mentions Spar_Result_ (ILC map, Release, dispatch PerCommand)
+variant | all nodes | Result nodes | Result code (MethodCode) | canonical Result<__Canon, __Canon> code (shared by reference-type T) | code for the 6 value-type T | Result code nodes
+Class | 1123639 | 38100 | 5120 | 875 | 4245 | 17
+Struct | 1137529 | 59988 | 21630 | 8086 | 13544 | 256
+UnionStruct | 1140770 | 60375 | 21986 | 8239 | 13747 | 260
+UnionClass | 1125729 | 39736 | 5394 | 837 | 4557 | 24
+
+# Result nodes by kind, Class vs UnionStruct
+AddressTakenMethod | UnionStruct | 5 nodes | 25 bytes
+ConstructedEEType | Class | 160 nodes | 18000 bytes
+ConstructedEEType | UnionStruct | 160 nodes | 18600 bytes
+EEType | Class | 70 nodes | 3760 bytes
+EEType | UnionStruct | 70 nodes | 3760 bytes
+FatFunctionPointer | Class | 70 nodes | 1120 bytes
+FatFunctionPointer | UnionStruct | 78 nodes | 1248 bytes
+GCInfo | Class | 17 nodes | 444 bytes
+GCInfo | UnionStruct | 260 nodes | 3496 bytes
+GCStatics | Class | 60 nodes | 480 bytes
+GCStatics | UnionStruct | 58 nodes | 464 bytes
+GCStaticsPreInitData | Class | 30 nodes | 240 bytes
+GCStaticsPreInitData | UnionStruct | 30 nodes | 240 bytes
+GenericComposition | Class | 60 nodes | 480 bytes
+GenericComposition | UnionStruct | 60 nodes | 480 bytes
+InterfaceDispatchMap | UnionStruct | 23 nodes | 424 bytes
+MethodAssociatedData | UnionStruct | 42 nodes | 210 bytes
+MethodCode | Class | 17 nodes | 5120 bytes
+MethodCode | UnionStruct | 260 nodes | 21986 bytes
+MethodExceptionHandlingInfo | UnionStruct | 9 nodes | 74 bytes
+MethodGenericDictionary | Class | 100 nodes | 2240 bytes
+MethodGenericDictionary | UnionStruct | 96 nodes | 2128 bytes
+MethodReadOnlyData | Class | 6 nodes | 96 bytes
+MethodReadOnlyData | UnionStruct | 15 nodes | 240 bytes
+NonGCStatics | Class | 60 nodes | 240 bytes
+NonGCStatics | UnionStruct | 58 nodes | 224 bytes
+ReadyToRunGenericLookupFromType | UnionStruct | 30 nodes | 498 bytes
+ReadyToRunHelper | Class | 20 nodes | 440 bytes
+ReadyToRunHelper | UnionStruct | 29 nodes | 438 bytes
+ReflectionVisibleGenericDefinitionEEType | Class | 1 nodes | 32 bytes
+ReflectionVisibleGenericDefinitionEEType | UnionStruct | 1 nodes | 32 bytes
+SealedVTable | UnionStruct | 20 nodes | 160 bytes
+TypeGenericDictionary | Class | 120 nodes | 3560 bytes
+TypeGenericDictionary | UnionStruct | 130 nodes | 3800 bytes
+WritableData | Class | 231 nodes | 1848 bytes
+WritableData | UnionStruct | 231 nodes | 1848 bytes

@@ -1,0 +1,302 @@
+{
+  "facts": {
+    "aot": "True",
+    "cdp.lastStatus": "Saved #10: cdp-9 (click trusted, input trusted)",
+    "devtoolsUi": "True",
+    "screenshot.error": "TimeoutException: screenshot did not complete within 10000 ms.",
+    "script.lastStatus": "Saved #20: script-9 (click synthetic, input synthetic)",
+    "startup.controllerMs": "162.8",
+    "startup.environmentMs": "14.3",
+    "startup.navigatedMs": "234.0",
+    "tree.rawChars": "7533",
+    "tree.summary": "RootWebArea:D8 automation spike#1 | heading:Profile#2 | LabelText:#3 | textbox:Name#12 | button:Save#4 | status:#5 | StaticText:Profile#15 | StaticText:Name#16 | StaticText:Save#17 | StaticText:Idle#18",
+    "tree.summaryNodes": "10",
+    "window": "Minimized"
+  },
+  "series": {
+    "ready.doubleRaf": {
+      "n": 1,
+      "min": 84.737,
+      "median": 84.737,
+      "p95": 84.737,
+      "max": 84.737,
+      "samples": [
+        84.737
+      ]
+    },
+    "evaluate.noop": {
+      "n": 10,
+      "min": 0.129,
+      "median": 0.178,
+      "p95": 0.378,
+      "max": 0.378,
+      "samples": [
+        0.378,
+        0.233,
+        0.181,
+        0.178,
+        0.172,
+        0.163,
+        0.229,
+        0.265,
+        0.129,
+        0.152
+      ]
+    },
+    "tree.cold": {
+      "n": 1,
+      "min": 2.883,
+      "median": 2.883,
+      "p95": 2.883,
+      "max": 2.883,
+      "samples": [
+        2.883
+      ]
+    },
+    "tree": {
+      "n": 10,
+      "min": 0.436,
+      "median": 0.484,
+      "p95": 0.61,
+      "max": 0.61,
+      "samples": [
+        0.61,
+        0.552,
+        0.579,
+        0.517,
+        0.475,
+        0.451,
+        0.484,
+        0.498,
+        0.449,
+        0.436
+      ]
+    },
+    "tree.cdpOnly": {
+      "n": 10,
+      "min": 0.413,
+      "median": 0.46,
+      "p95": 0.579,
+      "max": 0.579,
+      "samples": [
+        0.579,
+        0.526,
+        0.555,
+        0.493,
+        0.454,
+        0.43,
+        0.46,
+        0.477,
+        0.428,
+        0.413
+      ]
+    },
+    "tree.parseOnly": {
+      "n": 10,
+      "min": 0.02,
+      "median": 0.022,
+      "p95": 0.027,
+      "max": 0.027,
+      "samples": [
+        0.027,
+        0.024,
+        0.023,
+        0.022,
+        0.02,
+        0.02,
+        0.023,
+        0.021,
+        0.02,
+        0.022
+      ]
+    },
+    "cdp.total": {
+      "n": 10,
+      "min": 70.897,
+      "median": 1003.956,
+      "p95": 1026.192,
+      "max": 1026.192,
+      "samples": [
+        70.897,
+        1008.521,
+        1025.493,
+        990.047,
+        1010.858,
+        996.516,
+        1026.192,
+        992.687,
+        1011.227,
+        1003.956
+      ]
+    },
+    "cdp.fill": {
+      "n": 10,
+      "min": 1.577,
+      "median": 2.377,
+      "p95": 7.092,
+      "max": 7.092,
+      "samples": [
+        2.377,
+        2.09,
+        1.636,
+        1.577,
+        2.142,
+        2.447,
+        6.168,
+        4.146,
+        3.84,
+        7.092
+      ]
+    },
+    "cdp.click": {
+      "n": 10,
+      "min": 5.587,
+      "median": 944.217,
+      "p95": 959.734,
+      "max": 959.734,
+      "samples": [
+        5.587,
+        951.494,
+        959.734,
+        934.747,
+        944.6,
+        939.177,
+        958.759,
+        933.932,
+        950.915,
+        944.217
+      ]
+    },
+    "cdp.waitFor": {
+      "n": 10,
+      "min": 52.618,
+      "median": 54.929,
+      "p95": 64.117,
+      "max": 64.117,
+      "samples": [
+        62.923,
+        54.929,
+        64.117,
+        53.715,
+        64.107,
+        54.877,
+        61.249,
+        54.596,
+        56.462,
+        52.618
+      ]
+    },
+    "script.total": {
+      "n": 10,
+      "min": 60.664,
+      "median": 61.748,
+      "p95": 63.765,
+      "max": 63.765,
+      "samples": [
+        62.285,
+        63.765,
+        63.48,
+        60.664,
+        60.812,
+        61.748,
+        62.8,
+        61.258,
+        61.032,
+        62.713
+      ]
+    },
+    "script.fill": {
+      "n": 10,
+      "min": 0.337,
+      "median": 0.557,
+      "p95": 2.834,
+      "max": 2.834,
+      "samples": [
+        1.07,
+        0.482,
+        0.562,
+        0.543,
+        0.517,
+        0.337,
+        1.169,
+        2.834,
+        2.768,
+        0.557
+      ]
+    },
+    "script.click": {
+      "n": 10,
+      "min": 0.211,
+      "median": 0.434,
+      "p95": 2.104,
+      "max": 2.104,
+      "samples": [
+        0.496,
+        0.401,
+        0.434,
+        0.347,
+        0.436,
+        0.211,
+        1.127,
+        2.073,
+        2.104,
+        0.384
+      ]
+    },
+    "script.waitFor": {
+      "n": 10,
+      "min": 56.14,
+      "median": 60.486,
+      "p95": 62.875,
+      "max": 62.875,
+      "samples": [
+        60.701,
+        62.875,
+        62.477,
+        59.767,
+        59.853,
+        61.192,
+        60.486,
+        56.325,
+        56.14,
+        61.765
+      ]
+    },
+    "waitFor.treePoll": {
+      "n": 5,
+      "min": 393.948,
+      "median": 1002.007,
+      "p95": 1027.957,
+      "max": 1027.957,
+      "samples": [
+        393.948,
+        989.279,
+        1002.007,
+        1027.957,
+        1004.431
+      ]
+    },
+    "waitFor.treePoll.polls": {
+      "n": 5,
+      "min": 3,
+      "median": 4,
+      "p95": 5,
+      "max": 5,
+      "samples": [
+        5,
+        3,
+        4,
+        4,
+        5
+      ]
+    },
+    "screenshot": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    }
+  }
+}

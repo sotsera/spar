@@ -1,0 +1,2533 @@
+{
+ "engine": "node",
+ "details": {
+  "node": "24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "arch": "x64",
+  "platform": "win32",
+  "exposeGc": true
+ },
+ "options": {
+  "sampleMs": 60,
+  "warmupRounds": 3,
+  "rounds": 7,
+  "burstSize": 10000,
+  "burstRounds": 15,
+  "retainedCount": 20000
+ },
+ "variants": [
+  {
+   "key": "native",
+   "label": "native Promise<Result> (baseline)"
+  },
+  {
+   "key": "formC",
+   "label": "form C thenable Call (today)"
+  },
+  {
+   "key": "subclass",
+   "label": "Promise subclass, built by the client (proposal)"
+  },
+  {
+   "key": "of",
+   "label": "Promise subclass wrapping a form C call (PromiseCall.of)"
+  },
+  {
+   "key": "noSpecies",
+   "label": "Promise subclass without Symbol.species"
+  },
+  {
+   "key": "ctor",
+   "label": "Promise subclass whose instances have constructor === Promise"
+  }
+ ],
+ "parity": {
+  "native": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "Promise",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": true,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "Promise",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "formC": {
+   "instanceofPromise": false,
+   "toStringTag": "[object Object]",
+   "constructorIs": "Call$1",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "no finally",
+   "catchReturns": "no catch",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "no static resolve",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "subclass": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "Call (Promise subclass)",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "Call (Promise subclass)",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "of": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "PromiseCall (Promise subclass)",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "PromiseCall (Promise subclass)",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "noSpecies": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "CallNoSpecies (Promise subclass)",
+   "thenReturns": "CallNoSpecies (Promise subclass)",
+   "thenResultHasMatch": true,
+   "finallyReturns": "CallNoSpecies (Promise subclass)",
+   "catchReturns": "CallNoSpecies (Promise subclass)",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "CallNoSpecies (Promise subclass)",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "ctor": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "Promise",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": true,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "Promise",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  }
+ },
+ "ticks": {
+  "native": {
+   "pending.await": 0,
+   "settled.await": 0,
+   "pending.match": 1,
+   "settled.match": 1,
+   "pending.unwrap": 1,
+   "settled.unwrap": 1,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 1,
+   "settled.all": 1
+  },
+  "formC": {
+   "pending.await": 2,
+   "settled.await": 2,
+   "pending.match": 2,
+   "settled.match": 1,
+   "pending.unwrap": 2,
+   "settled.unwrap": 1,
+   "pending.then": 1,
+   "settled.then": 0,
+   "pending.all": 3,
+   "settled.all": 3
+  },
+  "subclass": {
+   "pending.await": 1,
+   "settled.await": 2,
+   "pending.match": 1,
+   "settled.match": 1,
+   "pending.unwrap": 1,
+   "settled.unwrap": 1,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 2,
+   "settled.all": 3
+  },
+  "of": {
+   "pending.await": 3,
+   "settled.await": 2,
+   "pending.match": 3,
+   "settled.match": 1,
+   "pending.unwrap": 3,
+   "settled.unwrap": 1,
+   "pending.then": 2,
+   "settled.then": 0,
+   "pending.all": 4,
+   "settled.all": 3
+  },
+  "noSpecies": {
+   "pending.await": 1,
+   "settled.await": 2,
+   "pending.match": 2,
+   "settled.match": 2,
+   "pending.unwrap": 2,
+   "settled.unwrap": 2,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 2,
+   "settled.all": 3
+  },
+  "ctor": {
+   "pending.await": 0,
+   "settled.await": 0,
+   "pending.match": 1,
+   "settled.match": 1,
+   "pending.unwrap": 1,
+   "settled.unwrap": 1,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 1,
+   "settled.all": 1
+  }
+ },
+ "order": {
+  "native": {
+   "await vs native await": "XN",
+   "await vs native then": "XN",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "formC": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "NX",
+   "then vs native then": "NX",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "subclass": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "of": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "NX",
+   "then vs native then": "NX",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "noSpecies": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "ctor": {
+   "await vs native await": "XN",
+   "await vs native then": "XN",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  }
+ },
+ "timing": {
+  "callsPerSample": 1048576,
+  "samples": {
+   "native.await": [
+    52.79102325439489,
+    52.68735885620088,
+    55.71117401122899,
+    53.97548675536989,
+    53.977966308592364,
+    51.099205017089005,
+    53.281402587888884
+   ],
+   "native.match": [
+    67.48952865600656,
+    67.09537506103396,
+    66.17670059204036,
+    70.02353668212821,
+    66.4205551147469,
+    66.06903076171803,
+    68.0843353271475
+   ],
+   "native.unwrap": [
+    67.42019653320324,
+    65.5022621154789,
+    66.43018722534214,
+    66.03727340698251,
+    64.75763320922673,
+    64.43529129028514,
+    67.01736450195547
+   ],
+   "formC.await": [
+    130.7019233703615,
+    128.34739685058625,
+    127.16436386108268,
+    127.36463546753063,
+    126.29547119140383,
+    125.45356750488443,
+    128.06320190429653
+   ],
+   "formC.match": [
+    104.35771942138642,
+    105.9884071350093,
+    106.56738281249883,
+    105.85947036743232,
+    103.7467956542977,
+    102.84986495971357,
+    108.24575424194308
+   ],
+   "formC.unwrap": [
+    100.37050247192411,
+    101.17645263671947,
+    108.51955413818288,
+    99.846267700196,
+    100.98361968994065,
+    100.75607299804557,
+    104.62932586670013
+   ],
+   "subclass.await": [
+    149.65753555297792,
+    147.50967025756873,
+    149.87258911132798,
+    150.810718536374,
+    147.39513397216825,
+    146.5506553649902,
+    149.48654174804648
+   ],
+   "subclass.match": [
+    100.71249008178698,
+    100.1839637756359,
+    100.2664566040045,
+    99.22723770141792,
+    101.67388916015527,
+    98.37036132812754,
+    98.86789321899431
+   ],
+   "subclass.unwrap": [
+    94.15626525878865,
+    95.00694274902459,
+    93.97411346435437,
+    94.86865997314354,
+    94.56892013549879,
+    94.30227279663,
+    94.75469589233232
+   ],
+   "of.await": [
+    232.55510330200124,
+    230.67426681518643,
+    227.4049758911132,
+    238.19532394409384,
+    227.11277008056683,
+    227.6005744934091,
+    232.7720642089845
+   ],
+   "of.match": [
+    190.99483489990257,
+    187.46271133422871,
+    187.1495246887206,
+    187.93249130249004,
+    185.49442291259862,
+    184.22298431396493,
+    184.57612991332888
+   ],
+   "of.unwrap": [
+    186.01369857788006,
+    185.81409454345754,
+    184.38158035278403,
+    181.55956268310624,
+    184.50527191162317,
+    183.39786529541004,
+    183.6772918701185
+   ],
+   "noSpecies.await": [
+    182.29255676269554,
+    185.30445098876962,
+    184.21850204467654,
+    181.8780899047849,
+    183.40406417846623,
+    181.95419311523366,
+    182.99388885498203
+   ],
+   "noSpecies.match": [
+    236.48481369018504,
+    241.18194580078148,
+    236.48090362548766,
+    236.3385200500473,
+    236.77387237548697,
+    235.70213317871193,
+    238.15412521362504
+   ],
+   "noSpecies.unwrap": [
+    233.5777282714835,
+    232.08856582641533,
+    231.6114425659193,
+    232.74745941162175,
+    226.8328666687018,
+    229.6251296997065,
+    233.10546874999795
+   ],
+   "ctor.await": [
+    72.54562377929756,
+    69.63167190551789,
+    71.58079147338847,
+    72.3086357116709,
+    70.07789611816403,
+    69.99225616455274,
+    71.84553146362404
+   ],
+   "ctor.match": [
+    100.68731307983323,
+    100.23622512817485,
+    100.97742080688448,
+    101.9475936889641,
+    99.08390045166097,
+    101.85041427612437,
+    101.98144912719475
+   ],
+   "ctor.unwrap": [
+    98.98347854614235,
+    99.65133666992206,
+    99.37849044799884,
+    99.1913795471179,
+    97.6114273071281,
+    99.36656951904307,
+    99.75023269653133
+   ]
+  }
+ },
+ "heap": {
+  "controlObjectBytes": {
+   "median": 40,
+   "min": 40,
+   "max": 56
+  },
+  "allocatedPerCall": {
+   "native.await": {
+    "median": 552,
+    "min": 480,
+    "max": 696.1875
+   },
+   "native.match": {
+    "median": 704.3125,
+    "min": 684.09375,
+    "max": 724.90625
+   },
+   "native.unwrap": {
+    "median": 704.09375,
+    "min": 699.375,
+    "max": 723.3125
+   },
+   "formC.await": {
+    "median": 1144.4375,
+    "min": 1087.1875,
+    "max": 1159.5625
+   },
+   "formC.match": {
+    "median": 1180.625,
+    "min": 1112.28125,
+    "max": 1208
+   },
+   "formC.unwrap": {
+    "median": 1128.28125,
+    "min": 1127.3125,
+    "max": 1154.3125
+   },
+   "subclass.await": {
+    "median": 1056.4375,
+    "min": 1055.21875,
+    "max": 1070.75
+   },
+   "subclass.match": {
+    "median": 888.09375,
+    "min": 672.25,
+    "max": 902.21875
+   },
+   "subclass.unwrap": {
+    "median": 848.09375,
+    "min": 632.0625,
+    "max": 865.375
+   },
+   "of.await": {
+    "median": 1765.09375,
+    "min": 1701.5625,
+    "max": 1775.9375
+   },
+   "of.match": {
+    "median": 1552.09375,
+    "min": 1529.25,
+    "max": 1561.03125
+   },
+   "of.unwrap": {
+    "median": 1512.71875,
+    "min": 1478.625,
+    "max": 1558.53125
+   },
+   "noSpecies.await": {
+    "median": 1352.46875,
+    "min": 1339.65625,
+    "max": 1352.46875
+   },
+   "noSpecies.match": {
+    "median": 1840.71875,
+    "min": 1686.40625,
+    "max": 1853.0625
+   },
+   "noSpecies.unwrap": {
+    "median": 1800.40625,
+    "min": 1630.25,
+    "max": 1812.40625
+   },
+   "ctor.await": {
+    "median": 696.21875,
+    "min": 691.46875,
+    "max": 712.90625
+   },
+   "ctor.match": {
+    "median": 840.65625,
+    "min": 696.25,
+    "max": 889.09375
+   },
+   "ctor.unwrap": {
+    "median": 800,
+    "min": 656.125,
+    "max": 820.8125
+   }
+  },
+  "retained": {
+   "native.none": [
+    {
+     "bytesPerCall": 176.1804,
+     "source": "heap after gc",
+     "peakBytesPerCall": 389.4084
+    },
+    {
+     "bytesPerCall": 175.9668,
+     "source": "heap after gc",
+     "peakBytesPerCall": 336.648
+    },
+    {
+     "bytesPerCall": 176.028,
+     "source": "heap after gc",
+     "peakBytesPerCall": 337.7592
+    }
+   ],
+   "native.await": [
+    {
+     "bytesPerCall": 647.8392,
+     "source": "heap after gc",
+     "peakBytesPerCall": 650.8004
+    },
+    {
+     "bytesPerCall": 646.6948,
+     "source": "heap after gc",
+     "peakBytesPerCall": 840.2228
+    },
+    {
+     "bytesPerCall": 648.0552,
+     "source": "heap after gc",
+     "peakBytesPerCall": 834.9676
+    }
+   ],
+   "native.match": [
+    {
+     "bytesPerCall": 799.5136,
+     "source": "heap after gc",
+     "peakBytesPerCall": 998.5332
+    },
+    {
+     "bytesPerCall": 800.012,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1007.1264
+    },
+    {
+     "bytesPerCall": 800.352,
+     "source": "heap after gc",
+     "peakBytesPerCall": 985.912
+    }
+   ],
+   "native.unwrap": [
+    {
+     "bytesPerCall": 798.2176,
+     "source": "heap after gc",
+     "peakBytesPerCall": 992.6732
+    },
+    {
+     "bytesPerCall": 800.012,
+     "source": "heap after gc",
+     "peakBytesPerCall": 995.9552
+    },
+    {
+     "bytesPerCall": 799.918,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1012.422
+    }
+   ],
+   "formC.none": [
+    {
+     "bytesPerCall": 358.474,
+     "source": "heap after gc",
+     "peakBytesPerCall": 520.8088
+    },
+    {
+     "bytesPerCall": 358.1072,
+     "source": "heap after gc",
+     "peakBytesPerCall": 520.7752
+    },
+    {
+     "bytesPerCall": 359.6556,
+     "source": "heap after gc",
+     "peakBytesPerCall": 520.3504
+    }
+   ],
+   "formC.await": [
+    {
+     "bytesPerCall": 1144.0868,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1352.886
+    },
+    {
+     "bytesPerCall": 1144.534,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1353.5796
+    },
+    {
+     "bytesPerCall": 1144.0212,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1352.9312
+    }
+   ],
+   "formC.match": [
+    {
+     "bytesPerCall": 1230.3772,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1392.7428
+    },
+    {
+     "bytesPerCall": 1233.6264,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1393.65
+    },
+    {
+     "bytesPerCall": 1231.3964,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1393.444
+    }
+   ],
+   "formC.unwrap": [
+    {
+     "bytesPerCall": 1215.7972,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1377.8796
+    },
+    {
+     "bytesPerCall": 1215.8216,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1377.8796
+    },
+    {
+     "bytesPerCall": 1215.8232,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1377.8796
+    }
+   ],
+   "subclass.none": [
+    {
+     "bytesPerCall": 175.3668,
+     "source": "heap after gc",
+     "peakBytesPerCall": 432.18
+    },
+    {
+     "bytesPerCall": 176.0224,
+     "source": "heap after gc",
+     "peakBytesPerCall": 410.2204
+    },
+    {
+     "bytesPerCall": 175.9988,
+     "source": "heap after gc",
+     "peakBytesPerCall": 409.6856
+    }
+   ],
+   "subclass.await": [
+    {
+     "bytesPerCall": 960.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1202.5728
+    },
+    {
+     "bytesPerCall": 960.4804,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1218.0436
+    },
+    {
+     "bytesPerCall": 959.9972,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1221.804
+    }
+   ],
+   "subclass.match": [
+    {
+     "bytesPerCall": 839.872,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1030.9876
+    },
+    {
+     "bytesPerCall": 839.5136,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1037.2268
+    },
+    {
+     "bytesPerCall": 840.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1046.4876
+    }
+   ],
+   "subclass.unwrap": [
+    {
+     "bytesPerCall": 791.9704,
+     "source": "heap after gc",
+     "peakBytesPerCall": 998.1032
+    },
+    {
+     "bytesPerCall": 791.756,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1008.2092
+    },
+    {
+     "bytesPerCall": 791.9996,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1007.8808
+    }
+   ],
+   "of.none": [
+    {
+     "bytesPerCall": 640.6696,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1145.4596
+    },
+    {
+     "bytesPerCall": 640.9632,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1145.4308
+    },
+    {
+     "bytesPerCall": 640.9632,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1145.444
+    }
+   ],
+   "of.await": [
+    {
+     "bytesPerCall": 1425.0092,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1977.73
+    },
+    {
+     "bytesPerCall": 1425.1844,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1977.88
+    },
+    {
+     "bytesPerCall": 1423.6748,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1978.1136
+    }
+   ],
+   "of.match": [
+    {
+     "bytesPerCall": 1304.908,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1810.4964
+    },
+    {
+     "bytesPerCall": 1304.966,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1809.7392
+    },
+    {
+     "bytesPerCall": 1304.6996,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1809.7308
+    }
+   ],
+   "of.unwrap": [
+    {
+     "bytesPerCall": 1256.974,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1762.2516
+    },
+    {
+     "bytesPerCall": 1257.0148,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1762.25
+    },
+    {
+     "bytesPerCall": 1255.4936,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1762.1964
+    }
+   ],
+   "noSpecies.none": [
+    {
+     "bytesPerCall": 175.9464,
+     "source": "heap after gc",
+     "peakBytesPerCall": 405.5316
+    },
+    {
+     "bytesPerCall": 176.0076,
+     "source": "heap after gc",
+     "peakBytesPerCall": 408.956
+    },
+    {
+     "bytesPerCall": 175.7772,
+     "source": "heap after gc",
+     "peakBytesPerCall": 410.2224
+    }
+   ],
+   "noSpecies.await": [
+    {
+     "bytesPerCall": 1160.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1499.9368
+    },
+    {
+     "bytesPerCall": 1160.2596,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1511.116
+    },
+    {
+     "bytesPerCall": 1159.9996,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1517.5232
+    }
+   ],
+   "noSpecies.match": [
+    {
+     "bytesPerCall": 1552.21,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1973.9672
+    },
+    {
+     "bytesPerCall": 1551.7344,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1975.718
+    },
+    {
+     "bytesPerCall": 1552.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1978.1628
+    }
+   ],
+   "noSpecies.unwrap": [
+    {
+     "bytesPerCall": 1503.74,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1929.4492
+    },
+    {
+     "bytesPerCall": 1503.9508,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1931.2556
+    },
+    {
+     "bytesPerCall": 1503.78,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1931.936
+    }
+   ],
+   "ctor.none": [
+    {
+     "bytesPerCall": 175.9444,
+     "source": "heap after gc",
+     "peakBytesPerCall": 426.1444
+    },
+    {
+     "bytesPerCall": 176.0076,
+     "source": "heap after gc",
+     "peakBytesPerCall": 407.532
+    },
+    {
+     "bytesPerCall": 175.7772,
+     "source": "heap after gc",
+     "peakBytesPerCall": 404.86
+    }
+   ],
+   "ctor.await": [
+    {
+     "bytesPerCall": 648.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 856.8076
+    },
+    {
+     "bytesPerCall": 648.2112,
+     "source": "heap after gc",
+     "peakBytesPerCall": 859.9152
+    },
+    {
+     "bytesPerCall": 647.9972,
+     "source": "heap after gc",
+     "peakBytesPerCall": 875.2092
+    }
+   ],
+   "ctor.match": [
+    {
+     "bytesPerCall": 840.3716,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1033.568
+    },
+    {
+     "bytesPerCall": 840.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1046.6632
+    },
+    {
+     "bytesPerCall": 839.5136,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1049.7276
+    }
+   ],
+   "ctor.unwrap": [
+    {
+     "bytesPerCall": 792.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1003.6444
+    },
+    {
+     "bytesPerCall": 792.0104,
+     "source": "heap after gc",
+     "peakBytesPerCall": 1003.3516
+    },
+    {
+     "bytesPerCall": 790.5912,
+     "source": "heap after gc",
+     "peakBytesPerCall": 990.6196
+    }
+   ]
+  }
+ },
+ "burst": {
+  "size": 10000,
+  "runs": {
+   "native.await": [
+    {
+     "ms": 1.252599999999802,
+     "peakBytes": 7369232,
+     "retainedBytes": 5760448
+    },
+    {
+     "ms": 1.1860000000015134,
+     "peakBytes": 7394992,
+     "retainedBytes": 5780448
+    },
+    {
+     "ms": 1.392199999998411,
+     "peakBytes": 7369232,
+     "retainedBytes": 5758224
+    },
+    {
+     "ms": 1.586299999999028,
+     "peakBytes": 7369184,
+     "retainedBytes": 5738072
+    },
+    {
+     "ms": 1.4729000000006636,
+     "peakBytes": 7366856,
+     "retainedBytes": 5757856
+    },
+    {
+     "ms": 1.0980999999992491,
+     "peakBytes": 7388968,
+     "retainedBytes": 5762624
+    },
+    {
+     "ms": 1.4164999999993597,
+     "peakBytes": 7366856,
+     "retainedBytes": 5759240
+    },
+    {
+     "ms": 1.291799999999057,
+     "peakBytes": 7369232,
+     "retainedBytes": 5760448
+    },
+    {
+     "ms": 1.6409000000021479,
+     "peakBytes": 7366856,
+     "retainedBytes": 5758072
+    },
+    {
+     "ms": 1.3449000000000524,
+     "peakBytes": 7369232,
+     "retainedBytes": 5759488
+    },
+    {
+     "ms": 1.4310000000004948,
+     "peakBytes": 7366856,
+     "retainedBytes": 5759544
+    },
+    {
+     "ms": 1.341100000001461,
+     "peakBytes": 7369232,
+     "retainedBytes": 5760448
+    },
+    {
+     "ms": 1.3251000000018394,
+     "peakBytes": 7369232,
+     "retainedBytes": 5760448
+    },
+    {
+     "ms": 1.2263999999995576,
+     "peakBytes": 7369232,
+     "retainedBytes": 5758224
+    },
+    {
+     "ms": 1.3601999999991676,
+     "peakBytes": 7369232,
+     "retainedBytes": 5760448
+    }
+   ],
+   "native.match": [
+    {
+     "ms": 1.7086999999992258,
+     "peakBytes": 8889216,
+     "retainedBytes": 7257960
+    },
+    {
+     "ms": 1.558499999999185,
+     "peakBytes": 8889264,
+     "retainedBytes": 7280288
+    },
+    {
+     "ms": 1.7210000000013679,
+     "peakBytes": 8889264,
+     "retainedBytes": 7280504
+    },
+    {
+     "ms": 1.9894999999996799,
+     "peakBytes": 8894104,
+     "retainedBytes": 7277904
+    },
+    {
+     "ms": 1.441500000000815,
+     "peakBytes": 8616576,
+     "retainedBytes": 7005480
+    },
+    {
+     "ms": 1.6541999999972177,
+     "peakBytes": 8889216,
+     "retainedBytes": 7258392
+    },
+    {
+     "ms": 1.769799999998213,
+     "peakBytes": 8891600,
+     "retainedBytes": 7280448
+    },
+    {
+     "ms": 1.4277000000001863,
+     "peakBytes": 8911376,
+     "retainedBytes": 7282624
+    },
+    {
+     "ms": 1.9264000000002852,
+     "peakBytes": 8893008,
+     "retainedBytes": 7259264
+    },
+    {
+     "ms": 1.493399999999383,
+     "peakBytes": 8889264,
+     "retainedBytes": 7280504
+    },
+    {
+     "ms": 1.5072999999974854,
+     "peakBytes": 8891600,
+     "retainedBytes": 7280504
+    },
+    {
+     "ms": 1.6394000000000233,
+     "peakBytes": 8911376,
+     "retainedBytes": 7282624
+    },
+    {
+     "ms": 1.7907999999988533,
+     "peakBytes": 8891552,
+     "retainedBytes": 7257864
+    },
+    {
+     "ms": 1.4543999999987136,
+     "peakBytes": 8889264,
+     "retainedBytes": 7280232
+    },
+    {
+     "ms": 1.3765999999995984,
+     "peakBytes": 8916704,
+     "retainedBytes": 7287032
+    }
+   ],
+   "native.unwrap": [
+    {
+     "ms": 1.9110000000000582,
+     "peakBytes": 8896672,
+     "retainedBytes": 7271256
+    },
+    {
+     "ms": 1.6168999999972584,
+     "peakBytes": 8891832,
+     "retainedBytes": 7280448
+    },
+    {
+     "ms": 1.625400000000809,
+     "peakBytes": 8890856,
+     "retainedBytes": 7281648
+    },
+    {
+     "ms": 1.5011000000013155,
+     "peakBytes": 8893200,
+     "retainedBytes": 7276968
+    },
+    {
+     "ms": 1.506599999996979,
+     "peakBytes": 8891832,
+     "retainedBytes": 7280272
+    },
+    {
+     "ms": 1.89259999999922,
+     "peakBytes": 8894104,
+     "retainedBytes": 7270216
+    },
+    {
+     "ms": 1.7396999999982654,
+     "peakBytes": 8894592,
+     "retainedBytes": 7284872
+    },
+    {
+     "ms": 1.802800000001298,
+     "peakBytes": 8891784,
+     "retainedBytes": 7258072
+    },
+    {
+     "ms": 1.6062999999994645,
+     "peakBytes": 8894104,
+     "retainedBytes": 7273464
+    },
+    {
+     "ms": 1.4915000000000873,
+     "peakBytes": 8890856,
+     "retainedBytes": 7278240
+    },
+    {
+     "ms": 1.4897999999993772,
+     "peakBytes": 8891832,
+     "retainedBytes": 7280272
+    },
+    {
+     "ms": 1.9452999999994063,
+     "peakBytes": 8897112,
+     "retainedBytes": 7262440
+    },
+    {
+     "ms": 1.8858999999974912,
+     "peakBytes": 8896672,
+     "retainedBytes": 7276888
+    },
+    {
+     "ms": 1.4910000000018044,
+     "peakBytes": 8891832,
+     "retainedBytes": 7279488
+    },
+    {
+     "ms": 1.7458000000005995,
+     "peakBytes": 8891784,
+     "retainedBytes": 7258120
+    }
+   ],
+   "formC.await": [
+    {
+     "ms": 2.069999999999709,
+     "peakBytes": 12816648,
+     "retainedBytes": 10724264
+    },
+    {
+     "ms": 2.1301000000021304,
+     "peakBytes": 12810952,
+     "retainedBytes": 10722664
+    },
+    {
+     "ms": 2.2945999999974447,
+     "peakBytes": 12810832,
+     "retainedBytes": 10723992
+    },
+    {
+     "ms": 2.251299999999901,
+     "peakBytes": 12810952,
+     "retainedBytes": 10720608
+    },
+    {
+     "ms": 2.230100000000675,
+     "peakBytes": 12810832,
+     "retainedBytes": 10723928
+    },
+    {
+     "ms": 2.5336999999999534,
+     "peakBytes": 12813712,
+     "retainedBytes": 10721808
+    },
+    {
+     "ms": 2.0898999999990338,
+     "peakBytes": 12809976,
+     "retainedBytes": 10725088
+    },
+    {
+     "ms": 1.8862999999983003,
+     "peakBytes": 12811696,
+     "retainedBytes": 10719496
+    },
+    {
+     "ms": 2.3170999999965716,
+     "peakBytes": 12814032,
+     "retainedBytes": 10723072
+    },
+    {
+     "ms": 2.1762999999991735,
+     "peakBytes": 12810952,
+     "retainedBytes": 10723928
+    },
+    {
+     "ms": 2.2836000000024796,
+     "peakBytes": 12810832,
+     "retainedBytes": 10723928
+    },
+    {
+     "ms": 2.2841000000007625,
+     "peakBytes": 12817264,
+     "retainedBytes": 10725312
+    },
+    {
+     "ms": 2.1225000000013097,
+     "peakBytes": 12816320,
+     "retainedBytes": 10723016
+    },
+    {
+     "ms": 2.251299999999901,
+     "peakBytes": 12809424,
+     "retainedBytes": 10723984
+    },
+    {
+     "ms": 2.041300000000774,
+     "peakBytes": 12815672,
+     "retainedBytes": 10718120
+    }
+   ],
+   "formC.match": [
+    {
+     "ms": 2.377599999999802,
+     "peakBytes": 13211576,
+     "retainedBytes": 11591056
+    },
+    {
+     "ms": 2.3699999999989814,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    },
+    {
+     "ms": 2.3540999999968335,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    },
+    {
+     "ms": 2.2295000000012806,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    },
+    {
+     "ms": 2.2833000000027823,
+     "peakBytes": 13211576,
+     "retainedBytes": 11591256
+    },
+    {
+     "ms": 2.4654000000009546,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    },
+    {
+     "ms": 2.3531000000002678,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    },
+    {
+     "ms": 2.256600000000617,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    },
+    {
+     "ms": 2.1763999999966472,
+     "peakBytes": 13211576,
+     "retainedBytes": 11589792
+    },
+    {
+     "ms": 2.258299999997689,
+     "peakBytes": 13211576,
+     "retainedBytes": 11588832
+    },
+    {
+     "ms": 2.472799999999552,
+     "peakBytes": 13211576,
+     "retainedBytes": 11589928
+    },
+    {
+     "ms": 2.2181999999993423,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    },
+    {
+     "ms": 2.21310000000085,
+     "peakBytes": 13211576,
+     "retainedBytes": 11588832
+    },
+    {
+     "ms": 2.169099999999162,
+     "peakBytes": 13211576,
+     "retainedBytes": 11590096
+    },
+    {
+     "ms": 2.457800000000134,
+     "peakBytes": 13211576,
+     "retainedBytes": 11592152
+    }
+   ],
+   "formC.unwrap": [
+    {
+     "ms": 2.13379999999961,
+     "peakBytes": 13050000,
+     "retainedBytes": 11430984
+    },
+    {
+     "ms": 2.299800000000687,
+     "peakBytes": 13050000,
+     "retainedBytes": 11426984
+    },
+    {
+     "ms": 2.484099999997852,
+     "peakBytes": 13047240,
+     "retainedBytes": 11404696
+    },
+    {
+     "ms": 2.3910999999970954,
+     "peakBytes": 13055448,
+     "retainedBytes": 11435392
+    },
+    {
+     "ms": 2.2419000000008964,
+     "peakBytes": 13050000,
+     "retainedBytes": 11430984
+    },
+    {
+     "ms": 2.4892999999974563,
+     "peakBytes": 13047432,
+     "retainedBytes": 11428416
+    },
+    {
+     "ms": 2.1960999999973865,
+     "peakBytes": 13050000,
+     "retainedBytes": 11433472
+    },
+    {
+     "ms": 2.0944999999992433,
+     "peakBytes": 13050000,
+     "retainedBytes": 11430024
+    },
+    {
+     "ms": 2.095499999999447,
+     "peakBytes": 13050000,
+     "retainedBytes": 11430984
+    },
+    {
+     "ms": 2.2563999999983935,
+     "peakBytes": 13050000,
+     "retainedBytes": 11430984
+    },
+    {
+     "ms": 2.2867000000005646,
+     "peakBytes": 13047432,
+     "retainedBytes": 11428480
+    },
+    {
+     "ms": 2.019800000001851,
+     "peakBytes": 13050000,
+     "retainedBytes": 11431352
+    },
+    {
+     "ms": 2.307600000000093,
+     "peakBytes": 13050000,
+     "retainedBytes": 11430984
+    },
+    {
+     "ms": 2.2556000000004133,
+     "peakBytes": 13050000,
+     "retainedBytes": 11431048
+    },
+    {
+     "ms": 2.5165999999990163,
+     "peakBytes": 13050000,
+     "retainedBytes": 11430024
+    }
+   ],
+   "subclass.await": [
+    {
+     "ms": 1.402699999998731,
+     "peakBytes": 11933440,
+     "retainedBytes": 8866704
+    },
+    {
+     "ms": 1.3175000000010186,
+     "peakBytes": 11933440,
+     "retainedBytes": 8871280
+    },
+    {
+     "ms": 1.5707000000002154,
+     "peakBytes": 11925608,
+     "retainedBytes": 8864256
+    },
+    {
+     "ms": 1.2691000000013446,
+     "peakBytes": 11931064,
+     "retainedBytes": 8866288
+    },
+    {
+     "ms": 1.6124999999992724,
+     "peakBytes": 11933024,
+     "retainedBytes": 8846600
+    },
+    {
+     "ms": 1.2678999999989173,
+     "peakBytes": 11932656,
+     "retainedBytes": 8866904
+    },
+    {
+     "ms": 1.3878999999978987,
+     "peakBytes": 11933440,
+     "retainedBytes": 8868928
+    },
+    {
+     "ms": 1.4808999999986554,
+     "peakBytes": 11933440,
+     "retainedBytes": 8868928
+    },
+    {
+     "ms": 1.2455000000009022,
+     "peakBytes": 11895952,
+     "retainedBytes": 8866704
+    },
+    {
+     "ms": 1.4193999999988591,
+     "peakBytes": 11933440,
+     "retainedBytes": 8868928
+    },
+    {
+     "ms": 1.273800000002666,
+     "peakBytes": 11933440,
+     "retainedBytes": 8871008
+    },
+    {
+     "ms": 1.4495999999999185,
+     "peakBytes": 11933440,
+     "retainedBytes": 8868928
+    },
+    {
+     "ms": 1.2682999999997264,
+     "peakBytes": 11933440,
+     "retainedBytes": 8866704
+    },
+    {
+     "ms": 1.4661999999989348,
+     "peakBytes": 11933440,
+     "retainedBytes": 8868928
+    },
+    {
+     "ms": 1.4272999999993772,
+     "peakBytes": 11931064,
+     "retainedBytes": 8871336
+    }
+   ],
+   "subclass.match": [
+    {
+     "ms": 1.4608999999982188,
+     "peakBytes": 10246664,
+     "retainedBytes": 7684880
+    },
+    {
+     "ms": 1.510099999999511,
+     "peakBytes": 10252392,
+     "retainedBytes": 7680424
+    },
+    {
+     "ms": 1.7175000000024738,
+     "peakBytes": 10246664,
+     "retainedBytes": 7680608
+    },
+    {
+     "ms": 1.4645000000018626,
+     "peakBytes": 10210744,
+     "retainedBytes": 7680232
+    },
+    {
+     "ms": 1.5496000000021013,
+     "peakBytes": 10081704,
+     "retainedBytes": 7679608
+    },
+    {
+     "ms": 1.4369000000006054,
+     "peakBytes": 10160784,
+     "retainedBytes": 7680504
+    },
+    {
+     "ms": 2.109500000002299,
+     "peakBytes": 10256080,
+     "retainedBytes": 7662504
+    },
+    {
+     "ms": 1.59860000000117,
+     "peakBytes": 10047320,
+     "retainedBytes": 7678504
+    },
+    {
+     "ms": 1.3937000000005355,
+     "peakBytes": 10250936,
+     "retainedBytes": 7680504
+    },
+    {
+     "ms": 1.3417999999983294,
+     "peakBytes": 10246464,
+     "retainedBytes": 7680608
+    },
+    {
+     "ms": 1.8568999999988591,
+     "peakBytes": 10256080,
+     "retainedBytes": 7662496
+    },
+    {
+     "ms": 1.9085999999988417,
+     "peakBytes": 10250952,
+     "retainedBytes": 7673672
+    },
+    {
+     "ms": 1.4304000000011001,
+     "peakBytes": 10212216,
+     "retainedBytes": 7680504
+    },
+    {
+     "ms": 1.852999999999156,
+     "peakBytes": 10257856,
+     "retainedBytes": 7661576
+    },
+    {
+     "ms": 1.483299999999872,
+     "peakBytes": 10122352,
+     "retainedBytes": 7678280
+    }
+   ],
+   "subclass.unwrap": [
+    {
+     "ms": 1.6746000000021013,
+     "peakBytes": 9778720,
+     "retainedBytes": 7204816
+    },
+    {
+     "ms": 1.4358000000029278,
+     "peakBytes": 9769120,
+     "retainedBytes": 7200552
+    },
+    {
+     "ms": 1.5085999999973865,
+     "peakBytes": 9769120,
+     "retainedBytes": 7203864
+    },
+    {
+     "ms": 1.440999999998894,
+     "peakBytes": 9773392,
+     "retainedBytes": 7199488
+    },
+    {
+     "ms": 1.4840000000003783,
+     "peakBytes": 9769120,
+     "retainedBytes": 7204824
+    },
+    {
+     "ms": 1.5367000000005646,
+     "peakBytes": 9743496,
+     "retainedBytes": 7204816
+    },
+    {
+     "ms": 1.7815000000009604,
+     "peakBytes": 9778232,
+     "retainedBytes": 7200512
+    },
+    {
+     "ms": 1.6317000000017288,
+     "peakBytes": 9722152,
+     "retainedBytes": 7217256
+    },
+    {
+     "ms": 1.4500000000007276,
+     "peakBytes": 9756648,
+     "retainedBytes": 7191120
+    },
+    {
+     "ms": 1.5781999999999243,
+     "peakBytes": 9769056,
+     "retainedBytes": 7200552
+    },
+    {
+     "ms": 1.7092999999986205,
+     "peakBytes": 9745496,
+     "retainedBytes": 7199552
+    },
+    {
+     "ms": 1.5909000000028755,
+     "peakBytes": 9709488,
+     "retainedBytes": 7214544
+    },
+    {
+     "ms": 1.4879000000000815,
+     "peakBytes": 9769120,
+     "retainedBytes": 7203864
+    },
+    {
+     "ms": 1.8359999999993306,
+     "peakBytes": 9680488,
+     "retainedBytes": 7200512
+    },
+    {
+     "ms": 1.8195999999988999,
+     "peakBytes": 9793272,
+     "retainedBytes": 7214760
+    }
+   ],
+   "of.await": [
+    {
+     "ms": 2.1058999999986554,
+     "peakBytes": 19073216,
+     "retainedBytes": 13540424
+    },
+    {
+     "ms": 2.06420000000071,
+     "peakBytes": 19071848,
+     "retainedBytes": 13539624
+    },
+    {
+     "ms": 2.051499999997759,
+     "peakBytes": 19071800,
+     "retainedBytes": 13539560
+    },
+    {
+     "ms": 2.277799999999843,
+     "peakBytes": 19071800,
+     "retainedBytes": 13539560
+    },
+    {
+     "ms": 2.2582000000002154,
+     "peakBytes": 19073176,
+     "retainedBytes": 13539784
+    },
+    {
+     "ms": 2.2006000000001222,
+     "peakBytes": 19071896,
+     "retainedBytes": 13539344
+    },
+    {
+     "ms": 2.2286999999996624,
+     "peakBytes": 19071848,
+     "retainedBytes": 13539560
+    },
+    {
+     "ms": 2.2969999999986612,
+     "peakBytes": 19071584,
+     "retainedBytes": 13539344
+    },
+    {
+     "ms": 2.1524999999965075,
+     "peakBytes": 19071896,
+     "retainedBytes": 13539560
+    },
+    {
+     "ms": 2.296599999997852,
+     "peakBytes": 19073368,
+     "retainedBytes": 13509656
+    },
+    {
+     "ms": 2.1190999999998894,
+     "peakBytes": 19069424,
+     "retainedBytes": 13537184
+    },
+    {
+     "ms": 2.2317000000002736,
+     "peakBytes": 19069256,
+     "retainedBytes": 13536968
+    },
+    {
+     "ms": 2.1792999999997846,
+     "peakBytes": 19071800,
+     "retainedBytes": 13539560
+    },
+    {
+     "ms": 2.058899999999994,
+     "peakBytes": 19071800,
+     "retainedBytes": 13539560
+    },
+    {
+     "ms": 2.280900000001566,
+     "peakBytes": 19073240,
+     "retainedBytes": 13540880
+    }
+   ],
+   "of.match": [
+    {
+     "ms": 1.8787000000011176,
+     "peakBytes": 17390920,
+     "retainedBytes": 12339616
+    },
+    {
+     "ms": 1.8777000000009139,
+     "peakBytes": 17394840,
+     "retainedBytes": 12322936
+    },
+    {
+     "ms": 1.8246999999973923,
+     "peakBytes": 17392560,
+     "retainedBytes": 12338712
+    },
+    {
+     "ms": 1.855599999998958,
+     "peakBytes": 17390968,
+     "retainedBytes": 12338720
+    },
+    {
+     "ms": 1.8022999999993772,
+     "peakBytes": 17390824,
+     "retainedBytes": 12339616
+    },
+    {
+     "ms": 1.9864999999990687,
+     "peakBytes": 17390968,
+     "retainedBytes": 12339616
+    },
+    {
+     "ms": 2.1423999999969965,
+     "peakBytes": 17380880,
+     "retainedBytes": 12337920
+    },
+    {
+     "ms": 1.8465999999971245,
+     "peakBytes": 17391088,
+     "retainedBytes": 12339616
+    },
+    {
+     "ms": 1.7855999999992491,
+     "peakBytes": 17390824,
+     "retainedBytes": 12338656
+    },
+    {
+     "ms": 1.9090999999971245,
+     "peakBytes": 17390936,
+     "retainedBytes": 12338656
+    },
+    {
+     "ms": 1.878499999998894,
+     "peakBytes": 17380880,
+     "retainedBytes": 12332784
+    },
+    {
+     "ms": 1.8027000000001863,
+     "peakBytes": 17390872,
+     "retainedBytes": 12339616
+    },
+    {
+     "ms": 1.8317999999999302,
+     "peakBytes": 17391136,
+     "retainedBytes": 12337392
+    },
+    {
+     "ms": 2.101299999998446,
+     "peakBytes": 17390824,
+     "retainedBytes": 12337560
+    },
+    {
+     "ms": 1.7917000000015832,
+     "peakBytes": 17410800,
+     "retainedBytes": 12358536
+    }
+   ],
+   "of.unwrap": [
+    {
+     "ms": 1.9075000000011642,
+     "peakBytes": 16913224,
+     "retainedBytes": 11857568
+    },
+    {
+     "ms": 2.103900000001886,
+     "peakBytes": 16913288,
+     "retainedBytes": 11817688
+    },
+    {
+     "ms": 1.7593999999990046,
+     "peakBytes": 16913224,
+     "retainedBytes": 11859560
+    },
+    {
+     "ms": 1.6903999999994994,
+     "peakBytes": 16925128,
+     "retainedBytes": 11861928
+    },
+    {
+     "ms": 1.8158000000003085,
+     "peakBytes": 16918336,
+     "retainedBytes": 11863928
+    },
+    {
+     "ms": 1.887800000000425,
+     "peakBytes": 16903064,
+     "retainedBytes": 11865816
+    },
+    {
+     "ms": 1.8948999999993248,
+     "peakBytes": 16914816,
+     "retainedBytes": 11841768
+    },
+    {
+     "ms": 1.8391000000010536,
+     "peakBytes": 16908392,
+     "retainedBytes": 11862872
+    },
+    {
+     "ms": 1.7529000000031374,
+     "peakBytes": 16904424,
+     "retainedBytes": 11859984
+    },
+    {
+     "ms": 2.1323000000011234,
+     "peakBytes": 16913288,
+     "retainedBytes": 11857504
+    },
+    {
+     "ms": 1.843700000001263,
+     "peakBytes": 16913368,
+     "retainedBytes": 11840448
+    },
+    {
+     "ms": 1.7001999999993131,
+     "peakBytes": 16910032,
+     "retainedBytes": 11865608
+    },
+    {
+     "ms": 1.7142999999996391,
+     "peakBytes": 16904376,
+     "retainedBytes": 11859984
+    },
+    {
+     "ms": 2.059800000002724,
+     "peakBytes": 16913320,
+     "retainedBytes": 11859560
+    },
+    {
+     "ms": 1.7835999999988417,
+     "peakBytes": 16913224,
+     "retainedBytes": 11859560
+    }
+   ],
+   "noSpecies.await": [
+    {
+     "ms": 1.6836000000002969,
+     "peakBytes": 14916736,
+     "retainedBytes": 10883016
+    },
+    {
+     "ms": 1.5740000000005239,
+     "peakBytes": 14900248,
+     "retainedBytes": 10880568
+    },
+    {
+     "ms": 1.5434999999997672,
+     "peakBytes": 14893816,
+     "retainedBytes": 10877128
+    },
+    {
+     "ms": 1.6543999999994412,
+     "peakBytes": 14893448,
+     "retainedBytes": 10838824
+    },
+    {
+     "ms": 1.591099999997823,
+     "peakBytes": 14893816,
+     "retainedBytes": 10880232
+    },
+    {
+     "ms": 1.2554999999993015,
+     "peakBytes": 14917864,
+     "retainedBytes": 10863848
+    },
+    {
+     "ms": 1.634699999998702,
+     "peakBytes": 14893816,
+     "retainedBytes": 10878224
+    },
+    {
+     "ms": 1.4121999999988475,
+     "peakBytes": 14893816,
+     "retainedBytes": 10860848
+    },
+    {
+     "ms": 1.3166999999994005,
+     "peakBytes": 14915928,
+     "retainedBytes": 10862208
+    },
+    {
+     "ms": 1.720499999999447,
+     "peakBytes": 14893832,
+     "retainedBytes": 10879184
+    },
+    {
+     "ms": 1.5894999999982247,
+     "peakBytes": 14893816,
+     "retainedBytes": 10878392
+    },
+    {
+     "ms": 1.5136999999995169,
+     "peakBytes": 14893816,
+     "retainedBytes": 10861072
+    },
+    {
+     "ms": 1.3755999999993946,
+     "peakBytes": 14917384,
+     "retainedBytes": 10863664
+    },
+    {
+     "ms": 1.4759999999987485,
+     "peakBytes": 14893920,
+     "retainedBytes": 10878056
+    },
+    {
+     "ms": 1.7396999999982654,
+     "peakBytes": 14893816,
+     "retainedBytes": 10878088
+    }
+   ],
+   "noSpecies.match": [
+    {
+     "ms": 2.1859999999978754,
+     "peakBytes": 19419080,
+     "retainedBytes": 14797840
+    },
+    {
+     "ms": 2.319899999998597,
+     "peakBytes": 19345192,
+     "retainedBytes": 14800504
+    },
+    {
+     "ms": 2.1353999999992084,
+     "peakBytes": 19409736,
+     "retainedBytes": 14800448
+    },
+    {
+     "ms": 2.5305999999982305,
+     "peakBytes": 19391952,
+     "retainedBytes": 14798448
+    },
+    {
+     "ms": 1.9543999999987136,
+     "peakBytes": 19480032,
+     "retainedBytes": 14800504
+    },
+    {
+     "ms": 2.440099999999802,
+     "peakBytes": 19465040,
+     "retainedBytes": 14782496
+    },
+    {
+     "ms": 1.9376000000011118,
+     "peakBytes": 19500112,
+     "retainedBytes": 14800448
+    },
+    {
+     "ms": 2.0007000000005064,
+     "peakBytes": 19452592,
+     "retainedBytes": 14800504
+    },
+    {
+     "ms": 2.166799999999057,
+     "peakBytes": 19474368,
+     "retainedBytes": 14778072
+    },
+    {
+     "ms": 2.23240000000078,
+     "peakBytes": 19446272,
+     "retainedBytes": 14799544
+    },
+    {
+     "ms": 2.141799999997602,
+     "peakBytes": 19525240,
+     "retainedBytes": 14802784
+    },
+    {
+     "ms": 1.8778999999994994,
+     "peakBytes": 19452200,
+     "retainedBytes": 14800504
+    },
+    {
+     "ms": 2.254899999999907,
+     "peakBytes": 19473320,
+     "retainedBytes": 14782488
+    },
+    {
+     "ms": 2.1366000000016356,
+     "peakBytes": 19503376,
+     "retainedBytes": 14800504
+    },
+    {
+     "ms": 2.3804999999993015,
+     "peakBytes": 19375664,
+     "retainedBytes": 14796032
+    }
+   ],
+   "noSpecies.unwrap": [
+    {
+     "ms": 2.5511999999980617,
+     "peakBytes": 18931568,
+     "retainedBytes": 14335720
+    },
+    {
+     "ms": 2.2144999999982247,
+     "peakBytes": 18982656,
+     "retainedBytes": 14314936
+    },
+    {
+     "ms": 2.402200000000448,
+     "peakBytes": 18931848,
+     "retainedBytes": 14320272
+    },
+    {
+     "ms": 2.534800000001269,
+     "peakBytes": 18971224,
+     "retainedBytes": 14320448
+    },
+    {
+     "ms": 2.076600000000326,
+     "peakBytes": 18912248,
+     "retainedBytes": 14319488
+    },
+    {
+     "ms": 2.159800000001269,
+     "peakBytes": 18965336,
+     "retainedBytes": 14320448
+    },
+    {
+     "ms": 2.3729999999995925,
+     "peakBytes": 19017872,
+     "retainedBytes": 14320272
+    },
+    {
+     "ms": 2.016199999998207,
+     "peakBytes": 18964112,
+     "retainedBytes": 14319488
+    },
+    {
+     "ms": 2.337200000001758,
+     "peakBytes": 18869872,
+     "retainedBytes": 14315976
+    },
+    {
+     "ms": 2.8018000000010943,
+     "peakBytes": 18929064,
+     "retainedBytes": 14314880
+    },
+    {
+     "ms": 1.906299999998737,
+     "peakBytes": 18997152,
+     "retainedBytes": 14320272
+    },
+    {
+     "ms": 2.158900000002177,
+     "peakBytes": 18986728,
+     "retainedBytes": 14319488
+    },
+    {
+     "ms": 2.181400000001304,
+     "peakBytes": 18918856,
+     "retainedBytes": 14320448
+    },
+    {
+     "ms": 2.0253999999986263,
+     "peakBytes": 18888728,
+     "retainedBytes": 14315120
+    },
+    {
+     "ms": 2.382499999999709,
+     "peakBytes": 19025992,
+     "retainedBytes": 14339096
+    }
+   ],
+   "ctor.await": [
+    {
+     "ms": 0.984599999999773,
+     "peakBytes": 8327872,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.8616000000001804,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.8710999999966589,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760616
+    },
+    {
+     "ms": 0.8368000000009488,
+     "peakBytes": 8327856,
+     "retainedBytes": 5756080
+    },
+    {
+     "ms": 0.9231999999974505,
+     "peakBytes": 8329448,
+     "retainedBytes": 5761872
+    },
+    {
+     "ms": 0.8614999999990687,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.8174999999973807,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.8710000000028231,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.9025000000001455,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.867099999999482,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.8947000000007392,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.8614000000015949,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.8515999999981432,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 0.877200000002631,
+     "peakBytes": 8327856,
+     "retainedBytes": 5760552
+    },
+    {
+     "ms": 1.0105000000003201,
+     "peakBytes": 8304296,
+     "retainedBytes": 5757584
+    }
+   ],
+   "ctor.match": [
+    {
+     "ms": 1.5604999999995925,
+     "peakBytes": 10071096,
+     "retainedBytes": 7700744
+    },
+    {
+     "ms": 1.5882999999994354,
+     "peakBytes": 10246664,
+     "retainedBytes": 7682656
+    },
+    {
+     "ms": 1.4471000000012282,
+     "peakBytes": 10250936,
+     "retainedBytes": 7680504
+    },
+    {
+     "ms": 1.3629999999975553,
+     "peakBytes": 10209240,
+     "retainedBytes": 7680504
+    },
+    {
+     "ms": 1.462599999998929,
+     "peakBytes": 10247624,
+     "retainedBytes": 7681632
+    },
+    {
+     "ms": 1.5112999999983003,
+     "peakBytes": 10250936,
+     "retainedBytes": 7676032
+    },
+    {
+     "ms": 1.4003999999986263,
+     "peakBytes": 10250936,
+     "retainedBytes": 7678280
+    },
+    {
+     "ms": 1.4684000000015658,
+     "peakBytes": 10207792,
+     "retainedBytes": 7678280
+    },
+    {
+     "ms": 1.5850000000027649,
+     "peakBytes": 10165624,
+     "retainedBytes": 7678280
+    },
+    {
+     "ms": 1.4727999999995518,
+     "peakBytes": 10045560,
+     "retainedBytes": 7678968
+    },
+    {
+     "ms": 1.3803999999981897,
+     "peakBytes": 10144608,
+     "retainedBytes": 7678280
+    },
+    {
+     "ms": 1.3915000000015425,
+     "peakBytes": 10226800,
+     "retainedBytes": 7678280
+    },
+    {
+     "ms": 1.5900000000001455,
+     "peakBytes": 10250936,
+     "retainedBytes": 7674768
+    },
+    {
+     "ms": 1.7316000000027998,
+     "peakBytes": 10246664,
+     "retainedBytes": 7683616
+    },
+    {
+     "ms": 1.4075000000011642,
+     "peakBytes": 9950400,
+     "retainedBytes": 7700824
+    }
+   ],
+   "ctor.unwrap": [
+    {
+     "ms": 1.748199999998178,
+     "peakBytes": 9745952,
+     "retainedBytes": 7194880
+    },
+    {
+     "ms": 1.5757999999987078,
+     "peakBytes": 9769120,
+     "retainedBytes": 7200552
+    },
+    {
+     "ms": 1.4096000000026834,
+     "peakBytes": 9796560,
+     "retainedBytes": 7207088
+    },
+    {
+     "ms": 1.5387999999984459,
+     "peakBytes": 9767984,
+     "retainedBytes": 7204816
+    },
+    {
+     "ms": 1.747400000000198,
+     "peakBytes": 9769120,
+     "retainedBytes": 7204824
+    },
+    {
+     "ms": 1.9718999999968219,
+     "peakBytes": 9769120,
+     "retainedBytes": 7204824
+    },
+    {
+     "ms": 1.4959000000017113,
+     "peakBytes": 9769120,
+     "retainedBytes": 7204616
+    },
+    {
+     "ms": 1.5504000000000815,
+     "peakBytes": 9773392,
+     "retainedBytes": 7200512
+    },
+    {
+     "ms": 1.519400000001042,
+     "peakBytes": 9769120,
+     "retainedBytes": 7204824
+    },
+    {
+     "ms": 1.6727000000028056,
+     "peakBytes": 9766328,
+     "retainedBytes": 7200448
+    },
+    {
+     "ms": 1.4452999999994063,
+     "peakBytes": 9773392,
+     "retainedBytes": 7200512
+    },
+    {
+     "ms": 1.3251999999993131,
+     "peakBytes": 9769120,
+     "retainedBytes": 7200344
+    },
+    {
+     "ms": 1.5423999999984517,
+     "peakBytes": 9769120,
+     "retainedBytes": 7204824
+    },
+    {
+     "ms": 1.5393999999978405,
+     "peakBytes": 9766552,
+     "retainedBytes": 7202320
+    },
+    {
+     "ms": 1.509200000000419,
+     "peakBytes": 9769120,
+     "retainedBytes": 7204608
+    }
+   ]
+  }
+ },
+ "elapsedMs": 31076.0794,
+ "sink": "+"
+}

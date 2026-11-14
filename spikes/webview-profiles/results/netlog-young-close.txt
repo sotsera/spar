@@ -1,0 +1,14 @@
+Net log of one young close (reputation checking on). Times in ms relative to CLOSE-START; the browser exited at about 6,530 ms.
+Source: artifacts/webview-profiles/netlog-young.json (Chromium --log-net-log, capture mode Default).
+   19 URL_REQUEST                 -107 ..    6477 https://config.edge.skype.com/config/v1/Edge/157.0.4341.46?clientid=<redacted>&agents=EdgeConfig%2CEdgeFirstRunConfig&osname=win&channel=stable&client=webview&osarch=x86_64&osver=10.0.26320&devicefamily=desktop&deviceform=&uma=1&sessionid=0&userid=&mngd=0&ent=1&installdate=<redacted>&edu=0&vm=0
+   37 SSL_CONNECT_JOB             -102 ..    -102 
+   45 SSL_CONNECT_JOB             -101 ..    -101 
+   47 SSL_CONNECT_JOB             -101 ..    -101 
+   51 URL_REQUEST                  -88 ..    6477 https://nav-edge.smartscreen.microsoft.com/api/browser/edge/navigate/3
+   63 SSL_CONNECT_JOB              -34 ..    6478 
+   65 URL_REQUEST                  -34 ..     -33 https://app.localhost/probe.js
+   66 URL_REQUEST                  -26 ..     -26 https://app.localhost/favicon.ico
+   67 SSL_CONNECT_JOB              -25 ..    6478 
+   69 URL_REQUEST                   -3 ..      -2 https://app.localhost/cacheable.txt
+   70 URL_REQUEST                   -1 ..      -1 https://app.localhost/_spar/result
+last event at 6478 ms relative

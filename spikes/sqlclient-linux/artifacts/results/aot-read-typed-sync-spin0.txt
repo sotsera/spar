@@ -1,0 +1,7 @@
+exit 0 wallMs 3149
+RUN runtime=aot mode=read arg=typed-sync sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+RUN 0 rows=1000000 ms=1011 rowsPerSec=989257 allocatedMB=327.2 checksum=532994389691
+RUN 1 rows=1000000 ms=1061 rowsPerSec=942627 allocatedMB=327.1 checksum=532994389691
+RUN 2 rows=1000000 ms=1013 rowsPerSec=986733 allocatedMB=327.1 checksum=532994389691
+RESULT read variant=typed-sync rows=1000000 medianMs=1013 rowsPerSec=986733 payloadMBps=192.9 runsMs=[1011, 1061, 1013] checksum=532994389691
+MEM end peakWorkingSetMB=50.8 workingSetMB=50.8 rssAnonMB=24.8 allocatedMB=982.8 gc0=54 gc1=1 gc2=0 cpuMs=4844

@@ -1,0 +1,225 @@
+# analyzer: Microsoft.Build.TaskAuthoring.Analyzer 15.1.0.0, Roslyn host 5.9.0.0
+analyzer MultiThreadableTaskAnalyzer: MSBuildTask0001(Info), MSBuildTask0002(Warning), MSBuildTask0003(Warning), MSBuildTask0004(Warning), MSBuildTask0005(Warning), MSBuildTask0006(Info), MSBuildTask0007(Info), MSBuildTask0008(Info), MSBuildTask0009(Info), MSBuildTask0010(Info), MSBuildTask0011(Info), MSBuildTask0012(Warning), MSBuildTask0013(Info,disabled), MSBuildTask0014(Warning)
+analyzer MultiThreadableTaskDeclarationAnalyzer: MSBuildTask0012(Warning), MSBuildTask0013(Info,disabled), MSBuildTask0014(Warning)
+analyzer PreferTypedParameterAnalyzer: MSBuildTask0006(Info), MSBuildTask0007(Info), MSBuildTask0008(Info)
+suppressor RequiredTaskPropertyInitializationSuppressor: MSBuildTaskSPR0001->CS8618
+analyzer TaskEnvironmentConstructorInjectionAnalyzer: MSBuildTask0011(Info)
+analyzer TransitiveCallChainAnalyzer: MSBuildTask0005(Warning)
+analyzer UnsupportedTaskItemTypeAnalyzer: MSBuildTask0009(Info), MSBuildTask0010(Info)
+fixer MultiThreadableTaskCodeFixProvider: ids [MSBuildTask0002, MSBuildTask0003], [ExportCodeFixProvider]=absent, [Shared]=False, mef2Export=False, fixAll=BatchFixAllProvider
+fixer PreferTypedParameterCodeFixProvider: ids [MSBuildTask0006, MSBuildTask0007, MSBuildTask0008], [ExportCodeFixProvider]=absent, [Shared]=False, mef2Export=False, fixAll=PreferTypedParameterFixAllProvider
+# original: compile errors 0, analyzer diagnostics 81
+
+R0001_NeverSafe.cs:12 MSBuildTask0011: no fix offered
+R0001_NeverSafe.cs:18 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:19 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:20 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:21 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:22 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:23 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:24 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:25 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:26 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:29 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:34 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:35 MSBuildTask0001: no fix offered
+R0001_NeverSafe.cs:47 MSBuildTask0001: no fix offered
+R0002_TaskEnvironment.cs:9 MSBuildTask0011: no fix offered
+R0002_TaskEnvironment.cs:15 MSBuildTask0002: 'Use TaskEnvironment.ProjectDirectory' -> compiles: yes, same diagnostic left on line: 0
+    - var cwd = Environment.CurrentDirectory; // expect: MSBuildTask0002
+    + var cwd = TaskEnvironment.ProjectDirectory; // expect: MSBuildTask0002
+R0002_TaskEnvironment.cs:16 MSBuildTask0002: 'Use TaskEnvironment.ProjectDirectory' -> compiles: NO, same diagnostic left on line: 0
+    - Environment.CurrentDirectory = cwd; // expect: MSBuildTask0002
+    + TaskEnvironment.ProjectDirectory = cwd; // expect: MSBuildTask0002
+      error CS0200: Property or indexer 'TaskEnvironment.ProjectDirectory' cannot be assigned to -- it is read only
+R0002_TaskEnvironment.cs:17 MSBuildTask0002: 'Use TaskEnvironment.ProjectDirectory' -> compiles: yes, same diagnostic left on line: 0
+    - var cwd2 = Directory.GetCurrentDirectory(); // expect: MSBuildTask0002
+    + var cwd2 = TaskEnvironment.ProjectDirectory; // expect: MSBuildTask0002
+R0002_TaskEnvironment.cs:18 MSBuildTask0002: 'Use TaskEnvironment.GetEnvironmentVariable()' -> compiles: yes, same diagnostic left on line: 1
+    - var home = Environment.GetEnvironmentVariable("HOME"); // expect: MSBuildTask0002
+    + var home = TaskEnvironment.GetEnvironmentVariable("HOME"); // expect: MSBuildTask0002
+R0002_TaskEnvironment.cs:19 MSBuildTask0002: 'Use TaskEnvironment.GetEnvironmentVariable()' -> compiles: NO, same diagnostic left on line: 0
+    - var user = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User); // expect: MSBuildTask0002
+    + var user = TaskEnvironment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User); // expect: MSBuildTask0002
+      error CS1501: No overload for method 'GetEnvironmentVariable' takes 2 arguments
+R0002_TaskEnvironment.cs:20 MSBuildTask0002: 'Use TaskEnvironment.SetEnvironmentVariable()' -> compiles: yes, same diagnostic left on line: 0
+    - Environment.SetEnvironmentVariable("SPIKE_VAR", "1"); // expect: MSBuildTask0002
+    + TaskEnvironment.SetEnvironmentVariable("SPIKE_VAR", "1"); // expect: MSBuildTask0002
+R0002_TaskEnvironment.cs:21 MSBuildTask0002: 'Use TaskEnvironment.GetEnvironmentVariables()' -> compiles: yes, same diagnostic left on line: 0
+    - var all = Environment.GetEnvironmentVariables(); // expect: MSBuildTask0002
+    + var all = TaskEnvironment.GetEnvironmentVariables(); // expect: MSBuildTask0002
+R0002_TaskEnvironment.cs:22 MSBuildTask0002: no fix offered
+R0002_TaskEnvironment.cs:23 MSBuildTask0002: no fix offered
+R0002_TaskEnvironment.cs:24 MSBuildTask0002: 'Use TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var full = Path.GetFullPath("relative/file.txt"); // expect: MSBuildTask0002
+    + var full = TaskEnvironment.GetAbsolutePath("relative/file.txt"); // expect: MSBuildTask0002
+R0002_TaskEnvironment.cs:25 MSBuildTask0002: no fix offered
+R0002_TaskEnvironment.cs:26 MSBuildTask0002: no fix offered
+R0002_TaskEnvironment.cs:27 MSBuildTask0002: no fix offered
+R0002_TaskEnvironment.cs:29 MSBuildTask0002: no fix offered
+R0002_TaskEnvironment.cs:30 MSBuildTask0002: no fix offered
+R0003_AbsolutePaths.cs:8 MSBuildTask0011: no fix offered
+R0003_AbsolutePaths.cs:17 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var exists = File.Exists(relative); // expect: MSBuildTask0003
+    + var exists = File.Exists(TaskEnvironment.GetAbsolutePath(relative)); // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:18 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - File.WriteAllText(relative, "contents"); // expect: MSBuildTask0003
+    + File.WriteAllText(TaskEnvironment.GetAbsolutePath(relative), "contents"); // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:19 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 2
+    - File.Copy(relative, "obj/copy.txt"); // expect: MSBuildTask0003 (one per call, not per argument)
+    + File.Copy(TaskEnvironment.GetAbsolutePath(relative), "obj/copy.txt"); // expect: MSBuildTask0003 (one per call, not per argument)
+R0003_AbsolutePaths.cs:20 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - Directory.CreateDirectory("obj/dir"); // expect: MSBuildTask0003
+    + Directory.CreateDirectory(TaskEnvironment.GetAbsolutePath("obj/dir")); // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:21 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var files = Directory.GetFiles("obj", "*.txt"); // expect: MSBuildTask0003
+    + var files = Directory.GetFiles(TaskEnvironment.GetAbsolutePath("obj"), "*.txt"); // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:22 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var fileInfo = new FileInfo(relative); // expect: MSBuildTask0003
+    + var fileInfo = new FileInfo(TaskEnvironment.GetAbsolutePath(relative)); // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:23 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var dirInfo = new DirectoryInfo("obj"); // expect: MSBuildTask0003
+    + var dirInfo = new DirectoryInfo(TaskEnvironment.GetAbsolutePath("obj")); // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:24 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 1
+    - using (var stream = new FileStream(relative, FileMode.Open)) // expect: MSBuildTask0003
+    + using (var stream = new FileStream(TaskEnvironment.GetAbsolutePath(relative), FileMode.Open)) // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:25 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - using (var reader = new StreamReader(relative)) // expect: MSBuildTask0003
+    + using (var reader = new StreamReader(TaskEnvironment.GetAbsolutePath(relative))) // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:26 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - using (var writer = new StreamWriter(relative)) // expect: MSBuildTask0003
+    + using (var writer = new StreamWriter(TaskEnvironment.GetAbsolutePath(relative))) // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:27 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - using (var watcher = new FileSystemWatcher("obj")) // expect: MSBuildTask0003
+    + using (var watcher = new FileSystemWatcher(TaskEnvironment.GetAbsolutePath("obj"))) // expect: MSBuildTask0003
+R0003_AbsolutePaths.cs:40 MSBuildTask0007: no fix offered
+R0003_AbsolutePaths.cs:41 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var itemSpec = File.Exists(item.ItemSpec); // expect: MSBuildTask0003 MSBuildTask0007
+    + var itemSpec = File.Exists(TaskEnvironment.GetAbsolutePath(item.ItemSpec)); // expect: MSBuildTask0003 MSBuildTask0007
+R0003_AbsolutePaths.cs:41 MSBuildTask0007: no fix offered
+R0003_AbsolutePaths.cs:47 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var combinedRelative = File.Exists(Path.Combine("obj", "x.txt")); // expect: ?
+    + var combinedRelative = File.Exists(TaskEnvironment.GetAbsolutePath(Path.Combine("obj", "x.txt"))); // expect: ?
+R0003_AbsolutePaths.cs:48 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 0
+    - var valueOnly = File.Exists(absolute.Value); // expect: MSBuildTask0003
+    + var valueOnly = File.Exists(TaskEnvironment.GetAbsolutePath(absolute.Value)); // expect: MSBuildTask0003
+R0004_Review.cs:9 MSBuildTask0011: no fix offered
+R0004_Review.cs:16 MSBuildTask0004: no fix offered
+R0004_Review.cs:17 MSBuildTask0004: no fix offered
+R0004_Review.cs:18 MSBuildTask0004: no fix offered
+R0004_Review.cs:19 MSBuildTask0004: no fix offered
+R0004_Review.cs:21 MSBuildTask0004: no fix offered
+R0004_Review.cs:23 MSBuildTask0004: no fix offered
+R0004_Review.cs:24 MSBuildTask0004: no fix offered
+R0004_Review.cs:25 MSBuildTask0004: no fix offered
+R0004_Review.cs:26 MSBuildTask0004: no fix offered
+R0004_Review.cs:27 MSBuildTask0004: no fix offered
+R0005_Transitive.cs:8 MSBuildTask0011: no fix offered
+R0005_Transitive.cs:21 MSBuildTask0005: no fix offered
+R0005_Transitive.cs:25 MSBuildTask0005: no fix offered
+R0005_Transitive.cs:26 MSBuildTask0005: no fix offered
+R0005_Transitive.cs:37 MSBuildTask0002: no fix offered
+R0006_TypedParameters.cs:8 MSBuildTask0011: no fix offered
+R0006_TypedParameters.cs:16 MSBuildTask0008: 'Change 'RelativeDefault' to 'AbsolutePath' and initialize it in Execute()' -> compiles: yes, same diagnostic left on line: 0
+    - public string RelativeDefault { get; set; } = "obj"; // expect: MSBuildTask0008
+    - 
+    - public ITaskItem Item { get; set; } = null!; // expect: none (0007 is reported where ItemSpec is parsed)
+    - 
+    - public override bool Execute()
+    - {
+    - var abs = TaskEnvironment.GetAbsolutePath(InputPath); // expect: MSBuildTask0006
+    - var file = new FileInfo(TaskEnvironment.GetAbsolutePath(FilePath)); // expect: MSBuildTask0006
+    - var rel = TaskEnvironment.GetAbsolutePath(RelativeDefault);
+    + public AbsolutePath RelativeDefault { get; set; } = default; // expect: MSBuildTask0008
+    + 
+    + public ITaskItem Item { get; set; } = null!; // expect: none (0007 is reported where ItemSpec is parsed)
+    + 
+    + public override bool Execute()
+    + {
+    + if (RelativeDefault == default)
+    + {
+    + RelativeDefault = TaskEnvironment.GetAbsolutePath("obj");
+    + }
+    + 
+    + var abs = TaskEnvironment.GetAbsolutePath(InputPath); // expect: MSBuildTask0006
+    + var file = new FileInfo(TaskEnvironment.GetAbsolutePath(FilePath)); // expect: MSBuildTask0006
+    + var rel = RelativeDefault;
+R0006_TypedParameters.cs:22 MSBuildTask0006: 'Change 'InputPath' to 'AbsolutePath'' -> compiles: yes, same diagnostic left on line: 0
+    - public string InputPath { get; set; } = ""; // expect: none (0006 is reported where the value is converted)
+    - 
+    - public string FilePath { get; set; } = ""; // expect: none
+    - 
+    - public string RelativeDefault { get; set; } = "obj"; // expect: MSBuildTask0008
+    - 
+    - public ITaskItem Item { get; set; } = null!; // expect: none (0007 is reported where ItemSpec is parsed)
+    - 
+    - public override bool Execute()
+    - {
+    - var abs = TaskEnvironment.GetAbsolutePath(InputPath); // expect: MSBuildTask0006
+    + public AbsolutePath InputPath { get; set; } = default; // expect: none (0006 is reported where the value is converted)
+    + 
+    + public string FilePath { get; set; } = ""; // expect: none
+    + 
+    + public string RelativeDefault { get; set; } = "obj"; // expect: MSBuildTask0008
+    + 
+    + public ITaskItem Item { get; set; } = null!; // expect: none (0007 is reported where ItemSpec is parsed)
+    + 
+    + public override bool Execute()
+    + {
+    + var abs = InputPath; // expect: MSBuildTask0006
+R0006_TypedParameters.cs:23 MSBuildTask0006: 'Change 'FilePath' to 'FileInfo'' -> compiles: yes, same diagnostic left on line: 0
+    - public string FilePath { get; set; } = ""; // expect: none
+    - 
+    - public string RelativeDefault { get; set; } = "obj"; // expect: MSBuildTask0008
+    - 
+    - public ITaskItem Item { get; set; } = null!; // expect: none (0007 is reported where ItemSpec is parsed)
+    - 
+    - public override bool Execute()
+    - {
+    - var abs = TaskEnvironment.GetAbsolutePath(InputPath); // expect: MSBuildTask0006
+    - var file = new FileInfo(TaskEnvironment.GetAbsolutePath(FilePath)); // expect: MSBuildTask0006
+    + public FileInfo FilePath { get; set; } = null!; // expect: none
+    + 
+    + public string RelativeDefault { get; set; } = "obj"; // expect: MSBuildTask0008
+    + 
+    + public ITaskItem Item { get; set; } = null!; // expect: none (0007 is reported where ItemSpec is parsed)
+    + 
+    + public override bool Execute()
+    + {
+    + var abs = TaskEnvironment.GetAbsolutePath(InputPath); // expect: MSBuildTask0006
+    + var file = new FileInfo(TaskEnvironment.GetAbsolutePath(FilePath.FullName)); // expect: MSBuildTask0006
+R0006_TypedParameters.cs:25 MSBuildTask0007: no fix offered
+R0006_TypedParameters.cs:33 MSBuildTask0009: no fix offered
+R0006_TypedParameters.cs:35 MSBuildTask0010: no fix offered
+R0011_Shape.cs:26 MSBuildTask0012: no fix offered
+R0011_Shape.cs:34 MSBuildTask0011: no fix offered
+R0011_Shape.cs:43 MSBuildTask0014: no fix offered
+R0011_Shape.cs:49 MSBuildTask0014: no fix offered
+R0011_Shape.cs:59 MSBuildTask0011: no fix offered
+R_Scope.cs:25 MSBuildTask0011: no fix offered
+R_StrictMode.cs:9 MSBuildTask0011: no fix offered
+R_StrictMode.cs:18 MSBuildTask0002: 'Use TaskEnvironment.ProjectDirectory' -> compiles: yes, same diagnostic left on line: 1
+    - var processDirectory = Directory.GetCurrentDirectory(); // expect: MSBuildTask0002
+    + var processDirectory = TaskEnvironment.ProjectDirectory; // expect: MSBuildTask0002
+R_StrictMode.cs:19 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 1
+    - var relativeHit = File.Exists("Leaf.proj"); // expect: MSBuildTask0003
+    + var relativeHit = File.Exists(TaskEnvironment.GetAbsolutePath("Leaf.proj")); // expect: MSBuildTask0003
+R_StrictMode.cs:24 MSBuildTask0003: 'Wrap with TaskEnvironment.GetAbsolutePath()' -> compiles: yes, same diagnostic left on line: 1
+    - File.WriteAllText("left-behind.txt", "x"); // expect: MSBuildTask0003
+    + File.WriteAllText(TaskEnvironment.GetAbsolutePath("left-behind.txt"), "x"); // expect: MSBuildTask0003
+R_StrictMode.cs:25 MSBuildTask0001: no fix offered
+
+# per rule: diagnostics / with a fix offered / fixes that compile
+MSBuildTask0001: 14 / 0 / 0
+MSBuildTask0002: 17 / 9 / 7
+MSBuildTask0003: 16 / 16 / 16
+MSBuildTask0004: 10 / 0 / 0
+MSBuildTask0005: 3 / 0 / 0
+MSBuildTask0006: 2 / 2 / 2
+MSBuildTask0007: 3 / 0 / 0
+MSBuildTask0008: 1 / 1 / 1
+MSBuildTask0009: 1 / 0 / 0
+MSBuildTask0010: 1 / 0 / 0
+MSBuildTask0011: 10 / 0 / 0
+MSBuildTask0012: 1 / 0 / 0
+MSBuildTask0014: 2 / 0 / 0

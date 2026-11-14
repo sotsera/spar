@@ -1,0 +1,187 @@
+Per role, median PSS in MB by library family (file-backed unless named anon or shared-memory-gpu).
+Families under 1 MB are omitted.
+
+electron-wayland-def               ready  electron-main        electron 55, anon 25, libc-and-system 11, gtk-gdk-gsk 4, shared-memory-gpu 2, other-files 1, cairo-pango-harfbuzz-freetype 1
+electron-wayland-def               ready  electron-zygote      electron 24, libc-and-system 3, anon 2
+electron-wayland-def               ready  electron-gpu-process llvm 49, electron 15, anon 13, mesa 11, shared-memory-gpu 3, libc-and-system 2
+electron-wayland-def               ready  electron-renderer    electron 31, anon 9
+electron-wayland-def               ready  electron-utility     electron 22, anon 3, libc-and-system 2
+electron-wayland-def               heavy  electron-main        electron 53, anon 24, libc-and-system 11, gtk-gdk-gsk 4, shared-memory-gpu 1, other-files 1, cairo-pango-harfbuzz-freetype 1
+electron-wayland-def               heavy  electron-zygote      electron 24, libc-and-system 3, anon 2
+electron-wayland-def               heavy  electron-gpu-process llvm 49, electron 15, anon 13, mesa 11, shared-memory-gpu 3, libc-and-system 2
+electron-wayland-def               heavy  electron-renderer    anon 411, electron 43, shared-memory-gpu 2
+electron-wayland-def               heavy  electron-utility     electron 22, anon 3, libc-and-system 2
+
+electron-wayland-empty             ready  electron-main        electron 56, anon 25, libc-and-system 11, gtk-gdk-gsk 4, shared-memory-gpu 2, other-files 1, cairo-pango-harfbuzz-freetype 1
+electron-wayland-empty             ready  electron-zygote      electron 24, libc-and-system 3, anon 2
+electron-wayland-empty             ready  electron-gpu-process llvm 49, electron 15, anon 13, mesa 11, shared-memory-gpu 2, libc-and-system 2
+electron-wayland-empty             ready  electron-renderer    electron 26, anon 8
+electron-wayland-empty             ready  electron-utility     electron 22, anon 3, libc-and-system 2
+
+electron-x11-def                   ready  electron-main        electron 53, anon 24, libc-and-system 5, gtk-gdk-gsk 3, cairo-pango-harfbuzz-freetype 1, other-files 1, shared-memory-gpu 1
+electron-x11-def                   ready  electron-zygote      electron 24, libc-and-system 3, anon 2
+electron-x11-def                   ready  electron-gpu-process llvm 49, electron 14, anon 14, mesa 12, libc-and-system 2, shared-memory-gpu 1
+electron-x11-def                   ready  electron-renderer    electron 30, anon 9
+electron-x11-def                   ready  electron-utility     electron 22, anon 3, libc-and-system 2
+electron-x11-def                   heavy  electron-main        electron 51, anon 22, libc-and-system 5, gtk-gdk-gsk 3, cairo-pango-harfbuzz-freetype 1, other-files 1, shared-memory-gpu 1
+electron-x11-def                   heavy  electron-zygote      electron 24, libc-and-system 3, anon 2
+electron-x11-def                   heavy  electron-gpu-process llvm 49, electron 14, anon 14, mesa 12, libc-and-system 2, shared-memory-gpu 2
+electron-x11-def                   heavy  electron-renderer    anon 412, electron 43, shared-memory-gpu 2
+electron-x11-def                   heavy  electron-utility     electron 22, anon 3, libc-and-system 2
+
+electron-x11-empty                 ready  electron-main        electron 54, anon 23, libc-and-system 5, gtk-gdk-gsk 3, cairo-pango-harfbuzz-freetype 1, other-files 1, shared-memory-gpu 1
+electron-x11-empty                 ready  electron-zygote      electron 24, libc-and-system 3, anon 2
+electron-x11-empty                 ready  electron-gpu-process llvm 49, electron 14, anon 14, mesa 12, libc-and-system 2
+electron-x11-empty                 ready  electron-renderer    electron 27, anon 8
+electron-x11-empty                 ready  electron-utility     electron 22, anon 3, libc-and-system 2
+
+floor-gtk3-wayland-def             ready  ui                   libc-and-system 9, gtk-gdk-gsk 7, cairo-pango-harfbuzz-freetype 4, anon 4, glib-gio 1, fonts-and-caches 1
+
+floor-gtk3-x11-def                 ready  ui                   llvm 22, gtk-gdk-gsk 5, anon 4, cairo-pango-harfbuzz-freetype 4, mesa 4, libc-and-system 3
+
+floor-gtk4-wayland-def             ready  ui                   anon 80, llvm 59, mesa 19, libc-and-system 9, gtk-gdk-gsk 8, cairo-pango-harfbuzz-freetype 4, other-files 2, gstreamer 1
+
+floor-gtk4-x11-def                 ready  ui                   anon 72, llvm 59, mesa 15, gtk-gdk-gsk 8, cairo-pango-harfbuzz-freetype 4, libc-and-system 4, other-files 2, gstreamer 1
+
+gtk3-wayland-def                   ready  ui                   anon 34, llvm 28, webkit 12, mesa 10, libc-and-system 9, gtk-gdk-gsk 7, javascriptcore 5, cairo-pango-harfbuzz-freetype 3, dotnet-app 1, shared-memory-gpu 1
+gtk3-wayland-def                   ready  web                  anon 79, llvm 40, webkit 37, mesa 9, javascriptcore 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-def                   ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk3-wayland-def                   heavy  ui                   anon 35, llvm 28, webkit 12, mesa 10, libc-and-system 9, gtk-gdk-gsk 7, javascriptcore 6, cairo-pango-harfbuzz-freetype 3, shared-memory-gpu 2, dotnet-app 1
+gtk3-wayland-def                   heavy  web                  anon 312, webkit 42, llvm 40, javascriptcore 13, mesa 9, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-def                   heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk3-wayland-empty                 ready  ui                   anon 34, llvm 28, webkit 12, mesa 10, libc-and-system 9, gtk-gdk-gsk 6, cairo-pango-harfbuzz-freetype 3, javascriptcore 3, dotnet-app 1, shared-memory-gpu 1
+gtk3-wayland-empty                 ready  web                  anon 66, llvm 38, webkit 32, mesa 8, javascriptcore 6, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-empty                 ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk3-wayland-empty-noaccel         ready  ui                   llvm 30, anon 25, mesa 13, webkit 13, libc-and-system 9, gtk-gdk-gsk 7, cairo-pango-harfbuzz-freetype 3, javascriptcore 3, dotnet-app 1
+gtk3-wayland-empty-noaccel         ready  web                  webkit 30, llvm 26, javascriptcore 6, anon 5, mesa 4, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-empty-noaccel         ready  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+
+gtk3-wayland-gtkonly               ready  ui                   libc-and-system 9, gtk-gdk-gsk 7, anon 5, cairo-pango-harfbuzz-freetype 4, dotnet-app 1
+
+gtk3-wayland-noaccel               ready  ui                   llvm 30, anon 26, mesa 13, webkit 13, libc-and-system 9, gtk-gdk-gsk 7, javascriptcore 5, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk3-wayland-noaccel               ready  web                  webkit 35, llvm 26, javascriptcore 8, anon 6, mesa 4, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-noaccel               ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk3-wayland-noaccel               heavy  ui                   llvm 30, anon 26, mesa 13, webkit 13, libc-and-system 9, gtk-gdk-gsk 7, javascriptcore 6, cairo-pango-harfbuzz-freetype 3, dotnet-app 1, shared-memory-gpu 1
+gtk3-wayland-noaccel               heavy  web                  anon 221, webkit 40, llvm 26, javascriptcore 13, mesa 4, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-noaccel               heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk3-wayland-sandbox               ready  ui                   anon 34, llvm 28, webkit 12, mesa 10, libc-and-system 9, javascriptcore 5, gtk-gdk-gsk 5, cairo-pango-harfbuzz-freetype 2, dotnet-app 1, shared-memory-gpu 1
+gtk3-wayland-sandbox               ready  web                  anon 79, llvm 40, webkit 37, mesa 9, javascriptcore 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-sandbox               ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk3-wayland-sandbox               heavy  ui                   anon 35, llvm 28, webkit 13, mesa 10, libc-and-system 9, javascriptcore 6, gtk-gdk-gsk 5, cairo-pango-harfbuzz-freetype 2, shared-memory-gpu 2, dotnet-app 1
+gtk3-wayland-sandbox               heavy  web                  anon 312, webkit 43, llvm 40, javascriptcore 13, mesa 9, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk3-wayland-sandbox               heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk3-x11-def                       ready  ui                   llvm 28, anon 22, webkit 12, mesa 7, javascriptcore 5, gtk-gdk-gsk 5, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk3-x11-def                       ready  web                  anon 79, llvm 40, webkit 37, mesa 9, javascriptcore 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-def                       ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk3-x11-def                       heavy  ui                   llvm 28, anon 22, webkit 12, mesa 7, javascriptcore 6, gtk-gdk-gsk 5, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk3-x11-def                       heavy  web                  anon 311, webkit 42, llvm 40, javascriptcore 13, mesa 9, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-def                       heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk3-x11-empty                     ready  ui                   llvm 28, anon 21, webkit 12, mesa 7, gtk-gdk-gsk 5, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, javascriptcore 3, dotnet-app 1
+gtk3-x11-empty                     ready  web                  anon 66, llvm 38, webkit 32, mesa 8, javascriptcore 6, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-empty                     ready  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+
+gtk3-x11-empty-noaccel             ready  ui                   llvm 26, webkit 13, anon 6, gtk-gdk-gsk 5, mesa 4, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, javascriptcore 3, dotnet-app 1
+gtk3-x11-empty-noaccel             ready  web                  webkit 30, llvm 26, javascriptcore 6, anon 5, mesa 4, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-empty-noaccel             ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk3-x11-gtkonly                   ready  ui                   gtk-gdk-gsk 5, cairo-pango-harfbuzz-freetype 4, anon 4, libc-and-system 3, dotnet-app 1
+
+gtk3-x11-noaccel                   ready  ui                   llvm 26, webkit 13, anon 7, javascriptcore 5, gtk-gdk-gsk 5, mesa 4, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk3-x11-noaccel                   ready  web                  webkit 35, llvm 26, javascriptcore 8, anon 6, mesa 4, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-noaccel                   ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk3-x11-noaccel                   heavy  ui                   llvm 26, webkit 13, anon 7, javascriptcore 6, gtk-gdk-gsk 5, mesa 4, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk3-x11-noaccel                   heavy  web                  anon 221, webkit 40, llvm 26, javascriptcore 13, mesa 4, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-noaccel                   heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk3-x11-sandbox                   ready  ui                   llvm 28, anon 22, webkit 12, mesa 7, javascriptcore 5, gtk-gdk-gsk 4, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk3-x11-sandbox                   ready  web                  anon 79, llvm 40, webkit 37, mesa 9, javascriptcore 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-sandbox                   ready  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+gtk3-x11-sandbox                   heavy  ui                   llvm 28, anon 23, webkit 12, mesa 7, javascriptcore 6, gtk-gdk-gsk 4, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk3-x11-sandbox                   heavy  web                  anon 313, webkit 43, llvm 40, javascriptcore 13, mesa 9, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk3-x11-sandbox                   heavy  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+
+gtk4-wayland-cairo                 ready  ui                   llvm 28, anon 27, webkit 12, mesa 11, libc-and-system 9, gtk-gdk-gsk 6, javascriptcore 5, cairo-pango-harfbuzz-freetype 2, dotnet-app 1, shared-memory-gpu 1
+gtk4-wayland-cairo                 ready  web                  anon 78, llvm 40, webkit 37, mesa 9, javascriptcore 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-cairo                 ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk4-wayland-cairo                 heavy  ui                   llvm 28, anon 27, webkit 12, mesa 11, libc-and-system 8, gtk-gdk-gsk 6, javascriptcore 6, cairo-pango-harfbuzz-freetype 2, dotnet-app 1, shared-memory-gpu 1
+gtk4-wayland-cairo                 heavy  web                  anon 310, webkit 42, llvm 40, javascriptcore 13, mesa 9, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-cairo                 heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-wayland-def                   ready  ui                   anon 93, llvm 33, webkit 12, mesa 12, libc-and-system 9, gtk-gdk-gsk 8, javascriptcore 5, cairo-pango-harfbuzz-freetype 2, dotnet-app 1, shared-memory-gpu 1, other-files 1
+gtk4-wayland-def                   ready  web                  anon 78, webkit 37, llvm 35, javascriptcore 8, mesa 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-def                   ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk4-wayland-def                   heavy  ui                   anon 94, llvm 33, webkit 12, mesa 12, libc-and-system 8, gtk-gdk-gsk 8, javascriptcore 6, cairo-pango-harfbuzz-freetype 2, dotnet-app 1, shared-memory-gpu 1, other-files 1
+gtk4-wayland-def                   heavy  web                  anon 311, webkit 42, llvm 35, javascriptcore 14, mesa 8, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-def                   heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-wayland-empty                 ready  ui                   anon 93, llvm 33, webkit 12, mesa 12, libc-and-system 9, gtk-gdk-gsk 8, javascriptcore 3, cairo-pango-harfbuzz-freetype 3, other-files 2, dotnet-app 1, shared-memory-gpu 1
+gtk4-wayland-empty                 ready  web                  anon 65, llvm 33, webkit 32, mesa 8, javascriptcore 6, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-empty                 ready  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+
+gtk4-wayland-empty-noaccel-cairo   ready  ui                   llvm 30, anon 19, webkit 13, mesa 13, libc-and-system 9, gtk-gdk-gsk 6, cairo-pango-harfbuzz-freetype 3, javascriptcore 3, dotnet-app 1
+gtk4-wayland-empty-noaccel-cairo   ready  web                  webkit 30, llvm 26, javascriptcore 6, anon 5, mesa 4, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-empty-noaccel-cairo   ready  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+
+gtk4-wayland-gtkonly               ready  ui                   anon 80, llvm 59, mesa 19, libc-and-system 9, gtk-gdk-gsk 8, cairo-pango-harfbuzz-freetype 4, other-files 2, dotnet-app 1, gstreamer 1
+
+gtk4-wayland-gtkonly-cairo         ready  ui                   libc-and-system 9, gtk-gdk-gsk 7, anon 5, cairo-pango-harfbuzz-freetype 4, mesa 2, dotnet-app 1, gstreamer 1, fonts-and-caches 1
+
+gtk4-wayland-noaccel               ready  ui                   anon 88, llvm 39, mesa 15, webkit 13, libc-and-system 9, gtk-gdk-gsk 8, javascriptcore 5, cairo-pango-harfbuzz-freetype 2, other-files 2, dotnet-app 1
+gtk4-wayland-noaccel               ready  web                  webkit 34, llvm 26, javascriptcore 8, anon 6, mesa 4, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-noaccel               ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk4-wayland-noaccel               heavy  ui                   anon 90, llvm 39, mesa 15, webkit 13, libc-and-system 9, gtk-gdk-gsk 8, javascriptcore 6, cairo-pango-harfbuzz-freetype 2, other-files 2, dotnet-app 1
+gtk4-wayland-noaccel               heavy  web                  anon 221, webkit 39, llvm 26, javascriptcore 13, mesa 4, libc-and-system 3, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-noaccel               heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-wayland-noaccel-cairo         ready  ui                   llvm 30, anon 20, webkit 13, mesa 13, libc-and-system 9, gtk-gdk-gsk 6, javascriptcore 5, cairo-pango-harfbuzz-freetype 2, dotnet-app 1
+gtk4-wayland-noaccel-cairo         ready  web                  webkit 34, llvm 26, javascriptcore 8, anon 6, mesa 4, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-noaccel-cairo         ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk4-wayland-noaccel-cairo         heavy  ui                   llvm 30, anon 20, webkit 13, mesa 13, libc-and-system 9, gtk-gdk-gsk 6, javascriptcore 6, cairo-pango-harfbuzz-freetype 2, dotnet-app 1
+gtk4-wayland-noaccel-cairo         heavy  web                  anon 221, webkit 39, llvm 26, javascriptcore 13, mesa 4, libc-and-system 3, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-wayland-noaccel-cairo         heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-x11-cairo                     ready  ui                   llvm 28, anon 27, webkit 12, mesa 7, gtk-gdk-gsk 6, javascriptcore 5, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk4-x11-cairo                     ready  web                  anon 79, llvm 40, webkit 37, mesa 9, javascriptcore 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-cairo                     ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk4-x11-cairo                     heavy  ui                   llvm 28, anon 27, webkit 12, mesa 7, gtk-gdk-gsk 6, javascriptcore 6, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk4-x11-cairo                     heavy  web                  anon 311, webkit 42, llvm 40, javascriptcore 13, mesa 9, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-cairo                     heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-x11-def                       ready  ui                   anon 83, llvm 33, webkit 12, mesa 8, gtk-gdk-gsk 7, javascriptcore 5, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1, shared-memory-gpu 1, other-files 1
+gtk4-x11-def                       ready  web                  anon 79, webkit 37, llvm 35, mesa 8, javascriptcore 8, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-def                       ready  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+gtk4-x11-def                       heavy  ui                   anon 84, llvm 33, webkit 12, mesa 8, gtk-gdk-gsk 7, javascriptcore 6, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1, shared-memory-gpu 1, other-files 1
+gtk4-x11-def                       heavy  web                  anon 311, webkit 42, llvm 35, javascriptcore 13, mesa 8, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-def                       heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-x11-empty                     ready  ui                   anon 82, llvm 33, webkit 12, mesa 8, gtk-gdk-gsk 7, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, javascriptcore 3, other-files 2, dotnet-app 1, shared-memory-gpu 1
+gtk4-x11-empty                     ready  web                  anon 66, llvm 33, webkit 32, mesa 8, javascriptcore 6, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-empty                     ready  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+
+gtk4-x11-empty-noaccel-cairo       ready  ui                   llvm 30, anon 17, webkit 13, mesa 9, gtk-gdk-gsk 6, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, javascriptcore 3, dotnet-app 1
+gtk4-x11-empty-noaccel-cairo       ready  web                  webkit 30, llvm 26, javascriptcore 6, anon 5, mesa 4, libc-and-system 3, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-empty-noaccel-cairo       ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-x11-gtkonly                   ready  ui                   anon 72, llvm 59, mesa 15, gtk-gdk-gsk 8, cairo-pango-harfbuzz-freetype 4, libc-and-system 4, other-files 2, dotnet-app 1, gstreamer 1
+
+gtk4-x11-gtkonly-cairo             ready  ui                   llvm 49, anon 16, mesa 12, gtk-gdk-gsk 7, cairo-pango-harfbuzz-freetype 4, libc-and-system 4, dotnet-app 1, gstreamer 1
+
+gtk4-x11-noaccel                   ready  ui                   anon 77, llvm 39, webkit 13, mesa 12, gtk-gdk-gsk 7, javascriptcore 5, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, other-files 2, dotnet-app 1
+gtk4-x11-noaccel                   ready  web                  webkit 34, llvm 26, javascriptcore 8, anon 6, mesa 4, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-noaccel                   ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk4-x11-noaccel                   heavy  ui                   anon 79, llvm 39, webkit 13, mesa 12, gtk-gdk-gsk 7, javascriptcore 6, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, other-files 2, dotnet-app 1
+gtk4-x11-noaccel                   heavy  web                  anon 221, webkit 39, llvm 26, javascriptcore 13, mesa 4, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-noaccel                   heavy  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+
+gtk4-x11-noaccel-cairo             ready  ui                   llvm 30, anon 18, webkit 13, mesa 9, gtk-gdk-gsk 6, javascriptcore 5, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk4-x11-noaccel-cairo             ready  web                  webkit 34, llvm 26, javascriptcore 8, anon 6, mesa 4, libc-and-system 3, icu 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-noaccel-cairo             ready  network              webkit 9, libc-and-system 5, javascriptcore 2, anon 2
+gtk4-x11-noaccel-cairo             heavy  ui                   llvm 30, anon 19, webkit 13, mesa 9, gtk-gdk-gsk 6, javascriptcore 6, libc-and-system 4, cairo-pango-harfbuzz-freetype 3, dotnet-app 1
+gtk4-x11-noaccel-cairo             heavy  web                  anon 221, webkit 39, llvm 26, javascriptcore 14, mesa 4, libc-and-system 4, icu 2, gstreamer 2, cairo-pango-harfbuzz-freetype 1
+gtk4-x11-noaccel-cairo             heavy  network              webkit 9, libc-and-system 4, javascriptcore 2, anon 2
+

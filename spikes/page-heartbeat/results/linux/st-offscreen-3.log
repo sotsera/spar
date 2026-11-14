@@ -1,0 +1,292 @@
+96.1 START ms=41.6 pid=2400 cpus=32 responsive=1 gsk=cairo
+97.1 SESSION arm=doc gate=none intervalMs=5000 misses=3 probeMs=1000 onUnresponsive=none options=[--www /spike/www/ --data /tmp/u/data-st-offscreen-3 --log /out/st-offscreen-3.log --gate none --actions 5000:sh:xdotool windowmove $WID 3000 3000,65000:sh:xdotool windowmove $WID 100 100 --duration 75000 --timeout 120]
+98.1 HB-ARM hb=probe reason=start
+98.7 NAVIGATE uri=spar://app/index.html
+159.8 LOAD-CHANGED event=started
+209.3 LOAD-CHANGED event=committed
+211.7 DOC path=/index.html vis=visible
+212.7 HB-ARM hb=ping reason=doc
+265.2 READY path=/index.html pagePerf=105.0 vis=visible
+270.2 LOAD-CHANGED event=finished
+271.7 PAGE state-seen:1
+1095.7 HB-PING hb=probe seq=1 postUs=39 hr=0x00000000 outstanding=1
+1096.5 HB-PONG hb=probe seq=1 rttMs=0.8 vis=visible latest=True
+1265.2 TICK n=1 dtMs=0 vis=visible frames=62
+2095.3 HB-PING hb=probe seq=2 postUs=40 hr=0x00000000 outstanding=1
+2096.8 HB-PONG hb=probe seq=2 rttMs=1.5 vis=visible latest=True
+2264.8 TICK n=2 dtMs=1000 vis=visible frames=62
+3097.1 HB-PING hb=probe seq=3 postUs=42 hr=0x00000000 outstanding=1
+3099.9 HB-PONG hb=probe seq=3 rttMs=2.8 vis=visible latest=True
+3264.8 TICK n=3 dtMs=1000 vis=visible frames=62
+4096.7 HB-PING hb=probe seq=4 postUs=62 hr=0x00000000 outstanding=1
+4099.8 HB-PONG hb=probe seq=4 rttMs=3.1 vis=visible latest=True
+4264.9 TICK n=4 dtMs=1000 vis=visible frames=62
+5096.5 HB-PING hb=probe seq=5 postUs=54 hr=0x00000000 outstanding=1
+5097.3 HB-PING hb=ping seq=1 postUs=20 hr=0x00000000 outstanding=1
+5099.3 HB-PONG hb=probe seq=5 rttMs=2.8 vis=visible latest=True
+5099.6 PUMP phase=start n=4303 median=0.03ms p99=0.11ms min=0.01ms max=48.38ms
+5101.1 HB-PONG hb=ping seq=1 rttMs=3.7 vis=visible latest=True
+5265.0 TICK n=5 dtMs=1000 vis=visible frames=62
+5267.8 ACTION verb=sh arg=xdotool windowmove $WID 3000 3000
+5278.4 SH cmd=xdotool windowmove $WID 3000 3000 wid=4194308
+6097.4 HB-PING hb=probe seq=6 postUs=39 hr=0x00000000 outstanding=1
+6101.0 HB-PONG hb=probe seq=6 rttMs=3.6 vis=visible latest=True
+6268.7 TICK n=6 dtMs=1004 vis=visible frames=63
+7097.3 HB-PING hb=probe seq=7 postUs=51 hr=0x00000000 outstanding=1
+7098.6 HB-PONG hb=probe seq=7 rttMs=1.3 vis=visible latest=True
+7272.6 TICK n=7 dtMs=1004 vis=visible frames=62
+8096.9 HB-PING hb=probe seq=8 postUs=39 hr=0x00000000 outstanding=1
+8097.5 HB-PONG hb=probe seq=8 rttMs=0.6 vis=visible latest=True
+8276.7 TICK n=8 dtMs=1004 vis=visible frames=62
+9096.4 HB-PING hb=probe seq=9 postUs=43 hr=0x00000000 outstanding=1
+9100.1 HB-PONG hb=probe seq=9 rttMs=3.8 vis=visible latest=True
+9280.6 TICK n=9 dtMs=1004 vis=visible frames=63
+10096.0 HB-PING hb=probe seq=10 postUs=48 hr=0x00000000 outstanding=1
+10096.7 HB-PING hb=ping seq=2 postUs=22 hr=0x00000000 outstanding=1
+10097.5 HB-PONG hb=probe seq=10 rttMs=1.5 vis=visible latest=True
+10098.1 HB-PONG hb=ping seq=2 rttMs=1.3 vis=visible latest=True
+10103.6 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4412 median=0.03ms p99=0.09ms min=0.01ms max=10.55ms
+10284.6 TICK n=10 dtMs=1004 vis=visible frames=62
+11095.4 HB-PING hb=probe seq=11 postUs=45 hr=0x00000000 outstanding=1
+11096.4 HB-PONG hb=probe seq=11 rttMs=1.0 vis=visible latest=True
+11288.7 TICK n=11 dtMs=1004 vis=visible frames=62
+12097.2 HB-PING hb=probe seq=12 postUs=50 hr=0x00000000 outstanding=1
+12097.9 HB-PONG hb=probe seq=12 rttMs=0.7 vis=visible latest=True
+12292.6 TICK n=12 dtMs=1004 vis=visible frames=63
+13097.0 HB-PING hb=probe seq=13 postUs=43 hr=0x00000000 outstanding=1
+13099.4 HB-PONG hb=probe seq=13 rttMs=2.5 vis=visible latest=True
+13296.6 TICK n=13 dtMs=1004 vis=visible frames=62
+14096.6 HB-PING hb=probe seq=14 postUs=44 hr=0x00000000 outstanding=1
+14097.5 HB-PONG hb=probe seq=14 rttMs=0.9 vis=visible latest=True
+14300.7 TICK n=14 dtMs=1004 vis=visible frames=62
+15096.4 HB-PING hb=probe seq=15 postUs=45 hr=0x00000000 outstanding=1
+15100.1 HB-PING hb=ping seq=3 postUs=32 hr=0x00000000 outstanding=1
+15104.9 HB-PONG hb=probe seq=15 rttMs=8.5 vis=visible latest=True
+15105.3 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4418 median=0.03ms p99=0.08ms min=0.01ms max=7.60ms
+15106.1 HB-PONG hb=ping seq=3 rttMs=6.0 vis=visible latest=True
+15304.6 TICK n=15 dtMs=1004 vis=visible frames=63
+16095.9 HB-PING hb=probe seq=16 postUs=38 hr=0x00000000 outstanding=1
+16096.9 HB-PONG hb=probe seq=16 rttMs=1.1 vis=visible latest=True
+16308.6 TICK n=16 dtMs=1004 vis=visible frames=62
+17095.4 HB-PING hb=probe seq=17 postUs=33 hr=0x00000000 outstanding=1
+17096.3 HB-PONG hb=probe seq=17 rttMs=0.9 vis=visible latest=True
+17312.7 TICK n=17 dtMs=1004 vis=visible frames=62
+18097.3 HB-PING hb=probe seq=18 postUs=43 hr=0x00000000 outstanding=1
+18098.0 HB-PONG hb=probe seq=18 rttMs=0.8 vis=visible latest=True
+18316.6 TICK n=18 dtMs=1004 vis=visible frames=63
+19096.9 HB-PING hb=probe seq=19 postUs=39 hr=0x00000000 outstanding=1
+19099.6 HB-PONG hb=probe seq=19 rttMs=2.7 vis=visible latest=True
+19320.6 TICK n=19 dtMs=1004 vis=visible frames=62
+20096.6 HB-PING hb=probe seq=20 postUs=43 hr=0x00000000 outstanding=1
+20097.3 HB-PING hb=ping seq=4 postUs=24 hr=0x00000000 outstanding=1
+20097.8 HB-PONG hb=probe seq=20 rttMs=1.1 vis=visible latest=True
+20098.2 HB-PONG hb=ping seq=4 rttMs=1.0 vis=visible latest=True
+20107.1 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4438 median=0.03ms p99=0.09ms min=0.00ms max=3.28ms
+20324.6 TICK n=20 dtMs=1004 vis=visible frames=62
+21095.9 HB-PING hb=probe seq=21 postUs=55 hr=0x00000000 outstanding=1
+21099.8 HB-PONG hb=probe seq=21 rttMs=3.9 vis=visible latest=True
+21328.6 TICK n=21 dtMs=1004 vis=visible frames=63
+22095.6 HB-PING hb=probe seq=22 postUs=42 hr=0x00000000 outstanding=1
+22097.9 HB-PONG hb=probe seq=22 rttMs=2.4 vis=visible latest=True
+22332.7 TICK n=22 dtMs=1004 vis=visible frames=62
+23097.3 HB-PING hb=probe seq=23 postUs=42 hr=0x00000000 outstanding=1
+23097.8 HB-PONG hb=probe seq=23 rttMs=0.5 vis=visible latest=True
+23336.6 TICK n=23 dtMs=1004 vis=visible frames=62
+24097.3 HB-PING hb=probe seq=24 postUs=74 hr=0x00000000 outstanding=1
+24098.2 HB-PONG hb=probe seq=24 rttMs=0.9 vis=visible latest=True
+24340.6 TICK n=24 dtMs=1004 vis=visible frames=62
+25097.2 HB-PING hb=probe seq=25 postUs=42 hr=0x00000000 outstanding=1
+25098.0 HB-PING hb=ping seq=5 postUs=17 hr=0x00000000 outstanding=1
+25098.8 HB-PONG hb=probe seq=25 rttMs=1.5 vis=visible latest=True
+25099.4 HB-PONG hb=ping seq=5 rttMs=1.5 vis=visible latest=True
+25109.3 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4412 median=0.03ms p99=0.09ms min=0.01ms max=4.60ms
+25344.5 TICK n=25 dtMs=1004 vis=visible frames=63
+26096.7 HB-PING hb=probe seq=26 postUs=48 hr=0x00000000 outstanding=1
+26097.8 HB-PONG hb=probe seq=26 rttMs=1.1 vis=visible latest=True
+26348.6 TICK n=26 dtMs=1004 vis=visible frames=62
+27095.8 HB-PING hb=probe seq=27 postUs=32 hr=0x00000000 outstanding=1
+27097.0 HB-PONG hb=probe seq=27 rttMs=1.2 vis=visible latest=True
+27352.6 TICK n=27 dtMs=1004 vis=visible frames=63
+28097.3 HB-PING hb=probe seq=28 postUs=37 hr=0x00000000 outstanding=1
+28098.5 HB-PONG hb=probe seq=28 rttMs=1.2 vis=visible latest=True
+28356.7 TICK n=28 dtMs=1004 vis=visible frames=62
+29096.6 HB-PING hb=probe seq=29 postUs=49 hr=0x00000000 outstanding=1
+29100.5 HB-PONG hb=probe seq=29 rttMs=4.0 vis=visible latest=True
+29360.7 TICK n=29 dtMs=1004 vis=visible frames=62
+30095.8 HB-PING hb=probe seq=30 postUs=56 hr=0x00000000 outstanding=1
+30102.7 HB-PING hb=ping seq=6 postUs=35 hr=0x00000000 outstanding=1
+30103.6 HB-PONG hb=probe seq=30 rttMs=7.8 vis=visible latest=True
+30115.3 HB-PONG hb=ping seq=6 rttMs=12.6 vis=visible latest=True
+30117.9 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4412 median=0.03ms p99=0.09ms min=0.01ms max=13.75ms
+30364.6 TICK n=30 dtMs=1003 vis=visible frames=63
+31097.1 HB-PING hb=probe seq=31 postUs=39 hr=0x00000000 outstanding=1
+31098.0 HB-PONG hb=probe seq=31 rttMs=0.9 vis=visible latest=True
+31368.8 TICK n=31 dtMs=1005 vis=visible frames=62
+32096.2 HB-PING hb=probe seq=32 postUs=38 hr=0x00000000 outstanding=1
+32097.2 HB-PONG hb=probe seq=32 rttMs=1.0 vis=visible latest=True
+32372.7 TICK n=32 dtMs=1004 vis=visible frames=62
+33095.4 HB-PING hb=probe seq=33 postUs=36 hr=0x00000000 outstanding=1
+33097.5 HB-PONG hb=probe seq=33 rttMs=2.1 vis=visible latest=True
+33376.6 TICK n=33 dtMs=1004 vis=visible frames=63
+34096.8 HB-PING hb=probe seq=34 postUs=51 hr=0x00000000 outstanding=1
+34097.7 HB-PONG hb=probe seq=34 rttMs=0.9 vis=visible latest=True
+34380.6 TICK n=34 dtMs=1004 vis=visible frames=62
+35096.5 HB-PING hb=probe seq=35 postUs=57 hr=0x00000000 outstanding=1
+35098.9 HB-PING hb=ping seq=7 postUs=25 hr=0x00000000 outstanding=1
+35102.2 HB-PONG hb=probe seq=35 rttMs=5.7 vis=visible latest=True
+35110.4 HB-PONG hb=ping seq=7 rttMs=11.5 vis=visible latest=True
+35120.5 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4424 median=0.02ms p99=0.10ms min=0.01ms max=10.09ms
+35384.6 TICK n=35 dtMs=1004 vis=visible frames=62
+36095.9 HB-PING hb=probe seq=36 postUs=59 hr=0x00000000 outstanding=1
+36098.5 HB-PONG hb=probe seq=36 rttMs=2.5 vis=visible latest=True
+36388.6 TICK n=36 dtMs=1004 vis=visible frames=63
+37097.2 HB-PING hb=probe seq=37 postUs=44 hr=0x00000000 outstanding=1
+37099.5 HB-PONG hb=probe seq=37 rttMs=2.3 vis=visible latest=True
+37392.6 TICK n=37 dtMs=1004 vis=visible frames=62
+38096.5 HB-PING hb=probe seq=38 postUs=34 hr=0x00000000 outstanding=1
+38097.8 HB-PONG hb=probe seq=38 rttMs=1.4 vis=visible latest=True
+38396.7 TICK n=38 dtMs=1004 vis=visible frames=62
+39096.1 HB-PING hb=probe seq=39 postUs=33 hr=0x00000000 outstanding=1
+39096.9 HB-PONG hb=probe seq=39 rttMs=0.8 vis=visible latest=True
+39400.6 TICK n=39 dtMs=1004 vis=visible frames=62
+40096.0 HB-PING hb=ping seq=8 postUs=56 hr=0x00000000 outstanding=1
+40097.0 HB-PING hb=probe seq=40 postUs=26 hr=0x00000000 outstanding=1
+40099.3 HB-PONG hb=ping seq=8 rttMs=3.3 vis=visible latest=True
+40100.0 HB-PONG hb=probe seq=40 rttMs=3.0 vis=visible latest=True
+40123.9 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4423 median=0.03ms p99=0.09ms min=0.01ms max=4.99ms
+40404.6 TICK n=40 dtMs=1004 vis=visible frames=63
+41095.9 HB-PING hb=probe seq=41 postUs=39 hr=0x00000000 outstanding=1
+41097.7 HB-PONG hb=probe seq=41 rttMs=1.8 vis=visible latest=True
+41408.6 TICK n=41 dtMs=1004 vis=visible frames=62
+42095.4 HB-PING hb=probe seq=42 postUs=37 hr=0x00000000 outstanding=1
+42097.7 HB-PONG hb=probe seq=42 rttMs=2.2 vis=visible latest=True
+42412.5 TICK n=42 dtMs=1004 vis=visible frames=63
+43096.9 HB-PING hb=probe seq=43 postUs=42 hr=0x00000000 outstanding=1
+43100.0 HB-PONG hb=probe seq=43 rttMs=3.2 vis=visible latest=True
+43416.7 TICK n=43 dtMs=1004 vis=visible frames=62
+44096.0 HB-PING hb=probe seq=44 postUs=45 hr=0x00000000 outstanding=1
+44100.2 HB-PONG hb=probe seq=44 rttMs=4.2 vis=visible latest=True
+44420.7 TICK n=44 dtMs=1004 vis=visible frames=62
+45097.6 HB-PING hb=probe seq=45 postUs=60 hr=0x00000000 outstanding=1
+45099.3 HB-PING hb=ping seq=9 postUs=22 hr=0x00000000 outstanding=1
+45107.6 HB-PONG hb=probe seq=45 rttMs=10.0 vis=visible latest=True
+45108.4 HB-PONG hb=ping seq=9 rttMs=9.1 vis=visible latest=True
+45126.1 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4439 median=0.02ms p99=0.09ms min=0.01ms max=8.98ms
+45424.6 TICK n=45 dtMs=1004 vis=visible frames=63
+46096.7 HB-PING hb=probe seq=46 postUs=99 hr=0x00000000 outstanding=1
+46097.5 HB-PONG hb=probe seq=46 rttMs=0.8 vis=visible latest=True
+46428.6 TICK n=46 dtMs=1004 vis=visible frames=62
+47095.9 HB-PING hb=probe seq=47 postUs=46 hr=0x00000000 outstanding=1
+47100.4 HB-PONG hb=probe seq=47 rttMs=4.5 vis=visible latest=True
+47432.6 TICK n=47 dtMs=1004 vis=visible frames=62
+48097.3 HB-PING hb=probe seq=48 postUs=42 hr=0x00000000 outstanding=1
+48098.4 HB-PONG hb=probe seq=48 rttMs=1.1 vis=visible latest=True
+48436.5 TICK n=48 dtMs=1004 vis=visible frames=63
+49096.8 HB-PING hb=probe seq=49 postUs=31 hr=0x00000000 outstanding=1
+49097.9 HB-PONG hb=probe seq=49 rttMs=1.1 vis=visible latest=True
+49440.6 TICK n=49 dtMs=1004 vis=visible frames=62
+50096.1 HB-PING hb=probe seq=50 postUs=30 hr=0x00000000 outstanding=1
+50099.8 HB-PING hb=ping seq=10 postUs=60 hr=0x00000000 outstanding=1
+50102.2 HB-PONG hb=probe seq=50 rttMs=6.1 vis=visible latest=True
+50109.0 HB-PONG hb=ping seq=10 rttMs=9.2 vis=visible latest=True
+50132.5 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4452 median=0.02ms p99=0.09ms min=0.01ms max=7.30ms
+50444.6 TICK n=50 dtMs=1004 vis=visible frames=62
+51095.4 HB-PING hb=probe seq=51 postUs=32 hr=0x00000000 outstanding=1
+51100.2 HB-PONG hb=probe seq=51 rttMs=4.8 vis=visible latest=True
+51448.6 TICK n=51 dtMs=1004 vis=visible frames=63
+52097.1 HB-PING hb=probe seq=52 postUs=56 hr=0x00000000 outstanding=1
+52099.0 HB-PONG hb=probe seq=52 rttMs=1.9 vis=visible latest=True
+52452.7 TICK n=52 dtMs=1004 vis=visible frames=62
+53096.5 HB-PING hb=probe seq=53 postUs=93 hr=0x00000000 outstanding=1
+53099.6 HB-PONG hb=probe seq=53 rttMs=3.1 vis=visible latest=True
+53456.6 TICK n=53 dtMs=1004 vis=visible frames=62
+54095.9 HB-PING hb=probe seq=54 postUs=37 hr=0x00000000 outstanding=1
+54096.6 HB-PONG hb=probe seq=54 rttMs=0.7 vis=visible latest=True
+54460.5 TICK n=54 dtMs=1003 vis=visible frames=63
+55095.6 HB-PING hb=probe seq=55 postUs=47 hr=0x00000000 outstanding=1
+55098.7 HB-PING hb=ping seq=11 postUs=24 hr=0x00000000 outstanding=1
+55099.7 HB-PONG hb=probe seq=55 rttMs=4.1 vis=visible latest=True
+55105.8 HB-PONG hb=ping seq=11 rttMs=7.1 vis=visible latest=True
+55133.6 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4455 median=0.02ms p99=0.08ms min=0.01ms max=5.80ms
+55464.6 TICK n=55 dtMs=1005 vis=visible frames=62
+56097.2 HB-PING hb=probe seq=56 postUs=41 hr=0x00000000 outstanding=1
+56102.7 HB-PONG hb=probe seq=56 rttMs=5.6 vis=visible latest=True
+56468.7 TICK n=56 dtMs=1004 vis=visible frames=62
+57096.6 HB-PING hb=probe seq=57 postUs=66 hr=0x00000000 outstanding=1
+57099.4 HB-PONG hb=probe seq=57 rttMs=2.8 vis=visible latest=True
+57472.7 TICK n=57 dtMs=1004 vis=visible frames=62
+58095.7 HB-PING hb=probe seq=58 postUs=43 hr=0x00000000 outstanding=1
+58099.2 HB-PONG hb=probe seq=58 rttMs=3.6 vis=visible latest=True
+58476.6 TICK n=58 dtMs=1004 vis=visible frames=63
+59095.6 HB-PING hb=probe seq=59 postUs=47 hr=0x00000000 outstanding=1
+59101.9 HB-PONG hb=probe seq=59 rttMs=6.3 vis=visible latest=True
+59480.7 TICK n=59 dtMs=1004 vis=visible frames=62
+60097.5 HB-PING hb=ping seq=12 postUs=62 hr=0x00000000 outstanding=1
+60099.4 HB-PING hb=probe seq=60 postUs=20 hr=0x00000000 outstanding=1
+60100.2 HB-PONG hb=ping seq=12 rttMs=2.8 vis=visible latest=True
+60103.2 HB-PONG hb=probe seq=60 rttMs=3.8 vis=visible latest=True
+60135.3 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4394 median=0.03ms p99=0.09ms min=0.01ms max=9.91ms
+60484.6 TICK n=60 dtMs=1004 vis=visible frames=62
+61097.2 HB-PING hb=probe seq=61 postUs=68 hr=0x00000000 outstanding=1
+61099.9 HB-PONG hb=probe seq=61 rttMs=2.7 vis=visible latest=True
+61488.7 TICK n=61 dtMs=1004 vis=visible frames=63
+62096.4 HB-PING hb=probe seq=62 postUs=34 hr=0x00000000 outstanding=1
+62097.5 HB-PONG hb=probe seq=62 rttMs=1.1 vis=visible latest=True
+62492.6 TICK n=62 dtMs=1004 vis=visible frames=62
+63095.8 HB-PING hb=probe seq=63 postUs=34 hr=0x00000000 outstanding=1
+63104.2 HB-PONG hb=probe seq=63 rttMs=8.5 vis=visible latest=True
+63496.7 TICK n=63 dtMs=1004 vis=visible frames=62
+64096.8 HB-PING hb=probe seq=64 postUs=34 hr=0x00000000 outstanding=1
+64099.8 HB-PONG hb=probe seq=64 rttMs=3.0 vis=visible latest=True
+64500.6 TICK n=64 dtMs=1004 vis=visible frames=63
+65095.9 HB-PING hb=probe seq=65 postUs=34 hr=0x00000000 outstanding=1
+65096.8 HB-PING hb=ping seq=13 postUs=22 hr=0x00000000 outstanding=1
+65097.5 HB-PONG hb=probe seq=65 rttMs=1.6 vis=visible latest=True
+65099.5 HB-PONG hb=ping seq=13 rttMs=2.7 vis=visible latest=True
+65153.8 PUMP phase=sh-xdotool windowmove $WID 3000 3000 n=4416 median=0.02ms p99=0.10ms min=0.01ms max=7.33ms
+65272.4 ACTION verb=sh arg=xdotool windowmove $WID 100 100
+65279.0 SH cmd=xdotool windowmove $WID 100 100 wid=4194308
+65504.7 TICK n=65 dtMs=1004 vis=visible frames=62
+66095.5 HB-PING hb=probe seq=66 postUs=52 hr=0x00000000 outstanding=1
+66096.1 HB-PONG hb=probe seq=66 rttMs=0.6 vis=visible latest=True
+66508.7 TICK n=66 dtMs=1004 vis=visible frames=62
+67097.4 HB-PING hb=probe seq=67 postUs=45 hr=0x00000000 outstanding=1
+67098.0 HB-PONG hb=probe seq=67 rttMs=0.7 vis=visible latest=True
+67512.6 TICK n=67 dtMs=1004 vis=visible frames=63
+68097.1 HB-PING hb=probe seq=68 postUs=66 hr=0x00000000 outstanding=1
+68098.8 HB-PONG hb=probe seq=68 rttMs=1.7 vis=visible latest=True
+68516.7 TICK n=68 dtMs=1004 vis=visible frames=62
+69096.9 HB-PING hb=probe seq=69 postUs=38 hr=0x00000000 outstanding=1
+69098.0 HB-PONG hb=probe seq=69 rttMs=1.0 vis=visible latest=True
+69520.7 TICK n=69 dtMs=1004 vis=visible frames=62
+70096.6 HB-PING hb=probe seq=70 postUs=40 hr=0x00000000 outstanding=1
+70097.2 HB-PING hb=ping seq=14 postUs=43 hr=0x00000000 outstanding=1
+70098.1 HB-PONG hb=probe seq=70 rttMs=1.5 vis=visible latest=True
+70098.7 HB-PONG hb=ping seq=14 rttMs=1.5 vis=visible latest=True
+70157.0 PUMP phase=sh-xdotool windowmove $WID 100 100 n=4426 median=0.03ms p99=0.09ms min=0.00ms max=6.24ms
+70524.7 TICK n=70 dtMs=1004 vis=visible frames=63
+71096.1 HB-PING hb=probe seq=71 postUs=42 hr=0x00000000 outstanding=1
+71097.0 HB-PONG hb=probe seq=71 rttMs=0.9 vis=visible latest=True
+71528.6 TICK n=71 dtMs=1004 vis=visible frames=62
+72095.6 HB-PING hb=probe seq=72 postUs=41 hr=0x00000000 outstanding=1
+72096.7 HB-PONG hb=probe seq=72 rttMs=1.1 vis=visible latest=True
+72532.7 TICK n=72 dtMs=1004 vis=visible frames=62
+73095.5 HB-PING hb=probe seq=73 postUs=41 hr=0x00000000 outstanding=1
+73097.1 HB-PONG hb=probe seq=73 rttMs=1.7 vis=visible latest=True
+73536.6 TICK n=73 dtMs=1004 vis=visible frames=63
+74097.1 HB-PING hb=probe seq=74 postUs=55 hr=0x00000000 outstanding=1
+74098.2 HB-PONG hb=probe seq=74 rttMs=1.0 vis=visible latest=True
+74540.6 TICK n=74 dtMs=1004 vis=visible frames=62
+75097.0 HB-PING hb=probe seq=75 postUs=38 hr=0x00000000 outstanding=1
+75098.4 HB-PING hb=ping seq=15 postUs=19 hr=0x00000000 outstanding=1
+75099.6 HB-PONG hb=probe seq=75 rttMs=2.6 vis=visible latest=True
+75100.3 HB-PONG hb=ping seq=15 rttMs=1.9 vis=visible latest=True
+75158.7 PUMP phase=sh-xdotool windowmove $WID 100 100 n=4435 median=0.02ms p99=0.09ms min=0.00ms max=2.95ms
+75282.7 PUMP-PHASE phase=start n=4448 median=0.03ms p99=0.11ms min=0.01ms max=48.38ms
+75289.4 PUMP-PHASE phase=sh-xdotool windowmove $WID 3000 3000 n=53054 median=0.03ms p99=0.09ms min=0.00ms max=13.75ms
+75291.0 PUMP-PHASE phase=sh-xdotool windowmove $WID 100 100 n=8856 median=0.02ms p99=0.09ms min=0.00ms max=6.24ms
+75294.3 FINISH backendCounter=1
+75298.1 VIS state=hidden pagePerf=75138.0
+75544.8 TICK n=75 dtMs=1004 vis=hidden frames=47
+76580.1 TICK n=76 dtMs=1035 vis=hidden frames=0
+77375.6 HOST-EXIT code=0

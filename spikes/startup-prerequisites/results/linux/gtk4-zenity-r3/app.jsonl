@@ -1,0 +1,15 @@
+{"t":33.47,"evt":"main","label":"gtk4-zenity","ui":"zenity","processAgeMs":80,"uid":1000,"desktop":null}
+{"t":34.08,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":34.29,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":35.01,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":0.536}
+{"t":35.44,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":0.232}
+{"t":36.13,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.521}
+{"t":41.15,"evt":"library","file":"libgtk-4.so.1","ok":true,"ms":4.673}
+{"t":76.28,"evt":"gtk-init","ok":true,"ms":33.514,"gtk":"4.14.5"}
+{"t":88.14,"evt":"library","file":"libwebkitgtk-6.0.so.4","ok":false,"reason":"libwebkitgtk-6.0.so.4: cannot open shared object file: No such file or directory"}
+{"t":92.56,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libwebkitgtk-6.0.so.4): libwebkitgtk-6.0.so.4: cannot open shared object file: No such file or directory"}
+{"t":107.73,"evt":"stderr","isatty":"redirected"}
+{"t":112.88,"evt":"journal","result":"journal-socket"}
+{"t":1676.38,"evt":"helper-exit","tool":"zenity","exit":0,"ms":1556.209,"stderr":"libEGL warning: DRI3 error: Could not get DRI3 device\nlibEGL warning: Ensure your X server supports DRI3 to get accelerated rendering\n\n(zenity:246): Gtk-WARNING **: 14:54:47.821: Unable to acquire the address of the accessibility bus: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files. If you are attempting to run GTK without a11y support, GTK_A11Y should be set to \u0027none\u0027."}
+{"t":1680.37,"evt":"graphical","way":"zenity","shown":true,"detail":"exit 0 after 1560 ms libEGL warning: DRI3 error: Could not get DRI3 device\nlibEGL warning: Ensure your X server supports DRI3 to get accelerated rendering\n\n(zenity:246): Gtk-WARNING **: 14:54:47.821: Unable to acquire the address of the accessibility bus: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files. If you are attempting to run GTK without a11y support, GTK_A11Y should be set to \u0027none\u0027.","ms":1563.891}
+{"t":1684.55,"evt":"exit","code":3}

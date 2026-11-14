@@ -1,0 +1,15 @@
+# Binlog summaries (from the dotnet-msbuild binlog MCP server)
+
+## results/mt8-all-kinds.binlog
+dotnet msbuild Probe.Build/Build.proj -nodeReuse:false -m:8 -mt -p:ProbeDelay=100 (32 leaves, 3 probe tasks each)
+Build: SUCCEEDED, Duration 1.6 s, MSBuild 18.12.2-1.26529.118+297acf930, 33 projects, 0 errors, 0 warnings.
+Expensive tasks (task duration includes the 100 ms sleep):
+| Task | Runs | Total ms | Min | Max | Avg |
+|---|---|---|---|---|---|
+| LegacyProbe (no attribute -> TaskHost) | 32 | 4931 | 109 | 300 | 154 |
+| InterfaceOnlyProbe (interface only -> TaskHost) | 32 | 3705 | 107 | 124 | 115 |
+| ThreadSafeProbe (attribute + interface -> in-proc) | 32 | 3446 | 106 | 110 | 107 |
+
+## results/probe-tasks-build.binlog
+dotnet build Probe.Tasks (analyzer referenced, TreatWarningsAsErrors, EnforceCodeStyleInBuild, central package management)
+Warnings: 0 distinct diagnostics (0 occurrences).

@@ -1,0 +1,11 @@
+exit 0 wallMs 134
+RUN runtime=aot mode=getschema arg= sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+PASS SqlDataReader.GetSchemaTable (8.2 ms): rows=18 columns=31 first=OrderId:Int32:4 key=True notes=Notes:String:2147483647:long=True
+PASS DbDataReader.GetColumnSchema (0.8 ms): columns=18 OrderId:Int32:int, CustomerId:Int32:int, ExternalRef:Guid:uniqueidentifier
+PASS SqlConnection.GetSchema() (0.5 ms): collections=20
+PASS SqlConnection.GetSchema(Tables) (5.2 ms): rows=2
+PASS SqlConnection.GetSchema(Columns, Orders) (11.8 ms): rows=18 first=OrderId:int
+PASS DataTable.Load(SqlDataReader) 10k rows (51.5 ms): rows=10000 columns=18 notesType=String
+PASS SqlDataReader.GetFieldType/GetProviderSpecificFieldType (0.6 ms): Int32/SqlInt32, Int32/SqlInt32, Guid/SqlGuid, Int16/SqlInt16, Decimal/SqlDecimal
+RESULT getschema failures=0
+MEM end peakWorkingSetMB=47.7 workingSetMB=47.7 rssAnonMB=22.8 allocatedMB=17.7 gc0=0 gc1=0 gc2=0 cpuMs=96

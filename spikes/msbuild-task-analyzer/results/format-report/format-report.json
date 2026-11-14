@@ -1,0 +1,1388 @@
+[
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 47,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Console.Error\u0027 must not be used in MSBuild tasks: interferes with build logging; use Log.LogMessage instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 18,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Console.WriteLine(string?)\u0027 must not be used in MSBuild tasks: interferes with build logging; use Log.LogMessage instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 19,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Console.BufferWidth\u0027 must not be used in MSBuild tasks: interferes with build logging; use Log.LogMessage instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 20,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Console.Out\u0027 must not be used in MSBuild tasks: interferes with build logging; use Log.LogMessage instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 21,
+        "CharNumber": 13,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Console.ReadLine()\u0027 must not be used in MSBuild tasks: may cause deadlocks in automated builds"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 22,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027ThreadPool.SetMinThreads(int, int)\u0027 must not be used in MSBuild tasks: modifies process-wide thread pool settings"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 23,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027ThreadPool.SetMaxThreads(int, int)\u0027 must not be used in MSBuild tasks: modifies process-wide thread pool settings"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 24,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027CultureInfo.DefaultThreadCurrentCulture\u0027 must not be used in MSBuild tasks: affects culture of all new threads in process"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027CultureInfo.DefaultThreadCurrentUICulture\u0027 must not be used in MSBuild tasks: affects UI culture of all new threads in process"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 26,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Directory.SetCurrentDirectory(string)\u0027 must not be used in MSBuild tasks: modifies process-wide working directory; use TaskEnvironment.ProjectDirectory instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 29,
+        "CharNumber": 13,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Process.Kill()\u0027 must not be used in MSBuild tasks: may terminate the MSBuild host process"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 34,
+        "CharNumber": 13,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Environment.Exit(int)\u0027 must not be used in MSBuild tasks: terminates entire process; return false or throw instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 35,
+        "CharNumber": 13,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Environment.FailFast(string?)\u0027 must not be used in MSBuild tasks: terminates entire process; return false or throw instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a7f2ec19-c99d-49a0-aa3c-43a2eed37c12"
+    },
+    "FileName": "R0001_NeverSafe.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0001_NeverSafe.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 12,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R0001_NeverSafe\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "fb811315-a0e9-4805-a198-1a50e0f0429f"
+    },
+    "FileName": "R0005_Transitive.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0005_Transitive.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 37,
+        "CharNumber": 35,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Directory.GetCurrentDirectory()\u0027 should use TaskEnvironment alternative: use TaskEnvironment.ProjectDirectory instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "fb811315-a0e9-4805-a198-1a50e0f0429f"
+    },
+    "FileName": "R0005_Transitive.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0005_Transitive.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 8,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R0005_Transitive\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 15,
+        "CharNumber": 19,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.CurrentDirectory\u0027 should use TaskEnvironment alternative: use TaskEnvironment.ProjectDirectory instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 16,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.CurrentDirectory\u0027 should use TaskEnvironment alternative: use TaskEnvironment.ProjectDirectory instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 17,
+        "CharNumber": 20,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Directory.GetCurrentDirectory()\u0027 should use TaskEnvironment alternative: use TaskEnvironment.ProjectDirectory instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 18,
+        "CharNumber": 20,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.GetEnvironmentVariable(string)\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetEnvironmentVariable instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 19,
+        "CharNumber": 20,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.GetEnvironmentVariable(string, EnvironmentVariableTarget)\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetEnvironmentVariable instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 20,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.SetEnvironmentVariable(string, string?)\u0027 should use TaskEnvironment alternative: use TaskEnvironment.SetEnvironmentVariable instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 21,
+        "CharNumber": 19,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.GetEnvironmentVariables()\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetEnvironmentVariables instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 22,
+        "CharNumber": 24,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.ExpandEnvironmentVariables(string)\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetEnvironmentVariable for individual variables instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 23,
+        "CharNumber": 23,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Environment.GetFolderPath(Environment.SpecialFolder)\u0027 should use TaskEnvironment alternative: may be affected by environment variable overrides; use TaskEnvironment.GetEnvironmentVariable instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 24,
+        "CharNumber": 20,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Path.GetFullPath(string)\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetAbsolutePath instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 19,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Path.GetTempPath()\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetTempPath() instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 26,
+        "CharNumber": 23,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Path.GetTempFileName()\u0027 should use TaskEnvironment alternative: depends on TMP/TEMP environment variables; suppress with a justification until a TaskEnvironment alternative is available"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 27,
+        "CharNumber": 22,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Directory.CreateTempSubdirectory(string?)\u0027 should use TaskEnvironment alternative: depends on TMP/TEMP environment variables; suppress with a justification until a TaskEnvironment alternative is available"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 29,
+        "CharNumber": 29,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Process.Start(string, string?)\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetProcessStartInfo instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 30,
+        "CharNumber": 20,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027ProcessStartInfo.ProcessStartInfo(string)\u0027 should use TaskEnvironment alternative: use TaskEnvironment.GetProcessStartInfo() instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "8946c37e-8505-46d4-a8d0-b1e9760c5b2f"
+    },
+    "FileName": "R0002_TaskEnvironment.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0002_TaskEnvironment.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 9,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R0002_TaskEnvironment\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 16,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027Assembly.Load(string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 17,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027Assembly.LoadFrom(string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 18,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027Assembly.LoadFile(string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 19,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027Assembly.Load(byte[])\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 21,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027Assembly.LoadWithPartialName(string)\u0027 may cause issues in multithreaded tasks: obsolete and may cause version conflicts"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 23,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027Activator.CreateInstance(string, string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 24,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027Activator.CreateInstanceFrom(string, string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027AppDomain.Load(string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 26,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027AppDomain.CreateInstance(string, string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 27,
+        "CharNumber": 18,
+        "DiagnosticId": "MSBuildTask0004",
+        "FormatDescription": "warning MSBuildTask0004: \u0027AppDomain.CreateInstanceFrom(string, string)\u0027 may cause issues in multithreaded tasks: may cause version conflicts in shared task host"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "a74afff4-3e28-40c7-af99-4ca3a52a2b23"
+    },
+    "FileName": "R0004_Review.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0004_Review.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 9,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R0004_Review\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "87e5a7b2-8210-4229-aa66-e6eaf6930cf4"
+    },
+    "FileName": "R_StrictMode.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R_StrictMode.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 18,
+        "CharNumber": 32,
+        "DiagnosticId": "MSBuildTask0002",
+        "FormatDescription": "warning MSBuildTask0002: \u0027Directory.GetCurrentDirectory()\u0027 should use TaskEnvironment alternative: use TaskEnvironment.ProjectDirectory instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "87e5a7b2-8210-4229-aa66-e6eaf6930cf4"
+    },
+    "FileName": "R_StrictMode.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R_StrictMode.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 19,
+        "CharNumber": 27,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.Exists(string?)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "87e5a7b2-8210-4229-aa66-e6eaf6930cf4"
+    },
+    "FileName": "R_StrictMode.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R_StrictMode.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 24,
+        "CharNumber": 13,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.WriteAllText(string, string?)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "87e5a7b2-8210-4229-aa66-e6eaf6930cf4"
+    },
+    "FileName": "R_StrictMode.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R_StrictMode.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 13,
+        "DiagnosticId": "MSBuildTask0001",
+        "FormatDescription": "info MSBuildTask0001: \u0027Directory.SetCurrentDirectory(string)\u0027 must not be used in MSBuild tasks: modifies process-wide working directory; use TaskEnvironment.ProjectDirectory instead"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "87e5a7b2-8210-4229-aa66-e6eaf6930cf4"
+    },
+    "FileName": "R_StrictMode.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R_StrictMode.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 9,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027StrictModeProbe\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 17,
+        "CharNumber": 22,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.Exists(string?)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 18,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.WriteAllText(string, string?)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 19,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.Copy(string, string)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 20,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027Directory.CreateDirectory(string)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 21,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027Directory.GetFiles(string, string)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 22,
+        "CharNumber": 24,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027new FileInfo(...)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 23,
+        "CharNumber": 23,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027new DirectoryInfo(...)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 24,
+        "CharNumber": 29,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027new FileStream(...)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 29,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027new StreamReader(...)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 26,
+        "CharNumber": 29,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027new StreamWriter(...)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 27,
+        "CharNumber": 30,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027new FileSystemWatcher(...)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 41,
+        "CharNumber": 28,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.Exists(string?)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 47,
+        "CharNumber": 32,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.Exists(string?)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 48,
+        "CharNumber": 25,
+        "DiagnosticId": "MSBuildTask0003",
+        "FormatDescription": "warning MSBuildTask0003: \u0027File.Exists(string?)\u0027 may resolve a relative path against the shared working directory: wrap path argument with TaskEnvironment.GetAbsolutePath()"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 40,
+        "CharNumber": 25,
+        "DiagnosticId": "MSBuildTask0007",
+        "FormatDescription": "info MSBuildTask0007: Consider changing task property \u0027Items\u0027 from \u0027ITaskItem[]\u0027 to \u0027ITaskItem\u003CFileInfo\u003E[]\u0027 instead of parsing ItemSpec manually"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 41,
+        "CharNumber": 28,
+        "DiagnosticId": "MSBuildTask0007",
+        "FormatDescription": "info MSBuildTask0007: Consider changing task property \u0027Items\u0027 from \u0027ITaskItem[]\u0027 to \u0027ITaskItem\u003CFileInfo\u003E[]\u0027 instead of parsing ItemSpec manually"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "5dc45589-8254-4cee-8d99-67125122c483"
+    },
+    "FileName": "R0003_AbsolutePaths.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0003_AbsolutePaths.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 8,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R0003_AbsolutePaths\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "1177481c-75fd-40c9-b100-dfab74eca46b"
+    },
+    "FileName": "R0011_Shape.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0011_Shape.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 26,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0012",
+        "FormatDescription": "warning MSBuildTask0012: Task \u0027R0012_NoInterface\u0027 declares a TaskEnvironment property but does not implement IMultiThreadableTask, so MSBuild never assigns it and it retains the task\u0027s own default; implement IMultiThreadableTask, or add a public constructor taking a TaskEnvironment that assigns the property"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "1177481c-75fd-40c9-b100-dfab74eca46b"
+    },
+    "FileName": "R0011_Shape.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0011_Shape.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 34,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R0013_NoAttribute\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "1177481c-75fd-40c9-b100-dfab74eca46b"
+    },
+    "FileName": "R0011_Shape.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0011_Shape.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 59,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R_ToolTaskDerived\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "f0f67b53-24e2-49c9-8684-1ed8deec3cb9"
+    },
+    "FileName": "R0006_TypedParameters.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0006_TypedParameters.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 22,
+        "CharNumber": 19,
+        "DiagnosticId": "MSBuildTask0006",
+        "FormatDescription": "info MSBuildTask0006: Consider changing task property \u0027InputPath\u0027 from \u0027string\u0027 to \u0027AbsolutePath\u0027 instead of converting inside the task body"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "f0f67b53-24e2-49c9-8684-1ed8deec3cb9"
+    },
+    "FileName": "R0006_TypedParameters.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0006_TypedParameters.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 23,
+        "CharNumber": 20,
+        "DiagnosticId": "MSBuildTask0006",
+        "FormatDescription": "info MSBuildTask0006: Consider changing task property \u0027FilePath\u0027 from \u0027string\u0027 to \u0027FileInfo\u0027 instead of converting inside the task body"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "f0f67b53-24e2-49c9-8684-1ed8deec3cb9"
+    },
+    "FileName": "R0006_TypedParameters.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0006_TypedParameters.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0007",
+        "FormatDescription": "info MSBuildTask0007: Consider changing task property \u0027Item\u0027 from \u0027ITaskItem\u0027 to \u0027ITaskItem\u003Cint\u003E\u0027 instead of parsing ItemSpec manually"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "f0f67b53-24e2-49c9-8684-1ed8deec3cb9"
+    },
+    "FileName": "R0006_TypedParameters.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0006_TypedParameters.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 16,
+        "CharNumber": 51,
+        "DiagnosticId": "MSBuildTask0008",
+        "FormatDescription": "info MSBuildTask0008: Task property \u0027RelativeDefault\u0027 has a relative default path; initialize it in Execute() so it can be rooted through TaskEnvironment when the property is changed to \u0027AbsolutePath\u0027"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "f0f67b53-24e2-49c9-8684-1ed8deec3cb9"
+    },
+    "FileName": "R0006_TypedParameters.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0006_TypedParameters.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 8,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R0006_TypedParameters\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "398d89fc-9e26-4eb8-a420-bba203b268db"
+    },
+    "FileName": "R_Scope.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R_Scope.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 21,
+        "DiagnosticId": "MSBuildTask0011",
+        "FormatDescription": "info MSBuildTask0011: Task \u0027R_NotCovered\u0027 receives TaskEnvironment only after construction; add a public constructor with a single TaskEnvironment parameter to make it available during construction"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "fb811315-a0e9-4805-a198-1a50e0f0429f"
+    },
+    "FileName": "R0005_Transitive.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0005_Transitive.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 21,
+        "CharNumber": 51,
+        "DiagnosticId": "MSBuildTask0005",
+        "FormatDescription": "warning MSBuildTask0005: \u0027R0005_Transitive.Execute\u0027 transitively calls unsafe API \u0027File.Exists(string?)\u0027 via: R0005_Transitive.Execute \u2192 TransitiveHelper.Describe \u2192 File.Exists(string?)"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "fb811315-a0e9-4805-a198-1a50e0f0429f"
+    },
+    "FileName": "R0005_Transitive.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0005_Transitive.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 26,
+        "CharNumber": 16,
+        "DiagnosticId": "MSBuildTask0005",
+        "FormatDescription": "warning MSBuildTask0005: \u0027R0005_Transitive.Execute\u0027 transitively calls unsafe API \u0027Environment.GetEnvironmentVariable(string)\u0027 via: R0005_Transitive.Execute \u2192 TransitiveHelper.Describe \u2192 TransitiveHelper.Inner \u2192 Environment.GetEnvironmentVariable(string)"
+      }
+    ]
+  },
+  {
+    "DocumentId": {
+      "ProjectId": {
+        "Id": "8fa291cf-52d8-415f-abf2-b938eca7bc86"
+      },
+      "Id": "fb811315-a0e9-4805-a198-1a50e0f0429f"
+    },
+    "FileName": "R0005_Transitive.cs",
+    "FilePath": "E:\\Ghidello\\Git\\spar.v7\\spikes\\msbuild-task-analyzer\\obj\\fix-copy\\Probe.Rules\\R0005_Transitive.cs",
+    "FileChanges": [
+      {
+        "LineNumber": 25,
+        "CharNumber": 9,
+        "DiagnosticId": "MSBuildTask0005",
+        "FormatDescription": "warning MSBuildTask0005: \u0027R0005_Transitive.Execute\u0027 transitively calls unsafe API \u0027Console.WriteLine(string?)\u0027 via: R0005_Transitive.Execute \u2192 TransitiveHelper.Describe \u2192 TransitiveHelper.Inner \u2192 Console.WriteLine(string?)"
+      }
+    ]
+  }
+]

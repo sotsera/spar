@@ -1,0 +1,13 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.5">
+  <!-- Spike: the React notes app (loopback), its Vite dev server and a SQL Server container, orchestrated by Aspire. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>spar-v7-aspire-spike</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.SqlServer" />
+    <PackageReference Include="Aspire.Hosting.JavaScript" />
+    <ProjectReference Include="..\..\react\React.App\React.App.csproj" />
+  </ItemGroup>
+</Project>

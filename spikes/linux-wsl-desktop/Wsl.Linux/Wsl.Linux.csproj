@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    WSLg desktop spike, Linux host: a GTK window with a WebKitGTK view on a real (WSLg) desktop. The page comes from a
+    folder through spar://app/. -p:SparGtk=4 builds GTK4 + WebKitGTK 6.0; the default is GTK3 + WebKitGTK 4.1.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Wsl.Linux</RootNamespace>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparGtk)' == '4'">
+    <DefineConstants>$(DefineConstants);SPAR_GTK4</DefineConstants>
+  </PropertyGroup>
+</Project>

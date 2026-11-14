@@ -1,0 +1,5 @@
+run 1: port 54737 after 177 ms
+after run 1 exit: port file present=True content=54737
+run 2, immediately after launch: file says 54737
+  stale port probe failed: TaskCanceledException
+run 2: new port 59448 after 2018 ms (1 polls)

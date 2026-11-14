@@ -1,0 +1,27 @@
+<Project>
+  <!--
+    Imported by each generated leaf project (obj/leaves/leaf-N/Leaf.proj). Runs the three probe tasks.
+    ProbeTaskHost=true declares them with TaskHostFactory (always out of process); otherwise Runtime="NET" only,
+    which loads them in the MSBuild node, or routes them by MSBuild's own rules under -mt.
+  -->
+  <PropertyGroup>
+    <ProbeLeaf>$([System.IO.Path]::GetFileName($(MSBuildProjectDirectory)))</ProbeLeaf>
+    <ProbeDelay Condition="'$(ProbeDelay)' == ''">300</ProbeDelay>
+    <!-- all, threadsafe or legacy: which probes the leaf runs. -->
+    <ProbeKinds Condition="'$(ProbeKinds)' == ''">all</ProbeKinds>
+  </PropertyGroup>
+
+  <UsingTask TaskName="Probe.Tasks.ThreadSafeProbe" AssemblyFile="$(ProbeTaskAssembly)" Runtime="NET" Condition="'$(ProbeTaskHost)' != 'true'" />
+  <UsingTask TaskName="Probe.Tasks.LegacyProbe" AssemblyFile="$(ProbeTaskAssembly)" Runtime="NET" Condition="'$(ProbeTaskHost)' != 'true'" />
+  <UsingTask TaskName="Probe.Tasks.InterfaceOnlyProbe" AssemblyFile="$(ProbeTaskAssembly)" Runtime="NET" Condition="'$(ProbeTaskHost)' != 'true'" />
+
+  <UsingTask TaskName="Probe.Tasks.ThreadSafeProbe" AssemblyFile="$(ProbeTaskAssembly)" Runtime="NET" TaskFactory="TaskHostFactory" Condition="'$(ProbeTaskHost)' == 'true'" />
+  <UsingTask TaskName="Probe.Tasks.LegacyProbe" AssemblyFile="$(ProbeTaskAssembly)" Runtime="NET" TaskFactory="TaskHostFactory" Condition="'$(ProbeTaskHost)' == 'true'" />
+  <UsingTask TaskName="Probe.Tasks.InterfaceOnlyProbe" AssemblyFile="$(ProbeTaskAssembly)" Runtime="NET" TaskFactory="TaskHostFactory" Condition="'$(ProbeTaskHost)' == 'true'" />
+
+  <Target Name="Build">
+    <ThreadSafeProbe Condition="'$(ProbeKinds)' != 'legacy'" Label="$(ProbeLeaf)" DelayMilliseconds="$(ProbeDelay)" OutputFile="obj\probe-$(ProbeLeaf).txt" />
+    <LegacyProbe Condition="'$(ProbeKinds)' != 'threadsafe'" Label="$(ProbeLeaf)" DelayMilliseconds="$(ProbeDelay)" />
+    <InterfaceOnlyProbe Condition="'$(ProbeKinds)' == 'all'" Label="$(ProbeLeaf)" DelayMilliseconds="$(ProbeDelay)" />
+  </Target>
+</Project>

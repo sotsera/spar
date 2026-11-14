@@ -1,0 +1,9 @@
+<Project>
+  <!--
+    This folder is an unchanged copy of spikes/app-model-check (C# only). The one addition is this file, which runs the
+    SPAR05x analyzer on both projects to look for false positives.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\Analyzers\Spar050.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+</Project>

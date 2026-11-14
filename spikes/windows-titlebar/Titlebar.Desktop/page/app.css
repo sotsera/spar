@@ -1,0 +1,36 @@
+:root {
+  --bg: #ffffff; --fg: #1a1a1a; --bar: #e8e8e8; --bar-inactive: #f3f3f3; --hover: rgba(0, 0, 0, 0.08);
+  --bar-h: 32px; --reserve: 0px;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1f1f1f; --fg: #f0f0f0; --bar: #2b2b2b; --bar-inactive: #262626; --hover: rgba(255, 255, 255, 0.10); }
+}
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; }
+html { background: transparent; }
+body { color: var(--fg); font: 13px "Segoe UI", system-ui, sans-serif; display: flex; flex-direction: column; overflow: hidden; }
+main { flex: 1; background: var(--bg); padding: 8px 16px; }
+.bar {
+  height: var(--bar-h); display: flex; align-items: stretch; gap: 4px; background: var(--bar);
+  app-region: drag; user-select: none; flex: none;
+}
+body.no-bar .bar { display: none; }
+body.inactive .bar { background: var(--bar-inactive); }
+.nodrag { app-region: no-drag; }
+.bar button { font: inherit; color: inherit; background: transparent; border: 0; padding: 0 10px; border-radius: 4px; margin: 3px 0; }
+.bar button:hover, .bar button.hover { background: var(--hover); }
+.bar .icon { width: 40px; margin-left: 4px; }
+.title { align-self: center; padding: 0 6px; }
+.tabs { display: flex; }
+.tabs [aria-selected="true"] { font-weight: 600; }
+#search { align-self: center; width: 180px; height: 22px; border-radius: 4px; border: 1px solid #8884; background: transparent; color: inherit; padding: 0 6px; }
+.drag { flex: 1; }
+.reserve { width: var(--reserve); flex: none; background: transparent; }
+.bar:has(.reserve:not([hidden])) { background: linear-gradient(to left, transparent var(--reserve), var(--bar) var(--reserve)); }
+.caption { display: flex; flex: none; }
+.caption .cap { width: 46px; margin: 0; border-radius: 0; padding: 0; font: 10px "Segoe Fluent Icons", "Segoe MDL2 Assets"; }
+.caption .close:hover, .caption .close.hover { background: #c42b1c; color: #fff; }
+.caption .cap.pressed { filter: brightness(0.85); }
+/* Caption buttons as drag regions: the host answers their hit test (HTMINBUTTON, HTMAXBUTTON, HTCLOSE). */
+body.capdrag .caption, body.capdrag .caption .cap { app-region: drag; }

@@ -1,0 +1,74 @@
+Build    None    first  rep 0  exit 0  1,80 s
+Build    None    base   rep 1  exit 0  0,76 s
+Build    InProc  cold   rep 1  exit 0  3,34 s
+Build    InProc  warm   rep 1  exit 0  0,90 s
+Build    InProc  edit   rep 1  exit 0  1,08 s
+Build    Exec    cold   rep 1  exit 0  2,78 s
+Build    Exec    warm   rep 1  exit 0  2,15 s
+Build    Exec    edit   rep 1  exit 0  2,29 s
+Build    None    base   rep 2  exit 0  0,48 s
+Build    Exec    cold   rep 2  exit 0  2,69 s
+Build    Exec    warm   rep 2  exit 0  2,19 s
+Build    Exec    edit   rep 2  exit 0  2,30 s
+Build    InProc  cold   rep 2  exit 0  0,76 s
+Build    InProc  warm   rep 2  exit 0  0,62 s
+Build    InProc  edit   rep 2  exit 0  0,68 s
+Build    None    base   rep 3  exit 0  0,46 s
+Build    InProc  cold   rep 3  exit 0  0,75 s
+Build    InProc  warm   rep 3  exit 0  0,59 s
+Build    InProc  edit   rep 3  exit 0  0,72 s
+Build    Exec    cold   rep 3  exit 0  2,73 s
+Build    Exec    warm   rep 3  exit 0  2,15 s
+Build    Exec    edit   rep 3  exit 0  2,31 s
+Publish  None    base   rep 1  exit 0  0,52 s
+Publish  InProc  cold   rep 1  exit 0  6,82 s
+Publish  InProc  warm   rep 1  exit 0  1,03 s
+Publish  InProc  edit   rep 1  exit 0  2,26 s
+Publish  Exec    cold   rep 1  exit 0  8,26 s
+Publish  Exec    warm   rep 1  exit 0  2,73 s
+Publish  Exec    edit   rep 1  exit 0  4,13 s
+Publish  None    base   rep 2  exit 0  0,48 s
+Publish  Exec    cold   rep 2  exit 0  8,17 s
+Publish  Exec    warm   rep 2  exit 0  2,91 s
+Publish  Exec    edit   rep 2  exit 0  4,25 s
+Publish  InProc  cold   rep 2  exit 0  6,13 s
+Publish  InProc  warm   rep 2  exit 0  1,05 s
+Publish  InProc  edit   rep 2  exit 0  2,41 s
+Publish  None    base   rep 3  exit 0  0,58 s
+Publish  InProc  cold   rep 3  exit 0  6,05 s
+Publish  InProc  warm   rep 3  exit 0  0,98 s
+Publish  InProc  edit   rep 3  exit 0  2,36 s
+Publish  Exec    cold   rep 3  exit 0  8,33 s
+Publish  Exec    warm   rep 3  exit 0  2,76 s
+Publish  Exec    edit   rep 3  exit 0  4,11 s
+
+Group                 N Median  Min  Max Failures
+-----                 - ------  ---  --- --------
+Build, Exec, cold     3   2,73 2,69 2,79        0
+Build, Exec, edit     3   2,30 2,29 2,31        0
+Build, Exec, warm     3   2,15 2,15 2,19        0
+Build, InProc, cold   3   0,76 0,75 3,34        0
+Build, InProc, edit   3   0,72 0,68 1,08        0
+Build, InProc, warm   3   0,62 0,59 0,90        0
+Build, None, base     3   0,48 0,46 0,76        0
+Publish, Exec, cold   3   8,26 8,17 8,33        0
+Publish, Exec, edit   3   4,13 4,12 4,25        0
+Publish, Exec, warm   3   2,76 2,73 2,91        0
+Publish, InProc, cold 3   6,13 6,05 6,82        0
+Publish, InProc, edit 3   2,37 2,26 2,41        0
+Publish, InProc, warm 3   1,03 0,98 1,05        0
+Publish, None, base   3   0,52 0,48 0,58        0
+
+
+Stopped (left by the builds):
+
+   Id Parent Name             Cmd
+   -- ------ ----             ---
+43912  54032 MSBuild.exe      MSBuild.exe /nologo /nodemode:8
+15364  43912 conhost.exe      \??\C:\WINDOWS\system32\conhost.exe 0x4
+ 4276  43912 VBCSCompiler.exe VBCSCompiler.exe "-pipename:d3-113a3e34b4354808aab5218d07927576"
+60696   4276 conhost.exe      \??\C:\WINDOWS\system32\conhost.exe 0x4
+47320  43912 MSBuild.exe      MSBuild.exe /nologo /nodemode:2 /nodereuse:True /low:False /parentpacketversion:8 
+55788  47320 conhost.exe      \??\C:\WINDOWS\system32\conhost.exe 0x4
+
+

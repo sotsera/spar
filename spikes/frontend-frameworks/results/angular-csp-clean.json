@@ -1,0 +1,254 @@
+{
+  "base": {
+    "done": true,
+    "ms": 2789,
+    "passed": 15,
+    "failed": 0,
+    "results": [
+      {
+        "name": "environment",
+        "ok": true,
+        "detail": {
+          "mode": "zoneless",
+          "angular": "22.2.6",
+          "zoneLoaded": false,
+          "zone": null,
+          "globalStylesApplied": true
+        }
+      },
+      {
+        "name": "signal set after await of a Call (OnPush)",
+        "ok": true,
+        "detail": {
+          "shown": "planned 1"
+        }
+      },
+      {
+        "name": "plain field set after await of a Call",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "baseline: plain field set after await of a native Promise",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "plain field set in a Call's then() callback",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "plain field set after await of a Call settled outside the Angular zone",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "resource() with a Call loader; a params change aborts the previous call",
+        "ok": true,
+        "detail": {
+          "status": "resolved",
+          "starts": 2
+        }
+      },
+      {
+        "name": "resource() destroyed while loading aborts the call",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "resource() with an unwrap loader and a declared error: error state",
+        "ok": true,
+        "detail": {
+          "shown": "error connectionNotFound",
+          "starts": 1
+        }
+      },
+      {
+        "name": "async pipe with a Call (thenable)",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "RxJS from() over a subscription: unsubscribe does not stop it until the next item",
+        "ok": true,
+        "detail": {
+          "received": 1,
+          "stoppedAfter100ms": 0,
+          "stoppedAfterMs": 262,
+          "how": "returned"
+        }
+      },
+      {
+        "name": "RxJS fromSpar() (AbortController in the teardown): unsubscribe aborts at once",
+        "ok": true,
+        "detail": {
+          "received": 1
+        }
+      },
+      {
+        "name": "component with fromSpar() subscription and component styles; DestroyRef aborts",
+        "ok": true,
+        "detail": {
+          "componentStyleApplied": false,
+          "color": "rgb(0, 0, 0)",
+          "styleElements": 0
+        }
+      },
+      {
+        "name": "toSignal(fromSpar(...)) renders and aborts on destroy",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "candidate Promise-subclass Call: resource(), async pipe, awaited plain field",
+        "ok": true,
+        "detail": {
+          "shown": "planned 1planned 1planned 1"
+        }
+      }
+    ],
+    "violations": [],
+    "reports": [],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  "trustedTypes": {
+    "done": true,
+    "ms": 2796,
+    "passed": 15,
+    "failed": 0,
+    "results": [
+      {
+        "name": "environment",
+        "ok": true,
+        "detail": {
+          "mode": "zoneless",
+          "angular": "22.2.6",
+          "zoneLoaded": false,
+          "zone": null,
+          "globalStylesApplied": true
+        }
+      },
+      {
+        "name": "signal set after await of a Call (OnPush)",
+        "ok": true,
+        "detail": {
+          "shown": "planned 1"
+        }
+      },
+      {
+        "name": "plain field set after await of a Call",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "baseline: plain field set after await of a native Promise",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "plain field set in a Call's then() callback",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "plain field set after await of a Call settled outside the Angular zone",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "updated": false
+        }
+      },
+      {
+        "name": "resource() with a Call loader; a params change aborts the previous call",
+        "ok": true,
+        "detail": {
+          "status": "resolved",
+          "starts": 2
+        }
+      },
+      {
+        "name": "resource() destroyed while loading aborts the call",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "resource() with an unwrap loader and a declared error: error state",
+        "ok": true,
+        "detail": {
+          "shown": "error connectionNotFound",
+          "starts": 1
+        }
+      },
+      {
+        "name": "async pipe with a Call (thenable)",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "RxJS from() over a subscription: unsubscribe does not stop it until the next item",
+        "ok": true,
+        "detail": {
+          "received": 1,
+          "stoppedAfter100ms": 0,
+          "stoppedAfterMs": 254,
+          "how": "returned"
+        }
+      },
+      {
+        "name": "RxJS fromSpar() (AbortController in the teardown): unsubscribe aborts at once",
+        "ok": true,
+        "detail": {
+          "received": 1
+        }
+      },
+      {
+        "name": "component with fromSpar() subscription and component styles; DestroyRef aborts",
+        "ok": true,
+        "detail": {
+          "componentStyleApplied": false,
+          "color": "rgb(0, 0, 0)",
+          "styleElements": 0
+        }
+      },
+      {
+        "name": "toSignal(fromSpar(...)) renders and aborts on destroy",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "candidate Promise-subclass Call: resource(), async pipe, awaited plain field",
+        "ok": true,
+        "detail": {
+          "shown": "planned 1planned 1planned 1"
+        }
+      }
+    ],
+    "violations": [],
+    "reports": [],
+    "consoleMessages": [],
+    "pageErrors": []
+  }
+}

@@ -1,0 +1,16 @@
+{"t":32.66,"evt":"main","label":"webkit-nohelpers","ui":"auto","processAgeMs":90,"uid":1000,"desktop":null}
+{"t":37.58,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":38.24,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":41.31,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":2.394}
+{"t":44.32,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":1.439}
+{"t":45.57,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.673}
+{"t":50.46,"evt":"library","file":"libgtk-4.so.1","ok":true,"ms":4.451}
+{"t":82.93,"evt":"gtk-init","ok":true,"ms":31.018,"gtk":"4.14.5"}
+{"t":90.87,"evt":"library","file":"libwebkitgtk-6.0.so.4","ok":true,"ms":7.538}
+{"t":94.6,"evt":"webkit-version","found":"2.52.6","minimum":"2.40.0"}
+{"t":96.22,"evt":"webkit-helpers","library":"/usr/lib/x86_64-linux-gnu/libwebkitgtk-6.0.so.4.16.10","folder":"/usr/lib/x86_64-linux-gnu/webkitgtk-6.0","missing":"/usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitWebProcess,/usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitNetworkProcess"}
+{"t":97.41,"evt":"problem","kind":"Broken","exit":5,"details":"missing or not executable: /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitWebProcess, /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitNetworkProcess"}
+{"t":99.61,"evt":"stderr","isatty":"redirected"}
+{"t":100.72,"evt":"journal","result":"journal-socket"}
+{"t":1656.17,"evt":"graphical","way":"gtk","shown":true,"detail":"button=0","ms":1554.894}
+{"t":1659.2,"evt":"exit","code":5}

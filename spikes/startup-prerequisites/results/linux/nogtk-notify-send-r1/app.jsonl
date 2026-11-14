@@ -1,0 +1,13 @@
+{"t":40.93,"evt":"main","label":"nogtk-notify-send","ui":"notify-send","processAgeMs":40,"uid":1000,"desktop":null}
+{"t":44.68,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":46.9,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":54.99,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":7.697}
+{"t":56.82,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":1.267}
+{"t":60.24,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":1.764}
+{"t":66.36,"evt":"library","file":"libgtk-4.so.1","ok":false,"reason":"libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":74.29,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libgtk-4.so.1): libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":86.87,"evt":"stderr","isatty":"redirected"}
+{"t":92.27,"evt":"journal","result":"journal-socket"}
+{"t":105.09,"evt":"helper-exit","tool":"notify-send","exit":0,"ms":6.403,"stderr":""}
+{"t":105.4,"evt":"graphical","way":"notify-send","shown":true,"detail":"exit 0 after 6 ms","ms":8.347}
+{"t":105.65,"evt":"exit","code":3}

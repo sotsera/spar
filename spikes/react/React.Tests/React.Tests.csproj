@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <_AppExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</_AppExtension>
+    <LoopAppPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\React.App\bin\$(Configuration)\net11.0\$(NETCoreSdkRuntimeIdentifier)\React.App$(_AppExtension)'))</LoopAppPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Microsoft.Playwright" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!-- Most tests launch the app's real executable, the way an agent or CI would.
+       The assembly is referenced too: the in-process factory runs its real entry point inside the test process. -->
+  <ItemGroup>
+    <!-- Tests run against the packaged bundle, as shipped: no dev server. -->
+    <ProjectReference Include="..\React.App\React.App.csproj" AdditionalProperties="SparDevServerBuild=false" />
+    <Compile Include="..\..\loopback\Loop.Tests\LoopbackApp.cs" Link="LoopbackApp.cs" />
+  </ItemGroup>
+
+  <Import Project="..\..\loopback\Loop.Tests\AppPathMetadata.targets" />
+</Project>

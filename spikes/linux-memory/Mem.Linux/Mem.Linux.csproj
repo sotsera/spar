@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Memory and shutdown spike, Linux host. One small NativeAOT host with three modes: a GTK window with no WebKit
+    (the floor), a WebKit view (empty, small or heavy page), and the window-manager drag used for the GTK4 shutdown
+    question. -p:SparGtk=4 builds GTK4 + WebKitGTK 6.0; the default is GTK3 + WebKitGTK 4.1.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Mem.Linux</RootNamespace>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparGtk)' == '4'">
+    <DefineConstants>$(DefineConstants);SPAR_GTK4</DefineConstants>
+  </PropertyGroup>
+</Project>

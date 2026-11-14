@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Linux counterpart of Profiles.Win: one NativeAOT executable with "host" and "harness" verbs. -p:SparGtk=4 builds
+    GTK4 + WebKitGTK 6.0; the default is GTK3 + WebKitGTK 4.1. Native imports and the GLib context are copied from
+    spikes/linux-memory and spikes/linux-desktop. The probe page (../www) is served from disk.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Spar.WebViewProfiles</RootNamespace>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparGtk)' == '4'">
+    <DefineConstants>$(DefineConstants);SPAR_GTK4</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Profiles.Win/Options.cs" Link="Options.cs" />
+    <Compile Include="../Profiles.Win/Scan.cs" Link="Scan.cs" />
+  </ItemGroup>
+</Project>

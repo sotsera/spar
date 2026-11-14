@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="dark">
+  <title>Spar integration probe</title>
+  <link rel="stylesheet" href="/app.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header id="titlebar" class="titlebar" data-spar-drag>
+    <span id="app-icon" class="app-icon" aria-hidden="true"></span>
+    <span id="app-title" class="app-title">Spar integration</span>
+    <input id="search" class="search" placeholder="Search" autocomplete="off" aria-label="Search">
+    <span id="drag-spot" class="drag-spot">drag here</span>
+    <div class="controls">
+      <button id="min" type="button" aria-label="Minimize">&#x2013;</button>
+      <button id="max" type="button" aria-label="Maximize">&#x25a1;</button>
+      <button id="close" type="button" aria-label="Close">&#x2715;</button>
+    </div>
+  </header>
+  <main>
+    <p>State: <output id="state">?</output> · ticks <output id="ticks">0</output> · visibility <output id="vis">?</output></p>
+    <label>Kept text <input id="kept" autocomplete="off"></label>
+    <p><button id="copy" type="button">Copy</button> <button id="paste" type="button">Paste</button> <output id="clip"></output></p>
+    <pre id="log"></pre>
+  </main>
+</body>
+</html>

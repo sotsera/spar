@@ -1,0 +1,424 @@
+# Windows memory scenario: 5 runs
+## Processes (GetProcessInfos, command-line scan)
+  memory-1.log: source=GetProcessInfos renderer:24472 browser:38260 utility:43720 gpu:58944 utility:68820
+  memory-1.log: source=command-line-scan browser:38260 crashpad-handler:7592 gpu-process:58944 utility:NetworkService:43720 utility:StorageService:68820 renderer:24472
+  memory-1.log: source=compare onlyInScan=[crashpad-handler:7592] onlyInList=[]
+  memory-2.log: source=GetProcessInfos browser:2064 renderer:6860 gpu:26316 utility:62036 utility:63400
+  memory-2.log: source=command-line-scan browser:2064 crashpad-handler:14952 gpu-process:26316 utility:NetworkService:63400 utility:StorageService:62036 renderer:6860
+  memory-2.log: source=compare onlyInScan=[crashpad-handler:14952] onlyInList=[]
+  memory-3.log: source=GetProcessInfos gpu:15332 utility:20284 browser:38020 utility:64764 renderer:69924
+  memory-3.log: source=command-line-scan browser:38020 crashpad-handler:65160 gpu-process:15332 utility:NetworkService:64764 utility:StorageService:20284 renderer:69924
+  memory-3.log: source=compare onlyInScan=[crashpad-handler:65160] onlyInList=[]
+  memory-4.log: source=GetProcessInfos browser:33900 utility:38740 gpu:42964 renderer:54284 utility:69672
+  memory-4.log: source=command-line-scan browser:33900 crashpad-handler:23016 gpu-process:42964 utility:NetworkService:38740 utility:StorageService:69672 renderer:54284
+  memory-4.log: source=compare onlyInScan=[crashpad-handler:23016] onlyInList=[]
+  memory-5.log: source=GetProcessInfos utility:52164 browser:52656 gpu:60424 utility:69420 renderer:75008
+  memory-5.log: source=command-line-scan browser:52656 crashpad-handler:73060 gpu-process:60424 utility:NetworkService:52164 utility:StorageService:69420 renderer:75008
+  memory-5.log: source=compare onlyInScan=[crashpad-handler:73060] onlyInList=[]
+  memory-1.log: EXTENDED call-hr=0x00000000 completed-hr=0x00000000 renderer:24472:frames=1:[]https://app.localhost/small.html browser:38260:frames=0 utility:43720:frames=0 gpu:58944:frames=0 utility:68820:frames=0
+  memory-2.log: EXTENDED call-hr=0x00000000 completed-hr=0x00000000 renderer:6860:frames=1:[]https://app.localhost/small.html browser:2064:frames=0 gpu:26316:frames=0 utility:62036:frames=0 utility:63400:frames=0
+  memory-3.log: EXTENDED call-hr=0x00000000 completed-hr=0x00000000 renderer:69924:frames=1:[]https://app.localhost/small.html gpu:15332:frames=0 utility:20284:frames=0 browser:38020:frames=0 utility:64764:frames=0
+  memory-4.log: EXTENDED call-hr=0x00000000 completed-hr=0x00000000 renderer:54284:frames=1:[]https://app.localhost/small.html browser:33900:frames=0 utility:38740:frames=0 gpu:42964:frames=0 utility:69672:frames=0
+  memory-5.log: EXTENDED call-hr=0x00000000 completed-hr=0x00000000 renderer:75008:frames=1:[]https://app.localhost/small.html utility:52164:frames=0 browser:52656:frames=0 gpu:60424:frames=0 utility:69420:frames=0
+  memory-1.log: THREADING GetProcessInfos-from-pool hr=0x802A000C; collection-from-pool count-hr=0x00000000 count=5 item-hr=0x00000000 pid-hr=0x00000000
+  memory-2.log: THREADING GetProcessInfos-from-pool hr=0x802A000C; collection-from-pool count-hr=0x00000000 count=5 item-hr=0x00000000 pid-hr=0x00000000
+  memory-3.log: THREADING GetProcessInfos-from-pool hr=0x802A000C; collection-from-pool count-hr=0x00000000 count=5 item-hr=0x00000000 pid-hr=0x00000000
+  memory-4.log: THREADING GetProcessInfos-from-pool hr=0x802A000C; collection-from-pool count-hr=0x00000000 count=5 item-hr=0x00000000 pid-hr=0x00000000
+  memory-5.log: THREADING GetProcessInfos-from-pool hr=0x802A000C; collection-from-pool count-hr=0x00000000 count=5 item-hr=0x00000000 pid-hr=0x00000000
+## Totals over the browser processes (MB)
+  loaded (n=5): processes 5.00 [5.00–5.00]; workingSetMB 327 [326–328]; privateWorkingSetMB 75.0 [74.8–77.1]; privateUsageMB 150 [150–153]; sharedCommitMB 67.2 [67.2–67.2]; qwsPrivateMB 74.6 [74.0–75.2]; qwsProportionalMB 111 [110–111]; hostWorkingSetMB 32.9 [32.8–33.1]; hostPrivateWorkingSetMB 13.5 [13.2–13.5]; hostPrivateUsageMB 16.4 [16.1–16.4]
+## Per kind, private working set / private usage / working set (kB)
+  renderer (n=5): private WS 11332 [11320–14072]; private usage 20984 [20976–23736]; WS 55704 [55620–58356]; proportional 17572 [17550–17582]
+  browser (n=5): private WS 31028 [30576–31588]; private usage 39648 [39216–40332]; WS 126808 [125356–127956]; proportional 44630 [44035–45270]
+  utility (n=10): private WS 6316 [4252–8612]; private usage 11664 [9372–14248]; WS 35368 [25952–47456]; proportional 10390 [7279–14089]
+  gpu (n=5): private WS 21628 [21544–21744]; private usage 69832 [69692–69916]; WS 79080 [78964–79176]; proportional 29763 [29674–29872]
+## Performance counter "Working Set - Private" against EX2 PrivateWorkingSetSize (same pid, before and after the counter read)
+  memory-1.log renderer:24472 counter=11332 ex2-before=11332 ex2-after=11332 | privateBytes counter=20984 ex2=20984 | WS counter=55732 ex2=55732
+  memory-1.log browser:38260 counter=31116 ex2-before=31116 ex2-after=31116 | privateBytes counter=39712 ex2=39712 | WS counter=127404 ex2=127404
+  memory-1.log utility:43720 counter=8608 ex2-before=8608 ex2-after=8608 | privateBytes counter=14232 ex2=14232 | WS counter=47524 ex2=47524
+  memory-1.log gpu:58944 counter=21588 ex2-before=21588 ex2-after=21588 | privateBytes counter=69752 ex2=69752 | WS counter=79032 ex2=79032
+  memory-1.log utility:68820 counter=4268 ex2-before=4268 ex2-after=4268 | privateBytes counter=9380 ex2=9380 | WS counter=26008 ex2=26008
+  memory-2.log browser:2064 counter=31196 ex2-before=31196 ex2-after=31196 | privateBytes counter=39784 ex2=39784 | WS counter=127608 ex2=127608
+  memory-2.log renderer:6860 counter=11324 ex2-before=11324 ex2-after=11324 | privateBytes counter=21000 ex2=21000 | WS counter=55736 ex2=55736
+  memory-2.log gpu:26316 counter=21660 ex2-before=21660 ex2-after=21660 | privateBytes counter=69872 ex2=69872 | WS counter=79124 ex2=79124
+  memory-2.log utility:62036 counter=4272 ex2-before=4272 ex2-after=4272 | privateBytes counter=9384 ex2=9384 | WS counter=25968 ex2=25968
+  memory-2.log utility:63400 counter=8528 ex2-before=8528 ex2-after=8528 | privateBytes counter=14140 ex2=14140 | WS counter=47452 ex2=47452
+  memory-3.log gpu:15332 counter=21736 ex2-before=21736 ex2-after=21736 | privateBytes counter=69972 ex2=69972 | WS counter=79208 ex2=79208
+  memory-3.log utility:20284 counter=4252 ex2-before=4252 ex2-after=4252 | privateBytes counter=9372 ex2=9372 | WS counter=25952 ex2=25952
+  memory-3.log browser:38020 counter=31236 ex2-before=31236 ex2-after=31236 | privateBytes counter=39884 ex2=39884 | WS counter=127768 ex2=127768
+  memory-3.log utility:64764 counter=8612 ex2-before=8612 ex2-after=8612 | privateBytes counter=14244 ex2=14244 | WS counter=47552 ex2=47552
+  memory-3.log renderer:69924 counter=14076 ex2-before=14076 ex2-after=14076 | privateBytes counter=23740 ex2=23740 | WS counter=58476 ex2=58476
+  memory-4.log browser:33900 counter=31296 ex2-before=31296 ex2-after=31296 | privateBytes counter=39904 ex2=39904 | WS counter=127828 ex2=127828
+  memory-4.log utility:38740 counter=8496 ex2-before=8496 ex2-after=8496 | privateBytes counter=14124 ex2=14124 | WS counter=47408 ex2=47408
+  memory-4.log gpu:42964 counter=21776 ex2-before=21776 ex2-after=21776 | privateBytes counter=69940 ex2=69940 | WS counter=79220 ex2=79220
+  memory-4.log renderer:54284 counter=11336 ex2-before=11336 ex2-after=11336 | privateBytes counter=20988 ex2=20988 | WS counter=55736 ex2=55736
+  memory-4.log utility:69672 counter=4268 ex2-before=4268 ex2-after=4268 | privateBytes counter=9376 ex2=9376 | WS counter=26020 ex2=26020
+  memory-5.log utility:52164 counter=8640 ex2-before=8640 ex2-after=8640 | privateBytes counter=14276 ex2=14276 | WS counter=47560 ex2=47560
+  memory-5.log browser:52656 counter=31668 ex2-before=31668 ex2-after=31668 | privateBytes counter=40416 ex2=40416 | WS counter=128556 ex2=128556
+  memory-5.log gpu:60424 counter=21676 ex2-before=21676 ex2-after=21676 | privateBytes counter=69900 ex2=69900 | WS counter=79144 ex2=79144
+  memory-5.log utility:69420 counter=4268 ex2-before=4268 ex2-after=4268 | privateBytes counter=9380 ex2=9380 | WS counter=25964 ex2=25964
+  memory-5.log renderer:75008 counter=11332 ex2-before=11332 ex2-after=11332 | privateBytes counter=20980 ex2=20980 | WS counter=55736 ex2=55736
+## Costs
+  GetProcessInfos+read-list thread=sta: median 28.6 [28.0–29.2] us, p90 31.6 [31.3–50.0], max 87.4 [42.2–151], alloc/call 11093 [11093–11094] B
+  GetProcessExtendedInfos-to-completion thread=sta: median 0.10 [0.10–0.10] ms, p90 0.10 [0.10–0.10], max 0.20 [0.20–0.30]
+  command-line-scan thread=pool: median 3.20 [3.10–3.50] ms, p90 3.50 [3.30–4.10], max 3.80 [3.40–4.70], alloc/call 452896 [452688–452952] B
+  list+open+EX2+close thread=sta: median 38.0 [37.7–40.6] us, p90 41.4 [41.0–57.4], max 106 [65.4–179], alloc/call 11191 [11191–11191] B
+  open+EX2+close thread=pool: median 7.40 [7.40–7.50] us, p90 7.50 [7.50–8.10], max 13.4 [9.20–97.7], alloc/call 0.00 [0.00–0.00] B
+  cached-handles+EX2 thread=pool: median 2.50 [2.50–2.50] us, p90 2.50 [2.50–2.60], max 4.80 [3.10–11.5], alloc/call 0.00 [0.00–0.00] B
+  cached-handles+EX2 thread=sta: median 2.40 [2.40–2.50] us, p90 2.50 [2.50–2.50], max 2.60 [2.50–4.70], alloc/call 0.00 [0.00–0.00] B
+  Process.GetProcessById.PrivateMemorySize64 thread=pool: median 15.9 [15.2–16.5] ms, p90 17.2 [16.1–19.0], max 18.4 [16.3–21.1], alloc/call 25176 [25112–25176] B
+  QueryWorkingSet-all thread=pool: median 5.40 [5.10–5.50] ms, p90 5.60 [5.20–5.80], max 5.70 [5.30–6.40], alloc/call 0.00 [0.00–0.00] B
+## UI thread (STA) ping latency
+  idle: ping median 0.00 [0.00–0.00] ms, p90 0.00 [0.00–0.00], max 0.40 [0.20–4.50]
+  sample-on-sta-every-100ms: ping median 0.00 [0.00–0.00] ms, p90 0.00 [0.00–0.00], max 1.00 [0.30–2.50]; sample median 0.10 [0.10–0.10] ms
+  sample-on-pool-every-100ms: ping median 0.00 [0.00–0.00] ms, p90 0.00 [0.00–0.00], max 1.10 [0.40–3.60]; sample median 0.00 [0.00–0.00] ms
+## Backend
+  values host: workingSetMB 37.2 [37.1–37.4]; gcHeapMB 0.00 [0.00–0.00]; gcCommittedMB 0.00 [0.00–0.00]; gcTotalMemoryMB 12.5 [12.5–12.6]; gcFragmentedMB 0.00 [0.00–0.00]; totalAllocatedMB 12.5 [12.5–12.5]; processPrivateMB 20.7 [20.3–20.8]; processWorkingSetMB 37.2 [37.1–37.4]; ex2PrivateUsageMB 20.7 [20.3–20.8]; ex2PrivateWorkingSetMB 17.8 [17.5–17.8]; ex2WorkingSetMB 37.2 [37.1–37.4]
+  values host-after-gc: workingSetMB 39.2 [39.1–39.4]; gcHeapMB 2.40 [2.40–2.40]; gcCommittedMB 14.5 [14.5–14.6]; gcTotalMemoryMB 2.30 [2.30–2.30]; gcFragmentedMB 0.00 [0.00–0.00]; totalAllocatedMB 12.5 [12.5–12.5]; processPrivateMB 22.4 [22.1–23.4]; processWorkingSetMB 39.1 [38.9–39.3]; ex2PrivateUsageMB 21.5 [21.1–22.4]; ex2PrivateWorkingSetMB 18.6 [18.2–19.5]; ex2WorkingSetMB 38.2 [37.9–39.1]
+  cost Environment.WorkingSet: 125 [124–128] ns, alloc 0.00 [0.00–0.00] B
+  cost GC.GetGCMemoryInfo: 25.0 [19.6–25.8] ns, alloc 288 [288–288] B
+  cost GC.GetTotalMemory(false): 13.5 [13.5–15.8] ns, alloc 0.00 [0.00–0.00] B
+  cost GC.GetTotalAllocatedBytes: 2.60 [2.60–2.60] ns, alloc 0.00 [0.00–0.00] B
+  cost Process.GetCurrentProcess().PrivateMemorySize64: 3156 [3091–3194] us, alloc 3520 [3520–3584] B
+  cost cachedProcess.Refresh+PrivateMemorySize64: 3215 [2988–3252] us, alloc 3232 [3232–3296] B
+  cost ex2PrivateUsage: 138 [135–139] ns, alloc 0.00 [0.00–0.00] B
+  cost ex2PrivateWorkingSet: 135 [133–139] ns, alloc 0.00 [0.00–0.00] B
+  cost ex2WorkingSet: 134 [133–140] ns, alloc 0.00 [0.00–0.00] B
+## Sampler sketch
+  engine-every-tick: ticks 51.0 [51.0–51.0], written 51.0 [51.0–51.0], dropped 33.0 [33.0–33.0], received 17.0 [17.0–17.0], read+write alloc/tick 0.00 [0.00–0.00] B, process-wide steady alloc/tick 77.0 [77.0–79.0] B
+  engine-threshold-1%-1MB: ticks 51.0 [50.0–51.0], written 1.00 [1.00–1.00], dropped 0.00 [0.00–0.00], received 1.00 [1.00–1.00], read+write alloc/tick 0.00 [0.00–0.00] B, process-wide steady alloc/tick 20.0 [19.0–3678] B
+
+# Windows disk scenario: 6 runs
+  disk-large-1.log: fillMs=824 estimate usage=100722574 details={"caches":33570816,"indexedDB":67151758} steps={"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000}
+  disk-large-2.log: fillMs=798 estimate usage=100722574 details={"caches":33570816,"indexedDB":67151758} steps={"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000}
+  disk-large-3.log: fillMs=797 estimate usage=100722574 details={"caches":33570816,"indexedDB":67151758} steps={"localStorageChars":4194304,"indexedDbBytes":67108864,"cacheStorageBytes":33554432,"httpBytes":40960000}
+  disk-realistic-1.log: fillMs=139 estimate usage=12591479 details={"caches":4196352,"indexedDB":8395127} steps={"localStorageChars":1048576,"indexedDbBytes":8388608,"cacheStorageBytes":4194304,"httpBytes":4096000}
+  disk-realistic-2.log: fillMs=118 estimate usage=12591481 details={"caches":4196352,"indexedDB":8395129} steps={"localStorageChars":1048576,"indexedDbBytes":8388608,"cacheStorageBytes":4194304,"httpBytes":4096000}
+  disk-realistic-3.log: fillMs=115 estimate usage=12591481 details={"caches":4196352,"indexedDB":8395129} steps={"localStorageChars":1048576,"indexedDbBytes":8388608,"cacheStorageBytes":4194304,"httpBytes":4096000}
+  disk-large-1.log: LOCKED label=running files=673 cannotOpenForRead=2 ms=3008.5
+  disk-large-2.log: LOCKED label=running files=673 cannotOpenForRead=2 ms=2926.9
+  disk-large-3.log: LOCKED label=running files=673 cannotOpenForRead=2 ms=3178.1
+  disk-realistic-1.log: LOCKED label=running files=228 cannotOpenForRead=2 ms=719.9
+  disk-realistic-2.log: LOCKED label=running files=229 cannotOpenForRead=2 ms=579.1
+  disk-realistic-3.log: LOCKED label=running files=228 cannotOpenForRead=2 ms=581.3
+  realistic (runs=3):
+    running udf FileInfo: files 228 [228–229], logical 26268 [26267–26268] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.49 [1.49–1.61] ms, repeat median 0.90 [0.90–1.00] ms
+    running udf FileSystemEnumerator: files 228 [228–229], logical 26268 [26267–26268] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.93 [0.89–1.17] ms, repeat median 0.90 [0.90–0.90] ms
+    running udf FindFirstFileEx: files 228 [228–229], logical 26268 [26267–26268] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.09 [1.07–1.11] ms, repeat median 1.00 [1.00–1.20] ms
+    running udf FileFullDirectoryInfo: files 228 [228–229], logical 26268 [26267–26268] kB, allocated 26830 [26806–26999] kB, errors 0.00 [0.00–0.00], first 0.97 [0.89–0.98] ms, repeat median 0.90 [0.90–1.00] ms
+    running udf PerFileAttributes: files 228 [228–229], logical 26407 [26406–26407] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.77 [1.75–1.86] ms, repeat median 1.60 [1.60–1.80] ms
+    running profile FileInfo: files 203 [203–203], logical 19745 [19745–19745] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.70 [0.68–0.72] ms, repeat median 0.70 [0.70–0.70] ms
+    running profile FileSystemEnumerator: files 203 [203–203], logical 19745 [19745–19745] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.64 [0.64–0.86] ms, repeat median 0.60 [0.60–0.70] ms
+    running profile FindFirstFileEx: files 203 [203–203], logical 19745 [19745–19745] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.84 [0.78–0.87] ms, repeat median 0.70 [0.70–0.80] ms
+    running profile FileFullDirectoryInfo: files 203 [203–203], logical 19745 [19745–19745] kB, allocated 20294 [20270–20466] kB, errors 0.00 [0.00–0.00], first 0.64 [0.63–0.67] ms, repeat median 0.60 [0.60–0.60] ms
+    running profile PerFileAttributes: files 203 [203–203], logical 19885 [19885–19885] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.56 [1.38–1.65] ms, repeat median 1.20 [1.20–1.30] ms
+    running-later udf FileInfo: files 233 [233–234], logical 26367 [26363–26367] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.24 [1.22–1.26] ms, repeat median 1.00 [0.90–1.00] ms
+    running-later udf FileSystemEnumerator: files 233 [233–234], logical 26367 [26363–26367] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.97 [0.91–1.04] ms, repeat median 0.90 [0.90–1.00] ms
+    running-later udf FindFirstFileEx: files 233 [233–234], logical 26367 [26363–26367] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.11 [1.08–1.13] ms, repeat median 1.10 [1.10–1.20] ms
+    running-later udf FileFullDirectoryInfo: files 233 [233–234], logical 26367 [26363–26367] kB, allocated 26998 [26974–27166] kB, errors 0.00 [0.00–0.00], first 0.93 [0.89–0.94] ms, repeat median 0.90 [0.90–1.00] ms
+    running-later udf PerFileAttributes: files 233 [233–234], logical 27393 [27389–27393] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.78 [1.77–1.81] ms, repeat median 1.80 [1.70–1.90] ms
+    running-later profile FileInfo: files 207 [207–207], logical 19838 [19838–19838] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.69 [0.68–0.70] ms, repeat median 0.70 [0.60–0.70] ms
+    running-later profile FileSystemEnumerator: files 207 [207–207], logical 19838 [19838–19838] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.63 [0.61–0.64] ms, repeat median 0.60 [0.60–0.60] ms
+    running-later profile FindFirstFileEx: files 207 [207–207], logical 19838 [19838–19838] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.76 [0.75–0.78] ms, repeat median 0.80 [0.70–0.80] ms
+    running-later profile FileFullDirectoryInfo: files 207 [207–207], logical 19838 [19838–19838] kB, allocated 20457 [20433–20629] kB, errors 0.00 [0.00–0.00], first 0.66 [0.63–0.69] ms, repeat median 0.60 [0.60–0.60] ms
+    running-later profile PerFileAttributes: files 207 [207–207], logical 20864 [20864–20864] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.55 [1.36–1.57] ms, repeat median 1.40 [1.20–1.40] ms
+    exited udf FileInfo: files 231 [231–232], logical 27364 [27360–27364] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.35 [1.28–1.45] ms, repeat median 0.90 [0.90–1.00] ms
+    exited udf FileSystemEnumerator: files 231 [231–232], logical 27364 [27360–27364] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.90 [0.88–0.98] ms, repeat median 0.90 [0.90–1.00] ms
+    exited udf FindFirstFileEx: files 231 [231–232], logical 27364 [27360–27364] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.10 [1.05–1.14] ms, repeat median 1.00 [1.00–1.00] ms
+    exited udf FileFullDirectoryInfo: files 231 [231–232], logical 27364 [27360–27364] kB, allocated 27458 [27455–27458] kB, errors 0.00 [0.00–0.00], first 0.89 [0.88–0.91] ms, repeat median 0.90 [0.90–0.90] ms
+    exited udf PerFileAttributes: files 231 [231–232], logical 27364 [27360–27364] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.91 [1.81–2.25] ms, repeat median 1.80 [1.60–1.90] ms
+    exited profile FileInfo: files 206 [206–206], logical 20833 [20833–20833] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.70 [0.68–0.70] ms, repeat median 0.70 [0.70–0.80] ms
+    exited profile FileSystemEnumerator: files 206 [206–206], logical 20833 [20833–20833] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.63 [0.61–0.73] ms, repeat median 0.60 [0.60–0.60] ms
+    exited profile FindFirstFileEx: files 206 [206–206], logical 20833 [20833–20833] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.78 [0.75–1.02] ms, repeat median 0.70 [0.70–0.80] ms
+    exited profile FileFullDirectoryInfo: files 206 [206–206], logical 20833 [20833–20833] kB, allocated 20918 [20918–20918] kB, errors 0.00 [0.00–0.00], first 0.65 [0.64–0.69] ms, repeat median 0.70 [0.60–0.70] ms
+    exited profile PerFileAttributes: files 206 [206–206], logical 20833 [20833–20833] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.45 [1.36–1.49] ms, repeat median 1.30 [1.30–1.30] ms
+  large (runs=3):
+    running udf FileInfo: files 673 [673–673], logical 148582 [148582–148582] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.80 [1.70–3.62] ms, repeat median 1.00 [1.00–1.00] ms
+    running udf FileSystemEnumerator: files 673 [673–673], logical 148582 [148582–148582] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.94 [0.92–1.02] ms, repeat median 0.90 [0.90–1.00] ms
+    running udf FindFirstFileEx: files 673 [673–673], logical 148582 [148582–148582] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 10.2 [9.73–10.4] ms, repeat median 1.10 [1.10–1.20] ms
+    running udf FileFullDirectoryInfo: files 673 [673–673], logical 148582 [148582–148582] kB, allocated 149331 [149223–149367] kB, errors 0.00 [0.00–0.00], first 0.97 [0.94–1.16] ms, repeat median 0.90 [0.90–1.00] ms
+    running udf PerFileAttributes: files 673 [673–673], logical 148721 [148721–148721] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 3.25 [3.11–3.36] ms, repeat median 3.00 [2.90–3.20] ms
+    running profile FileInfo: files 647 [647–647], logical 142060 [142060–142060] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.79 [0.79–0.81] ms, repeat median 0.80 [0.80–0.80] ms
+    running profile FileSystemEnumerator: files 647 [647–647], logical 142060 [142060–142060] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.69 [0.68–0.69] ms, repeat median 0.70 [0.60–0.70] ms
+    running profile FindFirstFileEx: files 647 [647–647], logical 142060 [142060–142060] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.82 [0.82–0.84] ms, repeat median 0.80 [0.80–0.80] ms
+    running profile FileFullDirectoryInfo: files 647 [647–647], logical 142060 [142060–142060] kB, allocated 142798 [142690–142834] kB, errors 0.00 [0.00–0.00], first 0.67 [0.67–0.73] ms, repeat median 0.70 [0.70–0.70] ms
+    running profile PerFileAttributes: files 647 [647–647], logical 142200 [142200–142200] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 2.83 [2.80–2.92] ms, repeat median 2.60 [2.60–2.60] ms
+    running-later udf FileInfo: files 678 [678–678], logical 152777 [152777–152781] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.34 [1.31–1.36] ms, repeat median 1.20 [1.00–2.90] ms
+    running-later udf FileSystemEnumerator: files 678 [678–678], logical 152777 [152777–152781] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.95 [0.94–1.41] ms, repeat median 0.90 [0.90–1.00] ms
+    running-later udf FindFirstFileEx: files 678 [678–678], logical 152777 [152777–152781] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.18 [1.18–1.34] ms, repeat median 1.10 [1.10–1.10] ms
+    running-later udf FileFullDirectoryInfo: files 678 [678–678], logical 152777 [152777–152781] kB, allocated 153698 [153490–153978] kB, errors 0.00 [0.00–0.00], first 0.97 [0.95–1.01] ms, repeat median 1.00 [1.00–1.00] ms
+    running-later udf PerFileAttributes: files 678 [678–678], logical 152777 [152777–152781] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 3.36 [3.27–3.40] ms, repeat median 3.00 [3.00–3.10] ms
+    running-later profile FileInfo: files 651 [651–651], logical 146252 [146252–146252] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.80 [0.80–0.81] ms, repeat median 0.80 [0.80–1.00] ms
+    running-later profile FileSystemEnumerator: files 651 [651–651], logical 146252 [146252–146252] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.67 [0.66–0.68] ms, repeat median 0.70 [0.70–0.70] ms
+    running-later profile FindFirstFileEx: files 651 [651–651], logical 146252 [146252–146252] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.83 [0.81–0.84] ms, repeat median 0.80 [0.80–0.90] ms
+    running-later profile FileFullDirectoryInfo: files 651 [651–651], logical 146252 [146252–146252] kB, allocated 147157 [146953–147441] kB, errors 0.00 [0.00–0.00], first 0.68 [0.67–0.70] ms, repeat median 0.70 [0.60–0.70] ms
+    running-later profile PerFileAttributes: files 651 [651–651], logical 146252 [146252–146252] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 2.80 [2.74–2.80] ms, repeat median 2.60 [2.50–2.80] ms
+    exited udf FileInfo: files 676 [676–676], logical 152748 [152748–152753] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.40 [1.29–1.44] ms, repeat median 1.10 [1.00–1.10] ms
+    exited udf FileSystemEnumerator: files 676 [676–676], logical 152748 [152748–152753] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.97 [0.93–0.99] ms, repeat median 0.90 [0.90–1.00] ms
+    exited udf FindFirstFileEx: files 676 [676–676], logical 152748 [152748–152753] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 1.14 [1.14–1.20] ms, repeat median 1.10 [1.10–1.10] ms
+    exited udf FileFullDirectoryInfo: files 676 [676–676], logical 152748 [152748–152753] kB, allocated 153174 [153174–153179] kB, errors 0.00 [0.00–0.00], first 0.98 [0.92–0.98] ms, repeat median 1.10 [0.90–1.10] ms
+    exited udf PerFileAttributes: files 676 [676–676], logical 152748 [152748–152753] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 3.28 [3.13–9.10] ms, repeat median 3.00 [2.80–3.30] ms
+    exited profile FileInfo: files 650 [650–650], logical 146222 [146222–146222] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.76 [0.73–0.81] ms, repeat median 0.70 [0.70–0.70] ms
+    exited profile FileSystemEnumerator: files 650 [650–650], logical 146222 [146222–146222] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.66 [0.64–0.76] ms, repeat median 0.70 [0.60–0.70] ms
+    exited profile FindFirstFileEx: files 650 [650–650], logical 146222 [146222–146222] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 0.85 [0.81–0.94] ms, repeat median 0.80 [0.80–0.80] ms
+    exited profile FileFullDirectoryInfo: files 650 [650–650], logical 146222 [146222–146222] kB, allocated 146637 [146637–146637] kB, errors 0.00 [0.00–0.00], first 0.69 [0.66–0.70] ms, repeat median 0.70 [0.60–0.70] ms
+    exited profile PerFileAttributes: files 650 [650–650], logical 146222 [146222–146222] kB, allocated -1.00 [-1.00–-1.00] kB, errors 0.00 [0.00–0.00], first 2.78 [2.50–2.81] ms, repeat median 2.60 [2.50–2.70] ms
+## Largest profile parts (running, then exited), realistic run 1
+  WALK-PART label=running folder=Cache files=47 dirs=2 logicalKB=4836 allocatedKB=4840 errors=0 ms=0.04
+  WALK-PART label=running folder=DawnGraphiteCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=running folder=DawnWebGPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=running folder=GPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=running folder=IndexedDB files=13 dirs=4 logicalKB=8198 allocatedKB=8232 errors=0 ms=0.06
+  WALK-PART label=running folder=Network files=10 dirs=0 logicalKB=112 allocatedKB=196 errors=0 ms=0.01
+  WALK-PART label=running folder=Service Worker files=7 dirs=4 logicalKB=4097 allocatedKB=4112 errors=0 ms=0.06
+  WALK-PART label=running folder=Shared Dictionary files=4 dirs=2 logicalKB=44 allocatedKB=44 errors=0 ms=0.03
+  WALK-PART label=running folder=WebStorage files=2 dirs=0 logicalKB=40 allocatedKB=64 errors=0 ms=0.01
+  WALK-PART label=running folder=EBWebView/BrowserMetrics files=1 dirs=0 logicalKB=1280 allocatedKB=1280 errors=0 ms=0.01
+  WALK-PART label=running folder=EBWebView/GrShaderCache files=5 dirs=0 logicalKB=4676 allocatedKB=4680 errors=0 ms=0.01
+  WALK-PART label=running folder=EBWebView/ShaderCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=running-later folder=Cache files=47 dirs=2 logicalKB=4836 allocatedKB=4840 errors=0 ms=0.04
+  WALK-PART label=running-later folder=DawnGraphiteCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=running-later folder=DawnWebGPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=running-later folder=GPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=running-later folder=IndexedDB files=13 dirs=4 logicalKB=8198 allocatedKB=8232 errors=0 ms=0.06
+  WALK-PART label=running-later folder=Network files=12 dirs=0 logicalKB=112 allocatedKB=196 errors=0 ms=0.01
+  WALK-PART label=running-later folder=Service Worker files=7 dirs=4 logicalKB=4097 allocatedKB=4112 errors=0 ms=0.06
+  WALK-PART label=running-later folder=Shared Dictionary files=4 dirs=2 logicalKB=44 allocatedKB=44 errors=0 ms=0.03
+  WALK-PART label=running-later folder=shared_proto_db files=10 dirs=1 logicalKB=7 allocatedKB=12 errors=0 ms=0.02
+  WALK-PART label=running-later folder=WebStorage files=2 dirs=0 logicalKB=60 allocatedKB=128 errors=0 ms=0.01
+  WALK-PART label=running-later folder=EBWebView/BrowserMetrics files=1 dirs=0 logicalKB=1280 allocatedKB=1280 errors=0 ms=0.01
+  WALK-PART label=running-later folder=EBWebView/GrShaderCache files=5 dirs=0 logicalKB=4676 allocatedKB=4680 errors=0 ms=0.01
+  WALK-PART label=running-later folder=EBWebView/ShaderCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=exited folder=Cache files=47 dirs=2 logicalKB=4836 allocatedKB=4840 errors=0 ms=0.04
+  WALK-PART label=exited folder=DawnGraphiteCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=exited folder=DawnWebGPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=exited folder=GPUCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+  WALK-PART label=exited folder=IndexedDB files=13 dirs=4 logicalKB=8198 allocatedKB=8232 errors=0 ms=0.06
+  WALK-PART label=exited folder=Local Storage files=5 dirs=1 logicalKB=1027 allocatedKB=1028 errors=0 ms=0.02
+  WALK-PART label=exited folder=Network files=12 dirs=0 logicalKB=112 allocatedKB=112 errors=0 ms=0.01
+  WALK-PART label=exited folder=Service Worker files=7 dirs=4 logicalKB=4097 allocatedKB=4112 errors=0 ms=0.06
+  WALK-PART label=exited folder=Shared Dictionary files=4 dirs=2 logicalKB=44 allocatedKB=44 errors=0 ms=0.03
+  WALK-PART label=exited folder=shared_proto_db files=10 dirs=1 logicalKB=7 allocatedKB=12 errors=0 ms=0.02
+  WALK-PART label=exited folder=WebStorage files=2 dirs=0 logicalKB=40 allocatedKB=40 errors=0 ms=0.01
+  WALK-PART label=exited folder=EBWebView/BrowserMetrics files=1 dirs=0 logicalKB=1280 allocatedKB=1280 errors=0 ms=0.01
+  WALK-PART label=exited folder=EBWebView/GrShaderCache files=5 dirs=0 logicalKB=4676 allocatedKB=4680 errors=0 ms=0.01
+  WALK-PART label=exited folder=EBWebView/ShaderCache files=5 dirs=0 logicalKB=544 allocatedKB=548 errors=0 ms=0.01
+
+# Windows shared-folder scenario: 9 logs
+  shared-1-a.log: instance=a t=0 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=1030 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=2066 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=3103 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=4135 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-a.log: instance=a t=5181 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-a.log: instance=a t=6218 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-a.log: instance=a t=7253 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-a.log: instance=a t=8284 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-a.log: instance=a t=9314 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=10345 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=11377 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=12407 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-a.log: instance=a t=13444 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712
+  shared-1-b.log: instance=b t=0 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-b.log: instance=b t=1039 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-b.log: instance=b t=2077 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-b.log: instance=b t=3112 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-b.log: instance=b t=4144 browserPid=14564 browser:14564 renderer:14688 utility:35340 utility:36092 gpu:45712 renderer:62744
+  shared-1-c.log: instance=c t=0 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+  shared-1-c.log: instance=c t=1035 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+  shared-1-c.log: instance=c t=2072 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+  shared-1-c.log: instance=c t=3107 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+  shared-1-c.log: instance=c t=4138 browserPid=36852 gpu:6880 utility:9312 browser:36852 utility:64248 renderer:72916
+  shared-2-a.log: instance=a t=0 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=1039 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=2077 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=3114 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=4145 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-a.log: instance=a t=5182 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-a.log: instance=a t=6218 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-a.log: instance=a t=7251 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-a.log: instance=a t=8283 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-a.log: instance=a t=9314 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=10342 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=11373 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=12402 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-a.log: instance=a t=13433 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308
+  shared-2-b.log: instance=b t=0 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-b.log: instance=b t=1041 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-b.log: instance=b t=2077 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-b.log: instance=b t=3110 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-b.log: instance=b t=4142 browserPid=28636 browser:28636 renderer:52904 utility:56140 utility:63116 gpu:70308 renderer:71024
+  shared-2-c.log: instance=c t=0 browserPid=53376 utility:43576 renderer:46716 browser:53376 gpu:64572 utility:76788
+  shared-2-c.log: instance=c t=1035 browserPid=53376 utility:43576 renderer:46716 browser:53376 gpu:64572 utility:76788
+  shared-2-c.log: instance=c t=2070 browserPid=53376 utility:43576 renderer:46716 browser:53376 gpu:64572 utility:76788
+  shared-2-c.log: instance=c t=3104 browserPid=53376 utility:43576 renderer:46716 browser:53376 gpu:64572 utility:76788
+  shared-2-c.log: instance=c t=4137 browserPid=53376 utility:43576 renderer:46716 browser:53376 gpu:64572 utility:76788
+  shared-3-a.log: instance=a t=0 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=1032 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=2071 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=3099 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=4135 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=5170 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=6205 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=7236 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=8267 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=9300 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=10331 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=11362 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=12389 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-a.log: instance=a t=13418 browserPid=58716 renderer:27936 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-b.log: instance=b t=0 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-b.log: instance=b t=1032 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-b.log: instance=b t=2065 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-b.log: instance=b t=3099 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-b.log: instance=b t=4144 browserPid=58716 renderer:27936 renderer:38304 gpu:38604 utility:56688 browser:58716 utility:62164
+  shared-3-c.log: instance=c t=0 browserPid=45828 renderer:12532 utility:42332 browser:45828 utility:60256 gpu:63036
+  shared-3-c.log: instance=c t=1026 browserPid=45828 renderer:12532 utility:42332 browser:45828 utility:60256 gpu:63036
+  shared-3-c.log: instance=c t=2062 browserPid=45828 renderer:12532 utility:42332 browser:45828 utility:60256 gpu:63036
+  shared-3-c.log: instance=c t=3092 browserPid=45828 renderer:12532 utility:42332 browser:45828 utility:60256 gpu:63036
+  shared-3-c.log: instance=c t=4123 browserPid=45828 renderer:12532 utility:42332 browser:45828 utility:60256 gpu:63036
+  shared-1-a.log: instance=a t=0 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=1031 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=2067 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=3103 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=4135 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=5181 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=6218 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=7254 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=8285 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=9314 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=10345 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=11377 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=12408 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-a.log: instance=a t=13445 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-b.log: instance=b t=1 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-b.log: instance=b t=1040 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-b.log: instance=b t=2077 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-b.log: instance=b t=3112 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-b.log: instance=b t=4144 62744=[https://app.localhost/small.html?instance=b] 14688=[https://app.localhost/small.html?instance=a]
+  shared-1-c.log: instance=c t=0 72916=[https://app.localhost/small.html?instance=c]
+  shared-1-c.log: instance=c t=1035 72916=[https://app.localhost/small.html?instance=c]
+  shared-1-c.log: instance=c t=2072 72916=[https://app.localhost/small.html?instance=c]
+  shared-1-c.log: instance=c t=3108 72916=[https://app.localhost/small.html?instance=c]
+  shared-1-c.log: instance=c t=4139 72916=[https://app.localhost/small.html?instance=c]
+  shared-2-a.log: instance=a t=0 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=1040 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=2077 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=3114 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=4146 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=5183 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=6218 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=7252 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=8283 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=9314 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=10342 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=11373 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=12403 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-a.log: instance=a t=13433 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-b.log: instance=b t=1 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-b.log: instance=b t=1042 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-b.log: instance=b t=2077 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-b.log: instance=b t=3111 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-b.log: instance=b t=4143 71024=[https://app.localhost/small.html?instance=b] 52904=[https://app.localhost/small.html?instance=a]
+  shared-2-c.log: instance=c t=0 46716=[https://app.localhost/small.html?instance=c]
+  shared-2-c.log: instance=c t=1036 46716=[https://app.localhost/small.html?instance=c]
+  shared-2-c.log: instance=c t=2070 46716=[https://app.localhost/small.html?instance=c]
+  shared-2-c.log: instance=c t=3104 46716=[https://app.localhost/small.html?instance=c]
+  shared-2-c.log: instance=c t=4138 46716=[https://app.localhost/small.html?instance=c]
+  shared-3-a.log: instance=a t=0 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=1033 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=2071 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=3100 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=4135 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=5171 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=6206 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=7236 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=8267 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=9300 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=10331 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=11362 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=12389 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-a.log: instance=a t=13418 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-b.log: instance=b t=1 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-b.log: instance=b t=1033 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-b.log: instance=b t=2066 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-b.log: instance=b t=3100 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-b.log: instance=b t=4145 38304=[https://app.localhost/small.html?instance=b] 27936=[https://app.localhost/small.html?instance=a]
+  shared-3-c.log: instance=c t=0 12532=[https://app.localhost/small.html?instance=c]
+  shared-3-c.log: instance=c t=1027 12532=[https://app.localhost/small.html?instance=c]
+  shared-3-c.log: instance=c t=2063 12532=[https://app.localhost/small.html?instance=c]
+  shared-3-c.log: instance=c t=3093 12532=[https://app.localhost/small.html?instance=c]
+  shared-3-c.log: instance=c t=4123 12532=[https://app.localhost/small.html?instance=c]
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=310.4 privateWorkingSetMB=74.5 privateUsageMB=148.2 sharedCommitMB=71.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=310.9 privateWorkingSetMB=72.7 privateUsageMB=146.0 sharedCommitMB=71.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=325.0 privateWorkingSetMB=75.1 privateUsageMB=150.6 sharedCommitMB=67.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=325.0 privateWorkingSetMB=74.9 privateUsageMB=150.5 sharedCommitMB=67.
+  shared-1-a.log: label=shared-a processes=6 workingSetMB=388.9 privateWorkingSetMB=94.6 privateUsageMB=180.1 sharedCommitMB=66.
+  shared-1-a.log: label=shared-a processes=6 workingSetMB=390.8 privateWorkingSetMB=94.5 privateUsageMB=180.0 sharedCommitMB=66.
+  shared-1-a.log: label=shared-a processes=6 workingSetMB=390.7 privateWorkingSetMB=94.5 privateUsageMB=179.9 sharedCommitMB=62.
+  shared-1-a.log: label=shared-a processes=6 workingSetMB=391.8 privateWorkingSetMB=94.7 privateUsageMB=180.2 sharedCommitMB=62.
+  shared-1-a.log: label=shared-a processes=6 workingSetMB=392.1 privateWorkingSetMB=94.9 privateUsageMB=180.5 sharedCommitMB=62.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=335.4 privateWorkingSetMB=79.8 privateUsageMB=155.8 sharedCommitMB=52.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=335.5 privateWorkingSetMB=79.8 privateUsageMB=155.8 sharedCommitMB=52.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=335.9 privateWorkingSetMB=79.9 privateUsageMB=156.0 sharedCommitMB=52.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=336.0 privateWorkingSetMB=80.0 privateUsageMB=156.0 sharedCommitMB=52.
+  shared-1-a.log: label=shared-a processes=5 workingSetMB=336.0 privateWorkingSetMB=80.0 privateUsageMB=156.0 sharedCommitMB=52.
+  shared-1-b.log: label=shared-b processes=6 workingSetMB=388.8 privateWorkingSetMB=94.6 privateUsageMB=180.1 sharedCommitMB=82.
+  shared-1-b.log: label=shared-b processes=6 workingSetMB=390.7 privateWorkingSetMB=94.4 privateUsageMB=179.9 sharedCommitMB=66.
+  shared-1-b.log: label=shared-b processes=6 workingSetMB=390.7 privateWorkingSetMB=94.5 privateUsageMB=179.9 sharedCommitMB=62.
+  shared-1-b.log: label=shared-b processes=6 workingSetMB=391.8 privateWorkingSetMB=94.7 privateUsageMB=180.2 sharedCommitMB=62.
+  shared-1-b.log: label=shared-b processes=6 workingSetMB=392.1 privateWorkingSetMB=94.9 privateUsageMB=180.5 sharedCommitMB=62.
+  shared-1-c.log: label=shared-c processes=5 workingSetMB=305.2 privateWorkingSetMB=70.6 privateUsageMB=144.2 sharedCommitMB=71.
+  shared-1-c.log: label=shared-c processes=5 workingSetMB=309.3 privateWorkingSetMB=72.4 privateUsageMB=145.5 sharedCommitMB=71.
+  shared-1-c.log: label=shared-c processes=5 workingSetMB=323.7 privateWorkingSetMB=74.8 privateUsageMB=150.1 sharedCommitMB=67.
+  shared-1-c.log: label=shared-c processes=5 workingSetMB=323.8 privateWorkingSetMB=74.7 privateUsageMB=150.0 sharedCommitMB=67.
+  shared-1-c.log: label=shared-c processes=5 workingSetMB=323.9 privateWorkingSetMB=74.7 privateUsageMB=150.0 sharedCommitMB=67.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=311.2 privateWorkingSetMB=76.0 privateUsageMB=150.8 sharedCommitMB=71.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=313.1 privateWorkingSetMB=75.6 privateUsageMB=149.8 sharedCommitMB=71.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=327.7 privateWorkingSetMB=78.0 privateUsageMB=154.5 sharedCommitMB=67.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=327.6 privateWorkingSetMB=77.8 privateUsageMB=154.3 sharedCommitMB=67.
+  shared-2-a.log: label=shared-a processes=6 workingSetMB=388.6 privateWorkingSetMB=94.7 privateUsageMB=181.1 sharedCommitMB=66.
+  shared-2-a.log: label=shared-a processes=6 workingSetMB=388.4 privateWorkingSetMB=94.4 privateUsageMB=180.9 sharedCommitMB=66.
+  shared-2-a.log: label=shared-a processes=6 workingSetMB=390.4 privateWorkingSetMB=94.5 privateUsageMB=181.0 sharedCommitMB=62.
+  shared-2-a.log: label=shared-a processes=6 workingSetMB=391.4 privateWorkingSetMB=94.7 privateUsageMB=181.3 sharedCommitMB=62.
+  shared-2-a.log: label=shared-a processes=6 workingSetMB=391.5 privateWorkingSetMB=94.7 privateUsageMB=181.3 sharedCommitMB=62.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=337.6 privateWorkingSetMB=82.5 privateUsageMB=159.5 sharedCommitMB=52.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=337.6 privateWorkingSetMB=82.5 privateUsageMB=159.5 sharedCommitMB=52.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=337.6 privateWorkingSetMB=82.5 privateUsageMB=159.5 sharedCommitMB=52.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=337.6 privateWorkingSetMB=82.5 privateUsageMB=159.5 sharedCommitMB=52.
+  shared-2-a.log: label=shared-a processes=5 workingSetMB=337.6 privateWorkingSetMB=82.5 privateUsageMB=159.5 sharedCommitMB=52.
+  shared-2-b.log: label=shared-b processes=6 workingSetMB=388.5 privateWorkingSetMB=94.7 privateUsageMB=181.1 sharedCommitMB=82.
+  shared-2-b.log: label=shared-b processes=6 workingSetMB=388.4 privateWorkingSetMB=94.4 privateUsageMB=180.8 sharedCommitMB=66.
+  shared-2-b.log: label=shared-b processes=6 workingSetMB=390.4 privateWorkingSetMB=94.5 privateUsageMB=181.0 sharedCommitMB=62.
+  shared-2-b.log: label=shared-b processes=6 workingSetMB=390.4 privateWorkingSetMB=94.5 privateUsageMB=181.0 sharedCommitMB=62.
+  shared-2-b.log: label=shared-b processes=6 workingSetMB=391.5 privateWorkingSetMB=94.7 privateUsageMB=181.3 sharedCommitMB=62.
+  shared-2-c.log: label=shared-c processes=5 workingSetMB=311.7 privateWorkingSetMB=75.6 privateUsageMB=150.5 sharedCommitMB=71.
+  shared-2-c.log: label=shared-c processes=5 workingSetMB=310.9 privateWorkingSetMB=73.0 privateUsageMB=147.3 sharedCommitMB=71.
+  shared-2-c.log: label=shared-c processes=5 workingSetMB=325.3 privateWorkingSetMB=75.4 privateUsageMB=152.0 sharedCommitMB=67.
+  shared-2-c.log: label=shared-c processes=5 workingSetMB=325.3 privateWorkingSetMB=75.3 privateUsageMB=151.9 sharedCommitMB=67.
+  shared-2-c.log: label=shared-c processes=5 workingSetMB=325.5 privateWorkingSetMB=75.3 privateUsageMB=151.9 sharedCommitMB=67.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=310.0 privateWorkingSetMB=75.3 privateUsageMB=150.0 sharedCommitMB=71.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=311.7 privateWorkingSetMB=74.9 privateUsageMB=149.0 sharedCommitMB=71.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=325.7 privateWorkingSetMB=77.2 privateUsageMB=153.6 sharedCommitMB=67.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=326.3 privateWorkingSetMB=77.1 privateUsageMB=153.6 sharedCommitMB=67.
+  shared-3-a.log: label=shared-a processes=6 workingSetMB=392.3 privateWorkingSetMB=97.1 privateUsageMB=183.4 sharedCommitMB=66.
+  shared-3-a.log: label=shared-a processes=6 workingSetMB=393.1 privateWorkingSetMB=96.9 privateUsageMB=183.3 sharedCommitMB=66.
+  shared-3-a.log: label=shared-a processes=6 workingSetMB=394.2 privateWorkingSetMB=96.9 privateUsageMB=183.3 sharedCommitMB=62.
+  shared-3-a.log: label=shared-a processes=6 workingSetMB=395.0 privateWorkingSetMB=97.2 privateUsageMB=183.5 sharedCommitMB=62.
+  shared-3-a.log: label=shared-a processes=6 workingSetMB=395.3 privateWorkingSetMB=97.4 privateUsageMB=183.8 sharedCommitMB=62.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=338.3 privateWorkingSetMB=82.2 privateUsageMB=159.1 sharedCommitMB=52.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=338.4 privateWorkingSetMB=82.3 privateUsageMB=159.1 sharedCommitMB=52.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=338.4 privateWorkingSetMB=82.3 privateUsageMB=159.1 sharedCommitMB=52.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=338.4 privateWorkingSetMB=82.3 privateUsageMB=159.1 sharedCommitMB=52.
+  shared-3-a.log: label=shared-a processes=5 workingSetMB=338.4 privateWorkingSetMB=82.3 privateUsageMB=159.1 sharedCommitMB=52.
+  shared-3-b.log: label=shared-b processes=6 workingSetMB=392.0 privateWorkingSetMB=97.0 privateUsageMB=183.4 sharedCommitMB=66.
+  shared-3-b.log: label=shared-b processes=6 workingSetMB=393.0 privateWorkingSetMB=96.9 privateUsageMB=183.3 sharedCommitMB=66.
+  shared-3-b.log: label=shared-b processes=6 workingSetMB=394.1 privateWorkingSetMB=96.9 privateUsageMB=183.3 sharedCommitMB=62.
+  shared-3-b.log: label=shared-b processes=6 workingSetMB=395.0 privateWorkingSetMB=97.2 privateUsageMB=183.5 sharedCommitMB=62.
+  shared-3-b.log: label=shared-b processes=6 workingSetMB=395.3 privateWorkingSetMB=97.4 privateUsageMB=183.8 sharedCommitMB=62.
+  shared-3-c.log: label=shared-c processes=5 workingSetMB=310.9 privateWorkingSetMB=75.7 privateUsageMB=150.3 sharedCommitMB=71.
+  shared-3-c.log: label=shared-c processes=5 workingSetMB=310.0 privateWorkingSetMB=72.4 privateUsageMB=146.5 sharedCommitMB=71.
+  shared-3-c.log: label=shared-c processes=5 workingSetMB=326.9 privateWorkingSetMB=75.1 privateUsageMB=151.5 sharedCommitMB=67.
+  shared-3-c.log: label=shared-c processes=5 workingSetMB=327.8 privateWorkingSetMB=75.0 privateUsageMB=151.4 sharedCommitMB=67.
+  shared-3-c.log: label=shared-c processes=5 workingSetMB=328.6 privateWorkingSetMB=75.1 privateUsageMB=151.5 sharedCommitMB=67.
+

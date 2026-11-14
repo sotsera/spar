@@ -1,0 +1,7 @@
+exit 0 wallMs 12661
+RUN runtime=aot mode=bulk arg=b100k sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+MEM before peakWorkingSetMB=31.5 workingSetMB=31.5 rssAnonMB=7.3 allocatedMB=1.6 gc0=0 gc1=0 gc2=0 cpuMs=42
+MEM after-copy peakWorkingSetMB=53.1 workingSetMB=53.1 rssAnonMB=27.8 allocatedMB=1825.8 gc0=103 gc1=2 gc2=1 cpuMs=25962
+RESULT bulk variant=b100k rows=1000000 copyMs=10710 totalMs=10710 rowsPerSec=93372 payloadMBps=18.3 progressEvents=10 maxProgressGapMs=1159 identical=True
+TARGET log usedMB=117.5
+MEM end peakWorkingSetMB=53.1 workingSetMB=53.1 rssAnonMB=27.8 allocatedMB=1825.8 gc0=103 gc1=2 gc2=1 cpuMs=25963

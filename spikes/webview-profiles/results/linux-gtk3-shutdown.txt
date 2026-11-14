@@ -1,0 +1,60 @@
+== default
+SUMMARY api=gtk3 variant=default runs=30
+  all children exited: n=30 min=6 p50=8 p90=9 max=9 ms; not exited in 30 s: 0
+  host exited after close: n=30 min=4 p50=5 p90=6 max=6 ms
+  launch to READY: n=30 min=114 p50=117 p90=120 max=269 ms; launch to all gone: n=30 min=124 p50=144 p90=148 max=277 ms; clean before run: n=0
+  WebKitNetworkPr: n=30 min=5 p50=8 p90=9 max=9 ms
+  bwrap: n=120 min=2 p50=5 p90=6 max=6 ms
+  xdg-dbus-proxy: n=30 min=4 p50=5 p90=6 max=6 ms
+  WebKitWebProces: n=30 min=2 p50=2 p90=3 max=4 ms
+  data: first=1 ok=29
+== unload
+SUMMARY api=gtk3 variant=unload runs=30
+  all children exited: n=30 min=6 p50=8 p90=9 max=12 ms; not exited in 30 s: 0
+  host exited after close: n=30 min=4 p50=5 p90=6 max=6 ms
+  launch to READY: n=30 min=113 p50=116 p90=119 max=233 ms; launch to all gone: n=30 min=125 p50=143 p90=148 max=258 ms; clean before run: n=0
+  WebKitNetworkPr: n=30 min=5 p50=8 p90=9 max=12 ms
+  bwrap: n=120 min=2 p50=5 p90=6 max=6 ms
+  xdg-dbus-proxy: n=30 min=4 p50=5 p90=6 max=6 ms
+  WebKitWebProces: n=30 min=2 p50=2 p90=3 max=3 ms
+  data: first=1 ok=29
+== idbstream
+SUMMARY api=gtk3 variant=idbstream runs=30
+  all children exited: n=30 min=8 p50=9 p90=11 max=14 ms; not exited in 30 s: 0
+  host exited after close: n=30 min=5 p50=6 p90=6 max=6 ms
+  launch to READY: n=30 min=423 p50=433 p90=439 max=547 ms; launch to all gone: n=30 min=440 p50=460 p90=465 max=580 ms; clean before run: n=0
+  WebKitNetworkPr: n=30 min=8 p50=9 p90=11 max=14 ms
+  bwrap: n=120 min=1 p50=6 p90=6 max=7 ms
+  xdg-dbus-proxy: n=30 min=1 p50=5 p90=6 max=6 ms
+  WebKitWebProces: n=30 min=2 p50=3 p90=4 max=5 ms
+  data: first=1 ok=29
+== killhost
+SUMMARY api=gtk3 variant=killhost runs=30
+  all children exited: n=30 min=9 p50=11 p90=13 max=24 ms; not exited in 30 s: 0
+  host exited after close: n=30 min=3 p50=5 p90=5 max=6 ms
+  launch to READY: n=30 min=119 p50=134 p90=169 max=261 ms; launch to all gone: n=30 min=134 p50=156 p90=203 max=275 ms; clean before run: n=0
+  WebKitNetworkPr: n=30 min=8 p50=11 p90=13 max=24 ms
+  bwrap: n=120 min=3 p50=6 p90=9 max=20 ms
+  xdg-dbus-proxy: n=30 min=3 p50=5 p90=5 max=7 ms
+  WebKitWebProces: n=30 min=4 p50=6 p90=7 max=9 ms
+  data: first=1 ok=29
+== waitexit
+SUMMARY api=gtk3 variant=waitexit runs=30
+  all children exited: n=30 min=11 p50=15 p90=16 max=16 ms; not exited in 30 s: 0
+  host exited after close: n=30 min=16 p50=21 p90=22 max=22 ms
+  launch to READY: n=30 min=111 p50=119 p90=122 max=242 ms; launch to all gone: n=30 min=134 p50=141 p90=144 max=260 ms; clean before run: n=0
+  WebKitNetworkPr: n=30 min=9 p50=10 p90=10 max=14 ms
+  bwrap: n=120 min=8 p50=12 p90=15 max=16 ms
+  xdg-dbus-proxy: n=30 min=10 p50=14 p90=15 max=16 ms
+  WebKitWebProces: n=30 min=8 p50=8 p90=8 max=9 ms
+  data: first=1 ok=29
+== linger2s
+SUMMARY api=gtk3 variant=linger2s runs=10
+  all children exited: n=10 min=5 p50=6 p90=6 max=7 ms; not exited in 30 s: 0
+  host exited after close: n=10 min=5 p50=6 p90=6 max=7 ms
+  launch to READY: n=10 min=122 p50=125 p90=143 max=223 ms; launch to all gone: n=10 min=2131 p50=2156 p90=2169 max=2231 ms; clean before run: n=0
+  WebKitNetworkPr: n=10 min=2 p50=2 p90=3 max=3 ms
+  bwrap: n=40 min=1 p50=5 p90=6 max=7 ms
+  xdg-dbus-proxy: n=10 min=1 p50=1 p90=2 max=2 ms
+  WebKitWebProces: n=10 min=2 p50=2 p90=4 max=4 ms
+  data: first=1 ok=9

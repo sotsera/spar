@@ -1,0 +1,48 @@
+6.1 WM-SIZE type=0
+6.2 WINDOW hwnd=0x2200810 placement=-32000,-32000
+12.9 ENV ms=6.7 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\page-heartbeat\pf-quiet-3 sandbox=False cpus=32
+205.7 PROCESS-INFOS-CHANGED browser:28128
+209.3 PROCESS-INFOS-CHANGED browser:28128 gpu:35464
+209.4 PROCESS-INFOS-CHANGED browser:28128 gpu:35464 utility:68880
+209.5 PROCESS-INFOS-CHANGED browser:28128 gpu:35464 utility:43424 utility:68880
+209.6 PROCESS-INFOS-CHANGED browser:28128 gpu:35464 utility:43424 utility:68880 renderer:75756
+250.6 INJECT hr=0x00000000
+251.3 CONTROLLER ms=244.8 browserPid=28128 webView3=True webView19=True processes=[browser:28128 gpu:35464 utility:43424 utility:68880 renderer:75756]
+252.5 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=0 onUnresponsive=none options=[--profile pf-quiet-3 --log results/win/pf-quiet-3.log --actions 3000:hang-idle --duration 75000 --timeout 120 --no-ping --probe-interval 0]
+253.0 NAVIGATE uri=https://app.localhost/index.html
+254.8 NAV-STARTING id=2 uri=https://app.localhost/index.html
+268.8 CONTENT-LOADING id=2 errorPage=0
+271.2 DOC path=/index.html vis=visible
+271.2 HB-ARM hb=ping reason=doc
+272.4 READY path=/index.html pagePerf=18.5 vis=visible
+277.5 NAV-COMPLETED id=2 success=True status=0
+277.6 PAGE state-seen:1
+1276.4 TICK n=1 dtMs=0 vis=visible frames=55
+2272.3 TICK n=2 dtMs=996 vis=visible frames=59
+3273.1 TICK n=3 dtMs=1001 vis=visible frames=60
+3280.6 ACTION verb=hang-idle arg=
+3280.9 HANG kind=idle pagePerf=3027.0
+5254.5 PUMP phase=hang-idle n=321 median=0.06ms p99=0.27ms min=0.02ms max=0.44ms
+10264.2 PUMP phase=hang-idle n=322 median=0.06ms p99=0.30ms min=0.01ms max=0.38ms
+15274.1 PUMP phase=hang-idle n=320 median=0.05ms p99=0.27ms min=0.02ms max=0.45ms
+20279.6 PUMP phase=hang-idle n=320 median=0.05ms p99=0.21ms min=0.02ms max=0.28ms
+25284.6 PUMP phase=hang-idle n=320 median=0.06ms p99=0.22ms min=0.02ms max=0.27ms
+30300.2 PUMP phase=hang-idle n=320 median=0.05ms p99=0.26ms min=0.02ms max=0.30ms
+35300.5 PUMP phase=hang-idle n=320 median=0.06ms p99=0.29ms min=0.02ms max=0.40ms
+40308.6 PUMP phase=hang-idle n=321 median=0.05ms p99=0.27ms min=0.02ms max=0.33ms
+45315.3 PUMP phase=hang-idle n=321 median=0.05ms p99=0.24ms min=0.02ms max=0.27ms
+50322.1 PUMP phase=hang-idle n=321 median=0.05ms p99=0.26ms min=0.02ms max=0.32ms
+55328.8 PUMP phase=hang-idle n=320 median=0.05ms p99=0.28ms min=0.02ms max=0.41ms
+60339.0 PUMP phase=hang-idle n=321 median=0.05ms p99=0.28ms min=0.02ms max=0.32ms
+64671.8 PROCESS-INFOS-CHANGED utility:14852 browser:28128 gpu:35464 utility:43424 utility:68880 renderer:75756
+64723.2 PROCESS-INFOS-CHANGED browser:28128 gpu:35464 utility:43424 utility:68880 renderer:75756
+65341.2 PUMP phase=hang-idle n=321 median=0.05ms p99=0.26ms min=0.02ms max=0.39ms
+70351.0 PUMP phase=hang-idle n=321 median=0.06ms p99=0.33ms min=0.02ms max=0.37ms
+73087.1 PROCESS-INFOS-CHANGED browser:28128 gpu:35464 utility:43424 utility:48692 utility:68880 renderer:75756
+73120.3 PROCESS-INFOS-CHANGED browser:28128 gpu:35464 utility:43424 utility:68880 renderer:75756
+75278.9 PUMP-PHASE phase=start n=195 median=0.06ms p99=0.25ms min=0.02ms max=0.44ms
+75279.2 PUMP-PHASE phase=hang-idle n=4608 median=0.05ms p99=0.27ms min=0.01ms max=0.45ms
+75279.2 FINISH backendCounter=1
+75286.8 PROCESS-INFOS-CHANGED 
+75464.7 BROWSER-EXITED 
+75471.7 HOST-EXIT code=0

@@ -1,0 +1,4 @@
+<Project>
+  <!-- Aspire.Hosting.AppHost is referenced implicitly by Aspire.AppHost.Sdk (NU1009 if listed here). -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
+</Project>

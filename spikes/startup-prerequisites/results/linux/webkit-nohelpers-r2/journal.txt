@@ -1,0 +1,9 @@
+MESSAGE
+b^A??????Spar Sample cannot start: WebKitGTK is installed, but programs it needs are missing: WebKitWebProcess, WebKitNetworkProcess.
+Reinstall it: sudo apt install --reinstall libwebkitgtk-6.0-4
+Details: missing or not executable: /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitWebProcess, /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitNetworkProcess
+Exit code 5.
+PRIORITY=3
+SYSLOG_IDENTIFIER=spar-sample
+SPAR_STARTUP_PROBLEM=Broken
+SPAR_EXIT_CODE=5

@@ -1,0 +1,150 @@
+# Probe diagnostics, SDK 11.0.100, 2026-11-14
+Ambiguous / Class : fails: CS0457
+    Ambiguous.cs(11,62): error CS0457: Ambiguous user defined conversions 'Result<PlanError, PlanError>.implicit operator Result<PlanError, PlanError>(PlanError)' and 'Result<PlanError, PlanError>.implicit operator Result<PlanError, PlanError>(PlanError)' when converting from 'PlanError.ConnectionNotFound' to 'Result<PlanError, PlanError>'
+Ambiguous / Struct : fails: CS0457
+    Ambiguous.cs(11,62): error CS0457: Ambiguous user defined conversions 'Result<PlanError, PlanError>.implicit operator Result<PlanError, PlanError>(PlanError)' and 'Result<PlanError, PlanError>.implicit operator Result<PlanError, PlanError>(PlanError)' when converting from 'PlanError.ConnectionNotFound' to 'Result<PlanError, PlanError>'
+Ambiguous / UnionStruct : fails: CS0457
+    Ambiguous.cs(11,62): error CS0457: Ambiguous user defined conversions 'Result<PlanError, PlanError>.IUnionMembers.Create(PlanError)' and 'Result<PlanError, PlanError>.IUnionMembers.Create(PlanError)' when converting from 'PlanError.ConnectionNotFound' to 'Result<PlanError, PlanError>'
+Ambiguous / UnionClass : fails: CS0457
+    Ambiguous.cs(11,62): error CS0457: Ambiguous user defined conversions 'Result<PlanError, PlanError>.IUnionMembers.Create(PlanError)' and 'Result<PlanError, PlanError>.IUnionMembers.Create(PlanError)' when converting from 'PlanError.ConnectionNotFound' to 'Result<PlanError, PlanError>'
+Conversions / Class : compiles
+Conversions / Struct : compiles
+Conversions / UnionStruct : compiles
+Conversions / UnionClass : compiles
+DefaultValue / Class : fails: CS1729, CS8603, CS8618
+    DefaultValue.cs(14,16): error CS8603: Possible null reference return.
+    DefaultValue.cs(17,59): error CS8603: Possible null reference return.
+    DefaultValue.cs(19,72): error CS1729: 'Result<CopyPlan, PlanError>' does not contain a constructor that takes 0 arguments
+    DefaultValue.cs(28,12): error CS8618: Non-nullable field '_last' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.
+    DefaultValue.cs(9,67): error CS8603: Possible null reference return.
+DefaultValue / Struct : compiles
+DefaultValue / UnionStruct : compiles
+DefaultValue / UnionClass : fails: CS1729, CS8603, CS8618
+    DefaultValue.cs(14,16): error CS8603: Possible null reference return.
+    DefaultValue.cs(17,59): error CS8603: Possible null reference return.
+    DefaultValue.cs(19,72): error CS1729: 'Result<CopyPlan, PlanError>' does not contain a constructor that takes 0 arguments
+    DefaultValue.cs(28,12): error CS8618: Non-nullable field '_last' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.
+    DefaultValue.cs(9,67): error CS8603: Possible null reference return.
+InterfaceValue / Class : fails: CS0029
+    InterfaceValue.cs(9,110): error CS0029: Cannot implicitly convert type 'System.Collections.Generic.IReadOnlyList<SqlTool.CopyJobs.PlanStep>' to 'Spar.Result<System.Collections.Generic.IReadOnlyList<SqlTool.CopyJobs.PlanStep>, SqlTool.CopyJobs.PlanError>'
+InterfaceValue / Struct : fails: CS0029
+    InterfaceValue.cs(9,110): error CS0029: Cannot implicitly convert type 'System.Collections.Generic.IReadOnlyList<SqlTool.CopyJobs.PlanStep>' to 'Spar.Result<System.Collections.Generic.IReadOnlyList<SqlTool.CopyJobs.PlanStep>, SqlTool.CopyJobs.PlanError>'
+InterfaceValue / UnionStruct : compiles
+InterfaceValue / UnionClass : compiles
+MissingErrorCase / Class : fails: CS8509
+    MissingErrorCase.cs(10,17): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.RunError.PartiallyCopied' is not covered.
+MissingErrorCase / Struct : fails: CS8509
+    MissingErrorCase.cs(10,17): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.RunError.PartiallyCopied' is not covered.
+MissingErrorCase / UnionStruct : fails: CS8509
+    MissingErrorCase.cs(10,17): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.RunError.PartiallyCopied' is not covered.
+MissingErrorCase / UnionClass : fails: CS8509
+    MissingErrorCase.cs(10,17): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.RunError.PartiallyCopied' is not covered.
+NullableValue / Class : compiles
+NullableValue / Struct : compiles
+NullableValue / UnionStruct : compiles
+NullableValue / UnionClass : compiles
+NullableValueSwitch / Class : fails: CS8121, CS8509
+    NullableValueSwitch.cs(11,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'CopyPlan'.
+    NullableValueSwitch.cs(12,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'PlanError'.
+    NullableValueSwitch.cs(17,42): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern '_' is not covered.
+    NullableValueSwitch.cs(25,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'CopyPlan'.
+    NullableValueSwitch.cs(27,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'PlanError'.
+NullableValueSwitch / Struct : fails: CS0037, CS8121, CS8509
+    NullableValueSwitch.cs(11,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'CopyPlan'.
+    NullableValueSwitch.cs(12,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'PlanError'.
+    NullableValueSwitch.cs(17,42): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern '_' is not covered.
+    NullableValueSwitch.cs(25,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'CopyPlan'.
+    NullableValueSwitch.cs(26,9): error CS0037: Cannot convert null to 'Result<CopyPlan?, PlanError>' because it is a non-nullable value type
+    NullableValueSwitch.cs(27,9): error CS8121: An expression of type 'Result<CopyPlan?, PlanError>' cannot be handled by a pattern of type 'PlanError'.
+NullableValueSwitch / UnionStruct : fails: CS8655
+    NullableValueSwitch.cs(17,42): error CS8655: The switch expression does not handle some null inputs (it is not exhaustive). For example, the pattern 'null' is not covered.
+    NullableValueSwitch.cs(9,85): error CS8655: The switch expression does not handle some null inputs (it is not exhaustive). For example, the pattern 'null' is not covered.
+NullableValueSwitch / UnionClass : fails: CS8655
+    NullableValueSwitch.cs(17,42): error CS8655: The switch expression does not handle some null inputs (it is not exhaustive). For example, the pattern 'null' is not covered.
+    NullableValueSwitch.cs(9,85): error CS8655: The switch expression does not handle some null inputs (it is not exhaustive). For example, the pattern 'null' is not covered.
+Reading / Class : compiles
+Reading / Struct : compiles
+Reading / UnionStruct : compiles
+Reading / UnionClass : compiles
+TestHelpers / Class : fails: CS1061
+    TestHelpers.cs(35,31): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeErrorClassic' and no accessible extension method 'ShouldBeErrorClassic' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+    TestHelpers.cs(36,28): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeError' and no accessible extension method 'ShouldBeError' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+TestHelpers / Struct : fails: CS1061
+    TestHelpers.cs(35,31): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeErrorClassic' and no accessible extension method 'ShouldBeErrorClassic' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+    TestHelpers.cs(36,28): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeError' and no accessible extension method 'ShouldBeError' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+TestHelpers / UnionStruct : fails: CS1061
+    TestHelpers.cs(35,31): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeErrorClassic' and no accessible extension method 'ShouldBeErrorClassic' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+    TestHelpers.cs(36,28): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeError' and no accessible extension method 'ShouldBeError' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+TestHelpers / UnionClass : fails: CS1061
+    TestHelpers.cs(35,31): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeErrorClassic' and no accessible extension method 'ShouldBeErrorClassic' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+    TestHelpers.cs(36,28): error CS1061: 'Result<CopyPlan, PlanError>' does not contain a definition for 'ShouldBeError' and no accessible extension method 'ShouldBeError' accepting a first argument of type 'Result<CopyPlan, PlanError>' could be found (are you missing a using directive or an assembly reference?)
+UnionSwitch / Class : fails: CS8121, CS8509
+    UnionSwitch.cs(12,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'CopyPlan'.
+    UnionSwitch.cs(13,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.ConnectionNotFound'.
+    UnionSwitch.cs(14,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.TableMissing'.
+    UnionSwitch.cs(19,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'CopyReport'.
+    UnionSwitch.cs(20,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.PlanOutdated'.
+    UnionSwitch.cs(21,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.TargetNotEmpty'.
+    UnionSwitch.cs(22,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.PartiallyCopied'.
+    UnionSwitch.cs(26,19): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.TableMissing'.
+    UnionSwitch.cs(30,9): error CS8121: An expression of type 'Result<long, PlanError>' cannot be handled by a pattern of type 'long'.
+    UnionSwitch.cs(31,9): error CS8121: An expression of type 'Result<long, PlanError>' cannot be handled by a pattern of type 'PlanError'.
+    UnionSwitch.cs(36,9): error CS8121: An expression of type 'Result<CancelError>' cannot be handled by a pattern of type 'Success'.
+    UnionSwitch.cs(37,9): error CS8121: An expression of type 'Result<CancelError>' cannot be handled by a pattern of type 'CancelError.NotRunning'.
+    UnionSwitch.cs(38,9): error CS8121: An expression of type 'Result<CancelError>' cannot be handled by a pattern of type 'CancelError.Forbidden'.
+    UnionSwitch.cs(43,42): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern '_' is not covered.
+UnionSwitch / Struct : fails: CS8121, CS8509
+    UnionSwitch.cs(12,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'CopyPlan'.
+    UnionSwitch.cs(13,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.ConnectionNotFound'.
+    UnionSwitch.cs(14,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.TableMissing'.
+    UnionSwitch.cs(19,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'CopyReport'.
+    UnionSwitch.cs(20,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.PlanOutdated'.
+    UnionSwitch.cs(21,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.TargetNotEmpty'.
+    UnionSwitch.cs(22,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.PartiallyCopied'.
+    UnionSwitch.cs(26,19): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.TableMissing'.
+    UnionSwitch.cs(30,9): error CS8121: An expression of type 'Result<long, PlanError>' cannot be handled by a pattern of type 'long'.
+    UnionSwitch.cs(31,9): error CS8121: An expression of type 'Result<long, PlanError>' cannot be handled by a pattern of type 'PlanError'.
+    UnionSwitch.cs(36,9): error CS8121: An expression of type 'Result<CancelError>' cannot be handled by a pattern of type 'Success'.
+    UnionSwitch.cs(37,9): error CS8121: An expression of type 'Result<CancelError>' cannot be handled by a pattern of type 'CancelError.NotRunning'.
+    UnionSwitch.cs(38,9): error CS8121: An expression of type 'Result<CancelError>' cannot be handled by a pattern of type 'CancelError.Forbidden'.
+    UnionSwitch.cs(43,42): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern '_' is not covered.
+UnionSwitch / UnionStruct : compiles
+UnionSwitch / UnionClass : compiles
+UnionSwitchMissing / Class : fails: CS8121
+    UnionSwitchMissing.cs(11,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'CopyReport'.
+    UnionSwitchMissing.cs(12,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.PlanOutdated'.
+    UnionSwitchMissing.cs(13,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.TargetNotEmpty'.
+    UnionSwitchMissing.cs(18,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.ConnectionNotFound'.
+    UnionSwitchMissing.cs(19,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.TableMissing'.
+UnionSwitchMissing / Struct : fails: CS8121
+    UnionSwitchMissing.cs(11,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'CopyReport'.
+    UnionSwitchMissing.cs(12,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.PlanOutdated'.
+    UnionSwitchMissing.cs(13,9): error CS8121: An expression of type 'Result<CopyReport, RunError>' cannot be handled by a pattern of type 'RunError.TargetNotEmpty'.
+    UnionSwitchMissing.cs(18,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.ConnectionNotFound'.
+    UnionSwitchMissing.cs(19,9): error CS8121: An expression of type 'Result<CopyPlan, PlanError>' cannot be handled by a pattern of type 'PlanError.TableMissing'.
+UnionSwitchMissing / UnionStruct : fails: CS8509
+    UnionSwitchMissing.cs(16,85): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.CopyPlan' is not covered.
+    UnionSwitchMissing.cs(9,85): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.RunError.PartiallyCopied' is not covered.
+UnionSwitchMissing / UnionClass : fails: CS8509
+    UnionSwitchMissing.cs(16,85): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.CopyPlan' is not covered.
+    UnionSwitchMissing.cs(9,85): error CS8509: The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern 'SqlTool.CopyJobs.RunError.PartiallyCopied' is not covered.
+# With the default(Result) analyzer prototype (-p:UseAnalyzer=true)
+DefaultValue / Struct + analyzer : fails
+    DefaultValue.cs(14,16): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    DefaultValue.cs(17,59): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CancelError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    DefaultValue.cs(19,72): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    DefaultValue.cs(9,67): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+DefaultValue / UnionStruct + analyzer : fails
+    DefaultValue.cs(14,16): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    DefaultValue.cs(17,59): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CancelError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    DefaultValue.cs(19,72): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    DefaultValue.cs(9,67): error SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+DefaultValue / UnionClass + analyzer : fails
+    DefaultValue.cs(14,16): error CS8603: Possible null reference return.
+    DefaultValue.cs(17,59): error CS8603: Possible null reference return.
+    DefaultValue.cs(19,72): error CS1729: 'Result<CopyPlan, PlanError>' does not contain a constructor that takes 0 arguments
+    DefaultValue.cs(28,12): error CS8618: Non-nullable field '_last' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the field as nullable.
+    DefaultValue.cs(9,67): error CS8603: Possible null reference return.
+Conversions / UnionStruct + analyzer : compiles
+Reading / UnionStruct + analyzer : compiles
+UnionSwitch / UnionStruct + analyzer : compiles

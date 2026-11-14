@@ -1,0 +1,244 @@
+{
+  "facts": {
+    "aot": "True",
+    "cdp.lastStatus": "Saved #5: cdp-4 (click trusted, input trusted)",
+    "devtoolsUi": "False",
+    "screenshot.bytes": "8795",
+    "screenshot.isPng": "True",
+    "screenshot.path": "E:\\Ghidello\\Git\\spar.v7\\spikes\\d8-automation\\artifacts\\results\\screenshot-Offscreen.png",
+    "script.lastStatus": "Saved #10: script-4 (click synthetic, input synthetic)",
+    "startup.controllerMs": "157.1",
+    "startup.environmentMs": "9.2",
+    "startup.navigatedMs": "204.9",
+    "tree.rawChars": "7533",
+    "tree.summary": "RootWebArea:D8 automation spike#1 | heading:Profile#2 | LabelText:#3 | textbox:Name#12 | button:Save#4 | status:#5 | StaticText:Profile#15 | StaticText:Name#16 | StaticText:Save#17 | StaticText:Idle#18",
+    "tree.summaryNodes": "10",
+    "window": "Offscreen"
+  },
+  "series": {
+    "ready.doubleRaf": {
+      "n": 1,
+      "min": 105.476,
+      "median": 105.476,
+      "p95": 105.476,
+      "max": 105.476,
+      "samples": [
+        105.476
+      ]
+    },
+    "evaluate.noop": {
+      "n": 5,
+      "min": 0.137,
+      "median": 0.157,
+      "p95": 0.25,
+      "max": 0.25,
+      "samples": [
+        0.25,
+        0.137,
+        0.177,
+        0.157,
+        0.143
+      ]
+    },
+    "tree.cold": {
+      "n": 1,
+      "min": 2.303,
+      "median": 2.303,
+      "p95": 2.303,
+      "max": 2.303,
+      "samples": [
+        2.303
+      ]
+    },
+    "tree": {
+      "n": 5,
+      "min": 0.476,
+      "median": 0.517,
+      "p95": 0.589,
+      "max": 0.589,
+      "samples": [
+        0.589,
+        0.52,
+        0.494,
+        0.476,
+        0.517
+      ]
+    },
+    "tree.cdpOnly": {
+      "n": 5,
+      "min": 0.456,
+      "median": 0.488,
+      "p95": 0.56,
+      "max": 0.56,
+      "samples": [
+        0.56,
+        0.5,
+        0.473,
+        0.456,
+        0.488
+      ]
+    },
+    "tree.parseOnly": {
+      "n": 5,
+      "min": 0.019,
+      "median": 0.02,
+      "p95": 0.027,
+      "max": 0.027,
+      "samples": [
+        0.025,
+        0.02,
+        0.02,
+        0.019,
+        0.027
+      ]
+    },
+    "cdp.total": {
+      "n": 5,
+      "min": 61.683,
+      "median": 66.272,
+      "p95": 78.681,
+      "max": 78.681,
+      "samples": [
+        66.272,
+        76.85,
+        78.681,
+        61.683,
+        62.951
+      ]
+    },
+    "cdp.fill": {
+      "n": 5,
+      "min": 1.436,
+      "median": 1.905,
+      "p95": 2.518,
+      "max": 2.518,
+      "samples": [
+        2.518,
+        1.905,
+        2.12,
+        1.436,
+        1.74
+      ]
+    },
+    "cdp.click": {
+      "n": 5,
+      "min": 5.411,
+      "median": 10.047,
+      "p95": 16.406,
+      "max": 16.406,
+      "samples": [
+        9.761,
+        10.238,
+        16.406,
+        5.411,
+        10.047
+      ]
+    },
+    "cdp.waitFor": {
+      "n": 5,
+      "min": 51.158,
+      "median": 54.829,
+      "p95": 64.7,
+      "max": 64.7,
+      "samples": [
+        53.981,
+        64.7,
+        60.147,
+        54.829,
+        51.158
+      ]
+    },
+    "script.total": {
+      "n": 5,
+      "min": 60.914,
+      "median": 62.084,
+      "p95": 63.187,
+      "max": 63.187,
+      "samples": [
+        62.299,
+        62.084,
+        62.071,
+        63.187,
+        60.914
+      ]
+    },
+    "script.fill": {
+      "n": 5,
+      "min": 0.287,
+      "median": 0.484,
+      "p95": 0.652,
+      "max": 0.652,
+      "samples": [
+        0.652,
+        0.287,
+        0.484,
+        0.501,
+        0.409
+      ]
+    },
+    "script.click": {
+      "n": 5,
+      "min": 0.179,
+      "median": 0.182,
+      "p95": 0.24,
+      "max": 0.24,
+      "samples": [
+        0.181,
+        0.182,
+        0.224,
+        0.24,
+        0.179
+      ]
+    },
+    "script.waitFor": {
+      "n": 5,
+      "min": 60.321,
+      "median": 61.456,
+      "p95": 62.441,
+      "max": 62.441,
+      "samples": [
+        61.456,
+        61.609,
+        61.356,
+        62.441,
+        60.321
+      ]
+    },
+    "waitFor.treePoll": {
+      "n": 2,
+      "min": 61.877,
+      "median": 61.877,
+      "p95": 63.991,
+      "max": 63.991,
+      "samples": [
+        63.991,
+        61.877
+      ]
+    },
+    "waitFor.treePoll.polls": {
+      "n": 2,
+      "min": 4,
+      "median": 4,
+      "p95": 5,
+      "max": 5,
+      "samples": [
+        5,
+        4
+      ]
+    },
+    "screenshot": {
+      "n": 5,
+      "min": 46.059,
+      "median": 47.515,
+      "p95": 65.037,
+      "max": 65.037,
+      "samples": [
+        65.037,
+        46.417,
+        46.059,
+        47.515,
+        60.045
+      ]
+    }
+  }
+}

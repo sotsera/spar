@@ -1,0 +1,13 @@
+{"t":13.89,"evt":"main","label":"display-gone","ui":"auto","processAgeMs":20,"uid":1000,"desktop":null}
+{"t":19.09,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":19.5,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":"localhost:7","x11Socket":null,"x11Ok":true}
+{"t":20.94,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":1.141}
+{"t":30.08,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":4.178}
+{"t":31.09,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.624}
+{"t":35.19,"evt":"library","file":"libgtk-4.so.1","ok":true,"ms":3.8}
+{"t":36.92,"evt":"gtk-init","ok":false,"ms":0.849,"gtk":"4.14.5"}
+{"t":37.34,"evt":"problem","kind":"NoDisplay","exit":6,"details":"gtk_init_check failed with DISPLAY=localhost:7, WAYLAND_DISPLAY=(unset)"}
+{"t":41.98,"evt":"stderr","isatty":"redirected"}
+{"t":43.03,"evt":"journal","result":"journal-socket"}
+{"t":43.42,"evt":"graphical","skipped":"no display"}
+{"t":43.69,"evt":"exit","code":6}

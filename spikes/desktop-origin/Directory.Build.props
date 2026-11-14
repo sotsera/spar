@@ -1,0 +1,14 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <!--
+    Desktop-origin spike. SpikeVariant names a separate bin/ and obj/ so two builds of the same host (for example
+    version 1.0.0 and 2.0.0, for the app-update check) can sit side by side.
+  -->
+  <PropertyGroup>
+    <SpikeVariant Condition="'$(SpikeVariant)' == ''">v1</SpikeVariant>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/bin/$(SpikeVariant)/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/$(SpikeVariant)/</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

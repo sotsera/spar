@@ -1,0 +1,19 @@
+user=WDAGUtilityAccount session=1
+os=Windows 10 Enterprise 24H2 build=26100.9877
+webview2 folder=157.0.4341.46
+webview2 folder=PlatformExperiencesHelper
+webview2 folder=SetupMetrics
+screen {X=0,Y=0,Width=1520,Height=823} primary=True
+HKLM webcam Value= NonPackaged=
+HKCU webcam Value= NonPackaged=
+HKLM microphone Value= NonPackaged=
+HKCU microphone Value= NonPackaged=
+device AudioEndpoint Remote Audio OK
+narrator=True
+capture ok
+--- after media runs
+HKLM webcam Value=Allow NonPackaged=
+HKCU webcam Value=Allow NonPackaged=
+HKLM microphone Value=Allow NonPackaged=
+HKCU microphone Value=Allow NonPackaged=
+device AudioEndpoint Remote Audio OK

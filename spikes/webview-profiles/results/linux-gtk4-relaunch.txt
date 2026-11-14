@@ -1,0 +1,27 @@
+== relaunch
+SUMMARY relaunch api=gtk4 runs=30 ready=30 started-while-previous-children-alive=0 data-ok=29/29
+  launch to READY: n=30 min=111 p50=114 p90=118 max=278 ms
+== concurrent 1
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+B ready=True B saw: ls=null idb=A1 cookie=[] cache=null
+A after B exited saw: ls=A1 idb=B1 cookie=[] cache=null
+C after both saw: ls=null idb=B1 cookie=[] cache=null
+stderr lines (A+B+C, distinct, first 15): 6
+  ** (process:50549): WARNING **: 12:40:43.938: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (process:50549): WARNING **: 12:40:44.082: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend
+  ** (process:50736): WARNING **: 12:40:44.240: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (process:50736): WARNING **: 12:40:44.293: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend
+  ** (process:50861): WARNING **: 12:40:44.375: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (process:50861): WARNING **: 12:40:44.428: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend
+== concurrent 2
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+B ready=True B saw: ls=null idb=A1 cookie=[] cache=null
+A after B exited saw: ls=A1 idb=B1 cookie=[] cache=null
+C after both saw: ls=null idb=B1 cookie=[] cache=null
+stderr lines (A+B+C, distinct, first 15): 6
+  ** (process:51019): WARNING **: 12:40:45.109: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (process:51019): WARNING **: 12:40:45.245: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend
+  ** (process:51206): WARNING **: 12:40:45.402: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (process:51206): WARNING **: 12:40:45.456: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend
+  ** (process:51331): WARNING **: 12:40:45.559: Disabled hardware acceleration because GTK failed to initialize GL: The current backend does not support OpenGL.
+  ** (process:51331): WARNING **: 12:40:45.611: Error creating WebKitWebView a11y socket: AT-SPI sockets can only be used with the AT-SPI backend

@@ -1,0 +1,127 @@
+Per role, medians in MB: PSS / USS of anonymous (heap, stacks, JS and GC heaps, llvmpipe buffers), file-backed
+(code, data, fonts, caches; mostly clean and reclaimable) and shared-memory/GPU mappings (memfd, /dev/shm, SysV, DRM).
+
+electron-wayland-def               ready   electron-main: anon 25/25 file 74/46 shm 2/0 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 13/13 file 78/63 shm 3/0 | electron-renderer: anon 9/9 file 32/12 shm 1/0 | electron-utility: anon 3/3 file 26/11 shm 0/0
+electron-wayland-def               idle30  electron-main: anon 23/23 file 75/47 shm 1/0 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 13/13 file 78/63 shm 2/0 | electron-renderer: anon 8/8 file 32/12 shm 0/0 | electron-utility: anon 3/3 file 26/11 shm 0/0
+electron-wayland-def               heavy   electron-main: anon 24/24 file 73/42 shm 1/0 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 13/13 file 78/63 shm 3/0 | electron-renderer: anon 411/411 file 44/22 shm 2/1 | electron-utility: anon 3/3 file 26/11 shm 0/0
+
+electron-wayland-empty             ready   electron-main: anon 25/25 file 75/48 shm 2/0 | electron-zygote: anon 2/1 file 30/1 shm 0/0 | electron-gpu-process: anon 13/13 file 78/63 shm 2/0 | electron-renderer: anon 8/8 file 27/9 shm 0/0 | electron-utility: anon 3/3 file 25/11 shm 0/0
+electron-wayland-empty             idle30  electron-main: anon 22/22 file 76/49 shm 1/0 | electron-zygote: anon 2/1 file 30/1 shm 0/0 | electron-gpu-process: anon 13/13 file 78/63 shm 2/0 | electron-renderer: anon 8/7 file 27/9 shm 0/0 | electron-utility: anon 3/3 file 25/11 shm 0/0
+
+electron-x11-def                   ready   electron-main: anon 24/24 file 66/40 shm 1/1 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 14/13 file 78/64 shm 1/0 | electron-renderer: anon 9/9 file 32/12 shm 1/0 | electron-utility: anon 3/3 file 26/11 shm 0/0
+electron-x11-def                   idle30  electron-main: anon 21/21 file 66/41 shm 1/1 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 14/13 file 78/64 shm 1/0 | electron-renderer: anon 8/8 file 32/12 shm 1/0 | electron-utility: anon 3/3 file 26/11 shm 0/0
+electron-x11-def                   heavy   electron-main: anon 22/22 file 64/36 shm 1/1 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 14/13 file 79/64 shm 2/0 | electron-renderer: anon 412/411 file 44/22 shm 2/1 | electron-utility: anon 3/3 file 26/11 shm 0/0
+
+electron-x11-empty                 ready   electron-main: anon 23/23 file 67/43 shm 1/1 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 14/13 file 79/64 shm 1/0 | electron-renderer: anon 8/8 file 28/11 shm 0/0 | electron-utility: anon 3/3 file 26/11 shm 0/0
+electron-x11-empty                 idle30  electron-main: anon 21/21 file 68/43 shm 1/1 | electron-zygote: anon 2/1 file 29/0 shm 0/0 | electron-gpu-process: anon 14/13 file 79/64 shm 1/0 | electron-renderer: anon 8/7 file 28/11 shm 0/0 | electron-utility: anon 3/3 file 26/11 shm 0/0
+
+floor-gtk3-wayland-def             ready   ui: anon 4/4 file 24/21 shm 1/0
+floor-gtk3-wayland-def             idle30  ui: anon 4/4 file 23/21 shm 1/0
+
+floor-gtk3-x11-def                 ready   ui: anon 4/4 file 41/39 shm 0/0
+floor-gtk3-x11-def                 idle30  ui: anon 4/4 file 41/39 shm 0/0
+
+floor-gtk4-wayland-def             ready   ui: anon 80/80 file 105/103 shm 0/0
+floor-gtk4-wayland-def             idle30  ui: anon 80/80 file 105/103 shm 0/0
+
+floor-gtk4-x11-def                 ready   ui: anon 72/72 file 95/93 shm 1/1
+floor-gtk4-x11-def                 idle30  ui: anon 72/72 file 95/93 shm 1/1
+
+gtk3-wayland-def                   ready   ui: anon 34/34 file 79/35 shm 1/0 | web: anon 79/79 file 103/59 shm 1/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-wayland-def                   idle30  ui: anon 34/34 file 79/35 shm 1/0 | web: anon 78/78 file 103/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk3-wayland-def                   heavy   ui: anon 35/35 file 79/34 shm 2/1 | web: anon 312/312 file 115/71 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk3-wayland-empty                 ready   ui: anon 34/34 file 76/36 shm 1/0 | web: anon 66/66 file 91/51 shm 1/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-wayland-empty                 idle30  ui: anon 34/34 file 76/36 shm 1/0 | web: anon 65/65 file 91/51 shm 1/0 | network: anon 2/2 file 20/8 shm 0/0
+
+gtk3-wayland-empty-noaccel         ready   ui: anon 25/25 file 82/45 shm 1/0 | web: anon 5/5 file 73/37 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk3-wayland-empty-noaccel         idle30  ui: anon 25/25 file 82/45 shm 1/0 | web: anon 5/5 file 73/37 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk3-wayland-gtkonly               ready   ui: anon 5/5 file 25/22 shm 1/0
+gtk3-wayland-gtkonly               idle30  ui: anon 5/5 file 25/22 shm 1/0
+
+gtk3-wayland-noaccel               ready   ui: anon 26/26 file 84/45 shm 1/0 | web: anon 6/6 file 81/42 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-wayland-noaccel               idle30  ui: anon 25/25 file 85/45 shm 1/0 | web: anon 6/6 file 81/42 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-wayland-noaccel               heavy   ui: anon 26/26 file 84/44 shm 1/1 | web: anon 221/221 file 94/54 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+
+gtk3-wayland-sandbox               ready   ui: anon 34/34 file 76/30 shm 1/0 | web: anon 79/79 file 103/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk3-wayland-sandbox               idle30  ui: anon 34/34 file 76/30 shm 1/0 | web: anon 78/78 file 103/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk3-wayland-sandbox               heavy   ui: anon 35/35 file 76/30 shm 2/1 | web: anon 312/312 file 115/71 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk3-x11-def                       ready   ui: anon 22/22 file 69/25 shm 1/0 | web: anon 79/79 file 103/59 shm 1/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-x11-def                       idle30  ui: anon 22/22 file 68/25 shm 1/0 | web: anon 78/78 file 103/59 shm 1/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-x11-def                       heavy   ui: anon 22/22 file 69/25 shm 1/0 | web: anon 311/311 file 116/72 shm 1/0 | network: anon 2/2 file 20/8 shm 0/0
+
+gtk3-x11-empty                     ready   ui: anon 21/21 file 66/25 shm 1/0 | web: anon 66/66 file 91/51 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk3-x11-empty                     idle30  ui: anon 21/21 file 66/25 shm 1/0 | web: anon 65/65 file 91/51 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk3-x11-empty-noaccel             ready   ui: anon 6/6 file 61/25 shm 0/0 | web: anon 5/5 file 73/37 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-x11-empty-noaccel             idle30  ui: anon 6/6 file 61/25 shm 0/0 | web: anon 5/5 file 73/37 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+
+gtk3-x11-gtkonly                   ready   ui: anon 4/4 file 16/14 shm 0/0
+gtk3-x11-gtkonly                   idle30  ui: anon 4/4 file 16/14 shm 0/0
+
+gtk3-x11-noaccel                   ready   ui: anon 7/7 file 64/25 shm 0/0 | web: anon 6/6 file 81/42 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-x11-noaccel                   idle30  ui: anon 7/7 file 64/25 shm 0/0 | web: anon 6/6 file 81/42 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+gtk3-x11-noaccel                   heavy   ui: anon 7/7 file 64/25 shm 1/0 | web: anon 221/221 file 94/55 shm 0/0 | network: anon 2/2 file 20/8 shm 0/0
+
+gtk3-x11-sandbox                   ready   ui: anon 22/22 file 67/22 shm 1/0 | web: anon 79/79 file 102/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk3-x11-sandbox                   idle30  ui: anon 22/22 file 67/22 shm 1/0 | web: anon 78/78 file 102/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk3-x11-sandbox                   heavy   ui: anon 23/23 file 67/22 shm 1/0 | web: anon 313/313 file 115/72 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-wayland-cairo                 ready   ui: anon 27/27 file 78/34 shm 1/0 | web: anon 78/78 file 102/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-wayland-cairo                 idle30  ui: anon 27/27 file 78/34 shm 1/0 | web: anon 78/78 file 102/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-wayland-cairo                 heavy   ui: anon 27/27 file 78/33 shm 1/0 | web: anon 310/310 file 115/70 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-wayland-def                   ready   ui: anon 93/93 file 86/36 shm 1/0 | web: anon 78/78 file 96/46 shm 1/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-wayland-def                   idle30  ui: anon 92/92 file 86/36 shm 1/0 | web: anon 78/78 file 96/46 shm 1/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-wayland-def                   heavy   ui: anon 94/94 file 86/35 shm 1/0 | web: anon 311/311 file 109/58 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-wayland-empty                 ready   ui: anon 93/93 file 84/38 shm 1/0 | web: anon 65/65 file 85/39 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-wayland-empty                 idle30  ui: anon 93/93 file 84/38 shm 1/0 | web: anon 65/65 file 85/39 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-wayland-empty-noaccel-cairo   ready   ui: anon 19/19 file 80/43 shm 1/0 | web: anon 5/5 file 72/36 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-wayland-empty-noaccel-cairo   idle30  ui: anon 19/19 file 80/43 shm 1/0 | web: anon 5/5 file 72/36 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-wayland-gtkonly               ready   ui: anon 80/80 file 106/104 shm 0/0
+gtk4-wayland-gtkonly               idle30  ui: anon 80/80 file 106/104 shm 0/0
+
+gtk4-wayland-gtkonly-cairo         ready   ui: anon 5/5 file 28/25 shm 0/0
+gtk4-wayland-gtkonly-cairo         idle30  ui: anon 5/5 file 28/25 shm 0/0
+
+gtk4-wayland-noaccel               ready   ui: anon 88/88 file 98/57 shm 1/0 | web: anon 6/6 file 80/41 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-wayland-noaccel               idle30  ui: anon 87/87 file 98/58 shm 1/0 | web: anon 6/6 file 80/41 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-wayland-noaccel               heavy   ui: anon 90/90 file 97/57 shm 1/0 | web: anon 221/221 file 93/53 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-wayland-noaccel-cairo         ready   ui: anon 20/20 file 83/43 shm 1/0 | web: anon 6/6 file 80/41 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-wayland-noaccel-cairo         idle30  ui: anon 19/19 file 83/43 shm 1/0 | web: anon 6/6 file 80/41 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-wayland-noaccel-cairo         heavy   ui: anon 20/20 file 82/42 shm 1/0 | web: anon 221/221 file 93/53 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-x11-cairo                     ready   ui: anon 27/27 file 69/25 shm 1/0 | web: anon 79/79 file 103/59 shm 1/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-x11-cairo                     idle30  ui: anon 26/26 file 69/25 shm 1/0 | web: anon 78/78 file 102/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-x11-cairo                     heavy   ui: anon 27/27 file 69/25 shm 1/0 | web: anon 311/311 file 115/71 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-x11-def                       ready   ui: anon 83/83 file 77/27 shm 1/1 | web: anon 79/79 file 96/47 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-x11-def                       idle30  ui: anon 82/82 file 77/27 shm 1/1 | web: anon 78/78 file 96/47 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-x11-def                       heavy   ui: anon 84/84 file 77/27 shm 1/1 | web: anon 311/311 file 109/59 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-x11-empty                     ready   ui: anon 82/82 file 75/29 shm 1/1 | web: anon 66/66 file 85/39 shm 1/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-x11-empty                     idle30  ui: anon 82/82 file 75/29 shm 1/1 | web: anon 65/65 file 85/39 shm 1/0 | network: anon 2/2 file 19/9 shm 0/0
+
+gtk4-x11-empty-noaccel-cairo       ready   ui: anon 17/17 file 71/35 shm 0/0 | web: anon 5/5 file 72/37 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-x11-empty-noaccel-cairo       idle30  ui: anon 17/17 file 71/35 shm 0/0 | web: anon 5/5 file 72/37 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+
+gtk4-x11-gtkonly                   ready   ui: anon 72/72 file 97/94 shm 1/1
+gtk4-x11-gtkonly                   idle30  ui: anon 72/72 file 97/94 shm 1/1
+
+gtk4-x11-gtkonly-cairo             ready   ui: anon 16/16 file 83/80 shm 0/0
+gtk4-x11-gtkonly-cairo             idle30  ui: anon 16/16 file 83/80 shm 0/0
+
+gtk4-x11-noaccel                   ready   ui: anon 77/77 file 88/49 shm 1/1 | web: anon 6/6 file 81/41 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-x11-noaccel                   idle30  ui: anon 76/76 file 89/49 shm 1/1 | web: anon 6/6 file 81/41 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-x11-noaccel                   heavy   ui: anon 79/79 file 88/49 shm 1/1 | web: anon 221/221 file 93/54 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+
+gtk4-x11-noaccel-cairo             ready   ui: anon 18/18 file 74/34 shm 0/0 | web: anon 6/6 file 81/41 shm 0/0 | network: anon 2/2 file 19/9 shm 0/0
+gtk4-x11-noaccel-cairo             idle30  ui: anon 18/18 file 74/34 shm 0/0 | web: anon 6/6 file 80/41 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+gtk4-x11-noaccel-cairo             heavy   ui: anon 19/19 file 73/34 shm 0/0 | web: anon 221/221 file 93/54 shm 0/0 | network: anon 2/2 file 19/8 shm 0/0
+

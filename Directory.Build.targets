@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Trim, AOT and single-file analyzers run in every project outside spikes/, tests included (plan section 7), so
+    AOT-unsafe code fails a normal build instead of only the publish. This is a targets file because the condition
+    needs the project's own TargetFramework: on a netstandard2.0 project, such as the generator, EnableAotAnalyzer
+    is NETSDK1210, which fails under MSBuildTreatWarningsAsErrors.
+  -->
+  <PropertyGroup Condition="!$(MSBuildProjectDirectory.Contains('\spikes\')) and !$(MSBuildProjectDirectory.Contains('/spikes/')) and $([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    <EnableAotAnalyzer>true</EnableAotAnalyzer>
+    <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,1487 @@
+{
+ "engine": "webkitgtk",
+ "details": {
+  "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15",
+  "hardwareConcurrency": 8,
+  "heapCounter": "none",
+  "gc": false,
+  "webkitgtk": "2.52.6",
+  "gtk": "4.14.5",
+  "webProcessesMeasured": 0
+ },
+ "options": {
+  "sampleMs": 60,
+  "warmupRounds": 3,
+  "rounds": 7,
+  "burstSize": 10000,
+  "burstRounds": 15,
+  "retainedCount": 20000
+ },
+ "variants": [
+  {
+   "key": "native",
+   "label": "native Promise<Result> (baseline)"
+  },
+  {
+   "key": "formC",
+   "label": "form C thenable Call (today)"
+  },
+  {
+   "key": "subclass",
+   "label": "Promise subclass, built by the client (proposal)"
+  },
+  {
+   "key": "of",
+   "label": "Promise subclass wrapping a form C call (PromiseCall.of)"
+  },
+  {
+   "key": "noSpecies",
+   "label": "Promise subclass without Symbol.species"
+  },
+  {
+   "key": "ctor",
+   "label": "Promise subclass whose instances have constructor === Promise"
+  }
+ ],
+ "parity": {
+  "native": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "Promise",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": true,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "Promise",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "formC": {
+   "instanceofPromise": false,
+   "toStringTag": "[object Object]",
+   "constructorIs": "Call$1",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "no finally",
+   "catchReturns": "no catch",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "no static resolve",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "subclass": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "Call (Promise subclass)",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "Call (Promise subclass)",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "of": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "PromiseCall (Promise subclass)",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "PromiseCall (Promise subclass)",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "noSpecies": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "CallNoSpecies (Promise subclass)",
+   "thenReturns": "CallNoSpecies (Promise subclass)",
+   "thenResultHasMatch": true,
+   "finallyReturns": "CallNoSpecies (Promise subclass)",
+   "catchReturns": "CallNoSpecies (Promise subclass)",
+   "promiseResolveIsSame": false,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "CallNoSpecies (Promise subclass)",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  },
+  "ctor": {
+   "instanceofPromise": true,
+   "toStringTag": "[object Promise]",
+   "constructorIs": "Promise",
+   "thenReturns": "Promise",
+   "thenResultHasMatch": false,
+   "finallyReturns": "Promise",
+   "catchReturns": "Promise",
+   "promiseResolveIsSame": true,
+   "awaitGives": "Result",
+   "thenGives": "Result",
+   "allGives": "Result",
+   "raceGives": "Result",
+   "allSettledGives": "fulfilled",
+   "staticResolveGives": "Promise",
+   "success.match": "resolved ok:5",
+   "success.unwrap": "resolved 5",
+   "success.await": "Result",
+   "declaredError.match": "resolved notFound:n1",
+   "declaredError.unwrap": "rejected SparError(notFound)",
+   "declaredError.await": "Result",
+   "undeclaredError.match": "resolved failure:protocol/unknownErrorCase",
+   "undeclaredError.unwrap": "rejected SparError(gone)",
+   "undeclaredError.await": "Result",
+   "infrastructureFailure.match": "resolved failure:transport/disconnected",
+   "infrastructureFailure.unwrap": "rejected SparError(disconnected)",
+   "infrastructureFailure.await": "Result",
+   "infrastructureFailure.matchWithoutFailureHandler": "resolved undefined",
+   "infrastructureFailure.interceptorCalls": 1,
+   "abortBeforeResult.match": "resolved failure:cancelled/cancelled",
+   "abortBeforeResult.unwrap": "rejected SparError(cancelled)",
+   "abortBeforeResult.await": "Result",
+   "abortedBeforeCall.match": "resolved failure:cancelled/cancelled",
+   "abortedBeforeCall.unwrap": "rejected SparError(cancelled)",
+   "abortedBeforeCall.await": "Result",
+   "unhandled.failureNeverConsumed": 0,
+   "unhandled.failureAwaitedOnly": 0,
+   "unhandled.failureMatched": 0,
+   "unhandled.failureThenDiscarded": 0,
+   "unhandled.successFinallyDiscarded": 0,
+   "unhandled.abortedNeverConsumed": 0,
+   "unhandled.unwrapFailureCaught": 0,
+   "unhandled.unwrapFailureNotHandled (expected 1)": 1,
+   "unhandled.throwingHandlerNotHandled (expected 1)": 1
+  }
+ },
+ "ticks": {
+  "native": {
+   "pending.await": 0,
+   "settled.await": 0,
+   "pending.match": 1,
+   "settled.match": 1,
+   "pending.unwrap": 1,
+   "settled.unwrap": 1,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 1,
+   "settled.all": 1
+  },
+  "formC": {
+   "pending.await": 2,
+   "settled.await": 2,
+   "pending.match": 2,
+   "settled.match": 1,
+   "pending.unwrap": 2,
+   "settled.unwrap": 1,
+   "pending.then": 1,
+   "settled.then": 0,
+   "pending.all": 3,
+   "settled.all": 3
+  },
+  "subclass": {
+   "pending.await": 1,
+   "settled.await": 2,
+   "pending.match": 1,
+   "settled.match": 1,
+   "pending.unwrap": 1,
+   "settled.unwrap": 1,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 2,
+   "settled.all": 3
+  },
+  "of": {
+   "pending.await": 3,
+   "settled.await": 2,
+   "pending.match": 3,
+   "settled.match": 1,
+   "pending.unwrap": 3,
+   "settled.unwrap": 1,
+   "pending.then": 2,
+   "settled.then": 0,
+   "pending.all": 4,
+   "settled.all": 3
+  },
+  "noSpecies": {
+   "pending.await": 1,
+   "settled.await": 2,
+   "pending.match": 2,
+   "settled.match": 2,
+   "pending.unwrap": 2,
+   "settled.unwrap": 2,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 2,
+   "settled.all": 3
+  },
+  "ctor": {
+   "pending.await": 0,
+   "settled.await": 0,
+   "pending.match": 1,
+   "settled.match": 1,
+   "pending.unwrap": 1,
+   "settled.unwrap": 1,
+   "pending.then": 0,
+   "settled.then": 0,
+   "pending.all": 1,
+   "settled.all": 1
+  }
+ },
+ "order": {
+  "native": {
+   "await vs native await": "XN",
+   "await vs native then": "XN",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "formC": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "NX",
+   "then vs native then": "NX",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "subclass": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "of": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "NX",
+   "then vs native then": "NX",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "noSpecies": {
+   "await vs native await": "NX",
+   "await vs native then": "NX",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  },
+  "ctor": {
+   "await vs native await": "XN",
+   "await vs native then": "XN",
+   "match vs native await": "NX",
+   "match vs native then": "NX",
+   "unwrap vs native await": "NX",
+   "unwrap vs native then": "NX",
+   "then vs native await": "XN",
+   "then vs native then": "XN",
+   "all vs native await": "NX",
+   "all vs native then": "NX"
+  }
+ },
+ "timing": {
+  "callsPerSample": 524288,
+  "samples": {
+   "native.await": [
+    66.75720214842362,
+    66.7572021484375,
+    64.84985351561112,
+    66.75720214842362,
+    59.1278076171875,
+    59.127807617215254,
+    57.220458984375
+   ],
+   "native.match": [
+    112.5335693359375,
+    114.44091796875,
+    114.44091796875,
+    116.3482666015625,
+    104.9041748046875,
+    104.90417480465975,
+    104.9041748046875
+   ],
+   "native.unwrap": [
+    112.5335693359375,
+    112.5335693359375,
+    114.44091796875,
+    110.626220703125,
+    104.9041748046875,
+    104.9041748046875,
+    102.99682617190275
+   ],
+   "formC.await": [
+    261.3067626953125,
+    263.214111328125,
+    257.4920654296875,
+    259.3994140625,
+    242.2332763671875,
+    238.4185791015625,
+    238.4185791015625
+   ],
+   "formC.match": [
+    219.3450927734375,
+    207.90100097657637,
+    217.437744140625,
+    209.80834960936113,
+    194.549560546875,
+    198.3642578125,
+    217.43774414065277
+   ],
+   "formC.unwrap": [
+    205.99365234375,
+    198.3642578125,
+    211.7156982421875,
+    209.808349609375,
+    183.10546875,
+    183.10546875,
+    192.64221191403473
+   ],
+   "subclass.await": [
+    350.95214843748613,
+    324.249267578125,
+    335.693359375,
+    328.06396484376387,
+    312.80517578125,
+    318.5272216796875,
+    312.80517578125
+   ],
+   "subclass.match": [
+    263.21411132813887,
+    255.58471679688887,
+    251.77001953125,
+    249.8626708984375,
+    249.8626708984375,
+    234.6038818359375,
+    236.51123046875
+   ],
+   "subclass.unwrap": [
+    253.6773681640625,
+    246.0479736328125,
+    247.955322265625,
+    247.955322265625,
+    246.04797363282637,
+    228.8818359375,
+    234.6038818359375
+   ],
+   "of.await": [
+    577.9266357422014,
+    574.1119384765486,
+    547.4090576171875,
+    553.131103515625,
+    549.3164062500277,
+    507.354736328125,
+    513.0767822265902
+   ],
+   "of.match": [
+    501.6326904296875,
+    488.28125000001387,
+    478.74450683592363,
+    482.5592041015625,
+    478.74450683595137,
+    440.5975341796875,
+    453.948974609375
+   ],
+   "of.unwrap": [
+    501.6326904296875,
+    476.837158203125,
+    474.92980957032637,
+    480.65185546876387,
+    480.65185546875,
+    431.060791015625,
+    434.87548828125
+   ],
+   "noSpecies.await": [
+    391.0064697265625,
+    373.84033203126387,
+    375.74768066407637,
+    375.7476806640625,
+    381.46972656251387,
+    345.2301025390625,
+    345.2301025390625
+   ],
+   "noSpecies.match": [
+    608.4442138672014,
+    593.1854248046875,
+    583.648681640625,
+    591.278076171875,
+    591.2780761718889,
+    545.501708984375,
+    543.5943603515625
+   ],
+   "noSpecies.unwrap": [
+    597.0001220703264,
+    577.9266357422014,
+    591.2780761718611,
+    581.7413330078125,
+    537.872314453125,
+    537.8723144530973,
+    541.68701171875
+   ],
+   "ctor.await": [
+    83.92333984375,
+    82.0159912109375,
+    82.01599121092362,
+    83.92333984376388,
+    78.2012939453125,
+    99.18212890625,
+    76.29394531252775
+   ],
+   "ctor.match": [
+    249.8626708984375,
+    251.77001953125,
+    251.77001953126387,
+    249.8626708984375,
+    230.7891845703125,
+    234.6038818359375,
+    230.78918457034027
+   ],
+   "ctor.unwrap": [
+    240.325927734375,
+    246.0479736328125,
+    246.0479736328125,
+    246.0479736328125,
+    226.9744873046875,
+    225.067138671875,
+    226.9744873046875
+   ]
+  }
+ },
+ "heap": {},
+ "burst": {
+  "size": 10000,
+  "runs": {
+   "native.await": [
+    {
+     "ms": 0
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 0
+    }
+   ],
+   "native.match": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    }
+   ],
+   "native.unwrap": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    }
+   ],
+   "formC.await": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    }
+   ],
+   "formC.match": [
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    }
+   ],
+   "formC.unwrap": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 1
+    }
+   ],
+   "subclass.await": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    }
+   ],
+   "subclass.match": [
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    }
+   ],
+   "subclass.unwrap": [
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    }
+   ],
+   "of.await": [
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    }
+   ],
+   "of.match": [
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 3
+    },
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 3
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 3
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    }
+   ],
+   "of.unwrap": [
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 3
+    },
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 3
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    }
+   ],
+   "noSpecies.await": [
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    }
+   ],
+   "noSpecies.match": [
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    }
+   ],
+   "noSpecies.unwrap": [
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 1.999999999985448
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2.000000000014552
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    },
+    {
+     "ms": 2
+    }
+   ],
+   "ctor.await": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 0
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    }
+   ],
+   "ctor.match": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    }
+   ],
+   "ctor.unwrap": [
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1.000000000014552
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    },
+    {
+     "ms": 1
+    },
+    {
+     "ms": 0.9999999999854481
+    }
+   ]
+  }
+ },
+ "elapsedMs": 72825,
+ "sink": "+"
+}

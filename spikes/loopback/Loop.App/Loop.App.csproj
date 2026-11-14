@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Loop.App</RootNamespace>
+    <!-- The build machine's own runtime (win-x64, linux-x64, …), so the apphost runs where it was built. -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- Tasks are built in this same graph (source checkout), so use a short-lived task host: no locked DLLs. -->
+    <SpikeTaskMode>TaskHost</SpikeTaskMode>
+  </PropertyGroup>
+
+  <!-- The loopback host exists only in development builds; Release publications never reference it. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>$(DefineConstants);SPAR_LOOPBACK</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\Loop.Loopback\Loop.Loopback.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\d1-pipeline\Spike.targets" />
+</Project>

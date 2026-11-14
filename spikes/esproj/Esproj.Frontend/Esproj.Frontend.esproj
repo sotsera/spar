@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.7204101">
+  <PropertyGroup>
+    <!-- Vite writes the bundle under obj/, not into the authored folder. The SDK makes this the project's TargetPath. -->
+    <BuildOutputFolder>$(MSBuildProjectDirectory)\obj\dist\</BuildOutputFolder>
+    <BuildCommand>npm run build -- --outDir obj/dist --emptyOutDir</BuildCommand>
+
+    <!--
+      Spike: SpikeEsprojIncremental=false keeps the SDK's own build step, which runs BuildCommand on every build.
+      true (default) turns it off and runs the same command from a target with Inputs and Outputs.
+    -->
+    <SpikeEsprojIncremental Condition="'$(SpikeEsprojIncremental)' == ''">true</SpikeEsprojIncremental>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SpikeEsprojIncremental)' == 'true'">
+    <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <!-- The SDK runs `npm audit` (a registry request) after every npm install. -->
+    <ShouldRunNpmAudit>false</ShouldRunNpmAudit>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SpikeEsprojIncremental)' == 'true'">
+    <_SpikeFrontendInput Include="src/**/*;index.html;package.json;package-lock.json;tsconfig.json;vite.config.ts" />
+    <!-- The generated @spar packages, through npm's links (file: dependencies). -->
+    <_SpikeFrontendInput Include="node_modules/@spar/**/*" />
+  </ItemGroup>
+
+  <Target Name="SpikeBuildBundle" AfterTargets="CoreCompile" Condition="'$(SpikeEsprojIncremental)' == 'true'"
+          Inputs="@(_SpikeFrontendInput)" Outputs="$(BuildOutputFolder)index.html">
+    <Exec Command="$(BuildCommand)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Touch Files="$(BuildOutputFolder)index.html" />
+  </Target>
+
+  <!-- Spike: SpikeFrontendMode=Cycle. The .esproj asks the app for its generated client first (the app references the .esproj too). -->
+  <ItemGroup Condition="'$(SpikeFrontendMode)' == 'Cycle'">
+    <ProjectReference Include="../Esproj.App/Esproj.App.csproj" ReferenceOutputAssembly="false" Targets="SparGenerateClient" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,73 @@
+<Project>
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!--
+    Pipeline:
+      ResolveReferences
+        -> SparWriteContractInventory   (sources, references, defines; written only when changed)
+        -> SparGenerateClient           (task: contracts.json and TypeScript, incremental)
+        -> SparPackFrontend             (task: deterministic zip of the authored frontend and the generated client)
+        -> EmbeddedResource "Spar.Frontend"
+      CoreCompile (one compilation; the source generator from this package emits all C#)
+  -->
+  <PropertyGroup>
+    <SparFrontendPath Condition="'$(SparFrontendPath)' == ''">$(MSBuildProjectDirectory)/frontend/</SparFrontendPath>
+    <_SparTasksPath>$(_SparToolsDirectory)Spike.Tasks.dll</_SparTasksPath>
+  </PropertyGroup>
+
+  <!-- The package folder is immutable: tasks load in-process (dotnet build) or in the pooled .NET task host (VS). -->
+  <UsingTask TaskName="Spike.Tasks.GenerateContractClient" AssemblyFile="$(_SparTasksPath)" Runtime="NET" />
+  <UsingTask TaskName="Spike.Tasks.PackFrontend" AssemblyFile="$(_SparTasksPath)" Runtime="NET" />
+
+  <!-- The same Spike.Generator.dll the tasks load. -->
+  <ItemGroup>
+    <Analyzer Include="$(_SparToolsDirectory)Spike.Generator.dll" />
+  </ItemGroup>
+
+  <Target Name="SparWriteContractInventory" DependsOnTargets="ResolveReferences"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_SparDir>$(IntermediateOutputPath)spar/</_SparDir>
+      <_SparInventory>$(_SparDir)contracts.inventory</_SparInventory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_SparInventoryLine Include="sdk=$(SparSdkVersion)" />
+      <_SparInventoryLine Include="langversion=$(LangVersion)" />
+      <_SparInventoryLine Include="nullable=$(Nullable)" />
+      <_SparInventoryLine Include="define=$(DefineConstants)" />
+      <_SparInventoryLine Include="@(Compile->'source=%(FullPath)')" />
+      <_SparInventoryLine Include="@(ReferencePath->'reference=%(FullPath)')" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(_SparDir)" />
+    <WriteLinesToFile File="$(_SparInventory)" Lines="@(_SparInventoryLine)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+
+  <Target Name="SparGenerateClient" DependsOnTargets="SparWriteContractInventory"
+          Condition="'$(DesignTimeBuild)' != 'true'"
+          Inputs="$(_SparInventory);@(Compile);$(_SparTasksPath)" Outputs="$(_SparDir)client.stamp">
+    <GenerateContractClient InventoryFile="$(_SparInventory)" OutputDirectory="$(_SparDir)client" />
+    <Touch Files="$(_SparDir)client.stamp" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="SparPackFrontend" DependsOnTargets="SparGenerateClient" BeforeTargets="AssignTargetPaths"
+          Condition="'$(DesignTimeBuild)' != 'true'"
+          Inputs="@(_SparFrontendInput);$(_SparDir)client.stamp" Outputs="$(_SparDir)frontend.pack.stamp">
+    <PackFrontend ZipFile="$(_SparDir)frontend.zip" Directories="$(SparFrontendPath);$(_SparDir)client" />
+    <!-- The zip keeps its timestamp when its bytes are unchanged (so CoreCompile stays skipped). -->
+    <Touch Files="$(_SparDir)frontend.pack.stamp" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="SparEmbedFrontend" AfterTargets="SparPackFrontend" BeforeTargets="AssignTargetPaths"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <EmbeddedResource Include="$(_SparDir)frontend.zip" LogicalName="Spar.Frontend" Type="Non-Resx" WithCulture="false" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <_SparFrontendInput Include="$(SparFrontendPath)**/*"
+                        Exclude="$(SparFrontendPath)node_modules/**;$(SparFrontendPath)dist/**" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,215 @@
+=== nodev-allow.jsonl
+3659 page {"type":"media","id":1,"op":"enum","devices":[{"kind":"audiooutput","label":"","hasId":false}]}
+3691 page {"type":"media","id":2,"op":"query","camera":"prompt","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+3744 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":1.3000000000465661}
+4294 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+4842 page {"type":"media","id":4,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":0.9000000000232831}
+5392 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+5562 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+5968 exit {"browserExited":true}
+=== nodev-deny.jsonl
+5956 page {"type":"media","id":1,"op":"enum","devices":[{"kind":"audiooutput","label":"","hasId":false}]}
+5965 page {"type":"media","id":2,"op":"query","camera":"denied","microphone":"denied","policyCamera":false,"policyMicrophone":false}
+6019 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":1.5}
+6582 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+6649 page {"type":"media","id":4,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":0.5999999999767169}
+7209 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+7379 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+7792 exit {"browserExited":true}
+=== nodev-handlerdeny.jsonl
+4104 page {"type":"media","id":1,"op":"enum","devices":[{"kind":"audiooutput","label":"","hasId":false}]}
+4135 page {"type":"media","id":2,"op":"query","camera":"prompt","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+4190 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":1.400000000023283}
+4749 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+4805 page {"type":"media","id":4,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":0.7000000000698492}
+5368 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+5551 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+5949 exit {"browserExited":true}
+=== nodev-none.jsonl
+3722 page {"type":"media","id":1,"op":"enum","devices":[{"kind":"audiooutput","label":"","hasId":false}]}
+3778 page {"type":"media","id":2,"op":"query","camera":"prompt","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+3842 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":1.599999999976717}
+4407 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+4554 page {"type":"media","id":4,"op":"gum","outcome":"error","name":"NotFoundError","message":"Requested device not found","ms":0.7999999999301508}
+5125 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+5438 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+5856 exit {"browserExited":true}
+=== fake-allow.jsonl
+4204 page {"type":"media","id":1,"op":"enum","devices":[{"kind":"audioinput","label":"","hasId":false},{"kind":"videoinput","label":"","hasId":false},{"kind":"audiooutput","label":"","hasId":false}]}
+4233 page {"type":"media","id":2,"op":"query","camera":"prompt","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+4298 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+4304 page {"type":"media","id":3,"op":"gum","outcome":"stream","ms":6.700000000069849,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+4856 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+5931 page {"type":"media","id":4,"op":"frames","frames":0,"width":0,"height":0}
+5993 page {"type":"media","id":5,"op":"tracks","tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+6057 result {"step":"list","settings":"hr=0x00000000 count=1 [camera|https://app.localhost/|allow]"}
+6060 permission-requested {"kind":"microphone","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+6066 page {"type":"media","id":6,"op":"gum","outcome":"stream","ms":7.5,"tracks":[{"kind":"audio","label":"Fake Default Audio Input","state":"live","muted":false}]}
+6633 result {"step":"gum:audio","permissionRequested":1,"events":"kind=microphone uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+6707 result {"step":"list","settings":"hr=0x00000000 count=2 [microphone|https://app.localhost/|allow; camera|https://app.localhost/|allow]"}
+6709 page {"type":"media","id":7,"op":"query","camera":"granted","microphone":"granted","policyCamera":true,"policyMicrophone":true}
+6759 result {"step":"set:camera:deny","origin":"https://app.localhost","set":"hr=0x00000000"}
+6759 page {"type":"media","op":"track-ended","kind":"video","t":2930.8000000000466}
+8261 page {"type":"media","id":8,"op":"tracks","tracks":[{"kind":"video","label":"fake_device_0","state":"ended","muted":false},{"kind":"audio","label":"Fake Default Audio Input","state":"live","muted":false}]}
+8312 page {"type":"media","id":9,"op":"query","camera":"denied","microphone":"granted","policyCamera":true,"policyMicrophone":true}
+8378 page {"type":"media","id":10,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.099999999976717}
+8941 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+9010 result {"step":"set:camera:default","origin":"https://app.localhost","set":"hr=0x00000000"}
+9011 result {"step":"list","settings":"hr=0x00000000 count=1 [microphone|https://app.localhost/|allow]"}
+9013 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+9016 page {"type":"media","id":11,"op":"gum","outcome":"stream","ms":3.900000000023283,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+9571 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+10003 result {"step":"list","settings":"hr=0x00000000 count=2 [microphone|https://app.localhost/|allow; camera|https://app.localhost/|allow]"}
+10004 page {"type":"media","id":12,"op":"stop"}
+10545 exit {"browserExited":true}
+=== fake-camself.jsonl
+3158 page {"type":"media","id":1,"op":"query","camera":"prompt","microphone":"denied","policyCamera":true,"policyMicrophone":false}
+3365 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+3370 page {"type":"media","id":2,"op":"gum","outcome":"stream","ms":133,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+3922 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+4054 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.599999999976717}
+4625 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+4941 page {"type":"media","id":4,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.400000000023283}
+5500 result {"step":"gum:both","permissionRequested":0,"events":"","newTopLevelWindows":""}
+6025 exit {"browserExited":true}
+=== fake-default.jsonl
+4628 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"default","savesInProfile":1,"savesInProfileAfter":1}
+12514 page {"type":"media","id":1,"op":"gum","outcome":"timeout","ms":8001.099999999977}
+13054 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=default savesInProfile=1->1","newTopLevelWindows":"Chrome_WidgetWin_1 '' msedgewebview2 [102,116,438,324]"}
+13121 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+13504 exit {"browserExited":true}
+=== fake-deny.jsonl
+2820 page {"type":"media","id":1,"op":"query","camera":"prompt","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+2992 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"deny","savesInProfile":1,"savesInProfileAfter":1}
+2994 page {"type":"media","id":2,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":122.19999999995343}
+3557 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=deny savesInProfile=1->1","newTopLevelWindows":""}
+3618 permission-requested {"kind":"microphone","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"deny","savesInProfile":1,"savesInProfileAfter":1}
+3619 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":2.199999999953434}
+4167 result {"step":"gum:audio","permissionRequested":1,"events":"kind=microphone uri=https://app.localhost/ userInitiated=True initialState=default answer=deny savesInProfile=1->1","newTopLevelWindows":""}
+4343 result {"step":"list","settings":"hr=0x00000000 count=2 [microphone|https://app.localhost/|deny; camera|https://app.localhost/|deny]"}
+4344 page {"type":"media","id":4,"op":"query","camera":"denied","microphone":"denied","policyCamera":true,"policyMicrophone":true}
+4396 page {"type":"media","id":5,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.1000000000931323}
+4957 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+5417 exit {"browserExited":true}
+=== fake-nosave.jsonl
+5589 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":0}
+5593 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":184.30000000004657,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+6143 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->0","newTopLevelWindows":""}
+6241 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+6243 page {"type":"media","id":2,"op":"stop"}
+8812 result {"step":"reload"}
+8815 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":0}
+8818 page {"type":"media","id":3,"op":"gum","outcome":"stream","ms":4.300000000046566,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+9375 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->0","newTopLevelWindows":""}
+9460 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+9820 exit {"browserExited":true}
+=== fake-observe.jsonl
+4404 page {"type":"media","id":1,"op":"enum","devices":[{"kind":"audioinput","label":"","hasId":false},{"kind":"videoinput","label":"","hasId":false},{"kind":"audiooutput","label":"","hasId":false}]}
+4419 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"none","savesInProfile":1,"savesInProfileAfter":1}
+12419 page {"type":"media","id":2,"op":"gum","outcome":"timeout","ms":8001.900000000023}
+12953 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=none savesInProfile=1->1","newTopLevelWindows":"Chrome_WidgetWin_1 '' msedgewebview2 [102,116,438,324]"}
+13018 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+13365 exit {"browserExited":true}
+=== fake-ppdeny.jsonl
+3499 page {"type":"media","id":1,"op":"query","camera":"denied","microphone":"denied","policyCamera":false,"policyMicrophone":false}
+3680 page {"type":"media","id":2,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":120.09999999997672}
+4185 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+4611 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.5}
+5160 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+5830 exit {"browserExited":true}
+=== fake-save1.jsonl
+4218 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+4222 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":114.39999999990687,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+4793 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+4880 result {"step":"list","settings":"hr=0x00000000 count=1 [camera|https://app.localhost/|allow]"}
+4882 page {"type":"media","id":2,"op":"stop"}
+5298 exit {"browserExited":true}
+=== fake-save2.jsonl
+4107 page {"type":"media","id":1,"op":"query","camera":"granted","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+4295 page {"type":"media","id":2,"op":"gum","outcome":"stream","ms":126.20000000006985,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+4855 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+4942 result {"step":"list","settings":"hr=0x00000000 count=1 [camera|https://app.localhost/|allow]"}
+4944 page {"type":"media","id":3,"op":"stop"}
+5006 result {"step":"set:camera:default","origin":"https://app.localhost","set":"hr=0x00000000"}
+5009 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+5010 page {"type":"media","id":4,"op":"query","camera":"prompt","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+5082 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"deny","savesInProfile":1,"savesInProfileAfter":1}
+5083 page {"type":"media","id":5,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.5}
+5651 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=deny savesInProfile=1->1","newTopLevelWindows":""}
+6043 exit {"browserExited":true}
+=== fake-ui.jsonl
+4767 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":130.40000000002328,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+5308 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+5374 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+5714 exit {"browserExited":true}
+=== fake-frames.jsonl
+3657 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+3662 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":127.30000000004657,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+4206 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+10792 page {"type":"media","id":3,"op":"tracks","tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+10894 page {"type":"media","id":4,"op":"stop"}
+10895 page {"type":"media","op":"play-error","error":"AbortError: The play() request was interrupted by a new load request."}
+11437 exit {"browserExited":true}
+=== fake-nopp.jsonl
+3709 page {"type":"media","id":1,"op":"query","camera":"prompt","microphone":"prompt","policyCamera":true,"policyMicrophone":true}
+3939 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"deny","savesInProfile":1,"savesInProfileAfter":1}
+3941 page {"type":"media","id":2,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":177}
+4442 result {"step":"gum:video","permissionRequested":1,"events":"kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=deny savesInProfile=1->1","newTopLevelWindows":""}
+4644 permission-requested {"kind":"microphone","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"deny","savesInProfile":1,"savesInProfileAfter":1}
+4644 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.8000000000465661}
+5223 result {"step":"gum:audio","permissionRequested":1,"events":"kind=microphone uri=https://app.localhost/ userInitiated=True initialState=default answer=deny savesInProfile=1->1","newTopLevelWindows":""}
+5357 result {"step":"list","settings":"hr=0x00000000 count=2 [microphone|https://app.localhost/|deny; camera|https://app.localhost/|deny]"}
+5651 exit {"browserExited":true}
+=== fake-ui-handlerdeny.jsonl
+3564 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":125.29999999993015,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+4127 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+4289 page {"type":"media","id":2,"op":"gum","outcome":"stream","ms":78.19999999995343,"tracks":[{"kind":"audio","label":"Fake Default Audio Input","state":"live","muted":false}]}
+4836 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+5025 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+5337 exit {"browserExited":true}
+=== fake-ui-ppdeny.jsonl
+5717 page {"type":"media","id":1,"op":"query","camera":"denied","microphone":"denied","policyCamera":false,"policyMicrophone":false}
+5926 page {"type":"media","id":2,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":131.60000000009313}
+6492 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+6552 page {"type":"media","id":3,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":1.3000000000465661}
+7111 result {"step":"gum:audio","permissionRequested":0,"events":"","newTopLevelWindows":""}
+7300 result {"step":"list","settings":"hr=0x00000000 count=0 []"}
+7632 exit {"browserExited":true}
+=== fake-frames-swgpu.jsonl
+5326 permission-requested {"kind":"microphone","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+5326 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+5334 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":135.90000000002328,"tracks":[{"kind":"audio","label":"Fake Default Audio Input","state":"live","muted":false},{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+5889 result {"step":"gum:both","permissionRequested":2,"events":"kind=microphone uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1 | kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+11084 page {"type":"media","id":2,"op":"frames","frames":0,"width":0,"height":0,"readyState":0,"paused":false,"error":null,"statsBefore":{"deliveredFrames":0,"totalFrames":54},"statsAfter":{"deliveredFrames":0,"totalFrames":74},"grabbed":"Error: no frame in 2 s"}
+11121 page {"type":"media","id":3,"op":"stop"}
+11122 page {"type":"media","op":"play-error","error":"AbortError: The play() request was interrupted by a new load request."}
+11663 exit {"browserExited":true}
+=== fake-frames.jsonl
+3005 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":111.09999999997672,"tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+3579 result {"step":"gum:video","permissionRequested":0,"events":"","newTopLevelWindows":""}
+8680 page {"type":"media","id":2,"op":"frames","frames":0,"width":0,"height":0,"readyState":0,"paused":false,"error":null,"statsBefore":{"deliveredFrames":0,"totalFrames":53},"statsAfter":{"deliveredFrames":0,"totalFrames":73},"grabbed":"Error: no frame in 2 s"}
+8696 page {"type":"media","id":3,"op":"tracks","tracks":[{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+8747 page {"type":"media","id":4,"op":"stop"}
+8748 page {"type":"media","op":"play-error","error":"AbortError: The play() request was interrupted by a new load request."}
+9159 exit {"browserExited":true}
+=== fake-both-deny.jsonl
+8776 permission-requested {"kind":"microphone","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"deny","savesInProfile":1,"savesInProfileAfter":1}
+8776 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"deny","savesInProfile":1,"savesInProfileAfter":1}
+8778 page {"type":"media","id":1,"op":"gum","outcome":"error","name":"NotAllowedError","message":"Permission denied","ms":186.19999999995343}
+9324 result {"step":"gum:both","permissionRequested":2,"events":"kind=microphone uri=https://app.localhost/ userInitiated=True initialState=default answer=deny savesInProfile=1->1 | kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=deny savesInProfile=1->1","newTopLevelWindows":""}
+9400 result {"step":"list","settings":"hr=0x00000000 count=2 [microphone|https://app.localhost/|deny; camera|https://app.localhost/|deny]"}
+9777 exit {"browserExited":true}
+=== fake-both.jsonl
+3415 permission-requested {"kind":"microphone","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+3415 permission-requested {"kind":"camera","uri":"https://app.localhost/","userInitiated":true,"initialState":"default","answer":"allow","savesInProfile":1,"savesInProfileAfter":1}
+3422 page {"type":"media","id":1,"op":"gum","outcome":"stream","ms":164.30000000004657,"tracks":[{"kind":"audio","label":"Fake Default Audio Input","state":"live","muted":false},{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+3984 result {"step":"gum:both","permissionRequested":2,"events":"kind=microphone uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1 | kind=camera uri=https://app.localhost/ userInitiated=True initialState=default answer=allow savesInProfile=1->1","newTopLevelWindows":""}
+4058 result {"step":"list","settings":"hr=0x00000000 count=2 [microphone|https://app.localhost/|allow; camera|https://app.localhost/|allow]"}
+4059 page {"type":"media","id":2,"op":"tracks","tracks":[{"kind":"audio","label":"Fake Default Audio Input","state":"live","muted":false},{"kind":"video","label":"fake_device_0","state":"live","muted":false}]}
+4112 result {"step":"set:microphone:deny","origin":"https://app.localhost","set":"hr=0x00000000"}
+4113 page {"type":"media","op":"track-ended","kind":"audio","t":1053.3999999999069}
+4115 page {"type":"media","op":"track-ended","kind":"video","t":1053.5}
+5130 page {"type":"media","id":3,"op":"tracks","tracks":[{"kind":"audio","label":"Fake Default Audio Input","state":"ended","muted":false},{"kind":"video","label":"fake_device_0","state":"ended","muted":false}]}
+5193 result {"step":"list","settings":"hr=0x00000000 count=2 [microphone|https://app.localhost/|deny; camera|https://app.localhost/|allow]"}
+5194 page {"type":"media","id":4,"op":"stop"}
+5660 exit {"browserExited":true}

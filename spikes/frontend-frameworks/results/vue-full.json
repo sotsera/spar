@@ -1,0 +1,76 @@
+{
+  "base": {
+    "done": true,
+    "ms": 380,
+    "passed": 1,
+    "failed": 0,
+    "results": [
+      {
+        "name": "runtime template compilation (template option) under the CSP",
+        "ok": true,
+        "detail": {
+          "shown": "",
+          "errors": [
+            "mount threw: EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self'\".\n"
+          ]
+        }
+      }
+    ],
+    "violations": [
+      {
+        "directive": "script-src",
+        "blocked": "eval",
+        "sample": "",
+        "source": "http://127.0.0.1:56373/assets/full-DyOP9d6a.js",
+        "line": 10
+      }
+    ],
+    "reports": [
+      {
+        "directive": "script-src",
+        "blocked": "eval",
+        "sample": ""
+      }
+    ],
+    "consoleMessages": [],
+    "pageErrors": []
+  },
+  "trustedTypes": {
+    "done": true,
+    "ms": 387,
+    "passed": 1,
+    "failed": 0,
+    "results": [
+      {
+        "name": "runtime template compilation (template option) under the CSP",
+        "ok": true,
+        "detail": {
+          "shown": "",
+          "errors": [
+            "mount threw: EvalError: Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: script-src 'self'\".\n"
+          ]
+        }
+      }
+    ],
+    "violations": [
+      {
+        "directive": "require-trusted-types-for",
+        "blocked": "trusted-types-sink",
+        "sample": "Function|(Vue\n) {\nconst _Vue = Vue\n\nreturn functi",
+        "source": "http://127.0.0.1:59777/assets/full-DyOP9d6a.js",
+        "line": 10
+      }
+    ],
+    "reports": [
+      {
+        "directive": "require-trusted-types-for",
+        "blocked": "trusted-types-sink",
+        "sample": "Function|(Vue\n) {\nconst _Vue = Vue\n\nreturn functi"
+      }
+    ],
+    "consoleMessages": [
+      "error: This document requires 'TrustedScript' assignment. The action has been blocked."
+    ],
+    "pageErrors": []
+  }
+}

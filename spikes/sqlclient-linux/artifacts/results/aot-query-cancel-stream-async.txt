@@ -1,0 +1,11 @@
+exit 0 wallMs 777
+RUN runtime=aot mode=query-cancel arg=stream-async sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+STREAM rowsAtCancel=100000 rowsReadTotal=100000 rowsAfterCancel=0
+STREAM server after the exception, before reader dispose (0.6 ms after cancel): request=SELECT/suspended/ASYNC_NETWORK_IO/cpu=59 session=running/opentran=0 locks=2
+STREAM server 500 ms later, reader still open: request=SELECT/suspended/ASYNC_NETWORK_IO/cpu=59 session=running/opentran=0 locks=2
+STREAM reader dispose after cancel took 3.4 ms
+SERVER before cancel: request=SELECT/suspended/ASYNC_NETWORK_IO/cpu=59 session=running/opentran=0 locks=2
+SERVER after: request gone 519.6 ms after cancel (last seen: ); now request=none session=sleeping/opentran=0 locks=0
+OUTCOME TaskCanceledException: A task was canceled.
+RESULT query-cancel case=stream-async cancelToExceptionMs=0.1 requestGoneAfterCancelMs=519.6 connectionState=Open reusable=yes (0.3 ms, SELECT 1 -> 1)
+MEM end peakWorkingSetMB=51.8 workingSetMB=51.8 rssAnonMB=26.6 allocatedMB=57.3 gc0=3 gc1=1 gc2=0 cpuMs=336

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RollForward>Major</RollForward>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <ProjectReference Include="..\Spike.Generator\Spike.Generator.csproj" />
+    <EmbeddedResource Include="SparSdk.ts" LogicalName="Spar.Sdk.ts" />
+  </ItemGroup>
+</Project>

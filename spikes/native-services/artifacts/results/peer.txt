@@ -1,0 +1,15 @@
+pid=55664 dynamicCodeCompiled=False mode=cred-write-peer parts=Dialogs,CsWin32Dialogs,Grants,CredMan,Dpapi,ProtectedData
+wrote SparSpike/native-services/peer
+
+Currently stored credentials for SparSpike/native-services/*:
+
+    Target: SparSpike/native-services/peer
+    Type: Generic 
+    User: spike_user
+    Saved for this logon only
+    
+pid=71568 dynamicCodeCompiled=False mode=cred-read-peer parts=Dialogs,CsWin32Dialogs,Grants,CredMan,Dpapi,ProtectedData
+[PASS] credman: a different process of the same user reads the secret: deleted=True
+[PASS] credman: nothing left under SparSpike/*: 
+pid=14664 dynamicCodeCompiled=False mode=cred-verify parts=Dialogs,CsWin32Dialogs,Grants,CredMan,Dpapi,ProtectedData
+[PASS] credman: CredEnumerate("SparSpike/*") is empty: 

@@ -1,0 +1,176 @@
+=== drive96/page-a11y.jsonl
+{"t":2.56,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=refuse annotate=subclass style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96 --label page-a11y --profile-root C:\\spar\\profiles --profile page-a11y --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --annotate subclass --nc-provider refuse --steps bar,drag,controls,rclick,dblclick,maxhits,maxbutto
+{"t":4664.91,"evt":"result","step":"bar","barPx":32,"barDip":32,"dpi":96,"hostBarPx":32,"topBand":8,"geometry":"window=[100,80,1000,580] frame=[107,80,993,573] client=[108,80,992,572] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":5846.54,"evt":"result","step":"drag","moved":"120,60","expected":"120,60","pass":true}
+{"t":7690.39,"evt":"result","step":"controls","pass":true,"events":"…"}
+{"t":9074.03,"evt":"result","step":"rclick","systemMenuVisible":true,"menus":"#32768 \u0027\u0027 checks-111838 [821,156,1004,303]","pageEvents":"…"}
+{"t":11115.71,"evt":"result","step":"dblclick-maximize","maximized":true,"geometry":"window=[-8,-8,1528,783] frame=[0,0,1520,775] client=[0,0,1520,775] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":12518.87,"evt":"result","step":"dblclick-restore","maximized":false}
+{"t":13671.74,"evt":"result","step":"maxhits","geometry":"window=[-8,-8,1528,783] frame=[0,0,1520,775] client=[0,0,1520,775] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":14551.02,"evt":"result","step":"max-controls","events":"…","stillMaximized":true}
+{"t":15512.34,"evt":"caption-command","button":9}
+{"t":16456.1,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":16614.46,"evt":"caption-command","button":9}
+{"t":17549.88,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":18852.94,"evt":"result","step":"topedge","hit":"HTTOP","topMoved":-40,"heightChange":40,"pass":true}
+{"t":21790.37,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":25959.42,"evt":"result","step":"snaphover","changedShareBelowButton":0.579,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":27362.38,"evt":"caption-command","button":8}
+{"t":28299.91,"evt":"result","step":"minimize","minimized":true}
+{"t":31776.47,"evt":"result","step":"win-up","wasForeground":true,"maximized":true,"minimized":false,"geometry":"window=[-8,-8,1528,783] frame=[0,0,1520,775] client=[0,0,1520,775] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":35314.8,"evt":"result","step":"win-left","wasForeground":true,"maximized":false,"minimized":false,"geometry":"window=[-7,0,767,782] frame=[0,0,760,775] client=[1,0,759,774] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":37995.87,"evt":"result","step":"win-right","wasForeground":true,"maximized":false,"minimized":false,"geometry":"window=[220,100,1120,640] frame=[227,100,1113,633] client=[228,100,1112,632] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":41242.36,"evt":"result","step":"win-down","wasForeground":true,"maximized":false,"minimized":true,"geometry":"window=[-32000,-32000,-31840,-31972] frame=[-31993,-32000,-31847,-31972] client=[-32000,-32000,-32000,-32000] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=False dpi=96"}
+{"t":43735.98,"evt":"result","step":"alt-space","systemMenuVisible":true}
+=== drive96/page-css.jsonl
+{"t":32.93,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96 --label page-css --profile-root C:\\spar\\profiles --profile page-css --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --steps bar,drag,controls,rclick,dblclick,maxhits,maxbutton,topedge,snaphover,maxsnaphover,minimize,keys,cl
+{"t":5683.72,"evt":"result","step":"bar","barPx":32,"barDip":32,"dpi":96,"hostBarPx":32,"topBand":8,"geometry":"window=[100,80,1000,580] frame=[107,80,993,573] client=[108,80,992,572] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":6895.52,"evt":"result","step":"drag","moved":"120,60","expected":"120,60","pass":true}
+{"t":8755.65,"evt":"result","step":"controls","pass":true,"events":"…"}
+{"t":10668.93,"evt":"result","step":"rclick","systemMenuVisible":true,"menus":"#32768 \u0027\u0027 checks-111838 [821,156,1004,303]","pageEvents":"…"}
+{"t":13176.26,"evt":"result","step":"dblclick-maximize","maximized":true,"geometry":"window=[-8,-8,1528,783] frame=[0,0,1520,775] client=[0,0,1520,775] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":14587.57,"evt":"result","step":"dblclick-restore","maximized":false}
+{"t":15708.76,"evt":"result","step":"maxhits","geometry":"window=[-8,-8,1528,783] frame=[0,0,1520,775] client=[0,0,1520,775] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":16642.26,"evt":"result","step":"max-controls","events":"…","stillMaximized":true}
+{"t":17614.83,"evt":"caption-command","button":9}
+{"t":18540.5,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":18701.93,"evt":"caption-command","button":9}
+{"t":19645.81,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":20935.55,"evt":"result","step":"topedge","hit":"HTTOP","topMoved":-40,"heightChange":40,"pass":true}
+{"t":23855.95,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":28340.84,"evt":"result","step":"snaphover","changedShareBelowButton":0.579,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":29770.96,"evt":"caption-command","button":8}
+{"t":30695.82,"evt":"result","step":"minimize","minimized":true}
+{"t":34442.09,"evt":"result","step":"win-up","wasForeground":true,"maximized":true,"minimized":false,"geometry":"window=[-8,-8,1528,783] frame=[0,0,1520,775] client=[0,0,1520,775] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":37941.68,"evt":"result","step":"win-left","wasForeground":true,"maximized":false,"minimized":false,"geometry":"window=[-7,0,767,782] frame=[0,0,760,775] client=[1,0,759,774] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":40635.84,"evt":"result","step":"win-right","wasForeground":true,"maximized":false,"minimized":false,"geometry":"window=[220,100,1120,640] frame=[227,100,1113,633] client=[228,100,1112,632] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=True dpi=96"}
+{"t":43872.09,"evt":"result","step":"win-down","wasForeground":true,"maximized":false,"minimized":true,"geometry":"window=[-32000,-32000,-31840,-31972] frame=[-31993,-32000,-31847,-31972] client=[-32000,-32000,-32000,-32000] work=[0,0,1520,775] monitor=[0,0,1520,823] clientInsideWork=False dpi=96"}
+{"t":46356.37,"evt":"result","step":"alt-space","systemMenuVisible":true}
+=== drive96/system-bounds.jsonl
+{"t":4.37,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=bounds tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96 --label system-bounds --profile-root C:\\spar\\profiles --profile system-bounds --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --dwm-fix bounds --steps tbi,maxbutton,maxsnaphover,minimize,close","pid":473
+{"t":5853.02,"evt":"result","step":"tbi","restored":"bar=[108,83,992,80] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[853,81,900,111] 3:0x0[900,81,946,111] 4:0x8000[0,0,0,0] 5:0x0[946,81,993,111] ","captionBounds":"[747,0,893,30]","window":"[100,80,1000,580]"}
+{"t":6659.24,"evt":"result","step":"tbi-maximized","maximized":"bar=[0,-5,1520,0] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[1379,0,1426,29] 3:0x0[1426,0,1472,29] 4:0x8000[0,0,0,0] 5:0x0[1472,0,1520,29] ","captionBounds":"[1381,0,1527,30]","window":"[-8,-8,1528,783]"}
+{"t":8717.01,"evt":"result","step":"maxbutton-click","maximized":false}
+{"t":9812.6,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":13666,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":15990.17,"evt":"result","step":"minimize","minimized":false}
+{"t":18064.83,"evt":"result","step":"close","via":"button","destroyed":false}
+=== drive96/system-nofix.jsonl
+{"t":2.78,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=none tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96 --label system-nofix --profile-root C:\\spar\\profiles --profile system-nofix --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --steps tbi,maxbutton,maxsnaphover,minimize,close","pid":440,"processStartToMain"
+{"t":5366.53,"evt":"result","step":"tbi","restored":"bar=[108,83,992,80] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[853,81,900,111] 3:0x0[900,81,946,111] 4:0x8000[0,0,0,0] 5:0x0[946,81,993,111] ","captionBounds":"[747,0,893,30]","window":"[100,80,1000,580]"}
+{"t":6173.47,"evt":"result","step":"tbi-maximized","maximized":"bar=[0,-5,1520,0] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[1379,0,1426,29] 3:0x0[1426,0,1472,29] 4:0x8000[0,0,0,0] 5:0x0[1472,0,1520,29] ","captionBounds":"[1381,0,1527,30]","window":"[-8,-8,1528,783]"}
+{"t":8108.8,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":9188.71,"evt":"result","step":"maxbutton-click-restore","maximized":true}
+{"t":13871.82,"evt":"result","step":"snaphover","changedShareBelowButton":0,"flyout":false,"hit":"HTCAPTION","pageEvents":"…"}
+{"t":16210.49,"evt":"result","step":"minimize","minimized":true}
+=== drive96/system-tbi.jsonl
+{"t":2.31,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=tbi tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96 --label system-tbi --profile-root C:\\spar\\profiles --profile system-tbi --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --dwm-fix tbi --steps tbi,maxbutton,maxsnaphover,minimize,close","pid":4672,"processSt
+{"t":4624.16,"evt":"result","step":"tbi","restored":"bar=[108,83,992,80] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[853,81,900,111] 3:0x0[900,81,946,111] 4:0x8000[0,0,0,0] 5:0x0[946,81,993,111] ","captionBounds":"[747,0,893,30]","window":"[100,80,1000,580]"}
+{"t":5436.54,"evt":"result","step":"tbi-maximized","maximized":"bar=[0,-5,1520,0] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[1379,0,1426,29] 3:0x0[1426,0,1472,29] 4:0x8000[0,0,0,0] 5:0x0[1472,0,1520,29] ","captionBounds":"[1381,0,1527,30]","window":"[-8,-8,1528,783]"}
+{"t":7367.86,"evt":"result","step":"maxbutton-click","maximized":false}
+{"t":8457.66,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":12317.75,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":14674.88,"evt":"result","step":"minimize","minimized":false}
+{"t":16751.48,"evt":"result","step":"close","via":"button","destroyed":false}
+=== drive96b/system-bounds.jsonl
+{"t":2.24,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=bounds tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96b --label system-bounds --profile-root C:\\spar\\profiles --profile system-bounds --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --dwm-fix bounds --steps tbi,maxbutton,maxsnaphover,minimize,close","pid":80
+{"t":4479.15,"evt":"result","step":"tbi","restored":"bar=[108,83,992,80] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[853,81,900,111] 3:0x0[900,81,946,111] 4:0x8000[0,0,0,0] 5:0x0[946,81,993,111] ","captionBounds":"[747,0,893,30]","window":"[100,80,1000,580]"}
+{"t":5298.46,"evt":"result","step":"tbi-maximized","maximized":"bar=[0,-5,1520,0] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[1379,0,1426,29] 3:0x0[1426,0,1472,29] 4:0x8000[0,0,0,0] 5:0x0[1472,0,1520,29] ","captionBounds":"[1381,0,1527,30]","window":"[-8,-8,1528,783]"}
+{"t":7209.71,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":7370.24,"evt":"caption-command","button":9}
+{"t":8301.5,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":12320.59,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":14657.82,"evt":"result","step":"minimize","minimized":true}
+=== drive96b/system-tbi.jsonl
+{"t":5.42,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=tbi tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96b --label system-tbi --profile-root C:\\spar\\profiles --profile system-tbi --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --dwm-fix tbi --steps tbi,maxbutton,maxsnaphover,minimize,close","pid":5912,"processS
+{"t":6763.45,"evt":"result","step":"tbi","restored":"bar=[108,83,992,80] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[853,81,900,111] 3:0x0[900,81,946,111] 4:0x8000[0,0,0,0] 5:0x0[946,81,993,111] ","captionBounds":"[747,0,893,30]","window":"[100,80,1000,580]"}
+{"t":7580.19,"evt":"result","step":"tbi-maximized","maximized":"bar=[0,-5,1520,0] 0:0x100000[0,0,0,0] 1:0x8000[0,0,0,0] 2:0x0[1379,0,1426,29] 3:0x0[1426,0,1472,29] 4:0x8000[0,0,0,0] 5:0x0[1472,0,1520,29] ","captionBounds":"[1381,0,1527,30]","window":"[-8,-8,1528,783]"}
+{"t":9498.65,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":9670.73,"evt":"caption-command","button":9}
+{"t":10597.37,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":14865.16,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":17201.72,"evt":"result","step":"minimize","minimized":true}
+=== drive96c/page-a11y.jsonl
+{"t":5.09,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=refuse annotate=subclass style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96c --label page-a11y --profile-root C:\\spar\\profiles --profile page-a11y --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --annotate subclass --nc-provider refuse --steps maxbutton,maxsnaphover,maxminimize,maxclose","pid
+{"t":7816.48,"evt":"result","step":"maxbutton-click","maximized":false}
+{"t":7971.05,"evt":"caption-command","button":9}
+{"t":8897,"evt":"result","step":"maxbutton-click-restore","maximized":true}
+{"t":13634.09,"evt":"result","step":"snaphover","changedShareBelowButton":0.579,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":15846.05,"evt":"caption-command","button":8}
+{"t":17172.3,"evt":"result","step":"maxminimize","target":"1405,16","minimized":true,"destroyed":false}
+{"t":18970.76,"evt":"caption-command","button":20}
+=== drive96c/system-bounds.jsonl
+{"t":3.82,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=bounds tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96c --label system-bounds --profile-root C:\\spar\\profiles --profile system-bounds --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --dwm-fix bounds --steps maxbutton,maxsnaphover,maxminimize,maxclose","pid":
+{"t":6450.2,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":6609.57,"evt":"caption-command","button":9}
+{"t":7545.29,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":11522.66,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":13950.68,"evt":"caption-command","button":8}
+{"t":15278.33,"evt":"result","step":"maxminimize","target":"1397,7","minimized":true,"destroyed":false}
+{"t":17046.28,"evt":"caption-command","button":20}
+=== drive96c/system-nofix.jsonl
+{"t":2.63,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=none tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96c --label system-nofix --profile-root C:\\spar\\profiles --profile system-nofix --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --steps maxbutton,maxsnaphover,maxminimize,maxclose","pid":4280,"processStartToM
+{"t":6444.73,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":7515,"evt":"result","step":"maxbutton-click-restore","maximized":true}
+{"t":12389.04,"evt":"result","step":"snaphover","changedShareBelowButton":0,"flyout":false,"hit":"HTCAPTION","pageEvents":"…"}
+{"t":15925.77,"evt":"result","step":"maxminimize","target":"1397,7","minimized":false,"destroyed":false}
+{"t":19146.44,"evt":"result","step":"maxclose","target":"1493,7","minimized":false,"destroyed":false}
+=== drive96c/system-tbi.jsonl
+{"t":2.14,"evt":"start","options":"hosting=Windowed frame=Custom buttons=System sink=Direct cache=css dwmFix=tbi tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96c --label system-tbi --profile-root C:\\spar\\profiles --profile system-tbi --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --buttons system --dwm-fix tbi --steps maxbutton,maxsnaphover,maxminimize,maxclose","pid":4672,"proces
+{"t":6154.16,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":6304.55,"evt":"caption-command","button":9}
+{"t":7236.67,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":11253.97,"evt":"result","step":"snaphover","changedShareBelowButton":0.598,"flyout":true,"hit":"HTMAXBUTTON","pageEvents":"…"}
+{"t":13967.35,"evt":"caption-command","button":8}
+{"t":15302.18,"evt":"result","step":"maxminimize","target":"1397,7","minimized":true,"destroyed":false}
+{"t":17123.23,"evt":"caption-command","button":20}
+=== drive96d/page-a11y.jsonl
+{"t":15.88,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=refuse annotate=subclass style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96d --label page-a11y --profile-root C:\\spar\\profiles --profile page-a11y --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --annotate subclass --nc-provider refuse --steps maxbutton,maxbutton,close","pid":3456,"processSt
+{"t":7771.21,"evt":"result","step":"maxbutton-click","maximized":false}
+{"t":7927.62,"evt":"caption-command","button":9}
+{"t":8852.38,"evt":"result","step":"maxbutton-click-restore","maximized":true}
+{"t":10021.49,"evt":"caption-command","button":9}
+{"t":10947.01,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":11114.92,"evt":"caption-command","button":9}
+{"t":12039.8,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":12514.88,"evt":"caption-command","button":20}
+=== drive96d/page-css.jsonl
+{"t":5.89,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96d --label page-css --profile-root C:\\spar\\profiles --profile page-css --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --steps maxbutton,maxbutton,close","pid":7084,"processStartToMain":71.778}
+{"t":8544.7,"evt":"result","step":"maxbutton-click","maximized":false}
+{"t":8679.28,"evt":"caption-command","button":9}
+{"t":9599.46,"evt":"result","step":"maxbutton-click-restore","maximized":true}
+{"t":10936.08,"evt":"caption-command","button":9}
+{"t":11873.43,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":12023.17,"evt":"caption-command","button":9}
+{"t":12946.89,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":13402.83,"evt":"caption-command","button":20}
+=== drive96d/page-css2.jsonl
+{"t":5.76,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96d --label page-css2 --profile-root C:\\spar\\profiles --profile page-css2 --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --steps maxbutton,maxbutton,close","pid":6720,"processStartToMain":16.812}
+{"t":10222.79,"evt":"result","step":"maxbutton-click","maximized":false}
+{"t":10372.86,"evt":"caption-command","button":9}
+{"t":11305.81,"evt":"result","step":"maxbutton-click-restore","maximized":true}
+{"t":12785.39,"evt":"caption-command","button":9}
+{"t":13724.42,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":13872.69,"evt":"caption-command","button":9}
+{"t":14792.91,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":15254.31,"evt":"caption-command","button":20}
+=== drive96f/page-a11y.jsonl
+{"t":3.25,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=refuse annotate=subclass style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96f --label page-a11y --profile-root C:\\spar\\profiles --profile page-a11y --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --annotate subclass --nc-provider refuse --steps maxbutton,minimize,close","pid":600,"processStart
+{"t":7130.78,"evt":"caption-command","button":9}
+{"t":8066.03,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":8224.26,"evt":"caption-command","button":9}
+{"t":9149.08,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":9598.39,"evt":"caption-command","button":8}
+{"t":10534.65,"evt":"result","step":"minimize","minimized":true}
+{"t":11660.5,"evt":"caption-command","button":20}
+=== drive96f/page-css.jsonl
+{"t":2.69,"evt":"start","options":"hosting=Windowed frame=Custom buttons=Page sink=Direct cache=css dwmFix=none tbi=default ncProvider=off annotate=none style=overlapped theme=dark page=index.html pp=none perm=observe saves=keep browserArgs=[]","args":"--out C:\\spar\\out\\drive96f --label page-css --profile-root C:\\spar\\profiles --profile page-css --placement 100,80 --mode drive --browser-folder C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\157.0.4341.46 --size 900x500 --steps maxbutton,maxbutton,close","pid":2896,"processStartToMain":12.459}
+{"t":5224.2,"evt":"caption-command","button":9}
+{"t":6155.58,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":6316.07,"evt":"caption-command","button":9}
+{"t":7242.2,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":7685.75,"evt":"caption-command","button":9}
+{"t":8632.42,"evt":"result","step":"maxbutton-click","maximized":true}
+{"t":8781.36,"evt":"caption-command","button":9}
+{"t":9718.31,"evt":"result","step":"maxbutton-click-restore","maximized":false}
+{"t":10161.05,"evt":"caption-command","button":20}

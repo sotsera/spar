@@ -1,0 +1,11 @@
+exit 0 wallMs 19235
+RUN runtime=aot mode=setup arg=1000000 sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+SERVER A version=16.0.4295.3 edition=Developer Edition (64-bit) cpus=32 committedTargetMB=3251 collation=SQL_Latin1_General_CP1_CI_AS
+SERVER B version=16.0.4295.3 edition=Developer Edition (64-bit) cpus=32 committedTargetMB=3250 collation=SQL_Latin1_General_CP1_CI_AS
+SETUP generated 1000000 rows on A in 9.9 s
+SOURCE rows=1000000 payloadMB=195.5
+SOURCE sp_spaceused reserved=235856 KB data=235376 KB index=336 KB
+SOURCE fingerprint 1000000|-2403711523708|5260780000.0000|32768000|18824004|37555760|-1566762014
+SETUP done in 19.2 s
+MEM end peakWorkingSetMB=22.7 workingSetMB=22.7 peakPrivateMB=10.3 allocatedMB=0.8 gc0=0 gc1=0 gc2=0 cpuMs=62
+

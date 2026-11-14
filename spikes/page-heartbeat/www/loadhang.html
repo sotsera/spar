@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Hang during load</title>
+  <script>
+    // Hangs while the document is parsed: DOMContentLoaded and NavigationCompleted never come. The host-injected
+    // script has already run (it runs before any page script), so its message handler is registered but can never run.
+    window.__sparPost(`hang:load:${performance.now().toFixed(1)}`);
+    for (;;) { /* hang */ }
+  </script>
+</head>
+<body>never parsed</body>
+</html>

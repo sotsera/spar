@@ -1,0 +1,15 @@
+{
+  "name": "spar-ts-compiled-contracts-spike",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.ts",
+    "probe": "node tools/probe.ts",
+    "matrix": "node tools/matrix.ts",
+    "bundle": "node tools/bundle.ts"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vite": "8.3.8"
+  }
+}

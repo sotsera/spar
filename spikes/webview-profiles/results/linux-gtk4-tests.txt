@@ -1,0 +1,46 @@
+== in-process mode=freshdirs
+TEST ft=6323260416543 mode=freshdirs i=0 fresh=True sessionMs=35.3 pageMs=240.9 no-users=True waitMs=12.5 deleted=True deleteMs=0.3 cleanupMs=12.7 totalMs=292.5 children=0
+TEST ft=6323427670057 mode=freshdirs i=1 fresh=True sessionMs=0.7 pageMs=150.3 no-users=True waitMs=14.6 deleted=True deleteMs=0.3 cleanupMs=14.8 totalMs=166.8 children=0
+TEST ft=6323591659838 mode=freshdirs i=2 fresh=True sessionMs=0.9 pageMs=146.8 no-users=True waitMs=14.5 deleted=True deleteMs=0.3 cleanupMs=14.8 totalMs=163.5 children=0
+TEST ft=6323754640953 mode=freshdirs i=3 fresh=True sessionMs=0.9 pageMs=145.8 no-users=True waitMs=14.6 deleted=True deleteMs=0.3 cleanupMs=14.9 totalMs=162.5 children=0
+TEST ft=6323918050103 mode=freshdirs i=4 fresh=True sessionMs=0.7 pageMs=146.2 no-users=True waitMs=14.7 deleted=True deleteMs=0.3 cleanupMs=15.0 totalMs=163.0 children=0
+TEST ft=6324079002314 mode=freshdirs i=5 fresh=True sessionMs=0.8 pageMs=143.7 no-users=True waitMs=14.7 deleted=True deleteMs=0.3 cleanupMs=14.9 totalMs=160.5 children=0
+TEST ft=6324243013459 mode=freshdirs i=6 fresh=True sessionMs=0.8 pageMs=148.9 no-users=True waitMs=12.5 deleted=True deleteMs=0.3 cleanupMs=12.8 totalMs=163.6 children=0
+TEST ft=6324406666281 mode=freshdirs i=7 fresh=True sessionMs=0.8 pageMs=148.4 no-users=True waitMs=12.5 deleted=True deleteMs=0.3 cleanupMs=12.8 totalMs=163.1 children=0
+TEST ft=6324566554479 mode=freshdirs i=8 fresh=True sessionMs=0.9 pageMs=144.9 no-users=True waitMs=12.4 deleted=True deleteMs=0.2 cleanupMs=12.7 totalMs=159.5 children=0
+TEST ft=6324727122913 mode=freshdirs i=9 fresh=True sessionMs=0.6 pageMs=145.7 no-users=True waitMs=12.4 deleted=True deleteMs=0.3 cleanupMs=12.7 totalMs=160.1 children=0
+CHILDREN-EXITED ft=6324732975234 ms=0.4
+== in-process mode=ephemeral
+TEST ft=6325577488731 mode=ephemeral i=0 fresh=True sessionMs=34.3 pageMs=147.6 cleanupMs=0.4 totalMs=185.8 children=7
+TEST ft=6325638994186 mode=ephemeral i=1 fresh=True sessionMs=0.3 pageMs=59.4 cleanupMs=0.4 totalMs=60.9 children=7
+TEST ft=6325700447895 mode=ephemeral i=2 fresh=True sessionMs=0.3 pageMs=59.2 cleanupMs=0.4 totalMs=60.9 children=7
+TEST ft=6325762859586 mode=ephemeral i=3 fresh=True sessionMs=0.3 pageMs=60.2 cleanupMs=0.4 totalMs=61.8 children=7
+TEST ft=6325828385323 mode=ephemeral i=4 fresh=True sessionMs=0.3 pageMs=63.3 cleanupMs=0.4 totalMs=65.0 children=7
+TEST ft=6325889799892 mode=ephemeral i=5 fresh=True sessionMs=0.3 pageMs=59.3 cleanupMs=0.4 totalMs=60.9 children=7
+TEST ft=6325950813446 mode=ephemeral i=6 fresh=True sessionMs=0.3 pageMs=58.9 cleanupMs=0.4 totalMs=60.4 children=7
+TEST ft=6326012769336 mode=ephemeral i=7 fresh=True sessionMs=0.3 pageMs=59.8 cleanupMs=0.4 totalMs=61.4 children=7
+TEST ft=6326073868742 mode=ephemeral i=8 fresh=True sessionMs=0.4 pageMs=58.9 cleanupMs=0.4 totalMs=60.5 children=7
+TEST ft=6326135823173 mode=ephemeral i=9 fresh=True sessionMs=0.3 pageMs=59.9 cleanupMs=0.3 totalMs=61.4 children=7
+CHILDREN-EXITED ft=6326144254182 ms=8.4
+== in-process mode=shared-clear
+TEST ft=6327070437382 mode=shared-clear i=0 fresh=True sessionMs=38.8 pageMs=228.4 cleared=True cleanupMs=15.9 totalMs=286.6 children=7
+TEST ft=6327229769165 mode=shared-clear i=1 fresh=True sessionMs=0.0 pageMs=146.1 cleared=True cleanupMs=11.7 totalMs=158.7 children=7
+TEST ft=6327384456577 mode=shared-clear i=2 fresh=True sessionMs=0.0 pageMs=142.3 cleared=True cleanupMs=10.9 totalMs=154.1 children=7
+TEST ft=6327542512257 mode=shared-clear i=3 fresh=True sessionMs=0.0 pageMs=144.8 cleared=True cleanupMs=11.7 totalMs=157.5 children=7
+TEST ft=6327703576762 mode=shared-clear i=4 fresh=True sessionMs=0.0 pageMs=148.9 cleared=True cleanupMs=10.6 totalMs=160.5 children=7
+TEST ft=6327858887218 mode=shared-clear i=5 fresh=True sessionMs=0.0 pageMs=142.5 cleared=True cleanupMs=11.3 totalMs=154.7 children=7
+TEST ft=6328012823870 mode=shared-clear i=6 fresh=True sessionMs=0.0 pageMs=141.1 cleared=True cleanupMs=11.3 totalMs=153.3 children=7
+TEST ft=6328168187800 mode=shared-clear i=7 fresh=True sessionMs=0.0 pageMs=142.6 cleared=True cleanupMs=11.2 totalMs=154.7 children=7
+TEST ft=6328320542116 mode=shared-clear i=8 fresh=True sessionMs=0.0 pageMs=140.4 cleared=True cleanupMs=10.5 totalMs=151.8 children=7
+TEST ft=6328473301209 mode=shared-clear i=9 fresh=True sessionMs=0.0 pageMs=140.5 cleared=True cleanupMs=10.7 totalMs=152.2 children=7
+CHILDREN-EXITED ft=6328485943316 ms=12.6
+== per-process: fresh folders per test
+SUMMARY api=gtk4 variant=perprocess runs=10
+  all children exited: n=10 min=18 p50=19 p90=21 max=21 ms; not exited in 30 s: 0
+  host exited after close: n=10 min=25 p50=26 p90=28 max=29 ms
+  launch to READY: n=10 min=185 p50=187 p90=189 max=273 ms; launch to all gone: n=10 min=213 p50=214 p90=219 max=300 ms; clean before run: n=9 min=1 p50=1 p90=1 max=1 ms
+  WebKitNetworkPr: n=10 min=8 p50=8 p90=9 max=11 ms
+  bwrap: n=40 min=10 p50=18 p90=20 max=21 ms
+  xdg-dbus-proxy: n=10 min=18 p50=19 p90=20 max=21 ms
+  WebKitWebProces: n=10 min=8 p50=8 p90=8 max=8 ms
+  data: first=10

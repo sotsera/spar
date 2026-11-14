@@ -1,0 +1,12 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <!-- GTK4 builds (-p:SparGtk=4) keep their own bin/ and obj/ subfolders, so both variants can exist side by side. -->
+  <PropertyGroup Condition="'$(SparGtk)' == '4'">
+    <BaseOutputPath>$(MSBuildProjectDirectory)/bin/gtk4/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/gtk4/</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,260 @@
+{
+  "facts": {
+    "aot": "True",
+    "cdp.lastStatus": "",
+    "cdp.total.error": "TimeoutException: cdp.total did not complete within 10000 ms.",
+    "devtoolsUi": "True",
+    "ready.doubleRaf.error": "TimeoutException: ready.doubleRaf did not complete within 10000 ms.",
+    "screenshot.bytes": "9899",
+    "screenshot.isPng": "True",
+    "screenshot.path": "E:\\Ghidello\\Git\\spar.v7\\spikes\\d8-automation\\artifacts\\results\\screenshot-Hidden.png",
+    "script.lastStatus": "Saved #10: script-9 (click synthetic, input synthetic)",
+    "startup.controllerMs": "162.1",
+    "startup.environmentMs": "7.9",
+    "startup.navigatedMs": "212.4",
+    "tree.rawChars": "7541",
+    "tree.summary": "RootWebArea:D8 automation spike#1 | heading:Profile#8 | LabelText:#9 | textbox:Name#10 | button:Save#12 | status:#13 | StaticText:Profile#15 | StaticText:Name#16 | StaticText:Save#17 | StaticText:Idle#18",
+    "tree.summaryNodes": "10",
+    "waitFor.treePoll.error": "TimeoutException: waitFor.treePoll did not complete within 10000 ms.",
+    "window": "Hidden"
+  },
+  "series": {
+    "ready.doubleRaf": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    },
+    "evaluate.noop": {
+      "n": 10,
+      "min": 0.289,
+      "median": 0.34,
+      "p95": 0.99,
+      "max": 0.99,
+      "samples": [
+        0.99,
+        0.452,
+        0.366,
+        0.359,
+        0.34,
+        0.3,
+        0.34,
+        0.289,
+        0.315,
+        0.333
+      ]
+    },
+    "tree.cold": {
+      "n": 1,
+      "min": 4.555,
+      "median": 4.555,
+      "p95": 4.555,
+      "max": 4.555,
+      "samples": [
+        4.555
+      ]
+    },
+    "tree": {
+      "n": 10,
+      "min": 0.481,
+      "median": 0.524,
+      "p95": 0.902,
+      "max": 0.902,
+      "samples": [
+        0.902,
+        0.866,
+        0.696,
+        0.649,
+        0.552,
+        0.493,
+        0.481,
+        0.512,
+        0.52,
+        0.524
+      ]
+    },
+    "tree.cdpOnly": {
+      "n": 10,
+      "min": 0.46,
+      "median": 0.501,
+      "p95": 0.861,
+      "max": 0.861,
+      "samples": [
+        0.861,
+        0.834,
+        0.666,
+        0.622,
+        0.528,
+        0.466,
+        0.46,
+        0.487,
+        0.497,
+        0.501
+      ]
+    },
+    "tree.parseOnly": {
+      "n": 10,
+      "min": 0.02,
+      "median": 0.025,
+      "p95": 0.033,
+      "max": 0.033,
+      "samples": [
+        0.033,
+        0.03,
+        0.028,
+        0.026,
+        0.022,
+        0.026,
+        0.02,
+        0.025,
+        0.021,
+        0.022
+      ]
+    },
+    "cdp.total": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    },
+    "cdp.fill": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    },
+    "cdp.click": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    },
+    "cdp.waitFor": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    },
+    "script.total": {
+      "n": 10,
+      "min": 746.598,
+      "median": 997.162,
+      "p95": 1007.035,
+      "max": 1007.035,
+      "samples": [
+        746.598,
+        997.162,
+        1006.657,
+        996.887,
+        1007.035,
+        991.028,
+        1004.413,
+        1000.513,
+        993.189,
+        1005.755
+      ]
+    },
+    "script.fill": {
+      "n": 10,
+      "min": 0.472,
+      "median": 0.832,
+      "p95": 1.639,
+      "max": 1.639,
+      "samples": [
+        0.591,
+        0.472,
+        1.593,
+        1.639,
+        0.672,
+        1.475,
+        1.621,
+        0.832,
+        0.567,
+        1.322
+      ]
+    },
+    "script.click": {
+      "n": 10,
+      "min": 0.278,
+      "median": 0.794,
+      "p95": 1.653,
+      "max": 1.653,
+      "samples": [
+        0.286,
+        0.278,
+        1.107,
+        1.653,
+        0.38,
+        0.794,
+        0.917,
+        1.031,
+        0.28,
+        0.95
+      ]
+    },
+    "script.waitFor": {
+      "n": 10,
+      "min": 745.709,
+      "median": 996.4,
+      "p95": 1005.972,
+      "max": 1005.972,
+      "samples": [
+        745.709,
+        996.4,
+        1003.943,
+        993.583,
+        1005.972,
+        988.745,
+        1001.866,
+        998.639,
+        992.331,
+        1003.442
+      ]
+    },
+    "waitFor.treePoll": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    },
+    "waitFor.treePoll.polls": {
+      "n": 0,
+      "min": 0,
+      "median": 0,
+      "p95": 0,
+      "max": 0,
+      "samples": []
+    },
+    "screenshot": {
+      "n": 10,
+      "min": 100.327,
+      "median": 525.646,
+      "p95": 560.082,
+      "max": 560.082,
+      "samples": [
+        100.327,
+        539.997,
+        518.482,
+        537.103,
+        552.471,
+        506.908,
+        525.646,
+        546.774,
+        504.84,
+        560.082
+      ]
+    }
+  }
+}

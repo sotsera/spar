@@ -1,0 +1,14 @@
+exit 0 wallMs 4853
+RUN runtime=aot mode=bulk-cancel arg=internal sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+CANCEL variant=internal trigger=rows rowsAtCancel=310000 lastNotified=310000 rowsCopied64=310001 elapsedMs=4443 cancelToExceptionMs=38.6
+CANCEL outcome=TaskCanceledException: A task was canceled.
+CANCEL targetConnection=Open transactionConnection=n/a
+SERVER-B target spid request gone after 0.8 ms (last seen: ); now request=none session=sleeping/opentran=0 locks=0
+SERVER-B any bulk request: 0
+SERVER-A source spid before reader dispose: request=SELECT/suspended/ASYNC_NETWORK_IO/cpu=220 session=running/opentran=0 locks=3
+CANCEL target connection reusable: SELECT 1 -> 1
+RESULT bulk-cancel variant=internal committedRowsOnB=300000 rowsAtCancel=310000 cancelToExceptionMs=38.6 requestGoneMs=0.8
+SOURCE reader dispose (after SqlCommand.Cancel) took 17.7 ms; source spid now request=none session=sleeping/opentran=0 locks=0
+SERVER-B rows after target connection closed: 300000
+MEM end peakWorkingSetMB=44.1 workingSetMB=44.1 peakPrivateMB=31.0 allocatedMB=569.1 gc0=31 gc1=1 gc2=0 cpuMs=4297
+

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <_AppExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</_AppExtension>
+    <LoopAppPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\Loop.App\bin\$(Configuration)\net11.0\$(NETCoreSdkRuntimeIdentifier)\Loop.App$(_AppExtension)'))</LoopAppPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Microsoft.Playwright" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!-- The tests launch the app's real executable, the way an agent or CI would. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Loop.App\Loop.App.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <Import Project="AppPathMetadata.targets" />
+</Project>

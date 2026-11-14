@@ -1,0 +1,16 @@
+{"t":25.48,"evt":"main","label":"nogtk-dbus","ui":"auto","processAgeMs":110,"uid":1000,"desktop":null}
+{"t":30.01,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":30.35,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":33.62,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":2.983}
+{"t":41.18,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":3.697}
+{"t":45.38,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":3.704}
+{"t":49.21,"evt":"library","file":"libgtk-4.so.1","ok":false,"reason":"libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":50.51,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libgtk-4.so.1): libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":56.25,"evt":"stderr","isatty":"redirected"}
+{"t":57.92,"evt":"journal","result":"journal-socket"}
+{"t":60.45,"evt":"graphical","way":"gtk","shown":false,"detail":"GTK 4 not initialised","ms":0}
+{"t":65.26,"evt":"graphical","way":"zenity","shown":false,"detail":"not installed","ms":3.836}
+{"t":65.69,"evt":"graphical","way":"kdialog","shown":false,"detail":"not installed","ms":0.024}
+{"t":69.48,"evt":"graphical","way":"yad","shown":false,"detail":"not installed","ms":0.024}
+{"t":79.79,"evt":"graphical","way":"dbus","shown":true,"detail":"notification id 2","ms":7.635}
+{"t":80.21,"evt":"exit","code":3}

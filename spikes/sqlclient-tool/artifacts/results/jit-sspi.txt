@@ -1,0 +1,12 @@
+exit 0 wallMs 10298
+RUN runtime=jit mode=sspi arg= sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+PASS sspi server=. openMs=90.3 transport=Shared memory auth=NTLM encrypt=FALSE version=17.0.1155.3 edition=Standard Developer Edition (64-bit) sysadmin=1 login=windows login
+PASS sspi server=localhost openMs=8.1 transport=Shared memory auth=NTLM encrypt=FALSE version=17.0.1155.3 edition=Standard Developer Edition (64-bit) sysadmin=1 login=windows login
+PASS sspi server=(local) openMs=7.5 transport=Shared memory auth=NTLM encrypt=FALSE version=17.0.1155.3 edition=Standard Developer Edition (64-bit) sysadmin=1 login=windows login
+PASS sspi server=np:. openMs=3.1 transport=Named pipe auth=NTLM encrypt=FALSE version=17.0.1155.3 edition=Standard Developer Edition (64-bit) sysadmin=1 login=windows login
+PASS sspi server=lpc:. openMs=3.0 transport=Shared memory auth=NTLM encrypt=FALSE version=17.0.1155.3 edition=Standard Developer Edition (64-bit) sysadmin=1 login=windows login
+FAIL sspi server=tcp:localhost after 5015 ms: SqlException(Number=258, Class=20): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.) <- Win32Exception: The wait operation timed out.
+FAIL sspi server=tcp:127.0.0.1 after 5012 ms: SqlException(Number=258, Class=20): A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 0 - The wait operation timed out.) <- Win32Exception: The wait operation timed out.
+RESULT sspi passes=5/7
+MEM end peakWorkingSetMB=52.0 workingSetMB=52.0 peakPrivateMB=15.9 allocatedMB=1.4 gc0=0 gc1=0 gc2=0 cpuMs=188
+

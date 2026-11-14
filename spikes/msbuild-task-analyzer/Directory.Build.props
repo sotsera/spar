@@ -1,0 +1,4 @@
+<Project>
+  <!-- Inherit the repository policy (net11.0, nullable, warnings as errors, code style). -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))" />
+</Project>

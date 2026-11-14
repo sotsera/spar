@@ -1,0 +1,40 @@
+Question 3: GTK4 web processes outliving the window after a window-manager move or resize. Cause evidence.
+Environment: container spar-linux-memory-q3 (image spar-linux-desktop:webkit2.52, Ubuntu 24.04, GTK 4.14.5,
+WebKitGTK 2.52.6), Xvfb :99 + openbox 3.6.1, uid 1000, seccomp unconfined. XTEST drag inside the web view by
+120,60; the host calls gdk_toplevel_begin_move / begin_resize after 4 px; close through WM_DELETE_WINDOW.
+
+1. No button release reaches the client: openbox grabs the pointer for the move, so the host logs press and
+   begin-move but never release (WSLg's weston xwm does not grab: release arrives, and the bug does not occur there).
+2. Reference count of the WebKitWebView (GObject.ref_count, the host holds one of its own):
+   rest 4; during a press 8; after begin_move 10; at close with no release 6 (normal close: 4).
+   After the window is disposed and finalized: 3 (normal: 1); after the host's own unref: 2 -> the view is never
+   disposed, so WebKit never closes the page, and WebKitWebProcess + WebKitNetworkProcess stay (10 s, 5/5).
+3. Resetting the view's controllers one by one (gtk_event_controller_reset, refcount before -> after):
+     GtkEventControllerLegacy 6->6, GtkGestureSwipe 6->6, GtkGestureDrag 6->6, GtkGestureLongPress 6->6,
+     GtkGestureZoom 6->5, GtkGestureClick 5->5 (touch-only), GtkGestureClick 5->4 (WebKit's mouse-button gesture),
+     the rest 4->4.
+   So the two stale references are held by WebKit's GtkGestureZoom and its mouse GtkGestureClick, i.e. by two
+   gestures whose sequence (the press) never ended.
+4. GTK 4.14.5 source: GtkGesture stores, per tracked point, a strong reference on the event target:
+     gtk/gtkgesture.c:501   g_set_object (&data->target, target);     (in _gtk_gesture_update_point)
+     gtk/gtkgesture.c:904   g_object_unref (point->target);           (free_point_data, at sequence end or reset)
+   GtkPointerFocus, by contrast, holds only weak references (gtk/gtkpointerfocus.c:82,87).
+   GTK4's gtk_window_destroy only drops GTK's toplevel reference; the window's dispose unparents the child
+   (gtk/gtkwindow.c:2569), it does not dispose it. GTK3's gtk_widget_destroy runs dispose on the children
+   regardless of extra references, which is why GTK3 is not affected.
+   WebKit closes the page in the view's dispose, so an extra reference keeps the page and its processes.
+5. GTK's own move/resize code resets its gestures right after starting the window-manager operation:
+     gtk/gtkwindowhandle.c:455-462  gdk_toplevel_begin_move (...); gtk_event_controller_reset (gesture);
+                                    gtk_event_controller_reset (self->click_gesture);
+     gtk/gtkwindow.c:1559-1566      gdk_toplevel_begin_resize (...); gtk_event_controller_reset (gesture);
+   The host started the move from a controller on the web view, whose other gestures (WebKit's) were left open.
+6. Gesture setup in WebKitGTK 2.52.6, Source/WebKit/UIProcess/API/gtk/WebKitWebViewBase.cpp:2372-2399:
+   a GtkGestureClick for all buttons (exclusive), a touch-only GtkGestureClick, and the GtkGestureZoom touch group.
+   The page itself sees mousedown and never mouseup after any WM drag (GTK3 and GTK4, with or without the fix).
+
+Fix (host side): after gdk_toplevel_begin_move / begin_resize, reset the web view's event controllers
+(gtk_widget_observe_controllers + gtk_event_controller_reset), as GTK's own window handle does. Alternatives that
+also worked 5/5: reset the controllers at shutdown, or gtk_widget_set_sensitive(view, FALSE) before destroying the
+window (it resets controllers too). Did not work: unparenting first, hiding first, webkit_web_view_try_close,
+draining the loop; g_object_run_dispose and webkit_web_view_terminate_web_process ended only the web process
+(the network process stayed).

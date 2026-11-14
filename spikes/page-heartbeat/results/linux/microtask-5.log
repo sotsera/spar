@@ -1,0 +1,118 @@
+98.9 START ms=52.4 pid=3939 cpus=32 responsive=1 gsk=cairo
+100.3 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=1000 onUnresponsive=none options=[--www /spike/www/ --data /tmp/u/data-microtask-5 --log /out/microtask-5.log --actions 6490:hang-microtask --duration 36490]
+101.2 HB-ARM hb=probe reason=start
+101.7 NAVIGATE uri=spar://app/index.html
+175.9 LOAD-CHANGED event=started
+181.7 LOAD-CHANGED event=committed
+184.8 DOC path=/index.html vis=visible
+185.2 HB-ARM hb=ping reason=doc
+190.6 READY path=/index.html pagePerf=15.0 vis=visible
+191.1 LOAD-CHANGED event=finished
+193.5 PAGE state-seen:1
+1100.7 HB-PING hb=probe seq=1 postUs=44 hr=0x00000000 outstanding=1
+1101.3 HB-PONG hb=probe seq=1 rttMs=0.6 vis=visible latest=True
+1191.0 TICK n=1 dtMs=0 vis=visible frames=64
+2100.2 HB-PING hb=probe seq=2 postUs=32 hr=0x00000000 outstanding=1
+2100.8 HB-PONG hb=probe seq=2 rttMs=0.6 vis=visible latest=True
+2190.5 TICK n=2 dtMs=1000 vis=visible frames=62
+3099.9 HB-PING hb=probe seq=3 postUs=61 hr=0x00000000 outstanding=1
+3100.5 HB-PONG hb=probe seq=3 rttMs=0.6 vis=visible latest=True
+3190.6 TICK n=3 dtMs=1000 vis=visible frames=62
+4101.4 HB-PING hb=probe seq=4 postUs=56 hr=0x00000000 outstanding=1
+4102.0 HB-PONG hb=probe seq=4 rttMs=0.6 vis=visible latest=True
+4190.7 TICK n=4 dtMs=1000 vis=visible frames=62
+5101.3 HB-PING hb=probe seq=5 postUs=364 hr=0x00000000 outstanding=1
+5101.7 HB-PING hb=ping seq=1 postUs=19 hr=0x00000000 outstanding=1
+5102.1 HB-PONG hb=probe seq=5 rttMs=0.8 vis=visible latest=True
+5102.5 PUMP phase=start n=4438 median=0.03ms p99=0.09ms min=0.01ms max=8.62ms
+5102.6 HB-PONG hb=ping seq=1 rttMs=0.9 vis=visible latest=True
+5190.8 TICK n=5 dtMs=1000 vis=visible frames=62
+6100.4 HB-PING hb=probe seq=6 postUs=43 hr=0x00000000 outstanding=1
+6161.7 HB-PONG hb=probe seq=6 rttMs=61.3 vis=visible latest=True
+6192.5 TICK n=6 dtMs=1002 vis=visible frames=60
+6679.8 ACTION verb=hang-microtask arg=
+6856.2 HANG kind=microtask pagePerf=6680.0
+7100.8 HB-PING hb=probe seq=7 postUs=260 hr=0x00000000 outstanding=1
+8099.9 HB-MISS hb=probe seq=7 missed=1
+8100.5 HB-PING hb=probe seq=8 postUs=78 hr=0x00000000 outstanding=2
+9101.5 HB-MISS hb=probe seq=8 missed=2
+9102.2 HB-PING hb=probe seq=9 postUs=50 hr=0x00000000 outstanding=3
+10100.7 HB-MISS hb=probe seq=9 missed=3
+10102.7 HB-PING hb=probe seq=10 postUs=64 hr=0x00000000 outstanding=4
+10104.2 HB-PING hb=ping seq=2 postUs=57 hr=0x00000000 outstanding=1
+10105.3 PUMP phase=hang-microtask n=4401 median=0.03ms p99=0.12ms min=0.01ms max=8.96ms
+11099.9 HB-MISS hb=probe seq=10 missed=4
+11100.4 HB-PING hb=probe seq=11 postUs=42 hr=0x00000000 outstanding=5
+12101.3 HB-MISS hb=probe seq=11 missed=5
+12101.8 HB-PING hb=probe seq=12 postUs=33 hr=0x00000000 outstanding=6
+13100.4 HB-MISS hb=probe seq=12 missed=6
+13101.0 HB-PING hb=probe seq=13 postUs=33 hr=0x00000000 outstanding=7
+14101.8 HB-MISS hb=probe seq=13 missed=7
+14102.3 HB-PING hb=probe seq=14 postUs=40 hr=0x00000000 outstanding=8
+15100.9 HB-MISS hb=probe seq=14 missed=8
+15101.4 HB-PING hb=probe seq=15 postUs=40 hr=0x00000000 outstanding=9
+15101.7 HB-MISS hb=ping seq=2 missed=1
+15102.1 HB-PING hb=ping seq=3 postUs=22 hr=0x00000000 outstanding=2
+15108.3 PUMP phase=hang-microtask n=4471 median=0.03ms p99=0.09ms min=0.01ms max=0.91ms
+16100.1 HB-MISS hb=probe seq=15 missed=9
+16100.7 HB-PING hb=probe seq=16 postUs=62 hr=0x00000000 outstanding=10
+17101.4 HB-MISS hb=probe seq=16 missed=10
+17101.9 HB-PING hb=probe seq=17 postUs=37 hr=0x00000000 outstanding=11
+18100.7 HB-MISS hb=probe seq=17 missed=11
+18101.2 HB-PING hb=probe seq=18 postUs=36 hr=0x00000000 outstanding=12
+19099.9 HB-MISS hb=probe seq=18 missed=12
+19100.5 HB-PING hb=probe seq=19 postUs=33 hr=0x00000000 outstanding=13
+20101.2 HB-MISS hb=probe seq=19 missed=13
+20101.7 HB-PING hb=probe seq=20 postUs=36 hr=0x00000000 outstanding=14
+20102.0 HB-MISS hb=ping seq=3 missed=2
+20102.3 HB-PING hb=ping seq=4 postUs=16 hr=0x00000000 outstanding=3
+20109.7 PUMP phase=hang-microtask n=4447 median=0.03ms p99=0.11ms min=0.01ms max=13.77ms
+21100.3 HB-MISS hb=probe seq=20 missed=14
+21100.7 HB-PING hb=probe seq=21 postUs=38 hr=0x00000000 outstanding=15
+22099.8 HB-MISS hb=probe seq=21 missed=15
+22100.2 HB-PING hb=probe seq=22 postUs=33 hr=0x00000000 outstanding=16
+23189.5 HB-MISS hb=probe seq=22 missed=16
+23198.0 HB-PING hb=probe seq=23 postUs=6882 hr=0x00000000 outstanding=17
+24109.7 HB-MISS hb=probe seq=23 missed=17
+25182.0 HB-PING hb=probe seq=24 postUs=1016750 hr=0x00000000 outstanding=18
+25267.9 HB-MISS hb=probe seq=24 missed=18
+25811.4 HB-PING hb=probe seq=25 postUs=443413 hr=0x00000000 outstanding=19
+25840.2 PUMP phase=hang-microtask n=3046 median=0.03ms p99=1.00ms min=0.01ms max=1713.39ms
+25887.3 HB-MISS hb=ping seq=4 missed=3
+25933.9 HB-UNRESPONSIVE hb=ping missed=3 intervalMs=5000
+26024.8 HOOK-UNRESPONSIVE missed=3 action=none
+27101.2 HB-PING hb=ping seq=5 postUs=957366 hr=0x00000000 outstanding=4
+27366.5 HB-MISS hb=probe seq=25 missed=19
+28615.1 HB-PING hb=probe seq=26 postUs=1108226 hr=0x00000000 outstanding=20
+28741.2 HB-MISS hb=probe seq=26 missed=20
+29711.1 HB-PING hb=probe seq=27 postUs=854589 hr=0x00000000 outstanding=21
+29879.6 HB-MISS hb=probe seq=27 missed=21
+31010.3 HB-PING hb=probe seq=28 postUs=1017423 hr=0x00000000 outstanding=22
+31030.8 HB-MISS hb=probe seq=28 missed=22
+31803.0 HB-PING hb=probe seq=29 postUs=703712 hr=0x00000000 outstanding=23
+31975.5 HB-MISS hb=probe seq=29 missed=23
+33231.3 HB-PING hb=probe seq=30 postUs=1040270 hr=0x00000000 outstanding=24
+33403.1 HB-MISS hb=probe seq=30 missed=24
+34954.7 HB-PING hb=probe seq=31 postUs=1375346 hr=0x00000000 outstanding=25
+35208.3 HB-MISS hb=probe seq=31 missed=25
+36367.4 HB-PING hb=probe seq=32 postUs=927023 hr=0x00000000 outstanding=26
+36433.4 HB-MISS hb=probe seq=32 missed=26
+37362.9 HB-PING hb=probe seq=33 postUs=786976 hr=0x00000000 outstanding=27
+37498.5 HB-MISS hb=probe seq=33 missed=27
+38397.4 HB-PING hb=probe seq=34 postUs=788438 hr=0x00000000 outstanding=28
+38461.6 HB-MISS hb=probe seq=34 missed=28
+39327.2 HB-PING hb=probe seq=35 postUs=817047 hr=0x00000000 outstanding=29
+39377.6 HB-MISS hb=probe seq=35 missed=29
+39641.3 HB-PING hb=probe seq=36 postUs=223405 hr=0x00000000 outstanding=30
+39824.9 HB-MISS hb=ping seq=5 missed=4
+39830.5 PUMP phase=hang-microtask n=2 median=1398.54ms p99=12447.32ms min=1398.54ms max=12447.32ms
+40513.5 HB-PING hb=ping seq=6 postUs=655202 hr=0x00000000 outstanding=5
+40548.8 HB-MISS hb=ping seq=6 missed=5
+41125.3 HB-PING hb=ping seq=7 postUs=506689 hr=0x00000000 outstanding=6
+41555.8 PUMP-PHASE phase=start n=5812 median=0.03ms p99=0.10ms min=0.01ms max=8.96ms
+41574.7 PUMP-PHASE phase=hang-microtask n=14993 median=0.03ms p99=0.11ms min=0.01ms max=12447.32ms
+41575.7 FINISH backendCounter=1
+45617.7 HB-MISS hb=probe seq=36 missed=30
+45618.0 PUMP phase=hang-microtask n=1 median=5764.15ms p99=5764.15ms min=5764.15ms max=5764.15ms
+46524.3 HB-PING hb=probe seq=37 postUs=902223 hr=0x00000000 outstanding=31
+48561.4 HOST-EXIT code=0

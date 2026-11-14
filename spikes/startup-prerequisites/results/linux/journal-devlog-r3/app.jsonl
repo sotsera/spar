@@ -1,0 +1,21 @@
+{"t":5.72,"evt":"main","label":"journal-devlog","ui":"auto","processAgeMs":30,"uid":1000,"desktop":null}
+{"t":6.3,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":6.61,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":7.57,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":0.643}
+{"t":8.12,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":0.272}
+{"t":8.89,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.505}
+{"t":9.71,"evt":"library","file":"libgtk-4.so.1","ok":false,"reason":"libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":13.23,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libgtk-4.so.1): libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":15.38,"evt":"stderr","isatty":"redirected"}
+{"t":16.94,"evt":"journal","result":"dev-log (journal socket: AddressNotAvailable)"}
+{"t":17.31,"evt":"graphical","way":"gtk","shown":false,"detail":"GTK 4 not initialised","ms":0}
+{"t":18.69,"evt":"helper-exit","tool":"zenity","exit":127,"ms":0.707,"stderr":"/usr/bin/zenity: error while loading shared libraries: libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":19.02,"evt":"graphical","way":"zenity","shown":false,"detail":"exit 127 after 1 ms /usr/bin/zenity: error while loading shared libraries: libgtk-4.so.1: cannot open shared object file: No such file or directory","ms":1.424}
+{"t":19.38,"evt":"graphical","way":"kdialog","shown":false,"detail":"not installed","ms":0.018}
+{"t":19.67,"evt":"graphical","way":"yad","shown":false,"detail":"not installed","ms":0.009}
+{"t":258.53,"evt":"graphical","way":"dbus","shown":false,"detail":"Notify failed: GDBus.Error:org.freedesktop.DBus.Error.Spawn.ChildSignaled: Process org.freedesktop.Notifications received signal 5","ms":238.331}
+{"t":409.44,"evt":"helper-exit","tool":"notify-send","exit":1,"ms":150.376,"stderr":"Error calling StartServiceByName for org.freedesktop.Notifications: Process org.freedesktop.Notifications received signal 5"}
+{"t":409.94,"evt":"graphical","way":"notify-send","shown":false,"detail":"exit 1 after 150 ms Error calling StartServiceByName for org.freedesktop.Notifications: Process org.freedesktop.Notifications received signal 5","ms":150.907}
+{"t":1545.54,"evt":"helper-exit","tool":"xmessage","exit":0,"ms":1135.279,"stderr":""}
+{"t":1547.09,"evt":"graphical","way":"xmessage","shown":true,"detail":"exit 0 after 1136 ms","ms":1136.863}
+{"t":1550.88,"evt":"exit","code":3}

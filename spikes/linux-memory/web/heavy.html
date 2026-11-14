@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Spar memory probe, heavy</title>
+  <link rel="stylesheet" href="/probe.css">
+  <!-- The React spike's built bundle (React runtime + app, 236 KB), copied here at sync time. It mounts into #root
+       and tries to reach its backend, which this host does not provide; it still parses, compiles and runs React. -->
+  <script type="module" crossorigin src="/assets/main-Bv9fbHoP.js"></script>
+  <script src="/probe.js" defer></script>
+  <script src="/rows.js" defer></script>
+</head>
+<body>
+  <header><h1>Heavy page: React bundle + 10,000 rows</h1></header>
+  <div id="root"></div>
+  <div id="list"></div>
+</body>
+</html>

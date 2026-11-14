@@ -1,0 +1,10 @@
+<Project>
+  <!-- Use the repository's central versions (Microsoft.Build.Framework / Utilities.Core 18.12.2), then add the analyzer. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
+
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.Build.TaskAuthoring.Analyzer" Version="18.13.0" />
+    <!-- The fix harness hosts the analyzer (built against Roslyn 4.12) with the repository's Roslyn version. -->
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.9.0" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1 @@
+{ "name": "run-probe", "private": true, "scripts": { "preinstall": "node -e \"console.log('ROOT-PREINSTALL')\"", "prebuild": "node -e \"console.log('PREBUILD')\"", "build": "node -e \"console.log('BUILD')\"" } }

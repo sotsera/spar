@@ -1,0 +1,37 @@
+=== run-all 2026-11-14T11:12:49, runs=3
+publish Bridge.Bench : 0 warnings
+publish Bridge.Desktop : 0 warnings
+publish Bridge.Loopback : 0 warnings
+Bridge.Bench.exe corpus -> exit 0, 0,1 s | corpus.js written
+Bridge.Bench.exe sizes -> exit 0, 0,3 s | sizes.md written
+Bridge.Bench.exe robust -> exit 0, 0,1 s | robustness-csharp.md written
+Bridge.Bench.exe cost -> exit 0, 155,0 s | | 1000 rows (223,571 bytes) | 65 | 230499 | 231 | 231043 | 532759 | 220100 | / 
+Bridge.Desktop.exe --mode probe --enc A --run 1 -> exit 0, 6,9 s | [     320 ms] result written: artifacts\bridge-encoding\desktop\probe-A-1.json / browser exited 6495 ms after the loop ended
+Bridge.Desktop.exe --mode micro --enc A --run 1 -> exit 0, 21,8 s | [   21514 ms] result written: artifacts\bridge-encoding\desktop\micro-A-1.json / browser exited 218 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc A --run 1 -> exit 0, 8,2 s | [    7946 ms] result written: artifacts\bridge-encoding\desktop\full-A-1.json / browser exited 174 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc B --run 1 -> exit 0, 8,3 s | [    8076 ms] result written: artifacts\bridge-encoding\desktop\full-B-1.json / browser exited 219 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc C --run 1 -> exit 0, 8,2 s | [    7965 ms] result written: artifacts\bridge-encoding\desktop\full-C-1.json / browser exited 235 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc Bj --run 1 -> exit 0, 9,2 s | [    8928 ms] result written: artifacts\bridge-encoding\desktop\full-Bj-1.json / browser exited 242 ms after the loop ended
+Bridge.Desktop.exe --mode micro --enc A --run 2 -> exit 0, 21,8 s | [   21495 ms] result written: artifacts\bridge-encoding\desktop\micro-A-2.json / browser exited 214 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc A --run 2 -> exit 0, 8,2 s | [    7958 ms] result written: artifacts\bridge-encoding\desktop\full-A-2.json / browser exited 227 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc B --run 2 -> exit 0, 8,4 s | [    8084 ms] result written: artifacts\bridge-encoding\desktop\full-B-2.json / browser exited 232 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc C --run 2 -> exit 0, 8,3 s | [    8006 ms] result written: artifacts\bridge-encoding\desktop\full-C-2.json / browser exited 240 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc Bj --run 2 -> exit 0, 9,5 s | [    9257 ms] result written: artifacts\bridge-encoding\desktop\full-Bj-2.json / browser exited 223 ms after the loop ended
+Bridge.Desktop.exe --mode micro --enc A --run 3 -> exit 0, 21,9 s | [   21621 ms] result written: artifacts\bridge-encoding\desktop\micro-A-3.json / browser exited 208 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc A --run 3 -> exit 0, 8,3 s | [    8070 ms] result written: artifacts\bridge-encoding\desktop\full-A-3.json / browser exited 217 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc B --run 3 -> exit 0, 8,2 s | [    7966 ms] result written: artifacts\bridge-encoding\desktop\full-B-3.json / browser exited 226 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc C --run 3 -> exit 0, 8,3 s | [    7981 ms] result written: artifacts\bridge-encoding\desktop\full-C-3.json / browser exited 235 ms after the loop ended
+Bridge.Desktop.exe --mode full --enc Bj --run 3 -> exit 0, 9,2 s | [    8959 ms] result written: artifacts\bridge-encoding\desktop\full-Bj-3.json / browser exited 236 ms after the loop ended
+Bridge.Loopback.exe --mode micro --enc A --run 1 -> exit 0, 21,8 s | result written: artifacts\bridge-encoding\loopback\micro-A-1.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc A --run 1 -> exit 0, 9,3 s | result written: artifacts\bridge-encoding\loopback\full-A-1.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc B --run 1 -> exit 0, 9,2 s | result written: artifacts\bridge-encoding\loopback\full-B-1.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc C --run 1 -> exit 0, 9,1 s | result written: artifacts\bridge-encoding\loopback\full-C-1.json / browser exited: True
+Bridge.Loopback.exe --mode micro --enc A --run 2 -> exit 0, 21,7 s | result written: artifacts\bridge-encoding\loopback\micro-A-2.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc A --run 2 -> exit 0, 9,2 s | result written: artifacts\bridge-encoding\loopback\full-A-2.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc B --run 2 -> exit 0, 9,7 s | result written: artifacts\bridge-encoding\loopback\full-B-2.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc C --run 2 -> exit 0, 9,2 s | result written: artifacts\bridge-encoding\loopback\full-C-2.json / browser exited: True
+Bridge.Loopback.exe --mode micro --enc A --run 3 -> exit 0, 22,1 s | result written: artifacts\bridge-encoding\loopback\micro-A-3.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc A --run 3 -> exit 0, 9,1 s | result written: artifacts\bridge-encoding\loopback\full-A-3.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc B --run 3 -> exit 0, 9,0 s | result written: artifacts\bridge-encoding\loopback\full-B-3.json / browser exited: True
+Bridge.Loopback.exe --mode full --enc C --run 3 -> exit 0, 9,7 s | result written: artifacts\bridge-encoding\loopback\full-C-3.json / browser exited: True
+=== done 2026-11-14T11:20:53

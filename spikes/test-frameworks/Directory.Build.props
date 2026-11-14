@@ -1,0 +1,32 @@
+<Project>
+  <!-- Inherit the repository policy (warnings as errors, code style), then add spike settings. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <!-- The machine's own runtime, so PublishAot works without extra arguments. -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <!--
+      The loopback spike's app, already built by that spike (Debug). Not a ProjectReference: building it from here
+      would write into spikes/loopback, which this spike must not change.
+    -->
+    <_AppExtension Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</_AppExtension>
+    <LoopAppPath>$([MSBuild]::NormalizePath('$(MSBuildThisFileDirectory)..\loopback\Loop.App\bin\Debug\net11.0\$(NETCoreSdkRuntimeIdentifier)\Loop.App$(_AppExtension)'))</LoopAppPath>
+
+    <!-- -p:SpikeBrowser=false leaves out Playwright and the browser journeys (used to isolate AOT findings). -->
+    <SpikeBrowser Condition="'$(SpikeBrowser)' == ''">true</SpikeBrowser>
+    <DefineConstants Condition="'$(SpikeBrowser)' == 'true'">$(DefineConstants);SPIKE_BROWSER</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Shared\*.cs" LinkBase="Shared" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SpikeBrowser)' == 'true'">
+    <PackageReference Include="Microsoft.Playwright" />
+    <Compile Include="$(MSBuildThisFileDirectory)..\loopback\Loop.Tests\LoopbackApp.cs" Link="Loopback\LoopbackApp.cs" />
+  </ItemGroup>
+</Project>

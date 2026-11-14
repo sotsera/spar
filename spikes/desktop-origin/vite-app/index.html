@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notes</title>
+  <script>
+    // Spike timing (desktop-origin): add the page's navigation-start-relative times to POST /_spar/ready.
+    (() => {
+      let dcl = NaN;
+      addEventListener("DOMContentLoaded", () => { dcl = performance.now(); });
+      const original = fetch;
+      window.fetch = (input, init) => {
+        if (typeof input === "string" && input === "/_spar/ready") {
+          input += `?page-dcl=${dcl.toFixed(1)}&page-ready=${performance.now().toFixed(1)}`;
+        }
+        return original(input, init);
+      };
+    })();
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <!--
+    Asset-packing spike. Every app build embeds one packing format of one input bundle:
+      PackFormat  none | raw | brotli | separate | zip
+      PackInput   react | large
+    Each combination gets its own bin/ and obj/ so sizes can be compared side by side. The task project is shared.
+  -->
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'Pack.Tasks'">
+    <PackFormat Condition="'$(PackFormat)' == ''">brotli</PackFormat>
+    <PackInput Condition="'$(PackInput)' == ''">react</PackInput>
+    <_PackVariant>$(PackFormat)-$(PackInput)</_PackVariant>
+    <_PackVariant Condition="'$(PackCompress)' == 'false'">$(_PackVariant)-stored</_PackVariant>
+    <_PackVariant Condition="'$(PackProbe)' == 'true'">$(_PackVariant)-probe</_PackVariant>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/bin/$(_PackVariant)/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/$(_PackVariant)/</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Loopback host for the bridge-encoding bench: Kestrel on 127.0.0.1 serves the page, one long-lived NDJSON channel
+    per document (host to page) and POSTed frames (page to host), as in spikes/react. It launches a headless Chromium
+    it owns and reads main-thread metrics through CDP. NativeAOT.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\Bridge.Core\Bridge.Core.csproj" />
+  </ItemGroup>
+</Project>

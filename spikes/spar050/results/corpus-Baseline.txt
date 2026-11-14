@@ -1,0 +1,256 @@
+# Corpus diagnostics with Analyzer=Baseline, SDK 11.0.100, 2026-11-14
+P01 [detect] TryGetValue(key, out var r) with the bool ignored, then r returned
+P02 [detect] r read in the branch where TryGetValue returned false
+P03 [clean] TryGetValue used as intended (if, early return, ?:, &&, assignment on miss)
+P04 [detect] the miss branch only logs, then r is read after the if
+P05 [missed] the bool result stored in a local and tested later
+P06 [detect] FirstOrDefault, LastOrDefault, SingleOrDefault, ElementAtOrDefault without a fallback
+P07 [clean] FirstOrDefault(fallback), GetValueOrDefault(key, fallback), First()
+P08 [detect] GetValueOrDefault(key) on a dictionary of Results
+P09 [detect] Result?.GetValueOrDefault() without a fallback
+P10 [detect] new Lazy<PlanResult>() without a factory
+P11 [runtime] Interlocked.Exchange(ref field, value) on a Result field
+P12 [impossible] Volatile.Read(ref field) of a Result field
+    line 10:CS0452: The type 'Result<CopyPlan, PlanError>' must be a reference type in order to use it as parameter 'T' in the generic type or method 'Volatile.Read<T>(ref readonly T)'
+P13 [detect] Task.FromResult<PlanResult>(default) and Task.FromResult(default(PlanResult))
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+P14 [detect] ValueTask.FromResult<PlanResult>(default) and new ValueTask<PlanResult>(default(PlanResult))
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+P15 [detect] TaskCompletionSource<PlanResult>.SetResult(default) / TrySetResult(default)
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 13:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+P16 [detect] new ThreadLocal<PlanResult>() without a factory
+P17 [detect] new AsyncLocal<PlanResult>()
+P18 [detect] new StrongBox<PlanResult>() without a value
+P19 [detect] ChannelReader<PlanResult>.TryRead(out var r) with the bool ignored
+P20 [detect] Queue<PlanResult>.TryDequeue and ConcurrentQueue.TryPeek with the bool ignored
+P21 [clean] while (queue.TryDequeue(out var r)) { … }
+P22 [runtime] List<PlanResult>.Enumerator.Current read before MoveNext
+P23 [clean] dictionary[key] on a missing key
+P24 [clean] MaxBy / Max over Results
+P25 [detect] List<PlanResult>.Find and Array.Find
+P26 [detect] ImmutableArray<PlanResult>.FirstOrDefault()
+P27 [detect] DefaultIfEmpty() over Results
+P28 [clean] ConcurrentDictionary.GetOrAdd with a factory
+P29 [detect] ConcurrentDictionary.TryRemove(key, out var r) with the bool ignored
+A01 [detect] new PlanResult[count] returned
+A02 [clean] new PlanResult[0]
+    line 8:CA1825: Avoid unnecessary zero-length array allocations.  Use Array.Empty<Result<CopyPlan, PlanError>>() instead.
+A03 [clean] new PlanResult[] { … } and new PlanResult[2] { … }
+A04 [clean] collection expressions and spreads
+A05 [clean] new PlanResult[n] filled by the for loop that follows it
+A06 [detect] a fill loop that can skip an element
+A07 [by-design] new PlanResult[n] filled with Parallel.For
+A08 [detect] new PlanResult[2, 3]
+A09 [clean] new PlanResult[3][] (jagged outer array)
+A10 [detect] Array.Resize growing an array
+A11 [detect] GC.AllocateUninitializedArray and GC.AllocateArray
+A12 [detect] Array.Clear on a Result array
+A13 [detect] Span<Result>.Clear() and Span<Result>.Fill(default)
+    line 16:CA1855: Prefer 'Span<T>.Clear()' instead of 'Span<T>.Fill(default)'
+    line 16:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+A14 [detect] CollectionsMarshal.SetCount on a List<Result>
+A15 [clean] CollectionsMarshal.AsSpan on a List<Result>
+A16 [detect] ArrayPool<Result>.Shared.Rent, and Return with clearArray
+A17 [clean] default(ImmutableArray<Result>)
+A18 [detect] ImmutableArray<Result>.Builder.Count = n
+A19 [detect] Array.CreateInstance(typeof(Result), n)
+A20 [clean] Array.Fill and Span.Fill with a value
+A21 [detect] Enumerable.Repeat<Result>(default, n)
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+A22 [by-design] clearing a buffer slot with default to release references
+    line 14:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+A23 [impossible] stackalloc PlanResult[2]
+    line 10:CS0208: Cannot take the address of, get the size of, or declare a pointer to a managed type ('Result<CopyPlan, PlanError>')
+A24 [clean] new List<Result>(capacity) filled with Add
+A25 [clean] default(ArraySegment<Result>), default(Memory<Result>), Span<Result> = default
+A26 [detect] CollectionsMarshal.GetValueRefOrAddDefault on a Dictionary<K, Result>
+A27 [detect] copying into a larger array, or ToArray over a partially filled pool array
+A28 [detect] MemoryPool<Result>.Shared.Rent
+C01 [clean] values and error cases returned by union conversion
+C02 [clean] Result.Success and default(Success)
+C03 [clean] a switch expression whose every arm is a value or an error
+C04 [clean] an interface-typed value converted by the union
+C05 [clean] async, Task.FromResult and ValueTask returns of real Results
+C06 [clean] collections built from values with Select, ToArray, ToList, ToDictionary
+C07 [clean] reading a Result: switch, TryGetValue/TryGetError with the bool ignored, Value, ToString
+C08 [clean] default of other types: CancellationToken, int, string, a class, a struct without Result
+C09 [clean] Lazy, ThreadLocal, StrongBox, TaskCompletionSource with real values
+C10 [clean] a class with required, initialized and constructor-assigned Result members
+C11 [clean] generic code over Results that never creates a default
+C12 [clean] tuples and record structs built from values
+C13 [clean] Result? as the way to say "maybe unset": HasValue, ??, Value
+C14 [clean] Result inside Task, IEnumerable, Dictionary, Func, with no default
+E01 [detect] => default (spikes/result-api DefaultValue.cs)
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+E02 [detect] return default; in an async method
+    line 11:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+E03 [detect] Result<CancelError> => default
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CancelError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+E04 [detect] new() of a Result
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+E05 [detect] new Result<…>[4]
+E06 [detect] a field assigned by a method but not by the constructor
+X01 [runtime] a library method that returns default with no hint in its signature
+X02 [detect] a library method marked [return: MaybeNull]
+X03 [detect] a library Try method with [MaybeNullWhen(false)], bool ignored
+X04 [runtime] a library class whose public Result field nothing assigns
+X05 [detect] a library Create<T>() where T : new(), called with a Result
+X06 [runtime] a library Make<T>() => default!, unannotated, called with a Result
+X07 [detect] a library Find<T>() declared T?, called with a Result
+X08 [detect] default(LibPair), a library struct with a private Result field
+X09 [detect] a call that omits a library method's optional Result parameter (= default)
+    line 10:SPAR050: 'Spar.Result<string, Library.LibError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+X10 [runtime] a library method that returns an array of default Results
+X11 [runtime] a third-party generator's output that returns default, and a generated unassigned field
+F01 [compiler] a private instance field that nothing assigns
+    line 8:CS0649: Field 'F01._last' is never assigned to, and will always have its default value 
+F02 [detect] a private field assigned only by a property setter
+F03 [detect] a public field that nothing in the assembly assigns
+F04 [compiler] a private static field that nothing assigns
+    line 8:CS0649: Field 'F04.s_last' is never assigned to, and will always have its default value 
+F05 [detect] a static field assigned by an Initialize method
+F06 [detect] a { get; set; } auto-property not assigned by the constructor
+F07 [detect] a getter-only auto-property never assigned
+F08 [detect] an init-only property that object initializers may omit
+F09 [clean] a required property
+F10 [detect] a required property and a [SetsRequiredMembers] constructor that does not assign it
+F11 [clean] assigned in every constructor, one chaining to another
+F12 [clean] assigned in both branches of an if/else
+F13 [detect] assigned in only one branch
+F14 [detect] an early return before the assignment
+F15 [clean] a field with an initializer
+F16 [clean] a primary constructor parameter stored by a field initializer
+F17 [clean] a positional record with a Result parameter
+F18 [detect] a record with a Result property declared in its body
+F19 [compiler] a struct constructor that does not assign the Result field
+    line 9:CS0649: Field 'F19._last' is never assigned to, and will always have its default value 
+F20 [clean] a struct with a public Result field and no constructor
+F21 [clean] a positional record struct
+F22 [clean] the opt-out: a Result? field that may be unset
+F23 [compiler] a [ThreadStatic] Result field with an initializer
+    line 10:CA2019: 'ThreadStatic' fields should not use inline initialization
+F24 [detect] a static initializer that reads a static field declared after it
+F25 [detect] a class field whose struct type holds a Result
+F26 [by-design] assigned by a helper method the constructor calls
+F27 [by-design] a protected base field assigned only by the derived constructor
+F28 [clean] assigned in try, catch rethrows
+F29 [clean] a static field assigned by the static constructor
+F30 [runtime] a base constructor calls a virtual method that reads a derived field before it is assigned
+F31 [runtime] the constructor publishes this before assigning the Result
+F32 [compiler] an internal field that nothing assigns
+    line 8:CS0649: Field 'F32.Last' is never assigned to, and will always have its default value 
+F33 [detect] a property using the field keyword, never assigned by the constructor
+F34 [clean] a partial class whose constructor in another part assigns the field
+F35 [clean] assigned by a deconstruction in the constructor
+F36 [clean] an expression-bodied constructor
+F37 [detect] a struct constructor chaining to the implicit this() and not assigning the Result
+F38 [clean] a switch statement that assigns in every section, with a default section
+F39 [clean] a static initializer that reads a static field declared before it
+F40 [detect] assigned inside a loop that may not run
+F41 [missed] an internal field written only by another type
+F42 [clean] assigned by passing the field as an out argument in the constructor
+F43 [detect] a [ThreadStatic] Result field assigned by the static constructor
+F44 [detect] a struct constructor that does not assign a Result field another member writes
+L01 [detect] an out parameter assigned default
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L02 [clean] a Try method that assigns default to a [MaybeNullWhen(false)] out parameter
+    line 14:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L03 [impossible] an out parameter never assigned
+    line 8:CS0177: The out parameter 'result' must be assigned to before control leaves the current method
+L04 [impossible] an unassigned local passed by ref
+    line 11:CS0165: Use of unassigned local variable 'result'
+L05 [impossible] an unassigned local returned
+    line 16:CS0165: Use of unassigned local variable 'result'
+L06 [impossible] a pattern variable read where the pattern did not match
+    line 15:CS0165: Use of unassigned local variable 'result'
+L07 [detect] a switch expression whose discard arm is default
+    line 12:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L08 [detect] default: return default; in a switch statement
+    line 15:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L09 [detect] maybe ?? default
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L10 [detect] ok ? value : default
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L11 [detect] a lambda returning default
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L12 [detect] a local function returning default
+    line 12:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L13 [detect] yield return default in an iterator
+    line 11:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L14 [detect] an async lambda returning default
+    line 11:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L15 [detect] an expression-bodied property => default
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L16 [detect] record with { Last = default }
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L17 [detect] an optional Result parameter whose default value is default or new()
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 12:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 12:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L18 [detect] default! and (PlanResult)default
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L19 [clean] PlanResult? r = default (null)
+L20 [detect] PlanResult? r = default(PlanResult)
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L21 [detect] Result<PlanResult, RunError> built from default(PlanResult)
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L22 [detect] object o = default(PlanResult)
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L23 [detect] [value, default] as PlanResult[]
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L24 [clean] throw where a value cannot be produced
+L25 [detect] yield return default in an async iterator
+    line 11:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L26 [clean] r.Equals(default), r.Equals(default(PlanResult)), EqualityComparer<PlanResult>.Default.Equals(r, default)
+    line 10:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+    line 12:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L27 [impossible] r == default
+    line 8:CS0019: Operator '==' cannot be applied to operands of type 'Result<CopyPlan, PlanError>' and 'default'
+L28 [detect] [return: MaybeNull] PlanResult Find() => default, and a caller
+    line 11:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+L29 [clean] a local assigned on every path before use
+L30 [detect] a struct holding a Result, reset with this = new()
+G01 [detect] a source generic method returning default(T)!, called with T = PlanResult
+G02 [detect] a generic method declared T? (maybe default), called with PlanResult
+G03 [detect] Create<T>() where T : new(), called with PlanResult
+G04 [detect] Activator.CreateInstance<T>() inside a generic method, called with PlanResult
+G05 [missed] Box<PlanResult>.Item initialized with default! in a generic class
+G06 [detect] Outer<T>() calls Make<T>(), called with PlanResult
+G07 [clean] Identity<T> and IsDefault<T> (EqualityComparer.Equals(value, default)) with PlanResult
+G08 [detect] Cache<PlanResult>.GetOrDefault() returning default! for the type's T
+G09 [detect] Zero<T>() where T : struct, called with PlanResult
+G10 [detect] a generic Try method with [MaybeNullWhen(false)] out T, used correctly and with the result ignored
+G11 [detect] new Pool<PlanResult>() where Pool<T> requires T : new()
+G12 [detect] default(T)! inside a lambda in a generic method, called with PlanResult
+G13 [clean] a type argument inferred from an argument, Outer chain through Identity
+S01 [detect] default(Pair) where Pair has a Result field
+S02 [detect] new Pair() without an explicit parameterless constructor
+S03 [clean] new Pair { Result = …, Id = 1 }
+S04 [detect] new Pair { Id = 1 }
+S05 [detect] a struct whose parameterless constructor assigns the Result, and default() of it
+S06 [detect] new() of a positional record struct
+S07 [detect] (int, PlanResult) t = default
+S08 [detect] (1, default) converted to (int, PlanResult)
+    line 8:SPAR050: 'Spar.Result<SqlTool.CopyJobs.CopyPlan, SqlTool.CopyJobs.PlanError>' is neither a value nor an error. Return a value, an error case, or Result.Success.
+S09 [detect] default(KeyValuePair<string, PlanResult>)
+S10 [detect] default(ValueTask<PlanResult>) and new ValueTask<PlanResult>()
+S11 [detect] an [InlineArray] buffer of Results
+S12 [detect] default(Outer) where Outer holds a Pair that holds a Result
+S13 [detect] default(Holder) with { Attempts = 1 }
+S14 [detect] this = default in a struct method
+S15 [detect] var (a, b) = default((PlanResult, int))
+S16 [detect] default(Wrapper<PlanResult>)
+S17 [clean] holder with { Attempts = 2 } on a real value
+U01 [detect] Unsafe.SkipInit(out PlanResult r)
+U02 [clean] [SkipLocalsInit] on a method with ordinary Result locals
+U03 [detect] Unsafe.As<TFrom, PlanResult> reinterpreting other memory
+U04 [runtime] MemoryMarshal.Cast<byte, PlanResult>
+U05 [detect] RuntimeHelpers.GetUninitializedObject(typeof(PlanResult))
+U06 [detect] Activator.CreateInstance<PlanResult>() and Activator.CreateInstance(typeof(PlanResult))
+    line 10:CA2263: Prefer the generic overload 'System.Activator.CreateInstance<T>()' instead of 'System.Activator.CreateInstance(System.Type)'
+U07 [runtime] Unsafe.NullRef<PlanResult>() read through

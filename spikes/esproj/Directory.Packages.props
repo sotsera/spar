@@ -1,0 +1,4 @@
+<Project>
+  <!-- Repository versions first (spike-local file stops the search, so import the root one explicitly). -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
+</Project>

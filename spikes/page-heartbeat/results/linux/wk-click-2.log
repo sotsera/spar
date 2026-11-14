@@ -1,0 +1,31 @@
+98.4 START ms=50.6 pid=1408 cpus=32 responsive=1 gsk=cairo
+100.1 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=0 onUnresponsive=none options=[--www /spike/www/ --data /tmp/u/data-wk-click-2 --log /out/wk-click-2.log --actions 3000:hang-idle,8000:sh:xdotool mousemove --window $WID 200 200 click 1 --duration 45000 --timeout 120 --no-ping --probe-interval 0]
+101.3 NAVIGATE uri=spar://app/index.html
+178.6 LOAD-CHANGED event=started
+185.4 LOAD-CHANGED event=committed
+189.1 DOC path=/index.html vis=visible
+189.7 HB-ARM hb=ping reason=doc
+195.5 READY path=/index.html pagePerf=18.0 vis=visible
+199.1 LOAD-CHANGED event=finished
+199.9 PAGE state-seen:1
+1195.8 TICK n=1 dtMs=0 vis=visible frames=64
+2195.4 TICK n=2 dtMs=1000 vis=visible frames=62
+3195.4 TICK n=3 dtMs=1000 vis=visible frames=62
+3198.7 ACTION verb=hang-idle arg=
+3201.1 HANG kind=idle pagePerf=3024.0
+5102.2 PUMP phase=hang-idle n=4406 median=0.03ms p99=0.09ms min=0.01ms max=11.74ms
+8199.6 ACTION verb=sh arg=xdotool mousemove --window $WID 200 200 click 1
+8210.1 SH cmd=xdotool mousemove --window $WID 200 200 click 1 wid=4194308
+10104.2 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4439 median=0.02ms p99=0.08ms min=0.01ms max=11.18ms
+15106.2 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4515 median=0.03ms p99=0.07ms min=0.01ms max=0.22ms
+20108.1 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4452 median=0.03ms p99=0.08ms min=0.01ms max=0.16ms
+25109.5 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4433 median=0.03ms p99=0.08ms min=0.01ms max=0.21ms
+30111.8 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4440 median=0.03ms p99=0.08ms min=0.01ms max=0.16ms
+35114.1 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4464 median=0.02ms p99=0.08ms min=0.01ms max=0.19ms
+40117.3 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4476 median=0.02ms p99=0.08ms min=0.01ms max=0.17ms
+45118.5 PUMP phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=4478 median=0.02ms p99=0.08ms min=0.01ms max=0.21ms
+45200.7 PUMP-PHASE phase=start n=2718 median=0.03ms p99=0.10ms min=0.01ms max=11.74ms
+45201.6 PUMP-PHASE phase=hang-idle n=4438 median=0.03ms p99=0.08ms min=0.01ms max=1.28ms
+45206.6 PUMP-PHASE phase=sh-xdotool mousemove --window $WID 200 200 click 1 n=33013 median=0.02ms p99=0.08ms min=0.01ms max=11.18ms
+45207.0 FINISH backendCounter=1
+47286.1 HOST-EXIT code=0

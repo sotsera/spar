@@ -1,0 +1,4 @@
+exit 0 wallMs 1049
+RUN runtime=aot mode=query-cancel arg=dispose-drain sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+RESULT query-cancel case=dispose-drain readerDisposeMs=987.0 connectionReusable=True
+MEM end peakWorkingSetMB=35.8 workingSetMB=35.8 rssAnonMB=11.5 allocatedMB=5.7 gc0=0 gc1=0 gc2=0 cpuMs=1720

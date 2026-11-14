@@ -1,0 +1,8 @@
+exit 0 wallMs 2349
+RUN runtime=jit mode=query-cancel arg=cpu-async sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+SERVER before cancel: request=SELECT/running/-/cpu=2016 session=running/opentran=0 locks=1
+SERVER after: request gone 9.6 ms after cancel (last seen: ); now request=none session=sleeping/opentran=0 locks=0
+OUTCOME SqlException(Number=0, Class=11): A severe error occurred on the current command.  The results, if any, should be discarded.
+RESULT query-cancel case=cpu-async cancelToExceptionMs=7.3 requestGoneAfterCancelMs=9.6 connectionState=Open reusable=yes (1.8 ms, SELECT 1 -> 1)
+MEM end peakWorkingSetMB=49.8 workingSetMB=49.8 peakPrivateMB=15.1 allocatedMB=1.0 gc0=0 gc1=0 gc2=0 cpuMs=266
+

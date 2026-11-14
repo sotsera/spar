@@ -1,0 +1,4 @@
+<Project>
+  <!-- Repository versions (central package management); the spike adds none. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
+</Project>

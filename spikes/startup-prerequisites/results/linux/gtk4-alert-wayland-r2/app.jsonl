@@ -1,0 +1,14 @@
+{"t":33.24,"evt":"main","label":"gtk4-alert-wayland","ui":"auto","processAgeMs":90,"uid":1000,"desktop":null}
+{"t":33.58,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":33.8,"evt":"display-env","WAYLAND_DISPLAY":"wayland-1","waylandSocket":true,"DISPLAY":null,"x11Socket":null,"x11Ok":false}
+{"t":34.59,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":0.58}
+{"t":35.06,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":0.288}
+{"t":35.77,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":0.486}
+{"t":40.07,"evt":"library","file":"libgtk-4.so.1","ok":true,"ms":3.753}
+{"t":46.32,"evt":"gtk-init","ok":true,"ms":3.587,"gtk":"4.14.5"}
+{"t":46.99,"evt":"library","file":"libwebkitgtk-6.0.so.4","ok":false,"reason":"libwebkitgtk-6.0.so.4: cannot open shared object file: No such file or directory"}
+{"t":47.24,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libwebkitgtk-6.0.so.4): libwebkitgtk-6.0.so.4: cannot open shared object file: No such file or directory"}
+{"t":52.15,"evt":"stderr","isatty":"redirected"}
+{"t":53.39,"evt":"journal","result":"journal-socket"}
+{"t":3056.91,"evt":"graphical","way":"gtk","shown":true,"detail":"button=-1 Operation was cancelled","ms":3003.256}
+{"t":3060.22,"evt":"exit","code":3}

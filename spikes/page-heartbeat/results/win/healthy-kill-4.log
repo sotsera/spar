@@ -1,0 +1,103 @@
+5.7 WM-SIZE type=0
+5.8 WINDOW hwnd=0x25C0810 placement=-32000,-32000
+11.5 ENV ms=5.7 version=157.0.4341.46 folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\page-heartbeat\healthy-kill-4 sandbox=False cpus=32
+204.6 PROCESS-INFOS-CHANGED browser:51848
+208.3 PROCESS-INFOS-CHANGED browser:51848 gpu:72220
+208.5 PROCESS-INFOS-CHANGED browser:51848 utility:52988 gpu:72220
+208.6 PROCESS-INFOS-CHANGED browser:51848 utility:52988 utility:57100 gpu:72220
+208.8 PROCESS-INFOS-CHANGED browser:51848 utility:52988 utility:57100 renderer:62488 gpu:72220
+251.2 INJECT hr=0x00000000
+251.5 CONTROLLER ms=245.4 browserPid=51848 webView3=True webView19=True processes=[browser:51848 utility:52988 utility:57100 renderer:62488 gpu:72220]
+251.7 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=1000 onUnresponsive=none options=[--profile healthy-kill-4 --log results/win/healthy-kill-4.log --actions 3000:state,6000:kill --duration 15000]
+251.9 HB-ARM hb=probe reason=start
+252.2 NAVIGATE uri=https://app.localhost/index.html
+254.0 NAV-STARTING id=2 uri=https://app.localhost/index.html
+282.7 CONTENT-LOADING id=2 errorPage=0
+284.9 DOC path=/index.html vis=visible
+284.9 HB-ARM hb=ping reason=doc
+286.1 READY path=/index.html pagePerf=33.0 vis=visible
+291.0 NAV-COMPLETED id=2 success=True status=0
+291.2 PAGE state-seen:1
+1261.9 HB-PING hb=probe seq=1 postUs=27 hr=0x00000000 outstanding=1
+1262.0 HB-PONG hb=probe seq=1 rttMs=0.1 vis=visible latest=True
+1293.0 TICK n=1 dtMs=0 vis=visible frames=53
+2257.9 HB-PING hb=probe seq=2 postUs=25 hr=0x00000000 outstanding=1
+2258.1 HB-PONG hb=probe seq=2 rttMs=0.2 vis=visible latest=True
+2289.7 TICK n=2 dtMs=997 vis=visible frames=60
+3255.9 HB-PING hb=probe seq=3 postUs=32 hr=0x00000000 outstanding=1
+3256.1 HB-PONG hb=probe seq=3 rttMs=0.2 vis=visible latest=True
+3286.8 TICK n=3 dtMs=997 vis=visible frames=60
+3286.8 ACTION verb=state arg=
+3287.2 PAGE state-seen:2
+4253.9 HB-PING hb=probe seq=4 postUs=26 hr=0x00000000 outstanding=1
+4254.1 HB-PONG hb=probe seq=4 rttMs=0.2 vis=visible latest=True
+4295.1 TICK n=4 dtMs=1008 vis=visible frames=61
+5252.0 HB-PING hb=probe seq=5 postUs=28 hr=0x00000000 outstanding=1
+5252.1 HB-PING hb=ping seq=1 postUs=6 hr=0x00000000 outstanding=1
+5252.2 HB-PONG hb=probe seq=5 rttMs=0.2 vis=visible latest=True
+5252.3 HB-PONG hb=ping seq=1 rttMs=0.2 vis=visible latest=True
+5267.6 PUMP phase=state n=323 median=0.05ms p99=0.26ms min=0.02ms max=0.52ms
+5295.1 TICK n=5 dtMs=1000 vis=visible frames=60
+6252.9 HB-PING hb=probe seq=6 postUs=25 hr=0x00000000 outstanding=1
+6253.1 HB-PONG hb=probe seq=6 rttMs=0.2 vis=visible latest=True
+6295.2 TICK n=6 dtMs=1000 vis=visible frames=60
+6299.3 ACTION verb=kill arg=
+6299.4 RECOVERY-START kind=kill
+6299.6 KILL-RENDERER pid=62488 error=0 callUs=189
+6305.7 PROCESS-FAILED kind=render-exited reason=terminated exitCode=1 description= processes=[browser:51848 utility:52988 utility:57100 renderer:62488 gpu:72220]
+6305.7 RENDERER-EXITED kind=render-exited reason=terminated exitCode=1 description= processes=[browser:51848 utility:52988 utility:57100 renderer:62488 gpu:72220]
+6305.7 HB-DISARM hb=ping reason=process-exited
+6305.8 RECOVERY-START kind=auto-reload-after-exit
+6305.8 RELOAD hr=0x00000000 callUs=20
+6308.3 PROCESS-INFOS-CHANGED browser:51848 utility:52988 utility:57100 gpu:72220
+6313.7 NAV-STARTING id=3 uri=https://app.localhost/index.html
+6315.1 PROCESS-INFOS-CHANGED renderer:50672 browser:51848 utility:52988 utility:57100 gpu:72220
+6343.5 CONTENT-LOADING id=3 errorPage=0
+6345.7 DOC path=/index.html vis=hidden
+6345.8 RECOVERY-DOC kind=auto-reload-after-exit ms=40
+6345.8 HB-ARM hb=ping reason=doc
+6345.9 VIS state=visible pagePerf=36.5
+6347.7 READY path=/index.html pagePerf=38.3 vis=visible
+6347.7 RECOVERY-READY kind=auto-reload-after-exit ms=42
+6352.4 NAV-COMPLETED id=3 success=True status=0
+6353.1 PAGE state-seen:3
+7251.4 HB-PING hb=probe seq=7 postUs=25 hr=0x00000000 outstanding=1
+7251.6 HB-PONG hb=probe seq=7 rttMs=0.2 vis=visible latest=True
+7251.6 RECOVERY-PONG kind=auto-reload-after-exit ms=946 source=probe
+7349.0 TICK n=1 dtMs=-5003 vis=visible frames=61
+8265.2 HB-PING hb=probe seq=8 postUs=28 hr=0x00000000 outstanding=1
+8265.4 HB-PONG hb=probe seq=8 rttMs=0.1 vis=visible latest=True
+8348.8 TICK n=2 dtMs=1000 vis=visible frames=60
+9264.4 HB-PING hb=probe seq=9 postUs=27 hr=0x00000000 outstanding=1
+9264.6 HB-PONG hb=probe seq=9 rttMs=0.2 vis=visible latest=True
+9359.3 TICK n=3 dtMs=1010 vis=visible frames=60
+10252.7 HB-PING hb=probe seq=10 postUs=28 hr=0x00000000 outstanding=1
+10252.7 HB-PING hb=ping seq=2 postUs=14 hr=0x00000000 outstanding=1
+10252.8 HB-PONG hb=probe seq=10 rttMs=0.2 vis=visible latest=True
+10252.9 HB-PONG hb=ping seq=2 rttMs=0.1 vis=visible latest=True
+10268.2 PUMP phase=kill n=320 median=0.05ms p99=0.31ms min=0.01ms max=0.45ms
+10349.2 TICK n=4 dtMs=990 vis=visible frames=60
+11255.0 HB-PING hb=probe seq=11 postUs=36 hr=0x00000000 outstanding=1
+11255.3 HB-PONG hb=probe seq=11 rttMs=0.3 vis=visible latest=True
+11349.1 TICK n=5 dtMs=1000 vis=visible frames=60
+12258.0 HB-PING hb=probe seq=12 postUs=24 hr=0x00000000 outstanding=1
+12258.2 HB-PONG hb=probe seq=12 rttMs=0.2 vis=visible latest=True
+12349.1 TICK n=6 dtMs=1000 vis=visible frames=60
+13261.5 HB-PING hb=probe seq=13 postUs=27 hr=0x00000000 outstanding=1
+13261.8 HB-PONG hb=probe seq=13 rttMs=0.3 vis=visible latest=True
+13356.9 TICK n=7 dtMs=1008 vis=visible frames=60
+14264.1 HB-PING hb=probe seq=14 postUs=24 hr=0x00000000 outstanding=1
+14264.4 HB-PONG hb=probe seq=14 rttMs=0.2 vis=visible latest=True
+14348.1 TICK n=8 dtMs=991 vis=visible frames=60
+15263.4 HB-PING hb=probe seq=15 postUs=24 hr=0x00000000 outstanding=1
+15263.4 HB-PING hb=ping seq=3 postUs=5 hr=0x00000000 outstanding=1
+15263.5 HB-PONG hb=probe seq=15 rttMs=0.1 vis=visible latest=True
+15263.6 HB-PONG hb=ping seq=3 rttMs=0.1 vis=visible latest=True
+15278.9 PUMP phase=kill n=320 median=0.06ms p99=0.23ms min=0.01ms max=0.27ms
+15295.4 PUMP-PHASE phase=start n=195 median=0.06ms p99=0.22ms min=0.02ms max=0.52ms
+15295.4 PUMP-PHASE phase=state n=193 median=0.05ms p99=0.29ms min=0.01ms max=0.32ms
+15295.4 PUMP-PHASE phase=kill n=576 median=0.05ms p99=0.24ms min=0.01ms max=0.45ms
+15295.4 FINISH backendCounter=3
+15306.8 PROCESS-INFOS-CHANGED 
+15492.5 BROWSER-EXITED 
+15496.8 HOST-EXIT code=0

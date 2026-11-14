@@ -1,0 +1,18 @@
+<Project>
+  <!--
+    Records where the app's executable is, relative to the test's own output folder, so a cloned or moved
+    repository still finds it. No absolute path is compiled into the test assembly.
+  -->
+  <Target Name="SparAppPathMetadata" BeforeTargets="GetAssemblyAttributes">
+    <PropertyGroup>
+      <_TestOutputDirectory>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(OutDir)'))</_TestOutputDirectory>
+      <_LoopAppRelativePath>$([MSBuild]::MakeRelative('$(_TestOutputDirectory)', '$(LoopAppPath)'))</_LoopAppRelativePath>
+    </PropertyGroup>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+        <_Parameter1>LoopAppPath</_Parameter1>
+        <_Parameter2>$(_LoopAppRelativePath)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+</Project>

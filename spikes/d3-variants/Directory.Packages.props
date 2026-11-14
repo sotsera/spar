@@ -1,0 +1,4 @@
+<Project>
+  <!-- Use the repository's central versions (xunit.v3). -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
+</Project>

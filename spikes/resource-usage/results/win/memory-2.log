@@ -1,0 +1,68 @@
+ENV ms=5.6 version=157.0.4341.46 env8=True env13=True folder=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\resource-usage\mem-2
+PROCESS-INFOS-CHANGED count=1 onUi=True
+CONTROLLER ms=187.2 browserPid=2064 profile=E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\resource-usage\mem-2\EBWebView\Default
+PROCESS-INFOS-CHANGED count=2 onUi=True
+PROCESS-INFOS-CHANGED count=3 onUi=True
+PROCESS-INFOS-CHANGED count=4 onUi=True
+PROCESS-INFOS-CHANGED count=5 onUi=True
+PAGE uri=https://app.localhost/small.html ms=174.7 message=SPAR_READY /small.html
+PROCESSES source=GetProcessInfos browser:2064 renderer:6860 gpu:26316 utility:62036 utility:63400
+COST what=GetProcessInfos+read-list thread=sta n=200 median=28.3us p90=31.5us min=25.9us max=42.2us allocB=11094
+EXTENDED call-hr=0x00000000 completed-hr=0x00000000 renderer:6860:frames=1:[]https://app.localhost/small.html browser:2064:frames=0 gpu:26316:frames=0 utility:62036:frames=0 utility:63400:frames=0
+COST what=GetProcessExtendedInfos-to-completion thread=sta n=20 median=0.1ms p90=0.1ms min=0.0ms max=0.3ms
+PROCESSES source=command-line-scan browser:2064 crashpad-handler:14952 gpu-process:26316 utility:NetworkService:63400 utility:StorageService:62036 renderer:6860
+PROCESSES source=compare onlyInScan=[crashpad-handler:14952] onlyInList=[]
+COST what=command-line-scan thread=pool n=10 median=3.1ms p90=3.3ms min=2.9ms max=3.4ms allocB=452928
+THREADING GetProcessInfos-from-pool hr=0x802A000C; collection-from-pool count-hr=0x00000000 count=5 item-hr=0x00000000 pid-hr=0x00000000
+MEM label=loaded pid=2064 kind=browser ex2-error=0 workingSetKB=127024 privateWorkingSetKB=31112 privateUsageKB=39696 sharedCommitKB=32084 dotnetPrivateKB=39696 qws-error=0 qwsPages=31735 qwsPrivateKB=31028 qwsSharedKB=95912 qwsSharedOnceKB=0 qwsProportionalKB=44729 qwsMs=2.17
+MEM label=loaded pid=6860 kind=renderer ex2-error=0 workingSetKB=55704 privateWorkingSetKB=11320 privateUsageKB=20996 sharedCommitKB=7700 dotnetPrivateKB=20996 qws-error=0 qwsPages=13904 qwsPrivateKB=11232 qwsSharedKB=44384 qwsSharedOnceKB=0 qwsProportionalKB=17572 qwsMs=0.91
+MEM label=loaded pid=26316 kind=gpu ex2-error=0 workingSetKB=79068 privateWorkingSetKB=21620 privateUsageKB=69812 sharedCommitKB=13536 dotnetPrivateKB=69812 qws-error=0 qwsPages=19748 qwsPrivateKB=21544 qwsSharedKB=57448 qwsSharedOnceKB=0 qwsProportionalKB=29750 qwsMs=1.46
+MEM label=loaded pid=62036 kind=utility ex2-error=0 workingSetKB=25968 privateWorkingSetKB=4272 privateUsageKB=9384 sharedCommitKB=6152 dotnetPrivateKB=9384 qws-error=0 qwsPages=6474 qwsPrivateKB=4200 qwsSharedKB=21696 qwsSharedOnceKB=0 qwsProportionalKB=7299 qwsMs=0.70
+MEM label=loaded pid=63400 kind=utility ex2-error=0 workingSetKB=47372 privateWorkingSetKB=8516 privateUsageKB=14128 sharedCommitKB=9356 dotnetPrivateKB=14128 qws-error=0 qwsPages=11825 qwsPrivateKB=8444 qwsSharedKB=38856 qwsSharedOnceKB=0 qwsProportionalKB=13994 qwsMs=1.07
+MEM-TOTAL label=loaded processes=5 workingSetMB=327.3 privateWorkingSetMB=75.0 privateUsageMB=150.4 sharedCommitMB=67.2 dotnetPrivateMB=150.4 qwsPrivateMB=74.7 qwsProportionalMB=110.7 hostWorkingSetMB=33.0 hostPrivateWorkingSetMB=13.5 hostPrivateUsageMB=16.4 hostPid=22524
+ACCESS pid=2064 limitedOnly=True error=0
+ACCESS pid=6860 limitedOnly=True error=0
+ACCESS pid=26316 limitedOnly=True error=0
+ACCESS pid=62036 limitedOnly=True error=0
+ACCESS pid=63400 limitedOnly=True error=0
+COST what=list+open+EX2+close thread=sta n=200 median=38.2us p90=41.4us min=35.8us max=178.8us allocB=11191
+COST what=open+EX2+close thread=pool n=200 median=7.4us p90=7.5us min=7.3us max=15.2us allocB=0
+ENGINE-REFRESH processes=5 ms=0.05
+COST what=cached-handles+EX2 thread=pool n=200 median=2.5us p90=2.6us min=2.4us max=11.5us allocB=0
+COST what=cached-handles+EX2 thread=sta n=200 median=2.4us p90=2.5us min=2.4us max=4.7us allocB=0
+COST what=Process.GetProcessById.PrivateMemorySize64 thread=pool n=20 median=16.5ms p90=19.0ms min=14.4ms max=21.1ms allocB=25112
+COST what=QueryWorkingSet-all thread=pool n=10 median=5.4ms p90=5.6ms min=4.2ms max=5.7ms allocB=0
+UI-PING label=idle n=2980 median=0.0ms p90=0.0ms min=0.0ms max=4.5ms samples=0 sampleCost=(n=0)
+UI-PING label=sample-on-sta-every-100ms n=2993 median=0.0ms p90=0.0ms min=0.0ms max=0.8ms samples=28 sampleCost=(n=28 median=0.1ms p90=0.2ms min=0.1ms max=0.2ms)
+UI-PING label=sample-on-pool-every-100ms n=2986 median=0.0ms p90=0.0ms min=0.0ms max=1.1ms samples=28 sampleCost=(n=28 median=0.0ms p90=0.0ms min=0.0ms max=0.0ms)
+BACKEND-VALUES label=host workingSetMB=37.3 gcHeapMB=0.0 gcCommittedMB=0.0 gcIndex=0 gcTotalMemoryMB=12.5 gcFragmentedMB=0.0 totalAllocatedMB=12.5 processPrivateMB=20.7 processWorkingSetMB=37.3 ex2PrivateUsageMB=20.7 ex2PrivateWorkingSetMB=17.8 ex2WorkingSetMB=37.3
+BACKEND-VALUES label=host-after-gc workingSetMB=39.3 gcHeapMB=2.4 gcCommittedMB=14.5 gcIndex=1 gcTotalMemoryMB=2.3 gcFragmentedMB=0.0 totalAllocatedMB=12.5 processPrivateMB=23.4 processWorkingSetMB=39.1 ex2PrivateUsageMB=21.5 ex2PrivateWorkingSetMB=18.6 ex2WorkingSetMB=38.2
+BACKEND-COST label=host read=Environment.WorkingSet n=20 median=123.5ns p90=124.4ns min=122.6ns max=131.9ns allocB=0
+BACKEND-COST label=host read=GC.GetGCMemoryInfo n=20 median=19.6ns p90=25.5ns min=17.5ns max=26.5ns allocB=288
+BACKEND-COST label=host read=GC.GetTotalMemory(false) n=20 median=15.8ns p90=15.9ns min=13.5ns max=16.2ns allocB=0
+BACKEND-COST label=host read=GC.GetTotalAllocatedBytes n=20 median=2.6ns p90=2.7ns min=2.5ns max=2.8ns allocB=0
+BACKEND-COST label=host read=Process.GetCurrentProcess().PrivateMemorySize64 n=200 median=3134.2us p90=3522.6us min=2484.9us max=4048.5us allocB=3520
+BACKEND-COST label=host read=cachedProcess.Refresh+PrivateMemorySize64 n=200 median=3251.9us p90=3641.4us min=2580.1us max=3993.7us allocB=3232
+BACKEND-COST label=host read=ex2PrivateUsage n=20 median=134.7ns p90=135.1ns min=133.9ns max=141.4ns allocB=0
+BACKEND-COST label=host read=ex2PrivateWorkingSet n=20 median=132.7ns p90=133.1ns min=132.2ns max=136.2ns allocB=0
+BACKEND-COST label=host read=ex2WorkingSet n=20 median=134.3ns p90=134.9ns min=133.4ns max=136.3ns allocB=0
+SAMPLER label=engine-every-tick seconds=5.0 ticks=51 written=51 dropped=33 received=17 allocatedB=6688 steadyAllocatedBPerTick=77 readWriteAllocatedBPerTick=0
+SAMPLER label=engine-threshold-1%-1MB seconds=5.0 ticks=50 written=1 dropped=0 received=1 allocatedB=149536 steadyAllocatedBPerTick=3678 readWriteAllocatedBPerTick=0
+PROCESS-INFOS-CHANGED total=5 refreshes=1
+MEM label=before-counters pid=2064 kind=browser ex2-error=0 workingSetKB=127608 privateWorkingSetKB=31196 privateUsageKB=39784 sharedCommitKB=32084 dotnetPrivateKB=39784 qws-error=0 qwsPages=31881 qwsPrivateKB=31112 qwsSharedKB=96412 qwsSharedOnceKB=0 qwsProportionalKB=44885 qwsMs=2.11
+MEM label=before-counters pid=6860 kind=renderer ex2-error=0 workingSetKB=55736 privateWorkingSetKB=11324 privateUsageKB=21000 sharedCommitKB=7700 dotnetPrivateKB=21000 qws-error=0 qwsPages=13912 qwsPrivateKB=11236 qwsSharedKB=44412 qwsSharedOnceKB=0 qwsProportionalKB=17580 qwsMs=0.93
+MEM label=before-counters pid=26316 kind=gpu ex2-error=0 workingSetKB=79124 privateWorkingSetKB=21660 privateUsageKB=69872 sharedCommitKB=13536 dotnetPrivateKB=69872 qws-error=0 qwsPages=19762 qwsPrivateKB=21584 qwsSharedKB=57464 qwsSharedOnceKB=0 qwsProportionalKB=29793 qwsMs=1.50
+MEM label=before-counters pid=62036 kind=utility ex2-error=0 workingSetKB=25968 privateWorkingSetKB=4272 privateUsageKB=9384 sharedCommitKB=6152 dotnetPrivateKB=9384 qws-error=0 qwsPages=6474 qwsPrivateKB=4200 qwsSharedKB=21696 qwsSharedOnceKB=0 qwsProportionalKB=7299 qwsMs=0.71
+MEM label=before-counters pid=63400 kind=utility ex2-error=0 workingSetKB=47452 privateWorkingSetKB=8528 privateUsageKB=14140 sharedCommitKB=9356 dotnetPrivateKB=14140 qws-error=0 qwsPages=11845 qwsPrivateKB=8456 qwsSharedKB=38924 qwsSharedOnceKB=0 qwsProportionalKB=14016 qwsMs=1.19
+MEM-TOTAL label=before-counters processes=5 workingSetMB=328.0 privateWorkingSetMB=75.2 privateUsageMB=150.6 sharedCommitMB=67.2 dotnetPrivateMB=150.6 qwsPrivateMB=74.8 qwsProportionalMB=110.9 hostWorkingSetMB=39.4 hostPrivateWorkingSetMB=19.7 hostPrivateUsageMB=22.5 hostPid=22524
+READY 
+MEM label=after-counters pid=2064 kind=browser ex2-error=0 workingSetKB=127608 privateWorkingSetKB=31196 privateUsageKB=39784 sharedCommitKB=32084 dotnetPrivateKB=39784 qws-error=0 qwsPages=31881 qwsPrivateKB=31112 qwsSharedKB=96412 qwsSharedOnceKB=0 qwsProportionalKB=44885 qwsMs=2.12
+MEM label=after-counters pid=6860 kind=renderer ex2-error=0 workingSetKB=55736 privateWorkingSetKB=11324 privateUsageKB=21000 sharedCommitKB=7700 dotnetPrivateKB=21000 qws-error=0 qwsPages=13912 qwsPrivateKB=11236 qwsSharedKB=44412 qwsSharedOnceKB=0 qwsProportionalKB=17580 qwsMs=0.92
+MEM label=after-counters pid=26316 kind=gpu ex2-error=0 workingSetKB=79124 privateWorkingSetKB=21660 privateUsageKB=69872 sharedCommitKB=13536 dotnetPrivateKB=69872 qws-error=0 qwsPages=19762 qwsPrivateKB=21584 qwsSharedKB=57464 qwsSharedOnceKB=0 qwsProportionalKB=29793 qwsMs=1.49
+MEM label=after-counters pid=62036 kind=utility ex2-error=0 workingSetKB=25968 privateWorkingSetKB=4272 privateUsageKB=9384 sharedCommitKB=6152 dotnetPrivateKB=9384 qws-error=0 qwsPages=6474 qwsPrivateKB=4200 qwsSharedKB=21696 qwsSharedOnceKB=0 qwsProportionalKB=7299 qwsMs=0.74
+MEM label=after-counters pid=63400 kind=utility ex2-error=0 workingSetKB=47452 privateWorkingSetKB=8528 privateUsageKB=14140 sharedCommitKB=9356 dotnetPrivateKB=14140 qws-error=0 qwsPages=11845 qwsPrivateKB=8456 qwsSharedKB=38924 qwsSharedOnceKB=0 qwsProportionalKB=14016 qwsMs=1.06
+MEM-TOTAL label=after-counters processes=5 workingSetMB=328.0 privateWorkingSetMB=75.2 privateUsageMB=150.6 sharedCommitMB=67.2 dotnetPrivateMB=150.6 qwsPrivateMB=74.8 qwsProportionalMB=110.9 hostWorkingSetMB=39.4 hostPrivateWorkingSetMB=19.7 hostPrivateUsageMB=22.5 hostPid=22524
+GO found=True
+PROCESS-INFOS-CHANGED count=6 onUi=True
+ENGINE-REFRESH processes=0 ms=0.04
+HOST-EXIT code=0

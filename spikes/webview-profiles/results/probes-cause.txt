@@ -1,0 +1,29 @@
+Probes for the cause of the ~6.4 s exit (Windows, 3 runs each). First block: harness --host options, after the option fix; "pre-delay" waits 1.5 s between controller creation and navigation.
+host: --pre-delay 1500
+run  0: processes=6 all-exit=   6446 ms browser-exit=   6434 ms host-exit=    23 ms last=crashp
+run  1: processes=6 all-exit=   6472 ms browser-exit=   6460 ms host-exit=    24 ms last=crashp
+run  2: processes=6 all-exit=   6398 ms browser-exit=   6386 ms host-exit=    24 ms last=crashp
+host: --browser-args --no-proxy-server
+run  0: processes=6 all-exit=   6420 ms browser-exit=   6408 ms host-exit=    21 ms last=crashp
+run  1: processes=6 all-exit=   6462 ms browser-exit=   6451 ms host-exit=    21 ms last=crashp
+run  2: processes=6 all-exit=   6468 ms browser-exit=   6457 ms host-exit=    24 ms last=crashp
+host: --browser-args --disable-background-networking
+run  0: processes=6 all-exit=   6466 ms browser-exit=   6444 ms host-exit=    21 ms last=crashp
+run  1: processes=6 all-exit=   6434 ms browser-exit=   6423 ms host-exit=    20 ms last=crashp
+run  2: processes=6 all-exit=   6428 ms browser-exit=   6415 ms host-exit=    23 ms last=crashp
+
+Close delay after the page's report (harness --linger), default settings, 3 runs each: all-exit ms
+linger 100: 6432.9 6418.8 6411.6
+linger 250: 6503.2 6419.2 6427.8
+linger 500: 6419.3 6406.3 6422.3
+linger 750: 124.7 124.2 127.1
+linger 1000: 120.2 129.8 125.2
+linger 3000: 143.5 142.3 126.0
+linger 5000: 166.9 144.0 142.0
+linger 6000: 141.8 136.7 138.9
+
+Reputation off / msSmartScreenProtection disabled / MAP * ~NOTFOUND / MAP app.localhost ~NOTFOUND (3 runs each, after the option fix), all-exit ms:
+IsReputationCheckingRequired=false: 72.8 60.8 60.0
+--disable-features=msSmartScreenProtection: 71.6 58.8 57.8
+--host-resolver-rules="MAP * ~NOTFOUND": 120.3 123.4 132.9
+--host-resolver-rules="MAP app.localhost ~NOTFOUND": 6408.3 6410.5 6419.7

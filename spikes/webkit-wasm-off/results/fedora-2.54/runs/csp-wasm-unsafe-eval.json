@@ -1,0 +1,464 @@
+{
+ "label": "csp-wasm-unsafe-eval",
+ "profile": "wasm-unsafe-eval",
+ "origin": "spar",
+ "userScript": "none",
+ "extension": null,
+ "setenv": [],
+ "jscUi": [],
+ "uiProcessUseWasm": true,
+ "webkitgtk": "2.54.2",
+ "gtk": "4.20.4",
+ "hostMs": {
+  "reportAt": 180.1,
+  "progress": [
+   [
+    "start",
+    124.7
+   ],
+   [
+    "main",
+    127.4
+   ],
+   [
+    "esm",
+    127.8
+   ],
+   [
+    "workers",
+    137.4
+   ],
+   [
+    "posted",
+    140.6
+   ],
+   [
+    "frames",
+    150.2
+   ]
+  ]
+ },
+ "served": [
+  "probe.html?label=csp-wasm-unsafe-eval csp=1",
+  "suite.js csp=1",
+  "probe.js csp=1",
+  "add.wasm csp=1",
+  "add.wasm csp=1",
+  "add.wasm csp=1",
+  "worker.js?csp=1 csp=1",
+  "suite.js csp=1",
+  "add.wasm csp=1",
+  "add.wasm csp=1",
+  "worker.js?csp=0 csp=0",
+  "add.wasm csp=1",
+  "add.wasm csp=1"
+ ],
+ "cspReportsReceived": 4,
+ "webkitProcesses": [
+  {
+   "process": "WebKitNetworkProcess",
+   "jscEnv": [],
+   "envCount": 18
+  },
+  {
+   "process": "WebKitWebProcess",
+   "jscEnv": [],
+   "envCount": 18
+  }
+ ],
+ "report": {
+  "initial": {
+   "typeofWebAssembly": "object",
+   "descriptor": {
+    "writable": true,
+    "enumerable": false,
+    "configurable": true,
+    "valueType": "object"
+   },
+   "hostMarker": "undefined",
+   "extension": null
+  },
+  "location": "spar://app/probe.html?label=csp-wasm-unsafe-eval",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15",
+  "evalChecks": {
+   "eval": {
+    "ok": false,
+    "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' 'wasm-unsafe-eval'\".\n"
+   },
+   "newFunction": {
+    "ok": false,
+    "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' 'wasm-unsafe-eval'\".\n"
+   }
+  },
+  "main": {
+   "typeofWebAssembly": "object",
+   "validate": {
+    "ok": true,
+    "value": true
+   },
+   "compile": {
+    "ok": true,
+    "value": true
+   },
+   "moduleSync": {
+    "ok": true,
+    "value": true
+   },
+   "instanceSync": {
+    "ok": true,
+    "value": 5
+   },
+   "instantiateBytes": {
+    "ok": true,
+    "value": 5
+   },
+   "instantiateModule": {
+    "ok": true,
+    "value": 5
+   },
+   "compileStreaming": {
+    "ok": true,
+    "value": true
+   },
+   "instantiateStreaming": {
+    "ok": true,
+    "value": 5
+   },
+   "memory": {
+    "ok": true,
+    "value": 65536
+   }
+  },
+  "esmImportWasm": {
+   "ok": false,
+   "error": "TypeError: 'application/wasm' is not a valid JavaScript MIME type for module script 'spar://app/add.wasm'."
+  },
+  "workerWithCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": false,
+      "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' 'wasm-unsafe-eval'\".\n"
+     },
+     "newFunction": {
+      "ok": false,
+      "error": "EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' or 'trusted-types-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' 'wasm-unsafe-eval'\".\n"
+     }
+    },
+    "violations": []
+   }
+  },
+  "workerWithoutCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "postedModule": {
+   "toWorkerWithCsp": {
+    "created": true,
+    "event": "message",
+    "data": {
+     "instantiatePostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "instanceSyncPostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "violations": []
+    }
+   },
+   "toWorkerWithoutCsp": {
+    "created": true,
+    "event": "message",
+    "data": {
+     "instantiatePostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "instanceSyncPostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "violations": []
+    }
+   }
+  },
+  "blobWorker": {
+   "ok": true,
+   "value": {
+    "created": true,
+    "event": "error"
+   }
+  },
+  "frames": {
+   "aboutBlank": {
+    "url": "about:blank",
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    }
+   },
+   "srcdoc": {
+    "load": "load",
+    "url": "about:srcdoc",
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    }
+   },
+   "sameOrigin": {
+    "load": "load",
+    "url": "about:blank",
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    }
+   }
+  },
+  "recovery": {
+   "inGlobalThis": {
+    "ok": true,
+    "value": true
+   },
+   "reflectGet": {
+    "ok": true,
+    "value": "object"
+   },
+   "windowPrototypeChain": {
+    "ok": true,
+    "value": []
+   },
+   "redefine": {
+    "ok": true,
+    "value": "number"
+   },
+   "windowOpen": {
+    "ok": true,
+    "value": "null"
+   }
+  },
+  "jsWork": [
+   {
+    "ms": 10,
+    "acc": 829569472
+   },
+   {
+    "ms": 9,
+    "acc": 829569472
+   },
+   {
+    "ms": 10,
+    "acc": 829569472
+   }
+  ],
+  "timing": {
+   "probeStartMs": 3,
+   "domContentLoadedMs": 5,
+   "probeTotalMs": 57
+  },
+  "violations": [
+   {
+    "directive": "script-src",
+    "blocked": "eval",
+    "sample": "",
+    "disposition": "enforce"
+   },
+   {
+    "directive": "script-src",
+    "blocked": "eval",
+    "sample": "",
+    "disposition": "enforce"
+   },
+   {
+    "directive": "worker-src",
+    "blocked": "blob",
+    "sample": "",
+    "disposition": "enforce"
+   },
+   {
+    "directive": "frame-src",
+    "blocked": "spar://app/frame.html",
+    "sample": "",
+    "disposition": "enforce"
+   }
+  ],
+  "query": {
+   "label": "csp-wasm-unsafe-eval"
+  }
+ }
+}

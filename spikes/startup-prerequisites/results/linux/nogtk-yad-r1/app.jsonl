@@ -1,0 +1,16 @@
+{"t":30.45,"evt":"main","label":"nogtk-yad","ui":"auto","processAgeMs":50,"uid":1000,"desktop":null}
+{"t":34.61,"evt":"distro","id":"ubuntu","like":"debian","family":"debian"}
+{"t":36.85,"evt":"display-env","WAYLAND_DISPLAY":null,"waylandSocket":false,"DISPLAY":":99","x11Socket":"/tmp/.X11-unix/X99","x11Ok":true}
+{"t":38.6,"evt":"library","file":"libglib-2.0.so.0","ok":true,"ms":1.07}
+{"t":43.8,"evt":"library","file":"libgobject-2.0.so.0","ok":true,"ms":1.559}
+{"t":46.5,"evt":"library","file":"libgio-2.0.so.0","ok":true,"ms":1.07}
+{"t":54.45,"evt":"library","file":"libgtk-4.so.1","ok":false,"reason":"libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":54.95,"evt":"problem","kind":"Missing","exit":3,"details":"dlopen(libgtk-4.so.1): libgtk-4.so.1: cannot open shared object file: No such file or directory"}
+{"t":70.31,"evt":"stderr","isatty":"redirected"}
+{"t":78.02,"evt":"journal","result":"journal-socket"}
+{"t":80.14,"evt":"graphical","way":"gtk","shown":false,"detail":"GTK 4 not initialised","ms":0}
+{"t":82.54,"evt":"graphical","way":"zenity","shown":false,"detail":"not installed","ms":0.246}
+{"t":82.96,"evt":"graphical","way":"kdialog","shown":false,"detail":"not installed","ms":0.021}
+{"t":1280.35,"evt":"helper-exit","tool":"yad","exit":0,"ms":1197.002,"stderr":"(yad:139): dbind-WARNING **: 14:51:26.715: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files"}
+{"t":1282.43,"evt":"graphical","way":"yad","shown":true,"detail":"exit 0 after 1199 ms (yad:139): dbind-WARNING **: 14:51:26.715: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files","ms":1199.117}
+{"t":1285.93,"evt":"exit","code":3}

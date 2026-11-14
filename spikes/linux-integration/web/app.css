@@ -1,0 +1,20 @@
+:root { color-scheme: dark; font: 13px system-ui, sans-serif; }
+html, body { margin: 0; height: 100%; background: #1f1f1f; color: #e6e6e6; overflow: hidden; }
+.titlebar {
+  display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 0 0 10px; background: #2b2b2b;
+  user-select: none; -webkit-user-select: none;
+  /* Checked, not relied on: does WebKitGTK honour the Chromium-style drag region? */
+  app-region: drag; -webkit-app-region: drag;
+  --spar-region: drag;
+}
+.titlebar button, .titlebar input { app-region: no-drag; -webkit-app-region: no-drag; --spar-region: no-drag; }
+.app-icon { width: 14px; height: 14px; border-radius: 50%; background: #1e90ff; }
+.app-title { font-weight: 600; }
+.search { width: 140px; background: #1f1f1f; color: inherit; border: 1px solid #444; border-radius: 4px; padding: 3px 6px; }
+.drag-spot { flex: 1; color: #888; text-align: center; }
+.controls { display: flex; height: 100%; }
+.controls button { width: 46px; height: 100%; border: 0; background: transparent; color: inherit; font-size: 14px; }
+.controls button:hover { background: #3a3a3a; }
+#close:hover { background: #c42b1c; }
+main { padding: 10px 14px; }
+#log { font: 11px ui-monospace, monospace; color: #9a9a9a; max-height: 260px; overflow: hidden; }

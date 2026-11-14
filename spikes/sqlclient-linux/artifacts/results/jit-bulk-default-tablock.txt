@@ -1,0 +1,7 @@
+exit 0 wallMs 12632
+RUN runtime=jit mode=bulk arg=default-tablock sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+MEM before peakWorkingSetMB=68.6 workingSetMB=68.6 rssAnonMB=8.9 allocatedMB=1.6 gc0=0 gc1=0 gc2=0 cpuMs=210
+MEM after-copy peakWorkingSetMB=96.6 workingSetMB=96.6 rssAnonMB=32.0 allocatedMB=1832.5 gc0=104 gc1=1 gc2=0 cpuMs=29375
+RESULT bulk variant=default-tablock rows=1000000 copyMs=10538 totalMs=10538 rowsPerSec=94893 payloadMBps=18.6 progressEvents=10 maxProgressGapMs=2271 identical=True
+TARGET log usedMB=42.9
+MEM end peakWorkingSetMB=96.9 workingSetMB=96.9 rssAnonMB=32.0 allocatedMB=1832.5 gc0=104 gc1=1 gc2=0 cpuMs=29388

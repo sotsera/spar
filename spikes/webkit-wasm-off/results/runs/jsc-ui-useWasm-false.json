@@ -1,0 +1,443 @@
+{
+ "label": "jsc-ui-useWasm-false",
+ "profile": "none",
+ "origin": "spar",
+ "userScript": "none",
+ "extension": null,
+ "setenv": [],
+ "jscUi": [
+  "useWasm=false"
+ ],
+ "uiProcessUseWasm": false,
+ "webkitgtk": "2.52.6",
+ "gtk": "4.14.5",
+ "hostMs": {
+  "reportAt": 232.8,
+  "progress": [
+   [
+    "start",
+    169.3
+   ],
+   [
+    "main",
+    172.6
+   ],
+   [
+    "esm",
+    173.4
+   ],
+   [
+    "workers",
+    184.1
+   ],
+   [
+    "posted",
+    187.7
+   ],
+   [
+    "frames",
+    199.8
+   ]
+  ]
+ },
+ "served": [
+  "probe.html?label=jsc-ui-useWasm-false csp=0",
+  "suite.js csp=0",
+  "probe.js csp=0",
+  "add.wasm csp=0",
+  "add.wasm csp=0",
+  "add.wasm csp=0",
+  "worker.js?csp=1 csp=0",
+  "suite.js csp=0",
+  "add.wasm csp=0",
+  "add.wasm csp=0",
+  "worker.js?csp=0 csp=0",
+  "add.wasm csp=0",
+  "add.wasm csp=0",
+  "frame.html csp=0"
+ ],
+ "cspReportsReceived": 0,
+ "webkitProcesses": [
+  {
+   "process": "WebKitNetworkProcess",
+   "jscEnv": [],
+   "envCount": 26
+  },
+  {
+   "process": "WebKitWebProcess",
+   "jscEnv": [],
+   "envCount": 27
+  }
+ ],
+ "report": {
+  "initial": {
+   "typeofWebAssembly": "object",
+   "descriptor": {
+    "writable": true,
+    "enumerable": false,
+    "configurable": true,
+    "valueType": "object"
+   },
+   "hostMarker": "undefined",
+   "extension": null
+  },
+  "location": "spar://app/probe.html?label=jsc-ui-useWasm-false",
+  "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15",
+  "evalChecks": {
+   "eval": {
+    "ok": true,
+    "value": 2
+   },
+   "newFunction": {
+    "ok": true,
+    "value": 2
+   }
+  },
+  "main": {
+   "typeofWebAssembly": "object",
+   "validate": {
+    "ok": true,
+    "value": true
+   },
+   "compile": {
+    "ok": true,
+    "value": true
+   },
+   "moduleSync": {
+    "ok": true,
+    "value": true
+   },
+   "instanceSync": {
+    "ok": true,
+    "value": 5
+   },
+   "instantiateBytes": {
+    "ok": true,
+    "value": 5
+   },
+   "instantiateModule": {
+    "ok": true,
+    "value": 5
+   },
+   "compileStreaming": {
+    "ok": true,
+    "value": true
+   },
+   "instantiateStreaming": {
+    "ok": true,
+    "value": 5
+   },
+   "memory": {
+    "ok": true,
+    "value": 65536
+   }
+  },
+  "esmImportWasm": {
+   "ok": false,
+   "error": "TypeError: 'application/wasm' is not a valid JavaScript MIME type."
+  },
+  "workerWithCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "workerWithoutCsp": {
+   "created": true,
+   "event": "message",
+   "data": {
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "compileStreaming": {
+      "ok": true,
+      "value": true
+     },
+     "instantiateStreaming": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    },
+    "evalChecks": {
+     "eval": {
+      "ok": true,
+      "value": 2
+     },
+     "newFunction": {
+      "ok": true,
+      "value": 2
+     }
+    },
+    "violations": []
+   }
+  },
+  "postedModule": {
+   "toWorkerWithCsp": {
+    "created": true,
+    "event": "message",
+    "data": {
+     "instantiatePostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "instanceSyncPostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "violations": []
+    }
+   },
+   "toWorkerWithoutCsp": {
+    "created": true,
+    "event": "message",
+    "data": {
+     "instantiatePostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "instanceSyncPostedModule": {
+      "ok": true,
+      "value": 5
+     },
+     "violations": []
+    }
+   }
+  },
+  "blobWorker": {
+   "ok": true,
+   "value": {
+    "created": true,
+    "event": "message",
+    "data": "object"
+   }
+  },
+  "frames": {
+   "aboutBlank": {
+    "url": "about:blank",
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    }
+   },
+   "srcdoc": {
+    "load": "load",
+    "url": "about:srcdoc",
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    }
+   },
+   "sameOrigin": {
+    "load": "load",
+    "url": "spar://app/frame.html",
+    "suite": {
+     "typeofWebAssembly": "object",
+     "validate": {
+      "ok": true,
+      "value": true
+     },
+     "compile": {
+      "ok": true,
+      "value": true
+     },
+     "moduleSync": {
+      "ok": true,
+      "value": true
+     },
+     "instanceSync": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateBytes": {
+      "ok": true,
+      "value": 5
+     },
+     "instantiateModule": {
+      "ok": true,
+      "value": 5
+     },
+     "memory": {
+      "ok": true,
+      "value": 65536
+     }
+    }
+   }
+  },
+  "recovery": {
+   "inGlobalThis": {
+    "ok": true,
+    "value": true
+   },
+   "reflectGet": {
+    "ok": true,
+    "value": "object"
+   },
+   "windowPrototypeChain": {
+    "ok": true,
+    "value": []
+   },
+   "redefine": {
+    "ok": true,
+    "value": "number"
+   },
+   "windowOpen": {
+    "ok": true,
+    "value": "null"
+   }
+  },
+  "jsWork": [
+   {
+    "ms": 11,
+    "acc": 829569472
+   },
+   {
+    "ms": 11,
+    "acc": 829569472
+   },
+   {
+    "ms": 9,
+    "acc": 829569472
+   }
+  ],
+  "timing": {
+   "probeStartMs": 13,
+   "domContentLoadedMs": 15,
+   "probeTotalMs": 63
+  },
+  "violations": [],
+  "query": {
+   "label": "jsc-ui-useWasm-false"
+  }
+ }
+}

@@ -1,0 +1,13 @@
+exit 0 wallMs 5033
+RUN runtime=jit mode=bulk-cancel arg=batch0-abort sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+CANCEL variant=batch0-abort trigger=abort rowsAtCancel=310000 lastNotified=310000 rowsCopied64=310000 elapsedMs=4530 cancelToExceptionMs=818.3
+CANCEL outcome=OperationAbortedException: Operation aborted.
+CANCEL targetConnection=Open transactionConnection=n/a
+SERVER-B target spid request gone after 9.9 ms (last seen: ); now request=none session=sleeping/opentran=0 locks=0
+SERVER-B any bulk request: 0
+SERVER-A source spid before reader dispose: request=SELECT/suspended/ASYNC_NETWORK_IO/cpu=199 session=running/opentran=0 locks=2
+CANCEL target connection reusable: SELECT 1 -> 1
+RESULT bulk-cancel variant=batch0-abort committedRowsOnB=310000 rowsAtCancel=310000 cancelToExceptionMs=818.3 requestGoneMs=9.9
+SOURCE reader dispose (after SqlCommand.Cancel) took 7.4 ms; source spid now request=none session=sleeping/opentran=0 locks=0
+SERVER-B rows after target connection closed: 310000
+MEM end peakWorkingSetMB=96.0 workingSetMB=96.0 rssAnonMB=32.0 allocatedMB=568.0 gc0=32 gc1=1 gc2=0 cpuMs=10089

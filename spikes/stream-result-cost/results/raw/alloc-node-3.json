@@ -1,0 +1,3256 @@
+{
+ "engine": "node",
+ "details": {
+  "node": "v24.21.0",
+  "v8": "13.6.233.17-node.53",
+  "arch": "x64",
+  "execArgv": [
+   "--expose-gc",
+   "--min-semi-space-size=64"
+  ],
+  "gc": true
+ },
+ "mode": "alloc",
+ "alloc": [
+  {
+   "combo": "plain",
+   "rep": 0,
+   "small": 1222784,
+   "large": 4034992,
+   "bytesPerItem": 703.052,
+   "windows": [
+    [
+     115.0475,
+     115.9663
+    ],
+    [
+     118.6637,
+     121.2954
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 0,
+   "small": 1754640,
+   "large": 5155992,
+   "bytesPerItem": 850.338,
+   "windows": [
+    [
+     124.1156,
+     125.1599
+    ],
+    [
+     127.913,
+     130.749
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 0,
+   "small": 1412184,
+   "large": 4175448,
+   "bytesPerItem": 690.816,
+   "windows": [
+    [
+     133.5707,
+     134.6227
+    ],
+    [
+     137.3133,
+     139.9788
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 0,
+   "small": 1411992,
+   "large": 4023352,
+   "bytesPerItem": 652.84,
+   "windows": [
+    [
+     142.8063,
+     143.8556
+    ],
+    [
+     146.4849,
+     149.026
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 0,
+   "small": 1651840,
+   "large": 4894584,
+   "bytesPerItem": 810.686,
+   "windows": [
+    [
+     151.7397,
+     152.7793
+    ],
+    [
+     155.6543,
+     158.5058
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 0,
+   "small": 1315112,
+   "large": 3888552,
+   "bytesPerItem": 643.36,
+   "windows": [
+    [
+     161.5898,
+     162.6467
+    ],
+    [
+     165.4566,
+     168.1588
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 0,
+   "small": 1315112,
+   "large": 3840896,
+   "bytesPerItem": 631.446,
+   "windows": [
+    [
+     171.0078,
+     172.0089
+    ],
+    [
+     174.6802,
+     177.2995
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 0,
+   "small": 1829272,
+   "large": 5359216,
+   "bytesPerItem": 882.486,
+   "windows": [
+    [
+     180.0335,
+     181.1583
+    ],
+    [
+     184.233,
+     187.2758
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 0,
+   "small": 628440,
+   "large": 1847496,
+   "bytesPerItem": 304.764,
+   "windows": [
+    [
+     190.1352,
+     190.9284
+    ],
+    [
+     193.6729,
+     195.8146
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 0,
+   "small": 1236304,
+   "large": 3647656,
+   "bytesPerItem": 602.838,
+   "windows": [
+    [
+     198.6635,
+     199.5868
+    ],
+    [
+     202.3066,
+     204.9736
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 0,
+   "small": 2500728,
+   "large": 7458152,
+   "bytesPerItem": 1239.356,
+   "windows": [
+    [
+     207.9018,
+     209.1173
+    ],
+    [
+     212.0689,
+     215.2942
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 0,
+   "small": 2902080,
+   "large": 8515680,
+   "bytesPerItem": 1403.4,
+   "windows": [
+    [
+     218.0824,
+     219.4306
+    ],
+    [
+     222.2376,
+     225.7817
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 1,
+   "small": 1749888,
+   "large": 5154424,
+   "bytesPerItem": 851.134,
+   "windows": [
+    [
+     228.7667,
+     229.8867
+    ],
+    [
+     232.6702,
+     235.5899
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 1,
+   "small": 1416832,
+   "large": 4176168,
+   "bytesPerItem": 689.834,
+   "windows": [
+    [
+     239.1349,
+     240.3632
+    ],
+    [
+     243.8119,
+     246.8172
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 1,
+   "small": 1413040,
+   "large": 4023176,
+   "bytesPerItem": 652.534,
+   "windows": [
+    [
+     250.2011,
+     251.3874
+    ],
+    [
+     254.5698,
+     257.2697
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 1,
+   "small": 1654568,
+   "large": 4896400,
+   "bytesPerItem": 810.458,
+   "windows": [
+    [
+     260.2774,
+     261.4129
+    ],
+    [
+     264.2314,
+     267.3999
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 1,
+   "small": 1318664,
+   "large": 3891040,
+   "bytesPerItem": 643.094,
+   "windows": [
+    [
+     270.5845,
+     271.75
+    ],
+    [
+     275.1569,
+     277.9525
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 1,
+   "small": 1317880,
+   "large": 3877400,
+   "bytesPerItem": 639.88,
+   "windows": [
+    [
+     281.124,
+     282.2785
+    ],
+    [
+     285.3948,
+     288.1972
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 1,
+   "small": 1820472,
+   "large": 5249048,
+   "bytesPerItem": 857.144,
+   "windows": [
+    [
+     291.1668,
+     292.3816
+    ],
+    [
+     295.3984,
+     298.4091
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 1,
+   "small": 627896,
+   "large": 1824176,
+   "bytesPerItem": 299.07,
+   "windows": [
+    [
+     301.3703,
+     302.2177
+    ],
+    [
+     305.2423,
+     307.3489
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 1,
+   "small": 1236168,
+   "large": 3583992,
+   "bytesPerItem": 586.956,
+   "windows": [
+    [
+     310.2428,
+     311.2334
+    ],
+    [
+     314.1481,
+     316.7433
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 1,
+   "small": 2499224,
+   "large": 7438016,
+   "bytesPerItem": 1234.698,
+   "windows": [
+    [
+     319.7841,
+     320.9758
+    ],
+    [
+     323.8008,
+     326.9238
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 1,
+   "small": 2904312,
+   "large": 8640760,
+   "bytesPerItem": 1434.112,
+   "windows": [
+    [
+     330.2323,
+     331.7578
+    ],
+    [
+     334.4992,
+     338.0914
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 1,
+   "small": 1234792,
+   "large": 3618968,
+   "bytesPerItem": 596.044,
+   "windows": [
+    [
+     341.2403,
+     342.2149
+    ],
+    [
+     345.1733,
+     347.7697
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 2,
+   "small": 1412848,
+   "large": 4147024,
+   "bytesPerItem": 683.544,
+   "windows": [
+    [
+     350.6995,
+     351.7814
+    ],
+    [
+     354.571,
+     357.2623
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 2,
+   "small": 1419632,
+   "large": 4176864,
+   "bytesPerItem": 689.308,
+   "windows": [
+    [
+     360.3953,
+     361.528
+    ],
+    [
+     364.2861,
+     367.0213
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 2,
+   "small": 1655152,
+   "large": 4899400,
+   "bytesPerItem": 811.062,
+   "windows": [
+    [
+     369.9196,
+     371.0096
+    ],
+    [
+     373.7659,
+     376.6802
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 2,
+   "small": 1317624,
+   "large": 3827504,
+   "bytesPerItem": 627.47,
+   "windows": [
+    [
+     379.4953,
+     380.5578
+    ],
+    [
+     383.2788,
+     385.9673
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 2,
+   "small": 1317880,
+   "large": 3890888,
+   "bytesPerItem": 643.252,
+   "windows": [
+    [
+     388.8353,
+     389.8934
+    ],
+    [
+     392.6907,
+     395.4229
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 2,
+   "small": 1808752,
+   "large": 5329960,
+   "bytesPerItem": 880.302,
+   "windows": [
+    [
+     398.2156,
+     399.301
+    ],
+    [
+     401.9713,
+     404.8839
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 2,
+   "small": 627896,
+   "large": 1824288,
+   "bytesPerItem": 299.098,
+   "windows": [
+    [
+     407.7424,
+     408.5318
+    ],
+    [
+     411.4074,
+     413.5314
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 2,
+   "small": 1236080,
+   "large": 3647784,
+   "bytesPerItem": 602.926,
+   "windows": [
+    [
+     416.2348,
+     417.1992
+    ],
+    [
+     419.9338,
+     422.4004
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 2,
+   "small": 2509352,
+   "large": 7343224,
+   "bytesPerItem": 1208.468,
+   "windows": [
+    [
+     425.1888,
+     426.3666
+    ],
+    [
+     429.0924,
+     432.0956
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 2,
+   "small": 2901688,
+   "large": 8642184,
+   "bytesPerItem": 1435.124,
+   "windows": [
+    [
+     434.8686,
+     436.209
+    ],
+    [
+     438.9134,
+     442.4206
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 2,
+   "small": 1234456,
+   "large": 3644312,
+   "bytesPerItem": 602.464,
+   "windows": [
+    [
+     445.2432,
+     446.18
+    ],
+    [
+     448.8879,
+     451.2813
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 2,
+   "small": 1749832,
+   "large": 5031920,
+   "bytesPerItem": 820.522,
+   "windows": [
+    [
+     453.9926,
+     455.1004
+    ],
+    [
+     457.7603,
+     460.4037
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 3,
+   "small": 1412768,
+   "large": 4105224,
+   "bytesPerItem": 673.114,
+   "windows": [
+    [
+     463.0905,
+     464.1911
+    ],
+    [
+     467.0278,
+     469.5601
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 3,
+   "small": 1641864,
+   "large": 4765600,
+   "bytesPerItem": 780.934,
+   "windows": [
+    [
+     472.5047,
+     473.6596
+    ],
+    [
+     476.5986,
+     479.2811
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 3,
+   "small": 1318664,
+   "large": 3852832,
+   "bytesPerItem": 633.542,
+   "windows": [
+    [
+     482.1118,
+     483.1688
+    ],
+    [
+     485.8422,
+     488.4057
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 3,
+   "small": 1318632,
+   "large": 3837824,
+   "bytesPerItem": 629.798,
+   "windows": [
+    [
+     491.4389,
+     492.5837
+    ],
+    [
+     495.5946,
+     498.2684
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 3,
+   "small": 1808640,
+   "large": 5249096,
+   "bytesPerItem": 860.114,
+   "windows": [
+    [
+     501.1,
+     502.2754
+    ],
+    [
+     505.1045,
+     507.7769
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 3,
+   "small": 627648,
+   "large": 1823184,
+   "bytesPerItem": 298.884,
+   "windows": [
+    [
+     510.7448,
+     511.5912
+    ],
+    [
+     514.3412,
+     516.4066
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 3,
+   "small": 1221760,
+   "large": 3646176,
+   "bytesPerItem": 606.104,
+   "windows": [
+    [
+     519.1373,
+     520.054
+    ],
+    [
+     522.7458,
+     525.2761
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 3,
+   "small": 2500176,
+   "large": 7436968,
+   "bytesPerItem": 1234.198,
+   "windows": [
+    [
+     528.3215,
+     529.5047
+    ],
+    [
+     532.2283,
+     535.3228
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 3,
+   "small": 2912528,
+   "large": 8598120,
+   "bytesPerItem": 1421.398,
+   "windows": [
+    [
+     538.4412,
+     539.8194
+    ],
+    [
+     542.8471,
+     546.4586
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 3,
+   "small": 1234376,
+   "large": 3581048,
+   "bytesPerItem": 586.668,
+   "windows": [
+    [
+     549.2056,
+     550.0999
+    ],
+    [
+     552.862,
+     555.1882
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 3,
+   "small": 1749800,
+   "large": 4903040,
+   "bytesPerItem": 788.31,
+   "windows": [
+    [
+     557.9594,
+     559.0556
+    ],
+    [
+     562.3228,
+     564.6349
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 3,
+   "small": 1412480,
+   "large": 4090664,
+   "bytesPerItem": 669.546,
+   "windows": [
+    [
+     567.3831,
+     568.4077
+    ],
+    [
+     571.0459,
+     573.5594
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 4,
+   "small": 1656272,
+   "large": 4896016,
+   "bytesPerItem": 809.936,
+   "windows": [
+    [
+     576.3574,
+     577.5428
+    ],
+    [
+     580.4162,
+     583.4039
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 4,
+   "small": 1318632,
+   "large": 3828680,
+   "bytesPerItem": 627.512,
+   "windows": [
+    [
+     586.2343,
+     587.3923
+    ],
+    [
+     590.1995,
+     592.9557
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 4,
+   "small": 1318632,
+   "large": 3891432,
+   "bytesPerItem": 643.2,
+   "windows": [
+    [
+     595.9431,
+     597.0671
+    ],
+    [
+     599.7656,
+     602.4985
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 4,
+   "small": 1794216,
+   "large": 5258872,
+   "bytesPerItem": 866.164,
+   "windows": [
+    [
+     605.2877,
+     606.4095
+    ],
+    [
+     609.1532,
+     611.918
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 4,
+   "small": 627648,
+   "large": 1823392,
+   "bytesPerItem": 298.936,
+   "windows": [
+    [
+     614.7104,
+     615.4939
+    ],
+    [
+     618.1536,
+     620.1998
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 4,
+   "small": 1235968,
+   "large": 3617872,
+   "bytesPerItem": 595.476,
+   "windows": [
+    [
+     622.9824,
+     623.8951
+    ],
+    [
+     626.5804,
+     629.0311
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 4,
+   "small": 2499112,
+   "large": 7448928,
+   "bytesPerItem": 1237.454,
+   "windows": [
+    [
+     631.8404,
+     632.9788
+    ],
+    [
+     635.6431,
+     638.7257
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 4,
+   "small": 2908928,
+   "large": 8503800,
+   "bytesPerItem": 1398.718,
+   "windows": [
+    [
+     641.941,
+     643.4368
+    ],
+    [
+     646.275,
+     649.735
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 4,
+   "small": 1234424,
+   "large": 3644232,
+   "bytesPerItem": 602.452,
+   "windows": [
+    [
+     652.5976,
+     653.5155
+    ],
+    [
+     656.3285,
+     658.7535
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 4,
+   "small": 1748640,
+   "large": 5153360,
+   "bytesPerItem": 851.18,
+   "windows": [
+    [
+     661.6167,
+     662.7223
+    ],
+    [
+     665.378,
+     668.1923
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 4,
+   "small": 1413496,
+   "large": 4174448,
+   "bytesPerItem": 690.238,
+   "windows": [
+    [
+     670.9185,
+     671.9543
+    ],
+    [
+     674.5862,
+     677.3237
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 4,
+   "small": 1412736,
+   "large": 4022704,
+   "bytesPerItem": 652.492,
+   "windows": [
+    [
+     680.2055,
+     681.2858
+    ],
+    [
+     684.1145,
+     686.8243
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 5,
+   "small": 1305848,
+   "large": 3890400,
+   "bytesPerItem": 646.138,
+   "windows": [
+    [
+     689.7075,
+     690.8019
+    ],
+    [
+     693.7495,
+     696.5132
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 5,
+   "small": 1318568,
+   "large": 3861688,
+   "bytesPerItem": 635.78,
+   "windows": [
+    [
+     699.762,
+     700.8881
+    ],
+    [
+     703.6016,
+     706.3491
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 5,
+   "small": 1810368,
+   "large": 5217008,
+   "bytesPerItem": 851.66,
+   "windows": [
+    [
+     709.2585,
+     710.4045
+    ],
+    [
+     713.1264,
+     715.9162
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 5,
+   "small": 627472,
+   "large": 1825496,
+   "bytesPerItem": 299.506,
+   "windows": [
+    [
+     719.0041,
+     719.7889
+    ],
+    [
+     722.3897,
+     724.5217
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 5,
+   "small": 1237312,
+   "large": 3645352,
+   "bytesPerItem": 602.01,
+   "windows": [
+    [
+     727.5754,
+     728.5263
+    ],
+    [
+     731.2586,
+     733.782
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 5,
+   "small": 2498992,
+   "large": 7446480,
+   "bytesPerItem": 1236.872,
+   "windows": [
+    [
+     736.6054,
+     737.7862
+    ],
+    [
+     740.5809,
+     743.8036
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 5,
+   "small": 2901544,
+   "large": 8641144,
+   "bytesPerItem": 1434.9,
+   "windows": [
+    [
+     746.6887,
+     748.0402
+    ],
+    [
+     750.8525,
+     754.4812
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 5,
+   "small": 1234312,
+   "large": 3581504,
+   "bytesPerItem": 586.798,
+   "windows": [
+    [
+     757.3401,
+     758.2666
+    ],
+    [
+     761.1083,
+     763.5369
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 5,
+   "small": 1750256,
+   "large": 5153016,
+   "bytesPerItem": 850.69,
+   "windows": [
+    [
+     766.3131,
+     767.4518
+    ],
+    [
+     770.1834,
+     773.0762
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 5,
+   "small": 1413376,
+   "large": 4173992,
+   "bytesPerItem": 690.154,
+   "windows": [
+    [
+     776.0082,
+     777.0642
+    ],
+    [
+     779.7579,
+     782.4781
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 5,
+   "small": 1412416,
+   "large": 4023904,
+   "bytesPerItem": 652.872,
+   "windows": [
+    [
+     785.2416,
+     786.39
+    ],
+    [
+     789.1042,
+     791.7604
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 5,
+   "small": 1654416,
+   "large": 4898840,
+   "bytesPerItem": 811.106,
+   "windows": [
+    [
+     794.8364,
+     796.0077
+    ],
+    [
+     798.7534,
+     801.6051
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 6,
+   "small": 1319464,
+   "large": 3823456,
+   "bytesPerItem": 625.998,
+   "windows": [
+    [
+     804.5473,
+     805.7152
+    ],
+    [
+     808.4465,
+     811.1943
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 6,
+   "small": 1818952,
+   "large": 5345544,
+   "bytesPerItem": 881.648,
+   "windows": [
+    [
+     814.4162,
+     815.5378
+    ],
+    [
+     818.294,
+     821.1268
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 6,
+   "small": 627584,
+   "large": 1822992,
+   "bytesPerItem": 298.852,
+   "windows": [
+    [
+     824.3695,
+     825.147
+    ],
+    [
+     827.8971,
+     829.9816
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 6,
+   "small": 1235800,
+   "large": 3567120,
+   "bytesPerItem": 582.83,
+   "windows": [
+    [
+     833.316,
+     834.2407
+    ],
+    [
+     836.9435,
+     839.3268
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 6,
+   "small": 2498992,
+   "large": 7343128,
+   "bytesPerItem": 1211.034,
+   "windows": [
+    [
+     841.999,
+     843.0895
+    ],
+    [
+     845.7973,
+     848.763
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 6,
+   "small": 2901544,
+   "large": 8584648,
+   "bytesPerItem": 1420.776,
+   "windows": [
+    [
+     851.5091,
+     852.8323
+    ],
+    [
+     855.6948,
+     859.0452
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 6,
+   "small": 1234312,
+   "large": 3643864,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     861.8781,
+     862.7697
+    ],
+    [
+     865.4354,
+     867.8875
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 6,
+   "small": 1583464,
+   "large": 5056872,
+   "bytesPerItem": 868.352,
+   "windows": [
+    [
+     871.0425,
+     872.1317
+    ],
+    [
+     875.0186,
+     877.7281
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 6,
+   "small": 1412416,
+   "large": 4173992,
+   "bytesPerItem": 690.394,
+   "windows": [
+    [
+     880.5267,
+     881.6006
+    ],
+    [
+     884.6084,
+     887.4154
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 6,
+   "small": 1412416,
+   "large": 4112736,
+   "bytesPerItem": 675.08,
+   "windows": [
+    [
+     890.2105,
+     891.3161
+    ],
+    [
+     894.1041,
+     896.8706
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 6,
+   "small": 1665728,
+   "large": 4897744,
+   "bytesPerItem": 808.004,
+   "windows": [
+    [
+     900.0816,
+     901.2127
+    ],
+    [
+     903.9857,
+     906.8934
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 6,
+   "small": 1294968,
+   "large": 3890336,
+   "bytesPerItem": 648.842,
+   "windows": [
+    [
+     910.394,
+     911.355
+    ],
+    [
+     914.1429,
+     916.8698
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 7,
+   "small": 1809536,
+   "large": 5358984,
+   "bytesPerItem": 887.362,
+   "windows": [
+    [
+     919.7975,
+     920.8933
+    ],
+    [
+     923.5892,
+     926.4471
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 7,
+   "small": 627472,
+   "large": 1839016,
+   "bytesPerItem": 302.886,
+   "windows": [
+    [
+     929.2462,
+     930.0571
+    ],
+    [
+     932.7745,
+     934.8841
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 7,
+   "small": 1235800,
+   "large": 3645352,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     937.7175,
+     938.6284
+    ],
+    [
+     941.4063,
+     943.9656
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 7,
+   "small": 2498144,
+   "large": 7436848,
+   "bytesPerItem": 1234.676,
+   "windows": [
+    [
+     947.3441,
+     948.4868
+    ],
+    [
+     951.1784,
+     954.3045
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 7,
+   "small": 2901544,
+   "large": 8595472,
+   "bytesPerItem": 1423.482,
+   "windows": [
+    [
+     957.3597,
+     958.6758
+    ],
+    [
+     961.5731,
+     965.1154
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 7,
+   "small": 1219952,
+   "large": 3643864,
+   "bytesPerItem": 605.978,
+   "windows": [
+    [
+     967.9136,
+     968.824
+    ],
+    [
+     971.468,
+     973.9094
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 7,
+   "small": 1748464,
+   "large": 5184992,
+   "bytesPerItem": 859.132,
+   "windows": [
+    [
+     976.7529,
+     977.846
+    ],
+    [
+     980.5568,
+     983.3686
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 7,
+   "small": 1412416,
+   "large": 4058256,
+   "bytesPerItem": 661.46,
+   "windows": [
+    [
+     986.396,
+     987.4845
+    ],
+    [
+     990.5263,
+     993.2187
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 7,
+   "small": 1413312,
+   "large": 4173992,
+   "bytesPerItem": 690.17,
+   "windows": [
+    [
+     996.7401,
+     997.8688
+    ],
+    [
+     1001.254,
+     1004.1069
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 7,
+   "small": 1654416,
+   "large": 4863752,
+   "bytesPerItem": 802.334,
+   "windows": [
+    [
+     1007.207,
+     1008.4252
+    ],
+    [
+     1011.577,
+     1014.5802
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 7,
+   "small": 1318568,
+   "large": 3833688,
+   "bytesPerItem": 628.78,
+   "windows": [
+    [
+     1017.6874,
+     1018.8176
+    ],
+    [
+     1021.7641,
+     1024.4577
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 7,
+   "small": 1319352,
+   "large": 3861688,
+   "bytesPerItem": 635.584,
+   "windows": [
+    [
+     1027.9027,
+     1029.0627
+    ],
+    [
+     1032.1421,
+     1034.968
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 8,
+   "small": 627472,
+   "large": 1830928,
+   "bytesPerItem": 300.864,
+   "windows": [
+    [
+     1038.0339,
+     1038.8847
+    ],
+    [
+     1042.2955,
+     1044.6011
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 8,
+   "small": 1235800,
+   "large": 3645352,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     1047.7393,
+     1048.7298
+    ],
+    [
+     1051.694,
+     1054.234
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 8,
+   "small": 2498992,
+   "large": 7448288,
+   "bytesPerItem": 1237.324,
+   "windows": [
+    [
+     1057.2379,
+     1058.3878
+    ],
+    [
+     1061.4244,
+     1064.3914
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 8,
+   "small": 2901544,
+   "large": 8503736,
+   "bytesPerItem": 1400.548,
+   "windows": [
+    [
+     1067.4186,
+     1068.7471
+    ],
+    [
+     1071.6306,
+     1074.9823
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 8,
+   "small": 1234312,
+   "large": 3616928,
+   "bytesPerItem": 595.654,
+   "windows": [
+    [
+     1078.1123,
+     1079.0576
+    ],
+    [
+     1081.954,
+     1084.4284
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 8,
+   "small": 1748464,
+   "large": 5063200,
+   "bytesPerItem": 828.684,
+   "windows": [
+    [
+     1087.2405,
+     1088.3962
+    ],
+    [
+     1091.3894,
+     1094.2391
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 8,
+   "small": 1412416,
+   "large": 4173992,
+   "bytesPerItem": 690.394,
+   "windows": [
+    [
+     1097.2595,
+     1098.3495
+    ],
+    [
+     1101.4318,
+     1104.2919
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 8,
+   "small": 1412416,
+   "large": 4175512,
+   "bytesPerItem": 690.774,
+   "windows": [
+    [
+     1107.4627,
+     1108.5227
+    ],
+    [
+     1111.3814,
+     1114.0869
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 8,
+   "small": 1656208,
+   "large": 4897048,
+   "bytesPerItem": 810.21,
+   "windows": [
+    [
+     1116.8642,
+     1117.9924
+    ],
+    [
+     1120.7542,
+     1123.6262
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 8,
+   "small": 1318568,
+   "large": 3818008,
+   "bytesPerItem": 624.86,
+   "windows": [
+    [
+     1126.5964,
+     1127.7668
+    ],
+    [
+     1130.4283,
+     1133.1285
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 8,
+   "small": 1318568,
+   "large": 3891232,
+   "bytesPerItem": 643.166,
+   "windows": [
+    [
+     1136.0869,
+     1137.2004
+    ],
+    [
+     1139.8597,
+     1142.6278
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 8,
+   "small": 1810984,
+   "large": 5211104,
+   "bytesPerItem": 850.03,
+   "windows": [
+    [
+     1145.8073,
+     1146.9617
+    ],
+    [
+     1149.724,
+     1152.4893
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 9,
+   "small": 1235800,
+   "large": 3598888,
+   "bytesPerItem": 590.772,
+   "windows": [
+    [
+     1155.3053,
+     1156.2488
+    ],
+    [
+     1159.1094,
+     1161.6282
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 9,
+   "small": 2498992,
+   "large": 7527344,
+   "bytesPerItem": 1257.088,
+   "windows": [
+    [
+     1164.5491,
+     1165.7728
+    ],
+    [
+     1168.6059,
+     1171.8365
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 9,
+   "small": 2901544,
+   "large": 8632952,
+   "bytesPerItem": 1432.852,
+   "windows": [
+    [
+     1174.9279,
+     1176.4451
+    ],
+    [
+     1179.4074,
+     1183.2327
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 9,
+   "small": 1234312,
+   "large": 3643864,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     1186.2353,
+     1187.2358
+    ],
+    [
+     1190.1339,
+     1192.7684
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 9,
+   "small": 1750256,
+   "large": 5063088,
+   "bytesPerItem": 828.208,
+   "windows": [
+    [
+     1195.7991,
+     1196.9539
+    ],
+    [
+     1199.916,
+     1202.854
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 9,
+   "small": 1353392,
+   "large": 4173992,
+   "bytesPerItem": 705.15,
+   "windows": [
+    [
+     1206.1721,
+     1207.152
+    ],
+    [
+     1210.1664,
+     1213.2794
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 9,
+   "small": 1412416,
+   "large": 4175512,
+   "bytesPerItem": 690.774,
+   "windows": [
+    [
+     1216.5094,
+     1217.5917
+    ],
+    [
+     1220.4379,
+     1223.3189
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 9,
+   "small": 1654416,
+   "large": 4898840,
+   "bytesPerItem": 811.106,
+   "windows": [
+    [
+     1226.3896,
+     1227.8569
+    ],
+    [
+     1230.9417,
+     1233.9918
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 9,
+   "small": 1318568,
+   "large": 3843320,
+   "bytesPerItem": 631.188,
+   "windows": [
+    [
+     1237.1004,
+     1238.3208
+    ],
+    [
+     1241.303,
+     1244.3019
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 9,
+   "small": 1318568,
+   "large": 3890336,
+   "bytesPerItem": 642.942,
+   "windows": [
+    [
+     1247.3737,
+     1248.6104
+    ],
+    [
+     1251.5076,
+     1254.3493
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 9,
+   "small": 1810368,
+   "large": 5315720,
+   "bytesPerItem": 876.338,
+   "windows": [
+    [
+     1257.3524,
+     1258.5065
+    ],
+    [
+     1261.5223,
+     1264.4063
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 9,
+   "small": 627472,
+   "large": 1822992,
+   "bytesPerItem": 298.88,
+   "windows": [
+    [
+     1267.3184,
+     1268.1262
+    ],
+    [
+     1271.0455,
+     1273.1061
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 10,
+   "small": 2498992,
+   "large": 7343128,
+   "bytesPerItem": 1211.034,
+   "windows": [
+    [
+     1276.0933,
+     1277.2638
+    ],
+    [
+     1280.1459,
+     1283.2285
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 10,
+   "small": 2903336,
+   "large": 8662720,
+   "bytesPerItem": 1439.846,
+   "windows": [
+    [
+     1286.1619,
+     1287.5654
+    ],
+    [
+     1290.7394,
+     1294.409
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 10,
+   "small": 1236360,
+   "large": 3574408,
+   "bytesPerItem": 584.512,
+   "windows": [
+    [
+     1297.4138,
+     1298.3236
+    ],
+    [
+     1301.0428,
+     1303.3218
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 10,
+   "small": 1748216,
+   "large": 5064880,
+   "bytesPerItem": 829.166,
+   "windows": [
+    [
+     1306.0154,
+     1307.0815
+    ],
+    [
+     1309.8604,
+     1312.7528
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 10,
+   "small": 1412024,
+   "large": 4173856,
+   "bytesPerItem": 690.458,
+   "windows": [
+    [
+     1315.6146,
+     1316.7211
+    ],
+    [
+     1319.4704,
+     1322.159
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 10,
+   "small": 1412024,
+   "large": 4103104,
+   "bytesPerItem": 672.77,
+   "windows": [
+    [
+     1325.1227,
+     1326.1858
+    ],
+    [
+     1329.0881,
+     1331.6659
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 10,
+   "small": 1654328,
+   "large": 4710456,
+   "bytesPerItem": 764.032,
+   "windows": [
+    [
+     1334.6242,
+     1335.8268
+    ],
+    [
+     1339.2316,
+     1341.6022
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 10,
+   "small": 1318224,
+   "large": 3891432,
+   "bytesPerItem": 643.302,
+   "windows": [
+    [
+     1344.6071,
+     1345.8312
+    ],
+    [
+     1348.7501,
+     1351.5694
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 10,
+   "small": 1318224,
+   "large": 3626808,
+   "bytesPerItem": 577.146,
+   "windows": [
+    [
+     1354.4593,
+     1355.6953
+    ],
+    [
+     1358.7773,
+     1361.5118
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 10,
+   "small": 1805696,
+   "large": 5180992,
+   "bytesPerItem": 843.824,
+   "windows": [
+    [
+     1364.7299,
+     1365.9299
+    ],
+    [
+     1369.8456,
+     1372.3973
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 10,
+   "small": 627248,
+   "large": 1822792,
+   "bytesPerItem": 298.886,
+   "windows": [
+    [
+     1375.3359,
+     1376.1139
+    ],
+    [
+     1378.8016,
+     1380.8549
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 10,
+   "small": 1235496,
+   "large": 3645048,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     1383.5885,
+     1384.4967
+    ],
+    [
+     1387.1994,
+     1389.725
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 11,
+   "small": 2895688,
+   "large": 8641672,
+   "bytesPerItem": 1436.496,
+   "windows": [
+    [
+     1392.4838,
+     1393.8685
+    ],
+    [
+     1396.5515,
+     1399.9994
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 11,
+   "small": 1234008,
+   "large": 3643560,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     1402.7731,
+     1403.6532
+    ],
+    [
+     1406.3206,
+     1408.6826
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 11,
+   "small": 1749576,
+   "large": 5155768,
+   "bytesPerItem": 851.548,
+   "windows": [
+    [
+     1411.4701,
+     1412.5786
+    ],
+    [
+     1415.2813,
+     1418.0682
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 11,
+   "small": 1412280,
+   "large": 4119848,
+   "bytesPerItem": 676.892,
+   "windows": [
+    [
+     1420.7798,
+     1421.8173
+    ],
+    [
+     1424.7664,
+     1427.3577
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 11,
+   "small": 1412280,
+   "large": 4083208,
+   "bytesPerItem": 667.732,
+   "windows": [
+    [
+     1430.3621,
+     1431.3952
+    ],
+    [
+     1434.0444,
+     1436.6359
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 11,
+   "small": 1654328,
+   "large": 4897744,
+   "bytesPerItem": 810.854,
+   "windows": [
+    [
+     1439.7108,
+     1440.8066
+    ],
+    [
+     1443.6004,
+     1446.4552
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 11,
+   "small": 1318024,
+   "large": 3844664,
+   "bytesPerItem": 631.66,
+   "windows": [
+    [
+     1449.3961,
+     1450.4883
+    ],
+    [
+     1453.5573,
+     1456.1373
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 11,
+   "small": 1318024,
+   "large": 3890336,
+   "bytesPerItem": 643.078,
+   "windows": [
+    [
+     1459.1014,
+     1460.2266
+    ],
+    [
+     1463.0643,
+     1465.7492
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 11,
+   "small": 1805696,
+   "large": 5356208,
+   "bytesPerItem": 887.628,
+   "windows": [
+    [
+     1468.5398,
+     1469.6463
+    ],
+    [
+     1472.3498,
+     1475.3077
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 11,
+   "small": 627136,
+   "large": 1822680,
+   "bytesPerItem": 298.886,
+   "windows": [
+    [
+     1478.2513,
+     1479.0858
+    ],
+    [
+     1481.7508,
+     1483.898
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 11,
+   "small": 1235496,
+   "large": 3645048,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     1486.6595,
+     1487.5914
+    ],
+    [
+     1490.4528,
+     1492.8775
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 11,
+   "small": 2509608,
+   "large": 7378800,
+   "bytesPerItem": 1217.298,
+   "windows": [
+    [
+     1495.9771,
+     1497.096
+    ],
+    [
+     1499.7103,
+     1502.7073
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 12,
+   "small": 1234008,
+   "large": 3581216,
+   "bytesPerItem": 586.802,
+   "windows": [
+    [
+     1505.6416,
+     1506.5322
+    ],
+    [
+     1509.2895,
+     1511.6236
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 12,
+   "small": 1748216,
+   "large": 5182240,
+   "bytesPerItem": 858.506,
+   "windows": [
+    [
+     1514.3827,
+     1515.5046
+    ],
+    [
+     1518.3814,
+     1521.1713
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 12,
+   "small": 1382888,
+   "large": 4174952,
+   "bytesPerItem": 698.016,
+   "windows": [
+    [
+     1524.1758,
+     1525.2114
+    ],
+    [
+     1528.0271,
+     1530.705
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 12,
+   "small": 1412280,
+   "large": 4082224,
+   "bytesPerItem": 667.486,
+   "windows": [
+    [
+     1533.4296,
+     1534.4454
+    ],
+    [
+     1537.0589,
+     1539.635
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 12,
+   "small": 1654328,
+   "large": 4822168,
+   "bytesPerItem": 791.96,
+   "windows": [
+    [
+     1542.3812,
+     1543.4726
+    ],
+    [
+     1546.24,
+     1548.9527
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 12,
+   "small": 1318024,
+   "large": 3890336,
+   "bytesPerItem": 643.078,
+   "windows": [
+    [
+     1551.7278,
+     1552.7673
+    ],
+    [
+     1555.458,
+     1558.2293
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 12,
+   "small": 1318920,
+   "large": 3890336,
+   "bytesPerItem": 642.854,
+   "windows": [
+    [
+     1561.4451,
+     1562.5694
+    ],
+    [
+     1565.4066,
+     1568.0743
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 12,
+   "small": 1805696,
+   "large": 5230288,
+   "bytesPerItem": 856.148,
+   "windows": [
+    [
+     1570.8849,
+     1571.9846
+    ],
+    [
+     1574.708,
+     1577.6048
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 12,
+   "small": 627136,
+   "large": 1822680,
+   "bytesPerItem": 298.886,
+   "windows": [
+    [
+     1580.4848,
+     1581.2541
+    ],
+    [
+     1583.9737,
+     1586.0698
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 12,
+   "small": 1235496,
+   "large": 3630816,
+   "bytesPerItem": 598.83,
+   "windows": [
+    [
+     1588.8474,
+     1589.741
+    ],
+    [
+     1592.4555,
+     1594.9903
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 12,
+   "small": 2498688,
+   "large": 7436744,
+   "bytesPerItem": 1234.514,
+   "windows": [
+    [
+     1597.8584,
+     1598.9509
+    ],
+    [
+     1601.6768,
+     1604.6879
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 12,
+   "small": 2901192,
+   "large": 8490424,
+   "bytesPerItem": 1397.308,
+   "windows": [
+    [
+     1607.5455,
+     1608.9408
+    ],
+    [
+     1612.0138,
+     1615.4698
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 13,
+   "small": 1749224,
+   "large": 4890936,
+   "bytesPerItem": 785.428,
+   "windows": [
+    [
+     1618.6038,
+     1619.6913
+    ],
+    [
+     1622.7135,
+     1625.0293
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 13,
+   "small": 1412280,
+   "large": 4144776,
+   "bytesPerItem": 683.124,
+   "windows": [
+    [
+     1627.9771,
+     1629.0256
+    ],
+    [
+     1631.7568,
+     1634.4508
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 13,
+   "small": 1412280,
+   "large": 4173992,
+   "bytesPerItem": 690.428,
+   "windows": [
+    [
+     1637.213,
+     1638.28
+    ],
+    [
+     1640.957,
+     1643.6329
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 13,
+   "small": 1654264,
+   "large": 4822424,
+   "bytesPerItem": 792.04,
+   "windows": [
+    [
+     1646.5333,
+     1647.6094
+    ],
+    [
+     1650.3336,
+     1652.9118
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 13,
+   "small": 1318024,
+   "large": 3890336,
+   "bytesPerItem": 643.078,
+   "windows": [
+    [
+     1655.8373,
+     1656.9048
+    ],
+    [
+     1659.6314,
+     1662.3699
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 13,
+   "small": 1318024,
+   "large": 3826912,
+   "bytesPerItem": 627.222,
+   "windows": [
+    [
+     1665.1486,
+     1666.2224
+    ],
+    [
+     1668.9944,
+     1671.6523
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 13,
+   "small": 1811480,
+   "large": 5237008,
+   "bytesPerItem": 856.382,
+   "windows": [
+    [
+     1674.7045,
+     1675.8997
+    ],
+    [
+     1678.6567,
+     1681.4383
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 13,
+   "small": 627136,
+   "large": 1822680,
+   "bytesPerItem": 298.886,
+   "windows": [
+    [
+     1684.3215,
+     1685.0971
+    ],
+    [
+     1687.8028,
+     1689.8381
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 13,
+   "small": 1235496,
+   "large": 3645048,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     1692.7188,
+     1693.6662
+    ],
+    [
+     1696.4736,
+     1698.8976
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 13,
+   "small": 2498688,
+   "large": 7436744,
+   "bytesPerItem": 1234.514,
+   "windows": [
+    [
+     1701.7087,
+     1702.8215
+    ],
+    [
+     1705.5418,
+     1708.6064
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 13,
+   "small": 2901192,
+   "large": 8640840,
+   "bytesPerItem": 1434.912,
+   "windows": [
+    [
+     1711.7406,
+     1713.1281
+    ],
+    [
+     1716.1784,
+     1719.7225
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 13,
+   "small": 1234008,
+   "large": 3643560,
+   "bytesPerItem": 602.388,
+   "windows": [
+    [
+     1722.6643,
+     1723.5474
+    ],
+    [
+     1726.3048,
+     1728.7485
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultShared",
+   "rep": 14,
+   "small": 1412280,
+   "large": 4022640,
+   "bytesPerItem": 652.59,
+   "windows": [
+    [
+     1731.8287,
+     1732.8503
+    ],
+    [
+     1735.5653,
+     1738.0938
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultUnwrap",
+   "rep": 14,
+   "small": 1413544,
+   "large": 4144776,
+   "bytesPerItem": 682.808,
+   "windows": [
+    [
+     1740.975,
+     1742.0152
+    ],
+    [
+     1744.7278,
+     1747.4553
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanMatch",
+   "rep": 14,
+   "small": 1654328,
+   "large": 4897744,
+   "bytesPerItem": 810.854,
+   "windows": [
+    [
+     1750.2268,
+     1751.3379
+    ],
+    [
+     1754.0586,
+     1756.8502
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanShared",
+   "rep": 14,
+   "small": 1306352,
+   "large": 3890336,
+   "bytesPerItem": 645.996,
+   "windows": [
+    [
+     1759.6946,
+     1760.8441
+    ],
+    [
+     1763.5748,
+     1766.2668
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "leanUnwrap",
+   "rep": 14,
+   "small": 1318024,
+   "large": 3861688,
+   "bytesPerItem": 635.916,
+   "windows": [
+    [
+     1769.0451,
+     1770.106
+    ],
+    [
+     1772.8254,
+     1775.4628
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "eagerMatch",
+   "rep": 14,
+   "small": 1806752,
+   "large": 5311176,
+   "bytesPerItem": 876.106,
+   "windows": [
+    [
+     1778.1966,
+     1779.3678
+    ],
+    [
+     1782.2771,
+     1785.1713
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "batch",
+   "rep": 14,
+   "small": 627136,
+   "large": 1838680,
+   "bytesPerItem": 302.886,
+   "windows": [
+    [
+     1787.9602,
+     1788.7202
+    ],
+    [
+     1791.3523,
+     1793.4005
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "tail",
+   "rep": 14,
+   "small": 1235496,
+   "large": 3584304,
+   "bytesPerItem": 587.202,
+   "windows": [
+    [
+     1796.1221,
+     1797.0277
+    ],
+    [
+     1799.8765,
+     1802.323
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genPlain",
+   "rep": 14,
+   "small": 2498688,
+   "large": 7343128,
+   "bytesPerItem": 1211.11,
+   "windows": [
+    [
+     1805.0523,
+     1806.1473
+    ],
+    [
+     1808.8971,
+     1812.0054
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "genResult",
+   "rep": 14,
+   "small": 2901192,
+   "large": 8640840,
+   "bytesPerItem": 1434.912,
+   "windows": [
+    [
+     1814.935,
+     1816.3201
+    ],
+    [
+     1819.1433,
+     1822.7017
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "plain",
+   "rep": 14,
+   "small": 1219712,
+   "large": 3588736,
+   "bytesPerItem": 592.256,
+   "windows": [
+    [
+     1825.5472,
+     1826.5464
+    ],
+    [
+     1829.3507,
+     1831.6359
+    ]
+   ],
+   "gcInside": 0
+  },
+  {
+   "combo": "resultMatch",
+   "rep": 14,
+   "small": 1748216,
+   "large": 5185192,
+   "bytesPerItem": 859.244,
+   "windows": [
+    [
+     1834.3877,
+     1835.4671
+    ],
+    [
+     1838.1991,
+     1840.9765
+    ]
+   ],
+   "gcInside": 0
+  }
+ ]
+}

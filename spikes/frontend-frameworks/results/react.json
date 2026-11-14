@@ -1,0 +1,424 @@
+{
+  "base": {
+    "done": true,
+    "ms": 4351,
+    "passed": 23,
+    "failed": 0,
+    "results": [
+      {
+        "name": "environment",
+        "ok": true,
+        "detail": {
+          "dev": false,
+          "react": "19.3.1",
+          "logoIsUrl": true,
+          "logo": "/assets/logo-CZ_AYDM5.svg"
+        }
+      },
+      {
+        "name": "use(call) suspends, then renders success",
+        "ok": true,
+        "detail": {
+          "starts": 1,
+          "ownKeysAfterUse": [
+            "status",
+            "value"
+          ]
+        }
+      },
+      {
+        "name": "use(call) with a declared error renders it through match (no boundary)",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "use(call) with an infrastructure failure and no failure handler: interceptor, undefined",
+        "ok": true,
+        "detail": {
+          "shown": "shown=undefined",
+          "intercepted": [
+            "lost"
+          ]
+        }
+      },
+      {
+        "name": "use(call.unwrap()) with a declared error reaches the error boundary",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "use() with a Call created during render (uncached), inside Suspense",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "transportStarts": 30,
+          "pageErrors": []
+        }
+      },
+      {
+        "name": "use() with a native Promise (baseline) created during render (uncached), inside Suspense",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "transportStarts": 30,
+          "pageErrors": []
+        }
+      },
+      {
+        "name": "use() with a frozen Call (non-extensible thenable)",
+        "ok": true,
+        "detail": {
+          "shown": "boundary: TypeError Cannot add property status, object is not extensible"
+        }
+      },
+      {
+        "name": "use() with a Call carrying Symbol.toStringTag (candidate SDK change)",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack queryFn unwrap, declared error, retry default",
+        "ok": true,
+        "detail": {
+          "shown": "error tableMissing failures=4",
+          "transportStarts": 4
+        }
+      },
+      {
+        "name": "TanStack queryFn unwrap, declared error, retry false",
+        "ok": true,
+        "detail": {
+          "shown": "error tableMissing failures=1",
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "TanStack queryFn unwrap, success",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack queryFn returns the Call: declared error is data, never retried",
+        "ok": true,
+        "detail": {
+          "shown": "no table t isCall=false",
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "TanStack queryFn async/await of the Call: Result data",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack queryFn returns match() without failure, infrastructure failure",
+        "ok": true,
+        "detail": {
+          "shown": "error [\"planMatch\",\"m\"] data is undefined",
+          "transportStarts": 1,
+          "intercepted": 1
+        }
+      },
+      {
+        "name": "TanStack cancelQueries aborts the call through its signal, no retry, no error state",
+        "ok": true,
+        "detail": {
+          "shown": "pending",
+          "status": "pending",
+          "fetchStatus": "idle",
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "TanStack unmount of the only observer aborts a pending call",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack useMutation unwrap, declared error: mutations do not retry by default",
+        "ok": true,
+        "detail": {
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "subscription in useEffect under StrictMode (docs/app-model.md 6.2 as written)",
+        "ok": true,
+        "detail": {
+          "early": "connecting: 0 rows",
+          "history": [
+            "live",
+            "3 updates skipped",
+            "reconnecting (attempt 1)",
+            "live",
+            "live",
+            "copyJobs.progress was cancelled"
+          ],
+          "starts": 1,
+          "abortedWhileMounted": 0,
+          "abortedAfterUnmount": 1
+        }
+      },
+      {
+        "name": "subscription in useEffect under StrictMode (failure ignores own abort)",
+        "ok": true,
+        "detail": {
+          "early": "connecting: 0 rows",
+          "history": [
+            "live",
+            "3 updates skipped",
+            "reconnecting (attempt 1)",
+            "live",
+            "live"
+          ],
+          "starts": 1,
+          "abortedWhileMounted": 0,
+          "abortedAfterUnmount": 1
+        }
+      },
+      {
+        "name": "unary call in useEffect under StrictMode: first call aborted, cancelled ignored",
+        "ok": true,
+        "detail": {
+          "starts": 1,
+          "aborted": 0,
+          "problems": [],
+          "intercepted": 0
+        }
+      },
+      {
+        "name": "candidate Promise-subclass Call: use() and TanStack (declared error is data, no retry)",
+        "ok": true,
+        "detail": {
+          "transportStarts": 2,
+          "isPromise": true
+        }
+      },
+      {
+        "name": "img asset from Vite with assetsInlineLimit 0",
+        "ok": true,
+        "detail": {
+          "src": "/assets/logo-CZ_AYDM5.svg"
+        }
+      }
+    ],
+    "violations": [],
+    "reports": [],
+    "consoleMessages": [
+      "error: bt: connectionNotFound\n    at St (http://127.0.0.1:50114/assets/index-lXJ5YO-M.js:9:86690)\n    at Et.unwrap (http://127.0.0.1:50114/assets/index-lXJ5YO-M.js:9:86925)\n    at Dt.unwrap (http://127.0.0.1:50114/assets/index-lXJ5YO-M.js:9:87094)",
+      "error: TypeError: Cannot add property status, object is not extensible\n    at io (http://127.0.0.1:50114/assets/index-lXJ5YO-M.js:8:38444)\n    at ds (http://127.0.0.1:50114/assets/index-lXJ5YO-M.js:8:50767)\n    at Object.fs [as use] (http://127.0.0.1:50114/assets/index-lXJ5YO-M.js:8:50964)\n    at e.use (http://127.0.0.1:50114/assets/index-lXJ5YO-M.js:1:8024)\n    at nn (http://127.0.0.1:50114/asset"
+    ],
+    "pageErrors": []
+  },
+  "trustedTypes": {
+    "done": true,
+    "ms": 4350,
+    "passed": 23,
+    "failed": 0,
+    "results": [
+      {
+        "name": "environment",
+        "ok": true,
+        "detail": {
+          "dev": false,
+          "react": "19.3.1",
+          "logoIsUrl": true,
+          "logo": "/assets/logo-CZ_AYDM5.svg"
+        }
+      },
+      {
+        "name": "use(call) suspends, then renders success",
+        "ok": true,
+        "detail": {
+          "starts": 1,
+          "ownKeysAfterUse": [
+            "status",
+            "value"
+          ]
+        }
+      },
+      {
+        "name": "use(call) with a declared error renders it through match (no boundary)",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "use(call) with an infrastructure failure and no failure handler: interceptor, undefined",
+        "ok": true,
+        "detail": {
+          "shown": "shown=undefined",
+          "intercepted": [
+            "lost"
+          ]
+        }
+      },
+      {
+        "name": "use(call.unwrap()) with a declared error reaches the error boundary",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "use() with a Call created during render (uncached), inside Suspense",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "transportStarts": 30,
+          "pageErrors": []
+        }
+      },
+      {
+        "name": "use() with a native Promise (baseline) created during render (uncached), inside Suspense",
+        "ok": true,
+        "detail": {
+          "shown": "loading",
+          "transportStarts": 30,
+          "pageErrors": []
+        }
+      },
+      {
+        "name": "use() with a frozen Call (non-extensible thenable)",
+        "ok": true,
+        "detail": {
+          "shown": "boundary: TypeError Cannot add property status, object is not extensible"
+        }
+      },
+      {
+        "name": "use() with a Call carrying Symbol.toStringTag (candidate SDK change)",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack queryFn unwrap, declared error, retry default",
+        "ok": true,
+        "detail": {
+          "shown": "error tableMissing failures=4",
+          "transportStarts": 4
+        }
+      },
+      {
+        "name": "TanStack queryFn unwrap, declared error, retry false",
+        "ok": true,
+        "detail": {
+          "shown": "error tableMissing failures=1",
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "TanStack queryFn unwrap, success",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack queryFn returns the Call: declared error is data, never retried",
+        "ok": true,
+        "detail": {
+          "shown": "no table t isCall=false",
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "TanStack queryFn async/await of the Call: Result data",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack queryFn returns match() without failure, infrastructure failure",
+        "ok": true,
+        "detail": {
+          "shown": "error [\"planMatch\",\"m\"] data is undefined",
+          "transportStarts": 1,
+          "intercepted": 1
+        }
+      },
+      {
+        "name": "TanStack cancelQueries aborts the call through its signal, no retry, no error state",
+        "ok": true,
+        "detail": {
+          "shown": "pending",
+          "status": "pending",
+          "fetchStatus": "idle",
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "TanStack unmount of the only observer aborts a pending call",
+        "ok": true,
+        "detail": null
+      },
+      {
+        "name": "TanStack useMutation unwrap, declared error: mutations do not retry by default",
+        "ok": true,
+        "detail": {
+          "transportStarts": 1
+        }
+      },
+      {
+        "name": "subscription in useEffect under StrictMode (docs/app-model.md 6.2 as written)",
+        "ok": true,
+        "detail": {
+          "early": "connecting: 0 rows",
+          "history": [
+            "live",
+            "3 updates skipped",
+            "reconnecting (attempt 1)",
+            "live",
+            "live",
+            "copyJobs.progress was cancelled"
+          ],
+          "starts": 1,
+          "abortedWhileMounted": 0,
+          "abortedAfterUnmount": 1
+        }
+      },
+      {
+        "name": "subscription in useEffect under StrictMode (failure ignores own abort)",
+        "ok": true,
+        "detail": {
+          "early": "connecting: 0 rows",
+          "history": [
+            "live",
+            "3 updates skipped",
+            "reconnecting (attempt 1)",
+            "live",
+            "live"
+          ],
+          "starts": 1,
+          "abortedWhileMounted": 0,
+          "abortedAfterUnmount": 1
+        }
+      },
+      {
+        "name": "unary call in useEffect under StrictMode: first call aborted, cancelled ignored",
+        "ok": true,
+        "detail": {
+          "starts": 1,
+          "aborted": 0,
+          "problems": [],
+          "intercepted": 0
+        }
+      },
+      {
+        "name": "candidate Promise-subclass Call: use() and TanStack (declared error is data, no retry)",
+        "ok": true,
+        "detail": {
+          "transportStarts": 2,
+          "isPromise": true
+        }
+      },
+      {
+        "name": "img asset from Vite with assetsInlineLimit 0",
+        "ok": true,
+        "detail": {
+          "src": "/assets/logo-CZ_AYDM5.svg"
+        }
+      }
+    ],
+    "violations": [],
+    "reports": [],
+    "consoleMessages": [
+      "error: bt: connectionNotFound\n    at St (http://127.0.0.1:64614/assets/index-lXJ5YO-M.js:9:86690)\n    at Et.unwrap (http://127.0.0.1:64614/assets/index-lXJ5YO-M.js:9:86925)\n    at Dt.unwrap (http://127.0.0.1:64614/assets/index-lXJ5YO-M.js:9:87094)",
+      "error: TypeError: Cannot add property status, object is not extensible\n    at io (http://127.0.0.1:64614/assets/index-lXJ5YO-M.js:8:38444)\n    at ds (http://127.0.0.1:64614/assets/index-lXJ5YO-M.js:8:50767)\n    at Object.fs [as use] (http://127.0.0.1:64614/assets/index-lXJ5YO-M.js:8:50964)\n    at e.use (http://127.0.0.1:64614/assets/index-lXJ5YO-M.js:1:8024)\n    at nn (http://127.0.0.1:64614/asset"
+    ],
+    "pageErrors": []
+  }
+}

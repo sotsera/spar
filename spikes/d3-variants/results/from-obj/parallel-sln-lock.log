@@ -1,0 +1,30 @@
+Build   1 SlnInProcFixed    0    5,36        1    2      1 ok
+Build   1 SlnMtInProcGuid    1    0,69        0    0      0 missing
+Build   1 SlnExec     0    4,75        0    2      1 ok
+Build   2 SlnInProcFixed    0    1,48        1    2      1 ok
+Build   2 SlnMtInProcGuid    1    0,51        0    0      0 missing
+Build   2 SlnExec     0    4,44        0    2      1 ok
+
+Op    Run Scenario        Exit Seconds Restores Done Waited Exe     Errors
+--    --- --------        ---- ------- -------- ---- ------ ---     ------
+Build   1 SlnInProcFixed     0    5,36        1    2      1 ok      
+Build   1 SlnMtInProcGuid    1    0,69        0    0      0 missing 
+Build   1 SlnExec            0    4,75        0    2      1 ok      
+Build   2 SlnInProcFixed     0    1,48        1    2      1 ok      
+Build   2 SlnMtInProcGuid    1    0,51        0    0      0 missing 
+Build   2 SlnExec            0    4,44        0    2      1 ok      
+
+
+WARNING: Parameter 'NoTypeInformation' is obsolete. This parameter is obsolete and has no effect. The default behavior is to not include type information. Use -IncludeTypeInformation to include type information.
+Stopped (left by the builds):
+
+   Id Parent Name             Cmd
+   -- ------ ----             ---
+52520  59400 MSBuild.exe      MSBuild.exe /nologo /nodemode:8
+40776  52520 conhost.exe      \??\C:\WINDOWS\system32\conhost.exe 0x4
+58044  52520 MSBuild.exe      MSBuild.exe /noautoresponse /nologo /nodemode:1 /nodeReuse:true /low:false
+51328  58044 conhost.exe      \??\C:\WINDOWS\system32\conhost.exe 0x4
+18900  52520 VBCSCompiler.exe VBCSCompiler.exe "-pipename:d3-24e3b7a9c55a461c86e3d014f1031fdd"
+52744  18900 conhost.exe      \??\C:\WINDOWS\system32\conhost.exe 0x4
+
+

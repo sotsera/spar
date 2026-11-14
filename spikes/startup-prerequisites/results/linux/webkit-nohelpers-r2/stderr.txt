@@ -1,0 +1,9 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+Spar Sample cannot start: WebKitGTK is installed, but programs it needs are missing: WebKitWebProcess, WebKitNetworkProcess.
+Reinstall it: sudo apt install --reinstall libwebkitgtk-6.0-4
+Details: missing or not executable: /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitWebProcess, /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/WebKitNetworkProcess
+Exit code 5.
+
+(spar-sample:41): Gtk-WARNING **: 14:53:30.672: Unable to acquire the address of the accessibility bus: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files. If you are attempting to run GTK without a11y support, GTK_A11Y should be set to 'none'.
+Gtk-Message: 14:53:31.013: GtkDialog mapped without a transient parent. This is discouraged.

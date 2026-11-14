@@ -1,0 +1,32 @@
+exit 0 wallMs 793
+RUN runtime=aot mode=schema arg= sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
+DIFF changed    check  dbo.Customers.CK_Customers_Age: ([Age]>=(0))  =>  ([Age]>=(18))
+DIFF changed    column dbo.Customers.CreatedAt: datetime2(3) NOT NULL DEFAULT (sysutcdatetime())  =>  datetime2(3) NOT NULL DEFAULT (getutcdate())
+DIFF changed    column dbo.Customers.CustomerId: int NOT NULL IDENTITY  =>  int NOT NULL
+DIFF changed    column dbo.Customers.Email: nvarchar(200) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  nvarchar(320) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column dbo.Customers.Name: nvarchar(100) NOT NULL COLLATE Latin1_General_CI_AS  =>  nvarchar(100) NOT NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF only-left  column dbo.Customers.Notes: nvarchar(max) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column dbo.Customers.Phone: varchar(30) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  varchar(30) NOT NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF only-left  column dbo.OnlyLeft.Id: int NOT NULL
+DIFF only-left  column dbo.OnlyLeft.Value: sql_variant NULL
+DIFF changed    column dbo.T050.C3: nvarchar(50) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  nvarchar(60) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column dbo.T100.C3: nvarchar(50) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  nvarchar(60) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column dbo.T150.C3: nvarchar(50) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  nvarchar(60) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column dbo.T200.C3: nvarchar(50) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  nvarchar(60) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column dbo.T250.C3: nvarchar(50) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  nvarchar(60) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column dbo.T300.C3: nvarchar(50) NULL COLLATE SQL_Latin1_General_CP1_CI_AS  =>  nvarchar(60) NULL COLLATE SQL_Latin1_General_CP1_CI_AS
+DIFF changed    column sales.Orders.Amount: decimal(29, 2) NULL AS ([Quantity]*[Price])  =>  numeric(34, 6) NULL AS (([Quantity]*[Price])*(1.22))
+DIFF changed    column sales.Orders.Price: decimal(18, 2) NOT NULL  =>  decimal(19, 4) NOT NULL
+DIFF only-left  fk     sales.Orders.FK_Orders_Customers: -> dbo.Customers ON DELETE NO_ACTION ON UPDATE NO_ACTION (CustomerId=CustomerId)
+DIFF changed    index  dbo.Customers.IX_Customers_Email: NONCLUSTERED (Email)  =>  NONCLUSTERED (Email DESC)
+DIFF only-left  index  dbo.OnlyLeft.PK__OnlyLeft__3214EC065C04E8C8: NONCLUSTERED UNIQUE PK (Id)
+DIFF changed    index  sales.Orders.IX_Orders_Customer: NONCLUSTERED (CustomerId, OrderDate) INCLUDE (Status)  =>  NONCLUSTERED UNIQUE (OrderDate, CustomerId) INCLUDE (Status)
+DIFF only-left  index  sales.Orders.IX_Orders_Status: NONCLUSTERED WHERE ([Status]<>(0)) (Status)
+DIFF only-left  table  dbo.OnlyLeft: exists
+DIFF changed    type   dbo.Code: varchar(10) NOT NULL  =>  varchar(12) NOT NULL
+DIFF only-right column dbo.OnlyRight.Id: int NOT NULL
+DIFF only-right column dbo.OnlyRight.Value: sql_variant NULL
+DIFF only-right index  dbo.OnlyRight.PK__OnlyRigh__3214EC0644B21179: NONCLUSTERED UNIQUE PK (Id)
+DIFF only-right table  dbo.OnlyRight: exists
+RESULT schema objectsLeft=5730 objectsRight=5727 differences=28 extractBothMs=[325.5, 98.7, 97.4, 99.1, 97.6] compareMs=2.02
+MEM end peakWorkingSetMB=53.9 workingSetMB=53.9 rssAnonMB=28.9 allocatedMB=38.1 gc0=2 gc1=1 gc2=0 cpuMs=179

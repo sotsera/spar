@@ -1,0 +1,98 @@
+77.4 START ms=42.3 pid=4555 cpus=32 responsive=1 gsk=cairo
+78.6 SESSION arm=doc gate=window intervalMs=5000 misses=3 probeMs=1000 onUnresponsive=none options=[--www /spike/www/ --data /tmp/u/data-busy3-3 --log /out/busy3-3.log --actions 7234:busy:3000 --duration 22234]
+79.4 HB-ARM hb=probe reason=start
+80.0 NAVIGATE uri=spar://app/index.html
+142.4 LOAD-CHANGED event=started
+149.1 LOAD-CHANGED event=committed
+152.2 DOC path=/index.html vis=visible
+152.7 HB-ARM hb=ping reason=doc
+158.2 READY path=/index.html pagePerf=16.0 vis=visible
+159.0 LOAD-CHANGED event=finished
+160.9 PAGE state-seen:1
+1081.8 HB-PING hb=probe seq=1 postUs=35 hr=0x00000000 outstanding=1
+1086.9 HB-PONG hb=probe seq=1 rttMs=5.1 vis=visible latest=True
+1158.5 TICK n=1 dtMs=0 vis=visible frames=64
+2081.6 HB-PING hb=probe seq=2 postUs=43 hr=0x00000000 outstanding=1
+2082.2 HB-PONG hb=probe seq=2 rttMs=0.6 vis=visible latest=True
+2158.1 TICK n=2 dtMs=1000 vis=visible frames=62
+3081.3 HB-PING hb=probe seq=3 postUs=42 hr=0x00000000 outstanding=1
+3081.8 HB-PONG hb=probe seq=3 rttMs=0.5 vis=visible latest=True
+3158.3 TICK n=3 dtMs=1000 vis=visible frames=62
+4081.1 HB-PING hb=probe seq=4 postUs=69 hr=0x00000000 outstanding=1
+4081.9 HB-PONG hb=probe seq=4 rttMs=0.8 vis=visible latest=True
+4158.2 TICK n=4 dtMs=1000 vis=visible frames=62
+5076.7 HB-PING hb=ping seq=1 postUs=50 hr=0x00000000 outstanding=1
+5077.2 HB-PONG hb=ping seq=1 rttMs=0.5 vis=visible latest=True
+5080.8 HB-PING hb=probe seq=5 postUs=27 hr=0x00000000 outstanding=1
+5081.3 HB-PONG hb=probe seq=5 rttMs=0.5 vis=visible latest=True
+5081.6 PUMP phase=start n=4393 median=0.03ms p99=0.10ms min=0.01ms max=8.07ms
+5158.3 TICK n=5 dtMs=1000 vis=visible frames=62
+6080.5 HB-PING hb=probe seq=6 postUs=41 hr=0x00000000 outstanding=1
+6081.1 HB-PONG hb=probe seq=6 rttMs=0.7 vis=visible latest=True
+6159.4 TICK n=6 dtMs=1001 vis=visible frames=62
+7079.9 HB-PING hb=probe seq=7 postUs=43 hr=0x00000000 outstanding=1
+7080.9 HB-PONG hb=probe seq=7 rttMs=1.1 vis=visible latest=True
+7163.4 TICK n=7 dtMs=1004 vis=visible frames=62
+7391.6 ACTION verb=busy arg=3000
+7393.1 HANG kind=busy-3000 pagePerf=7251.0
+8081.1 HB-PING hb=probe seq=8 postUs=95 hr=0x00000000 outstanding=1
+9080.6 HB-MISS hb=probe seq=8 missed=1
+9081.2 HB-PING hb=probe seq=9 postUs=47 hr=0x00000000 outstanding=2
+10076.5 HB-PING hb=ping seq=2 postUs=65 hr=0x00000000 outstanding=1
+10080.7 HB-MISS hb=probe seq=9 missed=2
+10081.1 HB-PING hb=probe seq=10 postUs=36 hr=0x00000000 outstanding=3
+10083.4 PUMP phase=busy-3000 n=4389 median=0.03ms p99=0.10ms min=0.01ms max=0.91ms
+10393.2 PAGE busy-end:3000:10251.0
+10394.0 HB-PONG hb=probe seq=8 rttMs=2312.9 vis=visible latest=False
+10394.5 HB-PONG hb=probe seq=9 rttMs=1313.3 vis=visible latest=False
+10395.0 HB-PONG hb=ping seq=2 rttMs=318.5 vis=visible latest=True
+10395.5 HB-PONG hb=probe seq=10 rttMs=314.4 vis=visible latest=True
+10396.0 TICK n=8 dtMs=3231 vis=visible frames=14
+11080.3 HB-PING hb=probe seq=11 postUs=69 hr=0x00000000 outstanding=1
+11081.0 HB-PONG hb=probe seq=11 rttMs=0.7 vis=visible latest=True
+11395.3 TICK n=9 dtMs=1001 vis=visible frames=63
+12080.0 HB-PING hb=probe seq=12 postUs=74 hr=0x00000000 outstanding=1
+12080.7 HB-PONG hb=probe seq=12 rttMs=0.7 vis=visible latest=True
+12399.4 TICK n=10 dtMs=1004 vis=visible frames=62
+13081.4 HB-PING hb=probe seq=13 postUs=47 hr=0x00000000 outstanding=1
+13082.2 HB-PONG hb=probe seq=13 rttMs=0.7 vis=visible latest=True
+13403.5 TICK n=11 dtMs=1004 vis=visible frames=62
+14080.7 HB-PING hb=probe seq=14 postUs=43 hr=0x00000000 outstanding=1
+14081.4 HB-PONG hb=probe seq=14 rttMs=0.7 vis=visible latest=True
+14407.5 TICK n=12 dtMs=1004 vis=visible frames=62
+15076.1 HB-PING hb=ping seq=3 postUs=46 hr=0x00000000 outstanding=1
+15076.6 HB-PONG hb=ping seq=3 rttMs=0.6 vis=visible latest=True
+15080.2 HB-PING hb=probe seq=15 postUs=28 hr=0x00000000 outstanding=1
+15080.8 HB-PONG hb=probe seq=15 rttMs=0.6 vis=visible latest=True
+15084.5 PUMP phase=busy-3000 n=4404 median=0.03ms p99=0.10ms min=0.01ms max=1.42ms
+15411.3 TICK n=13 dtMs=1004 vis=visible frames=63
+16080.2 HB-PING hb=probe seq=16 postUs=42 hr=0x00000000 outstanding=1
+16080.9 HB-PONG hb=probe seq=16 rttMs=0.7 vis=visible latest=True
+16415.4 TICK n=14 dtMs=1004 vis=visible frames=62
+17079.9 HB-PING hb=probe seq=17 postUs=43 hr=0x00000000 outstanding=1
+17080.6 HB-PONG hb=probe seq=17 rttMs=0.7 vis=visible latest=True
+17419.4 TICK n=15 dtMs=1004 vis=visible frames=62
+18081.1 HB-PING hb=probe seq=18 postUs=49 hr=0x00000000 outstanding=1
+18081.8 HB-PONG hb=probe seq=18 rttMs=0.7 vis=visible latest=True
+18423.4 TICK n=16 dtMs=1004 vis=visible frames=62
+19080.5 HB-PING hb=probe seq=19 postUs=46 hr=0x00000000 outstanding=1
+19081.3 HB-PONG hb=probe seq=19 rttMs=0.8 vis=visible latest=True
+19427.4 TICK n=17 dtMs=1004 vis=visible frames=63
+20076.4 HB-PING hb=ping seq=4 postUs=59 hr=0x00000000 outstanding=1
+20077.0 HB-PONG hb=ping seq=4 rttMs=0.6 vis=visible latest=True
+20080.4 HB-PING hb=probe seq=20 postUs=22 hr=0x00000000 outstanding=1
+20080.9 HB-PONG hb=probe seq=20 rttMs=0.5 vis=visible latest=True
+20086.3 PUMP phase=busy-3000 n=4393 median=0.03ms p99=0.10ms min=0.01ms max=0.49ms
+20431.4 TICK n=18 dtMs=1004 vis=visible frames=62
+21080.6 HB-PING hb=probe seq=21 postUs=47 hr=0x00000000 outstanding=1
+21081.3 HB-PONG hb=probe seq=21 rttMs=0.7 vis=visible latest=True
+21435.4 TICK n=19 dtMs=1004 vis=visible frames=62
+22080.4 HB-PING hb=probe seq=22 postUs=55 hr=0x00000000 outstanding=1
+22081.1 HB-PONG hb=probe seq=22 rttMs=0.7 vis=visible latest=True
+22397.5 PUMP-PHASE phase=start n=6434 median=0.03ms p99=0.09ms min=0.01ms max=8.07ms
+22399.0 PUMP-PHASE phase=busy-3000 n=13165 median=0.03ms p99=0.10ms min=0.01ms max=1.42ms
+22399.5 FINISH backendCounter=1
+22401.8 VIS state=hidden pagePerf=22260.0
+22439.5 TICK n=20 dtMs=1004 vis=hidden frames=60
+23975.7 TICK n=21 dtMs=1536 vis=hidden frames=0
+24494.4 HOST-EXIT code=0

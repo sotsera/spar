@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>React.App</RootNamespace>
+    <!-- The build machine's own runtime (win-x64, linux-x64, …), so the apphost runs where it was built. -->
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- Size probes (spike only), shared with React.Desktop. -->
+    <DefineConstants>$(DefineConstants);$(SpikeSizeProbe)</DefineConstants>
+
+    <!-- Tasks are built in this same graph (source checkout): short-lived task host, no locked DLLs. -->
+    <SpikeTaskMode>TaskHost</SpikeTaskMode>
+
+    <!-- package.json lists the generated packages as file: dependencies, so npm links them; no junction of our own. -->
+    <SparLinkPackages>false</SparLinkPackages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <ProjectReference Include="..\React.Desktop\React.Desktop.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+
+    <!-- Keep MSBuild's default globs (and dotnet watch) out of the frontend's dependencies and build output. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);frontend/node_modules/**;frontend/dist/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+
+  <!--
+    Development builds embed no production bundle: the app (desktop or loopback) starts or reuses the Vite dev server
+    and serves the page from it. Release, and builds that pass SparDevServerBuild=false (the tests), embed the bundle.
+  -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <SparDevServerBuild Condition="'$(SparDevServerBuild)' == ''">true</SparDevServerBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(SparDevServerBuild)' == 'true'">
+    <DefineConstants>$(DefineConstants);SPAR_DEV_SERVER_BUILD</DefineConstants>
+  </PropertyGroup>
+
+
+  <!-- The OpenTelemetry layer is on in Debug. SQL Server storage (SparSql) is off in this spike unless asked for. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <SparTelemetry Condition="'$(SparTelemetry)' == ''">true</SparTelemetry>
+  </PropertyGroup>
+  <!-- SQL Server storage: on in Debug; Release only with -p:SparSql=true (SqlClient is not AOT-clean). -->
+  <PropertyGroup Condition="'$(SparSql)' == 'true'">
+    <DefineConstants>$(DefineConstants);SPAR_SQL</DefineConstants>
+    <!-- SqlClient refuses invariant globalization (NotSupportedException on Open), even under JIT. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(SparSql)' == 'true'">
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+  <!-- Optional OpenTelemetry layer (spike): -p:SparTelemetry=true. Off by default. -->
+  <ItemGroup Condition="'$(SparTelemetry)' == 'true'">
+    <ProjectReference Include="..\React.Telemetry\React.Telemetry.csproj" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(SparTelemetry)' == 'true'">
+    <DefineConstants>$(DefineConstants);SPAR_TELEMETRY</DefineConstants>
+  </PropertyGroup>
+  <!-- The loopback host exists only in development builds; Release publications never reference it. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>$(DefineConstants);SPAR_LOOPBACK</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\..\loopback\Loop.Loopback\Loop.Loopback.csproj" />
+
+    <!-- Development builds resolve dev-session paths against the project folder, wherever dotnet run is started. -->
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>SparProjectDirectory</_Parameter1>
+      <_Parameter2>$(MSBuildProjectDirectory)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <!-- dotnet watch: C# only; Vite owns the frontend. -->
+  <ItemGroup>
+    <Watch Remove="frontend/**" />
+  </ItemGroup>
+
+  <Import Project="..\..\d1-pipeline\Spike.targets" />
+  <Import Project="React.targets" />
+  <Import Project="..\React.Desktop\Desktop.targets" />
+</Project>

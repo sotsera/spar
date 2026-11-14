@@ -1,0 +1,50 @@
+== lint-cases-promise.tsx
+case 01 a Call as a statement                                                  @typescript-eslint/no-floating-promises (no rejection handler)
+case 02 Call.match as a statement (a Promise)                                  @typescript-eslint/no-floating-promises (no rejection handler)
+case 03 void-ed match                                                          -
+case 04 awaited match                                                          -
+case 05 await of a Call (await-thenable)                                       -
+case 06 Result.match as a statement (synchronous)                              -
+case 07 then() without a rejection handler on a Call                           @typescript-eslint/no-floating-promises (no rejection handler)
+case 08 unwrap as a statement                                                  @typescript-eslint/no-floating-promises (no rejection handler)
+case 09 a Call in a condition                                                  @typescript-eslint/no-misused-promises, @typescript-eslint/no-unnecessary-condition
+case 10 a Call assigned and never awaited                                      -
+case 11 Promise.all over Calls                                                 -
+case 12 stream item match                                                      -
+case 13 async success handler in a stream loop                                 @typescript-eslint/no-floating-promises (no rejection handler)
+case 14 a Call returned from a void callback                                   @typescript-eslint/no-misused-promises, @typescript-eslint/promise-function-async
+case 15 async void callback (baseline)                                         @typescript-eslint/no-misused-promises
+case 16 a function returning a Call without async (promise-function-async)     -
+case 17 returning a promise inside try (return-await)                          @typescript-eslint/return-await
+case 18 returning a Call inside try (return-await)                             @typescript-eslint/return-await
+case 19 match in an effect without void                                        @typescript-eslint/no-floating-promises (no rejection handler)
+case 20 arrow returning a Call to onClick                                      @typescript-eslint/no-misused-promises, @typescript-eslint/promise-function-async
+case 21 arrow returning Call.match (Promise) to onClick                        @typescript-eslint/no-misused-promises, @typescript-eslint/promise-function-async, @typescript-eslint/no-confusing-void-expression
+case 22 async onClick (baseline)                                               @typescript-eslint/no-misused-promises
+case 23 block body with void                                                   @typescript-eslint/no-confusing-void-expression
+line 7: @typescript-eslint/no-empty-object-type
+line 44: @typescript-eslint/promise-function-async
+== lint-cases.tsx
+case 01 a Call as a statement                                                  @typescript-eslint/no-floating-promises (no rejection handler)
+case 02 Call.match as a statement (a Promise)                                  @typescript-eslint/no-floating-promises (no rejection handler)
+case 03 void-ed match                                                          -
+case 04 awaited match                                                          -
+case 05 await of a Call (await-thenable)                                       -
+case 06 Result.match as a statement (synchronous)                              -
+case 07 then() without a rejection handler on a Call                           @typescript-eslint/no-floating-promises (no rejection handler)
+case 08 unwrap as a statement                                                  @typescript-eslint/no-floating-promises (no rejection handler)
+case 09 a Call in a condition                                                  @typescript-eslint/no-misused-promises, @typescript-eslint/no-unnecessary-condition
+case 10 a Call assigned and never awaited                                      -
+case 11 Promise.all over Calls                                                 -
+case 12 stream item match                                                      -
+case 13 async success handler in a stream loop                                 @typescript-eslint/no-floating-promises (no rejection handler)
+case 14 a Call returned from a void callback                                   @typescript-eslint/no-misused-promises
+case 15 async void callback (baseline)                                         @typescript-eslint/no-misused-promises
+case 16 a function returning a Call without async (promise-function-async)     -
+case 17 returning a promise inside try (return-await)                          @typescript-eslint/return-await
+case 18 returning a Call inside try (return-await)                             @typescript-eslint/return-await
+case 19 match in an effect without void                                        @typescript-eslint/no-floating-promises (no rejection handler)
+case 20 arrow returning a Call to onClick                                      @typescript-eslint/no-misused-promises
+case 21 arrow returning Call.match (Promise) to onClick                        @typescript-eslint/no-misused-promises, @typescript-eslint/promise-function-async, @typescript-eslint/no-confusing-void-expression
+case 22 async onClick (baseline)                                               @typescript-eslint/no-misused-promises
+case 23 block body with void                                                   @typescript-eslint/no-confusing-void-expression

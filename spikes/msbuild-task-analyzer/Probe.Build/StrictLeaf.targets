@@ -1,0 +1,8 @@
+<Project>
+  <!-- Runs StrictModeProbe (from Probe.Rules) in the generated leaves. Used by scripts/strict-mode.ps1. -->
+  <UsingTask TaskName="Probe.Rules.StrictModeProbe" AssemblyFile="$(ProbeRulesAssembly)" Runtime="NET" />
+
+  <Target Name="Build">
+    <StrictModeProbe ChangeDirectory="$(ProbeMisbehave)" />
+  </Target>
+</Project>

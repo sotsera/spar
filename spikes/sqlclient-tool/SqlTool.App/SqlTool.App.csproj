@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    SqlToolRuntime (see ../Directory.Build.props):
+      aot            NativeAOT, native SNI sidecar DLL. Publish with the app-level warning acceptance:
+                     -p:TreatWarningsAsErrors=false -p:IlcTreatWarningsAsErrors=false
+      aot-managedsni NativeAOT with SqlClient's managed networking (single exe, no SNI DLL).
+      jit            CoreCLR, framework-dependent (PublishAot=false, so no AOT feature switches either).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <IsAotCompatible>true</IsAotCompatible>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <!-- SqlConnection.Open throws NotSupportedException in invariant mode. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SqlToolRuntime)' != 'jit'">
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SqlToolRuntime)' == 'jit'">
+    <PublishAot>false</PublishAot>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SqlToolRuntime)' == 'aot-managedsni'">
+    <RuntimeHostConfigurationOption Include="Switch.Microsoft.Data.SqlClient.UseManagedNetworkingOnWindows"
+                                    Value="true"
+                                    Trim="true" />
+    <PackageReference Include="Microsoft.Data.SqlClient.SNI.runtime" ExcludeAssets="all" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
