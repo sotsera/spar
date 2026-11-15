@@ -19,13 +19,26 @@ public sealed class SparGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        var contracts = context.SyntaxProvider.ForAttributeWithMetadataName(
+        var own = context.SyntaxProvider.ForAttributeWithMetadataName(
                 "Spar.SparContractAttribute",
                 static (node, _) => node is ClassDeclarationSyntax or InterfaceDeclarationSyntax,
                 static (attributed, _) => ContractAnalysis.Analyze((INamedTypeSymbol)attributed.TargetSymbol))
             .Where(static contract => contract is not null)
-            .Collect()
-            .Select(static (models, _) => ContractSet.Valid(models!).ToImmutableArray());
+            .Collect();
+
+        // The listed libraries' contracts are read from the compilation's references, so this step reruns with every
+        // compilation; its result compares by value, so what follows it reruns only when they change.
+        var libraries = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue(ContractLibraries.Property, out var listed) ? listed : "");
+        var referenced = context.CompilationProvider.Combine(libraries).Select(static (input, _) =>
+            ContractProblems.Referenced(input.Left, ContractProblems.ParseList(input.Right))
+                .Select(type => ContractAnalysis.Analyze(type))
+                .Where(model => model is not null)
+                .Select(model => model!)
+                .ToEquatable());
+
+        var contracts = own.Combine(referenced)
+            .Select(static (input, _) => ContractSet.Valid(input.Left.Select(model => model!).Concat(input.Right)).ToImmutableArray());
 
         var createCalls = context.SyntaxProvider.CreateSyntaxProvider(
                 static (node, _) => node is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Create" } },

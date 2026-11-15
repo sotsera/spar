@@ -14,7 +14,8 @@ internal sealed record ClientInputs(
     IReadOnlyList<AbsolutePath> Sources,
     IReadOnlyList<AbsolutePath> References,
     IReadOnlyList<string> Defines,
-    bool NullableEnabled);
+    bool NullableEnabled,
+    IReadOnlyList<string> Libraries);
 
 /// <summary>One contract as the generator sees it, with the C# documentation and the file that declares it.</summary>
 internal sealed record ClientContract(ContractModel Model, string SourceFile, ClientDocs Docs);
@@ -33,23 +34,24 @@ internal static class ContractSource
     private static readonly ConcurrentDictionary<(string Path, DateTime Written, long Length), MetadataReference> ReferenceCache = new();
 
     public static ContractRead Read(ClientInputs inputs, CancellationToken cancellationToken) =>
-        Read(Compile(inputs, cancellationToken), inputs.ProjectDirectory, cancellationToken);
+        Read(Compile(inputs, cancellationToken), inputs.ProjectDirectory, inputs.Libraries, cancellationToken);
 
     /// <summary>
     /// The contracts of a compilation and their problems, read by the analyzer's own code (<see cref="ContractProblems"/>);
     /// source paths in the headers are relative to <paramref name="projectDirectory"/>.
     /// </summary>
-    public static ContractRead Read(CSharpCompilation compilation, string projectDirectory, CancellationToken cancellationToken)
+    public static ContractRead Read(CSharpCompilation compilation, string projectDirectory, IReadOnlyList<string> libraries, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var docs = new ClientDocs(compilation, projectDirectory);
-        var found = ContractProblems.Find(compilation);
+        var found = ContractProblems.Find(compilation, libraries);
 
         var contracts = new List<ClientContract>(found.Valid.Count);
         foreach (var (model, type) in found.Valid)
         {
-            var file = type.Locations.FirstOrDefault(l => l.IsInSource)?.SourceTree?.FilePath ?? "";
-            contracts.Add(new ClientContract(model, RelativePath(projectDirectory, file), docs));
+            var file = type.Locations.FirstOrDefault(l => l.IsInSource)?.SourceTree?.FilePath;
+            var source = file is null ? $"{type.ContainingAssembly.Name} (a referenced library)" : RelativePath(projectDirectory, file);
+            contracts.Add(new ClientContract(model, source, docs));
         }
 
         return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], found.All);

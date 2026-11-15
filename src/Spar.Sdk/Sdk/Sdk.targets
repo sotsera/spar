@@ -27,10 +27,21 @@
     <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
-  <!-- The generator reads the variant. -->
+  <!--
+    The generator reads the variant, and the libraries whose contracts the app serves: <SparContracts Include="Lib" />
+    in the app's project, by assembly name (decision "Contracts from referenced libraries: the app opts in").
+  -->
   <ItemGroup>
     <CompilerVisibleProperty Include="SparVariant" />
+    <CompilerVisibleProperty Include="SparContractAssemblies" />
   </ItemGroup>
+
+  <!-- Items exist only after properties are evaluated, so the list becomes a property in a target, before it is read. -->
+  <Target Name="SparContractAssemblies" BeforeTargets="GenerateMSBuildEditorConfigFileCore;SparWriteClientInventory">
+    <PropertyGroup>
+      <SparContractAssemblies>@(SparContracts)</SparContractAssemblies>
+    </PropertyGroup>
+  </Target>
 
   <!--
     The test-host hook exists only where a test process turns it on. Apps turn it off, and the trimmer removes it
@@ -117,6 +128,7 @@
       <_SparClientInventoryLine Include="@(_SparClientSdkFile->'%(FullPath)')" />
       <_SparClientInventoryLine Include="defines=$([MSBuild]::Escape('$(DefineConstants)'))" />
       <_SparClientInventoryLine Include="nullable=$(Nullable)" />
+      <_SparClientInventoryLine Include="contracts=$(SparContractAssemblies)" />
       <FileWrites Include="$(SparClientInventory);$(SparClientStamp)" />
     </ItemGroup>
 
@@ -141,7 +153,9 @@
                 SdkDirectory="$(SparClientSdkDirectory)"
                 SdkSourceDirectory="$(SparClientSdkSourceDirectory)"
                 ProjectName="$(MSBuildProjectName)"
-                SnapshotFile="$(SparContractSnapshotExpected)" />
+                SnapshotFile="$(SparContractSnapshotExpected)"
+                ContractAssemblies="$(SparContractAssemblies)"
+                ProjectFile="$(MSBuildProjectFullPath)" />
 
     <Touch Files="$(SparClientStamp)" AlwaysCreate="true" />
   </Target>

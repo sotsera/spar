@@ -11,6 +11,9 @@ internal static class Descriptors
     private const string Contracts = "Spar.Contracts";
     private const string ProgramShape = "Spar.Program";
 
+    /// <summary>The restated descriptors of <see cref="InReferencedAssembly"/>, by ID and message.</summary>
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, DiagnosticDescriptor> Referenced = new();
+
     public static readonly DiagnosticDescriptor NotSealedClassOrInterface = Error(
         "SPAR001", "Contract must be a sealed class or an interface", "Contract '{0}' must be a sealed class or an interface", Contracts);
 
@@ -24,6 +27,10 @@ internal static class Descriptors
     /// <summary>{0}: what is named; {1}: the name; {2}: why it is reserved; {3}: the fix.</summary>
     public static readonly DiagnosticDescriptor ReservedName = Error(
         "SPAR004", "Reserved name", "{0} resolves to the name '{1}', {2}. {3}", Contracts);
+
+    /// <summary>{0}: what is wrong with a library the app lists in <c>SparContracts</c>, and the fix.</summary>
+    public static readonly DiagnosticDescriptor ListedLibrary = Error(
+        "SPAR006", "Listed contract library", "{0}", Contracts);
 
     public static readonly DiagnosticDescriptor DuplicateContract = Error(
         "SPAR005", "Two contracts with one name",
@@ -111,6 +118,14 @@ internal static class Descriptors
     public static readonly DiagnosticDescriptor NotReturningRun = Error(
         "SPAR061", "Program.cs must return app.Run()",
         "The top-level statements of Program.cs must end with 'return app.Run();' (an int); they return '{0}'", ProgramShape);
+
+    /// <summary>
+    /// The same diagnostic about a symbol in a referenced assembly, which has no place in the project: its message
+    /// starts "In referenced assembly 'X': " (plan section 2, "Diagnostics"). One copy per descriptor.
+    /// </summary>
+    public static DiagnosticDescriptor InReferencedAssembly(DiagnosticDescriptor descriptor) =>
+        Referenced.GetOrAdd(descriptor.Id + "\0" + descriptor.MessageFormat, _ => Error(
+            descriptor.Id, descriptor.Title.ToString(), "In referenced assembly '{0}': {1}", descriptor.Category));
 
     private static DiagnosticDescriptor Error(string id, string title, string message, string category) =>
         new(id, title, message, category, DiagnosticSeverity.Error, isEnabledByDefault: true);

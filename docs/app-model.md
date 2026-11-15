@@ -312,7 +312,18 @@ public interface IConnections
 | error case `PlanError.TableMissing` | code `tableMissing` |
 
 - Classes keep their name, interfaces drop one leading `I`, and both drop a trailing `Service`. Then the name is put in acronym-aware camelCase.
-- Two contracts with the same name are an error, including contracts from referenced assemblies.
+- Names follow ASCII camelCase: an explicit name with another character, or a class whose derived name has one (`Copy_JobsService`), is an error that asks for an explicit name.
+- Two contracts with the same name are an error, compared ignoring case, including contracts from the libraries the app serves (below).
+- A contract declared in a library reaches the page only when the app lists the library, by assembly name, in its project file. Nothing else is needed: the app's build generates the library's dispatch, serializers and TypeScript module, and registers its class contracts. Only public contracts can be served.
+
+  ```xml
+  <ItemGroup>
+    <ProjectReference Include="..\SqlTool.Contracts\SqlTool.Contracts.csproj" />
+    <SparContracts Include="SqlTool.Contracts" />
+  </ItemGroup>
+  ```
+
+  A referenced library that is not listed adds nothing to what the page can call, even when it declares contracts.
 - A contract name cannot be a JavaScript reserved word or a subpath that `@spar/app` uses itself, such as `sdk`, `vite` or `windows` (plan section 2, "Names"). An `ExportService` would be named `export`, so the export contract in 3.6 is `CsvExportService`, named `csvExport`.
 
 ### 3.5 Native services: the tray

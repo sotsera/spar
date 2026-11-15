@@ -6,7 +6,17 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Spar.Generator.Tests;
 
-/// <summary>Compiles C# in memory against Spar and the BCL, runs the analyzer or the generator, and reports what came out.</summary>
+/// <summary>How a test app references a library: as a project reference (its compilation) or as a built assembly.</summary>
+public enum LibraryKind
+{
+    Project,
+    Metadata,
+}
+
+/// <summary>
+/// Compiles C# in memory against Spar and the BCL, runs the analyzer or the generator, and reports what came out. An
+/// app can reference libraries and list some of them in <c>SparContracts</c>, as its project would.
+/// </summary>
 internal static class GeneratorHarness
 {
     private static readonly CSharpParseOptions ParseOptions = new CSharpParseOptions(LanguageVersion.Preview)
@@ -14,40 +24,40 @@ internal static class GeneratorHarness
 
     private static readonly Lazy<ImmutableArray<MetadataReference>> References = new(LoadReferences);
 
-    public static CSharpCompilation Compile(string source, OutputKind kind = OutputKind.ConsoleApplication) =>
-        CSharpCompilation.Create(
-            "App",
-            [CSharpSyntaxTree.ParseText(source, ParseOptions, path: "Program.cs")],
-            References.Value,
-            new CSharpCompilationOptions(kind, nullableContextOptions: NullableContextOptions.Enable));
+    public static CSharpCompilation Compile(string source, OutputKind kind = OutputKind.ConsoleApplication, IEnumerable<MetadataReference>? libraries = null) =>
+        Compile("App", source, kind, libraries);
+
+    /// <summary>A library named <paramref name="name"/>, referenced the way <paramref name="kind"/> says.</summary>
+    public static MetadataReference Library(string name, string source, LibraryKind kind)
+    {
+        var library = Compile(name, source, OutputKind.DynamicallyLinkedLibrary, null);
+        if (kind == LibraryKind.Project)
+        {
+            return library.ToMetadataReference();
+        }
+
+        using var image = new MemoryStream();
+        var emitted = library.Emit(image, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(emitted.Success, string.Join("\n", emitted.Diagnostics));
+        return MetadataReference.CreateFromImage(image.ToArray());
+    }
 
     /// <summary>The analyzer's diagnostics as "ID: located text", in source order.</summary>
-    public static async Task<IReadOnlyList<string>> AnalyzeAsync(string source)
-    {
-        var compilation = Compile(source);
-        var diagnostics = await compilation
-            .WithAnalyzers([new ContractAnalyzer()])
-            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
-        return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start).Select(Describe)];
-    }
+    public static async Task<IReadOnlyList<string>> AnalyzeAsync(string source, IEnumerable<MetadataReference>? libraries = null, string listed = "") =>
+        [.. (await DiagnosticsAsync(source, libraries, listed)).Select(Describe)];
 
     /// <summary>The analyzer's diagnostics as "ID: message", in source order.</summary>
-    public static async Task<IReadOnlyList<string>> MessagesAsync(string source)
-    {
-        var diagnostics = await Compile(source)
-            .WithAnalyzers([new ContractAnalyzer()])
-            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
-        return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start).Select(d => $"{d.Id}: {d.GetMessage(System.Globalization.CultureInfo.InvariantCulture)}")];
-    }
+    public static async Task<IReadOnlyList<string>> MessagesAsync(string source, IEnumerable<MetadataReference>? libraries = null, string listed = "") =>
+        [.. (await DiagnosticsAsync(source, libraries, listed)).Select(d => $"{d.Id}: {d.GetMessage(System.Globalization.CultureInfo.InvariantCulture)}")];
 
     /// <summary>Runs the generator (in <paramref name="variant"/>) and compiles the app with its output.</summary>
-    public static GeneratorRun Generate(string source, string variant = "Development")
+    public static GeneratorRun Generate(string source, string variant = "Development", IEnumerable<MetadataReference>? libraries = null, string listed = "")
     {
-        var compilation = Compile(source);
+        var compilation = Compile(source, libraries: libraries);
         var driver = CSharpGeneratorDriver.Create(
             [new SparGenerator().AsSourceGenerator()],
             parseOptions: ParseOptions,
-            optionsProvider: new VariantOptions(variant));
+            optionsProvider: new BuildOptions(variant, listed));
         driver.RunGeneratorsAndUpdateCompilation(compilation, out var output, out var generatorDiagnostics, TestContext.Current.CancellationToken);
 
         var files = output.SyntaxTrees
@@ -59,6 +69,22 @@ internal static class GeneratorHarness
             .Select(Describe)
             .ToList();
         return new GeneratorRun(files, errors);
+    }
+
+    private static CSharpCompilation Compile(string name, string source, OutputKind kind, IEnumerable<MetadataReference>? libraries) =>
+        CSharpCompilation.Create(
+            name,
+            [CSharpSyntaxTree.ParseText(source, ParseOptions, path: name == "App" ? "Program.cs" : $"{name}.cs")],
+            References.Value.Concat(libraries ?? []),
+            new CSharpCompilationOptions(kind, nullableContextOptions: NullableContextOptions.Enable));
+
+    private static async Task<IReadOnlyList<Diagnostic>> DiagnosticsAsync(string source, IEnumerable<MetadataReference>? libraries, string listed)
+    {
+        var options = new AnalyzerOptions([], new BuildOptions("Development", listed));
+        var diagnostics = await Compile(source, libraries: libraries)
+            .WithAnalyzers([new ContractAnalyzer()], options)
+            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
+        return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ThenBy(d => d.GetMessage(), StringComparer.Ordinal)];
     }
 
     private static string Describe(Diagnostic diagnostic)
@@ -76,19 +102,25 @@ internal static class GeneratorHarness
             .Select(path => MetadataReference.CreateFromFile(path))];
     }
 
-    private sealed class VariantOptions(string variant) : AnalyzerConfigOptionsProvider
+    /// <summary>The build properties the generator and analyzer read: the variant and the <c>SparContracts</c> list.</summary>
+    private sealed class BuildOptions(string variant, string listed) : AnalyzerConfigOptionsProvider
     {
-        public override AnalyzerConfigOptions GlobalOptions { get; } = new Options(variant);
+        public override AnalyzerConfigOptions GlobalOptions { get; } = new Options(variant, listed);
 
         public override AnalyzerConfigOptions GetOptions(SyntaxTree tree) => GlobalOptions;
 
         public override AnalyzerConfigOptions GetOptions(AdditionalText textFile) => GlobalOptions;
 
-        private sealed class Options(string variant) : AnalyzerConfigOptions
+        private sealed class Options(string variant, string listed) : AnalyzerConfigOptions
         {
             public override bool TryGetValue(string key, [NotNullWhen(true)] out string? value)
             {
-                value = key == "build_property.SparVariant" ? variant : null;
+                value = key switch
+                {
+                    "build_property.SparVariant" => variant,
+                    "build_property.SparContractAssemblies" => listed,
+                    _ => null,
+                };
                 return value is not null;
             }
         }

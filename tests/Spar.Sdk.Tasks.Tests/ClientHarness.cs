@@ -6,6 +6,9 @@ using Spar.Sdk.Tasks.Client;
 
 namespace Spar.Sdk.Tasks.Tests;
 
+/// <summary>A library an app references and lists in <c>SparContracts</c>.</summary>
+internal sealed record Library(string Name, MetadataReference Reference);
+
 /// <summary>Compiles C# contracts in memory and runs the client step's analysis, layout and emitters on them.</summary>
 internal static class ClientHarness
 {
@@ -22,19 +25,37 @@ internal static class ClientHarness
     /// The layout of <paramref name="source"/>, compiled as <c>Contracts.cs</c> in <paramref name="projectDirectory"/>;
     /// the contracts must have no problem.
     /// </summary>
-    public static ClientLayout Plan(string source, string? projectDirectory = null)
+    public static ClientLayout Plan(string source, string? projectDirectory = null, Library? library = null)
     {
-        var read = Read(source, projectDirectory);
+        var read = Read(source, projectDirectory, library);
         Assert.Empty(read.Problems);
         return ClientLayout.Plan(read.Contracts);
     }
 
-    /// <summary>What the client step reads from <paramref name="source"/>: the valid contracts and the problem count.</summary>
-    public static ContractRead Read(string source, string? projectDirectory = null)
+    /// <summary>
+    /// What the client step reads from <paramref name="source"/>: the valid contracts and their problems. A
+    /// <paramref name="library"/> is referenced and listed in <c>SparContracts</c>.
+    /// </summary>
+    public static ContractRead Read(string source, string? projectDirectory = null, Library? library = null)
     {
         var project = projectDirectory ?? DefaultProject;
-        var compilation = Compile(source, project);
-        return ContractSource.Read(compilation, project, TestContext.Current.CancellationToken);
+        var compilation = Compile(source, project, library);
+        string[] listed = library is null ? [] : [library.Name];
+        return ContractSource.Read(compilation, project, listed, TestContext.Current.CancellationToken);
+    }
+
+    /// <summary>A library compiled from <paramref name="source"/> and referenced as a built assembly.</summary>
+    public static Library CompileLibrary(string name, string source)
+    {
+        var compilation = CSharpCompilation.Create(
+            name,
+            [CSharpSyntaxTree.ParseText(source, ParseOptions, path: $"{name}.cs")],
+            References.Value,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
+        using var image = new MemoryStream();
+        var emitted = compilation.Emit(image, cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(emitted.Success, string.Join(Environment.NewLine, emitted.Diagnostics));
+        return new Library(name, MetadataReference.CreateFromImage(image.ToArray()));
     }
 
     /// <summary>The compiler's errors for <paramref name="source"/>, for a test that must start from valid C#.</summary>
@@ -43,17 +64,17 @@ internal static class ClientHarness
             .Where(d => d.Severity == DiagnosticSeverity.Error)
             .Select(d => d.ToString())];
 
-    private static CSharpCompilation Compile(string source, string projectDirectory) =>
+    private static CSharpCompilation Compile(string source, string projectDirectory, Library? library = null) =>
         CSharpCompilation.Create(
             "App",
             [CSharpSyntaxTree.ParseText(source, ParseOptions, path: Path.Combine(projectDirectory, "Contracts.cs"))],
-            References.Value,
+            library is null ? References.Value : References.Value.Add(library.Reference),
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
 
     /// <summary>The package's files as text, by path; the SDK's own files are left out.</summary>
-    public static SortedDictionary<string, string> Emit(string source)
+    public static SortedDictionary<string, string> Emit(string source, Library? library = null)
     {
-        var layout = Plan(source);
+        var layout = Plan(source, library: library);
 
         var files = ClientPackage.Files(layout, new AbsolutePath(Repository.SdkBuild), new AbsolutePath(Repository.SdkSources), "1.2.3", SourcePrefix);
         var text = new SortedDictionary<string, string>(StringComparer.Ordinal);

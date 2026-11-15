@@ -66,6 +66,12 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
     [Required]
     public string SnapshotFile { get; set; } = "";
 
+    /// <summary>The libraries whose contracts the app serves (<c>SparContracts</c>), by assembly name, separated by semicolons.</summary>
+    public string ContractAssemblies { get; set; } = "";
+
+    /// <summary>The app's project file, where a problem with no place in the source is reported.</summary>
+    public string ProjectFile { get; set; } = "";
+
     public override bool Execute()
     {
         var project = TaskEnvironment.GetAbsolutePath(ProjectDirectory);
@@ -82,7 +88,8 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
             [.. Sources.Select(s => TaskEnvironment.GetAbsolutePath(s.ItemSpec))],
             [.. References.Select(r => TaskEnvironment.GetAbsolutePath(r.ItemSpec))],
             [.. DefineConstants.Split([';', ','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)],
-            string.Equals(Nullable, "enable", StringComparison.OrdinalIgnoreCase));
+            string.Equals(Nullable, "enable", StringComparison.OrdinalIgnoreCase),
+            Spar.Generator.ContractProblems.ParseList(ContractAssemblies));
 
         var read = ContractSource.Read(inputs, CancellationToken.None);
         if (read.Problems.Count > 0)
@@ -113,12 +120,20 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
     }
 
     /// <summary>
-    /// Writes the expected snapshot on every run: it is one of the step's Outputs, so its time must be this run's. It is
-    /// the variant's own file, so no other build writes it.
+    /// One contract problem as a build error, with the analyzer's ID, message and place (lines from 1). One inside a
+    /// referenced library, or about the <c>SparContracts</c> list, has no place in the source: it is charged to the
+    /// app's project file, which holds the list, and its message names the library.
     /// </summary>
-    /// <summary>One contract problem as a build error, with the analyzer's ID, message and place (lines from 1).</summary>
     private void LogProblem(Microsoft.CodeAnalysis.Diagnostic problem)
     {
+        var message = problem.GetMessage(System.Globalization.CultureInfo.InvariantCulture);
+        if (!problem.Location.IsInSource)
+        {
+            var project = ProjectFile.Length == 0 ? null : TaskEnvironment.GetAbsolutePath(ProjectFile).Value;
+            Log.LogError(problem.Descriptor.Category, problem.Id, null, project, 0, 0, 0, 0, message);
+            return;
+        }
+
         var span = problem.Location.GetLineSpan();
         Log.LogError(
             problem.Descriptor.Category,
@@ -129,9 +144,13 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
             span.StartLinePosition.Character + 1,
             span.EndLinePosition.Line + 1,
             span.EndLinePosition.Character + 1,
-            problem.GetMessage(System.Globalization.CultureInfo.InvariantCulture));
+            message);
     }
 
+    /// <summary>
+    /// Writes the expected snapshot on every run: it is one of the step's Outputs, so its time must be this run's. It is
+    /// the variant's own file, so no other build writes it.
+    /// </summary>
     private void WriteSnapshot(ClientLayout layout)
     {
         var path = TaskEnvironment.GetAbsolutePath(SnapshotFile);

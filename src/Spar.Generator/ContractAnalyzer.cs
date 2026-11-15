@@ -22,6 +22,7 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
         Descriptors.GenericContract,
         Descriptors.InvalidName,
         Descriptors.ReservedName,
+        Descriptors.ListedLibrary,
         Descriptors.DuplicateContract,
         Descriptors.UnsupportedReturn,
         Descriptors.TooManyRequests,
@@ -51,7 +52,9 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
         context.RegisterCompilationStartAction(start =>
         {
-            var problems = new Lazy<ContractProblems>(() => ContractProblems.Find(start.Compilation), isThreadSafe: true);
+            start.Options.AnalyzerConfigOptionsProvider.GlobalOptions.TryGetValue(ContractLibraries.Property, out var listed);
+            var libraries = ContractProblems.ParseList(listed);
+            var problems = new Lazy<ContractProblems>(() => ContractProblems.Find(start.Compilation, libraries), isThreadSafe: true);
             start.RegisterSymbolAction(
                 symbol =>
                 {
@@ -61,6 +64,15 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
                     }
                 },
                 SymbolKind.NamedType);
+
+            // Problems inside a listed library, or with the list, have no place in the project: once, at the end.
+            start.RegisterCompilationEndAction(end =>
+            {
+                foreach (var diagnostic in problems.Value.Unlocated)
+                {
+                    end.ReportDiagnostic(diagnostic);
+                }
+            });
         });
         context.RegisterCompilationAction(AnalyzeEntryPoint);
     }

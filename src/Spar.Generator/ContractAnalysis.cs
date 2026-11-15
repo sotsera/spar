@@ -72,7 +72,7 @@ internal sealed class ContractAnalysis
         var commands = Commands(type, isInterface, wireName);
         var csharp = type.ToDisplayString(CSharpFormat);
         Remember(csharp, type);
-        if (!ModuleNamesFree(type, attribute, subject, wireName, commands, fix) || !TypeNamesUnique(wireName))
+        if (!ModuleNamesFree(type, attribute, subject, wireName, commands, fix) || !TypeNamesUnique(type, wireName))
         {
             return null;
         }
@@ -126,8 +126,11 @@ internal sealed class ContractAnalysis
         return false;
     }
 
-    /// <summary>Within one contract's module each TypeScript type name is used once (SPAR040, at each type).</summary>
-    private bool TypeNamesUnique(string contractName)
+    /// <summary>
+    /// Within one contract's module each TypeScript type name is used once (SPAR040): reported at each clashing type the
+    /// contract's own assembly declares, else at the contract (plan section 2, "Diagnostics").
+    /// </summary>
+    private bool TypeNamesUnique(INamedTypeSymbol contract, string contractName)
     {
         var named = _records.Values.Select(r => (r.CSharp, r.Name)).Concat(_errors.Values.Select(e => (e.CSharp, e.Name)));
         var unique = true;
@@ -135,9 +138,12 @@ internal sealed class ContractAnalysis
         {
             unique = false;
             var spellings = string.Join(" and ", clash.Select(t => Display(t.CSharp)).OrderBy(s => s, StringComparer.Ordinal));
-            foreach (var (csharp, _) in clash)
+            var declared = clash.Select(t => _named[t.CSharp])
+                .Where(s => SymbolEqualityComparer.Default.Equals(s.ContainingAssembly, contract.ContainingAssembly))
+                .ToList();
+            foreach (var symbol in declared.Count > 0 ? declared : [contract])
             {
-                Report(Descriptors.DuplicateTypeName, _named[csharp], $"Contract '{contractName}' uses", clash.Key, spellings);
+                Report(Descriptors.DuplicateTypeName, symbol, $"Contract '{contractName}' uses", clash.Key, spellings);
             }
         }
 

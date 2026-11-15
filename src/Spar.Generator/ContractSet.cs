@@ -8,8 +8,9 @@ namespace Spar.Generator;
 /// <summary>
 /// A problem between contracts, about one contract or one type, named by its C# name (<see cref="ContractModel.CSharp"/>,
 /// <see cref="RecordModel.CSharp"/>, <see cref="ErrorModel.CSharp"/>), so the analyzer can place it at that declaration.
+/// The problems of one clash share a <paramref name="Group"/>.
 /// </summary>
-internal sealed record SetProblem(DiagnosticDescriptor Descriptor, string Subject, object[] Arguments);
+internal sealed record SetProblem(DiagnosticDescriptor Descriptor, string Subject, object[] Arguments, int Group);
 
 /// <summary>
 /// The checks that need every contract at once (plan section 2, "Names"): two contracts with one name (SPAR005), and
@@ -23,24 +24,27 @@ internal static class ContractSet
         var contracts = models.OrderBy(c => c.WireName, StringComparer.Ordinal).ThenBy(c => c.CSharp, StringComparer.Ordinal).ToList();
         var problems = new List<SetProblem>();
         var excluded = new HashSet<string>(StringComparer.Ordinal);
+        var group = 0;
 
-        foreach (var group in contracts.GroupBy(c => c.WireName, StringComparer.OrdinalIgnoreCase).Where(g => g.Count() > 1))
+        foreach (var clash in contracts.GroupBy(c => c.WireName, StringComparer.OrdinalIgnoreCase).Where(g => g.Count() > 1))
         {
-            var members = group.ToList();
+            group++;
+            var members = clash.ToList();
             foreach (var contract in members)
             {
                 var other = members.First(c => c != contract);
-                problems.Add(new SetProblem(Descriptors.DuplicateContract, contract.CSharp, [Display(contract.CSharp), Display(other.CSharp), contract.WireName]));
+                problems.Add(new SetProblem(Descriptors.DuplicateContract, contract.CSharp, [Display(contract.CSharp), Display(other.CSharp), contract.WireName], group));
                 excluded.Add(contract.CSharp);
             }
         }
 
         foreach (var clash in SharedClashes(contracts.Where(c => !excluded.Contains(c.CSharp)).ToList()))
         {
+            group++;
             var spellings = string.Join(" and ", clash.Select(t => Display(t.CSharp)).OrderBy(s => s, StringComparer.Ordinal));
             foreach (var type in clash)
             {
-                problems.Add(new SetProblem(Descriptors.DuplicateTypeName, type.CSharp, ["The shared module declares", type.Name, spellings]));
+                problems.Add(new SetProblem(Descriptors.DuplicateTypeName, type.CSharp, ["The shared module declares", type.Name, spellings], group));
             }
 
             var keys = new HashSet<string>(clash.Select(t => t.Key), StringComparer.Ordinal);
