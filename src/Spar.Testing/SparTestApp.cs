@@ -1,5 +1,7 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Spar.Loopback;
 using Spar.Runtime;
 
 namespace Spar.Testing;
@@ -9,6 +11,12 @@ public enum SparTestSurface
 {
     /// <summary>No page: the test calls commands through the typed test clients.</summary>
     None,
+
+    /// <summary>
+    /// The page in an ordinary browser over in-process loopback: open <see cref="SparTestApp.PageUrl"/> with Playwright.
+    /// CoreCLR only, like Playwright for .NET.
+    /// </summary>
+    Browser,
 }
 
 /// <summary>A test's changes to the app.</summary>
@@ -17,6 +25,8 @@ public sealed class SparTestOptions
     internal List<Action<IServiceCollection>> ServiceActions { get; } = [];
 
     internal HashSet<Type> AllowedExternals { get; } = [];
+
+    internal List<(string Prefix, string Folder)> PageFolders { get; } = [];
 
     public SparTestSurface Surface { get; set; } = SparTestSurface.None;
 
@@ -27,6 +37,16 @@ public sealed class SparTestOptions
     public SparTestOptions Services(Action<IServiceCollection> configure)
     {
         ServiceActions.Add(configure);
+        return this;
+    }
+
+    /// <summary>
+    /// Serves <paramref name="folder"/> as the page, or under <paramref name="prefix"/> (for example <c>"spar/"</c>), on
+    /// the Browser surface. A stand-in until the packing step embeds the app's built page, which then becomes the default.
+    /// </summary>
+    public SparTestOptions Page(string folder, string prefix = "")
+    {
+        PageFolders.Add((prefix, folder));
         return this;
     }
 
@@ -48,15 +68,16 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     private readonly Task<int> _exit;
     private readonly SparRunningApp _app;
     private readonly SparTestOptions _options;
+    private readonly ConcurrentQueue<string> _problems = new();
+    private LoopbackHost? _loopback;
     private long _nextCallId;
 
-    private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options, TimeSpan startedAfter)
+    private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options)
     {
         _session = session;
         _exit = exit;
         _app = app;
         _options = options;
-        StartedAfter = startedAfter;
     }
 
     /// <summary>The app's own service provider: a test can inspect backend state directly.</summary>
@@ -68,7 +89,19 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     /// <summary>The contracts' fingerprint, as a page would see it in <c>open</c>.</summary>
     public string Fingerprint => _app.Catalog.Fingerprint;
 
-    public TimeSpan StartedAfter { get; }
+    public TimeSpan StartedAfter { get; private set; }
+
+    /// <summary>The page's origin on the Browser surface, for example <c>http://127.0.0.1:52311</c>.</summary>
+    public Uri Origin => Loopback.Origin;
+
+    /// <summary>What the bridge refused or dropped, and the page's CSP violations, so far. A clean run has none.</summary>
+    public IReadOnlyList<string> Problems => [.. _problems];
+
+    private LoopbackHost Loopback =>
+        _loopback ?? throw new InvalidOperationException("The app has no page: start it with Surface = SparTestSurface.Browser.");
+
+    /// <summary>The page's address with its token in the fragment, for the browser to open (Browser surface).</summary>
+    public Uri PageUrl(string path = "/") => Loopback.PageUrl(path);
 
     /// <summary>
     /// Runs <typeparamref name="TApp"/>'s top-level statements on a thread of their own. Their
@@ -105,8 +138,22 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
             throw new InvalidOperationException($"The app's Program.cs returned {await exit.Task} without calling Run.");
         }
 
-        var app = await session.Started;
-        return new SparTestApp(session, exit.Task, app, options, clock.Elapsed);
+        var testApp = new SparTestApp(session, exit.Task, await session.Started, options);
+        try
+        {
+            if (options.Surface == SparTestSurface.Browser)
+            {
+                await testApp.StartBrowserSurfaceAsync(cancellationToken);
+            }
+        }
+        catch
+        {
+            await testApp.DisposeAsync();
+            throw;
+        }
+
+        testApp.StartedAfter = clock.Elapsed;
+        return testApp;
     }
 
     /// <summary>Runs one command through the app's real dispatch, as the bridge would.</summary>
@@ -118,6 +165,11 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        if (_loopback is not null)
+        {
+            await _loopback.DisposeAsync();
+        }
+
         _session.Stop();
         var code = await _exit.WaitAsync(TimeSpan.FromSeconds(10));
         if (!_options.KeepData)
@@ -129,6 +181,31 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         {
             throw new InvalidOperationException($"The app exited with {code}.");
         }
+    }
+
+    private async Task StartBrowserSurfaceAsync(CancellationToken cancellationToken)
+    {
+        if (_options.PageFolders.Count == 0)
+        {
+            throw new InvalidOperationException("The Browser surface needs the page: pass its folder with o.Page(folder).");
+        }
+
+        var assets = new LoopbackAssets();
+        foreach (var (prefix, folder) in _options.PageFolders)
+        {
+            assets.Mount(prefix, folder);
+        }
+
+        _loopback = await LoopbackHost.StartAsync(
+            new LoopbackOptions
+            {
+                Dispatcher = _app.Dispatcher,
+                Fingerprint = _app.Catalog.Fingerprint,
+                Assets = assets,
+                IncludeDetails = true,
+                Log = _problems.Enqueue,
+            },
+            cancellationToken);
     }
 
     private static void RunEntryPoint<TApp>(TaskCompletionSource<int> exit)

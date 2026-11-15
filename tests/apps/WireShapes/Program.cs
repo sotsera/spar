@@ -50,5 +50,13 @@ namespace WireShapes
 
         [SparCommand]
         public Task<long> BigAsync(Item request) => Task.FromResult(long.Parse(request.Name, System.Globalization.CultureInfo.InvariantCulture));
+
+        /// <summary>Waits until the call is cancelled, so a test can abort a call that is running.</summary>
+        [SparCommand]
+        public async Task<Item> WaitAsync(Item request, CancellationToken cancellationToken)
+        {
+            await Task.Delay(Timeout.Infinite, cancellationToken);
+            return request;
+        }
     }
 }

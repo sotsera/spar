@@ -18,6 +18,7 @@ export {
   type Handlers,
 } from "./results.js";
 export { unknownErrorCase, type BridgeChannel, type Decoder } from "./connection.js";
+export { loopbackChannel, takeToken, type LoopbackOptions, type TokenPage } from "./loopback.js";
 
 let current: Connection | undefined;
 

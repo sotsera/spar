@@ -13,7 +13,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Transports:**
   - Windows: `postMessage` (0.2 ms unary).
   - Linux: the script message handler, plus `evaluate_javascript` (0.2–0.3 ms).
-  - Loopback: `fetch` for unary calls, and one streamed channel per document (the 6-connection browser limit blocked per-call streams).
+  - Loopback (built in M1a; decision "Loopback transport: one ordered send path", for review): one streamed channel per document for every host message, call replies included (`POST /_spar/channel`, opened by the `hello`), and the page's messages posted in order to `POST /_spar/send`, one request at a time, with what queues up meanwhile sent together, one message per line. A `fetch` per call, as `spikes/loopback` did, can deliver ids out of order (they are then dropped) and lets long calls use up the browser's six connections. Requests: `Host` checked on every one; the bearer token and, when sent, the `Origin` on bridge requests; `X-Spar-Doc` names the document on sends.
   - Neither WebView streams intercepted responses usefully, so streams always use credits.
 - **Which window may call what (decided, user, 2026-11-14):**
   - **Default:** every window of the app may call every command, because every window runs the app's own code from its one origin.
@@ -71,7 +71,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - **Credits:** the page grants `credits` batches in flight (default 8) and refills them in halves as it consumes. What is in flight is bounded by window × batch size. Proposals from the spike: a window configurable per stream (8 × 1,000 rows kept 7,000 rows in flight), and batches sized by bytes or time (for example 64 KB or 5 ms) rather than rows; batches of 1 were 20–130× slower.
   - **Trace field:** `-` when the call has no context; otherwise the `traceparent`, optionally followed by `;` and the URI-escaped `tracestate`. Streams always sent `-` (not instrumented). The host drops a `traceparent` over 128 characters and a `tracestate` over 8 KB; a malformed context starts a new trace and never fails the call. `traceparent` costs 55 bytes. Before the field existed, `q` and `s` had no `trace` position.
   - **Flush before close:** the desktop host sends `z`, the page runs its registered close work (the telemetry flush, `Promise.allSettled`) and answers `z`, and the host waits at most 1 s.
-  - **Loopback endpoints** (`spikes/loopback/Loop.Loopback/LoopbackHost.cs`; every bridge call needs the bearer token, and the host's `Origin` when one is sent):
+  - **Loopback endpoints of the spike** (`spikes/loopback/Loop.Loopback/LoopbackHost.cs`; every bridge call needs the bearer token, and the host's `Origin` when one is sent). Superseded by the M1a transport under "Transports" above; kept as evidence:
 
     | Endpoint | Use |
     |---|---|

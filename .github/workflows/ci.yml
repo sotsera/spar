@@ -47,9 +47,18 @@ jobs:
           npm ci --ignore-scripts
           npm run check
           npm test
+          # The browser tests serve the compiled SDK from obj/dist.
+          npm run build
 
       - name: Build
         run: dotnet build Spar.slnx -c Debug
+
+      - name: Chromium for the browser tests
+        shell: bash
+        run: |
+          # Playwright's headless shell only; --with-deps adds its system libraries on Linux.
+          script=$(find tests/WireShapes.EndToEndTests/bin -name playwright.ps1 | head -1)
+          pwsh "$script" install --with-deps --only-shell chromium
 
       - name: Test (CoreCLR)
         run: dotnet test --solution Spar.slnx -c Debug --no-build

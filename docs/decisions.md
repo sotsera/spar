@@ -2914,3 +2914,21 @@ Evidence: `docs/evidence/m1a-typescript-sdk.md`.
 ## 2026-11-15, SDK abort confirmation and calls before open accepted (user decision)
 
 The user kept both choices of "TypeScript SDK core" ("Keep both"): an aborted call waits 5 s for the backend's confirmation and then ends as `transport` / `unconfirmed` / `unknown`; a call made before `open` waits for it, and fails `unavailable` / `notStarted` if the channel closes first.
+
+## 2026-11-15, Loopback transport: one ordered send path (implementation record; choices for review)
+
+Evidence: `docs/evidence/m1a-loopback-browser.md`.
+- **Built:** `src/Spar.Loopback` (Kestrel on 127.0.0.1, the page's files, the bridge endpoints), the SDK's `loopbackChannel` and `takeToken`, the test host's `Browser` surface (`o.Surface = SparTestSurface.Browser`, `o.Page(folder)`, `app.PageUrl()`, `app.Problems`), and `tests/WireShapes.EndToEndTests`: the WireShapes page in Chromium calling the backend in the test process. `dotnet test` runs 186 tests, all passing; the NativeAOT lane passes 153.
+- **Choice for review: every page message goes through one ordered send path.** Section 2c said "`fetch` for unary calls, and one streamed channel per document", from `spikes/loopback`. Building it against the accepted id rule showed two problems with a `fetch` per call:
+  - **Order:** separate requests travel over up to six connections and can arrive out of order, and a call whose id is not higher than every earlier one is dropped without a reply. With the order broken on purpose (sends in parallel), the 200-call test timed out: calls were dropped and never answered.
+  - **Connections:** a long call holds its `fetch` connection until it ends, so five long calls plus the channel use up the browser's six connections and block even cancels, the pitfall that moved streams to the channel.
+
+  So the page posts its messages to `POST /_spar/send` one request at a time, and whatever queues up while one is in flight travels in the next request, one message per line. Every host message, call replies included, comes on the document's channel (`POST /_spar/channel`, opened by the `hello`, first line `open`). This is the same shape as the desktop hosts: one ordered path each way. The cost is that a message can wait for one loopback round trip behind the request in flight.
+- **Other choices made while building, for review:**
+  - **Endpoints:** `/_spar/channel` (the body is the `hello`; 400 `invalid-request` otherwise), `/_spar/send` (the document in `X-Spar-Doc`, 404 `unknown-document` for a document the host does not have, 204 otherwise) and `/_spar/csp-report` (no token: the browser sends reports itself; only logged). Refusals: 403 `forbidden-host`, 403 `forbidden-origin`, 401 `unauthorized`, 405 `method-not-allowed`, 404 `not-found`, as plain-text codes. The spike's per-command paths and the status-code table of section 2c no longer apply: outcomes travel as bridge messages.
+  - **A refused or failed send closes the page's channel,** so the connection fails the calls it had sent as `transport` / `lost` / `unknown`: the host may have run them.
+  - **The host checks `Host` on every request, assets included** (127.0.0.1 or `localhost` with the port), and the `Origin` only on bridge requests, when one is sent.
+  - **Files are served only with a listed content type** (`SparContentTypes`), so `.map` files and unknown types are 404, and only from plain path segments (no dot segments or dotfiles, no backslashes or escaped characters, no links).
+  - **The page headers of section 3b are one runtime type,** `SparPageHeaders`, for every host: the base CSP (with `connect-src` naming the served origin), `nosniff`, `no-referrer`, the cross-origin policies, `Permissions-Policy` and `no-store`.
+  - **`Spar.Testing` references `Spar.Loopback`,** so every test executable carries Kestrel: the NativeAOT test executables grew from 16.4 MB to 20.2–20.3 MB, and each lane publish from 10–14 s to 21–24 s.
+  - **The Browser surface serves page folders the test names** until the packing step embeds the built page; the browser fixture lives in the test project, because Playwright cannot be part of `Spar.Testing` (it is not trim-safe, and `Spar.Testing` is in the NativeAOT lane).
