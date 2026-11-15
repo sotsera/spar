@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Buffers.Binary;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
@@ -33,6 +34,13 @@ internal sealed class SparFrontend
     }
 
     public IReadOnlyCollection<SparFrontendEntry> Entries => _entries.Values;
+
+    /// <summary>
+    /// Whether this build carries the Brotli decoder. The packing step sets it off when it packs everything stored
+    /// (decision "Frontend packing: stored below the decoder's cost"), and the trimmer then removes the decoder.
+    /// </summary>
+    [FeatureSwitchDefinition("Spar.Frontend.Brotli")]
+    internal static bool IsBrotliSupported { get; } = !AppContext.TryGetSwitch("Spar.Frontend.Brotli", out var on) || on;
 
     /// <summary>A pack held in memory (tests).</summary>
     internal static SparFrontend Read(ReadOnlyMemory<byte> pack) => new(typeof(SparFrontend).Assembly, pack);
@@ -72,20 +80,41 @@ internal sealed class SparFrontend
     public string Notices()
     {
         using var stream = _assembly.GetManifestResourceStream(NoticesResourceName);
-        if (stream is null || stream.Length == 0)
+        return stream is null ? "" : ReadNotices(stream);
+    }
+
+    /// <summary>The notices resource's text: one byte says how it follows, 0 stored or 1 Brotli.</summary>
+    internal static string ReadNotices(Stream stream)
+    {
+        if (stream.Length == 0)
         {
             return "";
         }
 
-        using var decoded = new BrotliStream(stream, CompressionMode.Decompress);
+        // One byte says how the text follows: 0 stored, 1 Brotli.
+        var encoding = stream.ReadByte();
+        if (encoding == 0)
+        {
+            using var plain = new StreamReader(stream, Encoding.UTF8);
+            return plain.ReadToEnd();
+        }
+
+        using var decoded = new BrotliStream(Brotli(), CompressionMode.Decompress);
         using var reader = new StreamReader(decoded, Encoding.UTF8);
         return reader.ReadToEnd();
+
+        Stream Brotli() => IsBrotliSupported ? stream : throw NoDecoder("the third-party notices");
     }
 
     private ReadOnlyMemory<byte> Stored(SparFrontendEntry entry) => _data.Slice(entry.Offset, entry.StoredLength);
 
     private byte[] Decode(SparFrontendEntry entry)
     {
+        if (!IsBrotliSupported)
+        {
+            throw NoDecoder($"'{entry.Path}'");
+        }
+
         var output = new byte[entry.OriginalLength];
         if (!BrotliDecoder.TryDecompress(Stored(entry).Span, output, out var written) || written != output.Length)
         {
@@ -94,6 +123,9 @@ internal sealed class SparFrontend
 
         return output;
     }
+
+    private static InvalidDataException NoDecoder(string what) =>
+        new($"The packed page's {what} is Brotli-compressed, but this build has no Brotli decoder (Spar.Frontend.Brotli is off).");
 
     /// <summary>Reads the index; returns where the data starts.</summary>
     private int ReadIndex(ReadOnlySpan<byte> pack)

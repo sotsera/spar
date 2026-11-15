@@ -35,7 +35,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Frontend packing:** one `Spar.Frontend` resource holding an index plus per-file Brotli (quality 11, fitted window). Built in M1a (decision "Frontend packing built"), with the asset checks (SPAR110) and the third-party notices as `Spar.ThirdPartyNotices`.
   - Files that Brotli shrinks by less than 5% are stored as is.
   - The host decodes on a background thread at start into a cache, and serves uncompressed entries straight from the image.
-  - Small bundles may pack uncompressed, with a feature switch that trims the decoder.
+  - Small bundles may pack uncompressed, with a feature switch that trims the decoder. Built in M1a (decision "Frontend packing: stored below the decoder's cost"): `SparFrontendCompression` is `auto` (the default: Brotli when it saves at least 192 KiB over page and notices together), `brotli` or `none`, and any other value is SPAR112. A stored pack sets `Spar.Frontend.Brotli=false` with `Trim="true"`; the decision is kept in `obj/…/spar-pack.mode`, so a build that skips packing still applies it. The notices resource starts with one byte for its encoding (0 stored, 1 Brotli).
   - No zip.
   - Measured:
     - the decoder adds about 168 KB on both OSes, statically linked;

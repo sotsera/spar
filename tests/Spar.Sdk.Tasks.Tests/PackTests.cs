@@ -87,16 +87,41 @@ public sealed class PackTests : IDisposable
         Assert.Equal("logo.svg and Logo.svg", problem.Path);
     }
 
-    [Fact]
-    public void The_notices_compress_and_decode_whole()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void The_notices_are_read_back_whole_either_way(bool compress)
     {
         var text = string.Concat(Enumerable.Repeat("MIT License\n\nPermission is hereby granted, free of charge…\n", 200));
 
-        var compressed = FrontendPack.Compress(Encoding.UTF8.GetBytes(text));
+        var resource = FrontendPack.Notices(Encoding.UTF8.GetBytes(text), compress);
 
-        Assert.True(compressed.Length < text.Length / 10);
-        using var decoded = new System.IO.Compression.BrotliStream(new MemoryStream(compressed), System.IO.Compression.CompressionMode.Decompress);
-        Assert.Equal(text, new StreamReader(decoded, Encoding.UTF8).ReadToEnd());
+        Assert.Equal(compress ? (byte)1 : (byte)0, resource[0]);
+        Assert.True(compress ? resource.Length < text.Length / 10 : resource.Length == Encoding.UTF8.GetByteCount(text) + 1);
+        Assert.Equal(text, SparFrontend.ReadNotices(new MemoryStream(resource)));
+    }
+
+    [Theory]
+    [InlineData("auto", FrontendPack.BrotliWorthBytes - 1, false)]
+    [InlineData("auto", FrontendPack.BrotliWorthBytes, true)]
+    [InlineData("brotli", 0, true)]
+    [InlineData("none", 10_000_000, false)]
+    public void Brotli_is_used_only_when_it_saves_more_than_its_decoder_costs(string mode, long saving, bool compress) =>
+        Assert.Equal(compress, FrontendPack.ShouldCompress(mode, saving));
+
+    [Fact]
+    public void A_stored_pack_holds_every_file_as_it_is()
+    {
+        var text = File("index.html", Encoding.UTF8.GetBytes(string.Concat(Enumerable.Repeat("<p>hello</p>", 2000))));
+
+        var entries = FrontendPack.Encode([text]);
+        var frontend = SparFrontend.Read(FrontendPack.Write(entries.Select(e => e.AsStored())));
+
+        Assert.True(entries[0].Saving > 0, "Brotli would have saved something.");
+        var entry = Assert.Single(frontend.Entries);
+        Assert.False(entry.Compressed);
+        Assert.True(frontend.TryGet("index.html", out var content, out _));
+        Assert.Equal(System.IO.File.ReadAllBytes(text.Source), content.ToArray());
     }
 
     private PageFile File(string path, byte[] content)

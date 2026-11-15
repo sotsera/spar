@@ -16,6 +16,7 @@ Spar | Spar.Bridge.BridgeTelemetry.Meter | readonly | The process's "Spar" Meter
 Spar | Spar.Bridge.BridgeTelemetry.Duration | readonly | The spar.call.duration histogram of that meter: thread-safe, holds no state of its own.
 Spar | Spar.BridgeLimits.<Default>k__BackingField | readonly | An immutable record of the default limits.
 Spar | Spar.Hosting.SparContentTypes.ByExtension | readonly | Extension to content type, filled once, read only.
+Spar | Spar.Hosting.SparFrontend.<IsBrotliSupported>k__BackingField | readonly | The Brotli decoder's feature switch, read once from AppContext: one value for the whole app by design (its build packs stored or not), and constant-folded by the trimmer.
 Spar | Spar.Runtime.SparJson.ReaderOptions | readonly | Reader options, a value type copied on use; never written.
 Spar | Spar.Runtime.SparJson.WriterOptions | readonly | Writer options, a value type copied on use; never written.
 Spar | Spar.SparTestSession.<IsSupported>k__BackingField | readonly | The test-host feature switch, read once from AppContext; the same for the whole process by design, and false in apps (trimmed away).

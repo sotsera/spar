@@ -21,9 +21,11 @@ public sealed class PackagingTests
     [Fact]
     public void The_notices_name_what_the_page_bundles()
     {
+        // The resource as shipped: one byte for its encoding (1 Brotli, 0 stored), then the text or its Brotli stream.
         using var stream = App.GetManifestResourceStream("Spar.ThirdPartyNotices")!;
-        using var decoded = new BrotliStream(stream, CompressionMode.Decompress);
-        var notices = new StreamReader(decoded, Encoding.UTF8).ReadToEnd();
+        var compressed = stream.ReadByte() == 1;
+        using var text = compressed ? new BrotliStream(stream, CompressionMode.Decompress) : stream;
+        var notices = new StreamReader(text, Encoding.UTF8).ReadToEnd();
 
         Assert.StartsWith("# Licenses", notices, StringComparison.Ordinal);
         Assert.Contains("## react - 19.3.1 (MIT)", notices, StringComparison.Ordinal);

@@ -205,6 +205,10 @@
     <SparFrontendNotices>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-notices.md</SparFrontendNotices>
     <SparFrontendPackStamp>$(IntermediateOutputPath)spar-pack.stamp</SparFrontendPackStamp>
     <SparFrontendPackSettings>$(IntermediateOutputPath)spar-pack.settings</SparFrontendPackSettings>
+    <!-- brotli or stored: the packing step's decision, read on every build to set the decoder's feature switch. -->
+    <SparFrontendPackMode>$(IntermediateOutputPath)spar-pack.mode</SparFrontendPackMode>
+    <!-- auto: Brotli when it saves more than its decoder costs (about 170 KB); brotli; or none. -->
+    <SparFrontendCompression Condition="'$(SparFrontendCompression)' == ''">auto</SparFrontendCompression>
     <!-- true: the frontend's licences as Vite collects them; false: none; or the path of the team's own notices file. -->
     <SparThirdPartyNotices Condition="'$(SparThirdPartyNotices)' == ''">true</SparThirdPartyNotices>
   </PropertyGroup>
@@ -264,26 +268,33 @@
       <_SparNoticesFile Include="$(SparThirdPartyNotices)" Condition="'$(SparThirdPartyNotices)' != 'true' and '$(SparThirdPartyNotices)' != 'false'" />
       <FileWrites Include="$(SparFrontendPackSettings)" />
     </ItemGroup>
-    <WriteLinesToFile File="$(SparFrontendPackSettings)" Lines="notices=$(SparThirdPartyNotices)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <WriteLinesToFile File="$(SparFrontendPackSettings)" Lines="notices=$(SparThirdPartyNotices);compression=$(SparFrontendCompression)" Overwrite="true" WriteOnlyWhenDifferent="true" />
   </Target>
 
   <Target Name="SparFrontendPack"
           DependsOnTargets="SparFrontendBuild;SparFrontendPackSettings"
           Condition="'$(SparHasFrontend)' == 'true' and '$(SparBuildFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
           Inputs="$(SparFrontendStamp);$(SparTasksAssembly);$(SparFrontendPackSettings);@(_SparNoticesFile)"
-          Outputs="$(SparFrontendPackStamp);$(SparFrontendPackFile)">
+          Outputs="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendPackMode)">
     <SparPack FrontendDirectory="$(SparFrontendOutput)" PackFile="$(SparFrontendPackFile)" NoticesFile="$(SparFrontendNotices)"
-              NoticesSource="$(SparThirdPartyNotices)" />
-    <Touch Files="$(SparFrontendPackStamp);$(SparFrontendPackFile)" AlwaysCreate="true" />
+              NoticesSource="$(SparThirdPartyNotices)" Compression="$(SparFrontendCompression)" ModeFile="$(SparFrontendPackMode)" />
+    <Touch Files="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendPackMode)" AlwaysCreate="true" />
     <ItemGroup>
-      <FileWrites Include="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendNotices)" />
+      <FileWrites Include="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendNotices);$(SparFrontendPackMode)" />
     </ItemGroup>
   </Target>
 
-  <!-- The pack and the notices into the app's assembly, on every build that has them. -->
+  <!--
+    The pack and the notices into the app's assembly, on every build that has them. A stored pack turns the Brotli
+    decoder's feature switch off, so the trimmer removes it (decision "Frontend packing: stored below the decoder's cost").
+  -->
   <Target Name="SparEmbedFrontend"
           Condition="'$(SparIsApp)' == 'true' and '$(SparBuildFrontend)' == 'true' and Exists('$(SparFrontendPackFile)')">
+    <ReadLinesFromFile File="$(SparFrontendPackMode)" Condition="Exists('$(SparFrontendPackMode)')">
+      <Output TaskParameter="Lines" PropertyName="_SparFrontendPackMode" />
+    </ReadLinesFromFile>
     <ItemGroup>
+      <RuntimeHostConfigurationOption Include="Spar.Frontend.Brotli" Value="false" Trim="true" Condition="'$(_SparFrontendPackMode)' == 'stored'" />
       <EmbeddedResource Include="$(SparFrontendPackFile)" LogicalName="Spar.Frontend" WithCulture="false" Type="Non-Resx" />
       <EmbeddedResource Include="$(SparFrontendNotices)" LogicalName="Spar.ThirdPartyNotices" WithCulture="false" Type="Non-Resx"
                         Condition="Exists('$(SparFrontendNotices)')" />

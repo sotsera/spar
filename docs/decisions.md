@@ -3161,3 +3161,15 @@ The fixture rules of the research review (plan section 5): assertion, capture an
 - **An empty selection:** `dotnet test` already fails it (exit code 8, "No tests ran"); xUnit's in-process runner, which the NativeAOT lane runs, exits 0 with "Total: 0". The CI step now fails such a run.
 - **Skips:** xUnit requires a reason for a skip and reports skipped tests separately; nothing was added. **Capture failures:** there is no capture to report yet (window screenshots arrive in M1b).
 - **Static state:** two fields, reviewed: `SparTestCleanup.Watched` (keyed by each test's id) and `s_currentTest` (set once by the hook). `dotnet test` 330 of 330; the NativeAOT lane passes.
+
+## 2026-11-15, Frontend packing: stored below the decoder's cost (implementation record; choices for review)
+
+The M1a item "the decoder trim feature switch" (`spikes/asset-packing`: the Brotli decoder costs a NativeAOT executable about 168.5 KB, and the switch `Spar.Frontend.Brotli=false` removed it, measured on Windows). Evidence: `docs/evidence/m1a-frontend-packing.md`, "Follow-up: stored below the decoder's cost".
+- **Built:** the packing step encodes each file once, adds up what Brotli saves on the page and on the notices, and packs everything stored when that is under the threshold; the reader's decoder sits behind `[FeatureSwitchDefinition("Spar.Frontend.Brotli")]`, which `Sdk.targets` turns off, with `Trim="true"`, for a stored pack. One line says which and why ("the page is packed with Brotli (Brotli saves 529,922 B, more than its decoder costs)").
+- **Choices made while building, for review:**
+  - **The threshold is 192 KiB of savings,** the decoder's 168.5 KB plus a margin of about 28 KB, counted over page and notices together, since either one keeps the decoder in the executable.
+  - **`SparFrontendCompression` = `auto` | `brotli` | `none`,** `auto` by default; any other value fails the build with SPAR112. It is part of the packing step's settings, so changing it repacks.
+  - **The decision is written to `obj/…/spar-pack.mode`** and read on every build, so a build that skips packing as up to date still sets the switch.
+  - **The notices resource now starts with an encoding byte** (0 stored, 1 Brotli), so it reads correctly whatever the switch, including in a test executable, which does not take the app's switches.
+- **Checked:** the Notebook stays on Brotli (529,922 B saved); with `SparFrontendCompression=none` it packs 11 files stored (773,763 B), the notices stored (123,418 B), its runtime config holds `"Spar.Frontend.Brotli": false`, and its unit tests (12) and browser journeys (7) pass on the stored page; back on `auto`, the switch is gone again. `dotnet test` 336 of 336; the NativeAOT lane passes.
+- **Not verified here:** that the trimmer removes the decoder from a Spar app: the Production executable reads no page until a desktop host exists (M1b), and a test executable does not take the app's switches. The spike verified the same switch and condition.

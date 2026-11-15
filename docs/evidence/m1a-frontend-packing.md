@@ -34,7 +34,11 @@ Recorded 2026-11-15. What it shows: the app build packs its page into its own as
 
 Decision "Source maps stay out of the executable; third-party notices are reported and copyleft is flagged". The build line reads "the third-party notices of 109 packages from Vite's licence file (3,057 B)" (106 MIT, 2 ISC, 1 0BSD). `SparThirdPartyNotices=false` builds with no notices; a missing file fails with SPAR111; back to the default, then an unchanged build, both behave. While checking `false`, the embedding target turned out to run before packing (see the pitfalls); with one ordered entry target, a build from an empty `obj/` and `bin/` embeds its pack on the first pass. `dotnet test` 250 of 250; `-mt` clean; the Notebook's NativeAOT tests 12 of 12.
 
+## Follow-up: stored below the decoder's cost (2026-11-15)
+
+Decision "Frontend packing: stored below the decoder's cost". The Notebook: "the page is packed with Brotli (Brotli saves 529,922 B, more than its decoder costs)"; notices 3,058 B (one more byte, the encoding). With `SparFrontendCompression=none`: "the page is packed stored", 11 files, 772,975 B into 773,763 B, notices 123,418 B, `"Spar.Frontend.Brotli": false` in `Notebook.runtimeconfig.json`, Notebook.Tests 12 of 12 (after reading the notices' encoding byte) and the 7 journeys on the stored page. Back on `auto`: Brotli again, and no switch in the runtime config. Pack tests: the notices both ways, the threshold on either side, `brotli` and `none`, a stored pack holding every file as it is. `dotnet test --solution Spar.slnx` 336 of 336; NativeAOT Spar.Tests 151 and Notebook.Tests 12.
+
 ## Not done or not verified
 
-- **Not built:** the feature switch that trims the decoder when nothing is compressed (`spikes/asset-packing` measured it), WebView2's and the static loader's notices (they arrive with the Windows host in M1b), reading the pack from a desktop host, and a link check on Windows (creating a symbolic link needs a privilege the tests do not take; the check uses `FileInfo.LinkTarget`).
+- **Not built:** WebView2's and the static loader's notices (they arrive with the Windows host in M1b), reading the pack from a desktop host, and a link check on Windows (creating a symbolic link needs a privilege the tests do not take; the check uses `FileInfo.LinkTarget`).
 - **Not run:** Linux, CI, a clean clone.
