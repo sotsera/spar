@@ -251,7 +251,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
    - the static-state test of Spar's assemblies, and the production boundary test of section 5 on a published console harness (the test host and the fakes absent).
 3. **Repository:**
    - CI with the build and test lanes on Windows and Linux, the `-mt` lane, and `eng/check-size.cs`;
-   - the first `Spar.BuildTests`: isolation, "authored files untouched", a clean clone;
+   - the first `Spar.BuildTests`: isolation, "authored files untouched", a clean clone (built: a clean copy, the unchanged build and the Production boundary of the Notebook; decision "Build tests: a clean copy, the step matrix from binary logs, the production boundary");
    - the package-only consumer test from the first day (section 1), with the generality fixtures (RR): a folder name with a space, an assembly name different from the project, a custom app id, a non-default frontend folder, a path with non-ASCII characters;
    - the test-SDK shape (RR): a `SparTestedApplication` item that becomes a project reference before restore, tried on `Spar.Sdk` before it is fixed.
 

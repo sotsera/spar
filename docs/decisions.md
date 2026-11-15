@@ -3031,3 +3031,15 @@ Evidence: `docs/evidence/m1a-frontend-packing.md`.
 
 - **Built with it (2026-11-15):** the informational build line (for the Notebook: "the third-party notices of 109 packages from Vite's licence file (3,057 B)") and `SparThirdPartyNotices` (`true`, `false`, or a file; a missing file fails with SPAR111). Checked in real builds: all three settings, a switch back to the default, and an unchanged build.
 - **Found on the way and fixed:** the embedding target ran before packing. Spar's steps were each hooked `BeforeTargets="PrepareResources"`, and MSBuild ran them in the order they are declared in `Sdk.targets`, whatever `AfterTargets` said; every build had embedded the pack left by the build before, and a clean clone's first build would have had no page. One entry target, `SparBuildSteps`, now lists the steps in order through `DependsOnTargets`; a clean Test build embeds its pack on the first pass.
+
+## 2026-11-15, Build tests: a clean copy, the step matrix from binary logs, the production boundary (implementation record; choices for review)
+
+Evidence: `docs/evidence/m1a-build-tests.md`.
+- **Built:** `tests/Spar.BuildTests`, three tests on one copy of the working tree: a clean first build of the Notebook and its tests (every incremental Spar step runs, the page, notices and client are there, no authored file changes), an unchanged build that runs none of them, and the Production NativeAOT publish searched for the test host, the loopback host and the test libraries (none found; a control finds them where they belong). 3 of 3 in about 69 s.
+- **Numbers:** unchanged Debug build of the Notebook 0.57-0.67 s with node reuse and the MSBuild server, 1.47-1.52 s fully isolated, 1.63-1.64 s isolated with a binary log; the 1.5 s budget holds in the developer's case.
+- **Choices made while building, for review:**
+  - **A copy, not `git clone`:** the files `git ls-files --cached --others --exclude-standard` lists, so uncommitted work is tested too and nothing needs a commit first. Under `artifacts/build-tests/<run>/`, kept after the run for inspection.
+  - **The step matrix reads a diagnostic replay of each binary log** for `Building target` / `Skipping target` lines of Spar's targets, rather than a binary-log reader package: no new dependency. It sees only targets with inputs and outputs, which are the ones that can be skipped; the test also requires each expected step to appear, so a renamed target fails it.
+  - **The no-op time is recorded in `logs/timings.txt`, not asserted:** the isolated build the tests need pays for starting MSBuild and sits at the budget, and machine speed varies. A budget check under a warm server belongs with the performance lane (M4).
+  - **Not in `Spar.slnx`;** CI runs them as their own step after the `-mt` build.
+  - **"Authored" is every file outside `bin/`, `obj/` and `node_modules/`;** a build that writes or adds anything else fails the test, the contract snapshot included.

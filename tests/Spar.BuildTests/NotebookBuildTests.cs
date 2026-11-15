@@ -1,0 +1,131 @@
+using System.Text;
+
+namespace Spar.BuildTests;
+
+/// <summary>
+/// The Notebook sample built from a clean copy: what a fresh clone's first build produces, what an unchanged second
+/// build runs, and what the Production executable carries. The builds share the copy's <c>obj/</c> folders and its
+/// restore, so they stay in this one class, whose tests xUnit runs one at a time.
+/// </summary>
+public sealed class NotebookBuildTests(Workspace workspace)
+{
+    private const string Tests = "samples/Notebook.Tests/Notebook.Tests.csproj";
+
+    private const string App = "samples/Notebook/Notebook.csproj";
+
+    /// <summary>The Spar targets with inputs and outputs; an unchanged build skips every one.</summary>
+    private static readonly string[] IncrementalSteps =
+    [
+        "SparClient", "SparFrontendInstall", "SparFrontendTypeCheck", "SparFrontendBuild", "SparFrontendPack",
+    ];
+
+    /// <summary>Plan section 5: the no-op build of the Notebook sample.</summary>
+    private static readonly TimeSpan NoOpBudget = TimeSpan.FromSeconds(1.5);
+
+    private static Task<BuildResult>? s_first;
+
+    [Fact]
+    public async Task A_clean_copy_builds_the_app_with_its_page_and_client_and_changes_no_authored_file()
+    {
+        var first = await FirstBuildAsync();
+
+        Assert.True(first.Exit == 0, first.Output);
+        Assert.Equal(IncrementalSteps.Order(StringComparer.Ordinal), first.Ran.Intersect(IncrementalSteps));
+
+        var app = Directory.GetFiles(Path.Combine(workspace.Root, "samples", "Notebook.Tests", "bin"), "Notebook.dll", SearchOption.AllDirectories);
+        var assembly = Assert.Single(app);
+        var image = File.ReadAllBytes(assembly);
+        Assert.True(Contains(image, "Spar.Frontend", Encoding.UTF8), "The app assembly has no packed page.");
+        Assert.True(Contains(image, "Spar.ThirdPartyNotices", Encoding.UTF8), "The app assembly has no notices.");
+
+        var client = Path.Combine(workspace.Root, "samples", "Notebook", "obj", "spar", "client");
+        Assert.True(File.Exists(Path.Combine(client, "package.json")), "No generated client under obj/spar/client.");
+
+        AssertAuthoredFilesUntouched();
+    }
+
+    [Fact]
+    public async Task An_unchanged_build_runs_no_Spar_step()
+    {
+        var first = await FirstBuildAsync();
+        Assert.True(first.Exit == 0, first.Output);
+
+        var second = await Dotnet.RunAsync(workspace, "notebook-tests-noop", "build", Tests);
+
+        Assert.True(second.Exit == 0, second.Output);
+        Assert.Empty(second.Ran);
+        foreach (var step in IncrementalSteps)
+        {
+            Assert.True(second.SparTargets.ContainsKey(step), $"The unchanged build's log does not mention {step}.");
+        }
+
+        // The budget is the app's own no-op build (plan section 5), measured after a first Debug build of it. Times
+        // vary with the machine, so they are recorded in timings.txt beside the logs, not asserted.
+        var appFirst = await Dotnet.RunAsync(workspace, "notebook-debug-first", "build", App);
+        Assert.True(appFirst.Exit == 0, appFirst.Output);
+        var appNoOp = await Dotnet.RunAsync(workspace, "notebook-debug-noop", "build", App);
+        Assert.True(appNoOp.Exit == 0, appNoOp.Output);
+        Assert.Empty(appNoOp.Ran);
+        TestContext.Current.SendDiagnosticMessage(
+            $"No-op build of the Notebook: {appNoOp.Elapsed.TotalSeconds:0.00} s (budget {NoOpBudget.TotalSeconds} s).");
+
+        AssertAuthoredFilesUntouched();
+    }
+
+    [Fact]
+    public async Task The_production_executable_carries_its_page_and_no_test_or_loopback_code()
+    {
+        // A publish installs the frontend and writes the client, so the clean copy's first build goes before it.
+        await FirstBuildAsync();
+
+        var publish = Path.Combine(workspace.Logs, "..", "publish", "Notebook");
+        var result = await Dotnet.RunAsync(workspace, "notebook-publish", "publish", App, "-c", "Release", "-o", publish);
+        Assert.True(result.Exit == 0, result.Output);
+
+        var name = OperatingSystem.IsWindows() ? "Notebook.exe" : "Notebook";
+        var image = File.ReadAllBytes(Path.Combine(publish, name));
+        Assert.True(Contains(image, "SPARFE", Encoding.ASCII), "The executable carries no packed page.");
+
+        // Type names are UTF-8 in a native image's metadata; string literals are UTF-16 (plan section 5).
+        string[] types =
+        [
+            "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackHost", "LoopbackChannel", "LoopbackAssets",
+            "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel",
+        ];
+        string[] literals = ["/_spar/channel", "/_spar/send", "Spar.TestHost.IsSupported"];
+        var found = types.Where(t => Contains(image, t, Encoding.UTF8))
+            .Concat(literals.Where(l => Contains(image, l, Encoding.Unicode)))
+            .ToList();
+        Assert.True(found.Count == 0, $"The Production executable contains: {string.Join(", ", found)}.");
+
+        // The control: the same search finds the markers in the assemblies that carry them.
+        var loopbackProject = Path.Combine("src", "Spar.Loopback", "Spar.Loopback.csproj");
+        var built = await Dotnet.RunAsync(workspace, "loopback", "build", loopbackProject);
+        Assert.True(built.Exit == 0, built.Output);
+        var loopbackOutput = Path.Combine(workspace.Root, "src", "Spar.Loopback", "bin");
+        var loopback = File.ReadAllBytes(Assert.Single(Directory.GetFiles(loopbackOutput, "Spar.Loopback.dll", SearchOption.AllDirectories)));
+        var testOutput = Path.Combine(workspace.Root, "samples", "Notebook.Tests", "bin");
+        var runtime = File.ReadAllBytes(Assert.Single(Directory.GetFiles(testOutput, "Spar.dll", SearchOption.AllDirectories)));
+        Assert.True(Contains(loopback, "LoopbackHost", Encoding.UTF8), "The control search missed LoopbackHost.");
+        Assert.True(Contains(loopback, "/_spar/channel", Encoding.Unicode), "The control search missed /_spar/channel.");
+        Assert.True(Contains(runtime, "SparTestSession", Encoding.UTF8), "The control search missed SparTestSession.");
+
+        AssertAuthoredFilesUntouched();
+    }
+
+    /// <summary>The first build of the copy, shared by the tests that need it, whichever runs first.</summary>
+    private Task<BuildResult> FirstBuildAsync() =>
+        s_first ??= Dotnet.RunAsync(workspace, "notebook-tests-first", "build", Tests);
+
+    private void AssertAuthoredFilesUntouched()
+    {
+        var now = workspace.HashAuthored();
+        var changed = workspace.Authored.Where(f => now.GetValueOrDefault(f.Key) != f.Value).Select(f => f.Key);
+        var added = now.Keys.Except(workspace.Authored.Keys);
+        var problems = changed.Select(f => $"changed or removed: {f}").Concat(added.Select(f => $"added: {f}")).ToList();
+        Assert.True(problems.Count == 0, string.Join("\n", problems));
+    }
+
+    private static bool Contains(byte[] image, string text, Encoding encoding) =>
+        image.AsSpan().IndexOf(encoding.GetBytes(text)) >= 0;
+}
