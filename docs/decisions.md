@@ -2910,3 +2910,7 @@ Evidence: `docs/evidence/m1a-typescript-sdk.md`.
   - **An aborted call waits 5 s for the backend's confirmation**, then ends as `transport` / `unconfirmed` / `unknown`. The plan names "the confirmation timeout" without a number.
   - **A call made before `open` waits for it,** instead of failing at once; if the channel closes first, it fails `unavailable` / `notStarted`.
 - **Two vectors added on both sides:** an id written `7.0` and credits written `4e0` are malformed, because the C# reader takes only integers written as integers and the TypeScript decoder now checks the raw text the same way.
+
+## 2026-11-15, SDK abort confirmation and calls before open accepted (user decision)
+
+The user kept both choices of "TypeScript SDK core" ("Keep both"): an aborted call waits 5 s for the backend's confirmation and then ends as `transport` / `unconfirmed` / `unknown`; a call made before `open` waits for it, and fails `unavailable` / `notStarted` if the channel closes first.
