@@ -1,0 +1,34 @@
+# The contracts of SqlTool.Real as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint 304fa63e424be195
+
+contract connections (SqlTool.Connections.IConnections)
+  forget(string) -> void
+  list() -> IReadOnlyList<SqlTool.Connections.ConnectionInfo>
+  test(string) -> SqlTool.Connections.ConnectionInfo | SqlTool.Connections.ConnectionError
+
+contract crashReport (SqlTool.Status.CrashReport)
+  lastCrash() -> SqlTool.Status.CrashInfo?
+
+contract script (SqlTool.Scripts.ScriptService)
+  copyCreateScript(string) -> void | SqlTool.Scripts.CopyScriptError
+
+record SqlTool.Connections.ConnectionInfo
+  id: string
+  server: string
+  database: string
+  integratedSecurity: bool
+
+record SqlTool.Status.CrashInfo
+  at: DateTimeOffset
+  summary: string
+
+error SqlTool.Connections.ConnectionError
+  notFound(connectionId: string)
+  loginFailed(server: string, sqlNumber: int)
+
+error SqlTool.Scripts.CopyScriptError
+  clipboardBusy
+  scriptTooLarge(limit: long)
+  noClipboard(reason: string)

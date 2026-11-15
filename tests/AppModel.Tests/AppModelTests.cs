@@ -46,6 +46,22 @@ public sealed partial class AppModelTests
         Assert.True(ran == 0, runOutput);
     }
 
+    /// <summary>
+    /// The document's app through real Spar: its SDK, analyzer and generator, with stand-ins (<c>tests/AppModel/Planned</c>)
+    /// only for what Spar does not have yet. The contracts it serves are those Spar can build today; the others join as
+    /// their features land (streams and subscriptions in M3).
+    /// </summary>
+    [Fact]
+    public async Task The_documents_app_builds_with_real_Spar()
+    {
+        var (exit, output) = await RunAsync("dotnet", "build", Path.Combine("Real", "SqlTool.Real.csproj"), "-nologo", "-nr:false", "-v:n");
+
+        Assert.True(exit == 0, output);
+        var snapshot = File.ReadAllText(Path.Combine(Check, "Real", "SqlTool.Real.contracts.snapshot"));
+        var contracts = snapshot.Split('\n').Where(line => line.StartsWith("contract ", StringComparison.Ordinal)).Select(line => line.Split(' ')[1]);
+        Assert.Equal(["connections", "crashReport", "script"], contracts);
+    }
+
     [Fact]
     public async Task A_switch_missing_a_case_fails_with_CS8509()
     {

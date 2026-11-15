@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Stand-ins for the Spar API the document uses that Spar does not have yet, for the real-Spar check (decision "The
+    documentation check under tests/"). It links the stand-in check's files for those APIs only; when Spar gains one,
+    the two definitions clash and the file is removed from this list.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Spar</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Spar\Spar.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="PlannedBuilder.cs" />
+    <Compile Include="..\Spar.Stubs\Window.cs" Link="Stubs\Window.cs" />
+    <Compile Include="..\Spar.Stubs\Tray.cs" Link="Stubs\Tray.cs" />
+    <Compile Include="..\Spar.Stubs\Shell.cs" Link="Stubs\Shell.cs" />
+    <Compile Include="..\Spar.Stubs\Clipboard.cs" Link="Stubs\Clipboard.cs" />
+    <Compile Include="..\Spar.Stubs\Taskbar.cs" Link="Stubs\Taskbar.cs" />
+    <Compile Include="..\Spar.Stubs\SystemEvents.cs" Link="Stubs\SystemEvents.cs" />
+    <Compile Include="..\Spar.Stubs\Network.cs" Link="Stubs\Network.cs" />
+    <Compile Include="..\Spar.Stubs\Health.cs" Link="Stubs\Health.cs" />
+    <Compile Include="..\Spar.Stubs\Files.cs" Link="Stubs\Files.cs" />
+  </ItemGroup>
+</Project>

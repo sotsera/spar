@@ -30,8 +30,10 @@ internal static class ExhaustiveChecks
 /// <summary>Reading a Result with one exhaustive union switch (the form chosen on 2026-11-14), and a command without a value.</summary>
 internal static class ResultChecks
 {
-    public static async Task<string> PlanMessage(CopyJobs.CopyJobsService service, CopyRecipe recipe, CancellationToken ct) =>
-        await service.PlanAsync(recipe, ct) switch
+    // The plan command's shape (CopyJobsService.PlanAsync), passed in so the real-Spar build, which leaves the streaming
+    // copyJobs contract out until M3, checks the same switch.
+    public static async Task<string> PlanMessage(Func<CopyRecipe, CancellationToken, Task<Result<CopyPlan, PlanError>>> plan, CopyRecipe recipe, CancellationToken ct) =>
+        await plan(recipe, ct) switch
         {
             CopyPlan p => $"{p.Steps.Count} tables",
             PlanError.ConnectionNotFound e => $"Unknown connection {e.ConnectionId}",

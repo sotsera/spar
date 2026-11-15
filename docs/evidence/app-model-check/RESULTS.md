@@ -1,6 +1,6 @@
 # app-model-check results
 
-**Moved on 2026-11-15:** the check now lives in `tests/AppModel` (the same files, at the same depth), and `dotnet test` runs it through `tests/AppModel.Tests` (decision "The documentation check under tests/"). This record keeps its history; the paths below are relative to `tests/AppModel`.
+**Moved on 2026-11-15:** the check now lives in `tests/AppModel` (the same files, at the same depth), and `dotnet test` runs it through `tests/AppModel.Tests` (decision "The documentation check under tests/"). This record keeps its history; the paths below are relative to `tests/AppModel`. Since then `tests/AppModel/Real` also builds the C# blocks Spar supports with real Spar, against `tests/AppModel/Planned` for the rest.
 
 Checks that every C# and TypeScript block of `docs/app-model.md` compiles, verbatim, against stand-ins for the Spar API. First run on 2026-11-14. The figures in the sections above "History" are from the rerun of 2026-11-15, after a review of the document; "History" keeps the earlier runs that explain a decision.
 
