@@ -1,0 +1,80 @@
+<Project>
+  <!--
+    Before Microsoft.NET.Sdk's targets: its publish targets read PublishAot when they are imported.
+  -->
+
+  <!-- What kind of Spar project this is: a test project (it sets IsTestProject) or an app (any other executable). -->
+  <PropertyGroup>
+    <SparIsTestProject Condition="'$(IsTestProject)' == 'true'">true</SparIsTestProject>
+    <SparIsApp Condition="'$(SparIsTestProject)' != 'true' and ('$(OutputType)' == 'Exe' or '$(OutputType)' == 'WinExe')">true</SparIsApp>
+  </PropertyGroup>
+
+  <!-- Apps publish with NativeAOT by default. -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <PublishAot Condition="'$(PublishAot)' == ''">true</PublishAot>
+  </PropertyGroup>
+
+  <!-- The NativeAOT test lane publishes the test project itself, against xunit.v3.aot (plan section 5). -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparTestLane)' == 'Aot'">
+    <PublishAot>true</PublishAot>
+    <DefineConstants>$(DefineConstants);XUNIT_AOT</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!-- Test results go to the repository's artifacts/test-results/<project>/ (decision "M1a names"). -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' == 'true'">
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <!-- The generator reads the variant. -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="SparVariant" />
+  </ItemGroup>
+
+  <!--
+    The test-host hook exists only where a test process turns it on. Apps turn it off, and the trimmer removes it
+    from their publications (the production boundary test proves it).
+  -->
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="false" Trim="true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="true" Trim="true" />
+  </ItemGroup>
+
+  <!--
+    A test project builds the projects it references (its app, and their libraries) in the Test variant, and never
+    passes its own lane on. Spar's own references are added below this update, so it does not touch them.
+  -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <ProjectReference Update="@(ProjectReference)"
+                      AdditionalProperties="%(ProjectReference.AdditionalProperties);SparVariant=Test"
+                      UndefineProperties="%(ProjectReference.UndefineProperties);SparTestLane" />
+  </ItemGroup>
+
+  <!--
+    Source mode: Spar's own projects by reference. Their builds never see an app's variant or lane, so each is built
+    once, whoever references it.
+  -->
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar\Spar.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+    <ProjectReference Include="$(SparSourceRoot)Spar.Generator\Spar.Generator.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;RuntimeIdentifier"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsTestProject)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Testing\Spar.Testing.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
+  <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <PackageReference Include="xunit.v3" Condition="'$(SparTestLane)' != 'Aot'" />
+    <PackageReference Include="xunit.v3.aot" Condition="'$(SparTestLane)' == 'Aot'" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

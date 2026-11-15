@@ -1,0 +1,67 @@
+using System.ComponentModel;
+
+namespace Spar.Runtime;
+
+public enum SparOutcomeKind
+{
+    /// <summary>The command returned a value (the payload is its JSON, empty for a command without one).</summary>
+    Value,
+
+    /// <summary>The command returned a declared error (the payload is <c>{"code":…}</c> with its fields).</summary>
+    Error,
+
+    /// <summary>An infrastructure failure (<see cref="SparOutcome.Failure"/>); the payload is empty.</summary>
+    Failure,
+}
+
+/// <summary>
+/// The outcome of one dispatched command, in the shape the bridge sends (plan section 2c, "The messages"): a
+/// <c>result</c> with <c>ok</c> true or false, or a <c>failure</c>.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public readonly struct SparOutcome
+{
+    private SparOutcome(SparOutcomeKind kind, ReadOnlyMemory<byte> payload, SparFailure? failure)
+    {
+        Kind = kind;
+        Payload = payload;
+        Failure = failure;
+    }
+
+    public SparOutcomeKind Kind { get; }
+
+    public ReadOnlyMemory<byte> Payload { get; }
+
+    public SparFailure? Failure { get; }
+
+    public static SparOutcome FromValue(ReadOnlyMemory<byte> json) => new(SparOutcomeKind.Value, json, null);
+
+    public static SparOutcome FromError(ReadOnlyMemory<byte> json) => new(SparOutcomeKind.Error, json, null);
+
+    public static SparOutcome FromFailure(SparFailure failure) => new(SparOutcomeKind.Failure, ReadOnlyMemory<byte>.Empty, failure);
+
+    public override string ToString() => Kind == SparOutcomeKind.Failure
+        ? $"failure {Failure}"
+        : $"{(Kind == SparOutcomeKind.Value ? "ok" : "error")} {System.Text.Encoding.UTF8.GetString(Payload.Span)}";
+}
+
+/// <summary>
+/// An infrastructure failure with the decided <c>CallError</c> fields (decision "<c>CallError</c> kinds"). The values
+/// are the wire strings. <see cref="Detail"/> reaches the page only in Development builds.
+/// </summary>
+public sealed record SparFailure(string Kind, string Code, string Execution, string? Detail = null)
+{
+    public static SparFailure InvalidRequest(string detail) => new("rejected", "invalid-request", "notStarted", detail);
+
+    public static SparFailure UnknownCommand(string contract, string command) =>
+        new("rejected", "unknown-command", "notStarted", $"{contract}.{command}");
+
+    public static SparFailure Cancelled() => new("cancelled", "cancelled", "stopped");
+
+    public static SparFailure Failed(Exception exception) => new("failed", "failed", "unknown", $"{exception.GetType().Name}: {exception.Message}");
+
+    public static SparFailure ResponseSerialization(Exception exception) =>
+        new("response", "serialization", "completed", $"{exception.GetType().Name}: {exception.Message}");
+
+    public override string ToString() => $"{Kind}/{Code} ({Execution}){(Detail is null ? "" : ": " + Detail)}";
+}

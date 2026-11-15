@@ -43,11 +43,12 @@ Read [the plan](docs/plan.md) for scope and the current milestone, the [design f
 | `spar-typescript-conventions` | Writing TypeScript and JavaScript, and the shape of the generated clients |
 | `spar-msbuild` | Project files, props and targets, build variants, output locations |
 | `spar-contract-generation` | Contract analysis, generated dispatch and serializers, the TypeScript client |
+| `spar-testing` | The test host, test projects and lanes, and the C# side of dispatch that tests drive |
 | `spar-native-interop` | Win32 and COM declarations, layouts, callbacks, handle ownership |
 | `spar-webview2-hosting` | The Windows WebView2 host, STA work, the bridge, devtools access, shutdown |
 | `spar-webkitgtk-hosting` | The Linux WebKitGTK host, GLib main-loop work, the bridge, devtools access, shutdown |
 
-Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# side of the bridge in M1a, page security in M1b, the loopback host and the development loop in M1d. Performance and Windows Sandbox skills come with M4. Skills for app authors are not kept here: they go in the `plugins/spar/` plugin.
+Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# side of the bridge in M1a (`spar-testing`), page security in M1b, the development loop in M1d. Performance and Windows Sandbox skills come with M4. Skills for app authors are not kept here: they go in the `plugins/spar/` plugin.
 
 ## Agent plugins
 
@@ -61,9 +62,10 @@ Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# sid
 
 | Path | Contents |
 |---|---|
-| `src/` | Framework projects (from M1) |
-| `samples/` | Consumer applications and their tests (from M1) |
+| `src/` | Framework projects: `Spar` (runtime), `Spar.Generator` (generator and analyzer), `Spar.Testing`, `Spar.Sdk` (props and targets) |
+| `samples/` | Polished sample apps and their tests; in this repository they import `src/Spar.Sdk/Sdk/` directly (source mode) |
 | `tests/` | Framework tests (from M1) |
 | `eng/` | Repository checks: `check-size.cs` and its exceptions file |
+| `.github/workflows/` | CI on GitHub Actions (decision "CI on GitHub Actions; the first slice"); not run until the first push |
 | `plugins/spar/` | The app-author skills plugin, versioned and released with the SDK; its marketplace file is at the root (not created yet) |
 | `spikes/` | Throwaway M0 experiments, versioned in git without their generated folders. Each has a `RESULTS.md`. A new spike keeps its raw evidence in its own `results/`, never only in `obj/`, `bin/` or `artifacts/`. The M0 spikes' raw logs and screenshots under the root `artifacts/` are the agreed exception: they are disposable, and each `RESULTS.md` is the record. Before deleting a spike, move its `RESULTS.md` and `results/` to `docs/evidence/<name>/` and update the links. Check which other spikes build on it first. `spikes/app-model-check` and `spikes/frontend-frameworks` hold checks this guidance requires, so they stay until M1a rebuilds those checks under `tests/`. |

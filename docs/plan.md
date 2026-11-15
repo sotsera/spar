@@ -56,7 +56,7 @@ Details and evidence in `docs/decisions.md`.
 | The remaining test points: trusted input in the in-process window, profiles for window tests (a shared environment with InPrivate controllers, or a folder per test), streams and cancellation through the typed test client, the black-box data root, where page tests run, and issues D to K. | The strategy is decided (section 5). Each remaining point is decided with the user when its slice reaches it (section 5, "Open issues"), with a spike where needed. Includes the performance regression suites (user, 2026-11-14): BenchmarkDotNet for runtime hot paths and a build-timing suite against stored baselines; which run in CI, and how noise is handled, is issue K. |
 | API design for native features (tray, custom title bar, close to tray, placement, file open and save, folder picker, drag and drop, clipboard, print and print to PDF, keyboard shortcuts, single instance, resource usage; notifications later): as easy and pleasant as possible in C# and TypeScript. | User requirement (2026-11-14). Principles and first ideas in section 3, "Native services". Designed with the user one feature at a time, each with a compiled example in `docs/app-model.md` before implementation. |
 | Agent devtools scope (Linux has no CDP), and CLI against MCP. | M2 evaluation. |
-| CI: the provider and its runners. Build and test lanes are needed from M1a on Windows and Linux; Linux window tests (Xvfb in a container) from M1c; Windows window tests need a runner with the WebView2 Runtime and a desktop session. | M1a chooses the provider. GTK4 needs a non-root user and user namespaces for its sandbox. |
+| CI: GitHub Actions (user, 2026-11-15; decision "CI on GitHub Actions; the first slice"). The workflow is in `.github/workflows/ci.yml` and first runs at the first push. Open: pinning actions to commit SHAs before that push, and whether the window tests (M1b) run on the hosted Windows runner or need a self-hosted one with a desktop session; Linux window tests use the container image from M1c. | First push; M1b and M1c. |
 | arm64: `win-arm64` and `linux-arm64` are mapped by `SparPlatforms`, but no spike ran on arm64. | Decide in M4 whether arm64 is qualified or documented as untested. |
 | The two-stage close: a close request with page and backend guards before teardown, and an automated mode that skips prompts for tests and agents. The dialog and window decisions already rely on it. | Adopted from the research review (user, 2026-11-15). Designed with the user at the start of M1b, with a compiled example in `docs/app-model.md` first. |
 | The Windows single-instance mechanism. Linux is decided (a lock file plus a Unix socket). | M1b. |
@@ -230,8 +230,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 #### M1a: build machinery, contracts and the core, with no window
 
-**Decide first:**
-- the CI provider and its runners;
+**Decide first:** nothing left; every point was decided on 2026-11-15.
 
 **Build:**
 1. **SDK and tasks:**

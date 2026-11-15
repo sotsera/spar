@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Spar's test library (plan section 5): runs the app's own Program.cs inside the test process with the test's
+    overrides. This slice has the None surface; Browser and Window follow in M1a and M1b/M1c.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Spar.Testing</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar\Spar.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+<Project>
+  <!--
+    The Notebook sample: a local Markdown notebook (decision "Polished sample apps: a Markdown notebook; the test
+    variant"). In this repository it builds against Spar's source by importing Spar.Sdk's props and targets; an app
+    outside writes <Project Sdk="Spar.Sdk"> instead.
+  -->
+  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.props" />
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Notebook</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
+</Project>

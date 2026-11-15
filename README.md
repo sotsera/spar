@@ -9,7 +9,7 @@ You write the backend as ordinary C# services and mark the operations the fronte
 
 An app chooses its target platforms with one property, and publishes by default as a single [NativeAOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot/) executable for each of them.
 
-This repository targets .NET 11. It is at milestone M0: repository foundation and build-pipeline decisions. Nothing here is usable as a framework yet.
+This repository targets .NET 11. It is at milestone M1a: build machinery, contracts and the core, with no window yet. Nothing here is usable as a framework yet.
 
 - [Plan](docs/plan.md): scope, settled decisions, open questions and milestones, with the design by area in [`docs/design/`](docs/design/).
 - [Decisions](docs/decisions.md): measured outcomes of the M0 spikes and the decisions taken from them.

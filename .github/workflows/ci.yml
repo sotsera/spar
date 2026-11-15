@@ -1,0 +1,65 @@
+# Spar CI (decision "CI on GitHub Actions"). Prepared before the repository exists; first run on the first push.
+# Before that push: pin every action to a full commit SHA (supply-chain default), and check that the window tests
+# can run on the hosted Windows runner (it may need a self-hosted one with a desktop session).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  # Results go where AGENTS.md puts them; the upload step collects them.
+  SPAR_TEST_RESULTS: ${{ github.workspace }}/artifacts/test-results
+
+jobs:
+  build-test:
+    name: build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Size limits
+        run: dotnet run eng/check-size.cs
+
+      - name: Build
+        run: dotnet build Spar.slnx -c Debug
+
+      - name: Test (CoreCLR)
+        run: dotnet test --solution Spar.slnx -c Debug --no-build
+
+      - name: Test (NativeAOT lane)
+        shell: bash
+        run: |
+          dotnet publish samples/Notebook.Tests -c Release -p:SparTestLane=Aot -o artifacts/aot/Notebook.Tests
+          artifacts/aot/Notebook.Tests/Notebook.Tests
+
+      - name: Build with -mt
+        run: dotnet build Spar.slnx -c Debug -mt -nodeReuse:false
+
+      - name: Test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}
+          path: artifacts/test-results/
+          if-no-files-found: ignore
