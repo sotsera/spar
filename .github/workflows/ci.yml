@@ -41,6 +41,13 @@ jobs:
       - name: Size limits
         run: dotnet run eng/check-size.cs
 
+      - name: TypeScript SDK (TypeScript 6 and 7, Vitest)
+        working-directory: src/Spar.Client
+        run: |
+          npm ci --ignore-scripts
+          npm run check
+          npm test
+
       - name: Build
         run: dotnet build Spar.slnx -c Debug
 

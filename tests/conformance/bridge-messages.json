@@ -182,6 +182,8 @@
     { "name": "id zero", "wire": "{\"type\":\"cancel\",\"id\":0}\t", "id": null },
     { "name": "a negative id", "wire": "{\"type\":\"cancel\",\"id\":-7}\t", "id": null },
     { "name": "a fractional id", "wire": "{\"type\":\"cancel\",\"id\":1.5}\t", "id": null },
+    { "name": "an integer id written with a fraction", "wire": "{\"type\":\"cancel\",\"id\":7.0}\t", "id": null },
+    { "name": "credits written with an exponent", "wire": "{\"type\":\"credits\",\"id\":9,\"credits\":4e0}\t", "id": 9 },
     { "name": "an id as a string", "wire": "{\"type\":\"cancel\",\"id\":\"7\"}\t", "id": null },
     { "name": "an unsafe id", "wire": "{\"type\":\"cancel\",\"id\":9007199254740992}\t", "id": null },
     { "name": "no type", "wire": "{\"id\":7}\t", "id": 7 },

@@ -1,0 +1,270 @@
+// One document's side of the bridge (plan section 2c): hello and open, increasing ids, one terminal per call,
+// aborts confirmed by the backend, and a lost channel turned into the decided failures. Never retries a call.
+import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
+import type { CallError, CallErrorKind, CallName, CallOptions, Execution, Outcome } from "./results.js";
+
+/** The host's channel for one document: strings both ways, never structured messages. */
+export interface BridgeChannel {
+  send(message: string): void;
+  /** Registers the listeners. `closed` runs when the channel can deliver nothing more (the host went away). */
+  listen(received: (message: string) => void, closed: () => void): void;
+}
+
+/** Returned by a decoder for a declared error code this client does not know (a newer backend). */
+export const unknownErrorCase: unique symbol = Symbol("spar.unknownErrorCase");
+
+/** How a generated module reads one command's payloads; both build their objects field by field. */
+export interface Decoder<T> {
+  /** Reads the value's JSON; the text is empty for a command without a value. */
+  readonly value: (json: string) => T;
+  /** Reads a declared error's parsed payload, or returns `unknownErrorCase`. */
+  readonly error: (code: string, payload: Readonly<Record<string, unknown>>) => unknown;
+}
+
+/** How long an aborted call waits for the backend to confirm it stopped before its outcome is unknown. */
+const confirmationTimeoutMs = 5_000;
+
+/** The host-to-page types this SDK understands, announced in hello. */
+const understoodTypes = ["open", "result", "failure", "event", "closing"] as const;
+
+interface Pending {
+  readonly name: CallName;
+  readonly decoder: Decoder<unknown>;
+  readonly resolve: (outcome: Outcome) => void;
+  sent: boolean;
+  cleanup: () => void;
+}
+
+export class Connection {
+  readonly #channel: BridgeChannel;
+  readonly #pending = new Map<number, Pending>();
+  readonly #waitingForOpen: Array<() => void> = [];
+  readonly #eventListeners = new Map<string, Set<(payload: string) => void>>();
+  readonly #closingWork: Array<() => Promise<unknown>> = [];
+  #state: "opening" | "open" | "closed" = "opening";
+  #nextId = 1;
+  #document: string | undefined;
+  #hostContracts: string | undefined;
+
+  constructor(channel: BridgeChannel, contracts: string) {
+    this.#channel = channel;
+    channel.listen(message => this.#receive(message), () => this.#closed());
+    this.#send({ type: "hello", protocol: protocolVersion, types: understoodTypes, contracts, payload: "" });
+  }
+
+  /** The document id the host assigned in open; undefined until then. */
+  get document(): string | undefined {
+    return this.#document;
+  }
+
+  /** The host's contract fingerprint from open: when it differs from the page's, every call is rejected. */
+  get hostContracts(): string | undefined {
+    return this.#hostContracts;
+  }
+
+  /** Sends one call and resolves with its outcome; the promise never rejects. */
+  invoke(contract: string, command: string, request: string, decoder: Decoder<unknown>, options?: CallOptions): Promise<Outcome> {
+    const name: CallName = { contract, command };
+    const signal = options?.signal;
+    if (signal?.aborted === true) {
+      // It never left the page, so it certainly did not run.
+      return Promise.resolve(failure(name, "cancelled", "cancelled-before-start", "notStarted"));
+    }
+
+    if (this.#state === "closed") {
+      return Promise.resolve(failure(name, "unavailable", "unavailable", "notStarted"));
+    }
+
+    return new Promise<Outcome>(resolve => {
+      const id = this.#nextId++;
+      const pending: Pending = { name, decoder, resolve, sent: false, cleanup: () => {} };
+      this.#pending.set(id, pending);
+      if (signal !== undefined) {
+        const onAbort = (): void => this.#abort(id);
+        signal.addEventListener("abort", onAbort, { once: true });
+        pending.cleanup = () => signal.removeEventListener("abort", onAbort);
+      }
+
+      const send = (): void => {
+        if (!this.#pending.has(id)) {
+          return;
+        }
+
+        pending.sent = true;
+        this.#send({ type: "call", id, contract, command, payload: request });
+      };
+      if (this.#state === "open") {
+        send();
+      } else {
+        this.#waitingForOpen.push(send);
+      }
+    });
+  }
+
+  /** Tells the host the page's handlers are registered (`ui-ready`). */
+  ready(): void {
+    this.#send({ type: "ready", payload: "" });
+  }
+
+  /** Listens for a host event, such as `backend-updated`; returns a function that stops listening. */
+  onEvent(name: string, listener: (payload: string) => void): () => void {
+    const listeners = this.#eventListeners.get(name) ?? new Set();
+    listeners.add(listener);
+    this.#eventListeners.set(name, listeners);
+    return () => listeners.delete(listener);
+  }
+
+  /** Work the page does before its window closes, such as a telemetry flush; the host waits about a second. */
+  onClosing(work: () => Promise<unknown>): void {
+    this.#closingWork.push(work);
+  }
+
+  #send(message: BridgeMessage): void {
+    if (this.#state !== "closed") {
+      this.#channel.send(encode(message));
+    }
+  }
+
+  #receive(text: string): void {
+    const decoded = decode(text);
+    if (!decoded.ok) {
+      if (decoded.id !== undefined) {
+        this.#fail(decoded.id, "protocol", "malformed", "unknown");
+      }
+
+      return;
+    }
+
+    const message = decoded.message;
+    switch (message.type) {
+      case "open":
+        this.#open(message);
+        break;
+      case "result":
+        this.#result(message);
+        break;
+      case "failure":
+        this.#failure(message);
+        break;
+      case "event":
+        this.#eventListeners.get(message.name!)?.forEach(listener => listener(message.payload));
+        break;
+      case "closing":
+        void this.#runClosingWork();
+        break;
+      default:
+        // An unexpected type for a pending call fails that call, so no call can hang.
+        if (message.id !== undefined) {
+          this.#fail(message.id, "protocol", "malformed", "unknown");
+        }
+    }
+  }
+
+  #open(message: BridgeMessage): void {
+    this.#document = message.doc;
+    this.#hostContracts = message.contracts;
+    this.#state = "open";
+    for (const send of this.#waitingForOpen.splice(0)) {
+      send();
+    }
+  }
+
+  #result(message: BridgeMessage): void {
+    const pending = this.#take(message.id!);
+    if (pending === undefined) {
+      return;
+    }
+
+    pending.resolve(message.ok === true ? valueOutcome(pending, message.payload) : errorOutcome(pending, message.payload));
+  }
+
+  #failure(message: BridgeMessage): void {
+    const pending = this.#take(message.id!);
+    pending?.resolve(failure(pending.name, message.kind as CallErrorKind, message.code!, message.execution as Execution));
+  }
+
+  /** The page gave up waiting: ask the backend to stop, and report what it confirms, or an unknown outcome. */
+  #abort(id: number): void {
+    const pending = this.#pending.get(id);
+    if (pending === undefined) {
+      return;
+    }
+
+    if (!pending.sent) {
+      this.#take(id);
+      pending.resolve(failure(pending.name, "cancelled", "cancelled-before-start", "notStarted"));
+      return;
+    }
+
+    this.#send({ type: "cancel", id, payload: "" });
+    setTimeout(() => this.#fail(id, "transport", "unconfirmed", "unknown"), confirmationTimeoutMs);
+  }
+
+  #fail(id: number, kind: CallErrorKind, code: string, execution: Execution): void {
+    const pending = this.#take(id);
+    pending?.resolve(failure(pending.name, kind, code, execution));
+  }
+
+  #take(id: number): Pending | undefined {
+    const pending = this.#pending.get(id);
+    if (pending === undefined) {
+      return undefined;
+    }
+
+    this.#pending.delete(id);
+    pending.cleanup();
+    return pending;
+  }
+
+  /** The host went away: a call it received may have run (`lost`); one it never received did not (`unavailable`). */
+  #closed(): void {
+    this.#state = "closed";
+    this.#waitingForOpen.length = 0;
+    for (const id of [...this.#pending.keys()]) {
+      const pending = this.#take(id)!;
+      pending.resolve(pending.sent
+        ? failure(pending.name, "transport", "lost", "unknown")
+        : failure(pending.name, "unavailable", "unavailable", "notStarted"));
+    }
+  }
+
+  async #runClosingWork(): Promise<void> {
+    await Promise.allSettled(this.#closingWork.map(work => work()));
+    this.#send({ type: "closing-done", payload: "" });
+  }
+}
+
+function failure(name: CallName, kind: CallErrorKind, code: string, execution: Execution): Outcome {
+  const error: CallError = { kind, code, execution, contract: name.contract, command: name.command };
+  return { ok: false, error };
+}
+
+function valueOutcome(pending: Pending, payload: string): Outcome {
+  try {
+    return { ok: true, value: pending.decoder.value(payload) };
+  } catch {
+    return failure(pending.name, "protocol", "malformed", "unknown");
+  }
+}
+
+function errorOutcome(pending: Pending, payload: string): Outcome {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(payload);
+  } catch {
+    return failure(pending.name, "protocol", "malformed", "unknown");
+  }
+
+  if (typeof parsed !== "object" || parsed === null || typeof (parsed as { code?: unknown }).code !== "string") {
+    return failure(pending.name, "protocol", "malformed", "unknown");
+  }
+
+  const fields = parsed as Readonly<Record<string, unknown>>;
+  const code = fields["code"] as string;
+  const decoded = pending.decoder.error(code, fields);
+  if (decoded === unknownErrorCase) {
+    return failure(pending.name, "protocol", "unknown-error-case", "unknown");
+  }
+
+  return { ok: false, code, payload: decoded, call: pending.name };
+}

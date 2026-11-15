@@ -1,0 +1,43 @@
+// @spar/app/sdk: the SDK's public surface for app code, and the one entry generated modules call.
+import { Connection, type BridgeChannel, type Decoder } from "./connection.js";
+import { callOf, type Call, type CallOptions, type ErrorCases } from "./results.js";
+
+export {
+  configureSpar,
+  Result,
+  SparError,
+  type ApplicationError,
+  type Call,
+  type CallError,
+  type CallErrorKind,
+  type CallName,
+  type CallOptions,
+  type ErrorCases,
+  type ErrorHandlers,
+  type Execution,
+  type Handlers,
+} from "./results.js";
+export { unknownErrorCase, type BridgeChannel, type Decoder } from "./connection.js";
+
+let current: Connection | undefined;
+
+/** Opens the bridge for this document over the host's channel; the host's start-up code calls it once. */
+export function connectSpar(channel: BridgeChannel, contracts: string): Connection {
+  current = new Connection(channel, contracts);
+  return current;
+}
+
+/** @internal Called by generated contract modules: one command, its encoded request, and its decoders. */
+export function invoke<T, E extends ErrorCases>(
+  contract: string,
+  command: string,
+  request: string,
+  decoder: Decoder<T>,
+  options?: CallOptions,
+): Call<T, E> {
+  if (current === undefined) {
+    throw new Error("Spar is not connected: the host's start-up script has not run in this document.");
+  }
+
+  return callOf<T, E>(current.invoke(contract, command, request, decoder as Decoder<unknown>, options));
+}

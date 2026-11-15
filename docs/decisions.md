@@ -2901,3 +2901,12 @@ Evidence: `docs/evidence/m1a-bridge-and-tests.md`.
 ## 2026-11-15, Bridge id rule accepted (user decision)
 
 The user accepted the corrected id rule of "Bridge in C#: codec, session and tests" ("Accept it"): a message whose id cannot be trusted (missing, not a safe integer from 1, given twice, or not higher than every earlier id of the document) gets no reply and is logged; a malformed message with a new, valid id is answered `rejected` / `invalid-request`; a malformed message for a pending call fails that call with `protocol` / `malformed` / `unknown`. Plan section 2c states it.
+
+## 2026-11-15, TypeScript SDK core (implementation record; two choices for review)
+
+Evidence: `docs/evidence/m1a-typescript-sdk.md`.
+- **Built:** `src/Spar.Client` with the encoding C codec, `Call`, `Result`, `CallError`, `configureSpar`, `SparError` and a per-document `Connection` over a host channel. 103 Vitest tests pass, including the 76 shared vector checks (the C# side passes the same file, 95 tests). The sources and tests are clean on TypeScript 6.0.3 and 7.0.2.
+- **Choices made while building, for review:**
+  - **An aborted call waits 5 s for the backend's confirmation**, then ends as `transport` / `unconfirmed` / `unknown`. The plan names "the confirmation timeout" without a number.
+  - **A call made before `open` waits for it,** instead of failing at once; if the channel closes first, it fails `unavailable` / `notStarted`.
+- **Two vectors added on both sides:** an id written `7.0` and credits written `4e0` are malformed, because the C# reader takes only integers written as integers and the TypeScript decoder now checks the raw text the same way.
