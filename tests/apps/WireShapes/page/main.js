@@ -34,6 +34,14 @@ function big(digits) {
   });
 }
 
+/** A ratio parsed by the backend: a value that is not a number makes the command throw, and the page gets its correlation id. */
+function ratio(text) {
+  return echo.ratio({ name: text }).match({
+    success: value => ({ value }),
+    failure: error => ({ failure: { kind: error.kind, code: error.code, correlation: error.correlation ?? null } }),
+  });
+}
+
 /** Starts a call that runs until cancelled, then aborts it once the call has had time to start. */
 function abortWait(afterMs) {
   const controller = new AbortController();
@@ -49,7 +57,7 @@ async function many(count) {
   return results.map(result => result.value);
 }
 
-window.wire = { check, echoShapes, big, abortWait, many, document: () => connection.document };
+window.wire = { check, echoShapes, big, ratio, abortWait, many, document: () => connection.document };
 
 connection.ready();
 document.getElementById("status").textContent = "ready";

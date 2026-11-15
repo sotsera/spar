@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Spar.Runtime;
 
 namespace Spar;
@@ -34,6 +35,9 @@ internal sealed class SparTestSession
 
     public required IReadOnlySet<Type> AllowedExternals { get; init; }
 
+    /// <summary>Makes the app instance's own log, given the app's clock; Spar.Testing passes it.</summary>
+    public Func<TimeProvider, ILogger>? CreateLog { get; init; }
+
     public Task<SparRunningApp> Started => _started.Task;
 
     public void Stop() => _stop.Set();
@@ -51,7 +55,7 @@ internal sealed class SparTestSession
             // The test's overrides run last, after the app's registrations and Spar's defaults.
             ConfigureServices?.Invoke(services);
             SparExternalGuard.Apply(services, AllowedExternals);
-            app = SparRunningApp.Build(services, catalog, folders);
+            app = SparRunningApp.Build(services, catalog, folders, CreateLog);
         }
         catch (Exception exception)
         {
@@ -87,14 +91,16 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
     {
         services.TryAddSingleton(folders);
         services.TryAddSingleton(limits);
+        services.TryAddSingleton(TimeProvider.System);
         services.TryAddScoped<SparCall>();
         services.TryAddScoped<ISparCall>(provider => provider.GetRequiredService<SparCall>());
         catalog.AddServices(services);
     }
 
-    internal static SparRunningApp Build(IServiceCollection services, SparCatalog catalog, SparFolders folders)
+    internal static SparRunningApp Build(IServiceCollection services, SparCatalog catalog, SparFolders folders, Func<TimeProvider, ILogger>? createLog = null)
     {
         var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
-        return new SparRunningApp(provider, new SparDispatcher(provider, catalog), catalog, folders);
+        var testLog = createLog?.Invoke(provider.GetService<TimeProvider>() ?? TimeProvider.System);
+        return new SparRunningApp(provider, new SparDispatcher(provider, catalog, testLog), catalog, folders);
     }
 }

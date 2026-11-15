@@ -21,13 +21,19 @@ public sealed class SparCallContext(IServiceProvider services, ReadOnlyMemory<by
 /// Runs one command: its own DI scope, the call filled into <see cref="ISparCall"/>, the command's time limit folded
 /// into the token, and every outcome turned into a <see cref="SparOutcome"/>. Nothing is ever retried.
 /// </summary>
-internal sealed class SparDispatcher(IServiceProvider services, SparCatalog catalog)
+internal sealed class SparDispatcher(IServiceProvider services, SparCatalog catalog, ILogger? testLog = null)
 {
     /// <summary>The app's bridge limits (<see cref="SparBuilder.Bridge"/>), or the defaults.</summary>
     public BridgeLimits Limits { get; } = services.GetService<BridgeLimits>() ?? BridgeLimits.Default;
 
-    /// <summary>The app's logger for the bridge; nothing is written when the app adds no logging.</summary>
-    public ILogger Logger { get; } = services.GetService<ILoggerFactory>()?.CreateLogger("Spar.Bridge") ?? NullLogger.Instance;
+    /// <summary>
+    /// The bridge's logger: the app's, through its <c>ILoggerFactory</c> (nothing is written when the app adds no
+    /// logging), and in a test also the app instance's own log.
+    /// </summary>
+    public ILogger Logger { get; } = BothLoggers.Of(services.GetService<ILoggerFactory>()?.CreateLogger("Spar.Bridge"), testLog);
+
+    /// <summary>The app's clock: <see cref="TimeProvider.System"/> unless a test replaced it.</summary>
+    public TimeProvider Time { get; } = services.GetService<TimeProvider>() ?? TimeProvider.System;
 
     /// <summary>Whether the app has this command: only names it has go into telemetry tags, which the page cannot inflate.</summary>
     public bool Knows(string contract, string command) => catalog.TryGet(contract, command, out _);
@@ -80,5 +86,28 @@ internal sealed class SparCall : ISparCall
         Contract = contract;
         Command = command;
         CancellationToken = cancellationToken;
+    }
+}
+
+/// <summary>Writes each entry to the app's logger and to the test's, when there is one of each.</summary>
+internal sealed class BothLoggers(ILogger first, ILogger second) : ILogger
+{
+    public static ILogger Of(ILogger? app, ILogger? test) => (app, test) switch
+    {
+        (null, null) => NullLogger.Instance,
+        ({ } only, null) => only,
+        (null, { } only) => only,
+        ({ } a, { } b) => new BothLoggers(a, b),
+    };
+
+    public IDisposable? BeginScope<TState>(TState state)
+        where TState : notnull => null;
+
+    public bool IsEnabled(LogLevel logLevel) => first.IsEnabled(logLevel) || second.IsEnabled(logLevel);
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+        first.Log(logLevel, eventId, state, exception, formatter);
+        second.Log(logLevel, eventId, state, exception, formatter);
     }
 }

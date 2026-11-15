@@ -73,6 +73,23 @@ public sealed class BrowserBridgeTests(SharedBrowser shared)
     }
 
     [Fact]
+    public async Task A_command_that_throws_reaches_the_page_as_a_correlation_id_and_the_apps_log_has_the_details()
+    {
+        await using var wire = await WirePage.OpenAsync(shared);
+
+        var outcome = JsonDocument.Parse(await wire.CallAsync("text => window.wire.ratio(text)", "not a number")).RootElement.GetProperty("failure");
+
+        Assert.Equal(("failed", "failed"), (outcome.GetProperty("kind").GetString(), outcome.GetProperty("code").GetString()));
+        var correlation = outcome.GetProperty("correlation").GetString()!;
+        Assert.Matches("^[0-9a-f]{32}$", correlation);
+        var entry = Assert.Single(wire.App.Log, e => e.Level == Microsoft.Extensions.Logging.LogLevel.Error);
+        Assert.Contains(correlation, entry.Message, StringComparison.Ordinal);
+        Assert.Contains("echo.ratio", entry.Message, StringComparison.Ordinal);
+        Assert.IsType<FormatException>(entry.Exception);
+        await wire.AssertCleanAsync();
+    }
+
+    [Fact]
     public async Task A_page_built_for_other_contracts_is_refused_before_anything_runs()
     {
         await using var wire = await WirePage.OpenAsync(shared, contracts: "ffffffffffffffff");

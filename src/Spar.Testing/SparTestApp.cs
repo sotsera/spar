@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spar.Runtime;
 
 namespace Spar.Testing;
@@ -43,6 +44,16 @@ public sealed class SparTestOptions
         return this;
     }
 
+    /// <summary>
+    /// The app's clock: every <see cref="TimeProvider"/> the app resolves, and Spar's own (the bridge's timers, the log's
+    /// timestamps), is <paramref name="time"/>. Pass a fake to control time.
+    /// </summary>
+    public SparTestOptions Time(TimeProvider time)
+    {
+        ServiceActions.Add(services => services.Replace(ServiceDescriptor.Singleton(time)));
+        return this;
+    }
+
     /// <summary>Lets the test use the real implementation of an external dependency.</summary>
     public SparTestOptions AllowExternal<TService>()
     {
@@ -62,14 +73,16 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     private readonly SparRunningApp _app;
     private readonly SparTestOptions _options;
     private readonly ConcurrentQueue<string> _problems = new();
+    private readonly SparTestLog _log;
     private long _nextCallId;
 
-    private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options)
+    private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options, SparTestLog log)
     {
         _session = session;
         _exit = exit;
         _app = app;
         _options = options;
+        _log = log;
     }
 
     /// <summary>The app's own service provider: a test can inspect backend state directly.</summary>
@@ -82,6 +95,19 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     public string Fingerprint => _app.Catalog.Fingerprint;
 
     public TimeSpan StartedAfter { get; private set; }
+
+    /// <summary>
+    /// What Spar logged for this app instance, every level, in order: a command that threw (with its exception and
+    /// correlation id), a refused call, a result over the limit. The newest <see cref="SparTestLog.Capacity"/> entries
+    /// are kept; <see cref="LogDropped"/> counts the older ones. The app's own logging goes where the app sends it.
+    /// </summary>
+    public IReadOnlyList<SparLogEntry> Log => _log.Entries;
+
+    /// <summary>How many of the oldest entries <see cref="Log"/> no longer holds.</summary>
+    public int LogDropped => _log.Dropped;
+
+    /// <summary>The app's clock (<see cref="SparTestOptions.Time"/>, or the system's).</summary>
+    public TimeProvider Time => _app.Dispatcher.Time;
 
     /// <summary>What the bridge refused or dropped, and the page's CSP violations, so far. A clean run has none.</summary>
     public IReadOnlyList<string> Problems => [.. _problems];
@@ -109,11 +135,13 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         var options = new SparTestOptions();
         configure?.Invoke(options);
 
+        SparTestLog? log = null;
         var session = new SparTestSession
         {
             DataRoot = TestDataRoots.Next(),
             ConfigureServices = services => options.ServiceActions.ForEach(action => action(services)),
             AllowedExternals = options.AllowedExternals,
+            CreateLog = time => log = new SparTestLog(time),
         };
 
         var exit = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -128,7 +156,8 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
             throw new InvalidOperationException($"The app's Program.cs returned {await exit.Task} without calling Run.");
         }
 
-        var testApp = new SparTestApp(session, exit.Task, await session.Started, options);
+        var running = await session.Started;
+        var testApp = new SparTestApp(session, exit.Task, running, options, log!);
         try
         {
             if (options.Surface == SparTestSurface.Browser)

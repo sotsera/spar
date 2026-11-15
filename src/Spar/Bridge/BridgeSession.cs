@@ -61,7 +61,7 @@ internal sealed class BridgeSession : IDisposable
         _doc = doc;
         _send = send;
         _includeDetails = includeDetails;
-        _time = time ?? TimeProvider.System;
+        _time = time ?? dispatcher.Time;
         _telemetry = new BridgeTelemetry(dispatcher, _time, doc);
     }
 
