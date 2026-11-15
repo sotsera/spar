@@ -3,6 +3,8 @@
   <PropertyGroup>
     <RootNamespace>Spar</RootNamespace>
     <IsAotCompatible>true</IsAotCompatible>
+    <!-- The packed page is read in place from the image (Hosting/SparFrontend.cs). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,5 +16,6 @@
     <InternalsVisibleTo Include="Spar.Testing" />
     <InternalsVisibleTo Include="Spar.Testing.Browser" />
     <InternalsVisibleTo Include="Spar.Tests" />
+    <InternalsVisibleTo Include="Spar.Sdk.Tasks.Tests" />
   </ItemGroup>
 </Project>

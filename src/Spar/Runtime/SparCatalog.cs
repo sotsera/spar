@@ -29,6 +29,9 @@ public sealed class SparCatalog
         _addServices = addServices;
     }
 
+    /// <summary>The app's assembly, which carries its packed page and notices; set by the generated catalog.</summary>
+    public System.Reflection.Assembly? AppAssembly { get; init; }
+
     /// <summary>16 hex characters of the SHA-256 of the contracts' wire shape (plan section 2c, "The messages").</summary>
     public string Fingerprint { get; }
 

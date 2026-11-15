@@ -29,7 +29,7 @@ public sealed class LoopbackHostTests : IAsyncLifetime
             {
                 Dispatcher = _backend.Dispatcher,
                 Fingerprint = TestBackend.Fingerprint,
-                Assets = new LoopbackAssets().Mount("", _page.FullName),
+                Page = new LoopbackAssets().Mount("", _page.FullName),
                 Log = message => { lock (_log) { _log.Add(message); } },
             },
             TestContext.Current.CancellationToken);
@@ -230,7 +230,7 @@ public sealed class LoopbackHostTests : IAsyncLifetime
 
         Assert.Null(await channel.NextOrEndAsync());
         await channel.DisposeAsync();
-        _host = await LoopbackHost.StartAsync(new LoopbackOptions { Dispatcher = _backend.Dispatcher, Fingerprint = "", Assets = new LoopbackAssets() }, TestContext.Current.CancellationToken);
+        _host = await LoopbackHost.StartAsync(new LoopbackOptions { Dispatcher = _backend.Dispatcher, Fingerprint = "", Page = new LoopbackAssets() }, TestContext.Current.CancellationToken);
     }
 
     private static string Header(HttpResponseMessage response, string name) =>

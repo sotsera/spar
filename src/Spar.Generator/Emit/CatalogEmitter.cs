@@ -28,7 +28,10 @@ internal static class CatalogEmitter
         }
 
         code.Line("    ],");
-        code.Line("    AddServices);");
+        code.Line("    AddServices)");
+        code.Line("{");
+        code.Line("    AppAssembly = typeof(SparContracts).Assembly,");
+        code.Line("};");
         code.Line();
 
         code.Open("private static void AddServices(global::Microsoft.Extensions.DependencyInjection.IServiceCollection services)");

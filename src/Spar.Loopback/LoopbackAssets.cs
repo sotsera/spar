@@ -1,10 +1,26 @@
+using Spar.Hosting;
+
 namespace Spar.Loopback;
+
+/// <summary>Where the loopback host takes the page's files from.</summary>
+internal interface ILoopbackPage
+{
+    /// <summary>One file by its safe path relative to the page root, with the type to send.</summary>
+    bool TryGet(string path, out ReadOnlyMemory<byte> content, out string contentType);
+}
+
+/// <summary>The app's own packed page, the one its executable carries.</summary>
+internal sealed class PackedPage(SparFrontend frontend) : ILoopbackPage
+{
+    public bool TryGet(string path, out ReadOnlyMemory<byte> content, out string contentType) =>
+        frontend.TryGet(path, out content, out contentType);
+}
 
 /// <summary>
 /// The page's files, read from folders mounted at URL prefixes. A stand-in until the packing step (plan section 1)
 /// embeds the built page in the app: then the host serves the packed files and this type goes away.
 /// </summary>
-internal sealed class LoopbackAssets
+internal sealed class LoopbackAssets : ILoopbackPage
 {
     private readonly List<(string Prefix, string Folder)> _mounts = [];
 
@@ -26,6 +42,13 @@ internal sealed class LoopbackAssets
         _mounts.Add((prefix, Path.TrimEndingDirectorySeparator(full) + Path.DirectorySeparatorChar));
         _mounts.Sort((left, right) => right.Prefix.Length.CompareTo(left.Prefix.Length));
         return this;
+    }
+
+    public bool TryGet(string path, out ReadOnlyMemory<byte> content, out string contentType)
+    {
+        var bytes = SparContentTypes.TryGet(path, out contentType) ? Read(path) : null;
+        content = bytes;
+        return bytes is not null;
     }
 
     /// <summary>Reads one file by its path relative to the page root, for example <c>assets/index.js</c>.</summary>

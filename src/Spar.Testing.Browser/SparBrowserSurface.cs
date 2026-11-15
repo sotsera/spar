@@ -1,18 +1,30 @@
+using Spar.Hosting;
 using Spar.Loopback;
 
 namespace Spar.Testing;
 
 /// <summary>
-/// The Browser surface: <c>o.Surface = SparTestSurface.Browser</c> with the page's folder from <c>o.Page(folder)</c>, then
-/// <c>app.PageUrl()</c> for the browser to open. The loopback host runs in the test process in front of the app's backend.
+/// The Browser surface: <c>o.Surface = SparTestSurface.Browser</c> with <c>o.Page()</c>, the app's own packed page, or
+/// <c>o.Page(folder)</c>; then <c>app.PageUrl()</c> for the browser to open. The loopback host runs in the test process in
+/// front of the app's backend.
 /// </summary>
 public static class SparBrowserSurface
 {
     extension(SparTestOptions options)
     {
         /// <summary>
-        /// Serves <paramref name="folder"/> as the page, or under <paramref name="prefix"/> (for example <c>"spar/"</c>).
-        /// A stand-in until the packing step embeds the app's built page, which then becomes the default.
+        /// Serves the app's own page: the one the build packed into its executable, as users get it. The app must be
+        /// built in a variant that packs its page (Test and Production do).
+        /// </summary>
+        public SparTestOptions Page()
+        {
+            options.StartBrowser = StartAsync;
+            return options;
+        }
+
+        /// <summary>
+        /// Serves <paramref name="folder"/> as the page, or under <paramref name="prefix"/> (for example <c>"spar/"</c>),
+        /// for a test page that is not the app's own.
         /// </summary>
         public SparTestOptions Page(string folder, string prefix = "")
         {
@@ -34,28 +46,46 @@ public static class SparBrowserSurface
     private static LoopbackHost HostOf(SparTestApp app) =>
         app.Surface is Surface surface
             ? surface.Host
-            : throw new InvalidOperationException("The app has no page: start it with Surface = SparTestSurface.Browser and o.Page(folder).");
+            : throw new InvalidOperationException("The app has no page: start it with Surface = SparTestSurface.Browser and o.Page().");
 
     private static async Task<IAsyncDisposable> StartAsync(SparTestApp app, CancellationToken cancellationToken)
     {
-        var assets = new LoopbackAssets();
-        foreach (var (prefix, folder) in app.Options.PageFolders)
-        {
-            assets.Mount(prefix, folder);
-        }
-
         var running = app.RunningApp;
+        ILoopbackPage page = app.Options.PageFolders.Count > 0 ? Folders(app.Options.PageFolders) : Packed(running.Catalog.AppAssembly);
         var host = await LoopbackHost.StartAsync(
             new LoopbackOptions
             {
                 Dispatcher = running.Dispatcher,
                 Fingerprint = running.Catalog.Fingerprint,
-                Assets = assets,
+                Page = page,
                 IncludeDetails = true,
                 Log = app.ReportProblem,
             },
             cancellationToken);
         return new Surface(host);
+    }
+
+    private static LoopbackAssets Folders(IEnumerable<(string Prefix, string Folder)> folders)
+    {
+        var assets = new LoopbackAssets();
+        foreach (var (prefix, folder) in folders)
+        {
+            assets.Mount(prefix, folder);
+        }
+
+        return assets;
+    }
+
+    private static PackedPage Packed(System.Reflection.Assembly? assembly)
+    {
+        var frontend = (assembly is null ? null : SparFrontend.Open(assembly))
+            ?? throw new InvalidOperationException(
+                "The app's executable carries no page: Development builds serve it from Vite instead. Test projects build " +
+                "the app in the Test variant, which packs it; check that the app has a frontend folder.");
+
+        // As a host does at start: decode the compressed files off the thread that serves them.
+        _ = Task.Run(frontend.DecodeAll);
+        return new PackedPage(frontend);
     }
 
     /// <summary>The running loopback host; disposing the app stops it before the backend.</summary>

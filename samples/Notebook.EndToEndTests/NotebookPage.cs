@@ -73,7 +73,7 @@ internal sealed class NotebookPage : IAsyncDisposable
         var app = await SparTestApp.StartAsync<Program>(options =>
         {
             options.Surface = SparTestSurface.Browser;
-            options.Page(Built.Frontend);
+            options.Page();
             configure?.Invoke(options);
         });
 
@@ -128,25 +128,10 @@ internal sealed class NotebookPage : IAsyncDisposable
     }
 }
 
-/// <summary>Where the build put the Notebook's page: the Test variant's Vite output, until packing embeds it.</summary>
+/// <summary>Folders of this repository the tests write to.</summary>
 internal static class Built
 {
     private static readonly Lazy<string> Root = new(FindRoot);
-
-    /// <summary><c>samples/Notebook/obj/Test/&lt;configuration&gt;/&lt;framework&gt;/&lt;runtime&gt;/frontend</c>, as this test was built.</summary>
-    public static string Frontend
-    {
-        get
-        {
-            // This test runs from bin/<variant>/<configuration>/<framework>/<runtime>/; the app's output uses the same three.
-            var output = new DirectoryInfo(AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar));
-            var (runtime, framework, configuration) = (output.Name, output.Parent!.Name, output.Parent.Parent!.Name);
-            var folder = Path.Combine(Root.Value, "samples", "Notebook", "obj", "Test", configuration, framework, runtime, "frontend");
-            return File.Exists(Path.Combine(folder, "index.html"))
-                ? folder
-                : throw new InvalidOperationException($"The Notebook's page is not built: {folder}.");
-        }
-    }
 
     public static string Results
     {

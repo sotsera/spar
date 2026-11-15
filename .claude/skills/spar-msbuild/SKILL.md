@@ -31,7 +31,7 @@ Apply these rules to authored `.csproj`, `.props` and `.targets` files.
 - **Frontend steps.**
   - `npm ci --ignore-scripts` runs in every variant when the lockfile changed: the Debug type-check and the dev server need `node_modules` too.
   - The TypeScript type-check runs in every variant, Debug included. It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line. `SparTypeCheck=false` turns it off (the name is confirmed in M1a).
-  - Release and test variants also run `vite build` into `obj/`, and the packing step. Packing rejects source maps, version-control and secret files, links, and names that differ only by case (plan section 3c).
+  - Release and test variants also run `vite build` into `obj/`, and the packing step. Spar's steps run before `PrepareResources`, because MSBuild settles embedded resources there and the pack is one. Packing rejects source maps, version-control and secret files, links, and names that differ only by case (plan section 3c).
   - Debug embeds no bundle: the host serves the page from the app's Vite server through the app's own origin. `SparDevServer=false` embeds the bundle in Debug through Release's code path.
 - **Steps are compiled tasks.** Spar build steps are compiled `net11.0` MSBuild tasks, not `Exec dotnet tool.dll`. Each one:
   - is marked `[MSBuildMultiThreadableTask]` and implements `IMultiThreadableTask`, with a constructor taking a `TaskEnvironment` and a parameterless one that uses `TaskEnvironment.Fallback`;

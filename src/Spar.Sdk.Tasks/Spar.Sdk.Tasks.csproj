@@ -22,6 +22,11 @@
     <ProjectReference Include="..\Spar.Generator\Spar.Generator.csproj" PrivateAssets="all" />
   </ItemGroup>
 
+  <!-- The packing step gives each file the type the hosts send: one list, shared with the runtime. -->
+  <ItemGroup>
+    <Compile Include="..\Spar\Hosting\SparContentTypes.cs" Link="Pack\SparContentTypes.cs" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Spar.Sdk.Tasks.Tests" />
   </ItemGroup>

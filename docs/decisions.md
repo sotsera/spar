@@ -3007,3 +3007,15 @@ Spike `spikes/csp-style-injection` (user request, after the Notebook's dialogs m
 ## 2026-11-15, Frontend packing: the Deflate control keeps Brotli (evidence)
 
 The research review asked for a per-file Deflate control on the real bundle before M1 packing (`docs/research-review.md`, "Asset codec control"). Measured in `spikes/asset-packing` ("Follow-up: per-file Deflate inside the same index"), Windows, NativeAOT, on the Notebook's bundle (772,422 B) and the spike's 2.8 MB bundle: Brotli gives the smaller executable by 46 KB and 155 KB (payload 6.2% and 15.1% smaller, decoder 168 KB against 192 KB), while Deflate decodes faster (0.9 against 1.5 ms, 3.3 against 5.0 ms, off the UI thread) with the same start time within noise. Packing stays per-file Brotli inside Spar's own index, as plan section 1 says; nothing else changes.
+
+## 2026-11-15, Frontend packing built (implementation record; choices for review)
+
+Evidence: `docs/evidence/m1a-frontend-packing.md`.
+- **Built:** the `SparPack` task and its format, the asset checks, the third-party notices, the runtime reader, the embedding, and the `Browser` surface on the app's own packed page. `dotnet test` runs 250, all passing; the NativeAOT lane 156; the Notebook's journeys now run on the page its executable carries.
+- **Choices made while building, for review:**
+  - **The format is Spar's own:** `SPARFE`, a version byte, an entry count, then per entry the encoding (stored or Brotli), path, content type, offset, stored and original lengths, then the data, entries sorted by ordinal path. Unlike the spike's index it carries no per-file SHA-256, which nothing read.
+  - **The asset checks fail the build with SPAR110** (category `Spar.Frontend`), one error per file: source maps; any hidden file or folder (version control, `.env`, `.npmrc`); key and secret files by extension or name (`.pem`, `.key`, `.p12`, `.pfx`, `.jks`, `.keystore`, `.kdbx`, `.env`, `id_rsa` and its kin); links; names that differ only by case; and file types the hosts do not serve. SPAR110 is a new ID after the snapshot's SPAR100 and the CSP analyzer's SPAR101–104.
+  - **The third-party notices come from Vite's `build.license`,** which `@spar/app/vite` now turns on: `.vite/license.md`, Brotli-compressed, as the resource `Spar.ThirdPartyNotices`. Nothing under `.vite/` is packed or served. WebView2's and the static loader's notices join them with the Windows host.
+  - **The runtime finds the pack through `SparCatalog.AppAssembly`,** set by the generated catalog, because in a test the entry assembly is the test's.
+  - **`o.Page()` serves the app's packed page;** `o.Page(folder)` stays for pages that are not the app's. The test host's core cannot reach the `Browser` package unless the test calls into it, so the surface still needs this one call.
+  - **Spar's build steps now run before `PrepareResources`** instead of `CoreCompile`, so the pack is an embedded resource before MSBuild settles resources.

@@ -128,7 +128,7 @@
   </Target>
 
   <Target Name="SparClient"
-          BeforeTargets="CoreCompile"
+          BeforeTargets="PrepareResources"
           DependsOnTargets="SparWriteClientInventory"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'"
           Inputs="$(SparClientInventory);@(Compile);@(ReferencePath);@(_SparClientSdkFile);$(SparTasksAssembly)"
@@ -153,7 +153,7 @@
   -->
   <Target Name="SparCheckContractSnapshot"
           AfterTargets="SparClient"
-          BeforeTargets="CoreCompile"
+          BeforeTargets="PrepareResources"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
     <PropertyGroup>
       <_SparSnapshotExpected>$([System.IO.File]::ReadAllText('$(SparContractSnapshotExpected)'))</_SparSnapshotExpected>
@@ -190,9 +190,16 @@
     <SparFrontendLease>$(MSBuildProjectDirectory)\obj\spar\npm.lease</SparFrontendLease>
     <SparTypeCheckStamp>$(IntermediateOutputPath)spar-typecheck.stamp</SparTypeCheckStamp>
     <SparFrontendStamp>$(IntermediateOutputPath)spar-frontend.stamp</SparFrontendStamp>
+    <SparFrontendPackFile>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-frontend.pack</SparFrontendPackFile>
+    <SparFrontendNotices>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-notices.md</SparFrontendNotices>
+    <SparFrontendPackStamp>$(IntermediateOutputPath)spar-pack.stamp</SparFrontendPackStamp>
   </PropertyGroup>
 
   <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
+             Runtime="NET" TaskFactory="TaskHostFactory"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparPack" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
 
@@ -233,10 +240,38 @@
     <Touch Files="$(SparFrontendStamp)" AlwaysCreate="true" />
   </Target>
 
+  <!--
+    Packing (plan section 1): the built page in one resource after the asset checks of section 3c, and the frontend's
+    third-party licences beside it. It reruns only when Vite ran, which touches the build stamp.
+  -->
+  <Target Name="SparFrontendPack"
+          DependsOnTargets="SparFrontendBuild"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(SparBuildFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="$(SparFrontendStamp);$(SparTasksAssembly)"
+          Outputs="$(SparFrontendPackStamp);$(SparFrontendPackFile)">
+    <SparPack FrontendDirectory="$(SparFrontendOutput)" PackFile="$(SparFrontendPackFile)" NoticesFile="$(SparFrontendNotices)" />
+    <Touch Files="$(SparFrontendPackStamp);$(SparFrontendPackFile)" AlwaysCreate="true" />
+    <ItemGroup>
+      <FileWrites Include="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendNotices)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- The pack and the notices into the app's assembly, on every build that has them. -->
+  <Target Name="SparEmbedFrontend"
+          AfterTargets="SparFrontend"
+          BeforeTargets="PrepareResources"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparBuildFrontend)' == 'true' and Exists('$(SparFrontendPackFile)')">
+    <ItemGroup>
+      <EmbeddedResource Include="$(SparFrontendPackFile)" LogicalName="Spar.Frontend" WithCulture="false" Type="Non-Resx" />
+      <EmbeddedResource Include="$(SparFrontendNotices)" LogicalName="Spar.ThirdPartyNotices" WithCulture="false" Type="Non-Resx"
+                        Condition="Exists('$(SparFrontendNotices)')" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="SparFrontend"
           AfterTargets="SparCheckContractSnapshot"
-          BeforeTargets="CoreCompile"
-          DependsOnTargets="SparFrontendInstall;SparFrontendTypeCheck;SparFrontendBuild"
+          BeforeTargets="PrepareResources"
+          DependsOnTargets="SparFrontendInstall;SparFrontendTypeCheck;SparFrontendBuild;SparFrontendPack"
           Condition="'$(SparIsApp)' == 'true' and '$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
   <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->

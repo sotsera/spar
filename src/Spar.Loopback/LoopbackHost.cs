@@ -24,7 +24,8 @@ internal sealed class LoopbackOptions
     /// <summary>The host's contract fingerprint, sent in <c>open</c>.</summary>
     public required string Fingerprint { get; init; }
 
-    public required LoopbackAssets Assets { get; init; }
+    /// <summary>The page: the app's packed one, or folders a test names.</summary>
+    public required ILoopbackPage Page { get; init; }
 
     /// <summary>Whether failures carry their detail (Development and tests only).</summary>
     public bool IncludeDetails { get; init; }
@@ -160,7 +161,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
         var relative = path == "/" ? "index.html" : path[1..];
 
         // Every request is answered, unknown paths with 404 (pitfalls, "An unanswered request to the app origin").
-        if (!SparContentTypes.TryGet(relative, out var contentType) || _options.Assets.Read(relative) is not { } content)
+        if (!LoopbackAssets.IsSafePath(relative) || !_options.Page.TryGet(relative, out var content, out var contentType))
         {
             await RefuseAsync(response, StatusCodes.Status404NotFound, "not-found");
             return;

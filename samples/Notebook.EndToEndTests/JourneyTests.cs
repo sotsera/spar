@@ -95,6 +95,7 @@ public sealed class JourneyTests(SharedBrowser shared)
     {
         await using var notebook = await NotebookPage.OpenAsync(shared);
         await notebook.CreateAsync("Old notes");
+        await Expect(notebook.Page.GetByRole(AriaRole.Heading, new() { Name = "Old notes", Level = 2 })).ToBeVisibleAsync();
         var file = Path.Combine(notebook.App.Folders.Data, "pages", "old-notes.md");
         Assert.True(File.Exists(file));
 

@@ -1,7 +1,8 @@
 // @spar/app/vite: the Vite plugin every Spar frontend uses (docs/app-model.md section 1). For a production build it
 // sets what the default Content Security Policy needs (plan section 3b): no asset inlined as a `data:` URL, which the
 // policy blocks, no source maps, which never ship (plan section 3c), and pages served from the root of the app's own
-// origin. The development server's part arrives with the development loop.
+// origin; and it collects the bundled dependencies' licences for the executable's third-party notices (plan 3c). The
+// development server's part arrives with the development loop.
 import type { Plugin, UserConfig } from "vite";
 
 /** Spar's Vite plugin: `plugins: [react(), spar()]` in `vite.config.ts`. */
@@ -17,6 +18,8 @@ export default function spar(): Plugin {
           sourcemap: false,
           // The engines Spar supports (WebView2, WebKitGTK 2.48 and newer) all run ES2022.
           target: "es2022",
+          // The bundled dependencies' licences, which the packing step embeds as the app's third-party notices.
+          license: true,
         },
       };
     },

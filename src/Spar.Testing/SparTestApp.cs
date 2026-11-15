@@ -181,7 +181,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         if (_options.StartBrowser is null)
         {
             throw new InvalidOperationException(
-                "The Browser surface comes from the Spar.Testing.Browser package: reference it and pass the page with o.Page(folder).");
+                "The Browser surface comes from the Spar.Testing.Browser package: reference it and call o.Page() for the app's page.");
         }
 
         Surface = await _options.StartBrowser(this, cancellationToken);
