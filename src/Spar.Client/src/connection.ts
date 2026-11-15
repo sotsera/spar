@@ -180,7 +180,7 @@ export class Connection {
 
   #failure(message: BridgeMessage): void {
     const pending = this.#take(message.id!);
-    pending?.resolve(failure(pending.name, message.kind as CallErrorKind, message.code!, message.execution as Execution));
+    pending?.resolve(failure(pending.name, message.kind as CallErrorKind, message.code!, message.execution as Execution, failureNotes(message.payload)));
   }
 
   /** The page gave up waiting: ask the backend to stop, and report what it confirms, or an unknown outcome. */
@@ -234,9 +234,59 @@ export class Connection {
   }
 }
 
-function failure(name: CallName, kind: CallErrorKind, code: string, execution: Execution): Outcome {
-  const error: CallError = { kind, code, execution, contract: name.contract, command: name.command };
+function failure(name: CallName, kind: CallErrorKind, code: string, execution: Execution, notes: FailureNotes = {}): Outcome {
+  const error: CallError = { kind, code, execution, contract: name.contract, command: name.command, ...notes };
   return { ok: false, error };
+}
+
+interface FailureNotes {
+  correlation?: string;
+  detail?: string;
+}
+
+const traceId = /^[0-9a-f]{32}$/;
+
+/**
+ * The correlation id and the Development detail from a failure's payload, each only when it has the expected shape.
+ * The payload is the host's, but read as untrusted: own properties only, built into a new object one by one.
+ */
+function failureNotes(payload: string): FailureNotes {
+  if (payload === "") {
+    return {};
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(payload);
+  } catch {
+    return {};
+  }
+
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    return {};
+  }
+
+  const notes: FailureNotes = {};
+  const correlation = ownString(parsed, "correlation");
+  if (correlation !== undefined && traceId.test(correlation)) {
+    notes.correlation = correlation;
+  }
+
+  const detail = ownString(parsed, "detail");
+  if (detail !== undefined) {
+    notes.detail = detail;
+  }
+
+  return notes;
+}
+
+function ownString(object: object, key: string): string | undefined {
+  if (!Object.prototype.hasOwnProperty.call(object, key)) {
+    return undefined;
+  }
+
+  const value: unknown = (object as Record<string, unknown>)[key];
+  return typeof value === "string" ? value : undefined;
 }
 
 function valueOutcome(pending: Pending, payload: string): Outcome {

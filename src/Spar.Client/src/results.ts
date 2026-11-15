@@ -18,6 +18,13 @@ export interface CallError extends CallName {
   readonly kind: CallErrorKind;
   readonly code: string;
   readonly execution: Execution;
+  /**
+   * When the command threw, or its result could not be written: the id of the host's log entry for it, the call's
+   * W3C trace id. Sent in every build, so a user can quote it.
+   */
+  readonly correlation?: string;
+  /** What went wrong, sent only by a Development host. For developers; never show it to users. */
+  readonly detail?: string;
 }
 
 /** Declared errors of a command: case name to payload, `undefined` for a case without one. `{}` when there are none. */

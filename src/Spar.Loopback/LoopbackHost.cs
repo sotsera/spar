@@ -83,6 +83,11 @@ internal sealed class LoopbackHost : IAsyncDisposable
 
             // A document's channel can be quiet for minutes; that is not a slow client.
             kestrel.Limits.MinResponseDataRate = null;
+
+            // The page sends batches of at most 1 MiB of text, or one larger message alone. Up to twice the bridge's
+            // message limit, a body reaches the session, which refuses an oversized call by its id; past that the
+            // server refuses the request (413) and the document's channel ends.
+            kestrel.Limits.MaxRequestBodySize = Math.Max(30_000_000L, 2L * options.Dispatcher.Limits.MaxMessageBytes);
         });
         builder.Services.Configure<HostOptions>(host => host.ShutdownTimeout = TimeSpan.FromSeconds(5));
 

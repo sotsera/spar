@@ -47,9 +47,10 @@ public readonly struct SparOutcome
 
 /// <summary>
 /// An infrastructure failure with the decided <c>CallError</c> fields (decision "<c>CallError</c> kinds"). The values
-/// are the wire strings. <see cref="Detail"/> reaches the page only in Development builds.
+/// are the wire strings. <see cref="Detail"/> reaches the page only in Development builds; <see cref="Exception"/>,
+/// when a command threw, never does: the host logs it under the call's correlation id.
 /// </summary>
-public sealed record SparFailure(string Kind, string Code, string Execution, string? Detail = null)
+public sealed record SparFailure(string Kind, string Code, string Execution, string? Detail = null, Exception? Exception = null)
 {
     public static SparFailure InvalidRequest(string detail) => new("rejected", "invalid-request", "notStarted", detail);
 
@@ -58,10 +59,20 @@ public sealed record SparFailure(string Kind, string Code, string Execution, str
 
     public static SparFailure Cancelled() => new("cancelled", "cancelled", "stopped");
 
-    public static SparFailure Failed(Exception exception) => new("failed", "failed", "unknown", $"{exception.GetType().Name}: {exception.Message}");
+    public static SparFailure Failed(Exception exception) =>
+        new("failed", "failed", "unknown", $"{exception.GetType().Name}: {exception.Message}", exception);
 
     public static SparFailure ResponseSerialization(Exception exception) =>
-        new("response", "serialization", "completed", $"{exception.GetType().Name}: {exception.Message}");
+        new("response", "serialization", "completed", $"{exception.GetType().Name}: {exception.Message}", exception);
+
+    /// <summary>A refusal by the bridge limits: the command never ran.</summary>
+    internal static SparFailure Busy() => new("rejected", "busy", "notStarted");
+
+    internal static SparFailure TooLarge(int bytes, int limit) =>
+        new("rejected", "too-large", "notStarted", $"the message is {bytes} bytes; the limit is {limit}");
+
+    internal static SparFailure ResultTooLarge(int bytes, int limit) =>
+        new("response", "too-large", "completed", $"the result is {bytes} bytes; the limit is {limit}");
 
     public override string ToString() => $"{Kind}/{Code} ({Execution}){(Detail is null ? "" : ": " + Detail)}";
 }

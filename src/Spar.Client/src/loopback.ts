@@ -167,7 +167,7 @@ class LoopbackChannel implements BridgeChannel {
 
     this.#posting = true;
     while (this.#queue.length > 0 && !this.#closed) {
-      const batch = this.#queue.splice(0).join("\n");
+      const batch = takeBatch(this.#queue).join("\n");
       const delivered = await this.#postBatch(batch, this.#doc);
       if (!delivered) {
         // The host may or may not have run what this request carried; the connection reports it as lost.
@@ -207,4 +207,22 @@ class LoopbackChannel implements BridgeChannel {
     this.#stop.abort();
     this.#closedListener?.();
   }
+}
+
+/**
+ * The most text one request carries. The host's server refuses a body far larger than the bridge's message limit,
+ * which would end the channel; a message longer than this travels alone, and the host answers it by its id.
+ */
+const batchCharacters = 1024 * 1024;
+
+/** Takes the first messages of the queue that fit in one request, and always at least one. */
+export function takeBatch(queue: string[]): string[] {
+  let length = queue[0]!.length;
+  let count = 1;
+  while (count < queue.length && length + 1 + queue[count]!.length <= batchCharacters) {
+    length += 1 + queue[count]!.length;
+    count++;
+  }
+
+  return queue.splice(0, count);
 }

@@ -98,9 +98,19 @@
       "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"rejected\",\"code\":\"unknown-command\",\"execution\":\"notStarted\"}\t"
     },
     {
+      "name": "failure of a command that threw, with its correlation id",
+      "message": { "type": "failure", "id": 7, "kind": "failed", "code": "failed", "execution": "unknown", "payload": "{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\"}" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"failed\",\"code\":\"failed\",\"execution\":\"unknown\"}\t{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\"}"
+    },
+    {
       "name": "failure with a development detail",
-      "message": { "type": "failure", "id": 7, "kind": "failed", "code": "failed", "execution": "unknown", "payload": "{\"detail\":\"IOException: disk full\"}" },
-      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"failed\",\"code\":\"failed\",\"execution\":\"unknown\"}\t{\"detail\":\"IOException: disk full\"}"
+      "message": { "type": "failure", "id": 7, "kind": "failed", "code": "failed", "execution": "unknown", "payload": "{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\",\"detail\":\"IOException: disk full\"}" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"failed\",\"code\":\"failed\",\"execution\":\"unknown\"}\t{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\",\"detail\":\"IOException: disk full\"}"
+    },
+    {
+      "name": "call refused by the limits",
+      "message": { "type": "failure", "id": 7, "kind": "rejected", "code": "busy", "execution": "notStarted", "payload": "" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"rejected\",\"code\":\"busy\",\"execution\":\"notStarted\"}\t"
     },
     {
       "name": "failure of a stream",

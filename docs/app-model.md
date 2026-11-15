@@ -812,6 +812,17 @@ public sealed class CrashReport(IAppHealth health)
 
 The page turns a `failure` into a `CallError` with the header's `kind`, `code` and `execution`, plus `contract` and `command` from its own record of call 7.
 
+When a command throws, the page never sees the exception. The failure's payload carries a correlation id, the call's W3C trace id, which the app's log entry for the exception also names, and only a Development host adds the exception's type and message:
+
+| Build | Failure of a command that threw |
+|---|---|
+| Release | `{"type":"failure","id":7,"kind":"failed","code":"failed","execution":"unknown"}⇥{"correlation":"4bf92f3577b34da6a3ce929d0e0e4736"}` |
+| Development | the same, with `"detail":"IOException: disk full"` beside the correlation |
+
+Spar logs the exception through the app's `ILogger` (category `Spar.Bridge`), so it goes wherever the app sends its logs; with no logger registered, nothing is written.
+
+**Limits.** The page is untrusted, so each document's bridge is bounded. A call larger than 4 MiB is refused with `rejected` / `too-large` before its payload is read; a result larger than 16 MiB fails only its call, with `response` / `too-large`; 16 commands run at once, the next ones wait in a queue of up to 1,024 calls and 16 MiB, and a call past that is refused with `rejected` / `busy`. Every refusal is `notStarted`. An app that has measured a need raises one in `Program.cs` with `builder.Bridge(o => o.MaxMessageBytes = …)`; a large transfer belongs in a stream.
+
 `long` travels as a decimal string because JSON numbers lose precision above 2^53.
 
 ## 5. The generated TypeScript
@@ -986,7 +997,7 @@ export async function cancelEverything(): Promise<void> {
 - A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `spikes/app-model-check`.
 - A command without declared errors has no `errors` property.
 - `execution` tells the page whether the backend ran the command: `notStarted`, `stopped`, `completed` or `unknown`. Nothing is retried automatically.
-- **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
+- **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. A command that threw also has `correlation`, the id to quote to whoever reads the app's log, and in Development `detail`, which is for developers only. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
   - **Where a failure goes:**
     - A `failure` function handles every failure.
     - A `failure` object handles the kinds it lists. A misspelled kind fails `tsc`.

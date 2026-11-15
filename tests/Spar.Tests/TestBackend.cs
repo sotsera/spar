@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spar.Bridge;
 using Spar.Runtime;
 
@@ -23,10 +24,16 @@ internal sealed class TestBackend : IAsyncDisposable
     /// <summary>Calls that have started, so a test knows a command is running before it cancels it.</summary>
     public ConcurrentQueue<string> Started { get; } = new();
 
-    public static TestBackend Create()
+    /// <summary>A backend with the default bridge limits, or <paramref name="limits"/>; <paramref name="log"/> receives its log.</summary>
+    public static TestBackend Create(BridgeOptions? limits = null, CapturedLog? log = null)
     {
         TestBackend? backend = null;
         var services = new ServiceCollection();
+        if (log is not null)
+        {
+            services.AddSingleton<ILoggerFactory>(log);
+        }
+
         var catalog = new SparCatalog(
             Fingerprint,
             [
@@ -43,6 +50,7 @@ internal sealed class TestBackend : IAsyncDisposable
                     return SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty);
                 }),
                 new("boom", "throw", 0, _ => throw new IOException("disk full")),
+                new("echo", "back", 0, call => ValueTask.FromResult(SparOutcome.FromValue(call.Request.ToArray()))),
                 new("boom", "otherToken", 0, _ => throw new OperationCanceledException(new CancellationToken(canceled: true))),
                 new("call", "describe", 0, call =>
                 {
@@ -53,7 +61,7 @@ internal sealed class TestBackend : IAsyncDisposable
             _ => { });
 
         var folders = SparFolders.ForTest(Path.Combine(Path.GetTempPath(), "spar-tests-unused"));
-        SparRunningApp.AddSparServices(services, catalog, folders);
+        SparRunningApp.AddSparServices(services, catalog, folders, (limits ?? new BridgeOptions()).Freeze());
         backend = new TestBackend(SparRunningApp.Build(services, catalog, folders));
         return backend;
     }
@@ -107,5 +115,31 @@ internal sealed class SentMessages
         {
             return true;
         }
+    }
+}
+
+/// <summary>A logger factory that keeps every entry, for tests that check what the bridge logs.</summary>
+internal sealed class CapturedLog : ILoggerFactory, ILogger
+{
+    private readonly ConcurrentQueue<(LogLevel Level, string Message, Exception? Exception)> _entries = new();
+
+    public IReadOnlyList<(LogLevel Level, string Message, Exception? Exception)> Entries => [.. _entries];
+
+    public ILogger CreateLogger(string categoryName) => this;
+
+    public void AddProvider(ILoggerProvider provider)
+    {
+    }
+
+    public IDisposable? BeginScope<TState>(TState state)
+        where TState : notnull => null;
+
+    public bool IsEnabled(LogLevel logLevel) => true;
+
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) =>
+        _entries.Enqueue((logLevel, formatter(state, exception), exception));
+
+    public void Dispose()
+    {
     }
 }

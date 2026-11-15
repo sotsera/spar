@@ -135,6 +135,26 @@ describe("sending", () => {
     expect(scripted.sends.map(s => s.body)).toEqual(["call 1", "call 2\ncancel 1"]);
   });
 
+  test("a request carries at most 1 MiB of text, and a longer message goes alone, in order", async () => {
+    const { scripted, channel } = await opened();
+    const quarter = "a".repeat(256 * 1024);
+    const large = "b".repeat(2 * 1024 * 1024);
+    for (const message of [quarter, quarter, quarter, quarter, large, "call 6"]) {
+      channel.send(message);
+    }
+
+    scripted.write(open);
+    const bodies: string[] = [];
+    for (let request = 0; request < 4; request++) {
+      await settle();
+      bodies.push(scripted.sends[request]!.body);
+      scripted.sends[request]!.answer(204);
+    }
+
+    // Four quarters and their three LFs are three characters over 1 MiB, so the fourth starts the next request.
+    expect(bodies.map(b => b.length)).toEqual([3 * quarter.length + 2, quarter.length, large.length, "call 6".length]);
+  });
+
   test("a refused send closes the channel, and nothing more is sent", async () => {
     const { scripted, channel, closed } = await opened();
     scripted.write(open);

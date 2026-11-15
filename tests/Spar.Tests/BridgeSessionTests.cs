@@ -161,10 +161,12 @@ public sealed class BridgeSessionTests : IAsyncLifetime
         _session.Receive(Call(1, "boom", "throw", ""));
         development.Receive(Call(1, "boom", "throw", ""));
 
+        // Both carry the correlation id (BridgeLimitTests covers it); only Development adds the detail.
         var production = await _sent.NextAsync();
         var withDetail = await developmentSent.NextAsync();
-        Assert.Equal(("failed", "failed", "unknown", ""), (production.Kind, production.Code, production.Execution, Text(production)));
-        Assert.Equal("{\"detail\":\"IOException: disk full\"}", Text(withDetail));
+        Assert.Equal(("failed", "failed", "unknown"), (production.Kind, production.Code, production.Execution));
+        Assert.DoesNotContain("detail", Text(production), StringComparison.Ordinal);
+        Assert.Contains("\"detail\":\"IOException: disk full\"", Text(withDetail), StringComparison.Ordinal);
     }
 
     [Fact]

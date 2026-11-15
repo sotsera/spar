@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Spar.Runtime;
 
 namespace Spar.Bridge;
@@ -7,15 +9,34 @@ namespace Spar.Bridge;
 /// <summary>
 /// The bridge for one document (plan section 2c): hello and open, the fingerprint checked once, increasing ids,
 /// commands dispatched off the caller's thread, cancels (also one that overtakes its call), exactly one terminal
-/// message per call, and nothing sent after <see cref="Close"/>. Transport-neutral: hosts pass in messages and a send
-/// function, which must be safe to call from any thread.
+/// message per call, and nothing sent after <see cref="Close"/>. Its limits (<see cref="BridgeOptions"/>) apply before
+/// any work: a message's size before it is decoded, and a slot or a place in the queue before its payload is read.
+/// An exception reaches the page as the call's correlation id, its details only in the app's log and, in Development,
+/// in the payload. Transport-neutral: hosts pass in messages and a send function, which must be safe on any thread.
 /// </summary>
 internal sealed class BridgeSession : IDisposable
 {
+    /// <summary>How far into an oversized message its header is looked for, to answer it by its id.</summary>
+    private const int HeaderSearchChars = 16 * 1024;
+
     /// <summary>How long a cancel for a call that has not arrived yet is remembered (spikes/react, "Cancellation").</summary>
     private static readonly TimeSpan EarlyCancelMemory = TimeSpan.FromSeconds(30);
 
+    private static readonly Action<ILogger, string, string, long, string, Exception?> CommandFailed = LoggerMessage.Define<string, string, long, string>(
+        LogLevel.Error, new EventId(1, "CommandFailed"), "Command {Contract}.{Command} (call {CallId}) failed; correlation {Correlation}");
+
+    private static readonly Action<ILogger, string, string, long, int, int, Exception?> ResultTooLarge = LoggerMessage.Define<string, string, long, int, int>(
+        LogLevel.Warning, new EventId(2, "ResultTooLarge"), "Command {Contract}.{Command} (call {CallId}) returned {Bytes} bytes, over the limit of {Limit}; the call failed");
+
+    private static readonly Action<ILogger, long, int, int, Exception?> MessageTooLarge = LoggerMessage.Define<long, int, int>(
+        LogLevel.Warning, new EventId(3, "MessageTooLarge"), "A page message (call {CallId}) of {Bytes} bytes was refused; the limit is {Limit}");
+
+    private static readonly Action<ILogger, long, Exception?> CallRefusedBusy = LoggerMessage.Define<long>(
+        LogLevel.Debug, new EventId(4, "Busy"), "Call {CallId} was refused: the document's calls in flight and queue are full");
+
     private readonly SparDispatcher _dispatcher;
+    private readonly BridgeLimits _limits;
+    private readonly ILogger _logger;
     private readonly string _fingerprint;
     private readonly string _doc;
     private readonly Action<string> _send;
@@ -24,9 +45,12 @@ internal sealed class BridgeSession : IDisposable
     private readonly Lock _gate = new();
     private readonly CancellationTokenSource _closing = new();
     private readonly Dictionary<long, CancellationTokenSource> _pending = [];
+    private readonly LinkedList<BridgeMessage> _queue = [];
     private readonly Dictionary<long, DateTimeOffset> _earlyCancels = [];
     private readonly List<Task> _running = [];
     private HashSet<string> _pageTypes = new(StringComparer.Ordinal);
+    private int _inFlight;
+    private long _queuedBytes;
     private bool _open;
     private bool _mismatch;
     private bool _closed;
@@ -35,6 +59,8 @@ internal sealed class BridgeSession : IDisposable
     public BridgeSession(SparDispatcher dispatcher, string fingerprint, string doc, Action<string> send, bool includeDetails, TimeProvider? time = null)
     {
         _dispatcher = dispatcher;
+        _limits = dispatcher.Limits;
+        _logger = dispatcher.Logger;
         _fingerprint = fingerprint;
         _doc = doc;
         _send = send;
@@ -53,6 +79,14 @@ internal sealed class BridgeSession : IDisposable
 
     public void Receive(string message)
     {
+        // Counting allocates nothing; decoding an oversized message would allocate three times its size.
+        var bytes = Encoding.UTF8.GetByteCount(message);
+        if (bytes > _limits.MaxMessageBytes)
+        {
+            RefuseTooLarge(message, bytes);
+            return;
+        }
+
         if (!BridgeCodec.TryDecode(message, out var decoded, out var error))
         {
             Refuse(error!);
@@ -102,7 +136,7 @@ internal sealed class BridgeSession : IDisposable
         Send(new BridgeMessage(BridgeMessageType.Event) { Name = name, Payload = payload });
     }
 
-    /// <summary>The document is gone: cancel every call, and send nothing more.</summary>
+    /// <summary>The document is gone: cancel every call, drop the waiting ones, and send nothing more.</summary>
     public void Close()
     {
         lock (_gate)
@@ -119,6 +153,8 @@ internal sealed class BridgeSession : IDisposable
             }
 
             _pending.Clear();
+            _queue.Clear();
+            _queuedBytes = 0;
         }
 
         _closing.Cancel();
@@ -152,10 +188,10 @@ internal sealed class BridgeSession : IDisposable
         Send(new BridgeMessage(BridgeMessageType.Open) { Protocol = protocol, Doc = _doc, Contracts = _fingerprint });
     }
 
+    /// <summary>A call starts when a slot is free, waits in the queue when one is not, and is refused as busy past both.</summary>
     private void Call(BridgeMessage call)
     {
         var id = call.Id!.Value;
-        CancellationTokenSource? token = null;
         SparFailure? refusal = null;
         lock (_gate)
         {
@@ -177,18 +213,35 @@ internal sealed class BridgeSession : IDisposable
             {
                 refusal = new SparFailure("cancelled", "cancelled-before-start", "notStarted");
             }
+            else if (_inFlight < _limits.CallsInFlight)
+            {
+                StartLocked(call);
+            }
+            else if (_queue.Count < _limits.QueuedCalls && _queuedBytes + call.Payload.Length <= _limits.QueuedBytes)
+            {
+                _queue.AddLast(call);
+                _queuedBytes += call.Payload.Length;
+            }
             else
             {
-                token = CancellationTokenSource.CreateLinkedTokenSource(_closing.Token);
-                _pending[id] = token;
-                _running.Add(Task.Run(() => DispatchAsync(call, token)));
+                refusal = SparFailure.Busy();
+                CallRefusedBusy(_logger, id, null);
             }
         }
 
         if (refusal is not null)
         {
-            Send(FailureMessage(id, refusal));
+            Send(FailureMessage(id, refusal, call));
         }
+    }
+
+    /// <summary>Takes a slot and runs the call; the slot is given back only when the command has really ended.</summary>
+    private void StartLocked(BridgeMessage call)
+    {
+        var token = CancellationTokenSource.CreateLinkedTokenSource(_closing.Token);
+        _pending[call.Id!.Value] = token;
+        _inFlight++;
+        _running.Add(Task.Run(() => DispatchAsync(call, token)));
     }
 
     private async Task DispatchAsync(BridgeMessage call, CancellationTokenSource token)
@@ -202,6 +255,16 @@ internal sealed class BridgeSession : IDisposable
         finally
         {
             token.Dispose();
+            lock (_gate)
+            {
+                _inFlight--;
+                if (!_closed && _queue.First is { } next)
+                {
+                    _queue.RemoveFirst();
+                    _queuedBytes -= next.Value.Payload.Length;
+                    StartLocked(next.Value);
+                }
+            }
         }
 
         lock (_gate)
@@ -213,11 +276,12 @@ internal sealed class BridgeSession : IDisposable
             }
         }
 
-        Send(OutcomeMessage(id, outcome));
+        Send(OutcomeMessage(call, outcome));
     }
 
     private void Cancel(long id)
     {
+        BridgeMessage? waiting = null;
         lock (_gate)
         {
             if (_pending.TryGetValue(id, out var token))
@@ -226,12 +290,36 @@ internal sealed class BridgeSession : IDisposable
                 return;
             }
 
-            if (id > _lastId)
+            if (RemoveQueued(id) is { } queued)
+            {
+                waiting = queued;
+            }
+            else if (id > _lastId)
             {
                 // The cancel overtook its call (another connection, on loopback): the call will never run.
                 _earlyCancels[id] = _time.GetUtcNow();
             }
         }
+
+        if (waiting is not null)
+        {
+            Send(FailureMessage(id, new SparFailure("cancelled", "cancelled-before-start", "notStarted"), waiting));
+        }
+    }
+
+    private BridgeMessage? RemoveQueued(long id)
+    {
+        for (var node = _queue.First; node is not null; node = node.Next)
+        {
+            if (node.Value.Id == id)
+            {
+                _queue.Remove(node);
+                _queuedBytes -= node.Value.Payload.Length;
+                return node.Value;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>A message of a type this host does not take: it fails a pending call with that id, so none can hang.</summary>
@@ -243,6 +331,36 @@ internal sealed class BridgeSession : IDisposable
         }
 
         Dropped?.Invoke($"'{message.TypeName}' message ignored");
+    }
+
+    /// <summary>
+    /// A message over the size limit is never decoded whole: only its header, when it sits within the first
+    /// characters, is read to answer the call by its id. One that names no fresh call id gets no reply.
+    /// </summary>
+    private void RefuseTooLarge(string message, int bytes)
+    {
+        var tab = message.AsSpan(0, Math.Min(message.Length, HeaderSearchChars)).IndexOf('\t');
+        if (tab < 0 || !BridgeCodec.TryDecode(string.Concat(message.AsSpan(0, tab), "\t"), out var header, out _) || header!.Type != BridgeMessageType.Call)
+        {
+            Dropped?.Invoke($"a message of {bytes} bytes, over the limit of {_limits.MaxMessageBytes}, with no call header");
+            return;
+        }
+
+        var id = header.Id!.Value;
+        bool fresh;
+        lock (_gate)
+        {
+            fresh = TakeId(id);
+        }
+
+        if (!fresh)
+        {
+            Dropped?.Invoke($"a message of {bytes} bytes for id {id}, which was already used");
+            return;
+        }
+
+        MessageTooLarge(_logger, id, bytes, _limits.MaxMessageBytes, null);
+        Send(FailureMessage(id, SparFailure.TooLarge(bytes, _limits.MaxMessageBytes), header));
     }
 
     private void Refuse(BridgeDecodeError error)
@@ -266,7 +384,7 @@ internal sealed class BridgeSession : IDisposable
 
         if (fresh)
         {
-            Send(FailureMessage(id, SparFailure.InvalidRequest(error.Reason)));
+            Send(FailureMessage(id, SparFailure.InvalidRequest(error.Reason), null));
         }
         else
         {
@@ -285,23 +403,31 @@ internal sealed class BridgeSession : IDisposable
 
         if (fresh)
         {
-            Send(FailureMessage(id, SparFailure.InvalidRequest(reason)));
+            Send(FailureMessage(id, SparFailure.InvalidRequest(reason), message));
         }
     }
 
+    /// <summary>Fails a running or waiting call; a running one keeps its slot until its command ends.</summary>
     private bool FailPending(long id, SparFailure failure)
     {
+        BridgeMessage? waiting = null;
         lock (_gate)
         {
-            if (!_pending.Remove(id, out var token))
+            if (_pending.Remove(id, out var token))
+            {
+                token.Cancel();
+            }
+            else if (RemoveQueued(id) is { } queued)
+            {
+                waiting = queued;
+            }
+            else
             {
                 return false;
             }
-
-            token.Cancel();
         }
 
-        Send(FailureMessage(id, failure));
+        Send(FailureMessage(id, failure, waiting));
         return true;
     }
 
@@ -328,29 +454,74 @@ internal sealed class BridgeSession : IDisposable
         return _earlyCancels.Remove(id);
     }
 
-    private BridgeMessage OutcomeMessage(long id, SparOutcome outcome) => outcome.Kind switch
+    private BridgeMessage OutcomeMessage(BridgeMessage call, SparOutcome outcome)
     {
-        SparOutcomeKind.Value => new BridgeMessage(BridgeMessageType.Result) { Id = id, Ok = true, Payload = outcome.Payload },
-        SparOutcomeKind.Error => new BridgeMessage(BridgeMessageType.Result) { Id = id, Ok = false, Payload = outcome.Payload },
-        _ => FailureMessage(id, outcome.Failure!),
-    };
+        var id = call.Id!.Value;
+        if (outcome.Kind != SparOutcomeKind.Failure && outcome.Payload.Length > _limits.MaxResultBytes)
+        {
+            ResultTooLarge(_logger, call.Contract!, call.Command!, id, outcome.Payload.Length, _limits.MaxResultBytes, null);
+            return FailureMessage(id, SparFailure.ResultTooLarge(outcome.Payload.Length, _limits.MaxResultBytes), call);
+        }
 
-    private BridgeMessage FailureMessage(long id, SparFailure failure) => new(BridgeMessageType.Failure)
+        return outcome.Kind switch
+        {
+            SparOutcomeKind.Value => new BridgeMessage(BridgeMessageType.Result) { Id = id, Ok = true, Payload = outcome.Payload },
+            SparOutcomeKind.Error => new BridgeMessage(BridgeMessageType.Result) { Id = id, Ok = false, Payload = outcome.Payload },
+            _ => FailureMessage(id, outcome.Failure!, call),
+        };
+    }
+
+    /// <summary>
+    /// A failure as the page sees it. One with an exception is logged under the call's correlation id, which the
+    /// payload carries in every build; the detail goes with it only in Development.
+    /// </summary>
+    private BridgeMessage FailureMessage(long id, SparFailure failure, BridgeMessage? call)
     {
-        Id = id,
-        Kind = failure.Kind,
-        Code = failure.Code,
-        Execution = failure.Execution,
-        Payload = _includeDetails && failure.Detail is { } detail ? DetailJson(detail) : ReadOnlyMemory<byte>.Empty,
-    };
+        string? correlation = null;
+        if (failure.Exception is { } exception)
+        {
+            correlation = Correlation(call?.TraceParent);
+            CommandFailed(_logger, call?.Contract ?? "", call?.Command ?? "", id, correlation, exception);
+        }
 
-    private static byte[] DetailJson(string detail)
+        var detail = _includeDetails ? failure.Detail : null;
+        return new BridgeMessage(BridgeMessageType.Failure)
+        {
+            Id = id,
+            Kind = failure.Kind,
+            Code = failure.Code,
+            Execution = failure.Execution,
+            Payload = correlation is null && detail is null ? ReadOnlyMemory<byte>.Empty : FailurePayload(correlation, detail),
+        };
+    }
+
+    /// <summary>The trace id of the call's <c>traceparent</c> (decision "Bridge limits … the behaviour"), else a new one.</summary>
+    private static string Correlation(string? traceParent)
+    {
+        if (traceParent is { Length: >= 55 } && ActivityContext.TryParse(traceParent, null, out var context))
+        {
+            return context.TraceId.ToHexString();
+        }
+
+        return ActivityTraceId.CreateRandom().ToHexString();
+    }
+
+    private static byte[] FailurePayload(string? correlation, string? detail)
     {
         using var stream = new MemoryStream();
         using (var writer = new Utf8JsonWriter(stream))
         {
             writer.WriteStartObject();
-            writer.WriteString("detail"u8, detail);
+            if (correlation is not null)
+            {
+                writer.WriteString("correlation"u8, correlation);
+            }
+
+            if (detail is not null)
+            {
+                writer.WriteString("detail"u8, detail);
+            }
+
             writer.WriteEndObject();
         }
 

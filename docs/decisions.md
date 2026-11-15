@@ -3070,3 +3070,30 @@ The spike exported every public contract of every referenced assembly that refer
 - **How it is passed:** `Spar.Sdk` turns the items into the property `SparContractAssemblies` in a target before `GenerateMSBuildEditorConfigFileCore` (items do not exist when properties are evaluated), so the generator and the analyzer read it from the compiler's config, design-time builds included; the client step gets it as a parameter, and its inventory includes it, so a changed list reruns the step.
 - **Found while building:** a library referenced as a project has source locations of its own, in its compilation; "in source" had to become "in this compilation" (`Compilation.ContainsSyntaxTree`), or its problems were filed under types the project never reports. And the client step crashed logging a problem with no location (`GetLineSpan().Path` is null for `Location.None`), found only by a real build.
 - **Evidence:** `docs/evidence/m1a-referenced-contracts.md`.
+
+## 2026-11-15, Bridge limits, admission and exception redaction: the behaviour (user decisions)
+
+Asked before building the M1a items "bridge limits and admission" and "exception redaction in Release" (research review, section 2), the user chose the recommended option each time:
+- **Over the in-flight limit, queue then refuse** (over refusing at once): a call past the calls in flight of its document waits in a small bounded queue for that document and starts when a slot frees; it is refused only when the queue is full, so a page that fires a burst of calls at load still works.
+- **A call these limits refuse is `rejected` / `busy` or `rejected` / `too-large`, `notStarted`** (over `unavailable`): the same kind as the other refusals before a command runs.
+- **The correlation id is the call's W3C trace id** (over a random id per failure): the one in its `traceparent`, or a new one when the page sent none, so the same id finds the log entry and, with telemetry on, the trace.
+- **The details go to `ILogger` from the app's services** (over the call's `Activity` only), with an exception event on the call's `Activity` as well; nothing is written when the app adds no logger.
+- **Still to set by measurement in M1a:** the maximum message size, the calls in flight and the queue per document.
+
+## 2026-11-15, Bridge limits built: the numbers, admission and redaction (implementation record; choices for review)
+
+Evidence: `docs/evidence/m1a-bridge-limits.md`; measurements in `spikes/bridge-limits`.
+- **Built:** `BridgeOptions` (`builder.Bridge(o => …)`, each value at least 1), the size check before decoding, slots and a FIFO queue per document, the result-size check, the correlation id in failure payloads, logging through the app's `ILogger`, `CallError.correlation` and `CallError.detail` in the SDK, and 1 MiB batches on the page's loopback transport. `dotnet test` 309 of 309; the NativeAOT lane passes.
+- **The numbers, from the measurements** (a call waiting or running holds about 620 bytes besides its message; taking a message in allocates about 3× its size at 0.5 ms per MiB; the page parses a result at 0.35 ms per MiB; Kestrel refuses bodies over 28.6 MiB by default):
+  - **`MaxMessageBytes` 4 MiB:** a large Markdown page or a recipe fits with room; taking one in costs about 2 ms and 12 MiB.
+  - **`MaxResultBytes` 16 MiB:** the page parses it in about 6 ms; larger transfers belong in streams (M3).
+  - **`CallsInFlight` 16:** not a memory bound (a call is cheap) but a bound on how much of the app's work one page can start at once.
+  - **`QueuedCalls` 1,024 and `QueuedBytes` 16 MiB:** the count was 64 at first, and the existing browser test that sends 200 calls at once failed with `busy`; since the bytes are bounded separately, the count only bounds bookkeeping, about 0.6 MB at 1,024.
+  - What one document can make the app hold is then about 16 × 12 MiB running plus 2 × 16 MiB waiting (as .NET strings), about 230 MiB.
+- **Choices made while building, for review:**
+  - **An oversized message is answered by the id in its header** when the TAB is within its first 16 K characters and the header decodes alone; otherwise it is dropped, like any message whose id cannot be trusted.
+  - **Refusals carry no correlation id and log no error;** `too-large` logs a warning, `busy` a debug entry (a page under load would flood a warning).
+  - **The failure payload is the place for the correlation id,** not a header field: the header stays the decided `kind`, `code`, `execution`.
+  - **On loopback the page caps a request at 1 MiB of text** and the server's body limit follows `MaxMessageBytes` (twice it, at least Kestrel's 28.6 MiB), so an oversized call fails alone rather than ending the channel.
+- **Found while building:** the client step's writes raced between an app's variants, which share `obj/spar/client`; it showed once, when an SDK rebuild made both variants rewrite every file (a `SafeFileHandle.CreateFile` failure in `ClientPackage.Sync`). The client step now writes under the same kind of lease as the npm install (`FileLease`). Not seen to wait in four later builds, so the overlap itself is unverified. Also open: two variants with different `DefineConstants` could write different clients into that one folder.
+- **Not run:** WebView2's and WebKitGTK's own message size limits (M1b, M1c); the production boundary with the bridge in it (the Production build has no host yet, so the session is trimmed away).

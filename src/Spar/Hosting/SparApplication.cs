@@ -47,10 +47,23 @@ public sealed class SparBuilder
 
     internal FolderOptions FolderOptions { get; } = new();
 
+    internal BridgeOptions BridgeOptions { get; } = new();
+
     /// <summary>Where data and logs go; each has a per-user default. A test host moves them all under its data root.</summary>
     public SparBuilder Folders(Action<FolderOptions> configure)
     {
         configure(FolderOptions);
+        return this;
+    }
+
+    /// <summary>
+    /// The bridge's limits per document. The defaults protect the app from a page that sends too much; raise one only
+    /// for a need you have measured, since it lets the page hold more of the app (see <see cref="Spar.BridgeOptions"/>).
+    /// </summary>
+    public SparBuilder Bridge(Action<BridgeOptions> configure)
+    {
+        configure(BridgeOptions);
+        _ = BridgeOptions.Freeze();
         return this;
     }
 }

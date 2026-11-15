@@ -12,8 +12,6 @@ namespace Spar.Sdk.Tasks;
 [MSBuildMultiThreadableTask]
 public sealed class SparFrontendInstall : MSBuildTask, IMultiThreadableTask
 {
-    private static readonly TimeSpan LeaseTimeout = TimeSpan.FromMinutes(10);
-
     public SparFrontendInstall()
         : this(TaskEnvironment.Fallback)
     {
@@ -38,12 +36,10 @@ public sealed class SparFrontendInstall : MSBuildTask, IMultiThreadableTask
     {
         var frontend = TaskEnvironment.GetAbsolutePath(FrontendDirectory);
         var leasePath = TaskEnvironment.GetAbsolutePath(LeaseFile);
-        Directory.CreateDirectory(new AbsolutePath(Path.GetDirectoryName(leasePath.Value)!));
-
-        using var lease = Acquire(leasePath);
+        using var lease = FileLease.Acquire(leasePath, Log, "Spar: waiting for another build's npm install to finish.");
         if (lease is null)
         {
-            Log.LogError("Another build has held the npm install lease for {0} minutes: {1}.", LeaseTimeout.TotalMinutes, leasePath);
+            Log.LogError("Another build has held the npm install lease for {0} minutes: {1}.", FileLease.Timeout.TotalMinutes, leasePath);
             return false;
         }
 
@@ -62,33 +58,6 @@ public sealed class SparFrontendInstall : MSBuildTask, IMultiThreadableTask
         var lockfile = new FileInfo(new AbsolutePath("package-lock.json", frontend));
         var installed = new FileInfo(new AbsolutePath(Path.Combine("node_modules", ".package-lock.json"), frontend));
         return installed.Exists && lockfile.Exists && installed.LastWriteTimeUtc >= lockfile.LastWriteTimeUtc;
-    }
-
-    private FileStream? Acquire(AbsolutePath path)
-    {
-        var deadline = DateTime.UtcNow + LeaseTimeout;
-        var waited = false;
-        while (true)
-        {
-            try
-            {
-                return new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 1, FileOptions.DeleteOnClose);
-            }
-            catch (IOException) when (DateTime.UtcNow < deadline)
-            {
-                if (!waited)
-                {
-                    Log.LogMessage(MessageImportance.High, "Spar: waiting for another build's npm install to finish.");
-                    waited = true;
-                }
-
-                Thread.Sleep(250);
-            }
-            catch (IOException)
-            {
-                return null;
-            }
-        }
     }
 
     private bool RunNpm(AbsolutePath frontend)

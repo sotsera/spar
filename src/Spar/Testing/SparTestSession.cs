@@ -46,7 +46,7 @@ internal sealed class SparTestSession
         SparRunningApp app;
         try
         {
-            SparRunningApp.AddSparServices(services, catalog, folders);
+            SparRunningApp.AddSparServices(services, catalog, folders, builder.BridgeOptions.Freeze());
 
             // The test's overrides run last, after the app's registrations and Spar's defaults.
             ConfigureServices?.Invoke(services);
@@ -83,9 +83,10 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
     public ValueTask DisposeAsync() => services.DisposeAsync();
 
     /// <summary>Spar's own services, after the app's, so an app registration (or a test's) wins.</summary>
-    internal static void AddSparServices(IServiceCollection services, SparCatalog catalog, SparFolders folders)
+    internal static void AddSparServices(IServiceCollection services, SparCatalog catalog, SparFolders folders, BridgeLimits limits)
     {
         services.TryAddSingleton(folders);
+        services.TryAddSingleton(limits);
         services.TryAddScoped<SparCall>();
         services.TryAddScoped<ISparCall>(provider => provider.GetRequiredService<SparCall>());
         catalog.AddServices(services);

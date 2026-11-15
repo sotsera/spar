@@ -1,5 +1,7 @@
 using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Spar.Runtime;
 
@@ -21,6 +23,12 @@ public sealed class SparCallContext(IServiceProvider services, ReadOnlyMemory<by
 /// </summary>
 internal sealed class SparDispatcher(IServiceProvider services, SparCatalog catalog)
 {
+    /// <summary>The app's bridge limits (<see cref="SparBuilder.Bridge"/>), or the defaults.</summary>
+    public BridgeLimits Limits { get; } = services.GetService<BridgeLimits>() ?? BridgeLimits.Default;
+
+    /// <summary>The app's logger for the bridge; nothing is written when the app adds no logging.</summary>
+    public ILogger Logger { get; } = services.GetService<ILoggerFactory>()?.CreateLogger("Spar.Bridge") ?? NullLogger.Instance;
+
     public async ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken)
     {

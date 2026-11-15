@@ -100,6 +100,31 @@ describe("outcomes", () => {
     expect(errorOf(await outcome)).toEqual({ kind: "rejected", code: "unknown-command", execution: "notStarted", contract: "pages", command: "rename" });
   });
 
+  test("a failed command carries its correlation id, and the detail a Development host sends", async () => {
+    const correlation = "4bf92f3577b34da6a3ce929d0e0e4736";
+    const outcome = connection.invoke("pages", "save", "{}", pageDecoder);
+
+    host.deliver({ type: "failure", id: 1, kind: "failed", code: "failed", execution: "unknown", payload: `{"correlation":"${correlation}","detail":"IOException: disk full"}` });
+
+    expect(errorOf(await outcome)).toEqual({
+      kind: "failed", code: "failed", execution: "unknown", contract: "pages", command: "save", correlation, detail: "IOException: disk full",
+    });
+  });
+
+  test.each([
+    ["not JSON", "{oops"],
+    ["an array", "[\"4bf92f3577b34da6a3ce929d0e0e4736\"]"],
+    ["a correlation that is not a trace id", "{\"correlation\":\"4BF92F35\"}"],
+    ["values that are not strings", "{\"correlation\":7,\"detail\":{}}"],
+    ["inherited keys only", "{\"__proto__\":{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\"}}"],
+  ])("a failure payload with %s adds nothing", async (_, payload) => {
+    const outcome = connection.invoke("pages", "save", "{}", pageDecoder);
+
+    host.deliver({ type: "failure", id: 1, kind: "failed", code: "failed", execution: "unknown", payload });
+
+    expect(errorOf(await outcome)).toEqual({ kind: "failed", code: "failed", execution: "unknown", contract: "pages", command: "save" });
+  });
+
   test("a value the decoder cannot read is protocol / malformed", async () => {
     const outcome = connection.invoke("pages", "get", "{}", pageDecoder);
 
