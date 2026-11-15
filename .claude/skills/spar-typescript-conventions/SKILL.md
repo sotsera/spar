@@ -5,7 +5,7 @@ description: "Write or review Spar TypeScript and JavaScript: the SDK and Vite p
 
 # Write Spar frontend code
 
-The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rules table) in `docs/design/contracts.md`, and 2c (bridge) in `docs/design/bridge.md`. `docs/app-model.md` sections 5 and 6 show the public shape, compiled; a change to that shape updates it and its check in the same change (`spikes/app-model-check` until M1a rebuilds it under `tests/`). Generator work also needs `spar-contract-generation`.
+The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rules table) in `docs/design/contracts.md`, and 2c (bridge) in `docs/design/bridge.md`. `docs/app-model.md` sections 5 and 6 show the public shape, compiled; a change to that shape updates it and its check in the same change (`tests/AppModel`, which `dotnet test` runs through `tests/AppModel.Tests`). Generator work also needs `spar-contract-generation`.
 
 ## Style
 

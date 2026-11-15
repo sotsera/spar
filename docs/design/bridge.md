@@ -36,7 +36,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - `events.reset` is required, because ignoring it leaves stale state; `gap`, `reconnecting` and `resumed` are optional.
     - Each subscription offers only the events it can emit: a coalesced one has no `gap`.
     - The generated type is `Subscription<T>`, an `AsyncIterable` of `Result<T, E, SubscriptionEvents>`.
-    - Checked in `spikes/app-model-check`: a missing `reset` fails `tsc` (TS2322, naming `reset`), and so do a misspelled event and a missing `events` object.
+    - Checked in `tests/AppModel` (from `spikes/app-model-check`): a missing `reset` fails `tsc` (TS2322, naming `reset`), and so do a misspelled event and a missing `events` object.
   - **Coalesced subscriptions** (decided, user, 2026-11-14): `[SparSubscription(Coalesce = true)]`, name to settle in M3. The subscription keeps only the newest value and replaces older ones silently, with no `gap` events. It suits state that only matters as its latest value: resource usage, progress, connection status.
     - The page sees each value at most once and always ends on the newest. A resumed subscription starts with the current value.
     - The capacity is 1 by definition, so `Capacity` is not allowed with it (a contract diagnostic).

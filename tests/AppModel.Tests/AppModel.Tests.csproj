@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The documentation check (test type 17): every C# and TypeScript block of docs/app-model.md, copied verbatim into
+    tests/AppModel and compiled there, with the deliberate mistakes failing as they should. It runs Node and the .NET
+    SDK, so tests/AppModel needs its npm packages (npm ci there) before the first run.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>AppModel.Tests</RootNamespace>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(MSBuildThisFileDirectory)..\..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

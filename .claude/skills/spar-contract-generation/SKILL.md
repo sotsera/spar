@@ -5,7 +5,7 @@ description: Change Spar's contract analysis, the generated C# dispatch and seri
 
 # Change contract generation
 
-The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rules table, diagnostic map, generated client) and 2c in `docs/design/bridge.md` (streams, subscriptions, failures); `docs/app-model.md` sections 3–6 show it compiled. In `docs/decisions.md` later entries supersede earlier ones. A change to the contract syntax, the wire or the generated client updates `docs/app-model.md` and its compiled check in the same change; the check is `spikes/app-model-check` until M1a rebuilds it under `tests/`. Page-side SDK rules are in `spar-typescript-conventions`.
+The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rules table, diagnostic map, generated client) and 2c in `docs/design/bridge.md` (streams, subscriptions, failures); `docs/app-model.md` sections 3–6 show it compiled. In `docs/decisions.md` later entries supersede earlier ones. A change to the contract syntax, the wire or the generated client updates `docs/app-model.md` and its compiled check in the same change; the check is `tests/AppModel`, which `dotnet test` runs through `tests/AppModel.Tests`. Page-side SDK rules are in `spar-typescript-conventions`.
 
 ## Pipeline
 

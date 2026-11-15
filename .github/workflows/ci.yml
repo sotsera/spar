@@ -52,6 +52,10 @@ jobs:
           # The browser tests serve the compiled SDK from obj/dist.
           npm run build
 
+      - name: The documentation check's packages (tests/AppModel)
+        working-directory: tests/AppModel
+        run: npm ci --ignore-scripts
+
       - name: Build
         run: dotnet build Spar.slnx -c Debug
 

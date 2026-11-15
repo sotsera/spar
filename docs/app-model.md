@@ -9,7 +9,7 @@ This design record shows, with complete examples, the code a Spar app author wri
 
 Where a decision changes, update this document in the same change.
 
-**Checked by compilation.** The C# and TypeScript in this document must compile, against stand-ins for the Spar API, in `spikes/app-model-check/`. Each block names the file it corresponds to there. The stand-ins have no contract analyzer, so a script there (`tools/check-contracts.mjs`) checks what compiling cannot: the request shape, the return forms, reserved contract names and the `cancelled` error code.
+**Checked by compilation.** The C# and TypeScript in this document must compile, against stand-ins for the Spar API, in `tests/AppModel/`, which `dotnet test` checks. Each block names the file it corresponds to there. The stand-ins have no contract analyzer, so a script there (`tools/check-contracts.mjs`) checks what compiling cannot: the request shape, the return forms, reserved contract names and the `cancelled` error code.
 
 The example is a small part of Spar's first consumer, the SQL Server tool: saved connections, and copy jobs that plan, preview and run a copy and report progress.
 
@@ -994,7 +994,7 @@ export async function cancelEverything(): Promise<void> {
 }
 ```
 
-- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `spikes/app-model-check`.
+- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `tests/AppModel`.
 - A command without declared errors has no `errors` property.
 - `execution` tells the page whether the backend ran the command: `notStarted`, `stopped`, `completed` or `unknown`. Nothing is retried automatically.
 - **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. A command that threw also has `correlation`, the id to quote to whoever reads the app's log, and in Development `detail`, which is for developers only. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
