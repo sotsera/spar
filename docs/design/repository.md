@@ -1,0 +1,19 @@
+# Repository and guidance
+
+Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled decisions, the open questions and the milestones, and lists every design file. Section numbers are global: "section 7" anywhere in the plan, the design files or `docs/decisions.md` means the heading of that number, wherever it lives.
+
+## 7. Repository and guidance
+
+- **Consumer model:** one app project, one fast test project, and one optional end-to-end project. No app-specific branches in the framework.
+- **Agent files:** `AGENTS.md` (`CLAUDE.md` contains `@AGENTS.md`), plus skills in `.claude/skills/`, reviewed against this plan on 2026-11-15 (M0 close-out step 2). Each M1 slice adds the skill its work needs. Portable skills may move to `.agents/skills/`.
+- **Plugins:** dotnet/skills plugins are enabled in `.claude/settings.json`.
+- **Readable code first,** in C#, TypeScript and generated output (in the skills).
+- **Size limits** for C# and TypeScript sources outside `spikes/`: 800 lines per file soft, 1,500 hard, 40 source files per folder. `eng/check-size.cs` enforces them (`dotnet run eng/check-size.cs`), with exceptions in `eng/size-exceptions.txt` whose ceilings only go down. `AGENTS.md` states the rule.
+- **Analyzers:** trim, AOT and single-file analyzers run in every project, including tests. Builds are `Deterministic`, and `.editorconfig` sets `end_of_line = lf`. Overrides are agreed and recorded in `.editorconfig`. Today: CA2016 at error in every project (decision "Guidance review applied", point 2), RSEXPERIMENTAL006 off in the generator, and the MSBuild task analyzer's option and severities for the task project (decision "Same-origin iframes blocked; MSBuild task analyzer settings").
+- **Warnings as errors covers compiler warnings only.** The root `Directory.Build.props` sets `TreatWarningsAsErrors`, which does not apply to MSBuild and SDK warnings (`MSB*`, `NETSDK*`): NETSDK1229 passed every build in `spikes/cswinrt`. Only `-warnaserror` or `MSBuildTreatWarningsAsErrors` fails them. **Decided (user, 2026-11-14):** the root `Directory.Build.props` sets `MSBuildTreatWarningsAsErrors` for every project outside `spikes/`. A probe warning (MSB9999) failed a build under `tests/` and stayed a warning under `spikes/`. Exceptions go in `MSBuildWarningsNotAsErrors`, agreed ID by ID with their reason. The app template sets it too; `Spar.Sdk` does not force it on apps, because a new NuGet advisory warning would break existing builds.
+- **Docs:**
+  - `docs/decisions.md` (append-only log), `docs/pitfalls.md` (known pitfalls), `docs/evidence/` (measurements).
+  - User-facing docs cite official platform docs only and don't name other frameworks.
+  - **A documentation website** (user, 2026-11-14): a good-looking, searchable site for app authors, built from the user-facing docs in this repository and published with each release. **Decided:** Astro Starlight, published to GitHub Pages from CI on each release. The pages stay plain Markdown, readable in the repository. The TypeScript reference comes from TypeDoc. The C# reference comes from the XML doc comments, through DocFX's Markdown output (to verify) or a small Spar generator.
+    - It holds the guides, the API reference generated from the C# and TypeScript doc comments, and the compiled examples.
+    - Its examples are compiled like `docs/app-model.md`, so they never go stale.

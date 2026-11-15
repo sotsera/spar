@@ -1,6 +1,6 @@
 ---
 name: spar-csharp-conventions
-description: Write or review Spar C# using the repository's syntax, feature layout, member order, ownership, and performance conventions.
+description: Write or review Spar C# using the repository's syntax, feature layout, member order, ownership and performance conventions, and its rules for `Result` values, DI services and cancellation.
 ---
 
 # Write Spar C#

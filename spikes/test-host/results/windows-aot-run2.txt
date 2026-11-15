@@ -1,0 +1,17 @@
+  Discovering: SampleApp.AotTests
+  Discovered:  SampleApp.AotTests
+  Starting:    SampleApp.AotTests
+    SampleApp.Tests.CommandTests.Apps_started_together_stay_apart(count: 2) [OUTPUT] SPIKE parallel-start count=2 all-started=0.4ms each=[0.3, 0.2]
+    SampleApp.Tests.CommandTests.Apps_started_together_stay_apart(count: 8) [OUTPUT] SPIKE parallel-start count=8 all-started=4.3ms each=[0.3, 0.2, 0.3, 0.2, 0.2, 0.2, 3.0, 0.2]
+    SampleApp.Tests.CommandTests.Start_cost_in_sequence [OUTPUT] SPIKE sequential start+call+dispose ms: first=0.4 median-rest=0.37 max-rest=0.58
+    SampleApp.Tests.WindowTests.Four_windows_at_once [OUTPUT] SPIKE 4 windows: all-open=459ms all-journeys=485ms descendants=24
+    SampleApp.Tests.WindowTests.Page_facts [OUTPUT] SPIKE page facts: {"href":"https://app.localhost/index.html","origin":"https://app.localhost","readyState":"complete","spar":"object","ready":"object","scripts":["https://app.localhost/app.js"],"resources":["https://app.localhost/app.css","https://app.localhost/app.js"],"script":"200 text/javascript; charset=utf-8","webkit":"undefined","webview":"object"}
+    SampleApp.Tests.WindowTests.Fifty_windows_in_sequence [OUTPUT] SPIKE 50 windows: ready first=278 median=274 max=511; open+journey+close median=467 max=714; engine-processes-left=0; working-set after window 1:36MB 10:38MB 25:42MB 50:48MB
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE window journey: open=274ms ready=277ms done=290ms engine-pids=[34228] descendants=6
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE dispose surface=159ms app=0ms delete=11ms
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE window closed=467ms engine-processes-left=0 after=475ms
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE marker | teardown=14ms browser-exit=145ms
+    SampleApp.Tests.ProcessStateTests.An_app_leaves_console_environment_and_directory_alone [OUTPUT] SPIKE two apps ran: nothing on stdout or stderr, same directory and environment
+  Finished:    SampleApp.AotTests (ID = '3205b6be8c6c5eacdb7f871327ad3d2cd7a22f02c664086bbedeb1794e2d0256')
+=== TEST EXECUTION SUMMARY ===
+   SampleApp.AotTests  Total: 15, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 25.799s

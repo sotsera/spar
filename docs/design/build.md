@@ -1,0 +1,45 @@
+# Build and packaging
+
+Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled decisions, the open questions and the milestones, and lists every design file. Section numbers are global: "section 1" anywhere in the plan, the design files or `docs/decisions.md` means the heading of that number, wherever it lives.
+
+## 1. Build and packaging
+
+- **Packages:**
+  - `Spar.Sdk`, one MSBuild project SDK for app and test projects: `<Project Sdk="Spar.Sdk">`, version pinned in `global.json` (`msbuild-sdks`). It ships the generator, the analyzer, the task assembly and the compiled TypeScript SDK, each once.
+  - Runtime packages: `Spar` (core), `Spar.Windows`, `Spar.Linux`.
+  - **Choosing platforms (decided, user, 2026-11-14):**
+    - An app sets `<SparPlatforms>windows;linux</SparPlatforms>`, or one of the two; both is the default.
+    - `Spar.Sdk` adds the host packages at its own version, so apps never reference `Spar.Windows` or `Spar.Linux` themselves, and `dotnet new spar-app --platforms …` writes the property.
+    - Each platform maps to its runtime identifiers (`win-x64`/`win-arm64`, `linux-x64`/`linux-arm64`), and NativeAOT removes the other host's code from each executable.
+    - Running on a platform the app does not target stops with a clear error that names the property.
+    - NativeAOT does not cross-compile between operating systems, so each executable is published on its own OS or in a container of it.
+  - Testing packages per test level.
+  - The `spar` .NET tool, versioned with the SDK.
+- **Package rules:**
+  - Never reuse a version.
+  - The runtime package is referenced implicitly at the SDK's version.
+  - The SDK version is an input of the client step.
+  - NuGet's `analyzers/` folder is ignored for MSBuild SDK packages, so the generator is added as an `Analyzer` item from `Sdk.targets`.
+- **Pipeline:**
+  1. `ResolveReferences`.
+  2. Contract inventory, written only when it changed.
+  3. Client step: the generated modules under `obj/spar/client` (`.js`, `.d.ts`, `.d.ts.map` to C#), the manifest, and the contract snapshot.
+  4. Frontend: `npm ci --ignore-scripts` when the lockfile changed (section 3c), in every variant, because the Debug type-check and the dev server need `node_modules` too; then the type-check in every variant (Debug included, see below); in Release and test variants also `vite build` into `obj/`, then packing.
+  5. One `CoreCompile`, where the generator and analyzer run.
+
+  Design-time builds run none of steps 2–4.
+  - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name to confirm in M1). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is. The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).
+- **Frontend packing:** one `Spar.Frontend` resource holding an index plus per-file Brotli (quality 11, fitted window).
+  - Files that Brotli shrinks by less than 5% are stored as is.
+  - The host decodes on a background thread at start into a cache, and serves uncompressed entries straight from the image.
+  - Small bundles may pack uncompressed, with a feature switch that trims the decoder.
+  - No zip.
+  - Measured:
+    - the decoder adds about 168 KB on both OSes, statically linked;
+    - a 2.8 MB bundle decodes in about 5 ms and makes the exe 44% smaller than raw;
+    - neither WebView decodes `Content-Encoding` itself.
+  - Deflate was measured only inside the zip container: its payloads were about 15% larger than Brotli's (React 71,240 against 61,176 B; the 2.8 MB bundle 1,006,299 against 875,155 B). Per-file Deflate inside the same index, without the zip reader, was not measured, so its decoder cost is unknown.
+- **Assets are served with `Cache-Control: no-store`.** Debug builds embed no bundle (see section 4).
+- **Determinism:** write-if-changed outputs, with stamp files as MSBuild `Outputs`. Exclude every `bin/`, `obj/`, `node_modules` and `dist` from the default globs.
+- **Multithreaded MSBuild:** every task is safe for `-mt`, and a build-test lane runs `-mt`.
+- **A package-only consumer test from M1's first day:** an isolated feed, package folder and HTTP cache (`NUGET_HTTP_CACHE_PATH`), outside any repository folder, covering update and downgrade while warm.

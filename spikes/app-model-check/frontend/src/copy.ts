@@ -5,9 +5,9 @@ declare function toast(text: string): void;
 
 configureSpar({
   // The interceptor: failures that no call handled. It may notify, never retry or change a result.
-  onFailure: e => toast(e.execution === "unknown" ? `${e.call}: outcome unknown, check the target` : e.message),
+  onFailure: e => toast(e.execution === "unknown" ? "Outcome unknown: check the target before retrying" : `The call failed (${e.code})`),
   // Every failure, handled or not, for logs and telemetry.
-  observe: e => console.warn(e.call, e.kind, e.code, e.execution),
+  observe: e => console.warn(e.kind, e.code, e.execution),
 });
 
 export async function planCopy(recipe: CopyRecipe, signal: AbortSignal): Promise<string | undefined> {

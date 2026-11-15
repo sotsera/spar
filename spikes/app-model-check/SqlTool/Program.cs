@@ -28,7 +28,7 @@ var app = SparApplication.Create(args, spar =>
     // The strict CSP is the default; each addition is explicit (plan 3b). Decided.
     spar.ContentSecurity(csp => csp.FontSrc("https://fonts.gstatic.com"));
 
-    // Powerful features are denied unless declared (plan 3b). Leaning.
+    // Powerful features are denied unless declared (plan 3b). Decided.
     spar.Permissions(p => p.Allow(Permission.ClipboardRead));
 
     // File types the app may open with their default program; nothing opens by default (6.6). Decided.

@@ -8,6 +8,8 @@ It collects topics that matter to v7 from:
 
 The reviews only read documents and code; nothing was re-run. Every finding is research input. Before it changes the plan, it becomes a Spar requirement or a spike.
 
+**State on 2026-11-15:** the items marked "Adopt (M1)" below, the two-stage close and the threat-model note are adopted (user decision) and listed in the plan's M1 slices, marked "(RR)" there. Their numbers are still set by measurement in the slice. The "Discuss" and "Later" items, and the "Adopt" items for M2 to M4, stay here until their milestone starts (decision "Plan and guidance review; M1 split").
+
 Sources are abbreviated:
 - `v1` stands for `spar`, `spar_old`, `spar-experiments` and `old/spar_spikes`;
 - `v2` to `v6` are the numbered repositories;

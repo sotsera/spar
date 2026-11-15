@@ -61,4 +61,13 @@ export async function mistakes(): Promise<void> {
 
   // 17. a window kind that is not declared: setings instead of settings [TS2345]
   await windows.open("setings").unwrap();
+
+  // 18. a subscription that declares errors, read without the errors object [TS2345]
+  for await (const item of jobLog.tail("job-1")) item.match({ success: () => 1, events: { reset: () => 0 } });
+
+  // 19. a field a CallError does not have: only kind, code and execution are decided [TS2339]
+  await copyJobs.cancelAll().match({ success: () => "done", failure: e => e.message });
+
+  // 20. the other undecided field: a CallError does not name its call [TS2339]
+  await copyJobs.cancelAll().match({ success: () => "done", failure: e => e.call });
 }

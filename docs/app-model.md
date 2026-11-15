@@ -9,7 +9,7 @@ This design record shows, with complete examples, the code a Spar app author wri
 
 Where a decision changes, update this document in the same change.
 
-**Checked by compilation.** The C# and TypeScript in this document must compile, against stand-ins for the Spar API, in `spikes/app-model-check/`. Each block names the file it corresponds to there.
+**Checked by compilation.** The C# and TypeScript in this document must compile, against stand-ins for the Spar API, in `spikes/app-model-check/`. Each block names the file it corresponds to there. The stand-ins have no contract analyzer, so a script there (`tools/check-contracts.mjs`) checks what compiling cannot: the request shape, the return forms, reserved contract names and the `cancelled` error code.
 
 The example is a small part of Spar's first consumer, the SQL Server tool: saved connections, and copy jobs that plan, preview and run a copy and report progress.
 
@@ -30,7 +30,7 @@ SqlTool/
     src/
   SqlTool.contracts.snapshot   committed; written by the build (decided 2026-11-14)
 SqlTool.Tests/              fast tests, run by every dotnet test
-SqlTool.EndToEndTests/      optional: browser, desktop executable, containers
+SqlTool.EndToEndTests/      optional: browser and window tests, the black-box executable, containers
 global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 ```
 
@@ -41,7 +41,14 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 
 ## 2. `Program.cs`
 
-`Program.cs` holds exactly one `Create` and one `Run`, directly in the top-level statements; anything else is a diagnostic (plan section 2, "`Program.cs`"; Leaning, not yet confirmed by the user). Declarations that the build must read are constants inside the `Create` configuration: the CSP, the permissions and the window colours (plan 3b, 3c, 3d).
+**Decided** (user, 2026-11-15; decision "`Program.cs` shape confirmed"). `Program.cs` holds exactly one `SparApplication.Create` and one `Run`, directly in the top-level statements; anything else is a diagnostic (plan section 2, "`Program.cs`").
+
+- **Read by the build, so constants only:** the declarations the build needs sit directly in the `Create` configuration with constant values, so the build reads them without running code. They are:
+  - the CSP (plan 3b);
+  - the permissions (plan 3b);
+  - the window kinds, whose names become a TypeScript union in `@spar/app/windows` (6.7);
+  - the window colours (plan 3d).
+- **Run at start-up, so ordinary values are fine:** every other configuration call runs when the app starts and may use run-time values. The example does so with `spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")))` and with the tray menu's lambda.
 
 File `SqlTool/Program.cs`:
 
@@ -76,7 +83,7 @@ var app = SparApplication.Create(args, spar =>
     // The strict CSP is the default; each addition is explicit (plan 3b). Decided.
     spar.ContentSecurity(csp => csp.FontSrc("https://fonts.gstatic.com"));
 
-    // Powerful features are denied unless declared (plan 3b). Leaning.
+    // Powerful features are denied unless declared (plan 3b). Decided.
     spar.Permissions(p => p.Allow(Permission.ClipboardRead));
 
     // File types the app may open with their default program; nothing opens by default (6.6). Decided.
@@ -250,7 +257,7 @@ public sealed class CopyJobsService(IConnectionStore connections, ISparCall call
 }
 ```
 
-- **Command shape:** zero or one request (a record or a scalar such as `string jobId`), then an optional `CancellationToken`.
+- **Command shape:** zero or one request (a positional record or a scalar such as `string jobId`), then an optional `CancellationToken`. A list or an array is not a request: it goes inside a record, as `ExportRequest` in 3.6.
 - **Returns:** `Task`, `Task<T>`, `Task<Result<T, TError>>`, `Task<Result<TError>>`, their `ValueTask` forms, `IAsyncEnumerable<T>`, `IAsyncEnumerable<Result<T, TError>>` (a stream with declared errors; yielding an error ends it, and the page's `match` gets an `errors` object as for unary calls), or a subscription.
 - **Conversions:** `return plan;` and `return new PlanError.TableMissing(…);` both convert into the `Result` implicitly. These are union conversions, so they also work for values typed as an interface, such as `IReadOnlyList<T>`.
 - **The per-call token fires** when the page aborts the call, when the page that started it goes away, or when the app shuts down. A command that ignores the token ends as "outcome unknown" when cancelled, never as "cancelled".
@@ -306,6 +313,7 @@ public interface IConnections
 
 - Classes keep their name, interfaces drop one leading `I`, and both drop a trailing `Service`. Then the name is put in acronym-aware camelCase.
 - Two contracts with the same name are an error, including contracts from referenced assemblies.
+- A contract name cannot be a JavaScript reserved word or a subpath that `@spar/app` uses itself, such as `sdk`, `vite` or `windows` (plan section 2, "Names"). An `ExportService` would be named `export`, so the export contract in 3.6 is `CsvExportService`, named `csvExport`.
 
 ### 3.5 Native services: the tray
 
@@ -360,7 +368,7 @@ public sealed record RecipeInfo(string Name, int Tables);
 /// <summary>Why a recipe could not be imported.</summary>
 public closed record ImportError
 {
-    public sealed record Cancelled : ImportError;
+    public sealed record Dismissed : ImportError;
 
     public sealed record NotAllowed(string Path) : ImportError;
 
@@ -382,7 +390,7 @@ public sealed class RecipesService(IFileDialogs dialogs)
         return picked switch
         {
             FileGrant file => Read(file),
-            FileDialogError.Dismissed => new ImportError.Cancelled(),
+            FileDialogError.Dismissed => new ImportError.Dismissed(),
             FileDialogError.AccessDenied e => new ImportError.NotAllowed(e.Path),
             FileDialogError.Unavailable e => new ImportError.NoFileDialog(e.Reason),
             FileDialogError.Busy => new ImportError.TryAgain(),
@@ -405,37 +413,40 @@ public sealed class RecipesService(IFileDialogs dialogs)
 }
 ```
 
-A folder works the same way. The grant declares read or read-write access, and every path is relative to the chosen folder.
+A folder works the same way. The grant declares read or read-write access, and every path is relative to the chosen folder. The table names arrive in a request record, `ExportRequest`, because a request is one positional record or one scalar, never a bare list (3.2).
 
-File `SqlTool/Recipes/ExportService.cs`:
+File `SqlTool/Recipes/CsvExportService.cs`:
 
 ```csharp
 using Spar;
 
 namespace SqlTool.Recipes;
 
+public sealed record ExportRequest(IReadOnlyList<string> Tables);
+
 /// <summary>Why an export did not finish.</summary>
 public closed record ExportError
 {
-    public sealed record Cancelled : ExportError;
+    public sealed record Dismissed : ExportError;
 
     public sealed record NoFolder(string Reason) : ExportError;
 
     public sealed record WriteFailed(string File) : ExportError;
 }
 
+/// <summary>Exports tables as CSV files. Wire name: csvExport.</summary>
 [SparContract]
-public sealed class ExportService(IFileDialogs dialogs)
+public sealed class CsvExportService(IFileDialogs dialogs)
 {
     /// <summary>Writes one CSV per table into a folder the user picks.</summary>
     [SparCommand]
-    public async Task<Result<int, ExportError>> ExportAsync(IReadOnlyList<string> tables, CancellationToken cancellationToken)
+    public async Task<Result<int, ExportError>> ExportAsync(ExportRequest request, CancellationToken cancellationToken)
     {
         var picked = await dialogs.OpenFolderAsync(new() { Title = "Choose export folder", Access = FolderAccess.ReadWrite }, cancellationToken);
         return picked switch
         {
-            FolderGrant folder => await WriteAsync(folder, tables, cancellationToken),
-            FileDialogError.Dismissed => new ExportError.Cancelled(),
+            FolderGrant folder => await WriteAsync(folder, request.Tables, cancellationToken),
+            FileDialogError.Dismissed => new ExportError.Dismissed(),
             FileDialogError.AccessDenied e => new ExportError.NoFolder(e.Path),
             FileDialogError.Unavailable e => new ExportError.NoFolder(e.Reason),
             FileDialogError.Busy => new ExportError.NoFolder("busy"),
@@ -514,7 +525,7 @@ export function acceptCsvDrops(area: Element, importFiles: (dropped: readonly Pi
   - While a valid drag hovers, the SDK sets `data-spar-drop="over"` on the area, so CSS can highlight it.
   - Page-internal drag and drop, such as sortable lists, is unaffected.
   - How each host gets the dropped files (WebView2's `postMessageWithAdditionalObjects`, a GTK drop target on WebKitGTK) is checked in M3.
-- **The dialog's cases:** `dismissed` (not `cancelled`, which is the `CallError` of an aborted call), `accessDenied`, `unavailable` and `busy`.
+- **The dialog's cases:** `dismissed` (not `cancelled`, which is the `CallError` of an aborted call), `accessDenied`, `unavailable` and `busy`. The app's own error types above follow the same rule: their case for a closed dialog is `Dismissed`.
 - **Read and write cases:** `notFound`, `accessDenied`, `inUse`, `tooLarge`, `grantExpired`, and for folders `outsideFolder` and `readOnlyGrant`.
 - **Folder grants** declare `Read` (the default) or `ReadWrite`. They offer list, read, safe write, create folder and delete (write access only). The host checks the final resolved path, so links leaving the folder are refused. Remembering a folder across restarts is not in the first version.
 - **Grants** are opaque on the wire, tied to the window that asked, revoked when it closes, and limited in number, with an optional expiry.
@@ -766,11 +777,12 @@ public sealed class CrashReport(IAppHealth health)
 {
     /// <summary>The previous run's crash, so the page can offer to send a report.</summary>
     [SparCommand]
-    public CrashInfo? LastCrash() =>
-        health.LastCrash is { } crash ? new CrashInfo(crash.At, crash.Exception) : null;
+    public Task<CrashInfo?> LastCrashAsync() =>
+        Task.FromResult(health.LastCrash is { } crash ? new CrashInfo(crash.At, crash.Exception) : null);
 }
 ```
 
+- **A command is never synchronous** (3.2, "Returns"). This one has nothing to await, so it returns a completed task (`Task.FromResult`).
 - **Spar never uploads anything by itself.** What happens with a report is the app's choice.
 - **"Send logs":** `diagnostics.collect()` on the page, or `IAppHealth.CollectAsync` in C#, packs logs and crash records into one zip saved through a grant, ready to attach to an email.
 - **Secrets:** Spar's own entries never contain secrets. Apps keep theirs out too, because the zip is sent to other people.
@@ -795,46 +807,97 @@ public sealed class CrashReport(IAppHealth health)
 The declarations the generator emits for `copyJobs`, as `@spar/app/copyJobs` (file `frontend-generated/copyJobs.d.ts` in the check):
 
 ```ts
+// Generated by Spar from SqlTool/CopyJobs/CopyJobsService.cs. Do not edit.
 import type { Call, CallOptions, Result, SubscribeOptions, Subscription } from "@spar/app/sdk";
 
-export interface CopyRecipe { readonly source: string; readonly target: string; readonly tables: readonly string[]; }
-export interface CopyPlan { readonly planId: string; readonly steps: readonly PlanStep[]; }
-export interface PlanStep { readonly table: string; readonly estimatedRows: bigint; }
-export interface RunCopy { readonly planId: string; readonly truncateTarget: boolean; }
-export interface CopyReport { readonly tables: number; readonly rows: bigint; readonly elapsed: string; }
-export interface PreviewRow { readonly cells: readonly (string | null)[]; }
-export interface CopyProgress { readonly jobId: string; readonly rows: bigint; }
+export interface CopyRecipe {
+  readonly source: string;
+  readonly target: string;
+  readonly tables: readonly string[];
+}
+
+export interface CopyPlan {
+  readonly planId: string;
+  readonly steps: readonly PlanStep[];
+}
+
+export interface PlanStep {
+  readonly table: string;
+  readonly estimatedRows: bigint;
+}
+
+export interface RunCopy {
+  readonly planId: string;
+  readonly truncateTarget: boolean;
+}
+
+export interface CopyReport {
+  readonly tables: number;
+  readonly rows: bigint;
+  readonly elapsed: string;
+}
+
+export interface PreviewRow {
+  readonly cells: readonly (string | null)[];
+}
+
+export interface CopyProgress {
+  readonly jobId: string;
+  readonly rows: bigint;
+}
 
 /** Why a copy could not be planned. (C# `PlanError`) */
 export interface PlanError {
   /** The named connection is not configured. */
-  readonly connectionNotFound: { readonly connectionId: string };
+  readonly connectionNotFound: {
+    readonly connectionId: string;
+  };
+
   /** The table does not exist on that connection. */
-  readonly tableMissing: { readonly connection: string; readonly table: string };
+  readonly tableMissing: {
+    readonly connection: string;
+    readonly table: string;
+  };
 }
 
 /** Why a planned copy did not run to the end. (C# `RunError`) */
 export interface RunError {
-  readonly planOutdated: { readonly reason: string };
-  readonly targetNotEmpty: { readonly table: string; readonly rows: bigint };
+  readonly planOutdated: {
+    readonly reason: string;
+  };
+
+  readonly targetNotEmpty: {
+    readonly table: string;
+    readonly rows: bigint;
+  };
+
   /** Rows committed before the failure stay in the target. */
-  readonly partiallyCopied: { readonly rowsCommitted: bigint; readonly reason: string };
+  readonly partiallyCopied: {
+    readonly rowsCommitted: bigint;
+    readonly reason: string;
+  };
 }
 
-/** Plans, previews and runs table copies. */
+/** Plans, previews and runs table copies. Wire name: copyJobs. */
 export declare const copyJobs: {
   /** Checks the recipe against both connections and estimates the work. */
   readonly plan: (request: CopyRecipe, options?: CallOptions) => Call<CopyPlan, PlanError>;
+
   /** Copies the planned tables. Cancelling stops between batches. */
   readonly run: (request: RunCopy, options?: CallOptions) => Call<CopyReport, RunError>;
+
   /** The first rows of each table, streamed as they are read. */
   readonly preview: (request: CopyRecipe, options?: CallOptions) => AsyncIterable<Result<PreviewRow>>;
-  /** Live progress of a running copy. */
+
+  /** Live progress of a running copy. Observation only, so it may resume after a lost connection. */
   readonly progress: (jobId: string, options?: SubscribeOptions<"automatic">) => Subscription<CopyProgress>;
+
+  /** Plain Task: success carries no value. */
   readonly cancelAll: (options?: CallOptions) => Call<void>;
 };
 ```
 
+- **The output reads as hand-written code** (plan section 2, "Generated code is readable"): a header naming the C# source file, one member per line, and the C# documentation carried over unchanged.
 - **Errors are an interface map** (case name to payload) carrying the C# docs. That gives completions, hover docs, go-to-definition and "add missing properties" for the cases.
 - **`Call<T, E>`** is a `Promise<Result<T, E>>` with `match` and `unwrap` (decided 2026-11-14). Awaiting it gives a `Result<T, E>` with the same two methods. Neither the call nor the result exposes the value any other way.
   - `then`, `catch` and `finally` return plain promises.
@@ -842,7 +905,10 @@ export declare const copyJobs: {
   - `Result` reports itself as `[object SparResult]`, so Vue does not wrap it in a proxy.
   - Being a real `Promise`, a forgotten call is flagged by `no-floating-promises` without extra lint settings.
 - **`SubscribeOptions`:** for an `Automatic` subscription the page may pass `resume: "manual"`. A `Manual` subscription accepts only `"manual"`.
-- **`Subscription<T>`** is an `AsyncIterable` of `Result` items. Their `match` takes `success` (the values), `events` (`reset` required, `gap`, `reconnecting` and `resumed` optional) and `failure`. A coalesced subscription has no `gap` (decided 2026-11-14).
+- **`Subscription<T>`** is an `AsyncIterable` of `Result` items (decision "The `events` slot for subscriptions"; plan 2c). Their `match` takes:
+  - `success`, for the app's values only;
+  - `events`: `reset` is required, and `gap`, `reconnecting` and `resumed` are optional. A coalesced subscription has no `gap`;
+  - the usual `errors` and `failure`. As for a call, `errors` is required when the subscription declares errors and absent when it declares none, as `progress` above.
 
 ## 6. Using it in the page
 
@@ -860,9 +926,9 @@ declare function toast(text: string): void;
 
 configureSpar({
   // The interceptor: failures that no call handled. It may notify, never retry or change a result.
-  onFailure: e => toast(e.execution === "unknown" ? `${e.call}: outcome unknown, check the target` : e.message),
+  onFailure: e => toast(e.execution === "unknown" ? "Outcome unknown: check the target before retrying" : `The call failed (${e.code})`),
   // Every failure, handled or not, for logs and telemetry.
-  observe: e => console.warn(e.call, e.kind, e.code, e.execution),
+  observe: e => console.warn(e.kind, e.code, e.execution),
 });
 
 export async function planCopy(recipe: CopyRecipe, signal: AbortSignal): Promise<string | undefined> {
@@ -906,7 +972,7 @@ export async function cancelEverything(): Promise<void> {
 - A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `spikes/app-model-check`.
 - A command without declared errors has no `errors` property.
 - `execution` tells the page whether the backend ran the command: `notStarted`, `stopped`, `completed` or `unknown`. Nothing is retried automatically.
-- **Failures** (decided 2026-11-14) are `CallError` values with a `kind`, a `code` and an `execution`. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
+- **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
   - **Where a failure goes:**
     - A `failure` function handles every failure.
     - A `failure` object handles the kinds it lists. A misspelled kind fails `tsc`.
@@ -940,7 +1006,7 @@ export function CopyProgressView({ jobId }: { readonly jobId: string }) {
             reconnecting: e => setStatus(`reconnecting (attempt ${e.attempt})`),
           },
           // Ignore the failure our own abort causes (StrictMode runs effects twice in development).
-          failure: e => { if (!abort.signal.aborted) setStatus(e.message); },
+          failure: e => { if (!abort.signal.aborted) setStatus(`stopped (${e.code})`); },
         });
       }
     })();
@@ -1187,9 +1253,19 @@ export function AppTitleBar({ onSearch }: { readonly onSearch: (text: string) =>
 
 ## 7. Still open in this model
 
-- **Contracts and wire:** the TypeScript interface-map entry for an error case without a payload (`{"code":"forbidden"}` on the wire).
+- **Contracts and wire:**
+  - the TypeScript interface-map entry for an error case without a payload (`{"code":"forbidden"}` on the wire). The examples declare such cases in C#, for example `ImportError.Dismissed`; the SDK stand-in in the check writes their entry as `{}`;
+  - whether a `CallError` also names the call it belongs to. The decided fields are `kind`, `code` and `execution` (decision "`CallError` kinds"), so the `onFailure` and `observe` hooks in 6.1 cannot say which command failed.
 - **Configuration:**
-  - the names of the `Services`, `Window` and `Permissions` builders.
+  - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example;
+  - the generated start-up check for a missing registration of an interface contract (section 2, Leaning).
+- **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
 - **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open).
 
-Decided since this list was first written, and shown above: streams with declared errors, the `events` slot for subscriptions, the committed contract snapshot, and `Call` as a `Promise` subclass (decisions "Streams may declare errors", "The `events` slot for subscriptions", "The contract snapshot is committed", "TypeScript SDK: `Call` as a `Promise` subclass, `toStringTag`, Vue augmentation").
+Decided since this list was first written, and shown above:
+- streams with declared errors (decision "Streams may declare errors");
+- the `events` slot for subscriptions (decision "The `events` slot for subscriptions");
+- the committed contract snapshot (decision "The contract snapshot is committed");
+- `Call` as a `Promise` subclass (decision "TypeScript SDK: `Call` as a `Promise` subclass, `toStringTag`, Vue augmentation");
+- the `Program.cs` shape (decision "`Program.cs` shape confirmed");
+- the declaration of permissions (decision "Camera, microphone and other permissions").

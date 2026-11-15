@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The app's one test project. It references the app and runs the app's own Program.cs inside this process. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SampleApp.Tests</RootNamespace>
+    <!-- -p:SpikeBrowser=false leaves out Playwright and the browser tests (the NativeAOT lane cannot run them). -->
+    <SpikeBrowser Condition="'$(SpikeBrowser)' == ''">true</SpikeBrowser>
+    <DefineConstants Condition="'$(SpikeBrowser)' == 'true'">$(DefineConstants);SPIKE_BROWSER</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Microsoft.Playwright" Condition="'$(SpikeBrowser)' == 'true'" />
+    <Using Include="Xunit" />
+    <ProjectReference Include="..\SampleApp\SampleApp.csproj" />
+    <ProjectReference Include="..\Spar.Mini.Testing\Spar.Mini.Testing.csproj" />
+  </ItemGroup>
+
+  <!-- The test host's hook is on in this process (it is off, and trimmed away, in the app's own Production build). -->
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="true" Trim="true" />
+  </ItemGroup>
+
+  <Import Project="..\WebView2Loader.targets" />
+</Project>

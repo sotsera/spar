@@ -79,28 +79,6 @@ public readonly struct Result<T, TError> : Result<T, TError>.IUnionMembers
         return CheckedState() == ErrorState;
     }
 
-    public TResult Match<TResult>(Func<T, TResult> success, Func<TError, TResult> error)
-    {
-        ArgumentNullException.ThrowIfNull(success);
-        ArgumentNullException.ThrowIfNull(error);
-
-        return CheckedState() == SuccessState ? success(_value) : error(_error!);
-    }
-
-    public void Switch(Action<T> success, Action<TError> error)
-    {
-        ArgumentNullException.ThrowIfNull(success);
-        ArgumentNullException.ThrowIfNull(error);
-
-        if (CheckedState() == SuccessState)
-        {
-            success(_value);
-            return;
-        }
-
-        error(_error!);
-    }
-
     public override string ToString() => _state switch
     {
         SuccessState => $"Success({_value})",

@@ -1,16 +1,17 @@
 // Shared by every form: the public error types, the handler types and the runtime that picks a handler.
 export type Execution = "notStarted" | "stopped" | "completed" | "unknown";
 
-/** What went wrong, for choosing a message (decision 2026-11-14). `code` gives the precise cause. */
+/** What went wrong, for choosing what to tell the user (decision "`CallError` kinds", 2026-11-14). `code` gives the precise cause. */
 export type CallErrorKind = "cancelled" | "unavailable" | "rejected" | "failed" | "transport" | "response" | "protocol";
 
-/** An infrastructure failure, the same for every command. Declared errors are never a CallError. */
+/**
+ * An infrastructure failure, the same for every command. Declared errors are never a CallError.
+ * Only the three decided fields: the decision defines no message and no call name.
+ */
 export interface CallError {
   readonly kind: CallErrorKind;
   readonly code: string;
-  readonly message: string;
   readonly execution: Execution;
-  readonly call: string;
 }
 
 /** Declared errors of a command: case name to payload. `{}` when the command declares none. */
@@ -90,10 +91,10 @@ export type ErrorResults<H> = Returns<H[keyof H]>;
 export type Outcome =
   | { readonly ok: true; readonly value: unknown }
   | { readonly ok: true; readonly event: string; readonly payload: unknown }
-  | { readonly ok: false; readonly call: string; readonly code: string; readonly payload: unknown }
-  | { readonly ok: false; readonly call: string; readonly code?: undefined; readonly error: CallError };
+  | { readonly ok: false; readonly code: string; readonly payload: unknown }
+  | { readonly ok: false; readonly code?: undefined; readonly error: CallError };
 
-let onFailure: (error: CallError) => void = error => console.error(error.call, error.code, error.execution);
+let onFailure: (error: CallError) => void = error => console.error(error.kind, error.code, error.execution);
 let observe: ((error: CallError) => void) | undefined;
 
 /**
@@ -125,7 +126,10 @@ interface AnyHandlers {
   readonly failure?: AnyHandler | Readonly<Partial<Record<CallErrorKind, AnyHandler>>>;
 }
 
-/** Calls the handler for this outcome. A case the client does not know (a newer backend) is a protocol failure. */
+/**
+ * Calls the handler for this outcome. A case the client does not know (a newer backend) is the failure
+ * `protocol` / `unknown-error-case`, whose execution is `unknown` (decision "`CallError` kinds").
+ */
 export function settle(outcome: Outcome, handlers: AnyHandlers): unknown {
   if (outcome.ok) return "event" in outcome ? handlers.events?.[outcome.event]?.(outcome.payload) : handlers.success(outcome.value);
 
@@ -134,7 +138,7 @@ export function settle(outcome: Outcome, handlers: AnyHandlers): unknown {
   else {
     const handler = handlers.errors?.[outcome.code];
     if (handler) return handler(outcome.payload);
-    error = { kind: "protocol", code: "unknown-error-case", message: `${outcome.call} returned undeclared error ${outcome.code}`, execution: "completed", call: outcome.call };
+    error = { kind: "protocol", code: "unknown-error-case", execution: "unknown" };
   }
 
   observe?.(error);

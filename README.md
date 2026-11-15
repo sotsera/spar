@@ -11,7 +11,7 @@ An app chooses its target platforms with one property, and publishes by default 
 
 This repository targets .NET 11. It is at milestone M0: repository foundation and build-pipeline decisions. Nothing here is usable as a framework yet.
 
-- [Plan](docs/plan.md): scope, design decisions and milestones.
+- [Plan](docs/plan.md): scope, settled decisions, open questions and milestones, with the design by area in [`docs/design/`](docs/design/).
 - [Decisions](docs/decisions.md): measured outcomes of the M0 spikes and the decisions taken from them.
 - [Agent guide](AGENTS.md): how to work in this repository.
 

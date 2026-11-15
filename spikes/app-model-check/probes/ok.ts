@@ -31,3 +31,20 @@ export async function awaited(): Promise<bigint> {
     failure: () => -1n,
   });
 }
+
+// A subscription that declares errors takes `events` and `errors`; `failure` stays optional (plan 2c, "The `events` slot").
+export async function tailed(): Promise<void> {
+  for await (const item of jobLog.tail("job-1")) {
+    item.match({
+      success: line => line.text,
+      events: { reset: () => "" },
+      errors: { logDeleted: e => e.jobId },
+    });
+  }
+}
+
+// A failure handler reads the three decided fields of a CallError (decision "`CallError` kinds").
+export const failureFields: Promise<string> = copyJobs.cancelAll().match({
+  success: () => "done",
+  failure: e => `${e.kind} ${e.code} ${e.execution}`,
+});

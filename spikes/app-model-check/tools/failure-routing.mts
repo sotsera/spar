@@ -1,9 +1,10 @@
-// Run-time check of the 2026-11-14 failure rules: function form, kind object, interceptor, observe, unwrap.
+// Run-time check of the 2026-11-14 failure rules: function form, kind object, interceptor, observe, unwrap,
+// and the failure the SDK builds itself for an error case it does not know.
 import { configureSpar, settle, unwrapOutcome, type CallError, type Outcome } from "../sdk/core.ts";
 
 const seen: string[] = [];
 configureSpar({ onFailure: e => seen.push(`onFailure:${e.kind}`), observe: e => seen.push(`observe:${e.kind}`) });
-const fail = (kind: CallError["kind"]): Outcome => ({ ok: false, call: "x.y", error: { kind, code: kind, message: kind, execution: "unknown", call: "x.y" } });
+const fail = (kind: CallError["kind"]): Outcome => ({ ok: false, error: { kind, code: kind, execution: "unknown" } });
 const check = (label: string, actual: unknown, expected: unknown) => {
   const ok = JSON.stringify(actual) === JSON.stringify(expected);
   console.log(`${ok ? "ok  " : "FAIL"} ${label}: ${JSON.stringify(actual)}`);
@@ -40,3 +41,12 @@ const event = (name: string, payload: unknown): Outcome => ({ ok: true, event: n
 check("event goes to its handler", settle(event("gap", { dropped: 3 }), { success: () => 0, events: { gap: (e: unknown) => (e as { dropped: number }).dropped } }), 3);
 check("unhandled optional event gives undefined", settle(event("resumed", {}), { success: () => 0, events: { reset: () => 1 } }), undefined);
 check("events never reach the failure hooks", seen, []);
+
+seen.length = 0;
+const undeclared: Outcome = { ok: false, code: "tableRenamed", payload: {} };
+check(
+  "undeclared error case is protocol / unknown-error-case, execution unknown",
+  settle(undeclared, { success: () => 0, errors: { tableMissing: () => "known" }, failure: (e: unknown) => e }),
+  { kind: "protocol", code: "unknown-error-case", execution: "unknown" });
+check("undeclared error case: observe only, with a failure function", seen, ["observe:protocol"]);
+check("declared error case goes to its handler", settle({ ok: false, code: "tableMissing", payload: {} }, { success: () => 0, errors: { tableMissing: () => "known" } }), "known");

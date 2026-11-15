@@ -1,11 +1,11 @@
 ---
 name: spar-typescript-conventions
-description: Write or review Spar TypeScript and JavaScript: the SDK and Vite plugin in `src/Spar.Client` (bridge protocol, transports, `Call`/`Result`, failure hooks, streams, subscriptions, page APIs), their source style, and the public shape of the `@spar/app` package and its generated modules.
+description: "Write or review Spar TypeScript and JavaScript: the SDK and Vite plugin in `src/Spar.Client` (bridge protocol, transports, `Call`/`Result`, failure hooks, streams, subscriptions, page APIs), their source style, and the public shape of the `@spar/app` package and its generated modules."
 ---
 
 # Write Spar frontend code
 
-The design is `docs/plan.md` sections 2b (SDK) and 2c (bridge), and section 2's "Generated client" and wire-rules table. `docs/app-model.md` sections 5 and 6 show the public shape, compiled; a change to that shape updates it and its check in the same change. Generator work also needs `spar-contract-generation`.
+The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rules table) in `docs/design/contracts.md`, and 2c (bridge) in `docs/design/bridge.md`. `docs/app-model.md` sections 5 and 6 show the public shape, compiled; a change to that shape updates it and its check in the same change (`spikes/app-model-check` until M1a rebuilds it under `tests/`). Generator work also needs `spar-contract-generation`.
 
 ## Style
 
@@ -19,7 +19,7 @@ The design is `docs/plan.md` sections 2b (SDK) and 2c (bridge), and section 2's 
 ## Package
 
 - **`@spar/app`** is one `file:` package under `obj/spar/client`: `/<contract>` and `/windows` are generated, `/sdk` and `/vite` ship compiled, `/telemetry` is optional and loads lazily.
-- **Shape:** `"type": "module"`, `"sideEffects": false`, subpath exports `{ "types": "./x.d.ts", "default": "./x.js" }` plus a root barrel, `.js` extensions in relative imports.
+- **Shape:** `"type": "module"`, `"sideEffects": false`, subpath exports `{ "types": "./x.d.ts", "default": "./x.js" }`, `.js` extensions in relative imports. Whether the package also gets a root barrel is settled in M1a: the spike had one, and no decision asks for it.
 - **The SDK ships compiled:** ES modules, `.d.ts`, `.d.ts.map`, source maps, and its `.ts` sources under `src/`, never beside a `.d.ts` of the same name. It is compiled with its own strict settings, separately for the browser (DOM) and the Vite plugin (Node); the app's `tsconfig` never compiles it.
 - **Tree shaking:** no top-level side effects. Optional parts are separate modules or free functions, never methods or properties of an exported object, which bundlers always keep.
 - **Development-only code** (the Hot Reload toast, the development overlay) is a no-op in Release that the bundler removes. Production bundles carry none.
@@ -54,10 +54,10 @@ The design is `docs/plan.md` sections 2b (SDK) and 2c (bridge), and section 2's 
 - **Page APIs return `Call`s with declared errors,** not `null` or booleans. A closed dialog is `dismissed`, never `cancelled`, which is the `CallError` of an aborted call. Grants show the page only names.
 - **Make mistakes compile errors:** generated unions for declared names (window kinds), keyed objects for kinds and buttons, action objects instead of string ids. Where the type cannot catch a duplicate, throw at once and name both.
 - **SDK code runs under the default CSP and Trusted Types:** no `eval`, `new Function` or string timers, no HTML string sinks, no injected `<style>` elements or `style` attributes, no `data:` URLs.
-- **Stay independent of UI frameworks.** When `Call` or `Result` changes, rerun the React, Angular and Vue checks of `spikes/frontend-frameworks`. Framework guidance for the docs is in plan 2b.
+- **Stay independent of UI frameworks.** When `Call` or `Result` changes, rerun the React, Angular and Vue checks of `spikes/frontend-frameworks`, which M1a moves into the SDK's tests. Framework guidance for the docs is in plan 2b.
 
 ## Verify
 
 - Vitest with fake channels for each host type, type tests (code that must compile, and code that must fail with the expected error), the `tsconfig` × TypeScript 6/7 matrix, and the conformance vectors shared with the C# tests.
 - Change generated modules in their generator. When an export or import shape changes, load the built JavaScript in a real consumer.
-- The evidence for these rules is in `docs/pitfalls.md` ("npm, Vite and TypeScript", "Wire format and serialization").
+- The evidence for these rules is in `docs/pitfalls.md` ("npm, Vite and TypeScript", "Bridge and loopback", "Page security", "Wire format and serialization").

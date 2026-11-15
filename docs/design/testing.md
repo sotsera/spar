@@ -1,0 +1,164 @@
+# Testing
+
+Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled decisions, the open questions and the milestones, and lists every design file. Section numbers are global: "section 5" anywhere in the plan, the design files or `docs/decisions.md` means the heading of that number, wherever it lives.
+
+## 5. Testing
+
+**Decided** (user, 2026-11-15; decision "Test strategy: the app runs inside the test process"; evidence `spikes/test-host`). The points still open are listed at the end of this section; each is decided with the user when its slice reaches it.
+
+**The idea.** A test runs the app's own `Program.cs` inside the test process and chooses what sits in front of the backend. The app contains no test code, there is no test configuration file, and replacing a dependency is ordinary DI code in the test:
+
+```csharp
+await using var app = await SparTestApp.StartAsync<Program>(o =>
+{
+    o.Surface = SparTestSurface.Window;   // None | Browser | Window
+    o.Services(s => s.Replace<IOrderDatabase>(new FakeOrders(42)));
+});
+```
+
+(The names are the spike's and are settled in M1a.) Spar's test library calls the app's entry point directly; the spike used an unsafe accessor to the compiler's `<Main>$`, which also works in a NativeAOT test executable. `SparApplication.Create` sees the test's session, and `Run` applies the test's overrides after the app's registrations and Spar's test defaults, builds the app and hands it to the test instead of opening its window.
+
+**Levels** (pick the smallest that can show the failure):
+
+| # | Level | What runs | Cost (`spikes/test-host`) | Project |
+|---|---|---|---|---|
+| 1 | Unit | Services called directly | µs | `MyApp.Tests` |
+| 2 | Command | Surface `None`: commands through real serialization and dispatch, with typed C# test clients generated per contract | 0.2–0.6 ms per app start | `MyApp.Tests` |
+| 3 | Page | The page code under Vitest against `@spar/app/testing`'s fake transport | ms | the frontend (issue B) |
+| 4 | Browser | Surface `Browser`: the page in Chromium over in-process loopback, one browser per test run and a context per test (Playwright, CoreCLR only) | 97–144 ms per test | `MyApp.EndToEndTests` |
+| 5 | Window | Surface `Window`: the app's real WebView2 or WebKitGTK window on the test process's UI thread, shown offscreen and never activated | 466–472 ms (Windows), 297–301 ms (Linux) per test | `MyApp.EndToEndTests` |
+| 6 | Real resources | Any of levels 2, 4 or 5 with the external dependency allowed and a disposable real service (a SQL Server container through Aspire's test builder or Testcontainers) | the container's start | `MyApp.EndToEndTests` |
+| 7 | Black box | The exact Production executable, launched, nothing replaced: smoke checks (window, clean close, exit code, files under a disposable data root), and behaviour across processes (single-instance handoff, start-up exit codes, the crash record at the next start); real input and focus-dependent checks in Windows Sandbox (M4) | seconds | `MyApp.EndToEndTests` |
+
+**Safe by default** (the test author does nothing for these):
+- **One data root per app instance,** from which every Spar folder derives: data, logs, cache, settings, the WebView2 profile or WebKit data, the credential namespace and the single-instance name, including folders the app set itself in `Program.cs`. Data roots sit under `artifacts/` in this repository (WebView2 profiles under `artifacts/webview2-profiles/`, Linux homes under `artifacts/linux-homes/`) and are deleted after each test.
+- **Spar's outward services are fakes in a test host:** clipboard, credentials, shell open, dialogs, tray, notifications, power and taskbar. The test can inspect them, and can ask for a real one explicitly.
+- **External dependencies:** the app marks its own real resources (a database, a remote API) when it registers them. Resolving one that the test did not replace or allow fails the call, and the message names the dependency and both ways out.
+- **No replacements across processes:** a launched executable (level 7) gets only a disposable data root and real disposable resources through configuration.
+
+**Rules for Spar's own code,** which the in-process host depends on:
+- Spar keeps no process-wide mutable state; a test lists every static field of Spar's assemblies against a reviewed list.
+- Spar never uses `Console`, environment variables or the working directory for per-app values. Each app instance has its own log sink; options are passed explicitly.
+- One UI thread per test process on each OS (WebView2 objects belong to the thread that created them; GTK is initialised once), shared by every window the process opens.
+- Test windows are shown offscreen with no taskbar button and no activation (`WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE` on Windows), and set `IsReputationCheckingRequired = false`, or every early close waits about 6.4 s for SmartScreen.
+- The engine's prerequisite check runs before the first window test: a native engine abort ends the whole test process and loses every result of the run (observed with `bwrap` refused).
+- The test host and Spar's test fakes sit behind a feature switch, so the trimmer removes them from Production. The production boundary test searches the published binary for them (type names as UTF-8, literals as UTF-16).
+
+**Projects and lanes:**
+- **`MyApp.Tests`** holds levels 1 and 2 and runs on every `dotnet test`. **`MyApp.EndToEndTests`** holds levels 4 to 7 and runs as its own CI stage; window tests run as their own invocation there, so a native abort loses only that run. The page tests (level 3) run in the frontend's own test command.
+- **Framework:** `xunit.v3`. **The NativeAOT lane** is the same sources built against `xunit.v3.aot` and published with NativeAOT, without the browser tests (Playwright for .NET cannot run under NativeAOT). Its documented limits apply: no generic test methods, no `params`, no stack traces in failures.
+- **Test variant:** a test project builds the app in Spar's one test variant (the test-host hook, page automation and the UI-thread stall probe). It replaces the earlier `DesktopTest` and `ManagedTest`; its name and how `Configuration` selects it are fixed in M1a.
+- xUnit writes no report files, but `dotnet test` (MTP) still leaves an empty `TestResults/` folder in the working directory (`spikes/test-frameworks`, `spikes/d3-variants`; `spikes/TestResults/` is one). The test-project defaults must keep it out of authored folders; how (for example `--results-directory` under `obj/`) is open for M1a.
+- **Paths:** no absolute paths in tests and scripts.
+
+**Required host tests:** close during controller creation, close during a long RPC or stream, navigate with an RPC in flight, close one of two windows sharing an environment, and repeated open/close. Each ends with all pending work final, stale replies dropped, and the profile reusable. Two more are adopted from the research review (user, 2026-11-15): the end of the OS session, treated as a non-cancellable, best-effort phase, and an app installed under a long path. They run at level 5 on both hosts, plus level 7 where the behaviour spans processes.
+
+**Test types** (2026-11-14, revised 2026-11-15 for the test strategy; ⚠ marks a type with an open issue, listed under the table).
+
+| # | Type | Who | What it checks | Runs with | Speed | Spar provides | |
+|---|---|---|---|---|---|---|---|
+| 1 | C# unit | App, Spar | Services and domain rules, called directly | xUnit | µs–ms | Nothing special; a `Result` reads with `switch` or `Assert` | |
+| 2 | Command | App, Spar | A command through real serialization and dispatch, services replaced, no window | The test host, surface `None` | 0.2–0.6 ms per app | The test host, generated typed test clients | |
+| 3 | Page | App, Spar | Page code against a fake backend: errors, failures, cancellation, stream events | Vitest/Node or a real browser | ms | `@spar/app/testing`: fake transport, `Result` factories | ⚠ B |
+| 4 | Browser | App, Spar | Real backend and page together, Chromium via Playwright over in-process loopback | The test host, surface `Browser` | 97–144 ms | The surface, a shared browser fixture, locators | |
+| 5 | Window | App, Spar | The real window (WebView2, WebKitGTK under Xvfb): selectors, input, screenshots | The test host, surface `Window` | 0.3–0.5 s | Page evaluation, `WaitForUiReady`, selectors, input, screenshots, scenes, fixed clock | ⚠ D, L |
+| 6 | Integration with real resources | App | The app against disposable real services (a SQL Server container) | Levels 2, 4 or 5 plus Aspire's test builder or Testcontainers | 42–48 s per run (`spikes/aspire`) | The external-dependency allowance; values passed as options | ⚠ E |
+| 7 | Black box | App, Spar | The exact Production executable: smoke checks and behaviour across processes | A launched-app fixture; UI Automation or AT-SPI to find the window | seconds | The fixture, the data-root switch | ⚠ M |
+| — | Contract compatibility | App, Spar | The committed contract snapshot | The build (SPAR100 in CI) | build time | Built in | |
+| — | Visual snapshot | App, Spar | `spar snap` with scenes: PNG and accessibility tree | `spar snap` | seconds | Built in (M2) | ⚠ F |
+| 8 | Generator and analyzers | Spar | Exact diagnostics and locations, the analyzer corpus, code fixes, false positives on a sample app | xUnit + Roslyn, SARIF | ms–s | — | |
+| 9 | Generated client | Spar | `.d.ts` on TypeScript 6 and 7 at the strictest settings, deliberate mistakes with exact codes, `.js` against `.d.ts` | tsc, Node | s | — | |
+| 10 | Serializers and wire | Spar | Differential against System.Text.Json, seeded fuzzing, golden vectors shared by C# and TypeScript, JIT/AOT parity | xUnit, Node | s–min | — | ⚠ G |
+| 11 | Runtime and protocol | Spar | Dispatcher, bridge codec, cancellation, `Result`, stream rules | xUnit | ms | — | |
+| 12 | Build | Spar | Incremental and no-op builds, variants, the production boundary, a clean clone, `-mt` | MSBuild with binlogs | min | — | ⚠ H |
+| 13 | Package | Spar | A consumer using Spar through packages only, isolated caches | `dotnet` in a temp folder | 36–62 s cold restore | — | ⚠ H |
+| 14 | Host lifecycle | Spar | Close during startup or a call, navigation with a call in flight, two windows, shutdown, profiles, startup errors, the heartbeat | Levels 5 and 7, both hosts | seconds | — | ⚠ I |
+| 15 | Windows Sandbox | Spar | Real input, dialogs, tray, focus-dependent features, the production exe offline | Windows Sandbox | minutes | — | ⚠ J |
+| 16 | Performance regression | Spar | BenchmarkDotNet, page benchmarks on three engines, build timing, against baselines | BenchmarkDotNet, runners | minutes | — | ⚠ K |
+| 17 | Documentation | Spar | `docs/app-model.md` examples compile and match their copies | `npm run check`, `dotnet build` | s | — | |
+| — | Needs the user | Spar | DPI, Narrator, a real camera, Wayland input, real desktops | The user at the PC | — | — | manual |
+
+**Open issues** (to investigate further, with spikes where needed):
+- **A. The managed level's form:** answered by the test strategy (2026-11-15).
+- **B. Where page tests run.** In Node with Vitest, in a real engine, or both. Also whether the fake transport behaves closely enough to the real bridge.
+- **C. Replacing services in end-to-end tests:** answered by the test strategy (2026-11-15) for levels 2 to 6; level 7 replaces nothing by design.
+- **D. Window specifics.**
+  - Trusted input in the in-process window (CDP `Input.*` on Windows, XTEST with `GDK_BACKEND=x11` on Linux, decision "Trusted input in Linux desktop tests: XTEST"): untested in-process; the spike used synthetic DOM events. Spike before M1b.
+  - Focus-dependent features (clipboard, user activation, the first click on an inactive window) fail in a non-activated offscreen window; they go to Windows Sandbox or the user.
+  - Linux window tests need the container image. Whether Windows machines may use WSLg, and whether Spar publishes the image or only its Dockerfile, are open (M1c).
+  - Selectors (role and name only, or test ids too) and how scenes are declared are open.
+- **E. Integration cost and quirks.** 42–48 s per run. A `localhost` → `::1` hang. Aspire writes keys to `%LOCALAPPDATA%`.
+- **F. Visual snapshots** need determinism (clock, fonts, DPI), which is not proven.
+- **G. The fuzz budget:** a fixed seed budget on every run or nightly, and whether a minimised corpus is committed.
+- **H. Build and package tests** are slow and noisy: 5 s process stalls, cold restores. They need isolation (MSBuild server off, no node reuse, unique compiler id, isolated caches) and medians with ranges.
+- **I. Profiles for window tests:** one shared WebView2 environment per test process with an InPrivate controller per test (76–79 ms per test in `spikes/webview-profiles`) against a fresh user data folder per test (about 470 ms in `spikes/test-host`, the safest); cleanup of folders left by crashed runs. Spike in M1b.
+- **J. Windows Sandbox:** fixed at 96 DPI, no network, minutes per run. **Proposal** (user, 2026-11-15: recorded as a proposal, not decided):
+  - **Why:** it is the one place for checks that cannot run in the test process or on the developer's desktop: real input and focus (the first click on an inactive window, clipboard actions that need a user gesture, drag and drop); anything that registers itself with the system (tray icons, notifications, deep links, file associations, autostart), which `AGENTS.md` keeps off the developer's machine; and the Production executable on a clean, offline machine (first run, start-up prerequisite failures).
+  - **A host-side runner in `Spar.Testing`:**
+    - it writes the Sandbox configuration (network, clipboard, printer, camera and microphone off unless a test asks), starts the sandbox, stages the payload, runs it with `wsb exec`, collects the results with a deadline, then stops the sandbox and closes its client windows;
+    - it handles what `spikes/windows-sandbox-checks` found: files staged under new names (the guest caches replaced files of a mapped folder), results returned as files (`wsb exec` relays no output), and leftover client windows closed after a stop.
+  - **The payload is the app's own tests:**
+    - `MyApp.EndToEndTests` published with NativeAOT is one executable that needs no .NET in the guest;
+    - window and black-box tests tagged with a Sandbox trait run inside the guest, where real input is allowed;
+    - the runner returns the xUnit report with the screenshots and UI Automation dumps.
+
+    Writing a Sandbox test means writing an ordinary window or black-box test and tagging it.
+  - **One-off tasks:** run a command with given files in the guest, and get its exit code and output folder back (installer checks, "launch it twice").
+  - **Limits, stated in the documentation:**
+    - Windows Pro, Enterprise or Education only, with the feature turned on, and probably unavailable on hosted CI runners (not checked). It is a local or self-hosted lane, never part of plain `dotnet test`.
+    - The guest is fixed at 96 DPI, so display scaling stays in "Checks that need the user at the PC".
+    - A run needs the Sandbox client window, which appears on the host desktop and activates itself, so unattended runs on a machine someone is using follow the same "ask first" rule as other desktop work.
+    - Windows only: Linux uses its container image.
+  - **Sequence:**
+    - a spike before M1b: a NativeAOT test executable running and reporting from the guest, the start time, whether two sandboxes can run at once, and whether any CI runner offers it;
+    - Spar's own runner in M1b;
+    - the app-facing layer (the trait, the fixture, one-off tasks), decided with the user at the start of M3, when tray, notifications and deep links arrive.
+- **K. Performance:** which suites run in CI, ratio or absolute thresholds, which machine sets the baselines, and the noise policy. The M1 budgets (Milestones, "Provisional budgets") are the first numbers.
+- **L. The test host's mechanics** (M1a): how the generator emits the entry-point accessor, and in which variant; whether the session hook stays an `AsyncLocal` or becomes compile-time interception; streams and cancellation through the typed test client.
+- **M. The black-box data root:** the Production binary needs a way to put its data under a disposable root (the spike read `--spar-data-root`). It is an input to a shipped executable, so it needs a security review before it is designed (M1b).
+
+**What Spar provides:**
+- **`Spar.Testing`** (NuGet):
+  - the test host: `StartAsync` with the surface, service overrides, the external-dependency allowance, `Services`, the per-app log, the folders, and an injectable `TimeProvider`;
+  - typed C# test clients generated per contract (RR);
+  - the browser surface with a shared-browser fixture and a context per test;
+  - the window surface: page evaluation, `WaitForUiReady`, tree and selectors, input, screenshots, scenes and the fixed clock shared with `spar snap`;
+  - the black-box fixture: start, a ready signal, kill with the parent and after a deadline, output capture, the exit code, an app path that also works from a publish folder;
+  - the fixture rules (RR): assertion, capture and teardown failures are reported together, unresolved cleanup is not a pass, an empty test selection fails, and skips are explicit.
+- **`@spar/app/testing`** for pages:
+  - the scripted fake transport (success, declared error, failure, hang, delays, stream events, abort semantics, a call log);
+  - `Result` factories for test doubles;
+  - a reset for `configureSpar` state;
+  - framework notes for React StrictMode, Angular zones and `OnPush`, Vue scope disposal, and TanStack `retry: false`.
+- **Template defaults:** the two test projects; results under `obj/`; a `Browser` and a `Window` trait so CI can run them as their own invocations; `CaptureConsole`, with xUnit1051 as an error; `TestContext.Current.CancellationToken`; the NativeAOT lane as a publish of `MyApp.Tests`.
+- **Shared infrastructure** (used by both Spar's tests and the app-facing kit):
+  - **Profiles:** under the test data root, created with identical options, with a bounded wait for `BrowserProcessExited` before a folder is deleted, and cleanup of folders left by crashed runs only when no process uses them (issue I).
+  - **Process ownership:** engine processes are tracked below the test process (or by job object). A leftover-process assertion runs after each window test.
+  - **Linux isolation:** a private `HOME` and every `XDG_*` folder under `artifacts/linux-homes/<run>/`, `XDG_RUNTIME_DIR` and a D-Bus session; `JSC_*` and inspector variables cleared. The window tests run as a non-root user with user namespaces available (the `bwrap` sandbox).
+  - **Waits:** every wait awaits its predicate and has a deadline; a timed-out call is abandoned, never replayed; output is structured (JSON lines) and kept in files.
+- **Spar's own tests:**
+  - **Generator and analyzers:**
+    - exact `(id, located text)` diagnostics for the generator;
+    - one analyzer corpus format (`//~ ID` markers, `Kind` headers, an exact set over SARIF), with a fix-and-recompile harness and a false-positive run on a sample app;
+    - the TypeScript exact-code negative runner on TypeScript 6 and 7.
+  - **Serializers and wire:** a differential test against System.Text.Json, a seeded fuzz lane with JIT/AOT pairs, and shared golden wire vectors read by the C# and TypeScript tests.
+  - **`Spar.BuildTests`:**
+    - isolation (MSBuild server off, no node reuse, unique compiler id);
+    - a step matrix from binlog replay;
+    - "authored files untouched";
+    - a clean clone;
+    - the production-boundary test on the published binary;
+    - a `-mt` strict lane.
+  - **`Spar.PackageTests`:** the package-consumer recipe.
+  - **Host-level runners:**
+    - a Windows Sandbox runner;
+    - one Linux CI image (non-root uid 1000, `--init`, the `bwrap` settings, Xvfb with an optional window manager);
+    - library hiding for the startup-error paths.
+  - **Performance:**
+    - BenchmarkDotNet with a standard configuration;
+    - a cross-engine page benchmark runner (Node, WebView2, WebKitGTK);
+    - a build-timing harness with medians and ranges that logs stalls instead of averaging them.
+- **Rules:**
+  - a check asserts; it never only prints;
+  - a missing tool (Node, a browser, Visual Studio) is an explicit skip, never a pass;
+  - tests never touch the user's desktop, settings or home folder.

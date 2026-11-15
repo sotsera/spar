@@ -1,0 +1,21 @@
+  Discovering: SampleApp.Tests
+  Discovered:  SampleApp.Tests
+  Starting:    SampleApp.Tests
+    SampleApp.Tests.CommandTests.Start_cost_in_sequence [OUTPUT] SPIKE sequential start+call+dispose ms: first=31.0 median-rest=0.57 max-rest=0.99
+    SampleApp.Tests.CommandTests.Apps_started_together_stay_apart(count: 2) [OUTPUT] SPIKE parallel-start count=2 all-started=1.7ms each=[0.4, 0.3]
+    SampleApp.Tests.CommandTests.Apps_started_together_stay_apart(count: 8) [OUTPUT] SPIKE parallel-start count=8 all-started=2.4ms each=[0.4, 0.3, 0.3, 0.3, 0.3, 0.7, 0.5, 0.3]
+    SampleApp.Tests.BrowserTests.A_journey_in_chromium [OUTPUT] SPIKE browser launched once in 359ms
+    SampleApp.Tests.BrowserTests.Ten_journeys_on_one_browser [OUTPUT] SPIKE shared browser, app+context+journey ms: first=157 median-rest=144 max-rest=160
+    SampleApp.Tests.BrowserTests.Five_journeys_with_a_browser_each [OUTPUT] SPIKE browser per test, app+launch+journey ms: median=277 max=289
+    SampleApp.Tests.ProcessStateTests.Spar_keeps_no_unreviewed_static_state [OUTPUT] SPIKE static fields: Spar.MiniJson.s_defaultOptions, Spar.MiniJson.<Default>k__BackingField, Spar.MiniJson.PropName_expression, Spar.MiniJson.PropName_awaitPromise, Spar.MiniJson.PropName_returnByValue, Spar.SystemClipboard.Constructed, Spar.SparTestSession.CurrentSession, Spar.SparTestSession.<IsSupported>k__BackingField, Spar.Windows.UiThread.SharedThread, Spar.Windows.WebViewWindow.s_classAtom, Spar.Linux.GtkThread.SharedThread
+    SampleApp.Tests.ProcessStateTests.An_app_leaves_console_environment_and_directory_alone [OUTPUT] SPIKE two apps ran: nothing on stdout or stderr, same directory and environment
+    SampleApp.Tests.WindowTests.Fifty_windows_in_sequence [OUTPUT] SPIKE 50 windows: ready first=348 median=275 max=638; open+journey+close median=466 max=830; engine-processes-left=0; working-set after window 1:112MB 10:117MB 25:119MB 50:119MB
+    SampleApp.Tests.WindowTests.Four_windows_at_once [OUTPUT] SPIKE 4 windows: all-open=667ms all-journeys=683ms descendants=24
+    SampleApp.Tests.WindowTests.Page_facts [OUTPUT] SPIKE page facts: {"href":"https://app.localhost/index.html","origin":"https://app.localhost","readyState":"complete","spar":"object","ready":"object","scripts":["https://app.localhost/app.js"],"resources":["https://app.localhost/app.css","https://app.localhost/app.js"],"script":"200 text/javascript; charset=utf-8","webkit":"undefined","webview":"object"}
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE window journey: open=266ms ready=268ms done=282ms engine-pids=[25904] descendants=6
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE dispose surface=176ms app=0ms delete=18ms
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE window closed=486ms engine-processes-left=0 after=494ms
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE marker | teardown=13ms browser-exit=163ms
+  Finished:    SampleApp.Tests (ID = '84165776f9f050c9f757ace8681feea161729133f6b8f1195ac8a8fa336271ef')
+=== TEST EXECUTION SUMMARY ===
+   SampleApp.Tests  Total: 19, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 30.124s

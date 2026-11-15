@@ -1,13 +1,14 @@
 # Working on Spar
 
-Read [the plan](docs/plan.md) for scope and the current milestone, and [decisions](docs/decisions.md) before changing anything a decision covers. Check [known pitfalls](docs/pitfalls.md) for the area you are touching, and add new ones you find. Load only the sections the task needs.
+Read [the plan](docs/plan.md) for scope and the current milestone, the [design file](docs/design/) for the area you are touching, and [decisions](docs/decisions.md) before changing anything a decision covers. Section numbers such as "plan section 3c" are global; the plan's "Design" table says which file holds each. Check [known pitfalls](docs/pitfalls.md) for the area you are touching, and add new ones you find. Load only the sections the task needs.
 
 ## Boundaries
 
 - Write code from scratch. Earlier Spar versions and other frameworks are research input, not sources to copy. Turn useful findings into Spar requirements, then implement them independently from official platform documentation.
 - Target .NET 11 (`global.json`). Treat NativeAOT and trimming warnings as errors, with no suppressions unless the user agrees to one. Production code takes no reflection fallback. Switching an app to CoreCLR is a publishing decision, never a workaround for an AOT warning.
 - Agree each analyzer severity override with the user (diagnostic ID, severity, scope, reason) before adding it. Record agreed overrides, with their reasons, in the analyzer section of the root `.editorconfig`. Overrides for some projects or folders only, such as tests, are path-scoped sections there, never nested `.editorconfig` files or `#pragma` in source. MSBuild, SDK and NuGet warnings fail the build outside `spikes/`; an exception is agreed the same way, ID by ID, and listed with its reason in `MSBuildWarningsNotAsErrors`.
-- Keep the consumer model: one user app project, one fast test project, and one optional end-to-end test project (browser, desktop executable, containers). A framework feature must not need application-specific branches. Settings that one app or one of its dependencies needs, such as SqlClient's `InvariantGlobalization=false`, belong in that app's project, never in Spar's defaults.
+- Keep the consumer model: one user app project, one fast test project, and one optional end-to-end test project (browser and window tests, the black-box executable, containers). Tests run the app's own `Program.cs` inside the test process (plan section 5). A framework feature must not need application-specific branches. Settings that one app or one of its dependencies needs, such as SqlClient's `InvariantGlobalization=false`, belong in that app's project, never in Spar's defaults.
+- Keep C# and TypeScript source files under 800 lines, with 1,500 as the hard limit, and folders under 40 source files. `dotnet run eng/check-size.cs` enforces this outside `spikes/`. An exception is a line in `eng/size-exceptions.txt`, agreed with the user, and its ceiling only goes down.
 - Generated files live under `obj/`, never in authored folders. The one exception is the committed contract snapshot, `<Project>.contracts.snapshot` (plan section 2). Write outputs only when their content changes.
 - Runnable output and ordinary publications go in each project's `bin/`. Generated files, caches and private publish staging go in its `obj/`. The root `artifacts/` is only for web-engine profiles and test data roots, and for outputs deliberately collected for inspection or transfer; everything there must be disposable.
 - Production builds contain no test, development, loopback-host or devtools code. Prove this with a test, not by inspection.
@@ -27,10 +28,10 @@ Read [the plan](docs/plan.md) for scope and the current milestone, and [decision
 
 ## Documentation
 
-- Make each user-facing document (README, guides, package docs) understandable on its own. Cite official Microsoft documentation where an external reference adds needed detail. Do not name or compare other frameworks or earlier Spar versions there. Skills, code comments and file names name no other framework either.
+- Make each user-facing document (README, guides, package docs) understandable on its own. Cite official Microsoft documentation where an external reference adds needed detail. Do not name or compare other frameworks or earlier Spar versions there. Skills, code comments and file names name no other framework either. "Framework" here means other desktop and application frameworks: the UI libraries an app's frontend may use, such as React, Vue or Angular, may be named.
 - User-facing pages are plain Markdown in this repository; the documentation site (Astro Starlight) is built from them. Their examples compile, like those in `docs/app-model.md`.
-- `docs/app-model.md` shows, with compiled examples, how an app is written. Keep it in step with the decisions: a change to the contract, client or configuration design updates it and its check in the same change.
-- `docs/plan.md`, `docs/decisions.md`, `docs/app-model.md`, `docs/research-review.md`, `docs/pitfalls.md` and the spike evidence (`spikes/`, `docs/evidence/`) are design records and are exempt. The history and comparisons in them are evidence for the decisions.
+- `docs/app-model.md` shows, with compiled examples, how an app is written. Keep it in step with the decisions: a change to the contract, client or configuration design updates it and its check in the same change. The check is `spikes/app-model-check` (its `RESULTS.md` says how to run it) until M1a rebuilds it under `tests/`.
+- `docs/plan.md`, `docs/design/`, `docs/decisions.md`, `docs/app-model.md`, `docs/research-review.md`, `docs/pitfalls.md` and the spike evidence (`spikes/`, `docs/evidence/`) are design records and are exempt. The history and comparisons in them are evidence for the decisions.
 
 ## Project skills
 
@@ -46,7 +47,7 @@ Read [the plan](docs/plan.md) for scope and the current milestone, and [decision
 | `spar-webview2-hosting` | The Windows WebView2 host, STA work, the bridge, devtools access, shutdown |
 | `spar-webkitgtk-hosting` | The Linux WebKitGTK host, GLib main-loop work, the bridge, devtools access, shutdown |
 
-Testing, performance and Windows Sandbox skills get added with the milestones that need them. Skills for app authors are not kept here: they go in the `plugins/spar/` plugin.
+Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# side of the bridge in M1a, page security in M1b, the loopback host and the development loop in M1d. Performance and Windows Sandbox skills come with M4. Skills for app authors are not kept here: they go in the `plugins/spar/` plugin.
 
 ## Agent plugins
 
@@ -63,5 +64,6 @@ Testing, performance and Windows Sandbox skills get added with the milestones th
 | `src/` | Framework projects (from M1) |
 | `samples/` | Consumer applications and their tests (from M1) |
 | `tests/` | Framework tests (from M1) |
+| `eng/` | Repository checks: `check-size.cs` and its exceptions file |
 | `plugins/spar/` | The app-author skills plugin, versioned and released with the SDK; its marketplace file is at the root (not created yet) |
-| `spikes/` | Throwaway M0 experiments, versioned in git without their generated folders. Each has a `RESULTS.md`, and keeps raw evidence in its own `results/`, never only in `obj/`, `bin/` or `artifacts/`. Before deleting a spike, move its `RESULTS.md` and `results/` to `docs/evidence/<name>/` and update the links. Check which other spikes build on it first. |
+| `spikes/` | Throwaway M0 experiments, versioned in git without their generated folders. Each has a `RESULTS.md`. A new spike keeps its raw evidence in its own `results/`, never only in `obj/`, `bin/` or `artifacts/`. The M0 spikes' raw logs and screenshots under the root `artifacts/` are the agreed exception: they are disposable, and each `RESULTS.md` is the record. Before deleting a spike, move its `RESULTS.md` and `results/` to `docs/evidence/<name>/` and update the links. Check which other spikes build on it first. `spikes/app-model-check` and `spikes/frontend-frameworks` hold checks this guidance requires, so they stay until M1a rebuilds those checks under `tests/`. |

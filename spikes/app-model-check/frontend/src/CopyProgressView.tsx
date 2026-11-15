@@ -18,7 +18,7 @@ export function CopyProgressView({ jobId }: { readonly jobId: string }) {
             reconnecting: e => setStatus(`reconnecting (attempt ${e.attempt})`),
           },
           // Ignore the failure our own abort causes (StrictMode runs effects twice in development).
-          failure: e => { if (!abort.signal.aborted) setStatus(e.message); },
+          failure: e => { if (!abort.signal.aborted) setStatus(`stopped (${e.code})`); },
         });
       }
     })();

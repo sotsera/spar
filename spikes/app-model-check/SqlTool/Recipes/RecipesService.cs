@@ -7,7 +7,7 @@ public sealed record RecipeInfo(string Name, int Tables);
 /// <summary>Why a recipe could not be imported.</summary>
 public closed record ImportError
 {
-    public sealed record Cancelled : ImportError;
+    public sealed record Dismissed : ImportError;
 
     public sealed record NotAllowed(string Path) : ImportError;
 
@@ -29,7 +29,7 @@ public sealed class RecipesService(IFileDialogs dialogs)
         return picked switch
         {
             FileGrant file => Read(file),
-            FileDialogError.Dismissed => new ImportError.Cancelled(),
+            FileDialogError.Dismissed => new ImportError.Dismissed(),
             FileDialogError.AccessDenied e => new ImportError.NotAllowed(e.Path),
             FileDialogError.Unavailable e => new ImportError.NoFileDialog(e.Reason),
             FileDialogError.Busy => new ImportError.TryAgain(),

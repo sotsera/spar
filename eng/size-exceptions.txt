@@ -1,0 +1,5 @@
+# Agreed exceptions to the size limits that eng/check-size.cs enforces (AGENTS.md, "Boundaries").
+# One per line: <path> <ceiling>
+# A path ending in "/" is a folder, and its ceiling counts source files. Any other path is a file, and its
+# ceiling counts lines. A ceiling must equal the current size, so it only goes down.
+# Agree each exception with the user before adding it, and say why in a comment.

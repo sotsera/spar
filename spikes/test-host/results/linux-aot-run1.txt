@@ -1,0 +1,133 @@
+  Discovering: SampleApp.AotTests
+  Discovered:  SampleApp.AotTests
+  Starting:    SampleApp.AotTests
+    SampleApp.Tests.CommandTests.Start_cost_in_sequence [OUTPUT] SPIKE sequential start+call+dispose ms: first=1.5 median-rest=0.24 max-rest=0.35
+    SampleApp.Tests.CommandTests.Apps_started_together_stay_apart(count: 2) [OUTPUT] SPIKE parallel-start count=2 all-started=0.3ms each=[0.2, 0.2]
+    SampleApp.Tests.CommandTests.Apps_started_together_stay_apart(count: 8) [OUTPUT] SPIKE parallel-start count=8 all-started=1.3ms each=[0.2, 0.2, 0.2, 0.3, 0.2, 0.2, 0.2, 0.2]
+    SampleApp.Tests.ProcessStateTests.An_app_leaves_console_environment_and_directory_alone [OUTPUT] SPIKE two apps ran: nothing on stdout or stderr, same directory and environment
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(process:13586): Gtk-WARNING **: 08:08:41.660: Unable to acquire session bus: Failed to execute child process “dbus-launch” (No such file or directory)
+
+** (process:2): WARNING **: 08:08:41.806: Can't connect to a11y bus: Could not connect: No such file or directory
+    SampleApp.Tests.WindowTests.Page_facts [OUTPUT] SPIKE page facts: {"href":"spar://app/index.html","origin":"spar://app","readyState":"complete","spar":"object","ready":"object","scripts":["spar://app/app.js"],"resources":[],"script":"200 text/javascript; charset=utf-8","webkit":"object","webview":"undefined"}
+
+** (process:2): WARNING **: 08:08:42.170: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:42.170: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:42.170: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:42.170: Can't connect to a11y bus: Could not connect: No such file or directory
+    SampleApp.Tests.WindowTests.Four_windows_at_once [OUTPUT] SPIKE 4 windows: all-open=160ms all-journeys=184ms descendants=5
+
+** (process:2): WARNING **: 08:08:42.487: Can't connect to a11y bus: Could not connect: No such file or directory
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE window journey: open=84ms ready=85ms done=96ms engine-pids=[] descendants=2
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE dispose surface=201ms app=0ms delete=0ms
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE window closed=298ms engine-processes-left=0 after=298ms
+    SampleApp.Tests.WindowTests.A_journey_in_the_real_window [OUTPUT] SPIKE marker
+
+** (process:2): WARNING **: 08:08:42.788: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:43.089: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:43.387: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:43.688: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:43.989: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:44.290: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:44.590: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:44.844: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:45.192: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:45.491: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:45.792: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:46.093: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:46.393: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:46.695: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:46.995: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:47.298: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:47.599: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:47.902: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:48.201: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:48.501: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:48.801: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:49.101: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:49.403: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:49.702: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:50.002: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:50.313: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:50.618: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:50.916: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:51.221: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:51.526: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:51.828: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:52.130: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:52.378: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:52.726: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:53.027: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:53.329: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:53.628: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:53.923: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:54.221: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:54.521: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:54.822: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:55.081: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:55.429: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:55.734: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:56.038: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:56.335: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:56.640: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:56.936: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:57.241: Can't connect to a11y bus: Could not connect: No such file or directory
+
+** (process:2): WARNING **: 08:08:57.542: Can't connect to a11y bus: Could not connect: No such file or directory
+    SampleApp.Tests.WindowTests.Fifty_windows_in_sequence [OUTPUT] SPIKE 50 windows: ready first=87 median=88 max=99; open+journey+close median=301 max=312; engine-processes-left=0; working-set after window 1:302MB 10:306MB 25:308MB 50:312MB
+  Finished:    SampleApp.AotTests (ID = '2d50a2f602c038287b9a0b50da9b1791890ae8138364057ca1a0cee815e9dbc6')
+=== TEST EXECUTION SUMMARY ===
+   SampleApp.AotTests  Total: 15, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 16.198s
