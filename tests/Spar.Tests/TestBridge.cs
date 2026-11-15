@@ -41,8 +41,14 @@ internal sealed class TestBridge : IAsyncDisposable
         return $"{{\"type\":\"call\",\"id\":{id},\"contract\":\"{contract}\",\"command\":\"{command}\"{trace}}}\t{payload}";
     }
 
+    /// <summary>
+    /// Closes the session and waits for its commands to end, so none of them finishes during a later test: a span that
+    /// stops then would reach that test's listener, since activity listeners are process-wide.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
+        Session.Close();
+        await Session.WhenIdleAsync().WaitAsync(TimeSpan.FromSeconds(10));
         Session.Dispose();
         await Backend.DisposeAsync();
     }
