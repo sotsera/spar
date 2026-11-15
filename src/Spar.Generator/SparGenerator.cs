@@ -24,7 +24,8 @@ public sealed class SparGenerator : IIncrementalGenerator
                 static (node, _) => node is ClassDeclarationSyntax or InterfaceDeclarationSyntax,
                 static (attributed, _) => ContractAnalysis.Analyze((INamedTypeSymbol)attributed.TargetSymbol))
             .Where(static contract => contract is not null)
-            .Collect();
+            .Collect()
+            .Select(static (models, _) => ContractSet.Valid(models!).ToImmutableArray());
 
         var createCalls = context.SyntaxProvider.CreateSyntaxProvider(
                 static (node, _) => node is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Create" } },
@@ -36,7 +37,7 @@ public sealed class SparGenerator : IIncrementalGenerator
             options.GlobalOptions.TryGetValue("build_property.SparVariant", out var variant) && variant == "Test");
         var entry = context.CompilationProvider.Select(static (compilation, cancellationToken) => EntryPoint(compilation, cancellationToken));
 
-        context.RegisterSourceOutput(contracts, static (output, models) => EmitContracts(output, models!));
+        context.RegisterSourceOutput(contracts, static (output, models) => EmitContracts(output, models));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
         context.RegisterSourceOutput(contracts.Combine(entry).Combine(isTest), static (output, input) =>
         {
@@ -51,7 +52,7 @@ public sealed class SparGenerator : IIncrementalGenerator
                 output.AddSource("Spar.TestEntryPoint.g.cs", TestEmitter.EntryPoint(entryPoint));
             }
 
-            output.AddSource("Spar.TestClients.g.cs", TestEmitter.Clients(models!));
+            output.AddSource("Spar.TestClients.g.cs", TestEmitter.Clients(models));
         });
     }
 

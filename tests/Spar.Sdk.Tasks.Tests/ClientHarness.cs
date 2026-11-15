@@ -18,13 +18,23 @@ internal static class ClientHarness
 
     private static string DefaultProject => Path.Combine(Repository.Root, "app");
 
-    /// <summary>The layout of <paramref name="source"/>, compiled as <c>Contracts.cs</c> in <paramref name="projectDirectory"/>.</summary>
+    /// <summary>
+    /// The layout of <paramref name="source"/>, compiled as <c>Contracts.cs</c> in <paramref name="projectDirectory"/>;
+    /// the contracts must have no problem.
+    /// </summary>
     public static ClientLayout Plan(string source, string? projectDirectory = null)
+    {
+        var read = Read(source, projectDirectory);
+        Assert.Equal(0, read.Problems);
+        return ClientLayout.Plan(read.Contracts);
+    }
+
+    /// <summary>What the client step reads from <paramref name="source"/>: the valid contracts and the problem count.</summary>
+    public static ContractRead Read(string source, string? projectDirectory = null)
     {
         var project = projectDirectory ?? DefaultProject;
         var compilation = Compile(source, project);
-        var contracts = ContractSource.Read(compilation, project, TestContext.Current.CancellationToken);
-        return ClientLayout.Plan(contracts);
+        return ContractSource.Read(compilation, project, TestContext.Current.CancellationToken);
     }
 
     /// <summary>The compiler's errors for <paramref name="source"/>, for a test that must start from valid C#.</summary>
@@ -44,7 +54,6 @@ internal static class ClientHarness
     public static SortedDictionary<string, string> Emit(string source)
     {
         var layout = Plan(source);
-        Assert.Empty(layout.Problems);
 
         var files = ClientPackage.Files(layout, new AbsolutePath(Repository.SdkBuild), new AbsolutePath(Repository.SdkSources), "1.2.3", SourcePrefix);
         var text = new SortedDictionary<string, string>(StringComparer.Ordinal);
@@ -66,7 +75,6 @@ internal static class ClientHarness
         File.WriteAllText(Path.Combine(projectDirectory, "Contracts.cs"), source);
 
         var layout = Plan(source, projectDirectory);
-        Assert.Empty(layout.Problems);
         var prefix = Path.GetRelativePath(packageDirectory, projectDirectory).Replace('\\', '/') + "/";
         var files = ClientPackage.Files(layout, new AbsolutePath(Repository.SdkBuild), new AbsolutePath(Repository.SdkSources), "1.2.3", prefix);
         Directory.CreateDirectory(packageDirectory);

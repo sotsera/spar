@@ -1,28 +1,15 @@
 using System.Text;
+using Spar.Generator;
 
 namespace Spar.Sdk.Tasks.Client;
 
 /// <summary>Names and literals as they must appear in generated TypeScript and JavaScript.</summary>
 internal static class TypeScriptNames
 {
-    /// <summary>
-    /// The SDK types every declaration file imports, in that order. The import line is written from this list, so a
-    /// contract type can never shadow an import the list does not know about.
-    /// </summary>
-    public static readonly IReadOnlyList<string> SdkImports = ["Call", "CallOptions"];
+    /// <summary>The SDK types every declaration file imports, in that order (the generator checks type names against them).</summary>
+    public static IReadOnlyList<string> SdkImports => ClientNames.SdkImports;
 
-    /// <summary>Reserved words and strict-mode restrictions of ECMAScript modules, and TypeScript's own type keywords.</summary>
-    private static readonly HashSet<string> Reserved = new(StringComparer.Ordinal)
-    {
-        "await", "break", "case", "catch", "class", "const", "continue", "debugger", "default", "delete", "do", "else",
-        "enum", "export", "extends", "false", "finally", "for", "function", "if", "implements", "import", "in",
-        "instanceof", "interface", "let", "new", "null", "package", "private", "protected", "public", "return",
-        "static", "super", "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with", "yield",
-        "arguments", "eval", "undefined", "NaN", "Infinity", "any", "boolean", "never", "number", "object", "string",
-        "symbol", "unknown", "bigint",
-    };
-
-    public static bool IsReserved(string name) => Reserved.Contains(name);
+    public static bool IsReserved(string name) => ClientNames.IsReserved(name);
 
     /// <summary>A parameter name that is legal in a function signature.</summary>
     public static string Parameter(string name) => IsReserved(name) ? name + "Value" : name;

@@ -84,18 +84,20 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
             [.. DefineConstants.Split([';', ','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)],
             string.Equals(Nullable, "enable", StringComparison.OrdinalIgnoreCase));
 
-        var layout = ClientLayout.Plan(ContractSource.Read(inputs, CancellationToken.None));
-        foreach (var problem in layout.Problems)
+        var read = ContractSource.Read(inputs, CancellationToken.None);
+        if (read.Problems > 0)
         {
-            var file = problem.SourceFile.Length == 0 ? null : new AbsolutePath(problem.SourceFile, project).Value;
-            Log.LogError("Spar.Contracts", problem.Code, null, file, problem.Line, 0, 0, 0, problem.Message);
+            // The compile reports each problem at its declaration, as the editor does. Writing a package without the
+            // invalid parts would let the frontend's type-check fail first, on names the developer did not change, and
+            // would rewrite the contract snapshot; the client from the last good build stays instead.
+            Log.LogMessage(
+                MessageImportance.High,
+                "Spar client: not updated, because the contracts have {0} problem(s), which the C# compiler reports; the client from the last good build stays.",
+                read.Problems);
+            return true;
         }
 
-        if (layout.Problems.Count > 0)
-        {
-            return false;
-        }
-
+        var layout = ClientLayout.Plan(read.Contracts);
         WriteSnapshot(layout);
 
         var output = TaskEnvironment.GetAbsolutePath(OutputDirectory);

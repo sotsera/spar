@@ -19,6 +19,9 @@ internal sealed record ClientInputs(
 /// <summary>One contract as the generator sees it, with the C# documentation and the file that declares it.</summary>
 internal sealed record ClientContract(ContractModel Model, string SourceFile, ClientDocs Docs);
 
+/// <summary>The valid contracts, and the number of problems the analysis found, which the analyzer reports.</summary>
+internal sealed record ContractRead(IReadOnlyList<ClientContract> Contracts, int Problems);
+
 /// <summary>
 /// Reads the project's contracts with the generator's own analysis (decision "D1: Compilation pipeline"), so the page's
 /// modules and fingerprint match the generated C# exactly. Parses with the Roslyn Spar references, at the preview
@@ -29,28 +32,36 @@ internal static class ContractSource
     /// <summary>Metadata references by file identity, kept across builds in a long-lived MSBuild node or task host.</summary>
     private static readonly ConcurrentDictionary<(string Path, DateTime Written, long Length), MetadataReference> ReferenceCache = new();
 
-    public static IReadOnlyList<ClientContract> Read(ClientInputs inputs, CancellationToken cancellationToken) =>
+    public static ContractRead Read(ClientInputs inputs, CancellationToken cancellationToken) =>
         Read(Compile(inputs, cancellationToken), inputs.ProjectDirectory, cancellationToken);
 
-    /// <summary>The contracts of a compilation; source paths in the headers are relative to <paramref name="projectDirectory"/>.</summary>
-    public static IReadOnlyList<ClientContract> Read(CSharpCompilation compilation, string projectDirectory, CancellationToken cancellationToken)
+    /// <summary>
+    /// The contracts of a compilation, and how many problems the contract analysis found in them; source paths in the
+    /// headers are relative to <paramref name="projectDirectory"/>. The problems are the analyzer's to report.
+    /// </summary>
+    public static ContractRead Read(CSharpCompilation compilation, string projectDirectory, CancellationToken cancellationToken)
     {
         var docs = new ClientDocs(compilation, projectDirectory);
 
-        var contracts = new List<ClientContract>();
+        var problems = 0;
+        var files = new Dictionary<string, string>(StringComparer.Ordinal);
+        var models = new List<ContractModel>();
         foreach (var type in ContractTypes(compilation, cancellationToken))
         {
-            var model = ContractAnalysis.Analyze(type);
+            var model = ContractAnalysis.Analyze(type, (_, _) => problems++);
             if (model is null)
             {
-                continue; // The analyzer reports why at the declaration; the build fails there.
+                continue;
             }
 
             var file = type.Locations.FirstOrDefault(l => l.IsInSource)?.SourceTree?.FilePath ?? "";
-            contracts.Add(new ClientContract(model, RelativePath(projectDirectory, file), docs));
+            files[model.CSharp] = RelativePath(projectDirectory, file);
+            models.Add(model);
         }
 
-        return [.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)];
+        var (valid, setProblems) = ContractSet.Check(models);
+        var contracts = valid.Select(m => new ClientContract(m, files[m.CSharp], docs));
+        return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], problems + setProblems.Count);
     }
 
     private static CSharpCompilation Compile(ClientInputs inputs, CancellationToken cancellationToken)

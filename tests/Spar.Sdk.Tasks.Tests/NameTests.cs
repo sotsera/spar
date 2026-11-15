@@ -1,33 +1,11 @@
 namespace Spar.Sdk.Tasks.Tests;
 
-/// <summary>Names the page cannot use stop the client step with the diagnostic of plan section 2.</summary>
+/// <summary>
+/// How names reach the client: the contract analysis checks them (its diagnostics are tested in Spar.Generator.Tests),
+/// and the client step writes nothing when it found a problem, so the compile reports it at its declaration.
+/// </summary>
 public sealed class NameTests
 {
-    [Fact]
-    public void Two_types_with_one_TypeScript_name_in_a_contract_are_SPAR040()
-    {
-        const string Source = """
-            using System.Threading.Tasks;
-            using Spar;
-
-            namespace A { public sealed record Note(string Text); }
-            namespace B { public sealed record Note(int Id); }
-
-            [SparContract]
-            public sealed class NotesService
-            {
-                [SparCommand]
-                public Task<A.Note> ReadAsync(B.Note request) => throw new System.NotImplementedException();
-            }
-            """;
-
-        var problems = ClientHarness.Plan(Source).Problems;
-
-        var problem = Assert.Single(problems);
-        Assert.Equal("SPAR040", problem.Code);
-        Assert.Equal("Contract 'notes' uses two types named 'Note' in TypeScript: A.Note and B.Note; rename one", problem.Message);
-    }
-
     [Fact]
     public void A_type_named_like_another_contracts_shared_type_is_fine_when_the_contract_does_not_import_it()
     {
@@ -62,12 +40,38 @@ public sealed class NameTests
 
         var layout = ClientHarness.Plan(Source);
 
-        Assert.Empty(layout.Problems);
         Assert.Equal(["global::A.Note"], layout.Shared.Select(t => t.CSharp));
     }
 
+    [Theory]
+    [InlineData("[SparContract(\"sdk\")]", "Item")]
+    [InlineData("[SparContract(\"readItem\")]", "Item")]
+    [InlineData("[SparContract]", "any")]
+    [InlineData("[SparContract]", "Call")]
+    public void A_name_problem_is_counted_so_the_client_step_writes_nothing(string attribute, string type)
+    {
+        var source = $$"""
+            using System.Threading.Tasks;
+            using Spar;
+
+            public sealed record {{type}}(string Name);
+
+            {{attribute}}
+            public sealed class ItemsService
+            {
+                [SparCommand]
+                public Task<{{type}}> GetAsync(string id) => throw new System.NotImplementedException();
+            }
+            """;
+        Assert.Empty(ClientHarness.Errors(source));
+
+        var read = ClientHarness.Read(source);
+
+        Assert.True(read.Problems > 0);
+    }
+
     [Fact]
-    public void Two_shared_types_with_one_name_are_SPAR040()
+    public void Two_shared_types_with_one_name_leave_both_contracts_out()
     {
         const string Source = """
             using System.Threading.Tasks;
@@ -80,124 +84,60 @@ public sealed class NameTests
             public sealed class FirstService
             {
                 [SparCommand]
-                public Task<A.Note> ReadAsync(B.Note request) => throw new System.NotImplementedException();
+                public Task<A.Note> ReadAsync(string id) => throw new System.NotImplementedException();
             }
 
             [SparContract]
             public sealed class SecondService
             {
                 [SparCommand]
-                public Task<A.Note> ReadAsync(B.Note request) => throw new System.NotImplementedException();
+                public Task<A.Note> ReadAsync(string id) => throw new System.NotImplementedException();
             }
-            """;
 
-        var problems = ClientHarness.Plan(Source).Problems.Select(p => p.Message);
-
-        Assert.Contains("The contracts share two types named 'Note' in TypeScript: A.Note and B.Note; rename one", problems);
-    }
-
-    [Theory]
-    [InlineData("sdk")]
-    [InlineData("shared")]
-    [InlineData("spar")]
-    [InlineData("delete")]
-    [InlineData("wire")]
-    [InlineData("invoke")]
-    [InlineData("noErrors")]
-    [InlineData("pingDecoder")]
-    public void A_reserved_contract_name_is_SPAR003(string name)
-    {
-        var source = $$"""
-            using System.Threading.Tasks;
-            using Spar;
-
-            [SparContract("{{name}}")]
-            public sealed class SomeService
+            [SparContract]
+            public sealed class ThirdService
             {
                 [SparCommand]
-                public Task PingAsync() => Task.CompletedTask;
+                public Task<B.Note> ReadAsync(string id) => throw new System.NotImplementedException();
+            }
+
+            [SparContract]
+            public sealed class FourthService
+            {
+                [SparCommand]
+                public Task<B.Note> ReadAsync(string id) => throw new System.NotImplementedException();
             }
             """;
 
-        var problem = Assert.Single(ClientHarness.Plan(source).Problems);
+        var read = ClientHarness.Read(Source);
 
-        Assert.Equal(("SPAR003", "Contracts.cs"), (problem.Code, problem.SourceFile));
+        Assert.Equal(2, read.Problems);
+        Assert.Empty(read.Contracts);
     }
 
     [Fact]
-    public void A_contract_named_like_one_of_its_readers_is_SPAR003()
+    public void SparName_on_a_type_is_its_TypeScript_name()
     {
         const string Source = """
             using System.Threading.Tasks;
             using Spar;
 
-            public sealed record Item(string Name);
-
-            [SparContract("readItem")]
-            public sealed class ItemsService
-            {
-                [SparCommand]
-                public Task<Item> GetAsync(string id) => throw new System.NotImplementedException();
-            }
-            """;
-
-        var problem = Assert.Single(ClientHarness.Plan(Source).Problems);
-
-        Assert.Equal("Contract name 'readItem' is a name its generated module uses itself; give the contract another name with [SparContract(\"…\")]", problem.Message);
-    }
-
-    [Theory]
-    [InlineData("any", "any")]
-    [InlineData("@string", "string")]
-    [InlineData("@default", "default")]
-    [InlineData("undefined", "undefined")]
-    public void A_type_named_with_a_reserved_word_is_SPAR003_at_its_declaration(string csharp, string typeScript)
-    {
-        var source = $$"""
-            using System.Threading.Tasks;
-            using Spar;
-
-            public sealed record {{csharp}}(string Name);
+            namespace A { [SparName("DraftNote")] public sealed record Note(string Text); }
+            namespace B { public sealed record Note(int Id); }
 
             [SparContract]
-            public sealed class WordsService
+            public sealed class NotesService
             {
                 [SparCommand]
-                public Task<{{csharp}}> GetAsync(string id) => throw new System.NotImplementedException();
+                public Task<A.Note> ReadAsync(B.Note request) => throw new System.NotImplementedException();
             }
             """;
-        Assert.Empty(ClientHarness.Errors(source));
 
-        var problem = Assert.Single(ClientHarness.Plan(source).Problems);
+        var files = ClientHarness.Emit(Source);
 
-        Assert.Equal(("SPAR003", "Contracts.cs", 4), (problem.Code, problem.SourceFile, problem.Line));
-        Assert.Equal($"Type '{csharp}' is named '{typeScript}', a reserved word in TypeScript; rename it", problem.Message);
-    }
-
-    [Theory]
-    [InlineData("Call")]
-    [InlineData("CallOptions")]
-    public void A_type_named_like_an_SDK_import_is_SPAR040_at_its_declaration(string name)
-    {
-        var source = $$"""
-            using System.Threading.Tasks;
-            using Spar;
-
-            public sealed record {{name}}(string Number);
-
-            [SparContract]
-            public sealed class PhoneService
-            {
-                [SparCommand]
-                public Task<{{name}}> DialAsync(string number) => throw new System.NotImplementedException();
-            }
-            """;
-        Assert.Empty(ClientHarness.Errors(source));
-
-        var problem = Assert.Single(ClientHarness.Plan(source).Problems);
-
-        Assert.Equal(("SPAR040", 4), (problem.Code, problem.Line));
-        Assert.Equal($"Type '{name}' has the name of the Spar SDK type '{name}', which the generated modules import; rename it", problem.Message);
+        Assert.Contains("export interface DraftNote {", files["notes.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("export interface Note {", files["notes.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("function readDraftNote(value) {", files["notes.js"], StringComparison.Ordinal);
     }
 
     [Fact]

@@ -26,11 +26,13 @@ internal sealed record TypeRef(WireKind Kind, string CSharp, string Key, TypeRef
 
 internal sealed record PropertyModel(string Name, string JsonName, TypeRef Type);
 
-internal sealed record RecordModel(string CSharp, string Key, EquatableArray<PropertyModel> Properties);
+/// <summary>A record; <paramref name="Name"/> is its TypeScript name, from <c>[SparName]</c> or its own.</summary>
+internal sealed record RecordModel(string CSharp, string Key, string Name, EquatableArray<PropertyModel> Properties);
 
 internal sealed record ErrorCaseModel(string CSharp, string Code, EquatableArray<PropertyModel> Properties);
 
-internal sealed record ErrorModel(string CSharp, string Key, EquatableArray<ErrorCaseModel> Cases);
+/// <summary>An error type; <paramref name="Name"/> is its TypeScript name, from <c>[SparName]</c> or its own.</summary>
+internal sealed record ErrorModel(string CSharp, string Key, string Name, EquatableArray<ErrorCaseModel> Cases);
 
 internal enum ReturnShape
 {

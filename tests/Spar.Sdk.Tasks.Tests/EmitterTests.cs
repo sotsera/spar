@@ -79,9 +79,9 @@ public sealed class EmitterTests
         Assert.Contains("import { readItem, writeItem } from \"./shared.js\";\n", files["orders.js"], StringComparison.Ordinal);
         Assert.Contains("    items: wire.readList(wire.field(object, \"items\"), readItem),\n", files["orders.js"], StringComparison.Ordinal);
         Assert.Contains("    wire.member(\"notes\", wire.writeList(value.notes, item => wire.writeNullable(item, wire.writeString))),\n", files["orders.js"], StringComparison.Ordinal);
-        Assert.Contains("  cancel: (orderId, options) => invoke(\"orders\", \"cancel\", () => wire.writeString(orderId), cancelDecoder, options),\n", files["orders.js"], StringComparison.Ordinal);
-        Assert.Contains("  clear: options => invoke(\"orders\", \"clear\", () => \"\", clearDecoder, options),\n", files["orders.js"], StringComparison.Ordinal);
-        Assert.Contains("const listDecoder = { value: json => wire.readList(JSON.parse(json), readItem), error: noErrors };\n", files["stock.js"], StringComparison.Ordinal);
+        Assert.Contains("  cancel: (orderId, options) => invoke(\"orders\", \"cancel\", () => wire.writeString(orderId), decodeCancel, options),\n", files["orders.js"], StringComparison.Ordinal);
+        Assert.Contains("  clear: options => invoke(\"orders\", \"clear\", () => \"\", decodeClear, options),\n", files["orders.js"], StringComparison.Ordinal);
+        Assert.Contains("const decodeList = { value: json => wire.readList(JSON.parse(json), readItem), error: noErrors };\n", files["stock.js"], StringComparison.Ordinal);
         Assert.Contains("export function readItem(value) {\n", files["shared.js"], StringComparison.Ordinal);
         Assert.DoesNotContain("Object.assign", string.Concat(files.Values), StringComparison.Ordinal);
         Assert.DoesNotContain("...", string.Concat(files.Values), StringComparison.Ordinal);

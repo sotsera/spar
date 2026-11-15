@@ -65,24 +65,13 @@ internal static partial class ModuleEmitter
         .Line($"export const fingerprint = {TypeScriptNames.Literal(fingerprint)};")
         .ToString();
 
-    /// <summary>
-    /// The names a contract's <c>.js</c> declares at its top level besides the contract's own object: its imports, its
-    /// readers and writers, its decoders and the two shared constants. The contract's name must be none of them.
-    /// </summary>
-    public static HashSet<string> TopLevelNames(ClientLayout layout, ClientContract contract)
-    {
-        var names = new HashSet<string>(StringComparer.Ordinal) { "invoke", "unknownErrorCase", "wire", "noValue", "noErrors" };
-        names.UnionWith(layout.Imported(contract).SelectMany(Functions));
-        names.UnionWith(layout.Own(contract).SelectMany(Functions));
-        names.UnionWith(contract.Model.Commands.Select(c => $"{c.WireName}Decoder"));
-        return names;
-    }
-
     /// <summary>Plain identifiers, which can be written as property names and read with a dot.</summary>
     public static bool IsIdentifier(string name) => Identifier().IsMatch(name) && !TypeScriptNames.IsReserved(name);
 
     private static IEnumerable<string> Functions(ClientType type) =>
-        type.Record is null ? [$"read{type.Name}"] : [$"read{type.Name}", $"write{type.Name}"];
+        type.Record is null
+            ? [ClientNames.Reader(type.Name)]
+            : [ClientNames.Reader(type.Name), ClientNames.Writer(type.Name)];
 
     private static void Type(TypeScriptWriter js, ClientLayout layout, ClientType type, bool exported)
     {
@@ -102,7 +91,7 @@ internal static partial class ModuleEmitter
 
     private static void RecordReader(TypeScriptWriter js, ClientLayout layout, ClientType type, RecordModel record, string export)
     {
-        js.Open($"{export}function read{type.Name}(value) {{")
+        js.Open($"{export}function {ClientNames.Reader(type.Name)}(value) {{")
             .Line("const object = wire.readObject(value);");
         ObjectLiteral(js, layout, record.Properties, "return {", "};");
         js.Close();
@@ -110,7 +99,7 @@ internal static partial class ModuleEmitter
 
     private static void RecordWriter(TypeScriptWriter js, ClientLayout layout, ClientType type, RecordModel record, string export)
     {
-        js.Open($"{export}function write{type.Name}(value) {{");
+        js.Open($"{export}function {ClientNames.Writer(type.Name)}(value) {{");
         if (record.Properties.Length == 0)
         {
             js.Line("return \"{}\";").Close();
@@ -129,7 +118,7 @@ internal static partial class ModuleEmitter
 
     private static void ErrorReader(TypeScriptWriter js, ClientLayout layout, ClientType type, ErrorModel error, string export)
     {
-        js.Open($"{export}function read{type.Name}(code, payload) {{").Open("switch (code) {");
+        js.Open($"{export}function {ClientNames.Reader(type.Name)}(code, payload) {{").Open("switch (code) {");
         foreach (var @case in error.Cases)
         {
             if (@case.Properties.Length == 0)
@@ -164,8 +153,8 @@ internal static partial class ModuleEmitter
     private static void Decoder(TypeScriptWriter js, ClientLayout layout, CommandModel command)
     {
         var value = command.Value is null ? "noValue" : $"json => {Read(layout, command.Value, "JSON.parse(json)", 0)}";
-        var error = command.ErrorKey is null ? "noErrors" : $"read{layout.Type(command.ErrorKey).Name}";
-        js.Line($"const {command.WireName}Decoder = {{ value: {value}, error: {error} }};");
+        var error = command.ErrorKey is null ? "noErrors" : ClientNames.Reader(layout.Type(command.ErrorKey).Name);
+        js.Line($"const {ClientNames.Decoder(command.WireName)} = {{ value: {value}, error: {error} }};");
     }
 
     private static void ContractObject(TypeScriptWriter js, ClientLayout layout, ClientContract contract)
@@ -186,7 +175,7 @@ internal static partial class ModuleEmitter
             first = false;
             var contractName = TypeScriptNames.Literal(model.WireName);
             var commandName = TypeScriptNames.Literal(command.WireName);
-            var decoder = $"{command.WireName}Decoder";
+            var decoder = ClientNames.Decoder(command.WireName);
             string function;
             if (command.Request is null)
             {
@@ -221,7 +210,7 @@ internal static partial class ModuleEmitter
         WireKind.Int32 => "wire.readInt32",
         WireKind.Int64 => "wire.readInt64",
         WireKind.Double => "wire.readDouble",
-        WireKind.Record => $"read{layout.Type(type.Key).Name}",
+        WireKind.Record => ClientNames.Reader(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Read(layout, type, Item(depth), depth)}",
     };
 
@@ -240,7 +229,7 @@ internal static partial class ModuleEmitter
         WireKind.Int32 => "wire.writeInt32",
         WireKind.Int64 => "wire.writeInt64",
         WireKind.Double => "wire.writeDouble",
-        WireKind.Record => $"write{layout.Type(type.Key).Name}",
+        WireKind.Record => ClientNames.Writer(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Write(layout, type, Item(depth), depth)}",
     };
 

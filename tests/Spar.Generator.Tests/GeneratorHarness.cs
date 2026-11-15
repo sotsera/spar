@@ -31,6 +31,15 @@ internal static class GeneratorHarness
         return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start).Select(Describe)];
     }
 
+    /// <summary>The analyzer's diagnostics as "ID: message", in source order.</summary>
+    public static async Task<IReadOnlyList<string>> MessagesAsync(string source)
+    {
+        var diagnostics = await Compile(source)
+            .WithAnalyzers([new ContractAnalyzer()])
+            .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
+        return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start).Select(d => $"{d.Id}: {d.GetMessage(System.Globalization.CultureInfo.InvariantCulture)}")];
+    }
+
     /// <summary>Runs the generator (in <paramref name="variant"/>) and compiles the app with its output.</summary>
     public static GeneratorRun Generate(string source, string variant = "Development")
     {

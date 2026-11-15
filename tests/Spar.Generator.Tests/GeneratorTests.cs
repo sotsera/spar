@@ -25,6 +25,23 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void Two_contracts_with_one_name_are_left_out_and_the_rest_still_compiles()
+    {
+        const string Contracts = """
+            [SparContract] public sealed class Items { [SparCommand] public Task PingAsync() => Task.CompletedTask; }
+            [SparContract] public interface IItemsService { Task PingAsync(); }
+            [SparContract] public sealed class Notes { [SparCommand] public Task PingAsync() => Task.CompletedTask; }
+            """;
+
+        var run = GeneratorHarness.Generate(Program + Contracts);
+
+        Assert.Empty(run.Errors);
+        var contracts = run.Files["Spar.Contracts.g.cs"];
+        Assert.Contains("\"notes\"", contracts, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"items\"", contracts, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Every_command_is_in_the_catalog_with_its_wire_name_and_time_limit()
     {
         var contracts = GeneratorHarness.Generate(Program + Fixtures.Catalog).Files["Spar.Contracts.g.cs"];

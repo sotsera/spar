@@ -27,14 +27,101 @@ public sealed class DiagnosticTests
     [InlineData("[SparContract] public sealed class Items { [SparCommand] public Task<Item> GetAsync(System.Uri request) => null!; }", "SPAR020: request")]
     [InlineData("public abstract record Shape(string Name); [SparContract] public sealed class Items { [SparCommand] public Task<Shape> GetAsync() => null!; }", "SPAR021: Shape")]
     [InlineData("public sealed class NotRecord; [SparContract] public sealed class Items { [SparCommand] public Task<Result<NotRecord>> GoAsync() => null!; }", "SPAR030: GoAsync")]
-    [InlineData("public closed record Err { public record Open : Err; } [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR030: Open")]
+    [InlineData("public closed record Err { public record Open : Err; } [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR032: Open")]
     [InlineData("public closed record Err { public sealed record Bad(string Message) : Err; } [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR033: Bad")]
     [InlineData("public closed record Err; [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR035: GoAsync")]
+    [InlineData("[SparContract(\"Copy-Jobs\")] public sealed class Items { }", "SPAR003: SparContract(\"Copy-Jobs\")")]
+    [InlineData("[SparContract] public sealed class Copy_JobsService { }", "SPAR003: Copy_JobsService")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand(\"Get\")] public Task GetAsync() => null!; }", "SPAR003: SparCommand(\"Get\")")]
+    [InlineData("[SparName(\"Bad-Name\")] public sealed record Note(string Text); [SparContract] public sealed class Items { [SparCommand] public Task<Note> GetAsync() => null!; }", "SPAR003: SparName(\"Bad-Name\")")]
+    [InlineData("public closed record Err { [SparName(\"Not Found\")] public sealed record Missing : Err; } [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR003: SparName(\"Not Found\")")]
+    [InlineData("[SparContract(\"sdk\")] public sealed class Items { }", "SPAR004: SparContract(\"sdk\")")]
+    [InlineData("[SparContract(\"Testing\")] public sealed class Items { }", "SPAR003: SparContract(\"Testing\")")]
+    [InlineData("[SparContract] public sealed class TestingService { }", "SPAR004: TestingService")]
+    [InlineData("[SparContract] public sealed class DeleteService { }", "SPAR004: DeleteService")]
+    [InlineData("[SparContract(\"wire\")] public sealed class Items { }", "SPAR004: SparContract(\"wire\")")]
+    [InlineData("[SparContract(\"readItem\")] public sealed class Items { [SparCommand] public Task<Item> GetAsync() => null!; }", "SPAR004: SparContract(\"readItem\")")]
+    [InlineData("[SparContract(\"decodeGet\")] public sealed class Items { [SparCommand] public Task GetAsync() => null!; }", "SPAR004: SparContract(\"decodeGet\")")]
+    [InlineData("public sealed record any(string Name); [SparContract] public sealed class Items { [SparCommand] public Task<any> GetAsync() => null!; }", "SPAR004: any")]
+    [InlineData("public sealed record @string(string Name); [SparContract] public sealed class Items { [SparCommand] public Task<@string> GetAsync() => null!; }", "SPAR004: @string")]
+    [InlineData("public sealed record Call(string Name); [SparContract] public sealed class Items { [SparCommand] public Task<Call> GetAsync() => null!; }", "SPAR004: Call")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand] public Task<Item> GetAsync(string[] request) => null!; }", "SPAR015: request")]
+    [InlineData("public sealed record Draft(string Title) { public string Body { get; init; } = \"\"; } [SparContract] public sealed class Items { [SparCommand] public Task<Draft> GetAsync() => null!; }", "SPAR021: Body")]
+    [InlineData("public sealed record Draft { public Draft(string title) { } public string Title { get; } = \"\"; } [SparContract] public sealed class Items { [SparCommand] public Task<Draft> GetAsync() => null!; }", "SPAR022: title")]
+    [InlineData("public sealed record Link(string URL, string Url); [SparContract] public sealed class Items { [SparCommand] public Task<Link> GetAsync() => null!; }", "SPAR023: Url")]
+    [InlineData("public closed record Err { public sealed record Inside : Err; } public sealed record Outside : Err; [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR031: Outside")]
+    [InlineData("public closed record Err { public sealed record NotFound : Err; [SparName(\"notFound\")] public sealed record Missing : Err; } [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR034: Missing")]
     public async Task A_contract_problem_is_reported_once_at_its_location(string contract, string expected)
     {
         var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + contract);
 
         Assert.Equal([expected], diagnostics);
+    }
+
+    [Theory]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand] public Task Get() => null!; [SparCommand] public Task GetAsync() => null!; }", "SPAR016: Get", "SPAR016: GetAsync")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand] public Task GetAsync() => null!; [SparCommand] public Task GetAsync(string id) => null!; }", "SPAR016: GetAsync", "SPAR016: GetAsync")]
+    [InlineData("[SparContract] public sealed class Items { } [SparContract] public interface IItemsService { }", "SPAR005: Items", "SPAR005: IItemsService")]
+    [InlineData("[SparContract] public sealed class Notes { } [SparContract(\"NOTES\")] public sealed class Other { }", "SPAR003: SparContract(\"NOTES\")")]
+    [InlineData("namespace A { public sealed record Note(string Text); } namespace B { public sealed record Note(int Id); } [SparContract] public sealed class Items { [SparCommand] public Task<A.Note> GetAsync(B.Note request) => null!; }", "SPAR040: Note", "SPAR040: Note")]
+    public async Task A_clash_is_reported_at_each_declaration(string contract, params string[] expected)
+    {
+        var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + contract);
+
+        Assert.Equal(expected, diagnostics);
+    }
+
+    [Fact]
+    public async Task Two_shared_types_with_one_name_are_reported_at_each_type()
+    {
+        const string Contracts = """
+            namespace A { public sealed record Note(string Text); }
+            namespace B { public sealed record Note(int Id); }
+            [SparContract] public sealed class First { [SparCommand] public Task<A.Note> GetAsync() => null!; }
+            [SparContract] public sealed class Second { [SparCommand] public Task<A.Note> GetAsync() => null!; }
+            [SparContract] public sealed class Third { [SparCommand] public Task<B.Note> GetAsync() => null!; }
+            [SparContract] public sealed class Fourth { [SparCommand] public Task<B.Note> GetAsync() => null!; }
+            """;
+
+        var messages = await GeneratorHarness.MessagesAsync(Program + Contracts);
+
+        const string Message = "SPAR040: The shared module declares two types named 'Note' in TypeScript: A.Note and B.Note. Give one of them another name with [SparName(\"…\")]";
+        Assert.Equal([Message, Message], messages);
+    }
+
+    [Fact]
+    public async Task A_type_two_contracts_use_is_reported_once()
+    {
+        const string Contracts = """
+            public sealed record any(string Name);
+            [SparContract] public sealed class First { [SparCommand] public Task<any> GetAsync() => null!; }
+            [SparContract] public sealed class Second { [SparCommand] public Task<any> GetAsync() => null!; }
+            """;
+
+        Assert.Equal(["SPAR004: any"], await GeneratorHarness.AnalyzeAsync(Program + Contracts));
+    }
+
+    [Fact]
+    public async Task The_messages_name_the_problem_and_the_fix()
+    {
+        const string Contracts = """
+            [SparContract] public sealed class Items { }
+            [SparContract] public interface IItemsService { }
+            [SparContract("sdk")] public sealed class Kit { }
+            public sealed record Call(string Number);
+            [SparContract] public sealed class Phone { [SparCommand] public Task<Call> DialAsync() => null!; }
+            """;
+
+        var messages = await GeneratorHarness.MessagesAsync(Program + Contracts);
+
+        Assert.Equal(
+            [
+                "SPAR005: Contracts 'Items' and 'IItemsService' both resolve to the name 'items' (contract names are compared ignoring case). Give one of them another name with [SparContract(\"…\")]",
+                "SPAR005: Contracts 'IItemsService' and 'Items' both resolve to the name 'items' (contract names are compared ignoring case). Give one of them another name with [SparContract(\"…\")]",
+                "SPAR004: Contract 'Kit' resolves to the name 'sdk', which @spar/app uses for one of its own subpaths. Use another name in [SparContract(\"…\")]",
+                "SPAR004: Record 'Call' resolves to the name 'Call', the name of a Spar SDK type the generated modules import. Give it a TypeScript name with [SparName(\"…\")]",
+            ],
+            messages);
     }
 
     [Fact]
