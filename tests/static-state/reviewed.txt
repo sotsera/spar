@@ -1,0 +1,82 @@
+# Every static field of Spar's assemblies, with why it is safe (tests/static-state/StaticStateTests.cs).
+# Spar keeps no process-wide mutable state: several apps run in one test process, and several projects' tasks in one
+# MSBuild node. A new field is reviewed before it is added here. Format: assembly | field | readonly or writable | why.
+# "Filled once" means a collection the static initializer fills and nothing writes again.
+
+# Spar (the runtime, in every app's process)
+Spar | Spar.Bridge.BridgeCodec.HeaderOptions | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Bridge.BridgeSession.CommandFailed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar | Spar.Bridge.BridgeSession.EarlyCancelMemory | readonly | A TimeSpan constant.
+Spar | Spar.Bridge.BridgeSession.ResultTooLarge | readonly | A log message delegate, as above.
+Spar | Spar.Bridge.BridgeTelemetry.CallRefused | readonly | A log message delegate, as above.
+Spar | Spar.Bridge.BridgeTelemetry.CallRefusedWarning | readonly | A log message delegate, as above.
+Spar | Spar.Bridge.BridgeTelemetry.RefusalsSuppressed | readonly | A log message delegate, as above.
+Spar | Spar.Bridge.BridgeTelemetry.Source | readonly | The process's "Spar" ActivitySource (plan section 6b): thread-safe, shared by design, keeps no call's data; every app's spans carry their own tags.
+Spar | Spar.Bridge.BridgeTelemetry.Meter | readonly | The process's "Spar" Meter, as above; measurements are tagged by command, aggregated by the listener.
+Spar | Spar.Bridge.BridgeTelemetry.Duration | readonly | The spar.call.duration histogram of that meter: thread-safe, holds no state of its own.
+Spar | Spar.BridgeLimits.<Default>k__BackingField | readonly | An immutable record of the default limits.
+Spar | Spar.Hosting.SparContentTypes.ByExtension | readonly | Extension to content type, filled once, read only.
+Spar | Spar.Runtime.SparJson.ReaderOptions | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Runtime.SparJson.WriterOptions | readonly | Writer options, a value type copied on use; never written.
+Spar | Spar.SparTestSession.<IsSupported>k__BackingField | readonly | The test-host feature switch, read once from AppContext; the same for the whole process by design, and false in apps (trimmed away).
+Spar | Spar.SparTestSession.CurrentSession | readonly | An AsyncLocal: each test's own flow sees its own session, so two apps in one process never share one.
+
+# Spar.Loopback (test and development variants only)
+# No static fields besides compiler data.
+
+# Spar.Testing (the test host)
+Spar.Testing | Spar.Testing.TestDataRoots.Base | readonly | A Lazy of the run's base folder under artifacts/, computed once, thread-safe; the same for every app in the run by design.
+Spar.Testing | Spar.Testing.TestDataRoots.Run | readonly | The run's folder name, computed once.
+Spar.Testing | Spar.Testing.TestDataRoots.s_next | writable | A counter changed only with Interlocked.Increment, so each app instance gets a data root of its own.
+
+# Spar.Testing.Browser (the Browser surface)
+# No static fields besides compiler data.
+
+# Spar.Generator (runs inside the compiler, for every project at once)
+Spar.Generator | Spar.Generator.ClientNames.LowerName | readonly | A compiled Regex, thread-safe.
+Spar.Generator | Spar.Generator.ClientNames.TypeName | readonly | A compiled Regex, thread-safe.
+Spar.Generator | Spar.Generator.ClientNames.ModuleNames | readonly | A set filled once, read only.
+Spar.Generator | Spar.Generator.ClientNames.Reserved | readonly | A set filled once, read only.
+Spar.Generator | Spar.Generator.ClientNames.ReservedSubpaths | readonly | A set filled once, read only.
+Spar.Generator | Spar.Generator.ClientNames.SdkImports | readonly | An array behind IReadOnlyList, filled once, read only.
+Spar.Generator | Spar.Generator.ContractAnalysis.CSharpFormat | readonly | An immutable SymbolDisplayFormat.
+Spar.Generator | Spar.Generator.ContractAnalysis.ReservedPayloadNames | readonly | A set filled once, read only.
+Spar.Generator | Spar.Generator.Descriptors.Referenced | readonly | A ConcurrentDictionary of restated descriptors, keyed by ID and message; a value depends only on its key, so any project may share it.
+Spar.Generator | Spar.Generator.Descriptors.BadErrorCase | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.BadErrorType | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.CaseNotNested | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.DuplicateCode | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.DuplicateCommand | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.DuplicateContract | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.DuplicateJsonName | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.DuplicateTypeName | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.GenericCommand | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.GenericContract | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.InvalidName | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.ListedLibrary | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.MissingProperty | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NoErrorCases | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NotPositionalRecord | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NotReturningRun | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NotSealedClassOrInterface | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NotTopLevel | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.RefParameter | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.ReservedName | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.ReservedPayloadName | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.TokenNotLast | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.TooManyRequests | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.UnsupportedRequest | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.UnsupportedReturn | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.UnsupportedWireType | readonly | An immutable DiagnosticDescriptor.
+
+# Spar.Sdk.Tasks (MSBuild tasks: one node runs several projects' builds)
+Spar.Sdk.Tasks | Spar.Hosting.SparContentTypes.ByExtension | readonly | The runtime's content-type table, linked in: filled once, read only.
+Spar.Sdk.Tasks | Spar.Sdk.Tasks.Client.ClientDocs.KeyFormat | readonly | An immutable SymbolDisplayFormat.
+Spar.Sdk.Tasks | Spar.Sdk.Tasks.Client.ContractSource.ReferenceCache | readonly | A ConcurrentDictionary of metadata references keyed by file path, time and size (decision "Client step"): thread-safe, and a key names one file's bytes, so projects may share entries.
+Spar.Sdk.Tasks | Spar.Sdk.Tasks.FileLease.Timeout | readonly | A TimeSpan constant.
+Spar.Sdk.Tasks | Spar.Sdk.Tasks.Pack.FrontendPack.SecretExtensions | readonly | An array filled once, read only.
+Spar.Sdk.Tasks | Spar.Sdk.Tasks.Pack.FrontendPack.SecretNames | readonly | An array filled once, read only.
+Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F298E75291E1836F3EBF8BC0FD6F037226BFD1906FC7DD903896DD4291CEE41C6__Identifier_0.Instance | readonly | The regex generator's singleton for ModuleEmitter's identifier pattern: immutable, thread-safe.
+Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F298E75291E1836F3EBF8BC0FD6F037226BFD1906FC7DD903896DD4291CEE41C6__Utilities.s_ascii_1000FF03FEFFFF87FEFFFF07 | readonly | The regex generator's character-class data: immutable.
+Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F298E75291E1836F3EBF8BC0FD6F037226BFD1906FC7DD903896DD4291CEE41C6__Utilities.s_defaultTimeout | readonly | The regex generator's timeout, read once from AppContext.
+Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F298E75291E1836F3EBF8BC0FD6F037226BFD1906FC7DD903896DD4291CEE41C6__Utilities.s_hasTimeout | readonly | The regex generator's timeout flag, as above.

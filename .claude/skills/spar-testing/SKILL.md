@@ -20,7 +20,7 @@ The design is plan section 5 (`docs/design/testing.md`); the mechanics are the d
 - **One data root per app instance,** under `artifacts/test-host/<run>/app-NNN/` in this repository, from which every folder derives (the app's own folder choices included). It is deleted after the test unless `KeepData` is set. Web engine data goes under `artifacts/webview2-profiles/` or `artifacts/linux-homes/` (`AGENTS.md`).
 - **External dependencies:** an app registers real resources with `AddExternal<TService, TImpl>()`; in a test host, resolving one that the test neither replaced nor allowed (`AllowExternal<T>()`) fails and names it.
 - **Spar's outward services** (clipboard, credentials, shell, dialogs, tray, notifications, power) are fakes in a test host, registered behind the feature switch so Production does not contain them.
-- **Spar keeps no process-wide mutable state** and never uses `Console`, environment variables or the working directory for per-app values: several apps run at once in one test process. A new static field is reviewed, and the static-state test lists the allowed ones.
+- **Spar keeps no process-wide mutable state** and never uses `Console`, environment variables or the working directory for per-app values: several apps run at once in one test process. A new static field is reviewed, and the static-state test lists the allowed ones: add it to `tests/static-state/reviewed.txt` with why it is safe (`readonly` or `writable`); the test, linked into Spar.Tests, Spar.Sdk.Tasks.Tests and WireShapes.EndToEndTests, reads the assemblies' metadata and fails on any field the list does not have.
 
 ## Projects, variants and lanes
 

@@ -15,4 +15,9 @@
   </ItemGroup>
 
   <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
+  <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
+  <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
+    <Compile Include="../static-state/StaticStateTests.cs" Link="StaticStateTests.cs" />
+  </ItemGroup>
+
 </Project>
