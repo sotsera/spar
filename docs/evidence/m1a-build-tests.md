@@ -6,7 +6,7 @@ Recorded 2026-11-15. What it shows: a clean copy of the working tree builds the 
 
 | Path | Contents |
 |---|---|
-| `tests/Spar.BuildTests/Workspace.cs` | The assembly fixture: every file `git ls-files --cached --others --exclude-standard` lists, copied to `artifacts/build-tests/<run>/repo/` (so no `bin/`, `obj/` or `node_modules/`), hashed, then `npm ci` and `npm run build` in the copy's `src/Spar.Client`, as CI does first. |
+| `tests/Spar.BuildTests/Workspace.cs` | The assembly fixture: the files `git ls-files --cached --others --exclude-standard` lists at the root and under `src/`, `samples/`, `tests/` and `eng/`, copied to `artifacts/build-tests/<run>/repo/` (so no `bin/`, `obj/` or `node_modules/`), hashed, then `npm ci` and `npm run build` in the copy's `src/Spar.Client`, as CI does first. It deletes earlier runs at the start, and its own copy and publications after a run whose tests all passed; it refuses to copy when git lists files inside a `bin/`, `obj/` or `node_modules/` folder. |
 | `tests/Spar.BuildTests/Dotnet.cs` | One isolated build: `DOTNET_CLI_USE_MSBUILD_SERVER=false`, `-nr:false`, a fresh `MSBUILDNODEHANDSHAKESALT` and `SharedCompilationId` per run, a binary log per build, then a diagnostic replay of the log read for `Building target "Spar…"` / `Skipping target "Spar…"`. Each build's time goes to `logs/timings.txt`. |
 | `tests/Spar.BuildTests/NotebookBuildTests.cs` | The three tests below. |
 | `.github/workflows/ci.yml` | A step after the `-mt` build: `dotnet test --project tests/Spar.BuildTests`. The project is not in `Spar.slnx`. |
@@ -32,6 +32,10 @@ Every test waits for the copy's first build, whichever xUnit runs first: in the 
 | Authored files after all builds | unchanged, none added |
 
 The 1.5 s no-op budget (plan, "Performance budgets") holds in the developer's case. The isolated case pays for starting MSBuild each time and sits at the budget; that is why the test records the time and does not assert it.
+
+## Follow-up: one run on disk, a smaller copy, the guard (2026-11-15)
+
+Four runs had left 2.4 GB (567-625 MB each: about 52 MB copied, 251 MB of `node_modules`, 143 MB of `bin/`, 18 MB of `obj/`, and 20-40 MB of text replay per build). Now, observed: a passing run starts by deleting the earlier runs and ends with only its binary logs and `timings.txt` (4.3 MB); a run with a deliberate failure kept its copy and publications (423 MB) until the next run; with the `node_modules/` line taken out of `.gitignore`, the run failed before copying, naming 50,694 files and five examples. A run cannot delete a folder another process has open (a shell whose working directory is inside it); it leaves it for the next run. Two runs at once in one checkout would delete each other's folders.
 
 ## Not done or not verified
 

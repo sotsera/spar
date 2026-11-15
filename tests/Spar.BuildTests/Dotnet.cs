@@ -36,13 +36,21 @@ public static partial class Dotnet
         return new BuildResult(exit, output, elapsed, await SparTargetsAsync(workspace, label, binlog));
     }
 
-    /// <summary>Replays the binary log at diagnostic verbosity and reads, for each Spar target, whether it ran.</summary>
+    /// <summary>
+    /// Replays the binary log at diagnostic verbosity and reads, for each Spar target, whether it ran. To read a run's
+    /// log again: <c>dotnet msbuild &lt;label&gt;.binlog -flp:v=diag</c>, or open it in a binary-log viewer.
+    /// </summary>
     private static async Task<IReadOnlyDictionary<string, bool>> SparTargetsAsync(Workspace workspace, string label, string binlog)
     {
         var replay = Path.Combine(workspace.Logs, $"{label}.log");
         await Tool.RunAsync(workspace.Root, "dotnet", "msbuild", binlog, "-noconlog", $"-flp:v=diag;logfile={replay}");
+        var text = File.ReadAllText(replay);
+
+        // The replay is 20-40 MB per build and the binary log (under 1 MB) holds the same, so only the log stays.
+        File.Delete(replay);
+
         var targets = new Dictionary<string, bool>(StringComparer.Ordinal);
-        foreach (Match match in Step().Matches(File.ReadAllText(replay)))
+        foreach (Match match in Step().Matches(text))
         {
             var name = match.Groups["name"].Value;
             var ran = match.Groups["verb"].Value == "Building";

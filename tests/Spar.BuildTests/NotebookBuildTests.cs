@@ -7,7 +7,7 @@ namespace Spar.BuildTests;
 /// build runs, and what the Production executable carries. The builds share the copy's <c>obj/</c> folders and its
 /// restore, so they stay in this one class, whose tests xUnit runs one at a time.
 /// </summary>
-public sealed class NotebookBuildTests(Workspace workspace)
+public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
 {
     private const string Tests = "samples/Notebook.Tests/Notebook.Tests.csproj";
 
@@ -78,7 +78,7 @@ public sealed class NotebookBuildTests(Workspace workspace)
         // A publish installs the frontend and writes the client, so the clean copy's first build goes before it.
         await FirstBuildAsync();
 
-        var publish = Path.Combine(workspace.Logs, "..", "publish", "Notebook");
+        var publish = Path.Combine(workspace.Publish, "Notebook");
         var result = await Dotnet.RunAsync(workspace, "notebook-publish", "publish", App, "-c", "Release", "-o", publish);
         Assert.True(result.Exit == 0, result.Output);
 
@@ -112,6 +112,10 @@ public sealed class NotebookBuildTests(Workspace workspace)
 
         AssertAuthoredFilesUntouched();
     }
+
+    /// <summary>Tells the workspace how this test ended, so a run with a failure keeps its copy.</summary>
+    public void Dispose() =>
+        workspace.Report(TestContext.Current.TestState?.Result == TestResult.Passed);
 
     /// <summary>The first build of the copy, shared by the tests that need it, whichever runs first.</summary>
     private Task<BuildResult> FirstBuildAsync() =>

@@ -7,33 +7,54 @@ using System.Text;
 namespace Spar.BuildTests;
 
 /// <summary>
-/// A clean copy of the working tree, as a fresh clone would have it: every tracked file and every untracked file git
-/// does not ignore, so no <c>bin/</c>, <c>obj/</c> or <c>node_modules/</c>. Made once per run under
-/// <c>artifacts/build-tests/&lt;run&gt;/</c>, with the TypeScript SDK installed and built there, as CI does first.
+/// A clean copy of what the builds read, as a fresh clone would have it: the files git lists (tracked, or untracked
+/// and not ignored) at the root and under <see cref="Copied"/>, so no <c>bin/</c>, <c>obj/</c> or <c>node_modules/</c>.
+/// Made once per run under <c>artifacts/build-tests/&lt;run&gt;/</c>, with the TypeScript SDK installed and built
+/// there, as CI does first. Starting a run deletes the earlier runs; a run whose tests all pass deletes its copy and
+/// keeps its logs, and one with a failure keeps both for inspection.
 /// </summary>
 public sealed class Workspace : IAsyncLifetime
 {
+    /// <summary>The top-level folders the builds read; <c>spikes/</c>, <c>docs/</c> and the tool folders are left out.</summary>
+    private static readonly string[] Copied = ["src", "samples", "tests", "eng"];
+
+    /// <summary>Folders builds and installs write, which git must ignore everywhere.</summary>
+    private static readonly string[] Generated = ["bin", "obj", "node_modules"];
+
     private static readonly string Run = $"{DateTime.UtcNow:yyyyMMdd-HHmmss}-{Environment.ProcessId}";
+
+    private int _passed;
+    private int _failed;
 
     public string Repository { get; } = FindRepository();
 
-    /// <summary>The copy's root.</summary>
-    public string Root => Path.Combine(Repository, "artifacts", "build-tests", Run, "repo");
+    /// <summary>Where every run's folder goes.</summary>
+    public string Runs => Path.Combine(Repository, "artifacts", "build-tests");
 
-    /// <summary>Where each build's binary log and its replay go.</summary>
-    public string Logs => Path.Combine(Repository, "artifacts", "build-tests", Run, "logs");
+    /// <summary>The copy's root.</summary>
+    public string Root => Path.Combine(Runs, Run, "repo");
+
+    /// <summary>Where each build's binary log, its replay and <c>timings.txt</c> go; kept after the run.</summary>
+    public string Logs => Path.Combine(Runs, Run, "logs");
+
+    /// <summary>Where publications go; deleted with the copy.</summary>
+    public string Publish => Path.Combine(Runs, Run, "publish");
 
     /// <summary>Every authored file of the copy with its SHA-256, taken right after copying.</summary>
     public IReadOnlyDictionary<string, string> Authored { get; private set; } = new Dictionary<string, string>();
 
     public async ValueTask InitializeAsync()
     {
+        DeleteEarlierRuns();
         Directory.CreateDirectory(Root);
         Directory.CreateDirectory(Logs);
+
         var listed = await Tool.RunAsync(Repository, "git", "ls-files", "-z", "--cached", "--others", "--exclude-standard");
         Assert.True(listed.Exit == 0, listed.Output);
+        var files = listed.Output.Split('\0', StringSplitOptions.RemoveEmptyEntries);
+        RefuseUnignoredOutput(files);
 
-        foreach (var relative in listed.Output.Split('\0', StringSplitOptions.RemoveEmptyEntries))
+        foreach (var relative in files.Where(IsCopied))
         {
             var source = Path.Combine(Repository, relative);
             if (!File.Exists(source))
@@ -55,7 +76,30 @@ public sealed class Workspace : IAsyncLifetime
         Assert.True(build.Exit == 0, build.Output);
     }
 
-    public ValueTask DisposeAsync() => ValueTask.CompletedTask; // Kept for inspection; artifacts/ is disposable.
+    public ValueTask DisposeAsync()
+    {
+        // Only a run with a pass and no failure removes its copy: a failed or interrupted run is the one to look at.
+        if (_passed > 0 && _failed == 0)
+        {
+            TryDelete(Path.Combine(Runs, Run, "repo"));
+            TryDelete(Publish);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    /// <summary>Called by each test as it ends, with whether it passed.</summary>
+    public void Report(bool passed)
+    {
+        if (passed)
+        {
+            Interlocked.Increment(ref _passed);
+        }
+        else
+        {
+            Interlocked.Increment(ref _failed);
+        }
+    }
 
     /// <summary>The authored files' hashes now, keyed as <see cref="Authored"/> is.</summary>
     public Dictionary<string, string> HashAuthored()
@@ -73,9 +117,70 @@ public sealed class Workspace : IAsyncLifetime
         return hashes;
     }
 
-    /// <summary>What builds may write: build output, installed packages, and what the npm install of the copy wrote.</summary>
+    /// <summary>A file at the root, or under one of the folders the builds read.</summary>
+    private static bool IsCopied(string relative)
+    {
+        var slash = relative.IndexOf('/');
+        return slash < 0 || Copied.Contains(relative[..slash], StringComparer.Ordinal);
+    }
+
     private static bool IsGenerated(string relative) =>
-        relative.Split('/').Any(segment => segment is "bin" or "obj" or "node_modules");
+        relative.Split('/').Any(segment => Generated.Contains(segment, StringComparer.Ordinal));
+
+    /// <summary>
+    /// Fails the run before copying when git lists files inside a build or install folder: a missing
+    /// <c>.gitignore</c> entry would otherwise copy thousands of files, and the copy would not be clean.
+    /// </summary>
+    private static void RefuseUnignoredOutput(string[] files)
+    {
+        var unignored = files.Where(IsGenerated).ToList();
+        if (unignored.Count == 0)
+        {
+            return;
+        }
+
+        var examples = string.Join("\n", unignored.Take(5).Select(f => "  " + f));
+        Assert.Fail(
+            $"git lists {unignored.Count} files inside bin/, obj/ or node_modules/ folders, for example:\n{examples}\n"
+            + "Add the folder to .gitignore (or remove the files from the index) and run again.");
+    }
+
+    /// <summary>Removes earlier runs' folders; one still in use (another run, an open file) stays for the next run.</summary>
+    private void DeleteEarlierRuns()
+    {
+        if (!Directory.Exists(Runs))
+        {
+            return;
+        }
+
+        foreach (var earlier in Directory.EnumerateDirectories(Runs))
+        {
+            TryDelete(earlier);
+        }
+    }
+
+    private static void TryDelete(string directory)
+    {
+        if (!Directory.Exists(directory))
+        {
+            return;
+        }
+
+        try
+        {
+            // npm and git leave read-only files, which Directory.Delete refuses on Windows.
+            foreach (var file in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+            }
+
+            Directory.Delete(directory, recursive: true);
+        }
+        catch (Exception problem) when (problem is IOException or UnauthorizedAccessException)
+        {
+            TestContext.Current.SendDiagnosticMessage($"Could not delete {directory}: {problem.Message}");
+        }
+    }
 
     private static string FindRepository()
     {
