@@ -1,0 +1,53 @@
+@import "@fontsource-variable/inter";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* The notebook's palette: a warm paper tone in light mode, ink blue for actions, and matching dark tones. */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+
+  --color-paper: #fbfaf7;
+  --color-paper-dark: #16171b;
+  --color-sheet: #ffffff;
+  --color-sheet-dark: #1d1f24;
+  --color-ink: #1f2430;
+  --color-ink-dark: #e6e7ea;
+  --color-muted: #6b7180;
+  --color-muted-dark: #9aa0ad;
+  --color-line: #e7e4dc;
+  --color-line-dark: #2c2f36;
+  --color-accent: #2f5bd3;
+  --color-accent-dark: #7d9cf0;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased dark:bg-paper-dark dark:text-ink-dark;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent dark:outline-accent-dark;
+  }
+}
+
+/*
+ * GitHub-style task lists (remark-gfm marks them): the checkbox is the bullet. Outside any layer, because the
+ * typography plugin's list styles sit in the utilities layer, which a components rule cannot override.
+ */
+.prose .contains-task-list {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.prose .task-list-item input {
+  margin-inline-end: 0.5rem;
+  vertical-align: middle;
+  accent-color: var(--color-accent);
+}

@@ -5,14 +5,15 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "check": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json && node node_modules/typescript7/bin/tsc -p tsconfig.json --noEmit && node node_modules/typescript7/bin/tsc -p tsconfig.test.json",
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.vite.json",
+    "check": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.vite.json --noEmit && tsc -p tsconfig.test.json && node node_modules/typescript7/bin/tsc -p tsconfig.json --noEmit && node node_modules/typescript7/bin/tsc -p tsconfig.vite.json --noEmit && node node_modules/typescript7/bin/tsc -p tsconfig.test.json",
     "test": "vitest run"
   },
   "devDependencies": {
     "@types/node": "24.19.2",
     "typescript": "6.0.3",
     "typescript7": "npm:typescript@7.0.2",
-    "vitest": "4.1.10"
+    "vite": "8.3.8",
+    "vitest": "4.1.12"
   }
 }

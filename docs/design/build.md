@@ -27,6 +27,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   4. Frontend: `npm ci --ignore-scripts` when the lockfile changed (section 3c), in every variant, because the Debug type-check and the dev server need `node_modules` too; then the type-check in every variant (Debug included, see below); in Release and test variants also `vite build` into `obj/`, then packing.
   5. One `CoreCompile`, where the generator and analyzer run.
 
+  Steps 2 to 4 are built (M1a; decisions "Client step: the generated TypeScript modules" and "Notebook page and the frontend build"), except packing; the install runs under a lease the app's variants share.
+
   Design-time builds run none of steps 2–4.
   - **The client refreshes on build** in the IDE (Visual Studio and VS Code build on F5), and **on save while the development loop runs:** under `dotnet watch` or `spar dev` a saved contract change restarts the app, which regenerates the client (5.4–6.1 s measured with Vite reused), so frontend editors see it without a manual build. There is no IDE-specific refresh path (decision "M1a names").
   - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name confirmed, decision "M1a names"). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is. The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).

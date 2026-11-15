@@ -12,9 +12,9 @@ namespace Spar.Sdk.Tasks.Client;
 /// </summary>
 internal static class ClientPackage
 {
-    /// <summary>Every file of the package, by its path relative to the package folder, with <c>/</c> separators.</summary>
     /// <summary>
-    /// Every file of the package. <paramref name="sourcePrefix"/> is the way from the package folder to the project
+    /// Every file of the package, by its path relative to the package folder, with <c>/</c> separators.
+    /// <paramref name="sourcePrefix"/> is the way from the package folder to the project
     /// folder (<c>../../../</c> for <c>obj/spar/client</c>), so the declaration maps reach the C# files.
     /// </summary>
     public static SortedDictionary<string, byte[]> Files(
@@ -43,14 +43,17 @@ internal static class ClientPackage
             Text($"{contract.Model.WireName}.d.ts.map", declarations.SourceMap($"{contract.Model.WireName}.d.ts", sourcePrefix));
         }
 
-        foreach (var file in Directory.EnumerateFiles(sdkDirectory).Where(IsCompiledSdkFile))
+        // The compiled SDK, its subfolders included (vite/), and its sources under sdk/src/ at the same relative paths.
+        foreach (var file in Directory.EnumerateFiles(sdkDirectory, "*", SearchOption.AllDirectories).Where(IsCompiledSdkFile))
         {
-            files[$"sdk/{Path.GetFileName(file)}"] = File.ReadAllBytes(new AbsolutePath(file));
+            files[$"sdk/{Relative(sdkDirectory, file)}"] = File.ReadAllBytes(new AbsolutePath(file));
         }
 
-        foreach (var file in Directory.EnumerateFiles(sdkSourceDirectory, "*.ts").Where(f => !f.EndsWith(".d.ts", StringComparison.Ordinal)))
+        var sources = Directory.EnumerateFiles(sdkSourceDirectory, "*.ts", SearchOption.AllDirectories)
+            .Where(f => !f.EndsWith(".d.ts", StringComparison.Ordinal));
+        foreach (var file in sources)
         {
-            files[$"sdk/src/{Path.GetFileName(file)}"] = File.ReadAllBytes(new AbsolutePath(file));
+            files[$"sdk/src/{Relative(sdkSourceDirectory, file)}"] = File.ReadAllBytes(new AbsolutePath(file));
         }
 
         Text("package.json", PackageJson(layout, version));
@@ -123,6 +126,8 @@ internal static class ClientPackage
         }
     }
 
+    private static string Relative(AbsolutePath directory, string file) => Path.GetRelativePath(directory, file).Replace('\\', '/');
+
     private static bool IsCompiledSdkFile(string path) =>
         path.EndsWith(".js", StringComparison.Ordinal) || path.EndsWith(".d.ts", StringComparison.Ordinal) || path.EndsWith(".map", StringComparison.Ordinal);
 
@@ -140,6 +145,7 @@ internal static class ClientPackage
             json.WriteBoolean("sideEffects", false);
             json.WriteStartObject("exports");
             Export(json, "sdk", "sdk/sdk");
+            Export(json, "vite", "sdk/vite/index");
             Export(json, "spar", "spar");
             foreach (var contract in layout.Contracts)
             {

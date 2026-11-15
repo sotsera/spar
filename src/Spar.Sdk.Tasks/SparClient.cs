@@ -60,7 +60,7 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
     public string ProjectName { get; set; } = "";
 
     /// <summary>
-    /// Where the expected contract snapshot goes, under <c>obj/</c>. The committed copy next to the project is compared
+    /// Where the expected contract snapshot goes, in the variant's <c>obj/</c> folder. The committed copy next to the project is compared
     /// with it on every build by <c>Sdk.targets</c>, so a stale copy is found even when this step is up to date.
     /// </summary>
     [Required]
@@ -109,15 +109,14 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
         return true;
     }
 
-    /// <summary>Writes the expected snapshot when its text changed.</summary>
+    /// <summary>
+    /// Writes the expected snapshot on every run: it is one of the step's Outputs, so its time must be this run's. It is
+    /// the variant's own file, so no other build writes it.
+    /// </summary>
     private void WriteSnapshot(ClientLayout layout)
     {
         var path = TaskEnvironment.GetAbsolutePath(SnapshotFile);
-        var expected = System.Text.Encoding.UTF8.GetBytes(ContractSnapshot.Text(ProjectName, layout.Contracts));
-        if (!File.Exists(path) || !File.ReadAllBytes(path).AsSpan().SequenceEqual(expected))
-        {
-            Directory.CreateDirectory(new AbsolutePath(Path.GetDirectoryName(path.Value)!));
-            ClientPackage.Write(path, expected);
-        }
+        Directory.CreateDirectory(new AbsolutePath(Path.GetDirectoryName(path.Value)!));
+        File.WriteAllText(path, ContractSnapshot.Text(ProjectName, layout.Contracts));
     }
 }

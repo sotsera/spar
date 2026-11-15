@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2024"
+    ],
+    "types": [],
+    "rootDir": "src/vite",
+    "outDir": "obj/dist/vite",
+    "sourceRoot": "../src/vite/"
+  },
+  "include": [
+    "src/vite"
+  ],
+  "exclude": []
+}

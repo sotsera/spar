@@ -2980,3 +2980,16 @@ Evidence: `docs/evidence/m1a-client-step.md`, "Follow-up: declaration maps and t
 ## 2026-11-15, Contract snapshot choices accepted (user decision)
 
 The user accepted both choices of "Declaration maps and the contract snapshot" ("Accept them"): the property is `SparContractSnapshot`, `Update` by default and `Verify` when `ContinuousIntegrationBuild` is `true`; and the committed snapshot is compared on every build against the expected copy under `obj/spar/`, not only when the client step runs.
+
+## 2026-11-15, Notebook page and the frontend build (implementation record; choices for review)
+
+Evidence: `docs/evidence/m1a-notebook-page.md`.
+- **Built:** the Notebook's page in `samples/Notebook/frontend/`, the frontend steps of the build (install, type-check, Vite build), a first `@spar/app/vite`, and `samples/Notebook.EndToEndTests` with seven journeys in Chromium against the real backend. `dotnet test` runs 236, all passing; the NativeAOT lane 154.
+- **Choices made while building, for review:**
+  - **The dialogs use the browser's modal `<dialog>`, not Radix.** Radix's modal Dialog and AlertDialog inject a `<style>` element to lock scrolling; the default CSP blocks it (`style-src-elem`), and the sample decision already excludes libraries that inject styles. `showModal()` gives focus containment, Escape and an inert page with nothing injected. Radix stays for the dropdown menu, non-modal (`modal={false}`), which injects nothing. This narrows the sample decision's "Radix for dialogs, menus and popovers".
+  - **The Markdown preview builds React elements (`react-markdown`), with no HTML sink,** so it needs no Trusted Types policy. The sample decision expected an HTML sink to exercise the policy an app declares in C#; that declaration arrives with page security in M1b, and the preview can take the sink then.
+  - **The frontend steps:** `npm ci --ignore-scripts --no-audit --no-fund` when the lockfile is newer than npm's record, under a lease in `obj/spar/` that the app's variants share; `tsc --noEmit` in every variant (`SparTypeCheck`); `vite build` into the variant's `obj/…/frontend/` in Production and Test, and in Development only with `SparDevServer=false`. The frontend folder is `SparFrontendPath` (`frontend/`). They run after the client step, because `package.json` links the generated package, and before `CoreCompile`.
+  - **`@spar/app/vite` today sets only what a production build needs under the default CSP:** `assetsInlineLimit: 0`, no source maps, base `/`, target ES2022. It is compiled separately for Node and copied into the package with the SDK.
+  - **The sample pins `postcss-selector-parser` to 6.1.6 with npm `overrides`** (a moderate advisory in the version the typography plugin pins), and the SDK moves to Vitest 4.1.12 (two moderate advisories).
+  - **Until packing exists, the browser tests serve the Test variant's Vite output** from the app's `obj/` folder.
+- **Found while building:** the client step re-ran on every build, because two of its Outputs were files written only when their content changed; the expected snapshot is now the variant's own file, written on every run, and `package.json` left the Outputs (a deleted package still reruns the step).

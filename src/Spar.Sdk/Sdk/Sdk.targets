@@ -89,7 +89,7 @@
     <SparClientDirectory>$(MSBuildProjectDirectory)\obj\spar\client\</SparClientDirectory>
     <!-- The committed snapshot: updated by local builds, verified (SPAR100) by CI builds, against the expected one. -->
     <SparContractSnapshotFile>$(MSBuildProjectDirectory)\$(MSBuildProjectName).contracts.snapshot</SparContractSnapshotFile>
-    <SparContractSnapshotExpected>$(MSBuildProjectDirectory)\obj\spar\contracts.snapshot</SparContractSnapshotExpected>
+    <SparContractSnapshotExpected>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)contracts.snapshot</SparContractSnapshotExpected>
     <SparContractSnapshot Condition="'$(SparContractSnapshot)' == '' and '$(ContinuousIntegrationBuild)' == 'true'">Verify</SparContractSnapshot>
     <SparContractSnapshot Condition="'$(SparContractSnapshot)' == ''">Update</SparContractSnapshot>
     <SparClientInventory>$(IntermediateOutputPath)spar-client.inventory</SparClientInventory>
@@ -110,8 +110,8 @@
           DependsOnTargets="ResolveReferences;GenerateGlobalUsings"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
     <ItemGroup>
-      <_SparClientSdkFile Include="$(SparClientSdkDirectory)*.js;$(SparClientSdkDirectory)*.d.ts;$(SparClientSdkDirectory)*.map" />
-      <_SparClientSdkFile Include="$(SparClientSdkSourceDirectory)*.ts" />
+      <_SparClientSdkFile Include="$(SparClientSdkDirectory)**\*.js;$(SparClientSdkDirectory)**\*.d.ts;$(SparClientSdkDirectory)**\*.map" />
+      <_SparClientSdkFile Include="$(SparClientSdkSourceDirectory)**\*.ts" />
       <_SparClientInventoryLine Include="@(Compile->'%(FullPath)')" />
       <_SparClientInventoryLine Include="@(ReferencePath->'%(FullPath)')" />
       <_SparClientInventoryLine Include="@(_SparClientSdkFile->'%(FullPath)')" />
@@ -122,6 +122,9 @@
 
     <WriteLinesToFile File="$(SparClientInventory)" Lines="@(_SparClientInventoryLine)"
                       Overwrite="true" WriteOnlyWhenDifferent="true" />
+
+    <!-- The package's files change only when their content does, so they cannot be Outputs; a deleted one reruns the step. -->
+    <Delete Files="$(SparClientStamp)" Condition="!Exists('$(SparClientDirectory)package.json')" />
   </Target>
 
   <Target Name="SparClient"
@@ -129,7 +132,7 @@
           DependsOnTargets="SparWriteClientInventory"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'"
           Inputs="$(SparClientInventory);@(Compile);@(ReferencePath);@(_SparClientSdkFile);$(SparTasksAssembly)"
-          Outputs="$(SparClientStamp);$(SparClientDirectory)package.json;$(SparContractSnapshotExpected)">
+          Outputs="$(SparClientStamp);$(SparContractSnapshotExpected)">
     <SparClient Sources="@(Compile)"
                 References="@(ReferencePath)"
                 DefineConstants="$(DefineConstants)"
@@ -169,6 +172,72 @@
     <Message Importance="high" Text="Spar: $(MSBuildProjectName).contracts.snapshot updated; commit it with the contract change."
              Condition="'$(_SparSnapshotState)' != '' and '$(SparContractSnapshot)' == 'Update'" />
   </Target>
+
+  <!--
+    The frontend (plan section 1, pipeline step 4): in the SparFrontendPath folder (frontend/ by default), after the
+    client step because package.json links the generated @spar/app package. npm ci runs when the lockfile changed, in
+    every variant, under a lease the variants share; the type-check runs in every variant (SparTypeCheck=false turns it
+    off); vite build runs in Production and Test, and in Development with SparDevServer=false, into the variant's obj/.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparFrontendPath Condition="'$(SparFrontendPath)' == ''">frontend\</SparFrontendPath>
+    <SparFrontendDirectory>$([MSBuild]::EnsureTrailingSlash('$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(SparFrontendPath)'))'))</SparFrontendDirectory>
+    <SparHasFrontend Condition="Exists('$(SparFrontendDirectory)package.json')">true</SparHasFrontend>
+    <SparTypeCheck Condition="'$(SparTypeCheck)' == ''">true</SparTypeCheck>
+    <SparDevServer Condition="'$(SparDevServer)' == '' and '$(SparVariant)' == 'Development'">true</SparDevServer>
+    <SparBuildFrontend Condition="'$(SparDevServer)' != 'true'">true</SparBuildFrontend>
+    <SparFrontendOutput>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)frontend\</SparFrontendOutput>
+    <SparFrontendLease>$(MSBuildProjectDirectory)\obj\spar\npm.lease</SparFrontendLease>
+    <SparTypeCheckStamp>$(IntermediateOutputPath)spar-typecheck.stamp</SparTypeCheckStamp>
+    <SparFrontendStamp>$(IntermediateOutputPath)spar-frontend.stamp</SparFrontendStamp>
+  </PropertyGroup>
+
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
+             Runtime="NET" TaskFactory="TaskHostFactory"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+
+  <Target Name="SparFrontendInputs" Condition="'$(SparHasFrontend)' == 'true'">
+    <ItemGroup>
+      <_SparFrontendSource Include="$(SparFrontendDirectory)src\**\*" />
+      <_SparFrontendSource Include="$(SparFrontendDirectory)index.html;$(SparFrontendDirectory)*.config.*;$(SparFrontendDirectory)tsconfig*.json" />
+      <_SparFrontendSource Include="$(SparFrontendDirectory)package.json;$(SparFrontendDirectory)package-lock.json" />
+      <_SparFrontendSource Include="$(SparClientDirectory)**\*" />
+      <FileWrites Include="$(SparTypeCheckStamp);$(SparFrontendStamp)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SparFrontendInstall"
+          DependsOnTargets="SparFrontendInputs"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="$(SparFrontendDirectory)package-lock.json"
+          Outputs="$(SparFrontendDirectory)node_modules\.package-lock.json">
+    <SparFrontendInstall FrontendDirectory="$(SparFrontendDirectory)" LeaseFile="$(SparFrontendLease)" />
+  </Target>
+
+  <Target Name="SparFrontendTypeCheck"
+          DependsOnTargets="SparFrontendInstall"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(SparTypeCheck)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="@(_SparFrontendSource)"
+          Outputs="$(SparTypeCheckStamp)">
+    <Exec Command="node node_modules/typescript/bin/tsc --noEmit -p . --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
+    <Touch Files="$(SparTypeCheckStamp)" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="SparFrontendBuild"
+          DependsOnTargets="SparFrontendTypeCheck"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(SparBuildFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="@(_SparFrontendSource)"
+          Outputs="$(SparFrontendStamp);$(SparFrontendOutput)index.html">
+    <Exec Command="node node_modules/vite/bin/vite.js build --outDir &quot;$(SparFrontendOutput.TrimEnd('\'))&quot; --emptyOutDir --logLevel warn"
+          WorkingDirectory="$(SparFrontendDirectory)" />
+    <Touch Files="$(SparFrontendStamp)" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="SparFrontend"
+          AfterTargets="SparCheckContractSnapshot"
+          BeforeTargets="CoreCompile"
+          DependsOnTargets="SparFrontendInstall;SparFrontendTypeCheck;SparFrontendBuild"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
   <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">

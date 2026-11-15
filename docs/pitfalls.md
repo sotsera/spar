@@ -111,6 +111,10 @@ See also "Bridge and loopback" for the bridge's message, id and connection limit
   Angular 22 also makes `OnPush` the default, which can look like a stale view. (`frontend-frameworks`)
 - **Vue's full build compiles templates at run time** and is blocked as `eval`; use the runtime-only build. (`frontend-frameworks`)
 
+- **Tailwind v4 puts plugin styles, such as the typography plugin's, in its utilities layer,** so a rule in the components layer cannot override them, whatever its specificity. Put such overrides outside any layer. (M1a Notebook page)
+- **`Intl` formatters without a locale follow the machine, not the page:** an English page showed "1 secondo fa" on an Italian Windows. Pass `document.documentElement.lang`. (M1a Notebook page)
+- **Playwright's `PressSequentially` on a textarea types at the start of its text,** where focusing puts the caret. Press `Control+End` first to type where a person would. (M1a Notebook page)
+- **Two variants of one app build at once in a solution build and share one `node_modules`:** `npm ci` in both would break it. Install under a lease the variants share, and skip when the other build already installed. (M1a frontend build)
 - **npm deletes what it does not know in `node_modules`.** A private junction to the generated client was pruned by `npm i`, deleting the files through it, and `npm ci` wipes everything. Link the client as a declared `file:` dependency outside `node_modules`. (`react`)
 - **The generated client path must not depend on the configuration.** With an `obj/Debug/…` path, a clean clone running only `dotnet publish -c Release` fails (TS2307). (`react`)
 - **Vite pre-bundles and caches `node_modules`,** so regenerated code there would miss hot updates. `file:` packages outside `node_modules` are treated as source. (`react`)
@@ -413,6 +417,7 @@ Entries tied to one host's API stay in that host's section. See also, in "Window
 
 Entries tied to one host's API stay in that host's section. See also, in "npm, Vite and TypeScript": "Angular under a strict CSP" and "Vue's full build compiles templates at run time". In "Windows host (WebView2)": `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS`, `AreDevToolsEnabled`, "The runtime makes requests the app never asked for" and the workers that the legacy request filter misses. In "Linux host (WebKitGTK)": "No origin information", `WEBKIT_INSPECTOR_SERVER`, "The GTK4 web process is always sandboxed" and "A redirect answered by a scheme handler is not followed".
 
+- **Radix's modal Dialog and AlertDialog inject a `<style>` element** to lock page scrolling, which the default CSP blocks (`style-src-elem`, `blocked-uri: inline`); a modal dropdown menu does the same. Use the browser's modal `<dialog>` (`showModal()`) and non-modal menus. (M1a Notebook page)
 - **Vite's default `build.assetsInlineLimit` turns small assets into `data:` URLs,** which a strict CSP blocks. Set it to 0. (`csp-navigation`)
 - **SRI fails open when the import map is blocked.** An inline import map is an inline script: without its hash in `script-src` it is blocked, and a tampered lazy chunk then loaded. SRI failures are not CSP violations either, so CSP listeners and reports miss them; only the console and an `error` listener see them. (`csp-navigation`)
 - **Vite's ETag is computed before a nonce is swapped in,** so a cached dev page kept an old nonce and its styles were blocked. Send the dev HTML `no-store`, without an ETag. (`csp-navigation`)
