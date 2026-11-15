@@ -65,6 +65,19 @@ internal static partial class ModuleEmitter
         .Line($"export const fingerprint = {TypeScriptNames.Literal(fingerprint)};")
         .ToString();
 
+    /// <summary>
+    /// The names a contract's <c>.js</c> declares at its top level besides the contract's own object: its imports, its
+    /// readers and writers, its decoders and the two shared constants. The contract's name must be none of them.
+    /// </summary>
+    public static HashSet<string> TopLevelNames(ClientLayout layout, ClientContract contract)
+    {
+        var names = new HashSet<string>(StringComparer.Ordinal) { "invoke", "unknownErrorCase", "wire", "noValue", "noErrors" };
+        names.UnionWith(layout.Imported(contract).SelectMany(Functions));
+        names.UnionWith(layout.Own(contract).SelectMany(Functions));
+        names.UnionWith(contract.Model.Commands.Select(c => $"{c.WireName}Decoder"));
+        return names;
+    }
+
     /// <summary>Plain identifiers, which can be written as property names and read with a dot.</summary>
     public static bool IsIdentifier(string name) => Identifier().IsMatch(name) && !TypeScriptNames.IsReserved(name);
 

@@ -14,13 +14,28 @@ internal sealed class ClientDocs
     private static readonly SymbolDisplayFormat KeyFormat = SymbolDisplayFormat.FullyQualifiedFormat;
 
     private readonly Dictionary<string, INamedTypeSymbol> _types = new(StringComparer.Ordinal);
+    private readonly string _projectDirectory;
 
-    public ClientDocs(Compilation compilation)
+    public ClientDocs(Compilation compilation, string projectDirectory)
     {
+        _projectDirectory = projectDirectory;
         foreach (var type in ContractSource.AllTypes(compilation.Assembly.GlobalNamespace))
         {
             _types[type.ToDisplayString(KeyFormat)] = type;
         }
+    }
+
+    /// <summary>Where the project declares a type: its file relative to the project, and its 1-based line.</summary>
+    public (string File, int Line)? Location(string csharp)
+    {
+        var location = _types.TryGetValue(csharp, out var type) ? type.Locations.FirstOrDefault(l => l.IsInSource) : null;
+        if (location?.SourceTree is null)
+        {
+            return null;
+        }
+
+        var file = Path.GetRelativePath(_projectDirectory, location.SourceTree.FilePath).Replace('\\', '/');
+        return (file, location.GetLineSpan().StartLinePosition.Line + 1);
     }
 
     /// <summary>A type's summary.</summary>

@@ -39,6 +39,10 @@ Windows 11 Pro 10.0.26320, SDK 11.0.100, `Microsoft.CodeAnalysis.CSharp` 5.9.0, 
 - Several error cases with payloads redeclared `const object` in one `switch` scope, a syntax error; each case is a block now.
 - The long reader accepted `-0`, which the C# reader refuses.
 
+## Follow-up: reserved names
+
+At the user's request (decision "Client step: reserved type names"). Observed: a type named `any`, `@string`, `@default` or `undefined` is SPAR003 at line 4 of its file, a type named `Call` or `CallOptions` is SPAR040 there, contracts named `wire`, `invoke`, `noErrors`, `pingDecoder` or `readItem` (beside a type `Item`) are SPAR003, two shared types with one name are SPAR040, and a contract that does not import a shared type may declare its own of that name. `tests/Spar.Sdk.Tasks.Tests` 37 of 37; `dotnet test` 226 of 226.
+
 ## Not done or not verified
 
 - **Not built:** the `.d.ts.map` to the C# declarations (go-to-definition), the manifest, the contract snapshot and SPAR100, the differential test against `tsc --declaration`, `@spar/app/windows`, streams and subscriptions in the modules, the package-mode paths, and the SDK version as the package version (it is `0.0.0`).

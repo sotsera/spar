@@ -35,7 +35,7 @@ internal static class ContractSource
     /// <summary>The contracts of a compilation; source paths in the headers are relative to <paramref name="projectDirectory"/>.</summary>
     public static IReadOnlyList<ClientContract> Read(CSharpCompilation compilation, string projectDirectory, CancellationToken cancellationToken)
     {
-        var docs = new ClientDocs(compilation);
+        var docs = new ClientDocs(compilation, projectDirectory);
 
         var contracts = new List<ClientContract>();
         foreach (var type in ContractTypes(compilation, cancellationToken))

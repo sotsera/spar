@@ -77,7 +77,7 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
         foreach (var problem in layout.Problems)
         {
             var file = problem.SourceFile.Length == 0 ? null : new AbsolutePath(problem.SourceFile, project).Value;
-            Log.LogError("Spar.Contracts", problem.Code, null, file, 0, 0, 0, 0, problem.Message);
+            Log.LogError("Spar.Contracts", problem.Code, null, file, problem.Line, 0, 0, 0, problem.Message);
         }
 
         if (layout.Problems.Count > 0)

@@ -2955,3 +2955,13 @@ Evidence: `docs/evidence/m1a-client-step.md`.
   - **In this repository the step needs the SDK built** (`npm run build` in `src/Spar.Client`), and fails with that instruction otherwise; CI builds it first. The SDK's compiled maps use `sourceRoot` so they point at `sdk/src/` inside the package.
 - **Found while building:** a type in the global namespace kept `global::` in its TypeScript name, which would have generated invalid TypeScript (fixed, with a test).
 - **Not built yet:** the `.d.ts.map` to the C# declarations, the manifest, the contract snapshot (SPAR100), the differential test against `tsc --declaration`, the package-mode paths (the task and the SDK from the `Spar.Sdk` package), and the SDK version as the package version.
+
+## 2026-11-15, Client step: reserved type names (implementation record, at the user's request)
+
+The user asked for the gap found in review to be closed ("Yes, fix it"). Evidence: `docs/evidence/m1a-client-step.md`, "Follow-up: reserved names".
+- **A type named with a reserved word is SPAR003,** reported at the type's own file and line: JavaScript reserved words and TypeScript's type keywords (`any`, `string`, `undefined`, …). C# allows them as names (`record any`, `record @string`), and the declarations would not have compiled. Roslyn writes such a name with `@`, which the TypeScript name drops before the check.
+- **A type named like an SDK import is SPAR040,** at its declaration. The import line of every declaration file is written from the same list, `TypeScriptNames.SdkImports`, so a new import (streams will add `Result` and `Subscription`) is forbidden as a type name without a second change.
+- **A contract named like a name its own module declares is SPAR003:** the module's imports (`invoke`, `wire`, `unknownErrorCase`), its readers and writers (`readItem`), its decoders (`pingDecoder`) and `noValue`/`noErrors`.
+- **Corrected:** the clash check compared each contract's types with every shared type, including ones that contract does not import, so it could report a clash that does not exist. It now checks each module's own names, and the shared module on its own.
+- **Not handled:** an explicit `[SparName]` on a type does not rename it in TypeScript yet, so the fix for these problems is renaming the C# type.
+- **Tests:** `tests/Spar.Sdk.Tasks.Tests` 37 (13 new); `dotnet test` 226, all passing.

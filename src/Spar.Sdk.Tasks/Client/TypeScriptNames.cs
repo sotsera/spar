@@ -5,8 +5,11 @@ namespace Spar.Sdk.Tasks.Client;
 /// <summary>Names and literals as they must appear in generated TypeScript and JavaScript.</summary>
 internal static class TypeScriptNames
 {
-    /// <summary>The SDK types every module imports, which no contract type may shadow.</summary>
-    public static readonly HashSet<string> SdkTypes = new(StringComparer.Ordinal) { "Call", "CallOptions" };
+    /// <summary>
+    /// The SDK types every declaration file imports, in that order. The import line is written from this list, so a
+    /// contract type can never shadow an import the list does not know about.
+    /// </summary>
+    public static readonly IReadOnlyList<string> SdkImports = ["Call", "CallOptions"];
 
     /// <summary>Reserved words and strict-mode restrictions of ECMAScript modules, and TypeScript's own type keywords.</summary>
     private static readonly HashSet<string> Reserved = new(StringComparer.Ordinal)
