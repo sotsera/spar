@@ -399,6 +399,8 @@ These entries come from other frameworks (`docs/research-review.md`) and have no
 
 ## Bridge and loopback
 
+- **`Task.Run` flows `Activity.Current`:** a command started from another call's completion (the next one in the queue) or from the host's receiving thread would have that activity as its span's parent. Clear `Activity.Current` before starting a command's span. (M1a instrumentation)
+
 - **Kestrel refuses a request body over 30,000,000 bytes (413) by default,** and the page's loopback transport sends whatever it has queued in one request: a burst of large calls would end the document's channel instead of failing one call. The page caps a request at 1 MiB of text, and the loopback host sets its body limit from the bridge's message limit. (M1a bridge limits)
 
 Entries tied to one host's API stay in that host's section. See also, in "Windows host (WebView2)": "`WebResourceRequested` cannot stream", "A page `fetch` abort is invisible to the host", "An unanswered request to the app origin leaves the machine's loopback" and "A hung page". In "Linux host (WebKitGTK)": "No origin information", "Custom-scheme responses stream, but with no back-pressure" and "A hung WebKitGTK page". Wire values are in "Wire format and serialization".

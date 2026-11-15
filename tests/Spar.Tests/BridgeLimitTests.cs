@@ -12,14 +12,12 @@ namespace Spar.Tests;
 /// </summary>
 public sealed class BridgeLimitTests
 {
-    private const string Hello = "{\"type\":\"hello\",\"protocol\":1,\"types\":[\"open\",\"result\",\"failure\",\"event\",\"closing\"],\"contracts\":\"0123456789abcdef\"}\t";
-
     private const string TraceParent = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
 
     [Fact]
     public async Task A_call_over_the_size_limit_is_refused_by_its_id_and_the_next_one_runs()
     {
-        await using var bridge = await Bridge.OpenAsync(new BridgeOptions { MaxMessageBytes = 1024 });
+        await using var bridge = await TestBridge.OpenAsync(new BridgeOptions { MaxMessageBytes = 1024 });
 
         bridge.Session.Receive(Call(1, "echo", "back", Quoted(2000)));
         bridge.Session.Receive(Call(2, "echo", "back", "\"small\""));
@@ -32,7 +30,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task An_oversized_message_with_no_call_header_gets_no_reply()
     {
-        await using var bridge = await Bridge.OpenAsync(new BridgeOptions { MaxMessageBytes = 1024 });
+        await using var bridge = await TestBridge.OpenAsync(new BridgeOptions { MaxMessageBytes = 1024 });
 
         bridge.Session.Receive(new string('x', 4000));
 
@@ -43,7 +41,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task Calls_past_the_slots_wait_and_start_in_order_and_past_the_queue_are_busy()
     {
-        await using var bridge = await Bridge.OpenAsync(new BridgeOptions { CallsInFlight = 2, QueuedCalls = 1 });
+        await using var bridge = await TestBridge.OpenAsync(new BridgeOptions { CallsInFlight = 2, QueuedCalls = 1 });
 
         bridge.Session.Receive(Call(1, "slow", "wait", ""));
         bridge.Session.Receive(Call(2, "slow", "wait", ""));
@@ -68,7 +66,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task A_waiting_call_that_is_cancelled_never_starts()
     {
-        await using var bridge = await Bridge.OpenAsync(new BridgeOptions { CallsInFlight = 1 });
+        await using var bridge = await TestBridge.OpenAsync(new BridgeOptions { CallsInFlight = 1 });
         bridge.Session.Receive(Call(1, "slow", "wait", ""));
         await WaitUntilAsync(() => bridge.Backend.Started.Count == 1);
 
@@ -85,7 +83,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task The_queue_is_also_bounded_by_the_bytes_it_holds()
     {
-        await using var bridge = await Bridge.OpenAsync(new BridgeOptions { CallsInFlight = 1, QueuedCalls = 10, QueuedBytes = 100 });
+        await using var bridge = await TestBridge.OpenAsync(new BridgeOptions { CallsInFlight = 1, QueuedCalls = 10, QueuedBytes = 100 });
         bridge.Session.Receive(Call(1, "slow", "wait", ""));
         await WaitUntilAsync(() => bridge.Backend.Started.Count == 1);
 
@@ -102,7 +100,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task A_result_over_the_limit_fails_only_its_own_call()
     {
-        await using var bridge = await Bridge.OpenAsync(new BridgeOptions { MaxResultBytes = 100 });
+        await using var bridge = await TestBridge.OpenAsync(new BridgeOptions { MaxResultBytes = 100 });
 
         bridge.Session.Receive(Call(1, "echo", "back", Quoted(200)));
         var failed = await bridge.Sent.NextAsync();
@@ -116,7 +114,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task An_exception_reaches_the_page_as_the_calls_trace_id_and_its_details_go_to_the_log()
     {
-        await using var bridge = await Bridge.OpenAsync();
+        await using var bridge = await TestBridge.OpenAsync();
 
         bridge.Session.Receive(Call(1, "boom", "throw", "", TraceParent));
         var failed = await bridge.Sent.NextAsync();
@@ -132,7 +130,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task Development_adds_the_detail_beside_the_correlation_id()
     {
-        await using var bridge = await Bridge.OpenAsync(includeDetails: true);
+        await using var bridge = await TestBridge.OpenAsync(includeDetails: true);
 
         bridge.Session.Receive(Call(1, "boom", "throw", "", TraceParent));
         var payload = JsonDocument.Parse((await bridge.Sent.NextAsync()).Payload).RootElement;
@@ -144,7 +142,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task A_call_without_a_trace_gets_a_new_id_that_the_log_names_too()
     {
-        await using var bridge = await Bridge.OpenAsync();
+        await using var bridge = await TestBridge.OpenAsync();
 
         bridge.Session.Receive(Call(1, "boom", "throw", ""));
         var correlation = JsonDocument.Parse((await bridge.Sent.NextAsync()).Payload).RootElement.GetProperty("correlation").GetString()!;
@@ -156,7 +154,7 @@ public sealed class BridgeLimitTests
     [Fact]
     public async Task A_refusal_carries_no_correlation_and_logs_no_error()
     {
-        await using var bridge = await Bridge.OpenAsync();
+        await using var bridge = await TestBridge.OpenAsync();
 
         bridge.Session.Receive(Call(1, "pages", "missing", ""));
 
@@ -179,11 +177,8 @@ public sealed class BridgeLimitTests
         Assert.Equal(name, refused.ParamName);
     }
 
-    private static string Call(long id, string contract, string command, string payload, string? traceParent = null)
-    {
-        var trace = traceParent is null ? "" : $",\"traceparent\":\"{traceParent}\"";
-        return $"{{\"type\":\"call\",\"id\":{id},\"contract\":\"{contract}\",\"command\":\"{command}\"{trace}}}\t{payload}";
-    }
+    private static string Call(long id, string contract, string command, string payload, string? traceParent = null) =>
+        TestBridge.Call(id, contract, command, payload, traceParent);
 
     /// <summary>A JSON string of <paramref name="bytes"/> bytes, quotes included.</summary>
     private static string Quoted(int bytes) => "\"" + new string('a', bytes - 2) + "\"";
@@ -203,43 +198,6 @@ public sealed class BridgeLimitTests
         {
             Assert.True(DateTime.UtcNow < deadline, "The condition never became true.");
             await Task.Delay(5, TestContext.Current.CancellationToken);
-        }
-    }
-
-    /// <summary>An opened session over a backend with the given limits, its sent messages and its log.</summary>
-    private sealed class Bridge : IAsyncDisposable
-    {
-        private Bridge(TestBackend backend, CapturedLog log, bool includeDetails)
-        {
-            Backend = backend;
-            Log = log;
-            Session = new BridgeSession(backend.Dispatcher, TestBackend.Fingerprint, "doc-1", Sent.Add, includeDetails);
-            Session.Dropped += reason => { lock (Dropped) { Dropped.Add(reason); } };
-        }
-
-        public TestBackend Backend { get; }
-
-        public CapturedLog Log { get; }
-
-        public BridgeSession Session { get; }
-
-        public SentMessages Sent { get; } = new();
-
-        public List<string> Dropped { get; } = [];
-
-        public static async Task<Bridge> OpenAsync(BridgeOptions? limits = null, bool includeDetails = false)
-        {
-            var log = new CapturedLog();
-            var bridge = new Bridge(TestBackend.Create(limits, log), log, includeDetails);
-            bridge.Session.Receive(Hello);
-            Assert.Equal(BridgeMessageType.Open, (await bridge.Sent.NextAsync()).Type);
-            return bridge;
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            Session.Dispose();
-            await Backend.DisposeAsync();
         }
     }
 }

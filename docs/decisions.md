@@ -3098,3 +3098,18 @@ Evidence: `docs/evidence/m1a-bridge-limits.md`; measurements in `spikes/bridge-l
 - **Found while building:** the client step's writes raced between an app's variants, which share `obj/spar/client`; it showed once, when an SDK rebuild made both variants rewrite every file (a `SafeFileHandle.CreateFile` failure in `ClientPackage.Sync`). The client step now writes under the same kind of lease as the npm install (`FileLease`). Not seen to wait in four later builds, so the overlap itself is unverified. Also open: two variants with different `DefineConstants` could write different clients into that one folder.
 - **Not run:** WebView2's and WebKitGTK's own message size limits (M1b, M1c); the production boundary with the bridge in it (the Production build has no host yet, so the session is trimmed away).
 - **Accepted (user, 2026-11-15):** "Accept them": the numbers (4 MiB messages, 16 MiB results, 16 in flight, a queue of 1,024 calls and 16 MiB) and the four choices of this entry (an oversized message answered by the id in its first 16 K characters, else dropped; no correlation on refusals, a warning for too-large and a debug entry for busy; the correlation in the failure's payload; 1 MiB loopback requests).
+
+## 2026-11-15, Bridge instrumentation built (implementation record; choices for review)
+
+The M1a item "the BCL instrumentation (section 6b)": one server `Activity` and one `spar.call.duration` sample per bridge command, BCL only. Evidence: `docs/evidence/m1a-bridge-instrumentation.md`.
+- **Built:** `src/Spar/Bridge/BridgeTelemetry.cs`, started and ended by `BridgeSession` around each command; `tests/Spar.Tests/BridgeTelemetryTests.cs` (5, in a collection that runs alone, since listeners are process-wide). `dotnet test` 314 of 314; the NativeAOT lane passes.
+- **Choices made while building, for review:**
+  - **The duration is in seconds** (the spike recorded milliseconds), as OpenTelemetry's conventions ask of durations.
+  - **The metric carries `spar.outcome`** (`success`, `error` for a declared error, or the failure's kind), a handful of values, so a dashboard can split failures out; the code goes on the span as `error.type`, not on the metric.
+  - **Queue time is not in the duration:** it starts when the command gets its slot. The span starts there too.
+  - **With an activity, the correlation id is its trace id,** so the page, the log entry and the trace always name one id; without one, the `traceparent`'s trace id or a new one, as decided.
+  - **The span never inherits an ambient activity:** `Activity.Current` is cleared before it starts, because the host's receiving thread (a Kestrel request on loopback) and a call that freed a slot (whose task starts the next queued call) would otherwise become its parent.
+  - **An oversized result is recorded as the failure the page gets** (`spar.outcome=response`), not as the success the command returned.
+  - **The instrumentation lives in the bridge,** so a command called through the test host's command surface has no span; it is the bridge's view of a call.
+- **Measured** (20,000 echo calls through one session, Debug, three rounds each): 2.7–3.7 µs and 3,935–3,949 B per call with no listener, 2.3–2.9 µs and 4,915–4,919 B with both listeners; time within noise, about 970 B more per call when listened to. A build without the instrumentation was not measured, so "no work without a listener" rests on the code (one `HasListeners` and one `Enabled` check), not on a comparison.
+- **Not measured:** the size it adds to a Production executable, which has no bridge yet (the spike measured +105 KB).

@@ -12,7 +12,8 @@ namespace Spar.Bridge;
 /// message per call, and nothing sent after <see cref="Close"/>. Its limits (<see cref="BridgeOptions"/>) apply before
 /// any work: a message's size before it is decoded, and a slot or a place in the queue before its payload is read.
 /// An exception reaches the page as the call's correlation id, its details only in the app's log and, in Development,
-/// in the payload. Transport-neutral: hosts pass in messages and a send function, which must be safe on any thread.
+/// in the payload. Each command runs in a server activity and records its duration (<see cref="BridgeTelemetry"/>).
+/// Transport-neutral: hosts pass in messages and a send function, which must be safe on any thread.
 /// </summary>
 internal sealed class BridgeSession : IDisposable
 {
@@ -247,6 +248,8 @@ internal sealed class BridgeSession : IDisposable
     private async Task DispatchAsync(BridgeMessage call, CancellationTokenSource token)
     {
         var id = call.Id!.Value;
+        var startedAt = Stopwatch.GetTimestamp();
+        using var activity = BridgeTelemetry.Start(call);
         SparOutcome outcome;
         try
         {
@@ -267,6 +270,8 @@ internal sealed class BridgeSession : IDisposable
             }
         }
 
+        outcome = Deliverable(call, outcome);
+        BridgeTelemetry.End(activity, call, outcome, startedAt);
         lock (_gate)
         {
             // A call that was failed, or a document that went away, gets no late reply.
@@ -276,7 +281,19 @@ internal sealed class BridgeSession : IDisposable
             }
         }
 
-        Send(OutcomeMessage(call, outcome));
+        Send(OutcomeMessage(call, outcome, activity));
+    }
+
+    /// <summary>The outcome as the page will get it: a result over the limit becomes the failure of its own call.</summary>
+    private SparOutcome Deliverable(BridgeMessage call, SparOutcome outcome)
+    {
+        if (outcome.Kind == SparOutcomeKind.Failure || outcome.Payload.Length <= _limits.MaxResultBytes)
+        {
+            return outcome;
+        }
+
+        ResultTooLarge(_logger, call.Contract!, call.Command!, call.Id!.Value, outcome.Payload.Length, _limits.MaxResultBytes, null);
+        return SparOutcome.FromFailure(SparFailure.ResultTooLarge(outcome.Payload.Length, _limits.MaxResultBytes));
     }
 
     private void Cancel(long id)
@@ -454,20 +471,14 @@ internal sealed class BridgeSession : IDisposable
         return _earlyCancels.Remove(id);
     }
 
-    private BridgeMessage OutcomeMessage(BridgeMessage call, SparOutcome outcome)
+    private BridgeMessage OutcomeMessage(BridgeMessage call, SparOutcome outcome, Activity? activity)
     {
         var id = call.Id!.Value;
-        if (outcome.Kind != SparOutcomeKind.Failure && outcome.Payload.Length > _limits.MaxResultBytes)
-        {
-            ResultTooLarge(_logger, call.Contract!, call.Command!, id, outcome.Payload.Length, _limits.MaxResultBytes, null);
-            return FailureMessage(id, SparFailure.ResultTooLarge(outcome.Payload.Length, _limits.MaxResultBytes), call);
-        }
-
         return outcome.Kind switch
         {
             SparOutcomeKind.Value => new BridgeMessage(BridgeMessageType.Result) { Id = id, Ok = true, Payload = outcome.Payload },
             SparOutcomeKind.Error => new BridgeMessage(BridgeMessageType.Result) { Id = id, Ok = false, Payload = outcome.Payload },
-            _ => FailureMessage(id, outcome.Failure!, call),
+            _ => FailureMessage(id, outcome.Failure!, call, activity),
         };
     }
 
@@ -475,12 +486,12 @@ internal sealed class BridgeSession : IDisposable
     /// A failure as the page sees it. One with an exception is logged under the call's correlation id, which the
     /// payload carries in every build; the detail goes with it only in Development.
     /// </summary>
-    private BridgeMessage FailureMessage(long id, SparFailure failure, BridgeMessage? call)
+    private BridgeMessage FailureMessage(long id, SparFailure failure, BridgeMessage? call, Activity? activity = null)
     {
         string? correlation = null;
         if (failure.Exception is { } exception)
         {
-            correlation = Correlation(call?.TraceParent);
+            correlation = activity?.TraceId.ToHexString() ?? Correlation(call?.TraceParent);
             CommandFailed(_logger, call?.Contract ?? "", call?.Command ?? "", id, correlation, exception);
         }
 
@@ -495,7 +506,11 @@ internal sealed class BridgeSession : IDisposable
         };
     }
 
-    /// <summary>The trace id of the call's <c>traceparent</c> (decision "Bridge limits … the behaviour"), else a new one.</summary>
+    /// <summary>
+    /// Without an activity (nothing listens): the trace id of the call's <c>traceparent</c> (decision "Bridge limits …
+    /// the behaviour"), else a new one. With one, the activity's trace id is used instead, so the page, the log and the
+    /// trace name one id.
+    /// </summary>
     private static string Correlation(string? traceParent)
     {
         if (traceParent is { Length: >= 55 } && ActivityContext.TryParse(traceParent, null, out var context))

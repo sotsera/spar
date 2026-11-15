@@ -40,6 +40,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 ## 6b. Observability: optional OpenTelemetry, backend and client (user decisions)
 
 - **Always on, BCL only (M1 core):** one `Activity` and one `spar.call.duration` sample per bridge command. No listener means no work; about +105 KB.
+  - **Built in M1a** (decision "Bridge instrumentation built"): the activity source and the meter are both named `Spar`. The activity is `{contract}/{command}`, kind Server, a child of the page's `traceparent` (else a new trace, never the receiving thread's activity), tagged `rpc.system=spar`, `rpc.service`, `rpc.method`, `spar.call.id`, the request and response sizes and `spar.outcome`; a failure sets status Error and `error.type` to its code, and an exception adds an `exception` event. `spar.call.duration` is a histogram in seconds, from the command's start to its outcome (queue time excluded), tagged `rpc.system`, `rpc.service`, `rpc.method` and `spar.outcome` (`success`, `error` for a declared error, or the failure's kind). With an activity, the failure's correlation id is its trace id.
 - **Optional layer (an opt-in package, never required):** the OpenTelemetry SDK plus the OTLP exporter, for traces, metrics and logs.
   - It starts only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set; no endpoint is configured by default.
   - +4.3 MB on an app that already uses HTTPS; AOT-clean, with export verified from the AOT exe.
