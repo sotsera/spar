@@ -32,7 +32,7 @@ The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rule
 - **`match({ success, errors, failure })`:** `errors` has one handler per declared case and is absent when there are none. `success` and `failure` get their own type parameters, `NoInfer` guards the error keys, and handlers are anchored on the generated `ErrorHandlers<E>` (pitfalls, generic `match`). A `failure` function handles every failure; an object handles the `CallError` kinds it lists. The rest go to `onFailure`, `match` returns `undefined` for them, and its type says so.
 - **`unwrap`** throws `SparError` and never reaches the interceptor.
 - **`configureSpar({ onFailure, observe, resume })`:** `onFailure` gets unhandled failures, `observe` sees every failure. Neither can retry, change a result, or turn a failure into a success.
-- **`CallError`** has `kind`, `code` and `execution`, with the kinds and codes of the decision "`CallError` kinds". `execution` is `notStarted` only when the host is certain. Declared errors are never a `CallError`; an error code the SDK does not know is `protocol` / `unknown-error-case`.
+- **`CallError`** has `kind`, `code` and `execution`, with the kinds and codes of the decision "`CallError` kinds", plus `contract` and `command`, which the SDK fills from its own record of the call id (decision "Bridge messages: encoding C header fields"). `execution` is `notStarted` only when the host is certain. Declared errors are never a `CallError`; an error code the SDK does not know is `protocol` / `unknown-error-case`.
 - **Cancellation:** pass `AbortSignal` through. A deadline is `AbortSignal.timeout(ms)`; there is no default deadline or idle timeout. Aborting ends the caller's wait. Report `cancelled` only when the backend confirms it, otherwise outcome unknown. Never retry or replay a call.
 
 ## Streams and subscriptions
@@ -44,7 +44,7 @@ The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rule
 
 ## Bridge and wire values
 
-- **Messages use encoding C:** a JSON header, a TAB, then the payload's own JSON, always as strings. Negotiate the version in `hello`/`open`, fail a pending call that receives an unknown message type, accept only safe-integer ids, reject duplicate header keys, and read trace values tolerantly. `traceparent` is reserved on every call, and streams use credits on every host. The letter-line tables in plan 2c are spike evidence, not the format.
+- **Messages use encoding C:** a JSON header, a TAB, then the payload's own JSON, always as strings, with the types and fields of plan section 2c ("The messages"). Negotiate the version in `hello`/`open`, fail a pending call that receives an unknown message type, accept only safe-integer ids, reject duplicate header keys, and read trace values tolerantly. `traceparent` is reserved on every call, and streams use credits on every host. The letter-line tables in plan 2c are spike evidence, not the format.
 - **Narrow untrusted data** before using it. Keep wire names exactly, and keep optional, nullable and required properties distinct.
 - **Build objects from wire data field by field,** never with `Object.assign` or spread: a parsed `__proto__` key then sets the copy's prototype.
 - **Follow the wire-rules table:** `long`/`ulong` as `bigint`, written only by the generated encoder (`JSON.stringify` throws on it); `byte[]` as `Uint8Array`; `Number.isFinite` before sending a number; lone surrogates replaced with U+FFFD before sending.

@@ -4,21 +4,30 @@ export type Execution = "notStarted" | "stopped" | "completed" | "unknown";
 /** What went wrong, for choosing what to tell the user (decision "`CallError` kinds", 2026-11-14). `code` gives the precise cause. */
 export type CallErrorKind = "cancelled" | "unavailable" | "rejected" | "failed" | "transport" | "response" | "protocol";
 
+/** The call an outcome belongs to. The SDK fills it from its own record of the call id; nothing extra travels. */
+export interface CallName {
+  readonly contract: string;
+  readonly command: string;
+}
+
 /**
  * An infrastructure failure, the same for every command. Declared errors are never a CallError.
- * Only the three decided fields: the decision defines no message and no call name.
+ * The decided fields (decisions "`CallError` kinds" and "Bridge messages: encoding C header fields"): kind, code,
+ * execution, and the call it belongs to. There is no message.
  */
-export interface CallError {
+export interface CallError extends CallName {
   readonly kind: CallErrorKind;
   readonly code: string;
   readonly execution: Execution;
 }
 
-/** Declared errors of a command: case name to payload. `{}` when the command declares none. */
+/** Declared errors of a command: case name to payload, `undefined` for a case without one. `{}` when the command declares none. */
 export type ErrorCases = object;
 
 /** The declared errors as a discriminated union on `code`, for code that needs one value (logging, `unwrap`). */
-export type ApplicationError<E extends ErrorCases> = { readonly [K in keyof E]: { readonly code: K } & E[K] }[keyof E];
+export type ApplicationError<E extends ErrorCases> = {
+  readonly [K in keyof E]: E[K] extends undefined ? { readonly code: K } : { readonly code: K } & E[K];
+}[keyof E];
 
 export interface CallOptions {
   readonly signal?: AbortSignal;
@@ -55,7 +64,10 @@ export type EventResults<G, V extends EventCases> =
   [keyof V] extends [never] ? never : Returns<Exclude<G[keyof G], undefined>> | ([keyof V] extends [keyof G] ? never : undefined);
 
 /** One handler per declared error case. */
-export type ErrorHandlers<E extends ErrorCases> = { readonly [K in keyof E]: (error: E[K]) => unknown };
+/** A case without a payload (entry `undefined`, decision "M1a names") takes a handler with no parameter. */
+export type ErrorHandlers<E extends ErrorCases> = {
+  readonly [K in keyof E]: E[K] extends undefined ? () => unknown : (error: E[K]) => unknown;
+};
 
 /** Keys that are not declared cases (typos). Kept out of inference so the declared cases drive completions and messages. */
 type NoExtraCases<H, E extends ErrorCases> = NoInfer<[Exclude<keyof H, keyof E>] extends [never] ? unknown : { readonly [K in Exclude<keyof H, keyof E>]: never }>;
@@ -91,10 +103,10 @@ export type ErrorResults<H> = Returns<H[keyof H]>;
 export type Outcome =
   | { readonly ok: true; readonly value: unknown }
   | { readonly ok: true; readonly event: string; readonly payload: unknown }
-  | { readonly ok: false; readonly code: string; readonly payload: unknown }
+  | { readonly ok: false; readonly code: string; readonly payload: unknown; readonly call: CallName }
   | { readonly ok: false; readonly code?: undefined; readonly error: CallError };
 
-let onFailure: (error: CallError) => void = error => console.error(error.kind, error.code, error.execution);
+let onFailure: (error: CallError) => void = error => console.error(`${error.contract}.${error.command}`, error.kind, error.code, error.execution);
 let observe: ((error: CallError) => void) | undefined;
 
 /**
@@ -138,7 +150,7 @@ export function settle(outcome: Outcome, handlers: AnyHandlers): unknown {
   else {
     const handler = handlers.errors?.[outcome.code];
     if (handler) return handler(outcome.payload);
-    error = { kind: "protocol", code: "unknown-error-case", execution: "unknown" };
+    error = { kind: "protocol", code: "unknown-error-case", execution: "unknown", contract: outcome.call.contract, command: outcome.call.command };
   }
 
   observe?.(error);

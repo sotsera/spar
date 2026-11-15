@@ -28,7 +28,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   5. One `CoreCompile`, where the generator and analyzer run.
 
   Design-time builds run none of steps 2–4.
-  - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name to confirm in M1). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is. The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).
+  - **The client refreshes on build** in the IDE (Visual Studio and VS Code build on F5), and **on save while the development loop runs:** under `dotnet watch` or `spar dev` a saved contract change restarts the app, which regenerates the client (5.4–6.1 s measured with Vite reused), so frontend editors see it without a manual build. There is no IDE-specific refresh path (decision "M1a names").
+  - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name confirmed, decision "M1a names"). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is. The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).
 - **Frontend packing:** one `Spar.Frontend` resource holding an index plus per-file Brotli (quality 11, fitted window).
   - Files that Brotli shrinks by less than 5% are stored as is.
   - The host decodes on a background thread at start into a cache, and serves uncompressed entries straight from the image.

@@ -2,7 +2,7 @@
 
 Checks that every C# and TypeScript block of `docs/app-model.md` compiles, verbatim, against stand-ins for the Spar API. First run on 2026-11-14. The figures in the sections above "History" are from the rerun of 2026-11-15, after a review of the document; "History" keeps the earlier runs that explain a decision.
 
-**Outcome (2026-11-15): all 26 document blocks are verbatim copies and compile.** The contract-rule check finds no broken rule, all 20 deliberate TypeScript mistakes and both deliberate C# mistakes fail with the expected codes, and all 17 run-time routing checks pass.
+**Outcome (2026-11-15): all 26 document blocks are verbatim copies and compile.** The contract-rule check finds no broken rule, all 21 deliberate TypeScript mistakes and both deliberate C# mistakes fail with the expected codes, and all 17 run-time routing checks pass.
 
 ## Tools
 
@@ -48,9 +48,9 @@ npm run check                                          exit 0; it runs, in order
   contracts  (check-contracts)                         7 contracts, 14 commands, 18 error cases: no rule broken
   check:ts7  (tsc 7.0.2 -p tsconfig.json)              0 errors
   check:ts6  (tsc 6.0.3 -p tsconfig.json)              0 errors
-  bad:ts7                                              all 20 mistakes rejected as expected
-  bad:ts6                                              all 20 mistakes rejected as expected
-  routing                                              17 ok, 0 FAIL
+  bad:ts7                                              all 21 mistakes rejected as expected
+  bad:ts6                                              all 21 mistakes rejected as expected
+  routing                                              18 ok, 0 FAIL
 dotnet build AppModelCheck.slnx --no-incremental       Build succeeded. 0 Warning(s) 0 Error(s)
 dotnet run --project SqlTool --no-build                prints the recorded configuration, exit 0
 dotnet build SqlTool -p:SparCheckMissingCase=true      Build FAILED: 2 Error(s), both CS8509 (expected)
@@ -203,7 +203,7 @@ export interface SubscribeOptions<R extends SubscriptionResume> extends CallOpti
 
 ### Expected TypeScript failures (`bad/bad.ts`)
 
-20 mistakes, each on one line. Both versions report one diagnostic per mistake, with the same code at the same position; the message text differs between the versions in places. Messages below are from tsc 7.0.2, shortened where marked with "…".
+21 mistakes, each on one line. Both versions report one diagnostic per mistake (two for mistake 21), with the same code at the same position; the message text differs between the versions in places. Messages below are from tsc 7.0.2, shortened where marked with "…".
 
 | # | Mistake | Code | Message (tsc 7.0.2) |
 |---|---|---|---|
@@ -226,15 +226,16 @@ export interface SubscribeOptions<R extends SubscriptionResume> extends CallOpti
 | 17 | a window kind that is not declared, `setings` | TS2345 | Argument of type '"setings"' is not assignable to parameter of type 'WindowKind'. |
 | 18 | a subscription that declares errors, read without `errors` (new) | TS2345 | Argument of type '{ success: () => number; events: { reset: () => number; }; }' is not assignable to parameter of type 'Handlers<LogLine, LogError, …>'. |
 | 19 | `e.message` on a `CallError` (new) | TS2339 | Property 'message' does not exist on type 'CallError'. |
-| 20 | `e.call` on a `CallError` (new) | TS2339 | Property 'call' does not exist on type 'CallError'. |
+| 20 | `e.call` on a `CallError`: the call is `contract` and `command` (decision "Bridge messages: encoding C header fields") | TS2339 | Property 'call' does not exist on type 'CallError'. |
+| 21 | `dismissed: e => e` on a case without a payload, whose entry is `undefined` (decision "M1a names") | TS2322, TS7006 | Type '(e: any) => any' is not assignable to type '() => unknown'. Parameter 'e' implicitly has an 'any' type. |
 
 For mistake 2, tsc reports only TS2561, not also TS2741 for the missing `tableMissing`. One diagnostic is enough to fail the build, and its message suggests the right name.
 
 ### Run-time routing (`tools/failure-routing.mts`)
 
-17 of 17 checks pass under Node 24.21.0 with type stripping. The 3 added on 2026-11-15:
+18 of 18 checks pass under Node 24.21.0 with type stripping (rerun 2026-11-15 after `CallError` gained `contract` and `command`, decision "Bridge messages: encoding C header fields"; the newest check is that `observe` and `onFailure` both see `copyJobs.plan`). The 3 added earlier on 2026-11-15:
 
-- an error case the SDK does not know becomes `{"kind":"protocol","code":"unknown-error-case","execution":"unknown"}`;
+- an error case the SDK does not know becomes `{"kind":"protocol","code":"unknown-error-case","execution":"unknown"}`, now with the call's `contract` and `command`;
 - that failure reaches `observe` and the call's `failure` function, not the interceptor;
 - a declared error case still goes to its own handler.
 
@@ -254,7 +255,7 @@ For mistake 2, tsc reports only TS2561, not also TS2741 for the missing `tableMi
 
 - NativeAOT publication of `SqlTool`. The build ran the AOT and trim analyzers (`IsAotCompatible`) with no warnings, but there was no `PublishAot` run.
 - The contract diagnostics themselves. No analyzer runs here: `check-contracts` is a text check of four rules, and a signature laid out differently from the document's could escape it.
-- Runtime behaviour of the TypeScript beyond the 17 routing checks: everything else is type-checked with `noEmit`, and no transport or page was run.
+- Runtime behaviour of the TypeScript beyond the 18 routing checks: everything else is type-checked with `noEmit`, and no transport or page was run.
 - IDE behaviour (completions, quick fixes, go-to-definition) for these files.
 - Lint rules such as `no-floating-promises`. Mistake 6 (`jobLog.follow(...)`, unused) and similar lines are not flagged by tsc itself.
 - On 2026-11-15: `--listFiles` for the React typings, the `TreatWarningsAsErrors=false` variant of the missing-case build, and the NU1510 probe were not repeated.

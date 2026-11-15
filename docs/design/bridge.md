@@ -21,7 +21,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - **Docs:** they recommend a list for any window that shows content the app does not fully control.
 - **Deadlines (decided, user, 2026-11-14):** calls and streams have no default deadline or idle timeout, because some calls wait on a person (pickers) or run long (copies).
   - On the page, a deadline is the web's `AbortSignal.timeout(ms)` passed as the call's `signal`.
-  - In C#, an optional backend limit (for example `[SparCommand(Timeout = "00:00:30")]`, name to settle in M1) is folded into the command's cancellation token.
+  - In C#, an optional backend limit (`[SparCommand(TimeoutSeconds = 30)]`, a positive integer; decision "M1a names") is folded into the command's cancellation token.
   - Both end like any cancellation: `cancelled` only when the backend confirms, otherwise outcome unknown. Never retried.
 - **Cancellation:** the page is told "cancelled" only when the backend confirms the command ended on its token (for a stream, after its iterator was disposed). Otherwise it gets the real result, or outcome unknown (`unconfirmed` after the confirmation timeout, `lost` when the connection drops). Never retried. The page sees these as `CallError` with `execution` (decision "Contract syntax"), which replaced the spike's `CancelledError`, `NotExecutedError` and `OutcomeUnknownError`; a confirmed cancel is `kind: "cancelled"`, with `execution` `notStarted` or `stopped` (decision "`CallError` kinds").
   Details from `spikes/react` ("Cancellation"):
@@ -48,7 +48,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     | Message | Meaning |
     |---|---|
     | `o doc` | channel open, for document `doc` |
-    | `r id json` | unary result (the `ok` envelope) |
+    | `r id json` | unary result (the spike's `ok` envelope) |
     | `i id dropped json-array` | a batch of stream items; `dropped` counts items a subscription dropped before it |
     | `e id` | completed |
     | `c id` | cancelled and stopped (the confirmation) |
@@ -82,7 +82,45 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     | `POST /_spar/ready` | `ui-ready` |
 
     Status codes: 200 result; 401 `unauthorized`; 403 `forbidden-origin` or `forbidden-host`; 409 `contract-mismatch` with the host's fingerprint; 400 `invalid-request` with the serializer's message, and 400 `cancelled-before-start`; 404 `unknown-command`; 499 cancelled; 500 outcome unknown. A closed connection cancels that document's calls. Assets are served without the token (they ship in the executable anyway).
-- **Decided (user, 2026-11-14): encoding C.** Every bridge message is a JSON header, a TAB, then the payload's own JSON, following the measurements below. The letter-line tables above describe the spikes' messages, not the target encoding; M1 writes the header fields and the shared conformance vectors from them, together with the rules listed under "Whatever the choice".
+- **Decided (user, 2026-11-14): encoding C.** Every bridge message is a JSON header, a TAB, then the payload's own JSON, following the measurements below. The letter-line tables above describe the spikes' messages, not the target encoding.
+- **The messages (decided, user, 2026-11-15; decision "Bridge messages: encoding C header fields").** Protocol version 1. The header is one JSON object whose `type` names the message; the payload after the TAB is the JSON the table gives, or empty. Unary calls, cancellation, readiness, close work and host events are built in M1a; `stream`, `credits`, `items` and `end` get their vectors in M1a and their implementation in M3.
+
+  **Page to host:**
+
+  | `type` | Header fields | Payload |
+  |---|---|---|
+  | `hello` | `protocol` (the highest version the page speaks), `types` (the host-to-page types it understands), `contracts` (its contract fingerprint, 16 hex characters of the manifest's SHA-256) | empty |
+  | `call` | `id`, `contract`, `command`, optional `traceparent` and `tracestate` | the request's JSON, or empty for a command without one |
+  | `stream` | the same as `call`, plus `credits` (batches the page will accept) | as `call` |
+  | `credits` | `id`, `credits` (more batches) | empty |
+  | `cancel` | `id` | empty |
+  | `ready` | none: the page's `ui-ready` | empty |
+  | `closing-done` | none: the page's close work finished | empty |
+
+  **Host to page:**
+
+  | `type` | Header fields | Payload |
+  |---|---|---|
+  | `open` | `protocol` (the version both use), `doc` (the document id the host assigned), `contracts` (the host's fingerprint) | empty |
+  | `result` | `id`, `ok` | `ok: true`: the value's JSON, or empty for a command without a value; `ok: false`: the declared error, `{"code":"<case>", …payload fields}` |
+  | `items` | `id`, optional `dropped` (items a subscription dropped before this batch) | a JSON array of item values |
+  | `end` | `id`, `ok` | `ok: true`: empty; `ok: false`: the declared error that ended the stream (in-band) |
+  | `failure` | `id`, `kind`, `code`, `execution`, and for a stream `itemsSent` | empty; in Development only, `{"detail":"…"}` |
+  | `event` | `name` (a host event, for example `backend-updated`) | the event's JSON, or empty |
+  | `closing` | none: run the close work and answer `closing-done` | empty |
+
+  **Rules:**
+  - **One terminal per call:** exactly one of `result`, `end` or `failure` ends a call; anything for that id afterwards is dropped.
+  - **Failures are `CallError` one for one:** `kind`, `code` and `execution` are the decided values (decision "`CallError` kinds"). A confirmed cancel is `kind: "cancelled"` with `execution` `stopped`, or `notStarted` with code `cancelled-before-start`. The page adds `contract` and `command` from its own record of the call id, so a `CallError` names its call without anything more on the wire.
+  - **The fingerprint is checked once per document:** the host answers `hello` with its own in `open`. When they differ, every call of that document fails with `rejected` / `contract-mismatch` / `notStarted`, and the page can show a "reload" message at once.
+  - **Document ids are the host's:** `open` assigns `doc`, and a navigation starts a new one; the page never names a document. On loopback the page sends the `doc` it was given with each request.
+  - **Ids:** `id` is a safe integer from 1 (`Number.isSafeInteger`; a .NET range check), increasing within a document. A missing, non-integer, negative, unsafe or repeated id is `rejected` / `invalid-request`, or `protocol` / `malformed` when no id can be read.
+  - **Headers:** duplicate keys are malformed; unknown fields are ignored; key order is free. An unknown `type` without a known id is ignored; an unknown `type` for a pending call fails that call with `protocol` / `malformed` / `unknown`, so no call can hang.
+  - **Versions:** `hello` carries the page's highest `protocol`; `open` the one both use. The host sends only the types the page listed.
+  - **Trace context:** `traceparent` and `tracestate` use the W3C names, the same as the loopback HTTP headers. A malformed value (a lone-surrogate escape included), a `traceparent` over 128 characters or a `tracestate` over 8 KB is dropped, never a reason to refuse the call.
+  - **Framing:** one message per `postMessage` string on Windows, per script message on Linux, and per line on the loopback channel; the TAB is always present. Compact JSON never contains a raw newline or TAB. Strings only, never `PostWebMessageAsJson`.
+  - **Limits:** the bridge limits of M1a (a maximum message size, calls in flight per document, a bounded send queue) apply before a payload is parsed.
+  - **Conformance vectors:** one shared file, read by the C# and the TypeScript tests: every message type in both directions, and the malformed cases above (a missing TAB, a duplicate key, the bad ids, an unknown type with and without a pending call, an unknown field, the dropped trace values). Written in M1a with the first codec.
 - **Decided before the shared conformance vectors (section 2b); the comparisons are kept as evidence:**
   - **The encoding (decided, C; the comparison is kept as evidence):** the letter-prefixed lines above, or the JSON envelopes `spikes/wire-details` used (`{"id":7,"ok":…}`, stream items `{"type":"item","value":…}`, the end message `{"type":"end","ok":false,…}`, and an `"arg"` key only when the command takes one). Section 2's envelope examples carry no `id`.
     - **Measured by `spikes/bridge-encoding`** (WebView2, loopback Chromium, WebKitGTK codec only), comparing (A) letter lines, (B) JSON envelopes and (C) a JSON header, a TAB, then the payload's own JSON:

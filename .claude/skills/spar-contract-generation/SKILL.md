@@ -40,7 +40,7 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 
 - **Failures are the `CallError` kinds** of the decision "`CallError` kinds". Only dispatch's own refusals before the command runs are `rejected` / `notStarted` (`invalid-request`, `unknown-command`, `contract-mismatch`, `forbidden-command`); their exception types must not derive from ones a handler can throw (`InvalidOperationException`, `JsonException`).
 - **A handler's exception is `failed` / `unknown`,** and so is an `OperationCanceledException` from another token. `cancelled` needs the command to end on its own call token. Nothing is retried.
-- **No default deadline.** An optional C# limit (`[SparCommand(Timeout = …)]`, name settled in M1) is folded into the call token.
+- **No default deadline.** An optional C# limit, `[SparCommand(TimeoutSeconds = 30)]` (a positive integer), is folded into the call token.
 - **Identical behaviour on every transport:** WebView2, WebKitGTK, loopback, and the test host's command and browser surfaces (plan section 5, `docs/design/testing.md`), whose typed C# test clients are generated per contract.
 
 ## Fingerprint and snapshot

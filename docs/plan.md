@@ -61,7 +61,6 @@ Details and evidence in `docs/decisions.md`.
 | The two-stage close: a close request with page and backend guards before teardown, and an automated mode that skips prompts for tests and agents. The dialog and window decisions already rely on it. | Adopted from the research review (user, 2026-11-15). Designed with the user at the start of M1b, with a compiled example in `docs/app-model.md` first. |
 | The Windows single-instance mechanism. Linux is decided (a lock file plus a Unix socket). | M1b. |
 | What "Wait" does after the hung-page dialog. | M1b (section 3, "Hung pages"). |
-| The TypeScript interface-map entry for an error case without a payload. | M1a. |
 | Where Spar's packages are published, with what version scheme and release steps. The SQL Server tool lives in its own repository and uses Spar through packages only; M1a's package-only consumer test uses an isolated local feed. | Needed by M3. Not discussed yet. |
 | The minimum Windows version. The README names Windows 11, screen-capture protection mentions Windows 10 2004, and no spike ran on Windows 10. | Provisional in M1b with the startup check; M4 confirms. |
 | Upgrades and data migration: how an installed app moves to a new version: the version of its settings and data folders and their migration, the web engine profile after an app update, what a downgrade does, and how a failed migration is reported. | Not discussed yet. Needed before the distribution decision in M4; the settings-files decision at the start of M3 is the first to depend on it. |
@@ -233,12 +232,6 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 **Decide first:**
 - the CI provider and its runners;
-- the header fields of bridge encoding C, written together with the shared conformance vectors;
-- the names left open: `SparTypeCheck`, `SparBundleBudget`, the command `Timeout` option;
-- the TypeScript interface-map entry for an error case without a payload;
-- whether `CallError` names its contract and command. With only `kind`, `code` and `execution`, the `onFailure` and `observe` hooks cannot say which call failed (`docs/app-model.md` section 7);
-- where `dotnet test` leaves `TestResults/` (section 5);
-- whether a TypeScript client that refreshes only on build is acceptable while editing, or the editor view needs a refresh on save (decision "D1 follow-up: IDE design-time behaviour").
 
 **Build:**
 1. **SDK and tasks:**

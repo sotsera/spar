@@ -172,7 +172,7 @@ public closed record RunError
   - **Reading in C#:** one exhaustive `switch` over the result, covering the success type and every error case, for example in a test: `await service.PlanAsync(recipe, ct) switch { CopyPlan p => …, PlanError.TableMissing e => … }`. Leaving out a case is CS8509 and SPAR055.
   - **Other members:** `IsSuccess`, `IsError`, `TryGetValue`, `TryGetError`. `Value` and `Error` throw if the result holds the other state, with that state in the message.
   - **`default(Result<…>)`** is neither a value nor an error, and every member throws on it. Spar's analyzers report the ways a default result can arise (rules SPAR050–SPAR054, plan section 2; decision "Analyzer rules SPAR050–SPAR054 adopted"), for example `default`, `new()`, an array created without values, `FirstOrDefault`, or a field some constructor leaves unassigned. A member that may legitimately be empty is declared `Result<…>?`.
-  - **Commands with errors but no value** return `Result<TError>`, writing `return Result.Success;`. On the wire this is `{"ok":true}`.
+  - **Commands with errors but no value** return `Result<TError>`, writing `return Result.Success;`. On the wire this is a `result` with `"ok":true` and no payload (section 4).
 
 ### 3.2 A class contract
 
@@ -789,14 +789,17 @@ public sealed class CrashReport(IAppHealth health)
 
 ## 4. On the wire
 
-**Decided** (decision "Contract syntax in the generator"; plan section 2).
+**Decided** (decisions "Contract syntax in the generator" and "Bridge messages: encoding C header fields"; plan sections 2 and 2c). Each message is a JSON header, a TAB (shown as `⇥`), then the payload's JSON. The call `copyJobs.plan`, id 7:
 
-| Outcome | JSON |
+| Outcome | Message |
 |---|---|
-| Success | `{"ok":true,"value":{"planId":"0193…","steps":[{"table":"dbo.Orders","estimatedRows":"120000"}]}}` |
-| Declared error | `{"ok":false,"error":{"code":"tableMissing","connection":"src","table":"dbo.Orders"}}` |
-| Infrastructure failure | `{"ok":false,"failure":{"kind":"response","code":"serialization","execution":"completed"}}` |
-| Plain `Task` | `{"ok":true}` (no `value` key) |
+| The call | `{"type":"call","id":7,"contract":"copyJobs","command":"plan"}⇥{"source":"src","target":"dst","tables":["dbo.Orders"]}` |
+| Success | `{"type":"result","id":7,"ok":true}⇥{"planId":"0193…","steps":[{"table":"dbo.Orders","estimatedRows":"120000"}]}` |
+| Declared error | `{"type":"result","id":7,"ok":false}⇥{"code":"tableMissing","connection":"src","table":"dbo.Orders"}` |
+| Infrastructure failure | `{"type":"failure","id":7,"kind":"response","code":"serialization","execution":"completed"}⇥` |
+| Plain `Task` | `{"type":"result","id":7,"ok":true}⇥` (empty payload) |
+
+The page turns a `failure` into a `CallError` with the header's `kind`, `code` and `execution`, plus `contract` and `command` from its own record of call 7.
 
 `long` travels as a decimal string because JSON numbers lose precision above 2^53.
 
@@ -1254,8 +1257,6 @@ export function AppTitleBar({ onSearch }: { readonly onSearch: (text: string) =>
 ## 7. Still open in this model
 
 - **Contracts and wire:**
-  - the TypeScript interface-map entry for an error case without a payload (`{"code":"forbidden"}` on the wire). The examples declare such cases in C#, for example `ImportError.Dismissed`; the SDK stand-in in the check writes their entry as `{}`;
-  - whether a `CallError` also names the call it belongs to. The decided fields are `kind`, `code` and `execution` (decision "`CallError` kinds"), so the `onFailure` and `observe` hooks in 6.1 cannot say which command failed.
 - **Configuration:**
   - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example;
   - the generated start-up check for a missing registration of an interface contract (section 2, Leaning).

@@ -65,9 +65,12 @@ export async function mistakes(): Promise<void> {
   // 18. a subscription that declares errors, read without the errors object [TS2345]
   for await (const item of jobLog.tail("job-1")) item.match({ success: () => 1, events: { reset: () => 0 } });
 
-  // 19. a field a CallError does not have: only kind, code and execution are decided [TS2339]
+  // 19. a field a CallError does not have: there is no message [TS2339]
   await copyJobs.cancelAll().match({ success: () => "done", failure: e => e.message });
 
-  // 20. the other undecided field: a CallError does not name its call [TS2339]
+  // 20. a CallError names its call with contract and command, not call [TS2339]
   await copyJobs.cancelAll().match({ success: () => "done", failure: e => e.call });
+
+  // 21. a payload read from an error case that has none: its handler takes no parameter, so e is also untyped [TS2322, TS7006]
+  await files.open().match({ success: () => 1, errors: { dismissed: e => e, accessDenied: () => 2, unavailable: () => 3, busy: () => 4 } });
 }

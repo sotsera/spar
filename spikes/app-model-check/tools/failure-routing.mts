@@ -4,7 +4,9 @@ import { configureSpar, settle, unwrapOutcome, type CallError, type Outcome } fr
 
 const seen: string[] = [];
 configureSpar({ onFailure: e => seen.push(`onFailure:${e.kind}`), observe: e => seen.push(`observe:${e.kind}`) });
-const fail = (kind: CallError["kind"]): Outcome => ({ ok: false, error: { kind, code: kind, execution: "unknown" } });
+const named: string[] = [];
+const call = { contract: "copyJobs", command: "plan" } as const;
+const fail = (kind: CallError["kind"]): Outcome => ({ ok: false, error: { kind, code: kind, execution: "unknown", ...call } });
 const check = (label: string, actual: unknown, expected: unknown) => {
   const ok = JSON.stringify(actual) === JSON.stringify(expected);
   console.log(`${ok ? "ok  " : "FAIL"} ${label}: ${JSON.stringify(actual)}`);
@@ -43,10 +45,15 @@ check("unhandled optional event gives undefined", settle(event("resumed", {}), {
 check("events never reach the failure hooks", seen, []);
 
 seen.length = 0;
-const undeclared: Outcome = { ok: false, code: "tableRenamed", payload: {} };
+const undeclared: Outcome = { ok: false, code: "tableRenamed", payload: {}, call };
 check(
   "undeclared error case is protocol / unknown-error-case, execution unknown",
   settle(undeclared, { success: () => 0, errors: { tableMissing: () => "known" }, failure: (e: unknown) => e }),
-  { kind: "protocol", code: "unknown-error-case", execution: "unknown" });
+  { kind: "protocol", code: "unknown-error-case", execution: "unknown", contract: "copyJobs", command: "plan" });
 check("undeclared error case: observe only, with a failure function", seen, ["observe:protocol"]);
-check("declared error case goes to its handler", settle({ ok: false, code: "tableMissing", payload: {} }, { success: () => 0, errors: { tableMissing: () => "known" } }), "known");
+check("declared error case goes to its handler", settle({ ok: false, code: "tableMissing", payload: {}, call }, { success: () => 0, errors: { tableMissing: () => "known" } }), "known");
+
+seen.length = 0;
+configureSpar({ onFailure: e => named.push(`${e.contract}.${e.command}`), observe: e => named.push(`observe ${e.contract}.${e.command}`) });
+settle(fail("failed"), { success: () => 0 });
+check("the hooks can say which call failed", named, ["observe copyJobs.plan", "copyJobs.plan"]);

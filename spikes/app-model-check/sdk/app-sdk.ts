@@ -34,12 +34,12 @@ export function setColorScheme(scheme: ColorScheme): void {
 /** The cases of a file dialog that gave no file. */
 export interface FileDialogError {
   /** The user closed the dialog. */
-  readonly dismissed: {};
+  readonly dismissed: undefined;
   readonly accessDenied: { readonly path: string };
   /** No dialog can be shown: no file portal, or no display. */
   readonly unavailable: { readonly reason: string };
   /** A dialog is already open for this window. */
-  readonly busy: {};
+  readonly busy: undefined;
 }
 
 /** Why a granted file could not be read or written. */
@@ -128,8 +128,8 @@ export const files: {
 
 /** Why printing gave no output. */
 export interface PrintError {
-  readonly dismissed: {};
-  readonly noPrinter: {};
+  readonly dismissed: undefined;
+  readonly noPrinter: undefined;
   readonly unavailable: { readonly reason: string };
   readonly failed: { readonly reason: string };
 }
@@ -211,9 +211,9 @@ export const actions: {
 
 export const menus: {
   /** Shows a native context menu at the pointer of `event`. */
-  show(event: MouseEvent, items: readonly MenuItem[], options?: CallOptions): Call<void, { readonly dismissed: {} }>;
+  show(event: MouseEvent, items: readonly MenuItem[], options?: CallOptions): Call<void, { readonly dismissed: undefined }>;
 } = {
-  show: (_event, items, options) => invoke<void, { readonly dismissed: {} }>("spar.menus.show", items.length, options),
+  show: (_event, items, options) => invoke<void, { readonly dismissed: undefined }>("spar.menus.show", items.length, options),
 };
 
 export interface MessageOptions<B extends string> extends CallOptions {
@@ -226,7 +226,7 @@ export interface MessageOptions<B extends string> extends CallOptions {
 /** Native message dialogs: a task dialog on Windows, GtkAlertDialog on Linux. alert/confirm/prompt are shown natively too. */
 export const dialogs: {
   /** Resolves with the chosen button's name; closing the dialog is `dismissed`. */
-  message<const B extends string>(options: MessageOptions<B>): Call<B, { readonly dismissed: {} }>;
+  message<const B extends string>(options: MessageOptions<B>): Call<B, { readonly dismissed: undefined }>;
 } = {
   message: options => invoke("spar.dialogs.message", { title: options.title, text: options.text }, options),
 };
