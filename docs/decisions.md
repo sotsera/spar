@@ -2976,3 +2976,7 @@ Evidence: `docs/evidence/m1a-client-step.md`, "Follow-up: declaration maps and t
   - **The committed copy is compared on every build, not only when the client step runs.** The step writes the expected text to `obj/spar/contracts.snapshot`; a small target in `Sdk.targets` compares the committed file with it (CRLF read as LF), copies it under `Update` and fails with SPAR100 under `Verify`. The first version did both inside the incremental step, and a stale snapshot passed a CI-mode build because the step was up to date.
 - **Not built:** the manifest, the differential test against `tsc --declaration`, and maps for the `.js` (only declarations are mapped; go-to-definition uses declarations).
 - **Tests:** `tests/Spar.Sdk.Tasks.Tests` 40 (snapshot text, a one-line diff for a new field, the go-to-definition probe, the map files in the package); `dotnet test` 229, the NativeAOT lane 154.
+
+## 2026-11-15, Contract snapshot choices accepted (user decision)
+
+The user accepted both choices of "Declaration maps and the contract snapshot" ("Accept them"): the property is `SparContractSnapshot`, `Update` by default and `Verify` when `ContinuousIntegrationBuild` is `true`; and the committed snapshot is compared on every build against the expected copy under `obj/spar/`, not only when the client step runs.
