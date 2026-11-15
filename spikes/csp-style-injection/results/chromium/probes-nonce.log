@@ -1,0 +1,15 @@
+[      0.0] HOST loopback origin=http://127.0.0.1:5190 profile=nonce csp=default-src 'none'; script-src 'self'; style-src 'self' 'nonce-{NONCE}'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script' meta=-
+LOOPBACK_READY http://127.0.0.1:5190
+[    140.5] SERVE GET /probes.html referer=- dest=document
+[    140.6] NONCE issued for /probes.html
+[    147.2] SERVE GET /probes.css referer=- dest=style
+[    147.8] SERVE GET /probes.js referer=- dest=script
+[    149.5] SERVE GET /report.js referer=- dest=script
+BROWSER_CONSOLE error Applying inline style violates the following Content Security Policy directive 'style-src 'self' 'nonce-fw/QoSbDZJy4S4P0RFM5bw==''. Either the 'unsafe-inline' keyword, a hash ('sha256-dk1uPHppabpvHHykJwVzKcUxdol/UrdCB2Pflvr3CCw='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+BROWSER_CONSOLE error Applying inline style violates the following Content Security Policy directive 'style-src 'self' 'nonce-fw/QoSbDZJy4S4P0RFM5bw==''. Either the 'unsafe-inline' keyword, a hash ('sha256-TuzrYMkx1YpM9+I3vhihiYCq9FYubEA/UY7yPTaOI7g='), or a nonce ('nonce-...') is required to enable inline execution. The action has been blocked.
+BROWSER_CONSOLE error Applying inline style violates the following Content Security Policy directive 'style-src 'self' 'nonce-fw/QoSbDZJy4S4P0RFM5bw==''. Either the 'unsafe-inline' keyword, a hash ('sha256-LFM+llYyP2xw4RpvOwNzEfWCpdm96naJTvM3o0Xp5Pc='), or a nonce ('nonce-...') is required to enable inline execution. Note that hashes do not apply to event handlers, style attributes and javascript: navigations unless the 'unsafe-hashes' keyword is present. The action has been blocked.
+[   1023.0] PAGE {"kind":"probes","nonceOffered":true,"nonceReadable":true,"nonceAttributeHidden":true,"results":{"element":"not applied","element-nonce":"applied","element-wrong-nonce":"not applied","replace-sync":"applied","replace-async":"applied","insert-rule":"applied","linked-insert":"applied","property":"applied","attribute":"not applied","shadow-replace-sync":"applied"},"violations":[{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-attr","blocked":"inline","sample":""}]}
+BROWSER_CONSOLE log SPAR_PAGE {"kind":"probes","nonceOffered":true,"nonceReadable":true,"nonceAttributeHidden":true,"results":{"element":"not applied","element-nonce":"applied","element-wrong-nonce":"not applied","replace-sync":"applied","replace-async":"applied","insert-rule":"applied","linked-insert":"applied","property":"applied","attribute":"not applied","shadow-replace-sync":"applied"},"violations":[{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-attr","blocked":"inline","sample":""}]}
+[   1025.8] PAGE {"kind":"done"}
+BROWSER_CONSOLE log SPAR_PAGE {"kind":"done"}
+BROWSER_VERSION 156.0.8078.4

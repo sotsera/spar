@@ -1,0 +1,26 @@
+[      0.0] HOST linux-webkitgtk-6.0 origin=spar://app profile=nonce csp=default-src 'none'; script-src 'self'; style-src 'self' 'nonce-{NONCE}'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script' meta=- navlock=True inject=True secure=True cors=True
+
+(process:586): Gtk-WARNING **: 16:20:51.644: Unable to acquire session bus: Failed to execute child process “dbus-launch” (No such file or directory)
+[    130.0] MEDIA_STREAM_DEFAULT 1
+[    507.2] NAVIGATE spar://app/probes.html
+
+** (process:2): WARNING **: 16:20:52.224: Can't connect to a11y bus: Could not connect: No such file or directory
+[    708.1] NAV_ALLOWED NAVIGATION user=0 redirect=0 button=0 navtype=5 frame=- spar://app/probes.html
+[    709.9] SERVE GET /probes.html referer=- origin=-
+[    712.6] NONCE issued for /probes.html
+[    713.5] RESPONSE_POLICY main=1 spar://app/probes.html
+[    714.5] LOAD_COMMITTED spar://app/probes.html
+[    717.3] NATIVE source=spar://app/probes.html {"kind":"injected","at":5,"url":"spar://app/probes.html","top":true,"readyState":"loading"}
+[    717.9] SERVE GET /probes.css referer=- origin=-
+[    718.5] SERVE GET /probes.js referer=- origin=spar://app
+[    719.1] NATIVE source=spar://app/probes.html {"kind":"violation","via":"injected","url":"spar://app/probes.html","directive":"require-trusted-types-for","blocked":"trusted-types-sink","source":"user-script","line":21,"sample":"eval|1","disposition":"enforce"}
+[    720.7] LOAD_FINISHED spar://app/probes.html
+[    721.3] SERVE GET /report.js referer=- origin=spar://app
+[    724.4] NATIVE source=spar://app/probes.html {"kind":"error","message":"error"}
+[    724.8] NATIVE source=spar://app/probes.html {"kind":"violation","via":"injected","url":"spar://app/probes.html","directive":"style-src-elem","blocked":"inline","source":"spar://app/probes.js","line":32,"sample":"","disposition":"enforce"}
+[    825.3] NATIVE source=spar://app/probes.html {"kind":"violation","via":"injected","url":"spar://app/probes.html","directive":"style-src-elem","blocked":"inline","source":"spar://app/probes.js","line":32,"sample":"","disposition":"enforce"}
+[    825.8] NATIVE source=spar://app/probes.html {"kind":"error","message":"error"}
+[   1127.1] NATIVE source=spar://app/probes.html {"kind":"violation","via":"injected","url":"spar://app/probes.html","directive":"style-src-attr","blocked":"inline","source":"spar://app/probes.js","line":17,"sample":"","disposition":"enforce"}
+[   1529.7] PAGE {"kind":"probes","nonceOffered":true,"nonceReadable":true,"nonceAttributeHidden":true,"results":{"element":"not applied","element-nonce":"applied","element-wrong-nonce":"not applied","replace-sync":"applied","replace-async":"applied","insert-rule":"applied","linked-insert":"applied","property":"applied","attribute":"not applied","shadow-replace-sync":"applied"},"violations":[{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-attr","blocked":"inline","sample":""}]}
+[   1533.1] PAGE {"kind":"done"}
+[   1873.7] WEBKIT_EXIT after=38ms

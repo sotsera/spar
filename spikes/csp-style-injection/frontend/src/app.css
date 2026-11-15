@@ -1,0 +1,18 @@
+/* The page is taller than the window, so a scroll lock has something to lock. */
+.page {
+  min-height: 200vh;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 30%);
+}
+
+.content {
+  position: fixed;
+  top: 30%;
+  left: 30%;
+  padding: 1rem;
+  background: white;
+}

@@ -51,6 +51,19 @@ public sealed class AppRoutes
         response.Headers.Add(new("Cache-Control", "no-store"));
         if (_profile.Csp is { } csp)
         {
+            // {NONCE} (spikes/csp-style-injection): a fresh nonce per response, also given to an HTML page as
+            // <meta property="csp-nonce" nonce="…">, the convention Vite's html.cspNonce uses.
+            if (csp.Contains("{NONCE}", StringComparison.Ordinal))
+            {
+                var nonce = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(16));
+                csp = csp.Replace("{NONCE}", nonce, StringComparison.Ordinal);
+                if (response.ContentType.StartsWith("text/html", StringComparison.Ordinal))
+                {
+                    response = response with { Body = InsertNonceMeta(response.Body, nonce) };
+                    Log.Write($"NONCE issued for {path}");
+                }
+            }
+
             // On every response: dedicated workers take their policy from their own script response.
             response.Headers.Add(new("Content-Security-Policy", csp));
         }
@@ -152,6 +165,15 @@ public sealed class AppRoutes
         }
 
         return [.. copy, (byte)' '];
+    }
+
+    private static byte[] InsertNonceMeta(byte[] html, string nonce)
+    {
+        var text = Encoding.UTF8.GetString(html);
+        var head = text.IndexOf("<head>", StringComparison.OrdinalIgnoreCase);
+        var tag = $"<meta property=\"csp-nonce\" nonce=\"{nonce}\">";
+        text = head < 0 ? tag + text : text.Insert(head + "<head>".Length, tag);
+        return Encoding.UTF8.GetBytes(text);
     }
 
     private static byte[] InsertMeta(byte[] html, string policy)

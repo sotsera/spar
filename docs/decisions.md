@@ -2993,3 +2993,13 @@ Evidence: `docs/evidence/m1a-notebook-page.md`.
   - **The sample pins `postcss-selector-parser` to 6.1.6 with npm `overrides`** (a moderate advisory in the version the typography plugin pins), and the SDK moves to Vitest 4.1.12 (two moderate advisories).
   - **Until packing exists, the browser tests serve the Test variant's Vite output** from the app's `obj/` folder.
 - **Found while building:** the client step re-ran on every build, because two of its Outputs were files written only when their content changed; the expected snapshot is now the variant's own file, written on every run, and `package.json` left the Outputs (a deleted package still reruns the step).
+
+## 2026-11-15, Styles added at run time: a nonce and constructed stylesheets both work (evidence for M1b)
+
+Spike `spikes/csp-style-injection` (user request, after the Notebook's dialogs moved off Radix). Nothing is decided here; the options go to the M1b page-security decisions.
+- **Measured on Chromium 156, WebView2 157 and WebKitGTK 6.0 2.52.6, identical on all three:**
+  - under Spar's base policy, a `<style>` element is blocked (`style-src-elem`) and a `style` attribute set from script is blocked (`style-src-attr`); constructed stylesheets (`replaceSync`, `replace`, `insertRule`, in the document or a shadow root), `insertRule` into the page's own stylesheet and `style.setProperty` apply with no violation;
+  - with `'nonce-…'` added to `style-src`, a `<style>` with the right nonce applies and one with a wrong nonce or none stays blocked; the page reads the nonce from `<meta property="csp-nonce">` as `meta.nonce`, while `getAttribute("nonce")` is empty;
+  - Radix's modal Dialog under the base policy opens and keeps focus but does not lock scrolling, with one violation per opening; with the nonce passed to `get-nonce`, or with `react-style-singleton` replaced by a module that adopts a constructed sheet, it locks and releases scrolling with no violation.
+- **Options for M1b:** document constructed stylesheets as the way to add CSS from script under the default policy (no policy change, no host support); and consider an explicit C# opt-in for a per-document style nonce, which needs each host to mint the nonce and give it to the page (the meta-tag convention or the injected start-up script). `'unsafe-inline'` is not needed by either.
+- **Change to an earlier spike:** `spikes/csp-navigation`'s shared host code supports `{NONCE}` in a profile's policy; its WebView2 host was republished.

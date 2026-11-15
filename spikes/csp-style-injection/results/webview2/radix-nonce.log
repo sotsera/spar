@@ -1,0 +1,14 @@
+[      0.0] HOST windows-webview2 origin=https://app.spar.invalid profile=nonce csp=default-src 'none'; script-src 'self'; style-src 'self' 'nonce-{NONCE}'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script' meta=- navlock=True inject=True
+[    229.9] INJECT_ADDED id=2
+[    230.3] NAVIGATE https://app.spar.invalid/
+[    232.0] NAV_ALLOWED TOP user=1 redirected=0 https://app.spar.invalid/
+[    234.0] SERVE GET / referer=- dest=-
+[    234.1] NONCE issued for /
+[    249.7] SERVE GET /assets/index-DkSQwQ0W.js referer=- dest=-
+[    250.2] NATIVE source=https://app.spar.invalid/ {"kind":"injected","at":16.599999964237213,"url":"https://app.spar.invalid/","top":true,"readyState":"loading"}
+[    250.4] SERVE GET /assets/index-d-8QHTN4.css referer=- dest=-
+[    260.3] NAV_COMPLETED success=1 status=0 source=https://app.spar.invalid/
+[    282.5] SERVE GET /favicon.ico referer=- dest=-
+[   1293.5] PAGE {"kind":"radix","build":"default","nonceOffered":true,"before":{"attribute":false,"overflow":"visible"},"open":{"opened":true,"focusInside":true,"attribute":true,"overflow":"hidden"},"after":{"closed":true,"attribute":false,"overflow":"visible"},"styleElements":1,"adopted":0,"violations":[]}
+[   1294.5] PAGE {"kind":"done"}
+[   1828.5] BROWSER_EXIT exited=True after=211ms

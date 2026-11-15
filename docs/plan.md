@@ -274,6 +274,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 - a provisional minimum WebView2 Runtime: the oldest one with the source-kinds filter of `ICoreWebView2_22` and the other interfaces section 3 lists. M4 confirms it;
 - the UI-thread stall probe (section 3);
 - the app id's validation rules and the folder names per channel (section 3c);
+- styles added at run time: whether app-author docs recommend constructed stylesheets, and whether Spar offers a per-document style nonce as a C# option, with how hosts hand it to the page (decision "Styles added at run time: a nonce and constructed stylesheets both work");
 - the policy for `<input type="file">` (section 3c);
 - profiles for window tests and trusted input in the in-process window (section 5, issues D and I), each after a spike;
 - the black-box data root (section 5, issue M), after a security review;

@@ -24,6 +24,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   ```
 
   Anything else (a font CDN, CSS-in-JS needing a nonce or `'unsafe-inline'`) is a conscious addition.
+  - **Styles added at run time** (`spikes/csp-style-injection`; decision "Styles added at run time: a nonce and constructed stylesheets both work"): under the base policy a `<style>` element and a `style` attribute are blocked, while constructed stylesheets, `insertRule` and `style.setProperty` apply, identically on Chromium, WebView2 and WebKitGTK 6.0. A per-document style nonce also works, delivered as `<meta property="csp-nonce">`. Which of these Spar documents or offers as a C# option is decided in M1b.
   - **What the build adds to this policy by itself:** the hash of the theme style (section 3d), the hash of the SRI import map (below), and in Debug the nonce and the HMR WebSocket (below).
   - **`require-trusted-types-for 'script'`** is part of the base policy, with a C# opt-out (decision "Trusted Types on by default"; see "Trusted Types" below).
   - **`connect-src` names the origin with its scheme** (`https://app.localhost` on Windows), because `'self'` also allows `wss://` to the same host, and WebSockets bypass the host (`spikes/desktop-origin`). The Linux value for `spar://app` still needs a check.

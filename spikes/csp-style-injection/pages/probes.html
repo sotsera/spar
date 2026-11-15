@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Style injection probes</title>
+  <link rel="stylesheet" href="/probes.css">
+  <script type="module" src="/probes.js"></script>
+</head>
+<body>
+  <p id="element">style element</p>
+  <p id="element-nonce">style element with the nonce</p>
+  <p id="element-wrong-nonce">style element with a wrong nonce</p>
+  <p id="replace-sync">constructed sheet, replaceSync</p>
+  <p id="replace-async">constructed sheet, replace</p>
+  <p id="insert-rule">constructed sheet, insertRule</p>
+  <p id="linked-insert">the page's own linked sheet, insertRule</p>
+  <p id="property">element.style.setProperty</p>
+  <p id="attribute">setAttribute("style")</p>
+  <div id="host"></div>
+</body>
+</html>

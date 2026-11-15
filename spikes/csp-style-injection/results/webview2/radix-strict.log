@@ -1,0 +1,15 @@
+[      0.0] HOST windows-webview2 origin=https://app.spar.invalid profile=strict csp=default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script' meta=- navlock=True inject=True
+[    240.3] INJECT_ADDED id=2
+[    240.9] NAVIGATE https://app.spar.invalid/
+[    242.7] NAV_ALLOWED TOP user=1 redirected=0 https://app.spar.invalid/
+[    244.9] SERVE GET / referer=- dest=-
+[    270.8] SERVE GET /assets/index-DkSQwQ0W.js referer=- dest=-
+[    271.5] NATIVE source=https://app.spar.invalid/ {"kind":"injected","at":26.900000035762787,"url":"https://app.spar.invalid/","top":true,"readyState":"loading"}
+[    271.8] SERVE GET /assets/index-d-8QHTN4.css referer=- dest=-
+[    282.0] NAV_COMPLETED success=1 status=0 source=https://app.spar.invalid/
+[    292.6] SERVE GET /favicon.ico referer=- dest=-
+[    505.3] NATIVE source=https://app.spar.invalid/ {"kind":"violation","via":"injected","url":"https://app.spar.invalid/","directive":"style-src-elem","blocked":"inline","source":"https://app.spar.invalid/assets/index-DkSQwQ0W.js","line":1,"sample":"","disposition":"enforce"}
+[    505.3] NATIVE source=https://app.spar.invalid/ {"kind":"error","message":"error"}
+[   1310.5] PAGE {"kind":"radix","build":"default","nonceOffered":false,"before":{"attribute":false,"overflow":"visible"},"open":{"opened":true,"focusInside":true,"attribute":true,"overflow":"visible"},"after":{"closed":true,"attribute":false,"overflow":"visible"},"styleElements":1,"adopted":0,"violations":[{"directive":"style-src-elem","blocked":"inline"}]}
+[   1311.5] PAGE {"kind":"done"}
+[   1868.4] BROWSER_EXIT exited=True after=231ms
