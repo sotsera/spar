@@ -30,6 +30,10 @@ Recorded 2026-11-15. What it shows: the app build packs its page into its own as
 
 - A journey checked for a page's file right after clicking "Create page"; it passed by timing until the page came from the pack. It now waits for the page to show first.
 
+## Follow-up: notices settings and the build order (2026-11-15)
+
+Decision "Source maps stay out of the executable; third-party notices are reported and copyleft is flagged". The build line reads "the third-party notices of 109 packages from Vite's licence file (3,057 B)" (106 MIT, 2 ISC, 1 0BSD). `SparThirdPartyNotices=false` builds with no notices; a missing file fails with SPAR111; back to the default, then an unchanged build, both behave. While checking `false`, the embedding target turned out to run before packing (see the pitfalls); with one ordered entry target, a build from an empty `obj/` and `bin/` embeds its pack on the first pass. `dotnet test` 250 of 250; `-mt` clean; the Notebook's NativeAOT tests 12 of 12.
+
 ## Not done or not verified
 
 - **Not built:** the feature switch that trims the decoder when nothing is compressed (`spikes/asset-packing` measured it), WebView2's and the static loader's notices (they arrive with the Windows host in M1b), reading the pack from a desktop host, and a link check on Windows (creating a symbolic link needs a privilege the tests do not take; the check uses `FileInfo.LinkTarget`).

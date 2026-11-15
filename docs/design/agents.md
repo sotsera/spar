@@ -21,6 +21,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - on Linux, WebKitGTK, GTK, ICU, OpenSSL, plus `clang` and `zlib` for AOT, each with the install command;
     - Docker and Playwright browsers, only when the end-to-end tests need them.
   - **Project:** the `SparFrontendPath` folder, the `@spar/app` dependency, the Vite plugin, the `build` script, the lockfile and `node_modules`, the contract snapshot, the launch profiles.
+  - **Third-party notices** (user, 2026-11-15; decision "Source maps stay out of the executable; third-party notices are reported and copyleft is flagged"): the packages the executable's notices cover, with packages that have no licence or a copyleft one (GPL, AGPL, LGPL) flagged.
   - **Shared checks:** the project checks are the same code the build uses for its diagnostics.
 - **`spar init frontend`** (user decision): wires an existing frontend (made with `npm create vite`, a Vue scaffolder, …) into a Spar app.
   - It adds the dependency, the Vite plugin and, if needed, `SparFrontendPath`.

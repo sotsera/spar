@@ -32,9 +32,15 @@ public sealed class SparPack : MSBuildTask, IMultiThreadableTask
     [Required]
     public string PackFile { get; set; } = "";
 
-    /// <summary>Where the third-party notices go, Brotli-compressed; written empty when the build produced none.</summary>
+    /// <summary>Where the third-party notices go, Brotli-compressed; deleted when there are none.</summary>
     [Required]
     public string NoticesFile { get; set; } = "";
+
+    /// <summary>
+    /// <c>SparThirdPartyNotices</c>: <c>true</c> (Vite's licence file), <c>false</c> (none), or the path of the team's own
+    /// notices file, relative to the project.
+    /// </summary>
+    public string NoticesSource { get; set; } = "true";
 
     public override bool Execute()
     {
@@ -64,12 +70,54 @@ public sealed class SparPack : MSBuildTask, IMultiThreadableTask
         var pack = FrontendPack.Write(files);
         var packWritten = WriteIfChanged(TaskEnvironment.GetAbsolutePath(PackFile), pack);
 
-        var license = new AbsolutePath(FrontendPack.LicenseFile, frontend);
-        var notices = File.Exists(license) ? FrontendPack.Compress(File.ReadAllBytes(license)) : [];
-        WriteIfChanged(TaskEnvironment.GetAbsolutePath(NoticesFile), notices);
+        if (!WriteNotices(frontend))
+        {
+            return false;
+        }
 
         var stored = files.Sum(f => new FileInfo(f.Source).Length);
         Log.LogMessage(MessageImportance.Normal, "Spar pack: {0} file(s), {1:N0} B into {2:N0} B{3}.", files.Count, stored, pack.Length, packWritten ? "" : " (unchanged)");
+        return true;
+    }
+
+    /// <summary>
+    /// The notices the executable carries, and one informational line saying what they are (decision "Source maps stay
+    /// out of the executable; third-party notices are reported and copyleft is flagged"). Never a warning: an app built
+    /// from the template fails on warnings.
+    /// </summary>
+    private bool WriteNotices(AbsolutePath frontend)
+    {
+        var target = TaskEnvironment.GetAbsolutePath(NoticesFile);
+        if (string.Equals(NoticesSource, "false", StringComparison.OrdinalIgnoreCase))
+        {
+            File.Delete(target);
+            Log.LogMessage(MessageImportance.High, "Spar: the executable carries no third-party notices (SparThirdPartyNotices=false).");
+            return true;
+        }
+
+        var own = !string.Equals(NoticesSource, "true", StringComparison.OrdinalIgnoreCase) && NoticesSource.Length > 0;
+        var source = own ? TaskEnvironment.GetAbsolutePath(NoticesSource) : new AbsolutePath(FrontendPack.LicenseFile, frontend);
+        if (!File.Exists(source))
+        {
+            if (own)
+            {
+                Log.LogError("Spar.Frontend", "SPAR111", null, null, 0, 0, 0, 0,
+                    "SparThirdPartyNotices names '{0}', which does not exist.", source.Value);
+                return false;
+            }
+
+            File.Delete(target);
+            Log.LogMessage(MessageImportance.High, "Spar: the page bundles nothing with a licence file, so the executable carries no third-party notices.");
+            return true;
+        }
+
+        var text = File.ReadAllBytes(source);
+        var compressed = FrontendPack.Compress(text);
+        WriteIfChanged(target, compressed);
+
+        var origin = own ? Path.GetFileName(source.Value) : "Vite's licence file";
+        var packages = own ? "" : $" of {FrontendPack.CountPackages(text)} packages";
+        Log.LogMessage(MessageImportance.High, "Spar: the executable carries the third-party notices{0} from {1} ({2:N0} B); spar doctor lists them.", packages, origin, compressed.Length);
         return true;
     }
 

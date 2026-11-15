@@ -191,7 +191,8 @@ Constraints fall into three levels:
     - After install, the build warns about lockfile entries with `hasInstallScript` that match the current OS.
   - NuGet audit runs as an error in Spar's repository, and as warnings by default in apps: `Spar.Sdk` forces nothing. An app created from the template starts with `MSBuildTreatWarningsAsErrors` on (section 7), so an audit finding fails its build until the app lists the advisory in `MSBuildWarningsNotAsErrors` or turns the setting off.
   - The packing step rejects source maps, version-control and secret files, links, and names that differ only by case (adopted from the research review, user, 2026-11-15; built in M1a as SPAR110, which also refuses hidden files and types the hosts do not serve; decision "Frontend packing built").
-  - The executable embeds third-party notices: the frontend's licences (Vite's `build.license`), plus WebView2's and the static loader's (adopted the same way; M1a). The frontend's are built, as `Spar.ThirdPartyNotices`; the other two arrive with the Windows host.
+  - The executable embeds third-party notices: the frontend's licences (Vite's `build.license`), plus WebView2's and the static loader's (adopted the same way; M1a). The frontend's are built, as `Spar.ThirdPartyNotices`; the other two arrive with the Windows host. The build reports them in one informational line, `SparThirdPartyNotices` replaces them with the team's own file or turns them off, and `spar doctor` flags packages with no licence or a copyleft one (decision "Source maps stay out of the executable; third-party notices are reported and copyleft is flagged").
+  - Source maps never ship, devtools in Production or not: Debug gets them from the Vite dev server (same decision).
 
 **Later (M4):**
 - signing the executable and the Linux packages;

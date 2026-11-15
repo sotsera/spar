@@ -118,6 +118,10 @@ internal static class FrontendPack
         return index.ToArray();
     }
 
+    /// <summary>How many packages Vite's licence file covers: it gives each one a <c>## name - version (licence)</c> heading.</summary>
+    public static int CountPackages(byte[] licenseFile) =>
+        Encoding.UTF8.GetString(licenseFile).Split('\n').Count(line => line.StartsWith("## ", StringComparison.Ordinal));
+
     /// <summary>A whole Brotli stream at quality 11, for the notices, which are read rarely and in full.</summary>
     public static byte[] Compress(byte[] original)
     {

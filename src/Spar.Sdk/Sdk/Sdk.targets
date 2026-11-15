@@ -128,7 +128,6 @@
   </Target>
 
   <Target Name="SparClient"
-          BeforeTargets="PrepareResources"
           DependsOnTargets="SparWriteClientInventory"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'"
           Inputs="$(SparClientInventory);@(Compile);@(ReferencePath);@(_SparClientSdkFile);$(SparTasksAssembly)"
@@ -152,8 +151,6 @@
     is found even when the client step is up to date. Text is compared with CRLF read as LF.
   -->
   <Target Name="SparCheckContractSnapshot"
-          AfterTargets="SparClient"
-          BeforeTargets="PrepareResources"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
     <PropertyGroup>
       <_SparSnapshotExpected>$([System.IO.File]::ReadAllText('$(SparContractSnapshotExpected)'))</_SparSnapshotExpected>
@@ -193,6 +190,9 @@
     <SparFrontendPackFile>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-frontend.pack</SparFrontendPackFile>
     <SparFrontendNotices>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-notices.md</SparFrontendNotices>
     <SparFrontendPackStamp>$(IntermediateOutputPath)spar-pack.stamp</SparFrontendPackStamp>
+    <SparFrontendPackSettings>$(IntermediateOutputPath)spar-pack.settings</SparFrontendPackSettings>
+    <!-- true: the frontend's licences as Vite collects them; false: none; or the path of the team's own notices file. -->
+    <SparThirdPartyNotices Condition="'$(SparThirdPartyNotices)' == ''">true</SparThirdPartyNotices>
   </PropertyGroup>
 
   <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
@@ -244,12 +244,22 @@
     Packing (plan section 1): the built page in one resource after the asset checks of section 3c, and the frontend's
     third-party licences beside it. It reruns only when Vite ran, which touches the build stamp.
   -->
+  <!-- The packing settings, written only when they change, so changing them reruns the pack. -->
+  <Target Name="SparFrontendPackSettings" Condition="'$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <_SparNoticesFile Include="$(SparThirdPartyNotices)" Condition="'$(SparThirdPartyNotices)' != 'true' and '$(SparThirdPartyNotices)' != 'false'" />
+      <FileWrites Include="$(SparFrontendPackSettings)" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(SparFrontendPackSettings)" Lines="notices=$(SparThirdPartyNotices)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+
   <Target Name="SparFrontendPack"
-          DependsOnTargets="SparFrontendBuild"
+          DependsOnTargets="SparFrontendBuild;SparFrontendPackSettings"
           Condition="'$(SparHasFrontend)' == 'true' and '$(SparBuildFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
-          Inputs="$(SparFrontendStamp);$(SparTasksAssembly)"
+          Inputs="$(SparFrontendStamp);$(SparTasksAssembly);$(SparFrontendPackSettings);@(_SparNoticesFile)"
           Outputs="$(SparFrontendPackStamp);$(SparFrontendPackFile)">
-    <SparPack FrontendDirectory="$(SparFrontendOutput)" PackFile="$(SparFrontendPackFile)" NoticesFile="$(SparFrontendNotices)" />
+    <SparPack FrontendDirectory="$(SparFrontendOutput)" PackFile="$(SparFrontendPackFile)" NoticesFile="$(SparFrontendNotices)"
+              NoticesSource="$(SparThirdPartyNotices)" />
     <Touch Files="$(SparFrontendPackStamp);$(SparFrontendPackFile)" AlwaysCreate="true" />
     <ItemGroup>
       <FileWrites Include="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendNotices)" />
@@ -258,8 +268,6 @@
 
   <!-- The pack and the notices into the app's assembly, on every build that has them. -->
   <Target Name="SparEmbedFrontend"
-          AfterTargets="SparFrontend"
-          BeforeTargets="PrepareResources"
           Condition="'$(SparIsApp)' == 'true' and '$(SparBuildFrontend)' == 'true' and Exists('$(SparFrontendPackFile)')">
     <ItemGroup>
       <EmbeddedResource Include="$(SparFrontendPackFile)" LogicalName="Spar.Frontend" WithCulture="false" Type="Non-Resx" />
@@ -269,10 +277,18 @@
   </Target>
 
   <Target Name="SparFrontend"
-          AfterTargets="SparCheckContractSnapshot"
-          BeforeTargets="PrepareResources"
           DependsOnTargets="SparFrontendInstall;SparFrontendTypeCheck;SparFrontendBuild;SparFrontendPack"
           Condition="'$(SparIsApp)' == 'true' and '$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
+
+  <!--
+    Spar's build steps, in order, before MSBuild settles embedded resources: the client step, the snapshot check, the
+    frontend (install, type-check, Vite, pack), then the embedding. One entry target with DependsOnTargets fixes the
+    order; several targets hooked on PrepareResources would run in the order they are declared in this file.
+  -->
+  <Target Name="SparBuildSteps"
+          BeforeTargets="PrepareResources"
+          DependsOnTargets="SparClient;SparCheckContractSnapshot;SparFrontend;SparEmbedFrontend"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
   <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">

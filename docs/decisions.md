@@ -3019,3 +3019,15 @@ Evidence: `docs/evidence/m1a-frontend-packing.md`.
   - **The runtime finds the pack through `SparCatalog.AppAssembly`,** set by the generated catalog, because in a test the entry assembly is the test's.
   - **`o.Page()` serves the app's packed page;** `o.Page(folder)` stays for pages that are not the app's. The test host's core cannot reach the `Browser` package unless the test calls into it, so the surface still needs this one call.
   - **Spar's build steps now run before `PrepareResources`** instead of `CoreCompile`, so the pack is an embedded resource before MSBuild settles resources.
+
+## 2026-11-15, Source maps stay out of the executable; third-party notices are reported and copyleft is flagged (user decisions)
+
+- **Source maps:** asked whether an app that turns on devtools in Production should ship them, the user concluded they are needed only in development ("they may be needed only on loopback"). So the rule stands: the packing step refuses `.map` files (SPAR110) in every packed variant, and Debug gets its maps from the Vite dev server (section 4). The generated `.d.ts.map` files, which point into the C# contracts, are editor-only: they live in `obj/spar/client`, Vite does not bundle declarations, and no executable needs them.
+- **Third-party notices** (user chose "Also flag copyleft" over an informational report alone and over saying nothing):
+  - The build prints one informational line, never a warning (warnings fail an app built from the template): how many packages the notices cover, where they came from, and their size.
+  - `SparThirdPartyNotices` replaces the collected notices with the team's own file (a path), or turns them off (`false`); the default (`true`) takes Vite's licence file.
+  - `spar doctor` lists the embedded notices, and flags packages with no licence and packages under a copyleft licence (GPL, AGPL, LGPL). This revises the 2026-11-14 note, under "Bundle budget", that Spar has no built-in licence check; the docs still point to dedicated tools for a full licence policy.
+- **Built now:** the build line and `SparThirdPartyNotices`. `spar doctor` does not exist yet; its check is in its design (section 8).
+
+- **Built with it (2026-11-15):** the informational build line (for the Notebook: "the third-party notices of 109 packages from Vite's licence file (3,057 B)") and `SparThirdPartyNotices` (`true`, `false`, or a file; a missing file fails with SPAR111). Checked in real builds: all three settings, a switch back to the default, and an unchanged build.
+- **Found on the way and fixed:** the embedding target ran before packing. Spar's steps were each hooked `BeforeTargets="PrepareResources"`, and MSBuild ran them in the order they are declared in `Sdk.targets`, whatever `AfterTargets` said; every build had embedded the pack left by the build before, and a clean clone's first build would have had no page. One entry target, `SparBuildSteps`, now lists the steps in order through `DependsOnTargets`; a clean Test build embeds its pack on the first pass.
