@@ -85,16 +85,17 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
             string.Equals(Nullable, "enable", StringComparison.OrdinalIgnoreCase));
 
         var read = ContractSource.Read(inputs, CancellationToken.None);
-        if (read.Problems > 0)
+        if (read.Problems.Count > 0)
         {
-            // The compile reports each problem at its declaration, as the editor does. Writing a package without the
-            // invalid parts would let the frontend's type-check fail first, on names the developer did not change, and
-            // would rewrite the contract snapshot; the client from the last good build stays instead.
-            Log.LogMessage(
-                MessageImportance.High,
-                "Spar client: not updated, because the contracts have {0} problem(s), which the C# compiler reports; the client from the last good build stays.",
-                read.Problems);
-            return true;
+            // The build stops here, before the frontend steps and the C# compile, so a contract problem is the first and
+            // only error: a type-check against a client without the new names would otherwise fail first. Nothing is
+            // written, so the last good client and the contract snapshot stay as they were.
+            foreach (var problem in read.Problems)
+            {
+                LogProblem(problem);
+            }
+
+            return false;
         }
 
         var layout = ClientLayout.Plan(read.Contracts);
@@ -115,6 +116,22 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
     /// Writes the expected snapshot on every run: it is one of the step's Outputs, so its time must be this run's. It is
     /// the variant's own file, so no other build writes it.
     /// </summary>
+    /// <summary>One contract problem as a build error, with the analyzer's ID, message and place (lines from 1).</summary>
+    private void LogProblem(Microsoft.CodeAnalysis.Diagnostic problem)
+    {
+        var span = problem.Location.GetLineSpan();
+        Log.LogError(
+            problem.Descriptor.Category,
+            problem.Id,
+            null,
+            span.Path,
+            span.StartLinePosition.Line + 1,
+            span.StartLinePosition.Character + 1,
+            span.EndLinePosition.Line + 1,
+            span.EndLinePosition.Character + 1,
+            problem.GetMessage(System.Globalization.CultureInfo.InvariantCulture));
+    }
+
     private void WriteSnapshot(ClientLayout layout)
     {
         var path = TaskEnvironment.GetAbsolutePath(SnapshotFile);

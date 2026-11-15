@@ -19,8 +19,8 @@ internal sealed record ClientInputs(
 /// <summary>One contract as the generator sees it, with the C# documentation and the file that declares it.</summary>
 internal sealed record ClientContract(ContractModel Model, string SourceFile, ClientDocs Docs);
 
-/// <summary>The valid contracts, and the number of problems the analysis found, which the analyzer reports.</summary>
-internal sealed record ContractRead(IReadOnlyList<ClientContract> Contracts, int Problems);
+/// <summary>The valid contracts, and every problem the analysis found: the same diagnostics the analyzer reports.</summary>
+internal sealed record ContractRead(IReadOnlyList<ClientContract> Contracts, IReadOnlyList<Diagnostic> Problems);
 
 /// <summary>
 /// Reads the project's contracts with the generator's own analysis (decision "D1: Compilation pipeline"), so the page's
@@ -36,32 +36,23 @@ internal static class ContractSource
         Read(Compile(inputs, cancellationToken), inputs.ProjectDirectory, cancellationToken);
 
     /// <summary>
-    /// The contracts of a compilation, and how many problems the contract analysis found in them; source paths in the
-    /// headers are relative to <paramref name="projectDirectory"/>. The problems are the analyzer's to report.
+    /// The contracts of a compilation and their problems, read by the analyzer's own code (<see cref="ContractProblems"/>);
+    /// source paths in the headers are relative to <paramref name="projectDirectory"/>.
     /// </summary>
     public static ContractRead Read(CSharpCompilation compilation, string projectDirectory, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var docs = new ClientDocs(compilation, projectDirectory);
+        var found = ContractProblems.Find(compilation);
 
-        var problems = 0;
-        var files = new Dictionary<string, string>(StringComparer.Ordinal);
-        var models = new List<ContractModel>();
-        foreach (var type in ContractTypes(compilation, cancellationToken))
+        var contracts = new List<ClientContract>(found.Valid.Count);
+        foreach (var (model, type) in found.Valid)
         {
-            var model = ContractAnalysis.Analyze(type, (_, _) => problems++);
-            if (model is null)
-            {
-                continue;
-            }
-
             var file = type.Locations.FirstOrDefault(l => l.IsInSource)?.SourceTree?.FilePath ?? "";
-            files[model.CSharp] = RelativePath(projectDirectory, file);
-            models.Add(model);
+            contracts.Add(new ClientContract(model, RelativePath(projectDirectory, file), docs));
         }
 
-        var (valid, setProblems) = ContractSet.Check(models);
-        var contracts = valid.Select(m => new ClientContract(m, files[m.CSharp], docs));
-        return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], problems + setProblems.Count);
+        return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], found.All);
     }
 
     private static CSharpCompilation Compile(ClientInputs inputs, CancellationToken cancellationToken)
@@ -87,26 +78,6 @@ internal static class ContractSource
     {
         var file = new FileInfo(path);
         return ReferenceCache.GetOrAdd((file.FullName, file.LastWriteTimeUtc, file.Length), key => MetadataReference.CreateFromFile(key.Path));
-    }
-
-    /// <summary>Classes and interfaces of this project marked <c>[SparContract]</c>, as the generator selects them.</summary>
-    private static IEnumerable<INamedTypeSymbol> ContractTypes(CSharpCompilation compilation, CancellationToken cancellationToken)
-    {
-        var attribute = compilation.GetTypeByMetadataName("Spar.SparContractAttribute");
-        if (attribute is null)
-        {
-            yield break;
-        }
-
-        foreach (var type in AllTypes(compilation.Assembly.GlobalNamespace))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            var marked = type.GetAttributes().Any(a => SymbolEqualityComparer.Default.Equals(a.AttributeClass, attribute));
-            if (marked && type.TypeKind is TypeKind.Class or TypeKind.Interface)
-            {
-                yield return type;
-            }
-        }
     }
 
     internal static IEnumerable<INamedTypeSymbol> AllTypes(INamespaceSymbol root)

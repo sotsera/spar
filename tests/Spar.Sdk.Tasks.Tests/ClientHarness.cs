@@ -25,7 +25,7 @@ internal static class ClientHarness
     public static ClientLayout Plan(string source, string? projectDirectory = null)
     {
         var read = Read(source, projectDirectory);
-        Assert.Equal(0, read.Problems);
+        Assert.Empty(read.Problems);
         return ClientLayout.Plan(read.Contracts);
     }
 

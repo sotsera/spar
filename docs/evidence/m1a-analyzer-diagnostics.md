@@ -23,6 +23,10 @@ Recorded 2026-11-15. What it shows: every diagnostic of the starting map (plan s
 | `-mt` build, size check | clean; 109 source files |
 | The Notebook's contract named `shared` in a real build | one error, `PagesService.cs(6,2): error SPAR004: Contract 'PagesService' resolves to the name 'shared', which @spar/app uses for one of its own subpaths. Use another name in [SparContract("…")]`; the client step printed that it kept the last good client; the generated package and the snapshot kept their bytes. Restored, the next build succeeded with the client unchanged. |
 
+## Follow-up: the client step reports the problems (2026-11-15)
+
+Keeping the previous client did not stop a type-check failing first: renaming `ListAsync` to `AllAsync` and `pages.list()` to `pages.all()` in one change, with an unrelated `string[]` request, would have failed on `pages.all` against the previous client. Now the client step reports the analyzer's diagnostics and fails. Observed in that real build: one error, `PagesService.cs(42,35,42,39): Spar.Contracts error SPAR015: The request of command 'TagAsync' is 'string[]'. …` (MSBuild repeats it in its summary), no TypeScript error, the client and the snapshot unchanged; both files restored. `dotnet test --solution Spar.slnx` 269 of 269; `-mt` clean; 110 source files.
+
 ## Not done or not verified
 
 - **Not built:** contracts from referenced assemblies (the generator discovers only the project's own), so the referenced half of the clash matrix and the generator's location-less diagnostics; the decided rules without an ID yet (yield after an error, `Capacity` with coalescing, `[Flags]`, `DateTime`, the cancellation suggestion); SPAR030's `closed` check.

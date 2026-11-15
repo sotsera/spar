@@ -2,7 +2,7 @@ namespace Spar.Sdk.Tasks.Tests;
 
 /// <summary>
 /// How names reach the client: the contract analysis checks them (its diagnostics are tested in Spar.Generator.Tests),
-/// and the client step writes nothing when it found a problem, so the compile reports it at its declaration.
+/// and the client step reports the same diagnostics, at the same places, and writes nothing.
 /// </summary>
 public sealed class NameTests
 {
@@ -48,7 +48,7 @@ public sealed class NameTests
     [InlineData("[SparContract(\"readItem\")]", "Item")]
     [InlineData("[SparContract]", "any")]
     [InlineData("[SparContract]", "Call")]
-    public void A_name_problem_is_counted_so_the_client_step_writes_nothing(string attribute, string type)
+    public void A_name_problem_is_the_client_steps_error_too(string attribute, string type)
     {
         var source = $$"""
             using System.Threading.Tasks;
@@ -67,7 +67,7 @@ public sealed class NameTests
 
         var read = ClientHarness.Read(source);
 
-        Assert.True(read.Problems > 0);
+        Assert.Equal(["SPAR004"], read.Problems.Select(p => p.Id));
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public sealed class NameTests
 
         var read = ClientHarness.Read(Source);
 
-        Assert.Equal(2, read.Problems);
+        Assert.Equal(["SPAR040", "SPAR040"], read.Problems.Select(p => p.Id));
         Assert.Empty(read.Contracts);
     }
 
