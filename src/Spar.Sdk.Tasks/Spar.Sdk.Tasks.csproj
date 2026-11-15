@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Spar's build steps as compiled MSBuild tasks (plan section 1; decision "D1 follow-up: Spar build steps run as MSBuild
+    tasks, not Exec dotnet"). Today the client step: the contracts' TypeScript modules under obj/spar/client, from the
+    generator's own contract analysis. MSBuild resolves a task's dependencies from the task's folder, so Roslyn and the
+    generator are copied next to it.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Spar.Sdk.Tasks</RootNamespace>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" ExcludeAssets="runtime" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" ExcludeAssets="runtime" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Build.TaskAuthoring.Analyzer" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- PrivateAssets: an app references this project only to build it first; nothing may flow into the app. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Spar.Generator\Spar.Generator.csproj" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Sdk.Tasks.Tests" />
+  </ItemGroup>
+</Project>

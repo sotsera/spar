@@ -129,7 +129,7 @@ internal sealed class ContractAnalysis
 
         var wireName = ExplicitName(method, "SparCommandAttribute") ?? Naming.Command(method.Name);
         return new CommandModel(
-            method.Name, wireName, request, takesToken, shape.Value.Shape, shape.Value.Value, shape.Value.ErrorKey, shape.Value.ErrorCSharp, TimeoutSeconds(method));
+            method.Name, wireName, request, requests.Count == 1 ? requests[0].Name : null, takesToken, shape.Value.Shape, shape.Value.Value, shape.Value.ErrorKey, shape.Value.ErrorCSharp, TimeoutSeconds(method));
     }
 
     private (ReturnShape Shape, TypeRef? Value, string? ErrorKey, string? ErrorCSharp)? Return(IMethodSymbol method)

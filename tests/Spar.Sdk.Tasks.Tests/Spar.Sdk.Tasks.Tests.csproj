@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The client step's tests (test type 9): what the emitter writes for each wire shape, shared types, the name checks,
+    and the generated package compiled by TypeScript 6 and 7 at the strictest settings, deliberate mistakes included.
+    They compile C# in memory and run Node, so they stay on CoreCLR. The TypeScript checks need src/Spar.Client built
+    (npm ci, npm run build).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.Sdk.Tasks.Tests</RootNamespace>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(MSBuildThisFileDirectory)..\..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.Build.Framework" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Sdk.Tasks\Spar.Sdk.Tasks.csproj" />
+    <ProjectReference Include="..\..\src\Spar.Generator\Spar.Generator.csproj" />
+    <ProjectReference Include="..\..\src\Spar\Spar.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="TypeScript\**" CopyToOutputDirectory="Never" />
+  </ItemGroup>
+</Project>

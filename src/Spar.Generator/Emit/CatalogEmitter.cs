@@ -118,8 +118,11 @@ internal static class CatalogEmitter
 
     public static string HandlerName(ContractModel contract, CommandModel command) => $"Handle{contract.PascalName}{Naming.Pascal(command.WireName)}";
 
-    /// <summary>16 hex characters of the SHA-256 of every contract's full wire shape (plan section 2).</summary>
-    private static string Fingerprint(IReadOnlyList<ContractModel> contracts)
+    /// <summary>
+    /// 16 hex characters of the SHA-256 of every contract's full wire shape (plan section 2). The client step computes the
+    /// page's copy with this same function, so the two can only differ when the contracts do.
+    /// </summary>
+    public static string Fingerprint(IEnumerable<ContractModel> contracts)
     {
         var shape = new StringBuilder();
         foreach (var contract in contracts.OrderBy(c => c.WireName, System.StringComparer.Ordinal))

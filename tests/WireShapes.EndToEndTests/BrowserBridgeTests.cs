@@ -99,6 +99,33 @@ public sealed class BrowserBridgeTests(SharedBrowser shared)
     }
 
     [Fact]
+    public async Task The_generated_fingerprint_is_the_backends()
+    {
+        await using var wire = await WirePage.OpenAsync(shared);
+
+        var generated = await wire.CallAsync("() => import('/spar/app/spar.js').then(module => module.fingerprint)", null);
+
+        Assert.Equal($"\"{wire.App.Fingerprint}\"", generated);
+        await wire.AssertCleanAsync();
+    }
+
+    [Fact]
+    public async Task A_request_the_encoder_refuses_never_reaches_the_host()
+    {
+        await using var wire = await WirePage.OpenAsync(shared);
+        const string Shapes = """
+            {"text":"t","note":null,"flag":true,"count":1,"big":"1","ratio":0,"key":"0f8fad5b-d9cb-469f-a165-70867728950e",
+            "at":"2026-11-15T10:20:30+01:00","maybe":null,"tags":[],"cells":[],"items":[],"parent":null}
+            """;
+
+        var outcome = await wire.CallAsync("json => window.wire.echoShapes({ ...JSON.parse(json), ratio: NaN })", Shapes);
+
+        Assert.Equal("{\"failure\":{\"kind\":\"rejected\",\"code\":\"invalid-request\",\"execution\":\"notStarted\",\"command\":\"shapes\"}}", outcome);
+        Assert.Empty(wire.App.Problems);
+        Assert.Equal(["error: Spar: echo.shapes was not sent: Expected a finite number, got number NaN."], wire.ConsoleErrors);
+    }
+
+    [Fact]
     public async Task Another_origin_cannot_reach_the_bridge()
     {
         await using var wire = await WirePage.OpenAsync(shared);
@@ -154,16 +181,29 @@ public sealed class BrowserBridgeTests(SharedBrowser shared)
 
         public string Token { get; }
 
+        /// <summary>The console's errors and warnings so far, and uncaught page errors.</summary>
+        public IReadOnlyList<string> ConsoleErrors
+        {
+            get
+            {
+                lock (_consoleErrors)
+                {
+                    return [.. _consoleErrors];
+                }
+            }
+        }
+
         public static async Task<WirePage> OpenAsync(SharedBrowser shared, string? contracts = null)
         {
             var app = await SparTestApp.StartAsync<Program>(o =>
             {
                 o.Surface = SparTestSurface.Browser;
-                o.Page(Repository.Page).Page(Repository.Sdk, "spar/");
+                o.Page(Repository.Page).Page(Repository.Client, "spar/app/");
             });
 
             var context = await shared.Browser.NewContextAsync();
-            var url = app.PageUrl($"/?contracts={contracts ?? app.Fingerprint}");
+            // Without an override the page uses the fingerprint its generated package was built with.
+            var url = app.PageUrl(contracts is null ? "/" : $"/?contracts={contracts}");
             var wire = new WirePage(app, context, await context.NewPageAsync(), url.Fragment["#token=".Length..]);
             await wire.Page.GotoAsync(url.ToString());
             await wire.WaitForReadyAsync();

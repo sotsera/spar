@@ -40,15 +40,15 @@ internal static class Repository
     /// <summary>The WireShapes page.</summary>
     public static string Page => Path.Combine(Root.Value, "tests", "apps", "WireShapes", "page");
 
-    /// <summary>The compiled SDK, which the page imports from <c>/spar/sdk.js</c>.</summary>
-    public static string Sdk
+    /// <summary>The app's generated <c>@spar/app</c> package, which the page imports from <c>/spar/app/</c>.</summary>
+    public static string Client
     {
         get
         {
-            var folder = Path.Combine(Root.Value, "src", "Spar.Client", "obj", "dist");
-            return File.Exists(Path.Combine(folder, "sdk.js"))
+            var folder = Path.Combine(Root.Value, "tests", "apps", "WireShapes", "obj", "spar", "client");
+            return File.Exists(Path.Combine(folder, "package.json"))
                 ? folder
-                : throw new InvalidOperationException($"The SDK is not built: run 'npm run build' in src/Spar.Client ({folder}).");
+                : throw new InvalidOperationException($"The WireShapes client is not generated: build tests/apps/WireShapes ({folder}).");
         }
     }
 

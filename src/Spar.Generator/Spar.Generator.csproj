@@ -17,4 +17,10 @@
     <AdditionalFiles Include="AnalyzerReleases.Shipped.md" />
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
+
+  <!-- The client step runs this same analysis before the compile (plan section 1, pipeline step 3). -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Sdk.Tasks" />
+    <InternalsVisibleTo Include="Spar.Sdk.Tasks.Tests" />
+  </ItemGroup>
 </Project>

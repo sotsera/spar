@@ -48,7 +48,7 @@ internal enum ReturnShape
 }
 
 internal sealed record CommandModel(
-    string MethodName, string WireName, TypeRef? Request, bool TakesToken, ReturnShape Return, TypeRef? Value, string? ErrorKey, string? ErrorCSharp, int TimeoutSeconds);
+    string MethodName, string WireName, TypeRef? Request, string? RequestName, bool TakesToken, ReturnShape Return, TypeRef? Value, string? ErrorKey, string? ErrorCSharp, int TimeoutSeconds);
 
 internal sealed record ContractModel(
     string CSharp,

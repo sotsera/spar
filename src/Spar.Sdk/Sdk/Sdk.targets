@@ -71,6 +71,72 @@
                       SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
   </ItemGroup>
 
+  <!-- The task assembly, built first so the client step can load it; nothing of it reaches the app. -->
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsApp)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Sdk.Tasks\Spar.Sdk.Tasks.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;RuntimeIdentifier"
+                      ReferenceOutputAssembly="false" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    The client step (plan section 1, pipeline step 3): the contracts' TypeScript modules in the @spar/app package
+    under obj/spar/client, one path for every variant and configuration. Apps only, never in design-time builds, and
+    only when an input changed: the inventory, written only when it differs, catches removed files and changed
+    settings. In this repository the task runs in a task host of its own, because the task assembly is rebuilt in the
+    same graph and a warm node would lock it (MSB3027).
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparClientDirectory>$(MSBuildProjectDirectory)\obj\spar\client\</SparClientDirectory>
+    <SparClientInventory>$(IntermediateOutputPath)spar-client.inventory</SparClientInventory>
+    <SparClientStamp>$(IntermediateOutputPath)spar-client.stamp</SparClientStamp>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'">
+    <SparClientSdkDirectory>$(SparSourceRoot)Spar.Client\obj\dist\</SparClientSdkDirectory>
+    <SparClientSdkSourceDirectory>$(SparSourceRoot)Spar.Client\src\</SparClientSdkSourceDirectory>
+    <SparTasksAssembly>$(SparSourceRoot)Spar.Sdk.Tasks\bin\$(Configuration)\net11.0\Spar.Sdk.Tasks.dll</SparTasksAssembly>
+  </PropertyGroup>
+
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparClient" AssemblyFile="$(SparTasksAssembly)"
+             Runtime="NET" TaskFactory="TaskHostFactory"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+
+  <Target Name="SparWriteClientInventory"
+          DependsOnTargets="ResolveReferences;GenerateGlobalUsings"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <_SparClientSdkFile Include="$(SparClientSdkDirectory)*.js;$(SparClientSdkDirectory)*.d.ts;$(SparClientSdkDirectory)*.map" />
+      <_SparClientSdkFile Include="$(SparClientSdkSourceDirectory)*.ts" />
+      <_SparClientInventoryLine Include="@(Compile->'%(FullPath)')" />
+      <_SparClientInventoryLine Include="@(ReferencePath->'%(FullPath)')" />
+      <_SparClientInventoryLine Include="@(_SparClientSdkFile->'%(FullPath)')" />
+      <_SparClientInventoryLine Include="defines=$([MSBuild]::Escape('$(DefineConstants)'))" />
+      <_SparClientInventoryLine Include="nullable=$(Nullable)" />
+      <FileWrites Include="$(SparClientInventory);$(SparClientStamp)" />
+    </ItemGroup>
+
+    <WriteLinesToFile File="$(SparClientInventory)" Lines="@(_SparClientInventoryLine)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+
+  <Target Name="SparClient"
+          BeforeTargets="CoreCompile"
+          DependsOnTargets="SparWriteClientInventory"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="$(SparClientInventory);@(Compile);@(ReferencePath);@(_SparClientSdkFile);$(SparTasksAssembly)"
+          Outputs="$(SparClientStamp);$(SparClientDirectory)package.json">
+    <SparClient Sources="@(Compile)"
+                References="@(ReferencePath)"
+                DefineConstants="$(DefineConstants)"
+                Nullable="$(Nullable)"
+                ProjectDirectory="$(MSBuildProjectDirectory)"
+                OutputDirectory="$(SparClientDirectory)"
+                SdkDirectory="$(SparClientSdkDirectory)"
+                SdkSourceDirectory="$(SparClientSdkSourceDirectory)" />
+
+    <Touch Files="$(SparClientStamp)" AlwaysCreate="true" />
+  </Target>
+
   <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
     <PackageReference Include="xunit.v3" Condition="'$(SparTestLane)' != 'Aot'" />
