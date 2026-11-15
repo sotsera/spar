@@ -28,6 +28,8 @@ Spar | Spar.SparTestSession.CurrentSession | readonly | An AsyncLocal: each test
 Spar.Testing | Spar.Testing.TestDataRoots.Base | readonly | A Lazy of the run's base folder under artifacts/, computed once, thread-safe; the same for every app in the run by design.
 Spar.Testing | Spar.Testing.TestDataRoots.Run | readonly | The run's folder name, computed once.
 Spar.Testing | Spar.Testing.TestDataRoots.s_next | writable | A counter changed only with Interlocked.Increment, so each app instance gets a data root of its own.
+Spar.Testing | Spar.Testing.SparTestCleanup.Watched | readonly | A ConcurrentDictionary keyed by each test's own id: a test's stop failures are kept under its id and removed by its hook, so no two tests share an entry.
+Spar.Testing | Spar.Testing.SparTestCleanup.s_currentTest | writable | How the test framework names the current test, set once with Interlocked.CompareExchange by the teardown hook; one framework runs a test process, so the same function serves every app in it.
 
 # Spar.Testing.Browser (the Browser surface)
 # No static fields besides compiler data.

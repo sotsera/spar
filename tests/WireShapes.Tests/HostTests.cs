@@ -36,6 +36,39 @@ public sealed class HostTests
         Assert.Equal(0, first.LogDropped);
     }
 
+    [Fact]
+    public async Task With_the_hook_a_failure_to_stop_is_kept_for_the_test_and_not_thrown()
+    {
+        var app = await SparTestApp.StartAsync<Program>(o => o.Services(s => s.AddSingleton<ExplodesOnDispose>()), TestContext.Current.CancellationToken);
+        app.Services.GetRequiredService<ExplodesOnDispose>();
+        var root = app.Folders.DataRoot;
+
+        await app.DisposeAsync();
+
+        // Taken back here, so the hook does not fail this test with it.
+        var kept = Assert.Single(SparTestCleanup.End(TestContext.Current.Test!.UniqueID));
+        Assert.Equal("dispose failed", Assert.IsType<InvalidOperationException>(kept).Message);
+        Assert.False(Directory.Exists(root), "A failed stop still deletes the data root.");
+    }
+
+    [Fact]
+    public async Task Without_the_hook_watching_a_failure_to_stop_is_thrown()
+    {
+        var app = await SparTestApp.StartAsync<Program>(o => o.Services(s => s.AddSingleton<ExplodesOnDispose>()), TestContext.Current.CancellationToken);
+        app.Services.GetRequiredService<ExplodesOnDispose>();
+        SparTestCleanup.End(TestContext.Current.Test!.UniqueID);
+
+        var thrown = await Assert.ThrowsAsync<InvalidOperationException>(() => app.DisposeAsync().AsTask());
+
+        Assert.Equal("dispose failed", thrown.Message);
+    }
+
+    /// <summary>A service whose disposal fails, so the app cannot stop cleanly.</summary>
+    private sealed class ExplodesOnDispose : IDisposable
+    {
+        public void Dispose() => throw new InvalidOperationException("dispose failed");
+    }
+
     /// <summary>A clock stopped at one moment.</summary>
     private sealed class FixedTime(DateTimeOffset now) : TimeProvider
     {

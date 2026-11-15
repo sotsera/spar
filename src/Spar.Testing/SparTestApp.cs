@@ -182,23 +182,59 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         return _app.Dispatcher.InvokeAsync(contract, command, callId, request, cancellationToken);
     }
 
+    /// <summary>
+    /// Stops the surface and the app, and deletes the data root. Every step runs even when an earlier one fails. A
+    /// failure is kept for the test framework's hook when the test project has one (<see cref="SparTestCleanup"/>), so
+    /// it is reported beside the test's own failure instead of replacing it; without the hook, it is thrown.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
+        var failures = new List<Exception>();
         if (Surface is not null)
         {
-            await Surface.DisposeAsync();
+            await Step(failures, async () => await Surface.DisposeAsync());
         }
 
         _session.Stop();
-        var code = await _exit.WaitAsync(TimeSpan.FromSeconds(10));
+        await Step(failures, async () =>
+        {
+            var code = await _exit.WaitAsync(TimeSpan.FromSeconds(10));
+            if (code != 0)
+            {
+                throw new InvalidOperationException($"The app exited with {code}.");
+            }
+        });
+
         if (!_options.KeepData)
         {
-            TestDataRoots.Delete(_app.Folders.DataRoot);
+            await Step(failures, () =>
+            {
+                TestDataRoots.Delete(_app.Folders.DataRoot);
+                return Task.CompletedTask;
+            });
         }
 
-        if (code != 0)
+        if (failures.Count == 0)
         {
-            throw new InvalidOperationException($"The app exited with {code}.");
+            return;
+        }
+
+        var failure = failures.Count == 1 ? failures[0] : new AggregateException("The app did not stop cleanly.", failures);
+        if (!SparTestCleanup.TryKeep(failure))
+        {
+            throw failure;
+        }
+    }
+
+    private static async Task Step(List<Exception> failures, Func<Task> step)
+    {
+        try
+        {
+            await step();
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
         }
     }
 

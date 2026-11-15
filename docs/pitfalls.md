@@ -546,6 +546,10 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 ## Tooling and environment
 
+- **`await using` lets a disposal's exception replace the one already in flight:** a test whose body failed and whose app then failed to stop showed only the stop failure. Spar's test host keeps the stop failure for a hook that raises it after the test. (M1a fixture rules)
+- **xUnit's in-process runner (the NativeAOT lane) exits 0 when no test ran,** where `dotnet test` exits 8. The CI step checks for "Total: 0". (M1a fixture rules)
+- **xUnit's two flavours are different assemblies** (`xunit.v3.core.dll`, `xunit.v3.core.aot.dll`) with different extension signatures: a library compiled against one cannot run against the other. Code that extends xUnit is compiled into the test project, one file per flavour. (M1a fixture rules)
+
 - **BenchmarkDotNet needs project names that are unique across the repository:** `Bench.csproj` in two spikes clashed. An analyzer whose descriptor uses a literal ID also needs `AnalyzerReleases.Shipped.md`/`Unshipped.md` (RS2008). (`result-api`)
 - **Aspire names endpoints `localhost`,** which Node resolves to `::1`. A backend that listens on `127.0.0.1` only, and checks its origin, then hangs every proxied call. (`aspire`)
 - **Aspire's SQL Server health probes log "pre-login handshake" errors** while the container starts. That is noise, not a failure. (`aspire`)

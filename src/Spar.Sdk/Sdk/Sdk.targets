@@ -304,6 +304,17 @@
           DependsOnTargets="SparClient;SparCheckContractSnapshot;SparFrontend;SparEmbedFrontend"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
+  <!--
+    The teardown hook (decision "Fixture rules: the teardown hook"): compiled into each test project against its
+    lane's xUnit, so Spar.Testing stays free of a test framework. SparTeardownHook=false leaves it out.
+  -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparTeardownHook)' != 'false'">
+    <Compile Include="$(SparSdkDirectory)Testing\SparTeardownHook.Xunit.cs" Link="Spar\SparTeardownHook.cs" Visible="false"
+             Condition="'$(SparTestLane)' != 'Aot'" />
+    <Compile Include="$(SparSdkDirectory)Testing\SparTeardownHook.XunitAot.cs" Link="Spar\SparTeardownHook.cs" Visible="false"
+             Condition="'$(SparTestLane)' == 'Aot'" />
+  </ItemGroup>
+
   <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
     <PackageReference Include="xunit.v3" Condition="'$(SparTestLane)' != 'Aot'" />
