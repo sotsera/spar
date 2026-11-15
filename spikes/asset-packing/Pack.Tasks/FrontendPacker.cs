@@ -34,8 +34,11 @@ public static class FrontendPacker
         {
             case "raw":
             case "brotli":
+            case "deflate":
                 {
-                    var entries = files.Select(file => Encode(file.Path, File.ReadAllBytes(file.File), format == "brotli", quality, window)).ToList();
+                    var entries = files.Select(file => format == "deflate"
+                        ? EncodeDeflate(file.Path, File.ReadAllBytes(file.File))
+                        : Encode(file.Path, File.ReadAllBytes(file.File), format == "brotli", quality, window)).ToList();
                     outputs["frontend.pack"] = WritePack(entries, separate: false);
                     report.Add(entries);
                     break;
@@ -111,6 +114,25 @@ public static class FrontendPacker
         // Already-compressed files (fonts, images) stay as they are: Brotli must save at least 5% to be worth decoding.
         return written <= original.Length - Math.Max(16, original.Length / 20)
             ? entry with { Stored = buffer[..written], Encoding = 1 }
+            : entry;
+    }
+
+    /// <summary>
+    /// The control the research review asked for (spike follow-up, 2026-11-15): per-file raw Deflate at the smallest
+    /// size inside the same index, encoding 3, with the same 5% rule as Brotli.
+    /// </summary>
+    private static PackedEntry EncodeDeflate(string path, byte[] original)
+    {
+        var entry = new PackedEntry(path, ContentType(path), original.Length, SHA256.HashData(original), original, Encoding: 0);
+        using var buffer = new MemoryStream();
+        using (var deflate = new System.IO.Compression.DeflateStream(buffer, System.IO.Compression.CompressionLevel.SmallestSize, leaveOpen: true))
+        {
+            deflate.Write(original);
+        }
+
+        var written = (int)buffer.Length;
+        return written <= original.Length - Math.Max(16, original.Length / 20)
+            ? entry with { Stored = buffer.ToArray(), Encoding = 3 }
             : entry;
     }
 
@@ -237,8 +259,8 @@ public sealed class PackReport
             Entries++;
             OriginalBytes += entry.OriginalLength;
             StoredBytes += entry.Stored.Length;
-            Compressed += entry.Encoding;
-            Lines.Add($"{entry.Path} {entry.OriginalLength} -> {entry.Stored.Length} ({(entry.Encoding == 1 ? "br" : "identity")})");
+            Compressed += entry.Encoding == 0 ? 0 : 1;
+            Lines.Add($"{entry.Path} {entry.OriginalLength} -> {entry.Stored.Length} ({(entry.Encoding switch { 1 => "br", 3 => "deflate", _ => "identity" })})");
         }
     }
 }

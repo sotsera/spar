@@ -11,6 +11,7 @@
     <PackWindow Condition="'$(PackWindow)' == ''">0</PackWindow>
     <PackInputDirectory Condition="'$(PackInput)' == 'react'">$(MSBuildThisFileDirectory)inputs/react/</PackInputDirectory>
     <PackInputDirectory Condition="'$(PackInput)' == 'large'">$(MSBuildThisFileDirectory)obj/inputs/large/</PackInputDirectory>
+    <PackInputDirectory Condition="'$(PackInput)' == 'notebook'">$(MSBuildThisFileDirectory)obj/inputs/notebook/</PackInputDirectory>
     <DefineConstants>$(DefineConstants);SPAR_PACK_$(PackFormat.ToUpperInvariant())</DefineConstants>
     <!--
       PackFormat=auto: the reader is the Brotli one (one resource), and the decoder is removed by a trimming feature
@@ -60,7 +61,7 @@
   <Target Name="EmbedFrontendAssets" AfterTargets="PackFrontendAssets" BeforeTargets="AssignTargetPaths"
           Condition="'$(PackFormat)' != 'none' and '$(DesignTimeBuild)' != 'true'">
     <ItemGroup>
-      <_PackResource Include="$(_PackDir)out/frontend.pack" LogicalName="Spar.Frontend" Condition="'$(PackFormat)' == 'raw' or '$(PackFormat)' == 'brotli' or '$(PackFormat)' == 'auto'" />
+      <_PackResource Include="$(_PackDir)out/frontend.pack" LogicalName="Spar.Frontend" Condition="'$(PackFormat)' == 'raw' or '$(PackFormat)' == 'brotli' or '$(PackFormat)' == 'deflate' or '$(PackFormat)' == 'auto'" />
       <_PackResource Include="$(_PackDir)out/frontend.zip" LogicalName="Spar.Frontend" Condition="'$(PackFormat)' == 'zip'" />
       <_PackResource Include="$(_PackDir)out/index.bin" LogicalName="Spar.Frontend.index" Condition="'$(PackFormat)' == 'separate'" />
       <_PackEntryFile Include="$(_PackDir)out/????.bin" Condition="'$(PackFormat)' == 'separate'" />

@@ -1,0 +1,45 @@
+SIZE deflate-notebook 1729536
+BENCH format=deflate mode=eager files=11 original=772422 stored=385913 open-ms=0.240 decode-all-ms=0.919 in-place=True cached=553910 peak-ws-kb=13912 ws-kb=13912 private-kb=6460 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=lazy files=11 original=772422 stored=385913 open-ms=0.182 first-requests-ms=0.849 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13864 ws-kb=13864 private-kb=6396 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=eager files=11 original=772422 stored=385913 open-ms=0.187 decode-all-ms=0.888 in-place=True cached=553910 peak-ws-kb=13856 ws-kb=13856 private-kb=6384 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=lazy files=11 original=772422 stored=385913 open-ms=0.182 first-requests-ms=0.873 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13880 ws-kb=13880 private-kb=6420 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=eager files=11 original=772422 stored=385913 open-ms=0.170 decode-all-ms=0.844 in-place=True cached=553910 peak-ws-kb=13884 ws-kb=13884 private-kb=6436 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=lazy files=11 original=772422 stored=385913 open-ms=0.210 first-requests-ms=0.879 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13960 ws-kb=13960 private-kb=6588 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=eager files=11 original=772422 stored=385913 open-ms=0.202 decode-all-ms=0.872 in-place=True cached=553910 peak-ws-kb=13856 ws-kb=13856 private-kb=6380 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=lazy files=11 original=772422 stored=385913 open-ms=0.175 first-requests-ms=0.869 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13856 ws-kb=13856 private-kb=6396 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=eager files=11 original=772422 stored=385913 open-ms=0.189 decode-all-ms=0.881 in-place=True cached=553910 peak-ws-kb=13880 ws-kb=13880 private-kb=6404 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=lazy files=11 original=772422 stored=385913 open-ms=0.219 first-requests-ms=0.868 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13848 ws-kb=13848 private-kb=6388 allocated-kb=595 heap-kb=0
+BENCH format=deflate mode=decode files=11 original=772422 stored=385913 open-ms=0.185
+ASSET assets/Preview-CxZrg16P.js enc=3 original=164445 stored=48793 first-ms=0.284 median-ms=0.198 MBps=830 ok=True
+ASSET assets/index-CL86eM-Y.css enc=3 original=43552 stored=8402 first-ms=0.045 median-ms=0.030 MBps=1447 ok=True
+ASSET assets/index-DfZj1qYq.js enc=3 original=345474 stored=109946 first-ms=0.528 median-ms=0.468 MBps=739 ok=True
+ASSET assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2 enc=0 original=25960 stored=25960 first-ms=0.027 median-ms=0.002 MBps=15271 ok=True
+ASSET assets/inter-cyrillic-wght-normal-DqGufNeO.woff2 enc=0 original=18748 stored=18748 first-ms=0.011 median-ms=0.001 MBps=15623 ok=True
+ASSET assets/inter-greek-ext-wght-normal-DlzME5K_.woff2 enc=0 original=11232 stored=11232 first-ms=0.009 median-ms=0.002 MBps=4680 ok=True
+ASSET assets/inter-greek-wght-normal-CkhJZR-_.woff2 enc=0 original=18996 stored=18996 first-ms=0.012 median-ms=0.002 MBps=8259 ok=True
+ASSET assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2 enc=0 original=85068 stored=85068 first-ms=0.055 median-ms=0.019 MBps=4362 ok=True
+ASSET assets/inter-latin-wght-normal-Dx4kXJAl.woff2 enc=0 original=48256 stored=48256 first-ms=0.028 median-ms=0.003 MBps=19302 ok=True
+ASSET assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2 enc=0 original=10252 stored=10252 first-ms=0.005 median-ms=0.001 MBps=20504 ok=True
+ASSET index.html enc=3 original=439 stored=260 first-ms=0.007 median-ms=0.002 MBps=183 ok=True
+BENCH format=deflate total-median-ms=0.728
+STARTUP deflate-notebook 90157us
+STARTUP deflate-notebook 124516us
+STARTUP deflate-notebook 121695us
+STARTUP deflate-notebook 85739us
+STARTUP deflate-notebook 88018us
+STARTUP deflate-notebook 108958us
+STARTUP deflate-notebook 87639us
+STARTUP deflate-notebook 87112us
+STARTUP deflate-notebook 88773us
+STARTUP deflate-notebook 87732us
+STARTUP deflate-notebook 89643us
+STARTUP deflate-notebook 86069us
+STARTUP deflate-notebook 90333us
+STARTUP deflate-notebook 84889us
+STARTUP deflate-notebook 94461us
+STARTUP deflate-notebook 89199us
+STARTUP deflate-notebook 85865us
+STARTUP deflate-notebook 86062us
+STARTUP deflate-notebook 101292us
+STARTUP deflate-notebook 87054us
+STARTUP deflate-notebook 86133us

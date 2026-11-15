@@ -1,0 +1,45 @@
+SIZE brotli-notebook 1683456
+BENCH format=brotli mode=eager files=11 original=772422 stored=363417 open-ms=0.215 decode-all-ms=1.630 in-place=True cached=553910 peak-ws-kb=13824 ws-kb=13824 private-kb=6396 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=lazy files=11 original=772422 stored=363417 open-ms=0.168 first-requests-ms=1.422 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13804 ws-kb=13804 private-kb=6652 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=eager files=11 original=772422 stored=363417 open-ms=0.185 decode-all-ms=1.528 in-place=True cached=553910 peak-ws-kb=13804 ws-kb=13804 private-kb=6376 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=lazy files=11 original=772422 stored=363417 open-ms=0.172 first-requests-ms=1.591 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13376 ws-kb=13376 private-kb=5944 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=eager files=11 original=772422 stored=363417 open-ms=0.194 decode-all-ms=1.462 in-place=True cached=553910 peak-ws-kb=13800 ws-kb=13800 private-kb=6376 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=lazy files=11 original=772422 stored=363417 open-ms=0.214 first-requests-ms=1.505 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13792 ws-kb=13792 private-kb=6640 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=eager files=11 original=772422 stored=363417 open-ms=0.170 decode-all-ms=1.487 in-place=True cached=553910 peak-ws-kb=13824 ws-kb=13824 private-kb=6396 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=lazy files=11 original=772422 stored=363417 open-ms=0.166 first-requests-ms=1.476 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13792 ws-kb=13792 private-kb=6644 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=eager files=11 original=772422 stored=363417 open-ms=0.186 decode-all-ms=1.527 in-place=True cached=553910 peak-ws-kb=13828 ws-kb=13828 private-kb=6404 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=lazy files=11 original=772422 stored=363417 open-ms=0.160 first-requests-ms=1.427 cached-requests-ms=0.001 cached=553910 peak-ws-kb=13400 ws-kb=13400 private-kb=6236 allocated-kb=584 heap-kb=0
+BENCH format=brotli mode=decode files=11 original=772422 stored=363417 open-ms=0.159
+ASSET assets/Preview-CxZrg16P.js enc=1 original=164445 stored=42694 first-ms=0.474 median-ms=0.387 MBps=425 ok=True
+ASSET assets/index-CL86eM-Y.css enc=1 original=43552 stored=7343 first-ms=0.101 median-ms=0.059 MBps=742 ok=True
+ASSET assets/index-DfZj1qYq.js enc=1 original=345474 stored=94693 first-ms=0.866 median-ms=0.829 MBps=417 ok=True
+ASSET assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2 enc=0 original=25960 stored=25960 first-ms=0.022 median-ms=0.002 MBps=14422 ok=True
+ASSET assets/inter-cyrillic-wght-normal-DqGufNeO.woff2 enc=0 original=18748 stored=18748 first-ms=0.011 median-ms=0.001 MBps=15623 ok=True
+ASSET assets/inter-greek-ext-wght-normal-DlzME5K_.woff2 enc=0 original=11232 stored=11232 first-ms=0.010 median-ms=0.002 MBps=5105 ok=True
+ASSET assets/inter-greek-wght-normal-CkhJZR-_.woff2 enc=0 original=18996 stored=18996 first-ms=0.014 median-ms=0.004 MBps=4871 ok=True
+ASSET assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2 enc=0 original=85068 stored=85068 first-ms=0.054 median-ms=0.021 MBps=4130 ok=True
+ASSET assets/inter-latin-wght-normal-Dx4kXJAl.woff2 enc=0 original=48256 stored=48256 first-ms=0.032 median-ms=0.003 MBps=17873 ok=True
+ASSET assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2 enc=0 original=10252 stored=10252 first-ms=0.006 median-ms=0.001 MBps=20504 ok=True
+ASSET index.html enc=1 original=439 stored=175 first-ms=0.015 median-ms=0.002 MBps=191 ok=True
+BENCH format=brotli total-median-ms=1.310
+STARTUP brotli-notebook 90359us
+STARTUP brotli-notebook 87104us
+STARTUP brotli-notebook 85176us
+STARTUP brotli-notebook 86733us
+STARTUP brotli-notebook 92313us
+STARTUP brotli-notebook 89833us
+STARTUP brotli-notebook 86753us
+STARTUP brotli-notebook 85605us
+STARTUP brotli-notebook 88239us
+STARTUP brotli-notebook 88114us
+STARTUP brotli-notebook 85132us
+STARTUP brotli-notebook 88641us
+STARTUP brotli-notebook 89075us
+STARTUP brotli-notebook 90288us
+STARTUP brotli-notebook 90203us
+STARTUP brotli-notebook 92216us
+STARTUP brotli-notebook 86820us
+STARTUP brotli-notebook 90276us
+STARTUP brotli-notebook 89347us
+STARTUP brotli-notebook 85980us
+STARTUP brotli-notebook 87417us

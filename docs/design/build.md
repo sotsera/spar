@@ -41,7 +41,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - the decoder adds about 168 KB on both OSes, statically linked;
     - a 2.8 MB bundle decodes in about 5 ms and makes the exe 44% smaller than raw;
     - neither WebView decodes `Content-Encoding` itself.
-  - Deflate was measured only inside the zip container: its payloads were about 15% larger than Brotli's (React 71,240 against 61,176 B; the 2.8 MB bundle 1,006,299 against 875,155 B). Per-file Deflate inside the same index, without the zip reader, was not measured, so its decoder cost is unknown.
+  - Deflate was measured only inside the zip container: its payloads were about 15% larger than Brotli's (React 71,240 against 61,176 B; the 2.8 MB bundle 1,006,299 against 875,155 B). Per-file Deflate inside the same index, measured later on the real bundle, gave a larger executable (payload 6–15% larger, decoder 192 KB against 168 KB) and faster decoding (decision "Frontend packing: the Deflate control keeps Brotli").
 - **Assets are served with `Cache-Control: no-store`.** Debug builds embed no bundle (see section 4).
 - **Determinism:** write-if-changed outputs, with stamp files as MSBuild `Outputs`. Exclude every `bin/`, `obj/`, `node_modules` and `dist` from the default globs.
 - **Multithreaded MSBuild:** every task is safe for `-mt`, and a build-test lane runs `-mt`.

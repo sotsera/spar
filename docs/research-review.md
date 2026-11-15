@@ -178,7 +178,7 @@ Small items, each found as a real bug or verified behaviour:
 - **Updates:** a signature is mandatory and independent of Authenticode, plus `relaunch` (T).
 - **SBOM, `SHA256SUMS`, and whether symbols ship** (v4 put a 16.5 MB `.pdb` next to a 3.8 MB exe).
 - **AppImage:** 2–6 MB becomes 70 MB or more; it must be built on the oldest supported glibc (T).
-- **Asset codec control:** on a 1.4 MB synthetic corpus, the whole exe was 1.60 MB with Deflate, 2.27 MB with Brotli and 2.56 MB raw (v1). v7 measured Brotli as 44% smaller than raw on a 2.8 MB bundle. **Adopt** a Deflate control on the real bundle before M1 packing. Status: `spikes/asset-packing` measured Deflate only inside the zip container, where its payloads were about 15% larger than Brotli's and the zip reader cost 0.5–1.0 MB. Per-file Deflate inside Spar's own index, which is what v1's result suggests, is still unmeasured.
+- **Asset codec control:** on a 1.4 MB synthetic corpus, the whole exe was 1.60 MB with Deflate, 2.27 MB with Brotli and 2.56 MB raw (v1). v7 measured Brotli as 44% smaller than raw on a 2.8 MB bundle. **Adopt** a Deflate control on the real bundle before M1 packing. Status: `spikes/asset-packing` measured Deflate only inside the zip container, where its payloads were about 15% larger than Brotli's and the zip reader cost 0.5–1.0 MB. Per-file Deflate inside Spar's own index was measured on 2026-11-15 on the real bundle: Brotli kept the smaller executable (46 KB and 155 KB smaller) and Deflate decoded faster; packing stays Brotli (decision "Frontend packing: the Deflate control keeps Brotli").
 
 ## 11. Measurement (M4, method from now)
 
