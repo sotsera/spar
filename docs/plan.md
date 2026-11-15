@@ -237,7 +237,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 1. **SDK and tasks:**
    - `Spar.Sdk` with `SparVariant`, `SparPlatforms` and the task assembly: inventory, client, pack, lease, and in-proc variant builds with a deterministic `MSBuildRestoreSessionId` and a design-time guard;
    - the generator, the analyzer and their tests: diagnostics with locations, the clash matrix with a referenced assembly, generated-output snapshots, the differential `tsc` test. Generated sources use `\n` only, and an invalid command skips only itself, never its whole contract;
-   - `src/Spar.Client` (section 2b): the protocol, `Call` and `Result`, the failure hooks, fake channels, the type tests, and the React, Angular and Vue checks that now live in `spikes/frontend-frameworks`;
+   - `src/Spar.Client` (section 2b): the protocol, `Call` and `Result`, the failure hooks, fake channels, the type tests, and the React, Angular and Vue checks that now live in `spikes/frontend-frameworks` (rebuilt in the SDK's tests, `src/Spar.Client/test/frameworks`; decision "The frontend-framework checks in the SDK's tests");
    - Brotli frontend packing, after a per-file Deflate control on the real bundle (RR), with the asset checks and the embedded third-party notices of section 3c (RR);
    - the documentation check of `docs/app-model.md`, moved from `spikes/app-model-check` into `tests/` and run by `dotnet test` (test type 17) (moved: `tests/AppModel`, decision "The documentation check under tests/"; against stand-ins, and the C# that Spar can build also through real Spar in `tests/AppModel/Real`).
 2. **Core:**

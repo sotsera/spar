@@ -55,7 +55,7 @@ The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rule
 - **Page APIs return `Call`s with declared errors,** not `null` or booleans. A closed dialog is `dismissed`, never `cancelled`, which is the `CallError` of an aborted call. Grants show the page only names.
 - **Make mistakes compile errors:** generated unions for declared names (window kinds), keyed objects for kinds and buttons, action objects instead of string ids. Where the type cannot catch a duplicate, throw at once and name both.
 - **SDK code runs under the default CSP and Trusted Types:** no `eval`, `new Function` or string timers, no HTML string sinks, no injected `<style>` elements or `style` attributes, no `data:` URLs.
-- **Stay independent of UI frameworks.** When `Call` or `Result` changes, rerun the React, Angular and Vue checks of `spikes/frontend-frameworks`, which M1a moves into the SDK's tests. Framework guidance for the docs is in plan 2b.
+- **Stay independent of UI frameworks.** The React, Vue and Angular checks are in the SDK's own tests (`test/frameworks/`, run by `npm test` and `npm run check`): React's `use()` and error boundaries, Vue's `ref`/`reactive`/Pinia holding a raw `Result`, Angular's `resource()` with a `Call` loader, and the TanStack Query and Angular types. A change to `Call` or `Result` must keep them passing. Framework guidance for the docs is in plan 2b.
 
 ## Verify
 
