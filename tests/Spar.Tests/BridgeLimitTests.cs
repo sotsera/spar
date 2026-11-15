@@ -24,7 +24,7 @@ public sealed class BridgeLimitTests
 
         Assert.Equal(("rejected", "too-large", "notStarted"), Failure(await bridge.Sent.NextAsync()));
         Assert.Equal(BridgeMessageType.Result, (await bridge.Sent.NextAsync()).Type);
-        Assert.Contains(bridge.Log.Entries, e => e.Level == LogLevel.Warning && e.Message.Contains("call 1", StringComparison.Ordinal));
+        Assert.Contains(bridge.Log.Entries, e => e.Level == LogLevel.Warning && e.Message.Contains("Call 1 to echo.back was refused (too-large)", StringComparison.Ordinal));
     }
 
     [Fact]

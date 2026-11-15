@@ -29,6 +29,9 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     /// <summary>The app's logger for the bridge; nothing is written when the app adds no logging.</summary>
     public ILogger Logger { get; } = services.GetService<ILoggerFactory>()?.CreateLogger("Spar.Bridge") ?? NullLogger.Instance;
 
+    /// <summary>Whether the app has this command: only names it has go into telemetry tags, which the page cannot inflate.</summary>
+    public bool Knows(string contract, string command) => catalog.TryGet(contract, command, out _);
+
     public async ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken)
     {

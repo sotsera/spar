@@ -12,7 +12,7 @@ namespace Spar.Bridge;
 /// message per call, and nothing sent after <see cref="Close"/>. Its limits (<see cref="BridgeOptions"/>) apply before
 /// any work: a message's size before it is decoded, and a slot or a place in the queue before its payload is read.
 /// An exception reaches the page as the call's correlation id, its details only in the app's log and, in Development,
-/// in the payload. Each command runs in a server activity and records its duration (<see cref="BridgeTelemetry"/>).
+/// in the payload. Every call that names a command is counted, and an admitted one traced, by <see cref="BridgeTelemetry"/>.
 /// Transport-neutral: hosts pass in messages and a send function, which must be safe on any thread.
 /// </summary>
 internal sealed class BridgeSession : IDisposable
@@ -29,12 +29,6 @@ internal sealed class BridgeSession : IDisposable
     private static readonly Action<ILogger, string, string, long, int, int, Exception?> ResultTooLarge = LoggerMessage.Define<string, string, long, int, int>(
         LogLevel.Warning, new EventId(2, "ResultTooLarge"), "Command {Contract}.{Command} (call {CallId}) returned {Bytes} bytes, over the limit of {Limit}; the call failed");
 
-    private static readonly Action<ILogger, long, int, int, Exception?> MessageTooLarge = LoggerMessage.Define<long, int, int>(
-        LogLevel.Warning, new EventId(3, "MessageTooLarge"), "A page message (call {CallId}) of {Bytes} bytes was refused; the limit is {Limit}");
-
-    private static readonly Action<ILogger, long, Exception?> CallRefusedBusy = LoggerMessage.Define<long>(
-        LogLevel.Debug, new EventId(4, "Busy"), "Call {CallId} was refused: the document's calls in flight and queue are full");
-
     private readonly SparDispatcher _dispatcher;
     private readonly BridgeLimits _limits;
     private readonly ILogger _logger;
@@ -46,7 +40,8 @@ internal sealed class BridgeSession : IDisposable
     private readonly Lock _gate = new();
     private readonly CancellationTokenSource _closing = new();
     private readonly Dictionary<long, CancellationTokenSource> _pending = [];
-    private readonly LinkedList<BridgeMessage> _queue = [];
+    private readonly LinkedList<Waiting> _queue = [];
+    private readonly BridgeTelemetry _telemetry;
     private readonly Dictionary<long, DateTimeOffset> _earlyCancels = [];
     private readonly List<Task> _running = [];
     private HashSet<string> _pageTypes = new(StringComparer.Ordinal);
@@ -67,6 +62,7 @@ internal sealed class BridgeSession : IDisposable
         _send = send;
         _includeDetails = includeDetails;
         _time = time ?? TimeProvider.System;
+        _telemetry = new BridgeTelemetry(dispatcher, _time, doc);
     }
 
     /// <summary>Raised when the page reports <c>ui-ready</c>.</summary>
@@ -80,17 +76,19 @@ internal sealed class BridgeSession : IDisposable
 
     public void Receive(string message)
     {
+        var received = _telemetry.Now();
+
         // Counting allocates nothing; decoding an oversized message would allocate three times its size.
         var bytes = Encoding.UTF8.GetByteCount(message);
         if (bytes > _limits.MaxMessageBytes)
         {
-            RefuseTooLarge(message, bytes);
+            RefuseTooLarge(message, bytes, received);
             return;
         }
 
         if (!BridgeCodec.TryDecode(message, out var decoded, out var error))
         {
-            Refuse(error!);
+            Refuse(error!, received);
             return;
         }
 
@@ -100,13 +98,13 @@ internal sealed class BridgeSession : IDisposable
                 Hello(decoded);
                 break;
             case BridgeMessageType.Call:
-                Call(decoded);
+                Call(decoded, received);
                 break;
             case BridgeMessageType.Cancel:
                 Cancel(decoded.Id!.Value);
                 break;
             case BridgeMessageType.Stream:
-                Refuse(decoded, "Streams and subscriptions arrive in M3.");
+                Refuse(decoded, "Streams and subscriptions arrive in M3.", received);
                 break;
             case BridgeMessageType.Ready:
                 Ready?.Invoke();
@@ -159,6 +157,7 @@ internal sealed class BridgeSession : IDisposable
         }
 
         _closing.Cancel();
+        _telemetry.Flush();
     }
 
     /// <summary>Completes when every dispatched command has finished (tests use it; hosts do not need it).</summary>
@@ -190,7 +189,7 @@ internal sealed class BridgeSession : IDisposable
     }
 
     /// <summary>A call starts when a slot is free, waits in the queue when one is not, and is refused as busy past both.</summary>
-    private void Call(BridgeMessage call)
+    private void Call(BridgeMessage call, Received received)
     {
         var id = call.Id!.Value;
         SparFailure? refusal = null;
@@ -216,40 +215,45 @@ internal sealed class BridgeSession : IDisposable
             }
             else if (_inFlight < _limits.CallsInFlight)
             {
-                StartLocked(call);
+                StartLocked(new Waiting(call, received));
             }
             else if (_queue.Count < _limits.QueuedCalls && _queuedBytes + call.Payload.Length <= _limits.QueuedBytes)
             {
-                _queue.AddLast(call);
+                _queue.AddLast(new Waiting(call, received));
                 _queuedBytes += call.Payload.Length;
             }
             else
             {
                 refusal = SparFailure.Busy();
-                CallRefusedBusy(_logger, id, null);
             }
         }
 
         if (refusal is not null)
         {
-            Send(FailureMessage(id, refusal, call));
+            RefuseAtTheDoor(call, id, refusal, received);
         }
     }
 
-    /// <summary>Takes a slot and runs the call; the slot is given back only when the command has really ended.</summary>
-    private void StartLocked(BridgeMessage call)
+    /// <summary>A call refused before it was admitted: the page gets the failure, the telemetry counts it.</summary>
+    private void RefuseAtTheDoor(BridgeMessage? call, long id, SparFailure refusal, Received received)
     {
-        var token = CancellationTokenSource.CreateLinkedTokenSource(_closing.Token);
-        _pending[call.Id!.Value] = token;
-        _inFlight++;
-        _running.Add(Task.Run(() => DispatchAsync(call, token)));
+        _telemetry.Ended(call, id, refusal, received, atTheDoor: true);
+        Send(FailureMessage(id, refusal, call));
     }
 
-    private async Task DispatchAsync(BridgeMessage call, CancellationTokenSource token)
+    /// <summary>Takes a slot and runs the call; the slot is given back only when the command has really ended.</summary>
+    private void StartLocked(Waiting waiting)
+    {
+        var token = CancellationTokenSource.CreateLinkedTokenSource(_closing.Token);
+        _pending[waiting.Call.Id!.Value] = token;
+        _inFlight++;
+        _running.Add(Task.Run(() => DispatchAsync(waiting.Call, waiting.Received, token)));
+    }
+
+    private async Task DispatchAsync(BridgeMessage call, Received received, CancellationTokenSource token)
     {
         var id = call.Id!.Value;
-        var startedAt = Stopwatch.GetTimestamp();
-        using var activity = BridgeTelemetry.Start(call);
+        using var activity = _telemetry.Started(call, received);
         SparOutcome outcome;
         try
         {
@@ -264,14 +268,14 @@ internal sealed class BridgeSession : IDisposable
                 if (!_closed && _queue.First is { } next)
                 {
                     _queue.RemoveFirst();
-                    _queuedBytes -= next.Value.Payload.Length;
+                    _queuedBytes -= next.Value.Call.Payload.Length;
                     StartLocked(next.Value);
                 }
             }
         }
 
         outcome = Deliverable(call, outcome);
-        BridgeTelemetry.End(activity, call, outcome, startedAt);
+        _telemetry.Completed(activity, call, outcome, received);
         lock (_gate)
         {
             // A call that was failed, or a document that went away, gets no late reply.
@@ -298,7 +302,7 @@ internal sealed class BridgeSession : IDisposable
 
     private void Cancel(long id)
     {
-        BridgeMessage? waiting = null;
+        Waiting? waiting = null;
         lock (_gate)
         {
             if (_pending.TryGetValue(id, out var token))
@@ -318,20 +322,22 @@ internal sealed class BridgeSession : IDisposable
             }
         }
 
-        if (waiting is not null)
+        if (waiting is { } ended)
         {
-            Send(FailureMessage(id, new SparFailure("cancelled", "cancelled-before-start", "notStarted"), waiting));
+            var cancelled = new SparFailure("cancelled", "cancelled-before-start", "notStarted");
+            _telemetry.Ended(ended.Call, id, cancelled, ended.Received, atTheDoor: false);
+            Send(FailureMessage(id, cancelled, ended.Call));
         }
     }
 
-    private BridgeMessage? RemoveQueued(long id)
+    private Waiting? RemoveQueued(long id)
     {
         for (var node = _queue.First; node is not null; node = node.Next)
         {
-            if (node.Value.Id == id)
+            if (node.Value.Call.Id == id)
             {
                 _queue.Remove(node);
-                _queuedBytes -= node.Value.Payload.Length;
+                _queuedBytes -= node.Value.Call.Payload.Length;
                 return node.Value;
             }
         }
@@ -354,7 +360,7 @@ internal sealed class BridgeSession : IDisposable
     /// A message over the size limit is never decoded whole: only its header, when it sits within the first
     /// characters, is read to answer the call by its id. One that names no fresh call id gets no reply.
     /// </summary>
-    private void RefuseTooLarge(string message, int bytes)
+    private void RefuseTooLarge(string message, int bytes, Received received)
     {
         var tab = message.AsSpan(0, Math.Min(message.Length, HeaderSearchChars)).IndexOf('\t');
         if (tab < 0 || !BridgeCodec.TryDecode(string.Concat(message.AsSpan(0, tab), "\t"), out var header, out _) || header!.Type != BridgeMessageType.Call)
@@ -376,11 +382,10 @@ internal sealed class BridgeSession : IDisposable
             return;
         }
 
-        MessageTooLarge(_logger, id, bytes, _limits.MaxMessageBytes, null);
-        Send(FailureMessage(id, SparFailure.TooLarge(bytes, _limits.MaxMessageBytes), header));
+        RefuseAtTheDoor(header, id, SparFailure.TooLarge(bytes, _limits.MaxMessageBytes), received);
     }
 
-    private void Refuse(BridgeDecodeError error)
+    private void Refuse(BridgeDecodeError error, Received received)
     {
         if (error.Id is not { } id)
         {
@@ -401,7 +406,7 @@ internal sealed class BridgeSession : IDisposable
 
         if (fresh)
         {
-            Send(FailureMessage(id, SparFailure.InvalidRequest(error.Reason), null));
+            RefuseAtTheDoor(null, id, SparFailure.InvalidRequest(error.Reason), received);
         }
         else
         {
@@ -409,7 +414,7 @@ internal sealed class BridgeSession : IDisposable
         }
     }
 
-    private void Refuse(BridgeMessage message, string reason)
+    private void Refuse(BridgeMessage message, string reason, Received received)
     {
         var id = message.Id!.Value;
         bool fresh;
@@ -420,14 +425,14 @@ internal sealed class BridgeSession : IDisposable
 
         if (fresh)
         {
-            Send(FailureMessage(id, SparFailure.InvalidRequest(reason), message));
+            RefuseAtTheDoor(message, id, SparFailure.InvalidRequest(reason), received);
         }
     }
 
     /// <summary>Fails a running or waiting call; a running one keeps its slot until its command ends.</summary>
     private bool FailPending(long id, SparFailure failure)
     {
-        BridgeMessage? waiting = null;
+        Waiting? waiting = null;
         lock (_gate)
         {
             if (_pending.Remove(id, out var token))
@@ -444,7 +449,12 @@ internal sealed class BridgeSession : IDisposable
             }
         }
 
-        Send(FailureMessage(id, failure, waiting));
+        if (waiting is { } ended)
+        {
+            _telemetry.Ended(ended.Call, id, failure, ended.Received, atTheDoor: false);
+        }
+
+        Send(FailureMessage(id, failure, waiting?.Call));
         return true;
     }
 
@@ -555,4 +565,7 @@ internal sealed class BridgeSession : IDisposable
 
         _send(Encoding.UTF8.GetString(BridgeCodec.Encode(message)));
     }
+
+    /// <summary>A call waiting for a slot, with when it arrived.</summary>
+    private readonly record struct Waiting(BridgeMessage Call, Received Received);
 }

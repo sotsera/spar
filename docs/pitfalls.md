@@ -535,6 +535,8 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 ## Observability
 
+- **Tag values taken from the page multiply metric series:** a refused call names whatever contract and command the page wrote, and each distinct value is a new series in every exporter. Spar tags only names the app's catalog has, and `unknown` otherwise. (M1a instrumentation)
+
 - **Page spans are lost when a desktop window closes:** none delivered in 2 of 2 runs with the default 5 s batch delay. The host must ask the page to flush and wait (bounded, 1 s); the flush took 9–22 ms. A headless `page.close` on loopback also delivered nothing; navigating away flushed. (`browser-telemetry`)
 - **A collector that is down stalls the page and the relay.** The JS SDK's `forceFlush` rejects, and each relay attempt waits about 2 s for a refused connection. Make the flush never reject, and have the relay answer 503 at once for a while after a failure. (`browser-telemetry`)
 - **A hard-coded service name splits one app in two under Aspire.** Read `OTEL_SERVICE_NAME` (and name the page `<name>-page`). (`browser-telemetry`)
