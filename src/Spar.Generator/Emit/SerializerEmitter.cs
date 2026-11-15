@@ -61,6 +61,7 @@ internal static class SerializerEmitter
         WireKind.Double => $"{Json}.ReadDouble(ref reader)",
         WireKind.Guid => $"{Json}.ReadGuid(ref reader)",
         WireKind.DateTimeOffset => $"{Json}.ReadDateTimeOffset(ref reader)",
+        WireKind.List when type.Key.StartsWith("ArrayOf", System.StringComparison.Ordinal) => $"[.. {Json}.ReadList(ref reader, Read{type.Element!.Key})]",
         WireKind.List => $"{Json}.ReadList(ref reader, Read{type.Element!.Key})",
         WireKind.Nullable => $"reader.TokenType == {TokenType}.Null ? null : Read{type.Element!.Key}(ref reader)",
         _ => $"Read{type.Key}(ref reader)",

@@ -1,0 +1,12 @@
+<Project>
+  <!-- Spar's runtime tests: the bridge codec against the shared vectors, the session, and dispatch. -->
+  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
+</Project>

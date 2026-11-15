@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The generator and analyzer tests (test type 8): exact diagnostics with their located text, generated code that
+    compiles for every supported shape, the variant rules, and output snapshots. They compile C# in memory, so they
+    run on CoreCLR only.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.Generator.Tests</RootNamespace>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(MSBuildThisFileDirectory)..\..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Generator\Spar.Generator.csproj" />
+    <ProjectReference Include="..\..\src\Spar\Spar.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Snapshots\**" CopyToOutputDirectory="Never" />
+  </ItemGroup>
+</Project>

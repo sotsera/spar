@@ -50,8 +50,13 @@ jobs:
       - name: Test (NativeAOT lane)
         shell: bash
         run: |
-          dotnet publish samples/Notebook.Tests -c Release -p:SparTestLane=Aot -o artifacts/aot/Notebook.Tests
-          artifacts/aot/Notebook.Tests/Notebook.Tests
+          # The same test projects published with NativeAOT (plan section 5); the generator tests compile C# in memory
+          # and stay on CoreCLR.
+          for project in tests/Spar.Tests tests/WireShapes.Tests samples/Notebook.Tests; do
+            name=$(basename "$project")
+            dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
+            "artifacts/aot/$name/$name"
+          done
 
       - name: Build with -mt
         run: dotnet build Spar.slnx -c Debug -mt -nodeReuse:false

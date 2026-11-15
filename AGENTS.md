@@ -64,7 +64,7 @@ Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# sid
 |---|---|
 | `src/` | Framework projects: `Spar` (runtime), `Spar.Generator` (generator and analyzer), `Spar.Testing`, `Spar.Sdk` (props and targets) |
 | `samples/` | Polished sample apps and their tests; in this repository they import `src/Spar.Sdk/Sdk/` directly (source mode) |
-| `tests/` | Framework tests (from M1) |
+| `tests/` | Framework tests: `Spar.Tests` (runtime and bridge), `Spar.Generator.Tests` (in-memory compilation), `WireShapes.Tests` with its app under `tests/apps/`, and the shared vectors in `tests/conformance/` |
 | `eng/` | Repository checks: `check-size.cs` and its exceptions file |
 | `.github/workflows/` | CI on GitHub Actions (decision "CI on GitHub Actions; the first slice"); not run until the first push |
 | `plugins/spar/` | The app-author skills plugin, versioned and released with the SDK; its marketplace file is at the root (not created yet) |

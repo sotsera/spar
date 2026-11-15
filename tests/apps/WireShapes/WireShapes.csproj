@@ -1,0 +1,11 @@
+<Project>
+  <!-- A test app whose one contract echoes every wire shape the generator supports, for run-time serializer tests. -->
+  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>WireShapes</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
+</Project>

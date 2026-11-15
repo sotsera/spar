@@ -206,8 +206,10 @@ internal sealed class ContractAnalysis
 
         if (List(type) is { } element)
         {
+            // Arrays and read-only lists read the same JSON, but are different C# types with their own methods.
             var item = Wire(element, location);
-            return item is null ? null : new TypeRef(WireKind.List, csharp, "ListOf" + item.Key, item, false);
+            var prefix = type is IArrayTypeSymbol ? "ArrayOf" : "ListOf";
+            return item is null ? null : new TypeRef(WireKind.List, csharp, prefix + item.Key, item, false);
         }
 
         if (type is INamedTypeSymbol named && named.IsRecord && named.TypeKind == TypeKind.Class)

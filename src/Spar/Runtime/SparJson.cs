@@ -133,11 +133,21 @@ public static class SparJson
         return Guid.TryParseExact(text, "D", out var value) ? value : throw Error(ref reader, "Expected a GUID");
     }
 
+    /// <summary>ISO 8601 with an offset, required on read (wire rules): without one the instant would depend on the reader's time zone.</summary>
     public static DateTimeOffset ReadDateTimeOffset(ref Utf8JsonReader reader)
     {
         Expect(ref reader, JsonTokenType.String);
-        return reader.TryGetDateTimeOffset(out var value) ? value : throw Error(ref reader, "Expected an ISO 8601 date and time");
+        var text = reader.GetString()!;
+        if (!HasOffset(text) || !reader.TryGetDateTimeOffset(out var value))
+        {
+            throw Error(ref reader, "Expected an ISO 8601 date and time with an offset");
+        }
+
+        return value;
     }
+
+    private static bool HasOffset(string text) =>
+        text.EndsWith('Z') || (text.Length > 6 && text[^6] is '+' or '-' && text[^3] == ':');
 
     public static IReadOnlyList<T> ReadList<T>(ref Utf8JsonReader reader, SparReader<T> readItem)
     {
