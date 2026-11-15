@@ -58,7 +58,7 @@ Apply these rules to authored `.csproj`, `.props` and `.targets` files.
 
 - Runnable output and ordinary publish output go in the project's own `bin/`.
 - Generated files, caches and private publish staging go in the project's own `obj/`. Keep publish staging separate from the incremental cache so staging can be cleared before a publish.
-- The one generated file outside `obj/` is the contract snapshot, `<Project>.contracts.snapshot`, next to the project. It is committed with LF endings and written only when it changes. Local builds update it; under `ContinuousIntegrationBuild` the build verifies it and fails with SPAR100 when it is stale.
+- The one generated file outside `obj/` is the contract snapshot, `<Project>.contracts.snapshot`, next to the project. It is committed with LF endings and written only when it changes. Local builds update it; under `ContinuousIntegrationBuild` the build verifies it and fails with SPAR100 when it is stale (`SparContractSnapshot` = `Update` or `Verify`). The client step writes the expected text under `obj/spar/`, and a target that runs on every build compares the committed copy with it, so a stale copy is found even when the step is up to date.
 - Test results go under `artifacts/test-results/<project>/` at the repository root, never into authored folders (the empty `TestResults/` folder `dotnet test` otherwise leaves in the working directory); the mechanism is checked in M1a.
 - The root `artifacts/` is only for web-engine profiles and test data roots, and for outputs deliberately collected for inspection or transfer, such as Windows Sandbox guest payloads (`AGENTS.md`). Everything there is disposable.
 - Keep outputs separate for every project and build dimension that can run concurrently.

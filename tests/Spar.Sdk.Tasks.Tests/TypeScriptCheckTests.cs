@@ -84,11 +84,52 @@ public sealed partial class TypeScriptCheckTests
         }
     }
 
+    [Fact]
+    public async Task Go_to_definition_on_a_generated_name_opens_its_CSharp_declaration()
+    {
+        var directory = Prepare("consumer.ts", "Bundler");
+        try
+        {
+            File.Copy(Path.Combine(Repository.Root, "tests", "Spar.Sdk.Tasks.Tests", "TypeScript", "definitions.cjs"), Path.Combine(directory, "definitions.cjs"));
+            string[][] probes =
+            [
+                ["orders.place(basket)", "place"],
+                ["return orders.place", "orders"],
+                ["outOfStock: error", "outOfStock"],
+                ["const basket: Basket", "Basket"],
+                ["{ sku: \"A-100\", stock: 3n", "sku"],
+                [".unwrap()).price", "price"],
+                ["stock.list()", "list"],
+            ];
+            var typeScript = Path.Combine(Repository.Client, "node_modules", "typescript");
+
+            var (exit, output) = await RunAsync(Path.Combine(directory, "definitions.cjs"), typeScript, directory, System.Text.Json.JsonSerializer.Serialize(probes, ProbeJson.Default.StringArrayArray));
+
+            Assert.True(exit == 0, output);
+            var landed = System.Text.Json.JsonDocument.Parse(output).RootElement;
+            Assert.Equal($"app/Contracts.cs:{LineOf("PlaceAsync")}", landed.GetProperty("orders.place(basket)").GetString());
+            Assert.Equal($"app/Contracts.cs:{LineOf("class OrdersService")}", landed.GetProperty("return orders.place").GetString());
+            Assert.Equal($"app/Contracts.cs:{LineOf("record OutOfStock")}", landed.GetProperty("outOfStock: error").GetString());
+            Assert.Equal($"app/Contracts.cs:{LineOf("record Basket")}", landed.GetProperty("const basket: Basket").GetString());
+            Assert.Equal($"app/Contracts.cs:{LineOf("record Item(")}", landed.GetProperty("{ sku: \"A-100\", stock: 3n").GetString());
+            Assert.Equal($"app/Contracts.cs:{LineOf("record Item(")}", landed.GetProperty(".unwrap()).price").GetString());
+            Assert.Equal($"app/Contracts.cs:{LineOf("ListAsync")}", landed.GetProperty("stock.list()").GetString());
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    /// <summary>The 1-based line of the Shop fixture that holds <paramref name="text"/>.</summary>
+    private static int LineOf(string text) =>
+        Fixtures.Shop.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n').ToList().FindIndex(line => line.Contains(text, StringComparison.Ordinal)) + 1;
+
     /// <summary>A scratch app: the Shop package under <c>node_modules/@spar/app</c>, one TypeScript file, its tsconfig.</summary>
     private static string Prepare(string file, string resolution)
     {
         var directory = Repository.Scratch(Path.GetFileNameWithoutExtension(file));
-        ClientHarness.Write(Fixtures.Shop, Path.Combine(directory, "node_modules", "@spar", "app"));
+        ClientHarness.Write(Fixtures.Shop, Path.Combine(directory, "app"), Path.Combine(directory, "node_modules", "@spar", "app"));
         File.Copy(Path.Combine(Repository.Root, "tests", "Spar.Sdk.Tasks.Tests", "TypeScript", file), Path.Combine(directory, file));
         File.WriteAllText(Path.Combine(directory, "package.json"), "{ \"private\": true, \"type\": \"module\" }\n");
 
@@ -148,3 +189,7 @@ public sealed partial class TypeScriptCheckTests
     [GeneratedRegex(@"mistakes\.ts\((\d+),\d+\): error (TS\d+)")]
     private static partial Regex Reported();
 }
+
+/// <summary>Source-generated JSON for the probes, as the trim and AOT analyzers require.</summary>
+[System.Text.Json.Serialization.JsonSerializable(typeof(string[][]))]
+internal sealed partial class ProbeJson : System.Text.Json.Serialization.JsonSerializerContext;

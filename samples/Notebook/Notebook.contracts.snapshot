@@ -1,0 +1,41 @@
+# The contracts of Notebook as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint 59cb559befd9b76b
+
+contract pages (Notebook.Pages.PagesService)
+  create(Notebook.Pages.CreatePage) -> Notebook.Pages.Page | Notebook.Pages.PageError
+  delete(Notebook.Pages.PageRef) -> void | Notebook.Pages.PageError
+  get(Notebook.Pages.PageRef) -> Notebook.Pages.Page | Notebook.Pages.PageError
+  list() -> IReadOnlyList<Notebook.Pages.PageSummary>
+  save(Notebook.Pages.SavePage) -> Notebook.Pages.Page | Notebook.Pages.PageError
+
+record Notebook.Pages.CreatePage
+  title: string
+  markdown: string?
+
+record Notebook.Pages.Page
+  id: string
+  title: string
+  markdown: string
+  updatedAt: DateTimeOffset
+  revision: long
+
+record Notebook.Pages.PageRef
+  id: string
+
+record Notebook.Pages.PageSummary
+  id: string
+  title: string
+  updatedAt: DateTimeOffset
+
+record Notebook.Pages.SavePage
+  id: string
+  markdown: string
+  baseRevision: long
+
+error Notebook.Pages.PageError
+  titleTaken(title: string)
+  invalidTitle(reason: string)
+  notFound(id: string)
+  changedElsewhere(currentRevision: long)

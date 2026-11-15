@@ -2965,3 +2965,14 @@ The user asked for the gap found in review to be closed ("Yes, fix it"). Evidenc
 - **Corrected:** the clash check compared each contract's types with every shared type, including ones that contract does not import, so it could report a clash that does not exist. It now checks each module's own names, and the shared module on its own.
 - **Not handled:** an explicit `[SparName]` on a type does not rename it in TypeScript yet, so the fix for these problems is renaming the C# type.
 - **Tests:** `tests/Spar.Sdk.Tasks.Tests` 37 (13 new); `dotnet test` 226, all passing.
+
+## 2026-11-15, Declaration maps and the contract snapshot (implementation record; choices for review)
+
+Evidence: `docs/evidence/m1a-client-step.md`, "Follow-up: declaration maps and the snapshot".
+- **Declaration maps built:** every generated `.d.ts` ends with `//# sourceMappingURL=` and has a `.d.ts.map` (source map version 3) whose sources are the C# files, reached from the package folder (`../../../Program.cs`). Each declared name maps to its C# declaration: a record or error type to its name, a property to the record's parameter, an error case to its nested record, the contract object to the contract type, a command to its method. Observed through `tsserver`, the process editors talk to: go-to-definition on seven names in a page landed on the exact C# line each time. The plain language-service API returns the `.d.ts` position; the mapping to the source is applied by `tsserver`, so the test drives `tsserver`.
+- **The contract snapshot built:** `<Project>.contracts.snapshot` next to each app, committed (`tests/apps/WireShapes/`, `samples/Notebook/`): the fingerprint, then each contract's commands with their request and result, each record's values and each error's cases, one per line, sorted, with C# names (BCL namespaces dropped).
+- **Choices made while building, for review:**
+  - **The property is `SparContractSnapshot`,** `Update` by default and `Verify` when `ContinuousIntegrationBuild` is `true`; CI now sets `ContinuousIntegrationBuild`.
+  - **The committed copy is compared on every build, not only when the client step runs.** The step writes the expected text to `obj/spar/contracts.snapshot`; a small target in `Sdk.targets` compares the committed file with it (CRLF read as LF), copies it under `Update` and fails with SPAR100 under `Verify`. The first version did both inside the incremental step, and a stale snapshot passed a CI-mode build because the step was up to date.
+- **Not built:** the manifest, the differential test against `tsc --declaration`, and maps for the `.js` (only declarations are mapped; go-to-definition uses declarations).
+- **Tests:** `tests/Spar.Sdk.Tasks.Tests` 40 (snapshot text, a one-line diff for a new field, the go-to-definition probe, the map files in the package); `dotnet test` 229, the NativeAOT lane 154.

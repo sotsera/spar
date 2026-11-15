@@ -20,6 +20,8 @@ env:
   DOTNET_NOLOGO: "1"
   # Results go where AGENTS.md puts them; the upload step collects them.
   SPAR_TEST_RESULTS: ${{ github.workspace }}/artifacts/test-results
+  # A CI build: deterministic paths, and the committed contract snapshots are verified (SPAR100), never rewritten.
+  ContinuousIntegrationBuild: "true"
 
 jobs:
   build-test:

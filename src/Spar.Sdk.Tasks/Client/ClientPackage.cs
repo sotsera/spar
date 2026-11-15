@@ -13,7 +13,12 @@ namespace Spar.Sdk.Tasks.Client;
 internal static class ClientPackage
 {
     /// <summary>Every file of the package, by its path relative to the package folder, with <c>/</c> separators.</summary>
-    public static SortedDictionary<string, byte[]> Files(ClientLayout layout, AbsolutePath sdkDirectory, AbsolutePath sdkSourceDirectory, string version)
+    /// <summary>
+    /// Every file of the package. <paramref name="sourcePrefix"/> is the way from the package folder to the project
+    /// folder (<c>../../../</c> for <c>obj/spar/client</c>), so the declaration maps reach the C# files.
+    /// </summary>
+    public static SortedDictionary<string, byte[]> Files(
+        ClientLayout layout, AbsolutePath sdkDirectory, AbsolutePath sdkSourceDirectory, string version, string sourcePrefix)
     {
         var files = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
         void Text(string path, string text) => files[path] = Encoding.UTF8.GetBytes(text);
@@ -25,13 +30,17 @@ internal static class ClientPackage
         if (layout.Shared.Any())
         {
             Text("shared.js", ModuleEmitter.Shared(layout));
-            Text("shared.d.ts", DeclarationEmitter.Shared(layout));
+            var shared = DeclarationEmitter.Shared(layout);
+            Text("shared.d.ts", shared.ToString());
+            Text("shared.d.ts.map", shared.SourceMap("shared.d.ts", sourcePrefix));
         }
 
         foreach (var contract in layout.Contracts)
         {
             Text($"{contract.Model.WireName}.js", ModuleEmitter.Contract(layout, contract));
-            Text($"{contract.Model.WireName}.d.ts", DeclarationEmitter.Contract(layout, contract));
+            var declarations = DeclarationEmitter.Contract(layout, contract);
+            Text($"{contract.Model.WireName}.d.ts", declarations.ToString());
+            Text($"{contract.Model.WireName}.d.ts.map", declarations.SourceMap($"{contract.Model.WireName}.d.ts", sourcePrefix));
         }
 
         foreach (var file in Directory.EnumerateFiles(sdkDirectory).Where(IsCompiledSdkFile))
@@ -65,9 +74,7 @@ internal static class ClientPackage
             }
 
             Directory.CreateDirectory(new AbsolutePath(Path.GetDirectoryName(path.Value)!));
-            var temporary = new AbsolutePath($"{path.Value}.{Guid.NewGuid():N}.tmp");
-            File.WriteAllBytes(temporary, bytes);
-            Replace(temporary, path);
+            Write(path, bytes);
             written.Add(relative);
         }
 
@@ -85,6 +92,14 @@ internal static class ClientPackage
         }
 
         return written;
+    }
+
+    /// <summary>Writes a file by replacing it in one step, so a build running beside this one never sees half of it.</summary>
+    public static void Write(AbsolutePath path, byte[] bytes)
+    {
+        var temporary = new AbsolutePath($"{path.Value}.{Guid.NewGuid():N}.tmp");
+        File.WriteAllBytes(temporary, bytes);
+        Replace(temporary, path);
     }
 
     private static void Replace(AbsolutePath temporary, AbsolutePath path)

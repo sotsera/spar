@@ -43,6 +43,21 @@ Windows 11 Pro 10.0.26320, SDK 11.0.100, `Microsoft.CodeAnalysis.CSharp` 5.9.0, 
 
 At the user's request (decision "Client step: reserved type names"). Observed: a type named `any`, `@string`, `@default` or `undefined` is SPAR003 at line 4 of its file, a type named `Call` or `CallOptions` is SPAR040 there, contracts named `wire`, `invoke`, `noErrors`, `pingDecoder` or `readItem` (beside a type `Item`) are SPAR003, two shared types with one name are SPAR040, and a contract that does not import a shared type may declare its own of that name. `tests/Spar.Sdk.Tasks.Tests` 37 of 37; `dotnet test` 226 of 226.
 
+## Follow-up: declaration maps and the snapshot
+
+Decision "Declaration maps and the contract snapshot". Observed:
+
+| Check | Result |
+|---|---|
+| Go-to-definition through `tsserver` (TypeScript 6.0.3) on a consumer page | `orders.place` → the line of `PlaceAsync`; `orders` → `class OrdersService`; `outOfStock` → `record OutOfStock`; `Basket` → `record Basket`; `sku` and `price` (through the shared module) → `record Item(`; `stock.list` → `ListAsync`, each in the C# file the maps name |
+| Snapshot, CI mode (`ContinuousIntegrationBuild=true`), on a copy of WireShapes | matching: passes; edited after an up-to-date build: SPAR100 "out of date"; deleted: SPAR100 "missing"; a CRLF copy: passes |
+| Snapshot, local build | rewrites a missing or stale copy, byte for byte equal to the committed one |
+| A new record field | one new snapshot line and a new fingerprint |
+| Tests | `tests/Spar.Sdk.Tasks.Tests` 40 of 40; `dotnet test` 229 of 229; NativeAOT lane 154 of 154; `-mt` build clean |
+| A stale task under a warm node | MSB4064 for the new parameter on a reused node; the same build on fresh nodes passed (see the pitfalls) |
+
+Not verified: go-to-definition in the Visual Studio and VS Code windows themselves (the plan's checks at the PC), and with TypeScript 7's language server.
+
 ## Not done or not verified
 
 - **Not built:** the `.d.ts.map` to the C# declarations (go-to-definition), the manifest, the contract snapshot and SPAR100, the differential test against `tsc --declaration`, `@spar/app/windows`, streams and subscriptions in the modules, the package-mode paths, and the SDK version as the package version (it is `0.0.0`).

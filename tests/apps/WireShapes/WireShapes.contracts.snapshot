@@ -1,0 +1,33 @@
+# The contracts of WireShapes as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint 4c0e639860861c8e
+
+contract echo (WireShapes.EchoService)
+  big(WireShapes.Item) -> long
+  check(WireShapes.Item) -> WireShapes.Item | WireShapes.EchoError
+  ratio(WireShapes.Item) -> double
+  shapes(WireShapes.Shapes) -> WireShapes.Shapes
+  wait(WireShapes.Item) -> WireShapes.Item
+
+record WireShapes.Item
+  name: string
+
+record WireShapes.Shapes
+  text: string
+  note: string?
+  flag: bool
+  count: int
+  big: long
+  ratio: double
+  key: Guid
+  at: DateTimeOffset
+  maybe: int?
+  tags: IReadOnlyList<string>
+  cells: IReadOnlyList<string?>
+  items: WireShapes.Item[]
+  parent: WireShapes.Shapes?
+
+error WireShapes.EchoError
+  refused(reason: string)
+  empty

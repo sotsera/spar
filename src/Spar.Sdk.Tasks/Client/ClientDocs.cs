@@ -5,6 +5,9 @@ using Microsoft.CodeAnalysis;
 
 namespace Spar.Sdk.Tasks.Client;
 
+/// <summary>A name in a C# file: the file relative to the project, and its 0-based line and column.</summary>
+internal readonly record struct SourceSpot(string File, int Line, int Column);
+
 /// <summary>
 /// The C# documentation of the project's own types, for the JSDoc of the generated modules. Types from referenced
 /// assemblies have none here. Keys are the generator's C# spellings (<c>global::App.Item</c>).
@@ -26,16 +29,38 @@ internal sealed class ClientDocs
     }
 
     /// <summary>Where the project declares a type: its file relative to the project, and its 1-based line.</summary>
-    public (string File, int Line)? Location(string csharp)
+    public (string File, int Line)? Location(string csharp) =>
+        TypeSpot(csharp, out var spot) ? (spot.File, spot.Line + 1) : null;
+
+    /// <summary>The name of a type in the project's source, for the declaration maps.</summary>
+    public bool TypeSpot(string csharp, out SourceSpot spot) => Spot(_types.GetValueOrDefault(csharp), out spot);
+
+    /// <summary>The name of a method, by its C# name.</summary>
+    public bool MethodSpot(string typeCSharp, string method, out SourceSpot spot) =>
+        Spot(_types.GetValueOrDefault(typeCSharp)?.GetMembers(method).FirstOrDefault(), out spot);
+
+    /// <summary>A positional record's parameter, which declares the property.</summary>
+    public bool ParameterSpot(string recordCSharp, string parameter, out SourceSpot spot)
     {
-        var location = _types.TryGetValue(csharp, out var type) ? type.Locations.FirstOrDefault(l => l.IsInSource) : null;
+        var declared = _types.GetValueOrDefault(recordCSharp)?.InstanceConstructors
+            .SelectMany(c => c.Parameters)
+            .FirstOrDefault(p => p.Name == parameter && p.Locations.Any(l => l.IsInSource));
+        return Spot(declared, out spot);
+    }
+
+    private bool Spot(ISymbol? symbol, out SourceSpot spot)
+    {
+        var location = symbol?.Locations.FirstOrDefault(l => l.IsInSource);
         if (location?.SourceTree is null)
         {
-            return null;
+            spot = default;
+            return false;
         }
 
+        var start = location.GetLineSpan().StartLinePosition;
         var file = Path.GetRelativePath(_projectDirectory, location.SourceTree.FilePath).Replace('\\', '/');
-        return (file, location.GetLineSpan().StartLinePosition.Line + 1);
+        spot = new SourceSpot(file, start.Line, start.Character);
+        return true;
     }
 
     /// <summary>A type's summary.</summary>

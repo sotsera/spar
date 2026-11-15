@@ -13,33 +13,40 @@ internal static class ClientHarness
 
     private static readonly Lazy<ImmutableArray<MetadataReference>> References = new(LoadReferences);
 
-    public static ClientLayout Plan(string source)
+    /// <summary>The package's folder relative to the project's in an app: <c>obj/spar/client</c>.</summary>
+    private const string SourcePrefix = "../../../";
+
+    private static string DefaultProject => Path.Combine(Repository.Root, "app");
+
+    /// <summary>The layout of <paramref name="source"/>, compiled as <c>Contracts.cs</c> in <paramref name="projectDirectory"/>.</summary>
+    public static ClientLayout Plan(string source, string? projectDirectory = null)
     {
-        var compilation = Compile(source);
-        var contracts = ContractSource.Read(compilation, Path.Combine(Repository.Root, "app"), TestContext.Current.CancellationToken);
+        var project = projectDirectory ?? DefaultProject;
+        var compilation = Compile(source, project);
+        var contracts = ContractSource.Read(compilation, project, TestContext.Current.CancellationToken);
         return ClientLayout.Plan(contracts);
     }
 
     /// <summary>The compiler's errors for <paramref name="source"/>, for a test that must start from valid C#.</summary>
     public static IReadOnlyList<string> Errors(string source) =>
-        [.. Compile(source).GetDiagnostics(TestContext.Current.CancellationToken)
+        [.. Compile(source, DefaultProject).GetDiagnostics(TestContext.Current.CancellationToken)
             .Where(d => d.Severity == DiagnosticSeverity.Error)
             .Select(d => d.ToString())];
 
-    private static CSharpCompilation Compile(string source) =>
+    private static CSharpCompilation Compile(string source, string projectDirectory) =>
         CSharpCompilation.Create(
             "App",
-            [CSharpSyntaxTree.ParseText(source, ParseOptions, path: Path.Combine(Repository.Root, "app", "Contracts.cs"))],
+            [CSharpSyntaxTree.ParseText(source, ParseOptions, path: Path.Combine(projectDirectory, "Contracts.cs"))],
             References.Value,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
 
-    /// <summary>The package's files as text, by path; the SDK's own files are left out unless asked for.</summary>
+    /// <summary>The package's files as text, by path; the SDK's own files are left out.</summary>
     public static SortedDictionary<string, string> Emit(string source)
     {
         var layout = Plan(source);
         Assert.Empty(layout.Problems);
 
-        var files = ClientPackage.Files(layout, new AbsolutePath(Repository.SdkBuild), new AbsolutePath(Repository.SdkSources), "1.2.3");
+        var files = ClientPackage.Files(layout, new AbsolutePath(Repository.SdkBuild), new AbsolutePath(Repository.SdkSources), "1.2.3", SourcePrefix);
         var text = new SortedDictionary<string, string>(StringComparer.Ordinal);
         foreach (var (path, bytes) in files.Where(f => !f.Key.StartsWith("sdk/", StringComparison.Ordinal)))
         {
@@ -49,14 +56,21 @@ internal static class ClientHarness
         return text;
     }
 
-    /// <summary>Writes the whole package, the SDK included, into <paramref name="directory"/>.</summary>
-    public static void Write(string source, string directory)
+    /// <summary>
+    /// Writes <paramref name="source"/> as <c>Contracts.cs</c> into <paramref name="projectDirectory"/>, and the whole
+    /// package, the SDK included, into <paramref name="packageDirectory"/>, with maps from one to the other.
+    /// </summary>
+    public static void Write(string source, string projectDirectory, string packageDirectory)
     {
-        var layout = Plan(source);
+        Directory.CreateDirectory(projectDirectory);
+        File.WriteAllText(Path.Combine(projectDirectory, "Contracts.cs"), source);
+
+        var layout = Plan(source, projectDirectory);
         Assert.Empty(layout.Problems);
-        var files = ClientPackage.Files(layout, new AbsolutePath(Repository.SdkBuild), new AbsolutePath(Repository.SdkSources), "1.2.3");
-        Directory.CreateDirectory(directory);
-        ClientPackage.Sync(new AbsolutePath(directory), files);
+        var prefix = Path.GetRelativePath(packageDirectory, projectDirectory).Replace('\\', '/') + "/";
+        var files = ClientPackage.Files(layout, new AbsolutePath(Repository.SdkBuild), new AbsolutePath(Repository.SdkSources), "1.2.3", prefix);
+        Directory.CreateDirectory(packageDirectory);
+        ClientPackage.Sync(new AbsolutePath(packageDirectory), files);
     }
 
     /// <summary>The BCL and Spar: the runtime lists them among its trusted assemblies.</summary>

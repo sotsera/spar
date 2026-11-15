@@ -9,7 +9,7 @@ public sealed class EmitterTests
         var files = ClientHarness.Emit(Fixtures.Shop);
 
         Assert.Equal(
-            ["orders.d.ts", "orders.js", "package.json", "shared.d.ts", "shared.js", "spar.d.ts", "spar.js", "stock.d.ts", "stock.js"],
+            ["orders.d.ts", "orders.d.ts.map", "orders.js", "package.json", "shared.d.ts", "shared.d.ts.map", "shared.js", "spar.d.ts", "spar.js", "stock.d.ts", "stock.d.ts.map", "stock.js"],
             files.Keys);
         Assert.Contains("\"./orders\": {\n      \"types\": \"./orders.d.ts\",\n      \"default\": \"./orders.js\"\n    }", files["package.json"], StringComparison.Ordinal);
         Assert.Contains("\"version\": \"1.2.3\"", files["package.json"], StringComparison.Ordinal);

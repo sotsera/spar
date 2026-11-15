@@ -87,6 +87,11 @@
   -->
   <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
     <SparClientDirectory>$(MSBuildProjectDirectory)\obj\spar\client\</SparClientDirectory>
+    <!-- The committed snapshot: updated by local builds, verified (SPAR100) by CI builds, against the expected one. -->
+    <SparContractSnapshotFile>$(MSBuildProjectDirectory)\$(MSBuildProjectName).contracts.snapshot</SparContractSnapshotFile>
+    <SparContractSnapshotExpected>$(MSBuildProjectDirectory)\obj\spar\contracts.snapshot</SparContractSnapshotExpected>
+    <SparContractSnapshot Condition="'$(SparContractSnapshot)' == '' and '$(ContinuousIntegrationBuild)' == 'true'">Verify</SparContractSnapshot>
+    <SparContractSnapshot Condition="'$(SparContractSnapshot)' == ''">Update</SparContractSnapshot>
     <SparClientInventory>$(IntermediateOutputPath)spar-client.inventory</SparClientInventory>
     <SparClientStamp>$(IntermediateOutputPath)spar-client.stamp</SparClientStamp>
   </PropertyGroup>
@@ -124,7 +129,7 @@
           DependsOnTargets="SparWriteClientInventory"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'"
           Inputs="$(SparClientInventory);@(Compile);@(ReferencePath);@(_SparClientSdkFile);$(SparTasksAssembly)"
-          Outputs="$(SparClientStamp);$(SparClientDirectory)package.json">
+          Outputs="$(SparClientStamp);$(SparClientDirectory)package.json;$(SparContractSnapshotExpected)">
     <SparClient Sources="@(Compile)"
                 References="@(ReferencePath)"
                 DefineConstants="$(DefineConstants)"
@@ -132,9 +137,37 @@
                 ProjectDirectory="$(MSBuildProjectDirectory)"
                 OutputDirectory="$(SparClientDirectory)"
                 SdkDirectory="$(SparClientSdkDirectory)"
-                SdkSourceDirectory="$(SparClientSdkSourceDirectory)" />
+                SdkSourceDirectory="$(SparClientSdkSourceDirectory)"
+                ProjectName="$(MSBuildProjectName)"
+                SnapshotFile="$(SparContractSnapshotExpected)" />
 
     <Touch Files="$(SparClientStamp)" AlwaysCreate="true" />
+  </Target>
+
+  <!--
+    The committed snapshot against the expected one, on every build: a stale copy (a reverted file, a cached CI build)
+    is found even when the client step is up to date. Text is compared with CRLF read as LF.
+  -->
+  <Target Name="SparCheckContractSnapshot"
+          AfterTargets="SparClient"
+          BeforeTargets="CoreCompile"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_SparSnapshotExpected>$([System.IO.File]::ReadAllText('$(SparContractSnapshotExpected)'))</_SparSnapshotExpected>
+      <_SparSnapshotCommitted></_SparSnapshotCommitted>
+      <_SparSnapshotCommitted Condition="Exists('$(SparContractSnapshotFile)')">$([System.IO.File]::ReadAllText('$(SparContractSnapshotFile)').Replace('&#13;&#10;', '&#10;'))</_SparSnapshotCommitted>
+      <_SparSnapshotState Condition="!Exists('$(SparContractSnapshotFile)')">missing</_SparSnapshotState>
+      <_SparSnapshotState Condition="Exists('$(SparContractSnapshotFile)') and '$(_SparSnapshotExpected)' != '$(_SparSnapshotCommitted)'">out of date</_SparSnapshotState>
+    </PropertyGroup>
+
+    <Error Code="SPAR100" File="$(SparContractSnapshotFile)"
+           Condition="'$(_SparSnapshotState)' != '' and '$(SparContractSnapshot)' == 'Verify'"
+           Text="The contract snapshot is $(_SparSnapshotState): build the project locally, which updates it, and commit it with the contract change." />
+
+    <Copy SourceFiles="$(SparContractSnapshotExpected)" DestinationFiles="$(SparContractSnapshotFile)"
+          Condition="'$(_SparSnapshotState)' != '' and '$(SparContractSnapshot)' == 'Update'" />
+    <Message Importance="high" Text="Spar: $(MSBuildProjectName).contracts.snapshot updated; commit it with the contract change."
+             Condition="'$(_SparSnapshotState)' != '' and '$(SparContractSnapshot)' == 'Update'" />
   </Target>
 
   <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->

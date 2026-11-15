@@ -55,6 +55,17 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
     /// <summary>The package's version: the SDK's.</summary>
     public string Version { get; set; } = "0.0.0";
 
+    /// <summary>The project's name, for the snapshot's header.</summary>
+    [Required]
+    public string ProjectName { get; set; } = "";
+
+    /// <summary>
+    /// Where the expected contract snapshot goes, under <c>obj/</c>. The committed copy next to the project is compared
+    /// with it on every build by <c>Sdk.targets</c>, so a stale copy is found even when this step is up to date.
+    /// </summary>
+    [Required]
+    public string SnapshotFile { get; set; } = "";
+
     public override bool Execute()
     {
         var project = TaskEnvironment.GetAbsolutePath(ProjectDirectory);
@@ -85,13 +96,28 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
             return false;
         }
 
+        WriteSnapshot(layout);
+
         var output = TaskEnvironment.GetAbsolutePath(OutputDirectory);
         Directory.CreateDirectory(output);
-        var files = ClientPackage.Files(layout, sdk, sdkSources, Version);
+        var sourcePrefix = Path.GetRelativePath(output, project).Replace('\\', '/') + "/";
+        var files = ClientPackage.Files(layout, sdk, sdkSources, Version, sourcePrefix);
         var written = ClientPackage.Sync(output, files);
 
         var summary = written.Count == 0 ? "unchanged" : $"{written.Count} file(s) written";
         Log.LogMessage(MessageImportance.Normal, "Spar client: {0} contract(s) in {1}, {2}.", layout.Contracts.Count, output, summary);
         return true;
+    }
+
+    /// <summary>Writes the expected snapshot when its text changed.</summary>
+    private void WriteSnapshot(ClientLayout layout)
+    {
+        var path = TaskEnvironment.GetAbsolutePath(SnapshotFile);
+        var expected = System.Text.Encoding.UTF8.GetBytes(ContractSnapshot.Text(ProjectName, layout.Contracts));
+        if (!File.Exists(path) || !File.ReadAllBytes(path).AsSpan().SequenceEqual(expected))
+        {
+            Directory.CreateDirectory(new AbsolutePath(Path.GetDirectoryName(path.Value)!));
+            ClientPackage.Write(path, expected);
+        }
     }
 }
