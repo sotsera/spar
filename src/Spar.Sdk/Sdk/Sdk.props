@@ -8,7 +8,12 @@
     <SparSdkDirectory>$(MSBuildThisFileDirectory)</SparSdkDirectory>
     <SparSourceRoot Condition="'$(SparSourceRoot)' == '' and Exists('$(MSBuildThisFileDirectory)..\..\Spar\Spar.csproj')">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..\..'))</SparSourceRoot>
     <SparSourceMode Condition="'$(SparSourceRoot)' != ''">true</SparSourceMode>
+    <!-- Package mode: this file is Sdk/Sdk.props inside the Spar.Sdk package, whose root holds tools/ and client/. -->
+    <SparPackageRoot Condition="'$(SparSourceMode)' != 'true'">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..'))</SparPackageRoot>
   </PropertyGroup>
+
+  <!-- Written when Spar.Sdk is packed: SparSdkVersion, and the versions of the packages the SDK adds itself. -->
+  <Import Project="Spar.Sdk.Version.props" Condition="'$(SparSourceMode)' != 'true'" />
 
   <!--
     The NativeAOT test lane (SparTestLane=Aot) restores different packages (xunit.v3.aot), so it keeps its own

@@ -82,6 +82,27 @@
                       SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
   </ItemGroup>
 
+  <!-- An end-to-end test project asks for the Browser surface (decision "Packages for the package-only consumer"). -->
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsTestProject)' == 'true' and '$(SparBrowserTests)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Testing.Browser\Spar.Testing.Browser.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
+  <!--
+    Package mode: Spar's packages at the SDK's own version, so they never drift from it, and the generator from the
+    SDK's tools/ (NuGet ignores the analyzers/ folder of an MSBuild SDK package). Implicit, like the SDK's own references.
+  -->
+  <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+    <PackageReference Include="Spar" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
+    <Analyzer Include="$(SparPackageRoot)tools\Spar.Generator.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparSourceMode)' != 'true' and '$(SparIsTestProject)' == 'true'">
+    <PackageReference Include="Spar.Testing" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
+    <PackageReference Include="Spar.Testing.Browser" Version="$(SparSdkVersion)" IsImplicitlyDefined="true"
+                      Condition="'$(SparBrowserTests)' == 'true'" />
+  </ItemGroup>
+
   <!-- The task assembly, built first so the client step can load it; nothing of it reaches the app. -->
   <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsApp)' == 'true'">
     <ProjectReference Include="$(SparSourceRoot)Spar.Sdk.Tasks\Spar.Sdk.Tasks.csproj"
@@ -105,6 +126,9 @@
     <SparContractSnapshot Condition="'$(SparContractSnapshot)' == ''">Update</SparContractSnapshot>
     <SparClientInventory>$(IntermediateOutputPath)spar-client.inventory</SparClientInventory>
     <SparClientStamp>$(IntermediateOutputPath)spar-client.stamp</SparClientStamp>
+    <!-- The generated package carries the SDK's version (plan section 1: an input of the client step); 0.0.0 from source. -->
+    <SparClientVersion Condition="'$(SparSdkVersion)' != ''">$(SparSdkVersion)</SparClientVersion>
+    <SparClientVersion Condition="'$(SparClientVersion)' == ''">0.0.0</SparClientVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'">
@@ -113,9 +137,18 @@
     <SparTasksAssembly>$(SparSourceRoot)Spar.Sdk.Tasks\bin\$(Configuration)\net11.0\Spar.Sdk.Tasks.dll</SparTasksAssembly>
   </PropertyGroup>
 
+  <!-- Package mode: the SDK package's own copies. Its task assembly never changes under a running build, so no task host. -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <SparClientSdkDirectory>$(SparPackageRoot)client\dist\</SparClientSdkDirectory>
+    <SparClientSdkSourceDirectory>$(SparPackageRoot)client\src\</SparClientSdkSourceDirectory>
+    <SparTasksAssembly>$(SparPackageRoot)tools\Spar.Sdk.Tasks.dll</SparTasksAssembly>
+  </PropertyGroup>
+
   <UsingTask TaskName="Spar.Sdk.Tasks.SparClient" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparClient" AssemblyFile="$(SparTasksAssembly)" Runtime="NET"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'" />
 
   <Target Name="SparWriteClientInventory"
           DependsOnTargets="ResolveReferences;GenerateGlobalUsings"
@@ -129,6 +162,7 @@
       <_SparClientInventoryLine Include="defines=$([MSBuild]::Escape('$(DefineConstants)'))" />
       <_SparClientInventoryLine Include="nullable=$(Nullable)" />
       <_SparClientInventoryLine Include="contracts=$(SparContractAssemblies)" />
+      <_SparClientInventoryLine Include="sdk=$(SparClientVersion)" />
       <FileWrites Include="$(SparClientInventory);$(SparClientStamp)" />
     </ItemGroup>
 
@@ -155,6 +189,7 @@
                 ProjectName="$(MSBuildProjectName)"
                 SnapshotFile="$(SparContractSnapshotExpected)"
                 ContractAssemblies="$(SparContractAssemblies)"
+                Version="$(SparClientVersion)"
                 ProjectFile="$(MSBuildProjectFullPath)" />
 
     <Touch Files="$(SparClientStamp)" AlwaysCreate="true" />
@@ -216,10 +251,14 @@
   <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)" Runtime="NET"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'" />
 
   <UsingTask TaskName="Spar.Sdk.Tasks.SparPack" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparPack" AssemblyFile="$(SparTasksAssembly)" Runtime="NET"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'" />
 
   <Target Name="SparFrontendInputs" Condition="'$(SparHasFrontend)' == 'true'">
     <ItemGroup>
@@ -331,5 +370,10 @@
     <PackageReference Include="xunit.v3" Condition="'$(SparTestLane)' != 'Aot'" />
     <PackageReference Include="xunit.v3.aot" Condition="'$(SparTestLane)' == 'Aot'" />
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!-- In package mode the SDK gives the version, written when it was packed; in this repository central package management does. -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <PackageReference Update="xunit.v3;xunit.v3.aot" Version="$(SparXunitVersion)" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,8 @@
     In M1a only the test host's Browser surface (Spar.Testing.Browser) uses it.
   -->
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>The Spar loopback host: the page in an ordinary browser over 127.0.0.1, for development and tests only.</Description>
     <RootNamespace>Spar.Loopback</RootNamespace>
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>

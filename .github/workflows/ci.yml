@@ -90,6 +90,10 @@ jobs:
         # Not in Spar.slnx: they copy the tree under artifacts/build-tests/ and build it in isolation, in minutes.
         run: dotnet test --project tests/Spar.BuildTests
 
+      - name: Package tests (Spar from its own packages, in a consumer outside the repository)
+        # Not in Spar.slnx: it packs Spar into a feed of its own and builds an app from it in a temporary folder.
+        run: dotnet test --project tests/Spar.PackageTests
+
       - name: Test results
         if: always()
         uses: actions/upload-artifact@v4

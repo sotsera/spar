@@ -252,7 +252,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 3. **Repository:**
    - CI with the build and test lanes on Windows and Linux, the `-mt` lane, and `eng/check-size.cs`;
    - the first `Spar.BuildTests`: isolation, "authored files untouched", a clean clone (built: a clean copy, the unchanged build and the Production boundary of the Notebook; decision "Build tests: a clean copy, the step matrix from binary logs, the production boundary");
-   - the package-only consumer test from the first day (section 1), with the generality fixtures (RR): a folder name with a space, an assembly name different from the project, a custom app id, a non-default frontend folder, a path with non-ASCII characters;
+   - the package-only consumer test from the first day (section 1), with the generality fixtures (RR): a folder name with a space, an assembly name different from the project, a custom app id, a non-default frontend folder, a path with non-ASCII characters (built: the packages and the consumer with a space, non-ASCII letters and a different assembly name, its tests, the analyzer, design time, NativeAOT, and an update and downgrade under a warm server; the frontend, the Browser surface and the app id are left; decision "Packages and the package-only consumer test built");
    - the test-SDK shape (RR): a `SparTestedApplication` item that becomes a project reference before restore, tried on `Spar.Sdk` before it is fixed.
 
 **Exit:**

@@ -4,6 +4,8 @@
     overrides. The None surface; Browser is in Spar.Testing.Browser, and Window follows in M1b (Windows) and M1c (Linux).
   -->
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>Spar test host: runs an app's own Program.cs inside the test process.</Description>
     <RootNamespace>Spar.Testing</RootNamespace>
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>

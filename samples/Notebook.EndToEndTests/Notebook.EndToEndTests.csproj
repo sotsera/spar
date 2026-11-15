@@ -8,6 +8,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <IsTestProject>true</IsTestProject>
+    <!-- The Browser surface (Spar.Testing.Browser), added by Spar.Sdk at its own version. -->
+    <SparBrowserTests>true</SparBrowserTests>
     <RootNamespace>Notebook.EndToEndTests</RootNamespace>
   </PropertyGroup>
 
@@ -17,12 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Notebook\Notebook.csproj" />
-  </ItemGroup>
-
-  <!-- The Browser surface; an app's end-to-end project gets it from Spar.Sdk once packaging is built. -->
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Spar.Testing.Browser\Spar.Testing.Browser.csproj"
-                      UndefineProperties="SparVariant;SparTestLane" />
   </ItemGroup>
 
   <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />

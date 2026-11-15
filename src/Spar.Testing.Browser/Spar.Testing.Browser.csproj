@@ -5,6 +5,8 @@
     (and their NativeAOT lane) carry no web server (decision "Loopback transport accepted; Browser surface in its own package").
   -->
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>Spar test host Browser surface: the app's page in a browser over in-process loopback, for end-to-end tests.</Description>
     <RootNamespace>Spar.Testing</RootNamespace>
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>

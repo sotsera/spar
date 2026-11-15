@@ -90,6 +90,8 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 - **An item `Update` outside a target cannot test custom metadata in its `Condition`** (MSB4191 for `'%(ProjectReference.SparFramework)'`). Order the items instead: add the items the update must not touch after it. (M1a first slice)
 - **`Utf8JsonReader.TryGetDateTimeOffset` accepts a time without an offset** and reads it in the local time zone, so the same JSON means different instants on different machines. The wire rule requires an offset; check for `Z` or `±hh:mm` before parsing. (M1a, `tests/WireShapes.Tests`)
 - **NativeAOT keeps test-only code that sits behind an ordinary run-time flag.** A fake registered under `if (testHost)` was still in the Production executable; only code behind a feature switch (`[FeatureSwitchDefinition]` plus a `RuntimeHostConfigurationOption` with `Trim="true"`) was removed. Search the published binary for type names (UTF-8) and string literals (UTF-16) to prove it. (`test-host`)
+- **Under Microsoft.Testing.Platform, `dotnet test` passes MSBuild switches it does not own on to the test application:** `dotnet test --project X -nr:false` built, then every test application failed with "Unknown option '--nr'" (exit code 5, zero tests). Set `MSBUILDDISABLENODEREUSE=1` in the environment instead, or build first and run `dotnet test --no-build`. (M1a, `tests/Spar.PackageTests`)
+- **An item transform cannot be concatenated with text inside another task parameter** (MSB4012, writing `SparXunitVersion=@(PackageVersion->…)` into `WriteLinesToFile`'s `Lines`). Put the transform in a property first, then use the property. (M1a, `Spar.Sdk` packing)
 
 ## dotnet watch and the development loop
 

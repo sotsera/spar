@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!-- The Spar runtime: results, contract attributes, the app builder and command dispatch. -->
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>The Spar runtime: contracts, results, the app builder and command dispatch.</Description>
     <RootNamespace>Spar</RootNamespace>
     <IsAotCompatible>true</IsAotCompatible>
     <!-- The packed page is read in place from the image (Hosting/SparFrontend.cs). -->
