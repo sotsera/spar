@@ -21,5 +21,11 @@
     <ProjectReference Include="..\apps\WireShapes\WireShapes.csproj" />
   </ItemGroup>
 
+  <!-- The Browser surface; an app's end-to-end project gets it from Spar.Sdk once packaging is built. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Testing.Browser\Spar.Testing.Browser.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
   <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
 </Project>

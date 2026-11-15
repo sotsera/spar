@@ -121,7 +121,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 - **`Spar.Testing`** (NuGet):
   - the test host: `StartAsync` with the surface, service overrides, the external-dependency allowance, `Services`, the per-app log, the folders, and an injectable `TimeProvider`;
   - typed C# test clients generated per contract (RR);
-  - the browser surface with a shared-browser fixture and a context per test;
+  - the browser surface with a shared-browser fixture and a context per test, in its own package `Spar.Testing.Browser` for end-to-end projects (user, 2026-11-15; decision "Loopback transport accepted; Browser surface in its own package"; the fixture still lives in the test project);
   - the window surface: page evaluation, `WaitForUiReady`, tree and selectors, input, screenshots, scenes and the fixed clock shared with `spar snap`;
   - the black-box fixture: start, a ready signal, kill with the parent and after a deadline, output capture, the exit code, an app path that also works from a publish folder;
   - the fixture rules (RR): assertion, capture and teardown failures are reported together, unresolved cleanup is not a pass, an empty test selection fails, and skips are explicit.

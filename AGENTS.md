@@ -62,7 +62,7 @@ Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# sid
 
 | Path | Contents |
 |---|---|
-| `src/` | Framework projects: `Spar` (runtime and bridge), `Spar.Generator` (generator and analyzer), `Spar.Loopback` (the loopback host, development and test variants only), `Spar.Testing`, `Spar.Sdk` (props and targets), `Spar.Client` (the TypeScript SDK, an npm project) |
+| `src/` | Framework projects: `Spar` (runtime and bridge), `Spar.Generator` (generator and analyzer), `Spar.Loopback` (the loopback host, development and test variants only), `Spar.Testing` and `Spar.Testing.Browser` (the Browser surface, for end-to-end projects), `Spar.Sdk` (props and targets), `Spar.Client` (the TypeScript SDK, an npm project) |
 | `samples/` | Polished sample apps and their tests; in this repository they import `src/Spar.Sdk/Sdk/` directly (source mode) |
 | `tests/` | Framework tests: `Spar.Tests` (runtime and bridge), `Spar.Generator.Tests` (in-memory compilation), `WireShapes.Tests` and the browser tests `WireShapes.EndToEndTests` with their app and page under `tests/apps/`, and the shared vectors in `tests/conformance/` |
 | `eng/` | Repository checks: `check-size.cs` and its exceptions file |

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!--
     Spar's test library (plan section 5): runs the app's own Program.cs inside the test process with the test's
-    overrides. Surfaces None and Browser; Window follows in M1b (Windows) and M1c (Linux).
+    overrides. The None surface; Browser is in Spar.Testing.Browser, and Window follows in M1b (Windows) and M1c (Linux).
   -->
   <PropertyGroup>
     <RootNamespace>Spar.Testing</RootNamespace>
@@ -10,6 +10,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Spar\Spar.csproj" />
-    <ProjectReference Include="..\Spar.Loopback\Spar.Loopback.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Testing.Browser" />
   </ItemGroup>
 </Project>

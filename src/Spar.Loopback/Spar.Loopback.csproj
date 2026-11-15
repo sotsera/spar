@@ -2,7 +2,7 @@
   <!--
     The loopback host (plan section 2c): the page in an ordinary browser, its bridge over HTTP on 127.0.0.1. Compiled
     only into development and test variants, never into Production (plan section 3c, "No loopback in Production").
-    In M1a only the test host's Browser surface uses it.
+    In M1a only the test host's Browser surface (Spar.Testing.Browser) uses it.
   -->
   <PropertyGroup>
     <RootNamespace>Spar.Loopback</RootNamespace>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Spar.Testing" />
+    <InternalsVisibleTo Include="Spar.Testing.Browser" />
     <InternalsVisibleTo Include="Spar.Tests" />
   </ItemGroup>
 </Project>

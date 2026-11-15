@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The test host's Browser surface (plan section 5, level 4): the app's page in an ordinary browser over in-process
+    loopback. Its own package, referenced only by end-to-end test projects, so Spar.Testing and the fast test projects
+    (and their NativeAOT lane) carry no web server (decision "Loopback transport accepted; Browser surface in its own package").
+  -->
+  <PropertyGroup>
+    <RootNamespace>Spar.Testing</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar.Testing\Spar.Testing.csproj" />
+    <ProjectReference Include="..\Spar.Loopback\Spar.Loopback.csproj" />
+  </ItemGroup>
+</Project>

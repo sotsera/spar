@@ -31,6 +31,10 @@ Windows 11 Pro 10.0.26320, SDK 11.0.100, Node 24.21.0, `Microsoft.Playwright` 1.
 | Size check | 62 source files, 0 errors, 0 warnings |
 | Leftover processes | none after the runs (no test executable, no headless shell) |
 
+## Follow-up: the Browser surface in its own package
+
+After the user chose a separate package (decision "Loopback transport accepted; Browser surface in its own package"), the surface moved to `src/Spar.Testing.Browser`, and `Spar.Testing` no longer references `Spar.Loopback`. Observed: 187 of 187 on CoreCLR (one new test: the Browser surface without its package fails naming it); NativeAOT lane Spar.Tests 123 of 123 (20,328,448 B, Kestrel kept for the loopback host's own tests), WireShapes.Tests 21 of 21 (16,441,856 B), Notebook.Tests 10 of 10 (16,480,768 B). Publish times were 18–25 s under uncontrolled conditions and are not compared.
+
 ## Not done or not verified
 
 - **Not run:** Linux, and the CI workflow (no repository yet). The CI file now builds the SDK and installs Playwright's headless shell; both steps are untested.

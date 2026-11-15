@@ -8,5 +8,11 @@
     <RootNamespace>Spar.Tests</RootNamespace>
   </PropertyGroup>
 
+  <!-- The loopback host's own tests; the other test projects stay free of a web server. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Loopback\Spar.Loopback.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
   <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
 </Project>
