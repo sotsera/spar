@@ -40,7 +40,7 @@ Details and evidence in `docs/decisions.md`.
 | A source generator emits all contract C#: dispatch, catalog and serializers. A pre-compile step emits only the generated client. They share one analysis library, and a `DiagnosticAnalyzer` reports located diagnostics. | D1 and the IDE checks: live diagnostics with squiggles, no build needed first. |
 | Wire serialization: generated `Utf8JsonReader`/`Utf8JsonWriter` code, with the fuzzing requirements (R0–R4). | Faster to read, 47% smaller than System.Text.Json metadata; at least as fast to write once tuned. |
 | Spar build steps are compiled, thread-safe MSBuild tasks (`Runtime="NET"`). Checked by `spikes/msbuild-task-analyzer` (SDK 11.0.100 = MSBuild 18.12.2): the task project references `Microsoft.Build.TaskAuthoring.Analyzer` 18.13.0 (`PrivateAssets="all"`; it runs, about 35 ms, no build-time difference) with Framework and Utilities.Core 18.12.2 as compile-only references. Tasks take the full thread-safe shape now: `[MSBuildMultiThreadableTask]`, `IMultiThreadableTask`, and a `TaskEnvironment` constructor. Under `-mt` only tasks with the attribute stay in-process (32 projects: 255–262 ms against 474–514 ms with `-m:8`); others move to TaskHost processes. The analyzer misses static mutable state, so that stays a review and test rule; its code fixes are not shipped. Its option and four severity raises (MSBuildTask0001, 0009, 0011 and 0013 to warning) are agreed and in the root `.editorconfig` (user, 2026-11-14). `TaskHostFactory` is used only in Spar's own checkout. Variant builds run in-proc through the `MSBuild` task, with per-variant `obj`/`bin`, `RemoveProperties`, and a cross-process lock. | Measured: 7–30 ms warm steps; in-proc variants 1.6–2.2 s faster than `Exec` per call. |
-| One `SparVariant` property selects the build variant: `Production`, `Development`, and one test variant that a test project builds the app in (the test-host hook, page automation, the UI-thread stall probe). The test variant replaces `DesktopTest` and the spikes' `ManagedTest` (decision "Test strategy: the app runs inside the test process"); its name, how `Configuration` selects a variant, and whether `Editor` stays are fixed in M1a. In this plan "Debug" means the `Development` variant, "Release" the `Production` variant, and "test variant" the one a test project builds. | The earlier mode-flag matrix was the main source of fragility. |
+| One `SparVariant` property selects the build variant: `Production`, `Development` or `Test`. Debug builds `Development`, Release builds `Production`, and a test project builds its referenced app as `Test` (the test-host hook, page automation, the UI-thread stall probe) whatever its configuration; `SparVariant` can still be set explicitly. `Test` replaces `DesktopTest` and the spikes' `ManagedTest`, and `Editor` is dropped (decisions "Test strategy: the app runs inside the test process" and "Polished sample apps: a Markdown notebook; the test variant"). In this plan "Debug" means the `Development` variant and "Release" the `Production` variant. | The earlier mode-flag matrix was the main source of fragility. |
 | A call has three outcomes: success, a declared typed error, or **outcome unknown**. Cancellation is reported only when the backend confirms it. No automatic retries; subscriptions resume only when their contract allows it. | A lost reply must never be read as "didn't happen". |
 | Results are opaque in TypeScript: `await cmd(req).match({ success, errors, failure? })` or `unwrap()`. `failure` is a function (every failure) or an object by `CallError` kind (only those kinds). Other failures go to the app-wide interceptor `onFailure`, and `match` returns `undefined` for them. `unwrap` throws and never reaches the interceptor. `observe` sees every failure. Neither hook can retry or change a result (2026-11-14). | User decision; checked with `tsc` and both language servers. |
 | One DI scope per command, from Microsoft DI (`Microsoft.Extensions.DependencyInjection`; user decision 2026-11-14, +0.3–0.9 MB in AOT). Every request belongs to one document, with sender checks. On navigation or close, stop admitting work, cancel, and drop late replies. | Proven in every spike. |
@@ -53,7 +53,7 @@ Details and evidence in `docs/decisions.md`.
 | Question | State, and where it is answered |
 |---|---|
 | Bridge transport per host. | Leaning, and the working design of section 2c: `postMessage` for everything on Windows; the script message handler plus `evaluate_javascript` on Linux; `fetch` unary plus one channel per document on loopback. Confirmed on the real hosts in M1b, M1c and M1d. |
-| The remaining test points: trusted input in the in-process window, profiles for window tests (a shared environment with InPrivate controllers, or a folder per test), the test host's mechanics (the entry-point accessor, the session hook, streams through the test client), the black-box data root, where page tests run, and issues D to K. | The strategy is decided (section 5). Each remaining point is decided with the user when its slice reaches it (section 5, "Open issues"), with a spike where needed. Includes the performance regression suites (user, 2026-11-14): BenchmarkDotNet for runtime hot paths and a build-timing suite against stored baselines; which run in CI, and how noise is handled, is issue K. |
+| The remaining test points: trusted input in the in-process window, profiles for window tests (a shared environment with InPrivate controllers, or a folder per test), streams and cancellation through the typed test client, the black-box data root, where page tests run, and issues D to K. | The strategy is decided (section 5). Each remaining point is decided with the user when its slice reaches it (section 5, "Open issues"), with a spike where needed. Includes the performance regression suites (user, 2026-11-14): BenchmarkDotNet for runtime hot paths and a build-timing suite against stored baselines; which run in CI, and how noise is handled, is issue K. |
 | API design for native features (tray, custom title bar, close to tray, placement, file open and save, folder picker, drag and drop, clipboard, print and print to PDF, keyboard shortcuts, single instance, resource usage; notifications later): as easy and pleasant as possible in C# and TypeScript. | User requirement (2026-11-14). Principles and first ideas in section 3, "Native services". Designed with the user one feature at a time, each with a compiled example in `docs/app-model.md` before implementation. |
 | Agent devtools scope (Linux has no CDP), and CLI against MCP. | M2 evaluation. |
 | CI: the provider and its runners. Build and test lanes are needed from M1a on Windows and Linux; Linux window tests (Xvfb in a container) from M1c; Windows window tests need a runner with the WebView2 Runtime and a desktop session. | M1a chooses the provider. GTK4 needs a non-root user and user namespaces for its sandbox. |
@@ -135,12 +135,12 @@ Checked at each M1 slice exit from the first slice on, instead of first in M4 (u
 
 | Measure | Budget | Spike value | First checked |
 |---|---|---|---|
-| No-op build of the Notes app | ≤ 1.5 s | 0.4–1.2 s (decisions "D1: Compilation pipeline" and "Package-only consumer") | M1a; with the frontend step in M1d (about 0.86 s with an incremental target) |
+| No-op build of the Notebook sample | ≤ 1.5 s | 0.4–1.2 s (decisions "D1: Compilation pipeline" and "Package-only consumer") | M1a; with the frontend step in M1d (about 0.86 s with an incremental target) |
 | Command test: app start, median | ≤ 2 ms | 0.2–0.6 ms (`spikes/test-host`) | M1a |
 | Browser test: app, context and journey, median | ≤ 250 ms | 97–144 ms (`spikes/test-host`) | M1a |
 | NativeAOT console harness (dispatch, serializers, codec) | ≤ 3 MB | 2.24 MB with generated serializers (decision "D1: Compilation pipeline") | M1a |
 | Small unary round trip over loopback, median | ≤ 2 ms | 0.7 ms (decision "Bridge streaming, cancellation and push") | M1a |
-| Notes NativeAOT executable, Windows / Linux | ≤ 5 MB / ≤ 8 MB | 3.68 MB (`spikes/react`) / 6.9 MB (`spikes/linux-desktop`) | M1b / M1c |
+| Notebook NativeAOT executable, Windows / Linux | ≤ 5 MB / ≤ 8 MB | 3.68 MB (`spikes/react`) / 6.9 MB (`spikes/linux-desktop`) | M1b / M1c |
 | Launch to `ui-ready`, warm, Release, Windows / Linux GTK4 | ≤ 400 ms / ≤ 350 ms | 261–370 ms (`spikes/react`) / 271–292 ms under Xvfb (`spikes/linux-desktop`) | M1b / M1c |
 | Small unary round trip on the desktop bridge, median | ≤ 1 ms | 0.2 ms (WebView2), 0.20–0.29 ms (WebKitGTK) | M1b / M1c |
 | App process working set, Windows, NativeAOT | ≤ 60 MB | 37 MB (`spikes/react`) | M1b |
@@ -221,10 +221,10 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 **State on 2026-11-15:** steps 1 to 3, 5 to 7 and 9 are done. Moving the evidence (step 4) and deleting the spikes (step 8) remain, and neither blocks M1a.
 
-### M1: build machinery, then a thin Notes slice on both hosts
+### M1: build machinery, then the Notebook sample on both hosts
 
 **Split into four slices** (user, 2026-11-15; decision "Plan and guidance review; M1 split"). Each slice has its own exit and its own evidence, and the next one starts when that exit is met.
-- The Notes sample (save and load, a typed error, the generated client, `ui-ready`) grows through all four.
+- **The Notebook sample grows through all four** (decision "Polished sample apps: a Markdown notebook; the test variant"): a polished Markdown notebook, not a minimal demo. In M1 it has notebooks and pages stored as Markdown files under its data folder, editing with live preview, tags, search, backlinks, and real error states (a page changed elsewhere, a name already taken, a missing file), on React, TypeScript, Vite, Tailwind CSS and Radix. Streams, dialogs, drag and drop, secondary windows and printing come with M3. Its spike-derived budgets below are a floor: a real app's bundle is larger, so a missed budget is first checked against what the sample adds.
 - Each slice starts by settling its "decide first" points with the user, and by adding the project skill its work needs (`AGENTS.md`, "Project skills"): testing (with the in-process test host and its loopback bridge) and the C# side of the bridge in M1a, page security in M1b, the development loop in M1d.
 - Items marked (RR) come from `docs/research-review.md` and were adopted on 2026-11-15. Limits and other numbers are set by measurement in the slice, never taken from earlier versions.
 - The slice contents were assembled by the 2026-11-15 review from the old M1 list, the "in M1" notes across this plan and the research review. Moving an item between slices needs no decision; dropping one does.
@@ -232,8 +232,6 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 #### M1a: build machinery, contracts and the core, with no window
 
 **Decide first:**
-- the test variant's name, how `Configuration` selects `SparVariant`, and whether `Editor` stays;
-- the test host's mechanics (section 5, issue L): how the generator emits the entry-point accessor, the session hook, and the public names (`SparTestApp`, the surfaces, the external-dependency marker);
 - the CI provider and its runners;
 - the header fields of bridge encoding C, written together with the shared conformance vectors;
 - the names left open: `SparTypeCheck`, `SparBundleBudget`, the command `Timeout` option;
@@ -266,8 +264,8 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 **Exit:**
 - `dotnet build` and `dotnet test` pass in the repository and in the package-only consumer, on Windows and Linux, in CI.
-- The Notes contract round-trips through real serialization and dispatch in a command test (level 2), and through the TypeScript SDK against a fake channel. The conformance vectors pass in C# and in TypeScript.
-- A browser test (level 4) runs the Notes page in Chromium against the in-process backend over loopback, on Windows and Linux.
+- The Notebook's contracts round-trip through real serialization and dispatch in command tests (level 2), and through the TypeScript SDK against a fake channel. The conformance vectors pass in C# and in TypeScript.
+- Browser tests (level 4) run the Notebook's pages in Chromium against the in-process backend over loopback, on Windows and Linux.
 - The command tests pass in the NativeAOT lane (`xunit.v3.aot`) with no warnings.
 - The M1a budgets are measured and recorded ("Provisional budgets").
 - A console harness around the core (dispatch, serializers, protocol codec) publishes with NativeAOT with no warnings on both OSes, and gives the same results as on CoreCLR.
@@ -300,7 +298,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 9. **Checks this plan deferred to M1:** the decided CSP run with the React bundle on `https://app.localhost`; `--host-resolver-rules` through `AdditionalBrowserArguments`; the SmartScreen flag against a net log; `--js-flags=--noexpose_wasm`; the CSP header on worker scripts; the minimum Runtime of the find API; the page's `online` and `offline` events in Windows Sandbox.
 
 **Exit:**
-- The Notes sample runs on Windows as a single-file NativeAOT executable with the bundle embedded, and its size is recorded. Debug uses the same path through `SparDevServer=false` until M1d.
+- The Notebook sample runs on Windows as a single-file NativeAOT executable with the bundle embedded, and its size is recorded. Debug uses the same path through `SparDevServer=false` until M1d.
 - The required host tests, the window tests (CoreCLR and NativeAOT lanes), the black-box smoke test and the production boundary test pass.
 - The M1b budgets are measured and recorded.
 - Each section 3c default is verified on the published executable with its opt-in.
@@ -323,7 +321,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 7. **Tests:** the `Window` surface on Linux (the GTK thread owned by the test process, under Xvfb, XTEST for trusted input), with the engine prerequisite check before the first window test; the same host-lifecycle suite as Windows; one Linux CI image (non-root, user namespaces, Xvfb), built from the two spike Dockerfiles and `spikes/test-host/linux/Dockerfile` (M0 close-out step 8); the page's `online` and `offline` events in a container or VM.
 
 **Exit:**
-- The Notes sample runs on Linux as a single-file NativeAOT executable, with its size recorded.
+- The Notebook sample runs on Linux as a single-file NativeAOT executable, with its size recorded.
 - The host tests and the window tests (CoreCLR and NativeAOT lanes) pass on Linux, headless in a container in CI, and both hosts pass the same host-lifecycle suite.
 - The M1c budgets are measured and recorded.
 - The start-up check refuses a WebKitGTK older than the provisional minimum (2.48) with exit code 4.

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The NativeAOT lane: the same test source, xunit.v3.aot, published with NativeAOT. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PublishAot>true</PublishAot>
+    <RootNamespace>EntryApp.Tests</RootNamespace>
+    <DefineConstants>$(DefineConstants);XUNIT_AOT</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.aot" />
+    <Using Include="Xunit" />
+    <ProjectReference Include="..\EntryApp\EntryApp.csproj" AdditionalProperties="SparVariant=Test" />
+    <ProjectReference Include="..\Spar.Entry\Spar.Entry.csproj" />
+    <ProjectReference Include="..\..\test-host\Spar.Mini.Testing\Spar.Mini.Testing.csproj" />
+    <Compile Include="..\EntryApp.Tests\EntryTests.cs" Link="EntryTests.cs" />
+    <Compile Include="..\..\test-host\SampleApp.Tests\NotesClient.cs" Link="NotesClient.cs" />
+    <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="true" Trim="true" />
+  </ItemGroup>
+</Project>

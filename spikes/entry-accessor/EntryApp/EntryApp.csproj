@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The test-host spike's sample app, linked unchanged (its Program.cs in the decided shape), with the entry-point
+    generator added. Nothing in the app is written for tests.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <PublishAot>true</PublishAot>
+    <RootNamespace>SampleApp</RootNamespace>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\test-host\SampleApp\**\*.cs" Exclude="..\..\test-host\SampleApp\obj\**;..\..\test-host\SampleApp\bin\**" LinkBase="App" />
+    <EmbeddedResource Include="..\..\test-host\SampleApp\wwwroot\**" LogicalName="spar/app/%(RecursiveDir)%(Filename)%(Extension)" WithCulture="false" />
+    <ProjectReference Include="..\..\test-host\Spar.Mini\Spar.Mini.csproj" />
+    <ProjectReference Include="..\Spar.Entry\Spar.Entry.csproj" />
+    <ProjectReference Include="..\EntryGen\EntryGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- What Spar.Sdk would add: the generator sees the variant. -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="SparVariant" />
+    <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="false" Trim="true" Condition="'$(SparVariant)' != 'Test'" />
+  </ItemGroup>
+</Project>

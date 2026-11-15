@@ -1,0 +1,6 @@
+shape=void variant=Development: Build succeeded.
+shape=void variant=Test: shapes\void.cs(2,1): error SPIKE002: The test host needs the top-level statements to end with 'return app.Run();' (an int); they return 'void'
+shape=classic variant=Development: Build succeeded.
+shape=classic variant=Test: shapes\classic.cs(2,23): error SPIKE001: The test host runs Program.cs, which must be top-level statements (one Create, one Run); the entry point is 'Program.Main(string[])'
+shape=async variant=Development: Build succeeded.
+shape=async variant=Test: shapes\async.cs(2,1): error SPIKE002: The test host needs the top-level statements to end with 'return app.Run();' (an int); they return 'System.Threading.Tasks.Task<int>'

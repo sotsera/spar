@@ -16,7 +16,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 });
 ```
 
-(The names are the spike's and are settled in M1a.) Spar's test library calls the app's entry point directly; the spike used an unsafe accessor to the compiler's `<Main>$`, which also works in a NativeAOT test executable. `SparApplication.Create` sees the test's session, and `Run` applies the test's overrides after the app's registrations and Spar's test defaults, builds the app and hands it to the test instead of opening its window.
+**How the test reaches the app** (user, 2026-11-15; decision "Test host mechanics: the generated entry point"; evidence `spikes/entry-accessor`). In the `Test` variant only, Spar's generator makes `Program` public and implements `Spar.ISparEntryPoint` on it, calling the compiler's top-level method (its name read from `Compilation.GetEntryPoint`) through an unsafe accessor. So the test writes `SparTestApp.StartAsync<Program>()`, with no reflection, under CoreCLR and NativeAOT, and Production keeps `Program` internal with no trace of the accessor. A `Program.cs` in another shape (no `return app.Run();`, async, a classic `Main`) fails the `Test` build with a located error. The test sets its session in an `AsyncLocal` and calls the entry point on a thread of its own; `SparApplication.Create` reads the session behind the feature switch, and `Run` applies the test's overrides after the app's registrations and Spar's test defaults, builds the app and hands it to the test instead of opening its window.
 
 **Levels** (pick the smallest that can show the failure):
 
@@ -47,7 +47,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 **Projects and lanes:**
 - **`MyApp.Tests`** holds levels 1 and 2 and runs on every `dotnet test`. **`MyApp.EndToEndTests`** holds levels 4 to 7 and runs as its own CI stage; window tests run as their own invocation there, so a native abort loses only that run. The page tests (level 3) run in the frontend's own test command.
 - **Framework:** `xunit.v3`. **The NativeAOT lane** is the same sources built against `xunit.v3.aot` and published with NativeAOT, without the browser tests (Playwright for .NET cannot run under NativeAOT). Its documented limits apply: no generic test methods, no `params`, no stack traces in failures.
-- **Test variant:** a test project builds the app in Spar's one test variant (the test-host hook, page automation and the UI-thread stall probe). It replaces the earlier `DesktopTest` and `ManagedTest`; its name and how `Configuration` selects it are fixed in M1a.
+- **Test variant:** a test project builds its referenced app as `SparVariant=Test` whatever its configuration (the test-host hook, page automation and the UI-thread stall probe). It replaces the earlier `DesktopTest` and `ManagedTest` (decision "Polished sample apps: a Markdown notebook; the test variant").
 - xUnit writes no report files, but `dotnet test` (MTP) still leaves an empty `TestResults/` folder in the working directory (`spikes/test-frameworks`, `spikes/d3-variants`; `spikes/TestResults/` is one). The test-project defaults must keep it out of authored folders; how (for example `--results-directory` under `obj/`) is open for M1a.
 - **Paths:** no absolute paths in tests and scripts.
 
@@ -114,7 +114,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
     - Spar's own runner in M1b;
     - the app-facing layer (the trait, the fixture, one-off tasks), decided with the user at the start of M3, when tray, notifications and deep links arrive.
 - **K. Performance:** which suites run in CI, ratio or absolute thresholds, which machine sets the baselines, and the noise policy. The M1 budgets (Milestones, "Provisional budgets") are the first numbers.
-- **L. The test host's mechanics** (M1a): how the generator emits the entry-point accessor, and in which variant; whether the session hook stays an `AsyncLocal` or becomes compile-time interception; streams and cancellation through the typed test client.
+- **L. The test host's mechanics:** answered (2026-11-15): the generated entry point, the `AsyncLocal` session and the spike's names (`SparTestApp`, `SparTestSurface`, `AddExternal`, `AllowExternal`). Still open for M1a: streams and cancellation through the typed test client, and a diagnostic for an app that declares `internal partial class Program` (conflicting accessibility in the `Test` variant).
 - **M. The black-box data root:** the Production binary needs a way to put its data under a disposable root (the spike read `--spar-data-root`). It is an input to a shipped executable, so it needs a security review before it is designed (M1b).
 
 **What Spar provides:**
