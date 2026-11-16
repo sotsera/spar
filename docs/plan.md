@@ -269,7 +269,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 #### M1b: the Windows host
 
 **Decide first:**
-- the two-stage close and its automated mode (RR), with a compiled example in `docs/app-model.md` first;
+- the two-stage close and its automated mode (RR), with a compiled example in `docs/app-model.md` first (decided, decision "Two-stage close"; `docs/app-model.md` 6.11);
 - the Windows single-instance mechanism;
 - what "Wait" does after the hung-page dialog (section 3, "Hung pages");
 - a provisional minimum WebView2 Runtime: the oldest one with the source-kinds filter of `ICoreWebView2_22` and the other interfaces section 3 lists. M4 confirms it;

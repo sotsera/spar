@@ -134,7 +134,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - Monotonic timestamps, a run ID, and view, navigation and call IDs.
   - Milestones: window visible, environment and controller ready (with HRESULTs), navigation start/DOMContentLoaded/complete with status, `ui-ready`, each RPC (bytes, duration, handler time), and every shutdown phase.
   - Consumers: tests, devtools and measurements.
-- **Teardown, in this order.** It starts only after the close request of the two-stage close is approved, or skipped by the automated mode (open questions; designed in M1b):
+- **Teardown, in this order.** It starts only after the close request of the two-stage close is approved (decision "Two-stage close"; `docs/app-model.md` 6.11: the page's guard, then the backend's, each close, keep or ask; the automated mode runs them without prompts):
   1. Mark the view closing, so a second close is harmless.
   2. Stop admitting calls, cancel, and settle pending promises.
   3. Keep pumping during bounded cleanup.

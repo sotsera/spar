@@ -127,4 +127,21 @@ public sealed class SparBuilder
         configure(PermissionOptions);
         return this;
     }
+
+    internal Func<CloseRequest, IServiceProvider, CancellationToken, ValueTask<CloseDecision>>? CloseGuard { get; private set; }
+
+    /// <summary>The backend's close guard, asked after the page's guard agreed (two-stage close).</summary>
+    public SparBuilder OnCloseRequested(Func<CloseRequest, IServiceProvider, CancellationToken, ValueTask<CloseDecision>> guard)
+    {
+        ArgumentNullException.ThrowIfNull(guard);
+        CloseGuard = guard;
+        return this;
+    }
+
+    /// <summary>The backend's close guard when it decides at once.</summary>
+    public SparBuilder OnCloseRequested(Func<CloseRequest, IServiceProvider, CloseDecision> guard)
+    {
+        ArgumentNullException.ThrowIfNull(guard);
+        return OnCloseRequested((request, services, _) => ValueTask.FromResult(guard(request, services)));
+    }
 }

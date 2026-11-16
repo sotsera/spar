@@ -23,6 +23,18 @@ public static class PlannedBuilder
         public SparBuilder ContentSecurity(Action<CspBuilder> configure) => Configure(builder, new CspBuilder(), configure);
 
         public SparBuilder Permissions(Action<PermissionsBuilder> configure) => Configure(builder, new PermissionsBuilder(), configure);
+
+        public SparBuilder OnCloseRequested(Func<CloseRequest, IServiceProvider, CancellationToken, ValueTask<CloseDecision>> guard)
+        {
+            ArgumentNullException.ThrowIfNull(guard);
+            return builder;
+        }
+
+        public SparBuilder OnCloseRequested(Func<CloseRequest, IServiceProvider, CloseDecision> guard)
+        {
+            ArgumentNullException.ThrowIfNull(guard);
+            return builder;
+        }
     }
 
     private static SparBuilder Configure<TOptions>(SparBuilder builder, TOptions options, Action<TOptions> configure)

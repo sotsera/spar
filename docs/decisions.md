@@ -3424,3 +3424,22 @@ Follow-up to "CI's first runs on GitHub Actions": the run of 4abe871 against the
 ## 2026-11-16, Parallel lanes measured (evidence)
 
 Follow-up to "CI in parallel lanes; the tested app keeps the NativeAOT lane": the run of 3806d7f passed all eight jobs in 3 min 52 s from start to end, against 7 min 48 s for the last run with one job per OS (4abe871). Windows: tests 228 s, build-tests 217 s, aot 213 s, package-tests 137 s. Linux: tests 127 s, aot 127 s, build-tests 116 s, package-tests 110 s. Windows' three longest lanes now set the time; one run each.
+
+## 2026-11-16, Two-stage close (user decisions; compiled example; choices for review)
+
+The first "decide first" item of M1b (research review: two-stage close and its automated mode, adopted 2026-11-15). Shown, compiled, in `docs/app-model.md` sections 2 and 6.11.
+- **Decided (user, 2026-11-16):**
+  - **Guards decide or ask.** The page's guard, then the backend's, each answer close, keep, or ask with a question. An ask shows one native confirmation owned by the window ("Close anyway" / "Keep open"), so the backend never needs UI of its own; a page may show its own dialog and answer close or keep. Chosen over guards that only answer yes or no.
+  - **Session end runs the guards but never prompts:** reason `SessionEnd`, a short deadline of about 5 s, an ask counts as close, and Spar never blocks Windows from logging off. Chosen over blocking the session end with a reason Windows shows.
+  - **The automated mode runs the guards without prompts:** `IsAutomated` / `automated` is true and an ask counts as close, so saving on close is tested. Chosen over skipping the guards.
+  - **The automated mode outside tests only in Development and Test:** the test host and the devtools agent session turn it on, and an environment variable works only in the Development and Test variants; a Production build never honours it. Chosen over also offering a Production option.
+- **The shape, for review:**
+  - **C#:** `spar.OnCloseRequested(guard)` in `Program.cs`, with a guard of `(CloseRequest, IServiceProvider) => CloseDecision` or `(CloseRequest, IServiceProvider, CancellationToken) => ValueTask<CloseDecision>`. `CloseRequest(Window, Reason, IsAutomated)`, `CloseReason.User`, `App` or `SessionEnd`, and `CloseDecision.Close`, `Keep` or `Ask(question)`.
+  - **Page:** `windows.onCloseRequested(guard)` in `@spar/app/windows`, returning a function that removes it. The request has `reason` (`"user"`, `"app"`, `"sessionEnd"`), `automated` and a `signal` aborted when the request ends without the guard; the answer is `"close"`, `"keep"` or `{ ask }`.
+- **Choices made while writing it, for review:**
+  - **What asks:** the close button, Alt+F4 and the taskbar are `User`; the app's own code and the tray's Quit are `App`. With close to tray, the close button hides the window and asks nothing; Quit asks.
+  - **Secondary windows first:** closing the main window asks each open secondary window, then itself, and keeps them all open if any answers keep.
+  - **A second click joins** the open request; an answer from a document that has since navigated is ignored.
+  - **A page guard that does not answer** within about 5 s, with no dialog of its own open, is treated as a hung page (plan section 3, "Hung pages"; what "Wait" then does is the next M1b question).
+  - **The environment variable** is `SPAR_AUTOMATED=1`.
+- **The check:** `RunningCopies` and the page's `closing.ts` are new blocks; the stand-ins gain `Spar.Stubs/Closing.cs` (also linked into the real-Spar check's planned stand-ins), `OnCloseRequested` on both builders, and `onCloseRequested` in the stand-in `windows.d.ts`. The documentation check passes, 29 blocks, on TypeScript 6 and 7 and through real Spar.

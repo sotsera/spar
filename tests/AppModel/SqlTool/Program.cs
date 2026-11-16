@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Spar;
 using SqlTool.Connections;
+using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
 
 var app = SparApplication.Create(args, spar =>
@@ -48,10 +49,16 @@ var app = SparApplication.Create(args, spar =>
         .Commands(c => c.Allow<IConnections>()));
     spar.Window("queryEditor", w => w.Route("/query").Size(1000, 700).Zoom(min: 0.5, max: 3).FindInPage());
 
+    // Closing asks first: the page's guard, then this one, which asks while a copy runs (6.11). Decided.
+    spar.OnCloseRequested((request, services) => services.GetRequiredService<RunningCopies>().Any
+        ? CloseDecision.Ask("A copy is still running. Close anyway?")
+        : CloseDecision.Close);
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
+    spar.Services.AddSingleton<RunningCopies>();
 });
 
 return app.Run();

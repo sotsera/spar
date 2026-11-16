@@ -71,6 +71,7 @@ File `SqlTool/Program.cs`:
 using Microsoft.Extensions.DependencyInjection;
 using Spar;
 using SqlTool.Connections;
+using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
 
 var app = SparApplication.Create(args, spar =>
@@ -118,10 +119,16 @@ var app = SparApplication.Create(args, spar =>
         .Commands(c => c.Allow<IConnections>()));
     spar.Window("queryEditor", w => w.Route("/query").Size(1000, 700).Zoom(min: 0.5, max: 3).FindInPage());
 
+    // Closing asks first: the page's guard, then this one, which asks while a copy runs (6.11). Decided.
+    spar.OnCloseRequested((request, services) => services.GetRequiredService<RunningCopies>().Any
+        ? CloseDecision.Ask("A copy is still running. Close anyway?")
+        : CloseDecision.Close);
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
+    spar.Services.AddSingleton<RunningCopies>();
 });
 
 return app.Run();
@@ -1379,6 +1386,61 @@ test("an answer can depend on the request", async () => {
 - **A command no test scripted** is refused (`rejected` / `unknown-command`), with a console error naming it.
 - **`fakeSpar()` resets `configureSpar`'s hooks**, so every test starts from the defaults. A test of the hooks configures them after `fakeSpar()`.
 - **Production bundles never contain it:** nothing in the app imports `@spar/app/testing`, and the build drops the generated code only it uses.
+
+### 6.11 Closing a window
+
+**Decided** (decision "Two-stage close"). Closing a window first asks: the page's guard, then the backend's, may save, keep the window open, or have Spar ask the user. The window closes only when both agree. The backend's guard is in `Program.cs` (section 2); it reads how many copies are running.
+
+File `SqlTool/CopyJobs/RunningCopies.cs`:
+
+```csharp
+namespace SqlTool.CopyJobs;
+
+/// <summary>How many copies are running, for the close guard in Program.cs.</summary>
+public sealed class RunningCopies
+{
+    private int _running;
+
+    public bool Any => Volatile.Read(ref _running) > 0;
+
+    public void Started() => Interlocked.Increment(ref _running);
+
+    public void Ended() => Interlocked.Decrement(ref _running);
+}
+```
+
+File `frontend/src/closing.ts`:
+
+```ts
+import { windows } from "@spar/app/windows";
+
+declare const editor: { readonly hasUnsavedChanges: boolean; save(): Promise<void> };
+
+// The page answers first; the backend's guard in Program.cs is asked only if the page agrees.
+export const stopGuarding = windows.onCloseRequested(async request => {
+  if (!editor.hasUnsavedChanges) {
+    return "close";
+  }
+
+  // When Windows shuts down, or tests or an agent close the app, nobody can answer: save, then close.
+  if (request.reason === "sessionEnd" || request.automated) {
+    await editor.save();
+    return "close";
+  }
+
+  return { ask: "The query has unsaved changes. Close without saving?" };
+});
+```
+
+- **Answers:** close, keep, or ask. An ask shows one native confirmation owned by the window, "Close anyway" or "Keep open", so the backend never needs UI of its own. A page may show its own dialog instead and answer close or keep.
+- **Order:** the page's guard, then the backend's. Either one keeping the window open ends the request; the backend's guard is not asked after a page that keeps it.
+- **What asks:** the close button, Alt+F4 or the taskbar (`CloseReason.User`); the app's own code and Quit in the tray menu (`CloseReason.App`); Windows logging off or shutting down (`CloseReason.SessionEnd`). With `.CloseToTray()`, the close button hides the window, which is not a close; Quit asks.
+- **One request at a time:** a second click while a request is open joins it, and an answer from a page that has since navigated away is ignored.
+- **Secondary windows** are asked before the main window: closing the main window asks each open secondary window, then itself, and keeps them all open if any answers keep.
+- **Session end:** guards run with `sessionEnd` and a short deadline, about 5 s, so they can save. They cannot keep the window open or ask: an ask counts as close, and Spar never blocks Windows from logging off.
+- **Automated mode,** when tests or an agent drive the app: guards still run, so saving on close is tested, with `automated` true, and an ask counts as close. The test host turns it on, and a test of a guard's prompt turns it off for that close. Outside tests, the devtools agent session turns it on, and so does the environment variable `SPAR_AUTOMATED=1`, in Development and Test builds only: a Production build ignores it, so nothing outside a shipped app can make it skip its prompts.
+- **A page that does not answer** within about 5 s, with no dialog of its own open, is treated as a hung page (plan section 3, "Hung pages").
+- **After the decision** the window's teardown runs (plan section 3), including the page's closing work.
 
 ## 7. Still open in this model
 

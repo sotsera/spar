@@ -11,4 +11,21 @@ export declare const windows: {
   showModal<T = unknown>(kind: WindowKind, params?: Readonly<Record<string, unknown>>): Call<T, { readonly dismissed: undefined }>;
   /** Inside a modal: closes it and hands the value to the opener. */
   closeWith(value: unknown): void;
+  /**
+   * This window's close guard, asked before the backend's: it may save, keep the window open, or have Spar ask the
+   * user. Returns a function that removes it.
+   */
+  onCloseRequested(guard: (request: CloseRequest) => CloseAnswer | Promise<CloseAnswer>): () => void;
 };
+
+/** A request to close this window. */
+export interface CloseRequest {
+  readonly reason: "user" | "app" | "sessionEnd";
+  /** Tests or an agent are closing the app: do not wait for a person; `ask` counts as close. */
+  readonly automated: boolean;
+  /** Aborted when the request ends without this guard: a deadline at session end, or the window closing anyway. */
+  readonly signal: AbortSignal;
+}
+
+/** A close guard's answer: `ask` shows the question in a native confirmation owned by the window. */
+export type CloseAnswer = "close" | "keep" | { readonly ask: string };
