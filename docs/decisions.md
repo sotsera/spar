@@ -3410,3 +3410,7 @@ The repository went to `sotsera/spar` (public; user, 2026-11-16) after a search 
   - **A job timeout of 45 minutes,** instead of GitHub's six hours.
   - **Concurrency per pull request,** grouped by workflow and pull request number; a newer push cancels only pull request runs, never a run on `main`.
 - **Considered and left:** caches between runs (a cache can make a job slower overall; none without a measured run each way); path filters for documentation-only changes (a skipped workflow leaves a required check waiting; revisit when `main` gets required checks). The actions are pinned by commit SHA (checkout v7.0.1, setup-dotnet v6.0.0, setup-node v7.1.0, upload-artifact v7.0.2), each the newest release at least two weeks old.
+
+## 2026-11-16, Windows caches on D: measured (evidence)
+
+Follow-up to "CI's first runs on GitHub Actions": the run of 4abe871 against the run of 82c68b9, both passed, one run each. Windows went from 9 min 44 s to 7 min 43 s. The package tests gained most (148 s to 84 s, now beside Linux's 72 s), then the build (55 s to 38 s). The NativeAOT lane (114 s to 110 s) and the build tests (104 s both times) did not change, so their Windows time is not the cache location. Linux, which the change does not touch, went from 6 min 52 s to 7 min 24 s, which shows how much one run varies. The two jobs now take about the same time.
