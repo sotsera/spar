@@ -43,3 +43,25 @@ Two problems the test found and that are fixed: `dotnet test -nr:false` under th
 - **A central-package-management consumer:** the implicit `PackageReference`s are untested with `Directory.Packages.props`.
 - **The `dotnet new` template:** not in M1a (decision "Packages for the package-only consumer").
 - **Release versions and publishing** stay open for M3.
+
+## Follow-up: a page in the consumer, and the package version (2026-11-16)
+
+Decision: "The generated package keeps version 0.0.0; the consumer gets a page".
+
+| Path | Contents |
+|---|---|
+| `tests/Spar.PackageTests/consumer-ui/` | The consumer's page as its author would commit it: `package.json` (`@spar/app` linked from `../obj/spar/client`, Vite 8.3.8, TypeScript 7.0.2), its `package-lock.json` (71 packages, generated once against a stand-in `@spar/app` at `0.0.0`), `index.html`, `tsconfig.json`, `vite.config.ts` with Spar's plugin, and `src/main.ts`, which counts words through `notes.count`. The fixture copies it to `App/ui/`. |
+| `ConsumerFiles.cs` | `SparFrontendPath=ui` in the app; `App.EndToEndTests/Notes.App.EndToEndTests.csproj` with `SparBrowserTests=true` and Playwright at the version in `Directory.Packages.props`, and one test that opens the packed page in headless Chromium, types four words and reads "4 words". |
+| `Consumer.cs` | `npm_config_cache` under the shared base folder, kept between runs; `package.json` and `node_modules` added to what may not sit above the consumer. |
+| `src/Spar.Sdk.Tasks` | `package.json` keeps `version` `0.0.0` and gains `sparSdk`; the task parameter is now `SdkVersion`. |
+
+Results (observed, Windows 11):
+
+| Check | Result |
+|---|---|
+| `dotnet test --project tests/Spar.PackageTests` | 6 of 6, 48 s with the caches warm; 2 min 41 s for the first run, whose first build filled the npm cache (1 min 7 s) |
+| The browser test | 7.6 s, Chromium from Playwright's default install |
+| The consumer's lockfile after its first build | identical to the committed one |
+| `npm ci` with a lockfile recording `0.0.0` and a linked package at `0.1.0-dev.7` (scratch check) | passed and left the lockfile alone; `npm install` then rewrote the version line |
+
+Not done: the custom app id (it arrives with the app identity, M1b); Linux; CI's own run.

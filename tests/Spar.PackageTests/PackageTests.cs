@@ -4,7 +4,7 @@ namespace Spar.PackageTests;
 
 /// <summary>
 /// An app and its tests built from Spar's packages alone (plan M1a, "the package-only consumer test"): they build and
-/// pass, the packaged analyzer reports a contract problem at its line, a design-time build runs no Spar step, the app
+/// pass, its page works in Chromium against its backend, the packaged analyzer reports a contract problem at its line, a design-time build runs no Spar step, the app
 /// publishes with NativeAOT, and an update and a downgrade of Spar.Sdk while MSBuild is warm each build with their own
 /// SDK. The builds share the consumer's folders, so they stay in this one class, whose tests xUnit runs one at a time.
 /// </summary>
@@ -19,9 +19,24 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
 
         Assert.True(exit == 0, output);
         Assert.Equal(consumer.First, ClientVersion());
+        Assert.Equal("0.0.0", ClientPackage().GetProperty("version").GetString());
+        var lockfile = File.ReadAllText(Path.Combine(consumer.Root, "App", "ui", "package-lock.json"));
+        var committed = File.ReadAllText(Path.Combine(consumer.Repository, "tests", "Spar.PackageTests", "consumer-ui", "package-lock.json"));
+        Assert.True(lockfile == committed, "The build changed the app's committed lockfile.");
         Assert.True(File.Exists(Path.Combine(consumer.Root, "App", "Notes.App.contracts.snapshot")), "No contract snapshot.");
         var restored = Path.Combine(consumer.Environment["NUGET_PACKAGES"], "spar", consumer.First.ToLowerInvariant());
         Assert.True(Directory.Exists(restored), $"Spar {consumer.First} was not restored from the run's feed.");
+    }
+
+    [Fact]
+    public async Task The_apps_page_works_in_a_browser_against_its_backend()
+    {
+        Assert.Equal(0, (await FirstAsync()).Exit);
+
+        var (exit, output) = await consumer.DotnetAsync("", "test", "--project", Path.Combine("App.EndToEndTests", "Notes.App.EndToEndTests.csproj"));
+
+        Assert.True(exit == 0, output);
+        Assert.Contains("succeeded: 1", output, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -66,6 +81,8 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
 
         Assert.True(exit == 0, output);
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "NotesTool.exe" : "NotesTool");
+        // The page from ui/, built by Vite and packed by the SDK's task, is in the executable.
+        Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
         var (ran, said) = await Tool.RunAsync(publish, executable, [], new Dictionary<string, string>());
 
         // M1a has no desktop host: the executable says so and exits with 2.
@@ -111,10 +128,15 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         return Tool.RunAsync(Path.Combine(consumer.Root, "App"), "dotnet", arguments, environment);
     }
 
-    /// <summary>The version of the app's generated @spar/app package, which is the SDK's that built it.</summary>
-    private string ClientVersion()
+    /// <summary>The SDK that generated the app's @spar/app package, from its sparSdk field; its version stays 0.0.0.</summary>
+    private string ClientVersion() => ClientPackage().GetProperty("sparSdk").GetString()!;
+
+    /// <summary>The app's generated package.json.</summary>
+    private JsonElement ClientPackage()
     {
         var package = Path.Combine(consumer.Root, "App", "obj", "spar", "client", "package.json");
-        return JsonDocument.Parse(File.ReadAllText(package)).RootElement.GetProperty("version").GetString()!;
+        return JsonDocument.Parse(File.ReadAllText(package)).RootElement.Clone();
     }
+
+    private static bool Contains(byte[] haystack, ReadOnlySpan<byte> needle) => haystack.AsSpan().IndexOf(needle) >= 0;
 }

@@ -54,6 +54,7 @@ public sealed class Consumer : IAsyncLifetime
         {
             ["NUGET_PACKAGES"] = Path.Combine(RunRoot, "nuget-packages"),
             ["NUGET_HTTP_CACHE_PATH"] = Path.Combine(Base, "http-cache"),
+            ["npm_config_cache"] = Path.Combine(Base, "npm-cache"),
             ["MSBUILDNODEHANDSHAKESALT"] = salt,
             ["DOTNET_CLI_USE_MSBUILD_SERVER"] = "false",
 
@@ -72,7 +73,8 @@ public sealed class Consumer : IAsyncLifetime
         await PackAsync(First);
         await PackAsync(Second);
         Assert.Equal(before, await WorkingTreeAsync());
-        ConsumerFiles.Write(Root, Feed, First, RepositorySdkVersion());
+        var page = Path.Combine(Repository, "tests", "Spar.PackageTests", "consumer-ui");
+        ConsumerFiles.Write(Root, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Playwright"));
     }
 
     public ValueTask DisposeAsync()
@@ -129,6 +131,14 @@ public sealed class Consumer : IAsyncLifetime
         return output;
     }
 
+    /// <summary>A package's version from the repository's central package management, so the consumer uses the same.</summary>
+    private string PackageVersion(string id)
+    {
+        var props = System.Xml.Linq.XDocument.Load(Path.Combine(Repository, "Directory.Packages.props"));
+        var version = props.Descendants("PackageVersion").Single(p => (string?)p.Attribute("Include") == id).Attribute("Version");
+        return version?.Value ?? throw new InvalidOperationException($"Directory.Packages.props has no version for {id}.");
+    }
+
     private string RepositorySdkVersion()
     {
         var json = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Repository, "global.json")));
@@ -138,7 +148,7 @@ public sealed class Consumer : IAsyncLifetime
     /// <summary>No folder above the consumer may hold what would change its build: it must see Spar's packages alone.</summary>
     private static void RequireNoRepositoryAbove(string folder)
     {
-        string[] influences = [".git", "Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props", "global.json", "nuget.config", "NuGet.Config"];
+        string[] influences = [".git", "Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props", "global.json", "nuget.config", "NuGet.Config", "package.json", "node_modules"];
         for (var directory = new DirectoryInfo(folder).Parent; directory is not null; directory = directory.Parent)
         {
             var found = influences.FirstOrDefault(name => Path.Exists(Path.Combine(directory.FullName, name)));
@@ -146,7 +156,7 @@ public sealed class Consumer : IAsyncLifetime
         }
     }
 
-    /// <summary>Removes earlier runs' folders, keeping the shared HTTP cache.</summary>
+    /// <summary>Removes earlier runs' folders, keeping the shared NuGet and npm caches.</summary>
     private static void DeleteEarlierRuns()
     {
         if (!Directory.Exists(Base))
@@ -154,7 +164,7 @@ public sealed class Consumer : IAsyncLifetime
             return;
         }
 
-        foreach (var earlier in Directory.EnumerateDirectories(Base).Where(d => Path.GetFileName(d) != "http-cache"))
+        foreach (var earlier in Directory.EnumerateDirectories(Base).Where(d => Path.GetFileName(d) is not ("http-cache" or "npm-cache")))
         {
             TryDelete(earlier);
         }
