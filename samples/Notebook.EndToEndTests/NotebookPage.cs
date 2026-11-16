@@ -36,6 +36,12 @@ public sealed class SharedBrowser : IAsyncLifetime
 /// </summary>
 internal sealed class NotebookPage : IAsyncDisposable
 {
+    /// <summary>
+    /// Chromium's warning for a feature Spar's <c>Permissions-Policy</c> header denies but this browser build does not
+    /// have: Linux's headless Chromium has no Web Bluetooth. The only console message the journeys accept.
+    /// </summary>
+    private const string UnknownDeniedFeature = "Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.";
+
     private readonly List<string> _console = [];
 
     private NotebookPage(SparTestApp app, IBrowserContext context, IPage page)
@@ -45,7 +51,7 @@ internal sealed class NotebookPage : IAsyncDisposable
         Page = page;
         page.Console += (_, message) =>
         {
-            if (message.Type is "error" or "warning")
+            if (message.Type is "error" or "warning" && message.Text != UnknownDeniedFeature)
             {
                 lock (_console)
                 {

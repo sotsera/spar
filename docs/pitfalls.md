@@ -4,6 +4,9 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 
 ## Build, MSBuild and packages
 
+- **NativeAOT on Linux cannot link with a NuGet package folder whose path has a space:** `clang` got `/tmp/spar`, `package` and `tests/nuget-packages/…/libSystem.Native.a` as separate arguments for every runtime library. The app's own folder, with a space and non-ASCII letters, linked fine. Windows links either. Keep `NUGET_PACKAGES` free of spaces wherever a Linux NativeAOT publish runs. (M1a Linux)
+- **A file-local type's name holds a hash of its source file's path** (the regex generator's `<RegexGenerator_g>F298E…__Utilities`), so it changes with the checkout and between builds with and without `ContinuousIntegrationBuild`, which maps paths to `/_/`. A list of type names must not keep the hash. (M1a Linux)
+- **MSBuild writes item paths with `/` on Linux,** whatever the project file says: a message that quotes an item written `..AppApp.csproj` prints `../App/App.csproj` there. (M1a Linux)
 - **xUnit does not run a class's tests in the order they are written:** the build tests' publish ran before the "first" build, installed the frontend and wrote the client, so the first build skipped them and its check failed. A test that needs a fresh tree awaits one shared first build, whichever test starts. (M1a build tests)
 - **`dotnet build-server shutdown` stops every MSBuild and compiler server on the machine,** not only the ones a test started. Isolated runs use their own `MSBUILDNODEHANDSHAKESALT` and `SharedCompilationId` and let their nodes end when idle. (M1a build tests)
 - **An app's variants share `obj/spar/client`,** which the frontend's `package.json` names, and build at the same time: two client steps rewriting it raced once (`SafeFileHandle.CreateFile` in `ClientPackage.Sync`). It stays hidden while the files are unchanged, because unchanged files are not written. Writes to a folder variants share go under a lease. (M1a bridge limits)
@@ -430,6 +433,7 @@ Entries tied to one host's API stay in that host's section. See also, in "Window
 
 ## Page security (CSP, headers, permissions)
 
+- **Chromium warns about a feature it lacks in `Permissions-Policy`:** Linux's headless Chromium has no Web Bluetooth and logs "Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'." on every page Spar serves. Spar keeps `bluetooth=()`; browser tests that require a clean console accept exactly this message. (M1a Linux)
 Entries tied to one host's API stay in that host's section. See also, in "npm, Vite and TypeScript": "Angular under a strict CSP" and "Vue's full build compiles templates at run time". In "Windows host (WebView2)": `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS`, `AreDevToolsEnabled`, "The runtime makes requests the app never asked for" and the workers that the legacy request filter misses. In "Linux host (WebKitGTK)": "No origin information", `WEBKIT_INSPECTOR_SERVER`, "The GTK4 web process is always sandboxed" and "A redirect answered by a scheme handler is not followed".
 
 - **`style-src` does not govern stylesheets built through the CSSOM:** constructed stylesheets (`replaceSync`, `insertRule`) and `style.setProperty` apply under `style-src 'self'` on all three engines, while `<style>` elements and `style` attributes are blocked. The policy stops styles brought in by markup, not by script. (`csp-style-injection`)
@@ -551,6 +555,8 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 ## Tooling and environment
 
+- **WSL empties `/tmp` when the distribution restarts,** and it stops between `wsl.exe` calls: a clone made there in one call was gone in the next. Keep runs in `/var/tmp`. Check that a script's `cd` succeeded: one that failed ran `npm ci` in the current Windows folder and replaced its `node_modules` with Linux binaries. (M1a Linux)
+- **`XDG_RUNTIME_DIR` on a Windows drive under WSL fails .NET:** the folder cannot be 0700 there, and the CLI's first run stopped with "does not have the expected owner or permissions for system scope". Keep a Linux run's homes on the distribution's own file system. (M1a Linux)
 - **`await using` lets a disposal's exception replace the one already in flight:** a test whose body failed and whose app then failed to stop showed only the stop failure. Spar's test host keeps the stop failure for a hook that raises it after the test. (M1a fixture rules)
 - **xUnit's in-process runner (the NativeAOT lane) exits 0 when no test ran,** where `dotnet test` exits 8. The CI step checks for "Total: 0". (M1a fixture rules)
 - **xUnit v3 4.x makes `CollectionBehavior.DisableTestParallelization` an error** (CS0619, obsolete). Turn parallel runs off with `[assembly: Xunit.v3.Parallelization(Mode = Xunit.Sdk.ParallelMode.None)]`. (M1a console harness)

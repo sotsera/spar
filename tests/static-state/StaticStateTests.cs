@@ -100,9 +100,14 @@ public sealed class StaticStateTests
         || typeName.StartsWith("<PrivateImplementationDetails>", StringComparison.Ordinal)
         || typeName.Split('+', '.').Any(part => part.StartsWith("<>c", StringComparison.Ordinal) || part.StartsWith("<>O", StringComparison.Ordinal));
 
+    /// <summary>
+    /// A type's name as the list spells it. A file-local type, such as the regex generator's, is named after a hash of
+    /// its source file's path (<c>&lt;RegexGenerator_g&gt;F298E…__Utilities</c>), which differs between checkouts and
+    /// between builds with and without <c>ContinuousIntegrationBuild</c>'s path map; the list has <c>{file}</c> instead.
+    /// </summary>
     private static string FullName(MetadataReader metadata, TypeDefinition type)
     {
-        var name = metadata.GetString(type.Name);
+        var name = System.Text.RegularExpressions.Regex.Replace(metadata.GetString(type.Name), "^(<[^>]+>)F[0-9A-F]{64}__", "$1F{file}__");
         if (type.GetDeclaringType() is { IsNil: false } declaring)
         {
             return FullName(metadata, metadata.GetTypeDefinition(declaring)) + "+" + name;

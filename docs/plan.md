@@ -249,7 +249,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
    - the BCL instrumentation (section 6b) (built; decision "Bridge instrumentation built");
    - **the test host** (section 5), with the surfaces `None` and `Browser` (the per-app log and the injectable clock built; decision "Test host: the per-app log and the clock"; the fixture rules built, decision "Fixture rules: the teardown hook"): the app's `Program.cs` run in the test process, service overrides, the data root per app instance, Spar's outward services faked, the external-dependency marker, the per-app log, typed C# test clients generated per contract (RR), and the fixture rules (RR): assertion, capture and teardown failures are reported together, unresolved cleanup is not a pass, an empty test selection fails, and skips are explicit;
    - **the loopback bridge** that the `Browser` surface needs, in test and development variants only (moved from M1d; decision "Plan split, additions and the M1a scope"): the token in the URL fragment, the `Host` and `Origin` checks (403 `forbidden-host`), one channel per document for every host message and the page's messages sent in order one request at a time (decision "Loopback transport accepted; Browser surface in its own package"; built, with the `Browser` surface in `Spar.Testing.Browser`), and a listener on both loopback addresses or one that advertises its real address;
-   - the static-state test of Spar's assemblies (built; decision "Static-state test built"), and the production boundary test of section 5 on a published console harness (the test host and the fakes absent) (built: `tests/apps/Spar.Harness`, with the bridge kept; Windows only so far; decision "Console harness built; its budget raised to 3.5 MB; lone surrogates on read").
+   - the static-state test of Spar's assemblies (built; decision "Static-state test built"), and the production boundary test of section 5 on a published console harness (the test host and the fakes absent) (built: `tests/apps/Spar.Harness`, with the bridge kept; on Windows and on Linux in WSL, decision "Linux runs in WSL for M1a; what Linux found"; decision "Console harness built; its budget raised to 3.5 MB; lone surrogates on read").
 3. **Repository:**
    - CI with the build and test lanes on Windows and Linux, the `-mt` lane, and `eng/check-size.cs`;
    - the first `Spar.BuildTests`: isolation, "authored files untouched", a clean clone (built: a clean copy, the unchanged build and the Production boundary of the Notebook; decision "Build tests: a clean copy, the step matrix from binary logs, the production boundary");
@@ -257,12 +257,12 @@ The biggest risks, each with what retires it. Update the table when a risk is re
    - the test-SDK shape (RR): a `SparTestedApplication` item that becomes a project reference before restore, tried on `Spar.Sdk` before it is fixed (built, with SPAR120–SPAR122; the `Projects.X` marker comes with the black-box fixture in M1b; decision "SparTestedApplication: the test project names its app").
 
 **Exit:**
-- `dotnet build` and `dotnet test` pass in the repository and in the package-only consumer, on Windows and Linux, in CI.
+- `dotnet build` and `dotnet test` pass in the repository and in the package-only consumer, on Windows and Linux, in CI (on Windows and on Linux in WSL, CI's steps: met, decision "Linux runs in WSL for M1a; what Linux found"; CI's own run waits for the first push).
 - The Notebook's contracts round-trip through real serialization and dispatch in command tests (level 2), and through the TypeScript SDK against a fake channel. The conformance vectors pass in C# and in TypeScript.
-- Browser tests (level 4) run the Notebook's pages in Chromium against the in-process backend over loopback, on Windows and Linux.
+- Browser tests (level 4) run the Notebook's pages in Chromium against the in-process backend over loopback, on Windows and Linux (met on both, decision "Linux runs in WSL for M1a; what Linux found").
 - The command tests pass in the NativeAOT lane (`xunit.v3.aot`) with no warnings.
-- The M1a budgets are measured and recorded ("Provisional budgets") (on Windows: all met, decision "M1a budgets measured; the NativeAOT lane builds into bin/aot"; Linux still open).
-- A console harness around the core (dispatch, serializers, protocol codec) publishes with NativeAOT with no warnings on both OSes, and gives the same results as on CoreCLR.
+- The M1a budgets are measured and recorded ("Provisional budgets") (all met on Windows, decision "M1a budgets measured; the NativeAOT lane builds into bin/aot", and on Linux, decision "Linux runs in WSL for M1a; what Linux found").
+- A console harness around the core (dispatch, serializers, protocol codec) publishes with NativeAOT with no warnings on both OSes, and gives the same results as on CoreCLR (met on both, decision "Linux runs in WSL for M1a; what Linux found").
 - Visual Studio and VS Code show contract diagnostics as you type, with squiggles in both.
 - Evidence is recorded for each result.
 

@@ -3292,3 +3292,15 @@ The open item from the package layout (`spar-msbuild` skill: "untested with a ce
 ## 2026-11-16, Test projects stay on xUnit; no opt-out for now (user decision)
 
 Asked what an app author does without xUnit: Spar.Sdk adds `xunit.v3` (or `xunit.v3.aot` in the NativeAOT lane), a global `using Xunit` and the teardown hook to every test project, with no switch to leave out the framework; `Spar.Testing` itself references no test framework. Offered a property that would leave the xUnit parts out, so a test project could bring MSTest, NUnit or TUnit and keep the rest of what Spar.Sdk does, the user chose to keep xUnit only for now, as decided on 2026-11-13 ("Test framework: plain xunit.v3 confirmed"), and may revisit it later. Using another framework was not tried.
+
+## 2026-11-16, Linux runs in WSL for M1a; what Linux found (user decisions; implementation record)
+
+The user chose to run M1a's Linux checks in WSL. Everything M1a builds and tests passed on Linux after four fixes. Evidence: `docs/evidence/m1a-linux.md`.
+- **How:** `eng/wsl/setup.sh` and `eng/wsl/step.sh` run CI's Linux steps in the WSL distribution, on a fresh clone of HEAD in `/var/tmp/spar-linux/` with its own SDK and caches, HOME and every XDG folder under the clone's `artifacts/linux-homes/<run>/`, Chromium's missing NSS and NSPR unpacked without root, and `ContinuousIntegrationBuild=true`. Nothing goes to the user's WSL home. Choices for review: the clone and the homes live in the distribution, not on the Windows drive, because WSL's file system there cannot give `XDG_RUNTIME_DIR` 0700 and is slow; `/var/tmp`, because WSL empties `/tmp` on restart.
+- **Results:** the solution 363 of 363 with the browser tests in Chromium, the NativeAOT lane, the `-mt` build, the build tests (the console harness's NativeAOT output equal to its CoreCLR output), the package tests 9 of 9, and the M1a budgets: command start 0.28–0.29 ms CoreCLR and 0.11–0.12 ms NativeAOT, browser journey 60–63 ms, loopback round trip 0.70–0.90 ms.
+- **Bluetooth in the Permissions-Policy header (user, 2026-11-16):** Linux's headless Chromium has no Web Bluetooth and warns about `bluetooth=()` in Spar's deny list, which failed every browser test's clean-console check. Asked, the user chose "Keep it; tests ignore it" over dropping the feature from the list (a weaker default where the feature exists) and over a header that depends on the platform. The two browser-test helpers accept exactly that message.
+- **Fixed:**
+  - the static-state test writes the path hash in file-local type names as `{file}`, since it differs between builds with and without `ContinuousIntegrationBuild` (it would have failed in CI on Windows too);
+  - the package tests' base folder has no space, `spar-package-tests`: the NativeAOT link step on Linux splits paths into the NuGet package folder at spaces; the consumer's own folder keeps its space and non-ASCII letters, and links;
+  - the SPAR121 check builds the expected item path with the platform's separator.
+- **Still open for the M1a exit:** CI's own run (nothing is pushed) and the editor squiggles (a check that needs the user).

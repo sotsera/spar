@@ -77,7 +77,9 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
             var (plain, plainOutput) = await consumer.DotnetAsync("App.Tests", "build", "-nologo", "-v:m");
             Assert.NotEqual(0, plain);
             Assert.Contains("error SPAR121", plainOutput, StringComparison.Ordinal);
-            Assert.Contains("<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\" />", plainOutput, StringComparison.Ordinal);
+            // MSBuild writes the item's path with the platform's separator.
+            var item = Path.Combine("..", "App", "Notes.App.csproj");
+            Assert.Contains($"<SparTestedApplication Include=\"{item}\" />", plainOutput, StringComparison.Ordinal);
 
             // The item's own metadata reaches the compiler's reference to the app.
             File.WriteAllText(tests, testsProject.Replace("<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\"",

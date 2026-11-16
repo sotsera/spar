@@ -7,6 +7,12 @@ namespace WireShapes.EndToEndTests;
 /// <summary>One app with its page open in a fresh browser context, and what the page reported.</summary>
 internal sealed class WirePage : IAsyncDisposable
 {
+    /// <summary>
+    /// Chromium's warning for a feature in Spar's deny list (the <c>Permissions-Policy</c> header) that this browser
+    /// build does not have: Linux's headless Chromium has no Web Bluetooth. The feature stays denied where it exists.
+    /// </summary>
+    private const string UnknownDeniedFeature = "Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.";
+
     private readonly List<string> _consoleErrors = [];
 
     private WirePage(SparTestApp app, IBrowserContext context, IPage page, string token)
@@ -17,7 +23,7 @@ internal sealed class WirePage : IAsyncDisposable
         Token = token;
         page.Console += (_, message) =>
         {
-            if (message.Type is "error" or "warning")
+            if (message.Type is "error" or "warning" && message.Text != UnknownDeniedFeature)
             {
                 lock (_consoleErrors)
                 {

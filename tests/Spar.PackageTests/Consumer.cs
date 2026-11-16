@@ -17,7 +17,9 @@ namespace Spar.PackageTests;
 /// </summary>
 public sealed class Consumer : IAsyncLifetime
 {
-    private static readonly string Base = Path.Combine(Path.GetTempPath(), "spar package tests");
+    // No space here: NativeAOT's Linux link step splits paths into the package folder at spaces. The consumer's own folder
+    // keeps its space and non-ASCII letters (<see cref="Root"/>).
+    private static readonly string Base = Path.Combine(Path.GetTempPath(), "spar-package-tests");
 
     /// <summary>The package folder every run shares, under <see cref="Base"/>.</summary>
     private const string PackagesFolder = "nuget-packages";
