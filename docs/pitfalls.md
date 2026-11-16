@@ -4,6 +4,7 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 
 ## Build, MSBuild and packages
 
+- **NuGet's restore ignores `UndefineProperties` on a `ProjectReference`:** a global property the reference removes still reaches the referenced project's restore. When that property moves the project's `obj/` (the NativeAOT lane's `objot`), restore writes `project.assets.json` where the build never looks, and a clean publish fails with NETSDK1004. It passed locally for days, because an ordinary build had already restored `obj/`; CI's first lane that started clean found it. Give such a reference the property instead of removing it. (M1a CI)
 - **NativeAOT on Linux cannot link with a NuGet package folder whose path has a space:** `clang` got `/tmp/spar`, `package` and `tests/nuget-packages/…/libSystem.Native.a` as separate arguments for every runtime library. The app's own folder, with a space and non-ASCII letters, linked fine. Windows links either. Keep `NUGET_PACKAGES` free of spaces wherever a Linux NativeAOT publish runs. (M1a Linux)
 - **A file-local type's name holds a hash of its source file's path** (the regex generator's `<RegexGenerator_g>F298E…__Utilities`), so it changes with the checkout and between builds with and without `ContinuousIntegrationBuild`, which maps paths to `/_/`. A list of type names must not keep the hash. (M1a Linux)
 - **MSBuild writes item paths with `/` on Linux,** whatever the project file says: a message that quotes an item written `..AppApp.csproj` prints `../App/App.csproj` there. (M1a Linux)

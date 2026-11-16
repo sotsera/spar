@@ -58,12 +58,12 @@
   <!--
     A test project names the app it tests, <SparTestedApplication Include="..\App\App.csproj" /> (decision
     "SparTestedApplication: the test project names its app"). It becomes a project reference here, during evaluation,
-    so restore sees it, and the app builds in the Test variant (with its libraries) and never gets the test lane. Other
-    project references build as they would anywhere.
+    so restore sees it, and the app builds in the Test variant (with its libraries). It keeps the test lane: NuGet's
+    restore ignores UndefineProperties, so in the NativeAOT lane the app is restored with the lane, into obj\aot\, and
+    its build must look there too. Other project references build as they would anywhere.
   -->
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
-    <ProjectReference Include="@(SparTestedApplication)" SparTestedApplication="true"
-                      AdditionalProperties="SparVariant=Test" UndefineProperties="SparTestLane" />
+    <ProjectReference Include="@(SparTestedApplication)" SparTestedApplication="true" AdditionalProperties="SparVariant=Test" />
   </ItemGroup>
 
   <!--
