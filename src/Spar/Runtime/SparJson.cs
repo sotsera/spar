@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.ComponentModel;
 using System.Globalization;
+using System.Text;
 using System.Text.Json;
 
 namespace Spar.Runtime;
@@ -21,6 +22,7 @@ public static class SparJson
 
     private static readonly JsonReaderOptions ReaderOptions = new() { MaxDepth = MaxDepth };
     private static readonly JsonWriterOptions WriterOptions = new() { MaxDepth = MaxDepth };
+    private static readonly UTF8Encoding StrictUtf8 = new(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
 
     /// <summary>Reads exactly one value from <paramref name="json"/>.</summary>
     public static T Read<T>(ReadOnlyMemory<byte> json, SparReader<T> read)
@@ -88,10 +90,92 @@ public static class SparJson
         reader.Skip();
     }
 
+    /// <summary>
+    /// A string value. A lone-surrogate escape becomes U+FFFD, never an error, and invalid UTF-8 is a
+    /// <see cref="JsonException"/> (wire rules); <c>GetString</c> throws <see cref="InvalidOperationException"/> for both.
+    /// </summary>
     public static string ReadString(ref Utf8JsonReader reader)
     {
         Expect(ref reader, JsonTokenType.String);
-        return reader.GetString()!;
+        try
+        {
+            return reader.GetString()!;
+        }
+        catch (InvalidOperationException)
+        {
+            // The rare case, so the common one stays GetString's own fast path.
+            return ReadUnpairedString(ref reader);
+        }
+    }
+
+    private static string ReadUnpairedString(ref Utf8JsonReader reader)
+    {
+        var raw = reader.HasValueSequence ? reader.ValueSequence.ToArray() : reader.ValueSpan;
+        var text = new StringBuilder(raw.Length);
+        var rest = raw;
+        while (!rest.IsEmpty)
+        {
+            var backslash = rest.IndexOf((byte)'\\');
+            var plain = backslash < 0 ? rest : rest[..backslash];
+            AppendUtf8(text, plain, ref reader);
+            if (backslash < 0)
+            {
+                break;
+            }
+
+            // The reader has already checked the escapes' syntax, so each is complete and its hex digits valid.
+            var escape = rest[backslash + 1];
+            if (escape == (byte)'u')
+            {
+                var code = rest.Slice(backslash + 2, 4);
+                text.Append((char)int.Parse(Encoding.ASCII.GetString(code), NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+                rest = rest[(backslash + 6)..];
+                continue;
+            }
+
+            text.Append(escape switch
+            {
+                (byte)'b' => '\b',
+                (byte)'f' => '\f',
+                (byte)'n' => '\n',
+                (byte)'r' => '\r',
+                (byte)'t' => '\t',
+                _ => (char)escape, // '"', '\\' and '/'
+            });
+            rest = rest[(backslash + 2)..];
+        }
+
+        ReplaceUnpairedSurrogates(text);
+        return text.ToString();
+    }
+
+    private static void AppendUtf8(StringBuilder text, ReadOnlySpan<byte> utf8, ref Utf8JsonReader reader)
+    {
+        try
+        {
+            text.Append(StrictUtf8.GetString(utf8));
+        }
+        catch (DecoderFallbackException)
+        {
+            throw Error(ref reader, "The string is not valid UTF-8");
+        }
+    }
+
+    private static void ReplaceUnpairedSurrogates(StringBuilder text)
+    {
+        for (var i = 0; i < text.Length; i++)
+        {
+            if (char.IsHighSurrogate(text[i]) && i + 1 < text.Length && char.IsLowSurrogate(text[i + 1]))
+            {
+                i++;
+                continue;
+            }
+
+            if (char.IsSurrogate(text[i]))
+            {
+                text[i] = '�';
+            }
+        }
     }
 
     public static bool ReadBoolean(ref Utf8JsonReader reader) => reader.TokenType switch
@@ -136,14 +220,27 @@ public static class SparJson
     /// <summary>ISO 8601 with an offset, required on read (wire rules): without one the instant would depend on the reader's time zone.</summary>
     public static DateTimeOffset ReadDateTimeOffset(ref Utf8JsonReader reader)
     {
-        Expect(ref reader, JsonTokenType.String);
-        var text = reader.GetString()!;
-        if (!HasOffset(text) || !reader.TryGetDateTimeOffset(out var value))
+        var text = ReadString(ref reader);
+        if (!HasOffset(text) || !TryGetDateTimeOffset(ref reader, out var value))
         {
             throw Error(ref reader, "Expected an ISO 8601 date and time with an offset");
         }
 
         return value;
+    }
+
+    /// <summary>The reader's own ISO 8601 parse, which throws, rather than fails, on a lone-surrogate escape.</summary>
+    private static bool TryGetDateTimeOffset(ref Utf8JsonReader reader, out DateTimeOffset value)
+    {
+        try
+        {
+            return reader.TryGetDateTimeOffset(out value);
+        }
+        catch (InvalidOperationException)
+        {
+            value = default;
+            return false;
+        }
     }
 
     private static bool HasOffset(string text) =>

@@ -19,6 +19,7 @@ Spar | Spar.Hosting.SparContentTypes.ByExtension | readonly | Extension to conte
 Spar | Spar.Hosting.SparFrontend.<IsBrotliSupported>k__BackingField | readonly | The Brotli decoder's feature switch, read once from AppContext: one value for the whole app by design (its build packs stored or not), and constant-folded by the trimmer.
 Spar | Spar.Runtime.SparJson.ReaderOptions | readonly | Reader options, a value type copied on use; never written.
 Spar | Spar.Runtime.SparJson.WriterOptions | readonly | Writer options, a value type copied on use; never written.
+Spar | Spar.Runtime.SparJson.StrictUtf8 | readonly | A UTF8Encoding that throws on invalid bytes: immutable, and GetString is thread-safe.
 Spar | Spar.SparTestSession.<IsSupported>k__BackingField | readonly | The test-host feature switch, read once from AppContext; the same for the whole process by design, and false in apps (trimmed away).
 Spar | Spar.SparTestSession.CurrentSession | readonly | An AsyncLocal: each test's own flow sees its own session, so two apps in one process never share one.
 

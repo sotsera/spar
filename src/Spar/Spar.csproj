@@ -19,5 +19,8 @@
     <InternalsVisibleTo Include="Spar.Testing.Browser" />
     <InternalsVisibleTo Include="Spar.Tests" />
     <InternalsVisibleTo Include="Spar.Sdk.Tasks.Tests" />
+
+    <!-- The console harness hosts the bridge the way a desktop host will (tests/apps/Spar.Harness). -->
+    <InternalsVisibleTo Include="Spar.Harness" />
   </ItemGroup>
 </Project>

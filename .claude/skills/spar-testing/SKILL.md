@@ -39,6 +39,6 @@ The design is plan section 5 (`docs/design/testing.md`); the mechanics are the d
 ## Verify
 
 - Run the tests on CoreCLR and publish and run the NativeAOT lane; both must pass, with no warnings.
-- After a change to the test host or the generator's Test-variant output, publish the app in Release and check the production boundary: the binary contains none of `SparTestSession`, `ISparEntryPoint`, the generated clients or the fakes (type names are UTF-8 in the image, string literals UTF-16).
+- After a change to the test host or the generator's Test-variant output, publish the app in Release and check the production boundary: the binary contains none of `SparTestSession`, `ISparEntryPoint`, the generated clients or the fakes (type names are UTF-8 in the image, string literals UTF-16). `Spar.BuildTests` checks it on the Notebook and on the console harness (`tests/apps/Spar.Harness`), whose bridge is kept, so its markers live in `ProductionBoundary.cs`. The harness's NativeAOT output must equal its CoreCLR output; a change to the codec, dispatch or the serializers shows there first.
 - Window tests (M1b, M1c) run as their own invocation: a native engine abort ends the whole test process.
 - The evidence for these rules is in `spikes/test-host/RESULTS.md`, `spikes/entry-accessor/RESULTS.md` and `docs/pitfalls.md` ("Build, MSBuild and packages", "Tooling and environment").

@@ -86,16 +86,7 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         var image = File.ReadAllBytes(Path.Combine(publish, name));
         Assert.True(Contains(image, "SPARFE", Encoding.ASCII), "The executable carries no packed page.");
 
-        // Type names are UTF-8 in a native image's metadata; string literals are UTF-16 (plan section 5).
-        string[] types =
-        [
-            "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackHost", "LoopbackChannel", "LoopbackAssets",
-            "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel",
-        ];
-        string[] literals = ["/_spar/channel", "/_spar/send", "Spar.TestHost.IsSupported"];
-        var found = types.Where(t => Contains(image, t, Encoding.UTF8))
-            .Concat(literals.Where(l => Contains(image, l, Encoding.Unicode)))
-            .ToList();
+        var found = ProductionBoundary.Find(image);
         Assert.True(found.Count == 0, $"The Production executable contains: {string.Join(", ", found)}.");
 
         // The control: the same search finds the markers in the assemblies that carry them.
@@ -130,6 +121,5 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         Assert.True(problems.Count == 0, string.Join("\n", problems));
     }
 
-    private static bool Contains(byte[] image, string text, Encoding encoding) =>
-        image.AsSpan().IndexOf(encoding.GetBytes(text)) >= 0;
+    private static bool Contains(byte[] image, string text, Encoding encoding) => ProductionBoundary.Contains(image, text, encoding);
 }

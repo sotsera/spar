@@ -523,7 +523,7 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 - **Lenient System.Text.Json readers:** `TryGetSingle` returns `Infinity` for `3.5e38`; `TryGetBytesFromBase64` accepts embedded whitespace; enum reading is case-insensitive and accepts numbers. (`wire-details`)
 - **The .NET integer parsers are not canonical.** `Utf8Parser.TryParse` and `long.TryParse` accept `+1`, `007` and `-0`, and `Utf8Parser` stops early on `1 ` and `1e3` (it reports partial consumption). Check `-?(0|[1-9][0-9]*)`, at most 19 digits, then require full consumption. (`wire-details`)
 - **System.Text.Json throws more than `JsonException`:**
-  - `Utf8JsonReader.GetString()` throws `InvalidOperationException` on invalid UTF-8 and on unpaired `\u` surrogates;
+  - `Utf8JsonReader.GetString()` throws `InvalidOperationException` on invalid UTF-8 and on unpaired `\u` surrogates, and so does `TryGetDateTimeOffset`, which throws rather than returning false. Dispatch counts anything but a `JsonException` as the command's own failure, so a request with a lone surrogate failed as `failed` / `unknown` until `SparJson.ReadString` handled it (M1a console harness);
   - `JsonEncodedText.Encode` throws `ArgumentException` on a lone surrogate;
   - `WriteNumberValue` throws `ArgumentException` on NaN and ±Infinity;
   - a writer at `MaxDepth` throws `InvalidOperationException`, even with `SkipValidation = true`.
@@ -550,6 +550,7 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 - **`await using` lets a disposal's exception replace the one already in flight:** a test whose body failed and whose app then failed to stop showed only the stop failure. Spar's test host keeps the stop failure for a hook that raises it after the test. (M1a fixture rules)
 - **xUnit's in-process runner (the NativeAOT lane) exits 0 when no test ran,** where `dotnet test` exits 8. The CI step checks for "Total: 0". (M1a fixture rules)
+- **xUnit v3 4.x makes `CollectionBehavior.DisableTestParallelization` an error** (CS0619, obsolete). Turn parallel runs off with `[assembly: Xunit.v3.Parallelization(Mode = Xunit.Sdk.ParallelMode.None)]`. (M1a console harness)
 - **xUnit's two flavours are different assemblies** (`xunit.v3.core.dll`, `xunit.v3.core.aot.dll`) with different extension signatures: a library compiled against one cannot run against the other. Code that extends xUnit is compiled into the test project, one file per flavour. (M1a fixture rules)
 
 - **BenchmarkDotNet needs project names that are unique across the repository:** `Bench.csproj` in two spikes clashed. An analyzer whose descriptor uses a literal ID also needs `AnalyzerReleases.Shipped.md`/`Unshipped.md` (RS2008). (`result-api`)

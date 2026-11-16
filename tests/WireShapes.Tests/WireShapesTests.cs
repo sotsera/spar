@@ -75,6 +75,37 @@ public sealed class WireShapesTests : IAsyncLifetime
         Assert.StartsWith("{\"text\":", output, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task A_lone_surrogate_in_a_read_string_becomes_U_FFFD()
+    {
+        // A lone escape sends the read down its slow path, which must still decode every other escape and the UTF-8.
+        var text = "\"l\\ud800one \\udc00 pair \\ud83d\\ude00 h\\u00e9 \\\"q\\\" \\\\ \\/ \\b\\f\\n\\r\\t é end\\ud83d\"";
+        var request = Valid
+            .Replace("\"text\":\"h\\u00e9llo \\u2713\"", "\"text\":" + text, StringComparison.Ordinal)
+            .Replace("\"tags\":[\"a\"]", "\"tags\":[\"\\udfff\"]", StringComparison.Ordinal);
+
+        var output = await EchoAsync(request);
+
+        using var json = JsonDocument.Parse(output);
+        Assert.Equal("l\uFFFDone \uFFFD pair 😀 hé \"q\" \\ / \b\f\n\r\t é end\uFFFD", json.RootElement.GetProperty("text").GetString());
+        Assert.Equal("\uFFFD", json.RootElement.GetProperty("tags")[0].GetString());
+    }
+
+    [Theory]
+    [InlineData("invalid UTF-8 in a read string", false)]
+    [InlineData("invalid UTF-8 beside a lone surrogate", true)]
+    public async Task Invalid_UTF8_in_a_read_string_is_rejected_before_the_command_runs(string why, bool loneSurrogate)
+    {
+        var marker = Valid.Replace("\"text\":\"h\\u00e9llo \\u2713\"", loneSurrogate ? "\"text\":\"a#\\ud800\"" : "\"text\":\"a#\"", StringComparison.Ordinal);
+        var bytes = Encoding.UTF8.GetBytes(marker);
+        bytes[Array.IndexOf(bytes, (byte)'#')] = 0xFF;
+
+        var outcome = await _app.InvokeAsync("echo", "shapes", bytes, Token);
+
+        Assert.True(outcome.Kind == SparOutcomeKind.Failure, why);
+        Assert.Equal(("rejected", "invalid-request", "notStarted"), (outcome.Failure!.Kind, outcome.Failure.Code, outcome.Failure.Execution));
+    }
+
     [Theory]
     [InlineData("a required value is missing", "text")]
     [InlineData("a property is given twice", "twice")]
@@ -87,6 +118,7 @@ public sealed class WireShapesTests : IAsyncLifetime
     [InlineData("a double overflows to infinity", "ratio-infinite")]
     [InlineData("a date has no offset", "at-without-offset")]
     [InlineData("a GUID is not one", "key-invalid")]
+    [InlineData("a date holds a lone surrogate", "at-lone-surrogate")]
     [InlineData("the values nest deeper than 64", "too-deep")]
     public async Task A_malformed_request_is_rejected_before_the_command_runs(string why, string variant)
     {
@@ -103,6 +135,7 @@ public sealed class WireShapesTests : IAsyncLifetime
             "ratio-infinite" => Valid.Replace("\"ratio\":0.25", "\"ratio\":1e400", StringComparison.Ordinal),
             "at-without-offset" => Valid.Replace("2026-11-16T08:30:00+01:00", "2026-11-16T08:30:00", StringComparison.Ordinal),
             "key-invalid" => Valid.Replace("0f8fad5b-d9cb-469f-a165-70867728950e", "not-a-guid", StringComparison.Ordinal),
+            "at-lone-surrogate" => Valid.Replace("2026-11-16T08:30:00+01:00", "2026-11-16T08:30:00\\ud800+01:00", StringComparison.Ordinal),
             _ => Nested(70),
         };
 

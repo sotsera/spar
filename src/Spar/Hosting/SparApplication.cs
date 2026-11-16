@@ -82,6 +82,12 @@ public sealed class SparApp
         _session = session;
     }
 
+    /// <summary>What <c>Program.cs</c> configured; a host builds the app from it.</summary>
+    internal SparBuilder Builder => _builder;
+
+    /// <summary>The app's generated contracts.</summary>
+    internal SparCatalog Catalog => _catalog;
+
     public int Run()
     {
         if (SparTestSession.IsSupported && _session is not null)

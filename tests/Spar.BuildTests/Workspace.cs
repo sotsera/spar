@@ -4,6 +4,9 @@ using System.Text;
 
 [assembly: AssemblyFixture(typeof(Spar.BuildTests.Workspace))]
 
+// Every test builds in the one copy, and two builds of the same projects at once would collide in their obj/ folders.
+[assembly: Xunit.v3.Parallelization(Mode = Xunit.Sdk.ParallelMode.None)]
+
 namespace Spar.BuildTests;
 
 /// <summary>

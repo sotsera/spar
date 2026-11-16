@@ -86,7 +86,7 @@ jobs:
       - name: Build with -mt
         run: dotnet build Spar.slnx -c Debug -mt -nodeReuse:false
 
-      - name: Build tests (a clean copy, an unchanged build, the production boundary)
+      - name: Build tests (a clean copy, an unchanged build, the production boundary, the console harness)
         # Not in Spar.slnx: they copy the tree under artifacts/build-tests/ and build it in isolation, in minutes.
         run: dotnet test --project tests/Spar.BuildTests
 

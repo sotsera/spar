@@ -79,6 +79,14 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
             Assert.Contains("error SPAR121", plainOutput, StringComparison.Ordinal);
             Assert.Contains("<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\" />", plainOutput, StringComparison.Ordinal);
 
+            // The item's own metadata reaches the compiler's reference to the app.
+            File.WriteAllText(tests, testsProject.Replace("<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\"",
+                "<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\" Aliases=\"notes\"", StringComparison.Ordinal));
+            var (resolved, resolvedOutput) = await consumer.DotnetAsync("App.Tests", "msbuild", "-t:ResolveReferences",
+                "-getItem:ReferencePath", "-nologo");
+            Assert.True(resolved == 0, resolvedOutput);
+            Assert.Equal("notes", ReferenceAliases(resolvedOutput, "NotesTool.dll"));
+
             // A library named as the tested app.
             File.WriteAllText(tests, testsProject.Replace("..\\App\\Notes.App.csproj", "..\\Lib\\Lib.csproj", StringComparison.Ordinal));
             var (notAnApp, notAnAppOutput) = await consumer.DotnetAsync("App.Tests", "build", "-nologo", "-v:m");
@@ -177,6 +185,22 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     {
         var package = Path.Combine(consumer.Root, "App", "obj", "spar", "client", "package.json");
         return JsonDocument.Parse(File.ReadAllText(package)).RootElement.Clone();
+    }
+
+    /// <summary>The <c>Aliases</c> metadata of one resolved reference, from <c>-getItem:ReferencePath</c>'s JSON.</summary>
+    private static string? ReferenceAliases(string json, string fileName)
+    {
+        var references = JsonDocument.Parse(json).RootElement.GetProperty("Items").GetProperty("ReferencePath");
+        foreach (var reference in references.EnumerateArray())
+        {
+            var path = reference.GetProperty("Identity").GetString()!;
+            if (Path.GetFileName(path).Equals(fileName, StringComparison.OrdinalIgnoreCase))
+            {
+                return reference.TryGetProperty("Aliases", out var aliases) ? aliases.GetString() : null;
+            }
+        }
+
+        throw new InvalidOperationException($"No reference to {fileName} among the resolved references:\n{json}");
     }
 
     private static bool Contains(byte[] haystack, ReadOnlySpan<byte> needle) => haystack.AsSpan().IndexOf(needle) >= 0;
