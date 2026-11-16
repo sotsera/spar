@@ -99,6 +99,43 @@ public sealed class EmitterTests
     }
 
     [Fact]
+    public void An_enum_is_a_union_of_its_member_names_read_and_written_by_a_switch()
+    {
+        var files = ClientHarness.Emit(Fixtures.Edges);
+
+        Assert.Contains("export type Level = \"Low\" | \"High\" | \"class\";\n", files["kinds.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("  readonly level: Level;\n  readonly mood: Mood | null;\n  readonly levels: readonly Level[];\n", files["kinds.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("/** How it feels; both contracts use it, so it lives in the shared module. */\nexport type Mood = \"Calm\" | \"Busy\";\n", files["shared.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("import type { Mood } from \"./shared.js\";\n\nexport type { Mood } from \"./shared.js\";\n", files["odd.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("import { readMood, writeMood } from \"./shared.js\";\n", files["odd.js"], StringComparison.Ordinal);
+
+        var expected = """
+            function readLevel(value) {
+              switch (value) {
+                case "Low":
+                case "High":
+                case "class":
+                  return value;
+                default:
+                  return wire.unknownMember(value, "Level");
+              }
+            }
+
+            function writeLevel(value) {
+              switch (value) {
+                case "Low":
+                case "High":
+                case "class":
+                  return wire.writeString(value);
+                default:
+                  return wire.refusedMember(value, "Level");
+              }
+            }
+            """.Replace("\r\n", "\n", StringComparison.Ordinal);
+        Assert.Contains(expected, files["kinds.js"], StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Empty_documentation_elements_keep_their_meaning()
     {
         const string Source = """

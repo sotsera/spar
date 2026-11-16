@@ -70,7 +70,9 @@ internal static class ContractSet
     }
 
     private static IEnumerable<(string Key, string CSharp, string Name)> Used(ContractModel contract) =>
-        contract.Records.Select(r => (r.Key, r.CSharp, r.Name)).Concat(contract.Errors.Select(e => (e.Key, e.CSharp, e.Name)));
+        contract.Records.Select(r => (r.Key, r.CSharp, r.Name))
+            .Concat(contract.Errors.Select(e => (e.Key, e.CSharp, e.Name)))
+            .Concat(contract.Enums.Select(e => (e.Key, e.CSharp, e.Name)));
 
     private static string Display(string csharp) => csharp.Replace("global::", "");
 }

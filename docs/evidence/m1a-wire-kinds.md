@@ -47,5 +47,27 @@ Recorded 2026-11-16. What it shows: every kind of the wire-rules table (plan sec
 
 ## Not covered
 
-- Enums and `[Flags]`; `Int128`, `UInt128`, `BigInteger`.
+- `Int128`, `UInt128`, `BigInteger` (enums: see the follow-up below).
 - Linux and CI for this change.
+
+## Follow-up: enums (2026-11-16)
+
+Decision: "Enums on the wire".
+
+| Path | Contents |
+|---|---|
+| `src/Spar.Generator/ContractAnalysis.WireTypes.cs` | Enums and SPAR025, and the primitive classification moved out of `ContractAnalysis.cs` (801 lines otherwise). |
+| `src/Spar.Generator/Emit/SerializerEmitter.cs` | A reader and a writer per enum; members written with `@`, so one named like a keyword compiles. |
+| `src/Spar.Sdk.Tasks/Client` | The union type, the reader and writer `switch`es, the layout and the snapshot. |
+| `src/Spar.Client/src/wire.ts` | `unknownMember` (a `TypeError`) and `refusedMember` (a `RangeError`). |
+| `tests/apps/WireShapes` | `Priority` in `Kinds`, and `kinds.priority(int)`, which casts. |
+| Tests | SPAR025 for each reason, with its message; SPAR004 and SPAR040 for enum names; a member named `class` through C# and TypeScript; an enum shared by two contracts; the differential `tsc` test with enums; `"normal"`, `"Urgent"`, `1` and a missing member refused; `High` written; a cast `42` a writer failure; the page sending and receiving an enum, and `"Urgent"` refused before sending. |
+
+| Check | Result |
+|---|---|
+| `KindsTests` | 42 of 42 |
+| Generator, client step, SDK | 83 of 83, 59 of 59, 148 of 148 |
+| `dotnet test --solution Spar.slnx` | 427 of 427 |
+| NativeAOT lane | Spar.Tests 158 of 158, WireShapes.Tests 79 of 79, no warnings |
+| `Spar.PackageTests`, `Spar.BuildTests`, `AppModel.Tests` | 10 of 10, 6 of 6, 10 of 10 |
+| `-mt` build, size check | clean; 216 source files |

@@ -31,7 +31,16 @@ namespace WireShapes
         byte[] Data,
         byte[]? Maybe,
         IReadOnlyList<ulong?> Ids,
-        decimal? Price);
+        decimal? Price,
+        Priority Level);
+
+    /// <summary>An enum travels as its member name.</summary>
+    public enum Priority
+    {
+        Low,
+        Normal,
+        High,
+    }
 
     /// <summary>Echoes the other kinds, so a test sees what their readers and writers do.</summary>
     [SparContract]
@@ -47,6 +56,10 @@ namespace WireShapes
         /// <summary>Parses a float, so a test can make the writer meet a value it must refuse.</summary>
         [SparCommand]
         public Task<float> SingleAsync(string text) => Task.FromResult(float.Parse(text, System.Globalization.CultureInfo.InvariantCulture));
+
+        /// <summary>Casts an integer, so a test can make the writer meet a value that is no member.</summary>
+        [SparCommand]
+        public Task<Priority> PriorityAsync(int value) => Task.FromResult((Priority)value);
     }
 
     /// <summary>The app's implementation of the library's rates contract: two fixed rates.</summary>

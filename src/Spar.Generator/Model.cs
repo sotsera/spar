@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Spar.Generator;
 
-/// <summary>The wire kinds of plan section 2's wire-rules table, except enums.</summary>
+/// <summary>The wire kinds of plan section 2's wire-rules table.</summary>
 internal enum WireKind
 {
     String,
@@ -33,6 +33,9 @@ internal enum WireKind
     /// <summary><c>byte[]</c>: padded base64, <c>Uint8Array</c> in TypeScript; never a list of numbers.</summary>
     Bytes,
 
+    /// <summary>An enum: one member name, exactly; a union of string literals in TypeScript.</summary>
+    Enum,
+
     List,
     Record,
     Nullable,
@@ -50,6 +53,9 @@ internal sealed record ErrorCaseModel(string CSharp, string Code, EquatableArray
 
 /// <summary>An error type; <paramref name="Name"/> is its TypeScript name, from <c>[SparName]</c> or its own.</summary>
 internal sealed record ErrorModel(string CSharp, string Key, string Name, EquatableArray<ErrorCaseModel> Cases);
+
+/// <summary>An enum on the wire: its TypeScript name and its member names, in declaration order.</summary>
+internal sealed record EnumModel(string CSharp, string Key, string Name, EquatableArray<string> Members);
 
 internal enum ReturnShape
 {
@@ -78,7 +84,8 @@ internal sealed record ContractModel(
     EquatableArray<CommandModel> Commands,
     EquatableArray<TypeRef> Types,
     EquatableArray<RecordModel> Records,
-    EquatableArray<ErrorModel> Errors);
+    EquatableArray<ErrorModel> Errors,
+    EquatableArray<EnumModel> Enums);
 
 internal sealed record EntryPointModel(bool TopLevel, bool ReturnsInt, string TypeName, string MethodName);
 

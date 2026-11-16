@@ -72,9 +72,10 @@ public sealed class BrowserBridgeTests(SharedBrowser shared)
         Assert.Equal(
             "{\"value\":{\"b\":255,\"sb\":-128,\"s\":-32768,\"us\":65535,\"ui\":4294967295,\"ul\":\"bigint 18446744073709551615\"," +
             "\"f\":0.5,\"m\":\"-12.50\",\"c\":\"é\",\"day\":\"2026-02-28\",\"time\":\"08:30:00.25\",\"span\":\"-1.02:30:00\"," +
-            "\"data\":\"Uint8Array 0,1,254,255\",\"maybe\":null,\"ids\":[\"bigint 0\",null],\"price\":\"0.000\"}}",
+            "\"data\":\"Uint8Array 0,1,254,255\",\"maybe\":null,\"ids\":[\"bigint 0\",null],\"price\":\"0.000\",\"level\":\"High\"}}",
             echoed);
         Assert.Equal("{\"failure\":{\"kind\":\"rejected\",\"code\":\"invalid-request\",\"execution\":\"notStarted\",\"command\":\"echo\"}}", refused);
+        Assert.Equal(refused, await wire.CallAsync("() => window.wire.sendBadLevel()", null));
         Assert.Empty(wire.App.Problems);
     }
 

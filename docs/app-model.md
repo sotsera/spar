@@ -852,10 +852,13 @@ Spar logs the exception through the app's `ILogger` (category `Spar.Bridge`), so
 | `DateTimeOffset` | ISO 8601 with an offset: `"2026-11-16T08:30:00+01:00"` | `string` |
 | `DateOnly`, `TimeOnly`, `TimeSpan` | `"2026-11-16"`, `"08:30:00.25"`, `"-1.02:30:00"` | `string` |
 | `byte[]` | padded base64 with no whitespace | `Uint8Array` |
+| an enum, such as `enum Priority { Low, High }` | the member name, exactly: `"High"` | `type Priority = "Low" \| "High"` |
 | `T?` | the value, or `null` | `T \| null` |
 | arrays and `IReadOnlyList<T>` | a JSON array | `readonly T[]` |
 
 `DateTime` works too, written with `Z`, an offset or nothing by its `Kind`, but the build warns (SPAR024): use `DateTimeOffset`, whose instant does not depend on the reader's time zone.
+
+An enum travels only when each value has one name: a `[Flags]` enum, two members with one value, and an enum with no members are build errors (SPAR025). A value that is no member, such as `(Priority)7`, fails the call that returns it.
 
 ## 5. The generated TypeScript
 

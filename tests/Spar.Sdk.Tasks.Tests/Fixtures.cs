@@ -91,13 +91,21 @@ internal static class Fixtures
 
             [SparCommand]
             public Task<IReadOnlyList<long?>> NumbersAsync(int count) => throw new NotImplementedException();
+
+            [SparCommand]
+            public Task<Mood> MoodAsync(Mood request) => throw new NotImplementedException();
         }
+
+        /// <summary>How it feels; both contracts use it, so it lives in the shared module.</summary>
+        public enum Mood { Calm, Busy }
+
+        public enum Level { Low, High, @class }
 
         /// <summary>Every other kind of the wire-rules table.</summary>
         public sealed record Kinds(
             byte B, sbyte Sb, short S, ushort Us, uint Ui, ulong Ul, float F, decimal M, char C,
             DateTime At, DateOnly Day, TimeOnly Time, TimeSpan Span, byte[] Data, byte[]? Maybe, IReadOnlyList<ulong?> Ids,
-            IReadOnlyList<byte> Small);
+            IReadOnlyList<byte> Small, Level Level, Mood? Mood, IReadOnlyList<Level> Levels);
 
         [SparContract]
         public sealed class KindsService

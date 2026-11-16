@@ -11,7 +11,7 @@ namespace Spar.Generator;
 /// command never drops its whole contract (decision "D1 follow-up: IDE design-time behaviour"); a problem with the
 /// contract's own name, or two of its types with one TypeScript name, does.
 /// </summary>
-internal sealed class ContractAnalysis
+internal sealed partial class ContractAnalysis
 {
     private const string LowerRule = "a camelCase ASCII name (a lower-case letter, then letters and digits)";
 
@@ -29,6 +29,7 @@ internal sealed class ContractAnalysis
 
     private readonly Dictionary<string, RecordModel> _records = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ErrorModel> _errors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, EnumModel> _enums = new(StringComparer.Ordinal);
 
     /// <summary>The contract and every record and error type it uses, by C# name, to report clashes at each.</summary>
     private readonly Dictionary<string, INamedTypeSymbol> _named = new(StringComparer.Ordinal);
@@ -90,7 +91,8 @@ internal sealed class ContractAnalysis
             commands.ToEquatable(),
             _types.Values.OrderBy(t => t.Key, StringComparer.Ordinal).ToEquatable(),
             _records.Values.OrderBy(r => r.Key, StringComparer.Ordinal).ToEquatable(),
-            _errors.Values.OrderBy(e => e.Key, StringComparer.Ordinal).ToEquatable());
+            _errors.Values.OrderBy(e => e.Key, StringComparer.Ordinal).ToEquatable(),
+            _enums.Values.OrderBy(e => e.Key, StringComparer.Ordinal).ToEquatable());
     }
 
     private bool ValidContractName(INamedTypeSymbol type, AttributeData? attribute, string subject, string name, string fix)
@@ -120,6 +122,7 @@ internal sealed class ContractAnalysis
         var functions = new HashSet<string>(StringComparer.Ordinal);
         functions.UnionWith(_records.Values.SelectMany(r => new[] { ClientNames.Reader(r.Name), ClientNames.Writer(r.Name) }));
         functions.UnionWith(_errors.Values.Select(e => ClientNames.Reader(e.Name)));
+        functions.UnionWith(_enums.Values.SelectMany(e => new[] { ClientNames.Reader(e.Name), ClientNames.Writer(e.Name) }));
         functions.UnionWith(commands.Select(c => ClientNames.Decoder(c.WireName)));
         if (!functions.Contains(name))
         {
@@ -136,7 +139,8 @@ internal sealed class ContractAnalysis
     /// </summary>
     private bool TypeNamesUnique(INamedTypeSymbol contract, string contractName)
     {
-        var named = _records.Values.Select(r => (r.CSharp, r.Name)).Concat(_errors.Values.Select(e => (e.CSharp, e.Name)));
+        var named = _records.Values.Select(r => (r.CSharp, r.Name)).Concat(_errors.Values.Select(e => (e.CSharp, e.Name)))
+            .Concat(_enums.Values.Select(e => (e.CSharp, e.Name)));
         var unique = true;
         foreach (var clash in named.GroupBy(t => t.Name, StringComparer.Ordinal).Where(g => g.Count() > 1))
         {
@@ -365,6 +369,11 @@ internal sealed class ContractAnalysis
             var item = Wire(element, location);
             var prefix = type is IArrayTypeSymbol ? "ArrayOf" : "ListOf";
             return item is null ? null : new TypeRef(WireKind.List, csharp, prefix + item.Key, item, false);
+        }
+
+        if (type is INamedTypeSymbol { TypeKind: TypeKind.Enum } enumType)
+        {
+            return Enum(enumType);
         }
 
         if (type is INamedTypeSymbol named && named.IsRecord && named.TypeKind == TypeKind.Class)
@@ -649,62 +658,6 @@ internal sealed class ContractAnalysis
                 pending.Push(nested);
             }
         }
-    }
-
-    private static WireKind? Primitive(ITypeSymbol type)
-    {
-        var special = type.SpecialType switch
-        {
-            SpecialType.System_String => WireKind.String,
-            SpecialType.System_Boolean => WireKind.Boolean,
-            SpecialType.System_Byte => WireKind.Byte,
-            SpecialType.System_SByte => WireKind.SByte,
-            SpecialType.System_Int16 => WireKind.Int16,
-            SpecialType.System_UInt16 => WireKind.UInt16,
-            SpecialType.System_Int32 => WireKind.Int32,
-            SpecialType.System_UInt32 => WireKind.UInt32,
-            SpecialType.System_Int64 => WireKind.Int64,
-            SpecialType.System_UInt64 => WireKind.UInt64,
-            SpecialType.System_Single => WireKind.Single,
-            SpecialType.System_Double => WireKind.Double,
-            SpecialType.System_Decimal => WireKind.Decimal,
-            SpecialType.System_Char => WireKind.Char,
-            SpecialType.System_DateTime => WireKind.DateTime,
-            _ => (WireKind?)null,
-        };
-        if (special is not null)
-        {
-            return special;
-        }
-
-        return type.ToDisplayString() switch
-        {
-            "System.Guid" => WireKind.Guid,
-            "System.DateTimeOffset" => WireKind.DateTimeOffset,
-            "System.DateOnly" => WireKind.DateOnly,
-            "System.TimeOnly" => WireKind.TimeOnly,
-            "System.TimeSpan" => WireKind.TimeSpan,
-            _ => null,
-        };
-    }
-
-    private static bool IsByteArray(ITypeSymbol type) =>
-        type is IArrayTypeSymbol { Rank: 1, ElementType.SpecialType: SpecialType.System_Byte };
-
-    /// <summary>Whether the type is <c>DateTime</c>, or a list or nullable of one, at any depth.</summary>
-    private static bool MentionsDateTime(ITypeSymbol type)
-    {
-        if (type.SpecialType == SpecialType.System_DateTime)
-        {
-            return true;
-        }
-
-        if (type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } nullable)
-        {
-            return MentionsDateTime(nullable.TypeArguments[0]);
-        }
-
-        return List(type) is { } element && MentionsDateTime(element);
     }
 
     private static ITypeSymbol? List(ITypeSymbol type)

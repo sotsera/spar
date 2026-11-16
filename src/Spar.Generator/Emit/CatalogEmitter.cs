@@ -163,6 +163,11 @@ internal static class CatalogEmitter
                 shape.Append("  record ").Append(record.Key).Append(Fields(record.Properties)).Append('\n');
             }
 
+            foreach (var model in contract.Enums)
+            {
+                shape.Append("  enum ").Append(model.Key).Append(' ').Append(string.Join(",", model.Members)).Append('\n');
+            }
+
             foreach (var error in contract.Errors)
             {
                 shape.Append("  error ").Append(error.Key).Append('\n');

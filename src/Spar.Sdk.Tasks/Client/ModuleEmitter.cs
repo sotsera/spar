@@ -69,13 +69,22 @@ internal static partial class ModuleEmitter
     public static bool IsIdentifier(string name) => Identifier().IsMatch(name) && !TypeScriptNames.IsReserved(name);
 
     private static IEnumerable<string> Functions(ClientType type) =>
-        type.Record is null
+        type.Error is not null
             ? [ClientNames.Reader(type.Name)]
             : [ClientNames.Reader(type.Name), ClientNames.Writer(type.Name)];
 
     private static void Type(TypeScriptWriter js, ClientLayout layout, ClientType type, bool exported)
     {
         var export = exported ? "export " : "";
+        if (type.Enum is { } model)
+        {
+            js.Line();
+            EnumFunction(js, type, model, export, ClientNames.Reader(type.Name), "unknownMember", "return value;");
+            js.Line();
+            EnumFunction(js, type, model, export, ClientNames.Writer(type.Name), "refusedMember", "return wire.writeString(value);");
+            return;
+        }
+
         if (type.Record is { } record)
         {
             js.Line();
@@ -87,6 +96,24 @@ internal static partial class ModuleEmitter
 
         js.Line();
         ErrorReader(js, layout, type, type.Error!, export);
+    }
+
+    /// <summary>
+    /// An enum's reader or writer: a member name passes as it is, anything else goes to the SDK's <paramref name="refuse"/>,
+    /// which throws. A switch, so the module declares no table of names of its own.
+    /// </summary>
+    private static void EnumFunction(TypeScriptWriter js, ClientType type, EnumModel model, string export, string name, string refuse, string accept)
+    {
+        js.Open($"{export}function {name}(value) {{").Open("switch (value) {");
+        var members = model.Members.Items;
+        foreach (var member in members[..^1])
+        {
+            js.Line($"case {TypeScriptNames.Literal(member)}:");
+        }
+
+        js.Open($"case {TypeScriptNames.Literal(members[^1])}:").Line(accept).Outdent();
+        js.Open("default:").Line($"return wire.{refuse}(value, {TypeScriptNames.Literal(type.Name)});").Outdent();
+        js.Close().Close();
     }
 
     private static void RecordReader(TypeScriptWriter js, ClientLayout layout, ClientType type, RecordModel record, string export)
@@ -211,7 +238,7 @@ internal static partial class ModuleEmitter
         WireKind.Boolean or WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32
             or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
             or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.read{type.Kind}",
-        WireKind.Record => ClientNames.Reader(layout.Type(type.Key).Name),
+        WireKind.Record or WireKind.Enum => ClientNames.Reader(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Read(layout, type, Item(depth), depth)}",
     };
 
@@ -231,7 +258,7 @@ internal static partial class ModuleEmitter
         WireKind.Boolean or WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32
             or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
             or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.write{type.Kind}",
-        WireKind.Record => ClientNames.Writer(layout.Type(type.Key).Name),
+        WireKind.Record or WireKind.Enum => ClientNames.Writer(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Write(layout, type, Item(depth), depth)}",
     };
 

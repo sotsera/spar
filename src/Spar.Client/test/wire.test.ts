@@ -117,6 +117,11 @@ describe("writers", () => {
     expect(() => wire.writeChar("ab")).toThrow(RangeError);
   });
 
+  test("an enum's refusals throw the reader's and the writer's errors", () => {
+    expect(() => wire.unknownMember("Urgent", "Priority")).toThrow(new TypeError("Expected a member of Priority, got a string."));
+    expect(() => wire.refusedMember(1, "Priority")).toThrow(RangeError);
+  });
+
   test("the other kinds write their own JSON", () => {
     expect(wire.writeByte(255)).toBe("255");
     expect(wire.writeUInt32(4294967295)).toBe("4294967295");

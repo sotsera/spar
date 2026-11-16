@@ -57,12 +57,12 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Diagnostics:** the spike catalogue is in `spikes/contract-syntax/RESULTS.md`, "Diagnostics", with each message and location rule. All are errors in category `Spar.Contracts`. Later decisions add a `DateTime` warning (decision "Wire format choices") and a suggestion for long-running commands that cannot observe cancellation (decision "Cancellation token delivery"). Messages about a referenced assembly start with "In referenced assembly 'X': …". It is the starting ID map for M1:
   - SPAR001–005: contract shape and names (sealed class or interface, not generic, valid and non-reserved names, wire-name clashes across assemblies);
   - SPAR010–016: command shape (return type, request parameters, token position, `ref`/`out`, generic commands, request types, command-name clashes including overloads). SPAR010 there rejected `ValueTask` and plain `Task`, which are now allowed;
-  - SPAR020–024: wire types and record shapes, SPAR024 being the `DateTime` warning;
+  - SPAR020–025: wire types and record shapes, SPAR024 being the `DateTime` warning and SPAR025 an enum that cannot travel as one member name;
   - SPAR030–035: error types and cases (shape, nesting, reserved payload names, code clashes, no cases);
   - SPAR040: two types with one TypeScript name in a contract.
 
   Already taken elsewhere: SPAR100 (the snapshot check) and SPAR101–SPAR104 (the CSP analyzer in `spikes/csp-navigation`).
-- **Wire types:** positional records, the primitives of the table below (all built except enums, decision "The rest of the wire-rules table"), nullable values (optional on the wire), arrays and `IReadOnlyList<T>`, nested records, and `closed record` errors.
+- **Wire types:** positional records, the primitives of the table below and enums (all built, decisions "The rest of the wire-rules table" and "Enums on the wire"), nullable values (optional on the wire), arrays and `IReadOnlyList<T>`, nested records, and `closed record` errors.
 - **Wire rules** (from `spikes/wire-details`; the choices once marked * were decided by the user on 2026-11-14, each on grounds that hold beyond SQL Server):
 
   | C# | JSON | TypeScript |
@@ -77,7 +77,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | `byte[]` | padded base64, whitespace rejected | `Uint8Array` (decided) |
   | `char` | one UTF-16 code unit | `string` |
   | `double`, `float` | finite only; NaN or ±Infinity is a writer failure, and the TypeScript encoder checks `Number.isFinite` | `number` |
-  | enum | member name, exact match; `[Flags]` is a contract diagnostic for now (decided) | a union of string literals |
+  | enum | member name, exact match; `[Flags]` is a contract diagnostic for now (decided; SPAR025, which also refuses two members with one value and an enum with no members) | a union of string literals |
   | `string` | a lone surrogate becomes U+FFFD in both directions, never an error (decided: .NET writers, WebView2 and `fetch` already replace or reject them, so only replacement behaves the same on every transport); invalid UTF-8 in a value that is read is a `JsonException` | `string` |
 
   - **Skipped unknown properties are not decoded.** Inside them, invalid UTF-8 and lone-surrogate escapes were accepted by every reader in `spikes/serializer-fuzz`, System.Text.Json included. Decided: the rule stays limited to values that are read. Skipped values never reach the app, and System.Text.Json does not validate them either.

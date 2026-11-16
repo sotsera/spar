@@ -15,12 +15,12 @@ internal static class SerializerEmitter
     private const string Writer = "global::System.Text.Json.Utf8JsonWriter writer";
     private const string TokenType = "global::System.Text.Json.JsonTokenType";
 
-    public static void Emit(CodeWriter code, IReadOnlyList<TypeRef> types, IReadOnlyList<RecordModel> records, IReadOnlyList<ErrorModel> errors)
+    public static void Emit(CodeWriter code, IReadOnlyList<TypeRef> types, IReadOnlyList<RecordModel> records, IReadOnlyList<ErrorModel> errors, IReadOnlyList<EnumModel> enums)
     {
         code.Open("internal static class SparSerializers");
         foreach (var type in types)
         {
-            EmitType(code, type, records);
+            EmitType(code, type, records, enums);
         }
 
         foreach (var error in errors)
@@ -31,11 +31,17 @@ internal static class SerializerEmitter
         code.Close();
     }
 
-    private static void EmitType(CodeWriter code, TypeRef type, IReadOnlyList<RecordModel> records)
+    private static void EmitType(CodeWriter code, TypeRef type, IReadOnlyList<RecordModel> records, IReadOnlyList<EnumModel> enums)
     {
         if (type.Kind == WireKind.Record)
         {
             EmitRecord(code, records.First(r => r.Key == type.Key));
+            return;
+        }
+
+        if (type.Kind == WireKind.Enum)
+        {
+            EmitEnum(code, enums.First(e => e.Key == type.Key));
             return;
         }
 
@@ -198,6 +204,39 @@ internal static class SerializerEmitter
             code.Line($"writer.WritePropertyName(\"{property.JsonName}\"u8);");
             code.Line($"Write{property.Type.Key}(writer, {owner}.{property.Name});");
         }
+    }
+
+    /// <summary>
+    /// One member name, exactly (wire rules). A value that is no member, such as a cast integer, is a writer failure;
+    /// <c>@</c> lets a member named like a keyword be written.
+    /// </summary>
+    private static void EmitEnum(CodeWriter code, EnumModel model)
+    {
+        code.Open($"public static {model.CSharp} Read{model.Key}({Reader})");
+        code.Line($"var name = {Json}.ReadString(ref reader);");
+        code.Line("return name switch");
+        code.Line("{");
+        foreach (var member in model.Members)
+        {
+            code.Line($"    \"{member}\" => {model.CSharp}.@{member},");
+        }
+
+        code.Line($"    _ => throw {Json}.Error(ref reader, \"Not a member of {model.Name}\"),");
+        code.Line("};");
+        code.Close();
+        code.Line();
+        code.Open($"public static void Write{model.Key}({Writer}, {model.CSharp} value)");
+        code.Line("writer.WriteStringValue(value switch");
+        code.Line("{");
+        foreach (var member in model.Members)
+        {
+            code.Line($"    {model.CSharp}.@{member} => \"{member}\",");
+        }
+
+        code.Line($"    _ => throw new global::System.InvalidOperationException(\"The value is not a member of {model.Name}.\"),");
+        code.Line("});");
+        code.Close();
+        code.Line();
     }
 
     /// <summary>Errors are <c>{"code":"…", …payload}</c>. The reader finds the code first, then reads that case.</summary>

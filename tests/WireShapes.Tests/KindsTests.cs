@@ -14,7 +14,7 @@ public sealed class KindsTests : IAsyncLifetime
     private const string Valid =
         "{\"b\":255,\"sb\":-128,\"s\":-32768,\"us\":65535,\"ui\":4294967295,\"ul\":\"18446744073709551615\",\"f\":0.1," +
         "\"m\":\"-12.50\",\"c\":\"\\u00e9\",\"day\":\"2026-02-28\",\"time\":\"08:30:00.25\",\"span\":\"-1.02:30:00\"," +
-        "\"data\":\"AQID/w==\",\"maybe\":null,\"ids\":[\"0\",null],\"price\":null}";
+        "\"data\":\"AQID/w==\",\"maybe\":null,\"ids\":[\"0\",null],\"price\":null,\"level\":\"Normal\"}";
 
     private SparTestApp _app = null!;
 
@@ -30,13 +30,13 @@ public sealed class KindsTests : IAsyncLifetime
         var kinds = new Kinds(
             byte.MaxValue, sbyte.MinValue, short.MinValue, ushort.MaxValue, uint.MaxValue, ulong.MaxValue, 0.1f,
             79228162514264337593543950335m, '\ud83d', new DateOnly(1, 1, 1), new TimeOnly(23, 59, 59, 999, 999),
-            TimeSpan.MinValue, [0, 1, 254, 255], [], [ulong.MaxValue, null], -0.000001m);
+            TimeSpan.MinValue, [0, 1, 254, 255], [], [ulong.MaxValue, null], -0.000001m, Priority.High);
 
         var echoed = await new KindsClient(_app).EchoAsync(kinds, Token);
 
         Assert.Equal(
-            (kinds.B, kinds.Sb, kinds.S, kinds.Us, kinds.Ui, kinds.Ul, kinds.F, kinds.M, kinds.Day, kinds.Time, kinds.Span, kinds.Price),
-            (echoed.B, echoed.Sb, echoed.S, echoed.Us, echoed.Ui, echoed.Ul, echoed.F, echoed.M, echoed.Day, echoed.Time, echoed.Span, echoed.Price));
+            (kinds.B, kinds.Sb, kinds.S, kinds.Us, kinds.Ui, kinds.Ul, kinds.F, kinds.M, kinds.Day, kinds.Time, kinds.Span, kinds.Price, kinds.Level),
+            (echoed.B, echoed.Sb, echoed.S, echoed.Us, echoed.Ui, echoed.Ul, echoed.F, echoed.M, echoed.Day, echoed.Time, echoed.Span, echoed.Price, echoed.Level));
         Assert.Equal('\ufffd', echoed.C); // a lone surrogate becomes U+FFFD, as in any string
         Assert.Equal(kinds.Data, echoed.Data);
         Assert.Equal(kinds.Maybe, echoed.Maybe);
@@ -99,6 +99,10 @@ public sealed class KindsTests : IAsyncLifetime
     [InlineData("\"data\":\"AQID/w==\"", "\"data\":\"AQID\\n/w==\"")]
     [InlineData("\"data\":\"AQID/w==\"", "\"data\":\"AQI\\u0044/w==\"")]
     [InlineData("\"data\":\"AQID/w==\"", "\"data\":[1,2,3]")]
+    [InlineData("\"level\":\"Normal\"", "\"level\":\"normal\"")]
+    [InlineData("\"level\":\"Normal\"", "\"level\":\"Urgent\"")]
+    [InlineData("\"level\":\"Normal\"", "\"level\":1")]
+    [InlineData(",\"level\":\"Normal\"", "")]
     public async Task A_malformed_value_is_refused_before_the_command_runs(string valid, string malformed)
     {
         var json = Valid.Replace(valid, malformed, StringComparison.Ordinal);
@@ -127,6 +131,16 @@ public sealed class KindsTests : IAsyncLifetime
         var outcome = await _app.InvokeAsync("kinds", "single", Encoding.UTF8.GetBytes($"\"{text}\""), Token);
 
         Assert.Equal(("response", "serialization", "completed"), (outcome.Failure?.Kind, outcome.Failure?.Code, outcome.Failure?.Execution));
+    }
+
+    [Fact]
+    public async Task An_enum_is_its_member_name_and_a_value_that_is_no_member_is_a_writer_failure()
+    {
+        var high = await _app.InvokeAsync("kinds", "priority", "2"u8.ToArray(), Token);
+        var cast = await _app.InvokeAsync("kinds", "priority", "42"u8.ToArray(), Token);
+
+        Assert.Equal("ok \"High\"", high.ToString());
+        Assert.Equal(("response", "serialization", "completed"), (cast.Failure?.Kind, cast.Failure?.Code, cast.Failure?.Execution));
     }
 
     private async Task<string> EchoAsync(string json)

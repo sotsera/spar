@@ -90,6 +90,11 @@ internal static class Descriptors
         "'{0}' carries a DateTime, whose time zone depends on its Kind: written with 'Z', an offset or nothing, and read back as the reader's local time when it has an offset. Use DateTimeOffset instead.",
         Contracts, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    /// <summary>{0}: the enum; {1}: why one member name cannot stand for each value.</summary>
+    public static readonly DiagnosticDescriptor UnsupportedEnum = Error(
+        "SPAR025", "Unsupported enum",
+        "Enum '{0}' cannot travel on the wire as one member name: {1}", Contracts);
+
     public static readonly DiagnosticDescriptor BadErrorType = Error(
         "SPAR030", "Unsupported error type",
         "Error type '{0}' must be a non-generic closed record with nested sealed record cases", Contracts);

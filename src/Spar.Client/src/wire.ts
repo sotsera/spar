@@ -286,6 +286,16 @@ export function writeNullable<T>(value: T | null | undefined, write: (value: T) 
   return value === null || value === undefined ? "null" : write(value);
 }
 
+/** An enum's reader met a value that is none of its member names. */
+export function unknownMember(value: unknown, type: string): never {
+  throw new TypeError(`Expected a member of ${type}, got ${describe(value)}.`);
+}
+
+/** An enum's writer was given a value that is none of its member names. */
+export function refusedMember(value: unknown, type: string): never {
+  throw new RangeError(`Expected a member of ${type}, got ${describe(value)}.`);
+}
+
 function readInteger(value: unknown, min: number, max: number, what: string): number {
   if (typeof value !== "number" || !Number.isInteger(value) || value < min || value > max) {
     throw new TypeError(`Expected ${what}, got ${describe(value)}.`);

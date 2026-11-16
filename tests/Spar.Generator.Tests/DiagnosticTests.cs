@@ -51,6 +51,10 @@ public sealed class DiagnosticTests
     [InlineData("public sealed record Link(string URL, string Url); [SparContract] public sealed class Items { [SparCommand] public Task<Link> GetAsync() => null!; }", "SPAR023: Url")]
     [InlineData("public closed record Err { public sealed record Inside : Err; } public sealed record Outside : Err; [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR031: Outside")]
     [InlineData("public closed record Err { public sealed record NotFound : Err; [SparName(\"notFound\")] public sealed record Missing : Err; } [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR034: Missing")]
+    [InlineData("[System.Flags] public enum Rights { Read = 1, Write = 2 } [SparContract] public sealed class Items { [SparCommand] public Task<Rights> GetAsync() => null!; }", "SPAR025: Rights")]
+    [InlineData("public enum Twice { One = 1, Uno = 1 } [SparContract] public sealed class Items { [SparCommand] public Task<Twice> GetAsync() => null!; }", "SPAR025: Twice")]
+    [InlineData("public enum Nothing { } [SparContract] public sealed class Items { [SparCommand] public Task GoAsync(Nothing request) => null!; }", "SPAR025: Nothing")]
+    [InlineData("public enum any { A } [SparContract] public sealed class Items { [SparCommand] public Task<any> GetAsync() => null!; }", "SPAR004: any")]
     public async Task A_contract_problem_is_reported_once_at_its_location(string contract, string expected)
     {
         var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + contract);
@@ -64,6 +68,7 @@ public sealed class DiagnosticTests
     [InlineData("[SparContract] public sealed class Items { } [SparContract] public interface IItemsService { }", "SPAR005: Items", "SPAR005: IItemsService")]
     [InlineData("[SparContract] public sealed class Notes { } [SparContract(\"NOTES\")] public sealed class Other { }", "SPAR003: SparContract(\"NOTES\")")]
     [InlineData("namespace A { public sealed record Note(string Text); } namespace B { public sealed record Note(int Id); } [SparContract] public sealed class Items { [SparCommand] public Task<A.Note> GetAsync(B.Note request) => null!; }", "SPAR040: Note", "SPAR040: Note")]
+    [InlineData("namespace A { public enum Note { X } } namespace B { public sealed record Note(int Id); } [SparContract] public sealed class Items { [SparCommand] public Task<A.Note> GetAsync(B.Note request) => null!; }", "SPAR040: Note", "SPAR040: Note")]
     public async Task A_clash_is_reported_at_each_declaration(string contract, params string[] expected)
     {
         var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + contract);
@@ -112,6 +117,37 @@ public sealed class DiagnosticTests
 
         Assert.Empty(diagnostics);
         Assert.Contains("new(\"kinds\", \"length\", 0, HandleKindsLength),", run.Files["Spar.Contracts.g.cs"], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task An_enum_problem_says_why_and_its_commands_are_left_out()
+    {
+        const string Contracts = """
+            [System.Flags] public enum Rights { Read = 1, Write = 2 }
+            public enum Twice { One = 1, Uno = 1, Two = 2 }
+            public enum Level { Low, High, @class }
+            public sealed record Chore(string Title, Level Level, Level? Was, System.Collections.Generic.IReadOnlyList<Level> History);
+            [SparContract] public sealed class Items
+            {
+                [SparCommand] public Task<Rights> RightsAsync() => null!;
+                [SparCommand] public Task<Twice> TwiceAsync() => null!;
+                [SparCommand] public Task<Chore> GetAsync(Level request) => null!;
+            }
+            """;
+
+        var messages = await GeneratorHarness.MessagesAsync(Program + Contracts);
+        var run = GeneratorHarness.Generate(Program + Contracts);
+
+        Assert.Equal(
+        [
+            "SPAR025: Enum 'Rights' cannot travel on the wire as one member name: it is [Flags], and one member name cannot carry a combination of them",
+            "SPAR025: Enum 'Twice' cannot travel on the wire as one member name: its members One and Uno have one value, which would have two names",
+        ], messages);
+        var contracts = run.Files["Spar.Contracts.g.cs"];
+        Assert.Contains("new(\"items\", \"get\", 0, HandleItemsGet),", contracts, StringComparison.Ordinal);
+        Assert.DoesNotContain("HandleItemsRights", contracts, StringComparison.Ordinal);
+        Assert.Contains("\"class\" => global::Level.@class,", contracts, StringComparison.Ordinal);
+        Assert.Contains("global::Level.@class => \"class\",", contracts, StringComparison.Ordinal);
     }
 
     [Fact]

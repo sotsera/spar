@@ -75,7 +75,7 @@ function post(account, cents) {
 const allKinds = () => ({
   b: 255, sb: -128, s: -32768, us: 65535, ui: 4294967295, ul: 18446744073709551615n, f: 0.5, m: "-12.50", c: "é",
   day: "2026-02-28", time: "08:30:00.25", span: "-1.02:30:00", data: new Uint8Array([0, 1, 254, 255]), maybe: null,
-  ids: [0n, null], price: "0.000",
+  ids: [0n, null], price: "0.000", level: "High",
 });
 
 function echoKinds() {
@@ -97,6 +97,11 @@ function sendBadByte() {
   return kinds.echo({ ...allKinds(), b: 256 }).match({ success: () => ({ value: "sent" }), failure: describeFailure });
 }
 
+/** A member name the enum does not have, refused the same way. */
+function sendBadLevel() {
+  return kinds.echo({ ...allKinds(), level: "Urgent" }).match({ success: () => ({ value: "sent" }), failure: describeFailure });
+}
+
 const who = () => ledger.who().match({ success: value => ({ value }), failure: describeFailure });
 
 /**
@@ -116,7 +121,7 @@ async function roundTrips(count, warmUp) {
   return durations;
 }
 
-window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, echoKinds, sendBadByte, roundTrips, document: () => connection.document };
+window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, echoKinds, sendBadByte, sendBadLevel, roundTrips, document: () => connection.document };
 
 connection.ready();
 document.getElementById("status").textContent = "ready";

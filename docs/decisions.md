@@ -3331,3 +3331,16 @@ The generator supported ten wire kinds; the wire-rules table decided on 2026-11-
   - **The page checks numbers, `ulong`, `decimal`, `char` and base64,** each against the same rules, and refuses a bad value before sending (`rejected` / `invalid-request`). Dates, times and GUIDs stay plain strings on the page, as `Guid` and `DateTimeOffset` already were; the backend checks them. A `float` from the page must still be finite once rounded to single precision.
   - **Base64 on the page** uses `atob` and `btoa` with a pattern check, in 32 KiB slices, so it needs no newer API.
 - **Not built:** enums and the `[Flags]` diagnostic (next), `Int128`, `UInt128` and `BigInteger` (the table adds them when an app needs them).
+
+## 2026-11-16, Enums on the wire (implementation record; choices for review)
+
+The last kind of the wire-rules table. An enum travels as its member name, exactly, and is a union of string literals in TypeScript (decided 2026-11-14); `[Flags]` is a contract diagnostic, now SPAR025. Evidence: `docs/evidence/m1a-wire-kinds.md`, "Follow-up: enums".
+- **Built:** the generator reads each enum into its member names in declaration order; the C# serializer reads with a `switch` over the names and writes with one over the values; the client step declares `export type Priority = "Low" | "Normal" | "High";`, with a reader and a writer per enum placed like a record's (in the contract's module, or once in `shared` when two contracts use it); the snapshot lists each enum's members; the fingerprint includes them. The SDK gains `unknownMember` and `refusedMember`, which the generated functions call for anything that is not a member.
+- **SPAR025** reports an enum that cannot travel as one member name, at the enum, saying why: `[Flags]`, two members with one value, or no members. The commands that use it are left out, as for any unsupported type.
+- **Choices made while building, for review:**
+  - **Two members with one value are an error,** not "the first name wins": a value written back would change its name, so a round trip would not be stable.
+  - **An enum with no members is an error;** its TypeScript type would be `never`, and no call could carry it.
+  - **A value that is no member** (a cast integer) is a writer failure, `response` / `serialization`, like a NaN `double`. On read, a name that is not a member, a member in another letter case, or a number is `rejected` / `invalid-request`.
+  - **Member names are exactly as C# spells them** (`High`, not `high`), and `[SparName]` does not apply to members. Renaming members on the wire would need a decision of its own.
+  - **No per-member JSDoc:** a union of string literals has no place for it; the enum's own summary becomes the type's JSDoc.
+  - Enum names follow the type-name rules of records and errors (SPAR003, SPAR004, SPAR040), and an enum's reader and writer names are checked against the contract's name like a record's.

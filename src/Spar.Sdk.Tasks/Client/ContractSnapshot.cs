@@ -5,8 +5,8 @@ using Spar.Generator.Emit;
 namespace Spar.Sdk.Tasks.Client;
 
 /// <summary>
-/// <c>&lt;Project&gt;.contracts.snapshot</c> (plan section 2, decided 2026-11-14): every command, record and error case
-/// pages can see, one per line and in a stable order, so a change to what pages can call shows up as a reviewable diff.
+/// <c>&lt;Project&gt;.contracts.snapshot</c> (plan section 2, decided 2026-11-14): every command, record, error case and
+/// enum member pages can see, in a stable order, so a change to what pages can call shows up as a reviewable diff.
 /// Committed next to the project, the one generated file outside <c>obj/</c>.
 /// </summary>
 internal static class ContractSnapshot
@@ -47,6 +47,12 @@ internal static class ContractSnapshot
                 var fields = string.Join(", ", @case.Properties.Select(p => $"{p.JsonName}: {Name(p.Type.CSharp)}"));
                 text.Append("  ").Append(@case.Code).Append(fields.Length == 0 ? "" : $"({fields})").Append('\n');
             }
+        }
+
+        foreach (var model in models.SelectMany(c => c.Enums).DistinctBy(e => e.Key).OrderBy(e => Name(e.CSharp), StringComparer.Ordinal))
+        {
+            text.Append('\n').Append("enum ").Append(Name(model.CSharp)).Append('\n')
+                .Append("  ").Append(string.Join(", ", model.Members)).Append('\n');
         }
 
         return text.ToString();

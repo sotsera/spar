@@ -44,7 +44,7 @@ internal static class TypeScriptTwin
         var imported = layout.Imported(contract).ToList();
         if (imported.Count > 0)
         {
-            var functions = imported.SelectMany(t => t.Record is null ? [ClientNames.Reader(t.Name)] : new[] { ClientNames.Reader(t.Name), ClientNames.Writer(t.Name) });
+            var functions = imported.SelectMany(t => t.Error is not null ? [ClientNames.Reader(t.Name)] : new[] { ClientNames.Reader(t.Name), ClientNames.Writer(t.Name) });
             var names = string.Join(", ", imported.Select(t => t.Name));
             ts.Append($"import {{ {string.Join(", ", functions)} }} from \"./shared.js\";\n")
                 .Append($"import type {{ {names} }} from \"./shared.js\";\n")
@@ -85,6 +85,18 @@ internal static class TypeScriptTwin
 
     private static void Type(StringBuilder ts, ClientLayout layout, ClientType type, string export)
     {
+        if (type.Enum is { } model)
+        {
+            var name = TypeScriptNames.Literal(type.Name);
+            var cases = string.Concat(model.Members.Select(m => $"    case {TypeScriptNames.Literal(m)}:\n"));
+            ts.Append($"export type {type.Name} = {string.Join(" | ", model.Members.Select(TypeScriptNames.Literal))};\n");
+            ts.Append($"{export}function {ClientNames.Reader(type.Name)}(value: unknown): {type.Name} {{\n  switch (value) {{\n{cases}");
+            ts.Append($"      return value;\n    default:\n      return wire.unknownMember(value, {name});\n  }}\n}}\n");
+            ts.Append($"{export}function {ClientNames.Writer(type.Name)}(value: {type.Name}): string {{\n  switch (value) {{\n{cases}");
+            ts.Append($"      return wire.writeString(value);\n    default:\n      return wire.refusedMember(value, {name});\n  }}\n}}\n");
+            return;
+        }
+
         if (type.Record is { } record)
         {
             ts.Append($"export interface {type.Name} {{\n");
@@ -168,7 +180,7 @@ internal static class TypeScriptTwin
             or WireKind.Single or WireKind.Double => "number",
         WireKind.Int64 or WireKind.UInt64 => "bigint",
         WireKind.Bytes => "Uint8Array",
-        WireKind.Record => layout.Type(type.Key).Name,
+        WireKind.Record or WireKind.Enum => layout.Type(type.Key).Name,
         WireKind.Nullable => $"{TypeOf(layout, type.Element!)} | null",
         WireKind.List when type.Element!.Kind is WireKind.Nullable or WireKind.List => $"readonly ({TypeOf(layout, type.Element)})[]",
         WireKind.List => $"readonly {TypeOf(layout, type.Element)}[]",
@@ -198,7 +210,7 @@ internal static class TypeScriptTwin
         WireKind.Boolean or WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32
             or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
             or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.read{type.Kind}",
-        WireKind.Record => ClientNames.Reader(layout.Type(type.Key).Name),
+        WireKind.Record or WireKind.Enum => ClientNames.Reader(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Read(layout, type, Item(depth), depth)}",
     };
 
@@ -217,7 +229,7 @@ internal static class TypeScriptTwin
         WireKind.Boolean or WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32
             or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
             or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.write{type.Kind}",
-        WireKind.Record => ClientNames.Writer(layout.Type(type.Key).Name),
+        WireKind.Record or WireKind.Enum => ClientNames.Writer(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Write(layout, type, Item(depth), depth)}",
     };
 
