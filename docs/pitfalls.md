@@ -601,6 +601,14 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
   - one `devenv.com /Build` run sat idle with no output, probably on a dialog.
 
   (`d1-pipeline`)
+- **IDE checks of analyzer squiggles:**
+  - ReSharper's code analysis, when on, stops Visual Studio drawing squiggles for every analyzer the project references (Spar's and the SDK's CA rules alike); they still reach the Error List as IntelliSense entries. Compiler errors and the built-in IDE analyzers are drawn. Check squiggles with ReSharper's "Enable code analysis" off, and say so;
+  - C# Dev Kit refuses a project without an SDK in `<Project Sdk="…">` ("unsupported format"), such as the samples, which import Spar.Sdk's props and targets themselves; its files then open as loose files, with no analyzer. Check editor behaviour on an app that names the SDK;
+  - opening a folder in VS Code through its 8.3 short path (`C:\Users\USERNA~1\…`, what `%TEMP%` often holds) made the project load twice once added to the workspace, and the open file stayed a loose file. Open folders by their long path;
+  - the language server's own `project/open` loads a project Dev Kit refuses, so a headless check can pass where the window does not;
+  - Visual Studio picks up a file changed on disk when its window gets focus, not before.
+
+  (M1a editor diagnostics)
 - **Driving TypeScript 7's language server over several projects in one Node process hit the client's 5 s shutdown timeout,** and the run was lost. One process per project worked. (`ts-compiled-contracts`)
 - **`performance.memory` stays 0 in `chromium-headless-shell`.** Read heap figures through CDP. (`react`)
 - **Linux NativeAOT needs `clang` and `zlib1g-dev`.** The Playwright .NET image lacks them ("Platform linker ('clang' or 'gcc') not found"); installing them took 93 s. (`linux-loopback`)
