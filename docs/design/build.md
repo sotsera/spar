@@ -23,7 +23,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Pipeline:**
   1. `ResolveReferences`.
   2. Contract inventory, written only when it changed.
-  3. Client step: the generated modules under `obj/spar/client` (`.js`, `.d.ts`, `.d.ts.map` to C#), the manifest, and the contract snapshot.
+  3. Client step: the generated modules under `obj/spar/client` (`.js`, `.d.ts`, `.d.ts.map` to C#) and the contract snapshot.
   4. Frontend: `npm ci --ignore-scripts` when the lockfile changed (section 3c), in every variant, because the Debug type-check and the dev server need `node_modules` too; then the type-check in every variant (Debug included, see below); in Release and test variants also `vite build` into `obj/`, then packing.
   5. One `CoreCompile`, where the generator and analyzer run.
 

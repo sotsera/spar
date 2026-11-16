@@ -56,4 +56,41 @@ internal static class Fixtures
             Task<IReadOnlyList<Item>> ListAsync();
         }
         """;
+
+    /// <summary>
+    /// The shapes most likely to come out differently: reserved words as property and parameter names, a list of lists
+    /// of nullable values, an empty record, a nullable record, and an error whose cases carry nothing.
+    /// </summary>
+    public const string Edges = """
+        using System;
+        using System.Collections.Generic;
+        using System.Threading.Tasks;
+        using Spar;
+
+        namespace Edges;
+
+        public sealed record Nothing();
+
+        public sealed record Odd(string Class, int Default, IReadOnlyList<IReadOnlyList<int?>> Grid, long? Big, Nothing? Empty);
+
+        public closed record Refusal
+        {
+            public sealed record Busy : Refusal;
+
+            public sealed record Gone : Refusal;
+        }
+
+        [SparContract]
+        public sealed class OddService
+        {
+            [SparCommand]
+            public Task<Odd> GetAsync(string @new) => throw new NotImplementedException();
+
+            [SparCommand]
+            public Task<Result<Refusal>> TryAsync(Nothing request) => throw new NotImplementedException();
+
+            [SparCommand]
+            public Task<IReadOnlyList<long?>> NumbersAsync(int count) => throw new NotImplementedException();
+        }
+        """;
 }

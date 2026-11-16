@@ -1,6 +1,6 @@
 ---
 name: spar-contract-generation
-description: Change Spar's contract analysis, the generated C# dispatch and serializers, the contract and `Result` diagnostics (SPAR001–SPAR055, SPAR100), the manifest, fingerprint and contract snapshot, or the generated TypeScript modules under `@spar/app` (one per contract, and `windows`).
+description: Change Spar's contract analysis, the generated C# dispatch and serializers, the contract and `Result` diagnostics (SPAR001–SPAR055, SPAR100), the fingerprint and contract snapshot, or the generated TypeScript modules under `@spar/app` (one per contract, and `windows`).
 ---
 
 # Change contract generation
@@ -9,8 +9,8 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 
 ## Pipeline
 
-- **The source generator owns all C#:** per-contract dispatch, the catalog with its embedded manifest, and serializers written against `Utf8JsonReader`/`Utf8JsonWriter`. No System.Text.Json metadata, no reflection. One small async method per command; a shared one doubled async allocations.
-- **The pre-compile client step owns no C#.** It writes the generated TypeScript (`.js` + `.d.ts` + a `.d.ts.map` to the C# declarations, under `obj/spar/client`), the manifest and the contract snapshot, from the same analysis library. Never copy SDK logic (`src/Spar.Client`) into generated files.
+- **The source generator owns all C#:** per-contract dispatch, the catalog with the fingerprint, and serializers written against `Utf8JsonReader`/`Utf8JsonWriter`. No System.Text.Json metadata, no reflection. One small async method per command; a shared one doubled async allocations.
+- **The pre-compile client step owns no C#.** It writes the generated TypeScript (`.js` + `.d.ts` + a `.d.ts.map` to the C# declarations, under `obj/spar/client`) and the contract snapshot, from the same analysis library. There is no separate manifest (decision "No contract manifest for now; the differential tsc test built"). Never copy SDK logic (`src/Spar.Client`) into generated files.
 - **Located diagnostics come from a `DiagnosticAnalyzer`** sharing the analysis; the generator reports only location-less ones (inside referenced assemblies), so nothing is reported twice.
 - **The C# and TypeScript sides change together.**
 
@@ -82,3 +82,4 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 - **Build test:** adding, renaming and removing a contract leaves no stale module or member (`spar-msbuild`, `dotnet-msbuild` skills).
 - **Runtime:** a CoreCLR round trip through the affected dispatch path; a strict NativeAOT publish when serialization changes; updated shared conformance vectors when the wire changes.
 - **Consumer:** a real TypeScript consumer compiled against the regenerated client across the `tsconfig` × TypeScript 6/7 matrix.
+- **Differential:** a change to the generated `.js` or `.d.ts` changes the typed twin in `tests/Spar.Sdk.Tasks.Tests/TypeScriptTwin.cs` too, written on its own rather than by calling the emitters, and `DifferentialTests` compares what `tsc` writes from it with what the client step wrote (tokens, so layout and comments do not count). A new wire shape goes into a fixture there.
