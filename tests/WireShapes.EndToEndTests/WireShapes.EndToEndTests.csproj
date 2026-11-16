@@ -23,6 +23,11 @@
     <SparTestedApplication Include="..\apps\WireShapes\WireShapes.csproj" />
   </ItemGroup>
 
+  <!-- The budget recorder of the command tests (plan, "Provisional budgets"). -->
+  <ItemGroup>
+    <Compile Include="../WireShapes.Tests/Budgets.cs" Link="Budgets.cs" />
+  </ItemGroup>
+
   <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
   <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
   <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">

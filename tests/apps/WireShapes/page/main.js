@@ -69,7 +69,24 @@ function post(account, cents) {
 
 const who = () => ledger.who().match({ success: value => ({ value }), failure: describeFailure });
 
-window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, document: () => connection.document };
+/**
+ * Small calls one after another, timed by the page from the call to its result: the loopback round trip of the budget
+ * table (plan, "Provisional budgets"). The first `warmUp` are left out; returns the rest in milliseconds.
+ */
+async function roundTrips(count, warmUp) {
+  const durations = [];
+  for (let i = 0; i < warmUp + count; i++) {
+    const started = performance.now();
+    await echo.check({ name: "x" });
+    if (i >= warmUp) {
+      durations.push(performance.now() - started);
+    }
+  }
+
+  return durations;
+}
+
+window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, roundTrips, document: () => connection.document };
 
 connection.ready();
 document.getElementById("status").textContent = "ready";

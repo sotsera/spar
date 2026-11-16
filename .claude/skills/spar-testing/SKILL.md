@@ -28,7 +28,7 @@ The design is plan section 5 (`docs/design/testing.md`); the mechanics are the d
 
 - **A test project** sets `<IsTestProject>true</IsTestProject>` and is a `Spar.Sdk` project (in this repository: it imports `src/Spar.Sdk/Sdk/Sdk.props` and `Sdk.targets`). It names the app it tests with `<SparTestedApplication Include="..AppApp.csproj" />`, which Spar.Sdk turns into a project reference built with `SparVariant=Test`; a plain `ProjectReference` to an app is SPAR121, and other references (libraries, the test project's or the app's) build as usual, without the variant or the test lane. Spar.Sdk adds `xunit.v3` and the test library, and turns the test-host switch on.
 - **Each variant builds into `obj/<variant>/` and `bin/<variant>/`;** restore output stays in `obj/`. Never share one variant's output with another.
-- **The NativeAOT lane is the same project:** `dotnet publish <tests> -c Release -p:SparTestLane=Aot` restores `xunit.v3.aot` into `obj/aot/` and publishes with NativeAOT. Run the published executable. Browser tests stay on CoreCLR (Playwright cannot run under NativeAOT); `xunit.v3.aot` allows no generic test methods or `params`, and prints no stack traces.
+- **The NativeAOT lane is the same project:** `dotnet publish <tests> -c Release -p:SparTestLane=Aot` restores `xunit.v3.aot` into `obj/aot/`, builds into `bin/aot/` (its self-contained build would otherwise make the CoreCLR Release build in `bin/Production/` look self-contained) and publishes with NativeAOT. Run the published executable. Browser tests stay on CoreCLR (Playwright cannot run under NativeAOT); `xunit.v3.aot` allows no generic test methods or `params`, and prints no stack traces.
 - **Results** go to `artifacts/test-results/<project>/` (decision "M1a names"); no `TestResults/` folder is left in the working directory.
 
 ## Dispatch, as tests see it
@@ -39,6 +39,7 @@ The design is plan section 5 (`docs/design/testing.md`); the mechanics are the d
 ## Verify
 
 - Run the tests on CoreCLR and publish and run the NativeAOT lane; both must pass, with no warnings.
+- **The M1 budgets** for command and browser tests are measured by `BudgetTests` in `tests/WireShapes.Tests` and `tests/WireShapes.EndToEndTests`, in Release, on both lanes for the command test (`docs/evidence/m1a-budgets.md` has the commands). They record medians and ranges to `artifacts/test-results/<project>/budgets.txt` and never assert a time.
 - After a change to the test host or the generator's Test-variant output, publish the app in Release and check the production boundary: the binary contains none of `SparTestSession`, `ISparEntryPoint`, the generated clients or the fakes (type names are UTF-8 in the image, string literals UTF-16). `Spar.BuildTests` checks it on the Notebook and on the console harness (`tests/apps/Spar.Harness`), whose bridge is kept, so its markers live in `ProductionBoundary.cs`. The harness's NativeAOT output must equal its CoreCLR output; a change to the codec, dispatch or the serializers shows there first.
 - Window tests (M1b, M1c) run as their own invocation: a native engine abort ends the whole test process.
 - The evidence for these rules is in `spikes/test-host/RESULTS.md`, `spikes/entry-accessor/RESULTS.md` and `docs/pitfalls.md` ("Build, MSBuild and packages", "Tooling and environment").

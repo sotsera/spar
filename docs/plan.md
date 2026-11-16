@@ -137,10 +137,10 @@ Checked at each M1 slice exit from the first slice on, instead of first in M4 (u
 | Measure | Budget | Spike value | First checked |
 |---|---|---|---|
 | No-op build of the Notebook sample | ≤ 1.5 s | 0.4–1.2 s (decisions "D1: Compilation pipeline" and "Package-only consumer") | M1a; with the frontend step in M1d (about 0.86 s with an incremental target) |
-| Command test: app start, median | ≤ 2 ms | 0.2–0.6 ms (`spikes/test-host`) | M1a |
-| Browser test: app, context and journey, median | ≤ 250 ms | 97–144 ms (`spikes/test-host`) | M1a |
+| Command test: app start, median | ≤ 2 ms | 0.2–0.6 ms (`spikes/test-host`); measured in M1a, Windows Release: 0.20–0.24 ms CoreCLR, 0.14–0.20 ms NativeAOT (decision "M1a budgets measured; the NativeAOT lane builds into bin/aot") | M1a |
+| Browser test: app, context and journey, median | ≤ 250 ms | 97–144 ms (`spikes/test-host`); measured in M1a, Windows Release: 122–137 ms on the WireShapes page (same decision) | M1a |
 | NativeAOT console harness (dispatch, serializers, codec, bridge session) | ≤ 3.5 MB (3 MB until 2026-11-16) | 2.24 MB with generated serializers (decision "D1: Compilation pipeline"); 3.10 MB measured in M1a (decision "Console harness built; its budget raised to 3.5 MB; lone surrogates on read") | M1a |
-| Small unary round trip over loopback, median | ≤ 2 ms | 0.7 ms (decision "Bridge streaming, cancellation and push") | M1a |
+| Small unary round trip over loopback, median | ≤ 2 ms | 0.7 ms (decision "Bridge streaming, cancellation and push"); measured in M1a, Windows Release: 0.70 ms, timed by the page (same decision) | M1a |
 | Notebook NativeAOT executable, Windows / Linux | ≤ 5 MB / ≤ 8 MB | 3.68 MB (`spikes/react`) / 6.9 MB (`spikes/linux-desktop`) | M1b / M1c |
 | Launch to `ui-ready`, warm, Release, Windows / Linux GTK4 | ≤ 400 ms / ≤ 350 ms | 261–370 ms (`spikes/react`) / 271–292 ms under Xvfb (`spikes/linux-desktop`) | M1b / M1c |
 | Small unary round trip on the desktop bridge, median | ≤ 1 ms | 0.2 ms (WebView2), 0.20–0.29 ms (WebKitGTK) | M1b / M1c |
@@ -261,7 +261,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 - The Notebook's contracts round-trip through real serialization and dispatch in command tests (level 2), and through the TypeScript SDK against a fake channel. The conformance vectors pass in C# and in TypeScript.
 - Browser tests (level 4) run the Notebook's pages in Chromium against the in-process backend over loopback, on Windows and Linux.
 - The command tests pass in the NativeAOT lane (`xunit.v3.aot`) with no warnings.
-- The M1a budgets are measured and recorded ("Provisional budgets").
+- The M1a budgets are measured and recorded ("Provisional budgets") (on Windows: all met, decision "M1a budgets measured; the NativeAOT lane builds into bin/aot"; Linux still open).
 - A console harness around the core (dispatch, serializers, protocol codec) publishes with NativeAOT with no warnings on both OSes, and gives the same results as on CoreCLR.
 - Visual Studio and VS Code show contract diagnostics as you type, with squiggles in both.
 - Evidence is recorded for each result.

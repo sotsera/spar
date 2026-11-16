@@ -3268,3 +3268,16 @@ The gap recorded in the previous entry, fixed at the user's request. Evidence: `
   - **Spar reads the file itself** (`XmlDocumentationFile`, a Roslyn `DocumentationProvider`), instead of referencing Roslyn's Workspaces assembly for its provider: the task would carry a large assembly for one small reader. It refuses DTDs, and an unreadable file documents nothing.
   - **No new inputs for the client step:** turning a library's documentation file on or off rebuilds its DLL, which is already an input; observed: the step reran each time and was skipped on an unchanged build. The reference cache's key includes the documentation file, for a long-lived node.
   - **Only the listed libraries' types are indexed for comments,** after the project's own, which keep a name both declare.
+
+## 2026-11-16, M1a budgets measured; the NativeAOT lane builds into bin/aot (implementation record; choices for review)
+
+The three M1a budgets still open in the plan's "Provisional budgets" table, measured on Windows in Release, two runs each. Evidence: `docs/evidence/m1a-budgets.md`.
+- **All met:**
+  - command test, app start: median 0.20–0.24 ms on CoreCLR and 0.14–0.20 ms on NativeAOT (budget 2 ms);
+  - browser test, app + context + journey: median 122.5–136.5 ms (budget 250 ms);
+  - small unary round trip over loopback, timed by the page: median 0.70 ms (budget 2 ms).
+- **Choices made while building, for review:**
+  - **The measurements are tests on the WireShapes app** (`BudgetTests` in `tests/WireShapes.Tests` and `tests/WireShapes.EndToEndTests`), the same small workload as the spike that set the budgets, so each slice exit reruns them unchanged. The samples carry no measurement code.
+  - **They record and do not assert:** median, range and count go to `artifacts/test-results/<project>/budgets.txt` with the configuration and runtime, like the no-op build time in the build tests. A slow machine never fails the suite; a missed budget is found when the slice exit reads the file.
+  - **The Notebook's own journeys are recorded for reference, not compared:** they do much more than the budget's journey (dialogs, autosave, a second window, screenshots) and took 191 ms to 1.74 s in Release. Whether the browser budget should also be set on a Notebook journey is left to the M1b budget review.
+- **Found and fixed:** the NativeAOT test lane built self-contained into the same `bin/Production/Release/` as the CoreCLR Release build, and its `hostfxr.dll` stopped that build from starting. The lane now builds into `bin/aot/`, beside its `obj/aot/` (`Sdk.props`).

@@ -17,10 +17,13 @@
 
   <!--
     The NativeAOT test lane (SparTestLane=Aot) restores different packages (xunit.v3.aot), so it keeps its own
-    restore output. This must be set before Microsoft.NET.Sdk reads it.
+    restore output; and its build is self-contained, so it keeps its own build output too, or the runtime it copies
+    would make the CoreCLR build of the same configuration look self-contained. This must be set before
+    Microsoft.NET.Sdk reads it.
   -->
   <PropertyGroup Condition="'$(SparTestLane)' == 'Aot'">
     <BaseIntermediateOutputPath>obj\aot\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin\aot\</BaseOutputPath>
   </PropertyGroup>
 
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
@@ -38,7 +41,8 @@
   <!-- Each variant builds into its own folders; restore output stays shared in obj/. -->
   <PropertyGroup>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(SparVariant)\$(Configuration)\</IntermediateOutputPath>
-    <OutputPath>bin\$(SparVariant)\$(Configuration)\</OutputPath>
+    <BaseOutputPath Condition="'$(BaseOutputPath)' == ''">bin\</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)$(SparVariant)\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <!--
