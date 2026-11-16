@@ -148,10 +148,13 @@ internal static class DeclarationEmitter
     /// <summary>The TypeScript spelling of a wire type (plan section 2, the wire-rules table).</summary>
     public static string TypeOf(ClientLayout layout, TypeRef type) => type.Kind switch
     {
-        WireKind.String or WireKind.Guid or WireKind.DateTimeOffset => "string",
+        WireKind.String or WireKind.Decimal or WireKind.Char or WireKind.Guid or WireKind.DateTime or WireKind.DateTimeOffset
+            or WireKind.DateOnly or WireKind.TimeOnly or WireKind.TimeSpan => "string",
         WireKind.Boolean => "boolean",
-        WireKind.Int32 or WireKind.Double => "number",
-        WireKind.Int64 => "bigint",
+        WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32 or WireKind.UInt32
+            or WireKind.Single or WireKind.Double => "number",
+        WireKind.Int64 or WireKind.UInt64 => "bigint",
+        WireKind.Bytes => "Uint8Array",
         WireKind.List => $"readonly {Parenthesized(TypeOf(layout, type.Element!))}[]",
         WireKind.Nullable => $"{TypeOf(layout, type.Element!)} | null",
         WireKind.Record => layout.Type(type.Key).Name,

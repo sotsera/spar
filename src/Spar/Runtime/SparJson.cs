@@ -20,6 +20,14 @@ public static class SparJson
 {
     public const int MaxDepth = 64;
 
+    private const string DateOnlyFormat = "yyyy-MM-dd";
+
+    /// <summary><c>F</c> digits: up to seven on read, and trailing zeros left out on write.</summary>
+    private const string TimeOnlyFormat = "HH:mm:ss.FFFFFFF";
+
+    private static readonly SearchValues<byte> Base64Alphabet =
+        SearchValues.Create("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="u8);
+
     private static readonly JsonReaderOptions ReaderOptions = new() { MaxDepth = MaxDepth };
     private static readonly JsonWriterOptions WriterOptions = new() { MaxDepth = MaxDepth };
     private static readonly UTF8Encoding StrictUtf8 = new(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
@@ -211,6 +219,140 @@ public static class SparJson
         return value;
     }
 
+    public static byte ReadByte(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.Number);
+        return reader.TryGetByte(out var value) ? value : throw Error(ref reader, "Expected an 8-bit unsigned integer");
+    }
+
+    public static sbyte ReadSByte(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.Number);
+        return reader.TryGetSByte(out var value) ? value : throw Error(ref reader, "Expected an 8-bit integer");
+    }
+
+    public static short ReadInt16(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.Number);
+        return reader.TryGetInt16(out var value) ? value : throw Error(ref reader, "Expected a 16-bit integer");
+    }
+
+    public static ushort ReadUInt16(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.Number);
+        return reader.TryGetUInt16(out var value) ? value : throw Error(ref reader, "Expected a 16-bit unsigned integer");
+    }
+
+    public static uint ReadUInt32(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.Number);
+        return reader.TryGetUInt32(out var value) ? value : throw Error(ref reader, "Expected a 32-bit unsigned integer");
+    }
+
+    /// <summary><c>ulong</c> travels as a canonical decimal string, like <c>long</c>.</summary>
+    public static ulong ReadUInt64(ref Utf8JsonReader reader)
+    {
+        var text = ReadString(ref reader);
+        var parsed = ulong.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var value);
+        if (!parsed || text != value.ToString(CultureInfo.InvariantCulture))
+        {
+            throw Error(ref reader, "Expected a 64-bit unsigned integer as a canonical decimal string");
+        }
+
+        return value;
+    }
+
+    /// <summary>A number beyond <c>float</c>'s range parses as infinity rather than failing, so it is checked here.</summary>
+    public static float ReadSingle(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.Number);
+        var read = reader.TryGetSingle(out var value);
+        return read && float.IsFinite(value) ? value : throw Error(ref reader, "The number is not a finite float");
+    }
+
+    /// <summary>
+    /// <c>decimal</c> travels as a canonical string that keeps its scale (<c>1.50</c>), with no exponent. Parsing rounds
+    /// past 28 or 29 significant digits instead of failing, and accepts <c>+1</c> and <c>01</c>, so the text must be what
+    /// the value writes back: nothing is rounded, and every value has one spelling.
+    /// </summary>
+    public static decimal ReadDecimal(ref Utf8JsonReader reader)
+    {
+        var text = ReadString(ref reader);
+        var styles = NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint;
+        var parsed = decimal.TryParse(text, styles, CultureInfo.InvariantCulture, out var value);
+        if (!parsed || text != value.ToString(CultureInfo.InvariantCulture))
+        {
+            throw Error(ref reader, "Expected a decimal as a canonical string, such as \"-12.50\"");
+        }
+
+        return value;
+    }
+
+    /// <summary>One UTF-16 code unit; a lone-surrogate escape is one U+FFFD, as in any string.</summary>
+    public static char ReadChar(ref Utf8JsonReader reader)
+    {
+        var text = ReadString(ref reader);
+        return text.Length == 1 ? text[0] : throw Error(ref reader, "Expected a string of one UTF-16 code unit");
+    }
+
+    /// <summary>ISO 8601 as System.Text.Json writes it: with <c>Z</c>, an offset, or nothing, by the value's Kind.</summary>
+    public static DateTime ReadDateTime(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.String);
+        try
+        {
+            return reader.TryGetDateTime(out var value) ? value : throw Error(ref reader, "Expected an ISO 8601 date and time");
+        }
+        catch (InvalidOperationException)
+        {
+            // A lone-surrogate escape: GetString's own failure, which the reader's date parse shares.
+            throw Error(ref reader, "Expected an ISO 8601 date and time");
+        }
+    }
+
+    public static DateOnly ReadDateOnly(ref Utf8JsonReader reader)
+    {
+        var text = ReadString(ref reader);
+        var parsed = DateOnly.TryParseExact(text, DateOnlyFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var value);
+        return parsed ? value : throw Error(ref reader, "Expected a date as yyyy-MM-dd");
+    }
+
+    public static TimeOnly ReadTimeOnly(ref Utf8JsonReader reader)
+    {
+        var text = ReadString(ref reader);
+        var parsed = TimeOnly.TryParseExact(text, TimeOnlyFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var value);
+        return parsed ? value : throw Error(ref reader, "Expected a time of day as HH:mm:ss with up to seven fraction digits");
+    }
+
+    /// <summary>The constant format, <c>[-][d.]hh:mm:ss[.fffffff]</c>, which parsing alone would accept as <c>1:2:3</c>.</summary>
+    public static TimeSpan ReadTimeSpan(ref Utf8JsonReader reader)
+    {
+        var text = ReadString(ref reader);
+        var parsed = TimeSpan.TryParseExact(text, "c", CultureInfo.InvariantCulture, out var value);
+        if (!parsed || text != value.ToString("c", CultureInfo.InvariantCulture))
+        {
+            throw Error(ref reader, "Expected a duration as [-][d.]hh:mm:ss[.fffffff]");
+        }
+
+        return value;
+    }
+
+    /// <summary>
+    /// Padded base64 with no whitespace (wire rules). The reader's own decoder skips whitespace, so the raw text is
+    /// checked first; an escape is refused too, since base64 never needs one.
+    /// </summary>
+    public static byte[] ReadBytes(ref Utf8JsonReader reader)
+    {
+        Expect(ref reader, JsonTokenType.String);
+        var raw = reader.HasValueSequence ? reader.ValueSequence.ToArray() : reader.ValueSpan;
+        if (raw.IndexOfAnyExcept(Base64Alphabet) >= 0 || !reader.TryGetBytesFromBase64(out var value))
+        {
+            throw Error(ref reader, "Expected padded base64 with no whitespace");
+        }
+
+        return value;
+    }
+
     public static Guid ReadGuid(ref Utf8JsonReader reader)
     {
         var text = ReadString(ref reader);
@@ -260,6 +402,26 @@ public static class SparJson
 
     public static void WriteInt64(Utf8JsonWriter writer, long value) =>
         writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
+
+    public static void WriteUInt64(Utf8JsonWriter writer, ulong value) =>
+        writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
+
+    /// <summary>The scale is kept and there is never an exponent; negative zero writes as zero.</summary>
+    public static void WriteDecimal(Utf8JsonWriter writer, decimal value) =>
+        writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
+
+    /// <summary>A lone surrogate becomes U+FFFD, as the writer does for any string.</summary>
+    public static void WriteChar(Utf8JsonWriter writer, char value) => writer.WriteStringValue(new ReadOnlySpan<char>(in value));
+
+    public static void WriteDateOnly(Utf8JsonWriter writer, DateOnly value) =>
+        writer.WriteStringValue(value.ToString(DateOnlyFormat, CultureInfo.InvariantCulture));
+
+    /// <summary>The fraction only as long as it needs to be, and none when it is zero.</summary>
+    public static void WriteTimeOnly(Utf8JsonWriter writer, TimeOnly value) =>
+        writer.WriteStringValue(value.ToString(TimeOnlyFormat, CultureInfo.InvariantCulture));
+
+    public static void WriteTimeSpan(Utf8JsonWriter writer, TimeSpan value) =>
+        writer.WriteStringValue(value.ToString("c", CultureInfo.InvariantCulture));
 
     public static void WriteGuid(Utf8JsonWriter writer, Guid value) => writer.WriteStringValue(value.ToString("D"));
 

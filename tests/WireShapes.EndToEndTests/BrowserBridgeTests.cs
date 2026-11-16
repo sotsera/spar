@@ -62,6 +62,23 @@ public sealed class BrowserBridgeTests(SharedBrowser shared)
     }
 
     [Fact]
+    public async Task Every_kind_round_trips_through_the_generated_module()
+    {
+        await using var wire = await WirePage.OpenAsync(shared);
+
+        var echoed = await wire.CallAsync("() => window.wire.echoKinds()", null);
+        var refused = await wire.CallAsync("() => window.wire.sendBadByte()", null);
+
+        Assert.Equal(
+            "{\"value\":{\"b\":255,\"sb\":-128,\"s\":-32768,\"us\":65535,\"ui\":4294967295,\"ul\":\"bigint 18446744073709551615\"," +
+            "\"f\":0.5,\"m\":\"-12.50\",\"c\":\"é\",\"day\":\"2026-02-28\",\"time\":\"08:30:00.25\",\"span\":\"-1.02:30:00\"," +
+            "\"data\":\"Uint8Array 0,1,254,255\",\"maybe\":null,\"ids\":[\"bigint 0\",null],\"price\":\"0.000\"}}",
+            echoed);
+        Assert.Equal("{\"failure\":{\"kind\":\"rejected\",\"code\":\"invalid-request\",\"execution\":\"notStarted\",\"command\":\"echo\"}}", refused);
+        Assert.Empty(wire.App.Problems);
+    }
+
+    [Fact]
     public async Task An_aborted_call_is_reported_cancelled_once_the_backend_confirms()
     {
         await using var wire = await WirePage.OpenAsync(shared);

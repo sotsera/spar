@@ -56,11 +56,10 @@ internal static class SerializerEmitter
     {
         WireKind.String => $"{Json}.ReadString(ref reader)",
         WireKind.Boolean => $"{Json}.ReadBoolean(ref reader)",
-        WireKind.Int32 => $"{Json}.ReadInt32(ref reader)",
-        WireKind.Int64 => $"{Json}.ReadInt64(ref reader)",
-        WireKind.Double => $"{Json}.ReadDouble(ref reader)",
-        WireKind.Guid => $"{Json}.ReadGuid(ref reader)",
-        WireKind.DateTimeOffset => $"{Json}.ReadDateTimeOffset(ref reader)",
+        WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32 or WireKind.UInt32
+            or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double or WireKind.Decimal or WireKind.Char
+            or WireKind.Guid or WireKind.DateTime or WireKind.DateTimeOffset or WireKind.DateOnly or WireKind.TimeOnly
+            or WireKind.TimeSpan or WireKind.Bytes => $"{Json}.Read{type.Kind}(ref reader)",
         WireKind.List when type.Key.StartsWith("ArrayOf", System.StringComparison.Ordinal) => $"[.. {Json}.ReadList(ref reader, Read{type.Element!.Key})]",
         WireKind.List => $"{Json}.ReadList(ref reader, Read{type.Element!.Key})",
         WireKind.Nullable => $"reader.TokenType == {TokenType}.Null ? null : Read{type.Element!.Key}(ref reader)",
@@ -72,25 +71,44 @@ internal static class SerializerEmitter
         switch (type.Kind)
         {
             case WireKind.String:
+            case WireKind.DateTime:
             case WireKind.DateTimeOffset:
                 yield return "writer.WriteStringValue(value);";
                 break;
             case WireKind.Boolean:
                 yield return "writer.WriteBooleanValue(value);";
                 break;
+            case WireKind.Byte:
+            case WireKind.SByte:
+            case WireKind.Int16:
+            case WireKind.UInt16:
+                yield return "writer.WriteNumberValue((int)value);";
+                break;
             case WireKind.Int32:
+            case WireKind.UInt32:
+                yield return "writer.WriteNumberValue(value);";
+                break;
+            case WireKind.Single:
+                // NaN and infinities are a writer failure (wire rules), reported as response / serialization.
+                yield return "if (!float.IsFinite(value)) throw new global::System.InvalidOperationException(\"A float must be finite.\");";
                 yield return "writer.WriteNumberValue(value);";
                 break;
             case WireKind.Double:
-                // NaN and infinities are a writer failure (wire rules), reported as response / serialization.
                 yield return "if (!double.IsFinite(value)) throw new global::System.InvalidOperationException(\"A double must be finite.\");";
                 yield return "writer.WriteNumberValue(value);";
                 break;
-            case WireKind.Int64:
-                yield return $"{Json}.WriteInt64(writer, value);";
+            case WireKind.Bytes:
+                yield return "writer.WriteBase64StringValue(value);";
                 break;
+            case WireKind.Int64:
+            case WireKind.UInt64:
+            case WireKind.Decimal:
+            case WireKind.Char:
             case WireKind.Guid:
-                yield return $"{Json}.WriteGuid(writer, value);";
+            case WireKind.DateOnly:
+            case WireKind.TimeOnly:
+            case WireKind.TimeSpan:
+                yield return $"{Json}.Write{type.Kind}(writer, value);";
                 break;
             case WireKind.List:
                 yield return $"{Json}.WriteList(writer, value, Write{type.Element!.Key});";

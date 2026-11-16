@@ -54,7 +54,9 @@ internal static class ContractSource
             contracts.Add(new ClientContract(model, source, docs));
         }
 
-        return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], found.All);
+        // Warnings, such as DateTime on the wire, leave the contract valid; the compiler's analyzer reports them.
+        var errors = found.All.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
+        return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], errors);
     }
 
     private static CSharpCompilation Compile(ClientInputs inputs, CancellationToken cancellationToken)

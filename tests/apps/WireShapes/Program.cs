@@ -14,6 +14,41 @@ namespace WireShapes
 {
     public sealed record Item(string Name);
 
+    /// <summary>The other kinds of the wire-rules table; DateTime is left out, since its warning fails this build.</summary>
+    public sealed record Kinds(
+        byte B,
+        sbyte Sb,
+        short S,
+        ushort Us,
+        uint Ui,
+        ulong Ul,
+        float F,
+        decimal M,
+        char C,
+        DateOnly Day,
+        TimeOnly Time,
+        TimeSpan Span,
+        byte[] Data,
+        byte[]? Maybe,
+        IReadOnlyList<ulong?> Ids,
+        decimal? Price);
+
+    /// <summary>Echoes the other kinds, so a test sees what their readers and writers do.</summary>
+    [SparContract]
+    public sealed class KindsService
+    {
+        [SparCommand]
+        public Task<Kinds> EchoAsync(Kinds request) => Task.FromResult(request);
+
+        /// <summary>A byte array is a scalar request: one base64 string.</summary>
+        [SparCommand]
+        public Task<int> LengthAsync(byte[] data) => Task.FromResult(data.Length);
+
+        /// <summary>Parses a float, so a test can make the writer meet a value it must refuse.</summary>
+        [SparCommand]
+        public Task<float> SingleAsync(string text) => Task.FromResult(float.Parse(text, System.Globalization.CultureInfo.InvariantCulture));
+    }
+
     /// <summary>The app's implementation of the library's rates contract: two fixed rates.</summary>
     public sealed class FixedRates : IRatesService
     {

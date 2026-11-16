@@ -26,6 +26,56 @@ describe("readers", () => {
     }
   });
 
+  test("each smaller integer keeps to its own range", () => {
+    const ranges: [(value: unknown) => number, number, number][] = [
+      [wire.readByte, 0, 255],
+      [wire.readSByte, -128, 127],
+      [wire.readInt16, -32768, 32767],
+      [wire.readUInt16, 0, 65535],
+      [wire.readUInt32, 0, 4294967295],
+    ];
+    for (const [read, min, max] of ranges) {
+      expect(read(min)).toBe(min);
+      expect(read(max)).toBe(max);
+      expect(() => read(min - 1)).toThrow(TypeError);
+      expect(() => read(max + 1)).toThrow(TypeError);
+      expect(() => read(0.5)).toThrow(TypeError);
+      expect(() => read("1")).toThrow(TypeError);
+    }
+  });
+
+  test("a ulong is a canonical decimal string up to 2^64 - 1", () => {
+    expect(wire.readUInt64("18446744073709551615")).toBe(18446744073709551615n);
+    expect(wire.readUInt64("0")).toBe(0n);
+    for (const bad of ["-1", "18446744073709551616", "+1", "01", 1]) {
+      expect(() => wire.readUInt64(bad)).toThrow(TypeError);
+    }
+  });
+
+  test("a decimal stays a string with its scale, in its one spelling", () => {
+    for (const good of ["0", "1.50", "-12.345", "0.001", "79228162514264337593543950335"]) {
+      expect(wire.readDecimal(good)).toBe(good);
+    }
+
+    for (const bad of ["-0", "-0.00", "+1", "01.5", "1e3", ".5", "1.", " 1", 1.5]) {
+      expect(() => wire.readDecimal(bad)).toThrow(TypeError);
+    }
+  });
+
+  test("a char is one UTF-16 code unit", () => {
+    expect(wire.readChar("é")).toBe("é");
+    expect(() => wire.readChar("")).toThrow(TypeError);
+    expect(() => wire.readChar("😀")).toThrow(TypeError);
+  });
+
+  test("bytes are padded base64 with no whitespace", () => {
+    expect(wire.readBytes("AQID/w==")).toEqual(new Uint8Array([1, 2, 3, 255]));
+    expect(wire.readBytes("")).toEqual(new Uint8Array([]));
+    for (const bad of ["AQID/w", "AQ ID", "AQID\n", "AQ==AQ==", 1]) {
+      expect(() => wire.readBytes(bad)).toThrow(TypeError);
+    }
+  });
+
   test("lists read every item, and null or missing is null", () => {
     expect(wire.readList(["a", "b"], wire.readString)).toEqual(["a", "b"]);
     expect(wire.readNullable(null, wire.readString)).toBeNull();
@@ -53,6 +103,31 @@ describe("writers", () => {
     expect(() => wire.writeDouble(Number.POSITIVE_INFINITY)).toThrow(RangeError);
     expect(() => wire.writeInt32(0.5)).toThrow(RangeError);
     expect(() => wire.writeInt64(2n ** 63n)).toThrow(RangeError);
+    expect(() => wire.writeByte(256)).toThrow(RangeError);
+    expect(() => wire.writeSByte(-129)).toThrow(RangeError);
+    expect(() => wire.writeInt16(32768)).toThrow(RangeError);
+    expect(() => wire.writeUInt16(-1)).toThrow(RangeError);
+    expect(() => wire.writeUInt32(2 ** 32)).toThrow(RangeError);
+    expect(() => wire.writeUInt64(-1n)).toThrow(RangeError);
+    expect(() => wire.writeUInt64(2n ** 64n)).toThrow(RangeError);
+    expect(() => wire.writeSingle(1e39)).toThrow(RangeError);
+    expect(() => wire.writeSingle(Number.NaN)).toThrow(RangeError);
+    expect(() => wire.writeDecimal("1e3")).toThrow(RangeError);
+    expect(() => wire.writeDecimal("-0")).toThrow(RangeError);
+    expect(() => wire.writeChar("ab")).toThrow(RangeError);
+  });
+
+  test("the other kinds write their own JSON", () => {
+    expect(wire.writeByte(255)).toBe("255");
+    expect(wire.writeUInt32(4294967295)).toBe("4294967295");
+    expect(wire.writeUInt64(18446744073709551615n)).toBe("\"18446744073709551615\"");
+    expect(wire.writeSingle(0.1)).toBe("0.1");
+    expect(wire.writeDecimal("-12.50")).toBe("\"-12.50\"");
+    expect(wire.writeChar("é")).toBe("\"é\"");
+    expect(wire.writeBytes(new Uint8Array([1, 2, 3, 255]))).toBe("\"AQID/w==\"");
+    expect(wire.writeBytes(new Uint8Array(0))).toBe("\"\"");
+    const large = new Uint8Array(100_000).map((_, i) => i % 256);
+    expect(wire.readBytes(JSON.parse(wire.writeBytes(large)))).toEqual(large);
   });
 });
 

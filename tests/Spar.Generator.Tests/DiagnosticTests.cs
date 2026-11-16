@@ -72,6 +72,49 @@ public sealed class DiagnosticTests
     }
 
     [Fact]
+    public async Task DateTime_is_a_warning_at_each_place_that_uses_it_and_the_command_stays()
+    {
+        const string Contracts = """
+            public sealed record Visit(System.DateTime At, System.Collections.Generic.IReadOnlyList<System.DateTime?> Earlier, System.DateTime Left);
+            [SparContract] public sealed class Visits
+            {
+                [SparCommand] public Task<Visit> GetAsync(System.DateTime since) => null!;
+                [SparCommand] public Task<System.DateTime> LastAsync() => null!;
+            }
+            """;
+
+        var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + Contracts);
+        var run = GeneratorHarness.Generate(Program + Contracts);
+
+        Assert.Equal(["SPAR024: At", "SPAR024: Earlier", "SPAR024: Left", "SPAR024: since", "SPAR024: LastAsync"], diagnostics);
+        var contracts = run.Files["Spar.Contracts.g.cs"];
+        Assert.Contains("new(\"visits\", \"get\", 0, HandleVisitsGet),", contracts, StringComparison.Ordinal);
+        Assert.Contains("new(\"visits\", \"last\", 0, HandleVisitsLast),", contracts, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Every_kind_of_the_wire_rules_table_is_accepted_and_byte_arrays_are_scalars()
+    {
+        const string Contracts = """
+            public sealed record Kinds(
+                byte B, sbyte Sb, short S, ushort Us, uint Ui, ulong Ul, float F, decimal M, char C,
+                System.DateOnly Day, System.TimeOnly Time, System.TimeSpan Span, byte[] Data, byte[]? Maybe,
+                System.Collections.Generic.IReadOnlyList<ulong?> Ids, decimal? Price);
+            [SparContract] public sealed class KindsService
+            {
+                [SparCommand] public Task<Kinds> EchoAsync(Kinds request) => Task.FromResult(request);
+                [SparCommand] public Task<int> LengthAsync(byte[] data) => Task.FromResult(data.Length);
+            }
+            """;
+
+        var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + Contracts);
+        var run = GeneratorHarness.Generate(Program + Contracts);
+
+        Assert.Empty(diagnostics);
+        Assert.Contains("new(\"kinds\", \"length\", 0, HandleKindsLength),", run.Files["Spar.Contracts.g.cs"], StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Two_shared_types_with_one_name_are_reported_at_each_type()
     {
         const string Contracts = """

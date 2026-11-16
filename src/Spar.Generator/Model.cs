@@ -6,16 +6,33 @@ using System.Linq;
 
 namespace Spar.Generator;
 
-/// <summary>The wire kinds the generator supports today; the full set is plan section 2's wire-rules table.</summary>
+/// <summary>The wire kinds of plan section 2's wire-rules table, except enums.</summary>
 internal enum WireKind
 {
     String,
     Boolean,
+    Byte,
+    SByte,
+    Int16,
+    UInt16,
     Int32,
+    UInt32,
     Int64,
+    UInt64,
+    Single,
     Double,
+    Decimal,
+    Char,
     Guid,
+    DateTime,
     DateTimeOffset,
+    DateOnly,
+    TimeOnly,
+    TimeSpan,
+
+    /// <summary><c>byte[]</c>: padded base64, <c>Uint8Array</c> in TypeScript; never a list of numbers.</summary>
+    Bytes,
+
     List,
     Record,
     Nullable,

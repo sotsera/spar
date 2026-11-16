@@ -3,6 +3,7 @@
 // Playwright test can compare it.
 import { connectSpar, loopbackChannel } from "/spar/app/sdk/sdk.js";
 import { echo } from "/spar/app/echo.js";
+import { kinds } from "/spar/app/kinds.js";
 import { ledger } from "/spar/app/ledger.js";
 import { fingerprint } from "/spar/app/spar.js";
 
@@ -67,6 +68,35 @@ function post(account, cents) {
   });
 }
 
+/**
+ * Every other kind of the wire-rules table, through the generated module both ways: `ulong` as `bigint`, `byte[]` as
+ * `Uint8Array`, `decimal` and the dates and times as strings. Returns what came back, with the types the page saw.
+ */
+const allKinds = () => ({
+  b: 255, sb: -128, s: -32768, us: 65535, ui: 4294967295, ul: 18446744073709551615n, f: 0.5, m: "-12.50", c: "é",
+  day: "2026-02-28", time: "08:30:00.25", span: "-1.02:30:00", data: new Uint8Array([0, 1, 254, 255]), maybe: null,
+  ids: [0n, null], price: "0.000",
+});
+
+function echoKinds() {
+  return kinds.echo(allKinds()).match({
+    success: value => ({
+      value: {
+        ...value,
+        ul: `${typeof value.ul} ${value.ul}`,
+        data: `${value.data.constructor.name} ${Array.from(value.data).join(",")}`,
+        ids: value.ids.map(id => (id === null ? null : `${typeof id} ${id}`)),
+      },
+    }),
+    failure: describeFailure,
+  });
+}
+
+/** A value the module refuses before sending: a byte beyond 255. */
+function sendBadByte() {
+  return kinds.echo({ ...allKinds(), b: 256 }).match({ success: () => ({ value: "sent" }), failure: describeFailure });
+}
+
 const who = () => ledger.who().match({ success: value => ({ value }), failure: describeFailure });
 
 /**
@@ -86,7 +116,7 @@ async function roundTrips(count, warmUp) {
   return durations;
 }
 
-window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, roundTrips, document: () => connection.document };
+window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, echoKinds, sendBadByte, roundTrips, document: () => connection.document };
 
 connection.ready();
 document.getElementById("status").textContent = "ready";

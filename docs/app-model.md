@@ -838,7 +838,24 @@ Spar logs the exception through the app's `ILogger` (category `Spar.Bridge`), so
 
 **Limits.** The page is untrusted, so each document's bridge is bounded. A call larger than 4 MiB is refused with `rejected` / `too-large` before its payload is read; a result larger than 16 MiB fails only its call, with `response` / `too-large`; 16 commands run at once, the next ones wait in a queue of up to 1,024 calls and 16 MiB, and a call past that is refused with `rejected` / `busy`. Every refusal is `notStarted`. An app that has measured a need raises one in `Program.cs` with `builder.Bridge(o => o.MaxMessageBytes = …)`; a large transfer belongs in a stream.
 
-`long` travels as a decimal string because JSON numbers lose precision above 2^53.
+`long` travels as a decimal string because JSON numbers lose precision above 2^53. Each C# type has one spelling on the wire and one TypeScript type:
+
+| C# | On the wire | TypeScript |
+|---|---|---|
+| `string`, `char` (one UTF-16 code unit) | a string; a lone surrogate becomes U+FFFD | `string` |
+| `bool` | `true` or `false` | `boolean` |
+| `byte`, `sbyte`, `short`, `ushort`, `int`, `uint` | a number in the type's range | `number` |
+| `long`, `ulong` | a canonical decimal string: `"-12"`, never `"+12"` or `"012"` | `bigint` |
+| `float`, `double` | a finite number; NaN or an infinity fails the call | `number` |
+| `decimal` | a string that keeps its scale and has no exponent: `"12.50"`; a value with too many digits is refused, never rounded | `string` |
+| `Guid` | `"0f8fad5b-d9cb-469f-a165-70867728950e"` | `string` |
+| `DateTimeOffset` | ISO 8601 with an offset: `"2026-11-16T08:30:00+01:00"` | `string` |
+| `DateOnly`, `TimeOnly`, `TimeSpan` | `"2026-11-16"`, `"08:30:00.25"`, `"-1.02:30:00"` | `string` |
+| `byte[]` | padded base64 with no whitespace | `Uint8Array` |
+| `T?` | the value, or `null` | `T \| null` |
+| arrays and `IReadOnlyList<T>` | a JSON array | `readonly T[]` |
+
+`DateTime` works too, written with `Z`, an offset or nothing by its `Kind`, but the build warns (SPAR024): use `DateTimeOffset`, whose instant does not depend on the reader's time zone.
 
 ## 5. The generated TypeScript
 

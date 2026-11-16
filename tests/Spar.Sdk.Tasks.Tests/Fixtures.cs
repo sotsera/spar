@@ -92,5 +92,21 @@ internal static class Fixtures
             [SparCommand]
             public Task<IReadOnlyList<long?>> NumbersAsync(int count) => throw new NotImplementedException();
         }
+
+        /// <summary>Every other kind of the wire-rules table.</summary>
+        public sealed record Kinds(
+            byte B, sbyte Sb, short S, ushort Us, uint Ui, ulong Ul, float F, decimal M, char C,
+            DateTime At, DateOnly Day, TimeOnly Time, TimeSpan Span, byte[] Data, byte[]? Maybe, IReadOnlyList<ulong?> Ids,
+            IReadOnlyList<byte> Small);
+
+        [SparContract]
+        public sealed class KindsService
+        {
+            [SparCommand]
+            public Task<Kinds> EchoAsync(Kinds request) => throw new NotImplementedException();
+
+            [SparCommand]
+            public Task<decimal?> TotalAsync(byte[] data) => throw new NotImplementedException();
+        }
         """;
 }

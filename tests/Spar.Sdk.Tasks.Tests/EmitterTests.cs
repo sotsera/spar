@@ -73,6 +73,32 @@ public sealed class EmitterTests
     }
 
     [Fact]
+    public void Every_kind_of_the_wire_rules_table_has_its_TypeScript_spelling_and_SDK_function()
+    {
+        var files = ClientHarness.Emit(Fixtures.Edges);
+        var declarations = files["kinds.d.ts"];
+        var module = files["kinds.js"];
+
+        string[] spelled =
+        [
+            "  readonly b: number;", "  readonly sb: number;", "  readonly s: number;", "  readonly us: number;",
+            "  readonly ui: number;", "  readonly ul: bigint;", "  readonly f: number;", "  readonly m: string;",
+            "  readonly c: string;", "  readonly at: string;", "  readonly day: string;", "  readonly time: string;",
+            "  readonly span: string;", "  readonly data: Uint8Array;", "  readonly maybe: Uint8Array | null;",
+            "  readonly ids: readonly (bigint | null)[];", "  readonly small: readonly number[];",
+            "  readonly total: (data: Uint8Array, options?: CallOptions) => Call<string | null>;",
+        ];
+        Assert.All(spelled, line => Assert.Contains(line, declarations, StringComparison.Ordinal));
+        string[] calls =
+        [
+            "wire.readByte(", "wire.readSByte(", "wire.readInt16(", "wire.readUInt16(", "wire.readUInt32(", "wire.readUInt64(",
+            "wire.readSingle(", "wire.readDecimal(", "wire.readChar(", "wire.readBytes(", "wire.writeByte(", "wire.writeUInt64(",
+            "wire.writeDecimal(", "wire.writeBytes(", "wire.readList(wire.field(object, \"small\"), wire.readByte)",
+        ];
+        Assert.All(calls, call => Assert.Contains(call, module, StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void Empty_documentation_elements_keep_their_meaning()
     {
         const string Source = """

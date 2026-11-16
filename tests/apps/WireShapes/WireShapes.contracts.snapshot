@@ -1,7 +1,7 @@
 # The contracts of WireShapes as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint 8f0f4b3957f8c1c8
+fingerprint b4ef3193d7841788
 
 contract echo (WireShapes.EchoService)
   big(WireShapes.Item) -> long
@@ -9,6 +9,11 @@ contract echo (WireShapes.EchoService)
   ratio(WireShapes.Item) -> double
   shapes(WireShapes.Shapes) -> WireShapes.Shapes
   wait(WireShapes.Item) -> WireShapes.Item
+
+contract kinds (WireShapes.KindsService)
+  echo(WireShapes.Kinds) -> WireShapes.Kinds
+  length(byte[]) -> int
+  single(string) -> float
 
 contract ledger (WireShapes.Library.LedgerService)
   post(WireShapes.Library.Entry) -> WireShapes.Library.Entry | WireShapes.Library.LedgerError
@@ -19,6 +24,24 @@ contract rates (WireShapes.Library.IRatesService)
 
 record WireShapes.Item
   name: string
+
+record WireShapes.Kinds
+  b: byte
+  sb: sbyte
+  s: short
+  us: ushort
+  ui: uint
+  ul: ulong
+  f: float
+  m: decimal
+  c: char
+  day: DateOnly
+  time: TimeOnly
+  span: TimeSpan
+  data: byte[]
+  maybe: byte[]?
+  ids: IReadOnlyList<ulong?>
+  price: decimal?
 
 record WireShapes.Library.Entry
   account: string

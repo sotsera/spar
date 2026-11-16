@@ -29,7 +29,7 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
   - Reserved: JavaScript reserved words and every subpath `@spar/app` uses itself, today `sdk`, `vite`, `windows`, `telemetry`, `shared`, `spar`, and `testing` (the page-test helpers).
 - **Errors:** C# 15 `closed record` hierarchies with nested sealed cases, never a union (CS0029). The code is the camelCase case name or its `[SparName]`; reserved payload names are `kind`, `code`, `message`, `execution`. A case without a payload is `{"code":"forbidden"}`; its TypeScript entry is `undefined`, with a handler that takes no parameter (decision "M1a names"). `RSEXPERIMENTAL006` is off for `src/Spar.Generator/**.cs` only, for Roslyn's closed-type API.
 - **`Result<T, TError>` and `Result<TError>`** are Spar's `readonly struct` C# 15 unions. Generated code never creates or forwards a `default` result; one that reaches the writer is a `response`/`serialization` failure.
-- **Wire types:** positional records, the primitives of the wire-rules table, nullable values (optional; non-nullable is required), arrays and `IReadOnlyList<T>`, nested records, `closed record` errors, and the opaque grants `FileGrant`/`FolderGrant` (the page sees only names). Extending the subset is a recorded contract decision.
+- **Wire types:** positional records, the primitives of the wire-rules table (all built except enums; `byte[]` is one base64 value and may be a request), nullable values (optional; non-nullable is required), arrays and `IReadOnlyList<T>`, nested records, `closed record` errors, and the opaque grants `FileGrant`/`FolderGrant` (the page sees only names). Extending the subset is a recorded contract decision.
 
 ## Wire and serializers
 
@@ -64,7 +64,7 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 
 ## Diagnostics
 
-- **Categories and IDs:** `Spar.Contracts` for SPAR001–040 (map in plan section 2, "Diagnostics"), `Spar.Results` for SPAR050–055, SPAR100 for the snapshot, SPAR101–104 for the CSP analyzer. Errors, except SPAR051–054, the `DateTime` warning and the suggestion for long-running commands that cannot observe cancellation. Decided rules without an ID yet: yield after an error, `Capacity` with coalescing, `[Flags]`, `DateTime`, that suggestion.
+- **Categories and IDs:** `Spar.Contracts` for SPAR001–040 (map in plan section 2, "Diagnostics"), `Spar.Results` for SPAR050–055, SPAR100 for the snapshot, SPAR101–104 for the CSP analyzer. Errors, except SPAR051–054, the `DateTime` warning (SPAR024) and the suggestion for long-running commands that cannot observe cancellation. Decided rules without an ID yet: yield after an error, `Capacity` with coalescing, `[Flags]`, that suggestion. A warning leaves its command valid, and the client step stops only on errors.
 - **One diagnostic per problem and location.** Messages about a referenced assembly start with "In referenced assembly 'X': …".
 - **Skip only the invalid command,** never its contract's whole binding; the client step skips invalid contracts silently.
 - **Track IDs** in `AnalyzerReleases.Shipped.md`/`Unshipped.md` (RS2008) instead of suppressing it.

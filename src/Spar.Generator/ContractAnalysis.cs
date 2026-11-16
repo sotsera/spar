@@ -23,6 +23,10 @@ internal sealed class ContractAnalysis
     private readonly Action<ISymbol, Diagnostic>? _report;
     private readonly IDictionary<string, INamedTypeSymbol>? _symbols;
     private readonly Dictionary<string, TypeRef> _types = new(StringComparer.Ordinal);
+
+    /// <summary>The places already warned about DateTime: a list of them is warned about once, not again for its items.</summary>
+    private readonly HashSet<ISymbol> _warnedDateTime = new(SymbolEqualityComparer.Default);
+
     private readonly Dictionary<string, RecordModel> _records = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ErrorModel> _errors = new(StringComparer.Ordinal);
 
@@ -253,7 +257,7 @@ internal sealed class ContractAnalysis
             method.Name, wireName, request, requests.Count == 1 ? requests[0].Name : null, takesToken, shape.Value.Shape, shape.Value.Value, shape.Value.ErrorKey, shape.Value.ErrorCSharp, TimeoutSeconds(method));
     }
 
-    /// <summary>A request is one record or one scalar, nullable or not (SPAR015 for a list).</summary>
+    /// <summary>A request is one record or one scalar, nullable or not (SPAR015 for a list); <c>byte[]</c> is a scalar.</summary>
     private TypeRef? Request(IMethodSymbol method, IParameterSymbol parameter)
     {
         var type = parameter.Type;
@@ -262,7 +266,7 @@ internal sealed class ContractAnalysis
             type = nullable.TypeArguments[0];
         }
 
-        if (List(type) is not null)
+        if (List(type) is not null && !IsByteArray(type))
         {
             Report(Descriptors.UnsupportedRequest, parameter, method.Name, parameter.Type.ToDisplayString());
             return null;
@@ -310,6 +314,13 @@ internal sealed class ContractAnalysis
     private TypeRef? Wire(ITypeSymbol type, ISymbol location)
     {
         var csharp = type.ToDisplayString(CSharpFormat);
+
+        // Before the cache, so every place that uses DateTime gets its warning (the same place is reported once).
+        if (MentionsDateTime(type) && _warnedDateTime.Add(location))
+        {
+            Report(Descriptors.DateTimeOnWire, location, csharp);
+        }
+
         if (_types.TryGetValue(csharp, out var known))
         {
             return known;
@@ -335,6 +346,11 @@ internal sealed class ContractAnalysis
         if (type.IsReferenceType && type.NullableAnnotation == NullableAnnotation.Annotated)
         {
             return Nullable(type.WithNullableAnnotation(NullableAnnotation.NotAnnotated), location, csharp, isValueType: false);
+        }
+
+        if (IsByteArray(type))
+        {
+            return new TypeRef(WireKind.Bytes, csharp, nameof(WireKind.Bytes), null, false);
         }
 
         var primitive = Primitive(type);
@@ -637,27 +653,58 @@ internal sealed class ContractAnalysis
 
     private static WireKind? Primitive(ITypeSymbol type)
     {
-        switch (type.SpecialType)
+        var special = type.SpecialType switch
         {
-            case SpecialType.System_String:
-                return WireKind.String;
-            case SpecialType.System_Boolean:
-                return WireKind.Boolean;
-            case SpecialType.System_Int32:
-                return WireKind.Int32;
-            case SpecialType.System_Int64:
-                return WireKind.Int64;
-            case SpecialType.System_Double:
-                return WireKind.Double;
+            SpecialType.System_String => WireKind.String,
+            SpecialType.System_Boolean => WireKind.Boolean,
+            SpecialType.System_Byte => WireKind.Byte,
+            SpecialType.System_SByte => WireKind.SByte,
+            SpecialType.System_Int16 => WireKind.Int16,
+            SpecialType.System_UInt16 => WireKind.UInt16,
+            SpecialType.System_Int32 => WireKind.Int32,
+            SpecialType.System_UInt32 => WireKind.UInt32,
+            SpecialType.System_Int64 => WireKind.Int64,
+            SpecialType.System_UInt64 => WireKind.UInt64,
+            SpecialType.System_Single => WireKind.Single,
+            SpecialType.System_Double => WireKind.Double,
+            SpecialType.System_Decimal => WireKind.Decimal,
+            SpecialType.System_Char => WireKind.Char,
+            SpecialType.System_DateTime => WireKind.DateTime,
+            _ => (WireKind?)null,
+        };
+        if (special is not null)
+        {
+            return special;
         }
 
-        var name = type.ToDisplayString();
-        return name switch
+        return type.ToDisplayString() switch
         {
             "System.Guid" => WireKind.Guid,
             "System.DateTimeOffset" => WireKind.DateTimeOffset,
+            "System.DateOnly" => WireKind.DateOnly,
+            "System.TimeOnly" => WireKind.TimeOnly,
+            "System.TimeSpan" => WireKind.TimeSpan,
             _ => null,
         };
+    }
+
+    private static bool IsByteArray(ITypeSymbol type) =>
+        type is IArrayTypeSymbol { Rank: 1, ElementType.SpecialType: SpecialType.System_Byte };
+
+    /// <summary>Whether the type is <c>DateTime</c>, or a list or nullable of one, at any depth.</summary>
+    private static bool MentionsDateTime(ITypeSymbol type)
+    {
+        if (type.SpecialType == SpecialType.System_DateTime)
+        {
+            return true;
+        }
+
+        if (type is INamedTypeSymbol { OriginalDefinition.SpecialType: SpecialType.System_Nullable_T } nullable)
+        {
+            return MentionsDateTime(nullable.TypeArguments[0]);
+        }
+
+        return List(type) is { } element && MentionsDateTime(element);
     }
 
     private static ITypeSymbol? List(ITypeSymbol type)

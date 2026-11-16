@@ -205,11 +205,12 @@ internal static partial class ModuleEmitter
     /// <summary>A function that reads one value of <paramref name="type"/>.</summary>
     private static string Reader(ClientLayout layout, TypeRef type, int depth) => type.Kind switch
     {
-        WireKind.String or WireKind.Guid or WireKind.DateTimeOffset => "wire.readString",
-        WireKind.Boolean => "wire.readBoolean",
-        WireKind.Int32 => "wire.readInt32",
-        WireKind.Int64 => "wire.readInt64",
-        WireKind.Double => "wire.readDouble",
+        // Dates, times and GUIDs are checked by the backend; the page passes their text as it is.
+        WireKind.String or WireKind.Guid or WireKind.DateTime or WireKind.DateTimeOffset or WireKind.DateOnly
+            or WireKind.TimeOnly or WireKind.TimeSpan => "wire.readString",
+        WireKind.Boolean or WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32
+            or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
+            or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.read{type.Kind}",
         WireKind.Record => ClientNames.Reader(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Read(layout, type, Item(depth), depth)}",
     };
@@ -224,11 +225,12 @@ internal static partial class ModuleEmitter
 
     private static string Writer(ClientLayout layout, TypeRef type, int depth) => type.Kind switch
     {
-        WireKind.String or WireKind.Guid or WireKind.DateTimeOffset => "wire.writeString",
-        WireKind.Boolean => "wire.writeBoolean",
-        WireKind.Int32 => "wire.writeInt32",
-        WireKind.Int64 => "wire.writeInt64",
-        WireKind.Double => "wire.writeDouble",
+        // Dates, times and GUIDs are checked by the backend; the page passes their text as it is.
+        WireKind.String or WireKind.Guid or WireKind.DateTime or WireKind.DateTimeOffset or WireKind.DateOnly
+            or WireKind.TimeOnly or WireKind.TimeSpan => "wire.writeString",
+        WireKind.Boolean or WireKind.Byte or WireKind.SByte or WireKind.Int16 or WireKind.UInt16 or WireKind.Int32
+            or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
+            or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.write{type.Kind}",
         WireKind.Record => ClientNames.Writer(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Write(layout, type, Item(depth), depth)}",
     };

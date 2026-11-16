@@ -84,6 +84,12 @@ internal static class Descriptors
         "SPAR023", "Two properties with one JSON name",
         "Record '{0}' has two properties with the JSON name '{1}'. Rename one of them", Contracts);
 
+    /// <summary>A warning, not an error (decision "Wire format choices"): the value works, but its meaning depends on its Kind.</summary>
+    public static readonly DiagnosticDescriptor DateTimeOnWire = new(
+        "SPAR024", "DateTime on the wire",
+        "'{0}' carries a DateTime, whose time zone depends on its Kind: written with 'Z', an offset or nothing, and read back as the reader's local time when it has an offset. Use DateTimeOffset instead.",
+        Contracts, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
     public static readonly DiagnosticDescriptor BadErrorType = Error(
         "SPAR030", "Unsupported error type",
         "Error type '{0}' must be a non-generic closed record with nested sealed record cases", Contracts);
@@ -124,8 +130,9 @@ internal static class Descriptors
     /// starts "In referenced assembly 'X': " (plan section 2, "Diagnostics"). One copy per descriptor.
     /// </summary>
     public static DiagnosticDescriptor InReferencedAssembly(DiagnosticDescriptor descriptor) =>
-        Referenced.GetOrAdd(descriptor.Id + "\0" + descriptor.MessageFormat, _ => Error(
-            descriptor.Id, descriptor.Title.ToString(), "In referenced assembly '{0}': {1}", descriptor.Category));
+        Referenced.GetOrAdd(descriptor.Id + "\0" + descriptor.MessageFormat, _ => new DiagnosticDescriptor(
+            descriptor.Id, descriptor.Title.ToString(), "In referenced assembly '{0}': {1}", descriptor.Category,
+            descriptor.DefaultSeverity, isEnabledByDefault: true));
 
     private static DiagnosticDescriptor Error(string id, string title, string message, string category) =>
         new(id, title, message, category, DiagnosticSeverity.Error, isEnabledByDefault: true);

@@ -514,6 +514,8 @@ This entry comes from other frameworks (`docs/research-review.md`) and has not b
 
 See also "Build, MSBuild and packages" for the C# traps found while building the `Result` type and its analyzer (conversion operators, `Interlocked`, `ArrayPool`, Roslyn operation blocks), and "Bridge and loopback" for the bridge's message and id limits.
 
+- **.NET's parsers are looser than a wire spelling:** `decimal.TryParse` rounds past 28 or 29 significant digits instead of failing and accepts `+1` and `01`; `Utf8JsonReader.TryGetSingle` returns infinity for `1e39`; `TryGetBytesFromBase64` skips whitespace; `TimeSpan.TryParseExact(…, "c")` accepts `1:2:3`. Require the text the value writes back, or check the raw bytes, before trusting a parse. Negative zero `decimal` writes as `0`. (M1a wire kinds)
+- **An analyzer that reports a descriptor missing from `SupportedDiagnostics` throws** (AD0001) instead of reporting it, and the build shows only AD0001. (M1a wire kinds)
 - **One generated async method that awaits every command** keeps an awaiter for every result type in its state machine, which doubled async allocations to about 600 B per call. Emit one small async method per command. (`result-api`)
 - **Tier-0 JIT code boxes a value-type `T` for `is not null`,** which breaks allocation assertions in Debug tests. Compute such checks once, in the constructor. (`result-api`)
 - The first generated serializer (fixed in the fuzzing spike's copy):

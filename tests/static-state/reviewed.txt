@@ -20,6 +20,7 @@ Spar | Spar.Hosting.SparFrontend.<IsBrotliSupported>k__BackingField | readonly |
 Spar | Spar.Runtime.SparJson.ReaderOptions | readonly | Reader options, a value type copied on use; never written.
 Spar | Spar.Runtime.SparJson.WriterOptions | readonly | Writer options, a value type copied on use; never written.
 Spar | Spar.Runtime.SparJson.StrictUtf8 | readonly | A UTF8Encoding that throws on invalid bytes: immutable, and GetString is thread-safe.
+Spar | Spar.Runtime.SparJson.Base64Alphabet | readonly | SearchValues of the base64 alphabet: immutable after creation, and its lookups are thread-safe.
 Spar | Spar.SparTestSession.<IsSupported>k__BackingField | readonly | The test-host feature switch, read once from AppContext; the same for the whole process by design, and false in apps (trimmed away).
 Spar | Spar.SparTestSession.CurrentSession | readonly | An AsyncLocal: each test's own flow sees its own session, so two apps in one process never share one.
 
@@ -48,6 +49,7 @@ Spar.Generator | Spar.Generator.ContractAnalysis.ReservedPayloadNames | readonly
 Spar.Generator | Spar.Generator.Descriptors.Referenced | readonly | A ConcurrentDictionary of restated descriptors, keyed by ID and message; a value depends only on its key, so any project may share it.
 Spar.Generator | Spar.Generator.Descriptors.BadErrorCase | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.BadErrorType | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.DateTimeOnWire | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.CaseNotNested | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.DuplicateCode | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.DuplicateCommand | readonly | An immutable DiagnosticDescriptor.

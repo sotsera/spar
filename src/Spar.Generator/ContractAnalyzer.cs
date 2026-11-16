@@ -35,6 +35,7 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
         Descriptors.NotPositionalRecord,
         Descriptors.MissingProperty,
         Descriptors.DuplicateJsonName,
+        Descriptors.DateTimeOnWire,
         Descriptors.BadErrorType,
         Descriptors.CaseNotNested,
         Descriptors.BadErrorCase,
