@@ -30,14 +30,17 @@ env:
 
 jobs:
   build-test:
-    name: build and test (${{ matrix.os }})
+    # Each OS runs four lanes at once, each on its own runner: one long job became four short ones. Each lane repeats
+    # the setup and the build it needs; the repository is public, so the extra runner minutes cost nothing.
+    name: ${{ matrix.lane }} (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest]
+        lane: [tests, aot, build-tests, package-tests]
     runs-on: ${{ matrix.os }}
-    # About four times the slowest job (Windows, about 10 minutes): a hung test fails here instead of after six hours.
-    timeout-minutes: 45
+    # About ten times the slowest lane: a hung test fails here instead of after GitHub's six hours.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -67,25 +70,43 @@ jobs:
           node-version: 24
 
       - name: Size limits
+        if: matrix.lane == 'tests'
         run: dotnet run eng/check-size.cs
 
       - name: TypeScript SDK (TypeScript 6 and 7, Vitest)
+        if: matrix.lane == 'tests'
         working-directory: src/Spar.Client
         run: |
           npm ci --ignore-scripts
           npm run check
           npm test
-          # The browser tests serve the compiled SDK from obj/dist.
+
+      - name: TypeScript SDK, compiled
+        # The apps' builds take the compiled SDK from obj/dist. The build tests compile their own copy.
+        if: matrix.lane != 'build-tests'
+        working-directory: src/Spar.Client
+        shell: bash
+        run: |
+          # The tests lane installed the packages in the step before.
+          if [ ! -d node_modules ]; then npm ci --ignore-scripts; fi
           npm run build
 
       - name: The documentation check's packages (tests/AppModel)
+        if: matrix.lane == 'tests'
         working-directory: tests/AppModel
         run: npm ci --ignore-scripts
 
       - name: Build
+        if: matrix.lane == 'tests'
         run: dotnet build Spar.slnx -c Debug
 
+      - name: Build the browser tests, for Playwright's installer
+        # The package tests' consumer opens its page in Chromium, the same Playwright version as the repository's.
+        if: matrix.lane == 'package-tests'
+        run: dotnet build tests/WireShapes.EndToEndTests -c Debug
+
       - name: Chromium for the browser tests
+        if: matrix.lane == 'tests' || matrix.lane == 'package-tests'
         shell: bash
         run: |
           # Playwright's headless shell only. --with-deps adds its system libraries on Linux; on Windows it installs the
@@ -96,14 +117,21 @@ jobs:
           pwsh "$script" install $deps --only-shell chromium
 
       - name: Test (CoreCLR)
+        if: matrix.lane == 'tests'
         run: dotnet test --solution Spar.slnx -c Debug --no-build
 
       - name: Page tests (the Notebook's page against @spar/app/testing)
         # After the build, which writes the generated @spar/app package and installs the frontend's packages.
+        if: matrix.lane == 'tests'
         working-directory: samples/Notebook/frontend
         run: npm test
 
+      - name: Build with -mt
+        if: matrix.lane == 'tests'
+        run: dotnet build Spar.slnx -c Debug -mt -nodeReuse:false
+
       - name: Test (NativeAOT lane)
+        if: matrix.lane == 'aot'
         shell: bash
         run: |
           # The same test projects published with NativeAOT (plan section 5); the generator tests compile C# in memory
@@ -117,21 +145,20 @@ jobs:
             echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }
           done
 
-      - name: Build with -mt
-        run: dotnet build Spar.slnx -c Debug -mt -nodeReuse:false
-
       - name: Build tests (a clean copy, an unchanged build, the production boundary, the console harness, one build per project)
         # Not in Spar.slnx: they copy the tree under artifacts/build-tests/ and build it in isolation, in minutes.
+        if: matrix.lane == 'build-tests'
         run: dotnet test --project tests/Spar.BuildTests
 
       - name: Package tests (Spar from its own packages, in a consumer outside the repository)
         # Not in Spar.slnx: it packs Spar into a feed of its own and builds an app from it in a temporary folder.
+        if: matrix.lane == 'package-tests'
         run: dotnet test --project tests/Spar.PackageTests
 
       - name: Test results
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: test-results-${{ matrix.os }}
+          name: test-results-${{ matrix.os }}-${{ matrix.lane }}
           path: artifacts/test-results/
           if-no-files-found: ignore
