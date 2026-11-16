@@ -60,6 +60,47 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     }
 
     [Fact]
+    public async Task A_test_project_must_name_its_app_with_SparTestedApplication()
+    {
+        Assert.Equal(0, (await FirstAsync()).Exit);
+        var tests = Path.Combine(consumer.Root, "App.Tests", "Notes.App.Tests.csproj");
+        var app = Path.Combine(consumer.Root, "App", "Notes.App.csproj");
+        var library = Path.Combine(consumer.Root, "Lib", "Lib.csproj");
+        var testsProject = File.ReadAllText(tests);
+        var appProject = File.ReadAllText(app);
+        Directory.CreateDirectory(Path.GetDirectoryName(library)!);
+        File.WriteAllText(library, "<Project Sdk=\"Microsoft.NET.Sdk\">\n  <PropertyGroup>\n    <TargetFramework>net11.0</TargetFramework>\n  </PropertyGroup>\n</Project>\n");
+        try
+        {
+            // The app through a plain reference: it would build as Development, without the test host.
+            File.WriteAllText(tests, testsProject.Replace("<SparTestedApplication ", "<ProjectReference ", StringComparison.Ordinal));
+            var (plain, plainOutput) = await consumer.DotnetAsync("App.Tests", "build", "-nologo", "-v:m");
+            Assert.NotEqual(0, plain);
+            Assert.Contains("error SPAR121", plainOutput, StringComparison.Ordinal);
+            Assert.Contains("<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\" />", plainOutput, StringComparison.Ordinal);
+
+            // A library named as the tested app.
+            File.WriteAllText(tests, testsProject.Replace("..\\App\\Notes.App.csproj", "..\\Lib\\Lib.csproj", StringComparison.Ordinal));
+            var (notAnApp, notAnAppOutput) = await consumer.DotnetAsync("App.Tests", "build", "-nologo", "-v:m");
+            Assert.NotEqual(0, notAnApp);
+            Assert.Contains("error SPAR122", notAnAppOutput, StringComparison.Ordinal);
+
+            // The item outside a test project.
+            File.WriteAllText(tests, testsProject);
+            File.WriteAllText(app, appProject.Replace("</Project>", "  <ItemGroup>\n    <SparTestedApplication Include=\"..\\Lib\\Lib.csproj\" />\n  </ItemGroup>\n</Project>", StringComparison.Ordinal));
+            var (misplaced, misplacedOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+            Assert.NotEqual(0, misplaced);
+            Assert.Contains("error SPAR120", misplacedOutput, StringComparison.Ordinal);
+        }
+        finally
+        {
+            File.WriteAllText(tests, testsProject);
+            File.WriteAllText(app, appProject);
+            Directory.Delete(Path.GetDirectoryName(library)!, recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task A_design_time_build_runs_no_Spar_step()
     {
         Assert.Equal(0, (await FirstAsync()).Exit);

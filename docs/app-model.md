@@ -38,6 +38,21 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 - The frontend is found through `SparFrontendPath`, by default `frontend/`.
 - The generated client lives under `obj/spar/client/` and is never written into `node_modules`.
 - Each contract is a subpath of `@spar/app`: `@spar/app/copyJobs`, `@spar/app/connections`. The SDK is `@spar/app/sdk`.
+- A test project names the app it tests with `SparTestedApplication` (decision "SparTestedApplication: the test project names its app"), so the app builds in the Test variant, with the test host and the typed test clients. A plain `ProjectReference` to the app fails the build (SPAR121); other projects, such as a library, are referenced as usual. An end-to-end project also sets `<SparBrowserTests>true</SparBrowserTests>` for the Browser surface.
+
+  ```xml
+  <Project Sdk="Spar.Sdk">
+    <PropertyGroup>
+      <OutputType>Exe</OutputType>
+      <TargetFramework>net11.0</TargetFramework>
+      <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <SparTestedApplication Include="..\SqlTool\SqlTool.csproj" />
+    </ItemGroup>
+  </Project>
+  ```
 
 ## 2. `Program.cs`
 

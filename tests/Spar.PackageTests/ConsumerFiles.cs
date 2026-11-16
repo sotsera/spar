@@ -114,7 +114,7 @@ internal static class ConsumerFiles
               </PropertyGroup>
 
               <ItemGroup>
-                <ProjectReference Include="..\App\Notes.App.csproj" />
+                <SparTestedApplication Include="..\App\Notes.App.csproj" />
               </ItemGroup>
             </Project>
 
@@ -163,7 +163,7 @@ internal static class ConsumerFiles
               </ItemGroup>
 
               <ItemGroup>
-                <ProjectReference Include="..\App\Notes.App.csproj" />
+                <SparTestedApplication Include="..\App\Notes.App.csproj" />
               </ItemGroup>
             </Project>
 

@@ -253,7 +253,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
    - CI with the build and test lanes on Windows and Linux, the `-mt` lane, and `eng/check-size.cs`;
    - the first `Spar.BuildTests`: isolation, "authored files untouched", a clean clone (built: a clean copy, the unchanged build and the Production boundary of the Notebook; decision "Build tests: a clean copy, the step matrix from binary logs, the production boundary");
    - the package-only consumer test from the first day (section 1), with the generality fixtures (RR): a folder name with a space, an assembly name different from the project, a custom app id, a non-default frontend folder, a path with non-ASCII characters (built: the packages and the consumer with a space, non-ASCII letters and a different assembly name, its tests, the analyzer, design time, NativeAOT, and an update and downgrade under a warm server, then its page in `ui/` and an end-to-end project with the Browser surface; the custom app id waits for the app identity (M1b); decisions "Packages and the package-only consumer test built" and "The generated package keeps version 0.0.0; the consumer gets a page");
-   - the test-SDK shape (RR): a `SparTestedApplication` item that becomes a project reference before restore, tried on `Spar.Sdk` before it is fixed.
+   - the test-SDK shape (RR): a `SparTestedApplication` item that becomes a project reference before restore, tried on `Spar.Sdk` before it is fixed (built, with SPAR120–SPAR122; the `Projects.X` marker comes with the black-box fixture in M1b; decision "SparTestedApplication: the test project names its app").
 
 **Exit:**
 - `dotnet build` and `dotnet test` pass in the repository and in the package-only consumer, on Windows and Linux, in CI.
@@ -278,6 +278,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 - the policy for `<input type="file">` (section 3c);
 - profiles for window tests and trusted input in the in-process window (section 5, issues D and I), each after a spike;
 - the black-box data root (section 5, issue M), after a security review;
+- the generated `Projects.X` marker of the test-SDK shape (RR), with its members taken from what the black-box fixture needs, such as the tested app's published executable (decision "SparTestedApplication: the test project names its app");
 - the Windows Sandbox runner (section 5, issue J, a proposal), after its spike.
 
 **Build:**

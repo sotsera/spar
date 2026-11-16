@@ -56,14 +56,53 @@
   </ItemGroup>
 
   <!--
-    A test project builds the projects it references (its app, and their libraries) in the Test variant, and never
-    passes its own lane on. Spar's own references are added below this update, so it does not touch them.
+    A test project names the app it tests, <SparTestedApplication Include="..\App\App.csproj" /> (decision
+    "SparTestedApplication: the test project names its app"). It becomes a project reference here, during evaluation,
+    so restore sees it, and the app builds in the Test variant (with its libraries) and never gets the test lane. Other
+    project references build as they would anywhere.
   -->
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
-    <ProjectReference Update="@(ProjectReference)"
-                      AdditionalProperties="%(ProjectReference.AdditionalProperties);SparVariant=Test"
-                      UndefineProperties="%(ProjectReference.UndefineProperties);SparTestLane" />
+    <ProjectReference Include="@(SparTestedApplication)" SparTestedApplication="true"
+                      AdditionalProperties="SparVariant=Test" UndefineProperties="SparTestLane" />
   </ItemGroup>
+
+  <!--
+    Whether a project is a Spar app travels back to the projects that reference it with the answer MSBuild already asks
+    for (its target frameworks), so checking a reference costs no evaluation of its own.
+  -->
+  <ItemGroup>
+    <AdditionalTargetFrameworkInfoProperty Include="SparIsApp" />
+  </ItemGroup>
+
+  <!--
+    A Spar app reached through a plain project reference would be tested in its Development build, without the test
+    host or its typed test clients; an item that names something other than a Spar app tests nothing. Both fail before
+    any reference builds, beside the .NET SDK's own check of executable references.
+  -->
+  <Target Name="SparCheckTestedApplications"
+          AfterTargets="_GetProjectReferenceTargetFrameworkProperties"
+          Condition="'$(SparIsTestProject)' == 'true' and '@(_MSBuildProjectReferenceExistent)' != ''">
+    <ItemGroup>
+      <_SparReferencedApp Include="@(_MSBuildProjectReferenceExistent)"
+                          Condition="$([System.String]::Copy('%(_MSBuildProjectReferenceExistent.AdditionalPropertiesFromProject)').Contains('&lt;SparIsApp&gt;true&lt;/SparIsApp&gt;'))" />
+      <_SparPlainApp Include="@(_SparReferencedApp)" Condition="'%(_SparReferencedApp.SparTestedApplication)' != 'true'" />
+      <_SparNotAnApp Include="@(_MSBuildProjectReferenceExistent)" Condition="'%(_MSBuildProjectReferenceExistent.SparTestedApplication)' == 'true'" />
+      <_SparNotAnApp Remove="@(_SparReferencedApp)" />
+    </ItemGroup>
+
+    <Error Code="SPAR121" File="$(MSBuildProjectFullPath)" Condition="'@(_SparPlainApp)' != ''"
+           Text="'%(_SparPlainApp.Identity)' is a Spar app referenced with a ProjectReference, so this test project would test its Development build, without the test host. Name it with &lt;SparTestedApplication Include=&quot;%(_SparPlainApp.Identity)&quot; /&gt; instead." />
+    <Error Code="SPAR122" File="$(MSBuildProjectFullPath)" Condition="'@(_SparNotAnApp)' != ''"
+           Text="SparTestedApplication '%(_SparNotAnApp.Identity)' is not a Spar app (an executable project that uses Spar.Sdk). Reference a library with a ProjectReference." />
+  </Target>
+
+  <!-- The item belongs in a test project; anywhere else it would be silently ignored. -->
+  <Target Name="SparCheckTestedApplicationItem"
+          BeforeTargets="ResolveProjectReferences"
+          Condition="'@(SparTestedApplication)' != '' and '$(SparIsTestProject)' != 'true'">
+    <Error Code="SPAR120" File="$(MSBuildProjectFullPath)"
+           Text="SparTestedApplication is for test projects: set IsTestProject to true in this project, or reference '@(SparTestedApplication)' with a ProjectReference." />
+  </Target>
 
   <!--
     Source mode: Spar's own projects by reference. Their builds never see an app's variant or lane, so each is built
