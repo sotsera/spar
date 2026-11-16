@@ -9,8 +9,10 @@ namespace Spar.Sdk.Tasks.Client;
 internal readonly record struct SourceSpot(string File, int Line, int Column);
 
 /// <summary>
-/// The C# documentation of the project's own types, for the JSDoc of the generated modules. Types from referenced
-/// assemblies have none here. Keys are the generator's C# spellings (<c>global::App.Item</c>).
+/// The C# documentation of the project's types and of the libraries it lists in <c>SparContracts</c>, for the JSDoc of
+/// the generated modules. A library's comments come from the XML documentation file beside its assembly, when it has
+/// one (<see cref="ContractSource"/>); its types have no place in the project's source. Keys are the generator's C#
+/// spellings (<c>global::App.Item</c>).
 /// </summary>
 internal sealed class ClientDocs
 {
@@ -19,12 +21,22 @@ internal sealed class ClientDocs
     private readonly Dictionary<string, INamedTypeSymbol> _types = new(StringComparer.Ordinal);
     private readonly string _projectDirectory;
 
-    public ClientDocs(Compilation compilation, string projectDirectory)
+    public ClientDocs(Compilation compilation, string projectDirectory, IReadOnlyList<string> libraries)
     {
         _projectDirectory = projectDirectory;
         foreach (var type in ContractSource.AllTypes(compilation.Assembly.GlobalNamespace))
         {
             _types[type.ToDisplayString(KeyFormat)] = type;
+        }
+
+        // The project's own type keeps its name when a library declares one spelled the same.
+        var listed = new HashSet<string>(libraries, StringComparer.OrdinalIgnoreCase);
+        foreach (var library in compilation.SourceModule.ReferencedAssemblySymbols.Where(a => listed.Contains(a.Name)))
+        {
+            foreach (var type in ContractSource.AllTypes(library.GlobalNamespace))
+            {
+                _types.TryAdd(type.ToDisplayString(KeyFormat), type);
+            }
         }
     }
 

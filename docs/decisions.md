@@ -3259,3 +3259,12 @@ The open item of decision "Contracts from referenced libraries: the app opts in"
 - **Correction, found by the first build:** decision "SparTestedApplication: the test project names its app" said the tested app's libraries inherit `SparVariant=Test`. They did, and passed it on: the library and `Spar.csproj` were each built twice, with and without the variant, into one `obj/`, and the build failed with CS2012. A plain library keeps no folder per variant, and the variant means nothing to it. `Spar.Sdk` now removes `SparVariant` and `SparTestLane` from every project reference other than the tested app, transitive references included (target `SparPlainReferences`, after `_SplitProjectReferencesByFileExistence`, so no reference is even evaluated with them). Spar's own projects already removed both.
 - **Guarded by a build test:** `ReferenceBuildTests` builds `WireShapes.Tests` in the clean copy and requires each project's `CoreCompile` to be entered by one instance only. With the target disabled it fails, and the clean build hits CS2012 again.
 - **Found, not fixed:** a library's documentation comments do not reach its TypeScript module, because the client step loads referenced assemblies without their XML documentation files.
+
+## 2026-11-16, A listed library's comments reach its JSDoc (implementation record; at the user's request)
+
+The gap recorded in the previous entry, fixed at the user's request. Evidence: `docs/evidence/m1a-referenced-contracts.md`, "Follow-up 2026-11-16: a library's comments in its module".
+- **The rule:** a listed library's documentation comments come from the XML documentation file beside its assembly, as the compiler finds them; a library that writes none (`GenerateDocumentationFile`) gets modules without JSDoc. `docs/app-model.md` section 3.4 says so.
+- **Choices made while building, for review:**
+  - **Spar reads the file itself** (`XmlDocumentationFile`, a Roslyn `DocumentationProvider`), instead of referencing Roslyn's Workspaces assembly for its provider: the task would carry a large assembly for one small reader. It refuses DTDs, and an unreadable file documents nothing.
+  - **No new inputs for the client step:** turning a library's documentation file on or off rebuilds its DLL, which is already an input; observed: the step reran each time and was skipped on an unchanged build. The reference cache's key includes the documentation file, for a long-lived node.
+  - **Only the listed libraries' types are indexed for comments,** after the project's own, which keep a name both declare.

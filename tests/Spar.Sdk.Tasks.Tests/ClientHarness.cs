@@ -58,6 +58,29 @@ internal static class ClientHarness
         return new Library(name, MetadataReference.CreateFromImage(image.ToArray()));
     }
 
+    /// <summary>
+    /// A library written to <paramref name="folder"/> as a build leaves it, <c>Name.dll</c> and, when
+    /// <paramref name="documented"/>, its <c>Name.xml</c> beside it, and loaded by the client step's own reference code.
+    /// </summary>
+    public static Library WriteLibrary(string name, string source, string folder, bool documented)
+    {
+        var compilation = CSharpCompilation.Create(
+            name,
+            [CSharpSyntaxTree.ParseText(source, ParseOptions, path: $"{name}.cs")],
+            References.Value,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
+        Directory.CreateDirectory(folder);
+        var assembly = Path.Combine(folder, $"{name}.dll");
+        using (var image = File.Create(assembly))
+        using (var docs = documented ? File.Create(Path.ChangeExtension(assembly, ".xml")) : null)
+        {
+            var emitted = compilation.Emit(image, xmlDocumentationStream: docs, cancellationToken: TestContext.Current.CancellationToken);
+            Assert.True(emitted.Success, string.Join(Environment.NewLine, emitted.Diagnostics));
+        }
+
+        return new Library(name, ContractSource.Reference(new AbsolutePath(assembly)));
+    }
+
     /// <summary>The compiler's errors for <paramref name="source"/>, for a test that must start from valid C#.</summary>
     public static IReadOnlyList<string> Errors(string source) =>
         [.. Compile(source, DefaultProject).GetDiagnostics(TestContext.Current.CancellationToken)

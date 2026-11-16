@@ -31,7 +31,7 @@ internal sealed record ContractRead(IReadOnlyList<ClientContract> Contracts, IRe
 internal static class ContractSource
 {
     /// <summary>Metadata references by file identity, kept across builds in a long-lived MSBuild node or task host.</summary>
-    private static readonly ConcurrentDictionary<(string Path, DateTime Written, long Length), MetadataReference> ReferenceCache = new();
+    private static readonly ConcurrentDictionary<ReferenceKey, MetadataReference> ReferenceCache = new();
 
     public static ContractRead Read(ClientInputs inputs, CancellationToken cancellationToken) =>
         Read(Compile(inputs, cancellationToken), inputs.ProjectDirectory, inputs.Libraries, cancellationToken);
@@ -43,7 +43,7 @@ internal static class ContractSource
     public static ContractRead Read(CSharpCompilation compilation, string projectDirectory, IReadOnlyList<string> libraries, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var docs = new ClientDocs(compilation, projectDirectory);
+        var docs = new ClientDocs(compilation, projectDirectory, libraries);
         var found = ContractProblems.Find(compilation, libraries);
 
         var contracts = new List<ClientContract>(found.Valid.Count);
@@ -76,10 +76,20 @@ internal static class ContractSource
         return CSharpCompilation.Create("SparClient", trees, references, options);
     }
 
-    private static MetadataReference Reference(AbsolutePath path)
+    /// <summary>
+    /// The assembly with the XML documentation file beside it, as the compiler finds it, so a listed library's comments
+    /// reach the JSDoc. <see cref="XmlDocumentationFile"/> reads that file only when a symbol's documentation is asked for.
+    /// </summary>
+    internal static MetadataReference Reference(AbsolutePath path)
     {
         var file = new FileInfo(path);
-        return ReferenceCache.GetOrAdd((file.FullName, file.LastWriteTimeUtc, file.Length), key => MetadataReference.CreateFromFile(key.Path));
+        var docs = new FileInfo(Path.ChangeExtension(file.FullName, ".xml"));
+        var key = docs.Exists
+            ? new ReferenceKey(file.FullName, file.LastWriteTimeUtc, file.Length, docs.LastWriteTimeUtc, docs.Length)
+            : new ReferenceKey(file.FullName, file.LastWriteTimeUtc, file.Length, default, -1);
+        return ReferenceCache.GetOrAdd(key, static (key, docs) => MetadataReference.CreateFromFile(
+            key.Path,
+            documentation: docs.Exists ? new XmlDocumentationFile(docs.FullName) : null), docs);
     }
 
     internal static IEnumerable<INamedTypeSymbol> AllTypes(INamespaceSymbol root)
@@ -114,4 +124,7 @@ internal static class ContractSource
 
     private static string RelativePath(string projectDirectory, string file) =>
         file.Length == 0 ? "" : Path.GetRelativePath(projectDirectory, file).Replace('\\', '/');
+
+    /// <summary>A reference's identity: the assembly file and its documentation file, either of which may change.</summary>
+    private readonly record struct ReferenceKey(string Path, DateTime Written, long Length, DateTime DocsWritten, long DocsLength);
 }

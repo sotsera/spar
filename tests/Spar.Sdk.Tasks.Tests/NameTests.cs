@@ -178,6 +178,51 @@ public sealed class NameTests
         Assert.Contains("import { readJob, writeJob } from \"./shared.js\";", files["queue.js"], StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void A_listed_librarys_comments_come_from_the_documentation_file_beside_it(bool documented)
+    {
+        const string Library = """
+            using System.Threading.Tasks;
+            using Spar;
+
+            namespace Lib;
+
+            /// <summary>A job in the queue.</summary>
+            /// <param name="Name">What the job is called.</param>
+            public sealed record Job(string Name);
+
+            /// <summary>Hands out jobs.</summary>
+            [SparContract]
+            public sealed class JobsService
+            {
+                /// <summary>The job with this <c>id</c>.</summary>
+                [SparCommand]
+                public Task<Job> GetAsync(string id) => Task.FromResult(new Job(id));
+            }
+            """;
+        var folder = Repository.Scratch("library-docs");
+        try
+        {
+            var library = ClientHarness.WriteLibrary("Lib", Library, folder, documented);
+
+            var jobs = ClientHarness.Emit("", library)["jobs.d.ts"];
+
+            string[] comments =
+            [
+                "/** A job in the queue. */\nexport interface Job {\n  /** What the job is called. */\n  readonly name: string;",
+                "/** Hands out jobs. Wire name: jobs. */",
+                "  /** The job with this `id`. */\n  readonly get:",
+            ];
+            Assert.All(comments, comment => Assert.Equal(documented, jobs.Contains(comment, StringComparison.Ordinal)));
+        }
+        finally
+        {
+            Directory.Delete(folder, recursive: true);
+        }
+    }
+
     [Fact]
     public void Every_SDK_import_is_a_name_no_type_may_take()
     {

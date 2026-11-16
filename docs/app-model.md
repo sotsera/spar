@@ -338,7 +338,7 @@ public interface IConnections
   </ItemGroup>
   ```
 
-  A referenced library that is not listed adds nothing to what the page can call, even when it declares contracts.
+  A referenced library that is not listed adds nothing to what the page can call, even when it declares contracts. The library's documentation comments become its module's JSDoc when the library writes its XML documentation file (`<GenerateDocumentationFile>true</GenerateDocumentationFile>` in its project), as the app's own comments do.
 - A contract name cannot be a JavaScript reserved word or a subpath that `@spar/app` uses itself, such as `sdk`, `vite` or `windows` (plan section 2, "Names"). An `ExportService` would be named `export`, so the export contract in 3.6 is `CsvExportService`, named `csvExport`.
 
 ### 3.5 Native services: the tray

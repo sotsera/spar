@@ -71,7 +71,7 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 
 ## Output
 
-- **Readable as hand-written code:** consistent indentation, blank lines between members and steps, no one-line blobs, stable order, C# docs carried into XML docs and JSDoc, a header naming the source, small named helpers, shared logic in the runtime or SDK. Snapshot tests review it.
+- **Readable as hand-written code:** consistent indentation, blank lines between members and steps, no one-line blobs, stable order, C# docs carried into XML docs and JSDoc (a listed library's from the `.xml` beside its assembly, read by `XmlDocumentationFile`, since the task does not reference Roslyn's Workspaces), a header naming the source, small named helpers, shared logic in the runtime or SDK. Snapshot tests review it.
 - **`\n` line endings only,** never `AppendLine` or `Environment.NewLine`.
 - **Write only on change,** delete only owned outputs (`spar-msbuild`), and fix output in its generator.
 - **The parsers use the Roslyn they reference;** a contract in syntax it does not know is skipped without a diagnostic. Raise it with the supported C# version (pitfalls, "Build, MSBuild and packages").

@@ -60,5 +60,28 @@ The first build of `WireShapes.Tests` failed with CS2012 on `src/Spar/obj/Debug/
 
 ### Not covered
 
-- **A library's documentation comments do not reach its TypeScript module:** the client step loads referenced assemblies without their XML documentation files (`MetadataReference.CreateFromFile` with no documentation provider), so `ledger.d.ts` has no JSDoc even when the library writes its `.xml`. The app's own contracts are not affected.
+- **A library's documentation comments did not reach its TypeScript module (fixed the same day, below):** the client step loads referenced assemblies without their XML documentation files (`MetadataReference.CreateFromFile` with no documentation provider), so `ledger.d.ts` has no JSDoc even when the library writes its `.xml`. The app's own contracts are not affected.
 - A library from a package, a library with an interface contract implemented in the app, Linux, CI.
+
+## Follow-up 2026-11-16: a library's comments in its module
+
+Decision: "A listed library's comments reach its JSDoc".
+
+| Path | Contents |
+|---|---|
+| `src/Spar.Sdk.Tasks/Client/XmlDocumentationFile.cs` | A Roslyn `DocumentationProvider` over the `.xml` the compiler writes beside an assembly: each `<member>` by its documentation id, read on the first request, DTDs refused, an unreadable file documenting nothing. Roslyn's own provider is in its Workspaces assembly, which the task does not reference. |
+| `src/Spar.Sdk.Tasks/Client/ContractSource.cs` | Each reference is loaded with the documentation file beside it when there is one; the reference cache's key includes that file's time and length. |
+| `src/Spar.Sdk.Tasks/Client/ClientDocs.cs` | Indexes the types of the listed libraries after the project's own (the project's keep a clashing name), so their summaries and record `<param>`s are found. They have no source place, so declaration maps are unchanged. |
+| `tests/Spar.Sdk.Tasks.Tests/NameTests.cs` | A library written to disk with and without its `.xml`, loaded through the step's own reference code: with it, the record, its property, the contract and the command carry their comments; without it, none. `ClientHarness.WriteLibrary` writes it. |
+| `tests/apps/WireShapes.Library` | Sets `GenerateDocumentationFile`, so `ledger.d.ts` carries its comments in a real build. |
+
+### Results (observed, Windows 11)
+
+| Check | Result |
+|---|---|
+| The new test | 2 of 2; removing either half (the provider, or the library types in the index) fails the documented case |
+| `ledger.d.ts` from a real build | the record, the error type, its case, the contract and both commands carry the library's summaries |
+| Turning the library's documentation file off, then on, then an unchanged build | the client step reran (the library's DLL is rebuilt either way) and dropped, then restored, the comments; the unchanged build skipped it |
+| `dotnet test --solution Spar.slnx` | 360 of 360 (`Spar.Sdk.Tasks.Tests` 56 of 56 again after a final tidy) |
+| `Spar.BuildTests` | 6 of 6 |
+| `-mt` build, size check | clean; 204 source files |
