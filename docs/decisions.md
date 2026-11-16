@@ -3395,3 +3395,7 @@ The last open M1a exit item: the Notebook's contracts through the TypeScript SDK
   - **Each script replaces the last** for its command and holds for every later call; there is no queue of answers. `answer` covers per-call behaviour and delays.
   - **Not built:** stream and subscription scripts (with streams, M3), host events, a scripted closed channel, and the framework notes of plan section 5.
 - **Checked on Windows:** the SDK 160 of 160 with its checks on TypeScript 6 and 7; `dotnet test` 430 of 430 (the client step 62, the documentation check with 27 blocks); the Notebook's page tests 7 of 7, about 25 ms of test time; the NativeAOT lane 158, 79 and 12 with no warnings; `-mt` clean; build tests 6 of 6, the Production page check included; package tests 10 of 10; the size check clean (226 files).
+
+## 2026-11-16, Page tests on Linux (evidence)
+
+Follow-up to "Page tests: @spar/app/testing": the CI lane in WSL (Ubuntu 24.04), on a fresh clone of 7eb0449, in CI's order: the size check, the TypeScript SDK's checks and tests, the build with no warnings, `dotnet test` 430 of 430, the new `pagetests` step (the Notebook's 7 page tests), the NativeAOT lane (Spar.Tests, WireShapes.Tests 79, Notebook.Tests 12) and `-mt`, every step exiting 0. Not run on Linux: the build tests and the package tests.
