@@ -1,5 +1,5 @@
-# Spar CI (decision "CI on GitHub Actions"). Prepared before the repository exists; first run on the first push.
-# Before that push: pin every action to a full commit SHA (supply-chain default), and check that the window tests
+# Spar CI (decision "CI on GitHub Actions"). Every action is pinned to a full commit SHA, its release in a comment
+# (supply-chain default); update them on purpose, never by tag. Before the window tests arrive (M1b), check that they
 # can run on the hosted Windows runner (it may need a self-hosted one with a desktop session).
 name: ci
 
@@ -32,11 +32,11 @@ jobs:
         os: [windows-latest, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           global-json-file: global.json
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
 
@@ -101,7 +101,7 @@ jobs:
 
       - name: Test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: test-results-${{ matrix.os }}
           path: artifacts/test-results/
