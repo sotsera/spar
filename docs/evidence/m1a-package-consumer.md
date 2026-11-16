@@ -75,3 +75,18 @@ A run took 2 min 33 s where the one before took 49.5 s. The package tests now wr
 - **Ruled out first:** the version lists alone aged (refetched, run 52.7 s); a Defender signature update (the slow run was not the first after it); the packs rebuilding after a runtime change (a touched source file left each pack at 1.2–2.2 s); a Defender scan (the only one that day was 11:38–11:40).
 - **The change (user, 2026-11-16):** one package folder, `nuget-packages`, shared by every run under the tests' base folder and still apart from the user's. Spar's own packages cannot go stale in it: each run packs versions no run has used, and deletes the earlier runs' `spar` and `spar.*` folders when it starts. Checked: a run filled the folder (53.8 s); the next, with the whole HTTP cache aged by two hours, took 46.8 s, downloaded nothing, and left only its own two Spar versions. The folder holds 1.4 GB extracted.
 - **Not covered:** two package-test runs at once would delete each other's Spar packages; the tests run one at a time.
+
+## Follow-up, 2026-11-16: a consumer with central package management
+
+Decision: "Spar.Sdk's own package references are implicit, the test framework included".
+
+- **What was added:** a second consumer beside the first, `Central Äpp`, from the same feed: the same app (its page in `ui/`) and test project, under a `Directory.Packages.props` with `ManagePackageVersionsCentrally` and `CentralPackageTransitivePinningEnabled`, which pins `Microsoft.Extensions.DependencyInjection`, a package Spar itself uses, at the version Spar was built with. `tests/Spar.PackageTests/CentralPackageTests.cs` builds and runs its tests, checks the pin in the app's restore, and restores the NativeAOT lane.
+- **Found:** the first run failed restore with `error NU1008: The following PackageReference items cannot define a value for Version: xunit.v3`. Spar.Sdk gave the test framework its version without marking the reference implicit, as it already did for Spar's own packages. Marked implicit, the consumer built and its test passed.
+
+| Check | Result |
+|---|---|
+| `CentralPackageTests` | 2 of 2: the tests pass, the app's assets list `Microsoft.Extensions.DependencyInjection/11.0.0`, the lane's assets list `xunit.v3.aot` |
+| `dotnet test --project tests/Spar.PackageTests` | 9 of 9, 46 s, both consumers |
+| `dotnet test --solution Spar.slnx` | 363 of 363 |
+
+- **Not covered:** a pin that differs from the version Spar was built with (lower or higher; neither was tried); the end-to-end project under central package management (its `Microsoft.Playwright` reference is the app's own, so it needs a `PackageVersion` like any other); Linux; CI.

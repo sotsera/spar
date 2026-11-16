@@ -3281,3 +3281,10 @@ The three M1a budgets still open in the plan's "Provisional budgets" table, meas
   - **They record and do not assert:** median, range and count go to `artifacts/test-results/<project>/budgets.txt` with the configuration and runtime, like the no-op build time in the build tests. A slow machine never fails the suite; a missed budget is found when the slice exit reads the file.
   - **The Notebook's own journeys are recorded for reference, not compared:** they do much more than the budget's journey (dialogs, autosave, a second window, screenshots) and took 191 ms to 1.74 s in Release. Whether the browser budget should also be set on a Notebook journey is left to the M1b budget review.
 - **Found and fixed:** the NativeAOT test lane built self-contained into the same `bin/Production/Release/` as the CoreCLR Release build, and its `hostfxr.dll` stopped that build from starting. The lane now builds into `bin/aot/`, beside its `obj/aot/` (`Sdk.props`).
+
+## 2026-11-16, Spar.Sdk's own package references are implicit, the test framework included (implementation record; one fix)
+
+The open item from the package layout (`spar-msbuild` skill: "untested with a central-package-management consumer"). Evidence: `docs/evidence/m1a-package-consumer.md`, "Follow-up, 2026-11-16: a consumer with central package management".
+- **Built:** a second package-only consumer whose solution manages package versions centrally, with transitive pinning and a pin of a package Spar uses. Its tests build and pass, the pin holds, and the NativeAOT lane restores.
+- **Fixed:** Spar.Sdk set the version of `xunit.v3` and `xunit.v3.aot` in package mode without marking the references implicit, so such a consumer failed restore with NU1008. They are now `IsImplicitlyDefined="true"`, like `Spar`, `Spar.Testing` and `Spar.Testing.Browser`.
+- **What this keeps:** the SDK owns the test framework's version, as before; the app's `Directory.Packages.props` needs no entry for it and cannot move it. The teardown hook is compiled against that version, so letting an app choose it would need a compatibility range of its own; not proposed.

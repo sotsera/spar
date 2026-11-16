@@ -37,6 +37,9 @@ public sealed class Consumer : IAsyncLifetime
     /// <summary>The consumer's own folder; a space and non-ASCII letters, as a user's documents folder can have.</summary>
     public string Root => Path.Combine(RunRoot, "Nötes Äpp");
 
+    /// <summary>A second consumer of the same packages, whose solution manages package versions centrally.</summary>
+    public string CentralRoot => Path.Combine(RunRoot, "Central Äpp");
+
     public string Feed => Path.Combine(RunRoot, "feed");
 
     /// <summary>The first version packed; the consumer starts on it.</summary>
@@ -83,6 +86,8 @@ public sealed class Consumer : IAsyncLifetime
         Assert.Equal(before, await WorkingTreeAsync());
         var page = Path.Combine(Repository, "tests", "Spar.PackageTests", "consumer-ui");
         ConsumerFiles.Write(Root, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Playwright"));
+        Directory.CreateDirectory(CentralRoot);
+        ConsumerFiles.WriteCentral(CentralRoot, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Extensions.DependencyInjection"));
     }
 
     public ValueTask DisposeAsync()
@@ -116,6 +121,10 @@ public sealed class Consumer : IAsyncLifetime
     public void UseSdk(string version) => ConsumerFiles.WriteGlobalJson(Root, version, RepositorySdkVersion());
 
     /// <summary>Runs <c>dotnet</c> in the consumer with its isolated environment, from <paramref name="directory"/> (relative to the root).</summary>
+    /// <summary>Runs <c>dotnet</c> in the central-package-management consumer, from <paramref name="directory"/>.</summary>
+    public Task<(int Exit, string Output)> CentralDotnetAsync(string directory, params string[] arguments) =>
+        Tool.RunAsync(Path.Combine(CentralRoot, directory), "dotnet", arguments, Environment);
+
     public Task<(int Exit, string Output)> DotnetAsync(string directory, params string[] arguments) =>
         Tool.RunAsync(Path.Combine(Root, directory), "dotnet", arguments, Environment);
 

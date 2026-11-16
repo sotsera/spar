@@ -19,6 +19,32 @@ internal static class ConsumerFiles
         WriteEndToEndTests(Path.Combine(root, "App.EndToEndTests"), playwrightVersion);
     }
 
+    /// <summary>
+    /// The same app and test project in a folder that manages package versions centrally, as many solutions do: a
+    /// <c>Directory.Packages.props</c> with transitive pinning, which pins a package Spar itself uses.
+    /// </summary>
+    public static void WriteCentral(string root, string feed, string sparVersion, string dotnetSdk, string page, string pinnedVersion)
+    {
+        WriteGlobalJson(root, sparVersion, dotnetSdk);
+        File.WriteAllText(Path.Combine(root, "nuget.config"), NugetConfig(feed));
+        File.WriteAllText(Path.Combine(root, "Directory.Packages.props"), $$"""
+            <Project>
+              <PropertyGroup>
+                <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+                <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+              </PropertyGroup>
+
+              <ItemGroup>
+                <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="{{pinnedVersion}}" />
+              </ItemGroup>
+            </Project>
+
+            """);
+        WriteApp(Path.Combine(root, "App"));
+        CopyFolder(page, Path.Combine(root, "App", "ui"));
+        WriteTests(Path.Combine(root, "App.Tests"));
+    }
+
     /// <summary>The .NET SDK the repository uses, and the Spar.Sdk version the project files resolve.</summary>
     public static void WriteGlobalJson(string root, string sparVersion, string dotnetSdk) =>
         File.WriteAllText(Path.Combine(root, "global.json"), $$"""

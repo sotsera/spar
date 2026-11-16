@@ -426,8 +426,13 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <!-- In package mode the SDK gives the version, written when it was packed; in this repository central package management does. -->
+  <!--
+    In package mode the SDK gives the version, written when it was packed, and the reference is the SDK's own, like
+    Spar's packages: implicit, so an app whose solution manages package versions centrally does not fail with NU1008
+    (a version on a PackageReference) and needs no PackageVersion for it. In this repository central package management
+    gives the version.
+  -->
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' != 'true'">
-    <PackageReference Update="xunit.v3;xunit.v3.aot" Version="$(SparXunitVersion)" />
+    <PackageReference Update="xunit.v3;xunit.v3.aot" Version="$(SparXunitVersion)" IsImplicitlyDefined="true" />
   </ItemGroup>
 </Project>
