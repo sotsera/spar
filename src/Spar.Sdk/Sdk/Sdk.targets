@@ -126,7 +126,7 @@
     <SparContractSnapshot Condition="'$(SparContractSnapshot)' == ''">Update</SparContractSnapshot>
     <SparClientInventory>$(IntermediateOutputPath)spar-client.inventory</SparClientInventory>
     <SparClientStamp>$(IntermediateOutputPath)spar-client.stamp</SparClientStamp>
-    <!-- The generated package carries the SDK's version (plan section 1: an input of the client step); 0.0.0 from source. -->
+    <!-- The SDK's version, an input of the client step (plan section 1), in the package's sparSdk field; 0.0.0 from source. -->
     <SparClientVersion Condition="'$(SparSdkVersion)' != ''">$(SparSdkVersion)</SparClientVersion>
     <SparClientVersion Condition="'$(SparClientVersion)' == ''">0.0.0</SparClientVersion>
   </PropertyGroup>
@@ -189,7 +189,7 @@
                 ProjectName="$(MSBuildProjectName)"
                 SnapshotFile="$(SparContractSnapshotExpected)"
                 ContractAssemblies="$(SparContractAssemblies)"
-                Version="$(SparClientVersion)"
+                SdkVersion="$(SparClientVersion)"
                 ProjectFile="$(MSBuildProjectFullPath)" />
 
     <Touch Files="$(SparClientStamp)" AlwaysCreate="true" />

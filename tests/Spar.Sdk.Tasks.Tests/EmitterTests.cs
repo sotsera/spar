@@ -12,7 +12,8 @@ public sealed class EmitterTests
             ["orders.d.ts", "orders.d.ts.map", "orders.js", "package.json", "shared.d.ts", "shared.d.ts.map", "shared.js", "spar.d.ts", "spar.js", "stock.d.ts", "stock.d.ts.map", "stock.js"],
             files.Keys);
         Assert.Contains("\"./orders\": {\n      \"types\": \"./orders.d.ts\",\n      \"default\": \"./orders.js\"\n    }", files["package.json"], StringComparison.Ordinal);
-        Assert.Contains("\"version\": \"1.2.3\"", files["package.json"], StringComparison.Ordinal);
+        Assert.Contains("\"version\": \"0.0.0\"", files["package.json"], StringComparison.Ordinal);
+        Assert.Contains("\"sparSdk\": \"1.2.3\"", files["package.json"], StringComparison.Ordinal);
         Assert.DoesNotContain("\"./shared\"", files["package.json"], StringComparison.Ordinal);
         Assert.Matches("export const fingerprint = \"[0-9a-f]{16}\";", files["spar.js"]);
     }

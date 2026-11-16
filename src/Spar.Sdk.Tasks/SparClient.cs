@@ -52,8 +52,8 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
     [Required]
     public string SdkSourceDirectory { get; set; } = "";
 
-    /// <summary>The package's version: the SDK's.</summary>
-    public string Version { get; set; } = "0.0.0";
+    /// <summary>The version of Spar.Sdk that generates the package, written as its <c>sparSdk</c> field.</summary>
+    public string SdkVersion { get; set; } = "0.0.0";
 
     /// <summary>The project's name, for the snapshot's header.</summary>
     [Required]
@@ -111,7 +111,7 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
         var output = TaskEnvironment.GetAbsolutePath(OutputDirectory);
         Directory.CreateDirectory(output);
         var sourcePrefix = Path.GetRelativePath(output, project).Replace('\\', '/') + "/";
-        var files = ClientPackage.Files(layout, sdk, sdkSources, Version, sourcePrefix);
+        var files = ClientPackage.Files(layout, sdk, sdkSources, SdkVersion, sourcePrefix);
         // The app's variants build at the same time and share this folder, which the frontend's package.json names.
         var leasePath = new AbsolutePath(Path.TrimEndingDirectorySeparator(output.Value) + ".lease");
         using var lease = FileLease.Acquire(leasePath, Log, "Spar: waiting for another build to finish writing the client.");
