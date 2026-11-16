@@ -1311,6 +1311,75 @@ export function AppTitleBar({ onSearch }: { readonly onSearch: (text: string) =>
 - **The layout** is posted to the host by the SDK whenever it changes. The host hit-tests from that cache (plan 3, "Title bar drawn by the page").
 - **Window state:** the SDK sets `data-spar-window="maximized"` or `"normal"` on `<html>`, so CSS can swap the maximise and restore icon.
 
+### 6.10 Page tests
+
+**Decided** (decision "Page tests: @spar/app/testing"). Page code is tested in Node with Vitest, against a fake backend from `@spar/app/testing`. Each test scripts the commands it uses, then checks what the page made of the answers and what it sent. The real engine is covered by the browser tests of the end-to-end project.
+
+File `frontend/src/copy.test.ts`:
+
+```ts
+import { expect, test } from "vitest";
+import { copyJobs } from "@spar/app/copyJobs";
+import { fakeSpar } from "@spar/app/testing";
+import { planCopy, runCopy } from "./copy.js";
+
+const recipe = { source: "prod", target: "test", tables: ["dbo.Orders"] };
+
+test("a plan reports its tables and rows", async () => {
+  // Each test makes its own fake backend, connected in place of the host.
+  const spar = fakeSpar();
+  spar.on(copyJobs.plan).succeed({ planId: "p1", steps: [{ table: "dbo.Orders", estimatedRows: 1200n }] });
+
+  expect(await planCopy(recipe, new AbortController().signal)).toBe("1 tables, about 1200 rows");
+  // What the page sent, read back from the wire as typed values.
+  expect(spar.calls(copyJobs.plan)).toEqual([recipe]);
+});
+
+test("a declared error is handled by name", async () => {
+  fakeSpar().on(copyJobs.run).fail("targetNotEmpty", { table: "dbo.Orders", rows: 3n });
+
+  expect(await runCopy("p1")).toBe("dbo.Orders already has 3 rows");
+});
+
+test("a lost connection leaves the outcome unknown", async () => {
+  fakeSpar().on(copyJobs.run).failWith({ kind: "transport", code: "lost", execution: "unknown" });
+
+  expect(await runCopy("p1")).toBe("Outcome unknown: check the target before retrying");
+});
+
+test("an aborted plan ends as cancelled", async () => {
+  const spar = fakeSpar();
+  spar.on(copyJobs.plan).hang();
+  const abort = new AbortController();
+
+  const planned = planCopy(recipe, abort.signal);
+  abort.abort();
+
+  // planCopy handles only `unavailable` failures; `cancelled` goes to onFailure, and the result is undefined.
+  expect(await planned).toBeUndefined();
+});
+
+test("an answer can depend on the request", async () => {
+  fakeSpar().on(copyJobs.run).answer((request, reply) =>
+    request.truncateTarget
+      ? reply.succeed({ tables: 1, rows: 10n, elapsed: "00:00:01" })
+      : reply.fail("targetNotEmpty", { table: "dbo.Orders", rows: 3n }));
+
+  expect(await runCopy("p1")).toBe("dbo.Orders already has 3 rows");
+});
+```
+
+- **Scripting:** `spar.on(<command>)` takes the generated command itself, so a misspelled command, a value of the wrong type or a case the command does not declare fails `tsc`. Each script replaces the last one for that command and holds for every later call.
+  - `succeed(value)`: no argument for a command without a value.
+  - `fail(case, payload)`: no payload for a case without one.
+  - `failWith({ kind, code, execution })`: an infrastructure failure, as a host reports it.
+  - `hang()`: the call never answers. Aborting it cancels it, and the fake backend confirms `cancelled` / `stopped`.
+  - `answer((request, reply) => …)`: decides per call. It may wait, so a test can check what the page shows while a call is on its way.
+- **On the wire:** the fake backend speaks the real bridge protocol to the page's own connection. Scripted values and the requests `spar.calls` returns cross the same generated encoders and decoders as with a real host, so `bigint`, bytes, enums and `null` behave as they will in the app. A value the encoder refuses (NaN, for example) ends the call as a real host would: `response` / `serialization`.
+- **A command no test scripted** is refused (`rejected` / `unknown-command`), with a console error naming it.
+- **`fakeSpar()` resets `configureSpar`'s hooks**, so every test starts from the defaults. A test of the hooks configures them after `fakeSpar()`.
+- **Production bundles never contain it:** nothing in the app imports `@spar/app/testing`, and the build drops the generated code only it uses.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**

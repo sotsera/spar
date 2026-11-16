@@ -24,7 +24,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 |---|---|---|---|---|
 | 1 | Unit | Services called directly | µs | `MyApp.Tests` |
 | 2 | Command | Surface `None`: commands through real serialization and dispatch, with typed C# test clients generated per contract | 0.2–0.6 ms per app start | `MyApp.Tests` |
-| 3 | Page | The page code under Vitest against `@spar/app/testing`'s fake transport | ms | the frontend (issue B) |
+| 3 | Page | The page code under Vitest in Node against `@spar/app/testing`'s fake backend | ms | the frontend (decision "Page tests: @spar/app/testing") |
 | 4 | Browser | Surface `Browser`: the page in Chromium over in-process loopback, one browser per test run and a context per test (Playwright, CoreCLR only) | 97–144 ms per test | `MyApp.EndToEndTests` |
 | 5 | Window | Surface `Window`: the app's real WebView2 or WebKitGTK window on the test process's UI thread, shown offscreen and never activated | 466–472 ms (Windows), 297–301 ms (Linux) per test | `MyApp.EndToEndTests` |
 | 6 | Real resources | Any of levels 2, 4 or 5 with the external dependency allowed and a disposable real service (a SQL Server container through Aspire's test builder or Testcontainers) | the container's start | `MyApp.EndToEndTests` |
@@ -59,7 +59,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 |---|---|---|---|---|---|---|---|
 | 1 | C# unit | App, Spar | Services and domain rules, called directly | xUnit | µs–ms | Nothing special; a `Result` reads with `switch` or `Assert` | |
 | 2 | Command | App, Spar | A command through real serialization and dispatch, services replaced, no window | The test host, surface `None` | 0.2–0.6 ms per app | The test host, generated typed test clients | |
-| 3 | Page | App, Spar | Page code against a fake backend: errors, failures, cancellation, stream events | Vitest/Node or a real browser | ms | `@spar/app/testing`: fake transport, `Result` factories | ⚠ B |
+| 3 | Page | App, Spar | Page code against a fake backend: errors, failures, cancellation, stream events | Vitest in Node (happy-dom for components) | ms | `@spar/app/testing`: `fakeSpar`, scripts per command, typed replies | |
 | 4 | Browser | App, Spar | Real backend and page together, Chromium via Playwright over in-process loopback | The test host, surface `Browser` | 97–144 ms | The surface, a shared browser fixture, locators | |
 | 5 | Window | App, Spar | The real window (WebView2, WebKitGTK under Xvfb): selectors, input, screenshots | The test host, surface `Window` | 0.3–0.5 s | Page evaluation, `WaitForUiReady`, selectors, input, screenshots, scenes, fixed clock | ⚠ D, L |
 | 6 | Integration with real resources | App | The app against disposable real services (a SQL Server container) | Levels 2, 4 or 5 plus Aspire's test builder or Testcontainers | 42–48 s per run (`spikes/aspire`) | The external-dependency allowance; values passed as options | ⚠ E |
@@ -80,7 +80,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 
 **Open issues** (to investigate further, with spikes where needed):
 - **A. The managed level's form:** answered by the test strategy (2026-11-15).
-- **B. Where page tests run.** In Node with Vitest, in a real engine, or both. Also whether the fake transport behaves closely enough to the real bridge.
+- **B. Where page tests run:** answered 2026-11-16 (decision "Page tests: @spar/app/testing"): in Node with Vitest; the real engine is level 4. The fake backend speaks the real protocol, so values cross the generated encoders and decoders as with a real host.
 - **C. Replacing services in end-to-end tests:** answered by the test strategy (2026-11-15) for levels 2 to 6; level 7 replaces nothing by design.
 - **D. Window specifics.**
   - Trusted input in the in-process window (CDP `Input.*` on Windows, XTEST with `GDK_BACKEND=x11` on Linux, decision "Trusted input in Linux desktop tests: XTEST"): untested in-process; the spike used synthetic DOM events. Spike before M1b.
@@ -125,11 +125,11 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
   - the window surface: page evaluation, `WaitForUiReady`, tree and selectors, input, screenshots, scenes and the fixed clock shared with `spar snap`;
   - the black-box fixture: start, a ready signal, kill with the parent and after a deadline, output capture, the exit code, an app path that also works from a publish folder;
   - the fixture rules (RR): assertion, capture and teardown failures are reported together, unresolved cleanup is not a pass, an empty test selection fails, and skips are explicit.
-- **`@spar/app/testing`** for pages:
-  - the scripted fake transport (success, declared error, failure, hang, delays, stream events, abort semantics, a call log);
-  - `Result` factories for test doubles;
-  - a reset for `configureSpar` state;
-  - framework notes for React StrictMode, Angular zones and `OnPush`, Vue scope disposal, and TanStack `retry: false`.
+- **`@spar/app/testing`** for pages (built for unary calls; decision "Page tests: @spar/app/testing"; `docs/app-model.md` section 6.10):
+  - `fakeSpar()`: a fake backend that speaks the real protocol to the page's connection, with a script per command (`succeed`, `fail`, `failWith`, `hang`, `answer` with typed replies, delays through `answer`), abort semantics (a hanging call is confirmed `cancelled` / `stopped`), and a call log read back from the wire (`calls`);
+  - a reset of `configureSpar`'s hooks, by `fakeSpar()` itself;
+  - stream events and subscriptions, with streams in M3;
+  - framework notes for React StrictMode, Angular zones and `OnPush`, Vue scope disposal, and TanStack `retry: false` (not written yet).
 - **Template defaults:** the two test projects; results under `obj/`; a `Browser` and a `Window` trait so CI can run them as their own invocations; `CaptureConsole`, with xUnit1051 as an error; `TestContext.Current.CancellationToken`; the NativeAOT lane as a publish of `MyApp.Tests`.
 - **Shared infrastructure** (used by both Spar's tests and the app-facing kit):
   - **Profiles:** under the test data root, created with identical options, with a bounded wait for `BrowserProcessExited` before a folder is deleted, and cleanup of folders left by crashed runs only when no process uses them (issue I).

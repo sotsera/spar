@@ -44,7 +44,7 @@ internal static class TypeScriptTwin
         var imported = layout.Imported(contract).ToList();
         if (imported.Count > 0)
         {
-            var functions = imported.SelectMany(t => t.Error is not null ? [ClientNames.Reader(t.Name)] : new[] { ClientNames.Reader(t.Name), ClientNames.Writer(t.Name) });
+            var functions = imported.SelectMany(t => new[] { ClientNames.Reader(t.Name), ClientNames.Writer(t.Name) });
             var names = string.Join(", ", imported.Select(t => t.Name));
             ts.Append($"import {{ {string.Join(", ", functions)} }} from \"./shared.js\";\n")
                 .Append($"import type {{ {names} }} from \"./shared.js\";\n")
@@ -67,7 +67,36 @@ internal static class TypeScriptTwin
         }
 
         ContractObject(ts, layout, contract);
+        TestingTable(ts, layout, contract);
         return ts.ToString();
+    }
+
+    /// <summary>What @spar/app/testing reads: typed here, so tsc checks each reader and writer against its command.</summary>
+    private static void TestingTable(StringBuilder ts, ClientLayout layout, ClientContract contract)
+    {
+        ts.Append("export const __sparTesting = {\n");
+        foreach (var command in contract.Model.Commands)
+        {
+            ts.Append($"  {LiteralKey(command.WireName)}: {{ contract: {TypeScriptNames.Literal(contract.Model.WireName)}, command: {TypeScriptNames.Literal(command.WireName)}, ");
+            if (command.Request is not null)
+            {
+                ts.Append($"request: (json: string): {TypeOf(layout, command.Request)} => {Read(layout, command.Request, "JSON.parse(json)", 0)}, ");
+            }
+
+            if (command.Value is not null)
+            {
+                ts.Append($"value: (value: {TypeOf(layout, command.Value)}): string => {Write(layout, command.Value, "value", 0)}, ");
+            }
+
+            if (command.ErrorKey is not null)
+            {
+                ts.Append($"error: {ClientNames.Writer(layout.Type(command.ErrorKey).Name)}, ");
+            }
+
+            ts.Append("},\n");
+        }
+
+        ts.Append("};\n");
     }
 
     private static string Shared(ClientLayout layout)
@@ -136,6 +165,25 @@ internal static class TypeScriptTwin
         }
 
         ts.Append("    default: return unknownErrorCase;\n  }\n}\n");
+
+        // The writer the fake backend of page tests uses: each case's payload typed as that case.
+        ts.Append($"{export}function {ClientNames.Writer(type.Name)}(code: string, value: unknown): string {{\n  switch (code) {{\n");
+        foreach (var @case in error.Cases)
+        {
+            var code = TypeScriptNames.Literal(@case.Code);
+            if (@case.Properties.Length == 0)
+            {
+                ts.Append($"    case {code}: return wire.writeObject([wire.member(\"code\", wire.writeString(code))]);\n");
+                continue;
+            }
+
+            var members = string.Concat(@case.Properties.Select(p =>
+                $"wire.member({TypeScriptNames.Literal(p.JsonName)}, {Write(layout, p.Type, Access("payload", p.JsonName), 0)}), "));
+            ts.Append($"    case {code}: {{ const payload = value as {type.Name}[{code}]; ")
+                .Append($"return wire.writeObject([wire.member(\"code\", wire.writeString(code)), {members}]); }}\n");
+        }
+
+        ts.Append($"    default: return wire.refusedMember(code, {TypeScriptNames.Literal(type.Name)});\n  }}\n}}\n");
     }
 
     private static void ContractObject(StringBuilder ts, ClientLayout layout, ClientContract contract)

@@ -9,12 +9,15 @@ public sealed class EmitterTests
         var files = ClientHarness.Emit(Fixtures.Shop);
 
         Assert.Equal(
-            ["orders.d.ts", "orders.d.ts.map", "orders.js", "package.json", "shared.d.ts", "shared.d.ts.map", "shared.js", "spar.d.ts", "spar.js", "stock.d.ts", "stock.d.ts.map", "stock.js"],
+            ["orders.d.ts", "orders.d.ts.map", "orders.js", "package.json", "shared.d.ts", "shared.d.ts.map", "shared.js", "spar.d.ts", "spar.js", "stock.d.ts", "stock.d.ts.map", "stock.js", "testing.d.ts", "testing.js"],
             files.Keys);
         Assert.Contains("\"./orders\": {\n      \"types\": \"./orders.d.ts\",\n      \"default\": \"./orders.js\"\n    }", files["package.json"], StringComparison.Ordinal);
         Assert.Contains("\"version\": \"0.0.0\"", files["package.json"], StringComparison.Ordinal);
         Assert.Contains("\"sparSdk\": \"1.2.3\"", files["package.json"], StringComparison.Ordinal);
         Assert.DoesNotContain("\"./shared\"", files["package.json"], StringComparison.Ordinal);
+        Assert.Contains("\"./testing\": {\n      \"types\": \"./testing.d.ts\",\n      \"default\": \"./testing.js\"\n    }", files["package.json"], StringComparison.Ordinal);
+        Assert.Contains("import * as orders$ from \"./orders.js\";\n", files["testing.js"], StringComparison.Ordinal);
+        Assert.Contains("  add(commands, orders$.orders, orders$.__sparTesting);\n  add(commands, stock$.stock, stock$.__sparTesting);\n", files["testing.js"], StringComparison.Ordinal);
         Assert.Matches("export const fingerprint = \"[0-9a-f]{16}\";", files["spar.js"]);
     }
 
@@ -204,6 +207,36 @@ public sealed class EmitterTests
 
             """.Replace("\r\n", "\n", StringComparison.Ordinal);
         Assert.Contains(expected, orders, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Page_tests_get_an_error_writer_and_a_table_of_each_commands_wire_functions()
+    {
+        var orders = ClientHarness.Emit(Fixtures.Shop)["orders.js"];
+
+        var writer = """
+            function writeOrderError(code, value) {
+              switch (code) {
+                case "outOfStock": {
+                  const payload = value;
+                  return wire.writeObject([
+                    wire.member("code", wire.writeString(code)),
+                    wire.member("sku", wire.writeString(payload.sku)),
+                    wire.member("left", wire.writeInt64(payload.left)),
+                  ]);
+                }
+                case "closed":
+                  return wire.writeObject([wire.member("code", wire.writeString(code))]);
+                default:
+                  return wire.refusedMember(code, "OrderError");
+              }
+            }
+
+            """.Replace("\r\n", "\n", StringComparison.Ordinal);
+        Assert.Contains(writer, orders, StringComparison.Ordinal);
+        Assert.Contains("export const __sparTesting = {\n", orders, StringComparison.Ordinal);
+        Assert.Contains("  cancel: {\n    contract: \"orders\",\n    command: \"cancel\",\n    request: json => wire.readString(JSON.parse(json)),\n", orders, StringComparison.Ordinal);
+        Assert.Contains("  clear: {\n    contract: \"orders\",\n    command: \"clear\",\n  },\n", orders, StringComparison.Ordinal);
     }
 
     [Fact]

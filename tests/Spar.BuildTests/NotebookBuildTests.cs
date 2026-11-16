@@ -101,6 +101,16 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         Assert.True(Contains(loopback, "/_spar/channel", Encoding.Unicode), "The control search missed /_spar/channel.");
         Assert.True(Contains(runtime, "SparTestSession", Encoding.UTF8), "The control search missed SparTestSession.");
 
+        // The page is packed compressed, so its bundle is searched before packing. `PageError` stands for the generated
+        // error writers: the Notebook's page reads its errors, and only page tests write them.
+        var app = Path.Combine(workspace.Root, "samples", "Notebook");
+        var page = Assert.Single(Directory.GetDirectories(Path.Combine(app, "obj", "Production"), "frontend", SearchOption.AllDirectories));
+        string[] pageMarkers = [.. ProductionBoundary.PageMarkers, "\"PageError\""];
+        var inPage = ProductionBoundary.FindInPage(page, pageMarkers);
+        Assert.True(inPage.Count == 0, $"The Production page contains: {string.Join(", ", inPage)}.");
+        var generated = ProductionBoundary.FindInPage(Path.Combine(app, "obj", "spar", "client"), pageMarkers);
+        Assert.True(generated.Count == pageMarkers.Length, $"The control search found only {string.Join(", ", generated)} in the generated package.");
+
         AssertAuthoredFilesUntouched();
     }
 

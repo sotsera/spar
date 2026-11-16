@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs one step of the CI lane in WSL, in the run setup.sh prepared, with CI's environment (ContinuousIntegrationBuild).
 # Usage: step.sh <repo on /mnt> <run> <step>; the output also goes to <repo>/artifacts/linux-runs/<run>/<step>.log.
-# Steps, in CI's order: size client appmodel build chromium test aot mt buildtests packagetests budgets.
+# Steps, in CI's order: size client appmodel build chromium test pagetests aot mt buildtests packagetests budgets.
 set -uo pipefail
 source_repo=$1
 run=$2
@@ -51,6 +51,7 @@ aot_lane() {
       cli=$(dirname "$(dirname "$(dirname "$driver")")")/package/cli.js
       timed "$driver" "$cli" install --only-shell chromium ;;
     test) timed dotnet test --solution Spar.slnx -c Debug --no-build ;;
+    pagetests) cd samples/Notebook/frontend && timed npm test ;;
     aot) aot_lane ;;
     mt) timed dotnet build Spar.slnx -c Debug -mt -nodeReuse:false ;;
     buildtests) timed dotnet test --project tests/Spar.BuildTests ;;

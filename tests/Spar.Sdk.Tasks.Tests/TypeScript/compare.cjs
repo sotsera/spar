@@ -18,10 +18,11 @@ function normalized(folder, file, fromTsc) {
   let source = ts.createSourceFile(file, text, ts.ScriptTarget.ES2022, true, kind);
   if (fromTsc && file.endsWith(".d.ts")) {
     // shared.js exports its readers and writers to the contract modules only; Spar does not declare them, nor
-    // import the SDK modules only those declarations would need.
+    // import the SDK modules only those declarations would need. Nor the table that only @spar/app/testing reads.
     const kept = source.statements.filter(statement =>
       !ts.isFunctionDeclaration(statement)
-      && !(ts.isImportDeclaration(statement) && statement.moduleSpecifier.text.startsWith("./sdk/")));
+      && !(ts.isImportDeclaration(statement) && statement.moduleSpecifier.text.startsWith("./sdk/"))
+      && !(ts.isVariableStatement(statement) && statement.declarationList.declarations.some(d => d.name.getText() === "__sparTesting")));
     source = ts.factory.updateSourceFile(source, kept);
   }
 

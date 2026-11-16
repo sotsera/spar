@@ -69,6 +69,11 @@ jobs:
       - name: Test (CoreCLR)
         run: dotnet test --solution Spar.slnx -c Debug --no-build
 
+      - name: Page tests (the Notebook's page against @spar/app/testing)
+        # After the build, which writes the generated @spar/app package and installs the frontend's packages.
+        working-directory: samples/Notebook/frontend
+        run: npm test
+
       - name: Test (NativeAOT lane)
         shell: bash
         run: |

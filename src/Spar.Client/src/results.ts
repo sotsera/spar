@@ -104,6 +104,12 @@ export function configureSpar(options: { readonly onFailure?: FailureHook; reado
   observe = options.observe;
 }
 
+/** @internal Back to the default hooks, for page tests: each test starts from what an app's start-up code sets. */
+export function resetConfiguration(): void {
+  onFailure = defaultOnFailure;
+  observe = undefined;
+}
+
 /** Thrown by `unwrap` for a declared error or an infrastructure failure. */
 export class SparError<E extends ErrorCases = ErrorCases> extends Error {
   readonly error: ApplicationError<E> | CallError;

@@ -18,7 +18,7 @@ The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rule
 
 ## Package
 
-- **`@spar/app`** is one `file:` package under `obj/spar/client`: `/<contract>` and `/windows` are generated, `/sdk` and `/vite` ship compiled, `/telemetry` is optional and loads lazily.
+- **`@spar/app`** is one `file:` package under `obj/spar/client`: `/<contract>` and `/windows` are generated, `/sdk` and `/vite` ship compiled, `/telemetry` is optional and loads lazily, and `/testing` (generated) gives page tests `fakeSpar` (`docs/app-model.md` section 6.10).
 - **Shape:** `"type": "module"`, `"sideEffects": false`, subpath exports `{ "types": "./x.d.ts", "default": "./x.js" }`, `.js` extensions in relative imports. Whether the package also gets a root barrel is settled in M1a: the spike had one, and no decision asks for it.
 - **The SDK ships compiled:** ES modules, `.d.ts`, `.d.ts.map`, source maps, and its `.ts` sources under `src/`, never beside a `.d.ts` of the same name. It is compiled with its own strict settings, separately for the browser (DOM) and the Vite plugin (Node); the app's `tsconfig` never compiles it.
 - **Tree shaking:** no top-level side effects. Optional parts are separate modules or free functions, never methods or properties of an exported object, which bundlers always keep.
@@ -59,6 +59,6 @@ The design is plan sections 2b (SDK) and 2 ("Generated client" and the wire-rule
 
 ## Verify
 
-- Vitest with fake channels for each host type, type tests (code that must compile, and code that must fail with the expected error), the `tsconfig` × TypeScript 6/7 matrix, and the conformance vectors shared with the C# tests.
+- Vitest with fake channels for each host type, the fake backend of `src/testing.ts` checked through a hand-written contract module (`test/testing.test.ts`, its type tests included), type tests (code that must compile, and code that must fail with the expected error), the `tsconfig` × TypeScript 6/7 matrix, and the conformance vectors shared with the C# tests.
 - Change generated modules in their generator. When an export or import shape changes, load the built JavaScript in a real consumer.
 - The evidence for these rules is in `docs/pitfalls.md` ("npm, Vite and TypeScript", "Bridge and loopback", "Page security", "Wire format and serialization").
