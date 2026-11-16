@@ -3288,3 +3288,7 @@ The open item from the package layout (`spar-msbuild` skill: "untested with a ce
 - **Built:** a second package-only consumer whose solution manages package versions centrally, with transitive pinning and a pin of a package Spar uses. Its tests build and pass, the pin holds, and the NativeAOT lane restores.
 - **Fixed:** Spar.Sdk set the version of `xunit.v3` and `xunit.v3.aot` in package mode without marking the references implicit, so such a consumer failed restore with NU1008. They are now `IsImplicitlyDefined="true"`, like `Spar`, `Spar.Testing` and `Spar.Testing.Browser`.
 - **What this keeps:** the SDK owns the test framework's version, as before; the app's `Directory.Packages.props` needs no entry for it and cannot move it. The teardown hook is compiled against that version, so letting an app choose it would need a compatibility range of its own; not proposed.
+
+## 2026-11-16, Test projects stay on xUnit; no opt-out for now (user decision)
+
+Asked what an app author does without xUnit: Spar.Sdk adds `xunit.v3` (or `xunit.v3.aot` in the NativeAOT lane), a global `using Xunit` and the teardown hook to every test project, with no switch to leave out the framework; `Spar.Testing` itself references no test framework. Offered a property that would leave the xUnit parts out, so a test project could bring MSTest, NUnit or TUnit and keep the rest of what Spar.Sdk does, the user chose to keep xUnit only for now, as decided on 2026-11-13 ("Test framework: plain xunit.v3 confirmed"), and may revisit it later. Using another framework was not tried.
