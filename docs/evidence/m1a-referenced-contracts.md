@@ -85,3 +85,38 @@ Decision: "A listed library's comments reach its JSDoc".
 | `dotnet test --solution Spar.slnx` | 360 of 360 (`Spar.Sdk.Tasks.Tests` 56 of 56 again after a final tidy) |
 | `Spar.BuildTests` | 6 of 6 |
 | `-mt` build, size check | clean; 204 source files |
+
+## Follow-up 2026-11-16: an interface contract, and a library from a package
+
+Decision: "Interface contracts run; a missing implementation stops the start; a contract library from a package".
+
+| Path | Contents |
+|---|---|
+| `tests/apps/WireShapes.Library/RatesService.cs` | `IRatesService`, an interface contract: `rate(string) -> long \| RateError`, with `RateError.Unknown(Currency)` and documentation that uses `<paramref>`. |
+| `tests/apps/WireShapes/Program.cs` | `FixedRates`, the app's implementation (EUR 100, USD 92, anything else unknown), registered scoped; the snapshot gains `contract rates (WireShapes.Library.IRatesService)`. |
+| `tests/WireShapes.Tests/RatesContractTests.cs` | Through the generated `RatesClient`: the app's implementation answers a value and the declared error; a test's own registration replaces it; with the registration removed, the start fails naming the contract and the interface. |
+| `src/Spar.Generator/Emit/CatalogEmitter.cs`, `src/Spar/Runtime/SparCatalog.cs`, `src/Spar/Hosting/SparRunningApp.cs` | The catalog lists the interface contracts; building the app checks each has a registration. |
+| `src/Spar.Sdk.Tasks/Client/ClientDocs.cs` | `<paramref>` and `<typeparamref>` as the name in backticks, an empty `<see href>` as its address. |
+| `tests/Spar.PackageTests/LibraryConsumerFiles.cs`, `LibraryPackageTests.cs` | `Tags Library/`: `Notes.Tags`, a class library on the `Spar` package with the interface contract `ITagsService` (`add(string) -> Tag \| TagError`) and its documentation file, packed by the test at a version of the run's own into `library-feed/`. `Library Äpp/`: the first consumer's app and tests, plus a `PackageReference` to `Notes.Tags` mapped to that feed, `<SparContracts Include="Notes.Tags" />`, the implementation `Tags`, and a test through `TagsClient`. The run deletes earlier runs' `notes.tags` from the shared package folder, as it does Spar's. |
+
+### Found
+
+- **Before the start check,** an app with the registration removed started, and `rates.rate` failed as `failed` / `unknown` on every call: `ValidateOnBuild` saw nothing wrong.
+- **The first `rates.d.ts`** read "How many cents one unit of is worth, or why there is no rate.": the `<paramref>` was dropped. The new emitter test fails without the fix.
+
+### Results (observed, Windows 11)
+
+| Check | Result |
+|---|---|
+| `RatesContractTests` | 3 of 3 |
+| `rates.d.ts` from a real build | "How many cents one unit of `currency` is worth, or why there is no rate." |
+| `Spar.PackageTests` | 10 of 10 in 49.8 s; the library's pack 2.2 s, its consumer's build and tests 7.3 s (2 of 2), the snapshot's `contract tags (Notes.Tags.ITagsService)`, and the contract, command and record comments in `tags.d.ts` from the package's documentation file |
+| `dotnet test --solution Spar.slnx` | 367 of 367 |
+| NativeAOT lane | Spar.Tests 151 of 151, WireShapes.Tests 37 of 37, no warnings |
+| `Spar.BuildTests` | 6 of 6 |
+| `-mt` build, size check | clean; 213 source files |
+
+### Not covered
+
+- A library package that targets several frameworks, or one whose package id differs from its assembly name (listing is by assembly name, so the item would name the assembly).
+- Linux and CI for this follow-up.

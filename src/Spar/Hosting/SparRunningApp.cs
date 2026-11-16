@@ -31,8 +31,30 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
 
     internal static SparRunningApp Build(IServiceCollection services, SparCatalog catalog, SparFolders folders, Func<TimeProvider, ILogger>? createLog = null)
     {
+        RequireImplementations(services, catalog);
         var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         var testLog = createLog?.Invoke(provider.GetService<TimeProvider>() ?? TimeProvider.System);
         return new SparRunningApp(provider, new SparDispatcher(provider, catalog, testLog), catalog, folders);
+    }
+
+    /// <summary>
+    /// The provider's validation checks what is registered, so it cannot see an interface contract the app never
+    /// registered: without this check, the app would start and every call to that contract would fail.
+    /// </summary>
+    private static void RequireImplementations(IServiceCollection services, SparCatalog catalog)
+    {
+        foreach (var contract in catalog.Interfaces)
+        {
+            if (services.Any(descriptor => descriptor.ServiceType == contract.Service))
+            {
+                continue;
+            }
+
+            var shortName = contract.Name[(contract.Name.LastIndexOf('.') + 1)..];
+            throw new InvalidOperationException(
+                $"The contract '{contract.Contract}' is the interface {contract.Name}, and the app registers no " +
+                $"implementation of it. Register one in SparApplication.Create, for example " +
+                $"spar.Services.AddScoped<{shortName}, MyImplementation>().");
+        }
     }
 }

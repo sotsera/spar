@@ -73,6 +73,35 @@ public sealed class EmitterTests
     }
 
     [Fact]
+    public void Empty_documentation_elements_keep_their_meaning()
+    {
+        const string Source = """
+            using System.Threading.Tasks;
+            using Spar;
+
+            namespace Docs;
+
+            /// <summary>Rates.</summary>
+            [SparContract]
+            public sealed class RatesService
+            {
+                /// <summary>
+                /// Cents per unit of <paramref name="currency"/>, as listed at <see href="https://www.iso.org/iso-4217-currency-codes.html"/>,
+                /// or <see langword="null"/>; see <see href="https://example.com/rates">the rates</see>.
+                /// </summary>
+                [SparCommand]
+                public Task<long?> RateAsync(string currency) => Task.FromResult<long?>(null);
+            }
+            """;
+
+        var rates = ClientHarness.Emit(Source)["rates.d.ts"];
+
+        Assert.Contains(
+            "  /** Cents per unit of `currency`, as listed at https://www.iso.org/iso-4217-currency-codes.html, or `null`; see the rates. */\n",
+            rates, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Modules_read_and_write_field_by_field_and_hand_invoke_the_encoder()
     {
         var files = ClientHarness.Emit(Fixtures.Shop);

@@ -407,6 +407,10 @@ These entries come from other frameworks (`docs/research-review.md`) and have no
 
 ## Bridge and loopback
 
+- **`ValidateOnBuild` checks only registered services:** an interface that generated code resolves, and that nothing registers, passes it, and fails only when it is resolved. An interface contract with no implementation started and failed every call. Check such services against the collection yourself before building the provider. (M1a interface contracts)
+
+- **An empty XML documentation element carries its meaning in an attribute:** `<paramref name="x"/>`, `<typeparamref>` and `<see href="…"/>` have no text, so code that takes each element's text leaves a hole in the sentence. (M1a interface contracts)
+
 - **`Task.Run` flows `Activity.Current`:** a command started from another call's completion (the next one in the queue) or from the host's receiving thread would have that activity as its span's parent. Clear `Activity.Current` before starting a command's span. (M1a instrumentation)
 
 - **Kestrel refuses a request body over 30,000,000 bytes (413) by default,** and the page's loopback transport sends whatever it has queued in one request: a burst of large calls would end the document's channel instead of failing one call. The page caps a request at 1 MiB of text, and the loopback host sets its body limit from the bridge's message limit. (M1a bridge limits)

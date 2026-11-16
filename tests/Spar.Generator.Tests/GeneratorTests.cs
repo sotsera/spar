@@ -61,12 +61,14 @@ public sealed class GeneratorTests
     }
 
     [Fact]
-    public void Only_class_contracts_are_registered_by_the_generated_code()
+    public void Only_class_contracts_are_registered_by_the_generated_code_and_interfaces_are_listed_for_the_start()
     {
         var contracts = GeneratorHarness.Generate(Program + Fixtures.Catalog).Files["Spar.Contracts.g.cs"];
 
         Assert.Contains("AddScoped<global::CatalogService>(services);", contracts, StringComparison.Ordinal);
         Assert.DoesNotContain("AddScoped<global::IIOStatsService>", contracts, StringComparison.Ordinal);
+        Assert.Contains("Interfaces =\n            [\n                new(\"ioStats\", \"IIOStatsService\", typeof(global::IIOStatsService)),\n            ],\n", contracts, StringComparison.Ordinal);
+        Assert.DoesNotContain("typeof(global::CatalogService)", contracts, StringComparison.Ordinal);
     }
 
     [Fact]

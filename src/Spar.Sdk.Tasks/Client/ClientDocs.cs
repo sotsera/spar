@@ -119,7 +119,11 @@ internal sealed class ClientDocs
         }
     }
 
-    /// <summary>The text of a documentation element on one line: <c>&lt;c&gt;</c> as code, <c>cref</c>s by name.</summary>
+    /// <summary>
+    /// The text of a documentation element on one line: <c>&lt;c&gt;</c> as code, <c>cref</c>s and parameter references
+    /// by name, a link by its text or else its address. Empty elements carry their meaning in an attribute; dropping
+    /// them would leave a hole in the sentence.
+    /// </summary>
     private static string? Text(XElement element)
     {
         var text = new StringBuilder();
@@ -131,6 +135,9 @@ internal sealed class ClientDocs
                 XElement { Name.LocalName: "c" or "code" } code => $"`{code.Value}`",
                 XElement reference when reference.Attribute("cref") is { } cref => $"`{LastName(cref.Value)}`",
                 XElement reference when reference.Attribute("langword") is { } word => $"`{word.Value}`",
+                XElement { Name.LocalName: "paramref" or "typeparamref" } parameter when parameter.Attribute("name") is { } name =>
+                    $"`{name.Value}`",
+                XElement { Value.Length: 0 } link when link.Attribute("href") is { } address => address.Value,
                 XElement other => other.Value,
                 _ => "",
             });

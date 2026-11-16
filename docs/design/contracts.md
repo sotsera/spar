@@ -4,7 +4,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 
 ## 2. Contracts and the generated client
 
-- **Contracts:** an attributed class (`[SparContract]`; only `[SparCommand]` methods are commands; one instance per call from the DI scope), or an attributed interface (every method is a command; implementation from DI). Mixing the two is a diagnostic.
+- **Contracts:** an attributed class (`[SparContract]`; only `[SparCommand]` methods are commands; one instance per call from the DI scope), or an attributed interface (every method is a command; implementation from DI, which the app registers: one without a registration does not start). Mixing the two is a diagnostic.
 - **`Program.cs`** (decided, user, 2026-11-15; decision "`Program.cs` shape confirmed"): exactly one `SparApplication.Create` and one `Run`, directly in the top-level statements, so the build can read the constant declarations without running code. Anything else is an analyzer error at its location.
   - **Read by the build, so constants only:** the CSP additions and other header opt-ins (section 3b), the permissions (section 3b), the window kinds, whose names become the `@spar/app/windows` union, and the window colours (section 3d).
   - **Run at start-up, so ordinary values are fine:** everything else in the configuration, such as services, folders, the tray and its menu handlers.

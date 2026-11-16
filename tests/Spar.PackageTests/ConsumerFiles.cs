@@ -78,7 +78,7 @@ internal static class ConsumerFiles
 
         """;
 
-    private static void WriteApp(string folder)
+    internal static void WriteApp(string folder)
     {
         Directory.CreateDirectory(folder);
         File.WriteAllText(Path.Combine(folder, "Notes.App.csproj"), """
@@ -124,7 +124,7 @@ internal static class ConsumerFiles
             """);
     }
 
-    private static void WriteTests(string folder)
+    internal static void WriteTests(string folder)
     {
         Directory.CreateDirectory(folder);
         File.WriteAllText(Path.Combine(folder, "Notes.App.Tests.csproj"), """
@@ -230,7 +230,7 @@ internal static class ConsumerFiles
     }
 
     /// <summary>Copies the page's authored files, as an author's checkout has them: no node_modules.</summary>
-    private static void CopyFolder(string source, string target)
+    internal static void CopyFolder(string source, string target)
     {
         foreach (var file in Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories))
         {

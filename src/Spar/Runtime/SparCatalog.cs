@@ -13,6 +13,13 @@ public delegate ValueTask<SparOutcome> SparCommandHandler(SparCallContext call);
 public sealed record SparCommandEntry(string Contract, string Command, int TimeoutSeconds, SparCommandHandler Handler);
 
 /// <summary>
+/// An interface contract: the app registers its implementation itself, so the start checks that it did.
+/// <paramref name="Name"/> is the interface's C# name, for the message.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public sealed record SparInterfaceContract(string Contract, string Name, Type Service);
+
+/// <summary>
 /// The app's contracts, built by generated code and passed to <see cref="SparApplication"/> by the generated
 /// interceptor of <c>SparApplication.Create</c>. Immutable once built.
 /// </summary>
@@ -31,6 +38,9 @@ public sealed class SparCatalog
 
     /// <summary>The app's assembly, which carries its packed page and notices; set by the generated catalog.</summary>
     public System.Reflection.Assembly? AppAssembly { get; init; }
+
+    /// <summary>The interface contracts, whose implementations come from the app's own registrations.</summary>
+    public IReadOnlyList<SparInterfaceContract> Interfaces { get; init; } = [];
 
     /// <summary>16 hex characters of the SHA-256 of the contracts' wire shape (plan section 2c, "The messages").</summary>
     public string Fingerprint { get; }

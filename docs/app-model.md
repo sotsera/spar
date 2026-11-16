@@ -128,7 +128,7 @@ return app.Run();
 ```
 
 - **Class contracts** are registered by the generated code.
-- **Interface contracts** need their implementation registered, as `IConnections` above. A generated startup check reports a missing registration (Leaning).
+- **Interface contracts** need their implementation registered, as `IConnections` above, whether the app declares them or a library it lists does (3.4). An app that registers none does not start: the error names the contract and its interface.
 - **Overrides of security defaults** (plan 3c) go in the same configuration. Spar logs each one at startup, and `spar doctor` lists them.
 
 ## 3. Contracts
@@ -329,7 +329,7 @@ public interface IConnections
 - Classes keep their name, interfaces drop one leading `I`, and both drop a trailing `Service`. Then the name is put in acronym-aware camelCase.
 - Names follow ASCII camelCase: an explicit name with another character, or a class whose derived name has one (`Copy_JobsService`), is an error that asks for an explicit name.
 - Two contracts with the same name are an error, compared ignoring case, including contracts from the libraries the app serves (below).
-- A contract declared in a library reaches the page only when the app lists the library, by assembly name, in its project file. Nothing else is needed: the app's build generates the library's dispatch, serializers and TypeScript module, and registers its class contracts. Only public contracts can be served.
+- A contract declared in a library reaches the page only when the app lists the library, by assembly name, in its project file. Nothing else is needed: the app's build generates the library's dispatch, serializers and TypeScript module, and registers its class contracts. The library's interface contracts are implemented by the app, which registers the implementation as for its own. Only public contracts can be served. The library may be a project, as below, or a NuGet package, listed the same way beside its `PackageReference`.
 
   ```xml
   <ItemGroup>
@@ -1295,8 +1295,7 @@ export function AppTitleBar({ onSearch }: { readonly onSearch: (text: string) =>
 
 - **Contracts and wire:**
 - **Configuration:**
-  - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example;
-  - the generated start-up check for a missing registration of an interface contract (section 2, Leaning).
+  - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example.
 - **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
 - **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open).
 

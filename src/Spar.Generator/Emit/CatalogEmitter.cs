@@ -31,6 +31,7 @@ internal static class CatalogEmitter
         code.Line("    AddServices)");
         code.Line("{");
         code.Line("    AppAssembly = typeof(SparContracts).Assembly,");
+        EmitInterfaces(code, contracts);
         code.Line("};");
         code.Line();
 
@@ -52,6 +53,26 @@ internal static class CatalogEmitter
         }
 
         code.Close();
+    }
+
+    /// <summary>The interface contracts, whose registration the app's start checks; nothing when there are none.</summary>
+    private static void EmitInterfaces(CodeWriter code, IReadOnlyList<ContractModel> contracts)
+    {
+        var interfaces = contracts.Where(c => c.IsInterface).ToList();
+        if (interfaces.Count == 0)
+        {
+            return;
+        }
+
+        code.Line("    Interfaces =");
+        code.Line("    [");
+        foreach (var contract in interfaces)
+        {
+            var name = contract.CSharp.StartsWith("global::", System.StringComparison.Ordinal) ? contract.CSharp.Substring("global::".Length) : contract.CSharp;
+            code.Line($"        new(\"{contract.WireName}\", \"{name}\", typeof({contract.CSharp})),");
+        }
+
+        code.Line("    ],");
     }
 
     private static void EmitHandler(CodeWriter code, ContractModel contract, CommandModel command)

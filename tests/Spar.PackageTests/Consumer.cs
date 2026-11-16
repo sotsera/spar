@@ -42,7 +42,19 @@ public sealed class Consumer : IAsyncLifetime
     /// <summary>A second consumer of the same packages, whose solution manages package versions centrally.</summary>
     public string CentralRoot => Path.Combine(RunRoot, "Central Äpp");
 
+    /// <summary>A third consumer, whose app serves the contract of a library it gets as a package.</summary>
+    public string LibraryAppRoot => Path.Combine(RunRoot, "Library Äpp");
+
+    /// <summary>That library's own folder, as another solution would be.</summary>
+    public string LibraryRoot => Path.Combine(RunRoot, "Tags Library");
+
     public string Feed => Path.Combine(RunRoot, "feed");
+
+    /// <summary>The library's feed, apart from Spar's.</summary>
+    public string LibraryFeed => Path.Combine(RunRoot, "library-feed");
+
+    /// <summary>The library's version: new each run, so the shared package folder never holds a stale copy.</summary>
+    public string LibraryVersion { get; } = $"1.0.0-dev.{Run}";
 
     /// <summary>The first version packed; the consumer starts on it.</summary>
     public string First { get; } = $"0.1.0-dev.{Run}.1";
@@ -58,6 +70,7 @@ public sealed class Consumer : IAsyncLifetime
         DeleteEarlierRuns();
         Directory.CreateDirectory(Root);
         Directory.CreateDirectory(Feed);
+        Directory.CreateDirectory(LibraryFeed);
         RequireNoRepositoryAbove(Root);
         Assert.True(File.Exists(Path.Combine(Repository, "src", "Spar.Client", "obj", "dist", "sdk.js")),
             "The TypeScript SDK is not built: run 'npm ci --ignore-scripts' and 'npm run build' in src/Spar.Client.");
@@ -90,6 +103,8 @@ public sealed class Consumer : IAsyncLifetime
         ConsumerFiles.Write(Root, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Playwright"));
         Directory.CreateDirectory(CentralRoot);
         ConsumerFiles.WriteCentral(CentralRoot, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Extensions.DependencyInjection"));
+        LibraryConsumerFiles.WriteLibrary(LibraryRoot, Feed, First, RepositorySdkVersion());
+        LibraryConsumerFiles.WriteApp(LibraryAppRoot, Feed, LibraryFeed, First, LibraryVersion, RepositorySdkVersion(), page);
     }
 
     public ValueTask DisposeAsync()
@@ -123,12 +138,16 @@ public sealed class Consumer : IAsyncLifetime
     public void UseSdk(string version) => ConsumerFiles.WriteGlobalJson(Root, version, RepositorySdkVersion());
 
     /// <summary>Runs <c>dotnet</c> in the consumer with its isolated environment, from <paramref name="directory"/> (relative to the root).</summary>
+    public Task<(int Exit, string Output)> DotnetAsync(string directory, params string[] arguments) =>
+        DotnetInAsync(Root, directory, arguments);
+
     /// <summary>Runs <c>dotnet</c> in the central-package-management consumer, from <paramref name="directory"/>.</summary>
     public Task<(int Exit, string Output)> CentralDotnetAsync(string directory, params string[] arguments) =>
-        Tool.RunAsync(Path.Combine(CentralRoot, directory), "dotnet", arguments, Environment);
+        DotnetInAsync(CentralRoot, directory, arguments);
 
-    public Task<(int Exit, string Output)> DotnetAsync(string directory, params string[] arguments) =>
-        Tool.RunAsync(Path.Combine(Root, directory), "dotnet", arguments, Environment);
+    /// <summary>Runs <c>dotnet</c> under <paramref name="root"/>, one of the run's folders, with the isolated environment.</summary>
+    public Task<(int Exit, string Output)> DotnetInAsync(string root, string directory, params string[] arguments) =>
+        Tool.RunAsync(Path.Combine(root, directory), "dotnet", arguments, Environment);
 
     /// <summary>
     /// Packs Spar's five packages at <paramref name="version"/> into the feed, from this repository with its own build
@@ -202,17 +221,19 @@ public sealed class Consumer : IAsyncLifetime
             return;
         }
 
-        // NuGet names package folders by lower-case id: spar, spar.sdk, spar.testing and the rest.
-        foreach (var spar in Directory.EnumerateDirectories(packages).Where(IsSparPackage))
+        // NuGet names package folders by lower-case id: spar, spar.sdk, spar.testing and the rest, and the library's.
+        foreach (var packed in Directory.EnumerateDirectories(packages).Where(IsPackedByRuns))
         {
-            TryDelete(spar);
+            TryDelete(packed);
         }
     }
 
-    private static bool IsSparPackage(string folder)
+    /// <summary>The packages a run packs itself, at versions of its own: Spar's and the contract library's.</summary>
+    private static bool IsPackedByRuns(string folder)
     {
         var id = Path.GetFileName(folder);
-        return id == "spar" || id.StartsWith("spar.", StringComparison.Ordinal);
+        var library = LibraryConsumerFiles.PackageId.ToLowerInvariant();
+        return id == "spar" || id.StartsWith("spar.", StringComparison.Ordinal) || id == library;
     }
 
     private static void TryDelete(string directory)

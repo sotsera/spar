@@ -16,7 +16,7 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 
 ## Contracts
 
-- **Forms:** `[SparContract] sealed class` (one instance per call from the call's DI scope; only `[SparCommand]` methods are commands) or `[SparContract] interface` (every method is a command, the implementation comes from DI, `[SparCommand]` only overrides). A class implementing a contract interface exposes only its members. Mixing the forms, and non-method or static members or default implementations on a contract interface, are diagnostics.
+- **Forms:** `[SparContract] sealed class` (one instance per call from the call's DI scope; only `[SparCommand]` methods are commands) or `[SparContract] interface` (every method is a command, the implementation comes from DI, `[SparCommand]` only overrides; the generated catalog lists interface contracts, and an app that registers no implementation does not start). A class implementing a contract interface exposes only its members. Mixing the forms, and non-method or static members or default implementations on a contract interface, are diagnostics.
 - **Commands:** zero or one request (a positional record or a scalar), then an optional `CancellationToken`. Dispatch fills the scoped `ISparCall` before resolving the contract.
 - **Returns:**
   - unary: `Task`, `Task<T>`, `Task<Result<T, TError>>`, `Task<Result<TError>>`, and the `ValueTask` forms;

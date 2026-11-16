@@ -3,12 +3,28 @@ using Spar;
 using WireShapes;
 using WireShapes.Library;
 
-var app = SparApplication.Create(args, spar => spar.Services.AddSingleton<Ledger>());
+var app = SparApplication.Create(args, spar =>
+{
+    spar.Services.AddSingleton<Ledger>();
+    spar.Services.AddScoped<IRatesService, FixedRates>();
+});
 return app.Run();
 
 namespace WireShapes
 {
     public sealed record Item(string Name);
+
+    /// <summary>The app's implementation of the library's rates contract: two fixed rates.</summary>
+    public sealed class FixedRates : IRatesService
+    {
+        public Task<Result<long, RateError>> RateAsync(string currency, CancellationToken cancellationToken) =>
+            Task.FromResult<Result<long, RateError>>(currency switch
+            {
+                "EUR" => 100,
+                "USD" => 92,
+                _ => new RateError.Unknown(currency),
+            });
+    }
 
     public sealed record Shapes(
         string Text,
