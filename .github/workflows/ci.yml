@@ -18,6 +18,9 @@ concurrency:
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: "1"
   DOTNET_NOLOGO: "1"
+  # A CI job builds a few times and is thrown away: the MSBuild server only adds its start-up wait. On a fresh Windows
+  # runner it did not start in time, and the CLI fell back to an in-process build after waiting.
+  DOTNET_CLI_USE_MSBUILD_SERVER: "false"
   # Results go where AGENTS.md puts them; the upload step collects them.
   SPAR_TEST_RESULTS: ${{ github.workspace }}/artifacts/test-results
   # A CI build: deterministic paths, and the committed contract snapshots are verified (SPAR100), never rewritten.
@@ -62,9 +65,12 @@ jobs:
       - name: Chromium for the browser tests
         shell: bash
         run: |
-          # Playwright's headless shell only; --with-deps adds its system libraries on Linux.
+          # Playwright's headless shell only. --with-deps adds its system libraries on Linux; on Windows it installs the
+          # Media Foundation feature instead, which the headless shell does not need and which took 3 of the 3.4 minutes.
           script=$(find tests/WireShapes.EndToEndTests/bin -name playwright.ps1 | head -1)
-          pwsh "$script" install --with-deps --only-shell chromium
+          deps=""
+          if [ "$RUNNER_OS" = "Linux" ]; then deps="--with-deps"; fi
+          pwsh "$script" install $deps --only-shell chromium
 
       - name: Test (CoreCLR)
         run: dotnet test --solution Spar.slnx -c Debug --no-build
