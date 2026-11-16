@@ -1,11 +1,10 @@
-<Project>
+<Project Sdk="Spar.Sdk">
   <!--
     Browser-level tests (plan section 5, level 4): the WireShapes page in Chromium over in-process loopback, calling the
     app's backend through the compiled TypeScript SDK. CoreCLR only: Playwright for .NET cannot run under NativeAOT, so
     this project is not in the NativeAOT lane. Needs the SDK built (npm run build in src/Spar.Client) and Playwright's
     Chromium headless shell installed.
   -->
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -28,10 +27,8 @@
     <Compile Include="../WireShapes.Tests/Budgets.cs" Link="Budgets.cs" />
   </ItemGroup>
 
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
   <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
   <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
     <Compile Include="../static-state/StaticStateTests.cs" Link="StaticStateTests.cs" />
   </ItemGroup>
-
 </Project>

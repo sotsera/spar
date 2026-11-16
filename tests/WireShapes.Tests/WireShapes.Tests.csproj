@@ -1,6 +1,5 @@
-<Project>
+<Project Sdk="Spar.Sdk">
   <!-- Run-time serializer tests through real dispatch (requirements R0-R4); also published in the NativeAOT lane. -->
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,6 +10,4 @@
   <ItemGroup>
     <SparTestedApplication Include="..\apps\WireShapes\WireShapes.csproj" />
   </ItemGroup>
-
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
 </Project>

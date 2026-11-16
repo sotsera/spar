@@ -1,16 +1,13 @@
-<Project>
+<Project Sdk="Spar.Sdk">
   <!--
     The console harness (plan M1a): a Spar app whose console host drives the core the way a desktop host will, with the
     conformance vectors through the codec and a fixed script of messages through a bridge session, dispatch and the
     generated serializers. Published Release, it is a Production NativeAOT executable with the bridge alive, which the
     build tests compare with its CoreCLR run and search for test, loopback and development code.
   -->
-  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Spar.Harness</RootNamespace>
   </PropertyGroup>
-
-  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
 </Project>

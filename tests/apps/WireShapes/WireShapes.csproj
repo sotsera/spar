@@ -1,9 +1,8 @@
-<Project>
+<Project Sdk="Spar.Sdk">
   <!--
     A test app whose one contract echoes every wire shape the generator supports, for run-time serializer tests. It also
     serves the contract of a library it references, which it lists in SparContracts.
   -->
-  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,6 +13,4 @@
     <ProjectReference Include="..\WireShapes.Library\WireShapes.Library.csproj" />
     <SparContracts Include="WireShapes.Library" />
   </ItemGroup>
-
-  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
 </Project>

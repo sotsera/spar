@@ -603,7 +603,7 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
   (`d1-pipeline`)
 - **IDE checks of analyzer squiggles:**
   - ReSharper's code analysis, when on, stops Visual Studio drawing squiggles for every analyzer the project references (Spar's and the SDK's CA rules alike); they still reach the Error List as IntelliSense entries. Compiler errors and the built-in IDE analyzers are drawn. Check squiggles with ReSharper's "Enable code analysis" off, and say so;
-  - C# Dev Kit refuses a project without an SDK in `<Project Sdk="…">` ("unsupported format"), such as the samples, which import Spar.Sdk's props and targets themselves; its files then open as loose files, with no analyzer. Check editor behaviour on an app that names the SDK;
+  - C# Dev Kit refuses a project without an SDK in `<Project Sdk="…">` ("unsupported format"), such as a project that imports an SDK's props and targets itself; its files then open as loose files, with no analyzer. This is why the repository's projects name `Spar.Sdk` through the `0.0.0-source` package (`eng/source-sdk/`) instead of importing `src/Spar.Sdk/Sdk/`;
   - opening a folder in VS Code through its 8.3 short path (`C:\Users\USERNA~1\…`, what `%TEMP%` often holds) made the project load twice once added to the workspace, and the open file stayed a loose file. Open folders by their long path;
   - the language server's own `project/open` loads a project Dev Kit refuses, so a headless check can pass where the window does not;
   - Visual Studio picks up a file changed on disk when its window gets focus, not before.

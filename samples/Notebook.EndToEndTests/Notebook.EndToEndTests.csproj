@@ -1,9 +1,8 @@
-<Project>
+<Project Sdk="Spar.Sdk">
   <!--
     The Notebook's browser tests (plan section 5, level 4): its real page in Chromium against its real backend in this
     process, over loopback. CoreCLR only, like Playwright for .NET; not in the NativeAOT lane.
   -->
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -20,6 +19,4 @@
   <ItemGroup>
     <SparTestedApplication Include="..\Notebook\Notebook.csproj" />
   </ItemGroup>
-
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
 </Project>

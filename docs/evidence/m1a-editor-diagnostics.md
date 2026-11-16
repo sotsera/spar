@@ -58,9 +58,19 @@ So both windows draw Spar's squiggles. With ReSharper's code analysis on, Visual
 - **A folder opened through its 8.3 short path** (`C:\Users\USERNA~1\…`) loaded twice in VS Code once the project was added to the workspace (once per spelling), and the open file stayed a loose file, with no squiggle. Opened by its long path, it loaded once and worked.
 - **`dotnet msbuild -t:Compile` alone fails in an app** with CS0016 ("Could not find a part of the path …\generated\Spar.Generator\…"): the folder for emitted generator files is not created by that target alone. `dotnet build` passes. Not a user path.
 
+## Follow-up: the samples name Spar.Sdk
+
+The repository's nine source-mode projects (the Notebook's three, and six under `tests/`) now write `<Project Sdk="Spar.Sdk">`, resolved to the `0.0.0-source` package of `eng/source-sdk/` (decision "The repository's projects name Spar.Sdk"). The Notebook folder opened in VS Code by its long path, with the same two commands written to `Pages/PagesService.cs` and then restored:
+
+| Step | Result |
+|---|---|
+| Project load | "Project system initialization finished. 1 project(s) are loaded, and 0 failed to load"; no format warning; "1 reference" on each command (the generated dispatch) |
+| The edit | SPAR015 at 68:35 and SPAR024 at 71:27 in Problems, squiggled, within 6 s (both errors: warnings are errors here) (`m1a-editor-diagnostics/vscode-notebook.jpg`) |
+| The restore | "No problems have been detected in the workspace" within 5 s |
+
 ## Not covered
 
-- The Notebook sample (source mode) in VS Code: Dev Kit rejects its project file (above). Visual Studio with the Notebook was not tried.
+- Visual Studio with the Notebook was not tried.
 - Which ReSharper setting, if any, lets Visual Studio draw analyzer squiggles while ReSharper's code analysis is on.
 - Go-to-definition from a page's call into the C# command in the windows (checked through `tsserver` before).
 - A library's diagnostics, which have no location and come at compilation end.

@@ -1,8 +1,9 @@
 <Project>
   <!--
     Spar.Sdk: the project SDK for Spar apps and their test projects. It wraps Microsoft.NET.Sdk.
-    Outside this repository a project writes <Project Sdk="Spar.Sdk">; inside it, projects import this file and
-    Sdk.targets directly (source mode), so they build against Spar's sources.
+    A project writes <Project Sdk="Spar.Sdk">. Inside this repository that SDK is the 0.0.0-source package of
+    eng/source-sdk, which imports this file and Sdk.targets from here (source mode), so projects build against Spar's
+    sources.
   -->
   <PropertyGroup>
     <SparSdkDirectory>$(MSBuildThisFileDirectory)</SparSdkDirectory>

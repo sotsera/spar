@@ -1,11 +1,10 @@
-<Project>
+<Project Sdk="Spar.Sdk">
   <!--
     The document's app built by real Spar (decision "The documentation check under tests/"): its C# blocks, as the
     stand-in check copied them, through Spar's SDK, analyzer and generator, with stand-ins (../Planned) only for the
     APIs Spar does not have yet. Left out until Spar can build them: the contracts with streams and subscriptions
     (copyJobs, status, M3), those with file grants (recipes, csvExport), and the deliberately failing files.
   -->
-  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -20,6 +19,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Planned\Spar.Planned.csproj" />
   </ItemGroup>
-
-  <Import Project="..\..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
 </Project>

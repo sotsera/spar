@@ -1,6 +1,5 @@
-<Project>
+<Project Sdk="Spar.Sdk">
   <!-- Spar's runtime tests: the bridge codec against the shared vectors, the session, and dispatch. -->
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,10 +13,8 @@
                       UndefineProperties="SparVariant;SparTestLane" />
   </ItemGroup>
 
-  <Import Project="..\..\src\Spar.Sdk\Sdk\Sdk.targets" />
   <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
   <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
     <Compile Include="../static-state/StaticStateTests.cs" Link="StaticStateTests.cs" />
   </ItemGroup>
-
 </Project>
