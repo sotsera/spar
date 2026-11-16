@@ -3,6 +3,7 @@
 // Playwright test can compare it.
 import { connectSpar, loopbackChannel } from "/spar/app/sdk/sdk.js";
 import { echo } from "/spar/app/echo.js";
+import { ledger } from "/spar/app/ledger.js";
 import { fingerprint } from "/spar/app/spar.js";
 
 // A test may pretend the page was built against other contracts.
@@ -57,7 +58,18 @@ async function many(count) {
   return results.map(result => result.value);
 }
 
-window.wire = { check, echoShapes, big, ratio, abortWait, many, document: () => connection.document };
+/** A posting through the contract of a library the app lists in SparContracts; cents travel as strings. */
+function post(account, cents) {
+  return ledger.post({ account, cents: BigInt(cents) }).match({
+    success: entry => ({ value: `${entry.account} ${typeof entry.cents} ${entry.cents}` }),
+    errors: { overdrawn: error => ({ overdrawn: String(error.balance) }) },
+    failure: describeFailure,
+  });
+}
+
+const who = () => ledger.who().match({ success: value => ({ value }), failure: describeFailure });
+
+window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, document: () => connection.document };
 
 connection.ready();
 document.getElementById("status").textContent = "ready";

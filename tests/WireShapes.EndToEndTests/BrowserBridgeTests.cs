@@ -50,6 +50,18 @@ public sealed class BrowserBridgeTests(SharedBrowser shared)
     }
 
     [Fact]
+    public async Task A_library_contract_listed_by_the_app_is_called_from_the_page()
+    {
+        await using var wire = await WirePage.OpenAsync(shared);
+        const string Post = "([account, cents]) => window.wire.post(account, cents)";
+
+        Assert.Equal("{\"value\":\"cash bigint 9007199254740993\"}", await wire.CallAsync(Post, new[] { "cash", "9007199254740993" }));
+        Assert.Equal("{\"overdrawn\":\"9007199254740993\"}", await wire.CallAsync(Post, new[] { "cash", "-9007199254740994" }));
+        Assert.Equal("{\"value\":\"ledger.who\"}", await wire.CallAsync("() => window.wire.who()", null));
+        await wire.AssertCleanAsync();
+    }
+
+    [Fact]
     public async Task An_aborted_call_is_reported_cancelled_once_the_backend_confirms()
     {
         await using var wire = await WirePage.OpenAsync(shared);

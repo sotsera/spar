@@ -67,6 +67,21 @@
   </ItemGroup>
 
   <!--
+    The variant and the test lane mean something only to Spar's own projects, which keep a folder per variant. Any
+    other project reference, such as the app's own library, direct or transitive, builds as it would anywhere: given
+    them, it would build once per variant into the same obj/ and bin/, and the builds would collide (CS2012, with a
+    library listed in SparContracts). Set before the first call to the references, so none is evaluated with them.
+  -->
+  <Target Name="SparPlainReferences"
+          AfterTargets="_SplitProjectReferencesByFileExistence"
+          Condition="'@(_MSBuildProjectReferenceExistent)' != ''">
+    <ItemGroup>
+      <_MSBuildProjectReferenceExistent Condition="'%(_MSBuildProjectReferenceExistent.SparTestedApplication)' != 'true'"
+                                        UndefineProperties="%(_MSBuildProjectReferenceExistent.UndefineProperties);SparVariant;SparTestLane" />
+    </ItemGroup>
+  </Target>
+
+  <!--
     Whether a project is a Spar app travels back to the projects that reference it with the answer MSBuild already asks
     for (its target frameworks), so checking a reference costs no evaluation of its own.
   -->

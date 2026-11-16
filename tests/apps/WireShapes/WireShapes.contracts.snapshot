@@ -1,7 +1,7 @@
 # The contracts of WireShapes as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint 4c0e639860861c8e
+fingerprint eff0ff715027a524
 
 contract echo (WireShapes.EchoService)
   big(WireShapes.Item) -> long
@@ -10,8 +10,16 @@ contract echo (WireShapes.EchoService)
   shapes(WireShapes.Shapes) -> WireShapes.Shapes
   wait(WireShapes.Item) -> WireShapes.Item
 
+contract ledger (WireShapes.Library.LedgerService)
+  post(WireShapes.Library.Entry) -> WireShapes.Library.Entry | WireShapes.Library.LedgerError
+  who() -> string
+
 record WireShapes.Item
   name: string
+
+record WireShapes.Library.Entry
+  account: string
+  cents: long
 
 record WireShapes.Shapes
   text: string
@@ -31,3 +39,6 @@ record WireShapes.Shapes
 error WireShapes.EchoError
   refused(reason: string)
   empty
+
+error WireShapes.Library.LedgerError
+  overdrawn(balance: long)

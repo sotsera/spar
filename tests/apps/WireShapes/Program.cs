@@ -1,7 +1,9 @@
+using Microsoft.Extensions.DependencyInjection;
 using Spar;
 using WireShapes;
+using WireShapes.Library;
 
-var app = SparApplication.Create(args, _ => { });
+var app = SparApplication.Create(args, spar => spar.Services.AddSingleton<Ledger>());
 return app.Run();
 
 namespace WireShapes
