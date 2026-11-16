@@ -3399,3 +3399,14 @@ The last open M1a exit item: the Notebook's contracts through the TypeScript SDK
 ## 2026-11-16, Page tests on Linux (evidence)
 
 Follow-up to "Page tests: @spar/app/testing": the CI lane in WSL (Ubuntu 24.04), on a fresh clone of 7eb0449, in CI's order: the size check, the TypeScript SDK's checks and tests, the build with no warnings, `dotnet test` 430 of 430, the new `pagetests` step (the Notebook's 7 page tests), the NativeAOT lane (Spar.Tests, WireShapes.Tests 79, Notebook.Tests 12) and `-mt`, every step exiting 0. Not run on Linux: the build tests and the package tests.
+
+## 2026-11-16, CI's first runs on GitHub Actions (evidence; user decisions on the workflow)
+
+The repository went to `sotsera/spar` (public; user, 2026-11-16) after a search of every commit for the one framework the repository must never name (none found), for secrets (only fakes and run-time passwords) and for files over 5 MB (none). All commits carry the user's GitHub noreply address. `m1a` is pull request sotsera/spar#1 into `main`.
+- **First run (bc589b7):** both jobs passed: Windows 14 min 28 s, Linux 7 min 20 s. The test suite was not the difference (Test (CoreCLR) 55 s against 49 s). Windows spent 203 s installing Chromium against 16 s on Linux, and its NativeAOT lane (159 s against 105 s), build tests (147 s against 109 s) and package tests (139 s against 74 s) were slower.
+- **Second run (82c68b9), both passed:** with `--with-deps` on Linux only (on Windows it installed the Media Foundation feature, 3 min 16 s) and the MSBuild server off, Windows took 9 min 44 s (Chromium 9 s) and Linux 6 min 52 s.
+- **Decided (user, 2026-11-16), in 4abe871:**
+  - **Windows caches and `TEMP` on D:** under `RUNNER_TEMP` (NuGet's packages and HTTP cache, npm's cache, `TEMP` and `TMP`), as two published measurements suggested; its effect is measured on the run of 4abe871.
+  - **A job timeout of 45 minutes,** instead of GitHub's six hours.
+  - **Concurrency per pull request,** grouped by workflow and pull request number; a newer push cancels only pull request runs, never a run on `main`.
+- **Considered and left:** caches between runs (a cache can make a job slower overall; none without a measured run each way); path filters for documentation-only changes (a skipped workflow leaves a required check waiting; revisit when `main` gets required checks). The actions are pinned by commit SHA (checkout v7.0.1, setup-dotnet v6.0.0, setup-node v7.1.0, upload-artifact v7.0.2), each the newest release at least two weeks old.

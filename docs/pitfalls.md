@@ -633,6 +633,14 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 - **On a Windows bind mount, files a root container created cannot be overwritten by a later uid 1000 container** (`tee: Permission denied`); new files in the same folder can be written. Delete the root-owned files from Windows, or keep the container on one user. (`test-host`)
 - **`U+2028`/`U+2029` written through agent tool input can land in source files as raw characters,** which broke a C# build (CS1010). Write them as escapes and check the bytes. (`bridge-encoding`)
 
+- **Hosted GitHub Actions runners (Windows):**
+  - Playwright's `install --with-deps` installs the Media Foundation Windows feature on Windows: 3 min 16 s of a 3 min 23 s step, for a browser download of 6 s. The headless shell does not need it; pass `--with-deps` on Linux only;
+  - the .NET CLI's MSBuild server did not start in time on a fresh runner, and the CLI built in-process after waiting ("MSBuild server unavailable … Falling back to an in-process build"). A CI job gains nothing from the server: `DOTNET_CLI_USE_MSBUILD_SERVER=false`;
+  - the NuGet and npm caches and `TEMP` live on C:, which writes more slowly than D:, where the checkout and `RUNNER_TEMP` are. Point `NUGET_PACKAGES`, `NUGET_HTTP_CACHE_PATH`, `npm_config_cache` and `TEMP`/`TMP` under `RUNNER_TEMP`;
+  - a job with no `timeout-minutes` runs up to six hours when a test hangs.
+
+  (M1a CI)
+
 ### Tooling: from earlier versions, not rechecked
 
 These entries come from earlier Spar versions (`docs/research-review.md`) and have not been rechecked on .NET 11:
