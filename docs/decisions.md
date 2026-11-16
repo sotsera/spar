@@ -3371,3 +3371,7 @@ C# Dev Kit loads only projects that name their SDK in `<Project Sdk="…">`: the
   - **`SourceSdkTests`** (Spar.Sdk.Tasks.Tests): the committed package holds the current nuspec, props and targets, and the nuspec, the package's file name and `global.json` name one version. NuGet keeps one extracted copy per version, so a change to the package needs a new version; the test says so. Checked by changing the targets without repacking: it failed with that message.
 - **Checked:** VS Code loads the Notebook ("1 project(s) are loaded, and 0 failed to load") and shows SPAR015 and SPAR024 on an edit of its contract, cleared on the restore (evidence: `docs/evidence/m1a-editor-diagnostics.md`, "Follow-up: the samples name Spar.Sdk"). On Windows: `dotnet test` 429 of 429; the NativeAOT lane 158, 79 and 12 with no warnings; `-mt` clean; build tests 6 of 6 (the clean copy takes the files git lists, untracked ones included); package tests 10 of 10 (their consumers have their own `nuget.config` and clear the sources).
 - **Not yet run:** the Linux lane in WSL with this change.
+
+## 2026-11-16, The source package on Linux (evidence)
+
+Follow-up to "The repository's projects name Spar.Sdk": the CI lane in WSL (Ubuntu 24.04), on a fresh clone of 7b8068a, in CI's order: the TypeScript SDK steps, `dotnet build Spar.slnx` with no warnings, `dotnet test` 429 of 429, the NativeAOT lane 158, 79 and 12, and `-mt` clean. The package's upward search with forward slashes finds `src/Spar.Sdk/Sdk/` there too. Not run on Linux: the build tests and the package tests.
