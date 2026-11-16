@@ -92,6 +92,8 @@ public sealed class DiagnosticTests
         var run = GeneratorHarness.Generate(Program + Contracts);
 
         Assert.Equal(["SPAR024: At", "SPAR024: Earlier", "SPAR024: Left", "SPAR024: since", "SPAR024: LastAsync"], diagnostics);
+        var messages = await GeneratorHarness.MessagesAsync(Program + Contracts);
+        Assert.StartsWith("SPAR024: 'System.Collections.Generic.IReadOnlyList<System.DateTime?>' carries a DateTime,", messages[1], StringComparison.Ordinal);
         var contracts = run.Files["Spar.Contracts.g.cs"];
         Assert.Contains("new(\"visits\", \"get\", 0, HandleVisitsGet),", contracts, StringComparison.Ordinal);
         Assert.Contains("new(\"visits\", \"last\", 0, HandleVisitsLast),", contracts, StringComparison.Ordinal);

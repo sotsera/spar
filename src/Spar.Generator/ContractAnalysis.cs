@@ -322,7 +322,7 @@ internal sealed partial class ContractAnalysis
         // Before the cache, so every place that uses DateTime gets its warning (the same place is reported once).
         if (MentionsDateTime(type) && _warnedDateTime.Add(location))
         {
-            Report(Descriptors.DateTimeOnWire, location, csharp);
+            Report(Descriptors.DateTimeOnWire, location, type.ToDisplayString());
         }
 
         if (_types.TryGetValue(csharp, out var known))

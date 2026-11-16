@@ -3344,3 +3344,9 @@ The last kind of the wire-rules table. An enum travels as its member name, exact
   - **Member names are exactly as C# spells them** (`High`, not `high`), and `[SparName]` does not apply to members. Renaming members on the wire would need a decision of its own.
   - **No per-member JSDoc:** a union of string literals has no place for it; the enum's own summary becomes the type's JSDoc.
   - Enum names follow the type-name rules of records and errors (SPAR003, SPAR004, SPAR040), and an enum's reader and writer names are checked against the contract's name like a record's.
+
+## 2026-11-16, Editor diagnostics through VS Code's language server; the windows still to check (evidence; one fix)
+
+The M1a exit asks for contract diagnostics as you type, with squiggles, in Visual Studio and VS Code. The user allowed the PC to be used while away, but computer use's approval dialog needs someone present, and the request was denied. Checked instead, without the windows: VS Code's C# language server (extension 2.160.4) reports SPAR015 and SPAR024 0.21–0.23 s after an unsaved edit of the Notebook's contract, at the parameter and the method, and clears them 0.17–0.18 s after the edit is undone. Evidence: `docs/evidence/m1a-editor-diagnostics.md`; the check is `eng/editor-diagnostics.cs`.
+- **Fixed:** SPAR024's message named the type with `global::`; it now uses the C# display name.
+- **Still open for the M1a exit:** the squiggles drawn in the VS Code window and in Visual Studio, which needs the user at the PC.

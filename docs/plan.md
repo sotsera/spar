@@ -263,7 +263,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 - The command tests pass in the NativeAOT lane (`xunit.v3.aot`) with no warnings.
 - The M1a budgets are measured and recorded ("Provisional budgets") (all met on Windows, decision "M1a budgets measured; the NativeAOT lane builds into bin/aot", and on Linux, decision "Linux runs in WSL for M1a; what Linux found").
 - A console harness around the core (dispatch, serializers, protocol codec) publishes with NativeAOT with no warnings on both OSes, and gives the same results as on CoreCLR (met on both, decision "Linux runs in WSL for M1a; what Linux found").
-- Visual Studio and VS Code show contract diagnostics as you type, with squiggles in both.
+- Visual Studio and VS Code show contract diagnostics as you type, with squiggles in both (VS Code's language server reports them 0.2 s after an unsaved edit, decision "Editor diagnostics through VS Code's language server; the windows still to check"; the squiggles in both windows wait for the user).
 - Evidence is recorded for each result.
 
 #### M1b: the Windows host
