@@ -8,14 +8,22 @@ namespace Spar.PackageTests;
 /// <summary>
 /// Spar packed twice, at two versions no build has used, into a feed of this run's own; and a consumer that uses Spar
 /// from that feed alone (decisions "Package-only consumer" and "Packages for the package-only consumer"): a folder
-/// outside any repository whose path has a space and non-ASCII letters, its own NuGet package folder, a nuget.config
-/// that maps Spar's packages to the feed, and its own MSBuild handshake and compiler server. NuGet's HTTP cache is kept
-/// apart from the user's and shared across runs, so only the first run downloads. A run that passes deletes its
-/// folder; one that fails keeps it, and the next run deletes it.
+/// outside any repository whose path has a space and non-ASCII letters, a nuget.config that maps Spar's packages to
+/// the feed, and its own MSBuild handshake and compiler server. NuGet's package folder and HTTP cache are kept apart
+/// from the user's and shared across runs, so only the first run downloads: the HTTP cache alone is not enough, since
+/// NuGet downloads again any entry older than 30 minutes. Spar's packages cannot go stale there, because every run
+/// packs new versions, and each run deletes the earlier runs' ones. A run that passes deletes its folder; one that
+/// fails keeps it, and the next run deletes it.
 /// </summary>
 public sealed class Consumer : IAsyncLifetime
 {
     private static readonly string Base = Path.Combine(Path.GetTempPath(), "spar package tests");
+
+    /// <summary>The package folder every run shares, under <see cref="Base"/>.</summary>
+    private const string PackagesFolder = "nuget-packages";
+
+    /// <summary>The folders under <see cref="Base"/> that outlive a run.</summary>
+    private static readonly string[] Shared = [PackagesFolder, "http-cache", "npm-cache"];
 
     private static readonly string Run = DateTime.UtcNow.ToString("yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture);
 
@@ -52,7 +60,7 @@ public sealed class Consumer : IAsyncLifetime
         var salt = Guid.NewGuid().ToString("N");
         Environment = new Dictionary<string, string>
         {
-            ["NUGET_PACKAGES"] = Path.Combine(RunRoot, "nuget-packages"),
+            ["NUGET_PACKAGES"] = Path.Combine(Base, PackagesFolder),
             ["NUGET_HTTP_CACHE_PATH"] = Path.Combine(Base, "http-cache"),
             ["npm_config_cache"] = Path.Combine(Base, "npm-cache"),
             ["MSBUILDNODEHANDSHAKESALT"] = salt,
@@ -79,6 +87,11 @@ public sealed class Consumer : IAsyncLifetime
 
     public ValueTask DisposeAsync()
     {
+        // Kept whether or not the run passed, so a slow run can be explained; CI uploads this folder.
+        var results = Path.Combine(Repository, "artifacts", "test-results", "Spar.PackageTests");
+        Directory.CreateDirectory(results);
+        File.WriteAllText(Path.Combine(results, "timings.txt"), Tool.Timings());
+
         if (_passed > 0 && _failed == 0)
         {
             TryDelete(RunRoot);
@@ -156,7 +169,10 @@ public sealed class Consumer : IAsyncLifetime
         }
     }
 
-    /// <summary>Removes earlier runs' folders, keeping the shared NuGet and npm caches.</summary>
+    /// <summary>
+    /// Removes earlier runs' folders, and their Spar packages from the shared package folder, keeping everything else
+    /// there and the NuGet and npm caches. Two runs at once would delete each other's packages; runs are one at a time.
+    /// </summary>
     private static void DeleteEarlierRuns()
     {
         if (!Directory.Exists(Base))
@@ -164,10 +180,28 @@ public sealed class Consumer : IAsyncLifetime
             return;
         }
 
-        foreach (var earlier in Directory.EnumerateDirectories(Base).Where(d => Path.GetFileName(d) is not ("http-cache" or "npm-cache")))
+        foreach (var earlier in Directory.EnumerateDirectories(Base).Where(d => !Shared.Contains(Path.GetFileName(d))))
         {
             TryDelete(earlier);
         }
+
+        var packages = Path.Combine(Base, PackagesFolder);
+        if (!Directory.Exists(packages))
+        {
+            return;
+        }
+
+        // NuGet names package folders by lower-case id: spar, spar.sdk, spar.testing and the rest.
+        foreach (var spar in Directory.EnumerateDirectories(packages).Where(IsSparPackage))
+        {
+            TryDelete(spar);
+        }
+    }
+
+    private static bool IsSparPackage(string folder)
+    {
+        var id = Path.GetFileName(folder);
+        return id == "spar" || id.StartsWith("spar.", StringComparison.Ordinal);
     }
 
     private static void TryDelete(string directory)
@@ -201,10 +235,35 @@ public sealed class Consumer : IAsyncLifetime
     }
 }
 
-/// <summary>Runs a tool and collects what it wrote.</summary>
+/// <summary>Runs a tool and collects what it wrote, and how long each run took.</summary>
 public static class Tool
 {
+    private static readonly List<string> Runs = [];
+
+    /// <summary>Every run so far, in the order they ended: seconds, exit code, folder and command line.</summary>
+    public static string Timings()
+    {
+        lock (Runs)
+        {
+            return string.Join("\n", Runs) + "\n";
+        }
+    }
+
     public static async Task<(int Exit, string Output)> RunAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment)
+    {
+        var clock = Stopwatch.StartNew();
+        var result = await StartAsync(directory, tool, arguments, environment);
+        var line = string.Create(System.Globalization.CultureInfo.InvariantCulture,
+            $"{clock.Elapsed.TotalSeconds,7:0.00} s  exit {result.Exit,-3} {Path.GetFileName(directory)}> {tool} {string.Join(' ', arguments)}");
+        lock (Runs)
+        {
+            Runs.Add(line);
+        }
+
+        return result;
+    }
+
+    private static async Task<(int Exit, string Output)> StartAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment)
     {
         var start = new ProcessStartInfo(tool)
         {

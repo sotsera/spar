@@ -65,3 +65,13 @@ Results (observed, Windows 11):
 | `npm ci` with a lockfile recording `0.0.0` and a linked package at `0.1.0-dev.7` (scratch check) | passed and left the lockfile alone; `npm install` then rewrote the version line |
 
 Not done: the custom app id (it arrives with the app identity, M1b); Linux; CI's own run.
+
+## Follow-up, 2026-11-16: why some runs took four times as long
+
+A run took 2 min 33 s where the one before took 49.5 s. The package tests now write each tool run's time to `artifacts/test-results/Spar.PackageTests/timings.txt`, passed or not.
+
+- **The cause:** NuGet's HTTP cache treats every entry as stale after 30 minutes, package files included, and each run started with an empty package folder of its own. A run more than 30 minutes after the last one downloaded about 370 MB again: Playwright (214 MB), the runtime packs, the NativeAOT compiler and xUnit. The slow run's packs were normal (15 s); every package file in the cache was dated from that run, and the fast runs after it rewrote none.
+- **Reproduced:** with the cached package files aged by two hours, a run took 2 min 26 s; the first build took 54.6 s instead of about 10 s, the browser test 55.9 s instead of about 8 s, and all 26 package files were downloaded again.
+- **Ruled out first:** the version lists alone aged (refetched, run 52.7 s); a Defender signature update (the slow run was not the first after it); the packs rebuilding after a runtime change (a touched source file left each pack at 1.2–2.2 s); a Defender scan (the only one that day was 11:38–11:40).
+- **The change (user, 2026-11-16):** one package folder, `nuget-packages`, shared by every run under the tests' base folder and still apart from the user's. Spar's own packages cannot go stale in it: each run packs versions no run has used, and deletes the earlier runs' `spar` and `spar.*` folders when it starts. Checked: a run filled the folder (53.8 s); the next, with the whole HTTP cache aged by two hours, took 46.8 s, downloaded nothing, and left only its own two Spar versions. The folder holds 1.4 GB extracted.
+- **Not covered:** two package-test runs at once would delete each other's Spar packages; the tests run one at a time.
