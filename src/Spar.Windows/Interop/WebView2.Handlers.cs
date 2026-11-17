@@ -77,6 +77,34 @@ internal partial interface ICoreWebView2ExecuteScriptCompletedHandler
     void Invoke(int errorCode, string? result);
 }
 
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("efedc989-c396-41ca-83f7-07f845a55724")]
+internal partial interface ICoreWebView2DownloadStartingEventHandler
+{
+    void Invoke(nint sender, nint args);
+}
+
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("04d3fe1d-ab87-42fb-a898-da241d35b63c")]
+internal partial interface ICoreWebView2ContextMenuRequestedEventHandler
+{
+    void Invoke(nint sender, nint args);
+}
+
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("b29c7e28-fa79-41a8-8e44-65811c76dcb2")]
+internal partial interface ICoreWebView2AcceleratorKeyPressedEventHandler
+{
+    void Invoke(nint sender, nint args);
+}
+
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("5c4889f0-5ef6-4c5a-952c-d8f1b92d0574")]
+internal partial interface ICoreWebView2CallDevToolsProtocolMethodCompletedHandler
+{
+    void Invoke(int errorCode, string? returnObjectAsJson);
+}
+
 /// <summary>Completes when the environment exists; the result holds one reference the host owns.</summary>
 [GeneratedComClass]
 internal sealed partial class EnvironmentCompleted : ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
@@ -125,7 +153,10 @@ internal sealed partial class WebView2EventHandler(Action<nint> handle, Action<E
     ICoreWebView2WebResourceRequestedEventHandler,
     ICoreWebView2BrowserProcessExitedEventHandler,
     ICoreWebView2NewWindowRequestedEventHandler,
-    ICoreWebView2PermissionRequestedEventHandler
+    ICoreWebView2PermissionRequestedEventHandler,
+    ICoreWebView2DownloadStartingEventHandler,
+    ICoreWebView2ContextMenuRequestedEventHandler,
+    ICoreWebView2AcceleratorKeyPressedEventHandler
 {
     public void Invoke(nint sender, nint args)
     {
@@ -164,4 +195,27 @@ internal sealed partial class ScriptCompleted : ICoreWebView2ExecuteScriptComple
 internal sealed class WebView2Exception(string what, int hresult) : Exception($"{what} failed with 0x{hresult:X8}.")
 {
     public int Code { get; } = hresult;
+}
+
+/// <summary>
+/// Completes with the result of an in-process DevTools Protocol call as JSON, or fails with its HRESULT, for the
+/// Development-only input trigger; the two calls a Production build makes have their own handler (<see cref="PagePicker"/>).
+/// </summary>
+[GeneratedComClass]
+internal sealed partial class DevToolsCallCompleted : ICoreWebView2CallDevToolsProtocolMethodCompletedHandler
+{
+    private readonly TaskCompletionSource<string?> _completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    public Task<string?> Task => _completion.Task;
+
+    public void Invoke(int errorCode, string? returnObjectAsJson)
+    {
+        if (errorCode < 0)
+        {
+            _completion.TrySetException(new WebView2Exception("CallDevToolsProtocolMethod", errorCode));
+            return;
+        }
+
+        _completion.TrySetResult(returnObjectAsJson);
+    }
 }

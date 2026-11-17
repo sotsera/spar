@@ -39,6 +39,12 @@ public sealed class SparCatalog
     /// <summary>The app's assembly, which carries its packed page and notices; set by the generated catalog.</summary>
     public System.Reflection.Assembly? AppAssembly { get; init; }
 
+    /// <summary>
+    /// The app id the build checked (<c>&lt;SparAppId&gt;</c>, plan section 3c), which names the app's folders and its
+    /// identity to the OS; set by the generated catalog, null when the build had none.
+    /// </summary>
+    public string? AppId { get; init; }
+
     /// <summary>The interface contracts, whose implementations come from the app's own registrations.</summary>
     public IReadOnlyList<SparInterfaceContract> Interfaces { get; init; } = [];
 

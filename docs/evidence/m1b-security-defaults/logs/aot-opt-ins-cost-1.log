@@ -1,0 +1,47 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle]
+      54,2 | run: window moved offscreen
+      60,3 | spar info +0.2 ms: [33f7458d] Host started 24.1 ms after the process.
+      60,3 | spar info +0.3 ms: [33f7458d] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-cost-1\com.example.tests.SecurityProbe
+      60,3 | spar warn +1.4 ms: [33f7458d] Browser opt-ins in force: AllowDevTools() AllowAcceleratorKeys() AllowPasswordSaving() AllowDownloads() AllowHistoryNavigation() AllowContextMenu() AllowPagePicker() AllowBrowserEnvironmentOverrides()
+      60,3 | spar info +1.9 ms: [33f7458d] single instance at 1.8 ms
+      60,5 | spar info +2.1 ms: [33f7458d] prerequisites checked at 2.1 ms
+      60,5 | spar info +2.3 ms: [33f7458d] services built at 2.3 ms
+      60,5 | spar info +10.7 ms: [33f7458d] window shown at 10.7 ms
+      60,5 | spar info +11.1 ms: [33f7458d] Theme dark (system), window #1f1f1f.
+      60,5 | spar info +11.8 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      60,5 | spar info +16.7 ms: [33f7458d] environment at 16.7 ms
+      60,5 | spar info +16.7 ms: [33f7458d] WebView2 Runtime 157.0.4341.46
+      60,5 | spar info +16.7 ms: [33f7458d] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-cost-1\com.example.tests.SecurityProbe\WebView2
+      60,5 | spar info +19.9 ms: [33f7458d] Heartbeat every 5000 ms.
+      60,5 | spar info +20.3 ms: [33f7458d] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-vjmfouqbK1MxQAssYbQXh0A/+f2ik4zc/bQ37VrPL7c=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      60,5 | spar info +20.3 ms: [33f7458d] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     262,2 | spar info +210.9 ms: [33f7458d] controller at 210.9 ms
+     262,2 | spar info +211.0 ms: [33f7458d] Browser settings set (0.04 ms): devtools on, keys on, password autosave on, autofill on, swipe on, host objects off, reputation check off; menu full, downloads allowed, history allowed.
+     308,4 | spar info +257.7 ms: [33f7458d] page script added at 257.7 ms
+     308,4 | spar info +257.7 ms: [33f7458d] navigation started at 257.7 ms
+     388,7 | spar info +324.5 ms: [33f7458d] Bridge: document d2bcdf6d05bc6ab7 opened.
+     388,7 | spar info +324.5 ms: [33f7458d] Heartbeat armed for the new document.
+     388,7 | spar info +324.5 ms: [33f7458d] first document at 324.5 ms
+     388,7 | spar info +332.1 ms: [33f7458d] first bridge message at 332.1 ms
+     388,7 | spar info +332.4 ms: [33f7458d] first bridge reply at 332.4 ms
+     388,7 | spar info +332.5 ms: [33f7458d] ui-ready at 332.5 ms
+     388,7 | spar info +332.5 ms: [33f7458d] Bridge: document d2bcdf6d05bc6ab7 reported ui-ready.
+     388,7 | spar info +335.5 ms: [33f7458d] first navigation completed at 335.5 ms
+     388,7 | probe: ready; nonce meta present
+     388,7 | probe: done idle
+     388,7 | spar info +338.1 ms: [33f7458d] 404 for /favicon.ico
+     425,5 | run: found 'done idle'
+     649,0 | run: app working set 24376 KiB, peak seen 24376 KiB, private 8324 KiB
+     649,4 | run: WM_CLOSE
+     892,5 | spar info +615.7 ms: [33f7458d] close requested (User) at 615.7 ms
+     892,5 | spar info +616.1 ms: [33f7458d] closing at 616.1 ms
+     892,5 | spar info +616.1 ms: [33f7458d] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+     892,5 | spar info +616.4 ms: [33f7458d] page close work done at 616.3 ms
+     892,5 | spar info +616.4 ms: [33f7458d] Bridge: document d2bcdf6d05bc6ab7 closed (window closing).
+     892,5 | spar info +616.4 ms: [33f7458d] calls stopped at 616.4 ms
+     892,5 | spar info +616.4 ms: [33f7458d] calls settled at 616.4 ms
+     892,5 | spar info +630.3 ms: [33f7458d] controller closed at 630.3 ms
+     892,5 | spar info +632.0 ms: [33f7458d] window destroyed at 632 ms
+     892,5 | spar info +634.4 ms: [33f7458d] services disposed at 634.4 ms
+     892,5 | spar info +634.4 ms: [33f7458d] exit 0 at 634.4 ms
+     892,9 | run: exit 0

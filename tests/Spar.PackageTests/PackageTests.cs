@@ -111,6 +111,36 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     }
 
     [Fact]
+    public async Task An_app_without_a_valid_app_id_does_not_build()
+    {
+        Assert.Equal(0, (await FirstAsync()).Exit);
+        var app = Path.Combine(consumer.Root, "App", "Notes.App.csproj");
+        var appProject = File.ReadAllText(app);
+        try
+        {
+            File.WriteAllText(app, appProject.Replace("<SparAppId>org.example.notes.Tool</SparAppId>", "", StringComparison.Ordinal));
+            var (missing, missingOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+            Assert.NotEqual(0, missing);
+            Assert.Contains("error SPAR130", missingOutput, StringComparison.Ordinal);
+            Assert.Contains("has no SparAppId", missingOutput, StringComparison.Ordinal);
+
+            // The last is 117 characters, one over the cap that keeps "<id>.Development" within Windows' 128.
+            var tooLong = "org.example." + new string('n', 105);
+            foreach (var invalid in new[] { "NotesTool", "org.example.1notes", "org.example.notes-tool", "org..notes", tooLong })
+            {
+                File.WriteAllText(app, appProject.Replace("org.example.notes.Tool", invalid, StringComparison.Ordinal));
+                var (failed, failedOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+                Assert.NotEqual(0, failed);
+                Assert.Contains($"SparAppId '{invalid}' is not a valid app id", failedOutput, StringComparison.Ordinal);
+            }
+        }
+        finally
+        {
+            File.WriteAllText(app, appProject);
+        }
+    }
+
+    [Fact]
     public async Task A_design_time_build_runs_no_Spar_step()
     {
         Assert.Equal(0, (await FirstAsync()).Exit);
@@ -137,6 +167,9 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "NotesTool.exe" : "NotesTool");
         // The page from ui/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
+        // The app id reaches the runtime through the generated catalog, a string literal (UTF-16) in the image.
+        Assert.True(Contains(File.ReadAllBytes(executable), System.Text.Encoding.Unicode.GetBytes("org.example.notes.Tool")),
+            "The published executable does not carry the app id.");
         // The app's per-user folders follow LOCALAPPDATA, so a run that ever reaches a host stays inside this test's root
         // and never writes into the developer's own profile (AGENTS.md).
         var perUser = Path.Combine(consumer.RunRoot, "local-app-data");

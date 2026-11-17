@@ -22,6 +22,7 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
     internal static void AddSparServices(IServiceCollection services, SparCatalog catalog, SparFolders folders, BridgeLimits limits)
     {
         services.TryAddSingleton(folders);
+        services.TryAddSingleton(new Hosting.BrowserProfile(folders.Profile));
         services.TryAddSingleton(limits);
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddScoped<SparCall>();

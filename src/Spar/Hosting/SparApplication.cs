@@ -67,6 +67,9 @@ public sealed class SparBuilder
     /// <summary>What Spar records for diagnosing the app.</summary>
     internal DiagnosticsOptions DiagnosticsOptions { get; } = new();
 
+    /// <summary>The browser's strict defaults the app opted out of (plan section 3c).</summary>
+    internal BrowserOptions BrowserOptions { get; } = new();
+
     /// <summary>The page's Content Security Policy as this run's configuration declared it.</summary>
     internal CspBuilder ContentSecurityOptions { get; } = new();
 
@@ -90,10 +93,28 @@ public sealed class SparBuilder
         return this;
     }
 
-    /// <summary>Where data and logs go; each has a per-user default. A test host moves them all under its data root.</summary>
+    /// <summary>
+    /// Where data, logs and the browser profile go; each has a per-user default under the app id's folder (plan section
+    /// 3c). A test host moves them all under its data root. App code reads the folders in use from the
+    /// <see cref="SparFolders"/> service.
+    /// </summary>
     public SparBuilder Folders(Action<FolderOptions> configure)
     {
+        ArgumentNullException.ThrowIfNull(configure);
         configure(FolderOptions);
+        return this;
+    }
+
+    /// <summary>
+    /// Loosens the browser's strict defaults (plan section 3c), for example <c>spar.Browser(b => b.AllowDownloads())</c>.
+    /// Every opt-in is for the whole app, documents its risk, and is logged at start-up. Without this call a Production
+    /// build has devtools, the browser's keys, password saving and autofill, downloads, history navigation, the full
+    /// context menu, the page's own file pickers and the WebView2 environment variables off.
+    /// </summary>
+    public SparBuilder Browser(Action<BrowserOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(BrowserOptions);
         return this;
     }
 
@@ -249,6 +270,12 @@ public sealed class SparApp
 
     /// <summary>The app's generated contracts.</summary>
     internal SparCatalog Catalog => _catalog;
+
+    /// <summary>
+    /// The app id the build checked (<c>SparAppId</c>), from the generated catalog; the assembly's name for an app built
+    /// without Spar's build steps, which a Spar.Sdk app never is.
+    /// </summary>
+    internal string AppId => _catalog.AppId ?? _catalog.AppAssembly?.GetName().Name ?? "Spar";
 
     /// <summary>Starts the app in its window and returns the process exit code when it ends.</summary>
     public int Run() => Run(host: null);

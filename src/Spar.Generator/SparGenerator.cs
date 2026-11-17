@@ -68,7 +68,12 @@ public sealed class SparGenerator : IIncrementalGenerator
             new HostsModel(compilation.GetTypeByMetadataName(HostEmitter.WindowsHost) is not null));
         var entry = context.CompilationProvider.Select(static (compilation, cancellationToken) => EntryPoint(compilation, cancellationToken));
 
-        context.RegisterSourceOutput(contracts.Combine(security), static (output, input) => EmitContracts(output, input.Left, input.Right));
+        // The app id the build checked (SparAppId, plan section 3c), for the catalog; empty when the project has none.
+        var appId = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.SparAppId", out var id) ? id.Trim() : "");
+
+        context.RegisterSourceOutput(contracts.Combine(security).Combine(appId), static (output, input) =>
+            EmitContracts(output, input.Left.Left, input.Left.Right, input.Right));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
         context.RegisterSourceOutput(runCalls.Combine(hosts).Combine(isTest), static (output, input) =>
         {
@@ -97,7 +102,7 @@ public sealed class SparGenerator : IIncrementalGenerator
         });
     }
 
-    private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models, PageSecurityModel? security)
+    private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models, PageSecurityModel? security, string appId)
     {
         var contracts = models.OrderBy(c => c.WireName, System.StringComparer.Ordinal).ToList();
         var types = contracts.SelectMany(c => c.Types).GroupBy(t => t.Key).Select(g => g.First()).OrderBy(t => t.Key, System.StringComparer.Ordinal).ToList();
@@ -110,7 +115,7 @@ public sealed class SparGenerator : IIncrementalGenerator
             .Line("#nullable enable")
             .Line()
             .Open("namespace Spar.Generated");
-        CatalogEmitter.Emit(code, contracts, security);
+        CatalogEmitter.Emit(code, contracts, security, appId);
         code.Line();
         SerializerEmitter.Emit(code, types, records, errors, enums);
         code.Close();

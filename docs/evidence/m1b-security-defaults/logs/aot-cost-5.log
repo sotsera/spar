@@ -1,0 +1,47 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle]
+      59,3 | run: window moved offscreen
+      64,9 | spar info +0.2 ms: [61404b69] Host started 21.2 ms after the process.
+      64,9 | spar info +0.3 ms: [61404b69] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-cost-5\com.example.tests.SecurityProbe
+      64,9 | spar info +1.7 ms: [61404b69] single instance at 1.6 ms
+      64,9 | spar info +1.9 ms: [61404b69] prerequisites checked at 1.9 ms
+      64,9 | spar info +2.0 ms: [61404b69] services built at 2 ms
+      65,0 | spar info +9.8 ms: [61404b69] window shown at 9.8 ms
+      65,0 | spar info +10.0 ms: [61404b69] Theme dark (system), window #1f1f1f.
+      65,1 | spar info +10.6 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      65,1 | spar info +14.9 ms: [61404b69] environment at 14.9 ms
+      65,1 | spar info +15.0 ms: [61404b69] WebView2 Runtime 157.0.4341.46
+      65,1 | spar info +15.1 ms: [61404b69] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-cost-5\com.example.tests.SecurityProbe\WebView2
+      65,1 | spar info +19.4 ms: [61404b69] Heartbeat every 5000 ms.
+      65,1 | spar info +19.7 ms: [61404b69] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-vjmfouqbK1MxQAssYbQXh0A/+f2ik4zc/bQ37VrPL7c=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      65,1 | spar info +19.7 ms: [61404b69] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     240,2 | spar info +196.2 ms: [61404b69] controller at 196.2 ms
+     240,2 | spar info +196.3 ms: [61404b69] Browser settings set (0.05 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     284,8 | spar info +241.4 ms: [61404b69] Page file picker blocked in 45.1 ms (Page.enable 44.8 ms).
+     284,8 | spar info +241.4 ms: [61404b69] page script added at 241.4 ms
+     284,8 | spar info +241.4 ms: [61404b69] navigation started at 241.4 ms
+     367,2 | spar info +305.8 ms: [61404b69] Bridge: document 441d3044f6335b9b opened.
+     367,2 | spar info +305.8 ms: [61404b69] Heartbeat armed for the new document.
+     367,2 | spar info +305.8 ms: [61404b69] first document at 305.8 ms
+     367,2 | spar info +312.2 ms: [61404b69] first bridge message at 312.2 ms
+     367,2 | spar info +312.4 ms: [61404b69] first bridge reply at 312.4 ms
+     367,2 | spar info +312.4 ms: [61404b69] ui-ready at 312.4 ms
+     367,2 | spar info +312.4 ms: [61404b69] Bridge: document 441d3044f6335b9b reported ui-ready.
+     367,2 | spar info +315.5 ms: [61404b69] first navigation completed at 315.5 ms
+     367,2 | probe: ready; nonce meta present
+     367,2 | probe: done idle
+     367,3 | spar info +317.9 ms: [61404b69] 404 for /favicon.ico
+     403,4 | run: found 'done idle'
+     629,0 | run: app working set 24000 KiB, peak seen 24000 KiB, private 7856 KiB
+     629,3 | run: WM_CLOSE
+     875,2 | spar info +598.5 ms: [61404b69] close requested (User) at 598.5 ms
+     875,2 | spar info +598.9 ms: [61404b69] closing at 598.9 ms
+     875,2 | spar info +598.9 ms: [61404b69] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+     875,2 | spar info +599.1 ms: [61404b69] page close work done at 599.1 ms
+     875,2 | spar info +599.2 ms: [61404b69] Bridge: document 441d3044f6335b9b closed (window closing).
+     875,2 | spar info +599.2 ms: [61404b69] calls stopped at 599.2 ms
+     875,3 | spar info +599.2 ms: [61404b69] calls settled at 599.2 ms
+     875,3 | spar info +611.8 ms: [61404b69] controller closed at 611.8 ms
+     875,3 | spar info +614.2 ms: [61404b69] window destroyed at 614.2 ms
+     875,3 | spar info +616.5 ms: [61404b69] services disposed at 616.5 ms
+     875,3 | spar info +616.5 ms: [61404b69] exit 0 at 616.5 ms
+     875,5 | run: exit 0

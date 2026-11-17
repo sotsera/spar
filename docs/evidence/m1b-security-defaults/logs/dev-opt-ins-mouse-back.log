@@ -1,0 +1,61 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=mouse-back SPAR_AUTOMATED=1 SPAR_DEV_INPUT=wait:500;click:300,300;wait:2500;back:300,300]
+     156,5 | spar info +8.3 ms: [26e08185] Host started 88.7 ms after the process.
+     156,6 | spar info +10.7 ms: [26e08185] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-opt-ins-mouse-back\com.example.tests.SecurityProbe.Development
+     156,6 | spar warn +12.2 ms: [26e08185] Browser opt-ins in force: AllowDevTools() AllowAcceleratorKeys() AllowPasswordSaving() AllowDownloads() AllowHistoryNavigation() AllowContextMenu() AllowPagePicker() AllowBrowserEnvironmentOverrides()
+     156,7 | spar info +16.9 ms: [26e08185] single instance at 16.3 ms
+     205,1 | spar info +51.1 ms: [26e08185] prerequisites checked at 51.1 ms
+     325,8 | run: window moved offscreen
+     331,9 | spar info +157.2 ms: [26e08185] UI-thread stall probe on.
+     331,9 | spar info +166.8 ms: [26e08185] services built at 166.8 ms
+     331,9 | spar info +167.6 ms: [26e08185] window shown at 167.6 ms
+     331,9 | spar info +167.9 ms: [26e08185] Theme dark (system), window #1f1f1f.
+     331,9 | spar info +174.5 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     331,9 | spar info +190.8 ms: [26e08185] environment at 190.8 ms
+     331,9 | spar info +191.3 ms: [26e08185] WebView2 Runtime 157.0.4341.46
+     331,9 | spar info +191.6 ms: [26e08185] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-opt-ins-mouse-back\com.example.tests.SecurityProbe.Development\WebView2
+     331,9 | spar info +203.1 ms: [26e08185] Heartbeat every 5000 ms.
+     331,9 | spar info +204.8 ms: [26e08185] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-eea5XUJ4+QCnH2kZNuJmJqSRjYtjSU+ByGEcjm7EkfU=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     331,9 | spar info +204.9 ms: [26e08185] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     530,1 | spar info +392.3 ms: [26e08185] controller at 392.3 ms
+     530,1 | spar info +394.6 ms: [26e08185] Browser settings read back (1.06 ms): devtools on, keys on, password autosave on, autofill on, swipe on, host objects off, reputation check off; menu full, downloads allowed, history allowed.
+     575,5 | spar info +433.1 ms: [26e08185] page script added at 433.1 ms
+     575,5 | spar info +433.7 ms: [26e08185] navigation started at 433.7 ms
+     670,0 | spar info +502.7 ms: [26e08185] Bridge: document f6fde2ed5068342b opened.
+     670,0 | spar info +503.0 ms: [26e08185] Heartbeat armed for the new document.
+     670,0 | spar info +503.1 ms: [26e08185] first document at 503.1 ms
+     670,0 | spar info +507.6 ms: [26e08185] first bridge message at 507.6 ms
+     670,0 | spar info +510.6 ms: [26e08185] first navigation completed at 510.6 ms
+     670,0 | spar info +512.6 ms: [26e08185] 404 for /favicon.ico
+     670,0 | spar info +515.1 ms: [26e08185] first bridge reply at 515.1 ms
+     670,0 | spar info +515.3 ms: [26e08185] ui-ready at 515.3 ms
+     670,0 | spar info +515.3 ms: [26e08185] Bridge: document f6fde2ed5068342b reported ui-ready.
+    1187,9 | spar info +1029.7 ms: [26e08185] Development input: sent click:300,300.
+    1187,9 | probe: history: opening a second document
+    1187,9 | spar info +1049.3 ms: [26e08185] Bridge: document f6fde2ed5068342b closed (navigation).
+    1187,9 | spar info +1053.7 ms: [26e08185] Bridge: document ff9c2a6ea6c92de9 opened.
+    1187,9 | spar info +1053.7 ms: [26e08185] Heartbeat armed for the new document.
+    1187,9 | spar info +1057.6 ms: [26e08185] Bridge: document ff9c2a6ea6c92de9 reported ui-ready.
+    1187,9 | probe: history: on the second document, 2 entries; going back
+    3699,7 | spar info +3540.7 ms: [26e08185] Development input: sent back:300,300.
+    3699,7 | spar info +3540.7 ms: [26e08185] Development input: all steps sent.
+    3699,7 | spar info +3542.0 ms: [26e08185] Bridge: document ff9c2a6ea6c92de9 closed (navigation).
+    3699,7 | spar info +3546.9 ms: [26e08185] Bridge: document 792c7173e47e9625 opened.
+    3699,7 | spar info +3546.9 ms: [26e08185] Heartbeat armed for the new document.
+    3699,7 | spar info +3550.1 ms: [26e08185] Bridge: document 792c7173e47e9625 reported ui-ready.
+    3699,7 | probe: history: back on the first document
+    3699,7 | probe: done mouse-back
+    3738,7 | run: found 'done mouse-back'
+    4244,1 | run: app working set 47736 KiB, peak seen 47736 KiB, private 14044 KiB
+    4244,4 | run: WM_CLOSE
+    4504,7 | spar info +4124.1 ms: [26e08185] close requested (User, automated) at 4124.1 ms
+    4504,8 | spar info +4128.8 ms: [26e08185] closing at 4128.8 ms
+    4504,8 | spar info +4129.0 ms: [26e08185] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    4504,8 | spar info +4130.1 ms: [26e08185] page close work done at 4130.1 ms
+    4504,8 | spar info +4130.4 ms: [26e08185] Bridge: document 792c7173e47e9625 closed (window closing).
+    4504,8 | spar info +4130.4 ms: [26e08185] calls stopped at 4130.4 ms
+    4504,8 | spar info +4130.4 ms: [26e08185] calls settled at 4130.4 ms
+    4504,8 | spar info +4145.5 ms: [26e08185] controller closed at 4145.5 ms
+    4504,8 | spar info +4148.5 ms: [26e08185] window destroyed at 4148.5 ms
+    4504,8 | spar info +4155.7 ms: [26e08185] services disposed at 4155.7 ms
+    4504,8 | spar info +4155.7 ms: [26e08185] exit 0 at 4155.7 ms
+    4505,1 | run: exit 0

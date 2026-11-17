@@ -15,32 +15,47 @@ namespace Spar.Windows;
 /// blocked and logged;</item>
 /// <item>a permission request is granted only for a feature the app declared and denied otherwise, with no prompt, and
 /// the browser never remembers the answer (<c>SavesInProfile = false</c>).</item>
+/// <item>a back or forward navigation to another document is cancelled unless the app allowed history navigation
+/// (plan section 3c).</item>
 /// </list>
 /// The foreign document filter of <see cref="PageServer"/> answers what a cancelled navigation already sent.
 /// </summary>
 internal sealed class PageGuard
 {
+    /// <summary>How many cancelled history navigations are logged in a run; a page that loops on them is counted only.</summary>
+    private const int LoggedHistoryNavigations = 20;
+
     private readonly HostLog _log;
     private readonly SparPageSecurity _security;
+    private readonly bool _allowHistory;
+    private int _historyCancelled;
     /// <summary>The permission kinds already logged, as bits by kind (WebView2 has fewer than 32).</summary>
     private long _loggedKinds;
     private bool _noSavesInProfileLogged;
 
-    public PageGuard(HostLog log, SparPageSecurity security)
+    /// <param name="allowHistory">The app called <c>AllowHistoryNavigation()</c>: back and forward navigations go ahead.</param>
+    public PageGuard(HostLog log, SparPageSecurity security, bool allowHistory)
     {
         _log = log;
         _security = security;
+        _allowHistory = allowHistory;
     }
 
     /// <summary>
-    /// A top-level navigation: false, with the navigation cancelled, when it leaves the app's origin. A navigation that
-    /// stays starts a new document epoch, which the bridge handles.
+    /// A top-level navigation: false, with the navigation cancelled, when it leaves the app's origin, or goes back or
+    /// forward to another document while history navigation is not allowed. A navigation that stays starts a new
+    /// document epoch, which the bridge handles.
     /// </summary>
     public bool OnNavigationStarting(nint argsPointer)
     {
-        var args = Com.Borrow<ICoreWebView2NavigationStartingEventArgs>(argsPointer);
+        var args = Com.Borrow<ICoreWebView2NavigationStartingEventArgs3>(argsPointer);
         try
         {
+            if (!_allowHistory && CancelHistory(args))
+            {
+                return false;
+            }
+
             var uri = args.GetUri();
             if (PageServer.IsAppOrigin(uri))
             {
@@ -60,7 +75,7 @@ internal sealed class PageGuard
     /// <summary>A frame's navigation: cancelled when it leaves the app's origin.</summary>
     public void OnFrameNavigationStarting(nint argsPointer)
     {
-        var args = Com.Borrow<ICoreWebView2NavigationStartingEventArgs>(argsPointer);
+        var args = Com.Borrow<ICoreWebView2NavigationStartingEventArgs3>(argsPointer);
         try
         {
             var uri = args.GetUri();
@@ -182,6 +197,28 @@ internal sealed class PageGuard
         12 => Permission.WindowManagement,
         _ => null,
     };
+
+    /// <summary>
+    /// A back or forward navigation to another document (plan section 3c): the mouse's side buttons, Alt+Left and
+    /// <c>history.back()</c> all arrive as <c>COREWEBVIEW2_NAVIGATION_KIND_BACK_OR_FORWARD</c>, which WebView2 has no
+    /// setting for, so it is cancelled here. Moves within one document raise no <c>NavigationStarting</c>.
+    /// </summary>
+    private bool CancelHistory(ICoreWebView2NavigationStartingEventArgs3 args)
+    {
+        if (args.GetNavigationKind() != WebView2Values.NavigationBackOrForward)
+        {
+            return false;
+        }
+
+        args.PutCancel(1);
+        _historyCancelled++;
+        if (_historyCancelled <= LoggedHistoryNavigations)
+        {
+            _log.Warn("Back or forward navigation cancelled (AllowHistoryNavigation allows it).");
+        }
+
+        return true;
+    }
 
     /// <summary>Allowed only for a declared feature, and only from the app's own origin.</summary>
     private int Decide(int kind, string uri) =>

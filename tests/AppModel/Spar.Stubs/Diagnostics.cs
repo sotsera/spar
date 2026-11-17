@@ -13,6 +13,8 @@ public sealed class FolderOptions
 
     internal string? CrashesFolder { get; private set; }
 
+    internal string? ProfileFolder { get; private set; }
+
     /// <summary>The root every other folder defaults under (the WebView profile, settings, logs, crashes).</summary>
     public FolderOptions Data(string path)
     {
@@ -23,6 +25,13 @@ public sealed class FolderOptions
     public FolderOptions Logs(string path)
     {
         LogsFolder = path;
+        return this;
+    }
+
+    /// <summary>The browser profile: an absolute path on a local drive, or the start stops with a message.</summary>
+    public FolderOptions Profile(string path)
+    {
+        ProfileFolder = path;
         return this;
     }
 

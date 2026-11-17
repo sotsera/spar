@@ -152,6 +152,12 @@ var app = SparApplication.Create(args, spar =>
     // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
     spar.Diagnostics(d => d.KeepStallProbe());
 
+    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
+    if (SupportBuild.IsSupportBuild)
+    {
+        spar.Browser(b => b.AllowDevTools());
+    }
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
@@ -166,7 +172,7 @@ return app.Run();
 
 - **Class contracts** are registered by the generated code.
 - **Interface contracts** need their implementation registered, as `IConnections` above, whether the app declares them or a library it lists does (3.4). An app that registers none does not start: the error names the contract and its interface.
-- **Overrides of security defaults** (plan 3c) go in the same configuration. Spar logs each one at startup, and `spar doctor` lists them.
+- **Overrides of security defaults** (plan 3c) go in the same configuration: the page's in `ContentSecurity` and `Permissions` below, the browser's in `Browser` (3.17). Spar logs each one at startup, and `spar doctor` lists them.
 - **Page security** (plan 3b; decision "Page security's public shape"; built in M1b):
   - `ContentSecurity` and `Permissions` are read by the build: each a statement of its own directly in `Create`, with constant values. Anything else is an error at its place: SPAR101 for a call elsewhere (a condition, a helper method), SPAR102 for a value that is not a constant, SPAR103 for a shape the build cannot read (a delegate variable, other statements in the lambda), SPAR104 for a source the policy refuses.
   - The directive methods (`FontSrc`, `ImgSrc`, `ConnectSrc`, `MediaSrc`, `ScriptSrc`, `StyleSrc`, `FrameSrc`) take hosts and schemes only, and `FrameSrc` also `'self'`. A keyword or a nonce in them is SPAR104, whose message names the method that gives it: `AllowInlineStyles()`, `AllowEval()`, `AllowWebAssembly()` or `StyleNonce()`. Each of those, and `WithoutTrustedTypes()` and `WithoutIntegrity()`, documents its risk, when it is reasonable and the safer alternative.
@@ -831,7 +837,7 @@ public sealed class NetworkAwareMonitor(INetworkStatus network, IMonitor monitor
 - **Logs:** Spar logs through `ILogger`. In Production it writes rotating files, by default 5 files of 10 MB, at a level that configuration can raise without a new build.
 - **Page errors:** console errors, uncaught exceptions and unhandled rejections reach the same log, grouped with flood limits.
 - **Crashes:** an unhandled .NET exception writes a crash record before the process ends.
-- **Folders:** every folder has a per-user default under the app id's folder (section 1) and can be set in `Program.cs` (`spar.Folders(…)`, as above). Test runs move them all under their own data root; a black-box test does it through the environment, since the Production executable takes no data-root switch.
+- **Folders:** every folder has a per-user default under the app id's folder (section 1) and can be set in `Program.cs` (`spar.Folders(…)`, as above; the browser profile in 3.17). App code reads the folders in use from the `SparFolders` service (`DataRoot`, `Data`, `Logs`, `Cache`, `Profile`). Test runs move them all under their own data root; a black-box test does it through the environment, since the Production executable takes no data-root switch.
 
 File `SqlTool/Status/CrashReport.cs`:
 
@@ -1015,7 +1021,42 @@ public sealed class HangLog
 - **What is not pinged:** a minimized or hidden window, whose page the browser throttles, and a page that never connected the SDK, which cannot answer.
 - **In the automated mode** (6.11) no dialog shows: the change is logged and the hook is called, and a close of a page that does not answer closes anyway.
 
-## 4. On the wire
+### 3.17 The browser's defaults, the app id and the profile
+
+**Decided** (decisions "M1b's remaining questions without a spike" and "Security defaults' public shape"; built in M1b). The browser in a Production build is locked down, and the app loosens a default only by name in `spar.Browser(b => …)`, whose methods each document the risk, when the opt-in is reasonable and the safer alternative. Every window shares one browser profile, so each opt-in is for the whole app, and Spar logs every opt-in in force at start-up. The SQL tool keeps them all; only the support build its team sends to one user turns devtools on (section 2).
+
+File `SqlTool/Support/SupportBuild.cs`:
+
+```csharp
+namespace SqlTool.Support;
+
+/// <summary>
+/// Whether this is the support build, which the team sends to a user whose problem it cannot reproduce: the project
+/// built with -p:DefineConstants=SUPPORT_BUILD. A shipped build keeps every browser default.
+/// </summary>
+public static class SupportBuild
+{
+#if SUPPORT_BUILD
+    public static bool IsSupportBuild { get; } = true;
+#else
+    public static bool IsSupportBuild { get; }
+#endif
+}
+```
+
+- **The defaults and their opt-ins:**
+  - devtools (F12 and Inspect): `AllowDevTools()`;
+  - the browser's own keys (reload, print, find, zoom, back and forward): `AllowAcceleratorKeys()`;
+  - saving passwords and general autofill, so a database password typed into the page is never offered for saving: `AllowPasswordSaving()`;
+  - downloads the page starts: `AllowDownloads()`;
+  - back and forward to another document, from the mouse's side buttons, Alt+Left, a swipe or `history.back()`: `AllowHistoryNavigation()`; a router's moves within one document always work;
+  - the browser's full context menu: `AllowContextMenu()`; without it editable fields keep Cut, Copy, Paste and Select all, and elsewhere no menu shows;
+  - the page's own file pickers, `<input type="file">` and `showOpenFilePicker`, `showSaveFilePicker`, `showDirectoryPicker`: `AllowPagePicker()`; the safer way is the file commands of 3.6, which hand the page a grant, never a path;
+  - the WebView2 environment variables that change the browser before it starts (`WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS`, `WEBVIEW2_BROWSER_EXECUTABLE_FOLDER`, `WEBVIEW2_USER_DATA_FOLDER`, the release-channel and script-debugger variables): `AllowBrowserEnvironmentOverrides()`. Without it Spar removes them from its process before the browser starts and logs each one by name. Policies an administrator sets in the registry stay in force.
+- **Always off, with no opt-in:** host objects in the page, and a remote debugging port opened by Spar. SmartScreen's reputation check is off while the page stays on the app's origin, which the navigation lock guarantees.
+- **A Debug build** has the same defaults, except devtools and the reload keys (F5, Ctrl+R), so a blocked download or picker shows while developing rather than after shipping.
+- **The app id** (section 1) names the app to the OS: it is the process's AppUserModelID on Windows, with `.Development` in a Debug build, and the key an administrator's WebView2 policies are found under. It reaches the app through the build, never by reflection.
+- **The browser profile** is the `WebView2` folder under the app's per-user folder: `%LOCALAPPDATA%\com.example.SqlTool\WebView2`, or `com.example.SqlTool.Development` for a Debug build. `spar.Folders(f => f.Profile(path))` moves it; the path must be absolute and on a local drive, or the app shows a message and exits with code 70, its own start failure, since a profile on a share is slow and readable by others. Spar checks the folder the browser actually uses, which a policy can move, logs a moved one, and no file grant ever reaches either folder.
 
 **Decided** (decisions "Contract syntax in the generator" and "Bridge messages: encoding C header fields"; plan sections 2 and 2c). Each message is a JSON header, a TAB (shown as `⇥`), then the payload's JSON. The call `copyJobs.plan`, id 7:
 

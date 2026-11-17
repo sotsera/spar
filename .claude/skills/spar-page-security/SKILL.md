@@ -31,6 +31,7 @@ The design is plan section 3b, with the defaults and overrides of 3c, in `docs/d
 ## The host
 
 - **Navigation lock:** cancel top-level and frame navigations off the app origin (frames may load `about:blank` and `about:srcdoc`); answer foreign documents 403; handle every new-window request so no WebView window opens; open a user-initiated `http(s)`, `mailto` or `tel` address without credentials with `ShellExecuteW` on an STA thread of its own, never on the UI thread; block and log the rest, the app's own origin included.
+- **History and pickers** (plan 3c, built in M1b step 5): `PageGuard` also cancels back-or-forward navigations to another document unless `AllowHistoryNavigation()`; the page's file pickers are closed by `PagePicker` and `BrowserEnvironment` unless `AllowPagePicker()` (`spar-webview2-hosting`, "Production defaults").
 - **Permission gate:** allow a declared feature from the app's origin, deny everything else, never prompt, `SavesInProfile = false`; log each kind once. Never ask for the camera or microphone in an unattended run.
 - **Logs:** state what was blocked and why; never put a page value in a log line uncut (`CspReportReader.MaxText`).
 

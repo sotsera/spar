@@ -12,7 +12,7 @@ namespace Spar.Windows.Interop;
 internal partial interface ICoreWebView2_22
 {
     // ICoreWebView2
-    [PreserveSig] int Slot003_GetSettings();
+    nint GetSettings();
     [PreserveSig] int Slot004_GetSource();
     void Navigate(string uri);
     [PreserveSig] int Slot006_NavigateToString();
@@ -45,7 +45,7 @@ internal partial interface ICoreWebView2_22
     void PostWebMessageAsString(string webMessageAsString);
     EventRegistrationToken AddWebMessageReceived(ICoreWebView2WebMessageReceivedEventHandler handler);
     void RemoveWebMessageReceived(EventRegistrationToken token);
-    [PreserveSig] int Slot036_CallDevToolsProtocolMethod();
+    void CallDevToolsProtocolMethod(string methodName, string parametersAsJson, ICoreWebView2CallDevToolsProtocolMethodCompletedHandler handler);
     uint GetBrowserProcessId();
     [PreserveSig] int Slot038_GetCanGoBack();
     [PreserveSig] int Slot039_GetCanGoForward();
@@ -87,8 +87,8 @@ internal partial interface ICoreWebView2_22
     // ICoreWebView2_4
     [PreserveSig] int Slot073_AddFrameCreated();
     [PreserveSig] int Slot074_RemoveFrameCreated();
-    [PreserveSig] int Slot075_AddDownloadStarting();
-    [PreserveSig] int Slot076_RemoveDownloadStarting();
+    EventRegistrationToken AddDownloadStarting(ICoreWebView2DownloadStartingEventHandler eventHandler);
+    void RemoveDownloadStarting(EventRegistrationToken token);
     // ICoreWebView2_5
     [PreserveSig] int Slot077_AddClientCertificateRequested();
     [PreserveSig] int Slot078_RemoveClientCertificateRequested();
@@ -119,8 +119,8 @@ internal partial interface ICoreWebView2_22
     [PreserveSig] int Slot098_RemoveBasicAuthenticationRequested();
     // ICoreWebView2_11
     [PreserveSig] int Slot099_CallDevToolsProtocolMethodForSession();
-    [PreserveSig] int Slot100_AddContextMenuRequested();
-    [PreserveSig] int Slot101_RemoveContextMenuRequested();
+    EventRegistrationToken AddContextMenuRequested(ICoreWebView2ContextMenuRequestedEventHandler eventHandler);
+    void RemoveContextMenuRequested(EventRegistrationToken token);
     // ICoreWebView2_12
     [PreserveSig] int Slot102_AddStatusBarTextChanged();
     [PreserveSig] int Slot103_RemoveStatusBarTextChanged();

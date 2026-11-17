@@ -53,6 +53,17 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void The_app_id_the_build_checked_reaches_the_catalog()
+    {
+        var withId = GeneratorHarness.Generate(Program + Fixtures.Catalog, appId: "com.example.SqlTool");
+        var withoutId = GeneratorHarness.Generate(Program + Fixtures.Catalog);
+
+        Assert.Empty(withId.Errors);
+        Assert.Contains("AppId = \"com.example.SqlTool\",", withId.Files["Spar.Contracts.g.cs"], StringComparison.Ordinal);
+        Assert.DoesNotContain("AppId =", withoutId.Files["Spar.Contracts.g.cs"], StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Two_contracts_with_one_name_are_left_out_and_the_rest_still_compiles()
     {
         const string Contracts = """

@@ -33,7 +33,7 @@ public sealed partial class UnsupportedWindowsHost : ISparHost
 
         var line = StartupReport.Describe(problem);
         Console.Error.WriteLine("spar fail: " + line);
-        AppendToLog(SparFolders.ForApp(title, app.Builder.FolderOptions).Logs, line);
+        AppendToLog(SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions).Logs, line);
         if (SparDevelopment.IsAutomatedFromEnvironment())
         {
             return problem.ExitCode;

@@ -80,6 +80,12 @@ var app = SparApplication.Create(args, spar =>
     // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
     spar.Diagnostics(d => d.KeepStallProbe());
 
+    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
+    if (SupportBuild.IsSupportBuild)
+    {
+        spar.Browser(b => b.AllowDevTools());
+    }
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();

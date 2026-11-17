@@ -1,0 +1,54 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=menu SPAR_AUTOMATED=1 SPAR_DEV_INPUT=wait:1500;right:120,120;wait:800;right:400,300]
+      90,7 | spar info +8.0 ms: [88b69846] Host started 47.0 ms after the process.
+      90,7 | spar info +10.2 ms: [88b69846] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-menu\com.example.tests.SecurityProbe.Development
+      90,8 | spar info +15.7 ms: [88b69846] single instance at 15.1 ms
+      90,8 | spar info +19.2 ms: [88b69846] prerequisites checked at 19.2 ms
+      90,8 | spar info +27.4 ms: [88b69846] UI-thread stall probe on.
+      90,8 | spar info +35.5 ms: [88b69846] services built at 35.5 ms
+      90,8 | spar info +37.4 ms: [88b69846] window shown at 37.4 ms
+      90,8 | spar info +37.7 ms: [88b69846] Theme dark (system), window #1f1f1f.
+     132,1 | run: window moved offscreen
+     137,8 | spar info +44.4 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     137,8 | spar info +60.8 ms: [88b69846] environment at 60.8 ms
+     137,8 | spar info +61.3 ms: [88b69846] WebView2 Runtime 157.0.4341.46
+     137,8 | spar info +61.6 ms: [88b69846] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-menu\com.example.tests.SecurityProbe.Development\WebView2
+     137,8 | spar info +72.2 ms: [88b69846] Heartbeat every 5000 ms.
+     137,8 | spar info +73.7 ms: [88b69846] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-vjmfouqbK1MxQAssYbQXh0A/+f2ik4zc/bQ37VrPL7c=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     137,8 | spar info +73.8 ms: [88b69846] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     311,9 | spar info +246.3 ms: [88b69846] controller at 246.3 ms
+     311,9 | spar info +248.7 ms: [88b69846] Browser settings read back (1.08 ms): devtools on, keys on (devtools keys only), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     358,5 | spar info +288.3 ms: [88b69846] Page file picker blocked in 39.4 ms (Page.enable 39.1 ms).
+     358,5 | spar info +288.4 ms: [88b69846] page script added at 288.4 ms
+     358,5 | spar info +289.5 ms: [88b69846] navigation started at 289.5 ms
+     407,1 | spar info +337.8 ms: [88b69846] Bridge: document 60559158b7d4d02f opened.
+     407,1 | spar info +338.1 ms: [88b69846] Heartbeat armed for the new document.
+     407,1 | spar info +338.1 ms: [88b69846] first document at 338.1 ms
+     407,1 | spar info +342.9 ms: [88b69846] first bridge message at 342.9 ms
+     407,1 | spar info +346.1 ms: [88b69846] first navigation completed at 346.1 ms
+     407,1 | spar info +349.8 ms: [88b69846] 404 for /favicon.ico
+     407,1 | spar info +350.5 ms: [88b69846] first bridge reply at 350.5 ms
+     407,1 | spar info +350.8 ms: [88b69846] ui-ready at 350.8 ms
+     407,1 | spar info +350.9 ms: [88b69846] Bridge: document 60559158b7d4d02f reported ui-ready.
+     453,9 | probe: menu: field at 20,100
+    1933,1 | spar info +1860.8 ms: [88b69846] Development input: sent right:120,120.
+    1933,1 | spar info +1863.6 ms: [88b69846] Context menu (editable): kept [cut copy paste selectAll inspectElement], removed 13, not shown.
+    2751,8 | spar info +2669.1 ms: [88b69846] Development input: sent right:400,300.
+    2751,8 | spar info +2669.1 ms: [88b69846] Development input: all steps sent.
+    2751,8 | spar info +2670.0 ms: [88b69846] Context menu (not editable): kept [inspectElement], removed 9, not shown.
+    5439,7 | probe: menu: contextmenu events 2
+    5439,7 | probe: done menu
+    5475,9 | run: found 'done menu'
+    5981,6 | run: app working set 50072 KiB, peak seen 50072 KiB, private 15732 KiB
+    5982,6 | run: WM_CLOSE
+    6242,4 | spar info +5933.0 ms: [88b69846] close requested (User, automated) at 5933 ms
+    6242,4 | spar info +5937.3 ms: [88b69846] closing at 5937.3 ms
+    6242,4 | spar info +5937.6 ms: [88b69846] Heartbeat: 1 ticks, 2 pings, longest tick on the UI thread 0.758 ms.
+    6242,4 | spar info +5938.5 ms: [88b69846] page close work done at 5938.5 ms
+    6242,4 | spar info +5939.0 ms: [88b69846] Bridge: document 60559158b7d4d02f closed (window closing).
+    6242,4 | spar info +5939.2 ms: [88b69846] calls stopped at 5939.2 ms
+    6242,4 | spar info +5939.2 ms: [88b69846] calls settled at 5939.2 ms
+    6242,4 | spar info +5955.1 ms: [88b69846] controller closed at 5955.1 ms
+    6242,4 | spar info +5958.3 ms: [88b69846] window destroyed at 5958.3 ms
+    6242,4 | spar info +5964.7 ms: [88b69846] services disposed at 5964.7 ms
+    6242,4 | spar info +5964.8 ms: [88b69846] exit 0 at 5964.8 ms
+    6242,6 | run: exit 0

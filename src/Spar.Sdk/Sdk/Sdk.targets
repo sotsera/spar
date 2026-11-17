@@ -51,7 +51,27 @@
   <ItemGroup>
     <CompilerVisibleProperty Include="SparVariant" />
     <CompilerVisibleProperty Include="SparContractAssemblies" />
+    <CompilerVisibleProperty Include="SparAppId" />
   </ItemGroup>
+
+  <!--
+    The app id (plan section 3c; decision "M1b's remaining questions without a spike"): required in every app, and
+    reverse-DNS by GTK's application-id rules: two or more dot-separated parts of ASCII letters, digits and _, none
+    starting with a digit, at most 116 characters, so that with ".Development" it fits the 128 characters Windows takes
+    for an AppUserModelID (decision "Security defaults' choices accepted"). It names the app's per-user folders and its
+    identity to the OS, so it reaches the runtime through the generated catalog (SparCatalog.AppId), never by
+    reflection.
+  -->
+  <Target Name="SparCheckAppId" Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_SparAppIdValid Condition="'$(SparAppId)' != '' and $(SparAppId.Length) &lt;= 116 and $([System.Text.RegularExpressions.Regex]::IsMatch('$(SparAppId)', '^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$'))">true</_SparAppIdValid>
+    </PropertyGroup>
+
+    <Error Code="SPAR130" File="$(MSBuildProjectFullPath)" Condition="'$(SparAppId)' == ''"
+           Text="This app has no SparAppId. Give it a reverse-DNS id in its project file, such as &lt;SparAppId&gt;com.example.$(MSBuildProjectName.Replace('-', '_').Replace(' ', '_'))&lt;/SparAppId&gt;: it names the app's per-user folders and its identity to the OS, so keep it once the app ships." />
+    <Error Code="SPAR130" File="$(MSBuildProjectFullPath)" Condition="'$(SparAppId)' != '' and '$(_SparAppIdValid)' != 'true'"
+           Text="SparAppId '$(SparAppId)' is not a valid app id: use two or more parts separated by dots, each made of ASCII letters, digits and underscores and not starting with a digit, at most 116 characters in all (with .Development it must fit the 128 characters Windows takes for an app identity), such as com.example.MyApp." />
+  </Target>
 
   <!-- Items exist only after properties are evaluated, so the list becomes a property in a target, before it is read. -->
   <Target Name="SparContractAssemblies" BeforeTargets="GenerateMSBuildEditorConfigFileCore;SparWriteClientInventory">
@@ -470,13 +490,13 @@
           Condition="'$(SparIsApp)' == 'true' and '$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
   <!--
-    Spar's build steps, in order, before MSBuild settles embedded resources: the client step, the snapshot check, the
-    frontend (install, type-check, Vite, pack), then the embedding. One entry target with DependsOnTargets fixes the
-    order; several targets hooked on PrepareResources would run in the order they are declared in this file.
+    Spar's build steps, in order, before MSBuild settles embedded resources: the app id's check, the client step, the
+    snapshot check, the frontend (install, type-check, Vite, pack), then the embedding. One entry target with
+    DependsOnTargets fixes the order; several targets hooked on PrepareResources would run in the order they are declared.
   -->
   <Target Name="SparBuildSteps"
           BeforeTargets="PrepareResources"
-          DependsOnTargets="SparClient;SparCheckContractSnapshot;SparFrontend;SparEmbedFrontend"
+          DependsOnTargets="SparCheckAppId;SparClient;SparCheckContractSnapshot;SparFrontend;SparEmbedFrontend"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
   <!--

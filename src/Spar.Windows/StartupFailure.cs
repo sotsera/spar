@@ -73,6 +73,36 @@ internal static class StartupFailure
     }
 
     /// <summary>
+    /// A configuration in <c>Program.cs</c> the app cannot start with, such as a profile folder that is relative or on a
+    /// network drive: the line on standard error and in the log, then, unless the run is automated, a native message on
+    /// an STA thread of its own, before any window exists. The exit code is <paramref name="exitCode"/>, the app's own
+    /// start failure (70), since the fixed codes describe the machine, not the app's code. The start-up hook is not
+    /// called: it receives problems of the machine.
+    /// </summary>
+    public static int ReportConfiguration(string message, int exitCode, StartupContext context)
+    {
+        var line = $"The app's configuration stops its start: {message}";
+        context.Log.Error(line);
+        WriteToParentConsole(line);
+        if (context.Automated)
+        {
+            context.Log.Info("The automated mode shows no start-up message.");
+            return exitCode;
+        }
+
+        var thread = new Thread(() => NativeDialog.ShowError(HWND.Null, context.Title, $"{context.Title} can't start\n\n{message}"))
+        {
+            Name = "Spar start-up message",
+        };
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+
+        // The process's main thread before any window exists: waiting for the message blocks nothing.
+        thread.Join();
+        return exitCode;
+    }
+
+    /// <summary>
     /// A desktop executable started from a console window, without redirection, has no standard error: the line goes
     /// to the console it was started from, as the spike's batch file saw it (plan section 3, "Both OSes").
     /// </summary>

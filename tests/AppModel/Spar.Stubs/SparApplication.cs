@@ -34,6 +34,7 @@ public sealed class SparApplication
             Console.WriteLine($"window kind {kind}: route {options.PageRoute}, modal {options.IsModal}, single {options.IsSingleInstance}, contracts {string.Join(", ", options.AllowedContracts.Select(t => t.Name))}");
         }
 
+        Console.WriteLine($"browser opt-ins: {string.Join(", ", _builder.BrowserOptions.Allowed)}");
         Console.WriteLine($"page hang hook {(_builder.PageHangHandler is null ? "none" : "set")}, stall probe kept {_builder.DiagnosticsOptions.KeepsStallProbe}");
         Console.WriteLine($"tray: {_builder.TrayOptions?.TooltipText} [{string.Join(" | ", _builder.TrayOptions?.MenuItems.Items ?? [])}], close to tray {window.HidesToTray}");
 
@@ -65,6 +66,16 @@ public sealed class SparBuilder
     internal ShellOptions ShellOptions { get; } = new();
 
     internal FolderOptions FolderOptions { get; } = new();
+
+    internal BrowserOptions BrowserOptions { get; } = new();
+
+    /// <summary>Loosens the browser's strict defaults; each opt-in is logged at start-up.</summary>
+    public SparBuilder Browser(Action<BrowserOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(BrowserOptions);
+        return this;
+    }
 
     /// <summary>Where data, logs and crash records go. Every folder has a per-user default.</summary>
     public SparBuilder Folders(Action<FolderOptions> configure)

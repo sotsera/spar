@@ -56,11 +56,15 @@ internal partial interface ICoreWebView2WebMessageReceivedEventArgs
     int TryGetWebMessageAsString(out string? webMessageAsString);
 }
 
-/// <summary><c>ICoreWebView2NavigationStartingEventArgs</c> (slots 3–9).</summary>
+/// <summary>
+/// <c>ICoreWebView2NavigationStartingEventArgs3</c>, flat: the base 3–9, _2 10–11, _3 12 (the navigation's kind, Runtime
+/// 115). Declared once at _3, which every Runtime Spar supports has, for top-level and frame navigations alike.
+/// </summary>
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
-[Guid("5b495469-e119-438a-9b18-7604f25f2e49")]
-internal partial interface ICoreWebView2NavigationStartingEventArgs
+[Guid("ddffe494-4942-4bd2-ab73-35b8ff40e19f")]
+internal partial interface ICoreWebView2NavigationStartingEventArgs3
 {
+    // ICoreWebView2NavigationStartingEventArgs
     string GetUri();
     int GetIsUserInitiated();
     [PreserveSig] int Slot005_GetIsRedirected();
@@ -68,6 +72,11 @@ internal partial interface ICoreWebView2NavigationStartingEventArgs
     [PreserveSig] int Slot007_GetCancel();
     void PutCancel(int cancel);
     ulong GetNavigationId();
+    // ICoreWebView2NavigationStartingEventArgs2
+    [PreserveSig] int Slot010_GetAdditionalAllowedFrameAncestors();
+    [PreserveSig] int Slot011_PutAdditionalAllowedFrameAncestors();
+    // ICoreWebView2NavigationStartingEventArgs3
+    int GetNavigationKind();
 }
 
 /// <summary><c>ICoreWebView2ContentLoadingEventArgs</c> (slots 3–4): an error page gets no heartbeat.</summary>
@@ -147,4 +156,7 @@ internal static class WebView2Values
 
     /// <summary><c>COREWEBVIEW2_PREFERRED_COLOR_SCHEME_DARK</c>.</summary>
     public const int ColorSchemeDark = 2;
+
+    /// <summary><c>COREWEBVIEW2_NAVIGATION_KIND_BACK_OR_FORWARD</c>, in <c>ICoreWebView2NavigationStartingEventArgs3</c>.</summary>
+    public const int NavigationBackOrForward = 1;
 }

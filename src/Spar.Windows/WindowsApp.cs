@@ -1,5 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
 using Spar.Hosting;
 using Spar.Runtime;
+using Spar.Windows.Interop;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
@@ -21,8 +23,14 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     /// <summary>A Development or Test build may set it to <c>default</c> to keep the WebView's own background (measurements).</summary>
     public const string WebViewBackgroundVariable = "SPAR_DEV_WEBVIEW_BACKGROUND";
 
-    /// <summary>The exit code when the app's services could not be built, as in a test host.</summary>
+    /// <summary>
+    /// The exit code when the app could not start for a reason of its own: its services could not be built, as in a test
+    /// host, or its configuration cannot be used, such as a profile folder on a network drive.
+    /// </summary>
     private const int StartFailedExitCode = 70;
+
+    /// <summary>The longest AppUserModelID Windows takes.</summary>
+    private const int MaxAppUserModelId = 128;
 
     /// <summary>How long the page's close work may take (plan section 2c, "Flush before close").</summary>
     private const int PageCloseWorkMilliseconds = 1_000;
@@ -43,6 +51,8 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     private readonly bool _automated = SparDevelopment.IsAutomatedFromEnvironment();
     private readonly string _title;
     private readonly SparFolders _folders;
+    private readonly BrowserProfile _profile;
+    private readonly string _identity;
     private readonly RelaunchQueue _relaunches;
     private readonly PageHangHook _hangHook;
     private CspViolationLog? _violations;
@@ -69,7 +79,9 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     {
         _app = app;
         _title = app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
-        _folders = SparFolders.ForApp(_title, app.Builder.FolderOptions);
+        _identity = SparFolders.ChannelId(app.AppId, SparDevelopment.IsSupported);
+        _folders = SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions);
+        _profile = new BrowserProfile(_folders.Profile);
         _relaunches = new RelaunchQueue(app.Builder.RelaunchHandler, _log.Logger);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
     }
@@ -80,6 +92,11 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         _log.Info($"Host started {HostLog.ProcessAgeMilliseconds():0.0} ms after the process.");
         try
         {
+            if (Configure() is { } configurationFailed)
+            {
+                return configurationFailed;
+            }
+
             return CheckThenRun();
         }
         finally
@@ -125,6 +142,45 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
                 return default(LRESULT);
             default:
                 return null;
+        }
+    }
+
+    /// <summary>
+    /// Before the start-up checks (plan section 3c): the app's identity to the OS, the browser opt-ins in force, each in
+    /// the log, the WebView2 environment variables the app did not allow removed before the loader's first call, and the
+    /// app's folder choices checked. Returns an exit code when the configuration stops the start.
+    /// </summary>
+    private int? Configure()
+    {
+        var builder = _app.Builder;
+        _log.Info($"App id {_identity}, folder {_folders.DataRoot}");
+        SetIdentity();
+        if (builder.BrowserOptions.Active() is { Length: > 0 } active)
+        {
+            _log.Warn($"Browser opt-ins in force: {active}");
+        }
+
+        BrowserEnvironment.Filter(builder.BrowserOptions.EnvironmentOverrides, _log);
+        if (SparFolders.ProfileProblem(builder.FolderOptions.ProfileFolder) is { } problem)
+        {
+            return StartupFailure.ReportConfiguration(problem, StartFailedExitCode, Startup);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// The process's explicit AppUserModelID, the app id of this channel (decision "M1b's remaining questions without a
+    /// spike"): the taskbar groups the app's windows by it, a Development build apart from an installed one, and
+    /// WebView2 looks an administrator's policies up by it. It registers nothing with the system. Windows takes at most
+    /// 128 characters; the build caps an app id at 116, so even its Development id fits, and this check only guards a
+    /// catalog built without Spar's build steps.
+    /// </summary>
+    private void SetIdentity()
+    {
+        if (_identity.Length > MaxAppUserModelId || PInvoke.SetCurrentProcessExplicitAppUserModelID(_identity).Failed)
+        {
+            _log.Warn("AppUserModelID not set: the app id is too long or was refused.");
         }
     }
 
@@ -176,6 +232,8 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     private SparRunningApp Build(SparFolders folders)
     {
         var builder = _app.Builder;
+        // The profile folders no file grant may reach, with the folder in use once the environment exists.
+        builder.Services.AddSingleton(_profile);
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, folders, builder.BridgeOptions.Freeze());
         if (SparDevelopment.IsSupported)
         {
@@ -229,10 +287,11 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
 
         var pages = new PageServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
         _ = LogPolicyAsync(pages);
-        var guard = new PageGuard(_log, security);
+        var guard = new PageGuard(_log, security, _app.Builder.BrowserOptions.HistoryNavigation);
+        var defaults = new BrowserDefaults(_log, _app.Builder.BrowserOptions, development, _automated);
         var script = PageScript.Text(_listenerReports);
         _view = new BrowserView(
-            ui, _log, _window, _folders.WebEngine, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed);
+            ui, _log, _window, _profile, defaults, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed);
         _ = _view.StartAsync();
         _ = ConnectAsync(ui, built);
     }
@@ -263,6 +322,7 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
             if (SparDevelopment.IsSupported)
             {
                 DevelopmentTriggers.Watch(ui, bridge, view, _log);
+                DevelopmentInput.Watch(bridge, view, _log);
             }
         }
 

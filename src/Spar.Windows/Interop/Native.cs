@@ -13,7 +13,7 @@ internal static partial class Native
     public static partial int CreateCoreWebView2EnvironmentWithOptions(
         string? browserExecutableFolder,
         string? userDataFolder,
-        nint environmentOptions,
+        ICoreWebView2EnvironmentOptions? environmentOptions,
         ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler environmentCreatedHandler);
 
     /// <summary>

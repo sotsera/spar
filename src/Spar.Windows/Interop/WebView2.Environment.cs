@@ -87,8 +87,8 @@ internal partial interface ICoreWebView2Controller
     [PreserveSig] int Slot016_RemoveGotFocus();
     [PreserveSig] int Slot017_AddLostFocus();
     [PreserveSig] int Slot018_RemoveLostFocus();
-    [PreserveSig] int Slot019_AddAcceleratorKeyPressed();
-    [PreserveSig] int Slot020_RemoveAcceleratorKeyPressed();
+    EventRegistrationToken AddAcceleratorKeyPressed(ICoreWebView2AcceleratorKeyPressedEventHandler eventHandler);
+    void RemoveAcceleratorKeyPressed(EventRegistrationToken token);
     [PreserveSig] int Slot021_GetParentWindow();
     [PreserveSig] int Slot022_PutParentWindow();
     [PreserveSig] int Slot023_NotifyParentWindowPositionChanged();

@@ -13,7 +13,7 @@ internal static class CatalogEmitter
 {
     private const string Runtime = "global::Spar.Runtime";
 
-    public static void Emit(CodeWriter code, IReadOnlyList<ContractModel> contracts, PageSecurityModel? security = null)
+    public static void Emit(CodeWriter code, IReadOnlyList<ContractModel> contracts, PageSecurityModel? security = null, string appId = "")
     {
         code.Open("internal static class SparContracts");
         code.Line($"public static {Runtime}.SparCatalog Catalog {{ get; }} = new(");
@@ -31,6 +31,11 @@ internal static class CatalogEmitter
         code.Line("    AddServices)");
         code.Line("{");
         code.Line("    AppAssembly = typeof(SparContracts).Assembly,");
+        if (appId.Length > 0)
+        {
+            code.Line($"    AppId = {Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(appId, quote: true)},");
+        }
+
         EmitInterfaces(code, contracts);
         EmitPageSecurity(code, security);
         code.Line("};");

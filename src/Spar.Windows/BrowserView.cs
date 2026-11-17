@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Spar.Hosting;
 using Spar.Windows.Interop;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -19,7 +20,8 @@ internal sealed class BrowserView
     private readonly UiThread _ui;
     private readonly HostLog _log;
     private readonly HWND _window;
-    private readonly string _profileFolder;
+    private readonly BrowserProfile _profile;
+    private readonly BrowserDefaults _defaults;
     private readonly PageServer _pages;
     private readonly PageGuard _guard;
     private readonly string _pageScript;
@@ -51,7 +53,8 @@ internal sealed class BrowserView
         UiThread ui,
         HostLog log,
         HWND window,
-        string profileFolder,
+        BrowserProfile profile,
+        BrowserDefaults defaults,
         PageServer pages,
         PageGuard guard,
         string pageScript,
@@ -64,7 +67,8 @@ internal sealed class BrowserView
         _ui = ui;
         _log = log;
         _window = window;
-        _profileFolder = profileFolder;
+        _profile = profile;
+        _defaults = defaults;
         _pages = pages;
         _guard = guard;
         _pageScript = pageScript;
@@ -189,6 +193,19 @@ internal sealed class BrowserView
         return completed.Task;
     }
 
+    /// <summary>An in-process DevTools Protocol call on the WebView, for the Development-only input trigger (UI thread).</summary>
+    public Task<string?> CallDevToolsAsync(string method, string parameters)
+    {
+        if (_webView is null)
+        {
+            return Task.FromResult<string?>(null);
+        }
+
+        var completed = new DevToolsCallCompleted();
+        _webView.CallDevToolsProtocolMethod(method, parameters, completed);
+        return completed.Task;
+    }
+
     /// <summary>
     /// Teardown step 5 (plan section 3, "Teardown"): no recovery from here on, the events removed, and the controller
     /// closed on the UI thread. The host then exits without waiting for the browser.
@@ -201,9 +218,10 @@ internal sealed class BrowserView
 
     private async Task CreateAsync(int generation)
     {
-        Directory.CreateDirectory(_profileFolder);
+        Directory.CreateDirectory(_profile.Requested);
         var created = new EnvironmentCompleted();
-        var result = Native.CreateCoreWebView2EnvironmentWithOptions(null, _profileFolder, 0, created);
+        var options = new EnvironmentOptions(_defaults.BrowserArguments, Prerequisites.MinimumRuntime);
+        var result = Native.CreateCoreWebView2EnvironmentWithOptions(null, _profile.Requested, options, created);
         if (result < 0)
         {
             throw new WebView2Exception("CreateCoreWebView2EnvironmentWithOptions", result);
@@ -219,6 +237,7 @@ internal sealed class BrowserView
         _log.Phase("environment");
         _runtimeVersion = environment.GetBrowserVersionString();
         _log.Info($"WebView2 Runtime {_runtimeVersion}");
+        CheckProfileFolder(environment);
         var exited = new WebView2EventHandler(
             args =>
             {
@@ -239,6 +258,8 @@ internal sealed class BrowserView
         _controller = controller;
         _webView = Com.Take<ICoreWebView2_22>(controller.GetCoreWebView2());
         _log.Phase("controller");
+        _defaults.Apply(_webView);
+        var picker = _defaults.BlocksPagePicker ? PagePicker.Block(_webView, _log) : Task.CompletedTask;
         SetPageScheme(_theme.PageScheme);
         Resize();
 
@@ -252,10 +273,12 @@ internal sealed class BrowserView
         PageServer.AddFilters(_webView);
         bridge.Attach(_webView);
 
-        // Before the first navigation, so the script is in every document from the first one on.
+        // Before the first navigation, so the script is in every document from the first one on, and the page's file
+        // picker is intercepted from the first document on.
         var added = new ScriptAdded();
         _webView.AddScriptToExecuteOnDocumentCreated(_pageScript, added);
         await added.Task;
+        await picker;
         if (Abandoned(generation, null) || _webView is null)
         {
             return;
@@ -288,6 +311,23 @@ internal sealed class BrowserView
         {
             Marshal.Release(options);
         }
+    }
+
+    /// <summary>
+    /// The profile folder the browser actually uses (plan section 3c): an administrator's policy, or an environment
+    /// variable the app allowed, can move it. A moved folder is logged and recorded with the requested one in
+    /// <see cref="BrowserProfile"/>, the folders no file grant may reach.
+    /// </summary>
+    private void CheckProfileFolder(ICoreWebView2Environment10 environment)
+    {
+        var inUse = environment.GetUserDataFolder();
+        if (_profile.RecordInUse(inUse))
+        {
+            _log.Warn($"Browser profile folder moved by a policy or an allowed variable: {inUse}");
+            return;
+        }
+
+        _log.Info($"Browser profile folder {inUse}");
     }
 
     private void MakeTransparent(nint options)
@@ -347,6 +387,25 @@ internal sealed class BrowserView
 
         var failed = Handler(generation, "ProcessFailed", args => OnProcessFailed(generation, args, bridge));
         Subscribe(failed, webView.AddProcessFailed(failed), webView.RemoveProcessFailed);
+
+        // Plan section 3c's defaults that are events rather than settings, each only where the app kept the default.
+        if (_defaults.DeniesDownloads)
+        {
+            var download = Handler(generation, "DownloadStarting", _defaults.OnDownloadStarting);
+            Subscribe(download, webView.AddDownloadStarting(download), webView.RemoveDownloadStarting);
+        }
+
+        if (_defaults.FiltersContextMenu)
+        {
+            var menu = Handler(generation, "ContextMenuRequested", _defaults.OnContextMenuRequested);
+            Subscribe(menu, webView.AddContextMenuRequested(menu), webView.RemoveContextMenuRequested);
+        }
+
+        if (_defaults.FiltersKeys && _controller is { } controller)
+        {
+            var keys = Handler(generation, "AcceleratorKeyPressed", _defaults.OnAcceleratorKeyPressed);
+            Subscribe(keys, controller.AddAcceleratorKeyPressed(keys), controller.RemoveAcceleratorKeyPressed);
+        }
 
         // A healthy document again: the renderer may be reloaded automatically once more. Subscribed once, for every generation.
         if (!_watchingReadiness)

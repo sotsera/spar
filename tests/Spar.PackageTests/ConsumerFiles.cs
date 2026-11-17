@@ -90,6 +90,7 @@ internal static class ConsumerFiles
                 <ImplicitUsings>enable</ImplicitUsings>
                 <AssemblyName>NotesTool</AssemblyName>
                 <RootNamespace>NotesTool</RootNamespace>
+                <SparAppId>org.example.notes.Tool</SparAppId>
                 <SparFrontendPath>ui</SparFrontendPath>
                 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
                 <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>

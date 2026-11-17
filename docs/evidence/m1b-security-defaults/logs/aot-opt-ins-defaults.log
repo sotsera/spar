@@ -1,0 +1,52 @@
+       0,0 | run: seeded <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-defaults\com.example.tests.SecurityProbe\WebView2\EBWebView\Default\Preferences with the download folder
+      10,1 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=defaults]
+      95,2 | run: window moved offscreen
+     101,7 | spar info +0.4 ms: [c85eed00] Host started 26.2 ms after the process.
+     101,7 | spar info +0.6 ms: [c85eed00] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-defaults\com.example.tests.SecurityProbe
+     101,7 | spar warn +1.6 ms: [c85eed00] Browser opt-ins in force: AllowDevTools() AllowAcceleratorKeys() AllowPasswordSaving() AllowDownloads() AllowHistoryNavigation() AllowContextMenu() AllowPagePicker() AllowBrowserEnvironmentOverrides()
+     101,8 | spar info +1.9 ms: [c85eed00] single instance at 1.9 ms
+     101,8 | spar info +2.1 ms: [c85eed00] prerequisites checked at 2.1 ms
+     101,8 | spar info +2.4 ms: [c85eed00] services built at 2.4 ms
+     101,8 | spar info +11.2 ms: [c85eed00] window shown at 11.2 ms
+     101,8 | spar info +11.5 ms: [c85eed00] Theme dark (system), window #1f1f1f.
+     101,8 | spar info +12.2 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     101,8 | spar info +16.9 ms: [c85eed00] environment at 16.9 ms
+     101,8 | spar info +16.9 ms: [c85eed00] WebView2 Runtime 157.0.4341.46
+     101,8 | spar info +16.9 ms: [c85eed00] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-defaults\com.example.tests.SecurityProbe\WebView2
+     101,8 | spar info +20.1 ms: [c85eed00] Heartbeat every 5000 ms.
+     101,8 | spar info +20.2 ms: [c85eed00] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-vjmfouqbK1MxQAssYbQXh0A/+f2ik4zc/bQ37VrPL7c=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     101,8 | spar info +20.2 ms: [c85eed00] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     306,4 | spar info +205.7 ms: [c85eed00] controller at 205.7 ms
+     306,5 | spar info +205.8 ms: [c85eed00] Browser settings set (0.10 ms): devtools on, keys on, password autosave on, autofill on, swipe on, host objects off, reputation check off; menu full, downloads allowed, history allowed.
+     350,8 | spar info +246.3 ms: [c85eed00] page script added at 246.3 ms
+     350,8 | spar info +246.3 ms: [c85eed00] navigation started at 246.3 ms
+     399,1 | spar info +314.0 ms: [c85eed00] Bridge: document 5757085d68061692 opened.
+     399,1 | spar info +314.1 ms: [c85eed00] Heartbeat armed for the new document.
+     399,1 | spar info +314.1 ms: [c85eed00] first document at 314.1 ms
+     399,1 | spar info +321.1 ms: [c85eed00] first bridge message at 321.1 ms
+     399,1 | spar info +321.4 ms: [c85eed00] first bridge reply at 321.4 ms
+     399,1 | spar info +321.4 ms: [c85eed00] ui-ready at 321.4 ms
+     399,1 | spar info +321.5 ms: [c85eed00] Bridge: document 5757085d68061692 reported ui-ready.
+     399,1 | spar info +324.3 ms: [c85eed00] first navigation completed at 324.3 ms
+     399,1 | probe: folders: data root <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-defaults\com.example.tests.SecurityProbe; profile <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-defaults\com.example.tests.SecurityProbe\WebView2; logs <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-opt-ins-defaults\com.example.tests.SecurityProbe\logs
+     399,2 | probe: pickers: showOpenFilePicker function, showSaveFilePicker function, showDirectoryPicker function
+     399,2 | probe: hostObjects: function
+     448,8 | spar info +331.9 ms: [c85eed00] 404 for /favicon.ico
+    2414,4 | probe: download: clicked
+    2414,4 | probe: done defaults
+    2449,7 | run: found 'done defaults'
+    4465,9 | run: app working set 24560 KiB, peak seen 24560 KiB, private 8372 KiB
+    4466,2 | run: WM_CLOSE
+    4738,9 | spar info +4397.4 ms: [c85eed00] close requested (User) at 4397.4 ms
+    4739,0 | spar info +4397.9 ms: [c85eed00] closing at 4397.9 ms
+    4739,0 | spar info +4397.9 ms: [c85eed00] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    4739,0 | spar info +4398.2 ms: [c85eed00] page close work done at 4398.2 ms
+    4739,0 | spar info +4398.2 ms: [c85eed00] Bridge: document 5757085d68061692 closed (window closing).
+    4739,0 | spar info +4398.2 ms: [c85eed00] calls stopped at 4398.2 ms
+    4739,0 | spar info +4398.2 ms: [c85eed00] calls settled at 4398.2 ms
+    4739,0 | spar info +4425.4 ms: [c85eed00] controller closed at 4425.4 ms
+    4739,0 | spar info +4437.7 ms: [c85eed00] window destroyed at 4437.7 ms
+    4739,0 | spar info +4444.0 ms: [c85eed00] services disposed at 4444 ms
+    4739,0 | spar info +4444.1 ms: [c85eed00] exit 0 at 4444.1 ms
+    4739,2 | run: exit 0
+    4739,8 | run: download folder holds 1 file(s): spar-step5-probe-download.txt

@@ -30,6 +30,17 @@ public sealed partial class WebView2SlotTests
         ("ICoreWebView2Environment10", 18, "GetProcessInfos"),
         ("ICoreWebView2ProcessInfoCollection", 4, "GetValueAtIndex"),
         ("ICoreWebView2ProcessInfo", 4, "GetKind"),
+        ("ICoreWebView2_22", 3, "GetSettings"),
+        ("ICoreWebView2_22", 36, "CallDevToolsProtocolMethod"),
+        ("ICoreWebView2_22", 75, "AddDownloadStarting"),
+        ("ICoreWebView2_22", 100, "AddContextMenuRequested"),
+        ("ICoreWebView2Controller", 19, "AddAcceleratorKeyPressed"),
+        ("ICoreWebView2Environment10", 15, "GetUserDataFolder"),
+        ("ICoreWebView2Settings8", 36, "PutIsReputationCheckingRequired"),
+        ("ICoreWebView2NavigationStartingEventArgs3", 12, "GetNavigationKind"),
+        ("ICoreWebView2EnvironmentOptions", 3, "GetAdditionalBrowserArguments"),
+        ("ICoreWebView2AcceleratorKeyPressedEventArgs2", 10, "PutIsBrowserAcceleratorKeyEnabled"),
+        ("ICoreWebView2ContextMenuItemCollection", 5, "RemoveValueAtIndex"),
     ];
 
     [Fact]

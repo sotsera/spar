@@ -1,0 +1,51 @@
+       0,0 | run: port 49517 before the start: closed
+       1,5 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS=--remote-debugging-port=49517]
+      58,5 | run: window moved offscreen
+      64,8 | spar info +0.2 ms: [d1f288ff] Host started 23.4 ms after the process.
+      64,8 | spar info +0.3 ms: [d1f288ff] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-env-port\com.example.tests.SecurityProbe
+      64,8 | spar warn +1.3 ms: [d1f288ff] WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS ignored (AllowBrowserEnvironmentOverrides allows it).
+      64,8 | spar info +1.6 ms: [d1f288ff] single instance at 1.6 ms
+      64,9 | spar info +1.8 ms: [d1f288ff] prerequisites checked at 1.8 ms
+      64,9 | spar info +2.0 ms: [d1f288ff] services built at 2 ms
+      64,9 | spar info +12.9 ms: [d1f288ff] window shown at 12.9 ms
+      64,9 | spar info +13.1 ms: [d1f288ff] Theme dark (system), window #1f1f1f.
+      64,9 | spar info +13.8 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      64,9 | spar info +26.0 ms: [d1f288ff] environment at 26 ms
+      64,9 | spar info +26.0 ms: [d1f288ff] WebView2 Runtime 157.0.4341.46
+      64,9 | spar info +26.0 ms: [d1f288ff] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-env-port\com.example.tests.SecurityProbe\WebView2
+      64,9 | spar info +29.1 ms: [d1f288ff] Heartbeat every 5000 ms.
+      64,9 | spar info +29.9 ms: [d1f288ff] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-vjmfouqbK1MxQAssYbQXh0A/+f2ik4zc/bQ37VrPL7c=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      65,0 | spar info +30.0 ms: [d1f288ff] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     243,6 | spar info +204.1 ms: [d1f288ff] controller at 204.1 ms
+     243,6 | spar info +204.2 ms: [d1f288ff] Browser settings set (0.05 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     289,3 | spar info +245.4 ms: [d1f288ff] Page file picker blocked in 41.2 ms (Page.enable 40.9 ms).
+     289,3 | spar info +245.5 ms: [d1f288ff] page script added at 245.5 ms
+     289,3 | spar info +245.5 ms: [d1f288ff] navigation started at 245.5 ms
+     368,3 | spar info +323.5 ms: [d1f288ff] Bridge: document 8f6c9fe3725234fe opened.
+     368,3 | spar info +323.5 ms: [d1f288ff] Heartbeat armed for the new document.
+     368,3 | spar info +323.5 ms: [d1f288ff] first document at 323.5 ms
+     368,3 | spar info +330.3 ms: [d1f288ff] first bridge message at 330.3 ms
+     368,3 | spar info +330.8 ms: [d1f288ff] first bridge reply at 330.8 ms
+     368,3 | spar info +330.8 ms: [d1f288ff] ui-ready at 330.8 ms
+     368,3 | spar info +330.8 ms: [d1f288ff] Bridge: document 8f6c9fe3725234fe reported ui-ready.
+     368,3 | spar info +333.6 ms: [d1f288ff] first navigation completed at 333.6 ms
+     368,3 | probe: ready; nonce meta present
+     368,3 | probe: done idle
+     368,3 | spar info +336.2 ms: [d1f288ff] 404 for /favicon.ico
+     405,3 | run: found 'done idle'
+    1420,3 | run: port 49517 while the app runs: closed
+    1938,6 | run: app working set 24524 KiB, peak seen 24524 KiB, private 8364 KiB
+    1938,9 | run: WM_CLOSE
+    2181,0 | spar info +1910.2 ms: [d1f288ff] close requested (User) at 1910.2 ms
+    2181,0 | spar info +1910.7 ms: [d1f288ff] closing at 1910.7 ms
+    2181,0 | spar info +1910.7 ms: [d1f288ff] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    2181,0 | spar info +1910.9 ms: [d1f288ff] page close work done at 1910.9 ms
+    2181,0 | spar info +1910.9 ms: [d1f288ff] Bridge: document 8f6c9fe3725234fe closed (window closing).
+    2181,0 | spar info +1910.9 ms: [d1f288ff] calls stopped at 1910.9 ms
+    2181,0 | spar info +1910.9 ms: [d1f288ff] calls settled at 1910.9 ms
+    2181,0 | spar info +1924.5 ms: [d1f288ff] controller closed at 1924.5 ms
+    2181,0 | spar info +1926.2 ms: [d1f288ff] window destroyed at 1926.2 ms
+    2181,0 | spar info +1928.4 ms: [d1f288ff] services disposed at 1928.4 ms
+    2181,0 | spar info +1928.4 ms: [d1f288ff] exit 0 at 1928.4 ms
+    2181,2 | run: exit 0
+    4193,0 | run: port 49517 after the exit: closed
