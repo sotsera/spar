@@ -65,7 +65,14 @@ public sealed class SingleInstanceTests : IDisposable
         using var primary = Claim([]).Instance!;
         primary.Listen(_ => Interlocked.Increment(ref count) > 0, _log);
 
-        var results = Enumerable.Range(0, 10).AsParallel().Select(index => Claim([index.ToString(System.Globalization.CultureInfo.InvariantCulture)])).ToList();
+        // Each launch is a process of its own, whose main thread blocks while the primary's pipe is served on the
+        // primary's thread pool. Pool threads here would stand for neither: while they wait their turn, the primary's
+        // loop has none left (on CI's four cores, 3 of 10 launches timed out).
+        var results = new InstanceClaim[10];
+        var launches = Enumerable.Range(0, results.Length).Select(index => new Thread(() =>
+            results[index] = Claim([index.ToString(System.Globalization.CultureInfo.InvariantCulture)]))).ToList();
+        launches.ForEach(launch => launch.Start());
+        launches.ForEach(launch => launch.Join());
 
         Assert.All(results, result => Assert.True(result.ForwardedTo != 0, result.Problem?.Details));
         Assert.Equal(10, count);
