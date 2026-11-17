@@ -128,16 +128,22 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         Assert.Equal(0, (await FirstAsync()).Exit);
         var publish = Path.Combine(consumer.RunRoot, "publish");
 
-        var (exit, output) = await consumer.DotnetAsync("App", "publish", "-c", "Release", "-o", publish, "-nologo");
+        // Published without the Windows host, so running it opens no window here: the host itself is checked on the
+        // Notebook (docs/evidence/m1b-host.md), and this run checks the error of a build with no host for its OS.
+        var (exit, output) = await consumer.DotnetAsync(
+            "App", "publish", "-c", "Release", "-o", publish, "-nologo", "-p:SparPlatforms=linux");
 
         Assert.True(exit == 0, output);
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "NotesTool.exe" : "NotesTool");
         // The page from ui/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
-        var (ran, said) = await Tool.RunAsync(publish, executable, [], new Dictionary<string, string>());
+        // The app's per-user folders follow LOCALAPPDATA, so a run that ever reaches a host stays inside this test's root
+        // and never writes into the developer's own profile (AGENTS.md).
+        var perUser = Path.Combine(consumer.RunRoot, "local-app-data");
+        var (ran, said) = await Tool.RunAsync(publish, executable, [], new Dictionary<string, string> { ["LOCALAPPDATA"] = perUser });
 
-        // M1a has no desktop host: the executable says so and exits with 2.
-        Assert.Equal(2, ran);
+        // No host for this OS in the build (Spar.Linux does not exist yet): the executable says so and exits with 3.
+        Assert.Equal(3, ran);
         Assert.Contains("no desktop host", said, StringComparison.Ordinal);
     }
 

@@ -30,7 +30,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - **Leaving a `for await` loop with `break`** cancels and waits for the confirmation. If none comes, the `break` itself throws outcome unknown.
   - **A pull stream stops at its next `yield`,** even when its code ignores the token (16–17 ms, one timer tick). Only a long stretch without a yield or an await on the token stays unconfirmed.
   - **Work that a command starts and does not await** is invisible to the host; "cancelled" covers only the command's own code. This is a contract limit to document.
-  - **A navigation starts a new document epoch** (`NavigationStarting` on WebView2): the old document's calls are cancelled and their late replies dropped. On loopback a closed channel or request does the same.
+  - **A navigation starts a new document epoch** (`NavigationStarting` on WebView2): the old document's calls are cancelled and their late replies dropped. The new document's session opens at `ContentLoading`, so a message still in flight from the old page cannot reach it (decision "The Windows host, first slice"). On loopback a closed channel or request does the same.
 - **Subscriptions:** a bounded drop-oldest buffer with visible `gap` events. Resumption is chosen at three levels (see M3).
   - **The `events` slot (decided, user, 2026-11-14).** Subscription items are `Result`s whose `match` takes `success` (the app's values only), `events` and the usual `errors` and `failure`.
     - `events.reset` is required, because ignoring it leaves stale state; `gap`, `reconnecting` and `resumed` are optional.

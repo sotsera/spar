@@ -13,8 +13,27 @@
                       UndefineProperties="SparVariant;SparTestLane" />
   </ItemGroup>
 
-  <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
+  <!--
+    The Windows host, for the slot-order test of its WebView2 declarations against the header of the WebView2 package
+    it was written from (copied beside the tests), and for the static-state test.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Windows\Spar.Windows.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+    <None Include="$(PkgMicrosoft_Web_WebView2)\build\native\include\WebView2.h" Link="WebView2.h" Visible="false"
+          CopyToOutputDirectory="PreserveNewest" Condition="'$(PkgMicrosoft_Web_WebView2)' != ''" />
+  </ItemGroup>
+
+  <!--
+    Tests that read files of the test's output (the static-state test, tests/static-state/, and the slot-order test
+    read assemblies' metadata), so CoreCLR only.
+  -->
   <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
     <Compile Include="../static-state/StaticStateTests.cs" Link="StaticStateTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTestLane)' == 'Aot'">
+    <Compile Remove="WebView2SlotTests.cs" />
   </ItemGroup>
 </Project>

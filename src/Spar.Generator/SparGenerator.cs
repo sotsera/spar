@@ -11,8 +11,9 @@ namespace Spar.Generator;
 
 /// <summary>
 /// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog; the interceptor that
-/// hands the catalog to <c>SparApplication.Create</c>; and, in the Test variant, the test entry point and typed test
-/// clients. It reports nothing itself: the analyzer shows problems at their locations.
+/// hands the catalog to <c>SparApplication.Create</c>; the interceptor that hands <c>app.Run()</c> the desktop host the
+/// build references (outside the Test variant); and, in the Test variant, the test entry point and typed test clients.
+/// It reports nothing itself: the analyzer shows problems at their locations.
 /// </summary>
 [Generator]
 public sealed class SparGenerator : IIncrementalGenerator
@@ -46,12 +47,30 @@ public sealed class SparGenerator : IIncrementalGenerator
             .Where(static call => call is not null)
             .Collect();
 
+        var runCalls = context.SyntaxProvider.CreateSyntaxProvider(
+                static (node, _) => node is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Run" } },
+                static (syntax, cancellationToken) => RunCall(syntax, cancellationToken))
+            .Where(static call => call is not null)
+            .Collect();
+
         var isTest = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
             options.GlobalOptions.TryGetValue("build_property.SparVariant", out var variant) && variant == "Test");
+        var hosts = context.CompilationProvider.Select(static (compilation, _) =>
+            new HostsModel(compilation.GetTypeByMetadataName(HostEmitter.WindowsHost) is not null));
         var entry = context.CompilationProvider.Select(static (compilation, cancellationToken) => EntryPoint(compilation, cancellationToken));
 
         context.RegisterSourceOutput(contracts, static (output, models) => EmitContracts(output, models));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
+        context.RegisterSourceOutput(runCalls.Combine(hosts).Combine(isTest), static (output, input) =>
+        {
+            var ((calls, found), test) = input;
+
+            // The test variant runs the app through its test session, never in a window.
+            if (!test)
+            {
+                HostEmitter.Emit(output, calls!, found);
+            }
+        });
         context.RegisterSourceOutput(contracts.Combine(entry).Combine(isTest), static (output, input) =>
         {
             var ((models, entryPoint), test) = input;
@@ -136,6 +155,20 @@ public sealed class SparGenerator : IIncrementalGenerator
 
         var location = syntax.SemanticModel.GetInterceptableLocation(invocation, cancellationToken);
         return location is null ? null : new CreateCallModel(location.Version, location.Data);
+    }
+
+    private static RunCallModel? RunCall(GeneratorSyntaxContext syntax, CancellationToken cancellationToken)
+    {
+        var invocation = (InvocationExpressionSyntax)syntax.Node;
+        if (syntax.SemanticModel.GetSymbolInfo(invocation, cancellationToken).Symbol is not IMethodSymbol method
+            || method.ContainingType.ToDisplayString() != "Spar.SparApp"
+            || method.Parameters.Length != 0)
+        {
+            return null;
+        }
+
+        var location = syntax.SemanticModel.GetInterceptableLocation(invocation, cancellationToken);
+        return location is null ? null : new RunCallModel(location.Version, location.Data);
     }
 
     private static EntryPointModel? EntryPoint(Compilation compilation, CancellationToken cancellationToken)

@@ -315,6 +315,12 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
   - **An endless microtask chain makes the renderer exit with out-of-memory** after about 20 s, rather than hang.
 
   (`page-heartbeat`)
+- **`System.Uri` in a NativeAOT image brings its flag names,** `LoopbackHost` among them, as UTF-8 metadata, so the Production boundary scan reported the loopback host in a Notebook that only parsed a URL. The Windows host checks its origin with plain string work on WebView2's canonical URLs. (M1b host)
+- **CsWin32 0.3.369 cannot generate `GetWindowLongPtr` and `SetWindowLongPtr` in a project without a runtime identifier** (`PInvoke001`, not found): the platform decides which export exists. Declare `GetWindowLongPtrW` and `SetWindowLongPtrW` yourself; Spar runs only on 64-bit Windows. Its `GetProcessTimes` overload for a `HANDLE` takes pointers, the friendly one a `SafeHandle`. (M1b host)
+- **`StrategyBasedComWrappers.DefaultMarshallingInstance` is not public:** to wrap a pointer as a unique instance, keep a `StrategyBasedComWrappers` of your own. (M1b host)
+- **A web message can arrive between `NavigationStarting` and the new document:** it still comes from the old page. A session opened at `NavigationStarting` would take its id and then drop the new page's first calls as lower ids; open the new session at `ContentLoading`. Inferred from the event order, not provoked. (M1b host)
+- **A test that runs a Spar app's executable now opens a real window,** with its profile in the real `%LOCALAPPDATA%<app>WebView2`, and nothing closes it: the package test waited 20 minutes for an exit. Publish such a run without the host (`-p:SparPlatforms=linux` on Windows), or set `LOCALAPPDATA` under `artifacts/` and close the window with `WM_CLOSE`. (M1b host)
+- **The interop placeholders keep WebView2's method names in the image** (`Slot036_CallDevToolsProtocolMethod` and the like are metadata of a NativeAOT executable). A boundary scan for devtools code must not use WebView2 method names as markers. (M1b host)
 - **An app built as `OutputType` `Exe` is a console program on Windows:** it opens a console window, `Process.MainWindowHandle` can return that console instead of the app's window, and `CloseMainWindow` then ends the app with `0xC000013A` (1 of 3 black-box runs). Desktop apps are `WinExe`. (`test-host`)
 
 ### Windows host: from earlier versions and other frameworks, not rechecked
@@ -582,6 +588,8 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 - **`@opentelemetry/sdk-trace-web` is deprecated in OpenTelemetry JS 3.x,** and its last release doesn't work with the current exporters. Use `@opentelemetry/sdk-trace`. (`browser-telemetry`)
 
 ## Tooling and environment
+
+- **A test that starts an app's executable writes into the developer's own profile** unless it moves the per-user folders: once the Windows host existed, the package test's consumer app opened a window and created `%LOCALAPPDATA%\NotesTool` (73 MB) on the developer's machine. Start every app executable from a test with `LOCALAPPDATA` (Windows) or `XDG_*` (Linux) inside the test's own root; the host reads its folders from them.
 
 - **`Task.WhenAny` can return the task that completed second** when both come from `TaskCompletionSource`s made with `RunContinuationsAsynchronously`: it returns the one whose continuation runs first. The test host's start reported "Program.cs returned 70 without calling Run" for an app that did call `Run` and failed to build (1 of 60 NativeAOT runs, 4 of 60 under load), because `Run` completes its start signal and then returns 70. Check the other task's `IsCompleted` before deciding. (`SparTestApp.StartAsync`; found by `sandbox-runner`)
 

@@ -117,6 +117,8 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
 
 **Windows:**
 - **Threading:** one STA thread owns the window, environment, controller and their cleanup. Its message pump stays responsive. No synchronous waits on pump-dependent work.
+- **How an app reaches its host** (built in M1b step 1; decision "The Windows host, first slice"): the generator intercepts `app.Run()` and passes the host the build references (`Spar.Windows.SparWindowsHost`, created behind an OS check that NativeAOT folds per target), so no reflection finds it and each executable keeps only its own OS's host. The host builds the app's services on the thread pool while its STA shows the window and creates the environment.
+- **Document epochs on WebView2** (built): `NavigationStarting` ends the current document's session; the next one opens at `ContentLoading`, before the new document can send, and a message arriving between the two is dropped. Messages are copied out on the STA and decoded and admitted on one reader task, in order; replies are posted back and sent only while their document is current.
 - **Bindings:**
   - CsWin32 for Win32;
   - hand-declared `[GeneratedComInterface]` for WebView2 (CsWinRT 3.0 added 10–23 MB; not now), with a slot-order test;

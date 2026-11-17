@@ -91,6 +91,12 @@ internal sealed record EntryPointModel(bool TopLevel, bool ReturnsInt, string Ty
 
 internal sealed record CreateCallModel(int Version, string Data);
 
+/// <summary>An <c>app.Run()</c> call in the app, which the generator hands the desktop host the build references.</summary>
+internal sealed record RunCallModel(int Version, string Data);
+
+/// <summary>The desktop hosts the compilation references, by their host type's full name.</summary>
+internal sealed record HostsModel(bool Windows);
+
 /// <summary>An immutable array compared by its items, so incremental pipeline steps cache correctly.</summary>
 internal readonly struct EquatableArray<T>(ImmutableArray<T> items) : IEquatable<EquatableArray<T>>, IEnumerable<T>
     where T : IEquatable<T>

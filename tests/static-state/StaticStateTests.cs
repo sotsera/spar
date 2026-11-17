@@ -17,7 +17,7 @@ public sealed class StaticStateTests
     /// <summary>Spar's assemblies; each test project checks the ones in its output.</summary>
     private static readonly string[] SparAssemblies =
     [
-        "Spar", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Generator", "Spar.Sdk.Tasks",
+        "Spar", "Spar.Windows", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Generator", "Spar.Sdk.Tasks",
     ];
 
     [Fact]

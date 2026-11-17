@@ -25,6 +25,31 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void Run_is_handed_the_windows_host_the_build_references()
+    {
+        const string Host = """
+            namespace Spar.Windows
+            {
+                public sealed class SparWindowsHost : Spar.Runtime.ISparHost
+                {
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+            """;
+
+        var run = GeneratorHarness.Generate(Program + Host);
+        var test = GeneratorHarness.Generate(Program + Host, "Test");
+
+        Assert.Empty(run.Errors);
+        Assert.Contains("return new global::Spar.Windows.SparWindowsHost();", run.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+        Assert.Contains("IsWindowsVersionAtLeast(10, 0, 17763)", run.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+
+        // The test variant runs through its test session, never in a window.
+        Assert.Empty(test.Errors);
+        Assert.DoesNotContain("Spar.Run.g.cs", test.Files.Keys);
+    }
+
+    [Fact]
     public void Two_contracts_with_one_name_are_left_out_and_the_rest_still_compiles()
     {
         const string Contracts = """

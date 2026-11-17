@@ -14,6 +14,23 @@
     <PublishAot Condition="'$(PublishAot)' == ''">true</PublishAot>
   </PropertyGroup>
 
+  <!--
+    The app's hosts (decision "Choosing target platforms: SparPlatforms"): windows, linux, or both, the default. Set
+    here because the application manifest below must be known before Microsoft.NET.Sdk's targets are imported.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparPlatforms Condition="'$(SparPlatforms)' == ''">windows;linux</SparPlatforms>
+    <SparTargetsWindows Condition="$([System.String]::Copy(';$(SparPlatforms);').ToLowerInvariant().Contains(';windows;'))">true</SparTargetsWindows>
+  </PropertyGroup>
+
+  <!--
+    A Windows app gets Spar's manifest unless it has its own: Common Controls 6, which the host's task dialogs need,
+    per-monitor DPI awareness, and Windows 10 and 11 as supported systems.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparTargetsWindows)' == 'true'">
+    <ApplicationManifest Condition="'$(ApplicationManifest)' == '' and '$(NoWin32Manifest)' != 'true'">$(SparSdkDirectory)Windows\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
   <!-- The NativeAOT test lane publishes the test project itself, against xunit.v3.aot (plan section 5). -->
   <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparTestLane)' == 'Aot'">
     <PublishAot>true</PublishAot>
@@ -53,6 +70,15 @@
 
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
     <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="true" Trim="true" />
+  </ItemGroup>
+
+  <!--
+    Spar's development facilities (failure details for the page, the automated mode's SPAR_AUTOMATED variable) are in
+    the Development and Test variants; Production turns the switch off and the trimmer removes them.
+  -->
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.Development.IsSupported" Value="false" Trim="true" Condition="'$(SparVariant)' == 'Production'" />
+    <RuntimeHostConfigurationOption Include="Spar.Development.IsSupported" Value="true" Trim="true" Condition="'$(SparVariant)' != 'Production'" />
   </ItemGroup>
 
   <!--
@@ -155,6 +181,51 @@
     <PackageReference Include="Spar.Testing" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
     <PackageReference Include="Spar.Testing.Browser" Version="$(SparSdkVersion)" IsImplicitlyDefined="true"
                       Condition="'$(SparBrowserTests)' == 'true'" />
+  </ItemGroup>
+
+  <!--
+    The Windows host, for apps whose SparPlatforms include windows: Spar.Windows at the SDK's own version (by reference
+    from source), which the generator hands to app.Run() on Windows. Apps never reference it themselves.
+  -->
+  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(SparSourceMode)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Windows\Spar.Windows.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <PackageReference Include="Spar.Windows" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+  <!--
+    The WebView2 loader (plan section 3, "Bindings"), from the Microsoft.Web.WebView2 package, used for its native
+    files only: linked statically into a NativeAOT executable (DirectPInvoke plus the static library, so the
+    publication is one file), and WebView2Loader.dll beside a CoreCLR build or publication. The version comes from
+    central package management in this repository and from the SDK in package mode, like the test framework's.
+  -->
+  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true'">
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <PackageReference Update="Microsoft.Web.WebView2" Version="$(SparWebView2Version)" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(SparTargetsWindows)' == 'true'">
+    <_SparWebView2Arch Condition="'$(RuntimeIdentifier)' == 'win-x64'">x64</_SparWebView2Arch>
+    <_SparWebView2Arch Condition="'$(RuntimeIdentifier)' == 'win-arm64'">arm64</_SparWebView2Arch>
+    <_SparWebView2Native>$(PkgMicrosoft_Web_WebView2)\build\native\$(_SparWebView2Arch)\</_SparWebView2Native>
+    <_SparWebView2PublishDll Condition="'$(PublishAot)' == 'true'">Never</_SparWebView2PublishDll>
+    <_SparWebView2PublishDll Condition="'$(PublishAot)' != 'true'">PreserveNewest</_SparWebView2PublishDll>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != ''">
+    <None Include="$(_SparWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" Visible="false"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="$(_SparWebView2PublishDll)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != '' and '$(PublishAot)' == 'true'">
+    <DirectPInvoke Include="WebView2Loader" />
+    <NativeLibrary Include="$(_SparWebView2Native)WebView2LoaderStatic.lib" />
   </ItemGroup>
 
   <!-- The task assembly, built first so the client step can load it; nothing of it reaches the app. -->

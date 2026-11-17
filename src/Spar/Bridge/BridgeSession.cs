@@ -195,6 +195,12 @@ internal sealed class BridgeSession : IDisposable
         SparFailure? refusal = null;
         lock (_gate)
         {
+            // A closed document runs nothing more: its page is going away, and no reply could reach it.
+            if (_closed)
+            {
+                return;
+            }
+
             if (!TakeId(id))
             {
                 Dropped?.Invoke($"call {id}: an id must be higher than every earlier one in the document");

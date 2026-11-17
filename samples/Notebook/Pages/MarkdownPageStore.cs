@@ -14,6 +14,9 @@ public interface IPageStore
     Task WriteAsync(Page page, CancellationToken cancellationToken);
 
     Task<bool> DeleteAsync(string id, CancellationToken cancellationToken);
+
+    /// <summary>Whether a page is being written or deleted right now, for the close guard in Program.cs.</summary>
+    bool IsWriting { get; }
 }
 
 /// <summary>
@@ -26,6 +29,8 @@ public sealed class MarkdownPageStore(SparFolders folders) : IPageStore
 
     private readonly string _folder = Path.Combine(folders.Data, "pages");
     private readonly SemaphoreSlim _gate = new(1, 1);
+
+    public bool IsWriting => _gate.CurrentCount == 0;
 
     public async Task<Page?> FindAsync(string id, CancellationToken cancellationToken)
     {

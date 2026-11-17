@@ -149,6 +149,20 @@ public sealed class BridgeSessionTests : IAsyncLifetime
         Assert.True(await _sent.StaysQuietAsync(TimeSpan.FromMilliseconds(200)));
     }
 
+    /// <summary>A desktop host closes a document at navigation; a message of it still in flight must not run a command.</summary>
+    [Fact]
+    public async Task After_close_a_call_runs_no_command()
+    {
+        await OpenAsync();
+
+        _session.Close();
+        _session.Receive(Call(1, "slow", "wait", ""));
+        await _session.WhenIdleAsync();
+
+        Assert.True(await _sent.StaysQuietAsync(TimeSpan.FromMilliseconds(200)));
+        Assert.DoesNotContain("slow.wait", _backend.Started);
+    }
+
     [Fact]
     public async Task Details_reach_the_page_only_when_the_host_allows_them()
     {

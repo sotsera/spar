@@ -49,6 +49,9 @@ public sealed class SparBuilder
 
     internal BridgeOptions BridgeOptions { get; } = new();
 
+    /// <summary>The backend's close guard, or null when the app declared none.</summary>
+    internal Func<CloseRequest, IServiceProvider, CancellationToken, ValueTask<CloseDecision>>? CloseGuard { get; private set; }
+
     /// <summary>Where data and logs go; each has a per-user default. A test host moves them all under its data root.</summary>
     public SparBuilder Folders(Action<FolderOptions> configure)
     {
@@ -66,11 +69,34 @@ public sealed class SparBuilder
         _ = BridgeOptions.Freeze();
         return this;
     }
+
+    /// <summary>
+    /// The backend's close guard (<c>docs/app-model.md</c> 6.11). It runs after the page's guard, off the window's UI
+    /// thread, with the app's root services, and answers <see cref="CloseDecision.Close"/>,
+    /// <see cref="CloseDecision.Keep"/> or <see cref="CloseDecision.Ask"/>. The token is cancelled at the session-end
+    /// deadline (about 5 s) and when the app stops.
+    /// </summary>
+    public SparBuilder OnCloseRequested(Func<CloseRequest, IServiceProvider, CancellationToken, ValueTask<CloseDecision>> guard)
+    {
+        ArgumentNullException.ThrowIfNull(guard);
+        CloseGuard = guard;
+        return this;
+    }
+
+    /// <summary>The backend's close guard when it decides at once.</summary>
+    public SparBuilder OnCloseRequested(Func<CloseRequest, IServiceProvider, CloseDecision> guard)
+    {
+        ArgumentNullException.ThrowIfNull(guard);
+        return OnCloseRequested((request, services, _) => ValueTask.FromResult(guard(request, services)));
+    }
 }
 
-/// <summary>The configured app. <see cref="Run"/> starts it and returns the process exit code.</summary>
+/// <summary>The configured app. <see cref="Run()"/> starts it and returns the process exit code.</summary>
 public sealed class SparApp
 {
+    /// <summary>The exit code when this build has no host for the OS it runs on (plan section 3, "Missing prerequisites").</summary>
+    internal const int NoHostExitCode = 3;
+
     private readonly SparBuilder _builder;
     private readonly SparCatalog _catalog;
     private readonly SparTestSession? _session;
@@ -88,15 +114,30 @@ public sealed class SparApp
     /// <summary>The app's generated contracts.</summary>
     internal SparCatalog Catalog => _catalog;
 
-    public int Run()
+    /// <summary>Starts the app in its window and returns the process exit code when it ends.</summary>
+    public int Run() => Run(host: null);
+
+    /// <summary>
+    /// The form Spar's generated code calls with the desktop host the app's build references for this OS (decision
+    /// "The Windows host, first slice"): the generator intercepts <c>app.Run()</c>, so no host is found by reflection,
+    /// and each NativeAOT executable keeps only its own OS's host.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public int Run(ISparHost? host)
     {
         if (SparTestSession.IsSupported && _session is not null)
         {
             return _session.Run(_builder, _catalog);
         }
 
-        // M1a has no window; the desktop hosts arrive in M1b and M1c.
-        Console.Error.WriteLine("This build of Spar has no desktop host yet. Run the app's tests instead.");
-        return 2;
+        if (host is null)
+        {
+            Console.Error.WriteLine(
+                $"This build of the app has no desktop host for {System.Runtime.InteropServices.RuntimeInformation.OSDescription}. " +
+                "Add the platform to <SparPlatforms> in the app's project (windows, linux) and build it again.");
+            return NoHostExitCode;
+        }
+
+        return host.Run(this);
     }
 }
