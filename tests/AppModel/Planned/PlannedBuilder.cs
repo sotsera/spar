@@ -21,10 +21,6 @@ public static class PlannedBuilder
         public SparBuilder Tray(Action<TrayOptions> configure) => Configure(builder, new TrayOptions(), configure);
 
         public SparBuilder Shell(Action<ShellOptions> configure) => Configure(builder, new ShellOptions(), configure);
-
-        public SparBuilder ContentSecurity(Action<CspBuilder> configure) => Configure(builder, new CspBuilder(), configure);
-
-        public SparBuilder Permissions(Action<PermissionsBuilder> configure) => Configure(builder, new PermissionsBuilder(), configure);
     }
 
     private static SparBuilder Configure<TOptions>(SparBuilder builder, TOptions options, Action<TOptions> configure)

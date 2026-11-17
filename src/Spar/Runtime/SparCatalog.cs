@@ -42,6 +42,12 @@ public sealed class SparCatalog
     /// <summary>The interface contracts, whose implementations come from the app's own registrations.</summary>
     public IReadOnlyList<SparInterfaceContract> Interfaces { get; init; } = [];
 
+    /// <summary>
+    /// The page security the build read from <c>Program.cs</c> (<c>spar.ContentSecurity</c>, <c>spar.Permissions</c>);
+    /// null when no generator set it, and the run's own declaration is used.
+    /// </summary>
+    public SparPageSecurity? PageSecurity { get; init; }
+
     /// <summary>16 hex characters of the SHA-256 of the contracts' wire shape (plan section 2c, "The messages").</summary>
     public string Fingerprint { get; }
 

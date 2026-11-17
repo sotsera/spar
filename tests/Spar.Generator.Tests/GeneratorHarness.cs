@@ -82,7 +82,7 @@ internal static class GeneratorHarness
     {
         var options = new AnalyzerOptions([], new BuildOptions("Development", listed));
         var diagnostics = await Compile(source, libraries: libraries)
-            .WithAnalyzers([new ContractAnalyzer()], options)
+            .WithAnalyzers([new ContractAnalyzer(), new PageSecurityAnalyzer()], options)
             .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
         return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ThenBy(d => d.GetMessage(), StringComparer.Ordinal)];
     }

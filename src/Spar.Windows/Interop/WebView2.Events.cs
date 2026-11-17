@@ -7,7 +7,7 @@ namespace Spar.Windows.Interop;
 // for the rules). Every pointer a callback receives is borrowed; Com.Borrow wraps it with a reference of its own.
 
 /// <summary><c>ICoreWebView2WebResourceRequestedEventArgs2</c>, flat: the base 3–7, _2 8.</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("9c562c24-b219-4d7f-92f6-b187fbbadd56")]
 internal partial interface ICoreWebView2WebResourceRequestedEventArgs2
 {
@@ -21,18 +21,22 @@ internal partial interface ICoreWebView2WebResourceRequestedEventArgs2
     int GetRequestedSourceKind();
 }
 
-/// <summary><c>ICoreWebView2WebResourceRequest</c> (slots 3–9; the host reads the first three).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+/// <summary><c>ICoreWebView2WebResourceRequest</c> (slots 3–9; the host reads the address, the method and the body).</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("97055cd4-512c-4264-8b5f-e3f446cea6a5")]
 internal partial interface ICoreWebView2WebResourceRequest
 {
     string GetUri();
     [PreserveSig] int Slot004_PutUri();
     string GetMethod();
+    [PreserveSig] int Slot006_PutMethod();
+
+    /// <summary>The request body as an <c>IStream</c> (one reference the caller owns), or 0 when it has none.</summary>
+    nint GetContent();
 }
 
 /// <summary><c>ICoreWebView2Deferral</c>: completes a deferred event.</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("c10e7f7b-b585-46f0-a623-8befbf3e4ee0")]
 internal partial interface ICoreWebView2Deferral
 {
@@ -40,7 +44,7 @@ internal partial interface ICoreWebView2Deferral
 }
 
 /// <summary><c>ICoreWebView2WebMessageReceivedEventArgs</c> (slots 3–5).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("0f99a40c-e962-4207-9e92-e3d542eff849")]
 internal partial interface ICoreWebView2WebMessageReceivedEventArgs
 {
@@ -53,21 +57,21 @@ internal partial interface ICoreWebView2WebMessageReceivedEventArgs
 }
 
 /// <summary><c>ICoreWebView2NavigationStartingEventArgs</c> (slots 3–9).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("5b495469-e119-438a-9b18-7604f25f2e49")]
 internal partial interface ICoreWebView2NavigationStartingEventArgs
 {
     string GetUri();
-    [PreserveSig] int Slot004_GetIsUserInitiated();
+    int GetIsUserInitiated();
     [PreserveSig] int Slot005_GetIsRedirected();
     [PreserveSig] int Slot006_GetRequestHeaders();
     [PreserveSig] int Slot007_GetCancel();
-    [PreserveSig] int Slot008_PutCancel();
+    void PutCancel(int cancel);
     ulong GetNavigationId();
 }
 
-/// <summary><c>ICoreWebView2ContentLoadingEventArgs</c> (slots 3–4).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+/// <summary><c>ICoreWebView2ContentLoadingEventArgs</c> (slots 3–4): an error page gets no heartbeat.</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("0c8a1275-9b6b-4901-87ad-70df25bafa6e")]
 internal partial interface ICoreWebView2ContentLoadingEventArgs
 {
@@ -76,7 +80,7 @@ internal partial interface ICoreWebView2ContentLoadingEventArgs
 }
 
 /// <summary><c>ICoreWebView2NavigationCompletedEventArgs</c> (slots 3–5).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("30d68b7d-20d9-4752-a9ca-ec8448fbb5c1")]
 internal partial interface ICoreWebView2NavigationCompletedEventArgs
 {
@@ -86,7 +90,7 @@ internal partial interface ICoreWebView2NavigationCompletedEventArgs
 }
 
 /// <summary><c>ICoreWebView2ProcessFailedEventArgs</c> (slot 3).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("8155a9a4-1474-4a86-8cae-151b0fa6b8ca")]
 internal partial interface ICoreWebView2ProcessFailedEventArgs
 {
@@ -94,7 +98,7 @@ internal partial interface ICoreWebView2ProcessFailedEventArgs
 }
 
 /// <summary><c>ICoreWebView2BrowserProcessExitedEventArgs</c> (slots 3–4).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("1f00663f-af8c-4782-9cdd-dd01c52e34cb")]
 internal partial interface ICoreWebView2BrowserProcessExitedEventArgs
 {
@@ -128,6 +132,12 @@ internal static class WebView2Values
 
     /// <summary><c>COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND_FAILED</c>; 0 is a normal exit.</summary>
     public const int BrowserExitFailed = 1;
+
+    /// <summary><c>COREWEBVIEW2_PERMISSION_STATE_ALLOW</c>.</summary>
+    public const int PermissionAllow = 1;
+
+    /// <summary><c>COREWEBVIEW2_PERMISSION_STATE_DENY</c>.</summary>
+    public const int PermissionDeny = 2;
 
     /// <summary><c>COREWEBVIEW2_PREFERRED_COLOR_SCHEME_AUTO</c>: the page follows the system's theme.</summary>
     public const int ColorSchemeAuto = 0;

@@ -123,7 +123,9 @@ internal sealed partial class WebView2EventHandler(Action<nint> handle, Action<E
     ICoreWebView2ProcessFailedEventHandler,
     ICoreWebView2WebMessageReceivedEventHandler,
     ICoreWebView2WebResourceRequestedEventHandler,
-    ICoreWebView2BrowserProcessExitedEventHandler
+    ICoreWebView2BrowserProcessExitedEventHandler,
+    ICoreWebView2NewWindowRequestedEventHandler,
+    ICoreWebView2PermissionRequestedEventHandler
 {
     public void Invoke(nint sender, nint args)
     {

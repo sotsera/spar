@@ -18,6 +18,12 @@ public enum BridgeMessageType
     /// <summary>The page's answer to <see cref="Ping"/>, sent from its message handler with the same <c>seq</c>.</summary>
     Pong,
 
+    /// <summary>
+    /// Content Security Policy violations, grouped and batched by the host-injected script (plan section 3b); the payload
+    /// is the batch. Hosts without the injected script never receive it.
+    /// </summary>
+    Csp,
+
     // Host to page.
     Open,
     Result,
@@ -27,7 +33,9 @@ public enum BridgeMessageType
     Event,
     Closing,
 
-    /// <summary>The heartbeat (plan section 3, "Hung pages"), sent only to a page that listed it in <c>hello</c>.</summary>
+    /// <summary>
+    /// The heartbeat (plan section 3, "Hung pages"), sent only by a host whose injected script answers it in the page.
+    /// </summary>
     Ping,
 
     /// <summary>A well-formed message of a type this side does not know (a newer peer).</summary>
@@ -97,6 +105,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         BridgeMessageType.Ready => "ready",
         BridgeMessageType.ClosingDone => "closing-done",
         BridgeMessageType.Pong => "pong",
+        BridgeMessageType.Csp => "csp",
         BridgeMessageType.Open => "open",
         BridgeMessageType.Result => "result",
         BridgeMessageType.Items => "items",
@@ -118,6 +127,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         "ready" => BridgeMessageType.Ready,
         "closing-done" => BridgeMessageType.ClosingDone,
         "pong" => BridgeMessageType.Pong,
+        "csp" => BridgeMessageType.Csp,
         "open" => BridgeMessageType.Open,
         "result" => BridgeMessageType.Result,
         "items" => BridgeMessageType.Items,

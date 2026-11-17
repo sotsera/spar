@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Threading.Channels;
 using Spar.Bridge;
+using Spar.Hosting;
 using Spar.Runtime;
 using Spar.Windows.Interop;
 
@@ -12,7 +13,10 @@ namespace Spar.Windows;
 /// A navigation starts a new document epoch: the old document's calls are cancelled at once and its late replies
 /// dropped, and the new session opens when the new document starts loading, so a message still in flight from the old
 /// page never reaches the new one. Messages are decoded and dispatched off the UI thread, in the order they arrived;
-/// replies are posted back to it and checked against the current document before they are sent.
+/// replies are posted back to it and checked against the current document before they are sent. Every document of the
+/// app's origin carries the host's injected script (<see cref="PageScript"/>), which answers the heartbeat from the
+/// document's creation and posts the page's Content Security Policy violations, handed to the
+/// <see cref="CspViolationLog"/> off the UI thread.
 /// </summary>
 internal sealed class WebViewBridge
 {
@@ -21,18 +25,21 @@ internal sealed class WebViewBridge
     private readonly SparDispatcher _dispatcher;
     private readonly string _fingerprint;
     private readonly bool _includeDetails;
+    private readonly CspViolationLog? _violations;
     private readonly Channel<Incoming> _incoming = Channel.CreateUnbounded<Incoming>(new UnboundedChannelOptions { SingleReader = true });
     private readonly Task _reader;
     private ICoreWebView2_22? _webView;
     private Document? _current;
 
-    public WebViewBridge(UiThread ui, HostLog log, SparDispatcher dispatcher, string fingerprint, bool includeDetails)
+    /// <param name="violations">Where the listener's batches go; null when the listener does not report in this build.</param>
+    public WebViewBridge(UiThread ui, HostLog log, SparDispatcher dispatcher, string fingerprint, bool includeDetails, CspViolationLog? violations)
     {
         _ui = ui;
         _log = log;
         _dispatcher = dispatcher;
         _fingerprint = fingerprint;
         _includeDetails = includeDetails;
+        _violations = violations;
         _reader = Task.Run(ReadAsync);
     }
 
@@ -40,8 +47,8 @@ internal sealed class WebViewBridge
     public event Action? DocumentReady;
 
     /// <summary>
-    /// Raised on the UI thread when the current document's page said <c>hello</c>: true when it answers the heartbeat's
-    /// <c>ping</c> (plan section 3, "Hung pages"). This is the first thing the page's start-up script does.
+    /// Raised on the UI thread when a new document is created, before any of its scripts runs: true when the host's
+    /// injected script answers its heartbeat (plan section 3, "Hung pages"), false for an error page, which has none.
     /// </summary>
     public event Action<bool>? DocumentOpened;
 
@@ -67,21 +74,34 @@ internal sealed class WebViewBridge
     /// <summary>A navigation started: the current document's epoch ends (UI thread).</summary>
     public void OnNavigationStarting() => CloseCurrent("navigation");
 
-    /// <summary>The new document is loading: its session opens, before any of its scripts can send (UI thread).</summary>
-    public void OnContentLoading()
+    /// <summary>
+    /// The new document is loading: its session opens, before any of its scripts can send, and the heartbeat is armed
+    /// for it unless it is an error page (UI thread).
+    /// </summary>
+    public void OnContentLoading(bool isErrorPage)
     {
         CloseCurrent("new document");
         var id = Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(8));
         var document = new Document(id);
-        var session = new BridgeSession(_dispatcher, _fingerprint, id, message => Send(document, message), _includeDetails);
+        var session = new BridgeSession(_dispatcher, _fingerprint, id, message => Send(document, message), _includeDetails)
+        {
+            HostAnswersPing = !isErrorPage,
+        };
         session.Dropped += reason => _log.Warn($"Bridge, document {id}: dropped {reason}");
         session.Ready += () => _ui.Post(() => Ready(document), "bridge ui-ready");
         session.ClosingDone += () => document.ClosingDone.TrySetResult();
-        session.Opened += ping => _ui.Post(() => Opened(document, ping), "bridge open");
         session.Pong += seq => _ui.Post(() => Ponged(document, seq), "heartbeat answer");
+        if (_violations is { } violations)
+        {
+            // On the reader task: the batch is copied and queued; it is parsed and logged on the log's own task.
+            session.Violations += payload => violations.PostBatch(id, payload);
+            violations.PostDocument(id);
+        }
+
         document.Session = session;
         _current = document;
-        _log.Info($"Bridge: document {id} opened.");
+        _log.Info($"Bridge: document {id} opened{(isErrorPage ? " (an error page)" : "")}.");
+        DocumentOpened?.Invoke(!isErrorPage);
     }
 
     /// <summary>A web message from the page (UI thread): checked, copied out, and queued for the reader.</summary>
@@ -169,14 +189,6 @@ internal sealed class WebViewBridge
         document.ClosingDone.TrySetResult();
         _log.Info($"Bridge: document {document.Id} closed ({why}).");
         DocumentClosed?.Invoke();
-    }
-
-    private void Opened(Document document, bool answersPing)
-    {
-        if (document == _current && !document.IsClosed)
-        {
-            DocumentOpened?.Invoke(answersPing);
-        }
     }
 
     private void Ponged(Document document, long seq)

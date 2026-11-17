@@ -1,0 +1,18 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    A test app for the Windows host's page security (plan M1b, build step 4; docs/evidence/m1b-page-security.md): its
+    page runs one probe, named by SECURITY_PROBE_MODE, and reports what happened through its one contract to standard
+    error. Run by hand, published or in Debug with SparDevServer=false, from the evidence's probe; not in Spar.slnx.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SecurityProbe</RootNamespace>
+
+    <!-- The page is plain JavaScript: there is nothing for the type-check to check. -->
+    <SparTypeCheck>false</SparTypeCheck>
+
+    <!-- -p:SecurityProbeListenerOff=true builds the probe with the violation listener off, to measure what it costs. -->
+    <DefineConstants Condition="'$(SecurityProbeListenerOff)' == 'true'">$(DefineConstants);PROBE_LISTENER_OFF</DefineConstants>
+  </PropertyGroup>
+</Project>

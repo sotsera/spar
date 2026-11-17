@@ -47,8 +47,9 @@ Read [the plan](docs/plan.md) for scope and the current milestone, the [design f
 | `spar-native-interop` | Win32 and COM declarations, layouts, callbacks, handle ownership |
 | `spar-webview2-hosting` | The Windows WebView2 host, STA work, the bridge, devtools access, shutdown |
 | `spar-webkitgtk-hosting` | The Linux WebKitGTK host, GLib main-loop work, the bridge, devtools access, shutdown |
+| `spar-page-security` | The page's policy declared in C# (CSP, permissions), its analyzer, the headers, the navigation lock, the host-injected script, violation reports, SRI and Trusted Types |
 
-Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# side of the bridge in M1a (`spar-testing`), page security in M1b, the development loop in M1d. Performance and Windows Sandbox skills come with M4. Skills for app authors are not kept here: they go in the `plugins/spar/` plugin.
+Each M1 slice adds the skill its work needs (plan, "M1"): testing and the C# side of the bridge in M1a (`spar-testing`), page security in M1b (`spar-page-security`), the development loop in M1d. Performance and Windows Sandbox skills come with M4. Skills for app authors are not kept here: they go in the `plugins/spar/` plugin.
 
 ## Agent plugins
 

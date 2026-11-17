@@ -23,6 +23,11 @@
     <ProjectReference Include="..\Spar\Spar.csproj" />
   </ItemGroup>
 
+  <!-- The script the host adds to every document: the heartbeat's answer and the CSP listener (PageScript.cs). -->
+  <ItemGroup>
+    <EmbeddedResource Include="PageScript.js" LogicalName="Spar.Windows.PageScript.js" WithCulture="false" Type="Non-Resx" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Spar.Tests" />
   </ItemGroup>

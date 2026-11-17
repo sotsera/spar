@@ -10,7 +10,9 @@ namespace Spar.Windows;
 /// the UI thread. It recovers from failures (plan section 3, "Failure recovery"), handling <c>ProcessFailed</c> per view
 /// and <c>BrowserProcessExited</c> per environment in either order: a renderer that exits gets a new document, with one
 /// automatic reload and never a replayed command; a browser that exits gets the environment and controller created
-/// again, once. Anything further is unrecoverable (exit code 5). Nothing recovers once shutdown has begun.
+/// again, once. Anything further is unrecoverable (exit code 5). Nothing recovers once shutdown has begun. Before the
+/// first navigation it adds the host's script to every document (<see cref="PageScript"/>), and its navigation,
+/// new-window and permission events go to the <see cref="PageGuard"/> (plan section 3b).
 /// </summary>
 internal sealed class BrowserView
 {
@@ -19,6 +21,8 @@ internal sealed class BrowserView
     private readonly HWND _window;
     private readonly string _profileFolder;
     private readonly PageServer _pages;
+    private readonly PageGuard _guard;
+    private readonly string _pageScript;
     private readonly Task<WebViewBridge> _bridge;
     private readonly WindowTheme _theme;
     private readonly bool _transparent;
@@ -49,6 +53,8 @@ internal sealed class BrowserView
         HWND window,
         string profileFolder,
         PageServer pages,
+        PageGuard guard,
+        string pageScript,
         Task<WebViewBridge> bridge,
         WindowTheme theme,
         bool transparent,
@@ -60,6 +66,8 @@ internal sealed class BrowserView
         _window = window;
         _profileFolder = profileFolder;
         _pages = pages;
+        _guard = guard;
+        _pageScript = pageScript;
         _bridge = bridge;
         _theme = theme;
         _transparent = transparent;
@@ -243,6 +251,17 @@ internal sealed class BrowserView
         SubscribeToWebView(generation, environment, _webView, bridge);
         PageServer.AddFilters(_webView);
         bridge.Attach(_webView);
+
+        // Before the first navigation, so the script is in every document from the first one on.
+        var added = new ScriptAdded();
+        _webView.AddScriptToExecuteOnDocumentCreated(_pageScript, added);
+        await added.Task;
+        if (Abandoned(generation, null) || _webView is null)
+        {
+            return;
+        }
+
+        _log.Phase("page script added");
         _webView.Navigate(PageServer.StartUrl);
         _log.Step("navigation started");
     }
@@ -294,12 +313,28 @@ internal sealed class BrowserView
         var requested = Handler(generation, "WebResourceRequested", args => _pages.OnRequested(environment, args));
         Subscribe(requested, webView.AddWebResourceRequested(requested), webView.RemoveWebResourceRequested);
 
-        var starting = Handler(generation, "NavigationStarting", _ => bridge.OnNavigationStarting());
+        // A navigation the lock lets through ends the current document's epoch; a cancelled one leaves it as it is.
+        var starting = Handler(generation, "NavigationStarting", args =>
+        {
+            if (_guard.OnNavigationStarting(args))
+            {
+                bridge.OnNavigationStarting();
+            }
+        });
         Subscribe(starting, webView.AddNavigationStarting(starting), webView.RemoveNavigationStarting);
 
-        var loading = Handler(generation, "ContentLoading", _ =>
+        var frameStarting = Handler(generation, "FrameNavigationStarting", _guard.OnFrameNavigationStarting);
+        Subscribe(frameStarting, webView.AddFrameNavigationStarting(frameStarting), webView.RemoveFrameNavigationStarting);
+
+        var newWindow = Handler(generation, "NewWindowRequested", _guard.OnNewWindowRequested);
+        Subscribe(newWindow, webView.AddNewWindowRequested(newWindow), webView.RemoveNewWindowRequested);
+
+        var permission = Handler(generation, "PermissionRequested", _guard.OnPermissionRequested);
+        Subscribe(permission, webView.AddPermissionRequested(permission), webView.RemovePermissionRequested);
+
+        var loading = Handler(generation, "ContentLoading", args =>
         {
-            bridge.OnContentLoading();
+            bridge.OnContentLoading(IsErrorPage(args));
             _log.Phase("first document");
         });
         Subscribe(loading, webView.AddContentLoading(loading), webView.RemoveContentLoading);
@@ -318,6 +353,19 @@ internal sealed class BrowserView
         {
             _watchingReadiness = true;
             bridge.DocumentReady += () => _rendererReloadUsed = false;
+        }
+    }
+
+    private static bool IsErrorPage(nint argsPointer)
+    {
+        var args = Com.Borrow<ICoreWebView2ContentLoadingEventArgs>(argsPointer);
+        try
+        {
+            return args.GetIsErrorPage() != 0;
+        }
+        finally
+        {
+            Com.Release(args);
         }
     }
 

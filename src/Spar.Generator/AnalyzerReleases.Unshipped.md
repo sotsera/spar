@@ -33,3 +33,8 @@ SPAR035 | Spar.Contracts | Error | ContractAnalyzer
 SPAR040 | Spar.Contracts | Error | ContractAnalyzer
 SPAR060 | Spar.Program | Error | ContractAnalyzer
 SPAR061 | Spar.Program | Error | ContractAnalyzer
+SPAR101 | Spar.PageSecurity | Error | PageSecurityAnalyzer
+SPAR102 | Spar.PageSecurity | Error | PageSecurityAnalyzer
+SPAR103 | Spar.PageSecurity | Error | PageSecurityAnalyzer
+SPAR104 | Spar.PageSecurity | Error | PageSecurityAnalyzer
+SPAR105 | Spar.PageSecurity | Warning | PageSecurityAnalyzer

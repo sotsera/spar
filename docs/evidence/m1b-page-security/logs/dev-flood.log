@@ -1,0 +1,47 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=flood:100000 SPAR_AUTOMATED=1]
+     335,5 | run: window moved offscreen
+     340,1 | spar info +7.3 ms: [52b0ebdf] Host started 198.4 ms after the process.
+     340,1 | spar info +13.6 ms: [52b0ebdf] single instance at 13 ms
+     340,1 | spar info +16.9 ms: [52b0ebdf] prerequisites checked at 16.9 ms
+     340,1 | spar info +25.8 ms: [52b0ebdf] UI-thread stall probe on.
+     340,1 | spar info +32.6 ms: [52b0ebdf] services built at 32.6 ms
+     340,2 | spar info +37.7 ms: [52b0ebdf] window shown at 37.7 ms
+     340,2 | spar info +38.2 ms: [52b0ebdf] Theme dark (system), window #1f1f1f.
+     340,2 | spar info +53.0 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     340,2 | spar info +82.6 ms: [52b0ebdf] environment at 82.6 ms
+     340,2 | spar info +83.6 ms: [52b0ebdf] WebView2 Runtime 157.0.4341.46
+     340,2 | spar info +102.8 ms: [52b0ebdf] Heartbeat every 5000 ms.
+     384,4 | spar warn +107.3 ms: The UI thread stalled 51.7 ms outside Spar's callbacks
+     384,5 | spar info +109.5 ms: [52b0ebdf] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     384,5 | spar info +109.6 ms: [52b0ebdf] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     577,6 | spar info +322.9 ms: [52b0ebdf] controller at 322.9 ms
+     623,5 | spar info +371.7 ms: [52b0ebdf] page script added at 371.7 ms
+     623,5 | spar info +372.4 ms: [52b0ebdf] navigation started at 372.4 ms
+     701,5 | spar info +438.4 ms: [52b0ebdf] Bridge: document 89a282eda39169b9 opened.
+     701,5 | spar info +439.0 ms: [52b0ebdf] Heartbeat armed for the new document.
+     701,5 | spar info +439.0 ms: [52b0ebdf] first document at 439 ms
+     701,5 | spar info +444.7 ms: [52b0ebdf] first bridge message at 444.7 ms
+     701,5 | spar info +448.5 ms: [52b0ebdf] first navigation completed at 448.5 ms
+     701,5 | spar info +454.1 ms: [52b0ebdf] 404 for /favicon.ico
+     701,6 | spar info +455.3 ms: [52b0ebdf] first bridge reply at 455.3 ms
+     701,6 | spar info +455.7 ms: [52b0ebdf] ui-ready at 455.7 ms
+     701,6 | spar info +455.8 ms: [52b0ebdf] Bridge: document 89a282eda39169b9 reported ui-ready.
+     751,4 | spar warn +475.2 ms: Content Security Policy: style-src-attr blocked inline at https://app.localhost/assets/index-DMSiW3dX.js:6:2275 Use build-time CSS or constructed stylesheets; csp.StyleNonce() serves a library that takes a nonce, and csp.AllowInlineStyles() allows every inline style.
+     751,4 | probe: flood: raised 100000 in 9.4 ms
+     751,4 | probe: done flood:100000
+     789,5 | run: found 'done flood:100000'
+   12815,5 | run: app working set 47400 KiB, peak seen 47400 KiB, private 13592 KiB
+   12815,9 | run: WM_CLOSE
+   13074,7 | spar info +12586.2 ms: [52b0ebdf] close requested (User, automated) at 12586.2 ms
+   13074,7 | spar info +12590.3 ms: [52b0ebdf] closing at 12590.3 ms
+   13074,7 | spar info +12590.6 ms: [52b0ebdf] Heartbeat: 2 ticks, 3 pings, longest tick on the UI thread 0.847 ms.
+   13074,8 | spar info +12591.3 ms: [52b0ebdf] page close work done at 12591.3 ms
+   13074,8 | spar info +12591.9 ms: [52b0ebdf] Bridge: document 89a282eda39169b9 closed (window closing).
+   13074,8 | spar info +12592.0 ms: [52b0ebdf] calls stopped at 12592 ms
+   13074,8 | spar info +12592.0 ms: [52b0ebdf] calls settled at 12592 ms
+   13074,8 | spar info +12606.7 ms: [52b0ebdf] controller closed at 12606.7 ms
+   13074,8 | spar info +12609.7 ms: [52b0ebdf] window destroyed at 12609.7 ms
+   13074,8 | spar info +12616.5 ms: Content Security Policy reports in this run: 1 listener batches, 1 report-uri reports read, 0 refused unread (rate or size), 0 dropped (queue full)
+   13074,8 | spar info +12616.9 ms: [52b0ebdf] services disposed at 12616.9 ms
+   13074,8 | spar info +12617.0 ms: [52b0ebdf] exit 0 at 12617 ms
+   13075,0 | run: exit 0

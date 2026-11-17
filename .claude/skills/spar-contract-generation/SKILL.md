@@ -64,7 +64,7 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 
 ## Diagnostics
 
-- **Categories and IDs:** `Spar.Contracts` for SPAR001–040 (map in plan section 2, "Diagnostics"), `Spar.Results` for SPAR050–055, SPAR100 for the snapshot, SPAR101–104 for the CSP analyzer. Errors, except SPAR051–054, the `DateTime` warning (SPAR024) and the suggestion for long-running commands that cannot observe cancellation. Decided rules without an ID yet: yield after an error, `Capacity` with coalescing, that suggestion. A warning leaves its command valid, and the client step stops only on errors.
+- **Categories and IDs:** `Spar.Contracts` for SPAR001–040 (map in plan section 2, "Diagnostics"), `Spar.Results` for SPAR050–055, SPAR100 for the snapshot, `Spar.PageSecurity` for SPAR101–104 and the SPAR105 warning (`PageSecurityAnalyzer`; `spar-page-security`). Errors, except SPAR051–054, the `DateTime` warning (SPAR024) and the suggestion for long-running commands that cannot observe cancellation. Decided rules without an ID yet: yield after an error, `Capacity` with coalescing, that suggestion. A warning leaves its command valid, and the client step stops only on errors.
 - **One diagnostic per problem and location.** Messages about a referenced assembly start with "In referenced assembly 'X': …".
 - **Skip only the invalid command,** never its contract's whole binding; the client step skips invalid contracts silently.
 - **Track IDs** in `AnalyzerReleases.Shipped.md`/`Unshipped.md` (RS2008) instead of suppressing it.

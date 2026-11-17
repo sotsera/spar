@@ -27,8 +27,14 @@ var app = SparApplication.Create(args, spar =>
             .Separator()
             .Item("Quit", TrayAction.Quit)));
 
-    // The strict CSP is the default; each addition is explicit (plan 3b). Decided.
-    spar.ContentSecurity(csp => csp.FontSrc("https://fonts.gstatic.com"));
+    // The strict CSP is the default; each addition is explicit (plan 3b). A directive method takes several sources and
+    // may be called again: Spar sends each directive once, its sources together. Violations are reported in every
+    // build by default; here report-uri, the backstop, reports only in Development and Test builds. Decided.
+    spar.ContentSecurity(csp => csp
+        .FontSrc("https://fonts.gstatic.com", "https://fonts.example-cdn.com")
+        .FontSrc("https://fonts.gstatic.com")
+        .ImgSrc("data:")
+        .Reporting(listener: CspReports.Always, endpoint: CspReports.DevelopmentOnly));
 
     // Powerful features are denied unless declared (plan 3b). Decided.
     spar.Permissions(p => p.Allow(Permission.ClipboardRead));

@@ -71,14 +71,27 @@ internal sealed class BridgeSession : IDisposable
     /// <summary>Raised when the page has finished its close work.</summary>
     public event Action? ClosingDone;
 
-    /// <summary>Raised after the page's <c>hello</c> was answered; true when the page answers the heartbeat's <c>ping</c>.</summary>
-    public event Action<bool>? Opened;
+    /// <summary>Raised after the page's <c>hello</c> was answered.</summary>
+    public event Action? Opened;
 
     /// <summary>Raised with the <c>seq</c> of each <c>pong</c>, the page's answer to a <see cref="Ping"/>.</summary>
     public event Action<long>? Pong;
 
+    /// <summary>
+    /// Raised with the payload of each <c>csp</c> message: a batch of Content Security Policy violations from the
+    /// host-injected script (plan section 3b). The payload is the page's, untrusted; the host parses it.
+    /// </summary>
+    public event Action<ReadOnlyMemory<byte>>? Violations;
+
     /// <summary>Messages that could not be used, with why; for the host's log.</summary>
     public event Action<string>? Dropped;
+
+    /// <summary>
+    /// Whether the document has the host's injected script, which answers the heartbeat's <c>ping</c> (plan section 3,
+    /// "Hung pages"): set by a host that adds it to every document. A session without it is never pinged, so the
+    /// loopback host, whose pages have no injected script, never pings.
+    /// </summary>
+    public bool HostAnswersPing { get; init; }
 
     public void Receive(string message)
     {
@@ -121,6 +134,9 @@ internal sealed class BridgeSession : IDisposable
             case BridgeMessageType.Pong:
                 Pong?.Invoke(decoded.Seq!.Value);
                 break;
+            case BridgeMessageType.Csp:
+                Violations?.Invoke(decoded.Payload);
+                break;
             default:
                 Unexpected(decoded);
                 break;
@@ -131,14 +147,14 @@ internal sealed class BridgeSession : IDisposable
     public void RequestClosing() => Send(new BridgeMessage(BridgeMessageType.Closing));
 
     /// <summary>
-    /// The heartbeat's ping (plan section 3, "Hung pages"); the page answers <c>pong</c> from its message handler. False,
-    /// with nothing sent, when the page did not list <c>ping</c> in its <c>hello</c> or the document is closed.
+    /// The heartbeat's ping (plan section 3, "Hung pages"); the host's injected script answers <c>pong</c> from its message
+    /// handler. False, with nothing sent, when the document has no such script or is closed.
     /// </summary>
     public bool Ping(long seq)
     {
         lock (_gate)
         {
-            if (_closed || !_pageTypes.Contains("ping"))
+            if (_closed || !HostAnswersPing)
             {
                 return false;
             }
@@ -213,7 +229,7 @@ internal sealed class BridgeSession : IDisposable
 
         var protocol = Math.Min(hello.Protocol!.Value, BridgeCodec.ProtocolVersion);
         Send(new BridgeMessage(BridgeMessageType.Open) { Protocol = protocol, Doc = _doc, Contracts = _fingerprint });
-        Opened?.Invoke(hello.Types?.Contains("ping", StringComparer.Ordinal) == true);
+        Opened?.Invoke();
     }
 
     /// <summary>A call starts when a slot is free, waits in the queue when one is not, and is refused as busy past both.</summary>

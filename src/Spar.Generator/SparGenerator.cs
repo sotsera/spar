@@ -10,9 +10,10 @@ using Spar.Generator.Emit;
 namespace Spar.Generator;
 
 /// <summary>
-/// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog; the interceptor that
-/// hands the catalog to <c>SparApplication.Create</c>; the interceptor that hands <c>app.Run()</c> the desktop host the
-/// build references (outside the Test variant); and, in the Test variant, the test entry point and typed test clients.
+/// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog, with the page security
+/// <c>Program.cs</c> declares (plan section 3b); the interceptor that hands the catalog to <c>SparApplication.Create</c>;
+/// the interceptor that hands <c>app.Run()</c> the desktop host the build references (outside the Test variant); and, in
+/// the Test variant, the test entry point and typed test clients.
 /// It reports nothing itself: the analyzer shows problems at their locations.
 /// </summary>
 [Generator]
@@ -47,6 +48,14 @@ public sealed class SparGenerator : IIncrementalGenerator
             .Where(static call => call is not null)
             .Collect();
 
+        // The page security Program.cs declares, read from the first Create call; null when there is none.
+        var security = context.SyntaxProvider.CreateSyntaxProvider(
+                static (node, _) => node is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Create" } },
+                static (syntax, cancellationToken) => PageSecurity(syntax, cancellationToken))
+            .Where(static model => model is not null)
+            .Collect()
+            .Select(static (models, _) => models.FirstOrDefault());
+
         var runCalls = context.SyntaxProvider.CreateSyntaxProvider(
                 static (node, _) => node is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Run" } },
                 static (syntax, cancellationToken) => RunCall(syntax, cancellationToken))
@@ -59,7 +68,7 @@ public sealed class SparGenerator : IIncrementalGenerator
             new HostsModel(compilation.GetTypeByMetadataName(HostEmitter.WindowsHost) is not null));
         var entry = context.CompilationProvider.Select(static (compilation, cancellationToken) => EntryPoint(compilation, cancellationToken));
 
-        context.RegisterSourceOutput(contracts, static (output, models) => EmitContracts(output, models));
+        context.RegisterSourceOutput(contracts.Combine(security), static (output, input) => EmitContracts(output, input.Left, input.Right));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
         context.RegisterSourceOutput(runCalls.Combine(hosts).Combine(isTest), static (output, input) =>
         {
@@ -88,7 +97,7 @@ public sealed class SparGenerator : IIncrementalGenerator
         });
     }
 
-    private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models)
+    private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models, PageSecurityModel? security)
     {
         var contracts = models.OrderBy(c => c.WireName, System.StringComparer.Ordinal).ToList();
         var types = contracts.SelectMany(c => c.Types).GroupBy(t => t.Key).Select(g => g.First()).OrderBy(t => t.Key, System.StringComparer.Ordinal).ToList();
@@ -101,7 +110,7 @@ public sealed class SparGenerator : IIncrementalGenerator
             .Line("#nullable enable")
             .Line()
             .Open("namespace Spar.Generated");
-        CatalogEmitter.Emit(code, contracts);
+        CatalogEmitter.Emit(code, contracts, security);
         code.Line();
         SerializerEmitter.Emit(code, types, records, errors, enums);
         code.Close();
@@ -155,6 +164,14 @@ public sealed class SparGenerator : IIncrementalGenerator
 
         var location = syntax.SemanticModel.GetInterceptableLocation(invocation, cancellationToken);
         return location is null ? null : new CreateCallModel(location.Version, location.Data);
+    }
+
+    private static PageSecurityModel? PageSecurity(GeneratorSyntaxContext syntax, CancellationToken cancellationToken)
+    {
+        var invocation = (InvocationExpressionSyntax)syntax.Node;
+        return PageSecurityAnalysis.IsCreate(invocation, syntax.SemanticModel, cancellationToken)
+            ? PageSecurityAnalysis.Read(invocation, syntax.SemanticModel, cancellationToken).Model
+            : null;
     }
 
     private static RunCallModel? RunCall(GeneratorSyntaxContext syntax, CancellationToken cancellationToken)

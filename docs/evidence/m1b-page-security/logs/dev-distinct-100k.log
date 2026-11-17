@@ -1,0 +1,147 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=distinct:100000 SPAR_AUTOMATED=1]
+      67,2 | spar info +7.0 ms: [33ab15fe] Host started 46.7 ms after the process.
+      67,2 | spar info +12.9 ms: [33ab15fe] single instance at 12.3 ms
+     154,8 | run: window moved offscreen
+     159,3 | spar info +15.9 ms: [33ab15fe] prerequisites checked at 15.9 ms
+     159,3 | spar info +24.5 ms: [33ab15fe] UI-thread stall probe on.
+     159,3 | spar info +31.8 ms: [33ab15fe] services built at 31.8 ms
+     159,3 | spar info +37.1 ms: [33ab15fe] window shown at 37.1 ms
+     159,3 | spar info +37.5 ms: [33ab15fe] Theme dark (system), window #1f1f1f.
+     159,3 | spar info +51.4 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     159,3 | spar info +80.0 ms: [33ab15fe] environment at 80 ms
+     159,3 | spar info +81.2 ms: [33ab15fe] WebView2 Runtime 157.0.4341.46
+     159,3 | spar info +101.7 ms: [33ab15fe] Heartbeat every 5000 ms.
+     159,3 | spar info +104.9 ms: [33ab15fe] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     159,3 | spar info +105.0 ms: [33ab15fe] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     382,5 | spar info +302.3 ms: [33ab15fe] controller at 302.3 ms
+     429,8 | spar info +350.6 ms: [33ab15fe] page script added at 350.6 ms
+     429,8 | spar info +351.0 ms: [33ab15fe] navigation started at 351 ms
+     504,8 | spar info +421.9 ms: [33ab15fe] Bridge: document 96f883910182316a opened.
+     504,8 | spar info +422.6 ms: [33ab15fe] Heartbeat armed for the new document.
+     504,9 | spar info +422.6 ms: [33ab15fe] first document at 422.6 ms
+     504,9 | spar info +427.9 ms: [33ab15fe] first bridge message at 427.9 ms
+     504,9 | spar info +430.2 ms: [33ab15fe] first navigation completed at 430.2 ms
+     504,9 | spar info +437.1 ms: [33ab15fe] first bridge reply at 437.1 ms
+     504,9 | spar info +437.3 ms: [33ab15fe] ui-ready at 437.3 ms
+     504,9 | spar info +437.4 ms: [33ab15fe] Bridge: document 96f883910182316a reported ui-ready.
+     504,9 | spar info +437.7 ms: [33ab15fe] 404 for /favicon.ico
+     741,5 | probe: distinct: raised 100000 in 222.0 ms
+     741,5 | spar warn +684.3 ms: Content Security Policy: img-src blocked https://blocked.invalid/0.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,6 | spar warn +684.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/1.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,6 | spar warn +684.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/2.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,6 | spar warn +684.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/3.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,6 | spar warn +684.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/4.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,6 | spar warn +684.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/5.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,6 | spar warn +684.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/6.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,6 | spar warn +684.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/7.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +684.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/8.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +684.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/9.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +685.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/10.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +685.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/11.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +685.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/12.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +685.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/13.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +686.2 ms: Content Security Policy: img-src blocked https://blocked.invalid/14.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +686.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/15.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +687.2 ms: Content Security Policy: img-src blocked https://blocked.invalid/16.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +687.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/17.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +687.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/18.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+     741,7 | spar warn +688.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/19.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20065,9 | probe: done distinct:100000
+   20066,0 | spar warn +19997.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/20.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/21.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/22.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/23.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/24.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/25.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/26.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/27.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/28.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/29.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/30.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/31.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/32.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/33.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/34.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/35.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,0 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/36.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,1 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/37.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,1 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/38.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,1 | spar warn +19997.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/39.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/40.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/41.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/42.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/43.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/44.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/45.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/46.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/47.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/48.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/49.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/50.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/51.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/52.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/53.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/54.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/55.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/56.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/57.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/58.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/59.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/60.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/61.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/62.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/63.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/64.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/65.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/66.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/67.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,2 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/68.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/69.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/70.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/71.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/72.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/73.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/74.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/75.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/76.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/77.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/78.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19997.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/79.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/80.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/81.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/82.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/83.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/84.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/85.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/86.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/87.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/88.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/89.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/90.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/91.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/92.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/93.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/94.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/95.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/96.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/97.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,3 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/98.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,4 | spar warn +19998.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/99.png at the page Allow it with csp.ImgSrc("https://blocked.invalid").
+   20066,4 | spar info +19998.4 ms: Content Security Policy: the page raised so many violations that Spar's listener stopped counting them in this document; report-uri still reports, rate-limited
+   20097,8 | run: found 'done distinct:100000'
+   20139,1 | spar info +20063.8 ms: Content Security Policy violations in the last 10 s: past the group limit: 900
+   32114,2 | run: app working set 52888 KiB, peak seen 52888 KiB, private 17732 KiB
+   32114,6 | run: WM_CLOSE
+   32375,2 | spar info +32064.6 ms: [33ab15fe] close requested (User, automated) at 32064.6 ms
+   32375,3 | spar info +32068.9 ms: [33ab15fe] closing at 32068.9 ms
+   32375,3 | spar info +32069.1 ms: [33ab15fe] Heartbeat: 6 ticks, 5 pings, longest tick on the UI thread 0.778 ms.
+   32375,3 | spar info +32069.9 ms: [33ab15fe] page close work done at 32069.9 ms
+   32375,3 | spar info +32070.4 ms: [33ab15fe] Bridge: document 96f883910182316a closed (window closing).
+   32375,3 | spar info +32070.5 ms: [33ab15fe] calls stopped at 32070.5 ms
+   32375,3 | spar info +32070.6 ms: [33ab15fe] calls settled at 32070.6 ms
+   32375,3 | spar info +32085.5 ms: [33ab15fe] controller closed at 32085.5 ms
+   32375,3 | spar info +32088.7 ms: [33ab15fe] window destroyed at 32088.7 ms
+   32375,3 | spar info +32096.1 ms: Content Security Policy reports in this run: 1 listener batches, 20 report-uri reports read, 69 refused unread (rate or size), 0 dropped (queue full)
+   32375,3 | spar info +32096.5 ms: [33ab15fe] services disposed at 32096.5 ms
+   32375,3 | spar info +32096.5 ms: [33ab15fe] exit 0 at 32096.5 ms
+   32375,5 | run: exit 0

@@ -1,0 +1,45 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=flood:100000]
+      58,3 | run: window moved offscreen
+      62,5 | spar info +0.2 ms: [3ea03a8a] Host started 21.2 ms after the process.
+      62,6 | spar info +0.7 ms: [3ea03a8a] single instance at 0.7 ms
+      62,6 | spar info +0.9 ms: [3ea03a8a] prerequisites checked at 0.9 ms
+      62,6 | spar info +1.1 ms: [3ea03a8a] services built at 1.1 ms
+      62,6 | spar info +10.8 ms: [3ea03a8a] window shown at 10.8 ms
+      62,6 | spar info +11.0 ms: [3ea03a8a] Theme dark (system), window #1f1f1f.
+      62,6 | spar info +12.0 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      62,6 | spar info +20.2 ms: [3ea03a8a] environment at 20.2 ms
+      62,6 | spar info +20.3 ms: [3ea03a8a] WebView2 Runtime 157.0.4341.46
+      62,6 | spar info +26.5 ms: [3ea03a8a] Heartbeat every 5000 ms.
+      62,6 | spar info +27.2 ms: [3ea03a8a] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      62,6 | spar info +27.4 ms: [3ea03a8a] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     294,4 | spar info +226.7 ms: [3ea03a8a] controller at 226.7 ms
+     344,0 | spar info +293.8 ms: [3ea03a8a] page script added at 293.8 ms
+     344,0 | spar info +293.8 ms: [3ea03a8a] navigation started at 293.8 ms
+     389,2 | spar info +345.7 ms: [3ea03a8a] Bridge: document 5fb80c2642f6449b opened.
+     389,2 | spar info +345.7 ms: [3ea03a8a] Heartbeat armed for the new document.
+     389,2 | spar info +345.7 ms: [3ea03a8a] first document at 345.7 ms
+     389,2 | spar info +356.0 ms: [3ea03a8a] first bridge message at 356 ms
+     389,2 | spar info +356.2 ms: [3ea03a8a] first bridge reply at 356.2 ms
+     389,2 | spar info +356.2 ms: [3ea03a8a] ui-ready at 356.2 ms
+     389,2 | spar info +356.2 ms: [3ea03a8a] Bridge: document 5fb80c2642f6449b reported ui-ready.
+     435,6 | spar info +361.5 ms: [3ea03a8a] first navigation completed at 361.5 ms
+     435,6 | spar warn +365.6 ms: Content Security Policy: style-src-attr blocked inline at https://app.localhost/assets/index-DMSiW3dX.js:6:2275
+     435,6 | probe: flood: raised 100000 in 8.5 ms
+     435,6 | probe: done flood:100000
+     435,6 | spar info +373.2 ms: [3ea03a8a] 404 for /favicon.ico
+     475,5 | run: found 'done flood:100000'
+   12495,7 | run: app working set 24284 KiB, peak seen 24284 KiB, private 8200 KiB
+   12496,1 | run: WM_CLOSE
+   12741,7 | spar info +12465.2 ms: [3ea03a8a] close requested (User) at 12465.2 ms
+   12741,8 | spar info +12465.7 ms: [3ea03a8a] closing at 12465.7 ms
+   12741,8 | spar info +12465.7 ms: [3ea03a8a] Heartbeat: 2 ticks, 3 pings, longest tick on the UI thread 0.073 ms.
+   12741,8 | spar info +12465.9 ms: [3ea03a8a] page close work done at 12465.9 ms
+   12741,8 | spar info +12465.9 ms: [3ea03a8a] Bridge: document 5fb80c2642f6449b closed (window closing).
+   12741,8 | spar info +12465.9 ms: [3ea03a8a] calls stopped at 12465.9 ms
+   12741,8 | spar info +12465.9 ms: [3ea03a8a] calls settled at 12465.9 ms
+   12741,8 | spar info +12481.2 ms: [3ea03a8a] controller closed at 12481.2 ms
+   12741,8 | spar info +12484.4 ms: [3ea03a8a] window destroyed at 12484.4 ms
+   12741,8 | spar info +12486.9 ms: Content Security Policy reports in this run: 1 listener batches, 1 report-uri reports read, 0 refused unread (rate or size), 0 dropped (queue full)
+   12741,8 | spar info +12486.9 ms: [3ea03a8a] services disposed at 12486.9 ms
+   12741,8 | spar info +12486.9 ms: [3ea03a8a] exit 0 at 12486.9 ms
+   12742,0 | run: exit 0

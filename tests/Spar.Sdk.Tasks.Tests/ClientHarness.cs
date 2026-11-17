@@ -44,6 +44,17 @@ internal static class ClientHarness
         return ContractSource.Read(compilation, project, listed, TestContext.Current.CancellationToken);
     }
 
+    /// <summary>What the client step reads from an app whose <c>Program.cs</c> is <paramref name="program"/>.</summary>
+    public static ContractRead ReadApp(string program)
+    {
+        var compilation = CSharpCompilation.Create(
+            "App",
+            [CSharpSyntaxTree.ParseText(program, ParseOptions, path: Path.Combine(DefaultProject, "Program.cs"))],
+            References.Value,
+            new CSharpCompilationOptions(OutputKind.ConsoleApplication, nullableContextOptions: NullableContextOptions.Enable));
+        return ContractSource.Read(compilation, DefaultProject, [], TestContext.Current.CancellationToken);
+    }
+
     /// <summary>A library compiled from <paramref name="source"/> and referenced as a built assembly.</summary>
     public static Library CompileLibrary(string name, string source)
     {

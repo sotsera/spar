@@ -96,7 +96,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | `cancel` | `id` | empty |
   | `ready` | none: the page's `ui-ready` | empty |
   | `closing-done` | none: the page's close work finished | empty |
-  | `pong` | `seq`: the `seq` of the `ping` it answers (added in M1b, decision "Hangs: heartbeat, stall probe and shutdown prompt") | empty |
+  | `pong` | `seq`: the `seq` of the `ping` it answers (added in M1b, decision "Hangs: heartbeat, stall probe and shutdown prompt"); sent by the host-injected script since M1b step 4 | empty |
+  | `csp` | none: Content Security Policy violations, from the host-injected script (section 3b; added in M1b step 4) | `{"groups":[{"directive","blocked","source","line","column","sample","count"}…],"overflow":N}`, with `"stopped":true` once the script stopped listening in that document |
 
   **Host to page:**
 
@@ -112,7 +113,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | `ping` | `seq`: the heartbeat's number, a safe integer from 1 (section 3, "Hung pages"; added in M1b) | empty |
 
   **Rules:**
-  - **The heartbeat:** the desktop host sends `ping` only to a page that listed it in `hello`, at most one unanswered at a time, and the page answers `pong` with the same `seq` at once, from its message handler. `seq` is not a call id: it follows no id rule and never touches a call. A `ping` or `pong` without a valid `seq` is malformed and dropped. Loopback never pings.
+  - **The heartbeat:** the desktop host sends `ping` only to a document that has its injected script (section 3b, every document of the app's origin but an error page), from the document's creation, before `hello`; at most one unanswered at a time; the injected script answers `pong` with the same `seq` at once, from its message handler (decision "Page security (implementation record; choices for review)"). The SDK neither lists `ping` in `hello` nor answers it, and `hello`'s `types` no longer arm anything. `seq` is not a call id: it follows no id rule and never touches a call. A `ping` or `pong` without a valid `seq` is malformed and dropped. Loopback never pings.
   - **One terminal per call:** exactly one of `result`, `end` or `failure` ends a call; anything for that id afterwards is dropped.
   - **Failures are `CallError` one for one:** `kind`, `code` and `execution` are the decided values (decision "`CallError` kinds"). A confirmed cancel is `kind: "cancelled"` with `execution` `stopped`, or `notStarted` with code `cancelled-before-start`. The page adds `contract` and `command` from its own record of the call id, so a `CallError` names its call without anything more on the wire.
   - **The fingerprint is checked once per document:** the host answers `hello` with its own in `open`. When they differ, every call of that document fails with `rejected` / `contract-mismatch` / `notStarted`, and the page can show a "reload" message at once.

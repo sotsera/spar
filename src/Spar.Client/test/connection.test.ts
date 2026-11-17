@@ -43,7 +43,7 @@ describe("opening", () => {
     expect(host.sent[0]).toEqual({
       type: "hello",
       protocol: 1,
-      types: ["open", "result", "failure", "event", "closing", "ping"],
+      types: ["open", "result", "failure", "event", "closing"],
       contracts: "0123456789abcdef",
       payload: "",
     });
@@ -240,45 +240,16 @@ describe("host messages", () => {
 });
 
 describe("heartbeat", () => {
-  test("each ping is answered at once with a pong of the same seq", () => {
-    host.open();
-
-    host.deliver({ type: "ping", seq: 1, payload: "" });
-    host.deliver({ type: "ping", seq: 2, payload: "" });
-
-    // Synchronously, from the message handler: only a page whose thread is stuck misses one.
-    expect(host.sent.filter(m => m.type === "pong")).toEqual([
-      { type: "pong", seq: 1, payload: "" },
-      { type: "pong", seq: 2, payload: "" },
-    ]);
-  });
-
-  test("a ping answers even while calls are pending, and touches none of them", async () => {
+  // The desktop host's injected script answers pings from the document's creation (plan section 3, "Hung pages"), so
+  // a page that hangs before it connects is seen too; the SDK leaves them alone.
+  test("a ping is not the SDK's to answer, and touches no pending call", async () => {
     host.open();
     const outcome = connection.invoke("pages", "get", "{}", pageDecoder);
 
     host.deliver({ type: "ping", seq: 7, payload: "" });
     host.deliver({ type: "result", id: 1, ok: true, payload: "{\"id\":\"a\",\"title\":\"A\"}" });
 
-    expect(host.last("pong")).toEqual({ type: "pong", seq: 7, payload: "" });
+    expect(host.last("pong")).toBeUndefined();
     expect(await outcome).toEqual({ ok: true, value: { id: "a", title: "A" } });
-  });
-
-  test("a ping without its seq is malformed and gets no answer", () => {
-    host.open();
-
-    host.deliverText("{\"type\":\"ping\"}\t");
-    host.deliverText("{\"type\":\"ping\",\"seq\":0}\t");
-
-    expect(host.last("pong")).toBeUndefined();
-  });
-
-  test("a closed channel answers nothing", () => {
-    host.open();
-    host.close();
-
-    host.deliver({ type: "ping", seq: 3, payload: "" });
-
-    expect(host.last("pong")).toBeUndefined();
   });
 });

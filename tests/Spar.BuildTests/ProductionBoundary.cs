@@ -4,7 +4,8 @@ namespace Spar.BuildTests;
 
 /// <summary>
 /// What a Production executable must not carry (plan section 5): the test host, the loopback host, the test
-/// libraries, the Windows host's Development-only triggers, and the UI-thread stall probe unless the app keeps it
+/// libraries, the Windows host's Development-only triggers, the Development-only parts of page security (the check
+/// that the run's policy equals the build's, and the advice in violation lines), and the UI-thread stall probe unless the app keeps it
 /// (<see cref="StallProbe"/>). Type names are UTF-8 in a native image's metadata; string literals are UTF-16. Each marker is unique to
 /// Spar, since generic names give false positives (pitfalls: <c>LoopbackHost</c> is also a <c>System.Uri</c> flag).
 /// </summary>
@@ -14,13 +15,14 @@ internal static class ProductionBoundary
     [
         "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackHost", "LoopbackChannel", "LoopbackAssets",
         "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel", "DevelopmentTriggers",
-        "UiStallProbe",
+        "UiStallProbe", "PageSecurityMismatch", "CspAdvice",
     ];
 
     private static readonly string[] Literals =
     [
         "/_spar/channel", "/_spar/send", "Spar.TestHost.IsSupported", "SPAR_DEV_PAGE_HANG", "SPAR_DEV_HEARTBEAT_MS",
         "SPAR_DEV_UI_STALL_MS", "SPAR_DEV_SLOW_DISPOSE_MS", "The UI thread stalled",
+        "differs from the one the build read", "Allow it with csp.",
     ];
 
     /// <summary>

@@ -7,7 +7,7 @@ namespace Spar.Windows.Interop;
 // ICoreWebView2_22 carries the source-kinds request filter (slot 123), which also sees shared and service workers.
 
 /// <summary><c>ICoreWebView2_22</c>, flat: every slot of ICoreWebView2 and _2 to _22, in header order.</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("db75dfc7-a857-4632-a398-6969dde26c0a")]
 internal partial interface ICoreWebView2_22
 {
@@ -26,17 +26,17 @@ internal partial interface ICoreWebView2_22
     [PreserveSig] int Slot014_RemoveHistoryChanged();
     EventRegistrationToken AddNavigationCompleted(ICoreWebView2NavigationCompletedEventHandler eventHandler);
     void RemoveNavigationCompleted(EventRegistrationToken token);
-    [PreserveSig] int Slot017_AddFrameNavigationStarting();
-    [PreserveSig] int Slot018_RemoveFrameNavigationStarting();
+    EventRegistrationToken AddFrameNavigationStarting(ICoreWebView2NavigationStartingEventHandler eventHandler);
+    void RemoveFrameNavigationStarting(EventRegistrationToken token);
     [PreserveSig] int Slot019_AddFrameNavigationCompleted();
     [PreserveSig] int Slot020_RemoveFrameNavigationCompleted();
     [PreserveSig] int Slot021_AddScriptDialogOpening();
     [PreserveSig] int Slot022_RemoveScriptDialogOpening();
-    [PreserveSig] int Slot023_AddPermissionRequested();
-    [PreserveSig] int Slot024_RemovePermissionRequested();
+    EventRegistrationToken AddPermissionRequested(ICoreWebView2PermissionRequestedEventHandler eventHandler);
+    void RemovePermissionRequested(EventRegistrationToken token);
     EventRegistrationToken AddProcessFailed(ICoreWebView2ProcessFailedEventHandler eventHandler);
     void RemoveProcessFailed(EventRegistrationToken token);
-    [PreserveSig] int Slot027_AddScriptToExecuteOnDocumentCreated();
+    void AddScriptToExecuteOnDocumentCreated(string javaScript, ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler handler);
     [PreserveSig] int Slot028_RemoveScriptToExecuteOnDocumentCreated();
     void ExecuteScript(string javaScript, ICoreWebView2ExecuteScriptCompletedHandler handler);
     [PreserveSig] int Slot030_CapturePreview();
@@ -53,8 +53,8 @@ internal partial interface ICoreWebView2_22
     [PreserveSig] int Slot041_GoForward();
     [PreserveSig] int Slot042_GetDevToolsProtocolEventReceiver();
     [PreserveSig] int Slot043_Stop();
-    [PreserveSig] int Slot044_AddNewWindowRequested();
-    [PreserveSig] int Slot045_RemoveNewWindowRequested();
+    EventRegistrationToken AddNewWindowRequested(ICoreWebView2NewWindowRequestedEventHandler eventHandler);
+    void RemoveNewWindowRequested(EventRegistrationToken token);
     [PreserveSig] int Slot046_AddDocumentTitleChanged();
     [PreserveSig] int Slot047_RemoveDocumentTitleChanged();
     [PreserveSig] int Slot048_GetDocumentTitle();

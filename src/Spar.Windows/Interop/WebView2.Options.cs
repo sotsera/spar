@@ -19,7 +19,7 @@ internal struct WebView2Color
 }
 
 /// <summary><c>ICoreWebView2ControllerOptions3</c>, flat: Options 3–6, _2 7–8, _3 9–10.</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("b32b191a-8998-57ca-b7cb-e04617e4ce4a")]
 internal partial interface ICoreWebView2ControllerOptions3
 {
@@ -37,7 +37,7 @@ internal partial interface ICoreWebView2ControllerOptions3
 }
 
 /// <summary><c>ICoreWebView2Profile</c>, the base interface (slots 3–9).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("79110ad3-cd5d-4373-8bc3-c60658f17a5f")]
 internal partial interface ICoreWebView2Profile
 {

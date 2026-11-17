@@ -99,8 +99,14 @@ var app = SparApplication.Create(args, spar =>
             .Separator()
             .Item("Quit", TrayAction.Quit)));
 
-    // The strict CSP is the default; each addition is explicit (plan 3b). Decided.
-    spar.ContentSecurity(csp => csp.FontSrc("https://fonts.gstatic.com"));
+    // The strict CSP is the default; each addition is explicit (plan 3b). A directive method takes several sources and
+    // may be called again: Spar sends each directive once, its sources together. Violations are reported in every
+    // build by default; here report-uri, the backstop, reports only in Development and Test builds. Decided.
+    spar.ContentSecurity(csp => csp
+        .FontSrc("https://fonts.gstatic.com", "https://fonts.example-cdn.com")
+        .FontSrc("https://fonts.gstatic.com")
+        .ImgSrc("data:")
+        .Reporting(listener: CspReports.Always, endpoint: CspReports.DevelopmentOnly));
 
     // Powerful features are denied unless declared (plan 3b). Decided.
     spar.Permissions(p => p.Allow(Permission.ClipboardRead));
@@ -161,6 +167,13 @@ return app.Run();
 - **Class contracts** are registered by the generated code.
 - **Interface contracts** need their implementation registered, as `IConnections` above, whether the app declares them or a library it lists does (3.4). An app that registers none does not start: the error names the contract and its interface.
 - **Overrides of security defaults** (plan 3c) go in the same configuration. Spar logs each one at startup, and `spar doctor` lists them.
+- **Page security** (plan 3b; decision "Page security's public shape"; built in M1b):
+  - `ContentSecurity` and `Permissions` are read by the build: each a statement of its own directly in `Create`, with constant values. Anything else is an error at its place: SPAR101 for a call elsewhere (a condition, a helper method), SPAR102 for a value that is not a constant, SPAR103 for a shape the build cannot read (a delegate variable, other statements in the lambda), SPAR104 for a source the policy refuses.
+  - The directive methods (`FontSrc`, `ImgSrc`, `ConnectSrc`, `MediaSrc`, `ScriptSrc`, `StyleSrc`, `FrameSrc`) take hosts and schemes only, and `FrameSrc` also `'self'`. A keyword or a nonce in them is SPAR104, whose message names the method that gives it: `AllowInlineStyles()`, `AllowEval()`, `AllowWebAssembly()` or `StyleNonce()`. Each of those, and `WithoutTrustedTypes()` and `WithoutIntegrity()`, documents its risk, when it is reasonable and the safer alternative.
+  - The policy above is sent as `font-src 'self' https://fonts.gstatic.com https://fonts.example-cdn.com` and `img-src 'self' data:`, with the rest of the strict default; duplicates are dropped. With `AllowInlineStyles()`, `style-src` gets no nonce or hash, which browsers would let override `'unsafe-inline'`, so `StyleNonce()` beside it is the SPAR105 warning.
+  - `Reporting(listener, endpoint)` sets each channel to `Always` (the default), `DevelopmentOnly` or `Off`: the listener is the host's script in each document, `endpoint` the `report-uri` backstop. Violations are logged grouped and with flood limits; in Development each new one says what C# would allow it.
+  - Under Trusted Types (on unless `WithoutTrustedTypes()`), `new Worker(url)` is a script sink: pass the worker's address through a policy, `trustedTypes.createPolicy("worker", { createScriptURL: url => url }).createScriptURL(address)`. Styles added from script use constructed stylesheets or `StyleNonce()`.
+  - `Permissions` declares the features the page may use (`Permission.Camera`, `Microphone`, `Geolocation`, `ClipboardRead`, `Sensors`, `LocalFonts`, `Midi`, `WindowManagement`, `Autoplay`). A declared feature is granted when the page asks, with no prompt; everything else is denied, also in the `Permissions-Policy` header. The browser never remembers an answer.
 
 ## 3. Contracts
 
@@ -1629,7 +1642,7 @@ export const stopGuarding = windows.onCloseRequested(async request => {
 
 - **Contracts and wire:**
 - **Configuration:**
-  - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example.
+  - the type names of the configuration builders behind `spar.Window(…)` and the other calls of section 2 not built yet (the check's stand-ins call them `SparBuilder` and `WindowOptions`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example. `CspBuilder`, `CspReports`, `PermissionsBuilder` and `Permission` are Spar's own since M1b.
 - **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
 - **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open).
 

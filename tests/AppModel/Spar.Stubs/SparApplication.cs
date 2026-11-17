@@ -27,7 +27,7 @@ public sealed class SparApplication
         var window = _builder.WindowOptions;
         Console.WriteLine($"window background: light {window.LightBackground}, dark {window.DarkBackground}");
         Console.WriteLine($"window size {window.InitialSize}, minimum {window.Minimum}, remembers placement {window.RemembersPlacement}");
-        Console.WriteLine($"font-src additions: {string.Join(' ', _builder.ContentSecurityOptions.FontSources)}");
+        Console.WriteLine($"content security: {_builder.ContentSecurityOptions.Describe()}");
         Console.WriteLine($"allowed permissions: {string.Join(", ", _builder.PermissionOptions.Allowed)}");
         foreach (var (kind, options) in _builder.WindowKinds)
         {

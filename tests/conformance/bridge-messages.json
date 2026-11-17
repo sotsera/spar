@@ -141,6 +141,11 @@
       "name": "pong",
       "message": { "type": "pong", "seq": 12, "payload": "" },
       "wire": "{\"type\":\"pong\",\"seq\":12}\t"
+    },
+    {
+      "name": "csp",
+      "message": { "type": "csp", "payload": "{\"groups\":[{\"directive\":\"img-src\",\"blocked\":\"https://example.com/a.png\",\"source\":\"\",\"line\":0,\"column\":0,\"sample\":\"\",\"count\":3}],\"overflow\":0}" },
+      "wire": "{\"type\":\"csp\"}\t{\"groups\":[{\"directive\":\"img-src\",\"blocked\":\"https://example.com/a.png\",\"source\":\"\",\"line\":0,\"column\":0,\"sample\":\"\",\"count\":3}],\"overflow\":0}"
     }
   ],
   "decode": [

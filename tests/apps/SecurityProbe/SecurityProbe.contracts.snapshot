@@ -1,0 +1,8 @@
+# The contracts of SecurityProbe as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint e4930ad77fe565ce
+
+contract probe (SecurityProbe.ProbeService)
+  mode() -> string
+  report(string) -> void

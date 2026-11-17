@@ -45,6 +45,8 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     private readonly SparFolders _folders;
     private readonly RelaunchQueue _relaunches;
     private readonly PageHangHook _hangHook;
+    private CspViolationLog? _violations;
+    private bool _listenerReports;
     private SingleInstance? _instance;
     private WindowTheme? _theme;
     private SparRunningApp? _running;
@@ -215,8 +217,22 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         _instance?.Listen(OnRelaunch, _log);
 
         var frontend = _app.Catalog.AppAssembly is { } assembly ? SparFrontend.Open(assembly) : null;
-        var pages = new PageServer(frontend, ui, _log);
-        _view = new BrowserView(ui, _log, _window, _folders.WebEngine, pages, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed);
+        var security = PageSecuritySetup.Resolve(_app, _log.Logger);
+        var development = SparDevelopment.IsSupported;
+        var endpointReports = PagePolicy.Reports(security.Endpoint, development);
+        _listenerReports = PagePolicy.Reports(security.Listener, development);
+        if (endpointReports || _listenerReports)
+        {
+            // The advice only in Development: behind the feature switch, so the trimmer removes it from Production.
+            _violations = new CspViolationLog(_log.Logger, TimeProvider.System, SparDevelopment.IsSupported ? CspAdvice.For : null);
+        }
+
+        var pages = new PageServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
+        _ = LogPolicyAsync(pages);
+        var guard = new PageGuard(_log, security);
+        var script = PageScript.Text(_listenerReports);
+        _view = new BrowserView(
+            ui, _log, _window, _folders.WebEngine, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed);
         _ = _view.StartAsync();
         _ = ConnectAsync(ui, built);
     }
@@ -238,7 +254,8 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         _guard = new CloseGuard(_app.Builder.CloseGuard, _running.Services, _log.Logger);
         _relaunches.Start(_running.Services);
         _hangHook.Start(_running.Services);
-        var bridge = new WebViewBridge(ui, _log, _running.Dispatcher, _running.Catalog.Fingerprint, SparDevelopment.IsSupported);
+        var bridge = new WebViewBridge(
+            ui, _log, _running.Dispatcher, _running.Catalog.Fingerprint, SparDevelopment.IsSupported, _listenerReports ? _violations : null);
         if (_view is { } view && _state != State.Closing)
         {
             _watch = new PageWatch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
@@ -447,6 +464,21 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         await TeardownAsync(problem.ExitCode);
     }
 
+    /// <summary>The policy the page gets, in the log once it is composed (off the UI thread).</summary>
+    private async Task LogPolicyAsync(PageServer pages)
+    {
+        try
+        {
+            var policy = await pages.Policy;
+            _log.Info($"Content-Security-Policy: {policy.ContentSecurityPolicy}");
+            _log.Info($"Permissions-Policy: {policy.PermissionsPolicy}");
+        }
+        catch (Exception exception)
+        {
+            _log.Error("The page could not be prepared", exception);
+        }
+    }
+
     /// <summary>After the window's thread has ended: relaunches, the bridge's reader, then the app's services.</summary>
     private void Stop()
     {
@@ -467,6 +499,9 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
             {
                 _bridge.Task.Result.StopAsync().GetAwaiter().GetResult();
             }
+
+            // What is still counted is written before the log closes.
+            _violations?.DisposeAsync().AsTask().GetAwaiter().GetResult();
 
             _running?.DisposeAsync().AsTask().GetAwaiter().GetResult();
             _log.Step("services disposed");

@@ -151,6 +151,8 @@ See also "Bridge and loopback" for the bridge's message, id and connection limit
 
   (`stream-result-cost`)
 
+- **The minifier drops a busy loop with an empty body:** `while (Date.now() < until) {}` in a test page became one `Date.now()` call in Vite 8's build, and the page never hung. Count in the loop and use the count afterwards. (M1b page security)
+
 ### npm and Vite: from earlier versions, not rechecked
 
 The entries below come from earlier Spar versions. They have not been rechecked on the current tools.
@@ -334,6 +336,10 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
 - **Two processes appending to one file through `FileStream` with `FileMode.Append` overwrite each other's lines:** the stream writes at the position it tracks itself, not at the file's end. Two processes writing 2,000 lines each left 2,001 lines. A handle opened with `FILE_APPEND_DATA` and without `FILE_WRITE_DATA` makes Windows ignore the write offset and append; the same run then kept all 4,000 lines, three times out of three. The per-user `host.log` is opened that way, because a relaunch writes there while the running instance does. (M1b start-up review)
 - **A test that stands for several launches with pool threads starves the primary it talks to:** `Ten_launches_in_a_row_all_arrive` ran its launches through PLINQ, each blocking a pool thread while it waited its turn, and the primary's pipe loop, on the same pool, had none left. On CI's four cores 3 of 10 launches timed out; locally it never failed until the pool was capped at four threads, where 7 of 10 did. Real launches are processes of their own: give each one a thread of its own (`fe8fb51`). (M1b start-up, CI)
 
+- **`[GeneratedComInterface]` also generates the vtable for a managed implementation** of every interface, which an interface the host only calls never needs: `Options = ComInterfaceOptions.ComObjectWrapper` on those cut the Notebook's NativeAOT executable by about 120 KB. Keep both directions on the handler interfaces the host implements. (M1b page security)
+- **`AddScriptToExecuteOnDocumentCreated` completes about 45 ms after the controller exists** (41–59 ms, 12 runs); awaiting it before the first `Navigate` left the time from the controller to the first document where it was (102–137 ms), since the navigation's own setup overlaps it. (M1b page security)
+- **A Production page busy for 15 s raises the hung-page dialog, by design,** also in an unattended run: a flood test or any long page work on a Production build shows it on the desktop the run uses. Run such cases in a Development build with `SPAR_AUTOMATED=1`. (M1b page security)
+
 ### Windows host: from earlier versions and other frameworks, not rechecked
 
 The entries below come from earlier Spar versions and other frameworks (`docs/research-review.md`). They have not been rechecked on the current Runtime.
@@ -510,6 +516,12 @@ Entries tied to one host's API stay in that host's section. See also, in "npm, V
 
   (`webkit-wasm-off`)
 
+- **Chromium raises one violation for identical ones in a document.** 100,000 `style` attributes set from one line gave one `securitypolicyviolation` event and one `report-uri` report on WebView2 157; only distinct violations (another address, line or sample) are raised again. A flood test needs distinct violations. (M1b page security)
+- **A `securitypolicyviolation` listener makes the engine pay per violation.** 100,000 distinct violations kept the page busy about 20 s without any listener and about 9.5 s more with one, which also held back the page's answers to the host; the cost is the engine's event, not the listener's code. Spar's injected listener stops listening after 1,000 violations in a document. (M1b page security)
+- **`report-uri` reached the host 89 times per document** for 1,000 and for 100,000 distinct violations on WebView2 157 (20 read, 69 over the host's rate limit). Do not count on it for totals; the listener counts. (M1b page security)
+- **Trusted Types make `new Worker(url)` a script sink.** Under `require-trusted-types-for 'script'` a worker created from a string or URL is refused (`trusted-types-sink`, "Worker constructor"), Vite's `new Worker(new URL("./worker.js", import.meta.url))` included. Pass the address through a policy: `trustedTypes.createPolicy("worker", { createScriptURL: url => url }).createScriptURL(address)`. (M1b page security)
+- **A permission the `Permissions-Policy` header denies never reaches `PermissionRequested`:** `navigator.geolocation` under `geolocation=()` failed with `PERMISSION_DENIED` and no host event; notifications, which no header governs, did raise it. (M1b page security)
+
 ### Page security: from other frameworks, not rechecked
 
 This entry comes from other frameworks (`docs/research-review.md`) and has not been rechecked here:
@@ -683,6 +695,8 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
   - a job with no `timeout-minutes` runs up to six hours when a test hangs.
 
   (M1a CI)
+
+- **Git Bash halves backslashes in arguments to native programs:** a script passed to `node -e` lost one of each `\\` pair, so `"\\n"` arrived as `"\n"`, a real newline in the written file. Put such scripts in a file. (M1b page security)
 
 ### Tooling: from earlier versions, not rechecked
 

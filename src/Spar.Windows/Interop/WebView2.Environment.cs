@@ -7,7 +7,9 @@ namespace Spar.Windows.Interop;
 // interfaces: every slot of every base interface in header order, IUnknown's three first. Slots the host does not call
 // are [PreserveSig] placeholders named SlotNNN_<header name>, which keep the offsets of the ones it does. Spar.Tests'
 // slot-order test checks every declared method against the header. A method that hands out an interface returns the
-// raw pointer, with one reference the caller owns (Com.Take).
+// raw pointer, with one reference the caller owns (Com.Take). An interface the host only calls is generated for calling
+// only (ComInterfaceOptions.ComObjectWrapper): the host never hands WebView2 a managed object of it, and the vtable for
+// one would be dead code in every image. The handler interfaces (WebView2.Handlers.cs) keep both directions.
 
 /// <summary>The C <c>RECT</c>: left, top, right, bottom.</summary>
 [StructLayout(LayoutKind.Sequential)]
@@ -27,7 +29,7 @@ internal struct EventRegistrationToken
 }
 
 /// <summary><c>ICoreWebView2Environment10</c>, flat: Environment 3–7, _2 8, _3 9–10, _4 11, _5 12–13, _6 14, _7 15, _8 16–18, _9 19, _10 20–22.</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("ee0eb9df-6f12-46ce-b53f-3f47b9c928e0")]
 internal partial interface ICoreWebView2Environment10
 {
@@ -64,7 +66,7 @@ internal partial interface ICoreWebView2Environment10
 }
 
 /// <summary><c>ICoreWebView2Controller</c>, the base interface (slots 3–25).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("4d00c0d1-9434-4eb6-8078-8697a560334f")]
 internal partial interface ICoreWebView2Controller
 {
@@ -95,7 +97,7 @@ internal partial interface ICoreWebView2Controller
 }
 
 /// <summary><c>ICoreWebView2ProcessInfoCollection</c>: the browser's processes, from <c>GetProcessInfos</c> (STA only).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("402b99cd-a0cc-4fa5-b7a5-51d86a1d2339")]
 internal partial interface ICoreWebView2ProcessInfoCollection
 {
@@ -104,7 +106,7 @@ internal partial interface ICoreWebView2ProcessInfoCollection
 }
 
 /// <summary><c>ICoreWebView2ProcessInfo</c>: one process's id and kind (<see cref="WebView2Values.RendererProcess"/>).</summary>
-[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("84fa7612-3f3d-4fbf-889d-fad000492d72")]
 internal partial interface ICoreWebView2ProcessInfo
 {

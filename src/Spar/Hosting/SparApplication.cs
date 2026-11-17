@@ -67,6 +67,18 @@ public sealed class SparBuilder
     /// <summary>What Spar records for diagnosing the app.</summary>
     internal DiagnosticsOptions DiagnosticsOptions { get; } = new();
 
+    /// <summary>The page's Content Security Policy as this run's configuration declared it.</summary>
+    internal CspBuilder ContentSecurityOptions { get; } = new();
+
+    /// <summary>The powerful features this run's configuration declared.</summary>
+    internal PermissionsBuilder PermissionOptions { get; } = new();
+
+    /// <summary>
+    /// The page security this run's configuration declared. Hosts use the build's copy from the generated catalog
+    /// (<see cref="SparCatalog.PageSecurity"/>); a Development build compares the two.
+    /// </summary>
+    internal SparPageSecurity DeclaredPageSecurity => ContentSecurityOptions.Build(PermissionOptions.Allowed);
+
     /// <summary>
     /// The main window: its colours before the page paints (plan section 3d), its size and its minimum size. The
     /// colours are read by the build, so give them as constants.
@@ -176,6 +188,31 @@ public sealed class SparBuilder
             handler(hang, services);
             return ValueTask.CompletedTask;
         });
+    }
+
+    /// <summary>
+    /// Widens the page's strict Content Security Policy (plan section 3b; <c>docs/app-model.md</c> section 2), for
+    /// example <c>spar.ContentSecurity(csp => csp.FontSrc("https://fonts.gstatic.com"))</c>. The build reads it from
+    /// <c>Program.cs</c> without running the app, so give constant values directly in the <c>Create</c> configuration.
+    /// It may be called more than once; the values add up.
+    /// </summary>
+    public SparBuilder ContentSecurity(Action<CspBuilder> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(ContentSecurityOptions);
+        return this;
+    }
+
+    /// <summary>
+    /// Declares the powerful browser features the page may use (plan section 3b), for example
+    /// <c>spar.Permissions(p => p.Allow(Permission.ClipboardRead))</c>. Everything else is denied with no prompt. Read
+    /// by the build like <see cref="ContentSecurity"/>.
+    /// </summary>
+    public SparBuilder Permissions(Action<PermissionsBuilder> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(PermissionOptions);
+        return this;
     }
 
     /// <summary>
