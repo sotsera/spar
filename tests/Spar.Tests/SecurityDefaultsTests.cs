@@ -46,6 +46,26 @@ public sealed class SecurityDefaultsTests
     [InlineData(@"\\?\C:\Profiles\SqlTool", null)]
     public void The_profile_folder_must_be_absolute_and_local(string path, string? problem)
     {
+        // Windows path forms; on Linux they are relative names, and the Linux rules come with its host (M1c).
+        Assert.SkipUnless(OperatingSystem.IsWindows(), "Windows path forms");
+        var found = SparFolders.ProfileProblem(path);
+
+        if (problem is null)
+        {
+            Assert.Null(found);
+        }
+        else
+        {
+            Assert.Contains(problem, found, StringComparison.Ordinal);
+        }
+    }
+
+    [Theory]
+    [InlineData("/var/lib/profiles/sqltool", null)]
+    [InlineData("relative/profile", "not an absolute path")]
+    public void On_Linux_the_profile_folder_must_be_absolute(string path, string? problem)
+    {
+        Assert.SkipUnless(OperatingSystem.IsLinux(), "Linux path forms");
         var found = SparFolders.ProfileProblem(path);
 
         if (problem is null)

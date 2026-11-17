@@ -102,8 +102,10 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         Assert.True(Contains(runtime, "SparTestSession", Encoding.UTF8), "The control search missed SparTestSession.");
 
         // The DevTools Protocol in Production: exactly the two calls that keep the page's file picker closed; the
-        // control is the Windows host's assembly, whose Development-only input trigger names the Input domain.
-        Assert.Equal(ProductionBoundary.AllowedDevToolsMethods, ProductionBoundary.DevToolsMethods(image));
+        // control is the Windows host's assembly, whose Development-only input trigger names the Input domain. A Linux
+        // image has no Windows host and, until its own host (M1c), makes no protocol call at all.
+        string[] expected = OperatingSystem.IsWindows() ? [.. ProductionBoundary.AllowedDevToolsMethods] : [];
+        Assert.Equal(expected, ProductionBoundary.DevToolsMethods(image));
         if (OperatingSystem.IsWindows())
         {
             var host = File.ReadAllBytes(Directory.GetFiles(testOutput, "Spar.Windows.dll", SearchOption.AllDirectories)[0]);

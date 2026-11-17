@@ -167,9 +167,14 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "NotesTool.exe" : "NotesTool");
         // The page from ui/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
-        // The app id reaches the runtime through the generated catalog, a string literal (UTF-16) in the image.
-        Assert.True(Contains(File.ReadAllBytes(executable), System.Text.Encoding.Unicode.GetBytes("org.example.notes.Tool")),
-            "The published executable does not carry the app id.");
+        // The app id reaches the runtime through the generated catalog, a string literal (UTF-16) in the image. On
+        // Linux nothing reads it until the Linux host (M1c), so the trimmer drops it there; on Windows the message of
+        // a build with no host for its OS logs into the app id's folder.
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.True(Contains(File.ReadAllBytes(executable), System.Text.Encoding.Unicode.GetBytes("org.example.notes.Tool")),
+                "The published executable does not carry the app id.");
+        }
         // The app's per-user folders follow LOCALAPPDATA, so a run that ever reaches a host stays inside this test's root
         // and never writes into the developer's own profile (AGENTS.md).
         var perUser = Path.Combine(consumer.RunRoot, "local-app-data");
