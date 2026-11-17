@@ -62,7 +62,7 @@ public sealed class SparBuilder
     internal Func<StartupProblem, bool>? StartupProblemHandler { get; private set; }
 
     /// <summary>The page hang hook, or null when the app declared none.</summary>
-    internal Action<PageHang, IServiceProvider>? PageHangHandler { get; private set; }
+    internal Func<PageHang, IServiceProvider, CancellationToken, ValueTask>? PageHangHandler { get; private set; }
 
     /// <summary>What Spar records for diagnosing the app.</summary>
     internal DiagnosticsOptions DiagnosticsOptions { get; } = new();
@@ -156,14 +156,26 @@ public sealed class SparBuilder
     /// <summary>
     /// Observes a window's page that stops answering (<c>docs/app-model.md</c> 3.16), for logs and telemetry: called
     /// when it becomes unresponsive, recovers, is reloaded, or its window is closed anyway, with how long it had not
-    /// answered. It runs off the window's UI thread, one change at a time, with the app's root services; one that throws
-    /// is logged. It cannot hide Spar's dialog, reload the page or close the window: only the user's answer does.
+    /// answered. It runs off the window's UI thread, one change at a time, each awaited before the next, with the app's
+    /// root services; one that throws is logged. Its token is cancelled when the app exits and the short wait for the
+    /// hook has ended. It cannot hide Spar's dialog, reload the page or close the window: only the user's answer does.
     /// </summary>
-    public SparBuilder OnPageUnresponsive(Action<PageHang, IServiceProvider> handler)
+    public SparBuilder OnPageUnresponsive(Func<PageHang, IServiceProvider, CancellationToken, ValueTask> handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
         PageHangHandler = handler;
         return this;
+    }
+
+    /// <summary>The page hang hook when it finishes at once.</summary>
+    public SparBuilder OnPageUnresponsive(Action<PageHang, IServiceProvider> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        return OnPageUnresponsive((hang, services, _) =>
+        {
+            handler(hang, services);
+            return ValueTask.CompletedTask;
+        });
     }
 
     /// <summary>

@@ -177,14 +177,25 @@ public sealed class SparBuilder
         return this;
     }
 
-    internal Action<PageHang, IServiceProvider>? PageHangHandler { get; private set; }
+    internal Func<PageHang, IServiceProvider, CancellationToken, ValueTask>? PageHangHandler { get; private set; }
 
     /// <summary>Observes a page that stops responding (3.16); Spar's dialog always shows.</summary>
-    public SparBuilder OnPageUnresponsive(Action<PageHang, IServiceProvider> handler)
+    public SparBuilder OnPageUnresponsive(Func<PageHang, IServiceProvider, CancellationToken, ValueTask> handler)
     {
         ArgumentNullException.ThrowIfNull(handler);
         PageHangHandler = handler;
         return this;
+    }
+
+    /// <summary>The page hang hook when it finishes at once.</summary>
+    public SparBuilder OnPageUnresponsive(Action<PageHang, IServiceProvider> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        return OnPageUnresponsive((hang, services, _) =>
+        {
+            handler(hang, services);
+            return ValueTask.CompletedTask;
+        });
     }
 
     internal DiagnosticsOptions DiagnosticsOptions { get; } = new();

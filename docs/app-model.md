@@ -140,7 +140,8 @@ var app = SparApplication.Create(args, spar =>
     spar.OnStartupProblem(SupportPage.TryOpen);
 
     // A page that stops responding is recorded for support; Spar's own dialog still asks the user (3.16). Decided.
-    spar.OnPageUnresponsive((hang, services) => services.GetRequiredService<HangLog>().Record(hang));
+    spar.OnPageUnresponsive((hang, services, cancellationToken) =>
+        services.GetRequiredService<HangLog>().RecordAsync(hang, cancellationToken));
 
     // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
     spar.Diagnostics(d => d.KeepStallProbe());
@@ -945,33 +946,47 @@ public static class SupportPage
 
 ### 3.16 A page that stops responding
 
-**Decided** (decisions "What "Wait" does after the hung-page dialog" and "Hangs: the page's hook, the Production stall probe and "Exit now""). While a window is visible, Spar pings its page every 5 s, and the page's SDK answers from its message handler. A page that misses three pings in a row (15 to 20 s after it stopped) gets Spar's native dialog, "Wait / Reload page". Wait asks again after about 20 s, then 40 s, 80 s and every 160 s while the page stays silent, and a page that answers again closes the dialog itself. Reload page ends the page's process, then loads the page again once; the backend keeps running, and no command is sent again. The app cannot replace the dialog: an app has no UI of its own to show while its page does not answer. It can observe each change through `spar.OnPageUnresponsive` in `Program.cs` (section 2), which the SQL tool uses to keep a record for its support team.
+**Decided** (decisions "What "Wait" does after the hung-page dialog" and "Hangs: the page's hook, the Production stall probe and "Exit now""). While a window is visible, Spar pings its page every 5 s, and the page's SDK answers from its message handler. A page that misses three pings in a row (15 to 20 s after it stopped) gets Spar's native dialog, "Wait / Reload page". Wait asks again after about 20 s, then 40 s, 80 s and every 160 s while the page stays silent, and a page that answers again closes the dialog itself. Reload page ends the page's process, then loads the page again once; the backend keeps running, and no command is sent again. The app cannot replace the dialog: an app has no UI of its own to show while its page does not answer. It can observe each change through `spar.OnPageUnresponsive` in `Program.cs` (section 2), which the SQL tool uses to keep a record for its support team. The hook returns a `ValueTask` and gets a `CancellationToken`, like the close guard and the relaunch handler; a hook that finishes at once can take the shorter form `(hang, services) => …`.
 
 File `SqlTool/Support/HangLog.cs`:
 
 ```csharp
 using System.Collections.Concurrent;
+using System.Globalization;
 using Spar;
 
 namespace SqlTool.Support;
 
-/// <summary>The page's hangs in this run, for the status page and support reports; Program.cs records each change.</summary>
+/// <summary>
+/// The page's hangs, for the status page and support reports: kept in memory for this run, and appended to
+/// <c>hangs.txt</c> in the logs folder for the support team. Program.cs records each change.
+/// </summary>
 public sealed class HangLog
 {
     private const int Kept = 50;
 
+    private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "logs", "hangs.txt");
+
     private readonly ConcurrentQueue<PageHang> _changes = new();
 
-    /// <summary>One change: unresponsive, recovered, reloaded or closed anyway. Spar's dialog has already asked the user.</summary>
-    public void Record(PageHang hang)
+    /// <summary>
+    /// One change: unresponsive, recovered, reloaded or closed anyway. Spar's dialog has already asked the user. Spar
+    /// awaits it before the next change, and cancels the token when the app exits and stops waiting.
+    /// </summary>
+    public async ValueTask RecordAsync(PageHang hang, CancellationToken cancellationToken)
     {
         _changes.Enqueue(hang);
         while (_changes.Count > Kept && _changes.TryDequeue(out _))
         {
         }
+
+        var line = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{DateTimeOffset.UtcNow:O} {hang.Window} {hang.State} after {hang.Duration.TotalSeconds:0.0} s{Environment.NewLine}");
+        await File.AppendAllTextAsync(FilePath, line, cancellationToken);
     }
 
-    /// <summary>How often the page stopped responding, and the longest it went without answering.</summary>
+    /// <summary>How often the page stopped responding in this run, and the longest it went without answering.</summary>
     public (int Hangs, TimeSpan Longest) Summary()
     {
         var hangs = _changes.Count(change => change.State == PageHangState.Unresponsive);
@@ -982,7 +997,7 @@ public sealed class HangLog
 ```
 
 - **What the hook gets:** the window kind (`main` for the main window, as in a close request), the `State` (`Unresponsive`, `Recovered`, `Reloaded` or `ClosedAnyway`), and the `Duration` the page had not answered, from the first ping it missed.
-- **When it runs:** off the window's UI thread, one change at a time in order, with the app's root services. A hook that throws is logged, and the next change still reaches it. It only observes: it cannot hide the dialog, reload the page or close the window.
+- **When it runs:** off the window's UI thread, one change at a time in order, each awaited before the next, with the app's root services. A hook that throws is logged, and the next change still reaches it. At exit the changes already reported still reach it within about 3 s; then its token is cancelled and the rest are dropped. It only observes: it cannot hide the dialog, reload the page or close the window.
 - **What else counts as unresponsive:** WebView2 reporting the page's renderer unresponsive, which it does only after input reaches a hung page, and a page that does not answer a close request within about 5 s (6.11). They are the same state, with one dialog.
 - **What is not pinged:** a minimized or hidden window, whose page the browser throttles, and a page that never connected the SDK, which cannot answer.
 - **In the automated mode** (6.11) no dialog shows: the change is logged and the hook is called, and a close of a page that does not answer closes anyway.

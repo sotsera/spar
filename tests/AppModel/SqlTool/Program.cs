@@ -68,7 +68,8 @@ var app = SparApplication.Create(args, spar =>
     spar.OnStartupProblem(SupportPage.TryOpen);
 
     // A page that stops responding is recorded for support; Spar's own dialog still asks the user (3.16). Decided.
-    spar.OnPageUnresponsive((hang, services) => services.GetRequiredService<HangLog>().Record(hang));
+    spar.OnPageUnresponsive((hang, services, cancellationToken) =>
+        services.GetRequiredService<HangLog>().RecordAsync(hang, cancellationToken));
 
     // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
     spar.Diagnostics(d => d.KeepStallProbe());

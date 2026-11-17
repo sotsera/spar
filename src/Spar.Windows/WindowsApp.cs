@@ -458,9 +458,9 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
                 _log.Warn("A relaunch handler was still running at exit.");
             }
 
-            if (!_hangHook.StopAsync().Wait(HookSettleMilliseconds))
+            if (!_hangHook.StopAsync(TimeSpan.FromMilliseconds(HookSettleMilliseconds)).GetAwaiter().GetResult())
             {
-                _log.Warn("The page hang hook was still running at exit.");
+                _log.Warn("The page hang hook was still running at exit: its token was cancelled.");
             }
 
             if (_bridge.Task.IsCompletedSuccessfully)
