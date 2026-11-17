@@ -41,6 +41,10 @@ public sealed partial class WebView2SlotTests
         ("ICoreWebView2EnvironmentOptions", 3, "GetAdditionalBrowserArguments"),
         ("ICoreWebView2AcceleratorKeyPressedEventArgs2", 10, "PutIsBrowserAcceleratorKeyEnabled"),
         ("ICoreWebView2ContextMenuItemCollection", 5, "RemoveValueAtIndex"),
+        ("ICoreWebView2Controller", 12, "MoveFocus"),
+        ("ICoreWebView2Controller", 13, "AddMoveFocusRequested"),
+        ("ICoreWebView2Controller", 23, "NotifyParentWindowPositionChanged"),
+        ("ICoreWebView2MoveFocusRequestedEventArgs", 5, "PutHandled"),
     ];
 
     [Fact]

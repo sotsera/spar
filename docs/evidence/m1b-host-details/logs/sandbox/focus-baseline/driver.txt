@@ -1,0 +1,29 @@
+﻿    144.4 | start C:\spar\in\230133-SecurityProbe.exe
+    880.8 | window 0x502E2 Spar.Window 'SecurityProbe' pid 3128; foreground 0x100EA Progman 'Program Manager' pid 6096
+   1454.5 | STEP A: typing right after the window is activated by a click on its title bar (stderr line 31)
+   1913.2 | title bar clicked (activation); foreground 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+   2718.0 | STEP B: Tab five times from wherever focus is, then t (stderr line 31)
+   4864.1 | STEP C: Shift+Tab, then s (stderr line 31)
+   5832.0 | STEP D: another window takes the foreground, then Alt+Tab back, then r (stderr line 31)
+   8902.6 | foreground with the other window 0x502E4 WindowsForms10.Window.8.app.0.3cd2c46_r8_ad1 'Other window' pid 4076
+  10061.0 | foreground after Alt+Tab 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+  10675.9 | STEP E: minimized (SC_MINIMIZE), restored by Alt+Tab, then m (stderr line 31)
+  12191.5 | minimized True; foreground 0x502E4 WindowsForms10.Window.8.app.0.3cd2c46_r8_ad1 'Other window' pid 4076
+  13549.7 | minimized False; foreground 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+  14141.4 | STEP F: the page hangs (F9); the dialog goes away by itself when the page answers; then h (stderr line 33)
+  44298.7 | dialog none; foreground 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+  84499.2 | TIMEOUT waiting for 'hang ended'
+  85317.6 | dialog gone; foreground 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+  85842.7 | STEP G: the page hangs (F9); Enter on the dialog (Wait); then k (stderr line 33)
+ 116614.4 | dialog none; foreground 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+ 117527.7 | after Enter: dialog none; foreground 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+ 157608.5 | TIMEOUT waiting for 'hang ended'
+ 158987.0 | STEP H: the select, opened by a click, then dragged with the window and opened by Alt+Down, then by a click (stderr line 33)
+ 159001.5 | client origin 248,31
+ 160128.5 | popups, clicked before the move: Chrome_WidgetWin_1 268,215 200x146
+ 162372.0 | client origin after the drag 398,131; foreground 0x502E2 Spar.Window 'SecurityProbe' pid 3128
+ 163556.6 | popups, Alt+Down after the move: Chrome_WidgetWin_1 268,215 200x146
+ 165319.2 | popups, clicked after the move: Chrome_WidgetWin_1 418,315 200x146
+ 166559.7 | STEP I: Alt+F4 when the app has the foreground, otherwise WM_CLOSE (stderr line 40)
+ 166712.3 | exit 
+ 166739.3 | done

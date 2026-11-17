@@ -1,0 +1,36 @@
+       6.8 | options --cycles 30 --teardown plain --window shown --anchor shown --loopback true --settle 1500 --browser-folder C:\Program Files (x86)\Microsoft\EdgeWebView\Application\157.0.4341.46 --out C:\spar\out\leak\leak-shown-plain-230646.log --profile C:\spar-work\leak-shown-plain-230646
+      47.9 | environment, Runtime 157.0.4341.46, loopback port 56028
+      49.8 | start | probe 191 | gdi 0 user 3 | 
+     547.1 | anchor (shown) loaded: True
+     549.4 | before cycles | probe 276 | gdi 2 user 9 | browser#5508 1129, crashpad#7376 153, gpu#4996 251, network#2276 378, renderer#5840 245, storage#8688 195
+    2573.3 | cycle 1: loaded True in 188 ms, plain close 14.7 ms | probe 276 | gdi 2 user 9 | browser#5508 1203, crashpad#7376 153, gpu#4996 485, network#2276 378, renderer#5840 257, storage#8688 195
+    4689.0 | cycle 2: loaded True in 110 ms, plain close 12.2 ms | probe 276 | gdi 2 user 9 | browser#5508 1304, crashpad#7376 153, gpu#4996 481, network#2276 378, renderer#5840 254, storage#8688 195
+    6350.1 | cycle 3: loaded True in 137 ms, plain close 12.6 ms | probe 276 | gdi 2 user 9 | browser#5508 1306, crashpad#7376 153, gpu#4996 476, network#2276 378, renderer#5840 254, storage#8688 195
+    8131.5 | cycle 4: loaded True in 255 ms, plain close 15.5 ms | probe 277 | gdi 2 user 9 | browser#5508 1306, crashpad#7376 153, gpu#4996 483, network#2276 378, renderer#5840 254, storage#8688 195
+    9819.4 | cycle 5: loaded True in 162 ms, plain close 12.7 ms | probe 277 | gdi 2 user 9 | browser#5508 1306, crashpad#7376 153, gpu#4996 478, network#2276 378, renderer#5840 254, storage#8688 195
+   11882.4 | cycle 6: loaded True in 535 ms, plain close 13.6 ms | probe 277 | gdi 2 user 9 | browser#5508 1306, crashpad#7376 153, gpu#4996 479, network#2276 378, renderer#5840 254, storage#8688 195
+   13663.8 | cycle 7: loaded True in 255 ms, plain close 13.0 ms | probe 277 | gdi 2 user 9 | browser#5508 1306, crashpad#7376 153, gpu#4996 486, network#2276 378, renderer#5840 254, storage#8688 195
+   15332.7 | cycle 8: loaded True in 149 ms, plain close 14.9 ms | probe 277 | gdi 2 user 9 | browser#5508 1306, crashpad#7376 153, gpu#4996 481, network#2276 378, renderer#5840 254, storage#8688 195
+   17396.9 | cycle 9: loaded True in 540 ms, plain close 14.0 ms | probe 277 | gdi 2 user 9 | browser#5508 1306, crashpad#7376 153, gpu#4996 488, network#2276 378, renderer#5840 254, storage#8688 195
+   19099.2 | cycle 10: loaded True in 173 ms, plain close 14.0 ms | probe 277 | gdi 2 user 9 | browser#5508 1308, crashpad#7376 153, gpu#4996 483, network#2276 378, renderer#5840 254, storage#8688 195
+   20820.1 | cycle 11: loaded True in 196 ms, plain close 13.5 ms | probe 277 | gdi 2 user 9 | browser#5508 1313, crashpad#7376 153, gpu#4996 490, network#2276 378, renderer#5840 254, storage#8688 195
+   22472.3 | cycle 12: loaded True in 130 ms, plain close 15.5 ms | probe 277 | gdi 2 user 9 | browser#5508 1313, crashpad#7376 153, gpu#4996 485, network#2276 378, renderer#5840 254, storage#8688 195
+   24140.3 | cycle 13: loaded True in 141 ms, plain close 13.9 ms | probe 277 | gdi 2 user 9 | browser#5508 1320, crashpad#7376 153, gpu#4996 486, network#2276 378, renderer#5840 254, storage#8688 195
+   26192.2 | cycle 14: loaded True in 528 ms, plain close 14.1 ms | probe 277 | gdi 2 user 9 | browser#5508 1320, crashpad#7376 153, gpu#4996 487, network#2276 378, renderer#5840 254, storage#8688 195
+   27930.4 | cycle 15: loaded True in 210 ms, plain close 15.0 ms | probe 277 | gdi 2 user 9 | browser#5508 1320, crashpad#7376 153, gpu#4996 494, network#2276 378, renderer#5840 254, storage#8688 195
+   29611.0 | cycle 16: loaded True in 146 ms, plain close 15.2 ms | probe 277 | gdi 2 user 9 | browser#5508 1320, crashpad#7376 153, gpu#4996 489, network#2276 378, renderer#5840 254, storage#8688 195
+   31678.1 | cycle 17: loaded True in 523 ms, plain close 25.8 ms | probe 276 | gdi 2 user 9 | browser#5508 1325, crashpad#7376 228, gpu#4996 491, network#2276 378, renderer#5840 304, storage#8688 195
+   33368.6 | cycle 18: loaded True in 161 ms, plain close 14.2 ms | probe 276 | gdi 2 user 9 | browser#5508 1325, crashpad#7376 228, gpu#4996 492, network#2276 378, renderer#5840 304, storage#8688 195
+   35031.7 | cycle 19: loaded True in 136 ms, plain close 14.2 ms | probe 276 | gdi 2 user 9 | browser#5508 1327, crashpad#7376 228, gpu#4996 493, network#2276 378, renderer#5840 304, storage#8688 195
+   36675.2 | cycle 20: loaded True in 123 ms, plain close 14.2 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 228, gpu#4996 500, network#2276 378, renderer#5840 304, storage#8688 195
+   38315.8 | cycle 21: loaded True in 118 ms, plain close 13.0 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 228, gpu#4996 495, network#2276 378, renderer#5840 304, storage#8688 195
+   40397.8 | cycle 22: loaded True in 549 ms, plain close 14.2 ms | probe 276 | gdi 2 user 9 | browser#5508 1329, crashpad#7376 228, gpu#4996 496, network#2276 378, renderer#5840 304, storage#8688 195
+   42069.2 | cycle 23: loaded True in 147 ms, plain close 13.7 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 228, gpu#4996 503, network#2276 378, renderer#5840 304, storage#8688 195
+   43757.0 | cycle 24: loaded True in 157 ms, plain close 13.7 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 228, gpu#4996 498, network#2276 378, renderer#5840 304, storage#8688 195
+   45815.4 | cycle 25: loaded True in 532 ms, plain close 13.1 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 227, gpu#4996 505, network#2276 378, renderer#5840 304, storage#8688 195
+   47582.6 | cycle 26: loaded True in 232 ms, plain close 13.4 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 227, gpu#4996 500, network#2276 378, renderer#5840 304, storage#8688 195
+   49290.1 | cycle 27: loaded True in 182 ms, plain close 13.9 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 227, gpu#4996 507, network#2276 378, renderer#5840 304, storage#8688 195
+   50974.5 | cycle 28: loaded True in 160 ms, plain close 14.8 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 227, gpu#4996 502, network#2276 378, renderer#5840 304, storage#8688 195
+   53034.2 | cycle 29: loaded True in 476 ms, plain close 13.6 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 227, gpu#4996 503, network#2276 378, renderer#5840 304, storage#8688 195
+   54755.4 | cycle 30: loaded True in 190 ms, plain close 13.7 ms | probe 276 | gdi 2 user 9 | browser#5508 1328, crashpad#7376 227, gpu#4996 510, network#2276 378, renderer#5840 304, storage#8688 195
+   57788.7 | after the environment's release | probe 252 | gdi 2 user 3 | 

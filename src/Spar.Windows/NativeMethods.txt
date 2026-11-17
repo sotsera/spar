@@ -15,10 +15,12 @@ DwmSetWindowAttribute
 DWMWINDOWATTRIBUTE
 FillRect
 FreeConsole
+GetActiveWindow
 GetClientRect
 GetCurrentProcess
 GetDpiForMonitor
 GetDpiForWindow
+GetFocus
 GetKeyState
 GetMessage
 GetModuleHandle
@@ -30,6 +32,7 @@ IDC_ARROW
 InvalidateRect
 IsIconic
 IsWindow
+IsWindowEnabled
 IsWindowVisible
 LoadCursor
 MessageBox
@@ -45,6 +48,7 @@ SetForegroundWindow
 SetWindowPos
 ShellExecute
 ShowWindow
+SIZE_MINIMIZED
 S_FALSE
 S_OK
 TaskDialogIndirect
@@ -54,6 +58,7 @@ TD_WARNING_ICON
 TerminateProcess
 TranslateMessage
 UnregisterClass
+WINDOWPOS
 WM_APP
 WM_CLOSE
 WM_DESTROY
@@ -62,6 +67,8 @@ WM_ERASEBKGND
 WM_GETMINMAXINFO
 WM_NCCREATE
 WM_NCDESTROY
+WM_SETFOCUS
 WM_SETTINGCHANGE
 WM_SIZE
+WM_WINDOWPOSCHANGED
 WriteConsole

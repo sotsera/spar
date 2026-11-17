@@ -80,9 +80,9 @@ internal partial interface ICoreWebView2Controller
     [PreserveSig] int Slot009_AddZoomFactorChanged();
     [PreserveSig] int Slot010_RemoveZoomFactorChanged();
     [PreserveSig] int Slot011_SetBoundsAndZoomFactor();
-    [PreserveSig] int Slot012_MoveFocus();
-    [PreserveSig] int Slot013_AddMoveFocusRequested();
-    [PreserveSig] int Slot014_RemoveMoveFocusRequested();
+    void MoveFocus(int reason);
+    EventRegistrationToken AddMoveFocusRequested(ICoreWebView2MoveFocusRequestedEventHandler eventHandler);
+    void RemoveMoveFocusRequested(EventRegistrationToken token);
     [PreserveSig] int Slot015_AddGotFocus();
     [PreserveSig] int Slot016_RemoveGotFocus();
     [PreserveSig] int Slot017_AddLostFocus();
@@ -91,7 +91,7 @@ internal partial interface ICoreWebView2Controller
     void RemoveAcceleratorKeyPressed(EventRegistrationToken token);
     [PreserveSig] int Slot021_GetParentWindow();
     [PreserveSig] int Slot022_PutParentWindow();
-    [PreserveSig] int Slot023_NotifyParentWindowPositionChanged();
+    void NotifyParentWindowPositionChanged();
     void Close();
     nint GetCoreWebView2();
 }

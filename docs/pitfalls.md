@@ -252,6 +252,7 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
   - `wsb exec` with `powershell -File` cannot pass an array parameter.
   - `SendInput` arrow keys need `KEYEVENTF_EXTENDEDKEY` for the `Win+arrow` shortcuts.
   - **The guest grants the foreground to every process:** a relaunch took the foreground in 15 of 15 cases, controls without `AllowSetForegroundWindow` and without a click included, with the default `ForegroundLockTimeout`. On the desktop the same control failed 3 of 3. Check focus rules on a real desktop. (`windows-single-instance`)
+  - **An app started from a script under `wsb exec` did not get the foreground** in 6 of 7 starts (the desktop or a leftover dialog kept it). Activate it with a real click on its title bar before typing, and send Alt+F4 only while it has the foreground: sent to the guest's desktop, it opened the "Shut Down Windows" dialog, which a later Enter would have confirmed. The guest has no Notepad: a second window for Alt+Tab has to come from a process of one's own. (M1b host details)
   - `wsb exec -r System` runs a command as SYSTEM in the guest: a second account for cross-user checks, without creating a user. `wsb connect` did not return while the session stayed open. (`windows-single-instance`)
 - **Blocking the page's file pickers** (`window-tests`):
   - **`Page.setInterceptFileChooserDialog` does nothing without `Page.enable` first:** it returns `{}` and the dialog opens.
@@ -348,20 +349,24 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
 - **`window.chrome.webview.hostObjects` exists with host objects disallowed:** `typeof` is `function` with `AreHostObjectsAllowed = false`; only what it returns is empty. Check the setting, not the page's view of it. (M1b step 5)
 - **A COM method the host calls costs about 300–420 B in the NativeAOT image, plus about 120 B of metadata:** step 5's interfaces first added 82 KB to the Notebook. Settings getters used only for a log line, a download's address, `DriveInfo` and `Environment.SetEnvironmentVariable` (their argument checks carry strings) and an `async` method for two chained calls took 22 KB of it; each now sits behind `SparDevelopment.IsSupported` or is a Win32 call or one completion handler. (M1b step 5)
 - **WebView2 and Windows write under the `LOCALAPPDATA` an app is given:** a run with `LOCALAPPDATA` in a test root also gets `Microsoft\Windows\Caches` there, beside the app's own folder. It is harmless and stays in the root. (M1b step 5)
+- **Without `WM_SETFOCUS` forwarded to `MoveFocus`, the keyboard never reaches the page** until the user clicks into it: after a click on the title bar, Alt+Tab back, a restore from minimized or a closed dialog, typing, Tab and the F keys all went nowhere (Runtime 157, real input in Windows Sandbox). The window's own focus must be passed on, and Tab past the page's last field comes back as `MoveFocusRequested`. (M1b host details)
+- **A hidden window's page keeps running at full rate:** after `SW_HIDE` the page stayed `visible`, with 60 animation frames and unthrottled timers a second, until the controller's `IsVisible` was set to false. Minimized, the browser makes the page `hidden` by itself (32–47 ms; 1 timer callback a second, no frames). A shown window placed offscreen counts as visible. (M1b host details)
+- **A hidden or minimized page still answers web messages,** within 1 ms of a close request's ping; only a suspended one does not (above). (M1b host details)
+- **A `<select>`'s list opened from the keyboard after the window moved appears at the old place** without `NotifyParentWindowPositionChanged`; one opened by a click is placed right either way, which hides the bug from mouse users. (M1b host details)
+- **The visible-window teardown leak of earlier research did not reproduce** on Runtime 157: in 100 open and close cycles on one environment, with windows offscreen on the desktop and on the screen in Windows Sandbox, the network service stayed within −10 and +5 handles, with or without the old mitigation (hide, `about:blank`, a posted close). **The GPU process gains about one handle per window opened and closed** (+102 to +104 in 100 cycles), with or without it. (M1b host details)
+- **The last controller's close ends the browser, and a new controller right after waits for it:** with no other controller alive, the next one on the same environment took 5.7 s (2 of 2) against 0.28 s, in a new browser process. Holding the environment object does not keep the browser alive; another controller does. (M1b host details)
 
 ### Windows host: from earlier versions and other frameworks, not rechecked
 
 The entries below come from earlier Spar versions and other frameworks (`docs/research-review.md`). They have not been rechecked on the current Runtime.
 
 - **A confirmed `WM_ENDSESSION` was ignored** by a window that accepted `WM_QUERYENDSESSION`, so nothing was cleaned up at sign-out or shutdown.
-- **Focus:** without forwarding `WM_SETFOCUS` to `MoveFocus(Programmatic)`, Tab never reaches the page. Playwright's CDP focus emulation hides `visibilityState` bugs.
 - **WebView2 counts any navigation within about 5 s after `ExecuteScript` as user-initiated.**
 - **A file sitting where the profile folder should be** caused a startup delay of about 65 s.
 - **A long data path** (the root lengthened from 114 to 169 characters) broke PDF staging and `localStorage` persistence.
 - **`Process.CloseMainWindow()` does not find hidden or offscreen windows.** Post `WM_CLOSE` to the recorded window handle.
 - **Returning directly from `WM_NCCREATE` broke the window title.**
 - **The CI runner ignored the WebView2 runtime-folder environment variable;** only the API parameter worked. In an elevated process (the Windows Sandbox runner), WebView2 ignores environment overrides altogether.
-- **A visible-window teardown leaked handles in WebView2's network service** that hidden-window tests never showed. The mitigation: hide the controller before `Close`, navigate to a blank page, and post the final close outside the callback.
 - **Unpackaged Windows apps get balloon notifications only;** in development, notifications show PowerShell's name and icon.
 
 ## Linux host (WebKitGTK)

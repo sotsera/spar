@@ -77,6 +77,7 @@ internal sealed class BrowserView
         _transparent = transparent;
         _fail = fail;
         _startupFailed = startupFailed;
+        WindowState = new ViewWindowState(ui, log, window);
     }
 
     /// <summary>
@@ -84,6 +85,9 @@ internal sealed class BrowserView
     /// same state as the heartbeat's alarm (plan section 3, "Hung pages"). Raised on the UI thread.
     /// </summary>
     public event Action? RendererUnresponsive;
+
+    /// <summary>The window's focus, visibility and position, passed on to the controller (UI thread).</summary>
+    public ViewWindowState WindowState { get; }
 
     /// <summary>Whether the controller shows the WebView: a hidden controller's page is not pinged (UI thread).</summary>
     public bool IsShown => _controller is { } controller && controller.GetIsVisible() != 0;
@@ -123,10 +127,10 @@ internal sealed class BrowserView
         }
     }
 
-    /// <summary>Keeps the WebView the size of the window's client area (UI thread).</summary>
+    /// <summary>Keeps the WebView the size of the window's client area (UI thread); a minimized window keeps the last size.</summary>
     public void Resize()
     {
-        if (_controller is null || !PInvoke.GetClientRect(_window, out var client))
+        if (_controller is null || PInvoke.IsIconic(_window) || !PInvoke.GetClientRect(_window, out var client))
         {
             return;
         }
@@ -213,6 +217,7 @@ internal sealed class BrowserView
     public void Close()
     {
         _closing = true;
+        WindowState.LogSummary();
         Release(closeController: true);
     }
 
@@ -258,6 +263,7 @@ internal sealed class BrowserView
         _controller = controller;
         _webView = Com.Take<ICoreWebView2_22>(controller.GetCoreWebView2());
         _log.Phase("controller");
+        WindowState.Attach(controller);
         _defaults.Apply(_webView);
         var picker = _defaults.BlocksPagePicker ? PagePicker.Block(_webView, _log) : Task.CompletedTask;
         SetPageScheme(_theme.PageScheme);
@@ -401,10 +407,15 @@ internal sealed class BrowserView
             Subscribe(menu, webView.AddContextMenuRequested(menu), webView.RemoveContextMenuRequested);
         }
 
-        if (_defaults.FiltersKeys && _controller is { } controller)
+        if (_controller is { } controller)
         {
-            var keys = Handler(generation, "AcceleratorKeyPressed", _defaults.OnAcceleratorKeyPressed);
-            Subscribe(keys, controller.AddAcceleratorKeyPressed(keys), controller.RemoveAcceleratorKeyPressed);
+            var tab = Handler(generation, "MoveFocusRequested", WindowState.OnMoveFocusRequested);
+            Subscribe(tab, controller.AddMoveFocusRequested(tab), controller.RemoveMoveFocusRequested);
+            if (_defaults.FiltersKeys)
+            {
+                var keys = Handler(generation, "AcceleratorKeyPressed", _defaults.OnAcceleratorKeyPressed);
+                Subscribe(keys, controller.AddAcceleratorKeyPressed(keys), controller.RemoveAcceleratorKeyPressed);
+            }
         }
 
         // A healthy document again: the renderer may be reloaded automatically once more. Subscribed once, for every generation.
@@ -638,6 +649,7 @@ internal sealed class BrowserView
     /// <summary>Removes the events, closes the controller and releases every WebView2 object, each step on its own.</summary>
     private void Release(bool closeController)
     {
+        WindowState.Detach();
         foreach (var subscription in _subscriptions)
         {
             try

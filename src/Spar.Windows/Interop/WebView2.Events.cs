@@ -115,6 +115,16 @@ internal partial interface ICoreWebView2BrowserProcessExitedEventArgs
     uint GetBrowserProcessId();
 }
 
+/// <summary><c>ICoreWebView2MoveFocusRequestedEventArgs</c> (slots 3–5): Tab or Shift+Tab is leaving the page.</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("2d6aa13b-3839-4a15-92fc-d88b3c0d9c9d")]
+internal partial interface ICoreWebView2MoveFocusRequestedEventArgs
+{
+    int GetReason();
+    [PreserveSig] int Slot004_GetHandled();
+    void PutHandled(int value);
+}
+
 /// <summary>The values of the WebView2 enums the host reads or passes, as WebView2.h defines them.</summary>
 internal static class WebView2Values
 {
@@ -159,4 +169,7 @@ internal static class WebView2Values
 
     /// <summary><c>COREWEBVIEW2_NAVIGATION_KIND_BACK_OR_FORWARD</c>, in <c>ICoreWebView2NavigationStartingEventArgs3</c>.</summary>
     public const int NavigationBackOrForward = 1;
+
+    /// <summary><c>COREWEBVIEW2_MOVE_FOCUS_REASON_PROGRAMMATIC</c>: focus to the page's last focused element.</summary>
+    public const int FocusProgrammatic = 0;
 }

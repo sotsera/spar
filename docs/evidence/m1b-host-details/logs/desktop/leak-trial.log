@@ -1,0 +1,8 @@
+       1,6 | options --cycles 3 --teardown plain --window offscreen --anchor none --loopback false --settle 1000 --browser-folder  --out E:\Ghidello\Git\spar.v7\artifacts\m1b-host-details\logs\leak-trial.log --profile E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\m1b-host-details\leak-trial\profile
+      12,3 | environment, Runtime 157.0.4341.46, loopback port 0
+      22,2 | start | probe 258 | gdi 0 user 3 | 
+      27,2 | before cycles | probe 271 | gdi 0 user 3 | 
+    1341,5 | cycle 1: loaded True in 281 ms, plain close 15,4 ms | probe 322 | gdi 2 user 4 | browser#55996 988, crashpad#53532 201, gpu#31104 567, network#65540 389, storage#71456 241
+    8091,9 | cycle 2: loaded True in 5718 ms, plain close 20,0 ms | probe 322 | gdi 2 user 4 | browser#6556 949, crashpad#63456 201, gpu#31024 587, network#68696 378, storage#55644 240
+   14849,6 | cycle 3: loaded True in 5710 ms, plain close 20,1 ms | probe 323 | gdi 2 user 4 | browser#74512 941, crashpad#27092 199, gpu#49056 587, network#28684 378, storage#45952 240
+   17865,2 | after the environment's release | probe 320 | gdi 2 user 3 | browser#74512 951, crashpad#27092 199, gpu#49056 587, network#28684 378, storage#45952 240

@@ -1,7 +1,8 @@
 <Project Sdk="Spar.Sdk">
   <!--
-    A test app for the Windows host's page security and security defaults (plan M1b, build steps 4 and 5;
-    docs/evidence/m1b-page-security.md, docs/evidence/m1b-security-defaults.md): its page runs one probe, named by
+    A test app for the Windows host's page security, security defaults and host details (plan M1b, build steps 4 to 6;
+    docs/evidence/m1b-page-security.md, docs/evidence/m1b-security-defaults.md, docs/evidence/m1b-host-details.md):
+    its page runs one probe, named by
     SECURITY_PROBE_MODE, and reports what happened through its one contract to standard error. Run by
     hand, published or in Debug with SparDevServer=false, from the evidence's probe; not in Spar.slnx.
   -->

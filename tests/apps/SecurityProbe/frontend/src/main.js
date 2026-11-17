@@ -213,6 +213,89 @@ const probes = {
   },
 };
 
+// The host details of plan M1b step 6 (docs/evidence/m1b-host-details.md), observed from the page.
+const elementName = element => element?.id || element?.tagName?.toLowerCase() || "none";
+const pageState = () =>
+  `active ${elementName(document.activeElement)}, hasFocus ${document.hasFocus()}, ${document.visibilityState}, ` +
+  `${innerWidth}x${innerHeight}, values [${["first", "second", "last"].map(id => document.getElementById(id)?.value ?? "").join("|")}]`;
+
+const watchPage = label => {
+  addEventListener("focus", () => report(`${label}: window focus`));
+  addEventListener("blur", () => report(`${label}: window blur`));
+  addEventListener("resize", () => report(`${label}: resize ${innerWidth}x${innerHeight}`));
+  document.addEventListener("visibilitychange", () =>
+    report(`${label}: visibilitychange ${document.visibilityState} at ${performance.now().toFixed(0)} ms`));
+  document.addEventListener("freeze", () => report(`${label}: freeze`));
+  document.addEventListener("resume", () => report(`${label}: resume`));
+};
+
+Object.assign(probes, {
+  // Focus and typing with real input (Windows Sandbox): three fields and a <select>; every focus change and key is
+  // reported. F8 reports the page's state; F9 makes the page hang for 25 s, so the hung-page dialog shows over it.
+  focus: async () => {
+    watchPage("focus");
+    for (const [id, top] of [["first", 20], ["second", 80], ["last", 200]]) {
+      place(document.createElement("input"), 20, top).id = id;
+    }
+
+    const select = place(document.createElement("select"), 20, 140);
+    select.id = "choice";
+    for (const name of ["one", "two", "three", "four", "five", "six"]) {
+      select.append(new Option(name, name));
+    }
+
+    select.addEventListener("change", () => report(`focus: select changed to ${select.value}`));
+    document.addEventListener("focusin", event => report(`focus: focusin ${elementName(event.target)}`));
+    document.addEventListener("keydown", event => {
+      if (event.key === "F8") {
+        report(`focus: state ${pageState()}`);
+        return;
+      }
+
+      if (event.key === "F9") {
+        report("focus: hang for 25 s").then(() => {
+          const end = performance.now() + 25_000;
+          while (performance.now() < end) {
+            // A page that does not answer: no message is handled until the loop ends.
+          }
+
+          report("focus: hang ended");
+        });
+        return;
+      }
+
+      report(`focus: key ${event.key} on ${elementName(event.target)}`);
+    });
+
+    const box = select.getBoundingClientRect();
+    await report(`focus: select at ${box.left},${box.top} size ${box.width}x${box.height}, dpr ${devicePixelRatio}`);
+    await report(`focus: ready, ${pageState()}`);
+  },
+
+  // Visibility and throttling: once a second, how many 50 ms interval callbacks and animation frames ran since the
+  // last report, with the page's visibility; every visibility, size, focus and lifecycle change at once.
+  visibility: async () => {
+    watchPage("visibility");
+    let intervals = 0;
+    let frames = 0;
+    let last = performance.now();
+    setInterval(() => intervals++, 50);
+    const frame = () => {
+      frames++;
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+    setInterval(() => {
+      const now = performance.now();
+      report(`visibility: ${document.visibilityState} ${(now - last).toFixed(0)} ms, intervals ${intervals}, frames ${frames}, ${innerWidth}x${innerHeight}`);
+      intervals = 0;
+      frames = 0;
+      last = now;
+    }, 1_000);
+    await report(`visibility: ready, ${pageState()}`);
+  },
+});
+
 const mode = await probe.mode().unwrap();
 const [name, argument] = mode.split(":");
 const run = probes[name];

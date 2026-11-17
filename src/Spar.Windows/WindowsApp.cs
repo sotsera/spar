@@ -120,6 +120,13 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
             case PInvoke.WM_SIZE:
                 _view?.Resize();
                 return default(LRESULT);
+            case PInvoke.WM_WINDOWPOSCHANGED:
+                // Shown, hidden, minimized or moved; DefWindowProc then sends WM_SIZE and WM_MOVE.
+                _view?.WindowState.OnPositionChanged(lParam);
+                return null;
+            case PInvoke.WM_SETFOCUS:
+                _view?.WindowState.OnSetFocus();
+                return default(LRESULT);
             case PInvoke.WM_GETMINMAXINFO:
                 WindowPlacement.ApplyMinimum(window, _app.Builder.MainWindow.Minimum, lParam);
                 return default(LRESULT);
@@ -621,6 +628,8 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     {
         PInvoke.WM_ERASEBKGND => "WM_ERASEBKGND",
         PInvoke.WM_SIZE => "WM_SIZE",
+        PInvoke.WM_WINDOWPOSCHANGED => "WM_WINDOWPOSCHANGED",
+        PInvoke.WM_SETFOCUS => "WM_SETFOCUS",
         PInvoke.WM_GETMINMAXINFO => "WM_GETMINMAXINFO",
         PInvoke.WM_DPICHANGED => "WM_DPICHANGED",
         PInvoke.WM_SETTINGCHANGE => "WM_SETTINGCHANGE",
