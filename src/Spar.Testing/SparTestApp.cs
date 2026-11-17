@@ -151,7 +151,11 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         SparTestSession.Current = null;
 
         var first = await Task.WhenAny(session.Started, exit.Task).WaitAsync(TimeSpan.FromSeconds(30), cancellationToken);
-        if (first == exit.Task)
+
+        // Run completes Started before it returns, also when the app fails to build (it then returns 70). Both tasks
+        // run their continuations asynchronously, so WhenAny can still pick the exit: a completed Started means Run was
+        // called, and its outcome, the build failure included, is the answer.
+        if (first == exit.Task && !session.Started.IsCompleted)
         {
             throw new InvalidOperationException($"The app's Program.cs returned {await exit.Task} without calling Run.");
         }

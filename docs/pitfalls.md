@@ -583,6 +583,8 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 ## Tooling and environment
 
+- **`Task.WhenAny` can return the task that completed second** when both come from `TaskCompletionSource`s made with `RunContinuationsAsynchronously`: it returns the one whose continuation runs first. The test host's start reported "Program.cs returned 70 without calling Run" for an app that did call `Run` and failed to build (1 of 60 NativeAOT runs, 4 of 60 under load), because `Run` completes its start signal and then returns 70. Check the other task's `IsCompleted` before deciding. (`SparTestApp.StartAsync`; found by `sandbox-runner`)
+
 - **WSL empties `/tmp` when the distribution restarts,** and it stops between `wsl.exe` calls: a clone made there in one call was gone in the next. Keep runs in `/var/tmp`. Check that a script's `cd` succeeded: one that failed ran `npm ci` in the current Windows folder and replaced its `node_modules` with Linux binaries. (M1a Linux)
 - **`XDG_RUNTIME_DIR` on a Windows drive under WSL fails .NET:** the folder cannot be 0700 there, and the CLI's first run stopped with "does not have the expected owner or permissions for system scope". Keep a Linux run's homes on the distribution's own file system. (M1a Linux)
 - **`await using` lets a disposal's exception replace the one already in flight:** a test whose body failed and whose app then failed to stop showed only the stop failure. Spar's test host keeps the stop failure for a hook that raises it after the test. (M1a fixture rules)
