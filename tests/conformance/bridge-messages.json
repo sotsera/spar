@@ -1,0 +1,208 @@
+{
+  "description": "Shared conformance vectors of the bridge's encoding C, protocol 1 (plan section 2c, \"The messages\"). The C# and TypeScript tests read this file. 'canonical': each encoder writes exactly 'wire' from 'message', and each decoder reads 'wire' back to 'message'. 'decode': valid messages in other forms that decoders must read as 'message'. 'malformed': messages decoders must refuse, with the id a refusal may be addressed to (null when none can be trusted). In 'message', 'payload' is the text after the TAB.",
+  "protocol": 1,
+  "canonical": [
+    {
+      "name": "hello",
+      "message": { "type": "hello", "protocol": 1, "types": ["open", "result", "failure", "event", "closing"], "contracts": "0123456789abcdef", "payload": "" },
+      "wire": "{\"type\":\"hello\",\"protocol\":1,\"types\":[\"open\",\"result\",\"failure\",\"event\",\"closing\"],\"contracts\":\"0123456789abcdef\"}\t"
+    },
+    {
+      "name": "call with a request",
+      "message": { "type": "call", "id": 7, "contract": "pages", "command": "get", "payload": "{\"id\":\"ideas\"}" },
+      "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"pages\",\"command\":\"get\"}\t{\"id\":\"ideas\"}"
+    },
+    {
+      "name": "call without a request",
+      "message": { "type": "call", "id": 8, "contract": "pages", "command": "list", "payload": "" },
+      "wire": "{\"type\":\"call\",\"id\":8,\"contract\":\"pages\",\"command\":\"list\"}\t"
+    },
+    {
+      "name": "call with trace context",
+      "message": { "type": "call", "id": 10, "contract": "pages", "command": "get", "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01", "tracestate": "spar=1", "payload": "{\"id\":\"ideas\"}" },
+      "wire": "{\"type\":\"call\",\"id\":10,\"contract\":\"pages\",\"command\":\"get\",\"traceparent\":\"00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01\",\"tracestate\":\"spar=1\"}\t{\"id\":\"ideas\"}"
+    },
+    {
+      "name": "stream",
+      "message": { "type": "stream", "id": 9, "contract": "jobLog", "command": "tail", "credits": 8, "payload": "{\"jobId\":\"job-1\"}" },
+      "wire": "{\"type\":\"stream\",\"id\":9,\"contract\":\"jobLog\",\"command\":\"tail\",\"credits\":8}\t{\"jobId\":\"job-1\"}"
+    },
+    {
+      "name": "credits",
+      "message": { "type": "credits", "id": 9, "credits": 4, "payload": "" },
+      "wire": "{\"type\":\"credits\",\"id\":9,\"credits\":4}\t"
+    },
+    {
+      "name": "cancel",
+      "message": { "type": "cancel", "id": 7, "payload": "" },
+      "wire": "{\"type\":\"cancel\",\"id\":7}\t"
+    },
+    {
+      "name": "ready",
+      "message": { "type": "ready", "payload": "" },
+      "wire": "{\"type\":\"ready\"}\t"
+    },
+    {
+      "name": "closing-done",
+      "message": { "type": "closing-done", "payload": "" },
+      "wire": "{\"type\":\"closing-done\"}\t"
+    },
+    {
+      "name": "open",
+      "message": { "type": "open", "protocol": 1, "doc": "d1", "contracts": "0123456789abcdef", "payload": "" },
+      "wire": "{\"type\":\"open\",\"protocol\":1,\"doc\":\"d1\",\"contracts\":\"0123456789abcdef\"}\t"
+    },
+    {
+      "name": "result with a value",
+      "message": { "type": "result", "id": 7, "ok": true, "payload": "{\"id\":\"ideas\",\"title\":\"Ideas\"}" },
+      "wire": "{\"type\":\"result\",\"id\":7,\"ok\":true}\t{\"id\":\"ideas\",\"title\":\"Ideas\"}"
+    },
+    {
+      "name": "result without a value",
+      "message": { "type": "result", "id": 8, "ok": true, "payload": "" },
+      "wire": "{\"type\":\"result\",\"id\":8,\"ok\":true}\t"
+    },
+    {
+      "name": "result with a declared error",
+      "message": { "type": "result", "id": 7, "ok": false, "payload": "{\"code\":\"notFound\",\"id\":\"ideas\"}" },
+      "wire": "{\"type\":\"result\",\"id\":7,\"ok\":false}\t{\"code\":\"notFound\",\"id\":\"ideas\"}"
+    },
+    {
+      "name": "result with a declared error without a payload",
+      "message": { "type": "result", "id": 11, "ok": false, "payload": "{\"code\":\"dismissed\"}" },
+      "wire": "{\"type\":\"result\",\"id\":11,\"ok\":false}\t{\"code\":\"dismissed\"}"
+    },
+    {
+      "name": "items after dropped ones",
+      "message": { "type": "items", "id": 9, "dropped": 3, "payload": "[{\"line\":\"a\"},{\"line\":\"b\"}]" },
+      "wire": "{\"type\":\"items\",\"id\":9,\"dropped\":3}\t[{\"line\":\"a\"},{\"line\":\"b\"}]"
+    },
+    {
+      "name": "items",
+      "message": { "type": "items", "id": 9, "payload": "[]" },
+      "wire": "{\"type\":\"items\",\"id\":9}\t[]"
+    },
+    {
+      "name": "end",
+      "message": { "type": "end", "id": 9, "ok": true, "payload": "" },
+      "wire": "{\"type\":\"end\",\"id\":9,\"ok\":true}\t"
+    },
+    {
+      "name": "end with a declared error",
+      "message": { "type": "end", "id": 9, "ok": false, "payload": "{\"code\":\"jobGone\"}" },
+      "wire": "{\"type\":\"end\",\"id\":9,\"ok\":false}\t{\"code\":\"jobGone\"}"
+    },
+    {
+      "name": "failure",
+      "message": { "type": "failure", "id": 7, "kind": "rejected", "code": "unknown-command", "execution": "notStarted", "payload": "" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"rejected\",\"code\":\"unknown-command\",\"execution\":\"notStarted\"}\t"
+    },
+    {
+      "name": "failure of a command that threw, with its correlation id",
+      "message": { "type": "failure", "id": 7, "kind": "failed", "code": "failed", "execution": "unknown", "payload": "{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\"}" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"failed\",\"code\":\"failed\",\"execution\":\"unknown\"}\t{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\"}"
+    },
+    {
+      "name": "failure with a development detail",
+      "message": { "type": "failure", "id": 7, "kind": "failed", "code": "failed", "execution": "unknown", "payload": "{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\",\"detail\":\"IOException: disk full\"}" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"failed\",\"code\":\"failed\",\"execution\":\"unknown\"}\t{\"correlation\":\"4bf92f3577b34da6a3ce929d0e0e4736\",\"detail\":\"IOException: disk full\"}"
+    },
+    {
+      "name": "call refused by the limits",
+      "message": { "type": "failure", "id": 7, "kind": "rejected", "code": "busy", "execution": "notStarted", "payload": "" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"rejected\",\"code\":\"busy\",\"execution\":\"notStarted\"}\t"
+    },
+    {
+      "name": "failure of a stream",
+      "message": { "type": "failure", "id": 9, "kind": "response", "code": "serialization", "execution": "stopped", "itemsSent": 12, "payload": "" },
+      "wire": "{\"type\":\"failure\",\"id\":9,\"kind\":\"response\",\"code\":\"serialization\",\"execution\":\"stopped\",\"itemsSent\":12}\t"
+    },
+    {
+      "name": "confirmed cancel",
+      "message": { "type": "failure", "id": 7, "kind": "cancelled", "code": "cancelled", "execution": "stopped", "payload": "" },
+      "wire": "{\"type\":\"failure\",\"id\":7,\"kind\":\"cancelled\",\"code\":\"cancelled\",\"execution\":\"stopped\"}\t"
+    },
+    {
+      "name": "event",
+      "message": { "type": "event", "name": "backend-updated", "payload": "{\"revision\":3}" },
+      "wire": "{\"type\":\"event\",\"name\":\"backend-updated\"}\t{\"revision\":3}"
+    },
+    {
+      "name": "closing",
+      "message": { "type": "closing", "payload": "" },
+      "wire": "{\"type\":\"closing\"}\t"
+    }
+  ],
+  "decode": [
+    {
+      "name": "keys in another order",
+      "wire": "{\"command\":\"get\",\"contract\":\"pages\",\"id\":7,\"type\":\"call\"}\t{}",
+      "message": { "type": "call", "id": 7, "contract": "pages", "command": "get", "payload": "{}" }
+    },
+    {
+      "name": "an unknown field is ignored",
+      "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"pages\",\"command\":\"get\",\"future\":{\"a\":[1,2]}}\t{}",
+      "message": { "type": "call", "id": 7, "contract": "pages", "command": "get", "payload": "{}" }
+    },
+    {
+      "name": "whitespace in the header",
+      "wire": "{ \"type\" : \"cancel\" , \"id\" : 7 }\t",
+      "message": { "type": "cancel", "id": 7, "payload": "" }
+    },
+    {
+      "name": "an unknown type keeps its name and id",
+      "wire": "{\"type\":\"subscribe-v2\",\"id\":12}\t{\"x\":1}",
+      "message": { "type": "unknown", "typeName": "subscribe-v2", "id": 12, "payload": "{\"x\":1}" }
+    },
+    {
+      "name": "the largest safe id",
+      "wire": "{\"type\":\"cancel\",\"id\":9007199254740991}\t",
+      "message": { "type": "cancel", "id": 9007199254740991, "payload": "" }
+    },
+    {
+      "name": "a malformed traceparent is dropped",
+      "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"pages\",\"command\":\"get\",\"traceparent\":\"not-a-trace\"}\t{}",
+      "message": { "type": "call", "id": 7, "contract": "pages", "command": "get", "payload": "{}" }
+    },
+    {
+      "name": "a traceparent with an all-zero trace id is dropped",
+      "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"pages\",\"command\":\"get\",\"traceparent\":\"00-00000000000000000000000000000000-00f067aa0ba902b7-01\"}\t{}",
+      "message": { "type": "call", "id": 7, "contract": "pages", "command": "get", "payload": "{}" }
+    },
+    {
+      "name": "a tracestate with a lone surrogate is dropped",
+      "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"pages\",\"command\":\"get\",\"tracestate\":\"a=\\ud800\"}\t{}",
+      "message": { "type": "call", "id": 7, "contract": "pages", "command": "get", "payload": "{}" }
+    },
+    {
+      "name": "a trace value that is not a string is dropped",
+      "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"pages\",\"command\":\"get\",\"traceparent\":42}\t{}",
+      "message": { "type": "call", "id": 7, "contract": "pages", "command": "get", "payload": "{}" }
+    },
+    {
+      "name": "a payload is located, not parsed",
+      "wire": "{\"type\":\"result\",\"id\":7,\"ok\":true}\tnot json at all",
+      "message": { "type": "result", "id": 7, "ok": true, "payload": "not json at all" }
+    }
+  ],
+  "malformed": [
+    { "name": "no TAB", "wire": "{\"type\":\"cancel\",\"id\":7}", "id": null },
+    { "name": "the id given twice", "wire": "{\"type\":\"cancel\",\"id\":7,\"id\":8}\t", "id": null },
+    { "name": "another key given twice", "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"a\",\"contract\":\"b\",\"command\":\"c\"}\t", "id": 7 },
+    { "name": "id zero", "wire": "{\"type\":\"cancel\",\"id\":0}\t", "id": null },
+    { "name": "a negative id", "wire": "{\"type\":\"cancel\",\"id\":-7}\t", "id": null },
+    { "name": "a fractional id", "wire": "{\"type\":\"cancel\",\"id\":1.5}\t", "id": null },
+    { "name": "an integer id written with a fraction", "wire": "{\"type\":\"cancel\",\"id\":7.0}\t", "id": null },
+    { "name": "credits written with an exponent", "wire": "{\"type\":\"credits\",\"id\":9,\"credits\":4e0}\t", "id": 9 },
+    { "name": "an id as a string", "wire": "{\"type\":\"cancel\",\"id\":\"7\"}\t", "id": null },
+    { "name": "an unsafe id", "wire": "{\"type\":\"cancel\",\"id\":9007199254740992}\t", "id": null },
+    { "name": "no type", "wire": "{\"id\":7}\t", "id": 7 },
+    { "name": "a call without a command", "wire": "{\"type\":\"call\",\"id\":7,\"contract\":\"pages\"}\t", "id": 7 },
+    { "name": "a call without an id", "wire": "{\"type\":\"call\",\"contract\":\"pages\",\"command\":\"get\"}\t", "id": null },
+    { "name": "a header that is not an object", "wire": "[1]\t", "id": null },
+    { "name": "content after the header object", "wire": "{\"type\":\"ready\"} {\"x\":1}\t", "id": null },
+    { "name": "zero credits", "wire": "{\"type\":\"credits\",\"id\":9,\"credits\":0}\t", "id": 9 },
+    { "name": "ok that is not a boolean", "wire": "{\"type\":\"result\",\"id\":7,\"ok\":\"yes\"}\t", "id": 7 },
+    { "name": "a hello without the fingerprint", "wire": "{\"type\":\"hello\",\"protocol\":1,\"types\":[]}\t", "id": null }
+  ]
+}

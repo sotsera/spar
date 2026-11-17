@@ -1,0 +1,20 @@
+<Project Sdk="Spar.Sdk">
+  <!-- Spar's runtime tests: the bridge codec against the shared vectors, the session, and dispatch. -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <!-- The loopback host's own tests; the other test projects stay free of a web server. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Loopback\Spar.Loopback.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
+  <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
+  <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
+    <Compile Include="../static-state/StaticStateTests.cs" Link="StaticStateTests.cs" />
+  </ItemGroup>
+</Project>

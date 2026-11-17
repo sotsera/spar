@@ -40,7 +40,7 @@ Details and evidence in `docs/decisions.md`.
 | A source generator emits all contract C#: dispatch, catalog and serializers. A pre-compile step emits only the generated client. They share one analysis library, and a `DiagnosticAnalyzer` reports located diagnostics. | D1 and the IDE checks: live diagnostics with squiggles, no build needed first. |
 | Wire serialization: generated `Utf8JsonReader`/`Utf8JsonWriter` code, with the fuzzing requirements (R0–R4). | Faster to read, 47% smaller than System.Text.Json metadata; at least as fast to write once tuned. |
 | Spar build steps are compiled, thread-safe MSBuild tasks (`Runtime="NET"`). Checked by `spikes/msbuild-task-analyzer` (SDK 11.0.100 = MSBuild 18.12.2): the task project references `Microsoft.Build.TaskAuthoring.Analyzer` 18.13.0 (`PrivateAssets="all"`; it runs, about 35 ms, no build-time difference) with Framework and Utilities.Core 18.12.2 as compile-only references. Tasks take the full thread-safe shape now: `[MSBuildMultiThreadableTask]`, `IMultiThreadableTask`, and a `TaskEnvironment` constructor. Under `-mt` only tasks with the attribute stay in-process (32 projects: 255–262 ms against 474–514 ms with `-m:8`); others move to TaskHost processes. The analyzer misses static mutable state, so that stays a review and test rule; its code fixes are not shipped. Its option and four severity raises (MSBuildTask0001, 0009, 0011 and 0013 to warning) are agreed and in the root `.editorconfig` (user, 2026-11-14). `TaskHostFactory` is used only in Spar's own checkout. Variant builds run in-proc through the `MSBuild` task, with per-variant `obj`/`bin`, `RemoveProperties`, and a cross-process lock. | Measured: 7–30 ms warm steps; in-proc variants 1.6–2.2 s faster than `Exec` per call. |
-| One `SparVariant` property selects the build variant: `Production`, `Development`, and one test variant that a test project builds the app in (the test-host hook, page automation, the UI-thread stall probe). The test variant replaces `DesktopTest` and the spikes' `ManagedTest` (decision "Test strategy: the app runs inside the test process"); its name, how `Configuration` selects a variant, and whether `Editor` stays are fixed in M1a. In this plan "Debug" means the `Development` variant, "Release" the `Production` variant, and "test variant" the one a test project builds. | The earlier mode-flag matrix was the main source of fragility. |
+| One `SparVariant` property selects the build variant: `Production`, `Development` or `Test`. Debug builds `Development`, Release builds `Production`, and a test project builds its referenced app as `Test` (the test-host hook, page automation, the UI-thread stall probe) whatever its configuration; `SparVariant` can still be set explicitly. `Test` replaces `DesktopTest` and the spikes' `ManagedTest`, and `Editor` is dropped (decisions "Test strategy: the app runs inside the test process" and "Polished sample apps: a Markdown notebook; the test variant"). In this plan "Debug" means the `Development` variant and "Release" the `Production` variant. | The earlier mode-flag matrix was the main source of fragility. |
 | A call has three outcomes: success, a declared typed error, or **outcome unknown**. Cancellation is reported only when the backend confirms it. No automatic retries; subscriptions resume only when their contract allows it. | A lost reply must never be read as "didn't happen". |
 | Results are opaque in TypeScript: `await cmd(req).match({ success, errors, failure? })` or `unwrap()`. `failure` is a function (every failure) or an object by `CallError` kind (only those kinds). Other failures go to the app-wide interceptor `onFailure`, and `match` returns `undefined` for them. `unwrap` throws and never reaches the interceptor. `observe` sees every failure. Neither hook can retry or change a result (2026-11-14). | User decision; checked with `tsc` and both language servers. |
 | One DI scope per command, from Microsoft DI (`Microsoft.Extensions.DependencyInjection`; user decision 2026-11-14, +0.3–0.9 MB in AOT). Every request belongs to one document, with sender checks. On navigation or close, stop admitting work, cancel, and drop late replies. | Proven in every spike. |
@@ -53,15 +53,14 @@ Details and evidence in `docs/decisions.md`.
 | Question | State, and where it is answered |
 |---|---|
 | Bridge transport per host. | Leaning, and the working design of section 2c: `postMessage` for everything on Windows; the script message handler plus `evaluate_javascript` on Linux; `fetch` unary plus one channel per document on loopback. Confirmed on the real hosts in M1b, M1c and M1d. |
-| The remaining test points: trusted input in the in-process window, profiles for window tests (a shared environment with InPrivate controllers, or a folder per test), the test host's mechanics (the entry-point accessor, the session hook, streams through the test client), the black-box data root, where page tests run, and issues D to K. | The strategy is decided (section 5). Each remaining point is decided with the user when its slice reaches it (section 5, "Open issues"), with a spike where needed. Includes the performance regression suites (user, 2026-11-14): BenchmarkDotNet for runtime hot paths and a build-timing suite against stored baselines; which run in CI, and how noise is handled, is issue K. |
+| The remaining test points: trusted input in the in-process window, profiles for window tests (a shared environment with InPrivate controllers, or a folder per test), streams and cancellation through the typed test client, the black-box data root, where page tests run, and issues D to K. | The strategy is decided (section 5). Each remaining point is decided with the user when its slice reaches it (section 5, "Open issues"), with a spike where needed. Includes the performance regression suites (user, 2026-11-14): BenchmarkDotNet for runtime hot paths and a build-timing suite against stored baselines; which run in CI, and how noise is handled, is issue K. |
 | API design for native features (tray, custom title bar, close to tray, placement, file open and save, folder picker, drag and drop, clipboard, print and print to PDF, keyboard shortcuts, single instance, resource usage; notifications later): as easy and pleasant as possible in C# and TypeScript. | User requirement (2026-11-14). Principles and first ideas in section 3, "Native services". Designed with the user one feature at a time, each with a compiled example in `docs/app-model.md` before implementation. |
 | Agent devtools scope (Linux has no CDP), and CLI against MCP. | M2 evaluation. |
-| CI: the provider and its runners. Build and test lanes are needed from M1a on Windows and Linux; Linux window tests (Xvfb in a container) from M1c; Windows window tests need a runner with the WebView2 Runtime and a desktop session. | M1a chooses the provider. GTK4 needs a non-root user and user namespaces for its sandbox. |
+| CI: GitHub Actions (user, 2026-11-15; decision "CI on GitHub Actions; the first slice"). The workflow is in `.github/workflows/ci.yml` and first runs at the first push. Open: pinning actions to commit SHAs before that push, and whether the window tests (M1b) run on the hosted Windows runner or need a self-hosted one with a desktop session; Linux window tests use the container image from M1c. | First push; M1b and M1c. |
 | arm64: `win-arm64` and `linux-arm64` are mapped by `SparPlatforms`, but no spike ran on arm64. | Decide in M4 whether arm64 is qualified or documented as untested. |
 | The two-stage close: a close request with page and backend guards before teardown, and an automated mode that skips prompts for tests and agents. The dialog and window decisions already rely on it. | Adopted from the research review (user, 2026-11-15). Designed with the user at the start of M1b, with a compiled example in `docs/app-model.md` first. |
 | The Windows single-instance mechanism. Linux is decided (a lock file plus a Unix socket). | M1b. |
 | What "Wait" does after the hung-page dialog. | M1b (section 3, "Hung pages"). |
-| The TypeScript interface-map entry for an error case without a payload. | M1a. |
 | Where Spar's packages are published, with what version scheme and release steps. The SQL Server tool lives in its own repository and uses Spar through packages only; M1a's package-only consumer test uses an isolated local feed. | Needed by M3. Not discussed yet. |
 | The minimum Windows version. The README names Windows 11, screen-capture protection mentions Windows 10 2004, and no spike ran on Windows 10. | Provisional in M1b with the startup check; M4 confirms. |
 | Upgrades and data migration: how an installed app moves to a new version: the version of its settings and data folders and their migration, the web engine profile after an app update, what a downgrade does, and how a failed migration is reported. | Not discussed yet. Needed before the distribution decision in M4; the settings-files decision at the start of M3 is the first to depend on it. |
@@ -105,7 +104,9 @@ Agents run nothing here unattended: each check needs the user present, real hard
 | A light Windows theme and a real system theme switch (`WM_SETTINGCHANGE`) | Changes the user's theme | plan 3d |
 | Wayland input under WSLg: dragging the page-drawn title bar, double-click, edge resize, on GTK4 | Only real mouse input works on WSLg Wayland | `spikes/linux-integration` |
 | Dropping files from Explorer or a Linux file manager onto the page | Real drag and drop | `spikes/linux-integration`, M3 |
-| Visual Studio and VS Code: contract diagnostics and CSP analyzer squiggles as you type (an M1a exit; Visual Studio drew no squiggle for a generator diagnostic in the spike). In VS Code also: completion popups, the lightbulb fixes, rename preview, the TypeScript Native Preview extension, read-only generated packages | Interactive editor UI | decisions "Opaque results in TypeScript", plan 3b |
+| Visual Studio and VS Code: CSP analyzer squiggles as you type (contract diagnostics checked 2026-11-16 on an app from packages, decision "Squiggles in both windows; ReSharper's code analysis hides them in Visual Studio"; the Notebook too, once it named `Spar.Sdk`, decision "The repository's projects name Spar.Sdk"). In VS Code also: completion popups, the lightbulb fixes, rename preview, the TypeScript Native Preview extension, read-only generated packages. In both: go-to-definition from a page's call (`orders.place`) into the C# command, through the generated `.d.ts.map` (checked through `tsserver` only) | Interactive editor UI | decisions "Opaque results in TypeScript", "Declaration maps and the contract snapshot", plan 3b |
+| Visual Studio's Dependencies node for a test project that names its app with `SparTestedApplication`: the app listed under Projects, and the reference's properties shown | Interactive IDE UI | decision "SparTestedApplication: the test project names its app" |
+| The Notebook sample's look and feel in both themes: layout, type, colours, the dialogs and the conflict banner (screenshots in `docs/evidence/m1a-notebook-page/`) | Visual judgement of polish | decision "Notebook page and the frontend build" |
 | Notifications as they appear on screen (Windows toast or balloon, Linux) | Visual, and they reach the user's desktop | research review, M3 |
 | On a real Linux desktop, if one is available: GNOME and KDE tray hosts, a real GPU, HiDPI, IME | Hardware and desktops not reachable from WSLg | `spikes/linux-wsl-desktop`, `spikes/linux-integration` |
 | The start-up error dialogs (task dialog and message box) at 125 %, 150 % and 200 %, and across monitors with different scales | Needs the user's display scaling; the Sandbox stays at 96 DPI | `spikes/startup-prerequisites` |
@@ -135,12 +136,12 @@ Checked at each M1 slice exit from the first slice on, instead of first in M4 (u
 
 | Measure | Budget | Spike value | First checked |
 |---|---|---|---|
-| No-op build of the Notes app | ≤ 1.5 s | 0.4–1.2 s (decisions "D1: Compilation pipeline" and "Package-only consumer") | M1a; with the frontend step in M1d (about 0.86 s with an incremental target) |
-| Command test: app start, median | ≤ 2 ms | 0.2–0.6 ms (`spikes/test-host`) | M1a |
-| Browser test: app, context and journey, median | ≤ 250 ms | 97–144 ms (`spikes/test-host`) | M1a |
-| NativeAOT console harness (dispatch, serializers, codec) | ≤ 3 MB | 2.24 MB with generated serializers (decision "D1: Compilation pipeline") | M1a |
-| Small unary round trip over loopback, median | ≤ 2 ms | 0.7 ms (decision "Bridge streaming, cancellation and push") | M1a |
-| Notes NativeAOT executable, Windows / Linux | ≤ 5 MB / ≤ 8 MB | 3.68 MB (`spikes/react`) / 6.9 MB (`spikes/linux-desktop`) | M1b / M1c |
+| No-op build of the Notebook sample | ≤ 1.5 s | 0.4–1.2 s (decisions "D1: Compilation pipeline" and "Package-only consumer") | M1a; with the frontend step in M1d (about 0.86 s with an incremental target) |
+| Command test: app start, median | ≤ 2 ms | 0.2–0.6 ms (`spikes/test-host`); measured in M1a, Windows Release: 0.20–0.24 ms CoreCLR, 0.14–0.20 ms NativeAOT (decision "M1a budgets measured; the NativeAOT lane builds into bin/aot") | M1a |
+| Browser test: app, context and journey, median | ≤ 250 ms | 97–144 ms (`spikes/test-host`); measured in M1a, Windows Release: 122–137 ms on the WireShapes page (same decision) | M1a |
+| NativeAOT console harness (dispatch, serializers, codec, bridge session) | ≤ 3.5 MB (3 MB until 2026-11-16) | 2.24 MB with generated serializers (decision "D1: Compilation pipeline"); 3.10 MB measured in M1a (decision "Console harness built; its budget raised to 3.5 MB; lone surrogates on read") | M1a |
+| Small unary round trip over loopback, median | ≤ 2 ms | 0.7 ms (decision "Bridge streaming, cancellation and push"); measured in M1a, Windows Release: 0.70 ms, timed by the page (same decision) | M1a |
+| Notebook NativeAOT executable, Windows / Linux | ≤ 5 MB / ≤ 8 MB | 3.68 MB (`spikes/react`) / 6.9 MB (`spikes/linux-desktop`) | M1b / M1c |
 | Launch to `ui-ready`, warm, Release, Windows / Linux GTK4 | ≤ 400 ms / ≤ 350 ms | 261–370 ms (`spikes/react`) / 271–292 ms under Xvfb (`spikes/linux-desktop`) | M1b / M1c |
 | Small unary round trip on the desktop bridge, median | ≤ 1 ms | 0.2 ms (WebView2), 0.20–0.29 ms (WebKitGTK) | M1b / M1c |
 | App process working set, Windows, NativeAOT | ≤ 60 MB | 37 MB (`spikes/react`) | M1b |
@@ -154,7 +155,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 | Risk | Why it matters | Retired by |
 |---|---|---|
-| Visual Studio shows no squiggle for a generator diagnostic (seen in the spike) | Contract mistakes would surface only at build time in one IDE | M1a exit, checked by the user (checks table) |
+| Visual Studio shows no squiggle for a generator diagnostic (seen in the spike) | Contract mistakes would surface only at build time in one IDE | Retired: Visual Studio draws Spar's squiggles; ReSharper's code analysis hides every referenced analyzer's (decision "Squiggles in both windows; ReSharper's code analysis hides them in Visual Studio") |
 | In-process window tests cannot drive trusted input, or isolate profiles cheaply | Levels 5 and 7 would need more launched executables, slower and with no replacements | A spike before M1b (section 5, issues D and I) |
 | A native engine abort ends the whole test process | One broken environment loses every result of a run | The engine prerequisite check before the first window test, and window tests as their own run (M1b, M1c) |
 | Variant and incremental builds turn fragile or slow, in the IDE or under `-mt` | The earlier mode-flag matrix was the main source of fragility | `Spar.BuildTests` and the no-op budget from M1a |
@@ -221,57 +222,48 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 **State on 2026-11-15:** steps 1 to 3, 5 to 7 and 9 are done. Moving the evidence (step 4) and deleting the spikes (step 8) remain, and neither blocks M1a.
 
-### M1: build machinery, then a thin Notes slice on both hosts
+### M1: build machinery, then the Notebook sample on both hosts
 
 **Split into four slices** (user, 2026-11-15; decision "Plan and guidance review; M1 split"). Each slice has its own exit and its own evidence, and the next one starts when that exit is met.
-- The Notes sample (save and load, a typed error, the generated client, `ui-ready`) grows through all four.
+- **The Notebook sample grows through all four** (decision "Polished sample apps: a Markdown notebook; the test variant"): a polished Markdown notebook, not a minimal demo. In M1 it has notebooks and pages stored as Markdown files under its data folder, editing with live preview, tags, search, backlinks, and real error states (a page changed elsewhere, a name already taken, a missing file), on React, TypeScript, Vite, Tailwind CSS and Radix. Streams, dialogs, drag and drop, secondary windows and printing come with M3. Its spike-derived budgets below are a floor: a real app's bundle is larger, so a missed budget is first checked against what the sample adds.
 - Each slice starts by settling its "decide first" points with the user, and by adding the project skill its work needs (`AGENTS.md`, "Project skills"): testing (with the in-process test host and its loopback bridge) and the C# side of the bridge in M1a, page security in M1b, the development loop in M1d.
 - Items marked (RR) come from `docs/research-review.md` and were adopted on 2026-11-15. Limits and other numbers are set by measurement in the slice, never taken from earlier versions.
 - The slice contents were assembled by the 2026-11-15 review from the old M1 list, the "in M1" notes across this plan and the research review. Moving an item between slices needs no decision; dropping one does.
 
 #### M1a: build machinery, contracts and the core, with no window
 
-**Decide first:**
-- the test variant's name, how `Configuration` selects `SparVariant`, and whether `Editor` stays;
-- the test host's mechanics (section 5, issue L): how the generator emits the entry-point accessor, the session hook, and the public names (`SparTestApp`, the surfaces, the external-dependency marker);
-- the CI provider and its runners;
-- the header fields of bridge encoding C, written together with the shared conformance vectors;
-- the names left open: `SparTypeCheck`, `SparBundleBudget`, the command `Timeout` option;
-- the TypeScript interface-map entry for an error case without a payload;
-- whether `CallError` names its contract and command. With only `kind`, `code` and `execution`, the `onFailure` and `observe` hooks cannot say which call failed (`docs/app-model.md` section 7);
-- where `dotnet test` leaves `TestResults/` (section 5);
-- whether a TypeScript client that refreshes only on build is acceptable while editing, or the editor view needs a refresh on save (decision "D1 follow-up: IDE design-time behaviour").
+**Decide first:** nothing left; every point was decided on 2026-11-15.
 
 **Build:**
 1. **SDK and tasks:**
    - `Spar.Sdk` with `SparVariant`, `SparPlatforms` and the task assembly: inventory, client, pack, lease, and in-proc variant builds with a deterministic `MSBuildRestoreSessionId` and a design-time guard;
-   - the generator, the analyzer and their tests: diagnostics with locations, the clash matrix with a referenced assembly, generated-output snapshots, the differential `tsc` test. Generated sources use `\n` only, and an invalid command skips only itself, never its whole contract;
-   - `src/Spar.Client` (section 2b): the protocol, `Call` and `Result`, the failure hooks, fake channels, the type tests, and the React, Angular and Vue checks that now live in `spikes/frontend-frameworks`;
+   - the generator, the analyzer and their tests: diagnostics with locations, the clash matrix with a referenced assembly, generated-output snapshots, the differential `tsc` test (built; no separate manifest, decision "No contract manifest for now; the differential tsc test built"). Generated sources use `\n` only, and an invalid command skips only itself, never its whole contract;
+   - `src/Spar.Client` (section 2b): the protocol, `Call` and `Result`, the failure hooks, fake channels, the type tests, and the React, Angular and Vue checks that now live in `spikes/frontend-frameworks` (rebuilt in the SDK's tests, `src/Spar.Client/test/frameworks`; decision "The frontend-framework checks in the SDK's tests");
    - Brotli frontend packing, after a per-file Deflate control on the real bundle (RR), with the asset checks and the embedded third-party notices of section 3c (RR);
-   - the documentation check of `docs/app-model.md`, moved from `spikes/app-model-check` into `tests/` and run by `dotnet test` (test type 17).
+   - the documentation check of `docs/app-model.md`, moved from `spikes/app-model-check` into `tests/` and run by `dotnet test` (test type 17) (moved: `tests/AppModel`, decision "The documentation check under tests/"; against stand-ins, and the C# that Spar can build also through real Spar in `tests/AppModel/Real`).
 2. **Core:**
    - dispatch, the three outcomes, a DI scope per command with `ValidateScopes = true`, cancellation (parameter plus `ISparCall`);
    - the bridge protocol with `traceparent`. Every message kind gets its header fields and conformance vectors. Unary calls, cancellation and host-to-page events are implemented here; streams and subscriptions in M3;
-   - bridge limits and admission (RR): a maximum message size, calls in flight per document and a bounded send queue; capacity reserved before parsing, and the document and command checked before converters, DI or the handler run; increasing call ids, with a duplicate or lower id rejected; separate capacity for control messages (cancel, close, readiness); parsing off the UI thread;
-   - exception redaction in Release (RR): an unhandled exception reaches the page as a correlation id, with details only in development, and an oversized result fails only its own call;
-   - the BCL instrumentation (section 6b);
-   - **the test host** (section 5), with the surfaces `None` and `Browser`: the app's `Program.cs` run in the test process, service overrides, the data root per app instance, Spar's outward services faked, the external-dependency marker, the per-app log, typed C# test clients generated per contract (RR), and the fixture rules (RR): assertion, capture and teardown failures are reported together, unresolved cleanup is not a pass, an empty test selection fails, and skips are explicit;
-   - **the loopback bridge** that the `Browser` surface needs, in test and development variants only (moved from M1d; decision "Plan split, additions and the M1a scope"): the token in the URL fragment, the `Host` and `Origin` checks (403 `forbidden-host`), `fetch` for unary calls and one channel per document, and a listener on both loopback addresses or one that advertises its real address;
-   - the static-state test of Spar's assemblies, and the production boundary test of section 5 on a published console harness (the test host and the fakes absent).
+   - bridge limits and admission (RR): a maximum message size, calls in flight per document and a bounded send queue; capacity reserved before parsing, and the document and command checked before converters, DI or the handler run; increasing call ids, with a duplicate or lower id rejected; separate capacity for control messages (cancel, close, readiness); parsing off the UI thread (built, except parsing off the UI thread, which comes with the desktop hosts; decision "Bridge limits built");
+   - exception redaction in Release (RR): an unhandled exception reaches the page as a correlation id, with details only in development, and an oversized result fails only its own call (built: the correlation is the call's trace id, the details go to the app's `ILogger`; decision "Bridge limits built");
+   - the BCL instrumentation (section 6b) (built; decision "Bridge instrumentation built");
+   - **the test host** (section 5), with the surfaces `None` and `Browser` (the per-app log and the injectable clock built; decision "Test host: the per-app log and the clock"; the fixture rules built, decision "Fixture rules: the teardown hook"): the app's `Program.cs` run in the test process, service overrides, the data root per app instance, Spar's outward services faked, the external-dependency marker, the per-app log, typed C# test clients generated per contract (RR), and the fixture rules (RR): assertion, capture and teardown failures are reported together, unresolved cleanup is not a pass, an empty test selection fails, and skips are explicit;
+   - **the loopback bridge** that the `Browser` surface needs, in test and development variants only (moved from M1d; decision "Plan split, additions and the M1a scope"): the token in the URL fragment, the `Host` and `Origin` checks (403 `forbidden-host`), one channel per document for every host message and the page's messages sent in order one request at a time (decision "Loopback transport accepted; Browser surface in its own package"; built, with the `Browser` surface in `Spar.Testing.Browser`), and a listener on both loopback addresses or one that advertises its real address;
+   - the static-state test of Spar's assemblies (built; decision "Static-state test built"), and the production boundary test of section 5 on a published console harness (the test host and the fakes absent) (built: `tests/apps/Spar.Harness`, with the bridge kept; on Windows and on Linux in WSL, decision "Linux runs in WSL for M1a; what Linux found"; decision "Console harness built; its budget raised to 3.5 MB; lone surrogates on read").
 3. **Repository:**
    - CI with the build and test lanes on Windows and Linux, the `-mt` lane, and `eng/check-size.cs`;
-   - the first `Spar.BuildTests`: isolation, "authored files untouched", a clean clone;
-   - the package-only consumer test from the first day (section 1), with the generality fixtures (RR): a folder name with a space, an assembly name different from the project, a custom app id, a non-default frontend folder, a path with non-ASCII characters;
-   - the test-SDK shape (RR): a `SparTestedApplication` item that becomes a project reference before restore, tried on `Spar.Sdk` before it is fixed.
+   - the first `Spar.BuildTests`: isolation, "authored files untouched", a clean clone (built: a clean copy, the unchanged build and the Production boundary of the Notebook; decision "Build tests: a clean copy, the step matrix from binary logs, the production boundary");
+   - the package-only consumer test from the first day (section 1), with the generality fixtures (RR): a folder name with a space, an assembly name different from the project, a custom app id, a non-default frontend folder, a path with non-ASCII characters (built: the packages and the consumer with a space, non-ASCII letters and a different assembly name, its tests, the analyzer, design time, NativeAOT, and an update and downgrade under a warm server, then its page in `ui/` and an end-to-end project with the Browser surface; the custom app id waits for the app identity (M1b); decisions "Packages and the package-only consumer test built" and "The generated package keeps version 0.0.0; the consumer gets a page"; a second consumer under central package management, decision "Spar.Sdk's own package references are implicit, the test framework included"; a third whose app serves the interface contract of a library package, decision "Interface contracts run; a missing implementation stops the start; a contract library from a package");
+   - the test-SDK shape (RR): a `SparTestedApplication` item that becomes a project reference before restore, tried on `Spar.Sdk` before it is fixed (built, with SPAR120–SPAR122; the `Projects.X` marker comes with the black-box fixture in M1b; decision "SparTestedApplication: the test project names its app").
 
 **Exit:**
-- `dotnet build` and `dotnet test` pass in the repository and in the package-only consumer, on Windows and Linux, in CI.
-- The Notes contract round-trips through real serialization and dispatch in a command test (level 2), and through the TypeScript SDK against a fake channel. The conformance vectors pass in C# and in TypeScript.
-- A browser test (level 4) runs the Notes page in Chromium against the in-process backend over loopback, on Windows and Linux.
-- The command tests pass in the NativeAOT lane (`xunit.v3.aot`) with no warnings.
-- The M1a budgets are measured and recorded ("Provisional budgets").
-- A console harness around the core (dispatch, serializers, protocol codec) publishes with NativeAOT with no warnings on both OSes, and gives the same results as on CoreCLR.
-- Visual Studio and VS Code show contract diagnostics as you type, with squiggles in both.
+- `dotnet build` and `dotnet test` pass in the repository and in the package-only consumer, on Windows and Linux, in CI (on Windows and on Linux in WSL, CI's steps: met, decision "Linux runs in WSL for M1a; what Linux found"; and in CI's own run on GitHub Actions, both OSes, decision "CI's first runs on GitHub Actions").
+- The Notebook's contracts round-trip through real serialization and dispatch in command tests (level 2), and through the TypeScript SDK against a fake channel. The conformance vectors pass in C# and in TypeScript. (met: the Notebook's command tests; its page tests against `@spar/app/testing`'s fake backend, which speaks the real protocol, decision "Page tests: @spar/app/testing"; the vectors in `tests/Spar.Tests` and `src/Spar.Client/test/vectors.test.ts`.)
+- Browser tests (level 4) run the Notebook's pages in Chromium against the in-process backend over loopback, on Windows and Linux (met on both, decision "Linux runs in WSL for M1a; what Linux found").
+- The command tests pass in the NativeAOT lane (`xunit.v3.aot`) with no warnings. (met on Windows and on Linux in WSL, decision "The source package on Linux".)
+- The M1a budgets are measured and recorded ("Provisional budgets") (all met on Windows, decision "M1a budgets measured; the NativeAOT lane builds into bin/aot", and on Linux, decision "Linux runs in WSL for M1a; what Linux found").
+- A console harness around the core (dispatch, serializers, protocol codec) publishes with NativeAOT with no warnings on both OSes, and gives the same results as on CoreCLR (met on both, decision "Linux runs in WSL for M1a; what Linux found").
+- Visual Studio and VS Code show contract diagnostics as you type, with squiggles in both (met for an app from packages: VS Code's language server reports them 0.2 s after an unsaved edit, both windows draw them, Visual Studio only with ReSharper's code analysis off, decisions "Editor diagnostics through VS Code's language server; the windows still to check" and "Squiggles in both windows; ReSharper's code analysis hides them in Visual Studio"; the samples and Spar's test projects name `Spar.Sdk` so C# Dev Kit loads them, decision "The repository's projects name Spar.Sdk").
 - Evidence is recorded for each result.
 
 #### M1b: the Windows host
@@ -283,9 +275,11 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 - a provisional minimum WebView2 Runtime: the oldest one with the source-kinds filter of `ICoreWebView2_22` and the other interfaces section 3 lists. M4 confirms it;
 - the UI-thread stall probe (section 3);
 - the app id's validation rules and the folder names per channel (section 3c);
+- styles added at run time: whether app-author docs recommend constructed stylesheets, and whether Spar offers a per-document style nonce as a C# option, with how hosts hand it to the page (decision "Styles added at run time: a nonce and constructed stylesheets both work");
 - the policy for `<input type="file">` (section 3c);
 - profiles for window tests and trusted input in the in-process window (section 5, issues D and I), each after a spike;
 - the black-box data root (section 5, issue M), after a security review;
+- the generated `Projects.X` marker of the test-SDK shape (RR), with its members taken from what the black-box fixture needs, such as the tested app's published executable (decision "SparTestedApplication: the test project names its app");
 - the Windows Sandbox runner (section 5, issue J, a proposal), after its spike.
 
 **Build:**
@@ -300,7 +294,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 9. **Checks this plan deferred to M1:** the decided CSP run with the React bundle on `https://app.localhost`; `--host-resolver-rules` through `AdditionalBrowserArguments`; the SmartScreen flag against a net log; `--js-flags=--noexpose_wasm`; the CSP header on worker scripts; the minimum Runtime of the find API; the page's `online` and `offline` events in Windows Sandbox.
 
 **Exit:**
-- The Notes sample runs on Windows as a single-file NativeAOT executable with the bundle embedded, and its size is recorded. Debug uses the same path through `SparDevServer=false` until M1d.
+- The Notebook sample runs on Windows as a single-file NativeAOT executable with the bundle embedded, and its size is recorded. Debug uses the same path through `SparDevServer=false` until M1d.
 - The required host tests, the window tests (CoreCLR and NativeAOT lanes), the black-box smoke test and the production boundary test pass.
 - The M1b budgets are measured and recorded.
 - Each section 3c default is verified on the published executable with its opt-in.
@@ -323,7 +317,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 7. **Tests:** the `Window` surface on Linux (the GTK thread owned by the test process, under Xvfb, XTEST for trusted input), with the engine prerequisite check before the first window test; the same host-lifecycle suite as Windows; one Linux CI image (non-root, user namespaces, Xvfb), built from the two spike Dockerfiles and `spikes/test-host/linux/Dockerfile` (M0 close-out step 8); the page's `online` and `offline` events in a container or VM.
 
 **Exit:**
-- The Notes sample runs on Linux as a single-file NativeAOT executable, with its size recorded.
+- The Notebook sample runs on Linux as a single-file NativeAOT executable, with its size recorded.
 - The host tests and the window tests (CoreCLR and NativeAOT lanes) pass on Linux, headless in a container in CI, and both hosts pass the same host-lifecycle suite.
 - The M1c budgets are measured and recorded.
 - The start-up check refuses a WebKitGTK older than the provisional minimum (2.48) with exit code 4.

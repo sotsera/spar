@@ -1,0 +1,21 @@
+[      0.0] HOST windows-webview2 origin=https://app.spar.invalid profile=strict csp=default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script' meta=- navlock=True inject=True
+[    265.1] INJECT_ADDED id=2
+[    265.8] NAVIGATE https://app.spar.invalid/probes.html
+[    267.6] NAV_ALLOWED TOP user=1 redirected=0 https://app.spar.invalid/probes.html
+[    281.8] SERVE GET /probes.html referer=- dest=-
+[    337.7] SERVE GET /probes.css referer=- dest=-
+[    338.1] SERVE GET /probes.js referer=- dest=-
+[    338.5] NATIVE source=https://app.spar.invalid/probes.html {"kind":"injected","at":69,"url":"https://app.spar.invalid/probes.html","top":true,"readyState":"loading"}
+[    340.3] SERVE GET /report.js referer=- dest=-
+[    342.4] NATIVE source=https://app.spar.invalid/probes.html {"kind":"violation","via":"injected","url":"https://app.spar.invalid/probes.html","directive":"style-src-elem","blocked":"inline","source":"https://app.spar.invalid/probes.js","line":32,"sample":"","disposition":"enforce"}
+[    342.4] NATIVE source=https://app.spar.invalid/probes.html {"kind":"error","message":"error"}
+[    346.0] NAV_COMPLETED success=1 status=0 source=https://app.spar.invalid/probes.html
+[    348.5] SERVE GET /favicon.ico referer=- dest=-
+[    393.3] NATIVE source=https://app.spar.invalid/probes.html {"kind":"violation","via":"injected","url":"https://app.spar.invalid/probes.html","directive":"style-src-elem","blocked":"inline","source":"https://app.spar.invalid/probes.js","line":32,"sample":"","disposition":"enforce"}
+[    393.4] NATIVE source=https://app.spar.invalid/probes.html {"kind":"error","message":"error"}
+[    445.0] NATIVE source=https://app.spar.invalid/probes.html {"kind":"violation","via":"injected","url":"https://app.spar.invalid/probes.html","directive":"style-src-elem","blocked":"inline","source":"https://app.spar.invalid/probes.js","line":32,"sample":"","disposition":"enforce"}
+[    445.0] NATIVE source=https://app.spar.invalid/probes.html {"kind":"error","message":"error"}
+[    793.2] NATIVE source=https://app.spar.invalid/probes.html {"kind":"violation","via":"injected","url":"https://app.spar.invalid/probes.html","directive":"style-src-attr","blocked":"inline","source":"https://app.spar.invalid/probes.js","line":58,"sample":"","disposition":"enforce"}
+[   1232.1] PAGE {"kind":"probes","nonceOffered":false,"nonceReadable":false,"nonceAttributeHidden":false,"results":{"element":"not applied","element-nonce":"not applied","element-wrong-nonce":"not applied","replace-sync":"applied","replace-async":"applied","insert-rule":"applied","linked-insert":"applied","property":"applied","attribute":"not applied","shadow-replace-sync":"applied"},"violations":[{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-elem","blocked":"inline","sample":""},{"directive":"style-src-attr","blocked":"inline","sample":""}]}
+[   1233.1] PAGE {"kind":"done"}
+[   1777.7] BROWSER_EXIT exited=True after=220ms

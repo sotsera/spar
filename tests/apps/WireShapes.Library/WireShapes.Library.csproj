@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    A class library with a contract of its own, which the WireShapes app serves because its project lists it in
+    SparContracts (decision "Contracts from referenced libraries: the app opts in"). Like any library that declares
+    contracts, it references the Spar runtime only and runs no generator: its dispatch is generated in the app.
+  -->
+  <PropertyGroup>
+    <RootNamespace>WireShapes.Library</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+    <!-- Its comments reach the JSDoc of the app's ledger module from this file. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Spar\Spar.csproj" />
+  </ItemGroup>
+</Project>

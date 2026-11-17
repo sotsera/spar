@@ -1,0 +1,12 @@
+== Production (Release publish, SparVariant=Production)
+Program: internal; interfaces []; methods [<Main>$, .ctor]
+generated accessor file in obj/Release: 0
+Production exe: ISparEntryPoint absent
+Production exe: SparEntry absent
+Production exe: SparTestSession absent
+== Test, Debug (the CoreCLR test lane)
+Program: public; interfaces [ISparEntryPoint]; methods [<Main>$, global::Spar.ISparEntryPoint.Run, SparEntry, .ctor]
+== Test, Release (the NativeAOT test lane)
+Program: public; interfaces [ISparEntryPoint]; methods [<Main>$, global::Spar.ISparEntryPoint.Run, SparEntry, .ctor]
+== Development (plain Debug build)
+Program: internal; interfaces []; methods [<Main>$, .ctor]

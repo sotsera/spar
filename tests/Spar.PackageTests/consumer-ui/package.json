@@ -1,0 +1,16 @@
+{
+  "name": "notes-ui",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "check": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@spar/app": "file:../obj/spar/client"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vite": "8.3.8"
+  }
+}

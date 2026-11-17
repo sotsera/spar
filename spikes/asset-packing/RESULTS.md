@@ -361,3 +361,22 @@ If an app already links the Brotli decoder for another reason (for example `Http
   - `artifacts/asset-packing/` (293 KB of logs);
   - `artifacts/webview2-profiles/asset-packing` (19 MB), `asset-packing-b` (15 MB) and `asset-packing-linux` (17 KB).
 - **Spike-local outputs:** `bin/` and `obj/` per project and variant, `obj/inputs/large/` and `large/node_modules/`.
+
+## Follow-up: per-file Deflate inside the same index (2026-11-15)
+
+The research review asked for a Deflate control on the real bundle before M1 packing: per-file Deflate inside Spar's own index, without the zip reader, which this spike had not measured. Added: a `deflate` format (encoding 3; `DeflateStream` at `SmallestSize` per file, the same 5% rule as Brotli; decoded with `DeflateStream` over the image) and a `notebook` input (the Notebook sample's Vite bundle from M1a: 11 files, 772,422 B, with 7 already-compressed `woff2` fonts). Windows only, `Pack.Bench`, strict NativeAOT. Raw logs and pack sizes in `results/deflate-control/`.
+
+| Build | Exe | Pack | Code (exe − none − pack) |
+|---|---:|---:|---:|
+| none | 1,133,568 | — | — |
+| raw, notebook | 1,924,096 | 773,562 | 16,966 |
+| **brotli, notebook** | **1,683,456** | 364,557 | 185,331 |
+| deflate, notebook | 1,729,536 | 387,053 | 208,915 |
+| raw, large | 3,949,568 | 2,799,243 | 16,757 |
+| **brotli, large** | **2,194,432** | 875,155 | 185,709 |
+| deflate, large | 2,349,056 | 1,006,918 | 208,570 |
+
+- **Brotli keeps the smaller executable:** 46,080 B smaller on the Notebook bundle and 154,624 B on the large one. Its payload is 6.2% and 15.1% smaller, and its decoder about 23 KB smaller (168,365 against 191,949 B over the reader). Even where an app already links zlib for something else, Brotli's payload alone stays 22–132 KB smaller.
+- **Deflate decodes faster:** decode-all 0.88 against 1.53 ms (Notebook) and 3.29 against 5.05 ms (large), medians of 5; the main chunk at 739 against 417 MB/s. Both run off the UI thread at start.
+- **No difference that matters at start:** process start, median of 21, 88.0 (Deflate) against 88.2 ms (Brotli), 85.8 ms with no frontend; peak working set 13.9 against 13.8 MB.
+- **So the research review's result does not repeat here** (a whole executable of 1.60 MB with Deflate against 2.27 MB with Brotli, on another runtime and a synthetic corpus). Packing stays Brotli, as the recommendation above says.

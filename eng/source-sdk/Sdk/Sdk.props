@@ -1,0 +1,13 @@
+<Project>
+  <!--
+    Spar.Sdk 0.0.0-source: lets a project in this repository write <Project Sdk="Spar.Sdk">, as an app does, and build
+    against Spar's sources. It forwards to src/Spar.Sdk/Sdk, found by looking upward from the project, so it works in any
+    clone. Editors that load only projects naming their SDK (C# Dev Kit) then load Spar's samples and tests.
+    Packed by eng/source-sdk/pack.cs; global.json pins this version.
+  -->
+  <PropertyGroup>
+    <SparSourceSdkRoot>$([MSBuild]::GetDirectoryNameOfFileAbove('$(MSBuildProjectDirectory)', 'src/Spar.Sdk/Sdk/Sdk.props'))</SparSourceSdkRoot>
+  </PropertyGroup>
+
+  <Import Project="$(SparSourceSdkRoot)/src/Spar.Sdk/Sdk/Sdk.props" />
+</Project>

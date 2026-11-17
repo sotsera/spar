@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Build tests (plan section 5, test type 12): a clean copy of the working tree under artifacts/build-tests/, built
+    with the MSBuild server off, no node reuse and a compiler server of its own; which Spar steps ran is read back by
+    replaying each build's binary log. Minutes, not seconds, so they are not in Spar.slnx: CI runs them as their own
+    step, and so does a developer, with dotnet test tests/Spar.BuildTests.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.BuildTests</RootNamespace>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(MSBuildThisFileDirectory)..\..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

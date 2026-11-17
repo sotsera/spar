@@ -2,7 +2,7 @@ using System.Buffers;
 using System.Buffers.Binary;
 using System.Reflection;
 using System.Text;
-#if SPAR_PACK_BROTLI || SPAR_PACK_SEPARATE || SPAR_PACK_ZIP
+#if SPAR_PACK_BROTLI || SPAR_PACK_SEPARATE || SPAR_PACK_ZIP || SPAR_PACK_DEFLATE
 using System.IO.Compression;
 #endif
 
@@ -35,6 +35,8 @@ internal sealed unsafe class FrontendAssets
     public const string Format = "separate";
 #elif SPAR_PACK_ZIP
     public const string Format = "zip";
+#elif SPAR_PACK_DEFLATE
+    public const string Format = "deflate";
 #else
     public const string Format = "none";
 #endif
@@ -44,7 +46,7 @@ internal sealed unsafe class FrontendAssets
     private readonly Lock _lock = new();
     private readonly Assembly _assembly;
     private readonly List<Stream> _resources = [];
-#if SPAR_PACK_RAW || SPAR_PACK_BROTLI
+#if SPAR_PACK_RAW || SPAR_PACK_BROTLI || SPAR_PACK_DEFLATE
     private byte* _data;
 #elif SPAR_PACK_SEPARATE
     private readonly Dictionary<int, nint> _entryResources = [];
@@ -66,7 +68,7 @@ internal sealed unsafe class FrontendAssets
     public static FrontendAssets Open(Assembly assembly)
     {
         var assets = new FrontendAssets(assembly);
-#if SPAR_PACK_RAW || SPAR_PACK_BROTLI
+#if SPAR_PACK_RAW || SPAR_PACK_BROTLI || SPAR_PACK_DEFLATE
         var pack = assets.Pin("Spar.Frontend", out var length);
         assets._data = pack + assets.ReadIndex(new ReadOnlySpan<byte>(pack, length));
 #elif SPAR_PACK_SEPARATE
@@ -143,7 +145,7 @@ internal sealed unsafe class FrontendAssets
     /// <summary>The bytes as embedded (compressed when <see cref="AssetEntry.Encoding"/> is 1).</summary>
     public ReadOnlyMemory<byte> Stored(AssetEntry entry)
     {
-#if SPAR_PACK_RAW || SPAR_PACK_BROTLI
+#if SPAR_PACK_RAW || SPAR_PACK_BROTLI || SPAR_PACK_DEFLATE
         return new PointerMemory(_data + entry.Offset, entry.StoredLength).Memory;
 #elif SPAR_PACK_SEPARATE
         return new PointerMemory((byte*)_entryResources[entry.Offset], entry.StoredLength).Memory;
@@ -176,6 +178,17 @@ internal sealed unsafe class FrontendAssets
         {
             using var stream = _archive!.GetEntry(entry.Path)!.Open();
             stream.ReadExactly(output);
+        }
+#elif SPAR_PACK_DEFLATE
+        if (entry.Encoding == 0)
+        {
+            Stored(entry).Span.CopyTo(output);
+        }
+        else
+        {
+            using var source = new UnmanagedMemoryStream(_data + entry.Offset, entry.StoredLength);
+            using var deflate = new DeflateStream(source, CompressionMode.Decompress);
+            deflate.ReadExactly(output);
         }
 #else
         Stored(entry).Span.CopyTo(output);

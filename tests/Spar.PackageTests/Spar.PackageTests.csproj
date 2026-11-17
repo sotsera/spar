@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The package-only consumer test (plan section 1; design testing, "Spar.PackageTests"): Spar packed into a feed of
+    its own, and an app with its tests that uses Spar from that feed alone, in a folder outside any repository. Minutes,
+    not seconds, and it downloads on its first run, so it is not in Spar.slnx: CI runs it as its own step, and so does
+    a developer, with dotnet test tests/Spar.PackageTests (after npm run build in src/Spar.Client).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.PackageTests</RootNamespace>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(MSBuildThisFileDirectory)..\..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+</Project>

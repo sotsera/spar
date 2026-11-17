@@ -13,7 +13,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Transports:**
   - Windows: `postMessage` (0.2 ms unary).
   - Linux: the script message handler, plus `evaluate_javascript` (0.2–0.3 ms).
-  - Loopback: `fetch` for unary calls, and one streamed channel per document (the 6-connection browser limit blocked per-call streams).
+  - Loopback (built in M1a; decided, user, 2026-11-15; decisions "Loopback transport: one ordered send path" and "Loopback transport accepted; Browser surface in its own package"): one streamed channel per document for every host message, call replies included (`POST /_spar/channel`, opened by the `hello`), and the page's messages posted in order to `POST /_spar/send`, one request at a time, with what queues up meanwhile sent together, one message per line. A `fetch` per call, as `spikes/loopback` did, can deliver ids out of order (they are then dropped) and lets long calls use up the browser's six connections. Requests: `Host` checked on every one; the bearer token and, when sent, the `Origin` on bridge requests; `X-Spar-Doc` names the document on sends.
   - Neither WebView streams intercepted responses usefully, so streams always use credits.
 - **Which window may call what (decided, user, 2026-11-14):**
   - **Default:** every window of the app may call every command, because every window runs the app's own code from its one origin.
@@ -21,7 +21,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - **Docs:** they recommend a list for any window that shows content the app does not fully control.
 - **Deadlines (decided, user, 2026-11-14):** calls and streams have no default deadline or idle timeout, because some calls wait on a person (pickers) or run long (copies).
   - On the page, a deadline is the web's `AbortSignal.timeout(ms)` passed as the call's `signal`.
-  - In C#, an optional backend limit (for example `[SparCommand(Timeout = "00:00:30")]`, name to settle in M1) is folded into the command's cancellation token.
+  - In C#, an optional backend limit (`[SparCommand(TimeoutSeconds = 30)]`, a positive integer; decision "M1a names") is folded into the command's cancellation token.
   - Both end like any cancellation: `cancelled` only when the backend confirms, otherwise outcome unknown. Never retried.
 - **Cancellation:** the page is told "cancelled" only when the backend confirms the command ended on its token (for a stream, after its iterator was disposed). Otherwise it gets the real result, or outcome unknown (`unconfirmed` after the confirmation timeout, `lost` when the connection drops). Never retried. The page sees these as `CallError` with `execution` (decision "Contract syntax"), which replaced the spike's `CancelledError`, `NotExecutedError` and `OutcomeUnknownError`; a confirmed cancel is `kind: "cancelled"`, with `execution` `notStarted` or `stopped` (decision "`CallError` kinds").
   Details from `spikes/react` ("Cancellation"):
@@ -36,7 +36,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - `events.reset` is required, because ignoring it leaves stale state; `gap`, `reconnecting` and `resumed` are optional.
     - Each subscription offers only the events it can emit: a coalesced one has no `gap`.
     - The generated type is `Subscription<T>`, an `AsyncIterable` of `Result<T, E, SubscriptionEvents>`.
-    - Checked in `spikes/app-model-check`: a missing `reset` fails `tsc` (TS2322, naming `reset`), and so do a misspelled event and a missing `events` object.
+    - Checked in `tests/AppModel` (from `spikes/app-model-check`): a missing `reset` fails `tsc` (TS2322, naming `reset`), and so do a misspelled event and a missing `events` object.
   - **Coalesced subscriptions** (decided, user, 2026-11-14): `[SparSubscription(Coalesce = true)]`, name to settle in M3. The subscription keeps only the newest value and replaces older ones silently, with no `gap` events. It suits state that only matters as its latest value: resource usage, progress, connection status.
     - The page sees each value at most once and always ends on the newest. A resumed subscription starts with the current value.
     - The capacity is 1 by definition, so `Capacity` is not allowed with it (a contract diagnostic).
@@ -48,7 +48,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     | Message | Meaning |
     |---|---|
     | `o doc` | channel open, for document `doc` |
-    | `r id json` | unary result (the `ok` envelope) |
+    | `r id json` | unary result (the spike's `ok` envelope) |
     | `i id dropped json-array` | a batch of stream items; `dropped` counts items a subscription dropped before it |
     | `e id` | completed |
     | `c id` | cancelled and stopped (the confirmation) |
@@ -71,7 +71,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - **Credits:** the page grants `credits` batches in flight (default 8) and refills them in halves as it consumes. What is in flight is bounded by window × batch size. Proposals from the spike: a window configurable per stream (8 × 1,000 rows kept 7,000 rows in flight), and batches sized by bytes or time (for example 64 KB or 5 ms) rather than rows; batches of 1 were 20–130× slower.
   - **Trace field:** `-` when the call has no context; otherwise the `traceparent`, optionally followed by `;` and the URI-escaped `tracestate`. Streams always sent `-` (not instrumented). The host drops a `traceparent` over 128 characters and a `tracestate` over 8 KB; a malformed context starts a new trace and never fails the call. `traceparent` costs 55 bytes. Before the field existed, `q` and `s` had no `trace` position.
   - **Flush before close:** the desktop host sends `z`, the page runs its registered close work (the telemetry flush, `Promise.allSettled`) and answers `z`, and the host waits at most 1 s.
-  - **Loopback endpoints** (`spikes/loopback/Loop.Loopback/LoopbackHost.cs`; every bridge call needs the bearer token, and the host's `Origin` when one is sent):
+  - **Loopback endpoints of the spike** (`spikes/loopback/Loop.Loopback/LoopbackHost.cs`; every bridge call needs the bearer token, and the host's `Origin` when one is sent). Superseded by the M1a transport under "Transports" above; kept as evidence:
 
     | Endpoint | Use |
     |---|---|
@@ -82,7 +82,50 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     | `POST /_spar/ready` | `ui-ready` |
 
     Status codes: 200 result; 401 `unauthorized`; 403 `forbidden-origin` or `forbidden-host`; 409 `contract-mismatch` with the host's fingerprint; 400 `invalid-request` with the serializer's message, and 400 `cancelled-before-start`; 404 `unknown-command`; 499 cancelled; 500 outcome unknown. A closed connection cancels that document's calls. Assets are served without the token (they ship in the executable anyway).
-- **Decided (user, 2026-11-14): encoding C.** Every bridge message is a JSON header, a TAB, then the payload's own JSON, following the measurements below. The letter-line tables above describe the spikes' messages, not the target encoding; M1 writes the header fields and the shared conformance vectors from them, together with the rules listed under "Whatever the choice".
+- **Decided (user, 2026-11-14): encoding C.** Every bridge message is a JSON header, a TAB, then the payload's own JSON, following the measurements below. The letter-line tables above describe the spikes' messages, not the target encoding.
+- **The messages (decided, user, 2026-11-15; decision "Bridge messages: encoding C header fields").** Protocol version 1. The header is one JSON object whose `type` names the message; the payload after the TAB is the JSON the table gives, or empty. Unary calls, cancellation, readiness, close work and host events are built in M1a; `stream`, `credits`, `items` and `end` get their vectors in M1a and their implementation in M3.
+
+  **Page to host:**
+
+  | `type` | Header fields | Payload |
+  |---|---|---|
+  | `hello` | `protocol` (the highest version the page speaks), `types` (the host-to-page types it understands), `contracts` (its contract fingerprint, 16 hex characters of the manifest's SHA-256) | empty |
+  | `call` | `id`, `contract`, `command`, optional `traceparent` and `tracestate` | the request's JSON, or empty for a command without one |
+  | `stream` | the same as `call`, plus `credits` (batches the page will accept) | as `call` |
+  | `credits` | `id`, `credits` (more batches) | empty |
+  | `cancel` | `id` | empty |
+  | `ready` | none: the page's `ui-ready` | empty |
+  | `closing-done` | none: the page's close work finished | empty |
+
+  **Host to page:**
+
+  | `type` | Header fields | Payload |
+  |---|---|---|
+  | `open` | `protocol` (the version both use), `doc` (the document id the host assigned), `contracts` (the host's fingerprint) | empty |
+  | `result` | `id`, `ok` | `ok: true`: the value's JSON, or empty for a command without a value; `ok: false`: the declared error, `{"code":"<case>", …payload fields}` |
+  | `items` | `id`, optional `dropped` (items a subscription dropped before this batch) | a JSON array of item values |
+  | `end` | `id`, `ok` | `ok: true`: empty; `ok: false`: the declared error that ended the stream (in-band) |
+  | `failure` | `id`, `kind`, `code`, `execution`, and for a stream `itemsSent` | empty; in Development only, `{"detail":"…"}` |
+  | `event` | `name` (a host event, for example `backend-updated`) | the event's JSON, or empty |
+  | `closing` | none: run the close work and answer `closing-done` | empty |
+
+  **Rules:**
+  - **One terminal per call:** exactly one of `result`, `end` or `failure` ends a call; anything for that id afterwards is dropped.
+  - **Failures are `CallError` one for one:** `kind`, `code` and `execution` are the decided values (decision "`CallError` kinds"). A confirmed cancel is `kind: "cancelled"` with `execution` `stopped`, or `notStarted` with code `cancelled-before-start`. The page adds `contract` and `command` from its own record of the call id, so a `CallError` names its call without anything more on the wire.
+  - **The fingerprint is checked once per document:** the host answers `hello` with its own in `open`. When they differ, every call of that document fails with `rejected` / `contract-mismatch` / `notStarted`, and the page can show a "reload" message at once.
+  - **Document ids are the host's:** `open` assigns `doc`, and a navigation starts a new one; the page never names a document. On loopback the page sends the `doc` it was given with each request.
+  - **Ids:** `id` is a safe integer from 1 (`Number.isSafeInteger`; a .NET range check), increasing within a document.
+    - **A message whose id cannot be trusted gets no reply:** a missing id, one that is not a safe integer from 1, an `id` key given twice, or one not higher than every earlier id of the document. Any reply would be addressed to an id the page may be using for another call, so the host logs and drops it (corrected 2026-11-15 and accepted by the user; decisions "Bridge in C#: codec, session and tests" and "Bridge id rule accepted").
+    - **A malformed message with a new, valid id** is answered with `rejected` / `invalid-request` for that id.
+    - **A malformed message for a pending call** fails that call with `protocol` / `malformed` / `unknown`.
+  - **Headers:** duplicate keys are malformed; unknown fields are ignored; key order is free. An unknown `type` without a known id is ignored; an unknown `type` for a pending call fails that call with `protocol` / `malformed` / `unknown`, so no call can hang.
+  - **Versions:** `hello` carries the page's highest `protocol`; `open` the one both use. The host sends only the types the page listed.
+  - **Trace context:** `traceparent` and `tracestate` use the W3C names, the same as the loopback HTTP headers. A malformed value (a lone-surrogate escape included), a `traceparent` over 128 characters or a `tracestate` over 8 KB is dropped, never a reason to refuse the call.
+  - **Framing:** one message per `postMessage` string on Windows, per script message on Linux, and per line on the loopback channel; the TAB is always present. Compact JSON never contains a raw newline or TAB. Strings only, never `PostWebMessageAsJson`.
+  - **Limits** (decisions "Bridge limits, admission and exception redaction: the behaviour" and "Bridge limits built"), per document, before a payload is parsed: a message over `MaxMessageBytes` (4 MiB) is answered `rejected` / `too-large` by the id in its header, which is looked for in its first 16 K characters, or dropped; 16 commands run at once (`CallsInFlight`), the next wait in a FIFO queue of up to 1,024 calls and 16 MiB of payload (`QueuedCalls`, `QueuedBytes`), and past that a call is `rejected` / `busy`; a slot is given back only when the command has ended. A result over `MaxResultBytes` (16 MiB) fails only its call with `response` / `too-large` / `completed`. Control messages (cancel, ready, closing-done) never wait. A waiting call that is cancelled ends `cancelled-before-start`. On loopback the page sends at most 1 MiB of text per request, or one longer message alone, and the server accepts bodies up to twice `MaxMessageBytes` (at least 28.6 MiB); past that it answers 413 and the document's channel ends.
+  - **Redaction:** a failure with an exception carries `{"correlation":"<trace id>"}` in every build, the trace id of the call's `traceparent` or a new one, and `"detail"` only in Development; the exception is logged at Error through the app's `ILogger` (category `Spar.Bridge`) with the contract, command, call id and correlation. Refusals carry no correlation.
+  - **The page side** (decision "SDK abort confirmation and calls before open accepted"): an aborted call sends `cancel` and waits 5 s for the backend to confirm, then ends as `transport` / `unconfirmed` / `unknown`; a call made before `open` waits for it, and fails `unavailable` / `notStarted` if the channel closes first.
+  - **Conformance vectors:** one shared file, `tests/conformance/bridge-messages.json`, read by the C# and the TypeScript tests: every message type in both directions with its canonical bytes, other valid forms (key order, unknown fields, whitespace, an unknown type, the dropped trace values), and the malformed cases above with the id a refusal may use. The C# side runs it in `tests/Spar.Tests`.
 - **Decided before the shared conformance vectors (section 2b); the comparisons are kept as evidence:**
   - **The encoding (decided, C; the comparison is kept as evidence):** the letter-prefixed lines above, or the JSON envelopes `spikes/wire-details` used (`{"id":7,"ok":…}`, stream items `{"type":"item","value":…}`, the end message `{"type":"end","ok":false,…}`, and an `"arg"` key only when the command takes one). Section 2's envelope examples carry no `id`.
     - **Measured by `spikes/bridge-encoding`** (WebView2, loopback Chromium, WebKitGTK codec only), comparing (A) letter lines, (B) JSON envelopes and (C) a JSON header, a TAB, then the payload's own JSON:

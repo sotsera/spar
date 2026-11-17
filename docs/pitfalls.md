@@ -4,6 +4,25 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 
 ## Build, MSBuild and packages
 
+- **NuGet's restore ignores `UndefineProperties` on a `ProjectReference`:** a global property the reference removes still reaches the referenced project's restore. When that property moves the project's `obj/` (the NativeAOT lane's `objot`), restore writes `project.assets.json` where the build never looks, and a clean publish fails with NETSDK1004. It passed locally for days, because an ordinary build had already restored `obj/`; CI's first lane that started clean found it. Give such a reference the property instead of removing it. (M1a CI)
+- **NativeAOT on Linux cannot link with a NuGet package folder whose path has a space:** `clang` got `/tmp/spar`, `package` and `tests/nuget-packages/…/libSystem.Native.a` as separate arguments for every runtime library. The app's own folder, with a space and non-ASCII letters, linked fine. Windows links either. Keep `NUGET_PACKAGES` free of spaces wherever a Linux NativeAOT publish runs. (M1a Linux)
+- **A file-local type's name holds a hash of its source file's path** (the regex generator's `<RegexGenerator_g>F298E…__Utilities`), so it changes with the checkout and between builds with and without `ContinuousIntegrationBuild`, which maps paths to `/_/`. A list of type names must not keep the hash. (M1a Linux)
+- **MSBuild writes item paths with `/` on Linux,** whatever the project file says: a message that quotes an item written `..AppApp.csproj` prints `../App/App.csproj` there. (M1a Linux)
+- **xUnit does not run a class's tests in the order they are written:** the build tests' publish ran before the "first" build, installed the frontend and wrote the client, so the first build skipped them and its check failed. A test that needs a fresh tree awaits one shared first build, whichever test starts. (M1a build tests)
+- **`dotnet build-server shutdown` stops every MSBuild and compiler server on the machine,** not only the ones a test started. Isolated runs use their own `MSBUILDNODEHANDSHAKESALT` and `SharedCompilationId` and let their nodes end when idle. (M1a build tests)
+- **An app's variants share `obj/spar/client`,** which the frontend's `package.json` names, and build at the same time: two client steps rewriting it raced once (`SafeFileHandle.CreateFile` in `ClientPackage.Sync`). It stays hidden while the files are unchanged, because unchanged files are not written. Writes to a folder variants share go under a lease. (M1a bridge limits)
+- **Several targets hooked `BeforeTargets` on one target run in the order they are declared in the file, and `AfterTargets` does not change that:** Spar's embedding target, declared before the packing target, ran first, so every build embedded the previous build's pack and a clean build would have embedded none. It went unnoticed because each test build had a pack left from an earlier one. Hook one entry target and order the steps with `DependsOnTargets`; check a clean build. (M1a packing)
+- **A resource embedded by a target that runs just before `CoreCompile` arrives after MSBuild settled resources** in `PrepareResources`, so it can miss the compile's resource list. Add generated `EmbeddedResource` items before `PrepareResources`. Inferred from the targets' order; the failing case was not built. (M1a packing)
+- **A warm MSBuild node keeps a task's old parameter list,** even when the task runs in its own task host (`TaskHostFactory`): after a parameter was added, a build on a reused node failed with MSB4064 ("The 'SnapshotMode' parameter is not supported") while one on a fresh node passed. Only framework development changes a task under a running node; build with `-nr:false` and `DOTNET_CLI_USE_MSBUILD_SERVER=false` after changing a task's parameters. (M1a client step)
+- **A check inside an incremental target misses a stale committed file:** the contract snapshot, verified inside the client step, passed a CI-mode build after being edited, because the step was up to date. Compare committed files in a target that always runs, against an expected copy under `obj/`. (M1a client step)
+- **A project reference to a task project leaks into the app** unless both sides stop it: the task project's own `PackageReference` (Roslyn) and `ProjectReference` (the generator) need `PrivateAssets="all"`, or the app restores them and gets their assemblies, and the generator as an ordinary reference. `ReferenceOutputAssembly="false"` on the app's side alone does not stop transitive flow. Checked: with both, the app's `project.assets.json` names neither. (M1a client step)
+- **The task authoring analyzer follows calls transitively:** MSBuildTask0005 flagged every `File` and `Directory` call in helper classes that took a `string` path, and MSBuildTask0003 a `File.Exists(Path.Combine(...))` in the task. Carry `AbsolutePath` to each call and combine with `new AbsolutePath(relative, basePath)`. (M1a client step)
+- **A step that reads the project's C# before the compile must run after `GenerateGlobalUsings`:** without the implicit usings, `Task<T>` in a contract does not bind and the contract silently loses its commands. Inferred from the `csp-navigation` extractor's finding; the client step depends on that target, and the failing case was not built. (M1a client step)
+- **A global property flows down every project reference that does not remove it,** transitive ones included: the app built as `SparVariant=Test` passed the variant to its plain library, and the library passed it to `Spar.csproj`, so both were built twice, with and without it, into the same `obj/` (CS2012 on `Spar.dll`, in the repository and in a clean copy). Only projects that keep a folder per value may receive such a property; `Spar.Sdk` removes the variant and the test lane from every other reference (`UndefineProperties`), and the build tests count each project's `CoreCompile` instances. (M1a library contract at run time)
+- **A self-contained build and a framework-dependent one must not share an output folder:** the NativeAOT test lane built `WireShapes.Tests` self-contained into the same `bin/Production/Release/` as its CoreCLR Release build, and the `hostfxr.dll` it left there made the CoreCLR build's launcher look for .NET in that folder ("You must install or update .NET to run this application", .NET location: the test's own folder). Nothing failed until a Release `dotnet test` ran after a lane publish. The lane now builds into `bin/aot/` as well as `obj/aot/`. (M1a budgets)
+- **Under central package management, every `PackageReference` an SDK adds with a version must be `IsImplicitlyDefined`:** Spar.Sdk marked its own packages so, but not `xunit.v3`, whose version it also sets, and a consumer with `ManagePackageVersionsCentrally` failed restore with NU1008 ("cannot define a value for Version: xunit.v3"). A consumer without central package management never shows it. (M1a central package management)
+- **Roslyn spells a type in the global namespace `global::Order`, with no dot:** taking the text after the last dot as its name kept the `global::`, which would have generated invalid TypeScript. A keyword used as a name comes with `@` (`global::App.@string`): drop it before checking the name. (M1a client step)
+
 - **Warm MSBuild nodes lock a task DLL** built in the same source checkout (MSB3027 on the next build). Run Spar's own tasks through `TaskHostFactory` in the repository. Package consumers don't need it: a package folder never changes. (`d1-pipeline`, `package-consumer`)
 - **`Microsoft.Extensions.DependencyInjection.Abstractions` is part of the `net11.0` shared framework.** Restore prunes the package, and a direct `PackageReference` fails under the repository's settings with NU1510 ("will not be pruned"). Reference nothing; the types are already there. (`app-model-check`)
 - **Never reuse a package version.** Deleting a cached `Spar.Sdk` version while the MSBuild server was warm stopped partway on a locked DLL and left the package half-deleted. The warm server still reported the next `dotnet build` as succeeded; only a fresh evaluation failed, with MSB4019. (`package-consumer`)
@@ -31,6 +50,7 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 - **The Aspire AppHost SDK references `Aspire.Hosting.AppHost` implicitly.** Listing it in `Directory.Packages.props` fails with NU1009. Without the Aspire CLI the build warns ASPIRE010. (`aspire`)
 - **Generated sources must use `\n` line endings.** Mixing in `AppendLine` makes Visual Studio show "Inconsistent Line Endings". (`d1-pipeline`)
 - **Visual Studio shows generator diagnostics in the Error List, but draws no squiggle.** Report located diagnostics from a `DiagnosticAnalyzer`. (`d1-pipeline`)
+- **An analyzer that reports a type's problem from each contract's symbol action reports it once per contract** that uses the type, and from another document than the one it is in. Spar's analyzer reads every contract once per compilation and lets each type's own symbol action report the problems inside it. (M1a diagnostics)
 - **Roslyn 5.9's closed-type API is `[Experimental]`** (RSEXPERIMENTAL006). The suppression is agreed and scoped to `src/Spar.Generator/**.cs`. Roslyn 5.9 hosts accept `closed` only at `LanguageVersion.Preview` (CS8652); the SDK 11.0.100 compiler doesn't need it. (`contract-syntax`)
 - **The client step and the generator parse with the Roslyn they reference.** The spike's client step used Roslyn 5.9 at `LanguageVersion.Preview`. A contract written in syntax that this Roslyn does not know is skipped without a diagnostic. Parse errors in other files are ignored, because only contract types are read. The generator has the same limit inside an older IDE. Raise the referenced Roslyn with the supported C# version. (`d1-pipeline`, reasoned from the design, not provoked)
 - **A C# extractor that binds a project's code needs its implicit global usings,** or binding fails. (`csp-navigation`)
@@ -69,7 +89,16 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 - **Under `-mt`, a task without `[MSBuildMultiThreadableTask]` runs in a TaskHost** (`/nodemode:2`, one per thread node), even when it implements `IMultiThreadableTask`. (`msbuild-task-analyzer`)
 - **`-mt` strict mode moves the working directory to a temp sentinel.** Relative paths that work under `-m` miss under `-mt`. A working-directory change is error MSB4286, and a write to the sentinel is warning MSB4287. `TreatWarningsAsErrors` doesn't cover MSB warnings, so pass `-warnAsError` where `MSBuildTreatWarningsAsErrors` is off (in `spikes/`). (`msbuild-task-analyzer`)
 - **About 29 % of builds that launched new MSBuild processes with `-nodeReuse:false` stalled about 5 s** at node start, cause unknown. Report timing ranges, not single runs. (`msbuild-task-analyzer`)
+- **`$(Configuration)` is still empty when a `Directory.Build.props` is read,** unless it was passed on the command line. A variant mapping or a folder name built from it there silently uses the empty string (`obj/test/` without the configuration). Read it where it is known, or with an explicit fallback. (`entry-accessor`)
+- **In `Directory.Build.props` the project's own `TargetFramework` is not set yet** (only the root's `net11.0`). Conditions on it belong in a `.targets` file: turning on the AOT analyzer from props broke a netstandard2.0 generator with NETSDK1210. (`entry-accessor`)
+- **A netstandard2.0 generator cannot use `record`** without an `IsExternalInit` stand-in (CS0518), and a generator with diagnostics needs `AnalyzerReleases.Shipped.md` and `.Unshipped.md` as additional files, or RS2008 fails the build under warnings as errors. (`entry-accessor`)
+- **`PublishAot` set after Microsoft.NET.Sdk's targets are imported is silently ignored:** `dotnet publish` produced a 73 KB framework-dependent apphost and no NativeAOT image, with no warning. A wrapping SDK sets it in its targets file before that import (or in props). (M1a first slice)
+- **Moving `BaseIntermediateOutputPath` makes the default globs pick up the old `obj/`:** the NativeAOT test lane restored into `obj/aot/`, and the normal lane's generated files under `obj/Development/` compiled a second time (CS0579, CS0101, CS0111). Exclude every `obj/**` and `bin/**` in `DefaultItemExcludes`, not just the current lane's. (M1a first slice)
+- **An item `Update` outside a target cannot test custom metadata in its `Condition`** (MSB4191 for `'%(ProjectReference.SparFramework)'`). Order the items instead: add the items the update must not touch after it. (M1a first slice)
+- **`Utf8JsonReader.TryGetDateTimeOffset` accepts a time without an offset** and reads it in the local time zone, so the same JSON means different instants on different machines. The wire rule requires an offset; check for `Z` or `±hh:mm` before parsing. (M1a, `tests/WireShapes.Tests`)
 - **NativeAOT keeps test-only code that sits behind an ordinary run-time flag.** A fake registered under `if (testHost)` was still in the Production executable; only code behind a feature switch (`[FeatureSwitchDefinition]` plus a `RuntimeHostConfigurationOption` with `Trim="true"`) was removed. Search the published binary for type names (UTF-8) and string literals (UTF-16) to prove it. (`test-host`)
+- **Under Microsoft.Testing.Platform, `dotnet test` passes MSBuild switches it does not own on to the test application:** `dotnet test --project X -nr:false` built, then every test application failed with "Unknown option '--nr'" (exit code 5, zero tests). Set `MSBUILDDISABLENODEREUSE=1` in the environment instead, or build first and run `dotnet test --no-build`. (M1a, `tests/Spar.PackageTests`)
+- **An item transform cannot be concatenated with text inside another task parameter** (MSB4012, writing `SparXunitVersion=@(PackageVersion->…)` into `WriteLinesToFile`'s `Lines`). Put the transform in a property first, then use the property. (M1a, `Spar.Sdk` packing)
 
 ## dotnet watch and the development loop
 
@@ -97,6 +126,10 @@ See also "Bridge and loopback" for the bridge's message, id and connection limit
   Angular 22 also makes `OnPush` the default, which can look like a stale view. (`frontend-frameworks`)
 - **Vue's full build compiles templates at run time** and is blocked as `eval`; use the runtime-only build. (`frontend-frameworks`)
 
+- **Tailwind v4 puts plugin styles, such as the typography plugin's, in its utilities layer,** so a rule in the components layer cannot override them, whatever its specificity. Put such overrides outside any layer. (M1a Notebook page)
+- **`Intl` formatters without a locale follow the machine, not the page:** an English page showed "1 secondo fa" on an Italian Windows. Pass `document.documentElement.lang`. (M1a Notebook page)
+- **Playwright's `PressSequentially` on a textarea types at the start of its text,** where focusing puts the caret. Press `Control+End` first to type where a person would. (M1a Notebook page)
+- **Two variants of one app build at once in a solution build and share one `node_modules`:** `npm ci` in both would break it. Install under a lease the variants share, and skip when the other build already installed. (M1a frontend build)
 - **npm deletes what it does not know in `node_modules`.** A private junction to the generated client was pruned by `npm i`, deleting the files through it, and `npm ci` wipes everything. Link the client as a declared `file:` dependency outside `node_modules`. (`react`)
 - **The generated client path must not depend on the configuration.** With an `obj/Debug/…` path, a clean clone running only `dotnet publish -c Release` fails (TS2307). (`react`)
 - **Vite pre-bundles and caches `node_modules`,** so regenerated code there would miss hot updates. `file:` packages outside `node_modules` are treated as source. (`react`)
@@ -375,6 +408,14 @@ These entries come from other frameworks (`docs/research-review.md`) and have no
 
 ## Bridge and loopback
 
+- **`ValidateOnBuild` checks only registered services:** an interface that generated code resolves, and that nothing registers, passes it, and fails only when it is resolved. An interface contract with no implementation started and failed every call. Check such services against the collection yourself before building the provider. (M1a interface contracts)
+
+- **An empty XML documentation element carries its meaning in an attribute:** `<paramref name="x"/>`, `<typeparamref>` and `<see href="…"/>` have no text, so code that takes each element's text leaves a hole in the sentence. (M1a interface contracts)
+
+- **`Task.Run` flows `Activity.Current`:** a command started from another call's completion (the next one in the queue) or from the host's receiving thread would have that activity as its span's parent. Clear `Activity.Current` before starting a command's span. (M1a instrumentation)
+
+- **Kestrel refuses a request body over 30,000,000 bytes (413) by default,** and the page's loopback transport sends whatever it has queued in one request: a burst of large calls would end the document's channel instead of failing one call. The page caps a request at 1 MiB of text, and the loopback host sets its body limit from the bridge's message limit. (M1a bridge limits)
+
 Entries tied to one host's API stay in that host's section. See also, in "Windows host (WebView2)": "`WebResourceRequested` cannot stream", "A page `fetch` abort is invisible to the host", "An unanswered request to the app origin leaves the machine's loopback" and "A hung page". In "Linux host (WebKitGTK)": "No origin information", "Custom-scheme responses stream, but with no back-pressure" and "A hung WebKitGTK page". Wire values are in "Wire format and serialization".
 
 - **WebView2 web messages:**
@@ -388,13 +429,21 @@ Entries tied to one host's API stay in that host's section. See also, in "Window
 - **`encodeURIComponent` throws `URIError` on a lone surrogate,** and the .NET reader throws on a lone-surrogate escape inside a string you then read as text. Trace fields need a tolerant read. (`bridge-encoding`)
 - **A browser allows 6 HTTP/1.1 connections per host** (loopback cannot use HTTP/2). Six open per-call streams blocked a unary call for more than 3 s, and even the cancels. Use one channel per document. (`react`)
 - **Kestrel (loopback): cancelling a blocked response flush aborts the connection,** and the cancel confirmation is lost. Transport flushes must not take the command's token. (`react`)
+- **Separate `fetch` requests reach the host in any order,** over up to six connections. With the id rule (ids increasing within a document), calls sent in parallel were dropped and never answered: 200 calls at once timed out. Send page messages one request at a time and batch what queues up. (M1a loopback)
+- **`MemoryExtensions.EnumerateLines` splits on more than LF:** CR, NEL, form feed, U+2028 and U+2029 too, and a message's JSON may contain a raw U+2028 (`JSON.stringify` leaves it unescaped). Split loopback batches and channel lines on LF only. (M1a loopback, from the API's documentation)
+- **Disposing an `HttpClient` response with an unread, endless body does not close the connection at once:** the handler drains it for up to 2 s, hoping to reuse the connection, so the server saw the channel close late. A test that stands in for a page going away cancels a pending read instead, which aborts the connection. (M1a loopback)
+- **Playwright's `EvaluateAsync` has no deadline:** a page promise that never settles (a call the host dropped) hangs the test run. Give every evaluation its own deadline. (M1a loopback)
 - **A loopback listener in a test also receives connections from other apps on the same origin** (other WebView2 apps' preconnects). Attribute connections by process. (`desktop-origin`)
 - **A heartbeat armed at `NavigationCompleted` misses hangs during load,** and one armed on a page without the injected script reports a healthy page after 20 s. Arm at document creation and only with the script. (`page-heartbeat`)
 
 ## Page security (CSP, headers, permissions)
 
+- **Chromium warns about a feature it lacks in `Permissions-Policy`:** Linux's headless Chromium has no Web Bluetooth and logs "Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'." on every page Spar serves. Spar keeps `bluetooth=()`; browser tests that require a clean console accept exactly this message. (M1a Linux)
 Entries tied to one host's API stay in that host's section. See also, in "npm, Vite and TypeScript": "Angular under a strict CSP" and "Vue's full build compiles templates at run time". In "Windows host (WebView2)": `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS`, `AreDevToolsEnabled`, "The runtime makes requests the app never asked for" and the workers that the legacy request filter misses. In "Linux host (WebKitGTK)": "No origin information", `WEBKIT_INSPECTOR_SERVER`, "The GTK4 web process is always sandboxed" and "A redirect answered by a scheme handler is not followed".
 
+- **`style-src` does not govern stylesheets built through the CSSOM:** constructed stylesheets (`replaceSync`, `insertRule`) and `style.setProperty` apply under `style-src 'self'` on all three engines, while `<style>` elements and `style` attributes are blocked. The policy stops styles brought in by markup, not by script. (`csp-style-injection`)
+- **A nonce in a `nonce` attribute is hidden from `getAttribute`** on all three engines once the policy arrives as a header; read it as `element.nonce`. (`csp-style-injection`)
+- **Radix's modal Dialog and AlertDialog inject a `<style>` element** to lock page scrolling, which the default CSP blocks (`style-src-elem`, `blocked-uri: inline`); a modal dropdown menu does the same. Use the browser's modal `<dialog>` (`showModal()`) and non-modal menus. (M1a Notebook page)
 - **Vite's default `build.assetsInlineLimit` turns small assets into `data:` URLs,** which a strict CSP blocks. Set it to 0. (`csp-navigation`)
 - **SRI fails open when the import map is blocked.** An inline import map is an inline script: without its hash in `script-src` it is blocked, and a tampered lazy chunk then loaded. SRI failures are not CSP violations either, so CSP listeners and reports miss them; only the console and an `error` listener see them. (`csp-navigation`)
 - **Vite's ETag is computed before a nonce is swapped in,** so a cached dev page kept an old nonce and its styles were blocked. Send the dev HTML `no-store`, without an ETag. (`csp-navigation`)
@@ -466,6 +515,8 @@ This entry comes from other frameworks (`docs/research-review.md`) and has not b
 
 See also "Build, MSBuild and packages" for the C# traps found while building the `Result` type and its analyzer (conversion operators, `Interlocked`, `ArrayPool`, Roslyn operation blocks), and "Bridge and loopback" for the bridge's message and id limits.
 
+- **.NET's parsers are looser than a wire spelling:** `decimal.TryParse` rounds past 28 or 29 significant digits instead of failing and accepts `+1` and `01`; `Utf8JsonReader.TryGetSingle` returns infinity for `1e39`; `TryGetBytesFromBase64` skips whitespace; `TimeSpan.TryParseExact(…, "c")` accepts `1:2:3`. Require the text the value writes back, or check the raw bytes, before trusting a parse. Negative zero `decimal` writes as `0`. (M1a wire kinds)
+- **An analyzer that reports a descriptor missing from `SupportedDiagnostics` throws** (AD0001) instead of reporting it, and the build shows only AD0001. (M1a wire kinds)
 - **One generated async method that awaits every command** keeps an awaiter for every result type in its state machine, which doubled async allocations to about 600 B per call. Emit one small async method per command. (`result-api`)
 - **Tier-0 JIT code boxes a value-type `T` for `is not null`,** which breaks allocation assertions in Debug tests. Compute such checks once, in the constructor. (`result-api`)
 - The first generated serializer (fixed in the fuzzing spike's copy):
@@ -486,7 +537,7 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 - **Lenient System.Text.Json readers:** `TryGetSingle` returns `Infinity` for `3.5e38`; `TryGetBytesFromBase64` accepts embedded whitespace; enum reading is case-insensitive and accepts numbers. (`wire-details`)
 - **The .NET integer parsers are not canonical.** `Utf8Parser.TryParse` and `long.TryParse` accept `+1`, `007` and `-0`, and `Utf8Parser` stops early on `1 ` and `1e3` (it reports partial consumption). Check `-?(0|[1-9][0-9]*)`, at most 19 digits, then require full consumption. (`wire-details`)
 - **System.Text.Json throws more than `JsonException`:**
-  - `Utf8JsonReader.GetString()` throws `InvalidOperationException` on invalid UTF-8 and on unpaired `\u` surrogates;
+  - `Utf8JsonReader.GetString()` throws `InvalidOperationException` on invalid UTF-8 and on unpaired `\u` surrogates, and so does `TryGetDateTimeOffset`, which throws rather than returning false. Dispatch counts anything but a `JsonException` as the command's own failure, so a request with a lone surrogate failed as `failed` / `unknown` until `SparJson.ReadString` handled it (M1a console harness);
   - `JsonEncodedText.Encode` throws `ArgumentException` on a lone surrogate;
   - `WriteNumberValue` throws `ArgumentException` on NaN and ±Infinity;
   - a writer at `MaxDepth` throws `InvalidOperationException`, even with `SkipValidation = true`.
@@ -500,6 +551,8 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 ## Observability
 
+- **Tag values taken from the page multiply metric series:** a refused call names whatever contract and command the page wrote, and each distinct value is a new series in every exporter. Spar tags only names the app's catalog has, and `unknown` otherwise. (M1a instrumentation)
+
 - **Page spans are lost when a desktop window closes:** none delivered in 2 of 2 runs with the default 5 s batch delay. The host must ask the page to flush and wait (bounded, 1 s); the flush took 9–22 ms. A headless `page.close` on loopback also delivered nothing; navigating away flushed. (`browser-telemetry`)
 - **A collector that is down stalls the page and the relay.** The JS SDK's `forceFlush` rejects, and each relay attempt waits about 2 s for a refused connection. Make the flush never reject, and have the relay answer 503 at once for a while after a failure. (`browser-telemetry`)
 - **A hard-coded service name splits one app in two under Aspire.** Read `OTEL_SERVICE_NAME` (and name the page `<name>-page`). (`browser-telemetry`)
@@ -509,10 +562,18 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 ## Tooling and environment
 
+- **WSL empties `/tmp` when the distribution restarts,** and it stops between `wsl.exe` calls: a clone made there in one call was gone in the next. Keep runs in `/var/tmp`. Check that a script's `cd` succeeded: one that failed ran `npm ci` in the current Windows folder and replaced its `node_modules` with Linux binaries. (M1a Linux)
+- **`XDG_RUNTIME_DIR` on a Windows drive under WSL fails .NET:** the folder cannot be 0700 there, and the CLI's first run stopped with "does not have the expected owner or permissions for system scope". Keep a Linux run's homes on the distribution's own file system. (M1a Linux)
+- **`await using` lets a disposal's exception replace the one already in flight:** a test whose body failed and whose app then failed to stop showed only the stop failure. Spar's test host keeps the stop failure for a hook that raises it after the test. (M1a fixture rules)
+- **xUnit's in-process runner (the NativeAOT lane) exits 0 when no test ran,** where `dotnet test` exits 8. The CI step checks for "Total: 0". (M1a fixture rules)
+- **xUnit v3 4.x makes `CollectionBehavior.DisableTestParallelization` an error** (CS0619, obsolete). Turn parallel runs off with `[assembly: Xunit.v3.Parallelization(Mode = Xunit.Sdk.ParallelMode.None)]`. (M1a console harness)
+- **xUnit's two flavours are different assemblies** (`xunit.v3.core.dll`, `xunit.v3.core.aot.dll`) with different extension signatures: a library compiled against one cannot run against the other. Code that extends xUnit is compiled into the test project, one file per flavour. (M1a fixture rules)
+
 - **BenchmarkDotNet needs project names that are unique across the repository:** `Bench.csproj` in two spikes clashed. An analyzer whose descriptor uses a literal ID also needs `AnalyzerReleases.Shipped.md`/`Unshipped.md` (RS2008). (`result-api`)
 - **Aspire names endpoints `localhost`,** which Node resolves to `::1`. A backend that listens on `127.0.0.1` only, and checks its origin, then hangs every proxied call. (`aspire`)
 - **Aspire's SQL Server health probes log "pre-login handshake" errors** while the container starts. That is noise, not a failure. (`aspire`)
 - **WebView2 and process tools on this machine:** never kill processes or containers that the current session did not start. The permission classifier blocks it. (session)
+- **NuGet's HTTP cache expires every entry after 30 minutes, package files included:** a test that restores into a fresh package folder each run downloads everything again after a 30-minute gap (about 370 MB and four times the run time for the package tests). Keep the isolated package folder between runs, and give the packages under test a version no run has used. (M1a package tests)
 - **Isolating builds from other sessions:** a private `MSBUILDNODEHANDSHAKESALT` and a private `SharedCompilationId` keep a build off other sessions' MSBuild server, nodes and compiler server. Give each step that must start cold its own salt: with one salt for packing and the consumer, the consumer's "cold" build reused the warm server. A Windows job object does not contain the processes, because the host's job allows silent breakaway; stop the process tree you started (by parent id and start time). (`d3-variants`, `package-consumer`)
 - **File-based apps (`#:`):**
   - inside the repository, central package management rejects `#:package` (NU1008). Set `#:property ManagePackageVersionsCentrally=false`, or run the app from outside;
@@ -529,6 +590,7 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
   (`d3-variants`, `test-frameworks`)
 - **The first `dotnet test` after a build was about 1–2.4 s slower** for all three frameworks, with or without browsers. Unexplained; possibly first loads of freshly written binaries. Discard the first run when timing. (`test-frameworks`)
 - **A NativeAOT test exe (`xunit.v3.aot`) prints no stack frames on failure.** It also needs the `XUNIT_AOT` define and allows no generic test methods and no `params`. (`test-frameworks`)
+- **TypeScript's language-service API does not follow declaration maps:** `getDefinitionAtPosition` returned the `.d.ts` position; `tsserver` maps it to the source. Test go-to-definition through `tsserver`'s protocol. (M1a client step)
 - **Playwright's `WaitForFunctionAsync` with an async predicate passes immediately.** Poll instead. (`react`)
 - **Playwright for .NET cannot run inside a NativeAOT process** (reflection JSON), so browser journeys stay on CoreCLR test projects. (`d8-automation`, `test-frameworks`)
 - **BenchmarkDotNet switches the Windows power plan by default,** a system setting. Always use `DontEnforcePowerPlan()`. BenchmarkDotNet 0.15.8 on .NET 11 also needs `.NET 10.0` job labels with `net11.0` toolchains and `IlcInstructionSet=native`. Its NativeAOT jobs build with `IlcOptimizationPreference=Speed`, warnings not as errors and no `Directory.Build.props`, so they are not shipping builds: with default ILC settings one serializer gap grew from 1–2% to 7–13%. (`serializer-bench`)
@@ -540,6 +602,14 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
   - one `devenv.com /Build` run sat idle with no output, probably on a dialog.
 
   (`d1-pipeline`)
+- **IDE checks of analyzer squiggles:**
+  - ReSharper's code analysis, when on, stops Visual Studio drawing squiggles for every analyzer the project references (Spar's and the SDK's CA rules alike); they still reach the Error List as IntelliSense entries. Compiler errors and the built-in IDE analyzers are drawn. Check squiggles with ReSharper's "Enable code analysis" off, and say so;
+  - C# Dev Kit refuses a project without an SDK in `<Project Sdk="…">` ("unsupported format"), such as a project that imports an SDK's props and targets itself; its files then open as loose files, with no analyzer. This is why the repository's projects name `Spar.Sdk` through the `0.0.0-source` package (`eng/source-sdk/`) instead of importing `src/Spar.Sdk/Sdk/`;
+  - opening a folder in VS Code through its 8.3 short path (`C:\Users\USERNA~1\…`, what `%TEMP%` often holds) made the project load twice once added to the workspace, and the open file stayed a loose file. Open folders by their long path;
+  - the language server's own `project/open` loads a project Dev Kit refuses, so a headless check can pass where the window does not;
+  - Visual Studio picks up a file changed on disk when its window gets focus, not before.
+
+  (M1a editor diagnostics)
 - **Driving TypeScript 7's language server over several projects in one Node process hit the client's 5 s shutdown timeout,** and the run was lost. One process per project worked. (`ts-compiled-contracts`)
 - **`performance.memory` stays 0 in `chromium-headless-shell`.** Read heap figures through CDP. (`react`)
 - **Linux NativeAOT needs `clang` and `zlib1g-dev`.** The Playwright .NET image lacks them ("Platform linker ('clang' or 'gcc') not found"); installing them took 93 s. (`linux-loopback`)
@@ -563,6 +633,14 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 - **A window hosted inside the test process takes the whole test run down when the engine aborts.** With `bwrap` refused (root in Docker), WebKitGTK ended the xUnit process with a GLib `ERROR` and a core dump: no result for any test, finished or not. Check the engine's prerequisites before the first window test. (`test-host`)
 - **On a Windows bind mount, files a root container created cannot be overwritten by a later uid 1000 container** (`tee: Permission denied`); new files in the same folder can be written. Delete the root-owned files from Windows, or keep the container on one user. (`test-host`)
 - **`U+2028`/`U+2029` written through agent tool input can land in source files as raw characters,** which broke a C# build (CS1010). Write them as escapes and check the bytes. (`bridge-encoding`)
+
+- **Hosted GitHub Actions runners (Windows):**
+  - Playwright's `install --with-deps` installs the Media Foundation Windows feature on Windows: 3 min 16 s of a 3 min 23 s step, for a browser download of 6 s. The headless shell does not need it; pass `--with-deps` on Linux only;
+  - the .NET CLI's MSBuild server did not start in time on a fresh runner, and the CLI built in-process after waiting ("MSBuild server unavailable … Falling back to an in-process build"). A CI job gains nothing from the server: `DOTNET_CLI_USE_MSBUILD_SERVER=false`;
+  - the NuGet and npm caches and `TEMP` live on C:, which writes more slowly than D:, where the checkout and `RUNNER_TEMP` are. Point `NUGET_PACKAGES`, `NUGET_HTTP_CACHE_PATH`, `npm_config_cache` and `TEMP`/`TMP` under `RUNNER_TEMP`;
+  - a job with no `timeout-minutes` runs up to six hours when a test hangs.
+
+  (M1a CI)
 
 ### Tooling: from earlier versions, not rechecked
 

@@ -1,0 +1,78 @@
+# The contracts of WireShapes as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint c0c1eb02e71778d8
+
+contract echo (WireShapes.EchoService)
+  big(WireShapes.Item) -> long
+  check(WireShapes.Item) -> WireShapes.Item | WireShapes.EchoError
+  ratio(WireShapes.Item) -> double
+  shapes(WireShapes.Shapes) -> WireShapes.Shapes
+  wait(WireShapes.Item) -> WireShapes.Item
+
+contract kinds (WireShapes.KindsService)
+  echo(WireShapes.Kinds) -> WireShapes.Kinds
+  length(byte[]) -> int
+  priority(int) -> WireShapes.Priority
+  single(string) -> float
+
+contract ledger (WireShapes.Library.LedgerService)
+  post(WireShapes.Library.Entry) -> WireShapes.Library.Entry | WireShapes.Library.LedgerError
+  who() -> string
+
+contract rates (WireShapes.Library.IRatesService)
+  rate(string) -> long | WireShapes.Library.RateError
+
+record WireShapes.Item
+  name: string
+
+record WireShapes.Kinds
+  b: byte
+  sb: sbyte
+  s: short
+  us: ushort
+  ui: uint
+  ul: ulong
+  f: float
+  m: decimal
+  c: char
+  day: DateOnly
+  time: TimeOnly
+  span: TimeSpan
+  data: byte[]
+  maybe: byte[]?
+  ids: IReadOnlyList<ulong?>
+  price: decimal?
+  level: WireShapes.Priority
+
+record WireShapes.Library.Entry
+  account: string
+  cents: long
+
+record WireShapes.Shapes
+  text: string
+  note: string?
+  flag: bool
+  count: int
+  big: long
+  ratio: double
+  key: Guid
+  at: DateTimeOffset
+  maybe: int?
+  tags: IReadOnlyList<string>
+  cells: IReadOnlyList<string?>
+  items: WireShapes.Item[]
+  parent: WireShapes.Shapes?
+
+error WireShapes.EchoError
+  refused(reason: string)
+  empty
+
+error WireShapes.Library.LedgerError
+  overdrawn(balance: long)
+
+error WireShapes.Library.RateError
+  unknown(currency: string)
+
+enum WireShapes.Priority
+  Low, Normal, High

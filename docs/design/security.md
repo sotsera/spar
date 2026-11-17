@@ -24,6 +24,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   ```
 
   Anything else (a font CDN, CSS-in-JS needing a nonce or `'unsafe-inline'`) is a conscious addition.
+  - **Styles added at run time** (`spikes/csp-style-injection`; decision "Styles added at run time: a nonce and constructed stylesheets both work"): under the base policy a `<style>` element and a `style` attribute are blocked, while constructed stylesheets, `insertRule` and `style.setProperty` apply, identically on Chromium, WebView2 and WebKitGTK 6.0. A per-document style nonce also works, delivered as `<meta property="csp-nonce">`. Which of these Spar documents or offers as a C# option is decided in M1b.
   - **What the build adds to this policy by itself:** the hash of the theme style (section 3d), the hash of the SRI import map (below), and in Debug the nonce and the HMR WebSocket (below).
   - **`require-trusted-types-for 'script'`** is part of the base policy, with a C# opt-out (decision "Trusted Types on by default"; see "Trusted Types" below).
   - **`connect-src` names the origin with its scheme** (`https://app.localhost` on Windows), because `'self'` also allows `wss://` to the same host, and WebSockets bypass the host (`spikes/desktop-origin`). The Linux value for `spar://app` still needs a check.
@@ -189,8 +190,9 @@ Constraints fall into three levels:
     - The flag goes on the `npm ci` command line only: in `.npmrc` it would also skip the app's own `pre`/`post` script hooks.
     - After install, the build warns about lockfile entries with `hasInstallScript` that match the current OS.
   - NuGet audit runs as an error in Spar's repository, and as warnings by default in apps: `Spar.Sdk` forces nothing. An app created from the template starts with `MSBuildTreatWarningsAsErrors` on (section 7), so an audit finding fails its build until the app lists the advisory in `MSBuildWarningsNotAsErrors` or turns the setting off.
-  - The packing step rejects source maps, version-control and secret files, links, and names that differ only by case (adopted from the research review, user, 2026-11-15; M1a).
-  - The executable embeds third-party notices: the frontend's licences (Vite's `build.license`), plus WebView2's and the static loader's (adopted the same way; M1a).
+  - The packing step rejects source maps, version-control and secret files, links, and names that differ only by case (adopted from the research review, user, 2026-11-15; built in M1a as SPAR110, which also refuses hidden files and types the hosts do not serve; decision "Frontend packing built").
+  - The executable embeds third-party notices: the frontend's licences (Vite's `build.license`), plus WebView2's and the static loader's (adopted the same way; M1a). The frontend's are built, as `Spar.ThirdPartyNotices`; the other two arrive with the Windows host. The build reports them in one informational line, `SparThirdPartyNotices` replaces them with the team's own file or turns them off, and `spar doctor` flags packages with no licence or a copyleft one (decision "Source maps stay out of the executable; third-party notices are reported and copyleft is flagged").
+  - Source maps never ship, devtools in Production or not: Debug gets them from the Vite dev server (same decision).
 
 **Later (M4):**
 - signing the executable and the Linux packages;

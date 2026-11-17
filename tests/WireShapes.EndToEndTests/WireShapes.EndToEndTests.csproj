@@ -1,0 +1,34 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    Browser-level tests (plan section 5, level 4): the WireShapes page in Chromium over in-process loopback, calling the
+    app's backend through the compiled TypeScript SDK. CoreCLR only: Playwright for .NET cannot run under NativeAOT, so
+    this project is not in the NativeAOT lane. Needs the SDK built (npm run build in src/Spar.Client) and Playwright's
+    Chromium headless shell installed.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <!-- The Browser surface (Spar.Testing.Browser), added by Spar.Sdk at its own version. -->
+    <SparBrowserTests>true</SparBrowserTests>
+    <RootNamespace>WireShapes.EndToEndTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Playwright" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\apps\WireShapes\WireShapes.csproj" />
+  </ItemGroup>
+
+  <!-- The budget recorder of the command tests (plan, "Provisional budgets"). -->
+  <ItemGroup>
+    <Compile Include="../WireShapes.Tests/Budgets.cs" Link="Budgets.cs" />
+  </ItemGroup>
+
+  <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
+  <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
+    <Compile Include="../static-state/StaticStateTests.cs" Link="StaticStateTests.cs" />
+  </ItemGroup>
+</Project>

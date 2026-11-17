@@ -16,7 +16,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 });
 ```
 
-(The names are the spike's and are settled in M1a.) Spar's test library calls the app's entry point directly; the spike used an unsafe accessor to the compiler's `<Main>$`, which also works in a NativeAOT test executable. `SparApplication.Create` sees the test's session, and `Run` applies the test's overrides after the app's registrations and Spar's test defaults, builds the app and hands it to the test instead of opening its window.
+**How the test reaches the app** (user, 2026-11-15; decision "Test host mechanics: the generated entry point"; evidence `spikes/entry-accessor`). In the `Test` variant only, Spar's generator makes `Program` public and implements `Spar.ISparEntryPoint` on it, calling the compiler's top-level method (its name read from `Compilation.GetEntryPoint`) through an unsafe accessor. So the test writes `SparTestApp.StartAsync<Program>()`, with no reflection, under CoreCLR and NativeAOT, and Production keeps `Program` internal with no trace of the accessor. A `Program.cs` in another shape (no `return app.Run();`, async, a classic `Main`) fails the `Test` build with a located error. The test sets its session in an `AsyncLocal` and calls the entry point on a thread of its own; `SparApplication.Create` reads the session behind the feature switch, and `Run` applies the test's overrides after the app's registrations and Spar's test defaults, builds the app and hands it to the test instead of opening its window.
 
 **Levels** (pick the smallest that can show the failure):
 
@@ -24,7 +24,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 |---|---|---|---|---|
 | 1 | Unit | Services called directly | µs | `MyApp.Tests` |
 | 2 | Command | Surface `None`: commands through real serialization and dispatch, with typed C# test clients generated per contract | 0.2–0.6 ms per app start | `MyApp.Tests` |
-| 3 | Page | The page code under Vitest against `@spar/app/testing`'s fake transport | ms | the frontend (issue B) |
+| 3 | Page | The page code under Vitest in Node against `@spar/app/testing`'s fake backend | ms | the frontend (decision "Page tests: @spar/app/testing") |
 | 4 | Browser | Surface `Browser`: the page in Chromium over in-process loopback, one browser per test run and a context per test (Playwright, CoreCLR only) | 97–144 ms per test | `MyApp.EndToEndTests` |
 | 5 | Window | Surface `Window`: the app's real WebView2 or WebKitGTK window on the test process's UI thread, shown offscreen and never activated | 466–472 ms (Windows), 297–301 ms (Linux) per test | `MyApp.EndToEndTests` |
 | 6 | Real resources | Any of levels 2, 4 or 5 with the external dependency allowed and a disposable real service (a SQL Server container through Aspire's test builder or Testcontainers) | the container's start | `MyApp.EndToEndTests` |
@@ -47,8 +47,8 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 **Projects and lanes:**
 - **`MyApp.Tests`** holds levels 1 and 2 and runs on every `dotnet test`. **`MyApp.EndToEndTests`** holds levels 4 to 7 and runs as its own CI stage; window tests run as their own invocation there, so a native abort loses only that run. The page tests (level 3) run in the frontend's own test command.
 - **Framework:** `xunit.v3`. **The NativeAOT lane** is the same sources built against `xunit.v3.aot` and published with NativeAOT, without the browser tests (Playwright for .NET cannot run under NativeAOT). Its documented limits apply: no generic test methods, no `params`, no stack traces in failures.
-- **Test variant:** a test project builds the app in Spar's one test variant (the test-host hook, page automation and the UI-thread stall probe). It replaces the earlier `DesktopTest` and `ManagedTest`; its name and how `Configuration` selects it are fixed in M1a.
-- xUnit writes no report files, but `dotnet test` (MTP) still leaves an empty `TestResults/` folder in the working directory (`spikes/test-frameworks`, `spikes/d3-variants`; `spikes/TestResults/` is one). The test-project defaults must keep it out of authored folders; how (for example `--results-directory` under `obj/`) is open for M1a.
+- **Test variant:** a test project builds the app it names with `SparTestedApplication` as `SparVariant=Test` whatever its configuration (decision "SparTestedApplication: the test project names its app") (the test-host hook, page automation and the UI-thread stall probe). It replaces the earlier `DesktopTest` and `ManagedTest` (decision "Polished sample apps: a Markdown notebook; the test variant").
+- xUnit writes no report files, but `dotnet test` (MTP) still leaves an empty `TestResults/` folder in the working directory (`spikes/test-frameworks`, `spikes/d3-variants`; `spikes/TestResults/` is one). The test-project defaults put results under `artifacts/test-results/<project>/` at the repository root (user, 2026-11-15; decision "M1a names"); the mechanism (an MTP results-directory setting from Spar.Sdk or the template) is checked in M1a.
 - **Paths:** no absolute paths in tests and scripts.
 
 **Required host tests:** close during controller creation, close during a long RPC or stream, navigate with an RPC in flight, close one of two windows sharing an environment, and repeated open/close. Each ends with all pending work final, stale replies dropped, and the profile reusable. Two more are adopted from the research review (user, 2026-11-15): the end of the OS session, treated as a non-cancellable, best-effort phase, and an app installed under a long path. They run at level 5 on both hosts, plus level 7 where the behaviour spans processes.
@@ -59,7 +59,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 |---|---|---|---|---|---|---|---|
 | 1 | C# unit | App, Spar | Services and domain rules, called directly | xUnit | µs–ms | Nothing special; a `Result` reads with `switch` or `Assert` | |
 | 2 | Command | App, Spar | A command through real serialization and dispatch, services replaced, no window | The test host, surface `None` | 0.2–0.6 ms per app | The test host, generated typed test clients | |
-| 3 | Page | App, Spar | Page code against a fake backend: errors, failures, cancellation, stream events | Vitest/Node or a real browser | ms | `@spar/app/testing`: fake transport, `Result` factories | ⚠ B |
+| 3 | Page | App, Spar | Page code against a fake backend: errors, failures, cancellation, stream events | Vitest in Node (happy-dom for components) | ms | `@spar/app/testing`: `fakeSpar`, scripts per command, typed replies | |
 | 4 | Browser | App, Spar | Real backend and page together, Chromium via Playwright over in-process loopback | The test host, surface `Browser` | 97–144 ms | The surface, a shared browser fixture, locators | |
 | 5 | Window | App, Spar | The real window (WebView2, WebKitGTK under Xvfb): selectors, input, screenshots | The test host, surface `Window` | 0.3–0.5 s | Page evaluation, `WaitForUiReady`, selectors, input, screenshots, scenes, fixed clock | ⚠ D, L |
 | 6 | Integration with real resources | App | The app against disposable real services (a SQL Server container) | Levels 2, 4 or 5 plus Aspire's test builder or Testcontainers | 42–48 s per run (`spikes/aspire`) | The external-dependency allowance; values passed as options | ⚠ E |
@@ -80,7 +80,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 
 **Open issues** (to investigate further, with spikes where needed):
 - **A. The managed level's form:** answered by the test strategy (2026-11-15).
-- **B. Where page tests run.** In Node with Vitest, in a real engine, or both. Also whether the fake transport behaves closely enough to the real bridge.
+- **B. Where page tests run:** answered 2026-11-16 (decision "Page tests: @spar/app/testing"): in Node with Vitest; the real engine is level 4. The fake backend speaks the real protocol, so values cross the generated encoders and decoders as with a real host.
 - **C. Replacing services in end-to-end tests:** answered by the test strategy (2026-11-15) for levels 2 to 6; level 7 replaces nothing by design.
 - **D. Window specifics.**
   - Trusted input in the in-process window (CDP `Input.*` on Windows, XTEST with `GDK_BACKEND=x11` on Linux, decision "Trusted input in Linux desktop tests: XTEST"): untested in-process; the spike used synthetic DOM events. Spike before M1b.
@@ -114,22 +114,22 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
     - Spar's own runner in M1b;
     - the app-facing layer (the trait, the fixture, one-off tasks), decided with the user at the start of M3, when tray, notifications and deep links arrive.
 - **K. Performance:** which suites run in CI, ratio or absolute thresholds, which machine sets the baselines, and the noise policy. The M1 budgets (Milestones, "Provisional budgets") are the first numbers.
-- **L. The test host's mechanics** (M1a): how the generator emits the entry-point accessor, and in which variant; whether the session hook stays an `AsyncLocal` or becomes compile-time interception; streams and cancellation through the typed test client.
+- **L. The test host's mechanics:** answered (2026-11-15): the generated entry point, the `AsyncLocal` session and the spike's names (`SparTestApp`, `SparTestSurface`, `AddExternal`, `AllowExternal`). Still open for M1a: streams and cancellation through the typed test client, and a diagnostic for an app that declares `internal partial class Program` (conflicting accessibility in the `Test` variant).
 - **M. The black-box data root:** the Production binary needs a way to put its data under a disposable root (the spike read `--spar-data-root`). It is an input to a shipped executable, so it needs a security review before it is designed (M1b).
 
 **What Spar provides:**
 - **`Spar.Testing`** (NuGet):
   - the test host: `StartAsync` with the surface, service overrides, the external-dependency allowance, `Services`, the per-app log, the folders, and an injectable `TimeProvider`;
   - typed C# test clients generated per contract (RR);
-  - the browser surface with a shared-browser fixture and a context per test;
+  - the browser surface with a shared-browser fixture and a context per test, in its own package `Spar.Testing.Browser` for end-to-end projects (user, 2026-11-15; decision "Loopback transport accepted; Browser surface in its own package"; the fixture still lives in the test project);
   - the window surface: page evaluation, `WaitForUiReady`, tree and selectors, input, screenshots, scenes and the fixed clock shared with `spar snap`;
   - the black-box fixture: start, a ready signal, kill with the parent and after a deadline, output capture, the exit code, an app path that also works from a publish folder;
   - the fixture rules (RR): assertion, capture and teardown failures are reported together, unresolved cleanup is not a pass, an empty test selection fails, and skips are explicit.
-- **`@spar/app/testing`** for pages:
-  - the scripted fake transport (success, declared error, failure, hang, delays, stream events, abort semantics, a call log);
-  - `Result` factories for test doubles;
-  - a reset for `configureSpar` state;
-  - framework notes for React StrictMode, Angular zones and `OnPush`, Vue scope disposal, and TanStack `retry: false`.
+- **`@spar/app/testing`** for pages (built for unary calls; decision "Page tests: @spar/app/testing"; `docs/app-model.md` section 6.10):
+  - `fakeSpar()`: a fake backend that speaks the real protocol to the page's connection, with a script per command (`succeed`, `fail`, `failWith`, `hang`, `answer` with typed replies, delays through `answer`), abort semantics (a hanging call is confirmed `cancelled` / `stopped`), and a call log read back from the wire (`calls`);
+  - a reset of `configureSpar`'s hooks, by `fakeSpar()` itself;
+  - stream events and subscriptions, with streams in M3;
+  - framework notes for React StrictMode, Angular zones and `OnPush`, Vue scope disposal, and TanStack `retry: false` (not written yet).
 - **Template defaults:** the two test projects; results under `obj/`; a `Browser` and a `Window` trait so CI can run them as their own invocations; `CaptureConsole`, with xUnit1051 as an error; `TestContext.Current.CancellationToken`; the NativeAOT lane as a publish of `MyApp.Tests`.
 - **Shared infrastructure** (used by both Spar's tests and the app-facing kit):
   - **Profiles:** under the test data root, created with identical options, with a bounded wait for `BrowserProcessExited` before a folder is deleted, and cleanup of folders left by crashed runs only when no process uses them (issue I).

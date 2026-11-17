@@ -1,0 +1,22 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The Notebook's browser tests (plan section 5, level 4): its real page in Chromium against its real backend in this
+    process, over loopback. CoreCLR only, like Playwright for .NET; not in the NativeAOT lane.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <!-- The Browser surface (Spar.Testing.Browser), added by Spar.Sdk at its own version. -->
+    <SparBrowserTests>true</SparBrowserTests>
+    <RootNamespace>Notebook.EndToEndTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Playwright" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\Notebook\Notebook.csproj" />
+  </ItemGroup>
+</Project>

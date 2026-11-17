@@ -1,0 +1,164 @@
+# Spar CI (decision "CI on GitHub Actions"). Every action is pinned to a full commit SHA, its release in a comment
+# (supply-chain default); update them on purpose, never by tag. Before the window tests arrive (M1b), check that they
+# can run on the hosted Windows runner (it may need a self-hosted one with a desktop session).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# One run per pull request: a new push cancels the run still in progress, so only the newest commit is tested. Runs on
+# main are never cancelled, so every merged commit gets its own result.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  # A CI job builds a few times and is thrown away: the MSBuild server only adds its start-up wait. On a fresh Windows
+  # runner it did not start in time, and the CLI fell back to an in-process build after waiting.
+  DOTNET_CLI_USE_MSBUILD_SERVER: "false"
+  # Results go where AGENTS.md puts them; the upload step collects them.
+  SPAR_TEST_RESULTS: ${{ github.workspace }}/artifacts/test-results
+  # A CI build: deterministic paths, and the committed contract snapshots are verified (SPAR100), never rewritten.
+  ContinuousIntegrationBuild: "true"
+
+jobs:
+  build-test:
+    # Each OS runs four lanes at once, each on its own runner: one long job became four short ones. Each lane repeats
+    # the setup and the build it needs; the repository is public, so the extra runner minutes cost nothing.
+    name: ${{ matrix.lane }} (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        lane: [tests, aot, build-tests, package-tests]
+    runs-on: ${{ matrix.os }}
+    # About ten times the slowest lane: a hung test fails here instead of after GitHub's six hours.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Caches and temporary files on the faster disk (Windows)
+        # Hosted Windows runners keep the NuGet and npm caches and TEMP on C:, which writes more slowly than D:, where
+        # the checkout and RUNNER_TEMP are. Restore, the NativeAOT publishes and the package tests (whose feed and
+        # consumers live under TEMP) all write there.
+        if: runner.os == 'Windows' && runner.environment == 'github-hosted'
+        shell: pwsh
+        run: |
+          $root = Join-Path $Env:RUNNER_TEMP "spar"
+          $folders = @{
+            NUGET_PACKAGES = "nuget\packages"; NUGET_HTTP_CACHE_PATH = "nuget\http-cache"
+            npm_config_cache = "npm-cache"; TEMP = "temp"; TMP = "temp"
+          }
+          foreach ($name in $folders.Keys) {
+            $path = Join-Path $root $folders[$name]
+            New-Item -ItemType Directory -Force -Path $path | Out-Null
+            "$name=$path" >> $Env:GITHUB_ENV
+          }
+
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: Size limits
+        if: matrix.lane == 'tests'
+        run: dotnet run eng/check-size.cs
+
+      - name: TypeScript SDK (TypeScript 6 and 7, Vitest)
+        if: matrix.lane == 'tests'
+        working-directory: src/Spar.Client
+        run: |
+          npm ci --ignore-scripts
+          npm run check
+          npm test
+
+      - name: TypeScript SDK, compiled
+        # The apps' builds take the compiled SDK from obj/dist. The build tests compile their own copy.
+        if: matrix.lane != 'build-tests'
+        working-directory: src/Spar.Client
+        shell: bash
+        run: |
+          # The tests lane installed the packages in the step before.
+          if [ ! -d node_modules ]; then npm ci --ignore-scripts; fi
+          npm run build
+
+      - name: The documentation check's packages (tests/AppModel)
+        if: matrix.lane == 'tests'
+        working-directory: tests/AppModel
+        run: npm ci --ignore-scripts
+
+      - name: Build
+        if: matrix.lane == 'tests'
+        run: dotnet build Spar.slnx -c Debug
+
+      - name: Build the browser tests, for Playwright's installer
+        # The package tests' consumer opens its page in Chromium, the same Playwright version as the repository's.
+        if: matrix.lane == 'package-tests'
+        run: dotnet build tests/WireShapes.EndToEndTests -c Debug
+
+      - name: Chromium for the browser tests
+        if: matrix.lane == 'tests' || matrix.lane == 'package-tests'
+        shell: bash
+        run: |
+          # Playwright's headless shell only. --with-deps adds its system libraries on Linux; on Windows it installs the
+          # Media Foundation feature instead, which the headless shell does not need and which took 3 of the 3.4 minutes.
+          script=$(find tests/WireShapes.EndToEndTests/bin -name playwright.ps1 | head -1)
+          deps=""
+          if [ "$RUNNER_OS" = "Linux" ]; then deps="--with-deps"; fi
+          pwsh "$script" install $deps --only-shell chromium
+
+      - name: Test (CoreCLR)
+        if: matrix.lane == 'tests'
+        run: dotnet test --solution Spar.slnx -c Debug --no-build
+
+      - name: Page tests (the Notebook's page against @spar/app/testing)
+        # After the build, which writes the generated @spar/app package and installs the frontend's packages.
+        if: matrix.lane == 'tests'
+        working-directory: samples/Notebook/frontend
+        run: npm test
+
+      - name: Build with -mt
+        if: matrix.lane == 'tests'
+        run: dotnet build Spar.slnx -c Debug -mt -nodeReuse:false
+
+      - name: Test (NativeAOT lane)
+        if: matrix.lane == 'aot'
+        shell: bash
+        run: |
+          # The same test projects published with NativeAOT (plan section 5); the generator tests compile C# in memory
+          # and stay on CoreCLR.
+          for project in tests/Spar.Tests tests/WireShapes.Tests samples/Notebook.Tests; do
+            name=$(basename "$project")
+            dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
+            # xUnit's in-process runner exits 0 when it ran no test; an empty run is a failure (fixture rules).
+            output=$("artifacts/aot/$name/$name") || { echo "$output"; exit 1; }
+            echo "$output"
+            echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }
+          done
+
+      - name: Build tests (a clean copy, an unchanged build, the production boundary, the console harness, one build per project)
+        # Not in Spar.slnx: they copy the tree under artifacts/build-tests/ and build it in isolation, in minutes.
+        if: matrix.lane == 'build-tests'
+        run: dotnet test --project tests/Spar.BuildTests
+
+      - name: Package tests (Spar from its own packages, in a consumer outside the repository)
+        # Not in Spar.slnx: it packs Spar into a feed of its own and builds an app from it in a temporary folder.
+        if: matrix.lane == 'package-tests'
+        run: dotnet test --project tests/Spar.PackageTests
+
+      - name: Test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.lane }}
+          path: artifacts/test-results/
+          if-no-files-found: ignore

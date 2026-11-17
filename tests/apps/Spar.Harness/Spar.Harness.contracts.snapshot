@@ -1,0 +1,34 @@
+# The contracts of Spar.Harness as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint 33506bc30a9b4206
+
+contract echo (Spar.Harness.EchoService)
+  big(Spar.Harness.Item) -> long
+  check(Spar.Harness.Item) -> Spar.Harness.Item | Spar.Harness.EchoError
+  fail(Spar.Harness.Item) -> Spar.Harness.Item
+  ratio(Spar.Harness.Item) -> double
+  shapes(Spar.Harness.Shapes) -> Spar.Harness.Shapes
+  wait(Spar.Harness.Item) -> Spar.Harness.Item
+
+record Spar.Harness.Item
+  name: string
+
+record Spar.Harness.Shapes
+  text: string
+  note: string?
+  flag: bool
+  count: int
+  big: long
+  ratio: double
+  key: Guid
+  at: DateTimeOffset
+  maybe: int?
+  tags: IReadOnlyList<string>
+  cells: IReadOnlyList<string?>
+  items: Spar.Harness.Item[]
+  parent: Spar.Harness.Shapes?
+
+error Spar.Harness.EchoError
+  refused(reason: string)
+  empty

@@ -1,0 +1,16 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The Notebook's fast tests: its own Program.cs runs inside this process (plan section 5). The NativeAOT lane is the
+    same project: dotnet publish -c Release -p:SparTestLane=Aot.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Notebook.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\Notebook\Notebook.csproj" />
+  </ItemGroup>
+</Project>

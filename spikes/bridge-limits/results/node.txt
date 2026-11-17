@@ -1,0 +1,7 @@
+== The page parsing one result message (Node v24.21.0, V8; median of 7)
+payload MiB | split + JSON.parse ms | heap MiB after
+     0.0625 |                  0.03 |              5
+          1 |                  0.42 |             11
+          4 |                  1.30 |             28
+         16 |                  5.88 |             52
+         64 |                 22.06 |            324

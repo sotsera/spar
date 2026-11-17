@@ -1,0 +1,39 @@
+SIZE deflate-large 2349056
+BENCH format=deflate mode=eager files=5 original=2798763 stored=1006438 open-ms=0.244 decode-all-ms=3.401 in-place=True cached=2484463 peak-ws-kb=16216 ws-kb=16216 private-kb=8256 allocated-kb=2477 heap-kb=0
+BENCH format=deflate mode=lazy files=5 original=2798763 stored=1006438 open-ms=0.187 first-requests-ms=3.283 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16192 ws-kb=16192 private-kb=8260 allocated-kb=2478 heap-kb=0
+BENCH format=deflate mode=eager files=5 original=2798763 stored=1006438 open-ms=0.177 decode-all-ms=3.276 in-place=True cached=2484463 peak-ws-kb=16200 ws-kb=16200 private-kb=8256 allocated-kb=2477 heap-kb=0
+BENCH format=deflate mode=lazy files=5 original=2798763 stored=1006438 open-ms=0.344 first-requests-ms=4.724 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16180 ws-kb=16180 private-kb=8236 allocated-kb=2478 heap-kb=0
+BENCH format=deflate mode=eager files=5 original=2798763 stored=1006438 open-ms=0.177 decode-all-ms=3.262 in-place=True cached=2484463 peak-ws-kb=16204 ws-kb=16204 private-kb=8244 allocated-kb=2477 heap-kb=0
+BENCH format=deflate mode=lazy files=5 original=2798763 stored=1006438 open-ms=0.171 first-requests-ms=3.318 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16280 ws-kb=16280 private-kb=8388 allocated-kb=2478 heap-kb=0
+BENCH format=deflate mode=eager files=5 original=2798763 stored=1006438 open-ms=0.175 decode-all-ms=3.416 in-place=True cached=2484463 peak-ws-kb=16196 ws-kb=16196 private-kb=8256 allocated-kb=2477 heap-kb=0
+BENCH format=deflate mode=lazy files=5 original=2798763 stored=1006438 open-ms=0.184 first-requests-ms=3.283 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16208 ws-kb=16208 private-kb=8256 allocated-kb=2478 heap-kb=0
+BENCH format=deflate mode=eager files=5 original=2798763 stored=1006438 open-ms=0.173 decode-all-ms=3.289 in-place=True cached=2484463 peak-ws-kb=16220 ws-kb=16220 private-kb=8268 allocated-kb=2477 heap-kb=0
+BENCH format=deflate mode=lazy files=5 original=2798763 stored=1006438 open-ms=0.173 first-requests-ms=3.500 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16200 ws-kb=16200 private-kb=8264 allocated-kb=2478 heap-kb=0
+BENCH format=deflate mode=decode files=5 original=2798763 stored=1006438 open-ms=0.181
+ASSET assets/bootstrap-icons-BHUGvtHM.woff enc=0 original=180288 stored=180288 first-ms=0.133 median-ms=0.032 MBps=5705 ok=True
+ASSET assets/bootstrap-icons-DJdhg9lH.woff2 enc=0 original=134012 stored=134012 first-ms=0.100 median-ms=0.025 MBps=5276 ok=True
+ASSET assets/index-CAVP4R_w.css enc=3 original=311240 stored=43793 first-ms=0.249 median-ms=0.165 MBps=1884 ok=True
+ASSET assets/index-Dyi-NEe3.js enc=3 original=2172791 stored=648072 first-ms=3.007 median-ms=2.694 MBps=806 ok=True
+ASSET index.html enc=3 original=432 stored=273 first-ms=0.005 median-ms=0.002 MBps=188 ok=True
+BENCH format=deflate total-median-ms=2.919
+STARTUP deflate-large 88901us
+STARTUP deflate-large 88921us
+STARTUP deflate-large 90680us
+STARTUP deflate-large 89797us
+STARTUP deflate-large 86614us
+STARTUP deflate-large 85685us
+STARTUP deflate-large 89758us
+STARTUP deflate-large 95896us
+STARTUP deflate-large 87747us
+STARTUP deflate-large 87532us
+STARTUP deflate-large 98579us
+STARTUP deflate-large 102738us
+STARTUP deflate-large 93848us
+STARTUP deflate-large 87296us
+STARTUP deflate-large 89036us
+STARTUP deflate-large 93460us
+STARTUP deflate-large 98908us
+STARTUP deflate-large 100182us
+STARTUP deflate-large 91160us
+STARTUP deflate-large 92184us
+STARTUP deflate-large 91731us

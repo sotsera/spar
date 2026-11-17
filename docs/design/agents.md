@@ -21,6 +21,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - on Linux, WebKitGTK, GTK, ICU, OpenSSL, plus `clang` and `zlib` for AOT, each with the install command;
     - Docker and Playwright browsers, only when the end-to-end tests need them.
   - **Project:** the `SparFrontendPath` folder, the `@spar/app` dependency, the Vite plugin, the `build` script, the lockfile and `node_modules`, the contract snapshot, the launch profiles.
+  - **Third-party notices** (user, 2026-11-15; decision "Source maps stay out of the executable; third-party notices are reported and copyleft is flagged"): the packages the executable's notices cover, with packages that have no licence or a copyleft one (GPL, AGPL, LGPL) flagged.
   - **Shared checks:** the project checks are the same code the build uses for its diagnostics.
 - **`spar init frontend`** (user decision): wires an existing frontend (made with `npm create vite`, a Vue scaffolder, …) into a Spar app.
   - It adds the dependency, the Vite plugin and, if needed, `SparFrontendPath`.
@@ -39,6 +40,10 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 ## 6b. Observability: optional OpenTelemetry, backend and client (user decisions)
 
 - **Always on, BCL only (M1 core):** one `Activity` and one `spar.call.duration` sample per bridge command. No listener means no work; about +105 KB.
+  - **Built in M1a** (decisions "Bridge instrumentation built" and "Bridge instrumentation: every call, from receipt, with a flood budget"): the activity source and the meter are both named `Spar`.
+    - **Spans:** `{contract}/{command}`, kind Server, from the message's arrival, a child of the page's `traceparent` (else a new trace, never an ambient activity), tagged `rpc.system=spar`, `rpc.service`, `rpc.method`, `spar.call.id`, the request and response sizes, `spar.queue.seconds` and `spar.outcome`, with a `started` event when the command gets its slot. A failure sets status Error and `error.type` to its code; an exception adds an `exception` event. Every admitted call gets one; a call refused at the door gets one within the document's budget (20, then 5 per second).
+    - **`spar.call.duration`:** a histogram in seconds, one sample per call that names a command, from arrival to outcome (queue time included), tagged `rpc.system`, `rpc.service`, `rpc.method`, `spar.outcome` (`success`, `error` for a declared error, or the failure's kind) and, for failures, `error.type`.
+    - **Names the app does not have** are `unknown` in span names and tags. With an activity, a failure's correlation id is its trace id.
 - **Optional layer (an opt-in package, never required):** the OpenTelemetry SDK plus the OTLP exporter, for traces, metrics and logs.
   - It starts only when `OTEL_EXPORTER_OTLP_ENDPOINT` is set; no endpoint is configured by default.
   - +4.3 MB on an app that already uses HTTPS; AOT-clean, with export verified from the AOT exe.

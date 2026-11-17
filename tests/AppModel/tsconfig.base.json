@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "types": [],
+    "paths": {
+      "@spar/app/sdk": ["./sdk/app-sdk.ts"],
+      "@spar/app/copyJobs": ["./frontend-generated/copyJobs.d.ts"],
+      "@spar/app/jobLog": ["./frontend-generated/jobLog.d.ts"],
+      "@spar/app/windows": ["./frontend-generated/windows.d.ts"],
+      "@spar/app/testing": ["./sdk/testing.ts"],
+      "vitest": ["./sdk/vitest.ts"]
+    }
+  }
+}

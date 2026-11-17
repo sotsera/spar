@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The Spar.Sdk package (plan section 1, "Packages"): the MSBuild project SDK an app or test project names in
+    <Project Sdk="Spar.Sdk">. It ships, each once:
+      Sdk/        Sdk.props, Sdk.targets, the teardown hooks, and Spar.Sdk.Version.props written at pack time;
+      tools/      the task assembly, the generator and the Roslyn they load (MSBuild resolves a task's dependencies from
+                  the task's folder, so the generator here is also the Analyzer item);
+      client/     the compiled TypeScript SDK (dist/) and its sources (src/), which the client step copies into each
+                  app's @spar/app package. src/Spar.Client must be built first (npm run build).
+  -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageType>MSBuildSdk</PackageType>
+    <Description>The Spar MSBuild project SDK: build steps, the contract generator and analyzer, and the TypeScript SDK.</Description>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);SparSdkPackageContent</TargetsForTfmSpecificContentInPackage>
+    <SparTasksOutput>$(MSBuildThisFileDirectory)..\Spar.Sdk.Tasks\bin\$(Configuration)\net11.0\</SparTasksOutput>
+    <SparClientRoot>$(MSBuildThisFileDirectory)..\Spar.Client\</SparClientRoot>
+  </PropertyGroup>
+
+  <!-- Built first, never referenced: its output is copied into tools/. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Spar.Sdk.Tasks\Spar.Sdk.Tasks.csproj" ReferenceOutputAssembly="false" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Sdk\**\*" Pack="true" PackagePath="Sdk\" />
+  </ItemGroup>
+
+  <!-- The SDK's own version, which Sdk.props reads to reference Spar's packages at the same version. -->
+  <Target Name="SparSdkVersionProps" BeforeTargets="GenerateNuspec;_GetPackageFiles">
+    <!-- Set here, not in the project body: IntermediateOutputPath is still empty there, so the file landed beside the project. -->
+    <PropertyGroup>
+      <SparVersionProps>$(IntermediateOutputPath)Spar.Sdk.Version.props</SparVersionProps>
+      <_SparXunitVersion>@(PackageVersion->WithMetadataValue('Identity', 'xunit.v3')->'%(Version)')</_SparXunitVersion>
+    </PropertyGroup>
+    <Error Condition="'$(_SparXunitVersion)' == ''" Text="Directory.Packages.props has no xunit.v3 version for Spar.Sdk to write." />
+    <WriteLinesToFile File="$(SparVersionProps)" Overwrite="true" WriteOnlyWhenDifferent="true"
+                      Lines="&lt;Project&gt;&lt;PropertyGroup&gt;&lt;SparSdkVersion&gt;$(PackageVersion)&lt;/SparSdkVersion&gt;&lt;SparXunitVersion&gt;$(_SparXunitVersion)&lt;/SparXunitVersion&gt;&lt;/PropertyGroup&gt;&lt;/Project&gt;" />
+    <ItemGroup>
+      <FileWrites Include="$(SparVersionProps)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SparSdkPackageContent" DependsOnTargets="SparSdkVersionProps">
+    <Error Condition="!Exists('$(SparClientRoot)obj\dist\sdk.js')"
+           Text="The TypeScript SDK is not built: run 'npm ci --ignore-scripts' and 'npm run build' in src/Spar.Client before packing Spar.Sdk." />
+    <ItemGroup>
+      <_SparTool Include="$(SparTasksOutput)*.dll;$(SparTasksOutput)*.deps.json" />
+      <_SparClientDist Include="$(SparClientRoot)obj\dist\**\*" />
+      <_SparClientSource Include="$(SparClientRoot)src\**\*.ts" />
+      <TfmSpecificPackageFile Include="@(_SparTool)" PackagePath="tools\%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="@(_SparClientDist)" PackagePath="client\dist\%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="@(_SparClientSource)" PackagePath="client\src\%(RecursiveDir)%(Filename)%(Extension)" />
+      <TfmSpecificPackageFile Include="$(SparVersionProps)" PackagePath="Sdk\Spar.Sdk.Version.props" />
+    </ItemGroup>
+  </Target>
+</Project>

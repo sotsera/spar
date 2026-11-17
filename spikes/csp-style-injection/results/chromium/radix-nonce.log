@@ -1,0 +1,11 @@
+[      0.0] HOST loopback origin=http://127.0.0.1:5190 profile=nonce csp=default-src 'none'; script-src 'self'; style-src 'self' 'nonce-{NONCE}'; img-src 'self'; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script' meta=-
+LOOPBACK_READY http://127.0.0.1:5190
+[    144.6] SERVE GET / referer=- dest=document
+[    144.7] NONCE issued for /
+[    150.2] SERVE GET /assets/index-DkSQwQ0W.js referer=- dest=script
+[    150.8] SERVE GET /assets/index-d-8QHTN4.css referer=- dest=style
+[   1192.0] PAGE {"kind":"radix","build":"default","nonceOffered":true,"before":{"attribute":false,"overflow":"visible"},"open":{"opened":true,"focusInside":true,"attribute":true,"overflow":"hidden"},"after":{"closed":true,"attribute":false,"overflow":"visible"},"styleElements":1,"adopted":0,"violations":[]}
+BROWSER_CONSOLE log SPAR_PAGE {"kind":"radix","build":"default","nonceOffered":true,"before":{"attribute":false,"overflow":"visible"},"open":{"opened":true,"focusInside":true,"attribute":true,"overflow":"hidden"},"after":{"closed":true,"attribute":false,"overflow":"visible"},"styleElements":1,"adopted":0,"violations":[]}
+[   1193.0] PAGE {"kind":"done"}
+BROWSER_CONSOLE log SPAR_PAGE {"kind":"done"}
+BROWSER_VERSION 156.0.8078.4

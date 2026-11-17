@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The loopback host (plan section 2c): the page in an ordinary browser, its bridge over HTTP on 127.0.0.1. Compiled
+    only into development and test variants, never into Production (plan section 3c, "No loopback in Production").
+    In M1a only the test host's Browser surface (Spar.Testing.Browser) uses it.
+  -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>The Spar loopback host: the page in an ordinary browser over 127.0.0.1, for development and tests only.</Description>
+    <RootNamespace>Spar.Loopback</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar\Spar.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Testing.Browser" />
+    <InternalsVisibleTo Include="Spar.Tests" />
+  </ItemGroup>
+</Project>

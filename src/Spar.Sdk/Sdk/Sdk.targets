@@ -1,0 +1,438 @@
+<Project>
+  <!--
+    Before Microsoft.NET.Sdk's targets: its publish targets read PublishAot when they are imported.
+  -->
+
+  <!-- What kind of Spar project this is: a test project (it sets IsTestProject) or an app (any other executable). -->
+  <PropertyGroup>
+    <SparIsTestProject Condition="'$(IsTestProject)' == 'true'">true</SparIsTestProject>
+    <SparIsApp Condition="'$(SparIsTestProject)' != 'true' and ('$(OutputType)' == 'Exe' or '$(OutputType)' == 'WinExe')">true</SparIsApp>
+  </PropertyGroup>
+
+  <!-- Apps publish with NativeAOT by default. -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <PublishAot Condition="'$(PublishAot)' == ''">true</PublishAot>
+  </PropertyGroup>
+
+  <!-- The NativeAOT test lane publishes the test project itself, against xunit.v3.aot (plan section 5). -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparTestLane)' == 'Aot'">
+    <PublishAot>true</PublishAot>
+    <DefineConstants>$(DefineConstants);XUNIT_AOT</DefineConstants>
+  </PropertyGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!-- Test results go to the repository's artifacts/test-results/<project>/ (decision "M1a names"). -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' == 'true'">
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <!--
+    The generator reads the variant, and the libraries whose contracts the app serves: <SparContracts Include="Lib" />
+    in the app's project, by assembly name (decision "Contracts from referenced libraries: the app opts in").
+  -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="SparVariant" />
+    <CompilerVisibleProperty Include="SparContractAssemblies" />
+  </ItemGroup>
+
+  <!-- Items exist only after properties are evaluated, so the list becomes a property in a target, before it is read. -->
+  <Target Name="SparContractAssemblies" BeforeTargets="GenerateMSBuildEditorConfigFileCore;SparWriteClientInventory">
+    <PropertyGroup>
+      <SparContractAssemblies>@(SparContracts)</SparContractAssemblies>
+    </PropertyGroup>
+  </Target>
+
+  <!--
+    The test-host hook exists only where a test process turns it on. Apps turn it off, and the trimmer removes it
+    from their publications (the production boundary test proves it).
+  -->
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="false" Trim="true" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.TestHost.IsSupported" Value="true" Trim="true" />
+  </ItemGroup>
+
+  <!--
+    A test project names the app it tests, <SparTestedApplication Include="..\App\App.csproj" /> (decision
+    "SparTestedApplication: the test project names its app"). It becomes a project reference here, during evaluation,
+    so restore sees it, and the app builds in the Test variant (with its libraries). It keeps the test lane: NuGet's
+    restore ignores UndefineProperties, so in the NativeAOT lane the app is restored with the lane, into obj\aot\, and
+    its build must look there too. Other project references build as they would anywhere.
+  -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <ProjectReference Include="@(SparTestedApplication)" SparTestedApplication="true" AdditionalProperties="SparVariant=Test" />
+  </ItemGroup>
+
+  <!--
+    The variant and the test lane mean something only to Spar's own projects, which keep a folder per variant. Any
+    other project reference, such as the app's own library, direct or transitive, builds as it would anywhere: given
+    them, it would build once per variant into the same obj/ and bin/, and the builds would collide (CS2012, with a
+    library listed in SparContracts). Set before the first call to the references, so none is evaluated with them.
+  -->
+  <Target Name="SparPlainReferences"
+          AfterTargets="_SplitProjectReferencesByFileExistence"
+          Condition="'@(_MSBuildProjectReferenceExistent)' != ''">
+    <ItemGroup>
+      <_MSBuildProjectReferenceExistent Condition="'%(_MSBuildProjectReferenceExistent.SparTestedApplication)' != 'true'"
+                                        UndefineProperties="%(_MSBuildProjectReferenceExistent.UndefineProperties);SparVariant;SparTestLane" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Whether a project is a Spar app travels back to the projects that reference it with the answer MSBuild already asks
+    for (its target frameworks), so checking a reference costs no evaluation of its own.
+  -->
+  <ItemGroup>
+    <AdditionalTargetFrameworkInfoProperty Include="SparIsApp" />
+  </ItemGroup>
+
+  <!--
+    A Spar app reached through a plain project reference would be tested in its Development build, without the test
+    host or its typed test clients; an item that names something other than a Spar app tests nothing. Both fail before
+    any reference builds, beside the .NET SDK's own check of executable references.
+  -->
+  <Target Name="SparCheckTestedApplications"
+          AfterTargets="_GetProjectReferenceTargetFrameworkProperties"
+          Condition="'$(SparIsTestProject)' == 'true' and '@(_MSBuildProjectReferenceExistent)' != ''">
+    <ItemGroup>
+      <_SparReferencedApp Include="@(_MSBuildProjectReferenceExistent)"
+                          Condition="$([System.String]::Copy('%(_MSBuildProjectReferenceExistent.AdditionalPropertiesFromProject)').Contains('&lt;SparIsApp&gt;true&lt;/SparIsApp&gt;'))" />
+      <_SparPlainApp Include="@(_SparReferencedApp)" Condition="'%(_SparReferencedApp.SparTestedApplication)' != 'true'" />
+      <_SparNotAnApp Include="@(_MSBuildProjectReferenceExistent)" Condition="'%(_MSBuildProjectReferenceExistent.SparTestedApplication)' == 'true'" />
+      <_SparNotAnApp Remove="@(_SparReferencedApp)" />
+    </ItemGroup>
+
+    <Error Code="SPAR121" File="$(MSBuildProjectFullPath)" Condition="'@(_SparPlainApp)' != ''"
+           Text="'%(_SparPlainApp.Identity)' is a Spar app referenced with a ProjectReference, so this test project would test its Development build, without the test host. Name it with &lt;SparTestedApplication Include=&quot;%(_SparPlainApp.Identity)&quot; /&gt; instead." />
+    <Error Code="SPAR122" File="$(MSBuildProjectFullPath)" Condition="'@(_SparNotAnApp)' != ''"
+           Text="SparTestedApplication '%(_SparNotAnApp.Identity)' is not a Spar app (an executable project that uses Spar.Sdk). Reference a library with a ProjectReference." />
+  </Target>
+
+  <!-- The item belongs in a test project; anywhere else it would be silently ignored. -->
+  <Target Name="SparCheckTestedApplicationItem"
+          BeforeTargets="ResolveProjectReferences"
+          Condition="'@(SparTestedApplication)' != '' and '$(SparIsTestProject)' != 'true'">
+    <Error Code="SPAR120" File="$(MSBuildProjectFullPath)"
+           Text="SparTestedApplication is for test projects: set IsTestProject to true in this project, or reference '@(SparTestedApplication)' with a ProjectReference." />
+  </Target>
+
+  <!--
+    Source mode: Spar's own projects by reference. Their builds never see an app's variant or lane, so each is built
+    once, whoever references it.
+  -->
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar\Spar.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+    <ProjectReference Include="$(SparSourceRoot)Spar.Generator\Spar.Generator.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;RuntimeIdentifier"
+                      OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsTestProject)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Testing\Spar.Testing.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
+  <!-- An end-to-end test project asks for the Browser surface (decision "Packages for the package-only consumer"). -->
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsTestProject)' == 'true' and '$(SparBrowserTests)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Testing.Browser\Spar.Testing.Browser.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
+  <!--
+    Package mode: Spar's packages at the SDK's own version, so they never drift from it, and the generator from the
+    SDK's tools/ (NuGet ignores the analyzers/ folder of an MSBuild SDK package). Implicit, like the SDK's own references.
+  -->
+  <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+    <PackageReference Include="Spar" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
+    <Analyzer Include="$(SparPackageRoot)tools\Spar.Generator.dll" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparSourceMode)' != 'true' and '$(SparIsTestProject)' == 'true'">
+    <PackageReference Include="Spar.Testing" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
+    <PackageReference Include="Spar.Testing.Browser" Version="$(SparSdkVersion)" IsImplicitlyDefined="true"
+                      Condition="'$(SparBrowserTests)' == 'true'" />
+  </ItemGroup>
+
+  <!-- The task assembly, built first so the client step can load it; nothing of it reaches the app. -->
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsApp)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Sdk.Tasks\Spar.Sdk.Tasks.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;RuntimeIdentifier"
+                      ReferenceOutputAssembly="false" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    The client step (plan section 1, pipeline step 3): the contracts' TypeScript modules in the @spar/app package
+    under obj/spar/client, one path for every variant and configuration. Apps only, never in design-time builds, and
+    only when an input changed: the inventory, written only when it differs, catches removed files and changed
+    settings. In this repository the task runs in a task host of its own, because the task assembly is rebuilt in the
+    same graph and a warm node would lock it (MSB3027).
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparClientDirectory>$(MSBuildProjectDirectory)\obj\spar\client\</SparClientDirectory>
+    <!-- The committed snapshot: updated by local builds, verified (SPAR100) by CI builds, against the expected one. -->
+    <SparContractSnapshotFile>$(MSBuildProjectDirectory)\$(MSBuildProjectName).contracts.snapshot</SparContractSnapshotFile>
+    <SparContractSnapshotExpected>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)contracts.snapshot</SparContractSnapshotExpected>
+    <SparContractSnapshot Condition="'$(SparContractSnapshot)' == '' and '$(ContinuousIntegrationBuild)' == 'true'">Verify</SparContractSnapshot>
+    <SparContractSnapshot Condition="'$(SparContractSnapshot)' == ''">Update</SparContractSnapshot>
+    <SparClientInventory>$(IntermediateOutputPath)spar-client.inventory</SparClientInventory>
+    <SparClientStamp>$(IntermediateOutputPath)spar-client.stamp</SparClientStamp>
+    <!-- The SDK's version, an input of the client step (plan section 1), in the package's sparSdk field; 0.0.0 from source. -->
+    <SparClientVersion Condition="'$(SparSdkVersion)' != ''">$(SparSdkVersion)</SparClientVersion>
+    <SparClientVersion Condition="'$(SparClientVersion)' == ''">0.0.0</SparClientVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'">
+    <SparClientSdkDirectory>$(SparSourceRoot)Spar.Client\obj\dist\</SparClientSdkDirectory>
+    <SparClientSdkSourceDirectory>$(SparSourceRoot)Spar.Client\src\</SparClientSdkSourceDirectory>
+    <SparTasksAssembly>$(SparSourceRoot)Spar.Sdk.Tasks\bin\$(Configuration)\net11.0\Spar.Sdk.Tasks.dll</SparTasksAssembly>
+  </PropertyGroup>
+
+  <!-- Package mode: the SDK package's own copies. Its task assembly never changes under a running build, so no task host. -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <SparClientSdkDirectory>$(SparPackageRoot)client\dist\</SparClientSdkDirectory>
+    <SparClientSdkSourceDirectory>$(SparPackageRoot)client\src\</SparClientSdkSourceDirectory>
+    <SparTasksAssembly>$(SparPackageRoot)tools\Spar.Sdk.Tasks.dll</SparTasksAssembly>
+  </PropertyGroup>
+
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparClient" AssemblyFile="$(SparTasksAssembly)"
+             Runtime="NET" TaskFactory="TaskHostFactory"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparClient" AssemblyFile="$(SparTasksAssembly)" Runtime="NET"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'" />
+
+  <Target Name="SparWriteClientInventory"
+          DependsOnTargets="ResolveReferences;GenerateGlobalUsings"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <_SparClientSdkFile Include="$(SparClientSdkDirectory)**\*.js;$(SparClientSdkDirectory)**\*.d.ts;$(SparClientSdkDirectory)**\*.map" />
+      <_SparClientSdkFile Include="$(SparClientSdkSourceDirectory)**\*.ts" />
+      <_SparClientInventoryLine Include="@(Compile->'%(FullPath)')" />
+      <_SparClientInventoryLine Include="@(ReferencePath->'%(FullPath)')" />
+      <_SparClientInventoryLine Include="@(_SparClientSdkFile->'%(FullPath)')" />
+      <_SparClientInventoryLine Include="defines=$([MSBuild]::Escape('$(DefineConstants)'))" />
+      <_SparClientInventoryLine Include="nullable=$(Nullable)" />
+      <_SparClientInventoryLine Include="contracts=$(SparContractAssemblies)" />
+      <_SparClientInventoryLine Include="sdk=$(SparClientVersion)" />
+      <FileWrites Include="$(SparClientInventory);$(SparClientStamp)" />
+    </ItemGroup>
+
+    <WriteLinesToFile File="$(SparClientInventory)" Lines="@(_SparClientInventoryLine)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+
+    <!-- The package's files change only when their content does, so they cannot be Outputs; a deleted one reruns the step. -->
+    <Delete Files="$(SparClientStamp)" Condition="!Exists('$(SparClientDirectory)package.json')" />
+  </Target>
+
+  <Target Name="SparClient"
+          DependsOnTargets="SparWriteClientInventory"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="$(SparClientInventory);@(Compile);@(ReferencePath);@(_SparClientSdkFile);$(SparTasksAssembly)"
+          Outputs="$(SparClientStamp);$(SparContractSnapshotExpected)">
+    <SparClient Sources="@(Compile)"
+                References="@(ReferencePath)"
+                DefineConstants="$(DefineConstants)"
+                Nullable="$(Nullable)"
+                ProjectDirectory="$(MSBuildProjectDirectory)"
+                OutputDirectory="$(SparClientDirectory)"
+                SdkDirectory="$(SparClientSdkDirectory)"
+                SdkSourceDirectory="$(SparClientSdkSourceDirectory)"
+                ProjectName="$(MSBuildProjectName)"
+                SnapshotFile="$(SparContractSnapshotExpected)"
+                ContractAssemblies="$(SparContractAssemblies)"
+                SdkVersion="$(SparClientVersion)"
+                ProjectFile="$(MSBuildProjectFullPath)" />
+
+    <Touch Files="$(SparClientStamp)" AlwaysCreate="true" />
+  </Target>
+
+  <!--
+    The committed snapshot against the expected one, on every build: a stale copy (a reverted file, a cached CI build)
+    is found even when the client step is up to date. Text is compared with CRLF read as LF.
+  -->
+  <Target Name="SparCheckContractSnapshot"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_SparSnapshotExpected>$([System.IO.File]::ReadAllText('$(SparContractSnapshotExpected)'))</_SparSnapshotExpected>
+      <_SparSnapshotCommitted></_SparSnapshotCommitted>
+      <_SparSnapshotCommitted Condition="Exists('$(SparContractSnapshotFile)')">$([System.IO.File]::ReadAllText('$(SparContractSnapshotFile)').Replace('&#13;&#10;', '&#10;'))</_SparSnapshotCommitted>
+      <_SparSnapshotState Condition="!Exists('$(SparContractSnapshotFile)')">missing</_SparSnapshotState>
+      <_SparSnapshotState Condition="Exists('$(SparContractSnapshotFile)') and '$(_SparSnapshotExpected)' != '$(_SparSnapshotCommitted)'">out of date</_SparSnapshotState>
+    </PropertyGroup>
+
+    <Error Code="SPAR100" File="$(SparContractSnapshotFile)"
+           Condition="'$(_SparSnapshotState)' != '' and '$(SparContractSnapshot)' == 'Verify'"
+           Text="The contract snapshot is $(_SparSnapshotState): build the project locally, which updates it, and commit it with the contract change." />
+
+    <Copy SourceFiles="$(SparContractSnapshotExpected)" DestinationFiles="$(SparContractSnapshotFile)"
+          Condition="'$(_SparSnapshotState)' != '' and '$(SparContractSnapshot)' == 'Update'" />
+    <Message Importance="high" Text="Spar: $(MSBuildProjectName).contracts.snapshot updated; commit it with the contract change."
+             Condition="'$(_SparSnapshotState)' != '' and '$(SparContractSnapshot)' == 'Update'" />
+  </Target>
+
+  <!--
+    The frontend (plan section 1, pipeline step 4): in the SparFrontendPath folder (frontend/ by default), after the
+    client step because package.json links the generated @spar/app package. npm ci runs when the lockfile changed, in
+    every variant, under a lease the variants share; the type-check runs in every variant (SparTypeCheck=false turns it
+    off); vite build runs in Production and Test, and in Development with SparDevServer=false, into the variant's obj/.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparFrontendPath Condition="'$(SparFrontendPath)' == ''">frontend\</SparFrontendPath>
+    <SparFrontendDirectory>$([MSBuild]::EnsureTrailingSlash('$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(SparFrontendPath)'))'))</SparFrontendDirectory>
+    <SparHasFrontend Condition="Exists('$(SparFrontendDirectory)package.json')">true</SparHasFrontend>
+    <SparTypeCheck Condition="'$(SparTypeCheck)' == ''">true</SparTypeCheck>
+    <SparDevServer Condition="'$(SparDevServer)' == '' and '$(SparVariant)' == 'Development'">true</SparDevServer>
+    <SparBuildFrontend Condition="'$(SparDevServer)' != 'true'">true</SparBuildFrontend>
+    <SparFrontendOutput>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)frontend\</SparFrontendOutput>
+    <SparFrontendLease>$(MSBuildProjectDirectory)\obj\spar\npm.lease</SparFrontendLease>
+    <SparTypeCheckStamp>$(IntermediateOutputPath)spar-typecheck.stamp</SparTypeCheckStamp>
+    <SparFrontendStamp>$(IntermediateOutputPath)spar-frontend.stamp</SparFrontendStamp>
+    <SparFrontendPackFile>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-frontend.pack</SparFrontendPackFile>
+    <SparFrontendNotices>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-notices.md</SparFrontendNotices>
+    <SparFrontendPackStamp>$(IntermediateOutputPath)spar-pack.stamp</SparFrontendPackStamp>
+    <SparFrontendPackSettings>$(IntermediateOutputPath)spar-pack.settings</SparFrontendPackSettings>
+    <!-- brotli or stored: the packing step's decision, read on every build to set the decoder's feature switch. -->
+    <SparFrontendPackMode>$(IntermediateOutputPath)spar-pack.mode</SparFrontendPackMode>
+    <!-- auto: Brotli when it saves more than its decoder costs (about 170 KB); brotli; or none. -->
+    <SparFrontendCompression Condition="'$(SparFrontendCompression)' == ''">auto</SparFrontendCompression>
+    <!-- true: the frontend's licences as Vite collects them; false: none; or the path of the team's own notices file. -->
+    <SparThirdPartyNotices Condition="'$(SparThirdPartyNotices)' == ''">true</SparThirdPartyNotices>
+  </PropertyGroup>
+
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
+             Runtime="NET" TaskFactory="TaskHostFactory"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)" Runtime="NET"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'" />
+
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparPack" AssemblyFile="$(SparTasksAssembly)"
+             Runtime="NET" TaskFactory="TaskHostFactory"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
+  <UsingTask TaskName="Spar.Sdk.Tasks.SparPack" AssemblyFile="$(SparTasksAssembly)" Runtime="NET"
+             Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'" />
+
+  <Target Name="SparFrontendInputs" Condition="'$(SparHasFrontend)' == 'true'">
+    <ItemGroup>
+      <_SparFrontendSource Include="$(SparFrontendDirectory)src\**\*" />
+      <_SparFrontendSource Include="$(SparFrontendDirectory)index.html;$(SparFrontendDirectory)*.config.*;$(SparFrontendDirectory)tsconfig*.json" />
+      <_SparFrontendSource Include="$(SparFrontendDirectory)package.json;$(SparFrontendDirectory)package-lock.json" />
+      <_SparFrontendSource Include="$(SparClientDirectory)**\*" />
+      <FileWrites Include="$(SparTypeCheckStamp);$(SparFrontendStamp)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SparFrontendInstall"
+          DependsOnTargets="SparFrontendInputs"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="$(SparFrontendDirectory)package-lock.json"
+          Outputs="$(SparFrontendDirectory)node_modules\.package-lock.json">
+    <SparFrontendInstall FrontendDirectory="$(SparFrontendDirectory)" LeaseFile="$(SparFrontendLease)" />
+  </Target>
+
+  <Target Name="SparFrontendTypeCheck"
+          DependsOnTargets="SparFrontendInstall"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(SparTypeCheck)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="@(_SparFrontendSource)"
+          Outputs="$(SparTypeCheckStamp)">
+    <Exec Command="node node_modules/typescript/bin/tsc --noEmit -p . --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
+    <Touch Files="$(SparTypeCheckStamp)" AlwaysCreate="true" />
+  </Target>
+
+  <Target Name="SparFrontendBuild"
+          DependsOnTargets="SparFrontendTypeCheck"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(SparBuildFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="@(_SparFrontendSource)"
+          Outputs="$(SparFrontendStamp);$(SparFrontendOutput)index.html">
+    <Exec Command="node node_modules/vite/bin/vite.js build --outDir &quot;$(SparFrontendOutput.TrimEnd('\'))&quot; --emptyOutDir --logLevel warn"
+          WorkingDirectory="$(SparFrontendDirectory)" />
+    <Touch Files="$(SparFrontendStamp)" AlwaysCreate="true" />
+  </Target>
+
+  <!--
+    Packing (plan section 1): the built page in one resource after the asset checks of section 3c, and the frontend's
+    third-party licences beside it. It reruns only when Vite ran, which touches the build stamp.
+  -->
+  <!-- The packing settings, written only when they change, so changing them reruns the pack. -->
+  <Target Name="SparFrontendPackSettings" Condition="'$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <_SparNoticesFile Include="$(SparThirdPartyNotices)" Condition="'$(SparThirdPartyNotices)' != 'true' and '$(SparThirdPartyNotices)' != 'false'" />
+      <FileWrites Include="$(SparFrontendPackSettings)" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(SparFrontendPackSettings)" Lines="notices=$(SparThirdPartyNotices);compression=$(SparFrontendCompression)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+  </Target>
+
+  <Target Name="SparFrontendPack"
+          DependsOnTargets="SparFrontendBuild;SparFrontendPackSettings"
+          Condition="'$(SparHasFrontend)' == 'true' and '$(SparBuildFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'"
+          Inputs="$(SparFrontendStamp);$(SparTasksAssembly);$(SparFrontendPackSettings);@(_SparNoticesFile)"
+          Outputs="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendPackMode)">
+    <SparPack FrontendDirectory="$(SparFrontendOutput)" PackFile="$(SparFrontendPackFile)" NoticesFile="$(SparFrontendNotices)"
+              NoticesSource="$(SparThirdPartyNotices)" Compression="$(SparFrontendCompression)" ModeFile="$(SparFrontendPackMode)" />
+    <Touch Files="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendPackMode)" AlwaysCreate="true" />
+    <ItemGroup>
+      <FileWrites Include="$(SparFrontendPackStamp);$(SparFrontendPackFile);$(SparFrontendNotices);$(SparFrontendPackMode)" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    The pack and the notices into the app's assembly, on every build that has them. A stored pack turns the Brotli
+    decoder's feature switch off, so the trimmer removes it (decision "Frontend packing: stored below the decoder's cost").
+  -->
+  <Target Name="SparEmbedFrontend"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparBuildFrontend)' == 'true' and Exists('$(SparFrontendPackFile)')">
+    <ReadLinesFromFile File="$(SparFrontendPackMode)" Condition="Exists('$(SparFrontendPackMode)')">
+      <Output TaskParameter="Lines" PropertyName="_SparFrontendPackMode" />
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <RuntimeHostConfigurationOption Include="Spar.Frontend.Brotli" Value="false" Trim="true" Condition="'$(_SparFrontendPackMode)' == 'stored'" />
+      <EmbeddedResource Include="$(SparFrontendPackFile)" LogicalName="Spar.Frontend" WithCulture="false" Type="Non-Resx" />
+      <EmbeddedResource Include="$(SparFrontendNotices)" LogicalName="Spar.ThirdPartyNotices" WithCulture="false" Type="Non-Resx"
+                        Condition="Exists('$(SparFrontendNotices)')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SparFrontend"
+          DependsOnTargets="SparFrontendInstall;SparFrontendTypeCheck;SparFrontendBuild;SparFrontendPack"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparHasFrontend)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
+
+  <!--
+    Spar's build steps, in order, before MSBuild settles embedded resources: the client step, the snapshot check, the
+    frontend (install, type-check, Vite, pack), then the embedding. One entry target with DependsOnTargets fixes the
+    order; several targets hooked on PrepareResources would run in the order they are declared in this file.
+  -->
+  <Target Name="SparBuildSteps"
+          BeforeTargets="PrepareResources"
+          DependsOnTargets="SparClient;SparCheckContractSnapshot;SparFrontend;SparEmbedFrontend"
+          Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
+
+  <!--
+    The teardown hook (decision "Fixture rules: the teardown hook"): compiled into each test project against its
+    lane's xUnit, so Spar.Testing stays free of a test framework. SparTeardownHook=false leaves it out.
+  -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparTeardownHook)' != 'false'">
+    <Compile Include="$(SparSdkDirectory)Testing\SparTeardownHook.Xunit.cs" Link="Spar\SparTeardownHook.cs" Visible="false"
+             Condition="'$(SparTestLane)' != 'Aot'" />
+    <Compile Include="$(SparSdkDirectory)Testing\SparTeardownHook.XunitAot.cs" Link="Spar\SparTeardownHook.cs" Visible="false"
+             Condition="'$(SparTestLane)' == 'Aot'" />
+  </ItemGroup>
+
+  <!-- The test framework for the lane: xunit.v3 normally, xunit.v3.aot for the NativeAOT lane. -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <PackageReference Include="xunit.v3" Condition="'$(SparTestLane)' != 'Aot'" />
+    <PackageReference Include="xunit.v3.aot" Condition="'$(SparTestLane)' == 'Aot'" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!--
+    In package mode the SDK gives the version, written when it was packed, and the reference is the SDK's own, like
+    Spar's packages: implicit, so an app whose solution manages package versions centrally does not fail with NU1008
+    (a version on a PackageReference) and needs no PackageVersion for it. In this repository central package management
+    gives the version.
+  -->
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <PackageReference Update="xunit.v3;xunit.v3.aot" Version="$(SparXunitVersion)" IsImplicitlyDefined="true" />
+  </ItemGroup>
+</Project>

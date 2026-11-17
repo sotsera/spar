@@ -9,7 +9,7 @@ This design record shows, with complete examples, the code a Spar app author wri
 
 Where a decision changes, update this document in the same change.
 
-**Checked by compilation.** The C# and TypeScript in this document must compile, against stand-ins for the Spar API, in `spikes/app-model-check/`. Each block names the file it corresponds to there. The stand-ins have no contract analyzer, so a script there (`tools/check-contracts.mjs`) checks what compiling cannot: the request shape, the return forms, reserved contract names and the `cancelled` error code.
+**Checked by compilation.** The C# and TypeScript in this document must compile, against stand-ins for the Spar API, in `tests/AppModel/`, which `dotnet test` checks. Each block names the file it corresponds to there. The C# blocks that Spar can already build are also built by real Spar, with its analyzer and generator (`tests/AppModel/Real`); the contracts with streams, subscriptions or file grants join that build when Spar supports them. The stand-ins have no contract analyzer, so a script there (`tools/check-contracts.mjs`) checks what compiling cannot: the request shape, the return forms, reserved contract names and the `cancelled` error code.
 
 The example is a small part of Spar's first consumer, the SQL Server tool: saved connections, and copy jobs that plan, preview and run a copy and report progress.
 
@@ -38,6 +38,21 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 - The frontend is found through `SparFrontendPath`, by default `frontend/`.
 - The generated client lives under `obj/spar/client/` and is never written into `node_modules`.
 - Each contract is a subpath of `@spar/app`: `@spar/app/copyJobs`, `@spar/app/connections`. The SDK is `@spar/app/sdk`.
+- A test project names the app it tests with `SparTestedApplication` (decision "SparTestedApplication: the test project names its app"), so the app builds in the Test variant, with the test host and the typed test clients. A plain `ProjectReference` to the app fails the build (SPAR121); other projects, such as a library, are referenced as usual. An end-to-end project also sets `<SparBrowserTests>true</SparBrowserTests>` for the Browser surface.
+
+  ```xml
+  <Project Sdk="Spar.Sdk">
+    <PropertyGroup>
+      <OutputType>Exe</OutputType>
+      <TargetFramework>net11.0</TargetFramework>
+      <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <SparTestedApplication Include="..\SqlTool\SqlTool.csproj" />
+    </ItemGroup>
+  </Project>
+  ```
 
 ## 2. `Program.cs`
 
@@ -113,7 +128,7 @@ return app.Run();
 ```
 
 - **Class contracts** are registered by the generated code.
-- **Interface contracts** need their implementation registered, as `IConnections` above. A generated startup check reports a missing registration (Leaning).
+- **Interface contracts** need their implementation registered, as `IConnections` above, whether the app declares them or a library it lists does (3.4). An app that registers none does not start: the error names the contract and its interface.
 - **Overrides of security defaults** (plan 3c) go in the same configuration. Spar logs each one at startup, and `spar doctor` lists them.
 
 ## 3. Contracts
@@ -172,7 +187,7 @@ public closed record RunError
   - **Reading in C#:** one exhaustive `switch` over the result, covering the success type and every error case, for example in a test: `await service.PlanAsync(recipe, ct) switch { CopyPlan p => …, PlanError.TableMissing e => … }`. Leaving out a case is CS8509 and SPAR055.
   - **Other members:** `IsSuccess`, `IsError`, `TryGetValue`, `TryGetError`. `Value` and `Error` throw if the result holds the other state, with that state in the message.
   - **`default(Result<…>)`** is neither a value nor an error, and every member throws on it. Spar's analyzers report the ways a default result can arise (rules SPAR050–SPAR054, plan section 2; decision "Analyzer rules SPAR050–SPAR054 adopted"), for example `default`, `new()`, an array created without values, `FirstOrDefault`, or a field some constructor leaves unassigned. A member that may legitimately be empty is declared `Result<…>?`.
-  - **Commands with errors but no value** return `Result<TError>`, writing `return Result.Success;`. On the wire this is `{"ok":true}`.
+  - **Commands with errors but no value** return `Result<TError>`, writing `return Result.Success;`. On the wire this is a `result` with `"ok":true` and no payload (section 4).
 
 ### 3.2 A class contract
 
@@ -312,7 +327,18 @@ public interface IConnections
 | error case `PlanError.TableMissing` | code `tableMissing` |
 
 - Classes keep their name, interfaces drop one leading `I`, and both drop a trailing `Service`. Then the name is put in acronym-aware camelCase.
-- Two contracts with the same name are an error, including contracts from referenced assemblies.
+- Names follow ASCII camelCase: an explicit name with another character, or a class whose derived name has one (`Copy_JobsService`), is an error that asks for an explicit name.
+- Two contracts with the same name are an error, compared ignoring case, including contracts from the libraries the app serves (below).
+- A contract declared in a library reaches the page only when the app lists the library, by assembly name, in its project file. Nothing else is needed: the app's build generates the library's dispatch, serializers and TypeScript module, and registers its class contracts. The library's interface contracts are implemented by the app, which registers the implementation as for its own. Only public contracts can be served. The library may be a project, as below, or a NuGet package, listed the same way beside its `PackageReference`.
+
+  ```xml
+  <ItemGroup>
+    <ProjectReference Include="..\SqlTool.Contracts\SqlTool.Contracts.csproj" />
+    <SparContracts Include="SqlTool.Contracts" />
+  </ItemGroup>
+  ```
+
+  A referenced library that is not listed adds nothing to what the page can call, even when it declares contracts. The library's documentation comments become its module's JSDoc when the library writes its XML documentation file (`<GenerateDocumentationFile>true</GenerateDocumentationFile>` in its project), as the app's own comments do.
 - A contract name cannot be a JavaScript reserved word or a subpath that `@spar/app` uses itself, such as `sdk`, `vite` or `windows` (plan section 2, "Names"). An `ExportService` would be named `export`, so the export contract in 3.6 is `CsvExportService`, named `csvExport`.
 
 ### 3.5 Native services: the tray
@@ -789,16 +815,50 @@ public sealed class CrashReport(IAppHealth health)
 
 ## 4. On the wire
 
-**Decided** (decision "Contract syntax in the generator"; plan section 2).
+**Decided** (decisions "Contract syntax in the generator" and "Bridge messages: encoding C header fields"; plan sections 2 and 2c). Each message is a JSON header, a TAB (shown as `⇥`), then the payload's JSON. The call `copyJobs.plan`, id 7:
 
-| Outcome | JSON |
+| Outcome | Message |
 |---|---|
-| Success | `{"ok":true,"value":{"planId":"0193…","steps":[{"table":"dbo.Orders","estimatedRows":"120000"}]}}` |
-| Declared error | `{"ok":false,"error":{"code":"tableMissing","connection":"src","table":"dbo.Orders"}}` |
-| Infrastructure failure | `{"ok":false,"failure":{"kind":"response","code":"serialization","execution":"completed"}}` |
-| Plain `Task` | `{"ok":true}` (no `value` key) |
+| The call | `{"type":"call","id":7,"contract":"copyJobs","command":"plan"}⇥{"source":"src","target":"dst","tables":["dbo.Orders"]}` |
+| Success | `{"type":"result","id":7,"ok":true}⇥{"planId":"0193…","steps":[{"table":"dbo.Orders","estimatedRows":"120000"}]}` |
+| Declared error | `{"type":"result","id":7,"ok":false}⇥{"code":"tableMissing","connection":"src","table":"dbo.Orders"}` |
+| Infrastructure failure | `{"type":"failure","id":7,"kind":"response","code":"serialization","execution":"completed"}⇥` |
+| Plain `Task` | `{"type":"result","id":7,"ok":true}⇥` (empty payload) |
 
-`long` travels as a decimal string because JSON numbers lose precision above 2^53.
+The page turns a `failure` into a `CallError` with the header's `kind`, `code` and `execution`, plus `contract` and `command` from its own record of call 7.
+
+When a command throws, the page never sees the exception. The failure's payload carries a correlation id, the call's W3C trace id, which the app's log entry for the exception also names, and only a Development host adds the exception's type and message:
+
+| Build | Failure of a command that threw |
+|---|---|
+| Release | `{"type":"failure","id":7,"kind":"failed","code":"failed","execution":"unknown"}⇥{"correlation":"4bf92f3577b34da6a3ce929d0e0e4736"}` |
+| Development | the same, with `"detail":"IOException: disk full"` beside the correlation |
+
+Spar logs the exception through the app's `ILogger` (category `Spar.Bridge`), so it goes wherever the app sends its logs; with no logger registered, nothing is written.
+
+**Limits.** The page is untrusted, so each document's bridge is bounded. A call larger than 4 MiB is refused with `rejected` / `too-large` before its payload is read; a result larger than 16 MiB fails only its call, with `response` / `too-large`; 16 commands run at once, the next ones wait in a queue of up to 1,024 calls and 16 MiB, and a call past that is refused with `rejected` / `busy`. Every refusal is `notStarted`. An app that has measured a need raises one in `Program.cs` with `builder.Bridge(o => o.MaxMessageBytes = …)`; a large transfer belongs in a stream.
+
+`long` travels as a decimal string because JSON numbers lose precision above 2^53. Each C# type has one spelling on the wire and one TypeScript type:
+
+| C# | On the wire | TypeScript |
+|---|---|---|
+| `string`, `char` (one UTF-16 code unit) | a string; a lone surrogate becomes U+FFFD | `string` |
+| `bool` | `true` or `false` | `boolean` |
+| `byte`, `sbyte`, `short`, `ushort`, `int`, `uint` | a number in the type's range | `number` |
+| `long`, `ulong` | a canonical decimal string: `"-12"`, never `"+12"` or `"012"` | `bigint` |
+| `float`, `double` | a finite number; NaN or an infinity fails the call | `number` |
+| `decimal` | a string that keeps its scale and has no exponent: `"12.50"`; a value with too many digits is refused, never rounded | `string` |
+| `Guid` | `"0f8fad5b-d9cb-469f-a165-70867728950e"` | `string` |
+| `DateTimeOffset` | ISO 8601 with an offset: `"2026-11-16T08:30:00+01:00"` | `string` |
+| `DateOnly`, `TimeOnly`, `TimeSpan` | `"2026-11-16"`, `"08:30:00.25"`, `"-1.02:30:00"` | `string` |
+| `byte[]` | padded base64 with no whitespace | `Uint8Array` |
+| an enum, such as `enum Priority { Low, High }` | the member name, exactly: `"High"` | `type Priority = "Low" \| "High"` |
+| `T?` | the value, or `null` | `T \| null` |
+| arrays and `IReadOnlyList<T>` | a JSON array | `readonly T[]` |
+
+`DateTime` works too, written with `Z`, an offset or nothing by its `Kind`, but the build warns (SPAR024): use `DateTimeOffset`, whose instant does not depend on the reader's time zone.
+
+An enum travels only when each value has one name: a `[Flags]` enum, two members with one value, and an enum with no members are build errors (SPAR025). A value that is no member, such as `(Priority)7`, fails the call that returns it.
 
 ## 5. The generated TypeScript
 
@@ -969,10 +1029,10 @@ export async function cancelEverything(): Promise<void> {
 }
 ```
 
-- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `spikes/app-model-check`.
+- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `tests/AppModel`.
 - A command without declared errors has no `errors` property.
 - `execution` tells the page whether the backend ran the command: `notStarted`, `stopped`, `completed` or `unknown`. Nothing is retried automatically.
-- **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
+- **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. A command that threw also has `correlation`, the id to quote to whoever reads the app's log, and in Development `detail`, which is for developers only. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
   - **Where a failure goes:**
     - A `failure` function handles every failure.
     - A `failure` object handles the kinds it lists. A misspelled kind fails `tsc`.
@@ -1251,14 +1311,80 @@ export function AppTitleBar({ onSearch }: { readonly onSearch: (text: string) =>
 - **The layout** is posted to the host by the SDK whenever it changes. The host hit-tests from that cache (plan 3, "Title bar drawn by the page").
 - **Window state:** the SDK sets `data-spar-window="maximized"` or `"normal"` on `<html>`, so CSS can swap the maximise and restore icon.
 
+### 6.10 Page tests
+
+**Decided** (decision "Page tests: @spar/app/testing"). Page code is tested in Node with Vitest, against a fake backend from `@spar/app/testing`. Each test scripts the commands it uses, then checks what the page made of the answers and what it sent. The real engine is covered by the browser tests of the end-to-end project.
+
+File `frontend/src/copy.test.ts`:
+
+```ts
+import { expect, test } from "vitest";
+import { copyJobs } from "@spar/app/copyJobs";
+import { fakeSpar } from "@spar/app/testing";
+import { planCopy, runCopy } from "./copy.js";
+
+const recipe = { source: "prod", target: "test", tables: ["dbo.Orders"] };
+
+test("a plan reports its tables and rows", async () => {
+  // Each test makes its own fake backend, connected in place of the host.
+  const spar = fakeSpar();
+  spar.on(copyJobs.plan).succeed({ planId: "p1", steps: [{ table: "dbo.Orders", estimatedRows: 1200n }] });
+
+  expect(await planCopy(recipe, new AbortController().signal)).toBe("1 tables, about 1200 rows");
+  // What the page sent, read back from the wire as typed values.
+  expect(spar.calls(copyJobs.plan)).toEqual([recipe]);
+});
+
+test("a declared error is handled by name", async () => {
+  fakeSpar().on(copyJobs.run).fail("targetNotEmpty", { table: "dbo.Orders", rows: 3n });
+
+  expect(await runCopy("p1")).toBe("dbo.Orders already has 3 rows");
+});
+
+test("a lost connection leaves the outcome unknown", async () => {
+  fakeSpar().on(copyJobs.run).failWith({ kind: "transport", code: "lost", execution: "unknown" });
+
+  expect(await runCopy("p1")).toBe("Outcome unknown: check the target before retrying");
+});
+
+test("an aborted plan ends as cancelled", async () => {
+  const spar = fakeSpar();
+  spar.on(copyJobs.plan).hang();
+  const abort = new AbortController();
+
+  const planned = planCopy(recipe, abort.signal);
+  abort.abort();
+
+  // planCopy handles only `unavailable` failures; `cancelled` goes to onFailure, and the result is undefined.
+  expect(await planned).toBeUndefined();
+});
+
+test("an answer can depend on the request", async () => {
+  fakeSpar().on(copyJobs.run).answer((request, reply) =>
+    request.truncateTarget
+      ? reply.succeed({ tables: 1, rows: 10n, elapsed: "00:00:01" })
+      : reply.fail("targetNotEmpty", { table: "dbo.Orders", rows: 3n }));
+
+  expect(await runCopy("p1")).toBe("dbo.Orders already has 3 rows");
+});
+```
+
+- **Scripting:** `spar.on(<command>)` takes the generated command itself, so a misspelled command, a value of the wrong type or a case the command does not declare fails `tsc`. Each script replaces the last one for that command and holds for every later call.
+  - `succeed(value)`: no argument for a command without a value.
+  - `fail(case, payload)`: no payload for a case without one.
+  - `failWith({ kind, code, execution })`: an infrastructure failure, as a host reports it.
+  - `hang()`: the call never answers. Aborting it cancels it, and the fake backend confirms `cancelled` / `stopped`.
+  - `answer((request, reply) => …)`: decides per call. It may wait, so a test can check what the page shows while a call is on its way.
+- **On the wire:** the fake backend speaks the real bridge protocol to the page's own connection. Scripted values and the requests `spar.calls` returns cross the same generated encoders and decoders as with a real host, so `bigint`, bytes, enums and `null` behave as they will in the app. A value the encoder refuses (NaN, for example) ends the call as a real host would: `response` / `serialization`.
+- **A command no test scripted** is refused (`rejected` / `unknown-command`), with a console error naming it.
+- **`fakeSpar()` resets `configureSpar`'s hooks**, so every test starts from the defaults. A test of the hooks configures them after `fakeSpar()`.
+- **Production bundles never contain it:** nothing in the app imports `@spar/app/testing`, and the build drops the generated code only it uses.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**
-  - the TypeScript interface-map entry for an error case without a payload (`{"code":"forbidden"}` on the wire). The examples declare such cases in C#, for example `ImportError.Dismissed`; the SDK stand-in in the check writes their entry as `{}`;
-  - whether a `CallError` also names the call it belongs to. The decided fields are `kind`, `code` and `execution` (decision "`CallError` kinds"), so the `onFailure` and `observe` hooks in 6.1 cannot say which command failed.
 - **Configuration:**
-  - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example;
-  - the generated start-up check for a missing registration of an interface contract (section 2, Leaning).
+  - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example.
 - **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
 - **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open).
 

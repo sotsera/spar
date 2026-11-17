@@ -1,0 +1,39 @@
+SIZE brotli-large 2194432
+BENCH format=brotli mode=eager files=5 original=2798763 stored=874675 open-ms=0.225 decode-all-ms=5.340 in-place=True cached=2484463 peak-ws-kb=16440 ws-kb=16040 private-kb=8240 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=lazy files=5 original=2798763 stored=874675 open-ms=0.187 first-requests-ms=5.185 cached-requests-ms=0.002 cached=2484463 peak-ws-kb=16404 ws-kb=16044 private-kb=8256 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=eager files=5 original=2798763 stored=874675 open-ms=0.178 decode-all-ms=4.973 in-place=True cached=2484463 peak-ws-kb=16456 ws-kb=16056 private-kb=8252 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=lazy files=5 original=2798763 stored=874675 open-ms=0.172 first-requests-ms=4.987 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16468 ws-kb=16068 private-kb=8272 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=eager files=5 original=2798763 stored=874675 open-ms=0.172 decode-all-ms=5.047 in-place=True cached=2484463 peak-ws-kb=16444 ws-kb=16052 private-kb=8252 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=lazy files=5 original=2798763 stored=874675 open-ms=0.169 first-requests-ms=5.019 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16408 ws-kb=16056 private-kb=8256 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=eager files=5 original=2798763 stored=874675 open-ms=0.167 decode-all-ms=5.017 in-place=True cached=2484463 peak-ws-kb=16416 ws-kb=16060 private-kb=8252 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=lazy files=5 original=2798763 stored=874675 open-ms=0.165 first-requests-ms=5.137 cached-requests-ms=0.002 cached=2484463 peak-ws-kb=16420 ws-kb=16040 private-kb=8232 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=eager files=5 original=2798763 stored=874675 open-ms=0.332 decode-all-ms=5.573 in-place=True cached=2484463 peak-ws-kb=16424 ws-kb=16044 private-kb=8256 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=lazy files=5 original=2798763 stored=874675 open-ms=0.188 first-requests-ms=5.060 cached-requests-ms=0.001 cached=2484463 peak-ws-kb=16048 ws-kb=15664 private-kb=7856 allocated-kb=2467 heap-kb=0
+BENCH format=brotli mode=decode files=5 original=2798763 stored=874675 open-ms=0.169
+ASSET assets/bootstrap-icons-BHUGvtHM.woff enc=0 original=180288 stored=180288 first-ms=0.139 median-ms=0.031 MBps=5854 ok=True
+ASSET assets/bootstrap-icons-DJdhg9lH.woff2 enc=0 original=134012 stored=134012 first-ms=0.089 median-ms=0.026 MBps=5115 ok=True
+ASSET assets/index-CAVP4R_w.css enc=1 original=311240 stored=33438 first-ms=0.572 median-ms=0.422 MBps=738 ok=True
+ASSET assets/index-Dyi-NEe3.js enc=1 original=2172791 stored=526774 first-ms=4.617 median-ms=4.279 MBps=508 ok=True
+ASSET index.html enc=1 original=432 stored=163 first-ms=0.011 median-ms=0.002 MBps=206 ok=True
+BENCH format=brotli total-median-ms=4.760
+STARTUP brotli-large 90606us
+STARTUP brotli-large 92279us
+STARTUP brotli-large 94245us
+STARTUP brotli-large 90601us
+STARTUP brotli-large 91156us
+STARTUP brotli-large 88680us
+STARTUP brotli-large 97075us
+STARTUP brotli-large 91127us
+STARTUP brotli-large 87090us
+STARTUP brotli-large 90020us
+STARTUP brotli-large 100880us
+STARTUP brotli-large 95850us
+STARTUP brotli-large 91869us
+STARTUP brotli-large 93007us
+STARTUP brotli-large 95815us
+STARTUP brotli-large 95843us
+STARTUP brotli-large 89991us
+STARTUP brotli-large 89070us
+STARTUP brotli-large 97850us
+STARTUP brotli-large 94228us
+STARTUP brotli-large 92666us

@@ -1,0 +1,267 @@
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spar.Runtime;
+
+namespace Spar.Testing;
+
+/// <summary>What sits in front of the app's backend in a test.</summary>
+public enum SparTestSurface
+{
+    /// <summary>No page: the test calls commands through the typed test clients.</summary>
+    None,
+
+    /// <summary>
+    /// The page in an ordinary browser over in-process loopback, from the <c>Spar.Testing.Browser</c> package: pass the
+    /// page with <c>o.Page(folder)</c> and open <c>app.PageUrl()</c> with Playwright. End-to-end projects only.
+    /// </summary>
+    Browser,
+}
+
+/// <summary>A test's changes to the app.</summary>
+public sealed class SparTestOptions
+{
+    internal List<Action<IServiceCollection>> ServiceActions { get; } = [];
+
+    internal HashSet<Type> AllowedExternals { get; } = [];
+
+    /// <summary>The page's folders for the Browser surface, which <c>Spar.Testing.Browser</c> fills.</summary>
+    internal List<(string Prefix, string Folder)> PageFolders { get; } = [];
+
+    /// <summary>Starts the Browser surface; set by <c>Spar.Testing.Browser</c>, so this package carries no web server.</summary>
+    internal Func<SparTestApp, CancellationToken, Task<IAsyncDisposable>>? StartBrowser { get; set; }
+
+    public SparTestSurface Surface { get; set; } = SparTestSurface.None;
+
+    /// <summary>Keep the app's data root after the test (it is deleted by default).</summary>
+    public bool KeepData { get; set; }
+
+    /// <summary>Changes the app's services. Runs after the app's registrations and Spar's defaults.</summary>
+    public SparTestOptions Services(Action<IServiceCollection> configure)
+    {
+        ServiceActions.Add(configure);
+        return this;
+    }
+
+    /// <summary>
+    /// The app's clock: every <see cref="TimeProvider"/> the app resolves, and Spar's own (the bridge's timers, the log's
+    /// timestamps), is <paramref name="time"/>. Pass a fake to control time.
+    /// </summary>
+    public SparTestOptions Time(TimeProvider time)
+    {
+        ServiceActions.Add(services => services.Replace(ServiceDescriptor.Singleton(time)));
+        return this;
+    }
+
+    /// <summary>Lets the test use the real implementation of an external dependency.</summary>
+    public SparTestOptions AllowExternal<TService>()
+    {
+        AllowedExternals.Add(typeof(TService));
+        return this;
+    }
+}
+
+/// <summary>
+/// An app started from its own <c>Program.cs</c> inside the test process (decision "Test strategy: the app runs inside
+/// the test process"). Pass it to a generated client, <c>new PagesClient(app)</c>, to call its commands.
+/// </summary>
+public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
+{
+    private readonly SparTestSession _session;
+    private readonly Task<int> _exit;
+    private readonly SparRunningApp _app;
+    private readonly SparTestOptions _options;
+    private readonly ConcurrentQueue<string> _problems = new();
+    private readonly SparTestLog _log;
+    private long _nextCallId;
+
+    private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options, SparTestLog log)
+    {
+        _session = session;
+        _exit = exit;
+        _app = app;
+        _options = options;
+        _log = log;
+    }
+
+    /// <summary>The app's own service provider: a test can inspect backend state directly.</summary>
+    public IServiceProvider Services => _app.Services;
+
+    /// <summary>Every folder of this app instance, all under its own data root.</summary>
+    public SparFolders Folders => _app.Folders;
+
+    /// <summary>The contracts' fingerprint, as a page would see it in <c>open</c>.</summary>
+    public string Fingerprint => _app.Catalog.Fingerprint;
+
+    public TimeSpan StartedAfter { get; private set; }
+
+    /// <summary>
+    /// What Spar logged for this app instance, every level, in order: a command that threw (with its exception and
+    /// correlation id), a refused call, a result over the limit. The newest <see cref="SparTestLog.Capacity"/> entries
+    /// are kept; <see cref="LogDropped"/> counts the older ones. The app's own logging goes where the app sends it.
+    /// </summary>
+    public IReadOnlyList<SparLogEntry> Log => _log.Entries;
+
+    /// <summary>How many of the oldest entries <see cref="Log"/> no longer holds.</summary>
+    public int LogDropped => _log.Dropped;
+
+    /// <summary>The app's clock (<see cref="SparTestOptions.Time"/>, or the system's).</summary>
+    public TimeProvider Time => _app.Dispatcher.Time;
+
+    /// <summary>What the bridge refused or dropped, and the page's CSP violations, so far. A clean run has none.</summary>
+    public IReadOnlyList<string> Problems => [.. _problems];
+
+    /// <summary>The surface in front of the backend, when it is not <see cref="SparTestSurface.None"/>.</summary>
+    internal IAsyncDisposable? Surface { get; private set; }
+
+    internal SparRunningApp RunningApp => _app;
+
+    internal SparTestOptions Options => _options;
+
+    /// <summary>
+    /// Runs <typeparamref name="TApp"/>'s top-level statements on a thread of their own. Their
+    /// <c>SparApplication.Create</c> sees this test's session, and their <c>Run</c> builds the app and waits for disposal.
+    /// </summary>
+    public static async Task<SparTestApp> StartAsync<TApp>(Action<SparTestOptions>? configure = null, CancellationToken cancellationToken = default)
+        where TApp : ISparEntryPoint
+    {
+        if (!SparTestSession.IsSupported)
+        {
+            throw new InvalidOperationException("The test host is off in this process: the test project must be built with Spar.Sdk.");
+        }
+
+        var clock = Stopwatch.StartNew();
+        var options = new SparTestOptions();
+        configure?.Invoke(options);
+
+        SparTestLog? log = null;
+        var session = new SparTestSession
+        {
+            DataRoot = TestDataRoots.Next(),
+            ConfigureServices = services => options.ServiceActions.ForEach(action => action(services)),
+            AllowedExternals = options.AllowedExternals,
+            CreateLog = time => log = new SparTestLog(time),
+        };
+
+        var exit = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+        SparTestSession.Current = session;
+        var thread = new Thread(() => RunEntryPoint<TApp>(exit)) { Name = "Spar app (test)", IsBackground = true };
+        thread.Start(); // The thread captures the execution context, so it sees this session and no other.
+        SparTestSession.Current = null;
+
+        var first = await Task.WhenAny(session.Started, exit.Task).WaitAsync(TimeSpan.FromSeconds(30), cancellationToken);
+        if (first == exit.Task)
+        {
+            throw new InvalidOperationException($"The app's Program.cs returned {await exit.Task} without calling Run.");
+        }
+
+        var running = await session.Started;
+        var testApp = new SparTestApp(session, exit.Task, running, options, log!);
+        try
+        {
+            if (options.Surface == SparTestSurface.Browser)
+            {
+                await testApp.StartBrowserSurfaceAsync(cancellationToken);
+            }
+        }
+        catch
+        {
+            await testApp.DisposeAsync();
+            throw;
+        }
+
+        testApp.StartedAfter = clock.Elapsed;
+        return testApp;
+    }
+
+    /// <summary>Runs one command through the app's real dispatch, as the bridge would.</summary>
+    public ValueTask<SparOutcome> InvokeAsync(string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken)
+    {
+        var callId = Interlocked.Increment(ref _nextCallId);
+        return _app.Dispatcher.InvokeAsync(contract, command, callId, request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Stops the surface and the app, and deletes the data root. Every step runs even when an earlier one fails. A
+    /// failure is kept for the test framework's hook when the test project has one (<see cref="SparTestCleanup"/>), so
+    /// it is reported beside the test's own failure instead of replacing it; without the hook, it is thrown.
+    /// </summary>
+    public async ValueTask DisposeAsync()
+    {
+        var failures = new List<Exception>();
+        if (Surface is not null)
+        {
+            await Step(failures, async () => await Surface.DisposeAsync());
+        }
+
+        _session.Stop();
+        await Step(failures, async () =>
+        {
+            var code = await _exit.WaitAsync(TimeSpan.FromSeconds(10));
+            if (code != 0)
+            {
+                throw new InvalidOperationException($"The app exited with {code}.");
+            }
+        });
+
+        if (!_options.KeepData)
+        {
+            await Step(failures, () =>
+            {
+                TestDataRoots.Delete(_app.Folders.DataRoot);
+                return Task.CompletedTask;
+            });
+        }
+
+        if (failures.Count == 0)
+        {
+            return;
+        }
+
+        var failure = failures.Count == 1 ? failures[0] : new AggregateException("The app did not stop cleanly.", failures);
+        if (!SparTestCleanup.TryKeep(failure))
+        {
+            throw failure;
+        }
+    }
+
+    private static async Task Step(List<Exception> failures, Func<Task> step)
+    {
+        try
+        {
+            await step();
+        }
+        catch (Exception exception)
+        {
+            failures.Add(exception);
+        }
+    }
+
+    /// <summary>A surface reports what its bridge refused or dropped here.</summary>
+    internal void ReportProblem(string problem) => _problems.Enqueue(problem);
+
+    private async Task StartBrowserSurfaceAsync(CancellationToken cancellationToken)
+    {
+        if (_options.StartBrowser is null)
+        {
+            throw new InvalidOperationException(
+                "The Browser surface comes from the Spar.Testing.Browser package: reference it and call o.Page() for the app's page.");
+        }
+
+        Surface = await _options.StartBrowser(this, cancellationToken);
+    }
+
+    private static void RunEntryPoint<TApp>(TaskCompletionSource<int> exit)
+        where TApp : ISparEntryPoint
+    {
+        try
+        {
+            exit.TrySetResult(TApp.Run([]));
+        }
+        catch (Exception exception)
+        {
+            exit.TrySetException(exception);
+        }
+    }
+}

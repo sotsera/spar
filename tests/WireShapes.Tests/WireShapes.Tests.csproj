@@ -1,0 +1,13 @@
+<Project Sdk="Spar.Sdk">
+  <!-- Run-time serializer tests through real dispatch (requirements R0-R4); also published in the NativeAOT lane. -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>WireShapes.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\apps\WireShapes\WireShapes.csproj" />
+  </ItemGroup>
+</Project>

@@ -23,22 +23,25 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Pipeline:**
   1. `ResolveReferences`.
   2. Contract inventory, written only when it changed.
-  3. Client step: the generated modules under `obj/spar/client` (`.js`, `.d.ts`, `.d.ts.map` to C#), the manifest, and the contract snapshot.
+  3. Client step: the generated modules under `obj/spar/client` (`.js`, `.d.ts`, `.d.ts.map` to C#) and the contract snapshot.
   4. Frontend: `npm ci --ignore-scripts` when the lockfile changed (section 3c), in every variant, because the Debug type-check and the dev server need `node_modules` too; then the type-check in every variant (Debug included, see below); in Release and test variants also `vite build` into `obj/`, then packing.
   5. One `CoreCompile`, where the generator and analyzer run.
 
+  Steps 2 to 4 are built (M1a; decisions "Client step: the generated TypeScript modules", "Notebook page and the frontend build" and "Frontend packing built"); the install runs under a lease the app's variants share, and the steps run before `PrepareResources`, so the pack is an embedded resource in time.
+
   Design-time builds run none of steps 2–4.
-  - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name to confirm in M1). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is. The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).
-- **Frontend packing:** one `Spar.Frontend` resource holding an index plus per-file Brotli (quality 11, fitted window).
+  - **The client refreshes on build** in the IDE (Visual Studio and VS Code build on F5), and **on save while the development loop runs:** under `dotnet watch` or `spar dev` a saved contract change restarts the app, which regenerates the client (5.4–6.1 s measured with Vite reused), so frontend editors see it without a manual build. There is no IDE-specific refresh path (decision "M1a names").
+  - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name confirmed, decision "M1a names"). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is. The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).
+- **Frontend packing:** one `Spar.Frontend` resource holding an index plus per-file Brotli (quality 11, fitted window). Built in M1a (decision "Frontend packing built"), with the asset checks (SPAR110) and the third-party notices as `Spar.ThirdPartyNotices`.
   - Files that Brotli shrinks by less than 5% are stored as is.
   - The host decodes on a background thread at start into a cache, and serves uncompressed entries straight from the image.
-  - Small bundles may pack uncompressed, with a feature switch that trims the decoder.
+  - Small bundles may pack uncompressed, with a feature switch that trims the decoder. Built in M1a (decision "Frontend packing: stored below the decoder's cost"): `SparFrontendCompression` is `auto` (the default: Brotli when it saves at least 192 KiB over page and notices together), `brotli` or `none`, and any other value is SPAR112. A stored pack sets `Spar.Frontend.Brotli=false` with `Trim="true"`; the decision is kept in `obj/…/spar-pack.mode`, so a build that skips packing still applies it. The notices resource starts with one byte for its encoding (0 stored, 1 Brotli).
   - No zip.
   - Measured:
     - the decoder adds about 168 KB on both OSes, statically linked;
     - a 2.8 MB bundle decodes in about 5 ms and makes the exe 44% smaller than raw;
     - neither WebView decodes `Content-Encoding` itself.
-  - Deflate was measured only inside the zip container: its payloads were about 15% larger than Brotli's (React 71,240 against 61,176 B; the 2.8 MB bundle 1,006,299 against 875,155 B). Per-file Deflate inside the same index, without the zip reader, was not measured, so its decoder cost is unknown.
+  - Deflate was measured only inside the zip container: its payloads were about 15% larger than Brotli's (React 71,240 against 61,176 B; the 2.8 MB bundle 1,006,299 against 875,155 B). Per-file Deflate inside the same index, measured later on the real bundle, gave a larger executable (payload 6–15% larger, decoder 192 KB against 168 KB) and faster decoding (decision "Frontend packing: the Deflate control keeps Brotli").
 - **Assets are served with `Cache-Control: no-store`.** Debug builds embed no bundle (see section 4).
 - **Determinism:** write-if-changed outputs, with stamp files as MSBuild `Outputs`. Exclude every `bin/`, `obj/`, `node_modules` and `dist` from the default globs.
 - **Multithreaded MSBuild:** every task is safe for `-mt`, and a build-test lane runs `-mt`.

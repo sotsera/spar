@@ -1,0 +1,67 @@
+<Project>
+  <!--
+    Spar.Sdk: the project SDK for Spar apps and their test projects. It wraps Microsoft.NET.Sdk.
+    A project writes <Project Sdk="Spar.Sdk">. Inside this repository that SDK is the 0.0.0-source package of
+    eng/source-sdk, which imports this file and Sdk.targets from here (source mode), so projects build against Spar's
+    sources.
+  -->
+  <PropertyGroup>
+    <SparSdkDirectory>$(MSBuildThisFileDirectory)</SparSdkDirectory>
+    <SparSourceRoot Condition="'$(SparSourceRoot)' == '' and Exists('$(MSBuildThisFileDirectory)..\..\Spar\Spar.csproj')">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..\..'))</SparSourceRoot>
+    <SparSourceMode Condition="'$(SparSourceRoot)' != ''">true</SparSourceMode>
+    <!-- Package mode: this file is Sdk/Sdk.props inside the Spar.Sdk package, whose root holds tools/ and client/. -->
+    <SparPackageRoot Condition="'$(SparSourceMode)' != 'true'">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)..'))</SparPackageRoot>
+  </PropertyGroup>
+
+  <!-- Written when Spar.Sdk is packed: SparSdkVersion, and the versions of the packages the SDK adds itself. -->
+  <Import Project="Spar.Sdk.Version.props" Condition="'$(SparSourceMode)' != 'true'" />
+
+  <!--
+    The NativeAOT test lane (SparTestLane=Aot) restores different packages (xunit.v3.aot), so it keeps its own
+    restore output; and its build is self-contained, so it keeps its own build output too, or the runtime it copies
+    would make the CoreCLR build of the same configuration look self-contained. This must be set before
+    Microsoft.NET.Sdk reads it.
+  -->
+  <PropertyGroup Condition="'$(SparTestLane)' == 'Aot'">
+    <BaseIntermediateOutputPath>obj\aot\</BaseIntermediateOutputPath>
+    <BaseOutputPath>bin\aot\</BaseOutputPath>
+  </PropertyGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <!--
+    One variant property (decision "Polished sample apps: a Markdown notebook; the test variant"): Debug builds
+    Development, Release builds Production, and a test project builds its referenced app as Test. An explicit value
+    wins. Configuration is defaulted by the import above, so it is known here.
+  -->
+  <PropertyGroup>
+    <SparVariant Condition="'$(SparVariant)' == '' and '$(Configuration)' == 'Release'">Production</SparVariant>
+    <SparVariant Condition="'$(SparVariant)' == ''">Development</SparVariant>
+  </PropertyGroup>
+
+  <!-- Each variant builds into its own folders; restore output stays shared in obj/. -->
+  <PropertyGroup>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(SparVariant)\$(Configuration)\</IntermediateOutputPath>
+    <BaseOutputPath Condition="'$(BaseOutputPath)' == ''">bin\</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)$(SparVariant)\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+
+  <!--
+    The default globs never pick up build output or the frontend's packages (plan section 1, "Determinism"). Whole
+    obj/ and bin/ trees, not just this lane's: the NativeAOT lane restores into obj/aot/, and the other lane's
+    generated files must not compile into it.
+  -->
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**;**/node_modules/**;**/dist/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <!-- Defaults every Spar app shares. An app overrides any of them in its own project file. -->
+  <PropertyGroup>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">$(NETCoreSdkRuntimeIdentifier)</RuntimeIdentifier>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Spar.Generated</InterceptorsNamespaces>
+
+    <!-- Generated C# is written under obj/ too, so people and agents can read what dispatch does. -->
+    <EmitCompilerGeneratedFiles Condition="'$(EmitCompilerGeneratedFiles)' == ''">true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+</Project>

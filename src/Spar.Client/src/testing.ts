@@ -1,0 +1,280 @@
+// The engine of @spar/app/testing (plan section 5, level 3): a fake host for page tests. It speaks the real bridge
+// protocol to the page's own connection, so every scripted value crosses the generated encoders and decoders exactly as
+// a real host's would: a bigint, bytes, an enum member, a null. The generated testing module passes it the app's
+// commands with their wire functions; app code imports only `fakeSpar` from there.
+import type { BridgeChannel } from "./connection.js";
+import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
+import { resetConfiguration, type Call, type CallError, type ErrorCases } from "./results.js";
+import { connectSpar } from "./sdk.js";
+
+/** @internal One command as the generated testing module describes it: its names and its wire functions. */
+export interface CommandCodec {
+  readonly contract: string;
+  readonly command: string;
+  /** Reads the request from its JSON; absent for a command without a request. */
+  readonly request?: ((json: string) => unknown) | undefined;
+  /** Writes the result's JSON; absent for a command without a value. */
+  readonly value?: ((value: unknown) => string) | undefined;
+  /** Writes a declared error's JSON, its code included; absent when the command declares none. */
+  readonly error?: ((code: string, payload: unknown) => string) | undefined;
+}
+
+/** A generated command function, such as `pages.get`. Streams and subscriptions are not scripted here. */
+export type Command = (...args: never[]) => PromiseLike<unknown>;
+
+/** The request a command takes, or `undefined` for one without a request. */
+export type RequestOf<F> = F extends (...args: infer A) => unknown ? (A extends [infer R, ...unknown[]] ? R : undefined) : never;
+
+/** The value a command's call succeeds with. */
+export type ValueOf<F> = F extends (...args: never[]) => Call<infer T, infer _E> ? T : never;
+
+/** The declared errors of a command's call: case name to payload. */
+export type ErrorsOf<F> = F extends (...args: never[]) => Call<infer _T, infer E> ? E : never;
+
+/** The arguments `succeed` takes: none for a command without a value. */
+export type ValueArgs<T> = [T] extends [void] ? [] : [value: T];
+
+/** The arguments after the case name: none for a case without a payload. */
+export type PayloadArgs<P> = [P] extends [undefined] ? [] : [payload: P];
+
+/** An infrastructure failure to script: the fields a host sends. The SDK adds the call's names itself. */
+export type ScriptedFailure = Pick<CallError, "kind" | "code" | "execution">;
+
+declare const replyBrand: unique symbol;
+
+/** What a scripted answer does with one call; made only by the `reply` an `answer` handler receives. */
+export interface Reply {
+  readonly [replyBrand]: true;
+}
+
+/** The replies an `answer` handler can give, typed by its command. */
+export interface Replies<T, E extends ErrorCases> {
+  succeed(...value: ValueArgs<T>): Reply;
+  fail<K extends keyof E & string>(code: K, ...payload: PayloadArgs<E[K]>): Reply;
+  failWith(error: ScriptedFailure): Reply;
+  hang(): Reply;
+}
+
+/**
+ * How the fake backend answers one command, from now on, for every call until scripted again. Each method replaces the
+ * last one's behaviour.
+ */
+export interface Script<R, T, E extends ErrorCases> {
+  /** Every call succeeds with this value. */
+  succeed(...value: ValueArgs<T>): void;
+  /** Every call ends with this declared error. */
+  fail<K extends keyof E & string>(code: K, ...payload: PayloadArgs<E[K]>): void;
+  /** Every call ends with this infrastructure failure, as a host would report it. */
+  failWith(error: ScriptedFailure): void;
+  /** Calls never answer. Aborting one cancels it, and the backend confirms: `cancelled` / `stopped`. */
+  hang(): void;
+  /** Each call is answered by `handler`, from its request; it may wait, to test what the page shows meanwhile. */
+  answer(handler: (request: R, reply: Replies<T, E>) => Reply | Promise<Reply>): void;
+}
+
+/**
+ * A fake backend for page tests, connected in place of the host: the generated contract modules call it as they would
+ * call a real one. A command nobody scripted is refused (`rejected` / `unknown-command`), with a console error naming it.
+ */
+export interface FakeSpar {
+  /** Scripts one command, such as `spar.on(pages.get)`. */
+  on<F extends Command>(command: F): Script<RequestOf<F>, ValueOf<F>, ErrorsOf<F>>;
+  /** The requests the page sent to one command, in order, read back from the wire. */
+  calls<F extends Command>(command: F): readonly RequestOf<F>[];
+}
+
+type Answer =
+  | { readonly kind: "value"; readonly value: unknown }
+  | { readonly kind: "error"; readonly code: string; readonly payload: unknown }
+  | { readonly kind: "failure"; readonly error: ScriptedFailure }
+  | { readonly kind: "hang" };
+
+type Behaviour = (request: unknown) => Answer | Promise<Answer>;
+
+const replies: Replies<unknown, Record<string, unknown>> = {
+  succeed: (...value: unknown[]) => reply({ kind: "value", value: value[0] }),
+  fail: (code: string, ...payload: unknown[]) => reply({ kind: "error", code, payload: payload[0] }),
+  failWith: error => reply({ kind: "failure", error }),
+  hang: () => reply({ kind: "hang" }),
+};
+
+/**
+ * @internal Called by the generated `fakeSpar`: resets the failure hooks and connects the page's SDK to a new fake host.
+ * `commands` maps each generated command function to its names and wire functions.
+ */
+export function createFakeSpar(commands: ReadonlyMap<unknown, CommandCodec>, fingerprint: string): FakeSpar {
+  resetConfiguration();
+  const host = new FakeHost(commands, fingerprint);
+  connectSpar(host, fingerprint);
+  return {
+    on: command => scriptFor(host, codecOf(commands, command)),
+    calls: command => host.calls(codecOf(commands, command)) as never,
+  };
+}
+
+function scriptFor<R, T, E extends ErrorCases>(host: FakeHost, codec: CommandCodec): Script<R, T, E> {
+  const always = (answer: Answer): void => host.script(codec, () => answer);
+  return {
+    succeed: (...value: unknown[]) => always({ kind: "value", value: value[0] }),
+    fail: (code: string, ...payload: unknown[]) => always({ kind: "error", code, payload: payload[0] }),
+    failWith: error => always({ kind: "failure", error }),
+    hang: () => always({ kind: "hang" }),
+    answer: handler => host.script(codec, async request => answerOf(await handler(request as R, replies as never))),
+  } as Script<R, T, E>;
+}
+
+function codecOf(commands: ReadonlyMap<unknown, CommandCodec>, command: unknown): CommandCodec {
+  const codec = commands.get(command);
+  if (codec === undefined) {
+    throw new TypeError("fakeSpar: this is not a command of the app's contracts. Pass one such as pages.get.");
+  }
+
+  return codec;
+}
+
+// A Reply is the Answer itself; the brand only keeps tests from building one by hand.
+function reply(answer: Answer): Reply {
+  return answer as unknown as Reply;
+}
+
+function answerOf(value: Reply): Answer {
+  return value as unknown as Answer;
+}
+
+/** The host side of the fake: answers `hello` with `open`, runs the scripts, and confirms cancellations. */
+class FakeHost implements BridgeChannel {
+  readonly #byName = new Map<string, CommandCodec>();
+  readonly #scripts = new Map<CommandCodec, Behaviour>();
+  readonly #calls = new Map<CommandCodec, unknown[]>();
+  readonly #inFlight = new Map<number, { settled: boolean }>();
+  readonly #fingerprint: string;
+  #received: ((message: string) => void) | undefined;
+
+  constructor(commands: ReadonlyMap<unknown, CommandCodec>, fingerprint: string) {
+    for (const codec of commands.values()) {
+      this.#byName.set(`${codec.contract}.${codec.command}`, codec);
+    }
+
+    this.#fingerprint = fingerprint;
+  }
+
+  listen(received: (message: string) => void): void {
+    this.#received = received;
+  }
+
+  send(text: string): void {
+    const decoded = decode(text);
+    if (!decoded.ok) {
+      throw new Error(`fakeSpar: the page sent a malformed message: ${decoded.reason}`);
+    }
+
+    const message = decoded.message;
+    switch (message.type) {
+      case "hello":
+        this.#deliver({ type: "open", protocol: protocolVersion, doc: "fake-document", contracts: this.#fingerprint, payload: "" });
+        break;
+      case "call":
+        this.#call(message);
+        break;
+      case "cancel":
+        this.#cancel(message.id!);
+        break;
+      default:
+        // ready and closing-done need no answer.
+        break;
+    }
+  }
+
+  script(codec: CommandCodec, behaviour: Behaviour): void {
+    this.#scripts.set(codec, behaviour);
+  }
+
+  calls(codec: CommandCodec): readonly unknown[] {
+    return [...(this.#calls.get(codec) ?? [])];
+  }
+
+  #call(message: BridgeMessage): void {
+    const id = message.id!;
+    const name = `${message.contract}.${message.command}`;
+    const codec = this.#byName.get(name);
+    const behaviour = codec === undefined ? undefined : this.#scripts.get(codec);
+    if (codec === undefined || behaviour === undefined) {
+      console.error(`fakeSpar: the page called ${name}, which no test scripted.`);
+      this.#fail(id, { kind: "rejected", code: "unknown-command", execution: "notStarted" });
+      return;
+    }
+
+    const request = codec.request === undefined ? undefined : codec.request(message.payload);
+    this.#record(codec, request);
+
+    const flight = { settled: false };
+    this.#inFlight.set(id, flight);
+    void Promise.resolve()
+      .then(() => behaviour(request))
+      .then(answer => this.#answer(id, flight, codec, answer), (error: unknown) => {
+        console.error(`fakeSpar: the script for ${name} threw:`, error);
+        this.#settle(id, flight, () => this.#fail(id, { kind: "failed", code: "failed", execution: "unknown" }));
+      });
+  }
+
+  #record(codec: CommandCodec, request: unknown): void {
+    const list = this.#calls.get(codec) ?? [];
+    list.push(request);
+    this.#calls.set(codec, list);
+  }
+
+  #answer(id: number, flight: { settled: boolean }, codec: CommandCodec, answer: Answer): void {
+    if (answer.kind === "hang") {
+      return;
+    }
+
+    this.#settle(id, flight, () => {
+      try {
+        this.#deliver(this.#message(id, codec, answer));
+      } catch (error) {
+        // What a real host does when it cannot write a result (plan section 2c): the command ran, its result is lost.
+        console.error(`fakeSpar: the scripted answer for ${codec.contract}.${codec.command} could not be written:`, error);
+        this.#fail(id, { kind: "response", code: "serialization", execution: "completed" });
+      }
+    });
+  }
+
+  #message(id: number, codec: CommandCodec, answer: Exclude<Answer, { kind: "hang" }>): BridgeMessage {
+    switch (answer.kind) {
+      case "value":
+        return { type: "result", id, ok: true, payload: codec.value === undefined ? "" : codec.value(answer.value) };
+      case "error":
+        return { type: "result", id, ok: false, payload: codec.error!(answer.code, answer.payload) };
+      case "failure":
+        return { type: "failure", id, ...answer.error, payload: "" };
+    }
+  }
+
+  /** The page gave up waiting: a call still running is stopped, and the backend confirms it. */
+  #cancel(id: number): void {
+    const flight = this.#inFlight.get(id);
+    if (flight !== undefined) {
+      this.#settle(id, flight, () => this.#fail(id, { kind: "cancelled", code: "cancelled", execution: "stopped" }));
+    }
+  }
+
+  #settle(id: number, flight: { settled: boolean }, send: () => void): void {
+    if (flight.settled) {
+      return;
+    }
+
+    flight.settled = true;
+    this.#inFlight.delete(id);
+    send();
+  }
+
+  #fail(id: number, error: ScriptedFailure): void {
+    this.#deliver({ type: "failure", id, ...error, payload: "" });
+  }
+
+  /** Answers arrive later, never inside the page's own send, as from a real host. */
+  #deliver(message: BridgeMessage): void {
+    const text = encode(message);
+    queueMicrotask(() => this.#received?.(text));
+  }
+}

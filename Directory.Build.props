@@ -11,5 +11,15 @@
       MSBuildWarningsNotAsErrors. Spikes are throwaway and keep plain warnings.
     -->
     <MSBuildTreatWarningsAsErrors Condition="!$(MSBuildProjectDirectory.Contains('\spikes\')) and !$(MSBuildProjectDirectory.Contains('/spikes/'))">true</MSBuildTreatWarningsAsErrors>
+
+    <!--
+      Packages built from this repository are 0.1.0-dev.N, unique per pack, so no version is ever reused (decision
+      "Packages for the package-only consumer"): a pack passes VersionSuffix=dev.N; an ordinary build is 0.1.0-dev.
+      Only the projects that are packages set IsPackable.
+    -->
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">dev</VersionSuffix>
+    <IsPackable>false</IsPackable>
+    <Authors>Spar</Authors>
   </PropertyGroup>
 </Project>
