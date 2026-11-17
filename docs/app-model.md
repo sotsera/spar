@@ -19,7 +19,8 @@ The example is a small part of Spar's first consumer, the SQL Server tool: saved
 
 ```text
 SqlTool/
-  SqlTool.csproj            <Project Sdk="Spar.Sdk">, with <SparPlatforms>windows;linux</SparPlatforms>
+  SqlTool.csproj            <Project Sdk="Spar.Sdk">, with <SparAppId>com.example.SqlTool</SparAppId>
+                            and <SparPlatforms>windows;linux</SparPlatforms>
   Program.cs
   Connections/              one folder per feature
   CopyJobs/
@@ -34,6 +35,7 @@ SqlTool.EndToEndTests/      optional: browser and window tests, the black-box ex
 global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 ```
 
+- The app id, `SparAppId`, is required: reverse-DNS, checked by the build. It names the app to the OS and its per-user folders: `%LOCALAPPDATA%\com.example.SqlTool` on Windows, the XDG folders on Linux, and `com.example.SqlTool.Development` for a Debug build, so Debug never shares data with an installed copy (decision "M1b's remaining questions without a spike").
 - The target hosts come from `SparPlatforms` (both by default); `Spar.Sdk` adds the host packages itself.
 - The frontend is found through `SparFrontendPath`, by default `frontend/`.
 - The generated client lives under `obj/spar/client/` and is never written into `node_modules`.
@@ -804,7 +806,7 @@ public sealed class NetworkAwareMonitor(INetworkStatus network, IMonitor monitor
 - **Logs:** Spar logs through `ILogger`. In Production it writes rotating files, by default 5 files of 10 MB, at a level that configuration can raise without a new build.
 - **Page errors:** console errors, uncaught exceptions and unhandled rejections reach the same log, grouped with flood limits.
 - **Crashes:** an unhandled .NET exception writes a crash record before the process ends.
-- **Folders:** every folder has a per-user default and can be set in `Program.cs` (`spar.Folders(…)`, as above). Test runs move them all under their own data root.
+- **Folders:** every folder has a per-user default under the app id's folder (section 1) and can be set in `Program.cs` (`spar.Folders(…)`, as above). Test runs move them all under their own data root; a black-box test does it through the environment, since the Production executable takes no data-root switch.
 
 File `SqlTool/Status/CrashReport.cs`:
 

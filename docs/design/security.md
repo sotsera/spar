@@ -24,7 +24,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   ```
 
   Anything else (a font CDN, CSS-in-JS needing a nonce or `'unsafe-inline'`) is a conscious addition.
-  - **Styles added at run time** (`spikes/csp-style-injection`; decision "Styles added at run time: a nonce and constructed stylesheets both work"): under the base policy a `<style>` element and a `style` attribute are blocked, while constructed stylesheets, `insertRule` and `style.setProperty` apply, identically on Chromium, WebView2 and WebKitGTK 6.0. A per-document style nonce also works, delivered as `<meta property="csp-nonce">`. Which of these Spar documents or offers as a C# option is decided in M1b.
+  - **Styles added at run time** (`spikes/csp-style-injection`; decision "Styles added at run time: a nonce and constructed stylesheets both work"): under the base policy a `<style>` element and a `style` attribute are blocked, while constructed stylesheets, `insertRule` and `style.setProperty` apply, identically on Chromium, WebView2 and WebKitGTK 6.0. A per-document style nonce also works, delivered as `<meta property="csp-nonce">`. Decided (user, 2026-11-17; decision "M1b's remaining questions without a spike"): the app-author docs recommend build-time CSS and constructed stylesheets, and `csp.StyleNonce()` in C# gives each document a fresh nonce, written into the served HTML as `<meta property="csp-nonce">` and into `style-src`.
   - **What the build adds to this policy by itself:** the hash of the theme style (section 3d), the hash of the SRI import map (below), and in Debug the nonce and the HMR WebSocket (below).
   - **`require-trusted-types-for 'script'`** is part of the base policy, with a C# opt-out (decision "Trusted Types on by default"; see "Trusted Types" below).
   - **`connect-src` names the origin with its scheme** (`https://app.localhost` on Windows), because `'self'` also allows `wss://` to the same host, and WebSockets bypass the host (`spikes/desktop-origin`). The Linux value for `spar://app` still needs a check.
@@ -161,7 +161,7 @@ Constraints fall into three levels:
     - downloads are denied (`DownloadStarting`);
     - swipe navigation is off, and so is history navigation (mouse back and forward buttons, Alt+Left);
     - no host objects (`AddHostObjectToScript`);
-    - `<input type="file">` gets a policy in M1b: the page's own picker would hand it a file outside the grant model.
+    - `<input type="file">` never opens the engine's picker (decided, user, 2026-11-17; decision "M1b's remaining questions without a spike"): it would hand the page a file outside the grant model. `AllowPagePicker()` in C# brings it back. Linux cancels it from `run-file-chooser`; WebView2 has no API, and the in-process DevTools route (`Page.setInterceptFileChooserDialog`) is checked by an M1b spike first.
 
     The history-navigation and file-input items are adopted from the research review (user, 2026-11-15) and built in M1b.
   - On Linux: no `enable-developer-extras`, no windows opened by JavaScript, no `file://` access, downloads denied.
@@ -173,9 +173,9 @@ Constraints fall into three levels:
   The filter is a block-list of exactly these names: everything else passes. In particular the Linux GPU workarounds (`__NV_DISABLE_EXPLICIT_SYNC`, `WEBKIT_DISABLE_DMABUF_RENDERER`, `WEBKIT_DISABLE_COMPOSITING_MODE`) keep working, and `spar doctor` suggests them for blank or white windows.
 
   The opt-in is `AllowBrowserEnvironmentOverrides()`. Administrator policies set in the registry stay in force. Whether clearing a variable in-process is enough is checked in M1.
-- **App identity and folders** (adopted from the research review, user, 2026-11-15; M1b and M1c): an app has a validated app id, from which the per-user data, profile, log and crash folders derive, and Spar exposes them to app code. Development and installed builds never share data or a profile: the folder names differ by channel. The host checks the profile folder actually in use, because policy can redirect it, and no file grant or helper may ever reach the profile folder.
+- **App identity and folders** (adopted from the research review, user, 2026-11-15; M1b and M1c): an app has a validated app id, from which the per-user data, profile, log and crash folders derive, and Spar exposes them to app code. Development and installed builds never share data or a profile: the folder names differ by channel. Decided (user, 2026-11-17; decision "M1b's remaining questions without a spike"): the id is reverse-DNS, `<SparAppId>com.example.SqlTool</SparAppId>`, required and checked by the build with GTK's application-id rules; the folders are `%LOCALAPPDATA%\<app id>` on Windows and `<app id>` under the XDG data, cache and state folders on Linux; Development appends `.Development` to the id everywhere. Production takes no data-root switch: tests move the folders through the platform's own per-user variables (the security review is in that decision). The host checks the profile folder actually in use, because policy can redirect it, and no file grant or helper may ever reach the profile folder.
 - **The browser profile of a shipped app** lives in a per-user, per-app folder, and its location is configurable:
-  - Windows: `%LOCALAPPDATA%\<Company>\<App>\WebView2`;
+  - Windows: `%LOCALAPPDATA%\<app id>\WebView2`;
   - Linux: the app's XDG data and cache folders.
 
   WebView2's own default, next to the executable, fails under `Program Files`. The `artifacts/webview2-profiles/` rule applies only to Spar's repository, its tests and local development.

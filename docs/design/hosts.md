@@ -15,10 +15,10 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - CPU work beyond a small budget;
   - serializing or parsing a large payload.
 - **Host callbacks that run on it must return quickly:** `WM_NCHITTEST` reads a cache, `IStream::Read` and the WebKit scheme handler serve memory already in the executable, and `decide-policy` and `NavigationStarting` decide from data already at hand. Anything slower takes a deferral and finishes off the thread.
-- **Proposal, to settle in M1b:**
-  - Development and test builds include a UI-thread stall probe: a timer posted through the pump or main loop that records each delay over a threshold (for example 50 ms) together with what was running.
-  - Window tests fail on a stall over a budget, which M4 sets from measurements.
-  - Production builds contain no probe.
+- **The UI-thread stall probe** (decided, user, 2026-11-17; decision "M1b's remaining questions without a spike"):
+  - Development and Test builds include it: a timer posted through the pump or main loop logs each delay over 50 ms as a warning, with the Spar callback that was running.
+  - Window tests fail on a stall over 250 ms, until M4 sets the budget from measurements.
+  - Production builds contain no probe unless a C# option keeps it, logging only, for diagnosing a user's machine. It sits behind a feature switch, so without the option it is trimmed away and the production boundary test still finds none.
 
 **Hung pages are detected by a heartbeat** (user, 2026-11-14; confirmed by `spikes/page-heartbeat`, with the changes listed below). An idle page stuck in a loop raises no event: `ProcessFailed(RenderProcessUnresponsive)` needs unanswered input, and an idle hung page gave nothing in 60 s (earlier research).
 - **Ping:** while a document is loaded and the window is visible, the host sends a small ping over the bridge every 5 s, and the injected script answers from its message handler.
@@ -122,12 +122,13 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - hand-declared `[GeneratedComInterface]` for WebView2 (CsWinRT 3.0 added 10–23 MB; not now), with a slot-order test;
   - the WebView2 loader linked statically under AOT, and `WebView2Loader.dll` published on CoreCLR.
   - Feature-detect newer interfaces, and test on the minimum supported Runtime.
+  - **The provisional minimum Runtime is 139** (decided, user, 2026-11-17; decision "M1b's remaining questions without a spike"), with no fallbacks: every interface below is stable there, find in page (`ICoreWebView2_28`, 139) and `ICoreWebView2ControllerOptions3` (137) being the newest. An older Runtime gets the start-up dialog and exit 4. M4 confirms it on a real Runtime 139.
   - **Interface slots M1 needs beyond the base set,** as the spikes declared them (0-based vtable slots, `IUnknown` included). The evidence is in the spike files named; the slot-order test should check each one against the WebView2 header:
     - `ICoreWebView2_22` (`db75dfc7-a857-4632-a398-6969dde26c0a`), declared flat: slots 3–122 are placeholders, and `AddWebResourceRequestedFilterWithRequestSourceKinds` is slot 123. It is called with context 0 (all) and source kinds `0xFFFFFFFF`. Also `ICoreWebView2WebResourceRequestedEventArgs2.GetRequestedSourceKind` (1 document, 2 shared worker, 4 service worker) and `ICoreWebView2PermissionRequestedEventArgs3.SavesInProfile` (`spikes/desktop-origin/Origin.Win/Interop/WebView2.cs`).
     - For the theme, called through raw vtables (`spikes/theme-startup/Theme.Desktop/Interop/WebView2.cs`, class `WebView2Raw`): `ICoreWebView2Controller2` (`c979903e-…`) 26/27 get/put `DefaultBackgroundColor`, the colour struct passed by value; `ICoreWebView2_13` (`f75f09a8-…`) 105 `get_Profile`; `ICoreWebView2Profile` (`79110ad3-…`) 8/9 `PreferredColorScheme`; `ICoreWebView2Environment10` (`ee0eb9df-…`) 20 `CreateCoreWebView2ControllerOptions` and 21 `CreateCoreWebView2ControllerWithOptions`; `ICoreWebView2ControllerOptions3` (`b32b191a-…`) 10 `put_DefaultBackgroundColor`.
 - **Assets and the bridge:** `WebResourceRequested` on the app origin `https://app.localhost` (user decision; verified by `spikes/desktop-origin`), and `postMessage` for calls.
   - The host answers every request to its origin, with a 404 for unknown paths. An unanswered request opened 2 TLS connections to `[::1]:443`; a host 404 never leaked.
-  - The filter is registered with `AddWebResourceRequestedFilterWithRequestSourceKinds(…, ALL)` (`ICoreWebView2_22`, feature-detected; minimum Runtime to check). The legacy filter missed shared and service workers.
+  - The filter is registered with `AddWebResourceRequestedFilterWithRequestSourceKinds(…, ALL)` (`ICoreWebView2_22`, stable since Runtime 122; the provisional minimum Runtime is 139, decision "M1b's remaining questions without a spike"). The legacy filter missed shared and service workers.
   - WebSockets are never intercepted, and CSP `'self'` in `connect-src` still allows `wss://app.localhost`. So the policy names the origin with its scheme (section 3b).
   - **Defence in depth:** `--host-resolver-rules="MAP app.localhost ~NOTFOUND"` stopped everything else, including the preconnects every navigation makes to `[::1]:443` before any request. It gave 0 loopback connections, with no load-time cost. It was tested only through the environment variable set in-process. To verify in M1: through `CoreWebView2EnvironmentOptions.AdditionalBrowserArguments`, and whether it is supported.
   - **Load times** (10 alternating runs each, median from `Navigate()` to `ui-ready`): `app.localhost` 68.5 ms, `app.spar.invalid` 67.3 ms, `app.example` 68.8 ms, `app.spar.local` 190 ms.
