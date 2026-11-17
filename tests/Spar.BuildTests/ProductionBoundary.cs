@@ -3,8 +3,9 @@ using System.Text;
 namespace Spar.BuildTests;
 
 /// <summary>
-/// What a Production executable must not carry (plan section 5): the test host, the loopback host and the test
-/// libraries. Type names are UTF-8 in a native image's metadata; string literals are UTF-16. Each marker is unique to
+/// What a Production executable must not carry (plan section 5): the test host, the loopback host, the test
+/// libraries, the Windows host's Development-only triggers, and the UI-thread stall probe unless the app keeps it
+/// (<see cref="StallProbe"/>). Type names are UTF-8 in a native image's metadata; string literals are UTF-16. Each marker is unique to
 /// Spar, since generic names give false positives (pitfalls: <c>LoopbackHost</c> is also a <c>System.Uri</c> flag).
 /// </summary>
 internal static class ProductionBoundary
@@ -12,10 +13,25 @@ internal static class ProductionBoundary
     private static readonly string[] Types =
     [
         "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackHost", "LoopbackChannel", "LoopbackAssets",
-        "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel",
+        "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel", "DevelopmentTriggers",
+        "UiStallProbe",
     ];
 
-    private static readonly string[] Literals = ["/_spar/channel", "/_spar/send", "Spar.TestHost.IsSupported"];
+    private static readonly string[] Literals =
+    [
+        "/_spar/channel", "/_spar/send", "Spar.TestHost.IsSupported", "SPAR_DEV_PAGE_HANG", "SPAR_DEV_HEARTBEAT_MS",
+        "SPAR_DEV_UI_STALL_MS", "SPAR_DEV_SLOW_DISPOSE_MS", "The UI thread stalled",
+    ];
+
+    /// <summary>
+    /// The stall probe as a kept image carries it (<c>spar.Diagnostics(d => d.KeepStallProbe())</c>): its type name
+    /// (UTF-8) and its warning (UTF-16). An app without the call carries neither.
+    /// </summary>
+    public static readonly (string Text, Encoding Encoding)[] StallProbe =
+    [
+        ("UiStallProbe", Encoding.UTF8),
+        ("The UI thread stalled", Encoding.Unicode),
+    ];
 
     /// <summary>
     /// What a Production page bundle must not carry: the fake backend of <c>@spar/app/testing</c> (its messages start

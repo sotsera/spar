@@ -39,6 +39,18 @@ internal sealed class WebViewBridge
     /// <summary>Raised on the UI thread when the current document reports <c>ui-ready</c>.</summary>
     public event Action? DocumentReady;
 
+    /// <summary>
+    /// Raised on the UI thread when the current document's page said <c>hello</c>: true when it answers the heartbeat's
+    /// <c>ping</c> (plan section 3, "Hung pages"). This is the first thing the page's start-up script does.
+    /// </summary>
+    public event Action<bool>? DocumentOpened;
+
+    /// <summary>Raised on the UI thread when the current document's epoch ends (navigation, renderer exit, closing).</summary>
+    public event Action? DocumentClosed;
+
+    /// <summary>Raised on the UI thread with the <c>seq</c> of each <c>pong</c> from the current document.</summary>
+    public event Action<long>? Answered;
+
     /// <summary>Whether a document is open and reported <c>ui-ready</c>.</summary>
     public bool HasReadyDocument => _current is { IsReady: true, IsClosed: false };
 
@@ -63,8 +75,10 @@ internal sealed class WebViewBridge
         var document = new Document(id);
         var session = new BridgeSession(_dispatcher, _fingerprint, id, message => Send(document, message), _includeDetails);
         session.Dropped += reason => _log.Warn($"Bridge, document {id}: dropped {reason}");
-        session.Ready += () => _ui.Post(() => Ready(document));
+        session.Ready += () => _ui.Post(() => Ready(document), "bridge ui-ready");
         session.ClosingDone += () => document.ClosingDone.TrySetResult();
+        session.Opened += ping => _ui.Post(() => Opened(document, ping), "bridge open");
+        session.Pong += seq => _ui.Post(() => Ponged(document, seq), "heartbeat answer");
         document.Session = session;
         _current = document;
         _log.Info($"Bridge: document {id} opened.");
@@ -121,6 +135,12 @@ internal sealed class WebViewBridge
         _log.Step(done == document.ClosingDone.Task ? "page close work done" : "page close work timed out");
     }
 
+    /// <summary>
+    /// The heartbeat's ping to the current document (UI thread); false when there is none, or its page does not answer
+    /// pings. The ping is encoded here and posted with the next drain of the UI thread's queue.
+    /// </summary>
+    public bool Ping(long seq) => _current is { IsClosed: false } document && document.Session.Ping(seq);
+
     /// <summary>Stops admitting calls: the current document's session closes, which cancels its calls (UI thread).</summary>
     public Task CloseAsync(string why)
     {
@@ -148,6 +168,23 @@ internal sealed class WebViewBridge
         document.Session.Close();
         document.ClosingDone.TrySetResult();
         _log.Info($"Bridge: document {document.Id} closed ({why}).");
+        DocumentClosed?.Invoke();
+    }
+
+    private void Opened(Document document, bool answersPing)
+    {
+        if (document == _current && !document.IsClosed)
+        {
+            DocumentOpened?.Invoke(answersPing);
+        }
+    }
+
+    private void Ponged(Document document, long seq)
+    {
+        if (document == _current && !document.IsClosed)
+        {
+            Answered?.Invoke(seq);
+        }
     }
 
     private void Ready(Document document)
@@ -164,7 +201,7 @@ internal sealed class WebViewBridge
     }
 
     /// <summary>The session's send function, called on any thread: the reply goes to the UI thread, to be checked there.</summary>
-    private void Send(Document document, string message) => _ui.Post(() => Deliver(document, message));
+    private void Send(Document document, string message) => _ui.Post(() => Deliver(document, message), "bridge reply");
 
     /// <summary>A reply reaches the page only if its document is still the current one (late replies are dropped).</summary>
     private void Deliver(Document document, string message)

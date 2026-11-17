@@ -123,6 +123,9 @@ internal static class WebView2Values
     /// <summary><c>COREWEBVIEW2_PROCESS_FAILED_KIND_RENDER_PROCESS_UNRESPONSIVE</c>.</summary>
     public const int RenderProcessUnresponsive = 2;
 
+    /// <summary><c>COREWEBVIEW2_PROCESS_KIND_RENDERER</c>, in <c>ICoreWebView2ProcessInfo</c>.</summary>
+    public const int RendererProcess = 1;
+
     /// <summary><c>COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND_FAILED</c>; 0 is a normal exit.</summary>
     public const int BrowserExitFailed = 1;
 

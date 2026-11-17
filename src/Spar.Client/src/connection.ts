@@ -24,8 +24,11 @@ export interface Decoder<T> {
 /** How long an aborted call waits for the backend to confirm it stopped before its outcome is unknown. */
 const confirmationTimeoutMs = 5_000;
 
-/** The host-to-page types this SDK understands, announced in hello. */
-const understoodTypes = ["open", "result", "failure", "event", "closing"] as const;
+/**
+ * The host-to-page types this SDK understands, announced in hello. Listing `ping` tells the desktop host that this
+ * document answers its heartbeat (plan section 3, "Hung pages"); a document that never says so is never pinged.
+ */
+const understoodTypes = ["open", "result", "failure", "event", "closing", "ping"] as const;
 
 interface Pending {
   readonly name: CallName;
@@ -151,6 +154,10 @@ export class Connection {
         break;
       case "closing":
         void this.#runClosingWork();
+        break;
+      case "ping":
+        // The heartbeat: answered at once, from this handler, so only a page whose thread is stuck misses it.
+        this.#send({ type: "pong", seq: message.seq!, payload: "" });
         break;
       default:
         // An unexpected type for a pending call fails that call, so no call can hang.

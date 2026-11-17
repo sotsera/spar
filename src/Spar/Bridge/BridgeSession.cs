@@ -71,6 +71,12 @@ internal sealed class BridgeSession : IDisposable
     /// <summary>Raised when the page has finished its close work.</summary>
     public event Action? ClosingDone;
 
+    /// <summary>Raised after the page's <c>hello</c> was answered; true when the page answers the heartbeat's <c>ping</c>.</summary>
+    public event Action<bool>? Opened;
+
+    /// <summary>Raised with the <c>seq</c> of each <c>pong</c>, the page's answer to a <see cref="Ping"/>.</summary>
+    public event Action<long>? Pong;
+
     /// <summary>Messages that could not be used, with why; for the host's log.</summary>
     public event Action<string>? Dropped;
 
@@ -112,6 +118,9 @@ internal sealed class BridgeSession : IDisposable
             case BridgeMessageType.ClosingDone:
                 ClosingDone?.Invoke();
                 break;
+            case BridgeMessageType.Pong:
+                Pong?.Invoke(decoded.Seq!.Value);
+                break;
             default:
                 Unexpected(decoded);
                 break;
@@ -120,6 +129,24 @@ internal sealed class BridgeSession : IDisposable
 
     /// <summary>The page asks for its close work; it answers <c>closing-done</c>.</summary>
     public void RequestClosing() => Send(new BridgeMessage(BridgeMessageType.Closing));
+
+    /// <summary>
+    /// The heartbeat's ping (plan section 3, "Hung pages"); the page answers <c>pong</c> from its message handler. False,
+    /// with nothing sent, when the page did not list <c>ping</c> in its <c>hello</c> or the document is closed.
+    /// </summary>
+    public bool Ping(long seq)
+    {
+        lock (_gate)
+        {
+            if (_closed || !_pageTypes.Contains("ping"))
+            {
+                return false;
+            }
+        }
+
+        Send(new BridgeMessage(BridgeMessageType.Ping) { Seq = seq });
+        return true;
+    }
 
     /// <summary>A host event (for example <c>backend-updated</c>), sent only when the page listed <c>event</c>.</summary>
     public void SendEvent(string name, ReadOnlyMemory<byte> payload)
@@ -186,6 +213,7 @@ internal sealed class BridgeSession : IDisposable
 
         var protocol = Math.Min(hello.Protocol!.Value, BridgeCodec.ProtocolVersion);
         Send(new BridgeMessage(BridgeMessageType.Open) { Protocol = protocol, Doc = _doc, Contracts = _fingerprint });
+        Opened?.Invoke(hello.Types?.Contains("ping", StringComparer.Ordinal) == true);
     }
 
     /// <summary>A call starts when a slot is free, waits in the queue when one is not, and is refused as busy past both.</summary>

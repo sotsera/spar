@@ -38,7 +38,7 @@ internal partial interface ICoreWebView2_22
     void RemoveProcessFailed(EventRegistrationToken token);
     [PreserveSig] int Slot027_AddScriptToExecuteOnDocumentCreated();
     [PreserveSig] int Slot028_RemoveScriptToExecuteOnDocumentCreated();
-    [PreserveSig] int Slot029_ExecuteScript();
+    void ExecuteScript(string javaScript, ICoreWebView2ExecuteScriptCompletedHandler handler);
     [PreserveSig] int Slot030_CapturePreview();
     void Reload();
     [PreserveSig] int Slot032_PostWebMessageAsJson();

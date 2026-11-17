@@ -1,0 +1,44 @@
+       4,2 > start Notebook.exe env [SPAR_AUTOMATED=1 SPAR_DEV_SLOW_DISPOSE_MS=13000]
+     119,4 | spar info +14.2 ms: [cb0c9e30] Host started 92.3 ms after the process.
+     129,5 | spar info +24.5 ms: [cb0c9e30] single instance at 23.5 ms
+     131,8 | spar info +29.8 ms: [cb0c9e30] prerequisites checked at 29.8 ms
+     145,9 | spar info +43.9 ms: [cb0c9e30] UI-thread stall probe on.
+     163,5 | spar info +61.5 ms: [cb0c9e30] services built at 61.5 ms
+     173,1 | spar info +71.1 ms: [cb0c9e30] window shown at 71.1 ms
+     173,8 | spar info +71.3 ms: [cb0c9e30] Theme dark (system), window #1d1f24.
+     190,2 | spar info +88.2 ms: [cb0c9e30] environment at 88.2 ms
+     190,7 | spar info +88.8 ms: [cb0c9e30] WebView2 Runtime 157.0.4341.46
+     200,6 | spar info +98.6 ms: [cb0c9e30] Heartbeat every 5000 ms.
+     375,3 | spar info +273.3 ms: [cb0c9e30] controller at 273.3 ms
+     378,6 | spar info +276.7 ms: [cb0c9e30] navigation started at 276.7 ms
+     478,6 | spar info +376.6 ms: [cb0c9e30] Bridge: document 33193f47de6ea7ce opened.
+     478,7 | spar info +376.6 ms: [cb0c9e30] first document at 376.6 ms
+     501,4 | spar info +399.4 ms: [cb0c9e30] first bridge message at 399.4 ms
+     503,0 | spar info +401.0 ms: [cb0c9e30] first navigation completed at 401 ms
+     509,6 | spar info +407.7 ms: [cb0c9e30] first bridge reply at 407.7 ms
+     509,9 | spar info +408.0 ms: [cb0c9e30] Heartbeat armed for the new document.
+     520,6 | spar info +418.6 ms: [cb0c9e30] ui-ready at 418.6 ms
+     520,7 > seen 'ui-ready'
+     520,7 | spar info +418.7 ms: [cb0c9e30] Bridge: document 33193f47de6ea7ce reported ui-ready.
+     522,9 | spar info +421.0 ms: [cb0c9e30] 404 for /favicon.ico
+     523,3 > WM_CLOSE to the window
+     524,9 | spar info +423.0 ms: [cb0c9e30] close requested (User, automated) at 423 ms
+     534,0 | spar info +432.0 ms: Close request for window main (User): the backend's guard answered Close
+     535,1 | spar info +433.2 ms: [cb0c9e30] closing at 433.2 ms
+     535,4 | spar info +433.4 ms: [cb0c9e30] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+     537,9 | spar info +436.0 ms: [cb0c9e30] page close work done at 436 ms
+     538,5 | spar info +436.6 ms: [cb0c9e30] Bridge: document 33193f47de6ea7ce closed (window closing).
+     538,6 | spar info +436.7 ms: [cb0c9e30] calls stopped at 436.7 ms
+     538,7 | spar info +436.7 ms: [cb0c9e30] calls settled at 436.7 ms
+     556,0 | spar info +454.1 ms: [cb0c9e30] controller closed at 454.1 ms
+     570,8 | spar info +468.8 ms: [cb0c9e30] window destroyed at 468.8 ms
+     576,9 | spar warn +475.0 ms: [cb0c9e30] Development trigger: disposing slowly (13000 ms).
+   10539,4 | spar warn +10437.4 ms: [cb0c9e30] The app has been closing for 10.0 s without finishing.
+   10539,5 > seen 'without finishing'
+   10539,5 | spar info +10437.5 ms: [cb0c9e30] The automated mode shows no shutdown prompt; still waiting.
+   12548,6 > no dialog (as expected)
+   13578,1 | spar info +13476.1 ms: [cb0c9e30] services disposed at 13476.1 ms
+   13587,0 | spar info +13476.2 ms: [cb0c9e30] exit 0 at 13476.2 ms
+   13589,5 > exit 0
+   13611,1 > browser processes left for this root 0,0 s after the exit: 0
+   13611,2 > RESULT OK

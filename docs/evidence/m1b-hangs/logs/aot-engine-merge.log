@@ -1,0 +1,48 @@
+       7,1 > start Notebook.exe env []
+      68,1 | spar info +0.3 ms: [db657e50] Host started 41.1 ms after the process.
+      68,4 | spar info +1.3 ms: [db657e50] single instance at 1.3 ms
+      68,4 | spar info +1.6 ms: [db657e50] prerequisites checked at 1.6 ms
+      68,4 | spar info +1.9 ms: [db657e50] services built at 1.9 ms
+      95,1 | spar info +29.0 ms: [db657e50] window shown at 29 ms
+      95,3 | spar info +29.2 ms: [db657e50] Theme dark (system), window #1d1f24.
+     103,6 | spar info +37.5 ms: [db657e50] environment at 37.5 ms
+     103,7 | spar info +37.5 ms: [db657e50] WebView2 Runtime 157.0.4341.46
+     107,5 | spar info +41.3 ms: [db657e50] Heartbeat every 5000 ms.
+     293,7 | spar info +227.6 ms: [db657e50] controller at 227.6 ms
+     294,7 | spar info +228.1 ms: [db657e50] navigation started at 228.1 ms
+     396,5 | spar info +330.4 ms: [db657e50] Bridge: document 23e254e50501cf77 opened.
+     396,7 | spar info +330.5 ms: [db657e50] first document at 330.5 ms
+     420,9 | spar info +354.8 ms: [db657e50] first bridge message at 354.8 ms
+     421,2 | spar info +355.2 ms: [db657e50] first bridge reply at 355.2 ms
+     421,3 | spar info +355.2 ms: [db657e50] Heartbeat armed for the new document.
+     422,7 | spar info +356.6 ms: [db657e50] first navigation completed at 356.6 ms
+     441,1 | spar info +375.0 ms: [db657e50] ui-ready at 375 ms
+     441,1 > seen 'ui-ready'
+     441,2 | spar info +375.0 ms: [db657e50] Bridge: document 23e254e50501cf77 reported ui-ready.
+     441,4 | spar info +375.3 ms: [db657e50] 404 for /favicon.ico
+    2474,7 > suspend renderer 60488
+   20108,6 | spar warn +20042.5 ms: [db657e50] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20108,6 > seen 'The page is not responding'
+   20108,8 | spar info +20042.8 ms: [db657e50] hung-page dialog shown (Wait / Reload page) at 20042.8 ms
+   20155,5 > dialog 'Notebook' owner the app's window
+   50170,7 > press 200 on 'Notebook'
+   50189,3 | spar info +50121.8 ms: [db657e50] hung-page dialog: Wait at 50121.8 ms
+   52198,1 > resume renderer 60488
+   52199,3 > dialog gone
+   52199,6 > WM_CLOSE to the window
+   52200,0 | spar info +52133.7 ms: [db657e50] the page answered again after 47.1 s at 52133.7 ms
+   52200,0 | spar info +52133.8 ms: [db657e50] close requested (User) at 52133.8 ms
+   52200,6 | spar info +52134.3 ms: Close request for window main (User): the backend's guard answered Close
+   52200,7 | spar info +52134.7 ms: [db657e50] closing at 52134.7 ms
+   52200,8 | spar info +52134.7 ms: [db657e50] Heartbeat: 10 ticks, 2 pings, longest tick on the UI thread 0.352 ms.
+   52201,5 | spar info +52135.4 ms: [db657e50] page close work done at 52135.4 ms
+   52201,5 | spar info +52135.5 ms: [db657e50] Bridge: document 23e254e50501cf77 closed (window closing).
+   52201,6 | spar info +52135.5 ms: [db657e50] calls stopped at 52135.5 ms
+   52201,6 | spar info +52135.5 ms: [db657e50] calls settled at 52135.5 ms
+   52224,9 | spar info +52158.7 ms: [db657e50] controller closed at 52158.7 ms
+   52231,2 | spar info +52165.1 ms: [db657e50] window destroyed at 52165.1 ms
+   52235,5 | spar info +52169.4 ms: [db657e50] services disposed at 52169.4 ms
+   52235,6 | spar info +52169.4 ms: [db657e50] exit 0 at 52169.4 ms
+   52245,4 > exit 0
+   52523,0 > browser processes left for this root 0,3 s after the exit: 0
+   52523,1 > RESULT OK

@@ -54,7 +54,7 @@ internal partial interface ICoreWebView2Environment10
     // ICoreWebView2Environment8
     [PreserveSig] int Slot016_AddProcessInfosChanged();
     [PreserveSig] int Slot017_RemoveProcessInfosChanged();
-    [PreserveSig] int Slot018_GetProcessInfos();
+    nint GetProcessInfos();
     // ICoreWebView2Environment9
     [PreserveSig] int Slot019_CreateContextMenuItem();
     // ICoreWebView2Environment10
@@ -92,4 +92,22 @@ internal partial interface ICoreWebView2Controller
     [PreserveSig] int Slot023_NotifyParentWindowPositionChanged();
     void Close();
     nint GetCoreWebView2();
+}
+
+/// <summary><c>ICoreWebView2ProcessInfoCollection</c>: the browser's processes, from <c>GetProcessInfos</c> (STA only).</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("402b99cd-a0cc-4fa5-b7a5-51d86a1d2339")]
+internal partial interface ICoreWebView2ProcessInfoCollection
+{
+    uint GetCount();
+    nint GetValueAtIndex(uint index);
+}
+
+/// <summary><c>ICoreWebView2ProcessInfo</c>: one process's id and kind (<see cref="WebView2Values.RendererProcess"/>).</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("84fa7612-3f3d-4fbf-889d-fad000492d72")]
+internal partial interface ICoreWebView2ProcessInfo
+{
+    int GetProcessId();
+    int GetKind();
 }

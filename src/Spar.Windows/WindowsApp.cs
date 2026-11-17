@@ -12,7 +12,9 @@ namespace Spar.Windows;
 /// instance (a later launch hands its arguments to the running one and exits), and the WebView2 Runtime check, each
 /// failure reported with its fixed exit code. Then the window, shown at once in the theme's colour (plan 3d), the app's
 /// services built beside it, the WebView, and the two-stage close (decision "Two-stage close"): every close of the
-/// window is a close request, the backend's guard decides or asks, and only an approved request starts the teardown.
+/// window is a close request, the page is checked and the backend's guard decides or asks, and only an approved
+/// request starts the teardown. While it runs, the page's heartbeat watches for a hung page (<see cref="PageWatch"/>),
+/// and from the teardown on, <see cref="ShutdownWatch"/> watches for a shutdown that does not finish.
 /// </summary>
 internal sealed class WindowsApp : IWindowMessages, IReportsErrors
 {
@@ -31,6 +33,9 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     /// <summary>How long the process waits at exit for a relaunch handler that is still running.</summary>
     private const int RelaunchSettleMilliseconds = 3_000;
 
+    /// <summary>How long the process waits at exit for the page hang hook to see its last change.</summary>
+    private const int HookSettleMilliseconds = 3_000;
+
     private readonly SparApp _app;
     private readonly HostLog _log = new();
     private readonly CancellationTokenSource _stopping = new();
@@ -39,12 +44,15 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     private readonly string _title;
     private readonly SparFolders _folders;
     private readonly RelaunchQueue _relaunches;
+    private readonly PageHangHook _hangHook;
     private SingleInstance? _instance;
     private WindowTheme? _theme;
     private SparRunningApp? _running;
     private CloseGuard? _guard;
     private UiThread? _ui;
     private BrowserView? _view;
+    private PageWatch? _watch;
+    private ShutdownWatch? _shutdown;
     private HWND _window;
     private HBRUSH _background;
     private State _state;
@@ -61,6 +69,7 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         _title = app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
         _folders = SparFolders.ForApp(_title, app.Builder.FolderOptions);
         _relaunches = new RelaunchQueue(app.Builder.RelaunchHandler, _log.Logger);
+        _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
     }
 
     public int Run()
@@ -75,6 +84,7 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         {
             // The pipe closes before the lock is released, so no launch is acknowledged by a closing app.
             _instance?.Dispose();
+            _shutdown?.Complete();
             _log.Close();
         }
     }
@@ -83,6 +93,7 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
 
     public LRESULT? OnMessage(HWND window, uint message, WPARAM wParam, LPARAM lParam)
     {
+        using var scope = MessageName(message) is { } name && _ui is { } ui ? ui.Enter(name) : default;
         switch (message)
         {
             case PInvoke.WM_ERASEBKGND:
@@ -164,7 +175,17 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     {
         var builder = _app.Builder;
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, folders, builder.BridgeOptions.Freeze());
+        if (SparDevelopment.IsSupported)
+        {
+            DevelopmentTriggers.AddSlowDisposal(builder.Services, _log);
+        }
+
         var running = SparRunningApp.Build(builder.Services, _app.Catalog, folders);
+        if (SparDevelopment.IsSupported)
+        {
+            DevelopmentTriggers.CreateSlowDisposal(running.Services);
+        }
+
         _log.UseAppLogging(running.Services);
         _log.Phase("services built");
         return running;
@@ -177,6 +198,12 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     private void Start(UiThread ui, WindowTheme theme, Task<SparRunningApp> built)
     {
         _ui = ui;
+        if (_app.Builder.DiagnosticsOptions.CreateStallProbe(_log.Logger) is { } probe)
+        {
+            ui.UseProbe(probe);
+            _log.Info("UI-thread stall probe on.");
+        }
+
         _background = PInvoke.CreateSolidBrush(new COLORREF(theme.Background.ColorRef));
         var bounds = WindowPlacement.Initial(_app.Builder.MainWindow.InitialSize);
         _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this);
@@ -210,7 +237,18 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
 
         _guard = new CloseGuard(_app.Builder.CloseGuard, _running.Services, _log.Logger);
         _relaunches.Start(_running.Services);
+        _hangHook.Start(_running.Services);
         var bridge = new WebViewBridge(ui, _log, _running.Dispatcher, _running.Catalog.Fingerprint, SparDevelopment.IsSupported);
+        if (_view is { } view && _state != State.Closing)
+        {
+            _watch = new PageWatch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
+            _watch.Start();
+            if (SparDevelopment.IsSupported)
+            {
+                DevelopmentTriggers.Watch(ui, bridge, view, _log);
+            }
+        }
+
         _bridge.TrySetResult(bridge);
         if (_state == State.Starting)
         {
@@ -282,9 +320,11 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
             var request = new CloseRequest("main", reason, _automated);
             _log.Step($"close requested ({reason}{(_automated ? ", automated" : "")})");
 
-            // The page's guard (windows.onCloseRequested) is asked here, first, when it is built: its "keep" ends the
-            // request before the backend is asked, and a page silent for about 5 s gets "Wait / Close anyway".
-            if (!await AskPageAsync(request))
+            // The page first: a page that does not answer within about 5 s, or is already hung, gets "Wait / Close
+            // anyway". The page's own guard (windows.onCloseRequested) is asked here too when it is built; its "keep"
+            // will end the request before the backend is asked.
+            var page = _watch is null ? PageCloseAnswer.Agree : await _watch.AskBeforeCloseAsync();
+            if (_state == State.Closing)
             {
                 return;
             }
@@ -293,13 +333,20 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
             if (verdict.Kind == CloseVerdictKind.Keep)
             {
                 _log.Step("close kept by the backend's guard");
+                _watch?.CloseRequestKept();
                 return;
             }
 
             if (verdict.Kind == CloseVerdictKind.Ask && !NativeDialog.ConfirmClose(_window, _title, verdict.Question!))
             {
                 _log.Step("close kept by the user");
+                _watch?.CloseRequestKept();
                 return;
+            }
+
+            if (page == PageCloseAnswer.CloseAnyway)
+            {
+                _watch?.ReportClosedAnyway();
             }
 
             await TeardownAsync(0);
@@ -314,17 +361,12 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         }
     }
 
-    /// <summary>The seam for the page's close guard; until it is built every page agrees.</summary>
-    private static Task<bool> AskPageAsync(CloseRequest request)
-    {
-        _ = request;
-        return Task.FromResult(true);
-    }
-
     /// <summary>
     /// Plan section 3, "Teardown": mark closing and close the relaunch pipe, let the page finish its close work, stop
     /// admitting calls and let the cancelled ones settle (bounded, still pumping), close the controller on this thread,
-    /// and destroy the window. The process then exits without waiting for the browser.
+    /// and destroy the window. The process then exits without waiting for the browser. A page that does not answer gets
+    /// no close work, and its renderer is ended before the controller closes. From here on the shutdown is watched, and
+    /// after about 10 s the user may end it (<see cref="ShutdownWatch"/>).
     /// </summary>
     private async Task TeardownAsync(int exitCode)
     {
@@ -334,6 +376,7 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         }
 
         _state = State.Closing;
+        _shutdown = ShutdownWatch.Start(_title, _log, _automated, ShutdownHang.FirstPromptMilliseconds, ShutdownHang.AskAgainMilliseconds);
         if (!_failed)
         {
             _exitCode = exitCode;
@@ -341,11 +384,17 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
 
         _instance?.StopListening();
         _log.Step("closing");
+        var pageHung = _watch?.IsUnresponsive == true;
+        _watch?.Stop();
 
         if (_bridge.Task.IsCompletedSuccessfully)
         {
             var bridge = _bridge.Task.Result;
-            await bridge.RunPageCloseWorkAsync(TimeSpan.FromMilliseconds(PageCloseWorkMilliseconds));
+            if (!pageHung)
+            {
+                await bridge.RunPageCloseWorkAsync(TimeSpan.FromMilliseconds(PageCloseWorkMilliseconds));
+            }
+
             var settled = bridge.CloseAsync("window closing");
             _log.Step("calls stopped");
             var first = await Task.WhenAny(settled, Task.Delay(CommandSettleMilliseconds));
@@ -353,6 +402,11 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         }
 
         _stopping.Cancel();
+        if (pageHung)
+        {
+            _ = _view?.TerminateRenderers();
+        }
+
         _view?.Close();
         _log.Step("controller closed");
         PInvoke.DestroyWindow(_window);
@@ -402,6 +456,11 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
             if (!_relaunches.StopAsync().Wait(RelaunchSettleMilliseconds))
             {
                 _log.Warn("A relaunch handler was still running at exit.");
+            }
+
+            if (!_hangHook.StopAsync().Wait(HookSettleMilliseconds))
+            {
+                _log.Warn("The page hang hook was still running at exit.");
             }
 
             if (_bridge.Task.IsCompletedSuccessfully)
@@ -457,6 +516,23 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
             _background = HBRUSH.Null;
         }
     }
+
+    /// <summary>The heartbeat's interval: 5 s, or a Development build's override (the call is trimmed from Production).</summary>
+    private static int HeartbeatInterval() =>
+        SparDevelopment.IsSupported ? DevelopmentTriggers.HeartbeatInterval() : PageHeartbeat.IntervalMilliseconds;
+
+    /// <summary>The window messages Spar handles, named for the stall probe; null for those it leaves to Windows.</summary>
+    private static string? MessageName(uint message) => message switch
+    {
+        PInvoke.WM_ERASEBKGND => "WM_ERASEBKGND",
+        PInvoke.WM_SIZE => "WM_SIZE",
+        PInvoke.WM_GETMINMAXINFO => "WM_GETMINMAXINFO",
+        PInvoke.WM_DPICHANGED => "WM_DPICHANGED",
+        PInvoke.WM_SETTINGCHANGE => "WM_SETTINGCHANGE",
+        PInvoke.WM_CLOSE => "WM_CLOSE",
+        PInvoke.WM_DESTROY => "WM_DESTROY",
+        _ => null,
+    };
 
     /// <summary>The WebView is transparent over the window colour (plan 3d); only a Development or Test build may say otherwise.</summary>
     private static bool TransparentWebView() =>

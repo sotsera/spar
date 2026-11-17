@@ -1,0 +1,312 @@
+== aot idle -- wait:ui-ready:30 no-dialog:60 close exit:30
+          2,6 > start Notebook.exe env []
+        464,5 > seen 'ui-ready'
+      60479,8 > no dialog (as expected)
+      60480,3 > WM_CLOSE to the window
+      60520,2 > exit 0
+      60792,1 > browser processes left for this root 0,3 s after the exit: 0
+      60792,1 > RESULT OK
+== dev busy3-1 --env SPAR_DEV_PAGE_HANG=3000:3000 -- wait:busy for:30 no-dialog:30 close exit:30
+          2,5 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:3000]
+       3557,3 > seen 'busy for'
+      33564,5 > no dialog (as expected)
+      33565,0 > WM_CLOSE to the window
+      33625,7 > exit 0
+      33897,2 > browser processes left for this root 0,3 s after the exit: 0
+      33897,2 > RESULT OK
+== dev busy10-1 --env SPAR_DEV_PAGE_HANG=3000:10000 -- wait:busy for:30 no-dialog:30 close exit:30
+          2,6 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:10000]
+       3475,9 > seen 'busy for'
+      33487,1 > no dialog (as expected)
+      33487,5 > WM_CLOSE to the window
+      33546,0 > exit 0
+      33817,7 > browser processes left for this root 0,3 s after the exit: 0
+      33817,7 > RESULT OK
+== dev busy3-2 --env SPAR_DEV_PAGE_HANG=3000:3000 -- wait:busy for:30 no-dialog:30 close exit:30
+          2,8 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:3000]
+       3475,4 > seen 'busy for'
+      33490,9 > no dialog (as expected)
+      33491,5 > WM_CLOSE to the window
+      33550,9 > exit 0
+      33824,4 > browser processes left for this root 0,3 s after the exit: 0
+      33824,5 > RESULT OK
+== dev busy10-2 --env SPAR_DEV_PAGE_HANG=3000:10000 -- wait:busy for:30 no-dialog:30 close exit:30
+          2,4 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:10000]
+       3464,4 > seen 'busy for'
+      33474,6 > no dialog (as expected)
+      33475,1 > WM_CLOSE to the window
+      33529,7 > exit 0
+      33806,6 > browser processes left for this root 0,3 s after the exit: 0
+      33806,6 > RESULT OK
+== dev busy3-3 --env SPAR_DEV_PAGE_HANG=3000:3000 -- wait:busy for:30 no-dialog:30 close exit:30
+          2,8 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:3000]
+       3480,5 > seen 'busy for'
+      33482,6 > no dialog (as expected)
+      33483,0 > WM_CLOSE to the window
+      33540,2 > exit 0
+      33818,5 > browser processes left for this root 0,3 s after the exit: 0
+      33818,5 > RESULT OK
+== dev busy10-3 --env SPAR_DEV_PAGE_HANG=3000:10000 -- wait:busy for:30 no-dialog:30 close exit:30
+          2,6 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:10000]
+       3491,1 > seen 'busy for'
+      33500,8 > no dialog (as expected)
+      33501,3 > WM_CLOSE to the window
+      33557,0 > exit 0
+      33836,2 > browser processes left for this root 0,3 s after the exit: 0
+      33836,2 > RESULT OK
+== dev endless-3000 --env SPAR_DEV_PAGE_HANG=3000 -- wait:the page hangs from now:30 wait:The page is not responding:40 dialog:10 sleep:1000 press:201 gone:10 wait:ui-ready:20 sleep:2000 close exit:30
+          2,7 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000]
+       3474,1 > seen 'the page hangs from now'
+      20138,2 > seen 'The page is not responding'
+      20184,3 > dialog 'Notebook' owner the app's window
+      21191,9 > press 201 on 'Notebook'
+      21207,4 > dialog gone
+      21288,6 > seen 'ui-ready'
+      23290,0 > WM_CLOSE to the window
+      23350,4 > exit 0
+      23622,4 > browser processes left for this root 0,3 s after the exit: 0
+      23622,5 > RESULT OK
+== dev endless-4200 --env SPAR_DEV_PAGE_HANG=4200 -- wait:the page hangs from now:30 wait:The page is not responding:40 dialog:10 sleep:1000 press:201 gone:10 wait:ui-ready:20 sleep:2000 close exit:30
+          2,7 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=4200]
+       4673,4 > seen 'the page hangs from now'
+      20143,4 > seen 'The page is not responding'
+      20190,2 > dialog 'Notebook' owner the app's window
+      21203,9 > press 201 on 'Notebook'
+      21219,2 > dialog gone
+      21307,1 > seen 'ui-ready'
+      23313,0 > WM_CLOSE to the window
+      23374,8 > exit 0
+      23646,9 > browser processes left for this root 0,3 s after the exit: 0
+      23647,0 > RESULT OK
+== dev endless-5400 --env SPAR_DEV_PAGE_HANG=5400 -- wait:the page hangs from now:30 wait:The page is not responding:40 dialog:10 sleep:1000 press:201 gone:10 wait:ui-ready:20 sleep:2000 close exit:30
+          2,5 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=5400]
+       5887,7 > seen 'the page hangs from now'
+      25135,1 > seen 'The page is not responding'
+      25184,2 > dialog 'Notebook' owner the app's window
+      26191,5 > press 201 on 'Notebook'
+      26207,0 > dialog gone
+      26346,8 > seen 'ui-ready'
+      28356,1 > WM_CLOSE to the window
+      28429,8 > exit 0
+      28723,6 > browser processes left for this root 0,3 s after the exit: 0
+      28723,6 > RESULT OK
+== dev endless-6600 --env SPAR_DEV_PAGE_HANG=6600 -- wait:the page hangs from now:30 wait:The page is not responding:40 dialog:10 sleep:1000 press:201 gone:10 wait:ui-ready:20 sleep:2000 close exit:30
+          4,2 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=6600]
+       7127,0 > seen 'the page hangs from now'
+      25200,0 > seen 'The page is not responding'
+      25245,5 > dialog 'Notebook' owner the app's window
+      26260,6 > press 201 on 'Notebook'
+      26275,6 > dialog gone
+      26366,5 > seen 'ui-ready'
+      28370,4 > WM_CLOSE to the window
+      28434,8 > exit 0
+      28735,3 > browser processes left for this root 0,3 s after the exit: 0
+      28735,4 > RESULT OK
+== dev endless-7800 --env SPAR_DEV_PAGE_HANG=7800 -- wait:the page hangs from now:30 wait:The page is not responding:40 dialog:10 sleep:1000 press:201 gone:10 wait:ui-ready:20 sleep:2000 close exit:30
+          4,6 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=7800]
+       8326,5 > seen 'the page hangs from now'
+      25200,4 > seen 'The page is not responding'
+      25248,3 > dialog 'Notebook' owner the app's window
+      26262,1 > press 201 on 'Notebook'
+      26277,7 > dialog gone
+      26366,7 > seen 'ui-ready'
+      28379,7 > WM_CLOSE to the window
+      28444,1 > exit 0
+      28745,3 > browser processes left for this root 0,3 s after the exit: 0
+      28745,5 > RESULT OK
+== dev busy25 --env SPAR_DEV_PAGE_HANG=3000:25000 -- wait:busy for:30 wait:The page is not responding:40 dialog:10 gone:20 wait:answered again:5 sleep:6000 close exit:30
+          4,8 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:25000]
+       3562,7 > seen 'busy for'
+      20211,0 > seen 'The page is not responding'
+      20257,1 > dialog 'Notebook' owner the app's window
+      28572,0 > dialog gone
+      28572,1 > seen 'answered again'
+      34575,9 > WM_CLOSE to the window
+      34640,8 > exit 0
+      34943,3 > browser processes left for this root 0,3 s after the exit: 0
+      34943,4 > RESULT OK
+== dev schedule --env SPAR_DEV_HEARTBEAT_MS=500 --env SPAR_DEV_PAGE_HANG=2000 -- wait:the page hangs from now:30 wait:The page is not responding:20 dialog:5 press:200 wait:asking again:10 dialog:5 press:200 wait:asking again:10 dialog:5 press:200 wait:asking again:20 dialog:5 press:200 wait:asking again:30 dialog:5 press:200 wait:asking again:30 dialog:5 press:201 gone:10 wait:ui-ready:20 close exit:30
+          4,5 > start Notebook.exe env [SPAR_DEV_HEARTBEAT_MS=500 SPAR_DEV_PAGE_HANG=2000]
+       2522,5 > seen 'the page hangs from now'
+       4201,0 > seen 'The page is not responding'
+       4263,6 > dialog 'Notebook' owner the app's window
+       4263,9 > press 200 on 'Notebook'
+       6194,0 > seen 'asking again'
+       6241,6 > dialog 'Notebook' owner the app's window
+       6241,9 > press 200 on 'Notebook'
+      10200,2 > seen 'asking again'
+      10245,3 > dialog 'Notebook' owner the app's window
+      10245,7 > press 200 on 'Notebook'
+      18198,7 > seen 'asking again'
+      18244,0 > dialog 'Notebook' owner the app's window
+      18244,3 > press 200 on 'Notebook'
+      34205,7 > seen 'asking again'
+      34252,6 > dialog 'Notebook' owner the app's window
+      34253,0 > press 200 on 'Notebook'
+      50205,4 > seen 'asking again'
+      50251,8 > dialog 'Notebook' owner the app's window
+      50252,2 > press 201 on 'Notebook'
+      50267,3 > dialog gone
+      50388,2 > seen 'ui-ready'
+      50388,7 > WM_CLOSE to the window
+      50455,9 > exit 0
+      57111,0 > browser processes left for this root 6,7 s after the exit: 0
+      57111,0 > RESULT OK
+== dev close-silent --env SPAR_DEV_PAGE_HANG=3000 -- wait:the page hangs from now:30 sleep:1000 close wait:did not answer the close request:10 dialog:5 press:200 wait:asking again:40 dialog:5 press:202 exit:30
+          4,5 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000]
+       3555,9 > seen 'the page hangs from now'
+       4566,0 > WM_CLOSE to the window
+       9584,6 > seen 'did not answer the close request'
+       9631,3 > dialog 'Notebook' owner the app's window
+       9631,7 > press 200 on 'Notebook'
+      25209,9 > seen 'asking again'
+      25257,2 > dialog 'Notebook' owner the app's window
+      25257,6 > press 202 on 'Notebook'
+      25320,1 > exit 0
+      25607,7 > browser processes left for this root 0,3 s after the exit: 0
+      25607,8 > RESULT OK
+== dev close-hung --env SPAR_DEV_PAGE_HANG=3000 -- wait:the page hangs from now:30 wait:The page is not responding:40 dialog:5 sleep:1000 close wait:Wait / Close anyway:5 sleep:500 dialog:5 press:202 exit:30
+          4,7 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000]
+       3527,8 > seen 'the page hangs from now'
+      20215,3 > seen 'The page is not responding'
+      20276,4 > dialog 'Notebook' owner the app's window
+      21288,5 > WM_CLOSE to the window
+      21291,6 > seen 'Wait / Close anyway'
+      21804,2 > dialog 'Notebook' owner the app's window
+      21805,0 > press 202 on 'Notebook'
+      21884,4 > exit 0
+      22171,3 > browser processes left for this root 0,3 s after the exit: 0
+      22171,3 > RESULT OK
+== dev shutdown-exit-now --env SPAR_DEV_SLOW_DISPOSE_MS=120000 -- wait:ui-ready:30 close wait:shutdown prompt shown:20 dialog:5 press:300 wait:shutdown prompt shown:40 dialog:5 press:301 exit:10
+          4,5 > start Notebook.exe env [SPAR_DEV_SLOW_DISPOSE_MS=120000]
+        534,9 > seen 'ui-ready'
+        537,7 > WM_CLOSE to the window
+      10562,6 > seen 'shutdown prompt shown'
+      10623,9 > dialog 'Notebook' owner none
+      10626,7 > press 300 on 'Notebook'
+      40651,2 > seen 'shutdown prompt shown'
+      40696,0 > dialog 'Notebook' owner none
+      40696,3 > press 301 on 'Notebook'
+      40728,3 > exit 10
+      40752,3 > browser processes left for this root 0,0 s after the exit: 0
+      40752,4 > RESULT OK
+== dev shutdown-finishes --env SPAR_DEV_SLOW_DISPOSE_MS=15000 -- wait:ui-ready:30 close wait:shutdown prompt shown:20 dialog:5 gone:10 exit:10
+          4,7 > start Notebook.exe env [SPAR_DEV_SLOW_DISPOSE_MS=15000]
+        559,2 > seen 'ui-ready'
+        561,9 > WM_CLOSE to the window
+      10591,8 > seen 'shutdown prompt shown'
+      10636,0 > dialog 'Notebook' owner none
+      15646,9 > dialog gone with the process
+      15650,8 > exit 0
+      15675,5 > browser processes left for this root 0,0 s after the exit: 0
+      15675,6 > RESULT OK
+== dev automated-hang --env SPAR_AUTOMATED=1 --env SPAR_DEV_PAGE_HANG=3000 -- wait:The page is not responding:40 no-dialog:3 close wait:closes a page that does not answer:10 exit:30
+          5,0 > start Notebook.exe env [SPAR_AUTOMATED=1 SPAR_DEV_PAGE_HANG=3000]
+      20207,9 > seen 'The page is not responding'
+      23209,0 > no dialog (as expected)
+      23209,8 > WM_CLOSE to the window
+      23212,5 > seen 'closes a page that does not answer'
+      23272,4 > exit 0
+      23561,6 > browser processes left for this root 0,3 s after the exit: 0
+      23561,6 > RESULT OK
+== dev automated-shutdown --env SPAR_AUTOMATED=1 --env SPAR_DEV_SLOW_DISPOSE_MS=13000 -- wait:ui-ready:30 close wait:without finishing:20 no-dialog:2 exit:10
+          4,2 > start Notebook.exe env [SPAR_AUTOMATED=1 SPAR_DEV_SLOW_DISPOSE_MS=13000]
+        520,7 > seen 'ui-ready'
+        523,3 > WM_CLOSE to the window
+      10539,5 > seen 'without finishing'
+      12548,6 > no dialog (as expected)
+      13589,5 > exit 0
+      13611,1 > browser processes left for this root 0,0 s after the exit: 0
+      13611,2 > RESULT OK
+== dev stall --env SPAR_DEV_UI_STALL_MS=300 -- wait:ui-ready:30 wait:development stall trigger:5 sleep:500 stall-ui:200 wait:outside Spar's callbacks:5 close exit:30
+          4,3 > start Notebook.exe env [SPAR_DEV_UI_STALL_MS=300]
+        524,6 > seen 'ui-ready'
+        840,2 > seen 'development stall trigger'
+       1352,6 > suspend the UI thread 64088 for 200 ms
+       1569,7 > seen 'outside Spar's callbacks'
+       1570,2 > WM_CLOSE to the window
+       1627,1 > exit 0
+       8037,9 > browser processes left for this root 6,4 s after the exit: 0
+       8038,0 > RESULT OK
+== aot stall-absent -- wait:ui-ready:30 stall-ui:300 absent:stalled:5 close exit:30
+          4,3 > start Notebook.exe env []
+        433,9 > seen 'ui-ready'
+        437,6 > suspend the UI thread 61280 for 300 ms
+       5747,1 > not seen 'stalled' within 5 s (as expected)
+       5747,9 > WM_CLOSE to the window
+       5792,2 > exit 0
+       6085,7 > browser processes left for this root 0,3 s after the exit: 0
+       6085,8 > RESULT OK
+== kept stall-kept -- wait:stall probe on:10 wait:ui-ready:30 stall-ui:300 wait:outside Spar's callbacks:5 close exit:30
+          5,0 > start Notebook.exe env []
+        111,0 > seen 'stall probe on'
+        481,6 > seen 'ui-ready'
+        484,8 > suspend the UI thread 46232 for 300 ms
+        792,8 > seen 'outside Spar's callbacks'
+        793,3 > WM_CLOSE to the window
+        832,7 > exit 0
+       7240,1 > browser processes left for this root 6,4 s after the exit: 0
+       7240,2 > RESULT OK
+== aot suspend-recover -- wait:ui-ready:30 sleep:2000 suspend-renderer wait:The page is not responding:40 dialog:5 sleep:2000 resume-renderer gone:10 wait:answered again:5 close exit:30
+          4,9 > start Notebook.exe env []
+        434,9 > seen 'ui-ready'
+       2464,7 > suspend renderer 68832
+      20104,5 > seen 'The page is not responding'
+      20151,5 > dialog 'Notebook' owner the app's window
+      22165,4 > resume renderer 68832
+      22185,4 > dialog gone
+      22185,5 > seen 'answered again'
+      22185,8 > WM_CLOSE to the window
+      22227,7 > exit 0
+      22506,0 > browser processes left for this root 0,3 s after the exit: 0
+      22506,1 > RESULT OK
+== aot suspend-reload -- wait:ui-ready:30 sleep:2000 suspend-renderer wait:The page is not responding:40 dialog:5 sleep:1000 press:201 gone:10 wait:ui-ready:20 close exit:30
+          4,4 > start Notebook.exe env []
+        430,0 > seen 'ui-ready'
+       2469,8 > suspend renderer 30904
+      20108,3 > seen 'The page is not responding'
+      20156,3 > dialog 'Notebook' owner the app's window
+      21168,4 > press 201 on 'Notebook'
+      21183,2 > dialog gone
+      21271,5 > seen 'ui-ready'
+      21272,0 > WM_CLOSE to the window
+      21318,0 > exit 0
+      27696,2 > browser processes left for this root 6,4 s after the exit: 0
+      27696,2 > RESULT OK
+== aot engine-merge -- wait:ui-ready:30 sleep:2000 suspend-renderer wait:The page is not responding:40 dialog:5 sleep:30000 press:200 sleep:2000 resume-renderer gone:5 close exit:30
+          7,1 > start Notebook.exe env []
+        441,1 > seen 'ui-ready'
+       2474,7 > suspend renderer 60488
+      20108,6 > seen 'The page is not responding'
+      20155,5 > dialog 'Notebook' owner the app's window
+      50170,7 > press 200 on 'Notebook'
+      52198,1 > resume renderer 60488
+      52199,3 > dialog gone
+      52199,6 > WM_CLOSE to the window
+      52245,4 > exit 0
+      52523,0 > browser processes left for this root 0,3 s after the exit: 0
+      52523,1 > RESULT OK
+== kept hook -- wait:ui-ready:30 sleep:2000 suspend-renderer wait:hook: main Unresponsive:40 dialog:5 sleep:1000 press:201 wait:hook: main Reloaded:5 wait:ui-ready:20 sleep:2000 suspend-renderer wait:hook: main Unresponsive:40 dialog:5 resume-renderer wait:hook: main Recovered:10 sleep:1000 suspend-renderer wait:hook: main Unresponsive:40 close wait:Wait / Close anyway:5 sleep:500 dialog:5 press:202 wait:hook: main ClosedAnyway:5 exit:30
+          4,9 > start Notebook.exe env []
+        426,3 > seen 'ui-ready'
+       2458,3 > suspend renderer 57752
+      20102,9 > seen 'hook: main Unresponsive'
+      20150,8 > dialog 'Notebook' owner the app's window
+      21162,2 > press 201 on 'Notebook'
+      21173,8 > seen 'hook: main Reloaded'
+      21262,5 > seen 'ui-ready'
+      23277,7 > suspend renderer 56500
+      40098,1 > seen 'hook: main Unresponsive'
+      40143,7 > dialog 'Notebook' owner the app's window
+      40155,6 > resume renderer 56500
+      40156,5 > seen 'hook: main Recovered'
+      41179,9 > suspend renderer 56500
+      60098,6 > seen 'hook: main Unresponsive'
+      60099,1 > WM_CLOSE to the window
+      60099,9 > seen 'Wait / Close anyway'
+      60612,1 > dialog 'Notebook' owner the app's window
+      60612,6 > press 202 on 'Notebook'
+      60625,2 > seen 'hook: main ClosedAnyway'
+      60678,5 > exit 0
+      60965,2 > browser processes left for this root 0,3 s after the exit: 0
+      60965,2 > RESULT OK

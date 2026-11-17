@@ -96,6 +96,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | `cancel` | `id` | empty |
   | `ready` | none: the page's `ui-ready` | empty |
   | `closing-done` | none: the page's close work finished | empty |
+  | `pong` | `seq`: the `seq` of the `ping` it answers (added in M1b, decision "Hangs: heartbeat, stall probe and shutdown prompt") | empty |
 
   **Host to page:**
 
@@ -108,8 +109,10 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | `failure` | `id`, `kind`, `code`, `execution`, and for a stream `itemsSent` | empty; in Development only, `{"detail":"…"}` |
   | `event` | `name` (a host event, for example `backend-updated`) | the event's JSON, or empty |
   | `closing` | none: run the close work and answer `closing-done` | empty |
+  | `ping` | `seq`: the heartbeat's number, a safe integer from 1 (section 3, "Hung pages"; added in M1b) | empty |
 
   **Rules:**
+  - **The heartbeat:** the desktop host sends `ping` only to a page that listed it in `hello`, at most one unanswered at a time, and the page answers `pong` with the same `seq` at once, from its message handler. `seq` is not a call id: it follows no id rule and never touches a call. A `ping` or `pong` without a valid `seq` is malformed and dropped. Loopback never pings.
   - **One terminal per call:** exactly one of `result`, `end` or `failure` ends a call; anything for that id afterwards is dropped.
   - **Failures are `CallError` one for one:** `kind`, `code` and `execution` are the decided values (decision "`CallError` kinds"). A confirmed cancel is `kind: "cancelled"` with `execution` `stopped`, or `notStarted` with code `cancelled-before-start`. The page adds `contract` and `command` from its own record of the call id, so a `CallError` names its call without anything more on the wire.
   - **The fingerprint is checked once per document:** the host answers `hello` with its own in `open`. When they differ, every call of that document fails with `rejected` / `contract-mismatch` / `notStarted`, and the page can show a "reload" message at once.

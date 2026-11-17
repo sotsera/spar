@@ -34,6 +34,7 @@ public sealed class SparApplication
             Console.WriteLine($"window kind {kind}: route {options.PageRoute}, modal {options.IsModal}, single {options.IsSingleInstance}, contracts {string.Join(", ", options.AllowedContracts.Select(t => t.Name))}");
         }
 
+        Console.WriteLine($"page hang hook {(_builder.PageHangHandler is null ? "none" : "set")}, stall probe kept {_builder.DiagnosticsOptions.KeepsStallProbe}");
         Console.WriteLine($"tray: {_builder.TrayOptions?.TooltipText} [{string.Join(" | ", _builder.TrayOptions?.MenuItems.Items ?? [])}], close to tray {window.HidesToTray}");
 
         foreach (var service in _builder.Services)
@@ -173,6 +174,26 @@ public sealed class SparBuilder
     {
         ArgumentNullException.ThrowIfNull(handler);
         StartupProblemHandler = handler;
+        return this;
+    }
+
+    internal Action<PageHang, IServiceProvider>? PageHangHandler { get; private set; }
+
+    /// <summary>Observes a page that stops responding (3.16); Spar's dialog always shows.</summary>
+    public SparBuilder OnPageUnresponsive(Action<PageHang, IServiceProvider> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        PageHangHandler = handler;
+        return this;
+    }
+
+    internal DiagnosticsOptions DiagnosticsOptions { get; } = new();
+
+    /// <summary>What Spar records for diagnosing the app (3.13).</summary>
+    public SparBuilder Diagnostics(Action<DiagnosticsOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(DiagnosticsOptions);
         return this;
     }
 }

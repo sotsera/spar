@@ -1,0 +1,41 @@
+       2,6 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:10000]
+      64,0 | spar info +7.2 ms: [daf16fb7] Host started 49.2 ms after the process.
+      70,0 | spar info +13.1 ms: [daf16fb7] single instance at 12.5 ms
+      71,4 | spar info +16.5 ms: [daf16fb7] prerequisites checked at 16.5 ms
+      80,1 | spar info +25.1 ms: [daf16fb7] UI-thread stall probe on.
+      88,5 | spar info +33.5 ms: [daf16fb7] services built at 33.5 ms
+     104,6 | spar info +49.8 ms: [daf16fb7] window shown at 49.8 ms
+     104,9 | spar info +50.1 ms: [daf16fb7] Theme dark (system), window #1d1f24.
+     122,6 | spar info +67.7 ms: [daf16fb7] environment at 67.7 ms
+     123,2 | spar info +68.3 ms: [daf16fb7] WebView2 Runtime 157.0.4341.46
+     135,1 | spar info +80.2 ms: [daf16fb7] Heartbeat every 5000 ms.
+     315,6 | spar info +260.7 ms: [daf16fb7] controller at 260.7 ms
+     319,5 | spar info +264.6 ms: [daf16fb7] navigation started at 264.6 ms
+     438,4 | spar info +383.4 ms: [daf16fb7] Bridge: document 5ae70687c17a514b opened.
+     438,6 | spar info +383.5 ms: [daf16fb7] first document at 383.5 ms
+     467,0 | spar info +412.1 ms: [daf16fb7] first bridge message at 412.1 ms
+     468,5 | spar info +413.6 ms: [daf16fb7] first navigation completed at 413.6 ms
+     474,6 | spar info +419.7 ms: [daf16fb7] first bridge reply at 419.7 ms
+     474,8 | spar info +420.0 ms: [daf16fb7] Heartbeat armed for the new document.
+     488,4 | spar info +433.5 ms: [daf16fb7] ui-ready at 433.5 ms
+     488,5 | spar info +433.5 ms: [daf16fb7] Bridge: document 5ae70687c17a514b reported ui-ready.
+     489,2 | spar info +434.3 ms: [daf16fb7] 404 for /favicon.ico
+    3491,0 | spar warn +3436.1 ms: [daf16fb7] Development trigger: the page is busy for 10000 ms from now.
+    3491,1 > seen 'busy for'
+   33500,8 > no dialog (as expected)
+   33501,3 > WM_CLOSE to the window
+   33503,4 | spar info +33448.2 ms: [daf16fb7] close requested (User) at 33448.2 ms
+   33507,7 | spar info +33452.8 ms: Close request for window main (User): the backend's guard answered Close
+   33508,9 | spar info +33454.0 ms: [daf16fb7] closing at 33454 ms
+   33509,0 | spar info +33454.2 ms: [daf16fb7] Heartbeat: 6 ticks, 6 pings, longest tick on the UI thread 0.756 ms.
+   33509,9 | spar info +33455.0 ms: [daf16fb7] page close work done at 33455 ms
+   33510,4 | spar info +33455.6 ms: [daf16fb7] Bridge: document 5ae70687c17a514b closed (window closing).
+   33510,5 | spar info +33455.7 ms: [daf16fb7] calls stopped at 33455.7 ms
+   33510,5 | spar info +33455.7 ms: [daf16fb7] calls settled at 33455.7 ms
+   33525,7 | spar info +33470.8 ms: [daf16fb7] controller closed at 33470.8 ms
+   33539,8 | spar info +33484.9 ms: [daf16fb7] window destroyed at 33484.9 ms
+   33545,0 | spar info +33490.1 ms: [daf16fb7] services disposed at 33490.1 ms
+   33545,1 | spar info +33490.2 ms: [daf16fb7] exit 0 at 33490.2 ms
+   33557,0 > exit 0
+   33836,2 > browser processes left for this root 0,3 s after the exit: 0
+   33836,2 > RESULT OK

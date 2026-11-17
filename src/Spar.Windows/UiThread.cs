@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Spar.Hosting;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
@@ -19,23 +20,30 @@ internal interface IWindowMessages
 /// The window's UI thread (plan section 3, "Threading"): one STA that owns every window, WebView2 object and their
 /// cleanup, and keeps pumping messages until the app's window is gone. It is also the synchronization context of its
 /// own thread, so an <c>await</c> there continues there; work posted from other threads goes through a message-only
-/// window, one message per burst. Nothing slow runs on it: callers post short work only.
+/// window, one message per burst. Nothing slow runs on it: callers post short work only. Each piece of work runs in a
+/// named <see cref="Enter"/> scope, so the stall probe (when the build has one) can name the callback that stalled it.
 /// </summary>
 internal sealed unsafe class UiThread : SynchronizationContext
 {
     private const uint DrainMessage = PInvoke.WM_APP + 1;
     private const string ClassName = "Spar.Window";
 
+    /// <summary>The name of posted work that gives none, and of <c>await</c> continuations.</summary>
+    private const string PostedWork = "posted work";
+
+    private const string AwaitContinuation = "await continuation";
+
     /// <summary><c>GWLP_USERDATA</c>.</summary>
     private const int UserData = -21;
 
-    private readonly ConcurrentQueue<(SendOrPostCallback Callback, object? State)> _queue = new();
+    private readonly ConcurrentQueue<(SendOrPostCallback Callback, object? State, string Name)> _queue = new();
     private readonly Action<Exception> _report;
     private readonly uint _background;
     private int _threadId;
     private int _drainPosted;
     private HWND _queueWindow;
     private HBRUSH _brush;
+    private IUiThreadWatch? _probe;
 
     private UiThread(uint background, Action<Exception> report)
     {
@@ -60,12 +68,33 @@ internal sealed unsafe class UiThread : SynchronizationContext
     /// <summary>Whether the caller is on this UI thread.</summary>
     public bool IsCurrent => Environment.CurrentManagedThreadId == _threadId;
 
-    /// <summary>Runs <paramref name="work"/> on the UI thread, after what is already queued. Safe from any thread.</summary>
-    public void Post(Action work) => Post(static state => ((Action)state!)(), work);
+    /// <summary>
+    /// Runs <paramref name="work"/> on the UI thread, after what is already queued. Safe from any thread.
+    /// <paramref name="name"/> names it for the stall probe.
+    /// </summary>
+    public void Post(Action work, string name = PostedWork) => Enqueue(static state => ((Action)state!)(), work, name);
 
-    public override void Post(SendOrPostCallback d, object? state)
+    public override void Post(SendOrPostCallback d, object? state) => Enqueue(d, state, AwaitContinuation);
+
+    /// <summary>
+    /// Starts the stall probe on this thread (UI thread, before the first window). The probe's own work goes through
+    /// the same queue as everything else, which is what it measures; it stops when the thread's loop ends.
+    /// </summary>
+    public void UseProbe(IUiThreadWatch probe)
     {
-        _queue.Enqueue((d, state));
+        _probe = probe;
+        probe.Start(work => Post(work, "stall probe"));
+    }
+
+    /// <summary>
+    /// A Spar callback on this thread, named for the stall probe; dispose it when the callback ends. Without a probe
+    /// (a Production build that did not keep it) it does nothing.
+    /// </summary>
+    public CallbackScope Enter(string name) => _probe is { } probe ? new CallbackScope(probe, name) : default;
+
+    private void Enqueue(SendOrPostCallback d, object? state, string name)
+    {
+        _queue.Enqueue((d, state, name));
 
         // One message per burst: the drain empties the queue, and the next post after it asks again.
         if (Interlocked.Exchange(ref _drainPosted, 1) == 0)
@@ -136,6 +165,7 @@ internal sealed unsafe class UiThread : SynchronizationContext
         }
         finally
         {
+            _probe?.Stop();
             Unregister();
         }
     }
@@ -206,6 +236,7 @@ internal sealed unsafe class UiThread : SynchronizationContext
         {
             try
             {
+                using var scope = Enter(item.Name);
                 item.Callback(item.State);
             }
             catch (Exception exception)
@@ -285,6 +316,28 @@ internal sealed unsafe class UiThread : SynchronizationContext
             return default(LRESULT);
         }
     }
+}
+
+/// <summary>
+/// One Spar callback on the UI thread, from <see cref="UiThread.Enter"/> until it is disposed: the stall probe learns
+/// how long it ran. A callback during which the thread pumped (a modal dialog's loop) is not counted as a stall.
+/// </summary>
+internal readonly ref struct CallbackScope
+{
+    private readonly IUiThreadWatch? _probe;
+    private readonly string? _name;
+    private readonly long _started;
+    private readonly long _ticks;
+
+    public CallbackScope(IUiThreadWatch probe, string name)
+    {
+        _probe = probe;
+        _name = name;
+        _started = probe.Now();
+        _ticks = probe.Ticks;
+    }
+
+    public void Dispose() => _probe?.Ran(_name!, _started, _ticks);
 }
 
 /// <summary>A window's owner that logs what its message handling threw.</summary>

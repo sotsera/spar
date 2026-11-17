@@ -219,6 +219,57 @@ public sealed class BridgeSessionTests : IAsyncLifetime
         Assert.True(closingDone);
     }
 
+    [Fact]
+    public async Task A_page_that_lists_ping_is_pinged_and_its_pongs_are_reported()
+    {
+        var opened = new List<bool>();
+        var pongs = new List<long>();
+        _session.Opened += opened.Add;
+        _session.Pong += pongs.Add;
+        _session.Receive("{\"type\":\"hello\",\"protocol\":1,\"types\":[\"open\",\"result\",\"ping\"],\"contracts\":\"0123456789abcdef\"}\t");
+        Assert.Equal(BridgeMessageType.Open, (await _sent.NextAsync()).Type);
+
+        Assert.True(_session.Ping(1));
+        var ping = await _sent.NextAsync();
+        _session.Receive("{\"type\":\"pong\",\"seq\":1}\t");
+        _session.Receive("{\"type\":\"pong\",\"seq\":0}\t");
+
+        Assert.Equal([true], opened);
+        Assert.Equal((BridgeMessageType.Ping, 1L), (ping.Type, ping.Seq!.Value));
+        Assert.Equal([1L], pongs);
+        Assert.Single(_dropped);
+    }
+
+    [Fact]
+    public async Task A_page_that_does_not_list_ping_is_never_pinged()
+    {
+        var opened = new List<bool>();
+        _session.Opened += opened.Add;
+        await OpenAsync();
+
+        Assert.False(_session.Ping(1));
+
+        Assert.Equal([false], opened);
+        Assert.True(await _sent.StaysQuietAsync(TimeSpan.FromMilliseconds(100)));
+    }
+
+    [Fact]
+    public async Task A_closed_document_is_not_pinged_and_a_pong_never_touches_a_call()
+    {
+        _session.Receive("{\"type\":\"hello\",\"protocol\":1,\"types\":[\"ping\"],\"contracts\":\"0123456789abcdef\"}\t");
+        Assert.Equal(BridgeMessageType.Open, (await _sent.NextAsync()).Type);
+
+        // A pong is no call: its seq is not an id, so the next call may still use id 1.
+        _session.Receive("{\"type\":\"pong\",\"seq\":5}\t");
+        _session.Receive(Call(1, "pages", "get", "{\"id\":\"ideas\"}"));
+        var result = await _sent.NextAsync();
+        Assert.Equal((BridgeMessageType.Result, 1L), (result.Type, result.Id!.Value));
+
+        _session.Close();
+        Assert.False(_session.Ping(2));
+        Assert.Empty(_dropped);
+    }
+
     private BridgeSession Session(bool includeDetails)
     {
         var sent = _session is null ? _sent : new SentMessages();

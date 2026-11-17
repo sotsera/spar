@@ -1,0 +1,39 @@
+       2,6 > start Notebook.exe env []
+      73,1 | spar info +0.2 ms: [d1f2dcfd] Host started 32.3 ms after the process.
+      73,3 | spar info +0.7 ms: [d1f2dcfd] single instance at 0.7 ms
+      73,3 | spar info +0.9 ms: [d1f2dcfd] prerequisites checked at 0.9 ms
+      73,3 | spar info +1.1 ms: [d1f2dcfd] services built at 1.1 ms
+      94,0 | spar info +21.9 ms: [d1f2dcfd] window shown at 21.9 ms
+      94,2 | spar info +22.1 ms: [d1f2dcfd] Theme dark (system), window #1d1f24.
+     100,2 | spar info +28.1 ms: [d1f2dcfd] environment at 28.1 ms
+     100,3 | spar info +28.2 ms: [d1f2dcfd] WebView2 Runtime 157.0.4341.46
+     103,8 | spar info +31.7 ms: [d1f2dcfd] Heartbeat every 5000 ms.
+     292,8 | spar info +220.7 ms: [d1f2dcfd] controller at 220.7 ms
+     293,4 | spar info +221.3 ms: [d1f2dcfd] navigation started at 221.3 ms
+     413,7 | spar info +341.5 ms: [d1f2dcfd] Bridge: document 3497f5d67e7e3d61 opened.
+     413,8 | spar info +341.5 ms: [d1f2dcfd] first document at 341.5 ms
+     440,0 | spar info +367.9 ms: [d1f2dcfd] first bridge message at 367.9 ms
+     440,2 | spar info +368.1 ms: [d1f2dcfd] first bridge reply at 368.1 ms
+     440,3 | spar info +368.1 ms: [d1f2dcfd] Heartbeat armed for the new document.
+     441,9 | spar info +369.8 ms: [d1f2dcfd] first navigation completed at 369.8 ms
+     464,4 | spar info +392.3 ms: [d1f2dcfd] ui-ready at 392.3 ms
+     464,5 > seen 'ui-ready'
+     464,5 | spar info +392.3 ms: [d1f2dcfd] Bridge: document 3497f5d67e7e3d61 reported ui-ready.
+     467,0 | spar info +394.9 ms: [d1f2dcfd] 404 for /favicon.ico
+   60479,8 > no dialog (as expected)
+   60480,3 > WM_CLOSE to the window
+   60481,1 | spar info +60408.6 ms: [d1f2dcfd] close requested (User) at 60408.6 ms
+   60481,1 | spar info +60409.1 ms: Close request for window main (User): the backend's guard answered Close
+   60481,2 | spar info +60409.2 ms: [d1f2dcfd] closing at 60409.2 ms
+   60481,3 | spar info +60409.2 ms: [d1f2dcfd] Heartbeat: 12 ticks, 13 pings, longest tick on the UI thread 0.149 ms.
+   60481,5 | spar info +60409.4 ms: [d1f2dcfd] page close work done at 60409.4 ms
+   60481,5 | spar info +60409.4 ms: [d1f2dcfd] Bridge: document 3497f5d67e7e3d61 closed (window closing).
+   60481,5 | spar info +60409.5 ms: [d1f2dcfd] calls stopped at 60409.4 ms
+   60481,5 | spar info +60409.5 ms: [d1f2dcfd] calls settled at 60409.5 ms
+   60497,0 | spar info +60424.9 ms: [d1f2dcfd] controller closed at 60424.9 ms
+   60508,6 | spar info +60436.5 ms: [d1f2dcfd] window destroyed at 60436.4 ms
+   60512,8 | spar info +60440.7 ms: [d1f2dcfd] services disposed at 60440.7 ms
+   60512,8 | spar info +60440.7 ms: [d1f2dcfd] exit 0 at 60440.7 ms
+   60520,2 > exit 0
+   60792,1 > browser processes left for this root 0,3 s after the exit: 0
+   60792,1 > RESULT OK

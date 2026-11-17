@@ -32,3 +32,20 @@ public sealed class FolderOptions
         return this;
     }
 }
+
+/// <summary>What Spar records for diagnosing the app on a user's machine (3.13).</summary>
+public sealed class DiagnosticsOptions
+{
+    internal DiagnosticsOptions()
+    {
+    }
+
+    internal bool KeepsStallProbe { get; private set; }
+
+    /// <summary>Keeps the UI-thread stall probe in a Production build, logging only.</summary>
+    public DiagnosticsOptions KeepStallProbe()
+    {
+        KeepsStallProbe = true;
+        return this;
+    }
+}

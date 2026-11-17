@@ -15,6 +15,9 @@ public enum BridgeMessageType
     Ready,
     ClosingDone,
 
+    /// <summary>The page's answer to <see cref="Ping"/>, sent from its message handler with the same <c>seq</c>.</summary>
+    Pong,
+
     // Host to page.
     Open,
     Result,
@@ -23,6 +26,9 @@ public enum BridgeMessageType
     Failure,
     Event,
     Closing,
+
+    /// <summary>The heartbeat (plan section 3, "Hung pages"), sent only to a page that listed it in <c>hello</c>.</summary>
+    Ping,
 
     /// <summary>A well-formed message of a type this side does not know (a newer peer).</summary>
     Unknown,
@@ -75,6 +81,9 @@ public sealed record BridgeMessage(BridgeMessageType Type)
     /// <summary>In <c>event</c>: the event's name.</summary>
     public string? Name { get; init; }
 
+    /// <summary>In <c>ping</c> and <c>pong</c>: the heartbeat's number, a safe integer from 1.</summary>
+    public long? Seq { get; init; }
+
     /// <summary>The JSON after the TAB, as UTF-8; empty when there is none.</summary>
     public ReadOnlyMemory<byte> Payload { get; init; }
 
@@ -87,6 +96,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         BridgeMessageType.Cancel => "cancel",
         BridgeMessageType.Ready => "ready",
         BridgeMessageType.ClosingDone => "closing-done",
+        BridgeMessageType.Pong => "pong",
         BridgeMessageType.Open => "open",
         BridgeMessageType.Result => "result",
         BridgeMessageType.Items => "items",
@@ -94,6 +104,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         BridgeMessageType.Failure => "failure",
         BridgeMessageType.Event => "event",
         BridgeMessageType.Closing => "closing",
+        BridgeMessageType.Ping => "ping",
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, "An unknown message has no type name of its own."),
     };
 
@@ -106,6 +117,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         "cancel" => BridgeMessageType.Cancel,
         "ready" => BridgeMessageType.Ready,
         "closing-done" => BridgeMessageType.ClosingDone,
+        "pong" => BridgeMessageType.Pong,
         "open" => BridgeMessageType.Open,
         "result" => BridgeMessageType.Result,
         "items" => BridgeMessageType.Items,
@@ -113,6 +125,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         "failure" => BridgeMessageType.Failure,
         "event" => BridgeMessageType.Event,
         "closing" => BridgeMessageType.Closing,
+        "ping" => BridgeMessageType.Ping,
         _ => BridgeMessageType.Unknown,
     };
 }

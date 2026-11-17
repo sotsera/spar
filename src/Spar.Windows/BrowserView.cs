@@ -35,6 +35,7 @@ internal sealed class BrowserView
     private bool _rendererReloadUsed;
     private bool _browserRecreated;
     private bool _watchingReadiness;
+    private bool _userReload;
 
     /// <param name="transparent">
     /// Whether the WebView's default background is transparent over the window colour (plan section 3d). Always true
@@ -65,6 +66,15 @@ internal sealed class BrowserView
         _fail = fail;
         _startupFailed = startupFailed;
     }
+
+    /// <summary>
+    /// WebView2 reported the page's renderer unresponsive (<c>ProcessFailed</c>, <c>RenderProcessUnresponsive</c>): the
+    /// same state as the heartbeat's alarm (plan section 3, "Hung pages"). Raised on the UI thread.
+    /// </summary>
+    public event Action? RendererUnresponsive;
+
+    /// <summary>Whether the controller shows the WebView: a hidden controller's page is not pinged (UI thread).</summary>
+    public bool IsShown => _controller is { } controller && controller.GetIsVisible() != 0;
 
     /// <summary>Creates the environment and the controller, then opens the page. Failures map to the start-up exit codes.</summary>
     public async Task StartAsync()
@@ -113,6 +123,65 @@ internal sealed class BrowserView
     }
 
     /// <summary>
+    /// "Reload page" in the hung-page dialog (plan section 3, "Hung pages"): reloading alone never recovers a hung
+    /// renderer, so the renderer is ended first, and the page loads again once it is gone. This is the user's choice, so
+    /// it does not use up the automatic reload. A renderer that cannot be found is reloaded as it is (UI thread).
+    /// </summary>
+    public void ReloadHungPage()
+    {
+        _userReload = true;
+        if (TerminateRenderers() == 0)
+        {
+            _userReload = false;
+            _webView?.Reload();
+            _log.Step("no renderer to end; page reloaded");
+        }
+    }
+
+    /// <summary>
+    /// Ends the environment's renderer processes, the only way a hung page recovers (pitfall "A hung page"). WebView2
+    /// has no API for it, so the process ids come from <c>GetProcessInfos</c>, which works only on the UI thread. The
+    /// environment is the app's alone (one data folder per app, single instance), so its renderers are this window's.
+    /// Returns how many were ended.
+    /// </summary>
+    public int TerminateRenderers()
+    {
+        if (_environment is null)
+        {
+            return 0;
+        }
+
+        var ended = 0;
+        foreach (var process in RendererProcessIds(_environment))
+        {
+            if (ProcessControl.Terminate(process))
+            {
+                ended++;
+            }
+            else
+            {
+                _log.Warn($"Renderer process {process} could not be ended.");
+            }
+        }
+
+        _log.Step($"renderer processes ended: {ended}");
+        return ended;
+    }
+
+    /// <summary>Runs a script in the page; for the Development-only triggers that make a page hang on demand.</summary>
+    public Task<string?> RunScriptAsync(string script)
+    {
+        if (_webView is null)
+        {
+            return Task.FromResult<string?>(null);
+        }
+
+        var completed = new ScriptCompleted();
+        _webView.ExecuteScript(script, completed);
+        return completed.Task;
+    }
+
+    /// <summary>
     /// Teardown step 5 (plan section 3, "Teardown"): no recovery from here on, the events removed, and the controller
     /// closed on the UI thread. The host then exits without waiting for the browser.
     /// </summary>
@@ -142,7 +211,13 @@ internal sealed class BrowserView
         _log.Phase("environment");
         _runtimeVersion = environment.GetBrowserVersionString();
         _log.Info($"WebView2 Runtime {_runtimeVersion}");
-        var exited = new WebView2EventHandler(args => OnBrowserExited(generation, args), Report);
+        var exited = new WebView2EventHandler(
+            args =>
+            {
+                using var scope = _ui.Enter("BrowserProcessExited");
+                OnBrowserExited(generation, args);
+            },
+            Report);
         Subscribe(exited, environment.AddBrowserProcessExited(exited), environment.RemoveBrowserProcessExited);
 
         var controllerCreated = new ControllerCompleted();
@@ -216,26 +291,26 @@ internal sealed class BrowserView
 
     private void SubscribeToWebView(int generation, ICoreWebView2Environment10 environment, ICoreWebView2_22 webView, WebViewBridge bridge)
     {
-        var requested = Handler(generation, args => _pages.OnRequested(environment, args));
+        var requested = Handler(generation, "WebResourceRequested", args => _pages.OnRequested(environment, args));
         Subscribe(requested, webView.AddWebResourceRequested(requested), webView.RemoveWebResourceRequested);
 
-        var starting = Handler(generation, _ => bridge.OnNavigationStarting());
+        var starting = Handler(generation, "NavigationStarting", _ => bridge.OnNavigationStarting());
         Subscribe(starting, webView.AddNavigationStarting(starting), webView.RemoveNavigationStarting);
 
-        var loading = Handler(generation, _ =>
+        var loading = Handler(generation, "ContentLoading", _ =>
         {
             bridge.OnContentLoading();
             _log.Phase("first document");
         });
         Subscribe(loading, webView.AddContentLoading(loading), webView.RemoveContentLoading);
 
-        var completed = Handler(generation, OnNavigationCompleted);
+        var completed = Handler(generation, "NavigationCompleted", OnNavigationCompleted);
         Subscribe(completed, webView.AddNavigationCompleted(completed), webView.RemoveNavigationCompleted);
 
-        var message = Handler(generation, bridge.OnMessage);
+        var message = Handler(generation, "WebMessageReceived", bridge.OnMessage);
         Subscribe(message, webView.AddWebMessageReceived(message), webView.RemoveWebMessageReceived);
 
-        var failed = Handler(generation, args => OnProcessFailed(generation, args, bridge));
+        var failed = Handler(generation, "ProcessFailed", args => OnProcessFailed(generation, args, bridge));
         Subscribe(failed, webView.AddProcessFailed(failed), webView.RemoveProcessFailed);
 
         // A healthy document again: the renderer may be reloaded automatically once more. Subscribed once, for every generation.
@@ -294,7 +369,8 @@ internal sealed class BrowserView
                 _ui.Post(() => _ = RecoverBrowserAsync(generation, "the browser process failed"));
                 break;
             case WebView2Values.RenderProcessUnresponsive:
-                _log.Warn("The page's renderer is not responding.");
+                _log.Warn("WebView2 reports the page's renderer is not responding.");
+                RendererUnresponsive?.Invoke();
                 break;
             default:
                 _log.Info($"A browser helper process exited (kind {kind}); WebView2 restarts it.");
@@ -307,6 +383,15 @@ internal sealed class BrowserView
     {
         bridge.OnNavigationStarting();
         _log.Step("renderer exited");
+        if (_userReload)
+        {
+            // The user chose "Reload page" for a hung page: the renderer was ended for it, and the page loads once.
+            _userReload = false;
+            _webView?.Reload();
+            _log.Step("page reloaded after the hung renderer was ended");
+            return;
+        }
+
         if (_rendererReloadUsed)
         {
             _fail(5, "The page stopped working again right after it was reloaded.");
@@ -397,14 +482,48 @@ internal sealed class BrowserView
         return true;
     }
 
-    private WebView2EventHandler Handler(int generation, Action<nint> handle) =>
+    /// <summary>An event handler of this generation, named for the stall probe.</summary>
+    private WebView2EventHandler Handler(int generation, string name, Action<nint> handle) =>
         new(args =>
         {
+            using var scope = _ui.Enter(name);
             if (generation == _generation)
             {
                 handle(args);
             }
         }, Report);
+
+    /// <summary>The ids of the environment's renderer processes, from <c>GetProcessInfos</c> (UI thread only).</summary>
+    private static List<int> RendererProcessIds(ICoreWebView2Environment10 environment)
+    {
+        var ids = new List<int>();
+        var processes = Com.Take<ICoreWebView2ProcessInfoCollection>(environment.GetProcessInfos());
+        try
+        {
+            var count = processes.GetCount();
+            for (uint index = 0; index < count; index++)
+            {
+                var process = Com.Take<ICoreWebView2ProcessInfo>(processes.GetValueAtIndex(index));
+                try
+                {
+                    if (process.GetKind() == WebView2Values.RendererProcess)
+                    {
+                        ids.Add(process.GetProcessId());
+                    }
+                }
+                finally
+                {
+                    Com.Release(process);
+                }
+            }
+        }
+        finally
+        {
+            Com.Release(processes);
+        }
+
+        return ids;
+    }
 
     private void Subscribe(WebView2EventHandler handler, EventRegistrationToken token, Action<EventRegistrationToken> remove) =>
         _subscriptions.Add(new Subscription(handler, token, remove));

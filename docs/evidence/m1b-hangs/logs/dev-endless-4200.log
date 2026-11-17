@@ -1,0 +1,55 @@
+       2,7 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=4200]
+      63,6 | spar info +7.2 ms: [4a257804] Host started 48.2 ms after the process.
+      69,6 | spar info +13.0 ms: [4a257804] single instance at 12.4 ms
+      71,0 | spar info +16.4 ms: [4a257804] prerequisites checked at 16.4 ms
+      79,2 | spar info +24.6 ms: [4a257804] UI-thread stall probe on.
+      87,7 | spar info +33.1 ms: [4a257804] services built at 33.1 ms
+     101,9 | spar info +47.2 ms: [4a257804] window shown at 47.2 ms
+     102,1 | spar info +47.5 ms: [4a257804] Theme dark (system), window #1d1f24.
+     118,7 | spar info +64.1 ms: [4a257804] environment at 64.1 ms
+     119,5 | spar info +64.8 ms: [4a257804] WebView2 Runtime 157.0.4341.46
+     131,0 | spar info +76.4 ms: [4a257804] Heartbeat every 5000 ms.
+     312,8 | spar info +258.1 ms: [4a257804] controller at 258.1 ms
+     316,7 | spar info +262.1 ms: [4a257804] navigation started at 262.1 ms
+     416,9 | spar info +362.2 ms: [4a257804] Bridge: document ad104a5f1e192e57 opened.
+     417,0 | spar info +362.3 ms: [4a257804] first document at 362.3 ms
+     443,2 | spar info +388.5 ms: [4a257804] first bridge message at 388.5 ms
+     444,8 | spar info +390.2 ms: [4a257804] first navigation completed at 390.2 ms
+     451,5 | spar info +396.9 ms: [4a257804] first bridge reply at 396.9 ms
+     452,2 | spar info +397.6 ms: [4a257804] Heartbeat armed for the new document.
+     462,8 | spar info +408.2 ms: [4a257804] ui-ready at 408.2 ms
+     462,9 | spar info +408.2 ms: [4a257804] Bridge: document ad104a5f1e192e57 reported ui-ready.
+     467,5 | spar info +412.8 ms: [4a257804] 404 for /favicon.ico
+    4673,4 | spar warn +4618.8 ms: [4a257804] Development trigger: the page hangs from now.
+    4673,4 > seen 'the page hangs from now'
+   20143,4 | spar warn +20088.8 ms: [4a257804] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20143,4 > seen 'The page is not responding'
+   20144,3 | spar info +20089.7 ms: [4a257804] hung-page dialog shown (Wait / Reload page) at 20089.7 ms
+   20190,2 > dialog 'Notebook' owner the app's window
+   21203,9 > press 201 on 'Notebook'
+   21217,0 | spar info +21162.4 ms: [4a257804] hung-page dialog: Reload page, after 16.1 s at 21162.4 ms
+   21219,1 | spar info +21164.5 ms: [4a257804] renderer processes ended: 1 at 21164.5 ms
+   21219,2 > dialog gone
+   21226,2 | spar info +21171.6 ms: [4a257804] Bridge: document ad104a5f1e192e57 closed (navigation).
+   21226,3 | spar info +21171.7 ms: [4a257804] renderer exited at 21171.7 ms
+   21226,5 | spar info +21172.0 ms: [4a257804] page reloaded after the hung renderer was ended at 21172 ms
+   21265,8 | spar info +21211.1 ms: [4a257804] Bridge: document 6aba4f77638045f8 opened.
+   21286,6 | spar info +21231.9 ms: [4a257804] Heartbeat armed for the new document.
+   21307,0 | spar info +21252.4 ms: [4a257804] Bridge: document 6aba4f77638045f8 reported ui-ready.
+   21307,1 > seen 'ui-ready'
+   23313,0 > WM_CLOSE to the window
+   23314,9 | spar info +23260.3 ms: [4a257804] close requested (User) at 23260.3 ms
+   23320,1 | spar info +23265.4 ms: Close request for window main (User): the backend's guard answered Close
+   23321,4 | spar info +23266.8 ms: [4a257804] closing at 23266.8 ms
+   23321,6 | spar info +23267.0 ms: [4a257804] Heartbeat: 4 ticks, 2 pings, longest tick on the UI thread 1.856 ms.
+   23322,5 | spar info +23267.9 ms: [4a257804] page close work done at 23267.9 ms
+   23322,7 | spar info +23268.2 ms: [4a257804] Bridge: document 6aba4f77638045f8 closed (window closing).
+   23322,8 | spar info +23268.2 ms: [4a257804] calls stopped at 23268.2 ms
+   23322,8 | spar info +23268.2 ms: [4a257804] calls settled at 23268.2 ms
+   23339,3 | spar info +23284.7 ms: [4a257804] controller closed at 23284.7 ms
+   23354,3 | spar info +23299.7 ms: [4a257804] window destroyed at 23299.7 ms
+   23361,0 | spar info +23306.3 ms: [4a257804] services disposed at 23306.3 ms
+   23361,0 | spar info +23306.4 ms: [4a257804] exit 0 at 23306.4 ms
+   23374,8 > exit 0
+   23646,9 > browser processes left for this root 0,3 s after the exit: 0
+   23647,0 > RESULT OK

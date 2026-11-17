@@ -67,12 +67,19 @@ var app = SparApplication.Create(args, spar =>
     // A missing prerequisite opens the company's install guide in place of Spar's message (3.15). Decided.
     spar.OnStartupProblem(SupportPage.TryOpen);
 
+    // A page that stops responding is recorded for support; Spar's own dialog still asks the user (3.16). Decided.
+    spar.OnPageUnresponsive((hang, services) => services.GetRequiredService<HangLog>().Record(hang));
+
+    // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
+    spar.Diagnostics(d => d.KeepStallProbe());
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
     spar.Services.AddSingleton<RunningCopies>();
     spar.Services.AddSingleton<RecipeQueue>();
+    spar.Services.AddSingleton<HangLog>();
 });
 
 return app.Run();

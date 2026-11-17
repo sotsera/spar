@@ -1,0 +1,50 @@
+       4,7 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000]
+     121,1 | spar info +12.7 ms: [8fa8711c] Host started 94.2 ms after the process.
+     131,4 | spar info +23.3 ms: [8fa8711c] single instance at 22.4 ms
+     133,6 | spar info +28.6 ms: [8fa8711c] prerequisites checked at 28.6 ms
+     151,1 | spar info +45.8 ms: [8fa8711c] UI-thread stall probe on.
+     165,8 | spar info +60.8 ms: [8fa8711c] services built at 60.8 ms
+     177,6 | spar info +72.7 ms: [8fa8711c] window shown at 72.7 ms
+     177,9 | spar info +72.9 ms: [8fa8711c] Theme dark (system), window #1d1f24.
+     193,5 | spar info +88.5 ms: [8fa8711c] environment at 88.5 ms
+     194,1 | spar info +89.2 ms: [8fa8711c] WebView2 Runtime 157.0.4341.46
+     204,4 | spar info +99.4 ms: [8fa8711c] Heartbeat every 5000 ms.
+     377,7 | spar info +272.6 ms: [8fa8711c] controller at 272.6 ms
+     381,0 | spar info +276.0 ms: [8fa8711c] navigation started at 276 ms
+     478,6 | spar info +373.6 ms: [8fa8711c] Bridge: document 13051cfc80b85291 opened.
+     478,8 | spar info +373.7 ms: [8fa8711c] first document at 373.7 ms
+     504,8 | spar info +398.2 ms: [8fa8711c] first bridge message at 398.2 ms
+     505,8 | spar info +400.3 ms: [8fa8711c] first navigation completed at 400.3 ms
+     512,6 | spar info +406.2 ms: [8fa8711c] first bridge reply at 406.2 ms
+     512,7 | spar info +406.5 ms: [8fa8711c] Heartbeat armed for the new document.
+     525,0 | spar info +419.6 ms: [8fa8711c] ui-ready at 419.6 ms
+     525,1 | spar info +419.6 ms: [8fa8711c] Bridge: document 13051cfc80b85291 reported ui-ready.
+     526,3 | spar info +421.2 ms: [8fa8711c] 404 for /favicon.ico
+    3527,7 | spar warn +3422.7 ms: [8fa8711c] Development trigger: the page hangs from now.
+    3527,8 > seen 'the page hangs from now'
+   20215,2 | spar warn +20110.2 ms: [8fa8711c] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20215,3 > seen 'The page is not responding'
+   20216,0 | spar info +20111.1 ms: [8fa8711c] hung-page dialog shown (Wait / Reload page) at 20111 ms
+   20276,4 > dialog 'Notebook' owner the app's window
+   21288,5 > WM_CLOSE to the window
+   21290,6 | spar info +21185.6 ms: [8fa8711c] close requested (User) at 21185.6 ms
+   21291,5 | spar info +21186.5 ms: [8fa8711c] hung-page dialog shown (Wait / Close anyway) at 21186.5 ms
+   21291,6 > seen 'Wait / Close anyway'
+   21804,2 > dialog 'Notebook' owner the app's window
+   21805,0 > press 202 on 'Notebook'
+   21817,8 | spar info +21712.5 ms: [8fa8711c] hung-page dialog: Close anyway at 21712.5 ms
+   21820,5 | spar info +21715.5 ms: Close request for window main (User): the backend's guard answered Close
+   21820,9 | spar info +21716.0 ms: [8fa8711c] window closed anyway; the page had not answered for 16.6 s at 21716 ms
+   21821,8 | spar info +21716.9 ms: [8fa8711c] closing at 21716.9 ms
+   21822,0 | spar info +21717.1 ms: [8fa8711c] Heartbeat: 4 ticks, 1 pings, longest tick on the UI thread 1.814 ms.
+   21822,7 | spar info +21717.8 ms: [8fa8711c] Bridge: document 13051cfc80b85291 closed (window closing).
+   21822,8 | spar info +21717.9 ms: [8fa8711c] calls stopped at 21717.9 ms
+   21822,9 | spar info +21717.9 ms: [8fa8711c] calls settled at 21717.9 ms
+   21825,3 | spar info +21720.4 ms: [8fa8711c] renderer processes ended: 1 at 21720.4 ms
+   21843,9 | spar info +21738.9 ms: [8fa8711c] controller closed at 21738.9 ms
+   21861,9 | spar info +21756.9 ms: [8fa8711c] window destroyed at 21756.9 ms
+   21870,9 | spar info +21765.9 ms: [8fa8711c] services disposed at 21765.8 ms
+   21870,9 | spar info +21765.9 ms: [8fa8711c] exit 0 at 21765.9 ms
+   21884,4 > exit 0
+   22171,3 > browser processes left for this root 0,3 s after the exit: 0
+   22171,3 > RESULT OK

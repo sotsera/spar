@@ -70,6 +70,13 @@ internal partial interface ICoreWebView2BrowserProcessExitedEventHandler
     void Invoke(nint sender, nint args);
 }
 
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("49511172-cc67-4bca-9923-137112f4c4cc")]
+internal partial interface ICoreWebView2ExecuteScriptCompletedHandler
+{
+    void Invoke(int errorCode, string? result);
+}
+
 /// <summary>Completes when the environment exists; the result holds one reference the host owns.</summary>
 [GeneratedComClass]
 internal sealed partial class EnvironmentCompleted : ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler
@@ -128,6 +135,26 @@ internal sealed partial class WebView2EventHandler(Action<nint> handle, Action<E
         {
             report(exception);
         }
+    }
+}
+
+/// <summary>Completes with a script's result as JSON, or fails with its HRESULT (Development triggers only).</summary>
+[GeneratedComClass]
+internal sealed partial class ScriptCompleted : ICoreWebView2ExecuteScriptCompletedHandler
+{
+    private readonly TaskCompletionSource<string?> _completion = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    public Task<string?> Task => _completion.Task;
+
+    public void Invoke(int errorCode, string? result)
+    {
+        if (errorCode < 0)
+        {
+            _completion.TrySetException(new WebView2Exception("ExecuteScript", errorCode));
+            return;
+        }
+
+        _completion.TrySetResult(result);
     }
 }
 

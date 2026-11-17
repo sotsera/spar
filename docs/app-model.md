@@ -139,12 +139,19 @@ var app = SparApplication.Create(args, spar =>
     // A missing prerequisite opens the company's install guide in place of Spar's message (3.15). Decided.
     spar.OnStartupProblem(SupportPage.TryOpen);
 
+    // A page that stops responding is recorded for support; Spar's own dialog still asks the user (3.16). Decided.
+    spar.OnPageUnresponsive((hang, services) => services.GetRequiredService<HangLog>().Record(hang));
+
+    // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
+    spar.Diagnostics(d => d.KeepStallProbe());
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
     spar.Services.AddSingleton<RunningCopies>();
     spar.Services.AddSingleton<RecipeQueue>();
+    spar.Services.AddSingleton<HangLog>();
 });
 
 return app.Run();
@@ -835,6 +842,7 @@ public sealed class CrashReport(IAppHealth health)
 - **Spar never uploads anything by itself.** What happens with a report is the app's choice.
 - **"Send logs":** `diagnostics.collect()` on the page, or `IAppHealth.CollectAsync` in C#, packs logs and crash records into one zip saved through a grant, ready to attach to an email.
 - **Secrets:** Spar's own entries never contain secrets. Apps keep theirs out too, because the zip is sent to other people.
+- **The UI-thread stall probe** (decision "Hangs: the page's hook, the Production stall probe and "Exit now""): Development and Test builds log each stall of the window's thread over 50 ms as a warning, naming the Spar callback that was running. A Production build has no probe unless `spar.Diagnostics(d => d.KeepStallProbe())` keeps it, as the SQL tool does (section 2); it then only logs. Without the call the probe's code is not in the executable at all.
 
 ### 3.14 Single instance and relaunches
 
@@ -928,10 +936,56 @@ public static class SupportPage
   - `Broken` 5: it is installed but does not start;
   - `OsTooOld` 7: Windows older than Windows 10 22H2;
   - `NotResponding` 8 and `OtherUser` 9: a relaunch could not reach the running app (3.14).
+
+  The one other fixed code is not a start-up problem: 10 when shutdown did not finish and the user chose "Exit now" (6.11).
 - **Return true only when the app showed its own message;** Spar then shows none. Returning false, or throwing, leaves Spar's message: on Windows a task dialog naming what is missing, with Microsoft's download page as a link and a button.
 - **Written regardless:** standard error and the per-user log (`host.log` in the logs folder, 3.13) get the problem, and the exit code is the kind's, whatever the hook returns.
 - **Before the app's services exist:** the hook gets no service provider. It runs on a thread of its own, which may show a window or a message box, and it should return promptly, since the process exits after it.
 - **In the automated mode** (tests and agents, 6.11) the hook is not called, and no message is shown: standard error and the log only.
+
+### 3.16 A page that stops responding
+
+**Decided** (decisions "What "Wait" does after the hung-page dialog" and "Hangs: the page's hook, the Production stall probe and "Exit now""). While a window is visible, Spar pings its page every 5 s, and the page's SDK answers from its message handler. A page that misses three pings in a row (15 to 20 s after it stopped) gets Spar's native dialog, "Wait / Reload page". Wait asks again after about 20 s, then 40 s, 80 s and every 160 s while the page stays silent, and a page that answers again closes the dialog itself. Reload page ends the page's process, then loads the page again once; the backend keeps running, and no command is sent again. The app cannot replace the dialog: an app has no UI of its own to show while its page does not answer. It can observe each change through `spar.OnPageUnresponsive` in `Program.cs` (section 2), which the SQL tool uses to keep a record for its support team.
+
+File `SqlTool/Support/HangLog.cs`:
+
+```csharp
+using System.Collections.Concurrent;
+using Spar;
+
+namespace SqlTool.Support;
+
+/// <summary>The page's hangs in this run, for the status page and support reports; Program.cs records each change.</summary>
+public sealed class HangLog
+{
+    private const int Kept = 50;
+
+    private readonly ConcurrentQueue<PageHang> _changes = new();
+
+    /// <summary>One change: unresponsive, recovered, reloaded or closed anyway. Spar's dialog has already asked the user.</summary>
+    public void Record(PageHang hang)
+    {
+        _changes.Enqueue(hang);
+        while (_changes.Count > Kept && _changes.TryDequeue(out _))
+        {
+        }
+    }
+
+    /// <summary>How often the page stopped responding, and the longest it went without answering.</summary>
+    public (int Hangs, TimeSpan Longest) Summary()
+    {
+        var hangs = _changes.Count(change => change.State == PageHangState.Unresponsive);
+        var longest = _changes.Select(change => change.Duration).DefaultIfEmpty(TimeSpan.Zero).Max();
+        return (hangs, longest);
+    }
+}
+```
+
+- **What the hook gets:** the window kind (`main` for the main window, as in a close request), the `State` (`Unresponsive`, `Recovered`, `Reloaded` or `ClosedAnyway`), and the `Duration` the page had not answered, from the first ping it missed.
+- **When it runs:** off the window's UI thread, one change at a time in order, with the app's root services. A hook that throws is logged, and the next change still reaches it. It only observes: it cannot hide the dialog, reload the page or close the window.
+- **What else counts as unresponsive:** WebView2 reporting the page's renderer unresponsive, which it does only after input reaches a hung page, and a page that does not answer a close request within about 5 s (6.11). They are the same state, with one dialog.
+- **What is not pinged:** a minimized or hidden window, whose page the browser throttles, and a page that never connected the SDK, which cannot answer.
+- **In the automated mode** (6.11) no dialog shows: the change is logged and the hook is called, and a close of a page that does not answer closes anyway.
 
 ## 4. On the wire
 
@@ -1554,6 +1608,7 @@ export const stopGuarding = windows.onCloseRequested(async request => {
 - **Automated mode,** when tests or an agent drive the app: guards still run, so saving on close is tested, with `automated` true, and an ask counts as close. The test host turns it on, and a test of a guard's prompt turns it off for that close. Outside tests, the devtools agent session turns it on, and so does the environment variable `SPAR_AUTOMATED=1`, in Development and Test builds only: a Production build ignores it, so nothing outside a shipped app can make it skip its prompts.
 - **A page that does not answer** within about 5 s, with no dialog of its own open, or a page that is already hung, gets a native "Wait / Close anyway" dialog. Close anyway skips only the page's guard: the backend's guard still runs, then the window closes. Wait keeps the request open and asks again after about 20 s, then 40 s, 80 s and every 160 s (decision "What "Wait" does after the hung-page dialog").
 - **After the decision** the window's teardown runs (plan section 3), including the page's closing work.
+- **A shutdown that does not finish:** after about 10 s of closing (commands settling, the web view closing, the app's services being disposed), Spar shows a native "Keep waiting / Exit now" prompt, and again every 30 s after "Keep waiting". It goes away by itself when the shutdown finishes. "Exit now" ends the process at once with the fixed exit code 10, so scripts and installers can tell it from a clean exit (0); Spar never ends the process on its own, and in the automated mode it shows no prompt and keeps waiting.
 
 ## 7. Still open in this model
 

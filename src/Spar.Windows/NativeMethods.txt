@@ -2,6 +2,7 @@ AdjustWindowRectExForDpi
 AllowSetForegroundWindow
 AttachConsole
 ATTACH_PARENT_PROCESS
+CloseHandle
 CreateSolidBrush
 CREATESTRUCTW
 CreateWindowEx
@@ -27,11 +28,13 @@ GetSystemTimePreciseAsFileTime
 IDC_ARROW
 InvalidateRect
 IsIconic
+IsWindow
 IsWindowVisible
 LoadCursor
 MessageBox
 MINMAXINFO
 MonitorFromPoint
+OpenProcess
 PostMessage
 PostQuitMessage
 RegisterClassEx
@@ -44,6 +47,8 @@ S_OK
 TaskDialogIndirect
 TASKDIALOG_NOTIFICATIONS
 TD_ERROR_ICON
+TD_WARNING_ICON
+TerminateProcess
 TranslateMessage
 UnregisterClass
 WM_APP

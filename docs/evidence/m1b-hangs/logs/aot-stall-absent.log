@@ -1,0 +1,40 @@
+       4,3 > start Notebook.exe env []
+      62,4 | spar info +0.3 ms: [59f5220d] Host started 41.8 ms after the process.
+      62,7 | spar info +1.3 ms: [59f5220d] single instance at 1.2 ms
+      62,8 | spar info +1.6 ms: [59f5220d] prerequisites checked at 1.6 ms
+      62,8 | spar info +2.0 ms: [59f5220d] services built at 2 ms
+      90,7 | spar info +29.8 ms: [59f5220d] window shown at 29.8 ms
+      90,8 | spar info +30.0 ms: [59f5220d] Theme dark (system), window #1d1f24.
+      96,0 | spar info +35.2 ms: [59f5220d] environment at 35.2 ms
+      96,1 | spar info +35.2 ms: [59f5220d] WebView2 Runtime 157.0.4341.46
+      98,9 | spar info +38.2 ms: [59f5220d] Heartbeat every 5000 ms.
+     284,3 | spar info +223.6 ms: [59f5220d] controller at 223.6 ms
+     284,9 | spar info +224.2 ms: [59f5220d] navigation started at 224.2 ms
+     387,8 | spar info +327.0 ms: [59f5220d] Bridge: document ad093f2540da5420 opened.
+     387,9 | spar info +327.0 ms: [59f5220d] first document at 327 ms
+     411,4 | spar info +350.6 ms: [59f5220d] first bridge message at 350.6 ms
+     411,4 | spar info +350.8 ms: [59f5220d] first bridge reply at 350.8 ms
+     411,5 | spar info +350.8 ms: [59f5220d] Heartbeat armed for the new document.
+     414,5 | spar info +353.3 ms: [59f5220d] first navigation completed at 353.3 ms
+     433,8 | spar info +373.0 ms: [59f5220d] ui-ready at 373 ms
+     433,9 > seen 'ui-ready'
+     434,0 | spar info +373.1 ms: [59f5220d] Bridge: document ad093f2540da5420 reported ui-ready.
+     434,2 | spar info +373.5 ms: [59f5220d] 404 for /favicon.ico
+     437,6 > suspend the UI thread 61280 for 300 ms
+    5747,1 > not seen 'stalled' within 5 s (as expected)
+    5747,9 > WM_CLOSE to the window
+    5748,4 | spar info +5687.6 ms: [59f5220d] close requested (User) at 5687.6 ms
+    5748,8 | spar info +5688.0 ms: Close request for window main (User): the backend's guard answered Close
+    5748,9 | spar info +5688.1 ms: [59f5220d] closing at 5688.1 ms
+    5748,9 | spar info +5688.1 ms: [59f5220d] Heartbeat: 1 ticks, 2 pings, longest tick on the UI thread 0.041 ms.
+    5749,1 | spar info +5688.4 ms: [59f5220d] page close work done at 5688.4 ms
+    5749,1 | spar info +5688.4 ms: [59f5220d] Bridge: document ad093f2540da5420 closed (window closing).
+    5749,1 | spar info +5688.4 ms: [59f5220d] calls stopped at 5688.4 ms
+    5749,1 | spar info +5688.4 ms: [59f5220d] calls settled at 5688.4 ms
+    5762,7 | spar info +5701.9 ms: [59f5220d] controller closed at 5701.9 ms
+    5779,3 | spar info +5718.5 ms: [59f5220d] window destroyed at 5718.5 ms
+    5783,8 | spar info +5723.1 ms: [59f5220d] services disposed at 5723.1 ms
+    5783,9 | spar info +5723.2 ms: [59f5220d] exit 0 at 5723.2 ms
+    5792,2 > exit 0
+    6085,7 > browser processes left for this root 0,3 s after the exit: 0
+    6085,8 > RESULT OK

@@ -19,6 +19,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - Development and Test builds include it: a timer posted through the pump or main loop logs each delay over 50 ms as a warning, with the Spar callback that was running.
   - Window tests fail on a stall over 250 ms, until M4 sets the budget from measurements.
   - Production builds contain no probe unless a C# option keeps it, logging only, for diagnosing a user's machine. It sits behind a feature switch, so without the option it is trimmed away and the production boundary test still finds none.
+  - **Built on Windows** (M1b step 3; decision "Hangs: heartbeat, stall probe and shutdown prompt"): `Spar.Hosting.UiStallProbe`, one probe at a time posted through the UI thread's queue about every 20–35 ms, and every Spar callback on the thread named through `UiThread.Enter` (window messages, WebView2 events, posted work and `await` continuations); a callback during which the thread pumped (a modal dialog) is not a stall. `spar.Diagnostics(d => d.KeepStallProbe())` is the only thing that roots it in Production: the Production Notebook carries neither its type nor its message, the console harness, which calls it, carries both (32 KB), and both are checked by `Spar.BuildTests`. Window tests read `Longest` and `Recent()` (step 8).
 
 **Hung pages are detected by a heartbeat** (user, 2026-11-14; confirmed by `spikes/page-heartbeat`, with the changes listed below). An idle page stuck in a loop raises no event: `ProcessFailed(RenderProcessUnresponsive)` needs unanswered input, and an idle hung page gave nothing in 60 s (earlier research).
 - **Ping:** while a document is loaded and the window is visible, the host sends a small ping over the bridge every 5 s, and the injected script answers from its message handler.
@@ -47,6 +48,12 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
 - **After "Wait"** (decided, user, 2026-11-17; decision "What "Wait" does after the hung-page dialog"): the heartbeat keeps pinging, one ping outstanding, and the dialog comes back after another three misses (about 20 s), then after 40 s, 80 s and every 160 s. A page that answers again closes an open dialog and resets the count and the interval.
 - **Closing a window whose page does not answer** (its close guard silent for about 5 s, or already hung): the same dialog offers "Wait / Close anyway". Close anyway skips only the page's guard; the backend's guard still runs, then the window closes and its renderer is terminated. Wait keeps the close request open, with the same interval.
 - **Milestone:** built with each host, in M1b and M1c.
+- **Built on Windows** (M1b step 3; decision "Hangs: heartbeat, stall probe and shutdown prompt"; `docs/evidence/m1b-hangs.md`):
+  - the `ping` and `pong` bridge messages (section 2c); the page's SDK is the injected script, and its `hello`, listing `ping`, arms the heartbeat for its document. A page that hangs before its start-up code connects the SDK is left to the engine's report;
+  - the rules in `Spar.Hosting.PageHeartbeat`, for both hosts; the Wait schedule counts visible ticks, so each return comes up to one interval early;
+  - the dialogs on a thread of their own, owned by the window and taken down by the host when the page answers; "Reload page" ends every renderer of the app's environment (`GetProcessInfos`), then reloads once, without using up the automatic reload;
+  - a close request pings the page and waits one interval until the page's own close guard is built;
+  - measured: alarm 15.5–19.2 s after a loop began and 16.8–18.9 s after the renderer was suspended; reload to `ui-ready` 85–140 ms; the tick costs the UI thread 0.15–0.36 ms on NativeAOT; no false alarm on an idle page or on work of 3 s and 10 s. `RenderProcessUnresponsive` never fired on the desktop, where the windows were not activated and the dialog took no focus.
 - **Not tested:**
   - CPU stress;
   - hidden windows for longer than 60 s;
@@ -66,6 +73,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - 7 OS too old;
   - 8 already running but not responding (single instance: no acknowledgement within 2 s, or still closing after about 5 s);
   - 9 already running for another user on the same data folder (decided, user, 2026-11-17; decision "The relaunch handler").
+  - 10 shutdown did not finish and the user chose "Exit now" (decided, user, 2026-11-17; decision "Hangs: the page's hook, the Production stall probe and "Exit now"").
 
   Apps cannot change them.
 - **Windows, in order** (built in M1b step 2; decision "Start-up: prerequisites, single instance and theme"):
@@ -149,6 +157,8 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   4. Check view and document liveness before every late reply.
   5. Close the controller explicitly on the STA. `Close` is synchronous. On Runtime 157 it does run `beforeunload`, `visibilitychange`, `unload` (29 of 29) and `pagehide` (26 of 29), and their writes persisted (`spikes/webview-profiles`; this corrects an earlier note). Required cleanup still must not depend on the page.
   6. Observe `BrowserProcessExited` before deleting a profile.
+
+  A page that does not answer gets no close work, and its renderer is ended before the controller closes. From the teardown's start until the process returns its code, the shutdown is watched: after about 10 s, "Keep waiting / Exit now", without an owner, again every 30 s; "Exit now" exits with code 10 (built in M1b step 3; decision "Hangs: heartbeat, stall probe and shutdown prompt").
 - **Failure recovery:** handle `ProcessFailed` per view and `BrowserProcessExited` per environment, in either order. Reset the affected RPC and stream state. Coordinate recreation across views. No recovery during app shutdown.
 - **Hardening:** `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS` is appended even in Production, so Production ignores it and the other browser environment overrides unless the app opts in (section 3c).
 - **Title bar drawn by the page** (`spikes/windows-titlebar`, real input in Windows Sandbox). **Decided (user, 2026-11-14): when an app uses a custom title bar, the page draws the caption buttons**, on Windows as on Linux:

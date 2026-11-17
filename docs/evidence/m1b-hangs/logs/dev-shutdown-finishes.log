@@ -1,0 +1,45 @@
+       4,7 > start Notebook.exe env [SPAR_DEV_SLOW_DISPOSE_MS=15000]
+     119,3 | spar info +13.2 ms: [b3a2c437] Host started 91.1 ms after the process.
+     130,1 | spar info +23.7 ms: [b3a2c437] single instance at 22.6 ms
+     132,3 | spar info +29.7 ms: [b3a2c437] prerequisites checked at 29.7 ms
+     147,3 | spar info +44.6 ms: [b3a2c437] UI-thread stall probe on.
+     163,3 | spar info +60.7 ms: [b3a2c437] services built at 60.6 ms
+     172,8 | spar info +70.2 ms: [b3a2c437] window shown at 70.2 ms
+     173,5 | spar info +70.9 ms: [b3a2c437] Theme dark (system), window #1d1f24.
+     200,6 | spar info +98.0 ms: [b3a2c437] environment at 98 ms
+     201,6 | spar info +99.0 ms: [b3a2c437] WebView2 Runtime 157.0.4341.46
+     221,5 | spar info +118.9 ms: [b3a2c437] Heartbeat every 5000 ms.
+     404,9 | spar info +302.2 ms: [b3a2c437] controller at 302.2 ms
+     411,3 | spar info +308.7 ms: [b3a2c437] navigation started at 308.7 ms
+     513,9 | spar info +411.2 ms: [b3a2c437] Bridge: document b5ddddde5d924a68 opened.
+     513,9 | spar info +411.3 ms: [b3a2c437] first document at 411.3 ms
+     539,8 | spar info +437.2 ms: [b3a2c437] first bridge message at 437.2 ms
+     541,9 | spar info +439.3 ms: [b3a2c437] first navigation completed at 439.3 ms
+     554,9 | spar info +452.3 ms: [b3a2c437] first bridge reply at 452.3 ms
+     555,4 | spar info +452.9 ms: [b3a2c437] Heartbeat armed for the new document.
+     559,2 | spar info +456.6 ms: [b3a2c437] ui-ready at 456.6 ms
+     559,2 > seen 'ui-ready'
+     559,3 | spar info +456.7 ms: [b3a2c437] Bridge: document b5ddddde5d924a68 reported ui-ready.
+     561,9 > WM_CLOSE to the window
+     564,6 | spar info +462.0 ms: [b3a2c437] close requested (User) at 462 ms
+     573,1 | spar info +470.5 ms: [b3a2c437] 404 for /favicon.ico
+     584,0 | spar info +481.3 ms: Close request for window main (User): the backend's guard answered Close
+     586,2 | spar info +483.6 ms: [b3a2c437] closing at 483.6 ms
+     586,6 | spar info +484.1 ms: [b3a2c437] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+     588,6 | spar info +486.0 ms: [b3a2c437] page close work done at 486 ms
+     589,6 | spar info +487.0 ms: [b3a2c437] Bridge: document b5ddddde5d924a68 closed (window closing).
+     589,8 | spar info +487.3 ms: [b3a2c437] calls stopped at 487.3 ms
+     592,7 | spar info +490.2 ms: [b3a2c437] calls settled at 490.2 ms
+     609,9 | spar info +507.2 ms: [b3a2c437] controller closed at 507.2 ms
+     616,4 | spar info +513.7 ms: [b3a2c437] window destroyed at 513.7 ms
+     622,0 | spar warn +519.4 ms: [b3a2c437] Development trigger: disposing slowly (15000 ms).
+   10589,7 | spar warn +10487.0 ms: [b3a2c437] The app has been closing for 10.0 s without finishing.
+   10591,7 | spar info +10489.0 ms: [b3a2c437] shutdown prompt shown (Keep waiting / Exit now) at 10489 ms
+   10591,8 > seen 'shutdown prompt shown'
+   10636,0 > dialog 'Notebook' owner none
+   15631,5 | spar info +15528.9 ms: [b3a2c437] services disposed at 15528.9 ms
+   15631,6 | spar info +15529.0 ms: [b3a2c437] exit 0 at 15529 ms
+   15646,9 > dialog gone with the process
+   15650,8 > exit 0
+   15675,5 > browser processes left for this root 0,0 s after the exit: 0
+   15675,6 > RESULT OK

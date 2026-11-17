@@ -1,0 +1,41 @@
+       2,4 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000:10000]
+      62,3 | spar info +7.4 ms: [1c4c06dd] Host started 47.3 ms after the process.
+      68,1 | spar info +13.5 ms: [1c4c06dd] single instance at 12.9 ms
+      69,4 | spar info +16.6 ms: [1c4c06dd] prerequisites checked at 16.6 ms
+      77,8 | spar info +25.0 ms: [1c4c06dd] UI-thread stall probe on.
+      86,2 | spar info +33.4 ms: [1c4c06dd] services built at 33.4 ms
+     101,8 | spar info +49.0 ms: [1c4c06dd] window shown at 49 ms
+     102,0 | spar info +49.3 ms: [1c4c06dd] Theme dark (system), window #1d1f24.
+     118,6 | spar info +65.7 ms: [1c4c06dd] environment at 65.7 ms
+     119,1 | spar info +66.4 ms: [1c4c06dd] WebView2 Runtime 157.0.4341.46
+     129,7 | spar info +76.9 ms: [1c4c06dd] Heartbeat every 5000 ms.
+     305,1 | spar info +252.3 ms: [1c4c06dd] controller at 252.3 ms
+     308,7 | spar info +255.9 ms: [1c4c06dd] navigation started at 255.9 ms
+     405,6 | spar info +352.8 ms: [1c4c06dd] Bridge: document 487e10483076a82e opened.
+     405,7 | spar info +352.8 ms: [1c4c06dd] first document at 352.8 ms
+     431,1 | spar info +378.3 ms: [1c4c06dd] first bridge message at 378.3 ms
+     432,6 | spar info +379.8 ms: [1c4c06dd] first navigation completed at 379.8 ms
+     439,2 | spar info +386.4 ms: [1c4c06dd] first bridge reply at 386.4 ms
+     439,4 | spar info +386.7 ms: [1c4c06dd] Heartbeat armed for the new document.
+     449,5 | spar info +396.7 ms: [1c4c06dd] ui-ready at 396.7 ms
+     449,5 | spar info +396.7 ms: [1c4c06dd] Bridge: document 487e10483076a82e reported ui-ready.
+     450,3 | spar info +397.6 ms: [1c4c06dd] 404 for /favicon.ico
+    3464,3 | spar warn +3411.5 ms: [1c4c06dd] Development trigger: the page is busy for 10000 ms from now.
+    3464,4 > seen 'busy for'
+   33474,6 > no dialog (as expected)
+   33475,1 > WM_CLOSE to the window
+   33477,3 | spar info +33424.3 ms: [1c4c06dd] close requested (User) at 33424.3 ms
+   33481,8 | spar info +33428.9 ms: Close request for window main (User): the backend's guard answered Close
+   33482,9 | spar info +33430.1 ms: [1c4c06dd] closing at 33430.1 ms
+   33483,0 | spar info +33430.3 ms: [1c4c06dd] Heartbeat: 6 ticks, 6 pings, longest tick on the UI thread 0.796 ms.
+   33483,9 | spar info +33431.2 ms: [1c4c06dd] page close work done at 33431.2 ms
+   33484,4 | spar info +33431.7 ms: [1c4c06dd] Bridge: document 487e10483076a82e closed (window closing).
+   33484,6 | spar info +33431.8 ms: [1c4c06dd] calls stopped at 33431.8 ms
+   33484,6 | spar info +33431.9 ms: [1c4c06dd] calls settled at 33431.9 ms
+   33499,9 | spar info +33447.1 ms: [1c4c06dd] controller closed at 33447.1 ms
+   33514,9 | spar info +33462.1 ms: [1c4c06dd] window destroyed at 33462.1 ms
+   33520,6 | spar info +33467.8 ms: [1c4c06dd] services disposed at 33467.8 ms
+   33520,7 | spar info +33467.9 ms: [1c4c06dd] exit 0 at 33467.9 ms
+   33529,7 > exit 0
+   33806,6 > browser processes left for this root 0,3 s after the exit: 0
+   33806,6 > RESULT OK
