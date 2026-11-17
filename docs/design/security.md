@@ -161,7 +161,7 @@ Constraints fall into three levels:
     - downloads are denied (`DownloadStarting`);
     - swipe navigation is off, and so is history navigation (mouse back and forward buttons, Alt+Left);
     - no host objects (`AddHostObjectToScript`);
-    - `<input type="file">` never opens the engine's picker (decided, user, 2026-11-17; decision "M1b's remaining questions without a spike"): it would hand the page a file outside the grant model. `AllowPagePicker()` in C# brings it back. Linux cancels it from `run-file-chooser`; WebView2 has no API, and the in-process DevTools route (`Page.setInterceptFileChooserDialog`) is checked by an M1b spike first.
+    - `<input type="file">` never opens the engine's picker (decided, user, 2026-11-17; decision "M1b's remaining questions without a spike"): it would hand the page a file outside the grant model. `AllowPagePicker()` in C# brings it back. Linux cancels it from `run-file-chooser`. WebView2 has no API: the host calls `Page.enable`, then `Page.setInterceptFileChooserDialog`, in-process for each WebView, and passes `--disable-blink-features=FileSystemAccessLocal`, so the File System Access pickers are absent as on Linux (decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner"; `spikes/window-tests`, 46 of 46 clicks opened no dialog).
 
     The history-navigation and file-input items are adopted from the research review (user, 2026-11-15) and built in M1b.
   - On Linux: no `enable-developer-extras`, no windows opened by JavaScript, no `file://` access, downloads denied.

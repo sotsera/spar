@@ -1,0 +1,8 @@
+CHILD t=08:51:03.674 log=par-inprivate-A.log exit=0
+Unhandled exception. System.IO.IOException: The process cannot access the file '<repo>\artifacts\window-tests\par-inprivate-A.log' because it is being used by another process.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String, FileMode, FileAccess, FileShare, FileOptions)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String, FileMode, FileAccess, FileShare, FileOptions, Int64, Nullable`1)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String, FileMode, FileAccess, FileShare, FileOptions, Int64, Nullable`1)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String, FileMode, FileAccess, FileShare, FileOptions, Int64, Nullable`1)
+   at Spar.WindowTests.Harness.Parallel(Options)
+   at Program.<Main>$(String[] args)

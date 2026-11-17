@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Window tests: input</title>
+<style>
+  body { font: 14px sans-serif; margin: 16px; }
+  button, input { display: block; margin: 8px 0; width: 240px; height: 32px; }
+</style>
+</head>
+<body>
+<p>Trusted input probe.</p>
+<button id="b">Click me</button>
+<input id="t1" aria-label="first">
+<input id="t2" aria-label="second">
+<button id="fs">Fullscreen</button>
+<button id="pop">Open</button>
+<script>
+// Every listener records what the page saw; the host reads window.events through Runtime.evaluate.
+window.events = [];
+function snapshot(event) {
+  const active = document.activeElement;
+  return {
+    type: event.type,
+    target: event.target.id || event.target.nodeName,
+    trusted: event.isTrusted,
+    key: event.key ?? null,
+    hasFocus: document.hasFocus(),
+    active: active ? (active.id || active.nodeName) : null,
+    focusMatches: active && active !== document.body ? active.matches(':focus') : null,
+    focusVisible: active && active !== document.body ? active.matches(':focus-visible') : null,
+    uaActive: navigator.userActivation.isActive,
+    uaBeen: navigator.userActivation.hasBeenActive,
+    t: performance.now(),
+  };
+}
+for (const type of ['pointerdown', 'mousedown', 'mouseup', 'click', 'keydown', 'keypress', 'keyup', 'beforeinput', 'input', 'focus', 'blur']) {
+  document.addEventListener(type, (event) => window.events.push(snapshot(event)), true);
+}
+window.state = () => ({
+  hasFocus: document.hasFocus(),
+  active: document.activeElement ? (document.activeElement.id || document.activeElement.nodeName) : null,
+  activeMatchesFocus: document.activeElement && document.activeElement !== document.body ? document.activeElement.matches(':focus') : null,
+  uaActive: navigator.userActivation.isActive,
+  uaBeen: navigator.userActivation.hasBeenActive,
+  visibility: document.visibilityState,
+  t1: document.getElementById('t1').value,
+  t2: document.getElementById('t2').value,
+  fullscreen: !!document.fullscreenElement,
+});
+window.gated = {};
+document.getElementById('fs').addEventListener('click', () => {
+  document.documentElement.requestFullscreen().then(
+    () => { window.gated.fullscreen = 'resolved'; document.exitFullscreen(); },
+    (error) => { window.gated.fullscreen = 'rejected:' + error.name + ':' + error.message; });
+});
+document.getElementById('pop').addEventListener('click', () => {
+  const opened = window.open('https://app.localhost/probe.html', '_blank');
+  window.gated.open = opened === null ? 'null' : 'window';
+});
+window.tryFullscreen = () => document.documentElement.requestFullscreen().then(
+  () => { document.exitFullscreen(); return 'resolved'; },
+  (error) => 'rejected:' + error.name + ':' + error.message);
+window.tryOpen = () => { const w = window.open('https://app.localhost/probe.html', '_blank'); return w === null ? 'null' : 'window'; };
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<Project>
+  <!--
+    Imported by executables (the app, the test projects). NativeAOT links the WebView2 loader statically; CoreCLR runs
+    load WebView2Loader.dll from beside the executable. Same layout as spikes/react/React.Desktop/Desktop.targets.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <_SparWebView2Native>$(PkgMicrosoft_Web_WebView2)\build\native\x64\</_SparWebView2Native>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64' and '$(PublishAot)' != 'true'">
+    <None Include="$(_SparWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64' and '$(PublishAot)' == 'true'">
+    <None Include="$(_SparWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" Visible="false" />
+    <DirectPInvoke Include="WebView2Loader" />
+    <NativeLibrary Include="$(_SparWebView2Native)WebView2LoaderStatic.lib" />
+  </ItemGroup>
+</Project>

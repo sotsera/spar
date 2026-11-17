@@ -1,0 +1,8 @@
+{"t_ms":1369,"step":"start-first","ms":1028,"raw":"exit=0 out={   \u0022Id\u0022: \u0022\u003Cfirst\u003E\u0022 } err="}
+{"t_ms":1694,"step":"first-exec-ready","ms":1353}
+{"t_ms":2024,"step":"start-second","ms":330,"raw":"exit=-2147221002 out= err=Application cannot be run more than once (0x800401F6 (CO_E_APPSINGLEUSE))"}
+{"t_ms":2309,"step":"list-during","ms":285,"ids":"\u003Cfirst\u003E"}
+{"t_ms":2618,"step":"start-same-id","ms":309,"raw":"exit=-2147221002 out= err=Application cannot be run more than once (0x800401F6 (CO_E_APPSINGLEUSE))"}
+{"t_ms":2884,"step":"list-during-2","ids":"\u003Cfirst\u003E"}
+{"t_ms":3711,"step":"stop","ms":563,"which":"\u003Cfirst\u003E","raw":"exit=0 out= err="}
+{"t_ms":4007,"step":"list-after","ids":"","clientWindows":0}

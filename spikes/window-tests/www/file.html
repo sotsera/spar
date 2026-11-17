@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Window tests: file chooser</title>
+<style>
+  body { font: 14px sans-serif; margin: 16px; }
+  input, button { display: block; margin: 8px 0; width: 260px; height: 32px; }
+  iframe { width: 300px; height: 80px; border: 1px solid #888; }
+</style>
+</head>
+<body>
+<p>File chooser probe.</p>
+<input id="f" type="file" aria-label="file">
+<button id="open">showOpenFilePicker</button>
+<button id="dir">showDirectoryPicker</button>
+<button id="save">showSaveFilePicker</button>
+<button id="pick">input.showPicker</button>
+<iframe id="frame" title="frame"></iframe>
+<script>
+window.events = [];
+const input = document.getElementById('f');
+for (const type of ['click', 'input', 'change', 'cancel']) {
+  input.addEventListener(type, (event) => window.events.push({ type, trusted: event.isTrusted, files: input.files.length, t: performance.now() }));
+}
+window.addEventListener('message', (event) => window.events.push({ type: 'framed:' + event.data.framed, trusted: event.data.trusted, files: event.data.files }));
+function report(name, promise) {
+  promise.then(
+    (value) => window.events.push({ type: name + ':resolved', value: String(value) }),
+    (error) => window.events.push({ type: name + ':rejected', value: error.name + ': ' + error.message }));
+}
+const pickers = { open: 'showOpenFilePicker', dir: 'showDirectoryPicker', save: 'showSaveFilePicker' };
+for (const [id, name] of Object.entries(pickers)) {
+  document.getElementById(id).addEventListener('click', () => {
+    if (typeof window[name] !== 'function') { window.events.push({ type: id + ':missing' }); return; }
+    try { report(id, window[name]()); } catch (error) { window.events.push({ type: id + ':threw', value: error.name }); }
+  });
+}
+document.getElementById('pick').addEventListener('click', () => {
+  try { input.showPicker(); window.events.push({ type: 'pick:called' }); } catch (error) { window.events.push({ type: 'pick:threw', value: error.name }); }
+});
+const frameSrc = new URLSearchParams(location.search).get('frame');
+if (frameSrc) document.getElementById('frame').src = frameSrc;
+window.apis = () => ({
+  open: typeof window.showOpenFilePicker, dir: typeof window.showDirectoryPicker, save: typeof window.showSaveFilePicker,
+});
+</script>
+</body>
+</html>

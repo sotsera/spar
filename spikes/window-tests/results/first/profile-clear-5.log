@@ -1,0 +1,12 @@
+START t=08:55:28.834 mode=profile-clear count=2 root=<repo>\artifacts\webview2-profiles\window-tests\first-profile-clear-5 pid=59564 cache=http://127.0.0.1:49221
+SHARED-ENV t=08:55:28.840 ms=6.0
+BODY t=08:55:29.465 mode=profile-clear i=0 leftovers=[] before={"cookie":null,"idb":null,"ls":null,"sw":0,"wm":"prompt"} screens=granted:2 permissionEvents=[kind=12 user=1 saves=1] stored=[12:https://app.localhost/:1] cacheFirstLoad=1 cacheSecondLoad=0 after={"cookie":"token=T0","idb":"T0","ls":"T0","sw":1,"wm":"granted"} browserPrivateMB=169.0
+TEST t=08:55:29.553 mode=profile-clear i=0 setupMs=350.5 envMs=0.0 controllerMs=210.7 pageMs=139.8 teardownMs=88.6 totalMs=439.1 clearHr=0x00000000
+BODY t=08:55:29.970 mode=profile-clear i=1 leftovers=[] before={"cookie":null,"idb":null,"ls":null,"sw":0,"wm":"prompt"} screens=granted:2 permissionEvents=[kind=12 user=1 saves=1] stored=[12:https://app.localhost/:1] cacheFirstLoad=1 cacheSecondLoad=0 after={"cookie":"token=T1","idb":"T1","ls":"T1","sw":1,"wm":"granted"} browserPrivateMB=171.6
+TEST t=08:55:30.057 mode=profile-clear i=1 setupMs=148.2 envMs=0.0 controllerMs=62.7 pageMs=85.5 teardownMs=86.8 totalMs=235.1 clearHr=0x00000000
+SUMMARY t=08:55:30.057 mode=profile-clear setup n=2 min=148.2 p50=148.2 p95=350.5 max=350.5
+SUMMARY t=08:55:30.057 mode=profile-clear setup-after-first n=1 min=148.2 p50=148.2 p95=148.2 max=148.2
+SUMMARY t=08:55:30.057 mode=profile-clear teardown n=2 min=86.8 p50=86.8 p95=88.6 max=88.6
+SUMMARY t=08:55:30.057 mode=profile-clear total n=2 min=235.1 p50=235.1 p95=439.1 max=439.1
+SUMMARY t=08:55:30.057 mode=profile-clear leaks=[]
+SHARED-END t=08:55:30.473 browserExited=True gone=True ms=415.4 files=424 kB=14083 profileFolders=2 deleted=True 

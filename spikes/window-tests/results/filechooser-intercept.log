@@ -1,0 +1,43 @@
+START t=08:59:12.056 pid=55076 only=intercept
+ENABLE t=08:59:12.284 label=intercept-no-page-enable result={}
+SETTINGS t=08:59:12.285 label=intercept-no-page-enable areDevToolsEnabled=1
+INTERCEPT t=08:59:12.878 label=intercept-no-page-enable run=0 dialog=OPENED(#32770/"Open"/pid=browser after=317ms closedAfter=163ms stillOpen=False) cdpEvents=[] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:13.369 label=intercept-no-page-enable run=1 dialog=OPENED(#32770/"Open"/pid=other after=345ms closedAfter=143ms stillOpen=False) cdpEvents=[] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:13.835 label=intercept-no-page-enable run=2 dialog=OPENED(#32770/"Open"/pid=other after=325ms closedAfter=140ms stillOpen=False) cdpEvents=[] page=[{"type":"click","trusted":true,"files":0}]
+ENABLE t=08:59:13.954 label=intercept result={}
+SETTINGS t=08:59:13.954 label=intercept areDevToolsEnabled=1
+INTERCEPT t=08:59:15.493 label=intercept run=0 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:16.998 label=intercept run=1 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:18.509 label=intercept run=2 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:18.822 label=intercept run=3 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:19.135 label=intercept run=4 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:19.445 label=intercept run=5 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:19.760 label=intercept run=6 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:20.070 label=intercept run=7 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:20.381 label=intercept run=8 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:20.692 label=intercept run=9 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:21.209 label=intercept run=answer-empty dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] answer={} page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:22.720 label=intercept run=showPicker dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"pick:called"}]
+INTERCEPT t=08:59:24.267 label=intercept run=same-origin dialog=none cdpEvents=[{"backendNodeId":16,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:25.827 label=intercept run=reload dialog=none cdpEvents=[{"backendNodeId":26,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:27.385 label=intercept run=cross-origin dialog=none cdpEvents=[{"backendNodeId":5,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:28.957 label=intercept run=back-to-app dialog=none cdpEvents=[{"backendNodeId":5,"frameId":"1700743334FAAD3E5198C1A86348885E","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+ENABLE t=08:59:29.053 label=intercept-devtools-off result={}
+SETTINGS t=08:59:29.053 label=intercept-devtools-off areDevToolsEnabled=0
+INTERCEPT t=08:59:30.607 label=intercept-devtools-off run=0 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:32.118 label=intercept-devtools-off run=1 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:33.633 label=intercept-devtools-off run=2 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:33.942 label=intercept-devtools-off run=3 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:34.253 label=intercept-devtools-off run=4 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:34.566 label=intercept-devtools-off run=5 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:34.882 label=intercept-devtools-off run=6 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:35.196 label=intercept-devtools-off run=7 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:35.509 label=intercept-devtools-off run=8 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:35.821 label=intercept-devtools-off run=9 dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:36.338 label=intercept-devtools-off run=answer-empty dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] answer={} page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:37.854 label=intercept-devtools-off run=showPicker dialog=none cdpEvents=[{"backendNodeId":6,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"pick:called"}]
+INTERCEPT t=08:59:39.403 label=intercept-devtools-off run=same-origin dialog=none cdpEvents=[{"backendNodeId":16,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:40.955 label=intercept-devtools-off run=reload dialog=none cdpEvents=[{"backendNodeId":26,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:42.525 label=intercept-devtools-off run=cross-origin dialog=none cdpEvents=[{"backendNodeId":5,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+INTERCEPT t=08:59:44.110 label=intercept-devtools-off run=back-to-app dialog=none cdpEvents=[{"backendNodeId":5,"frameId":"FA36F341EF460D2B7F276D6AA222D3A1","mode":"selectSingle"}] page=[{"type":"click","trusted":true,"files":0}]
+CLEANUP t=08:59:44.327 deleted=True 

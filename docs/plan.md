@@ -267,7 +267,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 #### M1b: the Windows host
 
-**Decide first:**
+**Decide first:** all decided by 2026-11-17, as each item notes.
 - the two-stage close and its automated mode (RR), with a compiled example in `docs/app-model.md` first (decided, decision "Two-stage close"; `docs/app-model.md` 6.11);
 - the Windows single-instance mechanism (decided: a lock file plus a named pipe with an explicit DACL and a check of the server process, decision "Windows single instance: a lock file plus a pipe"), then the relaunch handler and its exit codes (decided, decision "The relaunch handler"; `docs/app-model.md` 3.14);
 - what "Wait" does after the hung-page dialog (section 3, "Hung pages"; decided: it asks again after about 20 s, then 40 s, 80 s and every 160 s, and a close shows "Wait / Close anyway", decision "What "Wait" does after the hung-page dialog");
@@ -275,11 +275,11 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 - the UI-thread stall probe (section 3; decided: Development and Test, and an opt-in in Production, decision "M1b's remaining questions without a spike");
 - the app id's validation rules and the folder names per channel (section 3c; decided: a required reverse-DNS `SparAppId`, folders named from it, `.Development` for Debug, decision "M1b's remaining questions without a spike");
 - styles added at run time: whether app-author docs recommend constructed stylesheets, and whether Spar offers a per-document style nonce as a C# option, with how hosts hand it to the page (decision "Styles added at run time: a nonce and constructed stylesheets both work"; decided: both, `csp.StyleNonce()` writing `<meta property="csp-nonce">`, decision "M1b's remaining questions without a spike");
-- the policy for `<input type="file">` (section 3c; decided: blocked, with `AllowPagePicker()`, once a spike confirms the WebView2 route, decision "M1b's remaining questions without a spike");
-- profiles for window tests and trusted input in the in-process window (section 5, issues D and I), each after a spike;
+- the policy for `<input type="file">` (section 3c; decided: blocked, with `AllowPagePicker()`, confirmed by `spikes/window-tests`, with the File System Access APIs removed on Windows, decision "M1b's remaining questions without a spike" and decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner");
+- profiles for window tests and trusted input in the in-process window (section 5, issues D and I), each after a spike (decided: InPrivate on one shared environment per test process, and CDP `Input.*`, decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner");
 - the black-box data root (section 5, issue M), after a security review (decided: the environment only, decision "M1b's remaining questions without a spike");
 - the generated `Projects.X` marker of the test-SDK shape (RR), with its members taken from what the black-box fixture needs, such as the tested app's published executable (decision "SparTestedApplication: the test project names its app"; decided: a generated class per tested app, decision "M1b's remaining questions without a spike");
-- the Windows Sandbox runner (section 5, issue J, a proposal), after its spike.
+- the Windows Sandbox runner (section 5, issue J, a proposal), after its spike (decided: two lanes, SYSTEM without windows and the user session with them, one sandbox per run, internal to `Spar.Testing` in M1b, decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner").
 
 **Build:**
 1. **The host:** STA ownership, instrumentation, asset serving on `https://app.localhost`, the bridge with document scoping, teardown behind the close request, and failure recovery.

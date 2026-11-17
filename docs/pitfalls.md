@@ -251,6 +251,18 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
   - `SendInput` arrow keys need `KEYEVENTF_EXTENDEDKEY` for the `Win+arrow` shortcuts.
   - **The guest grants the foreground to every process:** a relaunch took the foreground in 15 of 15 cases, controls without `AllowSetForegroundWindow` and without a click included, with the default `ForegroundLockTimeout`. On the desktop the same control failed 3 of 3. Check focus rules on a real desktop. (`windows-single-instance`)
   - `wsb exec -r System` runs a command as SYSTEM in the guest: a second account for cross-user checks, without creating a user. `wsb connect` did not return while the session stayed open. (`windows-single-instance`)
+- **Blocking the page's file pickers** (`window-tests`):
+  - **`Page.setInterceptFileChooserDialog` does nothing without `Page.enable` first:** it returns `{}` and the dialog opens.
+  - **It covers one WebView, and not a cross-site iframe,** which needs `Target.setAutoAttach` (flatten) plus the same calls in each child session.
+  - **`Permissions-Policy` and CSP `sandbox` do not block the File System Access pickers;** only `--disable-blink-features=FileSystemAccessLocal` removes them.
+- **A named profile's first controller in a fresh user-data folder took 5.2 s** in 5 of 13 runs; InPrivate on the default profile never stalled. (`window-tests`)
+- **`EBWebView\lockfile` shows whether a browser still uses a user-data folder:** held while it lives, gone when it exits (also after a kill), never left behind; deleting the folder while it is held fails with `0x80070020`. (`window-tests`)
+- **Windows Sandbox for test runs** (`sandbox-runner`):
+  - **only one sandbox runs per user session:** a second `wsb start` fails with `0x800401F6` (`CO_E_APPSINGLEUSE`);
+  - **WebView2 needs the user session:** as SYSTEM, `CreateCoreWebView2Controller` failed with `0x80080005`;
+  - **xUnit writes TRX and XML only at the end,** so a run killed at a deadline returns no report;
+  - **client windows stayed open after `wsb stop`** in 6 of 11 connected sessions; close them with `WM_CLOSE`;
+  - **in a generated `cmd` script,** `echo 1> file` writes "ECHO is off.", and parentheses around an echo break on `(x86)`: put the redirection first.
 - **Single instance and named pipes** (`windows-single-instance`):
   - **`PipeOptions.CurrentUserOnly` follows the token's owner, not its user.** For an elevated administrator the owner is `BUILTIN\Administrators`, so the server's pipe was `O:BA D:(A;;0x1f019f;;;BA)`, open to every administrator: a SYSTEM process connected. The client's check compares owners too, so a SYSTEM squatter whose pipe Administrators owned received an elevated client's arguments. Build the DACL from the token's user SID, and check the user of the server process (`GetNamedPipeServerProcessId`, then its token), not the pipe's owner.
   - **`DisconnectNamedPipe` discards data the client has not read.** Wait for the client to close its end before disconnecting, or the acknowledgement can be lost.

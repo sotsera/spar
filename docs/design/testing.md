@@ -83,7 +83,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 - **B. Where page tests run:** answered 2026-11-16 (decision "Page tests: @spar/app/testing"): in Node with Vitest; the real engine is level 4. The fake backend speaks the real protocol, so values cross the generated encoders and decoders as with a real host.
 - **C. Replacing services in end-to-end tests:** answered by the test strategy (2026-11-15) for levels 2 to 6; level 7 replaces nothing by design.
 - **D. Window specifics.**
-  - Trusted input in the in-process window (CDP `Input.*` on Windows, XTEST with `GDK_BACKEND=x11` on Linux, decision "Trusted input in Linux desktop tests: XTEST"): untested in-process; the spike used synthetic DOM events. Spike before M1b.
+  - Trusted input in the in-process window (CDP `Input.*` on Windows, XTEST with `GDK_BACKEND=x11` on Linux, decision "Trusted input in Linux desktop tests: XTEST"). Windows answered (user, 2026-11-17; decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner"; `spikes/window-tests`): CDP input in an offscreen, never-activated window is trusted, gives user activation and focuses the page; a click takes about 15 ms; tests wait two frames after a navigation.
   - Focus-dependent features (clipboard, user activation, the first click on an inactive window) fail in a non-activated offscreen window; they go to Windows Sandbox or the user.
   - Linux window tests need the container image. Whether Windows machines may use WSLg, and whether Spar publishes the image or only its Dockerfile, are open (M1c).
   - Selectors (role and name only, or test ids too) and how scenes are declared are open.
@@ -91,7 +91,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
 - **F. Visual snapshots** need determinism (clock, fonts, DPI), which is not proven.
 - **G. The fuzz budget:** a fixed seed budget on every run or nightly, and whether a minimised corpus is committed.
 - **H. Build and package tests** are slow and noisy: 5 s process stalls, cold restores. They need isolation (MSBuild server off, no node reuse, unique compiler id, isolated caches) and medians with ranges.
-- **I. Profiles for window tests:** one shared WebView2 environment per test process with an InPrivate controller per test (76–79 ms per test in `spikes/webview-profiles`) against a fresh user data folder per test (about 470 ms in `spikes/test-host`, the safest); cleanup of folders left by crashed runs. Spike in M1b.
+- **I. Profiles for window tests:** answered (user, 2026-11-17; decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner"): InPrivate on one shared environment per test process (81 ms per test), each process under its own root; a later run deletes a leftover root only when its `EBWebView\lockfile` is gone. The original question: one shared WebView2 environment per test process with an InPrivate controller per test (76–79 ms per test in `spikes/webview-profiles`) against a fresh user data folder per test (about 470 ms in `spikes/test-host`, the safest); cleanup of folders left by crashed runs. Spike in M1b.
 - **J. Windows Sandbox:** fixed at 96 DPI, no network, minutes per run. **Proposal** (user, 2026-11-15: recorded as a proposal, not decided):
   - **Why:** it is the one place for checks that cannot run in the test process or on the developer's desktop: real input and focus (the first click on an inactive window, clipboard actions that need a user gesture, drag and drop); anything that registers itself with the system (tray icons, notifications, deep links, file associations, autostart), which `AGENTS.md` keeps off the developer's machine; and the Production executable on a clean, offline machine (first run, start-up prerequisite failures).
   - **A host-side runner in `Spar.Testing`:**
@@ -109,6 +109,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
     - The guest is fixed at 96 DPI, so display scaling stays in "Checks that need the user at the PC".
     - A run needs the Sandbox client window, which appears on the host desktop and activates itself, so unattended runs on a machine someone is using follow the same "ask first" rule as other desktop work.
     - Windows only: Linux uses its container image.
+  - **Answered (user, 2026-11-17; decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner"; `spikes/sandbox-runner`):** the runner works and costs seconds per run, not minutes (6.2–9.0 s with a user session, 2.6 s without). Two lanes: SYSTEM for tests without windows, the user session for window and input tests, with "ask first". One sandbox per run, since only one can run at a time; results stream as they arrive. Built in M1b inside `Spar.Testing` for Spar's own checks; the app-facing layer waits for M3.
   - **Sequence:**
     - a spike before M1b: a NativeAOT test executable running and reporting from the guest, the start time, whether two sandboxes can run at once, and whether any CI runner offers it;
     - Spar's own runner in M1b;

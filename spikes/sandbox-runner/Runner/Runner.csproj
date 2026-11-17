@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Prototype of the host-side Windows Sandbox runner (docs/design/testing.md, issue J): writes the configuration,
+    starts a sandbox, opens a minimized session when a job needs one, stages payloads under new names, runs them with
+    a deadline, collects the results through a mapped folder, stops the sandbox and closes its client windows.
+    NativeAOT-clean (no reflection, source-generated P/Invoke), like a part of Spar.Testing would have to be.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SandboxRunner</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+</Project>

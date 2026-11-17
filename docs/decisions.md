@@ -3526,3 +3526,36 @@ The user asked to settle all of M1b's "decide first" items. These nine needed no
   - **Windows reads `LOCALAPPDATA` from the variable,** so a process that starts the app with another value moves its folders. That process is already the user.
   - **The variable can be missing or relative** (a service, a stripped environment). The app then falls back to the known folder.
   - **The folder actually in use is still checked** (plan section 3c). A `LOCALAPPDATA` that is a UNC path is refused, as it is for the profile.
+
+## 2026-11-17, Window-test profiles, trusted input, the page's pickers and the Sandbox runner (user decisions; spikes)
+
+The last four "decide first" items of M1b, each after its spike: `spikes/window-tests` (WebView2 157, one NativeAOT probe, windows shown offscreen and never activated, all input through the in-process DevTools Protocol) and `spikes/sandbox-runner` (Windows Sandbox on this host, a NativeAOT runner prototype). The user chose the recommended option each time.
+- **Profiles for window tests (issue I): InPrivate on one shared environment per test process.**
+  - **Cost per test,** setup plus teardown, 25 tests each (p50 / p95): InPrivate 81 / 147 ms; a new named profile, then `Profile8.Delete`, 220 / 360; the same with `ClearBrowsingDataAll` instead, 259 / 313; a new user-data folder 510 / 1,072.
+  - **Isolation:** every mode isolated `localStorage`, IndexedDB, a cookie, a service worker, a remembered permission and the HTTP cache (309 of 310 tests; the exception was a race in the probe).
+  - **Named profiles stalled:** their first controller in a fresh folder took 5.2 s in 5 of 13 runs; InPrivate never did.
+  - **Two test processes at once,** each with its own root, did not interfere.
+  - **Cleanup:** each test process uses its own root under `artifacts/webview2-profiles/`. A later run deletes a leftover root only when its `EBWebView\lockfile` is gone, and otherwise uses a new root. The lock file was held for as long as the browser lived, disappeared when it exited (also after a kill, 76–88 ms later), and never stayed behind. Checking it costs 0.09 ms.
+- **Trusted input in the in-process window (issue D): CDP `Input.*`.**
+  - **Trusted:** clicks, `insertText`, key events and Tab arrived with `isTrusted` true, gave user activation (`window.open` reached `NewWindowRequested` as user-initiated), and focused the page. The window never became the foreground window.
+  - **Latency** (p50 / p95, 100 each): a click 14.8 / 15.2 ms, a key 0.8 / 1.1, `insertText` 0.3 / 0.5.
+  - **No first-input stall:** the 5 s stall was not seen in 200 first clicks. Window tests keep a two-frame wait after a navigation (about 18 ms).
+  - **What stays in Windows Sandbox:** real OS input, for focus between windows, the clipboard and drag and drop.
+- **The page's pickers on WebView2: intercepted, and the File System Access APIs removed.** This confirms the block of decision "M1b's remaining questions without a spike".
+  - **Interception:** right after each controller is created, the host calls `Page.enable`, then `Page.setInterceptFileChooserDialog {enabled: true}`, through `CallDevToolsProtocolMethod`, and listens to `Page.fileChooserOpened`. 46 of 46 file-input clicks then opened no dialog, across same-origin, reload and cross-origin navigations, for `showPicker()`, and with `AreDevToolsEnabled = false`. The page saw only its `click`: no `change`, no `cancel`, no files.
+  - **`Page.enable` first:** without it the call returns `{}` and the dialog still opens.
+  - **Per WebView:** each WebView needs its own calls, and a cross-site iframe needs `Target.setAutoAttach` (flatten), then the same calls in each child session. Spar's navigation lock keeps foreign frames out, so this becomes necessary only if an app allows them.
+  - **The File System Access APIs:** `showOpenFilePicker`, `showSaveFilePicker` and `showDirectoryPicker` were intercepted too, rejecting with `AbortError`. `Permissions-Policy` and CSP `sandbox` did not block them. The host also passes `--disable-blink-features=FileSystemAccessLocal`, so the page sees no such API, as on WebKitGTK.
+  - **The opt-in:** `AllowPagePicker()` turns both off.
+  - **In Production:** these are in-process DevTools calls; they open no devtools endpoint, and the production boundary test keeps checking that none is present.
+- **The Windows Sandbox runner (issue J): two lanes, one sandbox per run.** Built in M1b as an internal part of `Spar.Testing`, for Spar's own checks; the app-facing layer (the trait, the fixture, one-off tasks) still waits for M3.
+  - **In the guest,** which has no .NET: `WireShapes.Tests` published as the `aot` lane does passed 79 of 79, and a payload with real WebView2 windows passed 15 of 15. TRX, xUnit XML, the console log and the exit code came back through the mapped folder.
+  - **Cost per cold cycle,** without the tests (7 cycles): 6.2–9.0 s with a user session, about 2.6 s with SYSTEM only. `wsb start` took about 1 s, and `wsb connect` until a user-session command worked 2.5–4.5 s. Reusing one sandbox saved about 5.8 s per extra job. Issue J's "minutes per run" was wrong for this host.
+  - **One sandbox at a time:** a second `wsb start` fails at once with `0x800401F6` (`CO_E_APPSINGLEUSE`). The runner checks `wsb list` first and fails with a clear message.
+  - **Lanes:** tests without windows run as SYSTEM, with no client window on the host. Window and input tests need the user session (as SYSTEM, `CreateCoreWebView2Controller` failed with `0x80080005`), whose client window took the foreground 2–3 times per connect, so the "ask first" rule stays for that lane.
+  - **One sandbox per test run,** jobs in sequence, each staged under a new folder. A fresh sandbox only for tests that need a clean machine.
+  - **Results stream as they arrive,** so a run killed at its deadline keeps them: xUnit writes TRX and XML only at the end, and the spike's killed run returned only its exit code and a partial console log.
+  - **CI:** from documentation, hosted `windows-latest` is Windows Server 2025, and Windows Sandbox is a client-edition feature, so it stays a local or self-hosted lane.
+- **Also found:**
+  - `WireShapes.Tests` looks for `Spar.slnx` to find its results folder, so one test fails outside the repository; tests should get that folder from the runner.
+  - `RatesContractTests.Without_an_implementation_the_app_does_not_start` failed 4 of 60 times on the host and 1 of 13 in the guest, unrelated to the Sandbox.
