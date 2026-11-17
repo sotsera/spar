@@ -1,0 +1,10 @@
+814757.282 pid=1396 start run --data C:\SparData\probe-dotnet --log C:\spar\out\probe-dotnet\logs --security dotnet --hold-ms 10000 -- first
+814759.794 pid=1396 lock taken 0.1 ms after main, attempt 1
+814765.421 pid=1396 primary serving spar-8d4d55ecb8102e18458dfdd687145ba7 sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+814891.067 pid=5072 start probe --data C:\SparData\probe-dotnet --log C:\spar\out\probe-dotnet\system
+814892.989 pid=5072 probe: connected to spar-8d4d55ecb8102e18458dfdd687145ba7, server pid 1396
+814894.127 pid=5072 exit 0
+814894.183 pid=1396 the client is gone (Unable to read beyond the end of the stream.); its arguments, if any, were handled
+824772.929 pid=1396 primary stopped serving
+824774.360 pid=1396 primary released the lock
+824775.639 pid=1396 exit 0

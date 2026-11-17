@@ -1,0 +1,148 @@
+87512383.278 pid=46708 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs --hold-ms 9000 -- first
+87512383.899 pid=46708 lock taken 0.2 ms after main, attempt 1
+87512384.806 pid=46708 primary serving spar-2dbd280ad430a6d9a546ef5408e19bcd sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+87512426.218 pid=41828 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs --count 20 --gap-ms 100 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-{i}.sql
+87512462.742 pid=11864 start run --t0 875124264680 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-0.sql
+87512463.837 pid=11864 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87512464.366 pid=11864 connected to pid 46708 in 1.0 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87512464.488 pid=46708 received args=[open file-0.sql] from_launch_ms=38.0 from_main_ms=1.5
+87512464.683 pid=11864 forwarded; ack 'ok' 1.4 ms after connecting
+87512464.889 pid=11864 exit 0
+87512467.620 pid=41828 spawned #0 pid 11864: exit 0 after 40.7 ms
+87512613.266 pid=2692 start run --t0 875125761300 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-1.sql
+87512614.281 pid=2692 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87512614.589 pid=2692 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87512614.729 pid=46708 received args=[open file-1.sql] from_launch_ms=38.6 from_main_ms=1.2
+87512614.971 pid=2692 forwarded; ack 'ok' 1.3 ms after connecting
+87512615.076 pid=2692 exit 0
+87512617.415 pid=41828 spawned #1 pid 2692: exit 0 after 41.3 ms
+87512754.492 pid=30348 start run --t0 875127187307 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-2.sql
+87512755.514 pid=30348 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87512755.843 pid=30348 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87512755.953 pid=46708 received args=[open file-2.sql] from_launch_ms=37.2 from_main_ms=1.2
+87512756.377 pid=30348 forwarded; ack 'ok' 1.5 ms after connecting
+87512756.527 pid=30348 exit 0
+87512758.876 pid=41828 spawned #2 pid 30348: exit 0 after 40.1 ms
+87512894.209 pid=51316 start run --t0 875128596131 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-3.sql
+87512895.194 pid=51316 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87512895.498 pid=51316 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87512895.601 pid=46708 received args=[open file-3.sql] from_launch_ms=36.0 from_main_ms=1.2
+87512895.845 pid=51316 forwarded; ack 'ok' 1.2 ms after connecting
+87512896.059 pid=51316 exit 0
+87512898.304 pid=41828 spawned #3 pid 51316: exit 0 after 38.7 ms
+87513041.564 pid=23168 start run --t0 875130021799 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-4.sql
+87513042.645 pid=23168 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87513042.942 pid=23168 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87513043.051 pid=46708 received args=[open file-4.sql] from_launch_ms=40.9 from_main_ms=1.2
+87513043.293 pid=23168 forwarded; ack 'ok' 1.2 ms after connecting
+87513043.462 pid=23168 exit 0
+87513045.615 pid=41828 spawned #4 pid 23168: exit 0 after 43.4 ms
+87513198.103 pid=44004 start run --t0 875131601620 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-5.sql
+87513199.238 pid=44004 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87513199.532 pid=44004 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87513199.638 pid=46708 received args=[open file-5.sql] from_launch_ms=39.5 from_main_ms=1.2
+87513199.854 pid=44004 forwarded; ack 'ok' 1.2 ms after connecting
+87513200.059 pid=44004 exit 0
+87513202.432 pid=41828 spawned #5 pid 44004: exit 0 after 42.3 ms
+87513343.379 pid=49676 start run --t0 875133030882 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-6.sql
+87513344.406 pid=49676 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87513344.728 pid=49676 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87513344.838 pid=46708 received args=[open file-6.sql] from_launch_ms=41.7 from_main_ms=1.2
+87513345.189 pid=49676 forwarded; ack 'ok' 1.4 ms after connecting
+87513345.378 pid=49676 exit 0
+87513347.883 pid=41828 spawned #6 pid 49676: exit 0 after 44.8 ms
+87513497.118 pid=10252 start run --t0 875134617022 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-7.sql
+87513498.157 pid=10252 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87513498.461 pid=10252 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87513498.632 pid=46708 received args=[open file-7.sql] from_launch_ms=36.9 from_main_ms=1.2
+87513498.820 pid=10252 forwarded; ack 'ok' 1.2 ms after connecting
+87513499.028 pid=10252 exit 0
+87513501.428 pid=41828 spawned #7 pid 10252: exit 0 after 39.7 ms
+87513639.297 pid=53572 start run --t0 875136035053 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-8.sql
+87513640.319 pid=53572 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87513640.624 pid=53572 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87513640.730 pid=46708 received args=[open file-8.sql] from_launch_ms=37.2 from_main_ms=1.2
+87513640.944 pid=53572 forwarded; ack 'ok' 1.2 ms after connecting
+87513641.138 pid=53572 exit 0
+87513643.336 pid=41828 spawned #8 pid 53572: exit 0 after 39.8 ms
+87513784.229 pid=63752 start run --t0 875137455688 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-9.sql
+87513785.302 pid=63752 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87513785.603 pid=63752 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87513785.735 pid=46708 received args=[open file-9.sql] from_launch_ms=40.2 from_main_ms=1.2
+87513785.981 pid=63752 forwarded; ack 'ok' 1.2 ms after connecting
+87513786.159 pid=63752 exit 0
+87513788.371 pid=41828 spawned #9 pid 63752: exit 0 after 42.8 ms
+87513939.174 pid=53444 start run --t0 875139025162 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-10.sql
+87513940.343 pid=53444 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87513940.641 pid=53444 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87513940.755 pid=46708 received args=[open file-10.sql] from_launch_ms=38.2 from_main_ms=1.2
+87513940.997 pid=53444 forwarded; ack 'ok' 1.3 ms after connecting
+87513941.238 pid=53444 exit 0
+87513943.669 pid=41828 spawned #10 pid 53444: exit 0 after 41.1 ms
+87514078.496 pid=12980 start run --t0 875140441519 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-11.sql
+87514079.602 pid=12980 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87514079.910 pid=12980 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87514080.073 pid=46708 received args=[open file-11.sql] from_launch_ms=35.9 from_main_ms=1.3
+87514080.437 pid=12980 forwarded; ack 'ok' 1.4 ms after connecting
+87514080.640 pid=12980 exit 0
+87514082.787 pid=41828 spawned #11 pid 12980: exit 0 after 38.6 ms
+87514221.825 pid=51508 start run --t0 875141867484 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-12.sql
+87514222.883 pid=51508 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87514223.199 pid=51508 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87514223.306 pid=46708 received args=[open file-12.sql] from_launch_ms=36.6 from_main_ms=1.2
+87514223.577 pid=51508 forwarded; ack 'ok' 1.3 ms after connecting
+87514223.771 pid=51508 exit 0
+87514225.869 pid=41828 spawned #12 pid 51508: exit 0 after 39.1 ms
+87514374.525 pid=64396 start run --t0 875143277794 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-13.sql
+87514375.605 pid=64396 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87514375.916 pid=64396 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87514376.076 pid=46708 received args=[open file-13.sql] from_launch_ms=48.3 from_main_ms=1.3
+87514376.298 pid=64396 forwarded; ack 'ok' 1.3 ms after connecting
+87514376.506 pid=64396 exit 0
+87514378.787 pid=41828 spawned #13 pid 64396: exit 0 after 51.0 ms
+87514522.302 pid=43148 start run --t0 875144853443 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-14.sql
+87514523.397 pid=43148 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87514523.701 pid=43148 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87514523.809 pid=46708 received args=[open file-14.sql] from_launch_ms=38.5 from_main_ms=1.2
+87514523.981 pid=43148 forwarded; ack 'ok' 1.2 ms after connecting
+87514524.157 pid=43148 exit 0
+87514526.432 pid=41828 spawned #14 pid 43148: exit 0 after 41.1 ms
+87514677.694 pid=66168 start run --t0 875146412644 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-15.sql
+87514678.859 pid=66168 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87514679.160 pid=66168 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87514679.258 pid=46708 received args=[open file-15.sql] from_launch_ms=38.0 from_main_ms=1.3
+87514679.499 pid=66168 forwarded; ack 'ok' 1.3 ms after connecting
+87514679.708 pid=66168 exit 0
+87514681.896 pid=41828 spawned #15 pid 66168: exit 0 after 40.6 ms
+87514831.576 pid=59264 start run --t0 875147960422 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-16.sql
+87514832.735 pid=59264 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87514833.032 pid=59264 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87514833.203 pid=46708 received args=[open file-16.sql] from_launch_ms=37.2 from_main_ms=1.3
+87514833.440 pid=59264 forwarded; ack 'ok' 1.3 ms after connecting
+87514833.664 pid=59264 exit 0
+87514835.921 pid=41828 spawned #16 pid 59264: exit 0 after 39.9 ms
+87514977.660 pid=22588 start run --t0 875149376481 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-17.sql
+87514978.731 pid=22588 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87514979.045 pid=22588 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87514979.163 pid=46708 received args=[open file-17.sql] from_launch_ms=41.5 from_main_ms=1.2
+87514979.357 pid=22588 forwarded; ack 'ok' 1.2 ms after connecting
+87514979.571 pid=22588 exit 0
+87514981.936 pid=41828 spawned #17 pid 22588: exit 0 after 44.3 ms
+87515129.944 pid=2940 start run --t0 875150944346 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-18.sql
+87515131.002 pid=2940 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87515131.317 pid=2940 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87515131.473 pid=46708 received args=[open file-18.sql] from_launch_ms=37.0 from_main_ms=1.3
+87515131.675 pid=2940 forwarded; ack 'ok' 1.3 ms after connecting
+87515131.760 pid=2940 exit 0
+87515134.030 pid=41828 spawned #18 pid 2940: exit 0 after 39.6 ms
+87515272.064 pid=25884 start run --t0 875152363966 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\normal\logs -- open file-19.sql
+87515273.136 pid=25884 server pid 46708 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87515273.447 pid=25884 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87515273.558 pid=46708 received args=[open file-19.sql] from_launch_ms=37.2 from_main_ms=1.2
+87515273.727 pid=25884 forwarded; ack 'ok' 1.2 ms after connecting
+87515275.679 pid=25884 exit 0
+87515277.979 pid=41828 spawned #19 pid 25884: exit 0 after 41.6 ms
+87515378.585 pid=41828 exit 0
+87521398.339 pid=46708 primary stopped serving
+87521398.631 pid=46708 primary released the lock
+87521398.771 pid=46708 exit 0

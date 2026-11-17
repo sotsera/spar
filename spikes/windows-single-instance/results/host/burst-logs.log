@@ -1,0 +1,78 @@
+87521469.959 pid=14168 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs --hold-ms 5000 -- first
+87521470.418 pid=14168 lock taken 0.1 ms after main, attempt 1
+87521471.245 pid=14168 primary serving spar-d4e4eb3fb0de1a133c6a6a90dc1ceb73 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+87521514.206 pid=26748 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs --count 10 --parallel -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-{i}.sql
+87521558.545 pid=6536 start run --t0 875215144315 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-0.sql
+87521560.115 pid=6536 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521560.604 pid=6536 connected to pid 14168 in 1.2 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521560.749 pid=14168 received args=[open burst-0.sql] from_launch_ms=46.3 from_main_ms=1.8
+87521560.971 pid=6536 forwarded; ack 'ok' 1.8 ms after connecting
+87521561.055 pid=6536 exit 0
+87521563.912 pid=48624 start run --t0 875215174652 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-1.sql
+87521564.940 pid=48624 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521565.272 pid=48624 connected to pid 14168 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521565.406 pid=14168 received args=[open burst-1.sql] from_launch_ms=47.9 from_main_ms=1.3
+87521565.733 pid=48624 forwarded; ack 'ok' 1.4 ms after connecting
+87521567.134 pid=61512 start run --t0 875215201145 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-2.sql
+87521568.553 pid=6656 start run --t0 875215224023 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-3.sql
+87521569.574 pid=48624 exit 0
+87521570.221 pid=6656 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521570.629 pid=6656 connected to pid 14168 in 1.5 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521570.867 pid=14168 received args=[open burst-3.sql] from_launch_ms=48.5 from_main_ms=2.1
+87521571.259 pid=6656 forwarded; ack 'ok' 2.3 ms after connecting
+87521571.342 pid=6656 exit 0
+87521571.993 pid=61512 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521572.322 pid=61512 connected to pid 14168 in 4.5 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521572.458 pid=14168 received args=[open burst-2.sql] from_launch_ms=52.3 from_main_ms=5.0
+87521572.699 pid=61512 forwarded; ack 'ok' 5.0 ms after connecting
+87521572.922 pid=61512 exit 0
+87521574.023 pid=45364 start run --t0 875215246398 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-4.sql
+87521574.235 pid=26748 spawned #0 pid 6536: exit 0 after 59.2 ms
+87521574.501 pid=26748 spawned #1 pid 48624: exit 0 after 57.0 ms
+87521575.422 pid=45364 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521575.744 pid=45364 connected to pid 14168 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521575.883 pid=14168 received args=[open burst-4.sql] from_launch_ms=51.2 from_main_ms=1.4
+87521576.116 pid=45364 forwarded; ack 'ok' 1.4 ms after connecting
+87521576.336 pid=45364 exit 0
+87521577.623 pid=39572 start run --t0 875215268490 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-5.sql
+87521577.964 pid=54544 start run --t0 875215289810 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-6.sql
+87521578.808 pid=26748 spawned #2 pid 61512: exit 0 after 58.7 ms
+87521579.002 pid=26748 spawned #3 pid 6656: exit 0 after 56.6 ms
+87521579.546 pid=39572 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521579.991 pid=39572 connected to pid 14168 in 1.5 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521580.230 pid=14168 received args=[open burst-5.sql] from_launch_ms=53.4 from_main_ms=2.2
+87521580.418 pid=39572 forwarded; ack 'ok' 2.0 ms after connecting
+87521580.601 pid=39572 exit 0
+87521580.737 pid=26748 spawned #4 pid 45364: exit 0 after 56.1 ms
+87521581.333 pid=54544 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521581.826 pid=54544 connected to pid 14168 in 3.2 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521581.961 pid=14168 received args=[open burst-6.sql] from_launch_ms=53.0 from_main_ms=3.7
+87521582.169 pid=54544 forwarded; ack 'ok' 3.7 ms after connecting
+87521582.343 pid=54544 exit 0
+87521583.682 pid=26748 spawned #5 pid 39572: exit 0 after 56.8 ms
+87521583.773 pid=24140 start run --t0 875215312505 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-7.sql
+87521584.869 pid=24140 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521585.194 pid=24140 connected to pid 14168 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521585.309 pid=14168 received args=[open burst-7.sql] from_launch_ms=54.1 from_main_ms=1.3
+87521585.493 pid=24140 forwarded; ack 'ok' 1.2 ms after connecting
+87521585.713 pid=24140 exit 0
+87521586.024 pid=26748 spawned #6 pid 54544: exit 0 after 57.0 ms
+87521587.205 pid=63800 start run --t0 875215342924 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-8.sql
+87521588.017 pid=26748 spawned #7 pid 24140: exit 0 after 56.8 ms
+87521588.458 pid=63800 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521588.792 pid=63800 connected to pid 14168 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521588.931 pid=14168 received args=[open burst-8.sql] from_launch_ms=54.6 from_main_ms=1.4
+87521589.129 pid=63800 forwarded; ack 'ok' 1.4 ms after connecting
+87521589.280 pid=63800 exit 0
+87521589.331 pid=13380 start run --t0 875215377142 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\burst\logs -- open burst-9.sql
+87521590.479 pid=13380 server pid 14168 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87521590.802 pid=13380 connected to pid 14168 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87521590.937 pid=14168 received args=[open burst-9.sql] from_launch_ms=53.2 from_main_ms=1.3
+87521591.105 pid=13380 forwarded; ack 'ok' 1.2 ms after connecting
+87521591.257 pid=13380 exit 0
+87521591.567 pid=26748 spawned #8 pid 63800: exit 0 after 57.3 ms
+87521593.370 pid=26748 spawned #9 pid 13380: exit 0 after 55.7 ms
+87521593.465 pid=26748 exit 0
+87526480.975 pid=14168 primary stopped serving
+87526481.250 pid=14168 primary released the lock
+87526481.323 pid=14168 exit 0

@@ -1,0 +1,18 @@
+87590503.522 pid=58624 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\logs --hold-ms 4000 -- first
+87590503.999 pid=58624 lock taken 0.1 ms after main, attempt 1
+87590504.830 pid=58624 primary serving spar-d0cc3ff9823579b4b50e29e6c0a3f085 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+87590546.150 pid=55684 start squat --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\logs --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\logs --hold-ms 200
+87590547.026 pid=55684 squat: CreateNamedPipe failed, error 231
+87590547.109 pid=55684 exit 1
+87590568.147 pid=44008 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\logs -- open still-primary.sql
+87590604.109 pid=45788 start run --t0 875905683805 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat-after\logs -- open still-primary.sql
+87590605.244 pid=45788 server pid 58624 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87590605.780 pid=45788 connected to pid 58624 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87590605.910 pid=58624 received args=[open still-primary.sql] from_launch_ms=37.5 from_main_ms=1.5
+87590606.101 pid=45788 forwarded; ack 'ok' 1.5 ms after connecting
+87590614.518 pid=45788 exit 0
+87590617.301 pid=44008 spawned #0 pid 45788: exit 0 after 48.5 ms
+87590732.116 pid=44008 exit 0
+87594520.559 pid=58624 primary stopped serving
+87594521.097 pid=58624 primary released the lock
+87594521.269 pid=58624 exit 0

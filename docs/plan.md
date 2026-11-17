@@ -59,7 +59,7 @@ Details and evidence in `docs/decisions.md`.
 | CI: GitHub Actions (user, 2026-11-15; decision "CI on GitHub Actions; the first slice"). The workflow is in `.github/workflows/ci.yml` and first runs at the first push. Open: pinning actions to commit SHAs before that push, and whether the window tests (M1b) run on the hosted Windows runner or need a self-hosted one with a desktop session; Linux window tests use the container image from M1c. | First push; M1b and M1c. |
 | arm64: `win-arm64` and `linux-arm64` are mapped by `SparPlatforms`, but no spike ran on arm64. | Decide in M4 whether arm64 is qualified or documented as untested. |
 | The two-stage close: a close request with page and backend guards before teardown, and an automated mode that skips prompts for tests and agents. The dialog and window decisions already rely on it. | Adopted from the research review (user, 2026-11-15). Designed with the user at the start of M1b, with a compiled example in `docs/app-model.md` first. |
-| The Windows single-instance mechanism. Linux is decided (a lock file plus a Unix socket). | M1b. |
+| The relaunch handler: the C# API that receives a relaunch's arguments (the default, showing and focusing the main window, is decided), and the exit codes of a relaunch that fails. The Windows mechanism is decided (a lock file plus a named pipe, decision "Windows single instance: a lock file plus a pipe"); Linux uses a lock file plus a Unix socket. | M1b, with a compiled example in `docs/app-model.md` first. |
 | What "Wait" does after the hung-page dialog. | M1b (section 3, "Hung pages"). |
 | Where Spar's packages are published, with what version scheme and release steps. The SQL Server tool lives in its own repository and uses Spar through packages only; M1a's package-only consumer test uses an isolated local feed. | Needed by M3. Not discussed yet. |
 | The minimum Windows version. The README names Windows 11, screen-capture protection mentions Windows 10 2004, and no spike ran on Windows 10. | Provisional in M1b with the startup check; M4 confirms. |
@@ -116,6 +116,7 @@ Agents run nothing here unattended: each check needs the user present, real hard
 | Task Manager's app-group "Memory" total against the reported app total | Visual comparison on the user's desktop | `spikes/resource-usage` |
 | GNOME and KDE System Monitor "Memory" against the Linux app total | Real desktops not reachable from WSL | `spikes/resource-usage` |
 | The "Wait / Reload page" dialog over a hung page on the real desktop, and a real click into a hung page | Visual judgement, and the focus and input behaviour on the user's own desktop | `spikes/page-heartbeat` |
+| A relaunch from Explorer, a shortcut and a file association bringing the running window to the front; the same user in a second session (Remote Desktop) | Real foreground rules exist only on the user's desktop (Windows Sandbox grants the foreground to every process), and a second session is the user's | `spikes/windows-single-instance` |
 | Sleep and resume, lock and session switch with a page open, where Windows Sandbox or a Linux VM cannot cover them (decision "Power and session events") | Puts the user's machine to sleep or locks it | `spikes/page-heartbeat` |
 
 ### Definition of done
@@ -270,7 +271,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 **Decide first:**
 - the two-stage close and its automated mode (RR), with a compiled example in `docs/app-model.md` first (decided, decision "Two-stage close"; `docs/app-model.md` 6.11);
-- the Windows single-instance mechanism;
+- the Windows single-instance mechanism (decided: a lock file plus a named pipe with an explicit DACL and a check of the server process, decision "Windows single instance: a lock file plus a pipe"), then the relaunch handler and its exit codes, with a compiled example in `docs/app-model.md` first;
 - what "Wait" does after the hung-page dialog (section 3, "Hung pages");
 - a provisional minimum WebView2 Runtime: the oldest one with the source-kinds filter of `ICoreWebView2_22` and the other interfaces section 3 lists. M4 confirms it;
 - the UI-thread stall probe (section 3);
@@ -284,7 +285,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 **Build:**
 1. **The host:** STA ownership, instrumentation, asset serving on `https://app.localhost`, the bridge with document scoping, teardown behind the close request, and failure recovery.
-2. **Start-up:** the prerequisite checks and the error dialog with the fixed exit codes; single instance before the environment exists; the window shown at once in the theme colour, with the host layers of section 3d and the cost of the transparent background measured.
+2. **Start-up:** the prerequisite checks and the error dialog with the fixed exit codes; single instance before the environment exists, through the lock file and the pipe; the window shown at once in the theme colour, with the host layers of section 3d and the cost of the transparent background measured.
 3. **Hangs:** the hung-page heartbeat, and the shutdown hang policy (RR): after about 10 s of incomplete shutdown, a native "Keep waiting / Exit now" prompt. The library never kills the process on its own.
 4. **Page security (section 3b):** the navigation lock; the CSP declared in C# with its analyzer (SPAR101–SPAR104); the response headers on every response, worker scripts included; `Permissions-Policy` and the deny-by-default permission gate; both violation channels with flood limits, their numbers taken from a flood test; SRI and Trusted Types on the Release bundle.
 5. **Security defaults (section 3c),** each verified on the published executable together with its C# opt-in: the Production browser settings; the ignored environment overrides, including whether clearing a variable in-process is enough; the app identity and its channel-separated folders (RR); the per-user profile folder, with a check of the folder actually in use (RR). The production boundary test proves that no test, development, loopback or devtools code ships.

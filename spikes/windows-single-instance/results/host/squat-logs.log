@@ -1,0 +1,18 @@
+87584426.133 pid=25848 start squat --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\logs --hold-ms 6000 --accept
+87584427.304 pid=25848 squat: holding spar-f66a20e18bb79d00e823133f42d736ab sddl=O:<host-user-sid>D:(A;;FA;;;WD)
+87584497.534 pid=57252 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\logs --hold-ms 3000 -- first
+87584497.842 pid=57252 lock taken 0.0 ms after main, attempt 1
+87584498.572 pid=57252 primary without a pipe: spar-f66a20e18bb79d00e823133f42d736ab is taken (IOException: CreateNamedPipe failed, error 231)
+87584527.278 pid=38588 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\logs -- open to-squatter.sql
+87584562.180 pid=48880 start run --t0 875845275509 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\squat\logs -- open to-squatter.sql
+87584563.191 pid=48880 server pid 25848 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:(A;;FA;;;WD)
+87584563.604 pid=48880 connected to pid 25848 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87584563.715 pid=25848 squat: a client connected and sent 40 bytes; answering with a fake ack
+87584563.890 pid=48880 forwarded; ack 'ok' 1.3 ms after connecting
+87584563.989 pid=48880 exit 0
+87584566.520 pid=38588 spawned #0 pid 48880: exit 0 after 38.6 ms
+87584682.116 pid=38588 exit 0
+87587501.979 pid=57252 primary stopped serving
+87587502.327 pid=57252 primary released the lock
+87587502.520 pid=57252 exit 13
+87590432.695 pid=25848 exit 0

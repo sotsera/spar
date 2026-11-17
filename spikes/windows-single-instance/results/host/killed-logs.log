@@ -1,0 +1,120 @@
+87579859.641 pid=62128 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-0
+87579860.042 pid=62128 lock taken 0.1 ms after main, attempt 1
+87579860.850 pid=62128 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-0]
+87579907.925 pid=63952 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-0.sql
+87579941.248 pid=65836 start run --t0 875799081697 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-0.sql
+87579941.488 pid=65836 lock taken 0.0 ms after main, attempt 1
+87579942.181 pid=65836 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-0.sql]
+87580155.990 pid=65836 primary stopped serving
+87580156.123 pid=65836 primary released the lock
+87580156.169 pid=65836 exit 0
+87580158.918 pid=63952 spawned #0 pid 65836: exit 0 after 250.3 ms
+87580265.959 pid=63952 exit 0
+87580318.754 pid=63636 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-1
+87580319.097 pid=63636 lock taken 0.0 ms after main, attempt 1
+87580319.904 pid=63636 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-1]
+87580364.720 pid=46696 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-1.sql
+87580397.784 pid=29528 start run --t0 875803650089 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-1.sql
+87580398.024 pid=29528 lock taken 0.0 ms after main, attempt 1
+87580398.837 pid=29528 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-1.sql]
+87580612.184 pid=29528 primary stopped serving
+87580612.397 pid=29528 primary released the lock
+87580612.525 pid=29528 exit 0
+87580615.239 pid=46696 spawned #0 pid 29528: exit 0 after 249.8 ms
+87580722.870 pid=46696 exit 0
+87580774.712 pid=9108 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-2
+87580775.225 pid=9108 lock taken 0.0 ms after main, attempt 1
+87580776.081 pid=9108 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-2]
+87580837.302 pid=42556 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-2.sql
+87580873.133 pid=31884 start run --t0 875808376991 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-2.sql
+87580873.385 pid=31884 lock taken 0.0 ms after main, attempt 1
+87580874.119 pid=31884 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-2.sql]
+87581085.418 pid=31884 primary stopped serving
+87581085.639 pid=31884 primary released the lock
+87581085.787 pid=31884 exit 0
+87581088.736 pid=42556 spawned #0 pid 31884: exit 0 after 250.6 ms
+87581195.770 pid=42556 exit 0
+87581250.164 pid=39004 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-3
+87581250.556 pid=39004 lock taken 0.0 ms after main, attempt 1
+87581251.437 pid=39004 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-3]
+87581280.015 pid=45400 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-3.sql
+87581314.336 pid=49304 start run --t0 875812802467 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-3.sql
+87581314.647 pid=49304 lock taken 0.0 ms after main, attempt 1
+87581315.366 pid=49304 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-3.sql]
+87581526.779 pid=49304 primary stopped serving
+87581526.967 pid=49304 primary released the lock
+87581527.042 pid=49304 exit 0
+87581530.031 pid=45400 spawned #0 pid 49304: exit 0 after 249.3 ms
+87581636.779 pid=45400 exit 0
+87581690.524 pid=55264 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-4
+87581690.900 pid=55264 lock taken 0.0 ms after main, attempt 1
+87581691.765 pid=55264 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-4]
+87581739.315 pid=36624 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-4.sql
+87581774.708 pid=26480 start run --t0 875817395960 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-4.sql
+87581774.976 pid=26480 lock taken 0.0 ms after main, attempt 1
+87581775.743 pid=26480 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-4.sql]
+87581985.235 pid=26480 primary stopped serving
+87581985.420 pid=26480 primary released the lock
+87581985.566 pid=26480 exit 0
+87581988.401 pid=36624 spawned #0 pid 26480: exit 0 after 248.4 ms
+87582096.773 pid=36624 exit 0
+87582148.871 pid=48000 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-5
+87582149.365 pid=48000 lock taken 0.0 ms after main, attempt 1
+87582150.179 pid=48000 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-5]
+87582211.649 pid=63388 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-5.sql
+87582247.520 pid=37260 start run --t0 875822118999 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-5.sql
+87582247.793 pid=37260 lock taken 0.0 ms after main, attempt 1
+87582248.545 pid=37260 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-5.sql]
+87582457.910 pid=37260 primary stopped serving
+87582458.084 pid=37260 primary released the lock
+87582458.221 pid=37260 exit 0
+87582461.224 pid=63388 spawned #0 pid 37260: exit 0 after 248.9 ms
+87582567.182 pid=63388 exit 0
+87582620.470 pid=6852 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-6
+87582620.996 pid=6852 lock taken 0.0 ms after main, attempt 1
+87582621.893 pid=6852 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-6]
+87582650.653 pid=56260 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-6.sql
+87582684.471 pid=59108 start run --t0 875826508825 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-6.sql
+87582684.706 pid=59108 lock taken 0.0 ms after main, attempt 1
+87582685.447 pid=59108 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-6.sql]
+87582898.910 pid=59108 primary stopped serving
+87582899.081 pid=59108 primary released the lock
+87582899.206 pid=59108 exit 0
+87582902.091 pid=56260 spawned #0 pid 59108: exit 0 after 250.7 ms
+87583010.288 pid=56260 exit 0
+87583062.145 pid=22940 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-7
+87583062.518 pid=22940 lock taken 0.0 ms after main, attempt 1
+87583063.333 pid=22940 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-7]
+87583109.459 pid=47320 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-7.sql
+87583145.189 pid=41224 start run --t0 875831097581 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-7.sql
+87583145.518 pid=41224 lock taken 0.0 ms after main, attempt 1
+87583146.277 pid=41224 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-7.sql]
+87583357.985 pid=41224 primary stopped serving
+87583358.173 pid=41224 primary released the lock
+87583358.240 pid=41224 exit 0
+87583361.115 pid=47320 spawned #0 pid 41224: exit 0 after 250.9 ms
+87583468.751 pid=47320 exit 0
+87583524.652 pid=55616 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-8
+87583525.074 pid=55616 lock taken 0.0 ms after main, attempt 1
+87583525.909 pid=55616 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-8]
+87583567.855 pid=9156 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-8.sql
+87583602.622 pid=57436 start run --t0 875835681976 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-8.sql
+87583602.904 pid=57436 lock taken 0.1 ms after main, attempt 1
+87583603.718 pid=57436 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-8.sql]
+87583816.064 pid=57436 primary stopped serving
+87583816.229 pid=57436 primary released the lock
+87583816.355 pid=57436 exit 0
+87583819.281 pid=9156 spawned #0 pid 57436: exit 0 after 250.7 ms
+87583926.952 pid=9156 exit 0
+87583978.551 pid=47712 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 30000 -- doomed-9
+87583978.997 pid=47712 lock taken 0.0 ms after main, attempt 1
+87583979.798 pid=47712 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[doomed-9]
+87584009.412 pid=8372 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-9.sql
+87584045.393 pid=7024 start run --t0 875840097147 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\killed\logs --hold-ms 200 -- open after-kill-9.sql
+87584045.660 pid=7024 lock taken 0.0 ms after main, attempt 1
+87584046.582 pid=7024 primary serving spar-34e7c98d7930fe6803c461002c0ef428 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[open after-kill-9.sql]
+87584257.524 pid=7024 primary stopped serving
+87584257.652 pid=7024 primary released the lock
+87584257.712 pid=7024 exit 0
+87584260.530 pid=8372 spawned #0 pid 7024: exit 0 after 250.4 ms
+87584366.188 pid=8372 exit 0

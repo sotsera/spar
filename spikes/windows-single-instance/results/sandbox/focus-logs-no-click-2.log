@@ -1,0 +1,17 @@
+485050.932 pid=3976 start run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-click-2 --log C:\spar\out\focus\logs-no-click-2 --window normal --hold-ms 6000 -- first
+485526.241 pid=3976 lock taken 0.2 ms after main, attempt 1
+485529.133 pid=3976 primary serving spar-9938e860e1ca43410a20ac0043e663d3 sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+485540.395 pid=3976 window 0x1401cc 'spar-si-primary-3976' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+485610.432 pid=3288 start spawn --log C:\spar\out\focus\logs-no-click-2 --count 1 -- run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-click-2 --log C:\spar\out\focus\logs-no-click-2 -- open focus-no-click-2.sql
+485659.400 pid=7280 start run --t0 4856112789 --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-click-2 --log C:\spar\out\focus\logs-no-click-2 -- open focus-no-click-2.sql
+485661.796 pid=7280 connected to pid 3976 in 1.2 ms; AllowSetForegroundWindow=False error=5; foreground=0x100f0 owner=5992 title='Program Manager'
+485662.505 pid=3976 received args=[open focus-no-click-2.sql] from_launch_ms=51.2 from_main_ms=2.3
+485663.260 pid=7280 forwarded; ack 'ok' 2.8 ms after connecting
+485664.269 pid=7280 exit 0
+485668.142 pid=3288 spawned #0 pid 7280: exit 0 after 56.4 ms
+485671.806 pid=3976 activate for [open focus-no-click-2.sql]: iconic=False visible=True SetForegroundWindow=True; foreground=0x1401cc owner=3976 title='spar-si-primary-3976'
+485781.692 pid=3288 exit 0
+485985.988 pid=3976 300 ms after activating: foreground=True; foreground=0x1401cc owner=3976 title='spar-si-primary-3976'
+491553.316 pid=3976 primary stopped serving
+491554.584 pid=3976 primary released the lock
+491555.670 pid=3976 exit 0

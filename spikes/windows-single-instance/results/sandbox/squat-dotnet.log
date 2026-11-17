@@ -1,0 +1,18 @@
+802138.670 pid=2172 start squat --data C:\SparData\squat-dotnet --log C:\spar\out\squat-dotnet\system --owner BA --hold-ms 9000 --accept
+802144.563 pid=2172 squat: holding spar-6b208b76b4f96dfc375e70bff594c4a2 sddl=O:BAD:(A;;FA;;;WD)
+808312.594 pid=2292 start run --data C:\SparData\squat-dotnet --log C:\spar\out\squat-dotnet\logs --security dotnet --hold-ms 3000 -- first
+808314.557 pid=2292 lock taken 0.1 ms after main, attempt 1
+808317.746 pid=2292 primary without a pipe: spar-6b208b76b4f96dfc375e70bff594c4a2 is taken (IOException: All pipe instances are busy.)
+808597.689 pid=2268 start spawn --log C:\spar\out\squat-dotnet\logs --count 1 -- run --data C:\SparData\squat-dotnet --log C:\spar\out\squat-dotnet\logs --security dotnet -- open to-system-squatter.sql
+808782.050 pid=8116 start run --t0 8086002564 --data C:\SparData\squat-dotnet --log C:\spar\out\squat-dotnet\logs --security dotnet -- open to-system-squatter.sql
+808788.962 pid=8116 server pid 2172 user S-1-5-18 session 0 (ours S-1-5-21-2047949552-857980807-821054962-504 session 1); pipe O:BAD:(A;;FA;;;WD)
+808794.037 pid=8116 connected to pid 2172 in 8.5 ms; AllowSetForegroundWindow=False error=5; foreground=0x100f0 owner=5992 title='Program Manager'
+808795.117 pid=2172 squat: a client connected and sent 47 bytes; answering with a fake ack
+808798.300 pid=8116 forwarded; ack 'ok' 12.9 ms after connecting
+808803.073 pid=8116 exit 0
+808810.846 pid=2268 spawned #0 pid 8116: exit 0 after 210.1 ms
+808912.246 pid=2268 exit 0
+811150.569 pid=2172 exit 0
+811320.896 pid=2292 primary stopped serving
+811324.051 pid=2292 primary released the lock
+811325.999 pid=2292 exit 13

@@ -1,0 +1,9 @@
+837206.117 pid=6708 start run --data C:\SparData\probe-spar --log C:\spar\out\probe-spar\logs --security spar --hold-ms 10000 -- first
+837207.037 pid=6708 lock taken 0.1 ms after main, attempt 1
+837209.144 pid=6708 primary serving spar-d0192204aaa090fda7243c3c9a831cf9 sddl=O:S-1-5-21-2047949552-857980807-821054962-504D:P(A;;FA;;;S-1-5-21-2047949552-857980807-821054962-504) args=[first]
+837557.539 pid=6428 start probe --data C:\SparData\probe-spar --log C:\spar\out\probe-spar\system
+837560.417 pid=6428 probe: spar-d0192204aaa090fda7243c3c9a831cf9 refused, UnauthorizedAccessException: Access to the path is denied.
+837561.477 pid=6428 exit 1
+847210.078 pid=6708 primary stopped serving
+847211.537 pid=6708 primary released the lock
+847212.507 pid=6708 exit 0

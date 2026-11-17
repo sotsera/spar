@@ -1,0 +1,22 @@
+435617.349 pid=4032 start run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-minimized-0 --log C:\spar\out\focus\logs-minimized-0 --window minimized --hold-ms 6000 -- first
+435618.454 pid=4032 lock taken 0.2 ms after main, attempt 1
+435620.497 pid=4032 primary serving spar-b05af0097c571fa42e296f806b5211a3 sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+435625.331 pid=4032 window 0xd01a8 'spar-si-primary-4032' start=minimized; foreground=0x100f0 owner=5992 title='Program Manager'
+435707.020 pid=3568 start launcher --exe C:\spar\in\si-074958.exe --log C:\spar\out\focus\logs-minimized-0 --hold-ms 4000 -- run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-minimized-0 --log C:\spar\out\focus\logs-minimized-0 -- open focus-minimized-0.sql
+435716.863 pid=3568 window 0xb01d4 'spar-si-launcher' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+436093.157 pid=2928 start click --log C:\spar\out\focus\logs-minimized-0 --title spar-si-launcher
+436094.369 pid=2928 click: before, foreground=0x100f0 owner=5992 title='Program Manager'
+436261.110 pid=3568 launcher: clicked, started pid 5884; foreground=0xb01d4 owner=3568 title='spar-si-launcher'
+436269.002 pid=5884 start run --t0 4362296250 --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-minimized-0 --log C:\spar\out\focus\logs-minimized-0 -- open focus-minimized-0.sql
+436271.494 pid=5884 connected to pid 4032 in 1.2 ms; AllowSetForegroundWindow=True error=0; foreground=0xb01d4 owner=3568 title='spar-si-launcher'
+436272.842 pid=4032 received args=[open focus-minimized-0.sql] from_launch_ms=43.2 from_main_ms=3.0
+436274.127 pid=5884 forwarded; ack 'ok' 4.0 ms after connecting
+436275.173 pid=5884 exit 0
+436422.252 pid=2928 click: sent 2; after, foreground=0xd01a8 owner=4032 title='spar-si-primary-4032'
+436423.968 pid=2928 exit 0
+436628.182 pid=4032 activate for [open focus-minimized-0.sql]: iconic=True visible=True SetForegroundWindow=True; foreground=0xd01a8 owner=4032 title='spar-si-primary-4032'
+436938.314 pid=4032 300 ms after activating: foreground=True; foreground=0xd01a8 owner=4032 title='spar-si-primary-4032'
+439713.774 pid=3568 exit 0
+441624.326 pid=4032 primary stopped serving
+441625.522 pid=4032 primary released the lock
+441626.741 pid=4032 exit 0

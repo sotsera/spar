@@ -249,6 +249,15 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
   - `Start-Process -WindowStyle Hidden` makes the app's first `ShowWindow` hide the window.
   - `wsb exec` with `powershell -File` cannot pass an array parameter.
   - `SendInput` arrow keys need `KEYEVENTF_EXTENDEDKEY` for the `Win+arrow` shortcuts.
+  - **The guest grants the foreground to every process:** a relaunch took the foreground in 15 of 15 cases, controls without `AllowSetForegroundWindow` and without a click included, with the default `ForegroundLockTimeout`. On the desktop the same control failed 3 of 3. Check focus rules on a real desktop. (`windows-single-instance`)
+  - `wsb exec -r System` runs a command as SYSTEM in the guest: a second account for cross-user checks, without creating a user. `wsb connect` did not return while the session stayed open. (`windows-single-instance`)
+- **Single instance and named pipes** (`windows-single-instance`):
+  - **`PipeOptions.CurrentUserOnly` follows the token's owner, not its user.** For an elevated administrator the owner is `BUILTIN\Administrators`, so the server's pipe was `O:BA D:(A;;0x1f019f;;;BA)`, open to every administrator: a SYSTEM process connected. The client's check compares owners too, so a SYSTEM squatter whose pipe Administrators owned received an elevated client's arguments. Build the DACL from the token's user SID, and check the user of the server process (`GetNamedPipeServerProcessId`, then its token), not the pipe's owner.
+  - **`DisconnectNamedPipe` discards data the client has not read.** Wait for the client to close its end before disconnecting, or the acknowledgement can be lost.
+  - **`NamedPipeClientStream.Connect(timeout)` retries a pipe that does not exist until the timeout,** so a missing pipe and a busy one both end as `TimeoutException`.
+  - **A pipe name from the data folder's path misses a junction:** the second process found the lock held and no pipe. Name it from the lock file's identity (volume serial number and file index), which an open with no access rights can read while another process holds the file with `FileShare.None`. `Path.GetFullPath` does expand 8.3 short names.
+  - **`AllowSetForegroundWindow`'s return value says nothing:** it returned true in background processes that could not give the foreground away. Only the primary's `SetForegroundWindow` result shows whether focus moved.
+- **A raw `CreateFileW` past `MAX_PATH` fails with error 3** (path not found) without the `\\?\` prefix; .NET's own file APIs add it, P/Invoke does not. (`windows-single-instance`, a 384-character data folder)
 
   (`windows-titlebar`)
 

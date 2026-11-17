@@ -301,7 +301,13 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
     - the tray icon and its menu, and close to tray;
     - the custom title bar (decided, page-drawn buttons);
     - window placement;
-    - single instance and argument forwarding. Decided: it is enforced before the WebView environment exists, a relaunch forwards its arguments to the running instance, and an app that wants several instances says so in C# (decision "Profiles and shutdown"). Linux uses a lock file plus a Unix socket; the Windows mechanism is settled in M1b;
+    - single instance and argument forwarding. Decided: it is enforced before the WebView environment exists, a relaunch forwards its arguments to the running instance, and an app that wants several instances says so in C# (decision "Profiles and shutdown"). Linux uses a lock file plus a Unix socket. Windows uses a lock file plus a named pipe (decided, user, 2026-11-17; decision "Windows single instance: a lock file plus a pipe"; `spikes/windows-single-instance`):
+      - **Lock:** `FileShare.None` on a lock file in the app's data folder, so the lock covers exactly the folder a second instance would corrupt. The OS releases it when the process ends; a killed primary left nothing stale (10 of 10).
+      - **Pipe:** named from the lock file's volume serial number and file index, so a junction or a short name reaches the same instance. One instance, reused with `DisconnectNamedPipe` after the client closes its end.
+      - **Security:** a DACL with only the token's user SID, `FILE_FLAG_FIRST_PIPE_INSTANCE` and `PIPE_REJECT_REMOTE_CLIENTS`. The secondary checks the user of the server process (`GetNamedPipeServerProcessId`, then its token). Never `PipeOptions.CurrentUserOnly`, which opens an elevated user's pipe to every administrator.
+      - **Timing:** the handoff takes 1.2 ms from the secondary's `Main`. A hung primary gives a clear failure after the 2 s acknowledgement timeout. A launch while the primary exits waits up to about 5 s for the lock and becomes the primary.
+      - **Focus:** the secondary calls `AllowSetForegroundWindow` with the server's pid, and the primary shows, restores and activates its main window: 9 of 9 on the desktop, 0 of 3 without the call.
+      - **The relaunch handler** (C#, optional) is designed with a compiled example in `docs/app-model.md`;
     - print to PDF (82 ms with no dialog on Linux; WebView2 has `PrintToPdfAsync`), plus printing with the system dialog. **API decided (2026-11-14):**
       - On the page, `print.show()` opens the system dialog and `print.toPdf(options)` saves through the save dialog with a safe write. Both are `Call`s, and `window.print()` does the same as `show()`.
       - In C#, `IPrinting.ToPdfAsync(options, grant, name, ct)` writes without a dialog.

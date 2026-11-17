@@ -1,0 +1,15 @@
+89257001.744 pid=58608 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs --naming fileid --hold-ms 7000 -- first
+89257002.097 pid=58608 lock taken 0.1 ms after main, attempt 1
+89257002.940 pid=58608 primary serving spar-eeee5d5f17e3e5e6b6ea7c17a632ace9 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+89257044.826 pid=46768 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\alias --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs --naming fileid -- open via-junction.sql
+89257081.717 pid=33172 start run --t0 892570450545 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\alias --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs --naming fileid -- open via-junction.sql
+89257082.859 pid=33172 server pid 58608 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+89257083.326 pid=33172 connected to pid 58608 in 1.0 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+89257083.451 pid=58608 received args=[open via-junction.sql] from_launch_ms=38.4 from_main_ms=1.5
+89257083.632 pid=33172 forwarded; ack 'ok' 1.5 ms after connecting
+89257083.835 pid=33172 exit 0
+89257086.625 pid=46768 spawned #0 pid 33172: exit 0 after 41.2 ms
+89257194.642 pid=46768 exit 0
+89264009.789 pid=58608 primary stopped serving
+89264010.129 pid=58608 primary released the lock
+89264010.263 pid=58608 exit 0

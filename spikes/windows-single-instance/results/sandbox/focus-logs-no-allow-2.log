@@ -1,0 +1,22 @@
+429491.846 pid=8 start run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-allow-2 --log C:\spar\out\focus\logs-no-allow-2 --window normal --hold-ms 6000 -- first
+429501.492 pid=8 lock taken 7.8 ms after main, attempt 1
+429504.310 pid=8 primary serving spar-81c05de23c3b5653988199f388a84ba9 sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+429514.660 pid=8 window 0x901ac 'spar-si-primary-8' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+429603.178 pid=3740 start launcher --exe C:\spar\in\si-074958.exe --log C:\spar\out\focus\logs-no-allow-2 --hold-ms 4000 -- run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-allow-2 --log C:\spar\out\focus\logs-no-allow-2 --no-allow-fg -- open focus-no-allow-2.sql
+429612.286 pid=3740 window 0x901f2 'spar-si-launcher' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+429999.092 pid=6884 start click --log C:\spar\out\focus\logs-no-allow-2 --title spar-si-launcher
+430000.288 pid=6884 click: before, foreground=0x100f0 owner=5992 title='Program Manager'
+430191.786 pid=3740 launcher: clicked, started pid 3768; foreground=0x901f2 owner=3740 title='spar-si-launcher'
+430200.916 pid=3768 start run --t0 4301392017 --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-allow-2 --log C:\spar\out\focus\logs-no-allow-2 --no-allow-fg -- open focus-no-allow-2.sql
+430203.681 pid=3768 connected to pid 8 in 1.3 ms; AllowSetForegroundWindow skipped
+430205.935 pid=8 received args=[open focus-no-allow-2.sql] from_launch_ms=66.7 from_main_ms=3.7
+430206.860 pid=3768 forwarded; ack 'ok' 4.4 ms after connecting
+430207.937 pid=3768 exit 0
+430217.079 pid=8 activate for [open focus-no-allow-2.sql]: iconic=False visible=True SetForegroundWindow=True; foreground=0x901ac owner=8 title='spar-si-primary-8'
+430327.436 pid=6884 click: sent 2; after, foreground=0x901ac owner=8 title='spar-si-primary-8'
+430328.722 pid=6884 exit 0
+430533.174 pid=8 300 ms after activating: foreground=True; foreground=0x901ac owner=8 title='spar-si-primary-8'
+433639.079 pid=3740 exit 0
+435528.495 pid=8 primary stopped serving
+435529.649 pid=8 primary released the lock
+435530.607 pid=8 exit 0

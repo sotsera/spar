@@ -1,0 +1,22 @@
+411011.626 pid=1640 start run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-allow-2 --log C:\spar\out\focus\logs-allow-2 --window normal --hold-ms 6000 -- first
+411013.881 pid=1640 lock taken 0.2 ms after main, attempt 1
+411026.241 pid=1640 primary serving spar-a65180bd00c8c5769af1bd6ea63e4561 sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+411044.165 pid=1640 window 0x501fa 'spar-si-primary-1640' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+411138.101 pid=6188 start launcher --exe C:\spar\in\si-074958.exe --log C:\spar\out\focus\logs-allow-2 --hold-ms 4000 -- run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-allow-2 --log C:\spar\out\focus\logs-allow-2 -- open focus-allow-2.sql
+411148.578 pid=6188 window 0x501cc 'spar-si-launcher' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+411524.470 pid=2804 start click --log C:\spar\out\focus\logs-allow-2 --title spar-si-launcher
+411525.516 pid=2804 click: before, foreground=0x100f0 owner=5992 title='Program Manager'
+411705.530 pid=6188 launcher: clicked, started pid 5884; foreground=0x501cc owner=6188 title='spar-si-launcher'
+411714.119 pid=5884 start run --t0 4116772829 --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-allow-2 --log C:\spar\out\focus\logs-allow-2 -- open focus-allow-2.sql
+411716.603 pid=5884 connected to pid 1640 in 1.2 ms; AllowSetForegroundWindow=True error=0; foreground=0x501cc owner=6188 title='spar-si-launcher'
+411717.334 pid=1640 received args=[open focus-allow-2.sql] from_launch_ms=40.0 from_main_ms=2.3
+411718.231 pid=5884 forwarded; ack 'ok' 3.0 ms after connecting
+411719.680 pid=5884 exit 0
+411727.597 pid=1640 activate for [open focus-allow-2.sql]: iconic=False visible=True SetForegroundWindow=True; foreground=0x501fa owner=1640 title='spar-si-primary-1640'
+411870.701 pid=2804 click: sent 2; after, foreground=0x501fa owner=1640 title='spar-si-primary-1640'
+411872.633 pid=2804 exit 0
+412045.738 pid=1640 300 ms after activating: foreground=True; foreground=0x501fa owner=1640 title='spar-si-primary-1640'
+415163.813 pid=6188 exit 0
+417046.208 pid=1640 primary stopped serving
+417050.014 pid=1640 primary released the lock
+417055.019 pid=1640 exit 0
