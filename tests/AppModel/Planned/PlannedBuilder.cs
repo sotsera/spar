@@ -35,6 +35,18 @@ public static class PlannedBuilder
             ArgumentNullException.ThrowIfNull(guard);
             return builder;
         }
+
+        public SparBuilder OnRelaunch(Func<Relaunch, IServiceProvider, CancellationToken, ValueTask> handler)
+        {
+            ArgumentNullException.ThrowIfNull(handler);
+            return builder;
+        }
+
+        public SparBuilder OnRelaunch(Action<Relaunch, IServiceProvider> handler)
+        {
+            ArgumentNullException.ThrowIfNull(handler);
+            return builder;
+        }
     }
 
     private static SparBuilder Configure<TOptions>(SparBuilder builder, TOptions options, Action<TOptions> configure)

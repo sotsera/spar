@@ -3460,3 +3460,18 @@ The second "decide first" item of M1b. `spikes/windows-single-instance`: a Nativ
   - **Focus needs `AllowSetForegroundWindow`:** on the desktop the primary came to the front in 9 of 9 (normal, minimized, hidden) with it, and in 0 of 3 without it. In Windows Sandbox every case came to the front, the controls included, so Sandbox focus results show nothing.
 - **Recommended for the build (M1b start-up), from the spike:** pipe security as above, never `CurrentUserOnly`; one pipe instance reused with `DisconnectNamedPipe` after the client closes its end; a 2 s acknowledgement timeout and a lock wait of about 5 s; close the pipe before releasing the lock; a primary whose pipe name is taken keeps running and logs it. The secondary's failures (not responding, still closing, running for another user) need exit codes beside the fixed start-up codes; choosing them is part of the handler's design.
 - **Not tested:** two sessions of the same user, elevated and non-elevated instances together, another real account, a launch from Explorer or a file association, network or redirected profile folders.
+
+## 2026-11-17, The relaunch handler (user decisions; compiled example)
+
+Follow-up to "Windows single instance: a lock file plus a pipe". Shown, compiled, in `docs/app-model.md` sections 2 and 3.14.
+- **Decided (user, 2026-11-17):**
+  - **`spar.OnRelaunch(handler)` in `Program.cs`,** with `(Relaunch, IServiceProvider)` and `(Relaunch, IServiceProvider, CancellationToken) => ValueTask` overloads, like the close guard. `Relaunch(Arguments, WorkingDirectory)` with `ResolvePath(path)` against the relaunch's working directory. Chosen over an injectable `IRelaunches` stream, which would have to buffer relaunches that arrive before anything watches and would drop them silently without a watcher.
+  - **A relaunch that cannot reach the running instance shows a native message and exits with a fixed code,** through the start-up error path (stderr and the system log too): 8 running but not responding (no acknowledgement within 2 s, or the lock still held after about 5 s), 9 running for another user on the same data folder. Chosen over an exit code alone, since a launch from an icon has no terminal. In the automated mode the message goes only to stderr and the log.
+- **Already decided and shown with it:** the main window is shown and focused before the handler runs; a relaunch is acknowledged when queued and never replayed.
+- **Choices made while writing it, for review:**
+  - The handler runs off the UI thread, one relaunch at a time in arrival order, with the app's root services, as the close guard does. The async overload's token is cancelled at shutdown.
+  - The first launch's arguments stay in `Program.cs`'s `args`; only later launches reach the handler.
+  - The page sees nothing unless the app passes it on.
+  - The example is the SQL tool's `--recipe <file>`, checked by `RecipeQueue.TryAdd`, because a relaunch's arguments are untrusted input from any process of the same user.
+- **Open:** a black-box test of a failed relaunch runs the Production executable, which ignores the automated mode, so its message would block the test. This is settled with the black-box data root (plan section 5, issue M). The option for several instances is still designed only when an app needs it.
+- **The check:** `RecipeQueue` is a new block, and `Program.cs` gains the handler and its service. The stand-ins gain `Spar.Stubs/Relaunch.cs`, also linked into the real-Spar check's planned stand-ins, and `OnRelaunch` on both builders.

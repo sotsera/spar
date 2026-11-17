@@ -62,7 +62,9 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - 4 too old;
   - 5 present but broken;
   - 6 no graphical session (Linux);
-  - 7 OS too old.
+  - 7 OS too old;
+  - 8 already running but not responding (single instance: no acknowledgement within 2 s, or still closing after about 5 s);
+  - 9 already running for another user on the same data folder (decided, user, 2026-11-17; decision "The relaunch handler").
 
   Apps cannot change them.
 - **Windows, in order:**
@@ -307,7 +309,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
       - **Security:** a DACL with only the token's user SID, `FILE_FLAG_FIRST_PIPE_INSTANCE` and `PIPE_REJECT_REMOTE_CLIENTS`. The secondary checks the user of the server process (`GetNamedPipeServerProcessId`, then its token). Never `PipeOptions.CurrentUserOnly`, which opens an elevated user's pipe to every administrator.
       - **Timing:** the handoff takes 1.2 ms from the secondary's `Main`. A hung primary gives a clear failure after the 2 s acknowledgement timeout. A launch while the primary exits waits up to about 5 s for the lock and becomes the primary.
       - **Focus:** the secondary calls `AllowSetForegroundWindow` with the server's pid, and the primary shows, restores and activates its main window: 9 of 9 on the desktop, 0 of 3 without the call.
-      - **The relaunch handler** (C#, optional) is designed with a compiled example in `docs/app-model.md`;
+      - **The relaunch handler:** `spar.OnRelaunch(…)` in `Program.cs`, run after the window is focused (decided, user, 2026-11-17; decision "The relaunch handler"; `docs/app-model.md` 3.14). A relaunch that cannot reach the running instance shows the start-up error message and exits 8 or 9;
     - print to PDF (82 ms with no dialog on Linux; WebView2 has `PrintToPdfAsync`), plus printing with the system dialog. **API decided (2026-11-14):**
       - On the page, `print.show()` opens the system dialog and `print.toPdf(options)` saves through the save dialog with a safe write. Both are `Call`s, and `window.print()` does the same as `show()`.
       - In C#, `IPrinting.ToPdfAsync(options, grant, name, ct)` writes without a dialog.

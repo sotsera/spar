@@ -54,11 +54,21 @@ var app = SparApplication.Create(args, spar =>
         ? CloseDecision.Ask("A copy is still running. Close anyway?")
         : CloseDecision.Close);
 
+    // A second launch shows and focuses the main window, then hands its arguments here (3.14). Decided.
+    spar.OnRelaunch((relaunch, services) =>
+    {
+        if (relaunch.Arguments is ["--recipe", var file])
+        {
+            services.GetRequiredService<RecipeQueue>().TryAdd(relaunch.ResolvePath(file));
+        }
+    });
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
     spar.Services.AddSingleton<RunningCopies>();
+    spar.Services.AddSingleton<RecipeQueue>();
 });
 
 return app.Run();

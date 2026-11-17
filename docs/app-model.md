@@ -124,11 +124,21 @@ var app = SparApplication.Create(args, spar =>
         ? CloseDecision.Ask("A copy is still running. Close anyway?")
         : CloseDecision.Close);
 
+    // A second launch shows and focuses the main window, then hands its arguments here (3.14). Decided.
+    spar.OnRelaunch((relaunch, services) =>
+    {
+        if (relaunch.Arguments is ["--recipe", var file])
+        {
+            services.GetRequiredService<RecipeQueue>().TryAdd(relaunch.ResolvePath(file));
+        }
+    });
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
     spar.Services.AddSingleton<RunningCopies>();
+    spar.Services.AddSingleton<RecipeQueue>();
 });
 
 return app.Run();
@@ -819,6 +829,52 @@ public sealed class CrashReport(IAppHealth health)
 - **Spar never uploads anything by itself.** What happens with a report is the app's choice.
 - **"Send logs":** `diagnostics.collect()` on the page, or `IAppHealth.CollectAsync` in C#, packs logs and crash records into one zip saved through a grant, ready to attach to an email.
 - **Secrets:** Spar's own entries never contain secrets. Apps keep theirs out too, because the zip is sent to other people.
+
+### 3.14 Single instance and relaunches
+
+**Decided** (decisions "Windows single instance: a lock file plus a pipe" and "The relaunch handler"). One instance of the app runs per data folder. Launching it again hands the new launch's arguments to the running instance: Spar shows and focuses the main window, then calls the handler in `Program.cs` (section 2). The SQL tool's handler accepts `--recipe <file>`, so a shortcut or a scheduled task can queue a saved recipe in the running tool.
+
+File `SqlTool/CopyJobs/RecipeQueue.cs`:
+
+```csharp
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+
+namespace SqlTool.CopyJobs;
+
+/// <summary>Saved recipes handed over by a relaunch (Program.cs), run one after another by the copy jobs.</summary>
+public sealed class RecipeQueue
+{
+    private readonly ConcurrentQueue<string> _files = new();
+
+    /// <summary>Queues a recipe file. A relaunch's arguments come from any process of this user, so they are checked.</summary>
+    public bool TryAdd(string path)
+    {
+        if (!path.EndsWith(".sqlrecipe", StringComparison.OrdinalIgnoreCase) || !File.Exists(path))
+        {
+            return false;
+        }
+
+        _files.Enqueue(path);
+        return true;
+    }
+
+    public bool TryTake([NotNullWhen(true)] out string? path) => _files.TryDequeue(out path);
+}
+```
+
+- **What a relaunch does:** the second process hands its arguments and working directory to the running instance, then exits. Spar shows and focuses the main window, restoring it from the tray or from minimized, then runs the handler. Without a handler, the window is focused and the arguments are ignored.
+- **The handler** runs off the UI thread, one relaunch at a time in arrival order. It receives the app's root services, as the close guard does; for a scoped service it creates a scope. An async overload, `(relaunch, services, cancellationToken) => ValueTask`, gets a token that is cancelled at shutdown. A relaunch is acknowledged when it is queued, before the handler runs, and is never replayed.
+- **Arguments are untrusted input:** any process of the same user can start the app with any arguments, so the handler checks them, as `TryAdd` does. `ResolvePath` resolves a relative path against the relaunch's working directory, not the running instance's.
+- **The first launch** gets its arguments in `Program.cs`'s `args`, as usual. Only later launches reach the handler.
+- **The page** sees nothing unless the app passes it on, for example through a subscription.
+- **When the running instance cannot be reached,** the second process shows a native message, writes stderr and the system log, and exits with a fixed code, as start-up errors do (plan section 3):
+  - 8 when the app is running but not responding: it is hung (no answer within 2 s), or still closing after about 5 s;
+  - 9 when it runs for another user on the same data folder.
+
+  In the automated mode the message goes only to stderr and the log.
+- **Several instances:** an app that needs them says so in C#. The option is designed when an app needs it, together with how their data folders are kept apart.
+- **How:** a lock file in the app's data folder, plus a named pipe on Windows and a Unix socket on Linux, only for the same user. The handoff takes about 1 ms once the second process runs.
 
 ## 4. On the wire
 

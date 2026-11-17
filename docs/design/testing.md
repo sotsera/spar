@@ -115,7 +115,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
     - the app-facing layer (the trait, the fixture, one-off tasks), decided with the user at the start of M3, when tray, notifications and deep links arrive.
 - **K. Performance:** which suites run in CI, ratio or absolute thresholds, which machine sets the baselines, and the noise policy. The M1 budgets (Milestones, "Provisional budgets") are the first numbers.
 - **L. The test host's mechanics:** answered (2026-11-15): the generated entry point, the `AsyncLocal` session and the spike's names (`SparTestApp`, `SparTestSurface`, `AddExternal`, `AllowExternal`). Still open for M1a: streams and cancellation through the typed test client, and a diagnostic for an app that declares `internal partial class Program` (conflicting accessibility in the `Test` variant).
-- **M. The black-box data root:** the Production binary needs a way to put its data under a disposable root (the spike read `--spar-data-root`). It is an input to a shipped executable, so it needs a security review before it is designed (M1b).
+- **M. The black-box data root:** the Production binary needs a way to put its data under a disposable root (the spike read `--spar-data-root`). It is an input to a shipped executable, so it needs a security review before it is designed (M1b). The same review settles how a black-box test of a failed relaunch avoids the native message that exits 8 or 9 (decision "The relaunch handler"): a Production build ignores the automated mode.
 
 **What Spar provides:**
 - **`Spar.Testing`** (NuGet):

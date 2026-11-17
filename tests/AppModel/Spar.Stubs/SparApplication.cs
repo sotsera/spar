@@ -144,4 +144,25 @@ public sealed class SparBuilder
         ArgumentNullException.ThrowIfNull(guard);
         return OnCloseRequested((request, services, _) => ValueTask.FromResult(guard(request, services)));
     }
+
+    internal Func<Relaunch, IServiceProvider, CancellationToken, ValueTask>? RelaunchHandler { get; private set; }
+
+    /// <summary>Receives later launches' arguments, after Spar has shown and focused the main window.</summary>
+    public SparBuilder OnRelaunch(Func<Relaunch, IServiceProvider, CancellationToken, ValueTask> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        RelaunchHandler = handler;
+        return this;
+    }
+
+    /// <summary>The relaunch handler when it finishes at once.</summary>
+    public SparBuilder OnRelaunch(Action<Relaunch, IServiceProvider> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        return OnRelaunch((relaunch, services, _) =>
+        {
+            handler(relaunch, services);
+            return ValueTask.CompletedTask;
+        });
+    }
 }
