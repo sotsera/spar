@@ -14,6 +14,9 @@ internal static class HostEmitter
 {
     public const string WindowsHost = "Spar.Windows.SparWindowsHost";
 
+    /// <summary>Spar's stand-in on a Windows too old for the host (below 1809): it reports "OS too old", exit 7.</summary>
+    public const string UnsupportedWindowsHost = "Spar.Runtime.UnsupportedWindowsHost";
+
     public static void Emit(SourceProductionContext output, ImmutableArray<RunCallModel> calls, HostsModel hosts)
     {
         if (calls.Length == 0 || !hosts.Windows)
@@ -37,6 +40,11 @@ internal static class HostEmitter
             .Open("private static global::Spar.Runtime.ISparHost? Host()")
             .Open("if (global::System.OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))")
             .Line($"return new global::{WindowsHost}();")
+            .Close()
+            .Line()
+            .Line("// Older than WebView2's own floor: the host cannot load, and the app reports \"OS too old\" (exit 7).")
+            .Open("if (global::System.OperatingSystem.IsWindows())")
+            .Line($"return new global::{UnsupportedWindowsHost}();")
             .Close()
             .Line()
             .Line("return null;")

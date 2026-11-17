@@ -49,8 +49,28 @@ public sealed class SparBuilder
 
     internal BridgeOptions BridgeOptions { get; } = new();
 
+    /// <summary>The main window's options.</summary>
+    internal WindowOptions MainWindow { get; } = new();
+
     /// <summary>The backend's close guard, or null when the app declared none.</summary>
     internal Func<CloseRequest, IServiceProvider, CancellationToken, ValueTask<CloseDecision>>? CloseGuard { get; private set; }
+
+    /// <summary>The relaunch handler, or null when the app declared none.</summary>
+    internal Func<Relaunch, IServiceProvider, CancellationToken, ValueTask>? RelaunchHandler { get; private set; }
+
+    /// <summary>The start-up hook, or null when the app declared none.</summary>
+    internal Func<StartupProblem, bool>? StartupProblemHandler { get; private set; }
+
+    /// <summary>
+    /// The main window: its colours before the page paints (plan section 3d), its size and its minimum size. The
+    /// colours are read by the build, so give them as constants.
+    /// </summary>
+    public SparBuilder Window(Action<WindowOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(MainWindow);
+        return this;
+    }
 
     /// <summary>Where data and logs go; each has a per-user default. A test host moves them all under its data root.</summary>
     public SparBuilder Folders(Action<FolderOptions> configure)
@@ -88,6 +108,43 @@ public sealed class SparBuilder
     {
         ArgumentNullException.ThrowIfNull(guard);
         return OnCloseRequested((request, services, _) => ValueTask.FromResult(guard(request, services)));
+    }
+
+    /// <summary>
+    /// Receives each later launch of the app (<c>docs/app-model.md</c> 3.14): Spar has already shown and focused the
+    /// main window. It runs off the window's UI thread, one relaunch at a time, with the app's root services; the
+    /// token is cancelled when the app stops. The arguments are untrusted input.
+    /// </summary>
+    public SparBuilder OnRelaunch(Func<Relaunch, IServiceProvider, CancellationToken, ValueTask> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        RelaunchHandler = handler;
+        return this;
+    }
+
+    /// <summary>The relaunch handler when it finishes at once.</summary>
+    public SparBuilder OnRelaunch(Action<Relaunch, IServiceProvider> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        return OnRelaunch((relaunch, services, _) =>
+        {
+            handler(relaunch, services);
+            return ValueTask.CompletedTask;
+        });
+    }
+
+    /// <summary>
+    /// Runs when the app cannot start (<c>docs/app-model.md</c> 3.15): a missing, old or broken prerequisite, an
+    /// operating system that is too old, or a relaunch that cannot reach the running app. It runs before the app's
+    /// services exist, on a thread of its own. Return true when it showed the app's own message, and Spar shows none;
+    /// return false to let Spar show its message. Standard error and the per-user log are written either way, the
+    /// process exits with the problem's fixed code, and in the automated mode the hook is not called.
+    /// </summary>
+    public SparBuilder OnStartupProblem(Func<StartupProblem, bool> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        StartupProblemHandler = handler;
+        return this;
     }
 }
 

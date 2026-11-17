@@ -3,6 +3,7 @@ using Spar;
 using SqlTool.Connections;
 using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
+using SqlTool.Support;
 
 var app = SparApplication.Create(args, spar =>
 {
@@ -62,6 +63,9 @@ var app = SparApplication.Create(args, spar =>
             services.GetRequiredService<RecipeQueue>().TryAdd(relaunch.ResolvePath(file));
         }
     });
+
+    // A missing prerequisite opens the company's install guide in place of Spar's message (3.15). Decided.
+    spar.OnStartupProblem(SupportPage.TryOpen);
 
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();

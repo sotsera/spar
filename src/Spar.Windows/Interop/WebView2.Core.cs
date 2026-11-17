@@ -126,7 +126,7 @@ internal partial interface ICoreWebView2_22
     [PreserveSig] int Slot103_RemoveStatusBarTextChanged();
     [PreserveSig] int Slot104_GetStatusBarText();
     // ICoreWebView2_13
-    [PreserveSig] int Slot105_GetProfile();
+    nint GetProfile();
     // ICoreWebView2_14
     [PreserveSig] int Slot106_AddServerCertificateErrorDetected();
     [PreserveSig] int Slot107_RemoveServerCertificateErrorDetected();

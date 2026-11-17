@@ -16,6 +16,18 @@ internal static partial class Native
         nint environmentOptions,
         ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler environmentCreatedHandler);
 
+    /// <summary>
+    /// The version of the Runtime the loader would start, read by the loader as environment creation reads it (never
+    /// from the registry; plan section 3, "Missing prerequisites"). <paramref name="versionInfo"/> is a
+    /// <c>CoTaskMemAlloc</c> string the caller frees. <c>0x80070002</c> when no Runtime is found.
+    /// </summary>
+    [LibraryImport("WebView2Loader", StringMarshalling = StringMarshalling.Utf16)]
+    public static partial int GetAvailableCoreWebView2BrowserVersionString(string? browserExecutableFolder, out nint versionInfo);
+
+    /// <summary>Compares two Runtime version strings: <paramref name="result"/> is -1, 0 or 1.</summary>
+    [LibraryImport("WebView2Loader", StringMarshalling = StringMarshalling.Utf16)]
+    public static partial int CompareBrowserVersions(string version1, string version2, out int result);
+
     /// <summary>A window's user data (<c>GWLP_USERDATA</c> is -21); 64-bit Windows exports the pointer-sized forms.</summary>
     [LibraryImport("user32", EntryPoint = "GetWindowLongPtrW")]
     public static partial nint GetWindowLongPtr(nint window, int index);

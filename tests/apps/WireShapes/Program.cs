@@ -7,6 +7,21 @@ var app = SparApplication.Create(args, spar =>
 {
     spar.Services.AddSingleton<Ledger>();
     spar.Services.AddScoped<IRatesService, FixedRates>();
+
+    // For runs of the executable (docs/evidence/m1b-startup.md): later launches' arguments on standard error, and,
+    // when asked, the app's own start-up message instead of Spar's, so a run can check that Spar then shows none.
+    spar.OnRelaunch((relaunch, _) =>
+        Console.Error.WriteLine($"wireshapes: relaunch [{string.Join(" | ", relaunch.Arguments)}] in {relaunch.WorkingDirectory}"));
+    spar.OnStartupProblem(problem =>
+    {
+        if (Environment.GetEnvironmentVariable("WIRESHAPES_OWN_STARTUP_MESSAGE") != "1")
+        {
+            return false;
+        }
+
+        Console.Error.WriteLine($"wireshapes: own start-up message for {problem.Kind}, {problem.Component}, found {problem.Found ?? "none"}");
+        return true;
+    });
 });
 return app.Run();
 

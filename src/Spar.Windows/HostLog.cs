@@ -34,11 +34,12 @@ internal sealed class HostLog
     private readonly Lock _gate = new();
     private readonly HashSet<string> _reached = new(StringComparer.Ordinal);
     private ILogger _logger;
+    private LogFile? _file;
 
     public HostLog()
     {
         RunId = Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(4));
-        _logger = new StandardErrorLogger(this);
+        _logger = new LocalLogger(this);
     }
 
     /// <summary>The run's id, in every line, so one run's lines can be found in a shared log.</summary>
@@ -50,13 +51,25 @@ internal sealed class HostLog
     /// <summary>Milliseconds since the host started, monotonic.</summary>
     public double Elapsed => Stopwatch.GetElapsedTime(_started).TotalMilliseconds;
 
-    /// <summary>Adds the app's own logging once its services exist; until then only standard error gets the lines.</summary>
+    /// <summary>The per-user log file, once <see cref="UseFile"/> opened it.</summary>
+    public string? FilePath => _file?.Path;
+
+    /// <summary>
+    /// Writes every line to the per-user log file in <paramref name="logsFolder"/> too, from now on (before anything can
+    /// fail at start-up).
+    /// </summary>
+    public void UseFile(string logsFolder) => _file ??= LogFile.Open(logsFolder);
+
+    /// <summary>Ends the log file: what was logged reaches the disk, within a short limit. Called once, at process exit.</summary>
+    public void Close() => _file?.Close();
+
+    /// <summary>Adds the app's own logging once its services exist; until then standard error and the file get the lines.</summary>
     public void UseAppLogging(IServiceProvider services)
     {
         var app = services.GetService<ILoggerFactory>()?.CreateLogger("Spar.Host");
         if (app is not null)
         {
-            _logger = BothLoggers.Of(app, new StandardErrorLogger(this));
+            _logger = BothLoggers.Of(app, new LocalLogger(this));
         }
     }
 
@@ -100,10 +113,11 @@ internal sealed class HostLog
     private static long Ticks(FILETIME time) => ((long)(uint)time.dwHighDateTime << 32) | (uint)time.dwLowDateTime;
 
     /// <summary>
-    /// Lines on standard error, when the process has one: a desktop executable gets it only from a console or a
-    /// launcher that redirected it, and otherwise the writes go nowhere.
+    /// The host's own lines: on standard error, when the process has one (a desktop executable gets it only from a
+    /// console or a launcher that redirected it, and otherwise the writes go nowhere), and in the per-user log file,
+    /// with the wall-clock time there, since a file outlives the run.
     /// </summary>
-    private sealed class StandardErrorLogger(HostLog log) : ILogger
+    private sealed class LocalLogger(HostLog log) : ILogger
     {
         public IDisposable? BeginScope<TState>(TState state)
             where TState : notnull => null;
@@ -125,6 +139,7 @@ internal sealed class HostLog
             }
 
             Console.Error.WriteLine(line);
+            log._file?.Write(DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture) + " " + line);
         }
 
         private static string Level(LogLevel level) => level switch

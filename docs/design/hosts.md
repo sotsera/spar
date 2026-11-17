@@ -68,12 +68,13 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - 9 already running for another user on the same data folder (decided, user, 2026-11-17; decision "The relaunch handler").
 
   Apps cannot change them.
-- **Windows, in order:**
-  1. `[STAThread]` on `Main`. Without it, environment creation fails with `0x80010106`, which would wrongly blame the runtime.
-  2. The OS build through `RtlGetVersion`, if Spar sets a minimum.
-  3. `GetAvailableCoreWebView2BrowserVersionString`, never the registry: the loader follows `ClientState\…\EBWebView`, and a stale path reads as missing while the registry looks fine.
-  4. `CompareBrowserVersions` against the app's minimum.
-  5. Normal start. A controller creation failure maps to 5.
+- **Windows, in order** (built in M1b step 2; decision "Start-up: prerequisites, single instance and theme"):
+  1. `[STAThread]` on `Main`. Without it, environment creation fails with `0x80010106`, which would wrongly blame the runtime. Spar's host runs the window, the WebView and the start-up message on STA threads of its own, so the app's `Main` needs no attribute.
+  2. The OS build through `RtlGetVersion`: Spar's minimum is Windows 10 22H2, build 19045 (decided provisionally, user, 2026-11-17; M4 confirms it on a real Windows 10). Windows 11 features are detected at run time. A Windows older than 1809, which cannot load the host at all, gets the same "OS too old" from `Spar.Runtime.UnsupportedWindowsHost`, which the generated `Run` hands over there.
+  3. Single instance (below), before anything touches the profile, and before the Runtime check so that a relaunch hands over at once (0.4–0.9 ms from the host's start).
+  4. `GetAvailableCoreWebView2BrowserVersionString`, never the registry: the loader follows `ClientState\…\EBWebView`, and a stale path reads as missing while the registry looks fine. It reads the version from `EmbeddedBrowserWebView.dll`'s version strings.
+  5. `CompareBrowserVersions` against the minimum, Runtime 139.0.3405.78.
+  6. Normal start. A controller creation failure maps to 5.
 
   Environment creation succeeds even with the browser deleted, and `BrowserProcessExited` never fired in any failure, so only controller creation detects a broken runtime.
 
@@ -88,7 +89,8 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - **Fallback:** `MessageBoxW` (25–81 ms, no links, only system-DPI-aware).
   - **Dark mode:** neither dialog follows it.
   - **Screen readers:** UI Automation exposes every text and button.
-  - **The app window:** the app's empty window must be hidden or become the dialog's owner.
+  - **The app window:** the app's empty window must be hidden or become the dialog's owner. Built: a problem found before the window exists has no owner; a controller failure's message is owned by the window, which keeps pumping meanwhile (the message runs on an STA thread of its own).
+  - **Built (M1b step 2):** the main instruction "<app> can't start", the problem's sentence, the link and the "Download the <component>" button when there is a page, and the problem's line and the log file's path as expandable details. Observed 67–449 ms from launch to the message on NativeAOT and CoreCLR (`docs/evidence/m1b-startup.md`).
 - **Linux, in order:**
   1. The display variables. With no display there is no graphical message: exit 6 within 6–23 ms, with stderr and the journal.
   2. GLib, then GTK 4.
@@ -104,9 +106,9 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - **Packages:** the message names the package to install.
   - **What desktops ship:** Ubuntu 24.04 and Fedora 43 Workstation already have everything. Kubuntu 24.04 lacks WebKitGTK 6.0 and `xdg-dbus-proxy`, so it gets the GTK dialog asking for `libwebkitgtk-6.0-4`.
 - **Both OSes:**
-  - stderr is written whenever a console or redirected handle exists.
-  - The system log is written too: the journal's native protocol or `/dev/log` on Linux. On Windows, a log file in the app's per-user folder, because an unregistered event-log source reads poorly.
-  - A C# hook runs before the default dialog and receives the problem's details. It may replace the dialog with the app's own message, and suppress Spar's dialog only when it shows one. stderr and the system log are written regardless, and the exit code cannot change (decided, user, 2026-11-14). The hook was not prototyped.
+  - stderr is written whenever a console or redirected handle exists. Built on Windows: a desktop executable started from a console without redirection attaches to it for the problem's line.
+  - The system log is written too: the journal's native protocol or `/dev/log` on Linux. On Windows, a log file in the app's per-user folder, because an unregistered event-log source reads poorly. Built: `host.log` in the app's logs folder (M1b step 2).
+  - A C# hook runs before the default dialog and receives the problem's details. It may replace the dialog with the app's own message, and suppress Spar's dialog only when it shows one. stderr and the system log are written regardless, and the exit code cannot change (decided, user, 2026-11-14). Its shape (decided, user, 2026-11-17): `spar.OnStartupProblem(problem => …)` returning true when the app showed its own message, with `StartupProblem` (`Kind`, `Component`, `Found`, `Required`, `Details`, `HelpUrl`), before the app's services exist, also for a relaunch that fails (8, 9); `docs/app-model.md` 3.15. In the automated mode it is not called and no message shows.
 - **Not tested:**
   - DPI above 100 %, and Narrator and Orca;
   - the download page opening;
@@ -314,6 +316,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
       - **Timing:** the handoff takes 1.2 ms from the secondary's `Main`. A hung primary gives a clear failure after the 2 s acknowledgement timeout. A launch while the primary exits waits up to about 5 s for the lock and becomes the primary.
       - **Focus:** the secondary calls `AllowSetForegroundWindow` with the server's pid, and the primary shows, restores and activates its main window: 9 of 9 on the desktop, 0 of 3 without the call.
       - **The relaunch handler:** `spar.OnRelaunch(…)` in `Program.cs`, run after the window is focused (decided, user, 2026-11-17; decision "The relaunch handler"; `docs/app-model.md` 3.14). A relaunch that cannot reach the running instance shows the start-up error message and exits 8 or 9;
+      - **Built in M1b step 2** (decision "Start-up: prerequisites, single instance and theme"): the lock is `instance.lock` in the data root; the client opens the pipe with `CreateFileW` and compares token user SIDs itself (no `NamedPipeClientStream` or `WindowsIdentity`, which added 168 KB to the image); each frame carries the sender's `GetTickCount64`, and the primary drops a relaunch that waited longer than the sender's 2 s, so a resumed primary never acts on a launch already reported as failed; the pipe closes when the teardown starts. Observed: hand-off 0.5–0.6 ms after the second host starts, the second process exits 0 in 30–31 ms, a suspended primary gives exit 8 at 2.0 s;
     - print to PDF (82 ms with no dialog on Linux; WebView2 has `PrintToPdfAsync`), plus printing with the system dialog. **API decided (2026-11-14):**
       - On the page, `print.show()` opens the system dialog and `print.toPdf(options)` saves through the save dialog with a safe write. Both are `Call`s, and `window.print()` does the same as `show()`.
       - In C#, `IPrinting.ToPdfAsync(options, grant, name, ct)` writes without a dialog.

@@ -58,8 +58,8 @@ internal partial interface ICoreWebView2Environment10
     // ICoreWebView2Environment9
     [PreserveSig] int Slot019_CreateContextMenuItem();
     // ICoreWebView2Environment10
-    [PreserveSig] int Slot020_CreateCoreWebView2ControllerOptions();
-    [PreserveSig] int Slot021_CreateCoreWebView2ControllerWithOptions();
+    nint CreateCoreWebView2ControllerOptions();
+    void CreateCoreWebView2ControllerWithOptions(nint parentWindow, nint options, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler handler);
     [PreserveSig] int Slot022_CreateCoreWebView2CompositionControllerWithOptions();
 }
 

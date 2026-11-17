@@ -20,11 +20,15 @@ internal sealed class BrowserView
     private readonly string _profileFolder;
     private readonly PageServer _pages;
     private readonly Task<WebViewBridge> _bridge;
+    private readonly WindowTheme _theme;
+    private readonly bool _transparent;
     private readonly Action<int, string> _fail;
+    private readonly Action<StartupProblem> _startupFailed;
     private readonly List<Subscription> _subscriptions = [];
     private ICoreWebView2Environment10? _environment;
     private ICoreWebView2Controller? _controller;
     private ICoreWebView2_22? _webView;
+    private string? _runtimeVersion;
     private int _generation;
     private bool _closing;
     private bool _recovering;
@@ -32,7 +36,23 @@ internal sealed class BrowserView
     private bool _browserRecreated;
     private bool _watchingReadiness;
 
-    public BrowserView(UiThread ui, HostLog log, HWND window, string profileFolder, PageServer pages, Task<WebViewBridge> bridge, Action<int, string> fail)
+    /// <param name="transparent">
+    /// Whether the WebView's default background is transparent over the window colour (plan section 3d). Always true
+    /// in Production; a Development or Test build may turn it off to measure what it costs.
+    /// </param>
+    /// <param name="fail">An unrecoverable failure once running: the exit code and a message.</param>
+    /// <param name="startupFailed">A start-up problem: the Runtime could not be started (exit 3 to 5).</param>
+    public BrowserView(
+        UiThread ui,
+        HostLog log,
+        HWND window,
+        string profileFolder,
+        PageServer pages,
+        Task<WebViewBridge> bridge,
+        WindowTheme theme,
+        bool transparent,
+        Action<int, string> fail,
+        Action<StartupProblem> startupFailed)
     {
         _ui = ui;
         _log = log;
@@ -40,7 +60,10 @@ internal sealed class BrowserView
         _profileFolder = profileFolder;
         _pages = pages;
         _bridge = bridge;
+        _theme = theme;
+        _transparent = transparent;
         _fail = fail;
+        _startupFailed = startupFailed;
     }
 
     /// <summary>Creates the environment and the controller, then opens the page. Failures map to the start-up exit codes.</summary>
@@ -53,9 +76,28 @@ internal sealed class BrowserView
         }
         catch (Exception exception) when (!_closing)
         {
-            var (code, message) = StartFailure(exception);
-            _log.Error($"The WebView could not start: {message}", exception);
-            _fail(code, message);
+            var problem = StartupProblemOf(exception, _runtimeVersion);
+            _log.Error($"The WebView could not start: {problem.Details}", exception);
+            _startupFailed(problem);
+        }
+    }
+
+    /// <summary>The page's colour scheme, on the profile: the app's choice, or Auto to follow the system (plan 3d).</summary>
+    public void SetPageScheme(int scheme)
+    {
+        if (_webView is null)
+        {
+            return;
+        }
+
+        var profile = Com.Take<ICoreWebView2Profile>(_webView.GetProfile());
+        try
+        {
+            profile.PutPreferredColorScheme(scheme);
+        }
+        finally
+        {
+            Com.Release(profile);
         }
     }
 
@@ -98,12 +140,13 @@ internal sealed class BrowserView
 
         _environment = environment;
         _log.Phase("environment");
-        _log.Info($"WebView2 Runtime {environment.GetBrowserVersionString()}");
+        _runtimeVersion = environment.GetBrowserVersionString();
+        _log.Info($"WebView2 Runtime {_runtimeVersion}");
         var exited = new WebView2EventHandler(args => OnBrowserExited(generation, args), Report);
         Subscribe(exited, environment.AddBrowserProcessExited(exited), environment.RemoveBrowserProcessExited);
 
         var controllerCreated = new ControllerCompleted();
-        environment.CreateCoreWebView2Controller((nint)_window, controllerCreated);
+        CreateController(environment, controllerCreated);
         var controller = Com.Take<ICoreWebView2Controller>(await controllerCreated.Task);
         if (Abandoned(generation, controller))
         {
@@ -113,6 +156,7 @@ internal sealed class BrowserView
         _controller = controller;
         _webView = Com.Take<ICoreWebView2_22>(controller.GetCoreWebView2());
         _log.Phase("controller");
+        SetPageScheme(_theme.PageScheme);
         Resize();
 
         var bridge = await _bridge;
@@ -126,6 +170,48 @@ internal sealed class BrowserView
         bridge.Attach(_webView);
         _webView.Navigate(PageServer.StartUrl);
         _log.Step("navigation started");
+    }
+
+    /// <summary>
+    /// The controller with plan 3d's transparent default background, set on the creation options so the WebView never
+    /// paints a colour of its own (white, or Chromium's dark <c>#121212</c>) before the page draws: the window colour
+    /// shows through. <c>ICoreWebView2ControllerOptions3</c> needs Runtime 137, below Spar's minimum; it is still
+    /// detected, so an older Runtime reached through a Development override only loses the transparency.
+    /// </summary>
+    private void CreateController(ICoreWebView2Environment10 environment, ControllerCompleted completed)
+    {
+        var options = environment.CreateCoreWebView2ControllerOptions();
+        try
+        {
+            if (_transparent)
+            {
+                MakeTransparent(options);
+            }
+
+            environment.CreateCoreWebView2ControllerWithOptions((nint)_window, options, completed);
+        }
+        finally
+        {
+            Marshal.Release(options);
+        }
+    }
+
+    private void MakeTransparent(nint options)
+    {
+        ICoreWebView2ControllerOptions3? withBackground = null;
+        try
+        {
+            withBackground = Com.Borrow<ICoreWebView2ControllerOptions3>(options);
+            withBackground.PutDefaultBackgroundColor(default);
+        }
+        catch (InvalidCastException)
+        {
+            _log.Warn("This WebView2 Runtime has no ICoreWebView2ControllerOptions3: the WebView keeps its default background.");
+        }
+        finally
+        {
+            Com.Release(withBackground);
+        }
     }
 
     private void SubscribeToWebView(int generation, ICoreWebView2Environment10 environment, ICoreWebView2_22 webView, WebViewBridge bridge)
@@ -366,15 +452,34 @@ internal sealed class BrowserView
 
     private void Report(Exception exception) => _log.Error("A WebView2 event handler failed", exception);
 
-    /// <summary>The start-up exit codes (plan section 3, "Missing prerequisites"); step 2 adds the full checks before this.</summary>
-    private static (int Code, string Message) StartFailure(Exception exception) => exception switch
+    /// <summary>
+    /// A start that failed after the checks of <see cref="Prerequisites"/> passed (plan section 3, "Missing
+    /// prerequisites", step 5): environment creation succeeds even without a browser, so a broken Runtime shows here,
+    /// mostly at controller creation. A Runtime that vanished since the check reads as missing; an interface the
+    /// Runtime lacks, as too old.
+    /// </summary>
+    internal static StartupProblem StartupProblemOf(Exception exception, string? runtimeVersion) => exception switch
     {
-        DllNotFoundException => (3, "The WebView2 loader is missing from the app."),
-        WebView2Exception { Code: unchecked((int)0x80070002) } => (3, "The Microsoft Edge WebView2 Runtime is not installed."),
-        WebView2Exception { Code: unchecked((int)0x8007139F) or unchecked((int)0x8000FFFF) } =>
-            (5, "Another instance of the app with different settings is using the same profile folder."),
-        InvalidCastException => (4, "The Microsoft Edge WebView2 Runtime is too old for this app."),
-        _ => (5, "The Microsoft Edge WebView2 Runtime could not start: " + exception.Message),
+        DllNotFoundException => new StartupProblem(
+            StartupProblemKind.Missing, "WebView2 loader", null, null, "The app's file WebView2Loader.dll is missing. Install the app again.", null),
+        WebView2Exception { Code: unchecked((int)0x80070002) } when runtimeVersion is null => Prerequisites.DecideRuntime(
+            unchecked((int)0x80070002), null, Prerequisites.MinimumRuntime, comparisonFailed: false, comparison: 0)!,
+        WebView2Exception { Code: unchecked((int)0x8007139F) or unchecked((int)0x8000FFFF) } and var different => new StartupProblem(
+            StartupProblemKind.Broken,
+            Prerequisites.Runtime,
+            runtimeVersion,
+            Prerequisites.MinimumRuntime,
+            $"Another program uses this app's browser data folder with different settings (error 0x{different.Code:X8}). Close it, then start the app again.",
+            null),
+        InvalidCastException => new StartupProblem(
+            StartupProblemKind.TooOld,
+            Prerequisites.Runtime,
+            runtimeVersion,
+            Prerequisites.MinimumRuntime,
+            "The Microsoft Edge WebView2 Runtime on this computer lacks a feature this app needs. Update it from Microsoft, then start the app again.",
+            Prerequisites.RuntimeDownload),
+        WebView2Exception failed => Prerequisites.ControllerFailed(runtimeVersion, failed.Code),
+        _ => Prerequisites.ControllerFailed(runtimeVersion, exception.HResult),
     };
 
     private readonly record struct Subscription(WebView2EventHandler Handler, EventRegistrationToken Token, Action<EventRegistrationToken> Remove);

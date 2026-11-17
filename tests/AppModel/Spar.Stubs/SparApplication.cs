@@ -165,4 +165,14 @@ public sealed class SparBuilder
             return ValueTask.CompletedTask;
         });
     }
+
+    internal Func<StartupProblem, bool>? StartupProblemHandler { get; private set; }
+
+    /// <summary>Runs when the app cannot start; true when the app showed its own message, so Spar shows none.</summary>
+    public SparBuilder OnStartupProblem(Func<StartupProblem, bool> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        StartupProblemHandler = handler;
+        return this;
+    }
 }

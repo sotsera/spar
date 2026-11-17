@@ -125,4 +125,13 @@ internal static class WebView2Values
 
     /// <summary><c>COREWEBVIEW2_BROWSER_PROCESS_EXIT_KIND_FAILED</c>; 0 is a normal exit.</summary>
     public const int BrowserExitFailed = 1;
+
+    /// <summary><c>COREWEBVIEW2_PREFERRED_COLOR_SCHEME_AUTO</c>: the page follows the system's theme.</summary>
+    public const int ColorSchemeAuto = 0;
+
+    /// <summary><c>COREWEBVIEW2_PREFERRED_COLOR_SCHEME_LIGHT</c>.</summary>
+    public const int ColorSchemeLight = 1;
+
+    /// <summary><c>COREWEBVIEW2_PREFERRED_COLOR_SCHEME_DARK</c>.</summary>
+    public const int ColorSchemeDark = 2;
 }

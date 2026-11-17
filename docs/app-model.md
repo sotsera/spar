@@ -75,6 +75,7 @@ using Spar;
 using SqlTool.Connections;
 using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
+using SqlTool.Support;
 
 var app = SparApplication.Create(args, spar =>
 {
@@ -134,6 +135,9 @@ var app = SparApplication.Create(args, spar =>
             services.GetRequiredService<RecipeQueue>().TryAdd(relaunch.ResolvePath(file));
         }
     });
+
+    // A missing prerequisite opens the company's install guide in place of Spar's message (3.15). Decided.
+    spar.OnStartupProblem(SupportPage.TryOpen);
 
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
@@ -877,6 +881,57 @@ public sealed class RecipeQueue
   In the automated mode the message goes only to stderr and the log.
 - **Several instances:** an app that needs them says so in C#. The option is designed when an app needs it, together with how their data folders are kept apart.
 - **How:** a lock file in the app's data folder, plus a named pipe on Windows and a Unix socket on Linux, only for the same user. The handoff takes about 1 ms once the second process runs.
+
+### 3.15 Start-up problems
+
+**Decided** (user, 2026-11-17; decision "Start-up: prerequisites, single instance and theme"). An app launched from an icon has no terminal, so when it cannot start, Spar shows a native message saying what is wrong and how to fix it, then exits with a fixed code (plan section 3, "Missing prerequisites"). An app can show its own message instead, through `spar.OnStartupProblem` in `Program.cs` (section 2). The SQL tool is installed by a company's IT department, whose users cannot install the WebView2 Runtime themselves, so it opens the company's install guide in place of Microsoft's download page.
+
+File `SqlTool/Support/SupportPage.cs`:
+
+```csharp
+using System.ComponentModel;
+using System.Diagnostics;
+using Spar;
+
+namespace SqlTool.Support;
+
+/// <summary>The install guide the company's IT department keeps, for what users cannot fix themselves.</summary>
+public static class SupportPage
+{
+    private const string Guide = "https://intranet.example.com/sqltool/install";
+
+    /// <summary>Opens the guide for a missing or outdated prerequisite; true when it opened, so Spar shows no message.</summary>
+    public static bool TryOpen(StartupProblem problem)
+    {
+        if (problem.Kind is not (StartupProblemKind.Missing or StartupProblemKind.TooOld or StartupProblemKind.OsTooOld))
+        {
+            return false;
+        }
+
+        try
+        {
+            var page = $"{Guide}?component={Uri.EscapeDataString(problem.Component)}";
+            Process.Start(new ProcessStartInfo(page) { UseShellExecute = true })?.Dispose();
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
+    }
+}
+```
+
+- **What a problem says:** `Kind`, `Component` (for example `"WebView2 Runtime"` or `"Windows"`), the `Found` and `Required` versions when a version matters, `Details` (a sentence for people, with an error code when there is one) and `HelpUrl` (where to get or repair the component, or null).
+- **The kinds and their exit codes,** the same on every OS and for every app:
+  - `Missing` 3 and `TooOld` 4: the web engine (the WebView2 Runtime on Windows, WebKitGTK on Linux) is not installed, or older than Spar's minimum (Runtime 139 on Windows);
+  - `Broken` 5: it is installed but does not start;
+  - `OsTooOld` 7: Windows older than Windows 10 22H2;
+  - `NotResponding` 8 and `OtherUser` 9: a relaunch could not reach the running app (3.14).
+- **Return true only when the app showed its own message;** Spar then shows none. Returning false, or throwing, leaves Spar's message: on Windows a task dialog naming what is missing, with Microsoft's download page as a link and a button.
+- **Written regardless:** standard error and the per-user log (`host.log` in the logs folder, 3.13) get the problem, and the exit code is the kind's, whatever the hook returns.
+- **Before the app's services exist:** the hook gets no service provider. It runs on a thread of its own, which may show a window or a message box, and it should return promptly, since the process exits after it.
+- **In the automated mode** (tests and agents, 6.11) the hook is not called, and no message is shown: standard error and the log only.
 
 ## 4. On the wire
 

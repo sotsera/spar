@@ -22,6 +22,11 @@ public sealed partial class WebView2SlotTests
         ("ICoreWebView2Environment10", 12, "AddBrowserProcessExited"),
         ("ICoreWebView2Controller", 24, "Close"),
         ("ICoreWebView2WebResourceRequestedEventArgs2", 8, "GetRequestedSourceKind"),
+        ("ICoreWebView2Environment10", 20, "CreateCoreWebView2ControllerOptions"),
+        ("ICoreWebView2Environment10", 21, "CreateCoreWebView2ControllerWithOptions"),
+        ("ICoreWebView2ControllerOptions3", 10, "PutDefaultBackgroundColor"),
+        ("ICoreWebView2_22", 105, "GetProfile"),
+        ("ICoreWebView2Profile", 9, "PutPreferredColorScheme"),
     ];
 
     [Fact]

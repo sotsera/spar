@@ -85,8 +85,11 @@ internal sealed unsafe class UiThread : SynchronizationContext
         d(state);
     }
 
-    /// <summary>Creates a top-level window of this thread's class; <paramref name="messages"/> receives its messages.</summary>
-    public HWND CreateWindow(string title, WINDOW_STYLE style, IWindowMessages messages)
+    /// <summary>
+    /// Creates a top-level window of this thread's class at <paramref name="bounds"/> (physical pixels; null lets Windows
+    /// place it); <paramref name="messages"/> receives its messages. The window is not shown yet.
+    /// </summary>
+    public HWND CreateWindow(string title, WINDOW_STYLE style, RECT? bounds, IWindowMessages messages)
     {
         var handle = GCHandle.Alloc(messages);
         fixed (char* className = ClassName)
@@ -94,7 +97,10 @@ internal sealed unsafe class UiThread : SynchronizationContext
         {
             var window = PInvoke.CreateWindowEx(
                 0, className, text, style,
-                PInvoke.CW_USEDEFAULT, PInvoke.CW_USEDEFAULT, PInvoke.CW_USEDEFAULT, PInvoke.CW_USEDEFAULT,
+                bounds?.left ?? PInvoke.CW_USEDEFAULT,
+                bounds?.top ?? PInvoke.CW_USEDEFAULT,
+                bounds is { } width ? width.right - width.left : PInvoke.CW_USEDEFAULT,
+                bounds is { } height ? height.bottom - height.top : PInvoke.CW_USEDEFAULT,
                 HWND.Null, HMENU.Null, Instance(), (void*)GCHandle.ToIntPtr(handle));
             if (window.IsNull)
             {

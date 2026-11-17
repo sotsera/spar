@@ -8,12 +8,14 @@ public static class PlannedBuilder
 {
     extension(SparBuilder builder)
     {
-        public SparBuilder Window(Action<WindowOptions> configure) => Configure(builder, new WindowOptions(), configure);
-
+        /// <summary>
+        /// Window kinds (6.7) are not built yet. The real options type has no public constructor, so the kind's
+        /// configuration runs against the main window's options, which this compile-only check never shows.
+        /// </summary>
         public SparBuilder Window(string kind, Action<WindowOptions> configure)
         {
             ArgumentException.ThrowIfNullOrEmpty(kind);
-            return Configure(builder, new WindowOptions(), configure);
+            return builder.Window(configure);
         }
 
         public SparBuilder Tray(Action<TrayOptions> configure) => Configure(builder, new TrayOptions(), configure);
@@ -23,18 +25,6 @@ public static class PlannedBuilder
         public SparBuilder ContentSecurity(Action<CspBuilder> configure) => Configure(builder, new CspBuilder(), configure);
 
         public SparBuilder Permissions(Action<PermissionsBuilder> configure) => Configure(builder, new PermissionsBuilder(), configure);
-
-        public SparBuilder OnRelaunch(Func<Relaunch, IServiceProvider, CancellationToken, ValueTask> handler)
-        {
-            ArgumentNullException.ThrowIfNull(handler);
-            return builder;
-        }
-
-        public SparBuilder OnRelaunch(Action<Relaunch, IServiceProvider> handler)
-        {
-            ArgumentNullException.ThrowIfNull(handler);
-            return builder;
-        }
     }
 
     private static SparBuilder Configure<TOptions>(SparBuilder builder, TOptions options, Action<TOptions> configure)
