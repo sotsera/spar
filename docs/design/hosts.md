@@ -44,7 +44,8 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   6. "Reload page" terminates the renderer, then reloads once.
   7. Keep at most one ping outstanding while the page is unresponsive.
   8. On Linux, rely on the heartbeat and `web-process-terminated`, not `is-web-process-responsive`, and terminate a hung web process before quitting. It otherwise outlives the app by about 10 s.
-- **Open, for the user (M1b):** what "Wait" does next. One proposal is to ask again after another three misses; it was not tested.
+- **After "Wait"** (decided, user, 2026-11-17; decision "What "Wait" does after the hung-page dialog"): the heartbeat keeps pinging, one ping outstanding, and the dialog comes back after another three misses (about 20 s), then after 40 s, 80 s and every 160 s. A page that answers again closes an open dialog and resets the count and the interval.
+- **Closing a window whose page does not answer** (its close guard silent for about 5 s, or already hung): the same dialog offers "Wait / Close anyway". Close anyway skips only the page's guard; the backend's guard still runs, then the window closes and its renderer is terminated. Wait keeps the close request open, with the same interval.
 - **Milestone:** built with each host, in M1b and M1c.
 - **Not tested:**
   - CPU stress;

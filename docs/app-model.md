@@ -1495,7 +1495,7 @@ export const stopGuarding = windows.onCloseRequested(async request => {
 - **Secondary windows** are asked before the main window: closing the main window asks each open secondary window, then itself, and keeps them all open if any answers keep.
 - **Session end:** guards run with `sessionEnd` and a short deadline, about 5 s, so they can save. They cannot keep the window open or ask: an ask counts as close, and Spar never blocks Windows from logging off.
 - **Automated mode,** when tests or an agent drive the app: guards still run, so saving on close is tested, with `automated` true, and an ask counts as close. The test host turns it on, and a test of a guard's prompt turns it off for that close. Outside tests, the devtools agent session turns it on, and so does the environment variable `SPAR_AUTOMATED=1`, in Development and Test builds only: a Production build ignores it, so nothing outside a shipped app can make it skip its prompts.
-- **A page that does not answer** within about 5 s, with no dialog of its own open, is treated as a hung page (plan section 3, "Hung pages").
+- **A page that does not answer** within about 5 s, with no dialog of its own open, or a page that is already hung, gets a native "Wait / Close anyway" dialog. Close anyway skips only the page's guard: the backend's guard still runs, then the window closes. Wait keeps the request open and asks again after about 20 s, then 40 s, 80 s and every 160 s (decision "What "Wait" does after the hung-page dialog").
 - **After the decision** the window's teardown runs (plan section 3), including the page's closing work.
 
 ## 7. Still open in this model

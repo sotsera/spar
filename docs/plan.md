@@ -59,7 +59,6 @@ Details and evidence in `docs/decisions.md`.
 | CI: GitHub Actions (user, 2026-11-15; decision "CI on GitHub Actions; the first slice"). The workflow is in `.github/workflows/ci.yml` and first runs at the first push. Open: pinning actions to commit SHAs before that push, and whether the window tests (M1b) run on the hosted Windows runner or need a self-hosted one with a desktop session; Linux window tests use the container image from M1c. | First push; M1b and M1c. |
 | arm64: `win-arm64` and `linux-arm64` are mapped by `SparPlatforms`, but no spike ran on arm64. | Decide in M4 whether arm64 is qualified or documented as untested. |
 | The two-stage close: a close request with page and backend guards before teardown, and an automated mode that skips prompts for tests and agents. The dialog and window decisions already rely on it. | Adopted from the research review (user, 2026-11-15). Designed with the user at the start of M1b, with a compiled example in `docs/app-model.md` first. |
-| What "Wait" does after the hung-page dialog. | M1b (section 3, "Hung pages"). |
 | Where Spar's packages are published, with what version scheme and release steps. The SQL Server tool lives in its own repository and uses Spar through packages only; M1a's package-only consumer test uses an isolated local feed. | Needed by M3. Not discussed yet. |
 | The minimum Windows version. The README names Windows 11, screen-capture protection mentions Windows 10 2004, and no spike ran on Windows 10. | Provisional in M1b with the startup check; M4 confirms. |
 | Upgrades and data migration: how an installed app moves to a new version: the version of its settings and data folders and their migration, the web engine profile after an app update, what a downgrade does, and how a failed migration is reported. | Not discussed yet. Needed before the distribution decision in M4; the settings-files decision at the start of M3 is the first to depend on it. |
@@ -271,7 +270,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 **Decide first:**
 - the two-stage close and its automated mode (RR), with a compiled example in `docs/app-model.md` first (decided, decision "Two-stage close"; `docs/app-model.md` 6.11);
 - the Windows single-instance mechanism (decided: a lock file plus a named pipe with an explicit DACL and a check of the server process, decision "Windows single instance: a lock file plus a pipe"), then the relaunch handler and its exit codes (decided, decision "The relaunch handler"; `docs/app-model.md` 3.14);
-- what "Wait" does after the hung-page dialog (section 3, "Hung pages");
+- what "Wait" does after the hung-page dialog (section 3, "Hung pages"; decided: it asks again after about 20 s, then 40 s, 80 s and every 160 s, and a close shows "Wait / Close anyway", decision "What "Wait" does after the hung-page dialog");
 - a provisional minimum WebView2 Runtime: the oldest one with the source-kinds filter of `ICoreWebView2_22` and the other interfaces section 3 lists. M4 confirms it;
 - the UI-thread stall probe (section 3);
 - the app id's validation rules and the folder names per channel (section 3c);

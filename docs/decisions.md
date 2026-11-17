@@ -3475,3 +3475,13 @@ Follow-up to "Windows single instance: a lock file plus a pipe". Shown, compiled
   - The example is the SQL tool's `--recipe <file>`, checked by `RecipeQueue.TryAdd`, because a relaunch's arguments are untrusted input from any process of the same user.
 - **Open:** a black-box test of a failed relaunch runs the Production executable, which ignores the automated mode, so its message would block the test. This is settled with the black-box data root (plan section 5, issue M). The option for several instances is still designed only when an app needs it.
 - **The check:** `RecipeQueue` is a new block, and `Program.cs` gains the handler and its service. The stand-ins gain `Spar.Stubs/Relaunch.cs`, also linked into the real-Spar check's planned stand-ins, and `OnRelaunch` on both builders.
+
+## 2026-11-17, What "Wait" does after the hung-page dialog (user decisions)
+
+The third "decide first" item of M1b (plan section 3, "Hung pages"; `spikes/page-heartbeat`, which left it open).
+- **Decided (user, 2026-11-17):**
+  - **Wait asks again, with a doubling interval.** The heartbeat keeps pinging, with at most one ping outstanding. The dialog comes back after another three misses (about 20 s), then after 40 s, 80 s, and every 160 s after that. Chosen over asking every 20 s, the untested proposal, which nags a user who is waiting for long work, and over asking once per hang, which leaves only the close button for a page that never recovers.
+  - **The page answering again closes the dialog:** Spar dismisses an open "Wait / Reload page" dialog itself, logs that the page recovered, and resets the count and the interval.
+  - **Closing a window whose page does not answer shows "Wait / Close anyway".** This is the case where the page's close guard is silent for about 5 s, or the page is already hung. It is the same native dialog, with "Close anyway" in place of "Reload page". Close anyway skips only the page's guard: the backend's guard still runs, with its own question, then the window closes and its renderer is terminated. Wait keeps the close request open, with the same doubling interval. Chosen over the ordinary dialog, whose Reload would drop the close request.
+- **Unchanged:** the library never kills anything on its own (a reload or a close anyway is the user's choice); reload terminates the renderer, then reloads once; one state and one dialog for the heartbeat alarm and `ProcessFailed(RenderProcessUnresponsive)`.
+- **Not measured:** the interval sequence is a policy, checked when the host is built (M1b). The dialog on the real desktop is already a row of the plan's "Checks that need the user at the PC".
