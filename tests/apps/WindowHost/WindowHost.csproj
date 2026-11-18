@@ -1,0 +1,16 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The test app of Spar's window tests (tests/Spar.WindowTests; plan section 5, level 5): a page that exercises the
+    page engine's roles, names and actionability rules, and a backend whose calls run long, ignore their cancellation or
+    record their close requests, for the required host tests. Run only by its test project, in the test process.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WindowHost</RootNamespace>
+    <SparAppId>com.example.tests.WindowHost</SparAppId>
+
+    <!-- The page is plain JavaScript: there is nothing for the type-check to check. -->
+    <SparTypeCheck>false</SparTypeCheck>
+  </PropertyGroup>
+</Project>

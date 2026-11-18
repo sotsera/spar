@@ -353,7 +353,7 @@ public sealed class SparApp
     {
         if (SparTestSession.IsSupported && _session is not null)
         {
-            return _session.Run(_builder, _catalog);
+            return _session.Run(this, host);
         }
 
         if (host is null)

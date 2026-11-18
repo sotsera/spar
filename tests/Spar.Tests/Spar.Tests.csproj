@@ -24,12 +24,12 @@
 
   <!--
     The Windows host, for the slot-order test of its WebView2 declarations against the header of the WebView2 package
-    it was written from (copied beside the tests), and for the static-state test.
+    it was written from (copied beside the tests), and for the static-state test. Spar.Sdk references that package in
+    every Windows test project, for the loader of the Window surface.
   -->
   <ItemGroup>
     <ProjectReference Include="..\..\src\Spar.Windows\Spar.Windows.csproj"
                       UndefineProperties="SparVariant;SparTestLane" />
-    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
     <None Include="$(PkgMicrosoft_Web_WebView2)\build\native\include\WebView2.h" Link="WebView2.h" Visible="false"
           CopyToOutputDirectory="PreserveNewest" Condition="'$(PkgMicrosoft_Web_WebView2)' != ''" />
   </ItemGroup>

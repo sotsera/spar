@@ -65,6 +65,22 @@ internal sealed unsafe class UiThread : SynchronizationContext
         thread.Join();
     }
 
+    /// <summary>
+    /// Starts a UI thread that keeps pumping for the rest of the process, and returns it once it pumps: the one UI
+    /// thread of a test process, shared by every window the process opens (plan section 5, "Rules for Spar's own
+    /// code"). It is a background thread, so it never keeps the process alive.
+    /// </summary>
+    public static UiThread StartShared(uint background, Action<Exception> report)
+    {
+        var ui = new UiThread(background, report);
+        using var ready = new ManualResetEventSlim();
+        var thread = new Thread(() => ui.Loop(_ => ready.Set())) { Name = "Spar UI (tests)", IsBackground = true };
+        thread.SetApartmentState(ApartmentState.STA);
+        thread.Start();
+        ready.Wait();
+        return ui;
+    }
+
     /// <summary>Whether the caller is on this UI thread.</summary>
     public bool IsCurrent => Environment.CurrentManagedThreadId == _threadId;
 
@@ -118,14 +134,14 @@ internal sealed unsafe class UiThread : SynchronizationContext
     /// Creates a top-level window of this thread's class at <paramref name="bounds"/> (physical pixels; null lets Windows
     /// place it); <paramref name="messages"/> receives its messages. The window is not shown yet.
     /// </summary>
-    public HWND CreateWindow(string title, WINDOW_STYLE style, RECT? bounds, IWindowMessages messages)
+    public HWND CreateWindow(string title, WINDOW_STYLE style, RECT? bounds, IWindowMessages messages, WINDOW_EX_STYLE extendedStyle = 0)
     {
         var handle = GCHandle.Alloc(messages);
         fixed (char* className = ClassName)
         fixed (char* text = title)
         {
             var window = PInvoke.CreateWindowEx(
-                0, className, text, style,
+                extendedStyle, className, text, style,
                 bounds?.left ?? PInvoke.CW_USEDEFAULT,
                 bounds?.top ?? PInvoke.CW_USEDEFAULT,
                 bounds is { } width ? width.right - width.left : PInvoke.CW_USEDEFAULT,

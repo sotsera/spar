@@ -47,9 +47,9 @@ public sealed class GeneratorTests
         // Older Windows cannot load the host: Spar's stand-in reports "OS too old" (exit 7) instead of "no host".
         Assert.Contains("return new global::Spar.Runtime.UnsupportedWindowsHost();", run.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
 
-        // The test variant runs through its test session, never in a window.
+        // The test variant gets the host too: its test session opens the app's window for the Window surface.
         Assert.Empty(test.Errors);
-        Assert.DoesNotContain("Spar.Run.g.cs", test.Files.Keys);
+        Assert.Contains("return new global::Spar.Windows.SparWindowsHost();", test.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
     }
 
     [Fact]

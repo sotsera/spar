@@ -12,8 +12,8 @@ namespace Spar.Generator;
 /// <summary>
 /// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog, with the page security
 /// <c>Program.cs</c> declares (plan section 3b); the interceptor that hands the catalog to <c>SparApplication.Create</c>;
-/// the interceptor that hands <c>app.Run()</c> the desktop host the build references (outside the Test variant); and, in
-/// the Test variant, the test entry point and typed test clients.
+/// the interceptor that hands <c>app.Run()</c> the desktop host the build references (in the Test variant too, for the
+/// test session's Window surface); and, in the Test variant, the test entry point and typed test clients.
 /// It reports nothing itself: the analyzer shows problems at their locations.
 /// </summary>
 [Generator]
@@ -75,15 +75,12 @@ public sealed class SparGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(contracts.Combine(security).Combine(appId), static (output, input) =>
             EmitContracts(output, input.Left.Left, input.Left.Right, input.Right));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
-        context.RegisterSourceOutput(runCalls.Combine(hosts).Combine(isTest), static (output, input) =>
+        // Every variant hands Run its host: in the test variant the test session runs the app instead, and opens its
+        // window through the host for the Window surface (plan section 5, level 5).
+        context.RegisterSourceOutput(runCalls.Combine(hosts), static (output, input) =>
         {
-            var ((calls, found), test) = input;
-
-            // The test variant runs the app through its test session, never in a window.
-            if (!test)
-            {
-                HostEmitter.Emit(output, calls!, found);
-            }
+            var (calls, found) = input;
+            HostEmitter.Emit(output, calls!, found);
         });
         context.RegisterSourceOutput(contracts.Combine(entry).Combine(isTest), static (output, input) =>
         {

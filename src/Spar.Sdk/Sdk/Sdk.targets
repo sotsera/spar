@@ -222,15 +222,24 @@
     publication is one file), and WebView2Loader.dll beside a CoreCLR build or publication. The version comes from
     central package management in this repository and from the SDK in package mode, like the test framework's.
   -->
-  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true'">
+  <PropertyGroup>
+    <_SparWebView2Loader Condition="'$(SparTargetsWindows)' == 'true'">true</_SparWebView2Loader>
+    <!--
+      A test project runs its app's real window in its own process (the Window surface, plan section 5), so it links the
+      loader as an app does when it is published with NativeAOT; on CoreCLR the app's WebView2Loader.dll comes with it.
+    -->
+    <_SparWebView2Loader Condition="'$(SparIsTestProject)' == 'true' and $(RuntimeIdentifier.StartsWith('win-'))">true</_SparWebView2Loader>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true'">
     <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(SparSourceMode)' != 'true'">
+  <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true' and '$(SparSourceMode)' != 'true'">
     <PackageReference Update="Microsoft.Web.WebView2" Version="$(SparWebView2Version)" IsImplicitlyDefined="true" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(SparTargetsWindows)' == 'true'">
+  <PropertyGroup Condition="'$(_SparWebView2Loader)' == 'true'">
     <_SparWebView2Arch Condition="'$(RuntimeIdentifier)' == 'win-x64'">x64</_SparWebView2Arch>
     <_SparWebView2Arch Condition="'$(RuntimeIdentifier)' == 'win-arm64'">arm64</_SparWebView2Arch>
     <_SparWebView2Native>$(PkgMicrosoft_Web_WebView2)\build\native\$(_SparWebView2Arch)\</_SparWebView2Native>
@@ -238,12 +247,12 @@
     <_SparWebView2PublishDll Condition="'$(PublishAot)' != 'true'">PreserveNewest</_SparWebView2PublishDll>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != ''">
+  <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != ''">
     <None Include="$(_SparWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" Visible="false"
           CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="$(_SparWebView2PublishDll)" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != '' and '$(PublishAot)' == 'true'">
+  <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != '' and '$(PublishAot)' == 'true'">
     <DirectPInvoke Include="WebView2Loader" />
     <NativeLibrary Include="$(_SparWebView2Native)WebView2LoaderStatic.lib" />
   </ItemGroup>

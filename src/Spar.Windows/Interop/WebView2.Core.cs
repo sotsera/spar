@@ -149,7 +149,7 @@ internal partial interface ICoreWebView2_22
     [PreserveSig] int Slot119_GetMemoryUsageTargetLevel();
     [PreserveSig] int Slot120_PutMemoryUsageTargetLevel();
     // ICoreWebView2_20
-    [PreserveSig] int Slot121_GetFrameId();
+    uint GetFrameId();
     // ICoreWebView2_21
     [PreserveSig] int Slot122_ExecuteScriptWithResult();
     // ICoreWebView2_22

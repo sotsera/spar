@@ -9,6 +9,11 @@
     <ProjectReference Include="..\Spar.Stubs\Spar.Stubs.csproj" />
   </ItemGroup>
 
+  <!-- The stand-in end-to-end project reaches Program, as a test project does through the Test variant. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="SqlTool.EndToEndTests" />
+  </ItemGroup>
+
   <!--
     Failing/ holds code that must not compile. Each file is compiled only when its switch is set:
     -p:SparCheckMissingCase=true  a PlanError switch and a file-dialog switch, each with one case missing (expected CS8509 twice)

@@ -1,0 +1,19 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The document's window test (docs/app-model.md 6.12) built by real Spar: Spar.Sdk's test project, the real test host
+    and page API, and the document's app (../Real) in the Test variant. Compiled only: the document's app has no page.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>SqlTool.EndToEndTests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\Real\SqlTool.Real.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SqlTool.EndToEndTests\ConnectionsWindowTests.cs" Link="ConnectionsWindowTests.cs" />
+  </ItemGroup>
+</Project>

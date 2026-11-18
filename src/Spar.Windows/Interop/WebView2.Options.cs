@@ -25,9 +25,9 @@ internal partial interface ICoreWebView2ControllerOptions3
 {
     // ICoreWebView2ControllerOptions
     [PreserveSig] int Slot003_GetProfileName();
-    [PreserveSig] int Slot004_PutProfileName();
+    void PutProfileName(string value);
     [PreserveSig] int Slot005_GetIsInPrivateModeEnabled();
-    [PreserveSig] int Slot006_PutIsInPrivateModeEnabled();
+    void PutIsInPrivateModeEnabled(int value);
     // ICoreWebView2ControllerOptions2
     [PreserveSig] int Slot007_GetScriptLocale();
     [PreserveSig] int Slot008_PutScriptLocale();

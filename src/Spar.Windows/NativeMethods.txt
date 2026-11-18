@@ -38,10 +38,13 @@ LoadCursor
 MessageBox
 MINMAXINFO
 MonitorFromPoint
+MsgWaitForMultipleObjectsEx
 OpenProcess
+PeekMessage
 PostMessage
 PostQuitMessage
 RegisterClassEx
+SendMessage
 SetCurrentProcessExplicitAppUserModelID
 SetEnvironmentVariable
 SetForegroundWindow
@@ -63,10 +66,13 @@ WM_APP
 WM_CLOSE
 WM_DESTROY
 WM_DPICHANGED
+WM_ENDSESSION
 WM_ERASEBKGND
 WM_GETMINMAXINFO
 WM_NCCREATE
 WM_NCDESTROY
+WM_QUERYENDSESSION
+WM_QUIT
 WM_SETFOCUS
 WM_SETTINGCHANGE
 WM_SIZE

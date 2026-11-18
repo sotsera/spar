@@ -17,7 +17,25 @@ internal static unsafe class WindowPlacement
     /// <summary>The main window's style: a normal resizable window with the system title bar.</summary>
     public const WINDOW_STYLE Style = WINDOW_STYLE.WS_OVERLAPPEDWINDOW;
 
+    /// <summary>
+    /// A test window's extended style (plan section 5): no taskbar button, and never activated, so it never takes the
+    /// focus from the person at the desktop.
+    /// </summary>
+    public const WINDOW_EX_STYLE TestExtendedStyle = WINDOW_EX_STYLE.WS_EX_TOOLWINDOW | WINDOW_EX_STYLE.WS_EX_NOACTIVATE;
+
     private const uint DefaultDpi = 96;
+
+    /// <summary>Where a test window is shown: far outside every monitor, still shown, so the page renders and takes input.</summary>
+    private const int OffscreenCorner = -32_000;
+
+    /// <summary><paramref name="bounds"/>'s size, moved offscreen.</summary>
+    public static RECT Offscreen(RECT bounds) => new()
+    {
+        left = OffscreenCorner,
+        top = OffscreenCorner,
+        right = OffscreenCorner + bounds.right - bounds.left,
+        bottom = OffscreenCorner + bounds.bottom - bounds.top,
+    };
 
     /// <summary>The first start's bounds: a client area of <paramref name="size"/>, centred in the primary monitor's work area.</summary>
     public static RECT Initial((int Width, int Height) size)

@@ -13,7 +13,14 @@ internal static class TestDataRoots
         $"{DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture)}-{Environment.ProcessId}";
 
     private static readonly Lazy<string> Base = new(FindBase);
+    private static readonly Lazy<string> ProfilesBase = new(FindProfiles);
     private static int s_next;
+
+    /// <summary>
+    /// Where window tests keep their browser profiles (<c>AGENTS.md</c>): <c>artifacts/webview2-profiles/test-host/</c> in a
+    /// repository, beside the data roots otherwise. Each test process takes a root of its own under it.
+    /// </summary>
+    public static string Profiles => ProfilesBase.Value;
 
     public static string Next()
     {
@@ -42,6 +49,15 @@ internal static class TestDataRoots
                 Thread.Sleep(100);
             }
         }
+    }
+
+    private static string FindProfiles()
+    {
+        var testHost = Base.Value;
+        var artifacts = Path.GetDirectoryName(testHost)!;
+        return Path.GetFileName(testHost) == "test-host" && Path.GetFileName(artifacts) == "artifacts"
+            ? Path.Combine(artifacts, "webview2-profiles", "test-host")
+            : Path.Combine(testHost, "webview2-profiles");
     }
 
     private static string FindBase()

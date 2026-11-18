@@ -1,19 +1,28 @@
 <Project Sdk="Spar.Sdk">
   <!--
-    The Notebook's browser tests (plan section 5, level 4): its real page in Chromium against its real backend in this
-    process, over loopback. CoreCLR only, like Playwright for .NET; not in the NativeAOT lane.
+    The Notebook's end-to-end tests (plan section 5): its real page against its real backend in this process, in
+    Chromium over loopback (levels 4, the browser journeys: CoreCLR only, like Playwright for .NET) and in its real
+    WebView2 window (level 5, Window/: trait Surface=Window, run as their own invocation, and also published in the
+    NativeAOT lane without the browser journeys).
   -->
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <IsTestProject>true</IsTestProject>
-    <!-- The Browser surface (Spar.Testing.Browser), added by Spar.Sdk at its own version. -->
-    <SparBrowserTests>true</SparBrowserTests>
     <RootNamespace>Notebook.EndToEndTests</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- The Browser surface (Spar.Testing.Browser), added by Spar.Sdk at its own version, and Playwright: CoreCLR only. -->
+  <PropertyGroup Condition="'$(SparTestLane)' != 'Aot'">
+    <SparBrowserTests>true</SparBrowserTests>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
     <PackageReference Include="Microsoft.Playwright" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTestLane)' == 'Aot'">
+    <Compile Remove="JourneyTests.cs;NotebookPage.cs" />
   </ItemGroup>
 
   <ItemGroup>

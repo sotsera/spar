@@ -1,6 +1,7 @@
 # Spar CI (decision "CI on GitHub Actions"). Every action is pinned to a full commit SHA, its release in a comment
-# (supply-chain default); update them on purpose, never by tag. Before the window tests arrive (M1b), check that they
-# can run on the hosted Windows runner (it may need a self-hosted one with a desktop session).
+# (supply-chain default); update them on purpose, never by tag. The window tests (M1b step 8a) run on the hosted Windows
+# runner as their own steps; whether its session can show WebView2 windows is checked by the first run after the push
+# (a self-hosted runner with a desktop session is the fallback).
 name: ci
 
 on:
@@ -117,8 +118,18 @@ jobs:
           pwsh "$script" install $deps --only-shell chromium
 
       - name: Test (CoreCLR)
+        # Everything but the window tests, which run as their own invocation below (plan section 5).
         if: matrix.lane == 'tests'
-        run: dotnet test --solution Spar.slnx -c Debug --no-build
+        run: dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait "Surface=Window"
+
+      - name: Window tests (CoreCLR)
+        # The app's real WebView2 window in the test process (trait Surface=Window), in their own invocations: a native
+        # engine abort ends only this step's process. Windows only until the Linux host (M1c).
+        if: matrix.lane == 'tests' && runner.os == 'Windows'
+        shell: bash
+        run: |
+          dotnet test --project tests/Spar.WindowTests -c Debug --no-build
+          dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=Window"
 
       - name: Page tests (the Notebook's page against @spar/app/testing)
         # After the build, which writes the generated @spar/app package and installs the frontend's packages.
@@ -140,6 +151,20 @@ jobs:
             name=$(basename "$project")
             dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
             # xUnit's in-process runner exits 0 when it ran no test; an empty run is a failure (fixture rules).
+            output=$("artifacts/aot/$name/$name") || { echo "$output"; exit 1; }
+            echo "$output"
+            echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }
+          done
+
+      - name: Window tests (NativeAOT lane)
+        # The same window tests published with NativeAOT, each executable its own invocation; Notebook.EndToEndTests
+        # leaves its browser journeys out of this lane (Playwright cannot run under NativeAOT). Windows only until M1c.
+        if: matrix.lane == 'aot' && runner.os == 'Windows'
+        shell: bash
+        run: |
+          for project in tests/Spar.WindowTests samples/Notebook.EndToEndTests; do
+            name=$(basename "$project")
+            dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
             output=$("artifacts/aot/$name/$name") || { echo "$output"; exit 1; }
             echo "$output"
             echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }

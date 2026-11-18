@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!--
     Spar's test library (plan section 5): runs the app's own Program.cs inside the test process with the test's
-    overrides. The None surface; Browser is in Spar.Testing.Browser, and Window follows in M1b (Windows) and M1c (Linux).
+    overrides. The None and Window surfaces, and the window tests' page API with its page engine; Browser is in
+    Spar.Testing.Browser. Apps never reference it, so none of it reaches an app's executable.
   -->
   <PropertyGroup>
     <IsPackable>true</IsPackable>
@@ -14,7 +15,15 @@
     <ProjectReference Include="..\Spar\Spar.csproj" />
   </ItemGroup>
 
+  <!-- The window tests' page engine (Window/PageEngine.js), host-neutral, run in the page's isolated world. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Window\PageEngine.js" LogicalName="Spar.Testing.PageEngine.js" WithCulture="false" Type="Non-Resx" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Spar.Testing.Browser" />
+
+    <!-- Spar's own host tests (tests/Spar.WindowTests) reach the window's lifetime and the host's phases. -->
+    <InternalsVisibleTo Include="Spar.WindowTests" />
   </ItemGroup>
 </Project>

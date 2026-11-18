@@ -1706,13 +1706,57 @@ export const stopGuarding = windows.onCloseRequested(async request => {
 - **After the decision** the window's teardown runs (plan section 3), including the page's closing work.
 - **A shutdown that does not finish:** after about 10 s of closing (commands settling, the web view closing, the app's services being disposed), Spar shows a native "Keep waiting / Exit now" prompt, and again every 30 s after "Keep waiting". It goes away by itself when the shutdown finishes. "Exit now" ends the process at once with the fixed exit code 10, so scripts and installers can tell it from a clean exit (0); Spar never ends the process on its own, and in the automated mode it shows no prompt and keeps waiting.
 
+### 6.12 Window tests
+
+**Decided** (decision "Step 8's shape: window tests driven by Spar's own API"; built on Windows in M1b step 8a, the Linux host follows in M1c). A window test runs the app's own `Program.cs` in the test process with its real window: the app's own packed page in WebView2, shown offscreen, never activated and with no taskbar button. `app.Page` drives the page with Spar's own API, which takes the method names of Microsoft's browser automation library, so a window journey reads like a browser journey of the same end-to-end project.
+
+File `SqlTool.EndToEndTests/ConnectionsWindowTests.cs`:
+
+```csharp
+using Spar.Testing;
+using static Spar.Testing.SparAssertions;
+
+namespace SqlTool.EndToEndTests;
+
+// Window tests carry this trait, so they run as their own invocation: a native engine abort ends only that run.
+[Trait("Surface", "Window")]
+public sealed class ConnectionsWindowTests
+{
+    [Fact]
+    public async Task Removing_a_connection_asks_first_and_takes_it_off_the_list()
+    {
+        await using var app = await SparTestApp.StartAsync<Program>(
+            o => o.Surface = SparTestSurface.Window,
+            TestContext.Current.CancellationToken);
+        var page = app.Page;
+        var connections = page.GetByRole(SparRole.List, new() { Name = "Connections" });
+
+        await connections.GetByRole(SparRole.Listitem).Filter(new() { HasText = "Production" })
+            .GetByRole(SparRole.Button, new() { Name = "Remove" }).ClickAsync();
+        await page.GetByRole(SparRole.Alertdialog).GetByRole(SparRole.Button, new() { Name = "Remove" }).ClickAsync();
+
+        await Expect(connections.GetByRole(SparRole.Listitem)).ToHaveCountAsync(1);
+        await Expect(page.GetByRole(SparRole.Status)).ToHaveTextAsync("Production removed");
+        Assert.Empty(app.Problems);
+        Assert.Empty(page.PageErrors);
+    }
+}
+```
+
+- **Finding elements:** by role and accessible name (`GetByRole`), label (`GetByLabel`), text (`GetByText`), placeholder, alt text and title, chained from one another, filtered (`Filter`) and picked (`First`, `Last`, `Nth`). There are no test ids: the page carries no markup for tests, and finding elements as assistive technology names them also checks that it names them. `Locator(css)` is there for structure that roles do not name.
+- **Actions wait** until their element is attached, visible, stable, enabled (and editable, for text), scrolled into view and, for the pointer, the element that receives the press. An action needs exactly one element: a locator that finds several fails at once and lists them. Input is trusted: the page sees `isTrusted` events with user activation, sent through the window's own in-process DevTools session, with no port and no second process.
+- **Assertions retry** until they hold, for 5 s unless `Timeout` says otherwise (actions wait 10 s); `Not` turns each one around. A failure names what was searched for and what was found at the last try, such as `no element matches GetByRole(Button, "Save"); near: button <button> "Cancel"; button <button> "Save draft"`.
+- **Also there:** `EvaluateAsync`, page and element `ScreenshotAsync`, `WaitForURLAsync`, `WaitForUiReadyAsync`, `GotoAsync`, `ReloadAsync`, `Keyboard` and `Mouse`, and what the page reported: `ConsoleMessages`, `PageErrors` and `Dialogs` (dismissed unless `AcceptDialogs`). `app.Problems` lists every warning and error Spar logged for the app: refused or dropped bridge messages, CSP violations and page errors.
+- **Isolation:** each window has an InPrivate profile of its own on one browser per test process, so nothing a test stores reaches the next one, and the window's renderer must have exited when the test ends.
+- **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=Window"`, and in the NativeAOT lane, which leaves out the browser tests. They never take the focus, so they can run while someone uses the computer.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**
 - **Configuration:**
   - the type names of the configuration builders behind `spar.Window(…)` and the other calls of section 2 not built yet (the check's stand-ins call them `SparBuilder` and `WindowOptions`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example. `CspBuilder`, `CspReports`, `PermissionsBuilder` and `Permission` are Spar's own since M1b.
 - **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
-- **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open).
+- **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open); for window tests (6.12), how scenes and a fixed clock are declared, and a public way to close the window through its close request.
 
 Decided since this list was first written, and shown above:
 - streams with declared errors (decision "Streams may declare errors");

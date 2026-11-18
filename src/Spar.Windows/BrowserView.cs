@@ -15,7 +15,7 @@ namespace Spar.Windows;
 /// first navigation it adds the host's script to every document (<see cref="PageScript"/>), and its navigation,
 /// new-window and permission events go to the <see cref="PageGuard"/> (plan section 3b).
 /// </summary>
-internal sealed class BrowserView
+internal sealed partial class BrowserView
 {
     private readonly UiThread _ui;
     private readonly HostLog _log;
@@ -30,6 +30,7 @@ internal sealed class BrowserView
     private readonly bool _transparent;
     private readonly Action<int, string> _fail;
     private readonly Action<StartupProblem> _startupFailed;
+    private readonly BrowserSource? _source;
     private readonly List<Subscription> _subscriptions = [];
     private ICoreWebView2Environment10? _environment;
     private ICoreWebView2Controller? _controller;
@@ -49,6 +50,7 @@ internal sealed class BrowserView
     /// </param>
     /// <param name="fail">An unrecoverable failure once running: the exit code and a message.</param>
     /// <param name="startupFailed">A start-up problem: the Runtime could not be started (exit 3 to 5).</param>
+    /// <param name="source">Where the browser comes from: null for an app's own environment on its profile folder.</param>
     public BrowserView(
         UiThread ui,
         HostLog log,
@@ -62,7 +64,8 @@ internal sealed class BrowserView
         WindowTheme theme,
         bool transparent,
         Action<int, string> fail,
-        Action<StartupProblem> startupFailed)
+        Action<StartupProblem> startupFailed,
+        BrowserSource? source = null)
     {
         _ui = ui;
         _log = log;
@@ -77,6 +80,7 @@ internal sealed class BrowserView
         _transparent = transparent;
         _fail = fail;
         _startupFailed = startupFailed;
+        _source = source;
         WindowState = new ViewWindowState(ui, log, window);
     }
 
@@ -88,6 +92,9 @@ internal sealed class BrowserView
 
     /// <summary>The window's focus, visibility and position, passed on to the controller (UI thread).</summary>
     public ViewWindowState WindowState { get; }
+
+    /// <summary>The WebView, once its controller exists and until it closes (UI thread).</summary>
+    public ICoreWebView2_22? WebView => _webView;
 
     /// <summary>Whether the controller shows the WebView: a hidden controller's page is not pinged (UI thread).</summary>
     public bool IsShown => _controller is { } controller && controller.GetIsVisible() != 0;
@@ -138,51 +145,6 @@ internal sealed class BrowserView
         _controller.PutBounds(new Rect { Left = 0, Top = 0, Right = client.right, Bottom = client.bottom });
     }
 
-    /// <summary>
-    /// "Reload page" in the hung-page dialog (plan section 3, "Hung pages"): reloading alone never recovers a hung
-    /// renderer, so the renderer is ended first, and the page loads again once it is gone. This is the user's choice, so
-    /// it does not use up the automatic reload. A renderer that cannot be found is reloaded as it is (UI thread).
-    /// </summary>
-    public void ReloadHungPage()
-    {
-        _userReload = true;
-        if (TerminateRenderers() == 0)
-        {
-            _userReload = false;
-            _webView?.Reload();
-            _log.Step("no renderer to end; page reloaded");
-        }
-    }
-
-    /// <summary>
-    /// Ends the environment's renderer processes, the only way a hung page recovers (pitfall "A hung page"). WebView2
-    /// has no API for it, so the process ids come from <c>GetProcessInfos</c>, which works only on the UI thread. The
-    /// environment is the app's alone (one data folder per app, single instance), so its renderers are this window's.
-    /// Returns how many were ended.
-    /// </summary>
-    public int TerminateRenderers()
-    {
-        if (_environment is null)
-        {
-            return 0;
-        }
-
-        var ended = 0;
-        foreach (var process in RendererProcessIds(_environment))
-        {
-            if (ProcessControl.Terminate(process))
-            {
-                ended++;
-            }
-            else
-            {
-                _log.Warn($"Renderer process {process} could not be ended.");
-            }
-        }
-
-        _log.Step($"renderer processes ended: {ended}");
-        return ended;
-    }
 
     /// <summary>Runs a script in the page; for the Development-only triggers that make a page hang on demand.</summary>
     public Task<string?> RunScriptAsync(string script)
@@ -217,32 +179,32 @@ internal sealed class BrowserView
     public void Close()
     {
         _closing = true;
+        Phase("closing");
         WindowState.LogSummary();
         Release(closeController: true);
     }
 
     private async Task CreateAsync(int generation)
     {
-        Directory.CreateDirectory(_profile.Requested);
-        var created = new EnvironmentCompleted();
-        var options = new EnvironmentOptions(_defaults.BrowserArguments, Prerequisites.MinimumRuntime);
-        var result = Native.CreateCoreWebView2EnvironmentWithOptions(null, _profile.Requested, options, created);
-        if (result < 0)
-        {
-            throw new WebView2Exception("CreateCoreWebView2EnvironmentWithOptions", result);
-        }
-
-        var environment = Com.Take<ICoreWebView2Environment10>(await created.Task);
+        // The feature switch is read in each condition, not kept in a local: the trimmer folds it there, so an app's
+        // image has no shared-environment path at all.
+        var environment = SparTestSession.IsSupported && _source is { IsShared: true }
+            ? await SharedEnvironmentAsync()
+            : await OwnEnvironmentAsync();
         if (Abandoned(generation, environment))
         {
             return;
         }
 
         _environment = environment;
-        _log.Phase("environment");
+        Phase("environment");
         _runtimeVersion = environment.GetBrowserVersionString();
         _log.Info($"WebView2 Runtime {_runtimeVersion}");
-        CheckProfileFolder(environment);
+        if (!SparTestSession.IsSupported || _source is not { IsShared: true })
+        {
+            CheckProfileFolder(environment);
+        }
+
         var exited = new WebView2EventHandler(
             args =>
             {
@@ -254,6 +216,7 @@ internal sealed class BrowserView
 
         var controllerCreated = new ControllerCompleted();
         CreateController(environment, controllerCreated);
+        Phase("controller requested");
         var controller = Com.Take<ICoreWebView2Controller>(await controllerCreated.Task);
         if (Abandoned(generation, controller))
         {
@@ -262,7 +225,7 @@ internal sealed class BrowserView
 
         _controller = controller;
         _webView = Com.Take<ICoreWebView2_22>(controller.GetCoreWebView2());
-        _log.Phase("controller");
+        Phase("controller");
         WindowState.Attach(controller);
         _defaults.Apply(_webView);
         var picker = _defaults.BlocksPagePicker ? PagePicker.Block(_webView, _log) : Task.CompletedTask;
@@ -294,10 +257,53 @@ internal sealed class BrowserView
             return;
         }
 
+        // A test's page driver installs itself here, after the host's own DevTools calls and before the first document.
+        if (SparTestSession.IsSupported && _source?.BeforeFirstNavigation is { } beforeNavigation)
+        {
+            await beforeNavigation();
+            if (Abandoned(generation, null) || _webView is null)
+            {
+                return;
+            }
+        }
+
         _log.Phase("page script added");
         _webView.Navigate(PageServer.StartUrl);
-        _log.Step("navigation started");
+        Phase("navigation started");
     }
+
+    /// <summary>An app's own environment, on its profile folder.</summary>
+    private async Task<ICoreWebView2Environment10> OwnEnvironmentAsync()
+    {
+        Directory.CreateDirectory(_profile.Requested);
+        var created = new EnvironmentCompleted();
+        var options = new EnvironmentOptions(_defaults.BrowserArguments, Prerequisites.MinimumRuntime);
+        var result = Native.CreateCoreWebView2EnvironmentWithOptions(null, _profile.Requested, options, created);
+        if (result < 0)
+        {
+            throw new WebView2Exception("CreateCoreWebView2EnvironmentWithOptions", result);
+        }
+
+        return Com.Take<ICoreWebView2Environment10>(await created.Task);
+    }
+
+    /// <summary>The test process's environment for these browser arguments; the view's reference is its own.</summary>
+    private async Task<ICoreWebView2Environment10> SharedEnvironmentAsync()
+    {
+        var pointer = await _source!.SharedEnvironment!(_defaults.BrowserArguments);
+        return Com.Take<ICoreWebView2Environment10>(pointer);
+    }
+
+    /// <summary>A start-up phase: in the log once, and to the test host's hook when a test opened the window.</summary>
+    private void Phase(string phase)
+    {
+        _log.Phase(phase);
+        if (SparTestSession.IsSupported)
+        {
+            _source?.OnPhase?.Invoke(phase);
+        }
+    }
+
 
     /// <summary>
     /// The controller with plan 3d's transparent default background, set on the creation options so the WebView never
@@ -313,6 +319,11 @@ internal sealed class BrowserView
             if (_transparent)
             {
                 MakeTransparent(options);
+            }
+
+            if (SparTestSession.IsSupported && _source?.PrivateProfile is { } profile)
+            {
+                MakePrivate(options, profile);
             }
 
             environment.CreateCoreWebView2ControllerWithOptions((nint)_window, options, completed);
@@ -338,6 +349,25 @@ internal sealed class BrowserView
         }
 
         _log.Info($"Browser profile folder {inUse}");
+    }
+
+    /// <summary>
+    /// A test's window: InPrivate, so nothing it stores outlives it, on a profile name no other window of the test
+    /// process uses at the same time, since InPrivate windows of one name share their storage (decision "Step 8's
+    /// shape: window tests driven by Spar's own API").
+    /// </summary>
+    private static void MakePrivate(nint options, string profile)
+    {
+        var settable = Com.Borrow<ICoreWebView2ControllerOptions3>(options);
+        try
+        {
+            settable.PutIsInPrivateModeEnabled(1);
+            settable.PutProfileName(profile);
+        }
+        finally
+        {
+            Com.Release(settable);
+        }
     }
 
     private void MakeTransparent(nint options)
@@ -385,7 +415,7 @@ internal sealed class BrowserView
         var loading = Handler(generation, "ContentLoading", args =>
         {
             bridge.OnContentLoading(IsErrorPage(args));
-            _log.Phase("first document");
+            Phase("first document");
         });
         Subscribe(loading, webView.AddContentLoading(loading), webView.RemoveContentLoading);
 
@@ -450,11 +480,12 @@ internal sealed class BrowserView
         {
             if (args.GetIsSuccess() != 0)
             {
-                _log.Phase("first navigation completed");
+                Phase("first navigation completed");
                 return;
             }
 
             _log.Warn($"Navigation {args.GetNavigationId()} failed with web error status {args.GetWebErrorStatus()}.");
+            Phase("navigation failed");
         }
         finally
         {
@@ -560,6 +591,14 @@ internal sealed class BrowserView
         }
 
         _log.Step($"browser lost ({reason})");
+
+        // The test process's browser serves every test's window: the test that lost it fails rather than start another.
+        if (SparTestSession.IsSupported && _source is { IsShared: true })
+        {
+            _fail(5, "The test process's web browser component stopped working.");
+            return;
+        }
+
         if (_browserRecreated)
         {
             _fail(5, "The web browser component stopped working again after it was restarted.");
@@ -627,37 +666,6 @@ internal sealed class BrowserView
             }
         }, Report);
 
-    /// <summary>The ids of the environment's renderer processes, from <c>GetProcessInfos</c> (UI thread only).</summary>
-    private static List<int> RendererProcessIds(ICoreWebView2Environment10 environment)
-    {
-        var ids = new List<int>();
-        var processes = Com.Take<ICoreWebView2ProcessInfoCollection>(environment.GetProcessInfos());
-        try
-        {
-            var count = processes.GetCount();
-            for (uint index = 0; index < count; index++)
-            {
-                var process = Com.Take<ICoreWebView2ProcessInfo>(processes.GetValueAtIndex(index));
-                try
-                {
-                    if (process.GetKind() == WebView2Values.RendererProcess)
-                    {
-                        ids.Add(process.GetProcessId());
-                    }
-                }
-                finally
-                {
-                    Com.Release(process);
-                }
-            }
-        }
-        finally
-        {
-            Com.Release(processes);
-        }
-
-        return ids;
-    }
 
     private void Subscribe(object handler, EventRegistrationToken token, Action<EventRegistrationToken> remove) =>
         _subscriptions.Add(new Subscription(handler, token, remove));

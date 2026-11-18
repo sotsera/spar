@@ -5,7 +5,8 @@ namespace Spar.BuildTests;
 /// <summary>
 /// What a Production executable must not carry (plan section 5): the test host, the loopback host, the test
 /// libraries, the Windows host's Development-only triggers, the Development-only parts of page security (the check
-/// that the run's policy equals the build's, and the advice in violation lines), and the UI-thread stall probe unless the app keeps it
+/// that the run's policy equals the build's, and the advice in violation lines), the Window surface of window tests (the
+/// host's test windows, the shared test browser and the page engine), and the UI-thread stall probe unless the app keeps it
 /// (<see cref="StallProbe"/>). Type names are UTF-8 in a native image's metadata; string literals are UTF-16. Each marker is unique to
 /// Spar, since generic names give false positives (pitfalls: <c>LoopbackHost</c> is also a <c>System.Uri</c> flag).
 /// </summary>
@@ -16,6 +17,11 @@ internal static class ProductionBoundary
         "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackHost", "LoopbackChannel", "LoopbackAssets",
         "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel", "DevelopmentTriggers",
         "UiStallProbe", "PageSecurityMismatch", "CspAdvice", "DevelopmentInput", "DevelopmentConsole",
+
+        // The Window surface (M1b step 8a): the host's test-only part, the test host's interfaces to it, and the page
+        // engine and its isolated world, which only Spar.Testing carries.
+        "TestWindowProcess", "ISparTestWindow", "SparTestWindowRequest", "FrameProcessesCompleted",
+        "SparDevToolsException", "__sparAutomation",
     ];
 
     private static readonly string[] Literals =
@@ -23,6 +29,7 @@ internal static class ProductionBoundary
         "/_spar/channel", "/_spar/send", "Spar.TestHost.IsSupported", "SPAR_DEV_PAGE_HANG", "SPAR_DEV_HEARTBEAT_MS",
         "SPAR_DEV_UI_STALL_MS", "SPAR_DEV_SLOW_DISPOSE_MS", "The UI thread stalled",
         "differs from the one the build read", "Allow it with csp.", "SPAR_DEV_INPUT", "remote-debugging-port",
+        "spar-automation", "Spar test anchor", "Spar UI (tests)", "spartest",
     ];
 
     /// <summary>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Window host</title>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <header class="bar">
+      <h1>Window host</h1>
+      <p role="status" id="status">Starting</p>
+    </header>
+    <main>
+      <section aria-label="Calls">
+        <h2>Calls</h2>
+        <button type="button" id="hold">Start a long call</button>
+        <button type="button" id="slow">Start a slow call</button>
+        <button type="button" id="echo">Echo</button>
+      </section>
+
+      <section aria-label="Order">
+        <h2>Order</h2>
+        <label for="customer">Customer name</label>
+        <input id="customer" autocomplete="off">
+        <label>Quantity <input id="quantity" type="number" value="1"></label>
+        <label><input id="gift" type="checkbox"> Gift wrap</label>
+        <label for="region">Region</label>
+        <select id="region">
+          <option>Europe</option>
+          <option>Americas</option>
+          <option value="apac">Asia Pacific</option>
+        </select>
+        <label for="day">Delivery day</label>
+        <input id="day" type="date">
+        <textarea id="notes" aria-label="Notes"></textarea>
+        <div id="message" contenteditable="true" role="textbox" aria-label="Message" class="editable"></div>
+        <button type="button" id="place" disabled>Place order</button>
+        <p id="summary">No order yet</p>
+      </section>
+
+      <section aria-label="Timing">
+        <h2>Timing</h2>
+        <button type="button" id="load">Load orders</button>
+        <div id="orders"></div>
+        <button type="button" id="open">Open the dialog</button>
+        <div class="covered">
+          <button type="button" id="covered">Covered button</button>
+          <div class="overlay" id="overlay">Loading…</div>
+        </div>
+        <button type="button" id="later">Show the late button</button>
+        <div id="late"></div>
+      </section>
+
+      <section aria-label="Scrolling">
+        <h2>Scrolling</h2>
+        <div class="scroller">
+          <div class="spacer">Scroll down</div>
+          <button type="button" id="far">Far away</button>
+        </div>
+      </section>
+
+      <section aria-label="Problems">
+        <h2>Problems</h2>
+        <button type="button" id="log-error">Log an error</button>
+        <button type="button" id="throw">Throw</button>
+        <button type="button" id="alert">Show an alert</button>
+        <button type="button" id="hide-me" class="invisible">Invisible</button>
+        <button type="button" hidden>Hidden</button>
+      </section>
+
+      <nav aria-label="Pages">
+        <a href="/other.html">Second page</a>
+      </nav>
+    </main>
+
+    <div id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" class="dialog" hidden>
+      <h2 id="dialog-title">Confirm the order</h2>
+      <p>The order goes out today.</p>
+      <button type="button" id="confirm">Confirm</button>
+      <button type="button" id="cancel">Cancel</button>
+    </div>
+  </body>
+</html>

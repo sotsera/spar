@@ -34,12 +34,18 @@ internal sealed class HostLog
     private readonly long _started = Stopwatch.GetTimestamp();
     private readonly Lock _gate = new();
     private readonly HashSet<string> _reached = new(StringComparer.Ordinal);
+    private readonly bool _standardError;
     private LogFile? _file;
     private ILogger? _fileLogger;
     private ILogger? _appLogger;
 
-    public HostLog()
+    /// <param name="standardError">
+    /// Whether the lines also go to standard error. A window in a test process writes only to its app's own log: the
+    /// process's standard error is shared by every app the tests run (plan section 5).
+    /// </param>
+    public HostLog(bool standardError = true)
     {
+        _standardError = standardError;
         RunId = Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(4));
         Logger = new LocalLogger(this);
     }
@@ -136,12 +142,13 @@ internal sealed class HostLog
         public IDisposable? BeginScope<TState>(TState state)
             where TState : notnull => null;
 
-        public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Information || Target()?.IsEnabled(logLevel) == true;
+        public bool IsEnabled(LogLevel logLevel) =>
+            (log._standardError && logLevel >= LogLevel.Information) || Target()?.IsEnabled(logLevel) == true;
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             // The generic part stays this small: it is compiled again for every kind of message state in the image.
-            if (logLevel >= LogLevel.Information && logLevel != LogLevel.None)
+            if (log._standardError && logLevel >= LogLevel.Information && logLevel != LogLevel.None)
             {
                 WriteStandardError(logLevel, formatter(state, exception), exception);
             }
