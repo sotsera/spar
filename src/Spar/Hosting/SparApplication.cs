@@ -251,12 +251,13 @@ public sealed class SparBuilder
     }
 
     /// <summary>
-    /// The levels of the app's log file (<c>docs/app-model.md</c> 3.13), for example
+    /// The app's log levels and its log file (<c>docs/app-model.md</c> 3.13), for example
     /// <c>spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.Copy", LogLevel.Debug))</c>. Every app writes
     /// <c>app.log</c> in its logs folder: Spar's lines and every <c>ILogger</c> of the app's services, Information and
     /// above in Production, Debug and above in Development and Test builds unless set here. A <c>logging.json</c> in the
     /// app's per-user folder overrides these at start (<c>{"level":"Debug","categories":{"SqlTool.Copy":"Trace"}}</c>),
-    /// so a user can raise the level for support without a new build. The levels apply to the file only.
+    /// so a user can raise the level for support without a new build. The levels are the app's, for every provider;
+    /// <c>l.WithoutFile()</c> writes no file (see <see cref="LoggingOptions.WithoutFile"/> for its risk).
     /// </summary>
     public SparBuilder Logging(Action<LoggingOptions> configure)
     {

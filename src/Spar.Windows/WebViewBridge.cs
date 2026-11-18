@@ -72,6 +72,12 @@ internal sealed class WebViewBridge
     /// <summary>Whether a document is open and reported <c>ui-ready</c>.</summary>
     public bool HasReadyDocument => _current is { IsReady: true, IsClosed: false };
 
+    /// <summary>The current document's id, or null between documents (UI thread).</summary>
+    public string? CurrentDocument => _current is { IsClosed: false } document ? document.Id : null;
+
+    /// <summary>Where the page's errors go, for the Development build's console events.</summary>
+    public PageErrorLog PageErrors => _pageErrors;
+
     /// <summary>The WebView whose messages this bridge carries; replaced when the browser is recreated.</summary>
     public void Attach(ICoreWebView2_22 webView) => _webView = webView;
 

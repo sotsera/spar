@@ -1,3 +1,5 @@
+using Spar.Hosting;
+
 namespace Spar.Windows;
 
 /// <summary>
@@ -27,6 +29,13 @@ internal static class PageScript
 
     private const string ResourceName = "Spar.Windows.PageScript.js";
 
+    /// <summary>
+    /// Whether this build reads the page's console errors from the in-process DevTools Protocol instead of the script's
+    /// wrapper (decision "Logging's follow-up choices"): a Development build, where devtools are on and their links
+    /// should point at the page's code; not a Test build, nor Production, where the switch is off and this is trimmed.
+    /// </summary>
+    public static bool ConsoleFromDevTools => SparDevelopment.IsSupported && !SparTestSession.IsSupported;
+
     /// <param name="reportViolations">Whether the listener reports (<c>csp.Reporting(listener: …)</c> for this build).</param>
     public static string Text(bool reportViolations)
     {
@@ -40,7 +49,8 @@ internal static class PageScript
             .Replace("__SPAR_REPORT_MAX_GROUPS__", Number(ReportMaxGroups), StringComparison.Ordinal)
             .Replace("__SPAR_REPORT_MAX_VIOLATIONS__", Number(ReportMaxViolations), StringComparison.Ordinal)
             .Replace("__SPAR_ERROR_MAX_GROUPS__", Number(ErrorMaxGroups), StringComparison.Ordinal)
-            .Replace("__SPAR_ERROR_MAX_ERRORS__", Number(ErrorMaxErrors), StringComparison.Ordinal);
+            .Replace("__SPAR_ERROR_MAX_ERRORS__", Number(ErrorMaxErrors), StringComparison.Ordinal)
+            .Replace("__SPAR_WRAP_CONSOLE__", ConsoleFromDevTools ? "false" : "true", StringComparison.Ordinal);
     }
 
     private static string Number(int value) => value.ToString(System.Globalization.CultureInfo.InvariantCulture);

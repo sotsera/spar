@@ -110,6 +110,10 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         {
             var host = File.ReadAllBytes(Directory.GetFiles(testOutput, "Spar.Windows.dll", SearchOption.AllDirectories)[0]);
             Assert.Contains("Input.dispatchMouseEvent", ProductionBoundary.DevToolsMethods(host));
+
+            // The Development build's console comes from the protocol's events: in the host's assembly, never in Production.
+            Assert.Contains("Runtime.consoleAPICalled", ProductionBoundary.DevToolsMethods(host));
+            Assert.Contains("Runtime.enable", ProductionBoundary.DevToolsMethods(host));
         }
 
         // The page is packed compressed, so its bundle is searched before packing. `PageError` stands for the generated

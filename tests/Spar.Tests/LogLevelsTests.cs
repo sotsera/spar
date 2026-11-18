@@ -26,8 +26,8 @@ public sealed class LogLevelsTests : IDisposable
     {
         var options = new LoggingOptions();
 
-        Assert.Equal(LogLevel.Information, LogLevels.Resolve(options, development: false, file: null).For("SqlTool"));
-        Assert.Equal(LogLevel.Debug, LogLevels.Resolve(options, development: true, file: null).For("SqlTool"));
+        Assert.Equal(LogLevel.Information, Lowest(LogLevels.Resolve(options, development: false, file: null), "SqlTool"));
+        Assert.Equal(LogLevel.Debug, Lowest(LogLevels.Resolve(options, development: true, file: null), "SqlTool"));
     }
 
     [Fact]
@@ -40,10 +40,12 @@ public sealed class LogLevelsTests : IDisposable
             .Level("SqlTool.*.Jobs", LogLevel.Trace);
         var levels = LogLevels.Resolve(options, development: false, file: null);
 
+        // The last: Microsoft.Extensions.Logging lets a wildcard's prefix and suffix overlap, so "SqlTool.*.Jobs" also
+        // matches "SqlTool.Jobs".
         Assert.Equal(
-            [LogLevel.Warning, LogLevel.Information, LogLevel.Debug, LogLevel.Debug, LogLevel.Trace, LogLevel.Information],
+            [LogLevel.Warning, LogLevel.Information, LogLevel.Debug, LogLevel.Debug, LogLevel.Trace, LogLevel.Trace],
             new[] { "Spar.Host", "SqlTool.Monitor", "SqlTool.Copy", "SqlTool.CopyJobs", "SqlTool.Recipes.Jobs", "SqlTool.Jobs" }
-                .Select(levels.For));
+                .Select(category => Lowest(levels, category)));
     }
 
     [Fact]
@@ -51,7 +53,7 @@ public sealed class LogLevelsTests : IDisposable
     {
         var options = new LoggingOptions().Level("SqlTool", LogLevel.Error).Level("SqlTool", LogLevel.Trace);
 
-        Assert.Equal(LogLevel.Trace, LogLevels.Resolve(options, development: false, file: null).For("SqlTool.Copy"));
+        Assert.Equal(LogLevel.Trace, Lowest(LogLevels.Resolve(options, development: false, file: null), "SqlTool.Copy"));
     }
 
     [Fact]
@@ -61,7 +63,7 @@ public sealed class LogLevelsTests : IDisposable
         var file = LoggingFile.Parse("""{"level":"Debug","categories":{"SqlTool.Copy":"Trace"}}"""u8, out _)!;
         var levels = LogLevels.Resolve(options, development: false, file);
 
-        Assert.Equal([LogLevel.Debug, LogLevel.Trace, LogLevel.Error], new[] { "App", "SqlTool.Copy", "SqlTool.Monitor" }.Select(levels.For));
+        Assert.Equal([LogLevel.Debug, LogLevel.Trace, LogLevel.Error], new[] { "App", "SqlTool.Copy", "SqlTool.Monitor" }.Select(category => Lowest(levels, category)));
     }
 
     [Fact]
@@ -160,6 +162,31 @@ public sealed class LogLevelsTests : IDisposable
         var levels = SparLogging.Levels(new LoggingOptions(), _root, development: false, out var problem);
 
         Assert.Null(problem);
-        Assert.Equal((LogLevel.Information, LogLevel.Trace), (levels.For("App"), levels.For("SqlTool.Copy")));
+        Assert.Equal((LogLevel.Information, LogLevel.Trace), (Lowest(levels, "App"), Lowest(levels, "SqlTool.Copy")));
+    }
+
+    /// <summary>The lowest level a category gets from these levels under Microsoft.Extensions.Logging's own rule selection.</summary>
+    private static LogLevel Lowest(LogLevels levels, string category)
+    {
+        using var factory = new LoggerFactory([new AnyProvider()], levels.ToFilterOptions());
+        var logger = factory.CreateLogger(category);
+        for (var level = LogLevel.Trace; level < LogLevel.None; level++)
+        {
+            if (logger.IsEnabled(level))
+            {
+                return level;
+            }
+        }
+
+        return LogLevel.None;
+    }
+
+    private sealed class AnyProvider : ILoggerProvider
+    {
+        public ILogger CreateLogger(string categoryName) => new CapturedLog();
+
+        public void Dispose()
+        {
+        }
     }
 }

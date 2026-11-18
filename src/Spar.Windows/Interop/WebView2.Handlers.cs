@@ -106,6 +106,13 @@ internal partial interface ICoreWebView2MoveFocusRequestedEventHandler
 }
 
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("e2fda4be-5456-406c-a261-3d452138362c")]
+internal partial interface ICoreWebView2DevToolsProtocolEventReceivedEventHandler
+{
+    void Invoke(nint sender, nint args);
+}
+
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
 [Guid("5c4889f0-5ef6-4c5a-952c-d8f1b92d0574")]
 internal partial interface ICoreWebView2CallDevToolsProtocolMethodCompletedHandler
 {

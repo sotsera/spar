@@ -1,0 +1,50 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=rejections:100000 SPAR_AUTOMATED=1]
+      79,3 | spar info +17.0 ms: [cd7b1bbb] Host started 57.0 ms after the process.
+      79,4 | spar info +19.0 ms: [cd7b1bbb] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-rejections-100k\com.example.tests.SecurityProbe.Development
+      79,4 | spar info +26.8 ms: [cd7b1bbb] single instance at 24.4 ms
+     141,8 | run: window moved offscreen
+     145,7 | spar info +28.5 ms: [cd7b1bbb] prerequisites checked at 28.5 ms
+     145,8 | spar info +40.4 ms: [cd7b1bbb] UI-thread stall probe on.
+     145,8 | spar info +49.8 ms: [cd7b1bbb] window shown at 49.8 ms
+     145,9 | spar info +50.1 ms: [cd7b1bbb] Theme dark (system), window #1f1f1f.
+     145,9 | spar info +52.5 ms: [cd7b1bbb] services built at 52.5 ms
+     145,9 | spar info +56.4 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     145,9 | spar info +75.9 ms: [cd7b1bbb] environment at 75.9 ms
+     145,9 | spar info +76.4 ms: [cd7b1bbb] WebView2 Runtime 157.0.4341.46
+     145,9 | spar info +76.8 ms: [cd7b1bbb] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-rejections-100k\com.example.tests.SecurityProbe.Development\WebView2
+     145,9 | spar info +88.5 ms: [cd7b1bbb] Heartbeat every 5000 ms.
+     145,9 | spar info +90.3 ms: [cd7b1bbb] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     145,9 | spar info +90.3 ms: [cd7b1bbb] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     381,0 | spar info +290.6 ms: [cd7b1bbb] controller at 290.6 ms
+     381,1 | spar info +296.1 ms: [cd7b1bbb] Browser settings read back (2.35 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     381,1 | spar info +327.9 ms: [cd7b1bbb] Development console: the page's console errors come from the DevTools Protocol.
+     381,1 | spar info +328.0 ms: [cd7b1bbb] Page file picker blocked in 31.6 ms (Page.enable 31.2 ms).
+     381,1 | spar info +328.1 ms: [cd7b1bbb] page script added at 328.1 ms
+     381,1 | spar info +328.4 ms: [cd7b1bbb] navigation started at 328.4 ms
+     490,0 | spar info +410.7 ms: [cd7b1bbb] Bridge: document 8d07efdd7db81eb5 opened.
+     490,0 | spar info +411.3 ms: [cd7b1bbb] Heartbeat armed for the new document.
+     490,0 | spar info +411.4 ms: [cd7b1bbb] first document at 411.4 ms
+     490,0 | spar info +419.6 ms: [cd7b1bbb] first bridge message at 419.6 ms
+     490,0 | spar info +424.6 ms: [cd7b1bbb] first navigation completed at 424.6 ms
+     490,0 | spar info +428.5 ms: [cd7b1bbb] 404 for /favicon.ico
+     490,0 | spar info +430.5 ms: [cd7b1bbb] first bridge reply at 430.5 ms
+     490,0 | spar info +430.8 ms: [cd7b1bbb] ui-ready at 430.8 ms
+     490,0 | spar info +430.9 ms: [cd7b1bbb] Bridge: document 8d07efdd7db81eb5 reported ui-ready.
+     820,9 | probe: rejections: first 1000 in 6.7 ms, the other 99000 in 276.3 ms
+    3132,0 | probe: done rejections:100000
+    3156,3 | run: found 'done rejections:100000'
+   15165,1 | run: app working set 51548 KiB, peak seen 51508 KiB, private 17416 KiB
+   15165,4 | run: WM_CLOSE
+   15413,1 | spar info +15114.9 ms: [cd7b1bbb] close requested (User, automated) at 15114.9 ms
+   15413,1 | spar info +15119.1 ms: [cd7b1bbb] closing at 15119.1 ms
+   15413,1 | spar info +15119.4 ms: [cd7b1bbb] Heartbeat: 3 ticks, 4 pings, longest tick on the UI thread 0.941 ms.
+   15413,1 | spar info +15120.2 ms: [cd7b1bbb] page close work done at 15120.2 ms
+   15413,1 | spar info +15120.8 ms: [cd7b1bbb] Bridge: document 8d07efdd7db81eb5 closed (window closing).
+   15413,1 | spar info +15120.9 ms: [cd7b1bbb] calls stopped at 15120.9 ms
+   15413,1 | spar info +15120.9 ms: [cd7b1bbb] calls settled at 15120.9 ms
+   15413,1 | spar info +15121.0 ms: [cd7b1bbb] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+   15413,1 | spar info +15134.8 ms: [cd7b1bbb] controller closed at 15134.8 ms
+   15413,1 | spar info +15137.9 ms: [cd7b1bbb] window destroyed at 15137.9 ms
+   15413,1 | spar info +15145.2 ms: [cd7b1bbb] services disposed at 15145.2 ms
+   15413,1 | spar info +15145.3 ms: [cd7b1bbb] exit 0 at 15145.2 ms
+   15413,3 | run: exit 0

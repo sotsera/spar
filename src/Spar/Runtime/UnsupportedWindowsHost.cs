@@ -35,9 +35,12 @@ public sealed partial class UnsupportedWindowsHost : ISparHost
         var line = StartupReport.Describe(problem);
         Console.Error.WriteLine("spar fail: " + line);
 
-        // The app's log file, through the same writer as the host's lines; closed (briefly flushed) before the exit.
-        var log = LogFile.Open(SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions).Logs);
-        log.Write(LogLevel.Error, SparLogging.HostCategory, line);
+        // The app's log file, through the same writer as the host's lines, unless the app writes none; closed (briefly
+        // flushed) before the exit.
+        var log = app.Builder.LoggingOptions.WritesFile
+            ? LogFile.Open(SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions).Logs)
+            : null;
+        log?.Write(LogLevel.Error, SparLogging.HostCategory, line);
         try
         {
             if (SparDevelopment.IsAutomatedFromEnvironment())
@@ -51,7 +54,7 @@ public sealed partial class UnsupportedWindowsHost : ISparHost
                 (message, exception) =>
                 {
                     Console.Error.WriteLine($"spar fail: {message}: {exception}");
-                    log.Write(LogLevel.Error, SparLogging.HostCategory, message, exception);
+                    log?.Write(LogLevel.Error, SparLogging.HostCategory, message, exception);
                 });
             if (!ownMessage)
             {
@@ -62,7 +65,7 @@ public sealed partial class UnsupportedWindowsHost : ISparHost
         }
         finally
         {
-            log.Close();
+            log?.Close();
         }
     }
 

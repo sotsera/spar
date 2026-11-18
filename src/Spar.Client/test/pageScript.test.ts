@@ -36,6 +36,7 @@ function run(options: {
   maxViolations?: number;
   maxErrorGroups?: number;
   maxErrors?: number;
+  wrapConsole?: boolean;
 } = {}): Fake {
   const posted: string[] = [];
   const logged: unknown[][] = [];
@@ -70,7 +71,8 @@ function run(options: {
     .replace("__SPAR_REPORT_MAX_GROUPS__", String(options.maxGroups ?? 100))
     .replace("__SPAR_REPORT_MAX_VIOLATIONS__", String(options.maxViolations ?? 1_000_000))
     .replace("__SPAR_ERROR_MAX_GROUPS__", String(options.maxErrorGroups ?? 100))
-    .replace("__SPAR_ERROR_MAX_ERRORS__", String(options.maxErrors ?? 1_000_000));
+    .replace("__SPAR_ERROR_MAX_ERRORS__", String(options.maxErrors ?? 1_000_000))
+    .replace("__SPAR_WRAP_CONSOLE__", String(options.wrapConsole ?? true));
   const globals = { chrome: { webview }, console: fakeConsole };
   const location = { origin: options.origin ?? "https://app.localhost" };
   new Function("globalThis", "location", "window", "performance", "setTimeout", "Event", text)(
@@ -395,5 +397,20 @@ describe("the place of a console error", () => {
     expect(stack.startsWith("    at ")).toBe(true);
     expect(stack).not.toContain("onConsole");
     expect(stack).toContain("pageScript.test.ts");
+  });
+});
+
+describe("a Development build", () => {
+  test("leaves console.error unwrapped, since the host reads it from the DevTools Protocol, and still reports exceptions", () => {
+    vi.useFakeTimers();
+    const page = run({ wrapConsole: false });
+    const original = page.console.error;
+
+    page.console.error("not reported by the script");
+    page.dispatch("error", { message: "Uncaught Error: boom", filename: "https://app.localhost/a.js", lineno: 1, colno: 2 });
+    vi.advanceTimersByTime(100);
+
+    expect(page.console.error).toBe(original);
+    expect(errorBatches(page.posted)[0]!.groups.map(g => g["kind"])).toEqual(["error"]);
   });
 });

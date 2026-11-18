@@ -73,3 +73,49 @@ From the ILC map (`-p:IlcGenerateMapFile=true`) of the final build's predecessor
 - DevTools in Development: where the console links a wrapped `console.error` (a row of "Checks that need the user at the PC").
 - "Exit now" after this step (a prompt on the desktop): its code is unchanged, and the file it closes now holds every line.
 - A full disk, an unwritable logs folder, a dropped-entries line from a real app (unit-tested only), a `logging.json` on a real run, `KeepData` with the test's file, the Windows Sandbox focus runner's change to read `app.log` (not run).
+
+## Follow-up (2026-11-18): Microsoft.Extensions.Logging, no file, the Development console
+
+Decision "Logging's follow-up choices (user decisions)", record "Logging's follow-up (implementation record)". Spar's own factory is gone: the app's services use Microsoft.Extensions.Logging's `LoggerFactory`, and Spar's levels are its filter rules (`LogLevels.Apply`). `spar.Logging(l => l.WithoutFile())` adds no file. A Development build reads `console.error` from `Runtime.consoleAPICalled` (`src/Spar.Windows/DevelopmentConsole.cs`) and the injected script leaves it unwrapped there. Runs as above (`scenarios.sh follow-up`, `aot`, `dev`, `notebook`); logs in [`m1b-logging/logs/follow-up/`](m1b-logging/logs/follow-up/).
+
+### Size
+
+| Variant | Notebook (no logging of its own) | SecurityProbe | SecurityProbe with its own `AddLogging(… SetMinimumLevel(Warning))` | `spar.Logging` levels hold |
+|---|---|---|---|---|
+| Step 6, before logging | 5,010,944 B | – | – | – |
+| (a) Spar's own factory, the app's factory wins if added | 5,103,616 B | 4,330,496 B | not built (the probe would need the package itself) | not under the app's factory (its minimum applies first) |
+| (b) Microsoft.Extensions.Logging always (adopted) | **5,182,464 B** (+78,848 B over (a)) | 4,409,856 B | 4,411,392 B (+1,536 B) | yes, with and without the app's `AddLogging` |
+| (b) with `WithoutFile()` | – | 4,410,368 B | – | – |
+
+The Development console adds nothing to Production: the Notebook was 5,182,464 B before and after it. Measured earlier, the factory alone on step 6's Notebook: `AddLogging()` +90,624 B, with one rule +96,256 B. (c), the hybrid (Spar's factory unless the app adds Microsoft's), was not measured: the user judged the 79 KB not worth a factory of Spar's own.
+
+### Start-up
+
+Host start to `ui-ready` (the host's own clock), the published Notebook offscreen with `LOCALAPPDATA` under `artifacts/`, 8 runs a round, the first left out, median of the other 7 (`logs/follow-up/startup/`):
+
+| Build | Round 1 | Round 2 | Round 3 |
+|---|---|---|---|
+| Before (5,103,616 B, Spar's own factory) | 418.8 ms | 388.5 ms | 412.3 ms |
+| After (5,182,464 B, Microsoft.Extensions.Logging) | 414.8 ms | 376.5 ms | – |
+
+No difference beyond the runs' spread (360–450 ms). The services' build moved from 2.2–2.3 ms to 2.8–2.9 ms after the host's start (median of the same runs).
+
+### The levels hold
+
+- `aot-add-logging`: the probe built with its own `AddLogging(logging => logging.SetMinimumLevel(LogLevel.Warning))` and `spar.Logging(l => l.Level("SecurityProbe", LogLevel.Debug))`: its Debug line `DEBUG SecurityProbe.ProbeService  The page asked for its probe: idle` is in `app.log`.
+- `aot-plain-idle`: the plain probe at the default Information: no Debug line. `aot-logging-json`: the same build with `{"categories":{"SecurityProbe":"Debug"}}` in its data root: the Debug line is there.
+- Unit tests: `LogFileTests` (`Spars_levels_hold_without_the_apps_own_logging…`, `…under_the_apps_own_AddLogging_whose_minimum_they_replace` with a second provider getting the same lines, `Logging_json_asking_for_Debug_reaches_an_app_category_under_the_apps_own_AddLogging`, `A_rule_the_app_adds_for_one_provider_still_applies_to_it` through the alias `SparFile`, `The_hosts_early_logger_filters_as_the_services_will`), and `LogLevelsTests` through `LoggerFactory`'s own rule selection.
+
+### Without a file
+
+`aot-without-file` (the probe with `WithoutFile()`, `page-errors`): no `app.log` and no logs folder in the run's data root; standard error had the host's 40 lines as before.
+
+### The Development console
+
+- `dev-console-devtools` and `dev-page-errors` (Development, `page-errors`): the `console.error` line is `ERROR Spar.Page  console.error at https://app.localhost/assets/index-….js:6:4346: probe: the settings could not be read SyntaxError: …`, the same place the Production wrapper reported (`aot-page-errors`: `:6:4346`), with the `SyntaxError`'s stack; the uncaught exception and the rejection come from the script as before, and each error is reported once. The host logged "Development console: the page's console errors come from the DevTools Protocol."
+- Floods, Development (two runs each): 99,000 identical `console.error` calls with an `Error` 2.58–2.79 s of page time (0.44–0.47 s before, with the wrapper past its bound), 99,000 distinct 0.90 s (0.37–0.42 s); uncaught errors 2.63–2.71 s (0.42–0.58 s) and rejections 0.26–0.28 s (0.17 s), since `Runtime.enable` makes the renderer serialize every console call and exception for the session (pitfall). The log is as before: 1 or 100 error lines, "stopped reporting", a summary, totals. No stall; the heartbeat's longest tick 0.64–0.94 ms. The app process's working set 92 MB at the end of a console flood (50–52 MB before), from the events' JSON.
+- Production (`aot-*`): unchanged, through the wrapper.
+
+### Not verified (follow-up)
+
+The devtools window's own display of a console error (its link now comes from the page's own stack, with no wrapper in Development); a document's navigation with `Runtime.enable` kept (one document per run here); Microsoft.Extensions.Logging's alias rule on a NativeAOT image (unit-tested on CoreCLR); the measured (c) hybrid.

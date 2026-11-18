@@ -43,6 +43,26 @@ internal partial interface ICoreWebView2Deferral
     void Complete();
 }
 
+/// <summary>
+/// <c>ICoreWebView2DevToolsProtocolEventReceiver</c> (slots 3–4): one DevTools Protocol event of the WebView. Only the
+/// Development build's console (<c>DevelopmentConsole</c>) uses it, so a Production image carries no call to it.
+/// </summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("b32ca51a-8371-45e9-9317-af021d080367")]
+internal partial interface ICoreWebView2DevToolsProtocolEventReceiver
+{
+    EventRegistrationToken AddDevToolsProtocolEventReceived(ICoreWebView2DevToolsProtocolEventReceivedEventHandler handler);
+    void RemoveDevToolsProtocolEventReceived(EventRegistrationToken token);
+}
+
+/// <summary><c>ICoreWebView2DevToolsProtocolEventReceivedEventArgs</c> (slot 3): the event's parameters as JSON.</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("653c2959-bb3a-4377-8632-b58ada4e66c4")]
+internal partial interface ICoreWebView2DevToolsProtocolEventReceivedEventArgs
+{
+    string GetParameterObjectAsJson();
+}
+
 /// <summary><c>ICoreWebView2WebMessageReceivedEventArgs</c> (slots 3–5).</summary>
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("0f99a40c-e962-4207-9e92-e3d542eff849")]

@@ -64,12 +64,12 @@ internal sealed class HostLog
 
     /// <summary>
     /// Writes every line to the app's log file in <paramref name="logsFolder"/> too, from now on (before anything can
-    /// fail at start-up), at the run's levels. The app's services get the same file (<see cref="SparLogging.AddFile"/>).
+    /// fail at start-up), at the run's levels. The app's services get the same file (<see cref="SparLogging.Add"/>).
     /// </summary>
     public void UseFile(string logsFolder, LogLevels levels)
     {
         _file ??= LogFile.Open(logsFolder);
-        _fileLogger = new FileLogger(_file, SparLogging.HostCategory, levels.For(SparLogging.HostCategory));
+        _fileLogger = SparLogging.EarlyLogger(_file, levels, SparLogging.HostCategory);
     }
 
     /// <summary>Ends the log file: what was logged reaches the disk, within a short limit. Called once, at process exit.</summary>

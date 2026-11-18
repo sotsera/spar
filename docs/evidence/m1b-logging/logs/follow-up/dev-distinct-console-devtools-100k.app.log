@@ -1,0 +1,446 @@
+2026-11-18T07:05:04.476Z INFO  Spar.Host  [bc5cdad7] Host started 55.5 ms after the process.
+2026-11-18T07:05:04.476Z INFO  Spar.Host  [bc5cdad7] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-distinct-console-devtools-100k\com.example.tests.SecurityProbe.Development
+2026-11-18T07:05:04.484Z INFO  Spar.Host  [bc5cdad7] single instance at 23.7 ms
+2026-11-18T07:05:04.485Z INFO  Spar.Host  [bc5cdad7] prerequisites checked at 27.7 ms
+2026-11-18T07:05:04.494Z INFO  Spar.Host  [bc5cdad7] UI-thread stall probe on.
+2026-11-18T07:05:04.504Z INFO  Spar.Host  [bc5cdad7] window shown at 46.3 ms
+2026-11-18T07:05:04.504Z INFO  Spar.Host  [bc5cdad7] Theme dark (system), window #1f1f1f.
+2026-11-18T07:05:04.508Z INFO  Spar.Host  [bc5cdad7] services built at 50.6 ms
+2026-11-18T07:05:04.514Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-18T07:05:04.530Z INFO  Spar.Host  [bc5cdad7] environment at 72.4 ms
+2026-11-18T07:05:04.530Z INFO  Spar.Host  [bc5cdad7] WebView2 Runtime 157.0.4341.46
+2026-11-18T07:05:04.531Z INFO  Spar.Host  [bc5cdad7] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-distinct-console-devtools-100k\com.example.tests.SecurityProbe.Development\WebView2
+2026-11-18T07:05:04.542Z INFO  Spar.Host  [bc5cdad7] Heartbeat every 5000 ms.
+2026-11-18T07:05:04.544Z INFO  Spar.Host  [bc5cdad7] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-18T07:05:04.544Z INFO  Spar.Host  [bc5cdad7] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-18T07:05:04.713Z INFO  Spar.Host  [bc5cdad7] controller at 255.5 ms
+2026-11-18T07:05:04.717Z INFO  Spar.Host  [bc5cdad7] Browser settings read back (1.72 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-18T07:05:04.758Z INFO  Spar.Host  [bc5cdad7] Development console: the page's console errors come from the DevTools Protocol.
+2026-11-18T07:05:04.758Z INFO  Spar.Host  [bc5cdad7] Page file picker blocked in 40.3 ms (Page.enable 39.8 ms).
+2026-11-18T07:05:04.758Z INFO  Spar.Host  [bc5cdad7] page script added at 300.4 ms
+2026-11-18T07:05:04.759Z INFO  Spar.Host  [bc5cdad7] navigation started at 301 ms
+2026-11-18T07:05:04.830Z INFO  Spar.Host  [bc5cdad7] Bridge: document f5a64fc08dfe68f8 opened.
+2026-11-18T07:05:04.830Z INFO  Spar.Host  [bc5cdad7] Heartbeat armed for the new document.
+2026-11-18T07:05:04.830Z INFO  Spar.Host  [bc5cdad7] first document at 372.6 ms
+2026-11-18T07:05:04.835Z INFO  Spar.Host  [bc5cdad7] first bridge message at 377.5 ms
+2026-11-18T07:05:04.839Z INFO  Spar.Host  [bc5cdad7] first navigation completed at 381.1 ms
+2026-11-18T07:05:04.841Z INFO  Spar.Host  [bc5cdad7] 404 for /favicon.ico
+2026-11-18T07:05:04.843Z INFO  Spar.Host  [bc5cdad7] first bridge reply at 385.2 ms
+2026-11-18T07:05:04.843Z INFO  Spar.Host  [bc5cdad7] ui-ready at 385.5 ms
+2026-11-18T07:05:04.843Z INFO  Spar.Host  [bc5cdad7] Bridge: document f5a64fc08dfe68f8 reported ui-ready.
+2026-11-18T07:05:04.857Z DEBUG SecurityProbe.ProbeService  The page asked for its probe: distinct-console:100000
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 0
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 1
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 2
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 3
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 4
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 5
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 6
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 7
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 8
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 9
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 10
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 11
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 12
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 13
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 14
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 15
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 16
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 17
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 18
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 19
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 20
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 21
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 22
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 23
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 24
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 25
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 26
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 27
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 28
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 29
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 30
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 31
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 32
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 33
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 34
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 35
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 36
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 37
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 38
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 39
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 40
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 41
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 42
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 43
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 44
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 45
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 46
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 47
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 48
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 49
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 50
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 51
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 52
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 53
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 54
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 55
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 56
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 57
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 58
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 59
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 60
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 61
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 62
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 63
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 64
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 65
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 66
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 67
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 68
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 69
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 70
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 71
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 72
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 73
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 74
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 75
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 76
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 77
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 78
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 79
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 80
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 81
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 82
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 83
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 84
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 85
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 86
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 87
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 88
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 89
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 90
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 91
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 92
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 93
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 94
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 95
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 96
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 97
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 98
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:04.870Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3506: probe console error 99
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3506)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:6:3926)
+        at <anonymous> (https://app.localhost/assets/index-B_HLBId8.js:7:3501)
+2026-11-18T07:05:05.916Z WARN  Spar.Page  The page raised so many errors that Spar stopped reporting them in this document
+2026-11-18T07:05:14.546Z INFO  Spar.Page  The page's errors in the last 9.7 s: past the group limit: 900
+2026-11-18T07:05:17.850Z INFO  Spar.Host  [bc5cdad7] close requested (User, automated) at 13392 ms
+2026-11-18T07:05:17.854Z INFO  Spar.Host  [bc5cdad7] closing at 13396.1 ms
+2026-11-18T07:05:17.854Z INFO  Spar.Host  [bc5cdad7] Heartbeat: 2 ticks, 3 pings, longest tick on the UI thread 0.698 ms.
+2026-11-18T07:05:17.855Z INFO  Spar.Host  [bc5cdad7] page close work done at 13397.2 ms
+2026-11-18T07:05:17.855Z INFO  Spar.Host  [bc5cdad7] Bridge: document f5a64fc08dfe68f8 closed (window closing).
+2026-11-18T07:05:17.856Z INFO  Spar.Host  [bc5cdad7] calls stopped at 13397.9 ms
+2026-11-18T07:05:17.856Z INFO  Spar.Host  [bc5cdad7] calls settled at 13398 ms
+2026-11-18T07:05:17.856Z INFO  Spar.Host  [bc5cdad7] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-18T07:05:17.870Z INFO  Spar.Host  [bc5cdad7] controller closed at 13412.9 ms
+2026-11-18T07:05:17.874Z INFO  Spar.Host  [bc5cdad7] window destroyed at 13416.1 ms
+2026-11-18T07:05:17.881Z INFO  Spar.Page  The page's error reports in this run: 2 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-18T07:05:17.882Z INFO  Spar.Host  [bc5cdad7] services disposed at 13424 ms
+2026-11-18T07:05:17.882Z INFO  Spar.Host  [bc5cdad7] exit 0 at 13424.1 ms

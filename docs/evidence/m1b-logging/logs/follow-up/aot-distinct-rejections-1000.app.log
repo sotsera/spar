@@ -1,0 +1,542 @@
+2026-11-18T07:02:52.763Z INFO  Spar.Host  [2c10a88d] Host started 20.0 ms after the process.
+2026-11-18T07:02:52.763Z INFO  Spar.Host  [2c10a88d] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-distinct-rejections-1000\com.example.tests.SecurityProbe
+2026-11-18T07:02:52.764Z INFO  Spar.Host  [2c10a88d] single instance at 1.6 ms
+2026-11-18T07:02:52.764Z INFO  Spar.Host  [2c10a88d] prerequisites checked at 1.9 ms
+2026-11-18T07:02:52.765Z INFO  Spar.Host  [2c10a88d] services built at 2.8 ms
+2026-11-18T07:02:52.771Z INFO  Spar.Host  [2c10a88d] window shown at 8.8 ms
+2026-11-18T07:02:52.771Z INFO  Spar.Host  [2c10a88d] Theme dark (system), window #1f1f1f.
+2026-11-18T07:02:52.772Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-18T07:02:52.776Z INFO  Spar.Host  [2c10a88d] environment at 13.7 ms
+2026-11-18T07:02:52.776Z INFO  Spar.Host  [2c10a88d] WebView2 Runtime 157.0.4341.46
+2026-11-18T07:02:52.776Z INFO  Spar.Host  [2c10a88d] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-distinct-rejections-1000\com.example.tests.SecurityProbe\WebView2
+2026-11-18T07:02:52.779Z INFO  Spar.Host  [2c10a88d] Heartbeat every 5000 ms.
+2026-11-18T07:02:52.779Z INFO  Spar.Host  [2c10a88d] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-18T07:02:52.779Z INFO  Spar.Host  [2c10a88d] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-18T07:02:52.972Z INFO  Spar.Host  [2c10a88d] controller at 209.5 ms
+2026-11-18T07:02:52.972Z INFO  Spar.Host  [2c10a88d] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-18T07:02:53.023Z INFO  Spar.Host  [2c10a88d] Page file picker blocked in 50.9 ms (Page.enable 50.3 ms).
+2026-11-18T07:02:53.023Z INFO  Spar.Host  [2c10a88d] page script added at 260.5 ms
+2026-11-18T07:02:53.023Z INFO  Spar.Host  [2c10a88d] navigation started at 260.6 ms
+2026-11-18T07:02:53.077Z INFO  Spar.Host  [2c10a88d] Bridge: document 4d8c70f345742f6c opened.
+2026-11-18T07:02:53.077Z INFO  Spar.Host  [2c10a88d] Heartbeat armed for the new document.
+2026-11-18T07:02:53.077Z INFO  Spar.Host  [2c10a88d] first document at 314.9 ms
+2026-11-18T07:02:53.084Z INFO  Spar.Host  [2c10a88d] first bridge message at 321.7 ms
+2026-11-18T07:02:53.084Z INFO  Spar.Host  [2c10a88d] first bridge reply at 321.8 ms
+2026-11-18T07:02:53.084Z INFO  Spar.Host  [2c10a88d] ui-ready at 321.8 ms
+2026-11-18T07:02:53.084Z INFO  Spar.Host  [2c10a88d] Bridge: document 4d8c70f345742f6c reported ui-ready.
+2026-11-18T07:02:53.087Z INFO  Spar.Host  [2c10a88d] first navigation completed at 324.8 ms
+2026-11-18T07:02:53.099Z INFO  Spar.Host  [2c10a88d] 404 for /favicon.ico
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 0
+    Error: probe rejection 0
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 1
+    Error: probe rejection 1
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 2
+    Error: probe rejection 2
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 3
+    Error: probe rejection 3
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 4
+    Error: probe rejection 4
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 5
+    Error: probe rejection 5
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 6
+    Error: probe rejection 6
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 7
+    Error: probe rejection 7
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 8
+    Error: probe rejection 8
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 9
+    Error: probe rejection 9
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 10
+    Error: probe rejection 10
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 11
+    Error: probe rejection 11
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 12
+    Error: probe rejection 12
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 13
+    Error: probe rejection 13
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 14
+    Error: probe rejection 14
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 15
+    Error: probe rejection 15
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 16
+    Error: probe rejection 16
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 17
+    Error: probe rejection 17
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 18
+    Error: probe rejection 18
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 19
+    Error: probe rejection 19
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 20
+    Error: probe rejection 20
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 21
+    Error: probe rejection 21
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 22
+    Error: probe rejection 22
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 23
+    Error: probe rejection 23
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 24
+    Error: probe rejection 24
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 25
+    Error: probe rejection 25
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 26
+    Error: probe rejection 26
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 27
+    Error: probe rejection 27
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 28
+    Error: probe rejection 28
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 29
+    Error: probe rejection 29
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 30
+    Error: probe rejection 30
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 31
+    Error: probe rejection 31
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 32
+    Error: probe rejection 32
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 33
+    Error: probe rejection 33
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 34
+    Error: probe rejection 34
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 35
+    Error: probe rejection 35
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 36
+    Error: probe rejection 36
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 37
+    Error: probe rejection 37
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 38
+    Error: probe rejection 38
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 39
+    Error: probe rejection 39
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 40
+    Error: probe rejection 40
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 41
+    Error: probe rejection 41
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 42
+    Error: probe rejection 42
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 43
+    Error: probe rejection 43
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 44
+    Error: probe rejection 44
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 45
+    Error: probe rejection 45
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 46
+    Error: probe rejection 46
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 47
+    Error: probe rejection 47
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 48
+    Error: probe rejection 48
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 49
+    Error: probe rejection 49
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 50
+    Error: probe rejection 50
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 51
+    Error: probe rejection 51
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 52
+    Error: probe rejection 52
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 53
+    Error: probe rejection 53
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 54
+    Error: probe rejection 54
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 55
+    Error: probe rejection 55
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 56
+    Error: probe rejection 56
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 57
+    Error: probe rejection 57
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 58
+    Error: probe rejection 58
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 59
+    Error: probe rejection 59
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 60
+    Error: probe rejection 60
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 61
+    Error: probe rejection 61
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 62
+    Error: probe rejection 62
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 63
+    Error: probe rejection 63
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 64
+    Error: probe rejection 64
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 65
+    Error: probe rejection 65
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 66
+    Error: probe rejection 66
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 67
+    Error: probe rejection 67
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 68
+    Error: probe rejection 68
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 69
+    Error: probe rejection 69
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 70
+    Error: probe rejection 70
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 71
+    Error: probe rejection 71
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 72
+    Error: probe rejection 72
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 73
+    Error: probe rejection 73
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 74
+    Error: probe rejection 74
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 75
+    Error: probe rejection 75
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 76
+    Error: probe rejection 76
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 77
+    Error: probe rejection 77
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 78
+    Error: probe rejection 78
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 79
+    Error: probe rejection 79
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 80
+    Error: probe rejection 80
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 81
+    Error: probe rejection 81
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 82
+    Error: probe rejection 82
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 83
+    Error: probe rejection 83
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 84
+    Error: probe rejection 84
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 85
+    Error: probe rejection 85
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 86
+    Error: probe rejection 86
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 87
+    Error: probe rejection 87
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 88
+    Error: probe rejection 88
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 89
+    Error: probe rejection 89
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 90
+    Error: probe rejection 90
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 91
+    Error: probe rejection 91
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 92
+    Error: probe rejection 92
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 93
+    Error: probe rejection 93
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 94
+    Error: probe rejection 94
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 95
+    Error: probe rejection 95
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 96
+    Error: probe rejection 96
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 97
+    Error: probe rejection 97
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 98
+    Error: probe rejection 98
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:53.191Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:3766: Error: probe rejection 99
+    Error: probe rejection 99
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3766
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:55.193Z INFO  Spar.Host  [2c10a88d] close requested (User) at 2431.1 ms
+2026-11-18T07:02:55.194Z INFO  Spar.Host  [2c10a88d] closing at 2431.5 ms
+2026-11-18T07:02:55.194Z INFO  Spar.Host  [2c10a88d] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-18T07:02:55.194Z INFO  Spar.Host  [2c10a88d] page close work done at 2431.8 ms
+2026-11-18T07:02:55.194Z INFO  Spar.Host  [2c10a88d] Bridge: document 4d8c70f345742f6c closed (window closing).
+2026-11-18T07:02:55.194Z INFO  Spar.Host  [2c10a88d] calls stopped at 2431.8 ms
+2026-11-18T07:02:55.194Z INFO  Spar.Host  [2c10a88d] calls settled at 2431.8 ms
+2026-11-18T07:02:55.194Z INFO  Spar.Host  [2c10a88d] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-18T07:02:55.207Z INFO  Spar.Host  [2c10a88d] controller closed at 2445 ms
+2026-11-18T07:02:55.210Z INFO  Spar.Host  [2c10a88d] window destroyed at 2447.3 ms
+2026-11-18T07:02:55.212Z INFO  Spar.Page  The page's errors in the last 2.1 s: past the group limit: 900
+2026-11-18T07:02:55.212Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-18T07:02:55.212Z INFO  Spar.Host  [2c10a88d] services disposed at 2450 ms
+2026-11-18T07:02:55.212Z INFO  Spar.Host  [2c10a88d] exit 0 at 2450 ms

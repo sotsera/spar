@@ -50,7 +50,7 @@ internal sealed class PageErrorLog : IAsyncDisposable
 
     private static readonly Action<ILogger, Exception?> Stopped = LoggerMessage.Define(
         LogLevel.Warning, new EventId(6, "PageErrorsStopped"),
-        "The page raised so many errors that Spar's script stopped reporting them in this document");
+        "The page raised so many errors that Spar stopped reporting them in this document");
 
     private readonly ILogger _logger;
     private readonly TimeProvider _time;

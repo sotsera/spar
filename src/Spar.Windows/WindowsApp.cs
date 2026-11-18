@@ -93,8 +93,14 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     public int Run()
     {
         // The levels first, so the host's first line is filtered as the app asked; logging.json is a small local file.
-        _levels = SparLogging.Levels(_app.Builder.LoggingOptions, _folders.DataRoot, SparDevelopment.IsSupported, out var problem);
-        _log.UseFile(_folders.Logs, _levels);
+        // Without a file (spar.Logging(l => l.WithoutFile())), the host's early lines go to standard error only.
+        var logging = _app.Builder.LoggingOptions;
+        _levels = SparLogging.Levels(logging, _folders.DataRoot, SparDevelopment.IsSupported, out var problem);
+        if (logging.WritesFile)
+        {
+            _log.UseFile(_folders.Logs, _levels);
+        }
+
         _log.Info($"Host started {HostLog.ProcessAgeMilliseconds():0.0} ms after the process.");
         if (problem is not null)
         {
@@ -254,8 +260,8 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         builder.Services.AddSingleton(_profile);
 
         // The app's loggers write to the file the host opened at its start; the host closes it at process exit.
-        var file = _log.File!;
-        SparLogging.AddFile(builder.Services, () => file, _levels!, ownsFile: false);
+        Func<LogFile>? file = _log.File is { } opened ? () => opened : null;
+        SparLogging.Add(builder.Services, _levels!, file, ownsFile: false);
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, folders, builder.BridgeOptions.Freeze());
         if (SparDevelopment.IsSupported)
         {

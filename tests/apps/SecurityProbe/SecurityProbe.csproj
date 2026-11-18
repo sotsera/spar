@@ -20,5 +20,9 @@
 
     <!-- -p:SecurityProbeOptIns=true builds the probe with every browser opt-in (docs/evidence/m1b-security-defaults.md). -->
     <DefineConstants Condition="'$(SecurityProbeOptIns)' == 'true'">$(DefineConstants);PROBE_OPT_INS</DefineConstants>
+
+    <!-- -p:SecurityProbeAddLogging=true adds the app's own AddLogging, -p:SecurityProbeWithoutFile=true spar.Logging(l => l.WithoutFile()). -->
+    <DefineConstants Condition="'$(SecurityProbeAddLogging)' == 'true'">$(DefineConstants);PROBE_ADD_LOGGING</DefineConstants>
+    <DefineConstants Condition="'$(SecurityProbeWithoutFile)' == 'true'">$(DefineConstants);PROBE_WITHOUT_FILE</DefineConstants>
   </PropertyGroup>
 </Project>

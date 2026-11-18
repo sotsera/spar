@@ -133,10 +133,10 @@ public sealed class LogFileTests : IDisposable
     }
 
     [Fact]
-    public void Writing_costs_the_caller_a_few_microseconds_and_never_waits_for_the_disk()
+    public async Task Writing_costs_the_caller_a_few_microseconds_and_never_waits_for_the_disk()
     {
-        var file = LogFile.Open(_root);
-        var logger = new FileLogger(file, "App", LogLevel.Information);
+        await using var provider = Services(new LoggingOptions(), configureApp: null);
+        var logger = provider.GetRequiredService<ILogger<LogFileTests>>();
         for (var i = 0; i < 1_000; i++)
         {
             logger.LogInformation("Warm-up {Index}", i);
@@ -150,8 +150,6 @@ public sealed class LogFileTests : IDisposable
         }
 
         var perLine = clock.Elapsed.TotalMicroseconds / count;
-        file.Close();
-
         TestContext.Current.TestOutputHelper?.WriteLine($"Caller's cost per line: {perLine:0.00} µs ({count} lines)");
         Assert.True(perLine < 50, $"A line cost the caller {perLine:0.00} µs.");
     }
@@ -172,56 +170,117 @@ public sealed class LogFileTests : IDisposable
     }
 
     [Fact]
-    public async Task The_apps_loggers_write_to_the_file_at_the_files_levels_and_the_services_close_it()
+    public async Task Spars_levels_hold_without_the_apps_own_logging_and_the_services_close_the_file()
+    {
+        var options = new LoggingOptions().Level(LogLevel.Information).Level("SqlTool.Copy", LogLevel.Debug);
+
+        await using (var provider = Services(options, configureApp: null))
+        {
+            WriteLines(provider);
+        }
+
+        Assert.Equal(["INFO  " + typeof(LogFileTests).FullName + "  typed 1", "DEBUG SqlTool.Copy.Jobs  debug of a copy"], FileLines());
+    }
+
+    [Fact]
+    public async Task Spars_levels_hold_under_the_apps_own_AddLogging_whose_minimum_they_replace()
+    {
+        // The app's own configuration sets Warning; spar.Logging's levels are configured after it and win.
+        var options = new LoggingOptions().Level(LogLevel.Information).Level("SqlTool.Copy", LogLevel.Debug);
+        var other = new CapturedLog();
+
+        await using (var provider = Services(options, services => services.AddLogging(logging => logging
+            .SetMinimumLevel(LogLevel.Warning)
+            .AddProvider(new CapturedProvider(other)))))
+        {
+            WriteLines(provider);
+        }
+
+        Assert.Equal(["INFO  " + typeof(LogFileTests).FullName + "  typed 1", "DEBUG SqlTool.Copy.Jobs  debug of a copy"], FileLines());
+
+        // The levels are the app's: its other providers get the same lines.
+        Assert.Equal(["typed 1", "debug of a copy"], other.Entries.Select(e => e.Message));
+    }
+
+    [Fact]
+    public async Task Logging_json_asking_for_Debug_reaches_an_app_category_under_the_apps_own_AddLogging()
+    {
+        Directory.CreateDirectory(_root);
+        File.WriteAllText(Path.Combine(_root, LoggingFile.FileName), """{"categories":{"SqlTool.Other":"Debug"}}""");
+
+        await using (var provider = Services(new LoggingOptions(), services => services.AddLogging(l => l.SetMinimumLevel(LogLevel.Error))))
+        {
+            provider.GetRequiredService<ILoggerFactory>().CreateLogger("SqlTool.Other").LogDebug("asked for by support");
+            provider.GetRequiredService<ILoggerFactory>().CreateLogger("SqlTool.Monitor").LogDebug("not asked for");
+        }
+
+        Assert.Equal(["DEBUG SqlTool.Other  asked for by support"], FileLines());
+    }
+
+    [Fact]
+    public async Task A_rule_the_app_adds_for_one_provider_still_applies_to_it()
+    {
+        var options = new LoggingOptions().Level(LogLevel.Debug);
+
+        await using (var provider = Services(options, services => services.Configure<LoggerFilterOptions>(filters =>
+            filters.Rules.Add(new LoggerFilterRule("SparFile", "Noisy", LogLevel.Error, filter: null)))))
+        {
+            var factory = provider.GetRequiredService<ILoggerFactory>();
+            factory.CreateLogger("Noisy.Thing").LogWarning("kept out of the file");
+            factory.CreateLogger("Quiet").LogDebug("in the file");
+        }
+
+        Assert.Equal(["DEBUG Quiet  in the file"], FileLines());
+    }
+
+    [Fact]
+    public void Without_the_file_no_provider_is_added_and_no_file_is_written()
     {
         var services = new ServiceCollection();
-        var levels = new LogLevels(LogLevel.Information, [new LogLevelRule("SqlTool.Copy", LogLevel.Debug)]);
-        SparLogging.AddFile(services, () => LogFile.Open(_root), levels, ownsFile: true);
-        SparLogging.AddFactory(services);
-        var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+        SparLogging.Add(services, LogLevels.BuildDefault(development: false), file: null, ownsFile: true);
+        using var provider = services.BuildServiceProvider();
 
+        provider.GetRequiredService<ILoggerFactory>().CreateLogger("App").LogError("nowhere to go");
+
+        Assert.Empty(provider.GetServices<ILoggerProvider>());
+        Assert.False(Directory.Exists(_root));
+    }
+
+    [Fact]
+    public void The_hosts_early_logger_filters_as_the_services_will()
+    {
+        var file = LogFile.Open(_root);
+        var levels = LogLevels.Resolve(new LoggingOptions().Level(LogLevel.Warning).Level("Spar.Host", LogLevel.Debug), false, null);
+
+        SparLogging.EarlyLogger(file, levels, SparLogging.HostCategory).LogDebug("early");
+        SparLogging.EarlyLogger(file, levels, "Other").LogInformation("filtered");
+        file.Close();
+
+        Assert.Equal(["DEBUG Spar.Host  early"], FileLines());
+    }
+
+    private ServiceProvider Services(LoggingOptions options, Action<IServiceCollection>? configureApp)
+    {
+        var services = new ServiceCollection();
+        configureApp?.Invoke(services);
+        var levels = SparLogging.Levels(options, _root, development: false, out _);
+        SparLogging.Add(services, levels, () => LogFile.Open(_root), ownsFile: true);
+        return services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+    }
+
+    private static void WriteLines(ServiceProvider provider)
+    {
         var typed = provider.GetRequiredService<ILogger<LogFileTests>>();
         var factory = provider.GetRequiredService<ILoggerFactory>();
         typed.LogDebug("not written");
         typed.LogInformation("typed {Value}", 1);
         factory.CreateLogger("SqlTool.Copy.Jobs").LogDebug("debug of a copy");
         factory.CreateLogger("SqlTool.Other").LogDebug("not written either");
-        await provider.DisposeAsync();
-
-        var lines = File.ReadAllLines(Path.Combine(_root, LogFile.FileName));
-        Assert.Equal(2, lines.Length);
-        Assert.EndsWith($"INFO  {typeof(LogFileTests).FullName}  typed 1", lines[0], StringComparison.Ordinal);
-        Assert.EndsWith("DEBUG SqlTool.Copy.Jobs  debug of a copy", lines[1], StringComparison.Ordinal);
     }
 
-    [Fact]
-    public void An_apps_own_factory_is_kept_and_gets_Spars_provider_from_the_services()
-    {
-        var services = new ServiceCollection();
-        var own = new CapturedLog();
-        services.AddSingleton<ILoggerFactory>(own);
-        SparLogging.AddFactory(services);
-        SparLogging.AddFile(services, () => LogFile.Open(_root), LogLevels.BuildDefault(development: false), ownsFile: true);
-        using var provider = services.BuildServiceProvider();
-
-        Assert.Same(own, provider.GetRequiredService<ILoggerFactory>());
-        Assert.IsType<SparFileLoggerProvider>(Assert.Single(provider.GetServices<ILoggerProvider>()));
-    }
-
-    [Fact]
-    public void Spars_factory_sends_each_line_to_every_provider_added_ones_included()
-    {
-        using var factory = new SparLoggerFactory([]);
-        var logger = factory.CreateLogger("App");
-        var added = new CapturedLog();
-
-        logger.LogInformation("before");
-        factory.AddProvider(new CapturedProvider(added));
-        logger.LogInformation("after");
-
-        Assert.Same(logger, factory.CreateLogger("App"));
-        Assert.Equal(["after"], added.Entries.Select(e => e.Message));
-    }
+    /// <summary>The file's lines after the time: level, category and message.</summary>
+    private string[] FileLines() =>
+        [.. File.ReadAllLines(Path.Combine(_root, LogFile.FileName)).Select(line => line[(line.IndexOf(' ', StringComparison.Ordinal) + 1)..])];
 
     private sealed class CapturedProvider(CapturedLog log) : ILoggerProvider
     {

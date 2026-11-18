@@ -11,11 +11,11 @@ internal sealed class LogLevelRule(string? category, LogLevel level)
 }
 
 /// <summary>
-/// The levels of the log file for this run: the build's default, the app's <c>spar.Logging(…)</c>, then the per-user
-/// <c>logging.json</c>, which overrides both (<see cref="LoggingFile"/>). A category gets the level of the longest
-/// rule it matches (case-insensitive prefix, with at most one <c>*</c>), the later of two equally long ones, and the
-/// default level when none matches: the rules of Microsoft.Extensions.Logging's filters, so a category means the same
-/// in Spar's file as in the app's other providers.
+/// The app's log levels for this run: the build's default, the app's <c>spar.Logging(…)</c>, then the per-user
+/// <c>logging.json</c>, which overrides both (<see cref="LoggingFile"/>). They become Microsoft.Extensions.Logging's
+/// filter rules (<see cref="Apply"/>): the default is the minimum level, and each category is a rule for every
+/// provider, matched as those rules match (a case-insensitive prefix, at most one <c>*</c>, the longest rule winning,
+/// the later of two equal ones). A rule the app adds for one provider still applies to that provider.
 /// </summary>
 internal sealed class LogLevels
 {
@@ -39,7 +39,10 @@ internal sealed class LogLevels
     /// <summary>The level of a category no rule matches.</summary>
     public LogLevel Default { get; }
 
-    /// <summary>The build's default levels, before any configuration: what a host uses until it has read them.</summary>
+    /// <summary>The category rules, in the order they apply: the app's, then the file's.</summary>
+    public IReadOnlyList<LogLevelRule> Rules => _rules;
+
+    /// <summary>The build's default levels, before any configuration.</summary>
     public static LogLevels BuildDefault(bool development) => new(development ? DevelopmentDefault : ProductionDefault, []);
 
     /// <summary>
@@ -58,19 +61,25 @@ internal sealed class LogLevels
         return new LogLevels(defaultLevel, rules);
     }
 
-    /// <summary>The lowest level written for <paramref name="category"/>.</summary>
-    public LogLevel For(string category)
+    /// <summary>
+    /// Writes these levels into the factory's filter options, after the app's own configuration: the minimum level,
+    /// and one rule per category for every provider, after the rules already there, so the later wins between equals.
+    /// </summary>
+    public void Apply(LoggerFilterOptions options)
     {
-        LogLevelRule? best = null;
+        options.MinLevel = Default;
         foreach (var rule in _rules)
         {
-            if (Matches(rule.Category!, category) && (best is null || rule.Category!.Length >= best.Category!.Length))
-            {
-                best = rule;
-            }
+            options.Rules.Add(new LoggerFilterRule(providerName: null, rule.Category, rule.Level, filter: null));
         }
+    }
 
-        return best?.Level ?? Default;
+    /// <summary>The filter options of these levels alone, for the host's lines before the app's services exist.</summary>
+    public LoggerFilterOptions ToFilterOptions()
+    {
+        var options = new LoggerFilterOptions();
+        Apply(options);
+        return options;
     }
 
     /// <summary>Throws for a value that is not a level.</summary>
@@ -82,7 +91,10 @@ internal sealed class LogLevels
         }
     }
 
-    /// <summary>Why a category name cannot be a rule, or null when it can.</summary>
+    /// <summary>
+    /// Why a category name cannot be a rule, or null when it can. Two stars would make Microsoft.Extensions.Logging
+    /// throw at the first logger, so they are refused here, where the app or the file can be told.
+    /// </summary>
     public static string? CategoryProblem(string? category)
     {
         if (string.IsNullOrWhiteSpace(category))
@@ -119,20 +131,5 @@ internal sealed class LogLevels
             _ => (LogLevel)(-1),
         };
         return level != (LogLevel)(-1);
-    }
-
-    private static bool Matches(string rule, string category)
-    {
-        var star = rule.IndexOf('*', StringComparison.Ordinal);
-        if (star < 0)
-        {
-            return category.StartsWith(rule, StringComparison.OrdinalIgnoreCase);
-        }
-
-        var prefix = rule.AsSpan(0, star);
-        var suffix = rule.AsSpan(star + 1);
-        return category.Length >= prefix.Length + suffix.Length
-            && category.AsSpan().StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-            && category.AsSpan().EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
     }
 }

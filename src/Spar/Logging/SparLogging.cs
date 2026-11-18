@@ -1,12 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Spar.Logging;
 
 /// <summary>
-/// How a host gives the app its logging (decision "Logging's public shape"): the levels of the run, read once at start,
-/// a logger factory unless the app brought its own, and the file's provider.
+/// How a host gives the app its logging (decision "Logging's public shape"): Microsoft.Extensions.Logging's factory,
+/// the run's levels as its filter rules, read once at start, and the log file's provider unless the app opted out.
 /// </summary>
 internal static class SparLogging
 {
@@ -25,20 +24,29 @@ internal static class SparLogging
     }
 
     /// <summary>
-    /// Spar's logger factory and <see cref="ILogger{TCategoryName}"/>, after the app's registrations, so an app that
-    /// called <c>AddLogging</c> keeps Microsoft.Extensions.Logging's factory.
+    /// The app's logging, after the app's own registrations: the factory (<c>AddLogging</c>, which an app may have
+    /// called already), the run's levels configured after the app's own filters, so they apply to every provider, and
+    /// the file's provider when <paramref name="file"/> is given. <paramref name="ownsFile"/> says whether the services
+    /// close the file when they are disposed (a test host) or the host does at process exit (a desktop host, whose last
+    /// lines come after the services are gone).
     /// </summary>
-    public static void AddFactory(IServiceCollection services)
+    public static void Add(IServiceCollection services, LogLevels levels, Func<LogFile>? file, bool ownsFile)
     {
-        services.TryAddSingleton<ILoggerFactory, SparLoggerFactory>();
-        services.TryAdd(ServiceDescriptor.Singleton(typeof(ILogger<>), typeof(Logger<>)));
+        services.AddLogging();
+        services.Configure<LoggerFilterOptions>(levels.Apply);
+        if (file is not null)
+        {
+            services.AddSingleton<ILoggerProvider>(_ => new SparFileLoggerProvider(file(), ownsFile));
+        }
     }
 
     /// <summary>
-    /// The log file's provider, created with the services' first logger. <paramref name="ownsFile"/> says whether the
-    /// services close the file when they are disposed (a test host) or the host does at process exit (a desktop host,
-    /// whose last lines come after the services are gone).
+    /// A logger for the host's lines before the app's services exist: the file's provider alone, behind a factory with
+    /// the same levels, so the first lines are filtered as the app asked.
     /// </summary>
-    public static void AddFile(IServiceCollection services, Func<LogFile> file, LogLevels levels, bool ownsFile) =>
-        services.AddSingleton<ILoggerProvider>(_ => new SparFileLoggerProvider(file(), levels, ownsFile));
+    public static ILogger EarlyLogger(LogFile file, LogLevels levels, string category)
+    {
+        var factory = new LoggerFactory([new SparFileLoggerProvider(file, ownsFile: false)], levels.ToFilterOptions());
+        return factory.CreateLogger(category);
+    }
 }

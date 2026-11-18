@@ -82,4 +82,13 @@ public sealed class LoggingOptions
         Categories.Add((category, level));
         return this;
     }
+
+    internal bool WritesFile { get; private set; } = true;
+
+    /// <summary>No log file: support has no local file, and failures before the services exist reach only stderr.</summary>
+    public LoggingOptions WithoutFile()
+    {
+        WritesFile = false;
+        return this;
+    }
 }

@@ -51,7 +51,7 @@ internal partial interface ICoreWebView2_22
     [PreserveSig] int Slot039_GetCanGoForward();
     [PreserveSig] int Slot040_GoBack();
     [PreserveSig] int Slot041_GoForward();
-    [PreserveSig] int Slot042_GetDevToolsProtocolEventReceiver();
+    nint GetDevToolsProtocolEventReceiver(string eventName);
     [PreserveSig] int Slot043_Stop();
     EventRegistrationToken AddNewWindowRequested(ICoreWebView2NewWindowRequestedEventHandler eventHandler);
     void RemoveNewWindowRequested(EventRegistrationToken token);

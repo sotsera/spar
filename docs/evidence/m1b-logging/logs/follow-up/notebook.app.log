@@ -1,0 +1,65 @@
+2026-11-18T07:05:20.619Z INFO  Spar.Host  [3bd2bbd2] Host started 22.9 ms after the process.
+2026-11-18T07:05:20.619Z INFO  Spar.Host  [3bd2bbd2] App id com.example.Notebook, folder <repo>\artifacts\webview2-profiles\m1b-logging\notebook\com.example.Notebook
+2026-11-18T07:05:20.620Z INFO  Spar.Host  [3bd2bbd2] single instance at 1.6 ms
+2026-11-18T07:05:20.620Z INFO  Spar.Host  [3bd2bbd2] prerequisites checked at 1.8 ms
+2026-11-18T07:05:20.621Z INFO  Spar.Host  [3bd2bbd2] services built at 2.9 ms
+2026-11-18T07:05:20.628Z INFO  Spar.Host  [3bd2bbd2] window shown at 9.3 ms
+2026-11-18T07:05:20.628Z INFO  Spar.Host  [3bd2bbd2] Theme dark (system), window #1d1f24.
+2026-11-18T07:05:20.633Z INFO  Spar.Host  [3bd2bbd2] environment at 14.5 ms
+2026-11-18T07:05:20.633Z INFO  Spar.Host  [3bd2bbd2] WebView2 Runtime 157.0.4341.46
+2026-11-18T07:05:20.642Z INFO  Spar.Host  [3bd2bbd2] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\notebook\com.example.Notebook\WebView2
+2026-11-18T07:05:20.645Z INFO  Spar.Host  [3bd2bbd2] Heartbeat every 5000 ms.
+2026-11-18T07:05:20.646Z INFO  Spar.Host  [3bd2bbd2] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-O2res6tlweUIDeInkejVCEYF76yg0f02UwoOs490teI='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-18T07:05:20.646Z INFO  Spar.Host  [3bd2bbd2] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-18T07:05:20.838Z INFO  Spar.Host  [3bd2bbd2] controller at 219.1 ms
+2026-11-18T07:05:20.838Z INFO  Spar.Host  [3bd2bbd2] Browser settings set (0.05 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-18T07:05:20.886Z INFO  Spar.Host  [3bd2bbd2] Page file picker blocked in 48.1 ms (Page.enable 47.5 ms).
+2026-11-18T07:05:20.886Z INFO  Spar.Host  [3bd2bbd2] page script added at 267.4 ms
+2026-11-18T07:05:20.886Z INFO  Spar.Host  [3bd2bbd2] navigation started at 267.4 ms
+2026-11-18T07:05:20.942Z INFO  Spar.Host  [3bd2bbd2] Bridge: document b5104b0bf5697ae6 opened.
+2026-11-18T07:05:20.942Z INFO  Spar.Host  [3bd2bbd2] Heartbeat armed for the new document.
+2026-11-18T07:05:20.942Z INFO  Spar.Host  [3bd2bbd2] first document at 323.7 ms
+2026-11-18T07:05:20.967Z INFO  Spar.Host  [3bd2bbd2] first bridge message at 348.6 ms
+2026-11-18T07:05:20.967Z INFO  Spar.Host  [3bd2bbd2] first bridge reply at 348.8 ms
+2026-11-18T07:05:20.969Z INFO  Spar.Host  [3bd2bbd2] first navigation completed at 350.3 ms
+2026-11-18T07:05:20.991Z INFO  Spar.Host  [3bd2bbd2] ui-ready at 372.4 ms
+2026-11-18T07:05:20.991Z INFO  Spar.Host  [3bd2bbd2] Bridge: document b5104b0bf5697ae6 reported ui-ready.
+2026-11-18T07:05:20.991Z WARN  Notebook.Pages.MarkdownPageStore  Skipped draft.md: not a Notebook page (it needs a front matter with title, revision and updated)
+2026-11-18T07:05:20.991Z INFO  Spar.Host  [3bd2bbd2] 404 for /favicon.ico
+2026-11-18T07:05:20.991Z ERROR Spar.Bridge  Command pages.list (call 1) failed; correlation 8e08a593656fbd9a39e56276f2051cd7
+    System.IO.IOException: The process cannot access the file '<repo>\artifacts\webview2-profiles\m1b-logging\notebook\com.example.Notebook\data\pages\locked.md' because it is being used by another process.
+       at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String, FileMode, FileAccess, FileShare, FileOptions)
+       at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String, FileMode, FileAccess, FileShare, FileOptions, Int64, Nullable`1)
+       at System.IO.Strategies.OSFileStreamStrategy..ctor(String, FileMode, FileAccess, FileShare, FileOptions, Int64, Nullable`1)
+       at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String, FileMode, FileAccess, FileShare, FileOptions, Int64, Nullable`1)
+       at System.IO.FileStream..ctor(String, FileMode, FileAccess, FileShare, Int32, FileOptions, Int64)
+       at System.IO.File.AsyncStreamReader(String, Encoding)
+       at System.IO.File.InternalReadAllTextAsync(String, Encoding, CancellationToken)
+    --- End of stack trace from previous location ---
+       at Notebook.Pages.MarkdownPageStore.<FindAsync>d__8.MoveNext()
+    --- End of stack trace from previous location ---
+       at Notebook.Pages.MarkdownPageStore.<ListAsync>d__9.MoveNext()
+    --- End of stack trace from previous location ---
+       at Spar.Generated.SparContracts.<HandlePagesList>d__6.MoveNext()
+    --- End of stack trace from previous location ---
+       at Spar.Runtime.SparDispatcher.<InvokeAsync>d__13.MoveNext()
+2026-11-18T07:05:21.096Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-DK6qQbxH.js:54:7061: Notebook: pages.list failed: failed / failed (unknown)
+        at onFailure (https://app.localhost/assets/index-DK6qQbxH.js:54:7061)
+        at ql (https://app.localhost/assets/index-DK6qQbxH.js:51:7438)
+        at Yl.match (https://app.localhost/assets/index-DK6qQbxH.js:51:7692)
+        at https://app.localhost/assets/index-DK6qQbxH.js:51:7879
+        at async https://app.localhost/assets/index-DK6qQbxH.js:54:4084
+2026-11-18T07:05:24.088Z INFO  Spar.Host  [3bd2bbd2] close requested (User) at 3469.3 ms
+2026-11-18T07:05:24.088Z INFO  Spar.Host  Close request for window main (User): the backend's guard answered Close
+2026-11-18T07:05:24.088Z INFO  Spar.Host  [3bd2bbd2] closing at 3469.9 ms
+2026-11-18T07:05:24.088Z INFO  Spar.Host  [3bd2bbd2] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-18T07:05:24.088Z INFO  Spar.Host  [3bd2bbd2] page close work done at 3470.1 ms
+2026-11-18T07:05:24.089Z INFO  Spar.Host  [3bd2bbd2] Bridge: document b5104b0bf5697ae6 closed (window closing).
+2026-11-18T07:05:24.089Z INFO  Spar.Host  [3bd2bbd2] calls stopped at 3470.1 ms
+2026-11-18T07:05:24.089Z INFO  Spar.Host  [3bd2bbd2] calls settled at 3470.1 ms
+2026-11-18T07:05:24.089Z INFO  Spar.Host  [3bd2bbd2] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-18T07:05:24.101Z INFO  Spar.Host  [3bd2bbd2] controller closed at 3482.9 ms
+2026-11-18T07:05:24.104Z INFO  Spar.Host  [3bd2bbd2] window destroyed at 3485.2 ms
+2026-11-18T07:05:24.107Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1 errors, 0 batches dropped (queue full)
+2026-11-18T07:05:24.107Z INFO  Spar.Host  [3bd2bbd2] services disposed at 3488.4 ms
+2026-11-18T07:05:24.107Z INFO  Spar.Host  [3bd2bbd2] exit 0 at 3488.4 ms

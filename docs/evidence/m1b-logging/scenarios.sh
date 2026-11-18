@@ -57,6 +57,26 @@ case "${1:-all}" in
       run "dev-$mode-100k" "$dev" "done $mode:100000" 120 12000 --env "SECURITY_PROBE_MODE=$mode:100000" --env SPAR_AUTOMATED=1
     done
     ;;&
+  all|follow-up)
+    # The follow-up (decision "Logging's follow-up choices"): the probe's Debug line under the app's own AddLogging
+    # (minimum Warning) with spar.Logging asking for Debug; the same line asked for by logging.json in a build without
+    # AddLogging; a build without the file; the Development build's console from the DevTools Protocol.
+    adds=$repo/artifacts/m1b-logging/probeAddLogging/SecurityProbe.exe
+    nofile=$repo/artifacts/m1b-logging/probeWithoutFile/SecurityProbe.exe
+    plain=$repo/artifacts/m1b-logging/probe/SecurityProbe.exe
+    run aot-add-logging "$adds" "done idle" 30 1000 --env SECURITY_PROBE_MODE=idle
+    run aot-plain-idle "$plain" "done idle" 30 1000 --env SECURITY_PROBE_MODE=idle
+    probe_json() {
+      mkdir -p "$1/com.example.tests.SecurityProbe"
+      printf '{"categories":{"SecurityProbe":"Debug"}}' > "$1/com.example.tests.SecurityProbe/logging.json"
+    }
+    before=probe_json run aot-logging-json "$plain" "done idle" 30 1000 --env SECURITY_PROBE_MODE=idle
+    run aot-without-file "$nofile" "done page-errors" 30 2000 --env SECURITY_PROBE_MODE=page-errors
+    find "$profiles/aot-without-file" -name 'app*.log' | sed 's/^/without-file: unexpected /'
+    run dev-console-devtools "$dev" "done page-errors" 30 2000 --env SECURITY_PROBE_MODE=page-errors --env SPAR_AUTOMATED=1
+    run dev-console-devtools-100k "$dev" "done console:100000" 120 12000 --env SECURITY_PROBE_MODE=console:100000 --env SPAR_AUTOMATED=1
+    run dev-distinct-console-devtools-100k "$dev" "done distinct-console:100000" 120 12000 --env SECURITY_PROBE_MODE=distinct-console:100000 --env SPAR_AUTOMATED=1
+    ;;&
   all|notebook)
     before=notebook_pages run notebook "$notebook" "ui-ready" 30 3000
     wait

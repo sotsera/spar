@@ -1,0 +1,46 @@
+       0,0 | run: start Notebook.exe env []
+      55,3 | run: window moved offscreen
+      60,5 | spar info +0.2 ms: [30dc454e] Host started 21.4 ms after the process.
+      60,5 | spar info +0.3 ms: [30dc454e] App id com.example.Notebook, folder <repo>\artifacts\webview2-profiles\m1b-logging-startup\before2-8\com.example.Notebook
+      60,5 | spar info +1.8 ms: [30dc454e] single instance at 1.8 ms
+      60,5 | spar info +2.0 ms: [30dc454e] prerequisites checked at 2 ms
+      60,5 | spar info +2.3 ms: [30dc454e] services built at 2.3 ms
+      60,5 | spar info +9.8 ms: [30dc454e] window shown at 9.8 ms
+      60,5 | spar info +10.0 ms: [30dc454e] Theme dark (system), window #1d1f24.
+      60,5 | spar info +15.3 ms: [30dc454e] environment at 15.3 ms
+      60,6 | spar info +15.3 ms: [30dc454e] WebView2 Runtime 157.0.4341.46
+      60,7 | spar info +15.4 ms: [30dc454e] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging-startup\before2-8\com.example.Notebook\WebView2
+      60,7 | spar info +23.2 ms: [30dc454e] Heartbeat every 5000 ms.
+      60,7 | spar info +23.5 ms: [30dc454e] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-O2res6tlweUIDeInkejVCEYF76yg0f02UwoOs490teI='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      60,7 | spar info +23.5 ms: [30dc454e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     289,1 | spar info +242.1 ms: [30dc454e] controller at 242.1 ms
+     289,1 | spar info +242.2 ms: [30dc454e] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     367,1 | spar info +297.1 ms: [30dc454e] Page file picker blocked in 54.9 ms (Page.enable 54.1 ms).
+     367,1 | spar info +297.2 ms: [30dc454e] page script added at 297.2 ms
+     367,1 | spar info +297.2 ms: [30dc454e] navigation started at 297.2 ms
+     399,9 | spar info +356.0 ms: [30dc454e] Bridge: document 9e1c74cb8b4d339d opened.
+     399,9 | spar info +356.0 ms: [30dc454e] Heartbeat armed for the new document.
+     399,9 | spar info +356.0 ms: [30dc454e] first document at 356 ms
+     446,4 | spar info +387.5 ms: [30dc454e] first bridge message at 387.5 ms
+     446,4 | spar info +387.7 ms: [30dc454e] first bridge reply at 387.7 ms
+     446,4 | spar info +389.5 ms: [30dc454e] first navigation completed at 389.5 ms
+     446,5 | spar info +412.3 ms: [30dc454e] ui-ready at 412.3 ms
+     446,5 | spar info +412.3 ms: [30dc454e] Bridge: document 9e1c74cb8b4d339d reported ui-ready.
+     446,5 | spar info +413.2 ms: [30dc454e] 404 for /favicon.ico
+     486,0 | run: found 'ui-ready'
+     993,1 | run: app working set 25856 KiB, peak seen 25856 KiB, private 9276 KiB
+     993,4 | run: WM_CLOSE
+    1225,5 | spar info +961.9 ms: [30dc454e] close requested (User) at 961.9 ms
+    1225,5 | spar info +962.4 ms: Close request for window main (User): the backend's guard answered Close
+    1225,5 | spar info +962.6 ms: [30dc454e] closing at 962.6 ms
+    1225,5 | spar info +962.6 ms: [30dc454e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1225,5 | spar info +962.9 ms: [30dc454e] page close work done at 962.9 ms
+    1225,5 | spar info +962.9 ms: [30dc454e] Bridge: document 9e1c74cb8b4d339d closed (window closing).
+    1225,5 | spar info +962.9 ms: [30dc454e] calls stopped at 962.9 ms
+    1225,5 | spar info +962.9 ms: [30dc454e] calls settled at 962.9 ms
+    1225,5 | spar info +962.9 ms: [30dc454e] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    1225,6 | spar info +975.2 ms: [30dc454e] controller closed at 975.2 ms
+    1225,6 | spar info +976.7 ms: [30dc454e] window destroyed at 976.7 ms
+    1225,6 | spar info +979.5 ms: [30dc454e] services disposed at 979.5 ms
+    1225,6 | spar info +979.5 ms: [30dc454e] exit 0 at 979.5 ms
+    1225,7 | run: exit 0

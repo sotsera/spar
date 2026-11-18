@@ -279,12 +279,16 @@ internal sealed class BrowserView
         PageServer.AddFilters(_webView);
         bridge.Attach(_webView);
 
+        // Development only: the page's console errors from the DevTools Protocol, so its links stay the page's own.
+        var console = PageScript.ConsoleFromDevTools ? ReadConsole(_webView, bridge) : Task.CompletedTask;
+
         // Before the first navigation, so the script is in every document from the first one on, and the page's file
         // picker is intercepted from the first document on.
         var added = new ScriptAdded();
         _webView.AddScriptToExecuteOnDocumentCreated(_pageScript, added);
         await added.Task;
         await picker;
+        await console;
         if (Abandoned(generation, null) || _webView is null)
         {
             return;
@@ -600,6 +604,18 @@ internal sealed class BrowserView
         return true;
     }
 
+    /// <summary>
+    /// Development only (<see cref="PageScript.ConsoleFromDevTools"/>): the page's console errors from the DevTools
+    /// Protocol's events, removed with the WebView's other events; completes once <c>Runtime.enable</c> did.
+    /// </summary>
+    private Task ReadConsole(ICoreWebView2_22 webView, WebViewBridge bridge)
+    {
+        var console = DevelopmentConsole.Start(webView, bridge, _log);
+        var receiver = console.Receiver;
+        Subscribe(console, receiver.AddDevToolsProtocolEventReceived(console), receiver.RemoveDevToolsProtocolEventReceived);
+        return console.Enabled;
+    }
+
     /// <summary>An event handler of this generation, named for the stall probe.</summary>
     private WebView2EventHandler Handler(int generation, string name, Action<nint> handle) =>
         new(args =>
@@ -643,7 +659,7 @@ internal sealed class BrowserView
         return ids;
     }
 
-    private void Subscribe(WebView2EventHandler handler, EventRegistrationToken token, Action<EventRegistrationToken> remove) =>
+    private void Subscribe(object handler, EventRegistrationToken token, Action<EventRegistrationToken> remove) =>
         _subscriptions.Add(new Subscription(handler, token, remove));
 
     /// <summary>Removes the events, closes the controller and releases every WebView2 object, each step on its own.</summary>
@@ -720,5 +736,5 @@ internal sealed class BrowserView
         _ => Prerequisites.ControllerFailed(runtimeVersion, exception.HResult),
     };
 
-    private readonly record struct Subscription(WebView2EventHandler Handler, EventRegistrationToken Token, Action<EventRegistrationToken> Remove);
+    private readonly record struct Subscription(object Handler, EventRegistrationToken Token, Action<EventRegistrationToken> Remove);
 }

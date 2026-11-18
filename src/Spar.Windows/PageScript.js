@@ -12,7 +12,9 @@
 //   (the window's `error` event) and unhandled rejections (`unhandledrejection`), grouped by kind, text and source
 //   location and posted as `errors` messages with the same limits. `console.error` is wrapped, since no event reports
 //   it: the wrapper calls the page's original with the same arguments and returns its result, and is taken out again
-//   once the document reaches its bound. The events are only listened to, never cancelled.
+//   once the document reaches its bound. A Development build leaves it unwrapped and reads console errors from the
+//   in-process DevTools Protocol, so the console's links point at the page's code. The events are only listened to,
+//   never cancelled.
 // It defines nothing on `window` and keeps its own references to what it calls, taken before the page runs. Page code
 // can post any message itself through the same port, fake reports included, and the host treats every message as
 // untrusted; so this script gives the page nothing it did not have. `report-uri` is the backstop for what it misses.
@@ -293,7 +295,9 @@
     }
   });
 
-  if (consoleError !== undefined) {
+  // Set by the host: false in a Development build, which reads console errors from the DevTools Protocol instead, so
+  // the console's links stay the page's own.
+  if (consoleError !== undefined && __SPAR_WRAP_CONSOLE__) {
     // A method named `error`, so stacks still read console.error; it returns what the page's original returns.
     wrapper = {
       error(...args) {

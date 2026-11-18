@@ -54,8 +54,10 @@ internal sealed class SparTestSession
         {
             // The app's log file as a desktop run writes it, in this test's own logs folder, deleted with its data root;
             // the services open it with their first logger and close it when they are disposed.
-            var levels = SparLogging.Levels(builder.LoggingOptions, folders.DataRoot, SparDevelopment.IsSupported, out loggingProblem);
-            SparLogging.AddFile(services, () => LogFile.Open(folders.Logs), levels, ownsFile: true);
+            var logging = builder.LoggingOptions;
+            var levels = SparLogging.Levels(logging, folders.DataRoot, SparDevelopment.IsSupported, out loggingProblem);
+            Func<LogFile>? file = logging.WritesFile ? () => LogFile.Open(folders.Logs) : null;
+            SparLogging.Add(services, levels, file, ownsFile: true);
             SparRunningApp.AddSparServices(services, catalog, folders, builder.BridgeOptions.Freeze());
 
             // The test's overrides run last, after the app's registrations and Spar's defaults.

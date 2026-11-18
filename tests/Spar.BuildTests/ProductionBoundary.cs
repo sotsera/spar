@@ -15,7 +15,7 @@ internal static class ProductionBoundary
     [
         "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackHost", "LoopbackChannel", "LoopbackAssets",
         "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel", "DevelopmentTriggers",
-        "UiStallProbe", "PageSecurityMismatch", "CspAdvice", "DevelopmentInput",
+        "UiStallProbe", "PageSecurityMismatch", "CspAdvice", "DevelopmentInput", "DevelopmentConsole",
     ];
 
     private static readonly string[] Literals =

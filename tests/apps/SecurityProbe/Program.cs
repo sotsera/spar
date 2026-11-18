@@ -1,4 +1,8 @@
+using Microsoft.Extensions.Logging;
 using Spar;
+#if PROBE_ADD_LOGGING
+using Microsoft.Extensions.DependencyInjection;
+#endif
 
 var app = SparApplication.Create(args, spar =>
 {
@@ -27,6 +31,16 @@ var app = SparApplication.Create(args, spar =>
     {
         spar.Folders(f => f.Profile(profile));
     }
+
+    // The app's own Microsoft.Extensions.Logging configuration, with a minimum above Debug, and Spar's levels asking for
+    // Debug from the probe's category: the Debug line must still reach app.log (docs/evidence/m1b-logging.md).
+#if PROBE_ADD_LOGGING
+    spar.Services.AddLogging(logging => logging.SetMinimumLevel(LogLevel.Warning));
+    spar.Logging(l => l.Level("SecurityProbe", LogLevel.Debug));
+#endif
+#if PROBE_WITHOUT_FILE
+    spar.Logging(l => l.WithoutFile());
+#endif
 });
 return app.Run();
 
@@ -34,10 +48,18 @@ namespace SecurityProbe
 {
     /// <summary>The page asks which probe to run, then reports each result, which goes to standard error.</summary>
     [SparContract]
-    public sealed class ProbeService(SparFolders folders)
+    public sealed class ProbeService(SparFolders folders, ILogger<ProbeService> logger)
     {
+        private static readonly Action<ILogger, string, Exception?> ModeAsked = LoggerMessage.Define<string>(
+            LogLevel.Debug, new EventId(1, "ModeAsked"), "The page asked for its probe: {Mode}");
+
         [SparCommand]
-        public Task<string> ModeAsync() => Task.FromResult(Environment.GetEnvironmentVariable("SECURITY_PROBE_MODE") ?? "idle");
+        public Task<string> ModeAsync()
+        {
+            var mode = Environment.GetEnvironmentVariable("SECURITY_PROBE_MODE") ?? "idle";
+            ModeAsked(logger, mode, null);
+            return Task.FromResult(mode);
+        }
 
         [SparCommand]
         public Task ReportAsync(string text)
