@@ -1,0 +1,48 @@
+       0,0 | run: start ConfigCost.exe env []
+      56,8 | run: window moved offscreen
+      62,2 | spar info +0.2 ms: [19e137ef] Host started 21.0 ms after the process.
+      62,3 | spar info +0.3 ms: [19e137ef] App id com.example.spikes.ConfigCost, folder <repo>\artifacts\webview2-profiles\configuration-cost\startup\s3-v1-5\com.example.spikes.ConfigCost
+      62,3 | spar info +1.6 ms: [19e137ef] single instance at 1.6 ms
+      62,3 | spar info +1.8 ms: [19e137ef] prerequisites checked at 1.8 ms
+      62,3 | spar info +2.9 ms: [19e137ef] services built at 2.9 ms
+      62,3 | spar info +9.0 ms: [19e137ef] window shown at 8.9 ms
+      62,3 | spar info +9.0 ms: [19e137ef] Theme dark (system), window #1f1f1f.
+      62,5 | spar info +13.9 ms: [19e137ef] environment at 13.9 ms
+      62,5 | spar info +13.9 ms: [19e137ef] WebView2 Runtime 157.0.4341.46
+      62,5 | spar info +14.0 ms: [19e137ef] Browser profile folder <repo>\artifacts\webview2-profiles\configuration-cost\startup\s3-v1-5\com.example.spikes.ConfigCost\WebView2
+      62,5 | spar info +25.9 ms: [19e137ef] Heartbeat every 5000 ms.
+      62,5 | spar info +26.4 ms: [19e137ef] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      62,6 | spar info +26.4 ms: [19e137ef] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     384,2 | spar info +329.8 ms: [19e137ef] controller at 329.8 ms
+     384,3 | spar info +329.9 ms: [19e137ef] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     460,9 | spar info +393.1 ms: [19e137ef] Page file picker blocked in 63.2 ms (Page.enable 62.7 ms).
+     460,9 | spar info +393.1 ms: [19e137ef] page script added at 393.1 ms
+     460,9 | spar info +393.1 ms: [19e137ef] navigation started at 393.1 ms
+     508,9 | spar info +452.9 ms: [19e137ef] Bridge: document 1ebfbd0c49416f07 opened.
+     508,9 | spar info +452.9 ms: [19e137ef] Heartbeat armed for the new document.
+     508,9 | spar info +452.9 ms: [19e137ef] first document at 452.9 ms
+     508,9 | spar info +461.3 ms: [19e137ef] first bridge message at 461.2 ms
+     508,9 | spar info +461.5 ms: [19e137ef] first bridge reply at 461.5 ms
+     508,9 | spar info +461.6 ms: [19e137ef] ui-ready at 461.6 ms
+     508,9 | spar info +461.6 ms: [19e137ef] Bridge: document 1ebfbd0c49416f07 reported ui-ready.
+     508,9 | spar info +464.7 ms: [19e137ef] first navigation completed at 464.7 ms
+     508,9 | probe: details variant 1
+     508,9 | probe: done
+     508,9 | spar info +469.0 ms: [19e137ef] 404 for /favicon.ico
+     547,8 | run: found 'ui-ready'
+     551,8 | run: at found: app working set 25292 KiB, private 8716 KiB, threads 11
+    1556,4 | run: app working set 25292 KiB, peak seen 25292 KiB, private 8716 KiB, threads 11
+    1556,7 | run: WM_CLOSE
+    1803,0 | spar info +1526.4 ms: [19e137ef] close requested (User) at 1526.4 ms
+    1803,1 | spar info +1526.9 ms: [19e137ef] closing at 1526.9 ms
+    1803,1 | spar info +1527.0 ms: [19e137ef] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1803,1 | spar info +1527.2 ms: [19e137ef] page close work done at 1527.2 ms
+    1803,1 | spar info +1527.2 ms: [19e137ef] Bridge: document 1ebfbd0c49416f07 closed (window closing).
+    1803,1 | spar info +1527.2 ms: [19e137ef] calls stopped at 1527.2 ms
+    1803,1 | spar info +1527.2 ms: [19e137ef] calls settled at 1527.2 ms
+    1803,1 | spar info +1527.2 ms: [19e137ef] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    1803,1 | spar info +1540.9 ms: [19e137ef] controller closed at 1540.8 ms
+    1803,1 | spar info +1542.2 ms: [19e137ef] window destroyed at 1542.2 ms
+    1803,1 | spar info +1545.3 ms: [19e137ef] services disposed at 1545.3 ms
+    1803,1 | spar info +1545.4 ms: [19e137ef] exit 0 at 1545.3 ms
+    1803,3 | run: exit 0

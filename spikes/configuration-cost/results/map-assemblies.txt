@@ -1,0 +1,80 @@
+# Bytes of ILC map nodes by owning assembly (MethodCode, GCInfo, EETypes, statics, dictionaries...), Production NativeAOT win-x64
+# "unattributed" nodes are image-wide (embedded metadata, frozen objects, stack-trace map, hashtables).
+key | v0 | v1 | v2 | v3 | v4 | v1-v0 | v2-v0 | v3-v0 | v4-v0
+(all nodes) | 3650673 | 3973364 | 4013205 | 4013207 | 3727779 | 322691 | 362532 | 362534 | 77106
+System.Private.CoreLib | 1734501 | 1844440 | 1860209 | 1860209 | 1750784 | 109939 | 125708 | 125708 | 16283
+(unattributed Metadata) | 302272 | 331176 | 336200 | 336200 | 311523 | 28904 | 33928 | 33928 | 9251
+Microsoft.Extensions.FileSystemGlobbing | 0 | 23106 | 23106 | 23106 | 0 | 23106 | 23106 | 23106 | 0
+Microsoft.Extensions.FileProviders.Physical | 0 | 19965 | 19965 | 19965 | 0 | 19965 | 19965 | 19965 | 0
+System.Linq | 29677 | 49031 | 49031 | 49031 | 32533 | 19354 | 19354 | 19354 | 2856
+(unattributed ArrayOfFrozenObjects) | 220040 | 231720 | 234504 | 234504 | 223472 | 11680 | 14464 | 14464 | 3432
+(unattributed ConstructedEEType) | 103432 | 116788 | 117684 | 117684 | 106364 | 13356 | 14252 | 14252 | 2932
+System.Text.Json | 63160 | 75947 | 75947 | 75947 | 75947 | 12787 | 12787 | 12787 | 12787
+System.IO.FileSystem.Watcher | 0 | 11353 | 11353 | 11353 | 0 | 11353 | 11353 | 11353 | 0
+(unattributed StackTraceMethodMapping) | 100726 | 109449 | 110279 | 110279 | 102792 | 8723 | 9553 | 9553 | 2066
+Microsoft.Extensions.Configuration | 0 | 8158 | 8310 | 8310 | 8437 | 8158 | 8310 | 8310 | 8437
+ConfigCost | 4802 | 5315 | 11516 | 11518 | 5410 | 513 | 6714 | 6716 | 608
+Microsoft.Extensions.Primitives | 1705 | 7781 | 7781 | 7781 | 2516 | 6076 | 6076 | 6076 | 811
+(unattributed InterfaceDispatchCellSection) | 17296 | 21824 | 22480 | 22480 | 18560 | 4528 | 5184 | 5184 | 1264
+Microsoft.Extensions.Logging.Configuration | 0 | 4966 | 4966 | 4966 | 4966 | 4966 | 4966 | 4966 | 4966
+System.Collections | 1681 | 6379 | 6387 | 6387 | 4057 | 4698 | 4706 | 4706 | 2376
+(unattributed ExternalReferencesTable) | 30684 | 34652 | 35068 | 35068 | 31560 | 3968 | 4384 | 4384 | 876
+Microsoft.Extensions.Configuration.EnvironmentVariables | 0 | 0 | 4313 | 4313 | 0 | 0 | 4313 | 4313 | 0
+System.Security.Cryptography | 7626 | 11724 | 11724 | 11724 | 7957 | 4098 | 4098 | 4098 | 331
+Microsoft.Extensions.Configuration.FileExtensions | 0 | 4096 | 4096 | 4096 | 0 | 4096 | 4096 | 4096 | 0
+Microsoft.Extensions.Configuration.Json | 0 | 3553 | 3553 | 3553 | 3180 | 3553 | 3553 | 3553 | 3180
+(unattributed GenericTypesHashtable) | 20159 | 23129 | 23405 | 23405 | 20773 | 2970 | 3246 | 3246 | 614
+(unattributed MethodCode) | 44594 | 47251 | 47334 | 47334 | 44697 | 2657 | 2740 | 2740 | 103
+(unattributed TypeMetadataMap) | 17448 | 19370 | 19550 | 19550 | 18122 | 1922 | 2102 | 2102 | 674
+Microsoft.Extensions.Configuration.Abstractions | 0 | 1485 | 1485 | 1485 | 1485 | 1485 | 1485 | 1485 | 1485
+(unattributed GenericMethodsHashtable) | 4637 | 5813 | 5840 | 5840 | 4947 | 1176 | 1203 | 1203 | 310
+System.ComponentModel.Primitives | 0 | 1111 | 1111 | 1111 | 0 | 1111 | 1111 | 1111 | 0
+System.Collections.Immutable | 27088 | 27130 | 27845 | 27845 | 27094 | 42 | 757 | 757 | 6
+(unattributed StaticsInfoHashtable) | 3265 | 3927 | 3927 | 3927 | 3409 | 662 | 662 | 662 | 144
+(unattributed SealedVTable) | 2496 | 2980 | 3152 | 3152 | 2564 | 484 | 656 | 656 | 68
+Microsoft.Extensions.FileProviders.Abstractions | 0 | 623 | 623 | 623 | 0 | 623 | 623 | 623 | 0
+(unattributed NativeLayoutInfo) | 8739 | 9076 | 9360 | 9360 | 8756 | 337 | 621 | 621 | 17
+Microsoft.Extensions.DependencyInjection.Abstractions | 9254 | 9754 | 9834 | 9834 | 9513 | 500 | 580 | 580 | 259
+(unattributed GCInfo) | 7473 | 7946 | 7996 | 7996 | 7511 | 473 | 523 | 523 | 38
+(unattributed InterfaceDispatchCellInfoSection) | 2084 | 2528 | 2589 | 2589 | 2155 | 444 | 505 | 505 | 71
+(unattributed InterfaceDispatchMap) | 1118 | 1566 | 1566 | 1566 | 1118 | 448 | 448 | 448 | 0
+Spar | 153402 | 153834 | 153834 | 153834 | 153402 | 432 | 432 | 432 | 0
+Microsoft.Extensions.Options.ConfigurationExtensions | 0 | 220 | 419 | 419 | 220 | 220 | 419 | 419 | 220
+Microsoft.Extensions.Options | 10005 | 10061 | 10421 | 10421 | 10061 | 56 | 416 | 416 | 56
+(unattributed UnboxingStub) | 4185 | 4509 | 4554 | 4554 | 4320 | 324 | 369 | 369 | 135
+(unattributed ArrayOfEmbeddedPointers) | 2400 | 2744 | 2748 | 2748 | 2468 | 344 | 348 | 348 | 68
+(unattributed ReflectionInvokeMap) | 2337 | 2579 | 2643 | 2643 | 2375 | 242 | 306 | 306 | 38
+(unattributed ReadyToRunGenericLookupFromType) | 3637 | 3937 | 3937 | 3937 | 3637 | 300 | 300 | 300 | 0
+(unattributed GenericComposition) | 3956 | 4176 | 4176 | 4176 | 3988 | 220 | 220 | 220 | 32
+(unattributed GenericTypesTemplateMap) | 1586 | 1719 | 1803 | 1803 | 1600 | 133 | 217 | 217 | 14
+(unattributed WritableData) | 1960 | 2168 | 2176 | 2176 | 2000 | 208 | 216 | 216 | 40
+(unattributed MethodAssociatedData) | 1175 | 1315 | 1340 | 1340 | 1200 | 140 | 165 | 165 | 25
+(unattributed ArrayMap) | 1222 | 1357 | 1367 | 1367 | 1247 | 135 | 145 | 145 | 25
+(unattributed ReflectionVisibleGenericDefinitionEEType) | 1632 | 1760 | 1760 | 1760 | 1664 | 128 | 128 | 128 | 32
+System.Diagnostics.DiagnosticSource | 44108 | 44227 | 44227 | 44227 | 44227 | 119 | 119 | 119 | 119
+(unattributed GvmDispatchCellSection) | 368 | 432 | 432 | 432 | 384 | 64 | 64 | 64 | 16
+Microsoft.Extensions.Configuration.Binder | 0 | 0 | 64 | 64 | 0 | 0 | 64 | 64 | 0
+(unattributed PInvokeMethodFixup) | 1372 | 1428 | 1428 | 1428 | 1372 | 56 | 56 | 56 | 0
+(unattributed AsyncContinuationEEType) | 840 | 896 | 896 | 896 | 896 | 56 | 56 | 56 | 56
+(unattributed GenericVirtualMethodTable) | 366 | 421 | 421 | 421 | 366 | 55 | 55 | 55 | 0
+(unattributed TypeThreadStaticIndex) | 688 | 736 | 736 | 736 | 688 | 48 | 48 | 48 | 0
+(unattributed ClassConstructorContextMap) | 1288 | 1334 | 1335 | 1335 | 1293 | 46 | 47 | 47 | 5
+(unattributed GvmDispatchCellInfoSection) | 125 | 163 | 163 | 163 | 133 | 38 | 38 | 38 | 8
+(unattributed Blob) | 2577 | 2611 | 2611 | 2611 | 2577 | 34 | 34 | 34 | 0
+(unattributed FatFunctionPointer) | 736 | 768 | 768 | 768 | 736 | 32 | 32 | 32 | 0
+(unattributed MethodReadOnlyData) | 300 | 324 | 324 | 324 | 300 | 24 | 24 | 24 | 0
+Microsoft.Extensions.Logging | 15898 | 15918 | 15918 | 15918 | 15918 | 20 | 20 | 20 | 20
+(unattributed ArrayOfEmbeddedData) | 88 | 104 | 104 | 104 | 88 | 16 | 16 | 16 | 0
+(unattributed GenericMethodsTemplateMap) | 882 | 896 | 896 | 896 | 882 | 14 | 14 | 14 | 0
+(unattributed ReadyToRunGenericLookupFromDictionary) | 202 | 216 | 216 | 216 | 202 | 14 | 14 | 14 | 0
+(unattributed InterfaceGenericVirtualMethodTable) | 166 | 180 | 180 | 180 | 166 | 14 | 14 | 14 | 0
+(unattributed ReadyToRunHelper) | 80 | 92 | 92 | 92 | 80 | 12 | 12 | 12 | 0
+(unattributed EEType) | 2456 | 2448 | 2448 | 2448 | 2408 | -8 | -8 | -8 | -48
+Spar.Windows | 207280 | 207280 | 207280 | 207280 | 207280 | 0 | 0 | 0 | 0
+System.Private.TypeLoader | 136369 | 136369 | 136369 | 136369 | 136369 | 0 | 0 | 0 | 0
+System.Threading.Channels | 50931 | 50931 | 50931 | 50931 | 50931 | 0 | 0 | 0 | 0
+Microsoft.Extensions.DependencyInjection | 38723 | 38723 | 38723 | 38723 | 38723 | 0 | 0 | 0 | 0
+Microsoft.Extensions.Logging.Abstractions | 36188 | 36188 | 36188 | 36188 | 36188 | 0 | 0 | 0 | 0
+(unattributed ResourceData) | 28679 | 28679 | 28679 | 28679 | 28679 | 0 | 0 | 0 | 0
+System.IO.Pipes | 26371 | 26371 | 26371 | 26371 | 26371 | 0 | 0 | 0 | 0
+System.Private.Reflection.Execution | 22593 | 22593 | 22593 | 22593 | 22593 | 0 | 0 | 0 | 0

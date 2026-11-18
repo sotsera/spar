@@ -1,0 +1,49 @@
+       0,0 | run: start ConfigCost.exe env [CONFIG_COST_TICK=1]
+      51,9 | run: window moved offscreen
+      57,4 | spar info +0.3 ms: [ce3a8cc1] Host started 21.2 ms after the process.
+      57,4 | spar info +0.4 ms: [ce3a8cc1] App id com.example.spikes.ConfigCost, folder <repo>\artifacts\webview2-profiles\configuration-cost\reload-v2\com.example.spikes.ConfigCost
+      57,4 | spar info +1.6 ms: [ce3a8cc1] single instance at 1.6 ms
+      57,7 | spar info +1.9 ms: [ce3a8cc1] prerequisites checked at 1.9 ms
+      57,7 | spar info +2.9 ms: [ce3a8cc1] services built at 2.9 ms
+      57,7 | spar info +8.8 ms: [ce3a8cc1] window shown at 8.8 ms
+      57,7 | spar info +8.9 ms: [ce3a8cc1] Theme dark (system), window #1f1f1f.
+      57,8 | spar info +13.9 ms: [ce3a8cc1] environment at 13.9 ms
+      57,8 | spar info +13.9 ms: [ce3a8cc1] WebView2 Runtime 157.0.4341.46
+      57,8 | spar info +13.9 ms: [ce3a8cc1] Browser profile folder <repo>\artifacts\webview2-profiles\configuration-cost\reload-v2\com.example.spikes.ConfigCost\WebView2
+      57,8 | spar info +20.5 ms: [ce3a8cc1] Heartbeat every 5000 ms.
+      57,8 | spar info +20.9 ms: [ce3a8cc1] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      57,8 | spar info +20.9 ms: [ce3a8cc1] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     256,4 | spar info +206.6 ms: [ce3a8cc1] controller at 206.6 ms
+     256,4 | spar info +206.8 ms: [ce3a8cc1] Browser settings set (0.08 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+    5176,6 | spar info +5120.9 ms: [ce3a8cc1] Page file picker blocked in 4914.1 ms (Page.enable 4913.6 ms).
+    5176,6 | spar info +5120.9 ms: [ce3a8cc1] page script added at 5120.9 ms
+    5176,6 | spar info +5120.9 ms: [ce3a8cc1] navigation started at 5120.9 ms
+    5314,5 | spar info +5250.4 ms: [ce3a8cc1] Bridge: document 62baa0443e240d88 opened.
+    5314,5 | spar info +5250.4 ms: [ce3a8cc1] Heartbeat armed for the new document.
+    5314,5 | spar info +5250.4 ms: [ce3a8cc1] first document at 5250.4 ms
+    5314,5 | spar info +5257.9 ms: [ce3a8cc1] first bridge message at 5257.9 ms
+    5314,5 | spar info +5258.1 ms: [ce3a8cc1] first bridge reply at 5258.1 ms
+    5314,5 | spar info +5258.1 ms: [ce3a8cc1] ui-ready at 5258.1 ms
+    5314,5 | spar info +5258.1 ms: [ce3a8cc1] Bridge: document 62baa0443e240d88 reported ui-ready.
+    5314,5 | spar info +5261.3 ms: [ce3a8cc1] first navigation completed at 5261.3 ms
+    5314,5 | probe: details variant 2+; options greeting=from-file count=3 tags=a,b; Logging:LogLevel:Default=Warning
+    5314,5 | probe: done
+    5314,5 | spar info +5265.9 ms: [ce3a8cc1] 404 for /favicon.ico
+    5338,5 | run: found 'probe: done'
+    5341,8 | run: at found: app working set 25764 KiB, private 9344 KiB, threads 11
+    6855,1 | run: wrote appsettings.json at 12:07:44.185 UTC: {"Logging":{"LogLevel":{"Default":"Warning","ConfigCost.ProbeService":"Debug","ConfigCost.Ticker":"Debug"}},"Probe":{"Greeting":"from-file","Count":3,"Tags":["a","b"]}}
+   11372,6 | run: app working set 25764 KiB, peak seen 25764 KiB, private 9344 KiB, threads 11
+   11372,9 | run: WM_CLOSE
+   11607,9 | spar info +11342.1 ms: [ce3a8cc1] close requested (User) at 11342.1 ms
+   11607,9 | spar info +11342.7 ms: [ce3a8cc1] closing at 11342.7 ms
+   11607,9 | spar info +11342.7 ms: [ce3a8cc1] Heartbeat: 2 ticks, 2 pings, longest tick on the UI thread 0.039 ms.
+   11607,9 | spar info +11342.9 ms: [ce3a8cc1] page close work done at 11342.9 ms
+   11607,9 | spar info +11342.9 ms: [ce3a8cc1] Bridge: document 62baa0443e240d88 closed (window closing).
+   11608,0 | spar info +11342.9 ms: [ce3a8cc1] calls stopped at 11342.9 ms
+   11608,0 | spar info +11342.9 ms: [ce3a8cc1] calls settled at 11342.9 ms
+   11608,0 | spar info +11343.0 ms: [ce3a8cc1] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+   11608,0 | spar info +11355.3 ms: [ce3a8cc1] controller closed at 11355.3 ms
+   11608,0 | spar info +11356.6 ms: [ce3a8cc1] window destroyed at 11356.6 ms
+   11608,0 | spar info +11359.8 ms: [ce3a8cc1] services disposed at 11359.8 ms
+   11608,0 | spar info +11359.8 ms: [ce3a8cc1] exit 0 at 11359.8 ms
+   11608,1 | run: exit 0
