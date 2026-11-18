@@ -12,9 +12,14 @@ public sealed class HangLog
 {
     private const int Kept = 50;
 
-    private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "logs", "hangs.txt");
-
     private readonly ConcurrentQueue<PageHang> _changes = new();
+    private readonly string _filePath;
+
+    /// <summary>A record in <paramref name="logsFolder"/>, the logs folder Program.cs resolved.</summary>
+    public HangLog(string logsFolder)
+    {
+        _filePath = Path.Combine(logsFolder, "hangs.txt");
+    }
 
     /// <summary>
     /// One change: unresponsive, recovered, reloaded or closed anyway. Spar's dialog has already asked the user. Spar
@@ -30,7 +35,7 @@ public sealed class HangLog
         var line = string.Create(
             CultureInfo.InvariantCulture,
             $"{DateTimeOffset.UtcNow:O} {hang.Window} {hang.State} after {hang.Duration.TotalSeconds:0.0} s{Environment.NewLine}");
-        await File.AppendAllTextAsync(FilePath, line, cancellationToken);
+        await File.AppendAllTextAsync(_filePath, line, cancellationToken);
     }
 
     /// <summary>How often the page stopped responding in this run, and the longest it went without answering.</summary>

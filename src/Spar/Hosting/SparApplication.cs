@@ -23,11 +23,12 @@ public static class SparApplication
         ArgumentNullException.ThrowIfNull(configure);
         ArgumentNullException.ThrowIfNull(catalog);
 
-        var builder = new SparBuilder(args);
-        configure(builder);
-
-        // A test session exists only in test processes; the feature switch trims this branch from apps.
+        // A test session exists only in test processes; the feature switch trims these branches from apps. The builder
+        // gets the session's data root, so spar.ResolveFolders() gives the folders the test host will use.
         var session = SparTestSession.IsSupported ? SparTestSession.Current : null;
+        var testDataRoot = SparTestSession.IsSupported ? session?.DataRoot : null;
+        var builder = new SparBuilder(args, SparApp.AppIdOf(catalog), testDataRoot);
+        configure(builder);
         return new SparApp(builder, catalog, session);
     }
 }
@@ -35,12 +36,23 @@ public static class SparApplication
 /// <summary>What <c>Program.cs</c> configures.</summary>
 public sealed class SparBuilder
 {
-    internal SparBuilder(string[] args)
+    /// <summary>The test host's data root when <c>Program.cs</c> runs under it, else null.</summary>
+    private readonly string? _testDataRoot;
+
+    /// <summary>The folders, once <see cref="ResolveFolders"/> decided them.</summary>
+    private SparFolders? _folders;
+
+    internal SparBuilder(string[] args, string appId = "Spar", string? testDataRoot = null)
     {
         Args = args;
+        AppId = appId;
+        _testDataRoot = testDataRoot;
     }
 
     public string[] Args { get; }
+
+    /// <summary>The app id the build checked (<c>SparAppId</c>), which names the app's per-user folder.</summary>
+    internal string AppId { get; }
 
     /// <summary>The app's services (Microsoft DI). Each command runs in its own scope.</summary>
     public IServiceCollection Services { get; } = new ServiceCollection();
@@ -99,13 +111,39 @@ public sealed class SparBuilder
     /// <summary>
     /// Where data, logs and the browser profile go; each has a per-user default under the app id's folder (plan section
     /// 3c). A test host moves them all under its data root. App code reads the folders in use from the
-    /// <see cref="SparFolders"/> service.
+    /// <see cref="SparFolders"/> service. Call it before <see cref="ResolveFolders"/>: afterwards it throws.
     /// </summary>
     public SparBuilder Folders(Action<FolderOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
+        if (_folders is not null)
+        {
+            throw new InvalidOperationException(FolderOptions.ResolvedMessage);
+        }
+
         configure(FolderOptions);
         return this;
+    }
+
+    /// <summary>
+    /// The folders the app's services will get as the <see cref="SparFolders"/> service, decided now, for what
+    /// <c>Program.cs</c> builds before the services exist, such as the app's own configuration file in its data folder:
+    /// <c>%LOCALAPPDATA%\&lt;app id&gt;</c> on Windows (<c>&lt;app id&gt;.Development</c> in a Development build), the
+    /// app's <c>spar.Folders(…)</c> choices, or the test host's own root in a test run. Call <c>spar.Folders(…)</c>
+    /// first: after this call it throws, so the value can never differ from the service. Calling it again returns the
+    /// same folders. App code that runs once the services exist takes the <see cref="SparFolders"/> service instead.
+    /// </summary>
+    public SparFolders ResolveFolders()
+    {
+        if (_folders is null)
+        {
+            _folders = _testDataRoot is not null
+                ? SparFolders.ForTest(_testDataRoot)
+                : SparFolders.ForApp(AppId, Hosting.SparDevelopment.IsSupported, FolderOptions);
+            FolderOptions.Freeze();
+        }
+
+        return _folders;
     }
 
     /// <summary>
@@ -256,7 +294,10 @@ public sealed class SparBuilder
     /// <c>app.log</c> in its logs folder: Spar's lines and every <c>ILogger</c> of the app's services, Information and
     /// above in Production, Debug and above in Development and Test builds unless set here. A <c>logging.json</c> in the
     /// app's per-user folder overrides these at start (<c>{"level":"Debug","categories":{"SqlTool.Copy":"Trace"}}</c>),
-    /// so a user can raise the level for support without a new build. The levels are the app's, for every provider;
+    /// so a user can raise the level for support without a new build, even over the app's own logging configuration. The
+    /// levels are the app's, for every provider; a rule of the app's own for every category (a configuration's
+    /// <c>"Default"</c>) overrides the default set here
+    /// (see <see cref="LoggingOptions.Level(Microsoft.Extensions.Logging.LogLevel)"/>).
     /// <c>l.WithoutFile()</c> writes no file (see <see cref="LoggingOptions.WithoutFile"/> for its risk).
     /// </summary>
     public SparBuilder Logging(Action<LoggingOptions> configure)
@@ -294,7 +335,10 @@ public sealed class SparApp
     /// The app id the build checked (<c>SparAppId</c>), from the generated catalog; the assembly's name for an app built
     /// without Spar's build steps, which a Spar.Sdk app never is.
     /// </summary>
-    internal string AppId => _catalog.AppId ?? _catalog.AppAssembly?.GetName().Name ?? "Spar";
+    internal string AppId => _builder.AppId;
+
+    /// <summary>The app id of a catalog: <see cref="AppId"/>'s source.</summary>
+    internal static string AppIdOf(SparCatalog catalog) => catalog.AppId ?? catalog.AppAssembly?.GetName().Name ?? "Spar";
 
     /// <summary>Starts the app in its window and returns the process exit code when it ends.</summary>
     public int Run() => Run(host: null);

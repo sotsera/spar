@@ -46,12 +46,19 @@ internal sealed class SparTestSession
     internal int Run(SparBuilder builder, SparCatalog catalog)
     {
         var services = builder.Services;
-        var folders = SparFolders.ForTest(DataRoot);
 
         SparRunningApp app;
         string? loggingProblem;
         try
         {
+            // The folders Program.cs could resolve early: the builder has this session's data root. A builder made
+            // outside this session would resolve the per-user folders, which a test must never touch.
+            var folders = builder.ResolveFolders();
+            if (folders.DataRoot != DataRoot)
+            {
+                throw new InvalidOperationException($"The app's folders ({folders.DataRoot}) are not the test's ({DataRoot}).");
+            }
+
             // The app's log file as a desktop run writes it, in this test's own logs folder, deleted with its data root;
             // the services open it with their first logger and close it when they are disposed.
             var logging = builder.LoggingOptions;

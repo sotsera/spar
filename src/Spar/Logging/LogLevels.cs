@@ -12,10 +12,16 @@ internal sealed class LogLevelRule(string? category, LogLevel level)
 
 /// <summary>
 /// The app's log levels for this run: the build's default, the app's <c>spar.Logging(…)</c>, then the per-user
-/// <c>logging.json</c>, which overrides both (<see cref="LoggingFile"/>). They become Microsoft.Extensions.Logging's
-/// filter rules (<see cref="Apply"/>): the default is the minimum level, and each category is a rule for every
-/// provider, matched as those rules match (a case-insensitive prefix, at most one <c>*</c>, the longest rule winning,
-/// the later of two equal ones). A rule the app adds for one provider still applies to that provider.
+/// <c>logging.json</c> (<see cref="LoggingFile"/>). They become Microsoft.Extensions.Logging's filter rules in two
+/// steps. <see cref="ApplyApp"/>, configured after the app's own registrations, sets the default as the minimum level
+/// and adds each category as a rule for every provider; a rule the app configured for every category itself (a
+/// configuration's <c>"Default"</c>, an <c>AddFilter</c> without a category) beats that minimum, as the app chose.
+/// <see cref="ApplyFile"/> runs after every configuration of the filter options, the app's included, whatever the
+/// order of registration: the file's level becomes the minimum and a rule for every category, and its categories are
+/// rules after all others, so the per-user switch always holds (decision "Configuration stays the app's choice").
+/// Rules match as Microsoft.Extensions.Logging's do (a case-insensitive prefix, at most one <c>*</c>, the longest
+/// category winning, the later of two equal ones), so a category rule of the app's still beats the file's level, and
+/// the file's categories beat the app's rules for the same category. A rule for one provider still applies to it.
 /// </summary>
 internal sealed class LogLevels
 {
@@ -29,56 +35,78 @@ internal sealed class LogLevels
     public const int MaxCategoryLength = 256;
 
     private readonly LogLevelRule[] _rules;
+    private readonly LogLevelRule[] _fileRules;
 
     public LogLevels(LogLevel defaultLevel, IReadOnlyList<LogLevelRule> rules)
+        : this(defaultLevel, rules, fileLevel: null, fileRules: [])
+    {
+    }
+
+    public LogLevels(LogLevel defaultLevel, IReadOnlyList<LogLevelRule> rules, LogLevel? fileLevel, IReadOnlyList<LogLevelRule> fileRules)
     {
         Default = defaultLevel;
         _rules = [.. rules];
+        FileLevel = fileLevel;
+        _fileRules = [.. fileRules];
     }
 
-    /// <summary>The level of a category no rule matches.</summary>
+    /// <summary>The app's default level: the build's, or the one <c>spar.Logging(…)</c> set.</summary>
     public LogLevel Default { get; }
 
-    /// <summary>The category rules, in the order they apply: the app's, then the file's.</summary>
+    /// <summary>The app's category rules, in the order it set them.</summary>
     public IReadOnlyList<LogLevelRule> Rules => _rules;
+
+    /// <summary>The level <c>logging.json</c> sets for every category, or null when it sets none.</summary>
+    public LogLevel? FileLevel { get; }
+
+    /// <summary>The category rules of <c>logging.json</c>, in its order.</summary>
+    public IReadOnlyList<LogLevelRule> FileRules => _fileRules;
+
+    /// <summary>Whether <c>logging.json</c> sets a level or a category, so <see cref="ApplyFile"/> has work to do.</summary>
+    public bool HasFileLevels => FileLevel is not null || _fileRules.Length > 0;
 
     /// <summary>The build's default levels, before any configuration.</summary>
     public static LogLevels BuildDefault(bool development) => new(development ? DevelopmentDefault : ProductionDefault, []);
 
-    /// <summary>
-    /// This run's levels: the build's default, then the app's choices, then the file's, each overriding the one before
-    /// for the default and for a category named the same.
-    /// </summary>
+    /// <summary>This run's levels: the build's default, then the app's choices, then the file's.</summary>
     public static LogLevels Resolve(LoggingOptions options, bool development, LoggingFileSettings? file)
     {
-        var defaultLevel = file?.Level ?? options.DefaultLevel ?? (development ? DevelopmentDefault : ProductionDefault);
-        var rules = new List<LogLevelRule>(options.Categories);
-        if (file is not null)
-        {
-            rules.AddRange(file.Categories);
-        }
-
-        return new LogLevels(defaultLevel, rules);
+        var defaultLevel = options.DefaultLevel ?? (development ? DevelopmentDefault : ProductionDefault);
+        return new LogLevels(defaultLevel, options.Categories, file?.Level, file?.Categories ?? []);
     }
 
     /// <summary>
-    /// Writes these levels into the factory's filter options, after the app's own configuration: the minimum level,
-    /// and one rule per category for every provider, after the rules already there, so the later wins between equals.
+    /// The levels of <c>Program.cs</c>, configured after the app's own registrations: the minimum level, and one rule per
+    /// category for every provider, after the rules already there, so the later wins between equals.
     /// </summary>
-    public void Apply(LoggerFilterOptions options)
+    public void ApplyApp(LoggerFilterOptions options)
     {
         options.MinLevel = Default;
-        foreach (var rule in _rules)
+        AddRules(options, _rules);
+    }
+
+    /// <summary>
+    /// The levels of <c>logging.json</c>, after every other configuration of the filter options: its level as the
+    /// minimum and as a rule for every category and provider, added last so it beats the app's own rule for every
+    /// category (a configuration's <c>"Default"</c>), then its categories, last too.
+    /// </summary>
+    public void ApplyFile(LoggerFilterOptions options)
+    {
+        if (FileLevel is { } level)
         {
-            options.Rules.Add(new LoggerFilterRule(providerName: null, rule.Category, rule.Level, filter: null));
+            options.MinLevel = level;
+            options.Rules.Add(new LoggerFilterRule(providerName: null, categoryName: null, level, filter: null));
         }
+
+        AddRules(options, _fileRules);
     }
 
     /// <summary>The filter options of these levels alone, for the host's lines before the app's services exist.</summary>
     public LoggerFilterOptions ToFilterOptions()
     {
         var options = new LoggerFilterOptions();
-        Apply(options);
+        ApplyApp(options);
+        ApplyFile(options);
         return options;
     }
 
@@ -131,5 +159,13 @@ internal sealed class LogLevels
             _ => (LogLevel)(-1),
         };
         return level != (LogLevel)(-1);
+    }
+
+    private static void AddRules(LoggerFilterOptions options, LogLevelRule[] rules)
+    {
+        foreach (var rule in rules)
+        {
+            options.Rules.Add(new LoggerFilterRule(providerName: null, rule.Category, rule.Level, filter: null));
+        }
     }
 }

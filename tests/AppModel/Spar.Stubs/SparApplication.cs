@@ -38,11 +38,12 @@ public sealed class SparApplication
         Console.WriteLine($"page hang hook {(_builder.PageHangHandler is null ? "none" : "set")}, stall probe kept {_builder.DiagnosticsOptions.KeepsStallProbe}");
         var logging = _builder.LoggingOptions;
         Console.WriteLine($"log file {logging.WritesFile}, level {logging.DefaultLevel?.ToString() ?? "the build's"}, categories {string.Join(", ", logging.Categories.Select(c => $"{c.Category} {c.Level}"))}");
+        Console.WriteLine($"folders resolved early: {_builder.ResolvedFolders?.ToString() ?? "no"}");
         Console.WriteLine($"tray: {_builder.TrayOptions?.TooltipText} [{string.Join(" | ", _builder.TrayOptions?.MenuItems.Items ?? [])}], close to tray {window.HidesToTray}");
 
         foreach (var service in _builder.Services)
         {
-            Console.WriteLine($"service: {service.Lifetime} {service.ServiceType.Name} -> {service.ImplementationType?.Name}");
+            Console.WriteLine($"service: {service.Lifetime} {service.ServiceType.Name} -> {service.ImplementationType?.Name ?? service.ImplementationInstance?.GetType().Name}");
         }
 
         return 0;
@@ -69,6 +70,8 @@ public sealed class SparBuilder
 
     internal FolderOptions FolderOptions { get; } = new();
 
+    internal SparFolders? ResolvedFolders { get; private set; }
+
     internal BrowserOptions BrowserOptions { get; } = new();
 
     /// <summary>Loosens the browser's strict defaults; each opt-in is logged at start-up.</summary>
@@ -79,12 +82,34 @@ public sealed class SparBuilder
         return this;
     }
 
-    /// <summary>Where data, logs and crash records go. Every folder has a per-user default.</summary>
+    /// <summary>Where data, logs and crash records go. Every folder has a per-user default. Throws after ResolveFolders.</summary>
     public SparBuilder Folders(Action<FolderOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
+        if (ResolvedFolders is not null)
+        {
+            throw new InvalidOperationException("The folders were already resolved by spar.ResolveFolders().");
+        }
+
         configure(FolderOptions);
         return this;
+    }
+
+    /// <summary>The folders the services will get, for what Program.cs builds before they exist (3.13).</summary>
+    public SparFolders ResolveFolders()
+    {
+        if (ResolvedFolders is null)
+        {
+            var root = Path.Combine(Path.GetTempPath(), "com.example.SqlTool");
+            ResolvedFolders = new SparFolders(
+                root,
+                FolderOptions.DataRoot ?? Path.Combine(root, "data"),
+                FolderOptions.LogsFolder ?? Path.Combine(root, "logs"),
+                Path.Combine(root, "cache"),
+                FolderOptions.ProfileFolder ?? Path.Combine(root, "WebView2"));
+        }
+
+        return ResolvedFolders;
     }
 
     /// <summary>What the app may open outside itself.</summary>

@@ -226,7 +226,7 @@ public sealed class SingleInstanceTests : IDisposable
         Assert.SkipUnless(OperatingSystem.IsWindows(), "Windows only");
         var logs = Path.Combine(_root, "logs");
         StartupProblem? seen = null;
-        var builder = new SparBuilder([]);
+        var builder = new SparBuilder([], appId: "test");
         builder.Folders(f => f.Logs(logs)).OnStartupProblem(problem => (seen = problem) is not null);
         var app = new SparApp(builder, new Spar.Runtime.SparCatalog("test", [], _ => { }), session: null);
 

@@ -42,6 +42,9 @@ public sealed class FolderOptions
     }
 }
 
+/// <summary>The folders in use: the SparFolders service, and what spar.ResolveFolders() gives Program.cs (3.13).</summary>
+public sealed record SparFolders(string DataRoot, string Data, string Logs, string Cache, string Profile);
+
 /// <summary>What Spar records for diagnosing the app on a user's machine (3.13).</summary>
 public sealed class DiagnosticsOptions
 {

@@ -25,15 +25,22 @@ internal static class SparLogging
 
     /// <summary>
     /// The app's logging, after the app's own registrations: the factory (<c>AddLogging</c>, which an app may have
-    /// called already), the run's levels configured after the app's own filters, so they apply to every provider, and
-    /// the file's provider when <paramref name="file"/> is given. <paramref name="ownsFile"/> says whether the services
-    /// close the file when they are disposed (a test host) or the host does at process exit (a desktop host, whose last
-    /// lines come after the services are gone).
+    /// called already), the levels of <c>Program.cs</c> configured after the app's own filters, those of
+    /// <c>logging.json</c> after every configuration (a post-configuration, so they hold whatever the app configured and
+    /// in whatever order, a configuration reloaded while the app runs included), and the file's provider when
+    /// <paramref name="file"/> is given. <paramref name="ownsFile"/> says whether the services close the file when they
+    /// are disposed (a test host) or the host does at process exit (a desktop host, whose last lines come after the
+    /// services are gone).
     /// </summary>
     public static void Add(IServiceCollection services, LogLevels levels, Func<LogFile>? file, bool ownsFile)
     {
         services.AddLogging();
-        services.Configure<LoggerFilterOptions>(levels.Apply);
+        services.Configure<LoggerFilterOptions>(levels.ApplyApp);
+        if (levels.HasFileLevels)
+        {
+            services.PostConfigure<LoggerFilterOptions>(levels.ApplyFile);
+        }
+
         if (file is not null)
         {
             services.AddSingleton<ILoggerProvider>(_ => new SparFileLoggerProvider(file(), ownsFile));

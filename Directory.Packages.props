@@ -14,6 +14,14 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0" />
     <!-- The logger factory and its filter rules (decision "Logging (follow-up record)"); not Configuration. -->
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="11.0.0" />
+    <!--
+      An app's own configuration (decision "Configuration stays the app's choice"): Spar does not reference these. The
+      runtime tests check Spar's levels against an app's AddConfiguration, and SecurityProbe's app-configuration build
+      reads a JSON file with them (docs/evidence/m1b-logging/configuration/).
+    -->
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Configuration" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.64.1" />
     <!--
       The Windows host (src/Spar.Windows): CsWin32 generates its Win32 declarations; the WebView2 package is used only

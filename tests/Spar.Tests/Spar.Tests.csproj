@@ -14,6 +14,15 @@
   </ItemGroup>
 
   <!--
+    An app's own logging configuration, for the order of Spar's levels against it (AppConfigurationTests); Spar itself
+    does not reference these (decision "Configuration stays the app's choice").
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" />
+  </ItemGroup>
+
+  <!--
     The Windows host, for the slot-order test of its WebView2 declarations against the header of the WebView2 package
     it was written from (copied beside the tests), and for the static-state test.
   -->

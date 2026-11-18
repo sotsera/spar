@@ -30,7 +30,10 @@ public sealed class LoggingOptions
 
     /// <summary>
     /// The lowest level logged for every category without a level of its own; <see cref="LogLevel.None"/> logs nothing.
-    /// It is the app's minimum level, so a <c>SetMinimumLevel</c> in the app's own <c>AddLogging</c> is replaced by it.
+    /// It is the app's minimum level, so a <c>SetMinimumLevel</c> in the app's own <c>AddLogging</c> is replaced by it,
+    /// but a rule the app configures for every category (a <c>"Default"</c> in its own configuration, an
+    /// <c>AddFilter</c> without a category) overrides it, for Spar's own <c>Spar.*</c> lines too: keep those with
+    /// <c>Level("Spar", LogLevel.Information)</c>. A <c>logging.json</c> level overrides both.
     /// </summary>
     public LoggingOptions Level(LogLevel level)
     {

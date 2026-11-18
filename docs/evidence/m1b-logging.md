@@ -119,3 +119,38 @@ No difference beyond the runs' spread (360–450 ms). The services' build moved 
 ### Not verified (follow-up)
 
 The devtools window's own display of a console error (its link now comes from the page's own stack, with no wrapper in Development); a document's navigation with `Runtime.enable` kept (one document per run here); Microsoft.Extensions.Logging's alias rule on a NativeAOT image (unit-tested on CoreCLR); the measured (c) hybrid.
+
+## Configuration (2026-11-18): `logging.json` over the app's own configuration, `spar.ResolveFolders()`
+
+Decision "Configuration stays the app's choice (user decision)", after [`spikes/configuration-cost/`](../../spikes/configuration-cost/RESULTS.md); record "Configuration stays the app's choice (implementation record; choices for review)". `logging.json`'s levels are now a post-configuration of `LoggerFilterOptions` (`LogLevels.ApplyFile`): its level the minimum and a rule for every category, its categories rules, all after anything the app configured. `spar.ResolveFolders()` gives `Program.cs` the folders the services get.
+
+### How it was run
+
+`scenarios.sh configuration`, as above (window offscreen and not activated, no input, `WM_CLOSE`, `LOCALAPPDATA` under `artifacts/webview2-profiles/m1b-logging/`). The build is `dotnet publish tests/apps/SecurityProbe -c Release -p:SecurityProbeAppConfiguration=true` (Production, NativeAOT, 4,766,208 B; 0 warnings): its `Program.cs` calls `spar.ResolveFolders()`, reads `appsettings.json` from the data folder with Microsoft.Extensions.Configuration (`AddJsonFile`) and applies its `Logging` section with its own `AddLogging(b => b.AddConfiguration(…))`. The file: `{"Logging":{"LogLevel":{"Default":"Warning","SecurityProbe":"Debug"}}}`; the probe's own Debug line shows it was read. Logs in [`m1b-logging/logs/configuration/`](m1b-logging/logs/configuration/), the repository's path written as `<repo>`. WebView2 Runtime 157.0.4341.60.
+
+### Results
+
+| Run | `logging.json` | `app.log` |
+|---|---|---|
+| `cfg-default-warning` | none | 4 `Spar.Host` lines, up to "prerequisites checked" (the host's early logger); every later Information line gone, `ui-ready` and `exit 0` included; the probe's `DEBUG SecurityProbe.ProbeService` line present. The override the documentation now describes. |
+| `cfg-logging-json-level` | `{"level":"Information"}` | 40 `Spar.Host` lines, "services built", the security headers, `ui-ready at 361.3 ms`, `exit 0 at 1430.6 ms`; the probe's Debug line still present, since the app's category rule is more specific than the file's level (the choice in the record). |
+| `cfg-folders` | none | the page asked the `SparFolders` service: data root `…\cfg-folders\com.example.tests.SecurityProbe`, data `…\data`, "same as Program.cs resolved: True". |
+| `cfg-folders-moved` | none | `SECURITY_PROBE_DATA` moved the data folder with `spar.Folders(f => f.Data(…))` before `ResolveFolders()`: the service's data `…\cfg-folders-moved\moved-data`, "same as Program.cs resolved: True", and the probe's Debug line shows `appsettings.json` was read from the moved folder. |
+
+All four exited 0.
+
+### Size
+
+| Build | Before | After |
+|---|---|---|
+| Notebook (`dotnet publish samples/Notebook -c Release`, 0 warnings) | 5,182,464 B | 5,184,512 B (+2,048 B) |
+| SecurityProbe | 4,409,856 B | 4,411,904 B (+2,048 B) |
+| SecurityProbe with its own configuration (`-p:SecurityProbeAppConfiguration=true`) | – | 4,766,208 B (+354,304 B over the probe; the spike measured +351,232 B for the same route) |
+
+### Unit tests
+
+`AppConfigurationTests` (Spar.Tests, with Microsoft.Extensions.Configuration and Logging.Configuration in the test project only): the app's `"Default"` overriding `spar.Logging`'s level; the file's level beating the app's `"Default"`, and its `AddFilter` without a category plus `SetMinimumLevel`, each registered before and after Spar's; the app's category rule beating the file's level and the file's category beating the app's; a `Program.cs` category keeping Spar's lines; a provider rule of the app's still applying to its provider; the file's level holding after the app's configuration reloads (a category the reload added shows it took effect); `ResolveFolders` in a desktop run's shape (`SparFolders.ForApp`, the app's choice applied, later `Folders` calls and a kept `FolderOptions` refused) and under the test host (`SparTestSession` running `SparApplication.Create`: the early value, the `SparFolders` service and the running app's folders equal the test's root). With the file's levels as a plain `Configure` instead of a post-configuration, the two "registered after" cases fail.
+
+### Not verified (configuration)
+
+Linux; a Development build of the configured probe (`ResolveFolders` uses the hosts' own `SparFolders.ForApp`, whose `.Development` suffix is unit-tested; not run); `reloadOnChange` with the file's level on a real run (unit-tested with an in-memory reload); an app's own `PostConfigure<LoggerFilterOptions>` (it runs before Spar's, since the app registers its services before Spar adds its own; only a test's service overrides come after).

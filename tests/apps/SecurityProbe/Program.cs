@@ -1,7 +1,10 @@
 using Microsoft.Extensions.Logging;
 using Spar;
-#if PROBE_ADD_LOGGING
+#if PROBE_ADD_LOGGING || PROBE_APP_CONFIGURATION
 using Microsoft.Extensions.DependencyInjection;
+#endif
+#if PROBE_APP_CONFIGURATION
+using Microsoft.Extensions.Configuration;
 #endif
 
 var app = SparApplication.Create(args, spar =>
@@ -41,11 +44,35 @@ var app = SparApplication.Create(args, spar =>
 #if PROBE_WITHOUT_FILE
     spar.Logging(l => l.WithoutFile());
 #endif
+
+    // The app's own configuration (decision "Configuration stays the app's choice"): appsettings.json in the data folder
+    // Spar resolves for it, read with Microsoft.Extensions.Configuration, its "Logging" section applied by the app's own
+    // AddLogging. Its standard "Default" overrides spar.Logging's levels; logging.json's level still beats it
+    // (docs/evidence/m1b-logging.md, "Configuration"). SECURITY_PROBE_DATA moves the data folder first.
+#if PROBE_APP_CONFIGURATION
+    if (Environment.GetEnvironmentVariable("SECURITY_PROBE_DATA") is { Length: > 0 } data)
+    {
+        spar.Folders(f => f.Data(data));
+    }
+
+    var folders = spar.ResolveFolders();
+    SecurityProbe.EarlyFolders.Value = folders;
+    var configuration = new ConfigurationBuilder()
+        .AddJsonFile(Path.Combine(folders.Data, "appsettings.json"), optional: true, reloadOnChange: false)
+        .Build();
+    spar.Services.AddLogging(logging => logging.AddConfiguration(configuration.GetSection("Logging")));
+#endif
 });
 return app.Run();
 
 namespace SecurityProbe
 {
+    /// <summary>The folders <c>Program.cs</c> resolved before the services existed, in the app-configuration build.</summary>
+    internal static class EarlyFolders
+    {
+        public static SparFolders? Value { get; set; }
+    }
+
     /// <summary>The page asks which probe to run, then reports each result, which goes to standard error.</summary>
     [SparContract]
     public sealed class ProbeService(SparFolders folders, ILogger<ProbeService> logger)
@@ -68,9 +95,20 @@ namespace SecurityProbe
             return Task.CompletedTask;
         }
 
-        /// <summary>The folders app code sees through the SparFolders service.</summary>
+        /// <summary>
+        /// The folders app code sees through the SparFolders service, and in the app-configuration build whether they
+        /// are the ones Program.cs resolved early.
+        /// </summary>
         [SparCommand]
-        public Task<string> FoldersAsync() =>
-            Task.FromResult($"data root {folders.DataRoot}; profile {folders.Profile}; logs {folders.Logs}");
+        public Task<string> FoldersAsync()
+        {
+            var text = $"data root {folders.DataRoot}; profile {folders.Profile}; logs {folders.Logs}";
+            if (EarlyFolders.Value is { } early)
+            {
+                text += $"; data {folders.Data}; same as Program.cs resolved: {early == folders}";
+            }
+
+            return Task.FromResult(text);
+        }
     }
 }

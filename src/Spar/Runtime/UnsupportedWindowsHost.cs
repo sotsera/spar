@@ -38,7 +38,7 @@ public sealed partial class UnsupportedWindowsHost : ISparHost
         // The app's log file, through the same writer as the host's lines, unless the app writes none; closed (briefly
         // flushed) before the exit.
         var log = app.Builder.LoggingOptions.WritesFile
-            ? LogFile.Open(SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions).Logs)
+            ? LogFile.Open(app.Builder.ResolveFolders().Logs)
             : null;
         log?.Write(LogLevel.Error, SparLogging.HostCategory, line);
         try

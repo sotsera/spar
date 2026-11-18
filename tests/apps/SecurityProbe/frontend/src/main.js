@@ -56,6 +56,12 @@ const probes = {
     await report(`ready; nonce meta ${document.querySelector("meta[property=csp-nonce]")?.nonce ? "present" : "absent"}`);
   },
 
+  // The folders app code sees through the SparFolders service, and in the app-configuration build whether they are the
+  // ones Program.cs resolved early (docs/evidence/m1b-logging.md, "Configuration").
+  folders: async () => {
+    await report(`folders: ${await probe.folders().unwrap()}`);
+  },
+
   // N violations of one group: a style attribute set from script, which style-src-attr blocks.
   flood: async count => {
     const element = document.getElementById("status");

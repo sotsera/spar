@@ -84,7 +84,7 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         _app = app;
         _title = app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
         _identity = SparFolders.ChannelId(app.AppId, SparDevelopment.IsSupported);
-        _folders = SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions);
+        _folders = app.Builder.ResolveFolders();
         _profile = new BrowserProfile(_folders.Profile);
         _relaunches = new RelaunchQueue(app.Builder.RelaunchHandler, _log.Logger);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);

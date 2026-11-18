@@ -115,9 +115,19 @@ public sealed partial record SparFolders(string DataRoot, string Data, string Lo
     private static partial uint GetDriveType(string rootPathName);
 }
 
-/// <summary>The folder choices <c>Program.cs</c> can make.</summary>
+/// <summary>
+/// The folder choices <c>Program.cs</c> can make, until <c>spar.ResolveFolders()</c> decides the folders: a choice
+/// after that throws, so the folders <c>Program.cs</c> got never differ from the <see cref="SparFolders"/> service.
+/// </summary>
 public sealed class FolderOptions
 {
+    /// <summary>Why a folder choice after <c>spar.ResolveFolders()</c> is refused.</summary>
+    internal const string ResolvedMessage =
+        "The folders were already resolved by spar.ResolveFolders(): call spar.Folders(…) before it, so the folders " +
+        "Program.cs got are the ones the app's services get.";
+
+    private bool _frozen;
+
     public string? DataFolder { get; private set; }
 
     public string? LogsFolder { get; private set; }
@@ -126,12 +136,14 @@ public sealed class FolderOptions
 
     public FolderOptions Data(string path)
     {
+        ThrowIfFrozen();
         DataFolder = path;
         return this;
     }
 
     public FolderOptions Logs(string path)
     {
+        ThrowIfFrozen();
         LogsFolder = path;
         return this;
     }
@@ -145,7 +157,19 @@ public sealed class FolderOptions
     public FolderOptions Profile(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
+        ThrowIfFrozen();
         ProfileFolder = path;
         return this;
+    }
+
+    /// <summary>Refuses further choices: the folders are decided.</summary>
+    internal void Freeze() => _frozen = true;
+
+    private void ThrowIfFrozen()
+    {
+        if (_frozen)
+        {
+            throw new InvalidOperationException(ResolvedMessage);
+        }
     }
 }

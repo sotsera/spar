@@ -47,6 +47,11 @@ var app = SparApplication.Create(args, spar =>
     // Here logs sit next to the executable, as in a portable install.
     spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")));
 
+    // The folders the services will get, resolved now for what Program.cs builds itself: the hang record goes in the
+    // logs folder chosen above without repeating its path (3.13). spar.Folders(…) throws after this call. Built; the
+    // shape is for review (decision "Configuration stays the app's choice").
+    var folders = spar.ResolveFolders();
+
     // Window kinds the page opens by name (6.7). Decided.
     spar.Window("settings", w => w
         .Route("/settings")
@@ -97,7 +102,7 @@ var app = SparApplication.Create(args, spar =>
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
     spar.Services.AddSingleton<RunningCopies>();
     spar.Services.AddSingleton<RecipeQueue>();
-    spar.Services.AddSingleton<HangLog>();
+    spar.Services.AddSingleton(new HangLog(folders.Logs));
 });
 
 return app.Run();

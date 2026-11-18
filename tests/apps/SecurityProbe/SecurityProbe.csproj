@@ -24,5 +24,17 @@
     <!-- -p:SecurityProbeAddLogging=true adds the app's own AddLogging, -p:SecurityProbeWithoutFile=true spar.Logging(l => l.WithoutFile()). -->
     <DefineConstants Condition="'$(SecurityProbeAddLogging)' == 'true'">$(DefineConstants);PROBE_ADD_LOGGING</DefineConstants>
     <DefineConstants Condition="'$(SecurityProbeWithoutFile)' == 'true'">$(DefineConstants);PROBE_WITHOUT_FILE</DefineConstants>
+
+    <!--
+      -p:SecurityProbeAppConfiguration=true adds the app's own configuration: appsettings.json in the data folder from
+      spar.ResolveFolders(), its "Logging" section through AddLogging (docs/evidence/m1b-logging.md, "Configuration").
+      The packages are this probe's alone; Spar and the Notebook reference none of them.
+    -->
+    <DefineConstants Condition="'$(SecurityProbeAppConfiguration)' == 'true'">$(DefineConstants);PROBE_APP_CONFIGURATION</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(SecurityProbeAppConfiguration)' == 'true'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" />
+  </ItemGroup>
 </Project>

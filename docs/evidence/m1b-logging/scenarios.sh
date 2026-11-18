@@ -77,6 +77,35 @@ case "${1:-all}" in
     run dev-console-devtools-100k "$dev" "done console:100000" 120 12000 --env SECURITY_PROBE_MODE=console:100000 --env SPAR_AUTOMATED=1
     run dev-distinct-console-devtools-100k "$dev" "done distinct-console:100000" 120 12000 --env SECURITY_PROBE_MODE=distinct-console:100000 --env SPAR_AUTOMATED=1
     ;;&
+  configuration)
+    # Decision "Configuration stays the app's choice": the probe built with -p:SecurityProbeAppConfiguration=true reads
+    # appsettings.json from the data folder spar.ResolveFolders() gave it, applying its "Logging" section through its own
+    # AddLogging: "Default" Warning, and Debug for the probe's category (its Debug line shows the file was read).
+    # Without logging.json, the "Default" silences Spar's Information lines; with {"level":"Information"} they are back.
+    # SECURITY_PROBE_DATA moves the data folder before ResolveFolders; the page asks the SparFolders service, and the
+    # probe says whether it equals what Program.cs resolved. Logs in logs/configuration/.
+    cfg=$repo/artifacts/m1b-logging/probeConfiguration/SecurityProbe.exe
+    logs=$repo/artifacts/m1b-logging/logs/configuration
+    mkdir -p "$logs"
+    app_json='{"Logging":{"LogLevel":{"Default":"Warning","SecurityProbe":"Debug"}}}'
+    app_settings() {
+      mkdir -p "$1/com.example.tests.SecurityProbe/data"
+      printf '%s' "$app_json" > "$1/com.example.tests.SecurityProbe/data/appsettings.json"
+    }
+    level_json() {
+      app_settings "$1"
+      printf '{"level":"Information"}' > "$1/com.example.tests.SecurityProbe/logging.json"
+    }
+    moved_data() {
+      mkdir -p "$1/moved-data"
+      printf '%s' "$app_json" > "$1/moved-data/appsettings.json"
+    }
+    before=app_settings run cfg-default-warning "$cfg" "done idle" 30 1000 --env SECURITY_PROBE_MODE=idle
+    before=level_json run cfg-logging-json-level "$cfg" "done idle" 30 1000 --env SECURITY_PROBE_MODE=idle
+    before=app_settings run cfg-folders "$cfg" "done folders" 30 1000 --env SECURITY_PROBE_MODE=folders
+    before=moved_data run cfg-folders-moved "$cfg" "done folders" 30 1000 --env SECURITY_PROBE_MODE=folders \
+      --env "SECURITY_PROBE_DATA=$(cygpath -w "$profiles/cfg-folders-moved/moved-data")"
+    ;;
   all|notebook)
     before=notebook_pages run notebook "$notebook" "ui-ready" 30 3000
     wait

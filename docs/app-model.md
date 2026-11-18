@@ -65,7 +65,7 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
   - the permissions (plan 3b);
   - the window kinds, whose names become a TypeScript union in `@spar/app/windows` (6.7);
   - the window colours (plan 3d).
-- **Run at start-up, so ordinary values are fine:** every other configuration call runs when the app starts and may use run-time values. The example does so with `spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")))` and with the tray menu's lambda.
+- **Run at start-up, so ordinary values are fine:** every other configuration call runs when the app starts and may use run-time values. The example does so with `spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")))` and with the tray menu's lambda. `spar.ResolveFolders()` gives the configuration the folders the app's services will get, for what it builds itself (3.13).
 
 File `SqlTool/Program.cs`:
 
@@ -119,6 +119,11 @@ var app = SparApplication.Create(args, spar =>
     // Here logs sit next to the executable, as in a portable install.
     spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")));
 
+    // The folders the services will get, resolved now for what Program.cs builds itself: the hang record goes in the
+    // logs folder chosen above without repeating its path (3.13). spar.Folders(…) throws after this call. Built; the
+    // shape is for review (decision "Configuration stays the app's choice").
+    var folders = spar.ResolveFolders();
+
     // Window kinds the page opens by name (6.7). Decided.
     spar.Window("settings", w => w
         .Route("/settings")
@@ -169,7 +174,7 @@ var app = SparApplication.Create(args, spar =>
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
     spar.Services.AddSingleton<RunningCopies>();
     spar.Services.AddSingleton<RecipeQueue>();
-    spar.Services.AddSingleton<HangLog>();
+    spar.Services.AddSingleton(new HangLog(folders.Logs));
 });
 
 return app.Run();
@@ -842,7 +847,8 @@ public sealed class NetworkAwareMonitor(INetworkStatus network, IMonitor monitor
 - **One log file, in every app:** `app.log` in the logs folder gets Spar's lines and every `ILogger` of the app's services, from the host's first moment, so a start-up failure is there too. Inject `ILogger<T>` as usual: the app's services use Microsoft.Extensions.Logging's logger factory, and an app may add its own providers (`AddLogging`, for a console or OpenTelemetry), which work beside the file. Writing never waits for the disk: a full queue drops the newest lines and the file says how many. Rotation comes in M3 (5 files of 10 MB); until then a file over 5 MB is moved aside to `app.1.log` when the app starts.
 - **Without a file:** `spar.Logging(l => l.WithoutFile())` adds no file, for an app that sends its logs only to a sink of its own. The risk: support has no local file to ask for, and a failure before the app's services exist (a missing WebView2 Runtime, a relaunch that cannot reach the running app) reaches only standard error, which an app started from its icon does not have; the start-up message then names no log file.
 - **Levels:** Information and above in Production, Debug and above in Development and Test builds. `spar.Logging(l => l.Level(…).Level("SqlTool.CopyJobs", LogLevel.Debug))` (section 2) sets the minimum and the level of a category and of every category it is a prefix of, as Microsoft.Extensions.Logging's filter rules do: case-insensitive, the longest match winning, one `*` allowed. They are the app's levels, for every provider, the file and any the app adds: they are applied after the app's own `AddLogging` configuration, so they replace its `SetMinimumLevel`, while a rule the app adds for one provider (`AddFilter<ConsoleLoggerProvider>(…)`, or the file's alias `SparFile`) still applies to that provider.
-- **Without a new build:** a `logging.json` in the app's per-user folder (`SparFolders.DataRoot`, `%LOCALAPPDATA%\<app id>` on Windows) overrides those levels when the app starts, writable without administrator rights and kept across updates. A file Spar cannot use (another shape, an unknown level, a comment) is ignored with one warning in the log, and the app starts with the levels of `Program.cs`. Its whole shape:
+- **The app's own logging rules override `spar.Logging`:** Microsoft.Extensions.Logging uses a matching rule before the minimum level, and the default of `spar.Logging` is the minimum. So a `"Default"` in the app's own `Logging` configuration section, or an `AddFilter` without a category, sets the level of every category without a rule of its own, Spar's `Spar.*` lines in `app.log` included: with `"Default": "Warning"`, the host's Information lines (`ui-ready`, the security headers, the exit) leave the file. A category rule of the app's replaces the one `spar.Logging` sets for the same category. That is the app's choice; to keep Spar's lines under a stricter default, give them their own level, `"Spar": "Information"` in the app's configuration or `spar.Logging(l => l.Level("Spar", LogLevel.Information))`.
+- **Without a new build:** a `logging.json` in the app's per-user folder (`SparFolders.DataRoot`, `%LOCALAPPDATA%\<app id>` on Windows) overrides those levels when the app starts, writable without administrator rights and kept across updates. Its `"level"` holds over the app's own configuration too: Spar applies it after every configuration of the levels, whatever the order, and again when the app's configuration reloads, as the level of every category, so support can raise it even in an app whose configuration sets a `"Default"`. A category level, the app's or `spar.Logging`'s, is more specific and keeps its level; the file's `"categories"` apply last, so naming the same category there changes it. A file Spar cannot use (another shape, an unknown level, a comment) is ignored with one warning in the log, and the app starts with the levels of `Program.cs`. Its whole shape:
 
 ```json
 { "level": "Debug", "categories": { "SqlTool.CopyJobs": "Trace" } }
@@ -852,7 +858,8 @@ public sealed class NetworkAwareMonitor(INetworkStatus network, IMonitor monitor
 - **Page errors:** `console.error` calls, uncaught exceptions and unhandled rejections reach the same log under `Spar.Page`, grouped by kind, text and place in the page: the first of each group at once, as an error with its stack, the rest counted in a summary at most every 10 s, with bounds per document. The page's own console is unchanged. A Development build reads `console.error` from the devtools' own console events, so the devtools' links point at the page's code; Production and Test builds wrap it in the page.
 - **Test runs** write the same file in the test's own logs folder, deleted with its data root.
 - **Crashes:** an unhandled .NET exception writes a crash record before the process ends.
-- **Folders:** every folder has a per-user default under the app id's folder (section 1) and can be set in `Program.cs` (`spar.Folders(…)`, as above; the browser profile in 3.17). App code reads the folders in use from the `SparFolders` service (`DataRoot`, `Data`, `Logs`, `Cache`, `Profile`). Test runs move them all under their own data root; a black-box test does it through the environment, since the Production executable takes no data-root switch.
+- **Folders:** every folder has a per-user default under the app id's folder (section 1) and can be set in `Program.cs` (`spar.Folders(…)`, as above; the browser profile in 3.17). App code reads the folders in use from the `SparFolders` service (`DataRoot`, `Data`, `Logs`, `Cache`, `Profile`). `Program.cs` gets the same value earlier from `spar.ResolveFolders()`, for what it builds before the services exist, as the SQL tool does for its hang record (section 2): the per-user folder (`%LOCALAPPDATA%\<app id>`, with `.Development` after the id in a Development build), the app's `spar.Folders(…)` choices, or a test run's own root. Call `spar.Folders(…)` first: after `ResolveFolders()` it throws, so the two can never differ. Test runs move them all under their own data root; a black-box test does it through the environment, since the Production executable takes no data-root switch.
+- **The app's own configuration:** Spar reads no `appsettings.json` and takes no configuration package. An app that wants one adds Microsoft.Extensions.Configuration itself; its packages work in a NativeAOT build without warnings, and a JSON file applied to logging measured about 350 KB of executable. The file can sit in the app's data folder without repeating Spar's folder rule: `var folders = spar.ResolveFolders();`, then `new ConfigurationBuilder().AddJsonFile(Path.Combine(folders.Data, "appsettings.json"), optional: true).Build()`, applied with `spar.Services.AddLogging(b => b.AddConfiguration(configuration.GetSection("Logging")))`. Its `"Default"` then overrides `spar.Logging`, as above, and `logging.json` still overrides it.
 
 File `SqlTool/Status/CrashReport.cs`:
 
@@ -999,9 +1006,14 @@ public sealed class HangLog
 {
     private const int Kept = 50;
 
-    private static readonly string FilePath = Path.Combine(AppContext.BaseDirectory, "logs", "hangs.txt");
-
     private readonly ConcurrentQueue<PageHang> _changes = new();
+    private readonly string _filePath;
+
+    /// <summary>A record in <paramref name="logsFolder"/>, the logs folder Program.cs resolved.</summary>
+    public HangLog(string logsFolder)
+    {
+        _filePath = Path.Combine(logsFolder, "hangs.txt");
+    }
 
     /// <summary>
     /// One change: unresponsive, recovered, reloaded or closed anyway. Spar's dialog has already asked the user. Spar
@@ -1017,7 +1029,7 @@ public sealed class HangLog
         var line = string.Create(
             CultureInfo.InvariantCulture,
             $"{DateTimeOffset.UtcNow:O} {hang.Window} {hang.State} after {hang.Duration.TotalSeconds:0.0} s{Environment.NewLine}");
-        await File.AppendAllTextAsync(FilePath, line, cancellationToken);
+        await File.AppendAllTextAsync(_filePath, line, cancellationToken);
     }
 
     /// <summary>How often the page stopped responding in this run, and the longest it went without answering.</summary>
