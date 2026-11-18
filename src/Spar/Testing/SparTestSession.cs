@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Spar.Hosting;
+using Spar.Logging;
 using Spar.Runtime;
 
 namespace Spar;
@@ -47,8 +49,13 @@ internal sealed class SparTestSession
         var folders = SparFolders.ForTest(DataRoot);
 
         SparRunningApp app;
+        string? loggingProblem;
         try
         {
+            // The app's log file as a desktop run writes it, in this test's own logs folder, deleted with its data root;
+            // the services open it with their first logger and close it when they are disposed.
+            var levels = SparLogging.Levels(builder.LoggingOptions, folders.DataRoot, SparDevelopment.IsSupported, out loggingProblem);
+            SparLogging.AddFile(services, () => LogFile.Open(folders.Logs), levels, ownsFile: true);
             SparRunningApp.AddSparServices(services, catalog, folders, builder.BridgeOptions.Freeze());
 
             // The test's overrides run last, after the app's registrations and Spar's defaults.
@@ -60,6 +67,11 @@ internal sealed class SparTestSession
         {
             _started.TrySetException(exception);
             return 70;
+        }
+
+        if (loggingProblem is not null)
+        {
+            app.Services.GetService<ILoggerFactory>()?.CreateLogger(SparLogging.HostCategory).LogWarning("{Problem}", loggingProblem);
         }
 
         _started.TrySetResult(app);

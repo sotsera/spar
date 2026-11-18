@@ -58,3 +58,28 @@ public sealed class DiagnosticsOptions
         return this;
     }
 }
+
+/// <summary>The log file's levels (3.13): a default and levels by category prefix; a per-user logging.json overrides them.</summary>
+public sealed class LoggingOptions
+{
+    internal LoggingOptions()
+    {
+    }
+
+    internal Microsoft.Extensions.Logging.LogLevel? DefaultLevel { get; private set; }
+
+    internal List<(string Category, Microsoft.Extensions.Logging.LogLevel Level)> Categories { get; } = [];
+
+    public LoggingOptions Level(Microsoft.Extensions.Logging.LogLevel level)
+    {
+        DefaultLevel = level;
+        return this;
+    }
+
+    public LoggingOptions Level(string category, Microsoft.Extensions.Logging.LogLevel level)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(category);
+        Categories.Add((category, level));
+        return this;
+    }
+}

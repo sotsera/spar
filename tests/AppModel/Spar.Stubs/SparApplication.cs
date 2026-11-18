@@ -36,6 +36,8 @@ public sealed class SparApplication
 
         Console.WriteLine($"browser opt-ins: {string.Join(", ", _builder.BrowserOptions.Allowed)}");
         Console.WriteLine($"page hang hook {(_builder.PageHangHandler is null ? "none" : "set")}, stall probe kept {_builder.DiagnosticsOptions.KeepsStallProbe}");
+        var logging = _builder.LoggingOptions;
+        Console.WriteLine($"log level {logging.DefaultLevel?.ToString() ?? "the build's"}, categories {string.Join(", ", logging.Categories.Select(c => $"{c.Category} {c.Level}"))}");
         Console.WriteLine($"tray: {_builder.TrayOptions?.TooltipText} [{string.Join(" | ", _builder.TrayOptions?.MenuItems.Items ?? [])}], close to tray {window.HidesToTray}");
 
         foreach (var service in _builder.Services)
@@ -216,6 +218,16 @@ public sealed class SparBuilder
     {
         ArgumentNullException.ThrowIfNull(configure);
         configure(DiagnosticsOptions);
+        return this;
+    }
+
+    internal LoggingOptions LoggingOptions { get; } = new();
+
+    /// <summary>The log file's levels (3.13); a per-user logging.json overrides them at start.</summary>
+    public SparBuilder Logging(Action<LoggingOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(LoggingOptions);
         return this;
     }
 }

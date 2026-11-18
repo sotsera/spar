@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using Microsoft.Extensions.Logging;
+using Spar.Logging;
 using Spar.Windows;
 
 namespace Spar.Tests;
@@ -188,7 +190,7 @@ public sealed class SingleInstanceTests : IDisposable
     [Fact]
     public async Task Two_runs_appending_to_one_log_file_keep_every_line()
     {
-        // A relaunch writes to host.log while the running instance does: two writers on one file, each with its own
+        // A relaunch writes to app.log while the running instance does: two writers on one file, each with its own
         // handle, as two processes have. A FileStream in append mode lost about half the lines here.
         Assert.SkipUnless(OperatingSystem.IsWindows(), "Windows log file");
         var logs = Path.Combine(_root, "logs");
@@ -199,7 +201,7 @@ public sealed class SingleInstanceTests : IDisposable
         {
             for (var i = 0; i < 2_000; i++)
             {
-                writer.Log.Write($"{writer.Name} {i}");
+                writer.Log.Write(LogLevel.Information, "Test", $"{writer.Name} {i}");
                 if (i % 50 == 0)
                 {
                     await Task.Yield();
@@ -211,8 +213,8 @@ public sealed class SingleInstanceTests : IDisposable
         second.Close();
 
         var lines = File.ReadAllLines(Path.Combine(logs, LogFile.FileName));
-        Assert.Equal(2_000, lines.Count(line => line.StartsWith("first ", StringComparison.Ordinal)));
-        Assert.Equal(2_000, lines.Count(line => line.StartsWith("second ", StringComparison.Ordinal)));
+        Assert.Equal(2_000, lines.Count(line => line.Contains(" Test  first ", StringComparison.Ordinal)));
+        Assert.Equal(2_000, lines.Count(line => line.Contains(" Test  second ", StringComparison.Ordinal)));
         Assert.Equal(4_000, lines.Length);
     }
 
@@ -232,7 +234,7 @@ public sealed class SingleInstanceTests : IDisposable
 
         Assert.Equal(7, exit);
         Assert.Equal((StartupProblemKind.OsTooOld, "Windows", "10.0.19045"), (seen!.Kind, seen.Component, seen.Required));
-        Assert.Contains("Start-up problem OsTooOld", File.ReadAllText(Path.Combine(logs, "host.log")), StringComparison.Ordinal);
+        Assert.Contains("Start-up problem OsTooOld", File.ReadAllText(Path.Combine(logs, LogFile.FileName)), StringComparison.Ordinal);
     }
 
     private InstanceClaim Claim(string[] arguments) =>

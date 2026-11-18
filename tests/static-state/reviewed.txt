@@ -46,6 +46,16 @@ Spar | Spar.Hosting.CspViolationLog.Violation | readonly | A log message delegat
 Spar | Spar.Hosting.CspViolationLog.ListenerStopped | readonly | A log message delegate, as above.
 Spar | Spar.Hosting.CspViolationLog.Totals | readonly | A log message delegate, as above.
 Spar | Spar.Hosting.CspViolationLog+Work.<Tick>k__BackingField | readonly | An immutable record of the summary tick, shared by design; it carries no data.
+Spar | Spar.Logging.LoggingFile.Options | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Logging.PageErrorReader.Options | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Logging.PageErrorLog.<SummaryInterval>k__BackingField | readonly | A TimeSpan constant.
+Spar | Spar.Logging.PageErrorLog.Reported | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar | Spar.Logging.PageErrorLog.Stopped | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.Summary | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.TooMany | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.Totals | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.Unreadable | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog+Work.<Tick>k__BackingField | readonly | An immutable record of the summary tick, shared by design; it carries no data.
 Spar | Spar.Hosting.PageHtml.Head | readonly | The bytes of a tag name, filled once, never written.
 Spar | Spar.Hosting.PageHtml.ImportMapStart | readonly | The bytes of the import map's opening tag, as above.
 Spar | Spar.Hosting.PageHtml.ScriptEnd | readonly | The bytes of a closing tag, as above.

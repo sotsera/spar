@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Spar.Logging;
 using Spar.Runtime;
 
 namespace Spar;
@@ -25,6 +26,7 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
         services.TryAddSingleton(new Hosting.BrowserProfile(folders.Profile));
         services.TryAddSingleton(limits);
         services.TryAddSingleton(TimeProvider.System);
+        SparLogging.AddFactory(services);
         services.TryAddScoped<SparCall>();
         services.TryAddScoped<ISparCall>(provider => provider.GetRequiredService<SparCall>());
         catalog.AddServices(services);

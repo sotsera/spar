@@ -67,6 +67,9 @@ public sealed class SparBuilder
     /// <summary>What Spar records for diagnosing the app.</summary>
     internal DiagnosticsOptions DiagnosticsOptions { get; } = new();
 
+    /// <summary>The log file's levels as <c>Program.cs</c> set them.</summary>
+    internal LoggingOptions LoggingOptions { get; } = new();
+
     /// <summary>The browser's strict defaults the app opted out of (plan section 3c).</summary>
     internal BrowserOptions BrowserOptions { get; } = new();
 
@@ -244,6 +247,21 @@ public sealed class SparBuilder
     {
         ArgumentNullException.ThrowIfNull(configure);
         configure(DiagnosticsOptions);
+        return this;
+    }
+
+    /// <summary>
+    /// The levels of the app's log file (<c>docs/app-model.md</c> 3.13), for example
+    /// <c>spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.Copy", LogLevel.Debug))</c>. Every app writes
+    /// <c>app.log</c> in its logs folder: Spar's lines and every <c>ILogger</c> of the app's services, Information and
+    /// above in Production, Debug and above in Development and Test builds unless set here. A <c>logging.json</c> in the
+    /// app's per-user folder overrides these at start (<c>{"level":"Debug","categories":{"SqlTool.Copy":"Trace"}}</c>),
+    /// so a user can raise the level for support without a new build. The levels apply to the file only.
+    /// </summary>
+    public SparBuilder Logging(Action<LoggingOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(LoggingOptions);
         return this;
     }
 }

@@ -13,6 +13,7 @@ export type MessageType =
   | "closing-done"
   | "pong"
   | "csp"
+  | "errors"
   | "open"
   | "result"
   | "items"
@@ -23,7 +24,7 @@ export type MessageType =
   | "ping";
 
 const knownTypes: ReadonlySet<string> = new Set<MessageType>([
-  "hello", "call", "stream", "credits", "cancel", "ready", "closing-done", "pong", "csp",
+  "hello", "call", "stream", "credits", "cancel", "ready", "closing-done", "pong", "csp", "errors",
   "open", "result", "items", "end", "failure", "event", "closing", "ping",
 ]);
 

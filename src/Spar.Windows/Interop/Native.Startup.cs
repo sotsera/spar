@@ -25,18 +25,6 @@ internal static partial class Native
     /// <summary><c>OPEN_EXISTING</c>.</summary>
     public const uint OpenExisting = 3;
 
-    /// <summary><c>OPEN_ALWAYS</c>: opens the file, or creates it when it does not exist.</summary>
-    public const uint OpenAlways = 4;
-
-    /// <summary>
-    /// <c>FILE_APPEND_DATA | SYNCHRONIZE</c>, without <c>FILE_WRITE_DATA</c>: every write lands at the end of the file,
-    /// whatever offset it names, so several processes can append to one file without overwriting each other.
-    /// </summary>
-    public const uint AppendOnly = 0x0004 | 0x00100000;
-
-    /// <summary><c>FILE_ATTRIBUTE_NORMAL</c>.</summary>
-    public const uint AttributeNormal = 0x80;
-
     /// <summary><c>GENERIC_READ</c>.</summary>
     public const uint GenericRead = 0x80000000;
 

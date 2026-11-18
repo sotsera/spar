@@ -1,0 +1,47 @@
+2026-11-17T23:25:18.599Z INFO  Spar.Host  [b8392d3f] Host started 20.6 ms after the process.
+2026-11-17T23:25:18.599Z INFO  Spar.Host  [b8392d3f] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-uncaught-1000\com.example.tests.SecurityProbe
+2026-11-17T23:25:18.601Z INFO  Spar.Host  [b8392d3f] single instance at 1.7 ms
+2026-11-17T23:25:18.601Z INFO  Spar.Host  [b8392d3f] prerequisites checked at 2 ms
+2026-11-17T23:25:18.601Z INFO  Spar.Host  [b8392d3f] services built at 2.2 ms
+2026-11-17T23:25:18.608Z INFO  Spar.Host  [b8392d3f] window shown at 9.2 ms
+2026-11-17T23:25:18.608Z INFO  Spar.Host  [b8392d3f] Theme dark (system), window #1f1f1f.
+2026-11-17T23:25:18.609Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-17T23:25:18.615Z INFO  Spar.Host  [b8392d3f] environment at 15.9 ms
+2026-11-17T23:25:18.615Z INFO  Spar.Host  [b8392d3f] WebView2 Runtime 157.0.4341.46
+2026-11-17T23:25:18.615Z INFO  Spar.Host  [b8392d3f] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-uncaught-1000\com.example.tests.SecurityProbe\WebView2
+2026-11-17T23:25:18.619Z INFO  Spar.Host  [b8392d3f] Heartbeat every 5000 ms.
+2026-11-17T23:25:18.619Z INFO  Spar.Host  [b8392d3f] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-PPCDxJ0a3mrhp+ZRnKIDD0gQNDpllZMu9T4EdLpTN7U=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-17T23:25:18.619Z INFO  Spar.Host  [b8392d3f] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-17T23:25:18.824Z INFO  Spar.Host  [b8392d3f] controller at 224.5 ms
+2026-11-17T23:25:18.824Z INFO  Spar.Host  [b8392d3f] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-17T23:25:18.895Z INFO  Spar.Host  [b8392d3f] Page file picker blocked in 71.1 ms (Page.enable 70.7 ms).
+2026-11-17T23:25:18.895Z INFO  Spar.Host  [b8392d3f] page script added at 295.8 ms
+2026-11-17T23:25:18.895Z INFO  Spar.Host  [b8392d3f] navigation started at 295.8 ms
+2026-11-17T23:25:18.938Z INFO  Spar.Host  [b8392d3f] Bridge: document 9064f7f0a0c1380f opened.
+2026-11-17T23:25:18.938Z INFO  Spar.Host  [b8392d3f] Heartbeat armed for the new document.
+2026-11-17T23:25:18.938Z INFO  Spar.Host  [b8392d3f] first document at 338.6 ms
+2026-11-17T23:25:18.942Z INFO  Spar.Host  [b8392d3f] first bridge message at 343.4 ms
+2026-11-17T23:25:18.943Z INFO  Spar.Host  [b8392d3f] first bridge reply at 343.6 ms
+2026-11-17T23:25:18.943Z INFO  Spar.Host  [b8392d3f] ui-ready at 343.6 ms
+2026-11-17T23:25:18.943Z INFO  Spar.Host  [b8392d3f] Bridge: document 9064f7f0a0c1380f reported ui-ready.
+2026-11-17T23:25:18.946Z INFO  Spar.Host  [b8392d3f] first navigation completed at 346.6 ms
+2026-11-17T23:25:18.969Z INFO  Spar.Host  [b8392d3f] 404 for /favicon.ico
+2026-11-17T23:25:19.049Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3569: Uncaught Error: probe uncaught
+    Error: probe uncaught
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3569
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] close requested (User) at 2450.6 ms
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] closing at 2451.1 ms
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] page close work done at 2451.3 ms
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] Bridge: document 9064f7f0a0c1380f closed (window closing).
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] calls stopped at 2451.3 ms
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] calls settled at 2451.3 ms
+2026-11-17T23:25:21.050Z INFO  Spar.Host  [b8392d3f] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-17T23:25:21.068Z INFO  Spar.Host  [b8392d3f] controller closed at 2468.6 ms
+2026-11-17T23:25:21.070Z INFO  Spar.Host  [b8392d3f] window destroyed at 2471.2 ms
+2026-11-17T23:25:21.073Z INFO  Spar.Page  The page's errors in the last 2.1 s: Uncaught exception "Uncaught Error: probe uncaught": 999 more
+2026-11-17T23:25:21.073Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-17T23:25:21.073Z INFO  Spar.Host  [b8392d3f] services disposed at 2473.6 ms
+2026-11-17T23:25:21.073Z INFO  Spar.Host  [b8392d3f] exit 0 at 2473.7 ms

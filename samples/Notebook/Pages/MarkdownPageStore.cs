@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Spar;
 
 namespace Notebook.Pages;
@@ -22,10 +23,17 @@ public interface IPageStore
 /// <summary>
 /// One Markdown file per page under the app's data folder, with a small front matter for what Markdown cannot hold:
 /// <c>title</c>, <c>revision</c> and <c>updated</c>. The files stay readable and editable in any editor.
+/// A file in the folder that is not such a page (edited by hand, or left by another tool) is skipped, and the app's log
+/// says which, so a page that "disappeared" can be found.
 /// </summary>
-public sealed class MarkdownPageStore(SparFolders folders) : IPageStore
+public sealed class MarkdownPageStore(SparFolders folders, ILogger<MarkdownPageStore> logger) : IPageStore
 {
     private const string Fence = "---";
+
+    private static readonly Action<ILogger, string, Exception?> Skipped = LoggerMessage.Define<string>(
+        LogLevel.Warning,
+        new EventId(1, "PageSkipped"),
+        "Skipped {File}: not a Notebook page (it needs a front matter with title, revision and updated)");
 
     private readonly string _folder = Path.Combine(folders.Data, "pages");
     private readonly SemaphoreSlim _gate = new(1, 1);
@@ -55,10 +63,13 @@ public sealed class MarkdownPageStore(SparFolders folders) : IPageStore
         foreach (var path in Directory.EnumerateFiles(_folder, "*.md"))
         {
             var page = await FindAsync(Path.GetFileNameWithoutExtension(path), cancellationToken);
-            if (page is not null)
+            if (page is null)
             {
-                pages.Add(new PageSummary(page.Id, page.Title, page.UpdatedAt));
+                Skipped(logger, Path.GetFileName(path), null);
+                continue;
             }
+
+            pages.Add(new PageSummary(page.Id, page.Title, page.UpdatedAt));
         }
 
         return [.. pages.OrderByDescending(p => p.UpdatedAt).ThenBy(p => p.Title, StringComparer.CurrentCultureIgnoreCase)];

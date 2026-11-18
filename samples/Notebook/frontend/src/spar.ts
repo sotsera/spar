@@ -3,8 +3,19 @@
 import { configureSpar, connectSpar, hostChannel, type CallError } from "@spar/app/sdk";
 import { fingerprint } from "@spar/app/spar";
 
+/**
+ * Connects the page. A call that failed for a reason no handler took is shown to the person through `onFailure`, and
+ * written with console.error, which reaches the app's log in its window: so a failure only the page saw (a lost
+ * connection, a timeout) is in the log a user sends with a support request.
+ */
 export function startSpar(onFailure: (error: CallError) => void): { ready(): void } {
-  configureSpar({ onFailure });
+  configureSpar({
+    onFailure: error => {
+      const call = `${error.contract}.${error.command}`;
+      console.error(`Notebook: ${call} failed: ${error.kind} / ${error.code} (${error.execution})`);
+      onFailure(error);
+    },
+  });
   return connectSpar(hostChannel(), fingerprint);
 }
 

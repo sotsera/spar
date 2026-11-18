@@ -83,6 +83,12 @@ internal sealed class BridgeSession : IDisposable
     /// </summary>
     public event Action<ReadOnlyMemory<byte>>? Violations;
 
+    /// <summary>
+    /// Raised with the payload of each <c>errors</c> message: a batch of the page's console errors, uncaught exceptions
+    /// and unhandled rejections from the host-injected script. The payload is the page's, untrusted; the host parses it.
+    /// </summary>
+    public event Action<ReadOnlyMemory<byte>>? PageErrors;
+
     /// <summary>Messages that could not be used, with why; for the host's log.</summary>
     public event Action<string>? Dropped;
 
@@ -136,6 +142,9 @@ internal sealed class BridgeSession : IDisposable
                 break;
             case BridgeMessageType.Csp:
                 Violations?.Invoke(decoded.Payload);
+                break;
+            case BridgeMessageType.Errors:
+                PageErrors?.Invoke(decoded.Payload);
                 break;
             default:
                 Unexpected(decoded);

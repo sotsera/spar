@@ -77,6 +77,51 @@ const probes = {
     await report(`distinct: raised ${count} in ${(performance.now() - started).toFixed(1)} ms`);
   },
 
+  // The page's errors (docs/evidence/m1b-logging.md): N of one kind, the same each time or all different, timed in two
+  // parts, the first 1,000 (which the host's script reports) and the rest (past its bound, which it no longer sees).
+  ...Object.fromEntries([
+    ["console", i => console.error("probe console error", new Error("same"))],
+    ["distinct-console", i => console.error(`probe console error ${i}`)],
+    ["uncaught", () => reportError(new Error("probe uncaught"))],
+    ["distinct-uncaught", i => reportError(new Error(`probe uncaught ${i}`))],
+    ["rejections", () => { Promise.reject(new Error("probe rejection")); }],
+    ["distinct-rejections", i => { Promise.reject(new Error(`probe rejection ${i}`)); }],
+  ].map(([name, raise]) => [name, async count => {
+    const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+    const first = Math.min(count, 1_000);
+    let started = performance.now();
+    for (let i = 0; i < first; i++) {
+      raise(i);
+    }
+
+    await settle();
+    const head = performance.now() - started;
+    started = performance.now();
+    for (let i = first; i < count; i++) {
+      raise(i);
+    }
+
+    await settle();
+    const rest = performance.now() - started;
+    await report(`${name}: first ${first} in ${head.toFixed(1)} ms, the other ${count - first} in ${rest.toFixed(1)} ms`);
+  }])),
+
+  // One error of each kind from real code paths, for the log's own lines: a throw in a timer, a rejection nobody
+  // handles, and a console.error with an exception.
+  "page-errors": async () => {
+    setTimeout(() => {
+      throw new TypeError("probe: a timer's callback failed");
+    }, 0);
+    Promise.reject(new RangeError("probe: a promise nobody awaited"));
+    try {
+      JSON.parse("{ not json");
+    } catch (error) {
+      console.error("probe: the settings could not be read", error);
+    }
+
+    await pause(1_500);
+  },
+
   // A module worker the host serves: does its own response carry the policy? Under Trusted Types a worker's address
   // must come from a policy (the Worker constructor is a script sink), so the address Vite emits is passed through one.
   worker: async () => {

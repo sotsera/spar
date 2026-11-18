@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spar.Hosting;
+using Spar.Logging;
 using Spar.Runtime;
 using Spar.Windows.Interop;
 using Windows.Win32;
@@ -56,6 +58,8 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
     private readonly RelaunchQueue _relaunches;
     private readonly PageHangHook _hangHook;
     private CspViolationLog? _violations;
+    private PageErrorLog? _pageErrors;
+    private LogLevels? _levels;
     private bool _listenerReports;
     private SingleInstance? _instance;
     private WindowTheme? _theme;
@@ -88,8 +92,15 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
 
     public int Run()
     {
-        _log.UseFile(_folders.Logs);
+        // The levels first, so the host's first line is filtered as the app asked; logging.json is a small local file.
+        _levels = SparLogging.Levels(_app.Builder.LoggingOptions, _folders.DataRoot, SparDevelopment.IsSupported, out var problem);
+        _log.UseFile(_folders.Logs, _levels);
         _log.Info($"Host started {HostLog.ProcessAgeMilliseconds():0.0} ms after the process.");
+        if (problem is not null)
+        {
+            _log.Warn(problem);
+        }
+
         try
         {
             if (Configure() is { } configurationFailed)
@@ -241,6 +252,10 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         var builder = _app.Builder;
         // The profile folders no file grant may reach, with the folder in use once the environment exists.
         builder.Services.AddSingleton(_profile);
+
+        // The app's loggers write to the file the host opened at its start; the host closes it at process exit.
+        var file = _log.File!;
+        SparLogging.AddFile(builder.Services, () => file, _levels!, ownsFile: false);
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, folders, builder.BridgeOptions.Freeze());
         if (SparDevelopment.IsSupported)
         {
@@ -320,8 +335,16 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
         _guard = new CloseGuard(_app.Builder.CloseGuard, _running.Services, _log.Logger);
         _relaunches.Start(_running.Services);
         _hangHook.Start(_running.Services);
+        var pageLogger = _running.Services.GetService<ILoggerFactory>()?.CreateLogger(PageErrorLog.Category);
+        _pageErrors = new PageErrorLog(pageLogger ?? Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance, TimeProvider.System);
         var bridge = new WebViewBridge(
-            ui, _log, _running.Dispatcher, _running.Catalog.Fingerprint, SparDevelopment.IsSupported, _listenerReports ? _violations : null);
+            ui,
+            _log,
+            _running.Dispatcher,
+            _running.Catalog.Fingerprint,
+            SparDevelopment.IsSupported,
+            _listenerReports ? _violations : null,
+            _pageErrors);
         if (_view is { } view && _state != State.Closing)
         {
             _watch = new PageWatch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
@@ -569,6 +592,7 @@ internal sealed class WindowsApp : IWindowMessages, IReportsErrors
 
             // What is still counted is written before the log closes.
             _violations?.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            _pageErrors?.DisposeAsync().AsTask().GetAwaiter().GetResult();
 
             _running?.DisposeAsync().AsTask().GetAwaiter().GetResult();
             _log.Step("services disposed");

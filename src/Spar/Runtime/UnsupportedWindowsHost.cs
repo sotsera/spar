@@ -1,7 +1,8 @@
 using System.ComponentModel;
-using System.Globalization;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
 using Spar.Hosting;
+using Spar.Logging;
 
 namespace Spar.Runtime;
 
@@ -33,35 +34,35 @@ public sealed partial class UnsupportedWindowsHost : ISparHost
 
         var line = StartupReport.Describe(problem);
         Console.Error.WriteLine("spar fail: " + line);
-        AppendToLog(SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions).Logs, line);
-        if (SparDevelopment.IsAutomatedFromEnvironment())
-        {
-            return problem.ExitCode;
-        }
 
-        var ownMessage = StartupReport.AppShowedItsOwnMessage(
-            app.Builder.StartupProblemHandler,
-            problem,
-            (message, exception) => Console.Error.WriteLine($"spar fail: {message}: {exception}"));
-        if (!ownMessage)
-        {
-            _ = MessageBox(0, $"{title} can't start\n\n{problem.Details}", title, MessageBoxOk | MessageBoxIconError | MessageBoxSetForeground);
-        }
-
-        return problem.ExitCode;
-    }
-
-    private static void AppendToLog(string folder, string line)
-    {
+        // The app's log file, through the same writer as the host's lines; closed (briefly flushed) before the exit.
+        var log = LogFile.Open(SparFolders.ForApp(app.AppId, SparDevelopment.IsSupported, app.Builder.FolderOptions).Logs);
+        log.Write(LogLevel.Error, SparLogging.HostCategory, line);
         try
         {
-            Directory.CreateDirectory(folder);
-            var stamp = DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture);
-            File.AppendAllText(Path.Combine(folder, StartupReport.LogFileName), $"{stamp} spar fail: {line}\r\n");
+            if (SparDevelopment.IsAutomatedFromEnvironment())
+            {
+                return problem.ExitCode;
+            }
+
+            var ownMessage = StartupReport.AppShowedItsOwnMessage(
+                app.Builder.StartupProblemHandler,
+                problem,
+                (message, exception) =>
+                {
+                    Console.Error.WriteLine($"spar fail: {message}: {exception}");
+                    log.Write(LogLevel.Error, SparLogging.HostCategory, message, exception);
+                });
+            if (!ownMessage)
+            {
+                _ = MessageBox(0, $"{title} can't start\n\n{problem.Details}", title, MessageBoxOk | MessageBoxIconError | MessageBoxSetForeground);
+            }
+
+            return problem.ExitCode;
         }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        finally
         {
-            // Standard error already has the line; the app still exits with its code.
+            log.Close();
         }
     }
 

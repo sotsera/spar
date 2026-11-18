@@ -146,6 +146,11 @@
       "name": "csp",
       "message": { "type": "csp", "payload": "{\"groups\":[{\"directive\":\"img-src\",\"blocked\":\"https://example.com/a.png\",\"source\":\"\",\"line\":0,\"column\":0,\"sample\":\"\",\"count\":3}],\"overflow\":0}" },
       "wire": "{\"type\":\"csp\"}\t{\"groups\":[{\"directive\":\"img-src\",\"blocked\":\"https://example.com/a.png\",\"source\":\"\",\"line\":0,\"column\":0,\"sample\":\"\",\"count\":3}],\"overflow\":0}"
+    },
+    {
+      "name": "errors",
+      "message": { "type": "errors", "payload": "{\"groups\":[{\"kind\":\"error\",\"message\":\"Uncaught TypeError: x is not a function\",\"source\":\"https://app.localhost/assets/index.js\",\"line\":3,\"column\":14,\"stack\":\"\",\"count\":2}],\"overflow\":0}" },
+      "wire": "{\"type\":\"errors\"}\t{\"groups\":[{\"kind\":\"error\",\"message\":\"Uncaught TypeError: x is not a function\",\"source\":\"https://app.localhost/assets/index.js\",\"line\":3,\"column\":14,\"stack\":\"\",\"count\":2}],\"overflow\":0}"
     }
   ],
   "decode": [

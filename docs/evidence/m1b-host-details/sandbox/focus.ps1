@@ -165,5 +165,6 @@ if ([Guest]::GetForegroundWindow() -eq $window) { [Guest]::Combo(0x12, 0x73) } e
 if (-not $app.WaitForExit(20000)) { Note 'still running 20 s after Alt+F4; WM_CLOSE'; [Guest]::Close($window); [void]$app.WaitForExit(20000) }
 Note "exit $($app.ExitCode)"
 Stop-Process -Id $notepad.Id -Force -ErrorAction SilentlyContinue
-Get-ChildItem $work -Recurse -Filter host.log | ForEach-Object { Copy-Item $_.FullName (Join-Path $out 'host.log') }
+# The app's log: app.log since M1b step 7 (host.log before it, as the baseline build writes).
+Get-ChildItem $work -Recurse -Include app.log, host.log | ForEach-Object { Copy-Item $_.FullName (Join-Path $out $_.Name) }
 Note 'done'

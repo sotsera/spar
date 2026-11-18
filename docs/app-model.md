@@ -71,6 +71,7 @@ File `SqlTool/Program.cs`:
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spar;
 using SqlTool.Connections;
 using SqlTool.CopyJobs;
@@ -151,6 +152,10 @@ var app = SparApplication.Create(args, spar =>
 
     // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
     spar.Diagnostics(d => d.KeepStallProbe());
+
+    // The log file: Information and above, and Debug for the copy jobs; a logging.json in the per-user folder overrides
+    // these on a user's machine without a new build (3.13). Decided.
+    spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
     // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
     if (SupportBuild.IsSupportBuild)
@@ -833,9 +838,18 @@ public sealed class NetworkAwareMonitor(INetworkStatus network, IMonitor monitor
 
 ### 3.13 Logs and crash reports
 
-**Decided** (2026-11-14).
-- **Logs:** Spar logs through `ILogger`. In Production it writes rotating files, by default 5 files of 10 MB, at a level that configuration can raise without a new build.
-- **Page errors:** console errors, uncaught exceptions and unhandled rejections reach the same log, grouped with flood limits.
+**Decided** (2026-11-14; the log's shape in decision "Logging's public shape", built in M1b).
+- **One log file, in every app:** `app.log` in the logs folder gets Spar's lines and every `ILogger` of the app's services, from the host's first moment, so a start-up failure is there too. Inject `ILogger<T>` as usual: Spar registers a logger factory unless the app adds its own logging (`AddLogging`, for a console or OpenTelemetry), whose providers then work beside the file. Writing never waits for the disk: a full queue drops the newest lines and the file says how many. Rotation comes in M3 (5 files of 10 MB); until then a file over 5 MB is moved aside to `app.1.log` when the app starts.
+- **Levels:** Information and above in Production, Debug and above in Development and Test builds. `spar.Logging(l => l.Level(…).Level("SqlTool.CopyJobs", LogLevel.Debug))` (section 2) sets the default and the level of a category and of every category it is a prefix of, as Microsoft.Extensions.Logging's filters do: case-insensitive, the longest match winning, one `*` allowed. The levels apply to the file only; an app with its own factory filters before the file, so it lowers its own minimum when it wants the file's Debug lines (the file's provider alias is `SparFile`).
+- **Without a new build:** a `logging.json` in the app's per-user folder (`SparFolders.DataRoot`, `%LOCALAPPDATA%\<app id>` on Windows) overrides those levels when the app starts, writable without administrator rights and kept across updates. A file Spar cannot use (another shape, an unknown level, a comment) is ignored with one warning in the log, and the app starts with the levels of `Program.cs`. Its whole shape:
+
+```json
+{ "level": "Debug", "categories": { "SqlTool.CopyJobs": "Trace" } }
+```
+
+- **Lines:** one line per entry, in UTC, readable in any editor: `2026-11-17T22:41:07.318Z INFO  SqlTool.CopyJobs.CopyJobsService  Copied 1200 rows`. A message's further lines and an exception's type, message and stack follow indented by four spaces, so nothing the app or the page logs can look like another entry; scopes and the message's structured values are not written.
+- **Page errors:** `console.error` calls, uncaught exceptions and unhandled rejections reach the same log under `Spar.Page`, grouped by kind, text and place in the page: the first of each group at once, as an error with its stack, the rest counted in a summary at most every 10 s, with bounds per document. The page's own console is unchanged.
+- **Test runs** write the same file in the test's own logs folder, deleted with its data root.
 - **Crashes:** an unhandled .NET exception writes a crash record before the process ends.
 - **Folders:** every folder has a per-user default under the app id's folder (section 1) and can be set in `Program.cs` (`spar.Folders(…)`, as above; the browser profile in 3.17). App code reads the folders in use from the `SparFolders` service (`DataRoot`, `Data`, `Logs`, `Cache`, `Profile`). Test runs move them all under their own data root; a black-box test does it through the environment, since the Production executable takes no data-root switch.
 
@@ -959,7 +973,7 @@ public static class SupportPage
 
   The one other fixed code is not a start-up problem: 10 when shutdown did not finish and the user chose "Exit now" (6.11).
 - **Return true only when the app showed its own message;** Spar then shows none. Returning false, or throwing, leaves Spar's message: on Windows a task dialog naming what is missing, with Microsoft's download page as a link and a button.
-- **Written regardless:** standard error and the per-user log (`host.log` in the logs folder, 3.13) get the problem, and the exit code is the kind's, whatever the hook returns.
+- **Written regardless:** standard error and the per-user log (`app.log` in the logs folder, 3.13) get the problem, and the exit code is the kind's, whatever the hook returns.
 - **Before the app's services exist:** the hook gets no service provider. It runs on a thread of its own, which may show a window or a message box, and it should return promptly, since the process exits after it.
 - **In the automated mode** (tests and agents, 6.11) the hook is not called, and no message is shown: standard error and the log only.
 

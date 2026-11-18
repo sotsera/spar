@@ -13,9 +13,6 @@ internal static class StartupReport
     /// </summary>
     public const int MinimumWindowsBuild = 19045;
 
-    /// <summary>The per-user log file in the app's logs folder, which start-up failures need (plan M1b, build step 7).</summary>
-    public const string LogFileName = "host.log";
-
     /// <summary>One line for standard error and the per-user log, with everything a support person needs.</summary>
     public static string Describe(StartupProblem problem)
     {

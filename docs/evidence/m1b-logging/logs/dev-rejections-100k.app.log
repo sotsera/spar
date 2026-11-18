@@ -1,0 +1,49 @@
+2026-11-17T23:26:39.736Z INFO  Spar.Host  [23487cb1] Host started 48.3 ms after the process.
+2026-11-17T23:26:39.737Z INFO  Spar.Host  [23487cb1] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-rejections-100k\com.example.tests.SecurityProbe.Development
+2026-11-17T23:26:39.744Z INFO  Spar.Host  [23487cb1] single instance at 17 ms
+2026-11-17T23:26:39.746Z INFO  Spar.Host  [23487cb1] prerequisites checked at 20.8 ms
+2026-11-17T23:26:39.754Z INFO  Spar.Host  [23487cb1] UI-thread stall probe on.
+2026-11-17T23:26:39.763Z INFO  Spar.Host  [23487cb1] window shown at 37.9 ms
+2026-11-17T23:26:39.763Z INFO  Spar.Host  [23487cb1] Theme dark (system), window #1f1f1f.
+2026-11-17T23:26:39.766Z INFO  Spar.Host  [23487cb1] services built at 41.4 ms
+2026-11-17T23:26:39.772Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-17T23:26:39.788Z INFO  Spar.Host  [23487cb1] environment at 63.3 ms
+2026-11-17T23:26:39.789Z INFO  Spar.Host  [23487cb1] WebView2 Runtime 157.0.4341.46
+2026-11-17T23:26:39.789Z INFO  Spar.Host  [23487cb1] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-rejections-100k\com.example.tests.SecurityProbe.Development\WebView2
+2026-11-17T23:26:39.800Z INFO  Spar.Host  [23487cb1] Heartbeat every 5000 ms.
+2026-11-17T23:26:39.803Z INFO  Spar.Host  [23487cb1] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-PPCDxJ0a3mrhp+ZRnKIDD0gQNDpllZMu9T4EdLpTN7U=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-17T23:26:39.803Z INFO  Spar.Host  [23487cb1] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-17T23:26:39.990Z INFO  Spar.Host  [23487cb1] controller at 264.9 ms
+2026-11-17T23:26:39.992Z INFO  Spar.Host  [23487cb1] Browser settings read back (1.06 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-17T23:26:40.046Z INFO  Spar.Host  [23487cb1] Page file picker blocked in 53.8 ms (Page.enable 53.4 ms).
+2026-11-17T23:26:40.047Z INFO  Spar.Host  [23487cb1] page script added at 321.7 ms
+2026-11-17T23:26:40.048Z INFO  Spar.Host  [23487cb1] navigation started at 322.7 ms
+2026-11-17T23:26:40.105Z INFO  Spar.Host  [23487cb1] Bridge: document c7879213aac9545c opened.
+2026-11-17T23:26:40.106Z INFO  Spar.Host  [23487cb1] Heartbeat armed for the new document.
+2026-11-17T23:26:40.106Z INFO  Spar.Host  [23487cb1] first document at 381.1 ms
+2026-11-17T23:26:40.112Z INFO  Spar.Host  [23487cb1] first bridge message at 387.1 ms
+2026-11-17T23:26:40.115Z INFO  Spar.Host  [23487cb1] first navigation completed at 390.1 ms
+2026-11-17T23:26:40.118Z INFO  Spar.Host  [23487cb1] 404 for /favicon.ico
+2026-11-17T23:26:40.124Z INFO  Spar.Host  [23487cb1] first bridge reply at 398.9 ms
+2026-11-17T23:26:40.124Z INFO  Spar.Host  [23487cb1] ui-ready at 399.2 ms
+2026-11-17T23:26:40.124Z INFO  Spar.Host  [23487cb1] Bridge: document c7879213aac9545c reported ui-ready.
+2026-11-17T23:26:40.564Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3696: Error: probe rejection
+    Error: probe rejection
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3696
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:40.564Z WARN  Spar.Page  The page raised so many errors that Spar's script stopped reporting them in this document
+2026-11-17T23:26:49.810Z INFO  Spar.Page  The page's errors in the last 9.7 s: Unhandled rejection "Error: probe rejection": 999 more
+2026-11-17T23:26:52.617Z INFO  Spar.Host  [23487cb1] close requested (User, automated) at 12891.7 ms
+2026-11-17T23:26:52.621Z INFO  Spar.Host  [23487cb1] closing at 12896.2 ms
+2026-11-17T23:26:52.621Z INFO  Spar.Host  [23487cb1] Heartbeat: 2 ticks, 3 pings, longest tick on the UI thread 0.736 ms.
+2026-11-17T23:26:52.622Z INFO  Spar.Host  [23487cb1] page close work done at 12897.5 ms
+2026-11-17T23:26:52.623Z INFO  Spar.Host  [23487cb1] Bridge: document c7879213aac9545c closed (window closing).
+2026-11-17T23:26:52.623Z INFO  Spar.Host  [23487cb1] calls stopped at 12898.2 ms
+2026-11-17T23:26:52.623Z INFO  Spar.Host  [23487cb1] calls settled at 12898.2 ms
+2026-11-17T23:26:52.623Z INFO  Spar.Host  [23487cb1] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-17T23:26:52.640Z INFO  Spar.Host  [23487cb1] controller closed at 12914.8 ms
+2026-11-17T23:26:52.642Z INFO  Spar.Host  [23487cb1] window destroyed at 12917.3 ms
+2026-11-17T23:26:52.648Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-17T23:26:52.649Z INFO  Spar.Host  [23487cb1] services disposed at 12924.6 ms
+2026-11-17T23:26:52.649Z INFO  Spar.Host  [23487cb1] exit 0 at 12924.6 ms

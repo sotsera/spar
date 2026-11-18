@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spar;
 using SqlTool.Connections;
 using SqlTool.CopyJobs;
@@ -79,6 +80,10 @@ var app = SparApplication.Create(args, spar =>
 
     // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
     spar.Diagnostics(d => d.KeepStallProbe());
+
+    // The log file: Information and above, and Debug for the copy jobs; a logging.json in the per-user folder overrides
+    // these on a user's machine without a new build (3.13). Decided.
+    spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
     // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
     if (SupportBuild.IsSupportBuild)

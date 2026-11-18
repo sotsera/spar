@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Threading.Channels;
 using Spar.Bridge;
 using Spar.Hosting;
+using Spar.Logging;
 using Spar.Runtime;
 using Spar.Windows.Interop;
 
@@ -15,8 +16,8 @@ namespace Spar.Windows;
 /// page never reaches the new one. Messages are decoded and dispatched off the UI thread, in the order they arrived;
 /// replies are posted back to it and checked against the current document before they are sent. Every document of the
 /// app's origin carries the host's injected script (<see cref="PageScript"/>), which answers the heartbeat from the
-/// document's creation and posts the page's Content Security Policy violations, handed to the
-/// <see cref="CspViolationLog"/> off the UI thread.
+/// document's creation and posts the page's Content Security Policy violations and errors, handed to the
+/// <see cref="CspViolationLog"/> and the <see cref="PageErrorLog"/> off the UI thread.
 /// </summary>
 internal sealed class WebViewBridge
 {
@@ -26,13 +27,22 @@ internal sealed class WebViewBridge
     private readonly string _fingerprint;
     private readonly bool _includeDetails;
     private readonly CspViolationLog? _violations;
+    private readonly PageErrorLog _pageErrors;
     private readonly Channel<Incoming> _incoming = Channel.CreateUnbounded<Incoming>(new UnboundedChannelOptions { SingleReader = true });
     private readonly Task _reader;
     private ICoreWebView2_22? _webView;
     private Document? _current;
 
     /// <param name="violations">Where the listener's batches go; null when the listener does not report in this build.</param>
-    public WebViewBridge(UiThread ui, HostLog log, SparDispatcher dispatcher, string fingerprint, bool includeDetails, CspViolationLog? violations)
+    /// <param name="pageErrors">Where the page's error batches go.</param>
+    public WebViewBridge(
+        UiThread ui,
+        HostLog log,
+        SparDispatcher dispatcher,
+        string fingerprint,
+        bool includeDetails,
+        CspViolationLog? violations,
+        PageErrorLog pageErrors)
     {
         _ui = ui;
         _log = log;
@@ -40,6 +50,7 @@ internal sealed class WebViewBridge
         _fingerprint = fingerprint;
         _includeDetails = includeDetails;
         _violations = violations;
+        _pageErrors = pageErrors;
         _reader = Task.Run(ReadAsync);
     }
 
@@ -97,6 +108,11 @@ internal sealed class WebViewBridge
             session.Violations += payload => violations.PostBatch(id, payload);
             violations.PostDocument(id);
         }
+
+        // The same for the page's errors, which the injected script always reports.
+        var pageErrors = _pageErrors;
+        session.PageErrors += payload => pageErrors.PostBatch(id, payload);
+        pageErrors.PostDocument(id);
 
         document.Session = session;
         _current = document;

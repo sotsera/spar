@@ -24,6 +24,13 @@ public enum BridgeMessageType
     /// </summary>
     Csp,
 
+    /// <summary>
+    /// The page's errors (console errors, uncaught exceptions, unhandled rejections), grouped and batched by the
+    /// host-injected script (plan M1b, build step 7); the payload is the batch. Hosts without the injected script never
+    /// receive it.
+    /// </summary>
+    Errors,
+
     // Host to page.
     Open,
     Result,
@@ -106,6 +113,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         BridgeMessageType.ClosingDone => "closing-done",
         BridgeMessageType.Pong => "pong",
         BridgeMessageType.Csp => "csp",
+        BridgeMessageType.Errors => "errors",
         BridgeMessageType.Open => "open",
         BridgeMessageType.Result => "result",
         BridgeMessageType.Items => "items",
@@ -128,6 +136,7 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         "closing-done" => BridgeMessageType.ClosingDone,
         "pong" => BridgeMessageType.Pong,
         "csp" => BridgeMessageType.Csp,
+        "errors" => BridgeMessageType.Errors,
         "open" => BridgeMessageType.Open,
         "result" => BridgeMessageType.Result,
         "items" => BridgeMessageType.Items,
