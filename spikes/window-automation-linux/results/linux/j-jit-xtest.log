@@ -1,0 +1,163 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=jit gtk+context=76.0ms since-process-start=124ms xtest=2.2 input=xtest csp=False
+dbus-daemon[54939]: [session uid=1000 pid=54939] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=54942 comm="<work>/jit/Ha" label="kernel")
+dbus-daemon[54939]: [session uid=1000 pid=54939] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[55100]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=54942 comm="<work>/jit/Ha" label="kernel")
+dbus-daemon[55100]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[54939]: [session uid=1000 pid=54939] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=55110 comm="/usr/bin/xdg-dbus-proxy --args=61" label="kernel")
+dbus-daemon[54939]: [session uid=1000 pid=54939] Activating service name='org.freedesktop.portal.Documents' requested by ':1.6' (uid=1000 pid=55136 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[54939]: [session uid=1000 pid=54939] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.7' (uid=1000 pid=55142 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[54939]: [session uid=1000 pid=54939] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[54939]: [session uid=1000 pid=54939] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.151: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.151: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[54939]: [session uid=1000 pid=54939] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.6' (uid=1000 pid=55136 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[54939]: [session uid=1000 pid=54939] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.197: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.197: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.197: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.197: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.197: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.198: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.198: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.199: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.200: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.200: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][02506.359256] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][02506.359332] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.202: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.202: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.203: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:38.203: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[54939]: [session uid=1000 pid=54939] Successfully activated service 'org.freedesktop.portal.Desktop'
+MEMORY test-process VmRSS=211.7MB RssAnon=55.7MB web processes now=1 web VmRSS=201.5MB network VmRSS=44.9MB
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:39.585: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-02cccfb2-a77c-450f-9e45-58e8dd882715: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:39.626: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:40.859: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-0c814614-d4df-4d88-aae0-f6bc7b239783: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:40.901: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:42.114: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-9d95d29a-8dcc-4509-9ee1-a05eb6cac989: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:42.154: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:43.383: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-5d1d0064-5ddc-46d0-9dfb-bc3320ab2136: The connection is closed
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:44.665: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-fd53e5a3-df8a-40dd-a33b-0eea0fa2b5af: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:44.709: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:45.921: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-453d97cd-369b-45c8-9484-b5e4b5a62d40: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:45.962: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:47.196: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-a04c3562-9dd8-43ba-9314-3d7dc6d3c1ff: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:47.237: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:48.486: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-4da93554-643f-410b-a618-53aa5b679931: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:48.527: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:49.809: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:51.038: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-07f2df9d-0257-42ce-a5d5-1c6d4e555d2c: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:51.083: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:52.326: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-a7a6ffc5-aeb1-43f0-8a1e-0990029d9df0: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:52.366: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:53.584: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-081d0cc8-529f-4904-9633-2b3439017094: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:53.627: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:54.850: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-fadf7efa-37bb-4815-9f93-57b00d31fe06: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:54.891: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:56.109: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-8fbfad9d-2249-4084-ae32-dfcff8a0fd9e: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:56.150: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:57.440: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:58.695: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-158dfcc4-7356-4b27-91cb-03c770a0c607: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:36:58.739: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:37:00.040: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:37:01.282: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-d66b3b1a-d38e-448a-be35-42de7909e1cb: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:37:01.326: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:37:02.580: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-852fb227-5496-461b-890c-7728ebd514c8: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:55136): xdg-desktop-portal-WARNING **: 20:37:02.621: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:37:03.861: Error releasing name org.webkit.app-c0cfbaf6fdea2ce75e78e11a2df97d094f3138254cddca27a35d092c83d80fd0.Sandboxed.WebProcess-5b03c53f-b70d-4bb2-b3db-6d918da36528: The connection is closed
+TEST create window + view + session           n=20 min=1.0 p50=1.0 p95=1.2 max=12.8
+TEST navigate (load, present)                 n=20 min=61.9 p50=65.0 p95=72.7 max=160.2
+TEST journey                                  n=20 min=1188.2 p50=1213.0 p95=1228.4 max=1320.3
+TEST close                                    n=20 min=1.0 p50=1.0 p95=1.4 max=1.5
+TEST per test                                 n=20 min=1255.2 p50=1282.7 p95=1301.3 max=1498.9
+STEP 01 ready (two frames)                    n=20 min=22.8 p50=24.1 p95=29.1 max=31.9
+STEP 02 expect heading                        n=20 min=63.4 p50=66.6 p95=84.8 max=155.1
+STEP 03 fill name                             n=20 min=32.7 p50=39.4 p95=48.1 max=60.1
+STEP 04 check native                          n=20 min=8.4 p50=10.0 p95=17.8 max=24.7
+STEP 05 check radix                           n=20 min=5.1 p50=16.2 p95=19.7 max=20.4
+STEP 06 select option                         n=20 min=2.6 p50=3.0 p95=6.1 max=8.4
+STEP 07 open listbox                          n=20 min=23.3 p50=28.6 p95=30.6 max=32.6
+STEP 08 pick option                           n=20 min=22.7 p50=24.2 p95=27.9 max=28.1
+STEP 09 expect listbox text                   n=20 min=0.6 p50=0.8 p95=3.3 max=4.9
+STEP 10 open menu                             n=20 min=14.9 p50=18.2 p95=30.2 max=31.5
+STEP 11 pick menu item                        n=20 min=10.3 p50=13.3 p95=27.2 max=28.9
+STEP 12 expect status                         n=20 min=0.5 p50=0.6 p95=0.7 max=7.5
+STEP 13 wait async list                       n=20 min=527.5 p50=531.6 p95=537.3 max=539.6
+STEP 14 expect enabled later                  n=20 min=0.5 p50=0.6 p95=0.8 max=0.9
+STEP 15 fill filter                           n=20 min=11.1 p50=11.9 p95=13.4 max=14.9
+STEP 16 press Enter                           n=20 min=3.2 p50=3.6 p95=8.2 max=8.4
+STEP 17 expect filtered                       n=20 min=0.3 p50=0.4 p95=3.3 max=5.3
+STEP 18 expect item text                      n=20 min=0.4 p50=0.5 p95=6.1 max=7.6
+STEP 19 open dialog                           n=20 min=17.2 p50=25.6 p95=32.9 max=33.4
+STEP 20 expect dialog                         n=20 min=0.7 p50=5.4 p95=7.9 max=9.3
+STEP 21 cancel dialog                         n=20 min=153.0 p50=160.4 p95=165.2 max=168.7
+STEP 22 expect dialog hidden                  n=20 min=0.4 p50=3.6 p95=7.0 max=7.5
+STEP 23 reopen dialog                         n=20 min=12.6 p50=17.2 p95=18.1 max=18.4
+STEP 24 confirm                               n=20 min=172.9 p50=175.4 p95=179.5 max=182.1
+STEP 25 expect placed                         n=20 min=0.4 p50=0.5 p95=2.1 max=4.0
+STEP 26 click link                            n=20 min=9.4 p50=11.0 p95=17.8 max=18.1
+STEP 27 wait for URL                          n=20 min=0.4 p50=2.1 p95=5.3 max=5.7
+STEP 28 expect route text                     n=20 min=0.5 p50=0.6 p95=0.7 max=0.8
+RETRY   380 x click / not stable
+RETRY   120 x expect / count is (not yet)
+RETRY     5 x expect / no element matches
+FOCUS key strokes that moved the X focus first: 0; remapped characters: 0
+RESULT runs=20 failures=0 input=xtest fill=keys
+TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=0 (names truncated by the kernel; counts include other runs)
+RUN exit=0 wall=26529ms
+PROCESSES before=[] after=[]

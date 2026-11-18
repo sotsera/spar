@@ -1,0 +1,35 @@
+SETUP env+anchor=213.0ms port-file=8.9ms driver-start=365.5ms connect=31.8ms total=619.2ms since-process-start=674ms port=63831 contexts=1 version=157.0.4341.60
+MEMORY driver=node pid=75276 private=128.4MB ws=113.4MB test-process=18.3MB
+IDENTITY contexts=1 pages per context=[4]
+IDENTITY   context#0 page url=about:blank
+IDENTITY   context#0 page url=https://app.localhost/?test=id083c57c65
+IDENTITY   context#0 page url=https://app.localhost/?test=id184a15e61
+IDENTITY   context#0 page url=https://app.localhost/?test=id208763c5d
+IDENTITY view 0: host target=164683BB library page target=164683BB same=True (16.1 ms via a CDP session)
+IDENTITY view 1: host target=A2E57E4F library page target=A2E57E4F same=True (4.5 ms via a CDP session)
+IDENTITY view 2: host target=E7BD8752 library page target=E7BD8752 same=True (17.9 ms via a CDP session)
+ISOLATION view 1 sees: from-view-0 / cookie=session=view0
+COVER context.CookiesAsync (default context): ok (9.8 ms) 0 cookies: 
+COVER context.StorageStateAsync: ok (8.7 ms) {"cookies":[],"origins":[{"origin":"https://app.localhost","localStorage":[{"name":"secret","value":"from-view-0"}]}]}
+COVER GetByTestId + GetByText: ok (27.0 ms) export=1 text=1
+COVER AriaSnapshotAsync: ok (15.5 ms) 18 lines, first: - form "New order":
+COVER EvaluateAsync: ok (1.7 ms) title=Orders
+COVER element ScreenshotAsync: ok (114.4 ms) 14586 bytes
+COVER Keyboard (Tab moves focus): ok (11.8 ms) focused after Tab: <input type="checkbox" style="">
+COVER timeout message (wrong text): ok (320.8 ms) message: Locator expected to have text 'Shipped' But was: 'Draft'  Call log:   - Expect "ToHaveTextAsync" GetByRole(AriaRole.Status) with timeout 300ms   - waiting for GetByRole(AriaRole.Status)     6 x locator resolved to <p role="status" class="mt-2 text-sm text-slate-600">Draft</p>       - unexpected valu
+COVER console + page error events: ok (340.3 ms) console=[error: export failed: disk full] pageerror=[Error: Unhandled boom]
+COVER Dialog event (alert, accepted): ok (62.0 ms) events=[alert: Saved!] native dialogs=0
+COVER network events on reload: ok (646.4 ms) requests seen=[/, /assets/index-KiM2E8c4.js, /assets/index-C5L_2qA8.css, /api/orders.json] host served=4 orders.json status=200 from-service-worker=False
+COVER RouteAsync fulfil (api): ok (1558.3 ms) route handler calls=0; list shows [#1041 Grace Hopper - 120.00; #1042 Bob Kahn - 48.50; #1043 Barbara Liskov - 310.25]; host served during reload=4
+COVER RouteAsync abort (api): ok (1550.6 ms) route handler calls=0; list items=3
+COVER Tracing (screenshots + snapshots): ok (124.5 ms) 107171 bytes, entries=[trace.trace, trace.network, screencast/page@8443d0e67f9b7d., screencast/page@3c031e6845a3f1., screencast/page@c1b5d4ac330540., screencast/page@c00c82e10cc89f., screencast/page@c00c82e10cc89f., screencast/page@c00c82e10cc89f., trace.stacks], trace events=45, screencast frames=6, snapshots=8
+COVER file input click, no library listener: ok (1070.3 ms) host intercepted=1 native dialogs=0
+COVER RunAndWaitForFileChooserAsync + SetFilesAsync: ok (564.5 ms) library chooser ok; host intercepted=1 native dialogs=0
+COVER file input click after the library's chooser: ok (1058.1 ms) host intercepted=1 native dialogs=0
+COVER SetInputFilesAsync: ok (8.2 ms) ok
+COVER host in-process Runtime.evaluate + captureScreenshot: ok (63.1 ms) evaluate={"result":{"description":"2","type":"number","value":2}} screenshot=39327 chars
+COVER page.CloseAsync on a WebView2 page (5 s limit): ok (5008.6 ms) returned=False; library page closed=False
+COVER browser.CloseAsync on a CDP connection: ok (3133.7 ms) WebView2 browser process exited=False
+TEARDOWN playwright disposed in 11.1ms; browser exited already=False
+TEARDOWN browser exited=True leftover=0 port-file-left=True
+TEARDOWN root deleted=True

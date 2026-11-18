@@ -1,0 +1,40 @@
+SETUP runtime=aot env+anchor=246.9ms since-process-start=270ms
+MEMORY browser=181.6MB test-process=12.2MB
+TEST create controller            n=15 min=54.4 p50=74.1 p95=87.3 max=87.3
+TEST attach                       n=15 min=0.5 p50=0.7 p95=2.1 max=2.1
+TEST navigate                     n=15 min=28.6 p50=33.2 p95=48.2 max=48.2
+TEST journey                      n=15 min=1443.3 p50=1535.7 p95=1547.1 max=1547.1
+TEST close                        n=15 min=10.0 p50=13.5 p95=15.0 max=15.0
+TEST per test                     n=15 min=1558.4 p50=1641.1 p95=1680.3 max=1680.3
+STEP 01 ready (two frames)        n=15 min=26.4 p50=30.8 p95=127.2 max=127.2
+STEP 02 expect heading            n=15 min=4.9 p50=20.4 p95=112.7 max=112.7
+STEP 03 fill name                 n=15 min=3.9 p50=4.6 p95=6.1 max=6.1
+STEP 04 check native              n=15 min=10.3 p50=14.0 p95=29.5 max=29.5
+STEP 05 check radix               n=15 min=67.2 p50=70.2 p95=72.9 max=72.9
+STEP 06 select option             n=15 min=1.8 p50=2.0 p95=4.3 max=4.3
+STEP 07 open listbox              n=15 min=56.6 p50=58.7 p95=67.5 max=67.5
+STEP 08 pick option               n=15 min=47.3 p50=47.9 p95=58.3 max=58.3
+STEP 09 expect listbox text       n=15 min=13.6 p50=14.4 p95=14.9 max=14.9
+STEP 10 open menu                 n=15 min=56.1 p50=57.9 p95=60.4 max=60.4
+STEP 11 pick menu item            n=15 min=47.4 p50=52.2 p95=53.1 max=53.1
+STEP 12 expect status             n=15 min=12.7 p50=14.4 p95=14.9 max=14.9
+STEP 13 wait async list           n=15 min=88.8 p50=356.4 p95=368.4 max=368.4
+STEP 14 expect enabled later      n=15 min=0.8 p50=0.9 p95=4.0 max=4.0
+STEP 15 fill filter               n=15 min=15.3 p50=18.4 p95=18.9 max=18.9
+STEP 16 press Enter               n=15 min=16.9 p50=17.9 p95=18.9 max=18.9
+STEP 17 expect filtered           n=15 min=32.8 p50=33.4 p95=34.1 max=34.1
+STEP 18 expect item text          n=15 min=35.1 p50=35.8 p95=36.5 max=36.5
+STEP 19 open dialog               n=15 min=56.9 p50=58.4 p95=59.0 max=59.0
+STEP 20 expect dialog             n=15 min=13.3 p50=14.3 p95=15.2 max=15.2
+STEP 21 cancel dialog             n=15 min=231.2 p50=232.7 p95=234.3 max=234.3
+STEP 22 expect dialog hidden      n=15 min=14.3 p50=15.4 p95=16.0 max=16.0
+STEP 23 reopen dialog             n=15 min=54.7 p50=56.5 p95=59.5 max=59.5
+STEP 24 confirm                   n=15 min=226.1 p50=230.6 p95=233.1 max=233.1
+STEP 25 expect placed             n=15 min=15.2 p50=16.1 p95=17.4 max=17.4
+STEP 26 click link                n=15 min=59.2 p50=61.3 p95=69.6 max=69.6
+STEP 27 wait for URL              n=15 min=1.5 p50=2.6 p95=6.5 max=6.5
+STEP 28 expect route text         n=15 min=1.0 p50=1.4 p95=3.5 max=3.5
+RETRY    90 x click / not stable
+RETRY    67 x expect / count is (not yet)
+RESULT runs=15 failures=0
+TEARDOWN browser exited=True leftover=0 root deleted=True

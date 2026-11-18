@@ -1,0 +1,43 @@
+== build the part-1 probe (JIT, Microsoft.Playwright)
+    0 Warning(s)
+Time Elapsed 00:00:01.84
+
+== 4. WebDriver: WebKitWebDriver (Ubuntu ships it only in webkit2gtk-driver, for 4.1) against the 6.0 harness
+webkit2gtk-driver: not installed; using the unpacked package
+package: webkit2gtk-driver - WebKitGTK WebDriver support
+WebKitWebDriver links: libsoup-3.0.so.0 
+Usage: WebKitWebDriver options
+  -h,          --help             Prints this help message
+  -p <port>,   --port=<port>      Port number the driver will use
+               --host=<host>      Host IP the driver will use, or either 'local' or 'all' (default: 'local')
+  -t <ip:port> --target=<ip:port> Target IP and port
+               --replace-on-new-session  Replace the existing session on new session request
+  Usage: WebKitWebDriver options
+    -h,          --help             Prints this help message
+    -p <port>,   --port=<port>      Port number the driver will use
+                 --host=<host>      Host IP the driver will use, or either 'local' or 'all' (default: 'local')
+    -t <ip:port> --target=<ip:port> Target IP and port
+                 --replace-on-new-session  Replace the existing session on new session request
+WEBDRIVER status (24.0 ms, 200): {"value":{"ready":true,"message":"No sessions"}}
+WEBDRIVER new session with webSocketUrl (BiDi) (2.5 ms, 500): {"value":{"error":"session not created","message":"Failed to match capabilities","stacktrace":""}}
+WEBDRIVER new session, classic (280.6 ms, 200): {"value":{"sessionId":"a8727dc5-5c6e-40b8-9bb6-a7f9c4510754","capabilities":{"browserName":"Harness","browserVersion":"1","platformName":"linux","acceptInsecureCerts":false,"strictFileInteractability":false,"setWindowRect":true,"unhandledPromptBehavior":"dismiss and notify","pageLoadStrategy":"normal","proxy":{},"timeouts":{"script":30000,"pageLoad":300000,"implicit":0}}}}
+WEBDRIVER webSocketUrl capability returned: null
+WEBDRIVER navigate spar://app/ (159.6 ms, 200): {"value":null}
+WEBDRIVER title (10.0 ms, 200): {"value":"Orders"}
+WEBDRIVER find form label input (68.2 ms, 200): {"value":{"element-6066-11e4-a52e-4f735466cecf":"node-DBA85F37-2FC0-468B-B3BF-15F3BB2E197C"}}
+WEBDRIVER element send keys (8.6 ms, 500): {"value":{"error":"unsupported operation","message":"","stacktrace":""}}
+WEBDRIVER find //button[normalize-space()='Actions'] (2.0 ms, 200): {"value":{"element-6066-11e4-a52e-4f735466cecf":"node-6272B79B-7A50-47A7-8ADA-D8D4F75E1929"}}
+WEBDRIVER element click (2.4 ms, 500): {"value":{"error":"unsupported operation","message":"","stacktrace":""}}
+WEBDRIVER actions API (pointer move+down+up) (0.9 ms, 500): {"value":{"error":"unsupported operation","message":"","stacktrace":""}}
+WEBDRIVER events the page saw (1.1 ms, 200): {"value":" | input value="}
+WEBDRIVER computed role of the menu button (1.2 ms, 200): {"value":"button"}
+WEBDRIVER computed label of the menu button (2.9 ms, 200): {"value":"Actions"}
+WEBDRIVER screenshot (25.1 ms, 200): {"<png>"}
+WEBDRIVER delete session (611.7 ms, 200): {"value":null}
+driver log tail:
+WEBDRIVER-HOST waiting for an automation session (WEBKIT_INSPECTOR_SERVER=127.0.0.1:49651)
+WEBDRIVER-HOST automation-started
+WEBDRIVER-HOST create-web-view answered
+WEBDRIVER-HOST done, closed by the session=True
+TEARDOWN WebKitWebProcess=1 WebKitNetworkProcess=1 (names truncated by the kernel; counts include other runs)
+left: harness=0 WebKitWebDriver=0 MiniBrowser=0 http.server=0 (python3 processes)

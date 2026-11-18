@@ -1,0 +1,22 @@
+STATE orders: engine nodes=30 atspi nodes=47 paired=30
+  name differs: document <html> engine "" | atspi document web "Orders"
+  name differs: textbox <input> engine "Customer name" | atspi entry "Customer name Ada Lovelace"
+  name differs: combobox <select> engine "Region" | atspi combo box "Region Americas"
+  name differs: button <input> engine "Attachment" | atspi push button "Attachment Choose File"
+  name differs: listitem <li> engine "" | atspi list item "#1041 Grace Hopper — 120.00"
+  name differs: listitem <li> engine "" | atspi list item "#1042 Bob Kahn — 48.50"
+  name differs: listitem <li> engine "" | atspi list item "#1043 Barbara Liskov — 310.25"
+  only atspi: menu "" <>
+STATE menu: engine nodes=6 atspi nodes=10 paired=6
+  name differs: document <html> engine "" | atspi document web "Orders"
+  only atspi: menu "" <>
+  only atspi: menu item "Americas" <option>
+  only atspi: menu item "Europe" <option>
+  only atspi: menu item "Asia" <option>
+STATE dialog: engine nodes=6 atspi nodes=10 paired=6
+  name differs: document <html> engine "" | atspi document web "Orders"
+  only atspi: menu "" <>
+  only atspi: menu item "Americas" <option>
+  only atspi: menu item "Europe" <option>
+  only atspi: menu item "Asia" <option>
+TOTAL engine nodes=42 paired=42 same name=33

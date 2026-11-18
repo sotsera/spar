@@ -1,0 +1,15 @@
+SETUP runtime=aot env+anchor=222.2ms since-process-start=245ms
+COVER evaluate: ok (0.4 ms) title=Orders
+COVER getByText exact: ok (2.1 ms) count=1
+COVER hover: ok (122.7 ms) 
+COVER element screenshot: ok (77.6 ms) 14546 bytes
+COVER timeout message (wrong text): ok (309.3 ms) message: expect role=status to have text "Shipped": timed out after 300 ms (6 attempts). Last attempt: text is "Draft"
+COVER timeout message (disabled button): ok (317.7 ms) message: click role=button[name~="Place order"]: timed out after 300 ms (6 attempts). Last attempt: <button class="rounded bg-slate-900 px-4 py-2 text-sm f."> "Place order": not enabled
+COVER strict mode message: ok (19.2 ms) message: Strict mode: role=button matches 6 elements: <button id="radix-_r_0_" class="rounded border border-slate-300 bg-white."> "Actions"; <input class="mt-1 block text-sm">; <button class="rounded bg-slate-900 px-4 py-2 text-s
+COVER console and page errors: ok (71.7 ms) console=1 errors=1 after 19 ms; console[0] has 'disk full'=True error has 'Unhandled boom'=True
+COVER set input files (DOM.setFileInputFiles): ok (17.0 ms) host interceptions so far=0
+COVER click on file input (host's picker block): ok (1069.9 ms) intercepted=1 native dialogs=0
+COVER alert (Page.javascriptDialogOpening, accepted): ok (61.7 ms) dialog events=1 native dialogs=0
+COVER alert with nobody answering (host Page.enable=True): ok (5181.0 ms) click returned=False dialog events=1 new windows=[] page answered=False
+COVER alert with nobody answering (host Page.enable=False): ok (5170.1 ms) click returned=False dialog events=0 new windows=[] page answered=False
+TEARDOWN browser exited=True leftover=0 root deleted=True

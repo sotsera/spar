@@ -181,7 +181,7 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
   - **Earlier versions saw the same** (`docs/research-review.md`): a WebView closed shortly after it became ready took about 6.4 s to exit, and about 210 ms when closed later. ETW showed SmartScreen's shutdown work, about 101 sleeps of about 60 ms each, and `IsReputationCheckingRequired=false` removed it in 18 of 18 runs. Desktop tests that close right after `ui-ready` pay this every time.
 
   (`react`, `cswinrt`, `asset-packing`, `webview-profiles`)
-- **`BrowserProcessExited` fires about 160 ms after the real kernel exit, and never after a failed controller creation.** A host that waits for it exits after about 326 ms instead of 20 ms. (`webview-profiles`)
+- **`BrowserProcessExited` fires after the real kernel exit, and never after a failed controller creation.** A host that waits for it exits after about 326 ms instead of 20 ms. (`webview-profiles`: about 160 ms late; `webview-restart-wait`, Runtime 157.0.4341.60: 5–12 ms late)
 - **`ICoreWebView2Profile8.Delete` poisons the profile name for good:** creating it again fails with `0x8007012F` (`ERROR_DELETE_PENDING`) at every later start (8 of 8), because `Local State` keeps it in `profile_basenames_deleted`. Use `ClearBrowsingDataAll` instead. (`webview-profiles`)
 - **`ClearBrowsingData(ALL_SITE)` keeps the `History` file,** which can hold data from page URLs. Add `BROWSING_HISTORY`, or use `ClearBrowsingDataAll`. (`webview-profiles`)
 - **A second app instance with different environment options** (additional browser arguments included) creates its environment, then fails at controller creation with `0x8007139F` after about 37 ms: environments sharing one profile folder must use identical options. If the first instance is exclusive, it fails with `0x8000FFFF`. Map both to a clear "another instance with different settings is running" error. (`webview-profiles`; earlier versions hit the same rule)
@@ -355,7 +355,9 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
 - **A hidden or minimized page still answers web messages,** within 1 ms of a close request's ping; only a suspended one does not (above). (M1b host details)
 - **A `<select>`'s list opened from the keyboard after the window moved appears at the old place** without `NotifyParentWindowPositionChanged`; one opened by a click is placed right either way, which hides the bug from mouse users. (M1b host details)
 - **The visible-window teardown leak of earlier research did not reproduce** on Runtime 157: in 100 open and close cycles on one environment, with windows offscreen on the desktop and on the screen in Windows Sandbox, the network service stayed within −10 and +5 handles, with or without the old mitigation (hide, `about:blank`, a posted close). **The GPU process gains about one handle per window opened and closed** (+102 to +104 in 100 cycles), with or without it. (M1b host details)
-- **The last controller's close ends the browser, and a new controller right after waits for it:** with no other controller alive, the next one on the same environment took 5.7 s (2 of 2) against 0.28 s, in a new browser process. Holding the environment object does not keep the browser alive; another controller does. (M1b host details)
+- **The last controller's close ends the browser, and with SmartScreen on a new controller right after waits for it:** with no other controller alive, the next one on the same environment took 5.7 s (2 of 2) against 0.28 s, in a new browser process. Holding the environment object does not keep the browser alive; another controller does. (M1b host details) **Cause, found later: SmartScreen**, which that probe left on. A close within about 0.5 s of a navigation keeps the old browser alive 6.47–6.56 s, and the new controller completes about 150 ms after it exits; with `IsReputationCheckingRequired = false` the next controller took 203–291 ms at every gap. Waiting for `BrowserProcessExited` first gains nothing. (`webview-restart-wait`)
+- **An InPrivate controller kept alive between window tests leaks their storage:** InPrivate data lives as long as any InPrivate controller of that profile name, so test *n* saw test *n−1*'s `localStorage` and cookie (4 of 4). Keep any anchor on the default profile; InPrivate controllers alive at once share storage unless their `ProfileName`s differ. (`window-automation`)
+- **Microsoft's browser automation library attached to WebView2 over CDP** puts every controller's page in one default context (context APIs such as cookies and tracing aim at the wrong one), has no route interception or video, can hang in `page.CloseAsync`, opens a real window for `NewPageAsync`, and leaves `DevToolsActivePort` and an empty `playwright-artifacts-*` folder in `%TEMP%` behind. (`window-automation`)
 
 ### Windows host: from earlier versions and other frameworks, not rechecked
 
@@ -456,6 +458,11 @@ See also "Bridge and loopback" for the heartbeat, and "Page security (CSP, heade
   - **Hidden pages run timers every 2 s,** but message handlers still answer in about 1 ms.
 
   (`page-heartbeat`)
+
+- **WebKitGTK's sandbox aborts when `XDG_RUNTIME_DIR` is under `/var/tmp`** ("bwrap: Can't make symlink at /var/tmp", exit 133); `HOME` and the other XDG folders there are fine. Keep the runtime folder elsewhere, for example a per-run folder in `/dev/shm`. (`window-automation-linux`)
+- **`WEBKIT_INSPECTOR_HTTP_SERVER` lets any local process run script in the page,** through the WebKit Inspector Protocol, even without developer extras. It speaks WebKit's protocol, not CDP: no `Input`, `Accessibility` or screenshot domain. (`window-automation-linux`)
+- **WebKitWebDriver is packaged for 4.1 only;** it can launch a 6.0 program, but element click, send keys and actions answer "unsupported operation", and asking for BiDi fails the session. (`window-automation-linux`)
+- **XTEST clicks reach a window that is not focused, but keys need the X focus;** characters missing from the keymap need a spare keycode bound to each, then a wait until GTK reads the keymap change. WebKitGTK 6.0 has no console signal: console calls and page errors need a shim in the page's main world. (`window-automation-linux`)
 
 ### Linux host: from other frameworks, not rechecked
 

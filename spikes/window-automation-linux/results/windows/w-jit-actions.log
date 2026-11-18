@@ -1,0 +1,12 @@
+SETUP runtime=jit role queries=engine
+ACTION resolve role button "Actions" (queryAXTree) n=100 min=6.2 p50=13.1 p95=14.2 max=15.4
+ACTION resolve role right after a DOM change (queryAXTree) n=100 min=11.6 p50=16.9 p95=17.8 max=18.6
+ACTION resolve listitems in the named list (queryAXTree) n=100 min=33.2 p50=35.5 p95=37.4 max=38.8
+ACTION expect text, already true (queryAXTree) n=100 min=14.1 p50=17.8 p95=18.7 max=25.6
+ACTION full ClickAsync (open menu) + Escape (queryAXTree) n=100 min=55.4 p50=58.2 p95=62.8 max=65.2
+ACTION resolve role button "Actions" (engine) n=100 min=0.6 p50=0.9 p95=2.3 max=3.2
+ACTION resolve role right after a DOM change (engine) n=100 min=0.3 p50=0.5 p95=1.5 max=2.8
+ACTION resolve listitems in the named list (engine) n=100 min=0.7 p50=1.0 p95=2.4 max=7.3
+ACTION expect text, already true (engine) n=100 min=0.7 p50=1.1 p95=2.9 max=4.3
+ACTION full ClickAsync (open menu) + Escape (engine) n=100 min=25.8 p50=32.3 p95=46.6 max=48.2
+TEARDOWN browser exited=True root deleted=True

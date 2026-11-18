@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The Windows probe of spikes/webview-restart-wait: one process, one STA with a message pump, and N cycles that each
+    create a controller, navigate to a page served on https://app.localhost, and close it, under the conditions its
+    options set. NativeAOT-capable; the runs use the NativeAOT publication.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <RootNamespace>RestartWait</RootNamespace>
+  </PropertyGroup>
+
+  <!-- The WebView2 loader, linked statically (as spikes/window-automation/Shared/Desktop.targets does). -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <_SpikeWebView2Native>$(PkgMicrosoft_Web_WebView2)\build\native\x64\</_SpikeWebView2Native>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(PublishAot)' != 'true'">
+    <None Include="$(_SpikeWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(PublishAot)' == 'true'">
+    <None Include="$(_SpikeWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" Visible="false" />
+    <DirectPInvoke Include="WebView2Loader" />
+    <NativeLibrary Include="$(_SpikeWebView2Native)WebView2LoaderStatic.lib" />
+  </ItemGroup>
+</Project>

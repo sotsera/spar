@@ -1,0 +1,9 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=191.7ms since-process-start=201ms xtest=2.2 input=xtest csp=False
+
+** (process:3901): CRITICAL **: 20:07:36.001: WebKitUserScript *webkit_user_script_new_for_world(const gchar *, WebKitUserContentInjectedFrames, WebKitUserScriptInjectionTime, const char *, const gchar *const *, const gchar *const *): assertion 'worldName' failed
+
+** (process:3901): CRITICAL **: 20:07:36.001: void webkit_user_content_manager_add_script(WebKitUserContentManager *, WebKitUserScript *): assertion 'script' failed
+RUN exit=139 wall=2907ms
+LEFT harness=0 web=0 network=0 xvfb=1

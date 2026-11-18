@@ -1,0 +1,10 @@
+       0.0 | options --reps 1 --gap 1000 --profile default --smartscreen off --dwell 0 --window shown --env new --wait none --folder same --overlap false --args "--log-net-log=<repo>\artifacts\webview-restart-wait\browserlogs\net-off-{n}.json --net-log-capture-mode=Default" --exit wait --sample false
+       6.4 | Runtime 157.0.4341.60
+     352.7 | cycle 0: controller 275 ms, navigation 50 ms, browser 43504 new True, environment 6 ms
+     497.9 |   BrowserProcessExited pid 43504 kind 0
+    1658.8 | cycle 1: controller 236 ms, navigation 52 ms, browser 14496 new True, environment 0 ms, close->create 1003 ms (waited 0), previous browser exited before create True, previous exit +138 ms / event +145 ms after its close
+    1816.3 |   BrowserProcessExited pid 14496 kind 0
+    1828.5 | cycle 0 browser 43504: close->exit +138 ms, BrowserProcessExited +145 ms
+    1828.5 | cycle 1 browser 14496: close->exit +151 ms, BrowserProcessExited +157 ms
+    2332.9 | processes of the root left: 0 
+    2332.9 | summary: first controller 275 ms; restarts n=1 controller p50 236 ms (min 236, max 236), to first navigation p50 288 ms, multi-second (>=2000 ms) 0, new browser 1; close->exit p50 144 ms (max 151)

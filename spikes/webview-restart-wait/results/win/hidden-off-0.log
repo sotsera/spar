@@ -1,0 +1,27 @@
+       0.0 | options --reps 10 --gap 0 --profile default --smartscreen off --dwell 0 --window hidden --env keep --wait none --folder same --overlap false --args "" --exit wait --sample false
+       5.9 | Runtime 157.0.4341.60
+     286.6 | cycle 0: controller 218 ms, navigation 49 ms, browser 38516 new True, environment 6 ms
+     383.0 | cycle 1: controller 63 ms, navigation 21 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+     484.9 | cycle 2: controller 59 ms, navigation 30 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+     575.0 | cycle 3: controller 50 ms, navigation 27 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+     666.0 | cycle 4: controller 54 ms, navigation 24 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+     759.0 | cycle 5: controller 56 ms, navigation 23 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+     848.2 | cycle 6: controller 58 ms, navigation 18 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+     937.4 | cycle 7: controller 48 ms, navigation 28 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+    1138.1 | cycle 8: controller 163 ms, navigation 24 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+    1232.9 | cycle 9: controller 55 ms, navigation 25 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+    1338.5 | cycle 10: controller 55 ms, navigation 36 ms, browser 38516 new False, close->create 0 ms (waited 0), previous browser exited before create False, previous exit +? ms / event +? ms after its close
+    1528.7 |   BrowserProcessExited pid 38516 kind 0
+    1539.7 | cycle 0 browser 38516: close->exit +1235 ms, BrowserProcessExited +1242 ms
+    1539.7 | cycle 1 browser 38516: close->exit +1139 ms, BrowserProcessExited +1146 ms
+    1539.7 | cycle 2 browser 38516: close->exit +1037 ms, BrowserProcessExited +1044 ms
+    1539.7 | cycle 3 browser 38516: close->exit +947 ms, BrowserProcessExited +954 ms
+    1539.7 | cycle 4 browser 38516: close->exit +856 ms, BrowserProcessExited +863 ms
+    1539.7 | cycle 5 browser 38516: close->exit +763 ms, BrowserProcessExited +770 ms
+    1539.7 | cycle 6 browser 38516: close->exit +674 ms, BrowserProcessExited +680 ms
+    1539.7 | cycle 7 browser 38516: close->exit +584 ms, BrowserProcessExited +591 ms
+    1539.7 | cycle 8 browser 38516: close->exit +384 ms, BrowserProcessExited +391 ms
+    1539.7 | cycle 9 browser 38516: close->exit +289 ms, BrowserProcessExited +296 ms
+    1539.7 | cycle 10 browser 38516: close->exit +183 ms, BrowserProcessExited +190 ms
+    2058.3 | processes of the root left: 0 
+    2058.4 | summary: first controller 218 ms; restarts n=10 controller p50 56 ms (min 48, max 163), to first navigation p50 79 ms, multi-second (>=2000 ms) 0, new browser 0; close->exit p50 763 ms (max 1235)

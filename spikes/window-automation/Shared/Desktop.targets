@@ -1,0 +1,23 @@
+<Project>
+  <!--
+    The WebView2 loader (adapted from spikes/window-tests): NativeAOT links it statically; a CoreCLR run loads
+    WebView2Loader.dll from beside the app.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <_SpikeWebView2Native>$(PkgMicrosoft_Web_WebView2)\build\native\x64\</_SpikeWebView2Native>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(PublishAot)' != 'true'">
+    <None Include="$(_SpikeWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(PublishAot)' == 'true'">
+    <None Include="$(_SpikeWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" Visible="false" />
+    <DirectPInvoke Include="WebView2Loader" />
+    <NativeLibrary Include="$(_SpikeWebView2Native)WebView2LoaderStatic.lib" />
+  </ItemGroup>
+</Project>

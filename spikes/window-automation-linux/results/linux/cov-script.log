@@ -1,0 +1,74 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=54.6ms since-process-start=65ms xtest=2.2 input=script csp=False
+dbus-daemon[4364]: [session uid=1000 pid=4364] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=4365 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[4364]: [session uid=1000 pid=4364] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[4521]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=4365 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[4521]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[4364]: [session uid=1000 pid=4364] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=4526 comm="/usr/bin/xdg-dbus-proxy --args=25" label="kernel")
+dbus-daemon[4364]: [session uid=1000 pid=4364] Activating service name='org.freedesktop.portal.Documents' requested by ':1.6' (uid=1000 pid=4557 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[4364]: [session uid=1000 pid=4364] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.7' (uid=1000 pid=4563 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[4364]: [session uid=1000 pid=4364] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[4364]: [session uid=1000 pid=4364] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.744: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.744: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[4364]: [session uid=1000 pid=4364] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.6' (uid=1000 pid=4557 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[4364]: [session uid=1000 pid=4364] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.779: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.780: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.780: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.780: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.780: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.780: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.781: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.781: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.782: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.782: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][02845.071687] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][02845.071733] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.784: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.784: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.784: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4557): xdg-desktop-portal-WARNING **: 20:42:16.785: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[4364]: [session uid=1000 pid=4364] Successfully activated service 'org.freedesktop.portal.Desktop'
+COVER evaluate: ok (62.5 ms) title=Orders
+COVER the page's CSP applies to page script, not to the engine's calls: ok (7.8 ms) eval in the main world: allowed; engine role query in its world: {"count":6}
+COVER getByText exact: ok (0.6 ms) count=1
+COVER hover: ok (24.4 ms) pointerenter on 'Show alert'=False
+COVER view geometry and coordinate mapping: ok (3.3 ms) xid=0x200004 window root origin=(0,0) view offset in surface=(0,0) view=1008x729; click at CSS (300,200) arrived at [300,200,false]
+COVER element screenshot: ok (5.3 ms) 28865 bytes
+COVER timeout message (wrong text): ok (300.7 ms) message: expect role=status to have text "Shipped": timed out after 300 ms (7 attempts). Last attempt: text is "Draft"
+COVER timeout message (disabled button): ok (300.4 ms) message: click role=button[name~="Place order"]: timed out after 300 ms (7 attempts). Last attempt: <button class="rounded bg-slate-900 px-4 py-2 text-sm f…"> "Place order": not enabled
+COVER strict mode message: ok (0.6 ms) message: Strict mode: role=button matches 6 elements: <button id="radix-_r_0_" class="rounded border border-slate-300 bg-white…"> "Actions"; <input class="mt-1 block text-sm">; <button class="rounded bg-slate-900 px-4 py-2 text-sm f…"> "Place order"; <button class="rou
+COVER console and page errors: ok (6.6 ms) console=1 errors=1 after 0 ms; console[0]=error: export failed: disk full | error[0]=Error: Unhandled boom at @spar://app/assets/index-KiM2E8c4.js:49:80744
+COVER set input files (click the input, the host's file-chooser handler selects the files): ok (21.4 ms) run-file-chooser requests=1 page sees upload.txt 5
+COVER click on the file input, nothing armed (the picker block): ok (1024.0 ms) run-file-chooser requests=1 (answered with cancel); new X top-level windows=[] of 4
+COVER alert (script-dialog answered by the host): ok (28.0 ms) dialogs=0: Saved!
+COVER trusted input and user activation (script): ok (40.3 ms) events=pointerdown:false mousedown:false click:false:activation=true keydown:false:activation=true
+COVER window.open from a click handler: does it pass WebKit's popup blocker? (script): ok (32.6 ms) host create requests from the click=1 (window.open returned null); see the activation verb for the controls
+COVER fill through execCommand('insertText'): ok (7.4 ms) engine reports {"value":"Grace Hopper","ok":true,"trusted":true}; React state: Place order enabled=True
+COVER Tab moves focus (trusted key): ok (24.4 ms) focused after Tab: <input class="mt-1 block w-full rounded border border-slate-
+COVER typing characters the keymap lacks (remapped keycode): ok (12.6 ms) value= remapped so far=0 (spare keycodes 19)
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:42:18.765: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-80dde510-400c-4bfc-9d59-a989c7824c1c: The connection is closed
+TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=0 (names truncated by the kernel; counts include other runs)
+RUN exit=0 wall=2727ms
+PROCESSES before=[] after=[]

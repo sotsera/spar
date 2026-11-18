@@ -86,7 +86,7 @@ await using var app = await SparTestApp.StartAsync<Program>(o =>
   - Trusted input in the in-process window (CDP `Input.*` on Windows, XTEST with `GDK_BACKEND=x11` on Linux, decision "Trusted input in Linux desktop tests: XTEST"). Windows answered (user, 2026-11-17; decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner"; `spikes/window-tests`): CDP input in an offscreen, never-activated window is trusted, gives user activation and focuses the page; a click takes about 15 ms; tests wait two frames after a navigation.
   - Focus-dependent features (clipboard, user activation, the first click on an inactive window) fail in a non-activated offscreen window; they go to Windows Sandbox or the user.
   - Linux window tests need the container image. Whether Windows machines may use WSLg, and whether Spar publishes the image or only its Dockerfile, are open (M1c).
-  - Selectors (role and name only, or test ids too) and how scenes are declared are open.
+  - Selectors: role and accessible name, label and text, no test ids for now; window tests use Spar's own API with the browser automation library's method names, over a page-script engine shared by both hosts (user, 2026-11-18; decision "Step 8's shape: window tests driven by Spar's own API"). How scenes are declared is open.
 - **E. Integration cost and quirks.** 42–48 s per run. A `localhost` → `::1` hang. Aspire writes keys to `%LOCALAPPDATA%`.
 - **F. Visual snapshots** need determinism (clock, fonts, DPI), which is not proven.
 - **G. The fuzz budget:** a fixed seed budget on every run or nightly, and whether a minimised corpus is committed.

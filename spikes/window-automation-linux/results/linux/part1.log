@@ -1,0 +1,124 @@
+== build the part-1 probe (JIT, Microsoft.Playwright)
+    0 Warning(s)
+Time Elapsed 00:00:01.97
+
+== 1. WEBKIT_INSPECTOR_SERVER (WebKit's remote inspector socket)
+harness (inspector): SERVE ready url=spar://app/ for 40s
+listening: LISTEN 0      10          127.0.0.1:9227      0.0.0.0:*          
+HTTP GET /json/version: status=000 bytes=0 curl exit=52
+first bytes the server sends after a request:
+0000000
+PART1 library 1.64.1.0
+PART1 Chromium.ConnectOverCDPAsync http://127.0.0.1:9227: PlaywrightException after 11 ms: socket hang up (ECONNRESET) | Call log: |   - <ws preparing> retrieving websocket url from http://127.0.0.1:9227
+PART1 Webkit.ConnectOverCDPAsync http://127.0.0.1:9227: ArgumentException after 0 ms: Connecting over CDP is only supported in Chromium.
+PART1 Webkit.ConnectAsync ws://127.0.0.1:9227/: PlaywrightException after 11 ms: WebSocket error: socket hang up | Call log: |   - <ws connecting> ws://127.0.0.1:9227/ |   - <ws error> ws://127.0.0.1:9227/ error socket hang up |   - <ws connect error> ws://127.0.0.1:9227/ socket hang up |   - <ws disconnected> ws://127.0.0.1:9227/ code=1006 reason=
+PART1 Chromium.ConnectOverCDPAsync ws://127.0.0.1:9227/: PlaywrightException after 1 ms: WebSocket error: socket hang up | Call log: |   - <ws connecting> ws://127.0.0.1:9227/ |   - <ws error> ws://127.0.0.1:9227/ error socket hang up |   - <ws connect error> ws://127.0.0.1:9227/ socket hang up |   - <ws disconnected> ws://127.0.0.1:9227/ code=1006 reason=
+harness (inspector--devtools): SERVE ready url=spar://app/ for 40s
+listening: LISTEN 0      10          127.0.0.1:9227      0.0.0.0:*          
+HTTP GET /json/version: status=000 bytes=0 curl exit=52
+first bytes the server sends after a request:
+0000000
+PART1 library 1.64.1.0
+PART1 Chromium.ConnectOverCDPAsync http://127.0.0.1:9227: PlaywrightException after 10 ms: socket hang up (ECONNRESET) | Call log: |   - <ws preparing> retrieving websocket url from http://127.0.0.1:9227
+PART1 Webkit.ConnectOverCDPAsync http://127.0.0.1:9227: ArgumentException after 0 ms: Connecting over CDP is only supported in Chromium.
+PART1 Webkit.ConnectAsync ws://127.0.0.1:9227/: PlaywrightException after 11 ms: WebSocket error: socket hang up | Call log: |   - <ws connecting> ws://127.0.0.1:9227/ |   - <ws error> ws://127.0.0.1:9227/ error socket hang up |   - <ws connect error> ws://127.0.0.1:9227/ socket hang up |   - <ws disconnected> ws://127.0.0.1:9227/ code=1006 reason=
+PART1 Chromium.ConnectOverCDPAsync ws://127.0.0.1:9227/: PlaywrightException after 1 ms: WebSocket error: socket hang up | Call log: |   - <ws connecting> ws://127.0.0.1:9227/ |   - <ws error> ws://127.0.0.1:9227/ error socket hang up |   - <ws connect error> ws://127.0.0.1:9227/ socket hang up |   - <ws disconnected> ws://127.0.0.1:9227/ code=1006 reason=
+
+== 2. WEBKIT_INSPECTOR_HTTP_SERVER (WebKit's inspector over HTTP and WebSocket)
+harness (http-inspector): SERVE ready url=spar://app/ for 40s
+listening: LISTEN 0      10          127.0.0.1:9228       0.0.0.0:*          
+GET /: <html><head><title>Remote inspector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>  h1 { color: #babdb6; text-shadow: 0 1px 0 white; margin-bottom: 0; }  html { font-family: -webkit-system-font; font-size: 11pt; color: #2e3436; padding: 20px 20px 0 20px; background-color: #f6f6f4;          background-image: -webkit-gradient(linear, left top, left bottom, color-
+GET /json:  [status=404 type=]
+GET /json/list:  [status=404 type=]
+GET /json/version:  [status=404 type=]
+GET /targets:  [status=404 type=]
+PART1 library 1.64.1.0
+PART1 Chromium.ConnectOverCDPAsync http://127.0.0.1:9228: PlaywrightException after 14 ms: Unexpected status 404 when connecting to http://127.0.0.1:9228/json/version/. | This does not look like a DevTools server, try connecting via ws://. | Call log: |   - <ws preparing> retrieving websocket url from http://127.0.0.1:9228
+PART1 Webkit.ConnectOverCDPAsync http://127.0.0.1:9228: ArgumentException after 0 ms: Connecting over CDP is only supported in Chromium.
+PART1 Webkit.ConnectAsync ws://127.0.0.1:9228/: PlaywrightException after 5 ms: WebSocket error: ws://127.0.0.1:9228/ 200 OK | <html><head><title>Remote inspector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>  h1 { color: #babdb6; text-shadow: 0 1px 0 white; margin-bottom: 0; }  html { font-family: -webkit-system-font; font-size: 11pt; color: #2e3436; padding: 20px 20px 0 20px; background-color: #f6f6f4;          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeec), color-stop(1, #f6f6f4));         background-size: 100% 5em; background-repeat: no-repeat; }  table { width: 100%; border-collapse: collapse; }  table, td { border: 1px solid #d3d7cf; border-left: none; border-right: none; }  p { margin
+PART1 Chromium.ConnectOverCDPAsync ws://127.0.0.1:9228/: PlaywrightException after 1 ms: WebSocket error: ws://127.0.0.1:9228/ 200 OK | <html><head><title>Remote inspector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>  h1 { color: #babdb6; text-shadow: 0 1px 0 white; margin-bottom: 0; }  html { font-family: -webkit-system-font; font-size: 11pt; color: #2e3436; padding: 20px 20px 0 20px; background-color: #f6f6f4;          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeec), color-stop(1, #f6f6f4));         background-size: 100% 5em; background-repeat: no-repeat; }  table { width: 100%; border-collapse: collapse; }  table, td { border: 1px solid #d3d7cf; border-left: none; border-right: none; }  p { margin
+INSPECTOR targets page: 1283 bytes; sockets: socket/1/1/WebPage
+INSPECTOR page target=frame-4294967297
+INSPECTOR <- {"method":"Target.targetCreated","params":{"targetInfo":{"targetId":"frame-4294967297","type":"frame"}}}
+INSPECTOR <- {"method":"Target.targetCreated","params":{"targetInfo":{"targetId":"page-13","type":"page"}}}
+INSPECTOR <- {"error":{"code":-32601,"message":"'Runtime' domain was not found","data":[{"code":-32601,"message":"'Runtime' domain was not found"}]},"id":1}
+INSPECTOR <- {"error":{"code":-32601,"message":"'Target.setAutoAttach' was not found","data":[{"code":-32601,"message":"'Target.setAutoAttach' was not found"}]},"id":2}
+INSPECTOR <- {"result":{},"id":3}
+INSPECTOR <- {"result":{},"id":4}
+INSPECTOR <- {"result":{},"id":5}
+INSPECTOR <- {"result":{},"id":6}
+INSPECTOR <- {"result":{},"id":7}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"result\":{\"result\":{\"type\":\"string\",\"value\":\"Orders spar://app/\"},\"wasThrown\":false},\"id\":1002}"}} inner={"result":{"result":{"type":"string","value":"Orders spar://app/"},"wasThrown":false},"id":1002}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"error\":{\"code\":-32601,\"message\":\"'Input' domain was not found\",\"data\":[{\"code\":-32601,\"message\":\"'Input' domain was  inner={"error":{"code":-32601,"message":"'Input' domain was not found","data":[{"code":-32601,"message":"'Input' domain was not found"}]},"id":1003}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"error\":{\"code\":-32601,\"message\":\"'Accessibility' domain was not found\",\"data\":[{\"code\":-32601,\"message\":\"'Accessibil inner={"error":{"code":-32601,"message":"'Accessibility' domain was not found","data":[{"code":-32601,"message":"'Accessibility' domain was not found"}]},"id":1004}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"error\":{\"code\":-32601,\"message\":\"'Page.captureScreenshot' was not found\",\"data\":[{\"code\":-32601,\"message\":\"'Page.cap inner={"error":{"code":-32601,"message":"'Page.captureScreenshot' was not found","data":[{"code":-32601,"message":"'Page.captureScreenshot' was not found"}]},"id":100
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"result\":{\"dataURL\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgA inner={"result":{"dataURL":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAEOSURBVHic7dHRCUAAAABR7ML+u5BZ
+harness (http-inspector--devtools): SERVE ready url=spar://app/ for 40s
+listening: LISTEN 0      10          127.0.0.1:9228       0.0.0.0:*          
+GET /: <html><head><title>Remote inspector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>  h1 { color: #babdb6; text-shadow: 0 1px 0 white; margin-bottom: 0; }  html { font-family: -webkit-system-font; font-size: 11pt; color: #2e3436; padding: 20px 20px 0 20px; background-color: #f6f6f4;          background-image: -webkit-gradient(linear, left top, left bottom, color-
+GET /json:  [status=404 type=]
+GET /json/list:  [status=404 type=]
+GET /json/version:  [status=404 type=]
+GET /targets:  [status=404 type=]
+PART1 library 1.64.1.0
+PART1 Chromium.ConnectOverCDPAsync http://127.0.0.1:9228: PlaywrightException after 16 ms: Unexpected status 404 when connecting to http://127.0.0.1:9228/json/version/. | This does not look like a DevTools server, try connecting via ws://. | Call log: |   - <ws preparing> retrieving websocket url from http://127.0.0.1:9228
+PART1 Webkit.ConnectOverCDPAsync http://127.0.0.1:9228: ArgumentException after 0 ms: Connecting over CDP is only supported in Chromium.
+PART1 Webkit.ConnectAsync ws://127.0.0.1:9228/: PlaywrightException after 6 ms: WebSocket error: ws://127.0.0.1:9228/ 200 OK | <html><head><title>Remote inspector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>  h1 { color: #babdb6; text-shadow: 0 1px 0 white; margin-bottom: 0; }  html { font-family: -webkit-system-font; font-size: 11pt; color: #2e3436; padding: 20px 20px 0 20px; background-color: #f6f6f4;          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeec), color-stop(1, #f6f6f4));         background-size: 100% 5em; background-repeat: no-repeat; }  table { width: 100%; border-collapse: collapse; }  table, td { border: 1px solid #d3d7cf; border-left: none; border-right: none; }  p { margin
+PART1 Chromium.ConnectOverCDPAsync ws://127.0.0.1:9228/: PlaywrightException after 1 ms: WebSocket error: ws://127.0.0.1:9228/ 200 OK | <html><head><title>Remote inspector</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>  h1 { color: #babdb6; text-shadow: 0 1px 0 white; margin-bottom: 0; }  html { font-family: -webkit-system-font; font-size: 11pt; color: #2e3436; padding: 20px 20px 0 20px; background-color: #f6f6f4;          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eeeeec), color-stop(1, #f6f6f4));         background-size: 100% 5em; background-repeat: no-repeat; }  table { width: 100%; border-collapse: collapse; }  table, td { border: 1px solid #d3d7cf; border-left: none; border-right: none; }  p { margin
+INSPECTOR targets page: 1283 bytes; sockets: socket/1/1/WebPage
+INSPECTOR page target=frame-4294967297
+INSPECTOR <- {"method":"Target.targetCreated","params":{"targetInfo":{"targetId":"frame-4294967297","type":"frame"}}}
+INSPECTOR <- {"method":"Target.targetCreated","params":{"targetInfo":{"targetId":"page-13","type":"page"}}}
+INSPECTOR <- {"error":{"code":-32601,"message":"'Runtime' domain was not found","data":[{"code":-32601,"message":"'Runtime' domain was not found"}]},"id":1}
+INSPECTOR <- {"error":{"code":-32601,"message":"'Target.setAutoAttach' was not found","data":[{"code":-32601,"message":"'Target.setAutoAttach' was not found"}]},"id":2}
+INSPECTOR <- {"result":{},"id":3}
+INSPECTOR <- {"result":{},"id":4}
+INSPECTOR <- {"result":{},"id":5}
+INSPECTOR <- {"result":{},"id":6}
+INSPECTOR <- {"result":{},"id":7}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"result\":{\"result\":{\"type\":\"string\",\"value\":\"Orders spar://app/\"},\"wasThrown\":false},\"id\":1002}"}} inner={"result":{"result":{"type":"string","value":"Orders spar://app/"},"wasThrown":false},"id":1002}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"error\":{\"code\":-32601,\"message\":\"'Input' domain was not found\",\"data\":[{\"code\":-32601,\"message\":\"'Input' domain was  inner={"error":{"code":-32601,"message":"'Input' domain was not found","data":[{"code":-32601,"message":"'Input' domain was not found"}]},"id":1003}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"error\":{\"code\":-32601,\"message\":\"'Accessibility' domain was not found\",\"data\":[{\"code\":-32601,\"message\":\"'Accessibil inner={"error":{"code":-32601,"message":"'Accessibility' domain was not found","data":[{"code":-32601,"message":"'Accessibility' domain was not found"}]},"id":1004}
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"error\":{\"code\":-32601,\"message\":\"'Page.captureScreenshot' was not found\",\"data\":[{\"code\":-32601,\"message\":\"'Page.cap inner={"error":{"code":-32601,"message":"'Page.captureScreenshot' was not found","data":[{"code":-32601,"message":"'Page.captureScreenshot' was not found"}]},"id":100
+INSPECTOR <- {"method":"Target.dispatchMessageFromTarget","params":{"targetId":"page-13","message":"{\"result\":{\"dataURL\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgA inner={"result":{"dataURL":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAEOSURBVHic7dHRCUAAAABR7ML+u5BZ
+
+== 3. The library's own WebKit browser type
+Version 1.64.1
+    at async Registry.validateHostRequirementsForExecutablesIfNeeded (<work>/part1/.playwright/package/lib/coreBundle.js:34977:11)
+    at async installBrowsers (<work>/part1/.playwright/package/lib/coreBundle.js:72213:5)
+    at async _Command.<anonymous> (<work>/part1/.playwright/package/lib/coreBundle.js:75877:7)
+5.1M	<work>/ms-playwright/ffmpeg-1013
+293M	<work>/ms-playwright/webkit-2370
+<work>/ms-playwright/webkit-2370/minibrowser-gtk/MiniBrowser: missing libraries:  libavif.so.16 => not found; libbacktrace.so.0 => not found; libevent-2.1.so.7 => not found; libflite.so.1 => not found; libflite_cmu_grapheme_lang.so.1 => not found; libflite_cmu_grapheme_lex.so.1 => not found; libflite_cmu_indic_lang.so.1 => not found; libflite_cmu_indic_lex.so.1 => not found; libflite_cmu_time_awb.so.1 => not found; libflite_cmu_us_awb.so.1 => not found; libflite_cmu_us_kal.so.1 => not found; libflite_cmu_us_kal16.so.1 => not found; libflite_cmu_us_rms.so.1 => not found; libflite_cmu_us_slt.so.1 => not found; libflite_cmulex.so.1 => not found; libflite_usenglish.so.1 => not found; libgstcodecparsers-1.0.so.0 => not found; libjxl.so.0.8 => not found;
+<work>/ms-playwright/webkit-2370/minibrowser-gtk/bin/MiniBrowser: missing libraries:  libavif.so.16 => not found; libbacktrace.so.0 => not found; libevent-2.1.so.7 => not found; libflite.so.1 => not found; libflite_cmu_grapheme_lang.so.1 => not found; libflite_cmu_grapheme_lex.so.1 => not found; libflite_cmu_indic_lang.so.1 => not found; libflite_cmu_indic_lex.so.1 => not found; libflite_cmu_time_awb.so.1 => not found; libflite_cmu_us_awb.so.1 => not found; libflite_cmu_us_kal.so.1 => not found; libflite_cmu_us_kal16.so.1 => not found; libflite_cmu_us_rms.so.1 => not found; libflite_cmu_us_slt.so.1 => not found; libflite_cmulex.so.1 => not found; libflite_usenglish.so.1 => not found; libgstcodecparsers-1.0.so.0 => not found; libjxl.so.0.8 => not found;
+<work>/ms-playwright/webkit-2370/pw_run.sh: missing libraries:  libWPEWebKit-2.0.so.1 => not found; libavif.so.16 => not found; libbacktrace.so.0 => not found; libevent-2.1.so.7 => not found; libflite.so.1 => not found; libflite_cmu_grapheme_lang.so.1 => not found; libflite_cmu_grapheme_lex.so.1 => not found; libflite_cmu_indic_lang.so.1 => not found; libflite_cmu_indic_lex.so.1 => not found; libflite_cmu_time_awb.so.1 => not found; libflite_cmu_us_awb.so.1 => not found; libflite_cmu_us_kal.so.1 => not found; libflite_cmu_us_kal16.so.1 => not found; libflite_cmu_us_rms.so.1 => not found; libflite_cmu_us_slt.so.1 => not found; libflite_cmulex.so.1 => not found; libflite_usenglish.so.1 => not found; libgstcodecparsers-1.0.so.0 => not found; libjxl.so.0.8 => not found;
+<work>/ms-playwright/webkit-2370/minibrowser-wpe/MiniBrowser: missing libraries:  libWPEWebKit-2.0.so.1 => not found; libavif.so.16 => not found; libbacktrace.so.0 => not found; libevent-2.1.so.7 => not found; libflite.so.1 => not found; libflite_cmu_grapheme_lang.so.1 => not found; libflite_cmu_grapheme_lex.so.1 => not found; libflite_cmu_indic_lang.so.1 => not found; libflite_cmu_indic_lex.so.1 => not found; libflite_cmu_time_awb.so.1 => not found; libflite_cmu_us_awb.so.1 => not found; libflite_cmu_us_kal.so.1 => not found; libflite_cmu_us_kal16.so.1 => not found; libflite_cmu_us_rms.so.1 => not found; libflite_cmu_us_slt.so.1 => not found; libflite_cmulex.so.1 => not found; libflite_usenglish.so.1 => not found; libgstcodecparsers-1.0.so.0 => not found; libjxl.so.0.8 => not found;
+PART1 library 1.64.1.0
+PART1 Webkit.LaunchAsync executable=(the library's WebKit): PlaywrightException after 142 ms:  | ╔══════════════════════════════════════════════════════════╗ | ║ Host system is missing dependencies to run browsers.     ║ | ║ Please install them with the following command:          ║ | ║                                                          ║ | ║     sudo pwsh bin/Debug/netX/playwright.ps1 install-deps ║ | ║                                                          ║ | ║ Alternatively, use apt:                                  ║ | ║     sudo apt-get install libevent-2.1-7t64\              ║ | ║         libgstreamer-plugins-bad1.0-0\                   ║ | ║         libflite1\                                       ║ | ║         libavif16\                                       ║ | ║   
+-- the same launch with the system WebKitGTK 6.0 MiniBrowser as the executable
+PART1 library 1.64.1.0
+PART1 Webkit.LaunchAsync executable=/usr/lib/x86_64-linux-gnu/webkitgtk-6.0/MiniBrowser: TargetClosedException after 113 ms: Target page, context or browser has been closed | Browser logs: |  | <launching> /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/MiniBrowser --inspector-pipe --headless --no-startup-window | <launched> pid=7657 | [pid=7657][err] libEGL warning: DRI3 error: Could not get DRI3 device | [pid=7657][err] libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering | [pid=7657][err] Cannot parse arguments: Unknown option --inspector-pipe | Call log: |   - <launching> /usr/lib/x86_64-linux-gnu/webkitgtk-6.0/MiniBrowser --inspector-pipe --headless --no-startup-window |   - <launched> pid=7657 |   - [pid=7657][err] libEGL warning: DRI3 error: Could not get DRI3 device |   - [pid=7657][err]
+-- the same launch with Spar's harness as the executable
+PART1 library 1.64.1.0
+PART1 Webkit.LaunchAsync executable=<work>/aot/Harness: TargetClosedException after 682 ms: Target page, context or browser has been closed | Browser logs: |  | <launching> <work>/aot/Harness --inspector-pipe --headless --no-startup-window | <launched> pid=7826 | [pid=7826][err] libEGL warning: DRI3 error: Could not get DRI3 device | [pid=7826][err] libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering | [pid=7826][out] SETUP runtime=aot gtk+context=58.3ms since-process-start=68ms xtest=2.2 input=xtest csp=False | [pid=7826][out] TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=0 (names truncated by the kernel; counts include other runs) | Call log: |   - <launching> <work>/aot/Harne
+
+== 4. WebDriver: WebKitWebDriver (Ubuntu ships it only in webkit2gtk-driver, for 4.1) against the 6.0 harness
+webkit2gtk-driver: not installed; using the unpacked package
+package: webkit2gtk-driver - WebKitGTK WebDriver support
+WebKitWebDriver links: libsoup-3.0.so.0 
+Usage: WebKitWebDriver options
+  -h,          --help             Prints this help message
+  -p <port>,   --port=<port>      Port number the driver will use
+               --host=<host>      Host IP the driver will use, or either 'local' or 'all' (default: 'local')
+  -t <ip:port> --target=<ip:port> Target IP and port
+               --replace-on-new-session  Replace the existing session on new session request
+  Usage: WebKitWebDriver options
+    -h,          --help             Prints this help message
+    -p <port>,   --port=<port>      Port number the driver will use
+                 --host=<host>      Host IP the driver will use, or either 'local' or 'all' (default: 'local')
+    -t <ip:port> --target=<ip:port> Target IP and port
+                 --replace-on-new-session  Replace the existing session on new session request
+WEBDRIVER status (26.7 ms, 200): {"value":{"ready":true,"message":"No sessions"}}
+WEBDRIVER new session (2.5 ms, 500): {"value":{"error":"session not created","message":"Failed to match capabilities","stacktrace":""}}
+driver log tail:
+left: harness=0 WebKitWebDriver=0 MiniBrowser=0 http.server=1

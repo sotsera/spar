@@ -1,0 +1,37 @@
+SETUP runtime=aot role queries=queryAXTree
+TEST create controller            n=60 min=56.2 p50=66.9 p95=90.7 max=122.3
+TEST attach                       n=60 min=0.5 p50=0.7 p95=1.2 max=1.5
+TEST navigate                     n=60 min=27.2 p50=35.5 p95=47.7 max=50.5
+TEST journey                      n=60 min=1439.1 p50=1475.1 p95=1550.9 max=1555.7
+TEST close                        n=60 min=9.4 p50=13.2 p95=16.0 max=19.3
+TEST per test                     n=60 min=1539.0 p50=1613.4 p95=1681.7 max=1727.2
+STEP 01 ready (two frames)        n=60 min=26.7 p50=33.9 p95=54.4 max=102.4
+STEP 02 expect heading            n=60 min=5.5 p50=17.8 p95=23.1 max=137.4
+STEP 03 fill name                 n=60 min=4.0 p50=5.1 p95=8.7 max=9.7
+STEP 04 check native              n=60 min=7.8 p50=13.6 p95=44.5 max=50.2
+STEP 05 check radix               n=60 min=67.7 p50=70.7 p95=72.3 max=73.5
+STEP 06 select option             n=60 min=1.7 p50=2.0 p95=3.9 max=4.7
+STEP 07 open listbox              n=60 min=55.3 p50=58.8 p95=65.2 max=66.9
+STEP 08 pick option               n=60 min=43.0 p50=48.3 p95=55.3 max=60.8
+STEP 09 expect listbox text       n=60 min=10.9 p50=14.2 p95=14.9 max=19.7
+STEP 10 open menu                 n=60 min=55.5 p50=58.0 p95=61.1 max=62.8
+STEP 11 pick menu item            n=60 min=47.1 p50=52.2 p95=53.9 max=56.0
+STEP 12 expect status             n=60 min=8.2 p50=14.3 p95=14.8 max=15.5
+STEP 13 wait async list           n=60 min=33.9 p50=264.9 p95=370.4 max=373.4
+STEP 14 expect enabled later      n=60 min=0.7 p50=0.9 p95=1.7 max=2.4
+STEP 15 fill filter               n=60 min=14.4 p50=18.3 p95=19.7 max=20.3
+STEP 16 press Enter               n=60 min=16.5 p50=18.1 p95=18.9 max=20.0
+STEP 17 expect filtered           n=60 min=30.9 p50=33.4 p95=34.1 max=34.7
+STEP 18 expect item text          n=60 min=34.6 p50=36.0 p95=36.6 max=37.7
+STEP 19 open dialog               n=60 min=56.3 p50=57.9 p95=59.7 max=61.9
+STEP 20 expect dialog             n=60 min=11.2 p50=14.2 p95=15.3 max=16.6
+STEP 21 cancel dialog             n=60 min=230.3 p50=233.4 p95=235.9 max=236.7
+STEP 22 expect dialog hidden      n=60 min=13.0 p50=15.3 p95=15.8 max=16.1
+STEP 23 reopen dialog             n=60 min=54.0 p50=56.2 p95=59.1 max=60.9
+STEP 24 confirm                   n=60 min=225.1 p50=230.9 p95=233.0 max=234.6
+STEP 25 expect placed             n=60 min=13.3 p50=16.1 p95=16.5 max=17.2
+STEP 26 click link                n=60 min=58.0 p50=60.9 p95=66.5 max=69.1
+STEP 27 wait for URL              n=60 min=1.6 p50=2.2 p95=5.2 max=7.0
+STEP 28 expect route text         n=60 min=1.0 p50=1.4 p95=2.8 max=3.6
+RESULT runs=60 failures=0 role queries=queryAXTree
+TEARDOWN browser exited=True root deleted=True

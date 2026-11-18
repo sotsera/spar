@@ -1,0 +1,99 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=177.3ms since-process-start=191ms xtest=2.2 input=xtest csp=False
+dbus-daemon[649]: [session uid=1000 pid=649] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=652 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[649]: [session uid=1000 pid=649] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[806]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=652 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[806]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[649]: [session uid=1000 pid=649] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=816 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[649]: [session uid=1000 pid=649] Activating service name='org.freedesktop.portal.Documents' requested by ':1.6' (uid=1000 pid=842 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[649]: [session uid=1000 pid=649] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.7' (uid=1000 pid=848 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[649]: [session uid=1000 pid=649] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[649]: [session uid=1000 pid=649] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.825: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.825: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[649]: [session uid=1000 pid=649] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.6' (uid=1000 pid=842 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[649]: [session uid=1000 pid=649] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.872: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.872: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.872: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.873: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.873: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.873: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.873: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.874: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.874: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.875: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00889.060920] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00889.060972] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.877: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.877: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.878: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:40.879: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[649]: [session uid=1000 pid=649] Successfully activated service 'org.freedesktop.portal.Desktop'
+MEMORY test-process private=70416.2MB web processes now=1
+
+(/usr/libexec/xdg-desktop-portal:842): xdg-desktop-portal-WARNING **: 20:09:47.784: Realtime error: Could not map pid: Process ids could not be found: 2
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:09:54.455: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-6d1951d5-bb25-4eec-ac4c-825bd0615da0: The connection is closed
+TEST create window + view + session           n=3 min=0.9 p50=1.3 p95=21.6 max=21.6
+TEST navigate (load, present)                 n=3 min=63.2 p50=65.0 p95=154.2 max=154.2
+TEST journey                                  n=3 min=6640.1 p50=6646.5 p95=6797.5 max=6797.5
+TEST close                                    n=3 min=1.0 p50=1.0 p95=1.4 max=1.4
+TEST per test                                 n=3 min=6705.2 p50=6713.7 p95=6974.7 max=6974.7
+STEP 01 ready (two frames)                    n=3 min=23.2 p50=23.8 p95=27.1 max=27.1
+STEP 02 expect heading                        n=3 min=62.4 p50=64.3 p95=170.3 max=170.3
+STEP 03 fill name                             n=3 min=35.8 p50=37.0 p95=47.8 max=47.8
+STEP 04 check native                          n=3 min=7.0 p50=7.8 p95=11.3 max=11.3
+STEP 05 check radix                           n=3 min=6.4 p50=13.0 p95=21.8 max=21.8
+STEP 06 select option                         n=3 min=2.4 p50=2.4 p95=2.6 max=2.6
+STEP 07 open listbox                          n=3 min=2010.4 p50=2010.9 p95=2013.4 max=2013.4
+STEP 08 pick option                           n=3 min=2019.4 p50=2020.4 p95=2022.0 max=2022.0
+STEP 09 expect listbox text                   n=3 min=0.8 p50=1.0 p95=1.0 max=1.0
+STEP 10 open menu                             n=3 min=2018.4 p50=2019.2 p95=2019.3 max=2019.3
+STEP 11 pick menu item                        n=3 min=27.1 p50=28.6 p95=29.0 max=29.0
+STEP 12 expect status                         n=3 min=0.5 p50=0.5 p95=0.6 max=0.6
+STEP 13 wait async list                       n=3 min=0.4 p50=0.5 p95=0.5 max=0.5
+STEP 14 expect enabled later                  n=3 min=0.4 p50=0.4 p95=0.5 max=0.5
+STEP 15 fill filter                           n=3 min=11.2 p50=12.6 p95=14.5 max=14.5
+STEP 16 press Enter                           n=3 min=3.6 p50=3.9 p95=3.9 max=3.9
+STEP 17 expect filtered                       n=3 min=0.3 p50=0.4 p95=0.4 max=0.4
+STEP 18 expect item text                      n=3 min=0.4 p50=0.5 p95=0.6 max=0.6
+STEP 19 open dialog                           n=3 min=20.1 p50=21.4 p95=32.6 max=32.6
+STEP 20 expect dialog                         n=3 min=7.3 p50=7.3 p95=7.7 max=7.7
+STEP 21 cancel dialog                         n=3 min=154.9 p50=157.2 p95=157.2 max=157.2
+STEP 22 expect dialog hidden                  n=3 min=3.6 p50=3.6 p95=4.4 max=4.4
+STEP 23 reopen dialog                         n=3 min=17.0 p50=17.2 p95=17.2 max=17.2
+STEP 24 confirm                               n=3 min=178.1 p50=178.5 p95=178.8 max=178.8
+STEP 25 expect placed                         n=3 min=0.4 p50=0.4 p95=0.5 max=0.5
+STEP 26 click link                            n=3 min=9.8 p50=11.6 p95=18.8 max=18.8
+STEP 27 wait for URL                          n=3 min=0.3 p50=1.0 p95=2.0 max=2.0
+STEP 28 expect route text                     n=3 min=0.5 p50=0.6 p95=0.6 max=0.6
+STEP 29 screenshot                            n=1 min=9.1 p50=9.1 p95=9.1 max=9.1
+RETRY    57 x click / not stable
+INPUT-PROBLEM     9 x click: not seen
+FOCUS key strokes that moved the X focus first: 0; remapped characters: 0
+RESULT runs=3 failures=0 input=xtest fill=keys
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:10:01.162: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-34df8568-5895-425c-9337-1fb6b32f775b: The connection is closed
+TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=0 (names truncated by the kernel; counts include other runs)
+RUN exit=0 wall=21187ms
+LEFT harness=0 web=0 network=0 xvfb=0
