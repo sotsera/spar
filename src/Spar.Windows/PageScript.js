@@ -2,7 +2,10 @@
 // it with AddScriptToExecuteOnDocumentCreated, so it runs when the document is created, before any page script and
 // under no page policy. It does three things, in the top document of the app's own origin only:
 // - answers the heartbeat's `ping` with a `pong` of the same seq, from its message handler, so the host sees a page that
-//   hangs from its very first script on (plan section 3, "Hung pages");
+//   hangs from its very first script on (plan section 3, "Hung pages"). The pong's payload is `{"dialog":true}` while the
+//   page shows a modal dialog of its own (an open modal `<dialog>`, or a visible `aria-modal="true"` element), so a close
+//   guard waiting for the person is not taken for a silent one (decision "Window tests: closing, session-end budget,
+//   test theme and any-character keys");
 // - listens for Content Security Policy violations, groups them by directive, blocked address and source location, and
 //   posts at most one `csp` message per interval, with a bounded number of groups per document (decision "CSP
 //   reporting: both channels, with flood limits"). After a bounded number of violations in one document it stops
@@ -41,6 +44,29 @@
   const slice = String.prototype.slice;
   const indexOf = String.prototype.indexOf;
   const apply = Reflect.apply;
+  const queryAll = typeof Document === "function" ? Document.prototype.querySelectorAll : undefined;
+  const checkVisibility = typeof Element === "function" ? Element.prototype.checkVisibility : undefined;
+  const dialogSelector = "dialog:modal, [aria-modal=\"true\"]";
+
+  // Whether a modal dialog of the page's own is open: a few elements at most, checked once per ping.
+  const showsDialog = () => {
+    if (queryAll === undefined) {
+      return false;
+    }
+
+    try {
+      const found = apply(queryAll, document, [dialogSelector]);
+      for (let index = 0; index < found.length; index++) {
+        if (checkVisibility === undefined || apply(checkVisibility, found[index], [])) {
+          return true;
+        }
+      }
+    } catch {
+      // A page that broke the DOM's methods shows no dialog the host can see.
+    }
+
+    return false;
+  };
 
   listen("message", event => {
     const data = event.data;
@@ -50,7 +76,7 @@
 
     const seq = apply(slice, data, [pingStart.length, data.length - pingEnd.length]);
     if (apply(test, seqPattern, [seq])) {
-      post("{\"type\":\"pong\",\"seq\":" + seq + "}\t");
+      post("{\"type\":\"pong\",\"seq\":" + seq + "}\t" + (showsDialog() ? "{\"dialog\":true}" : ""));
     }
   });
 

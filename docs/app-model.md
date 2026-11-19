@@ -1044,7 +1044,7 @@ public sealed class HangLog
 
 - **What the hook gets:** the window kind (`main` for the main window, as in a close request), the `State` (`Unresponsive`, `Recovered`, `Reloaded` or `ClosedAnyway`), and the `Duration` the page had not answered, from the first ping it missed.
 - **When it runs:** off the window's UI thread, one change at a time in order, each awaited before the next, with the app's root services. A hook that throws is logged, and the next change still reaches it. At exit the changes already reported still reach it within about 3 s; then its token is cancelled and the rest are dropped. It only observes: it cannot hide the dialog, reload the page or close the window.
-- **What else counts as unresponsive:** WebView2 reporting the page's renderer unresponsive, which it does only after input reaches a hung page, and a page that does not answer a close request within about 5 s (6.11). They are the same state, with one dialog.
+- **What else counts as unresponsive:** WebView2 reporting the page's renderer unresponsive, which it does only after input reaches a hung page, and a page that answers nothing for about 5 s after a close request (6.11). They are the same state, with one dialog. A page that still answers but whose close guard is silent gets the same "Wait / Close anyway" without being reported here: it is not hung.
 - **What is not pinged:** a minimized or hidden window, whose page the browser throttles, and a page that never connected the SDK, which cannot answer.
 - **In the automated mode** (6.11) no dialog shows: the change is logged and the hook is called, and a close of a page that does not answer closes anyway.
 
@@ -1700,9 +1700,9 @@ export const stopGuarding = windows.onCloseRequested(async request => {
 - **What asks:** the close button, Alt+F4 or the taskbar (`CloseReason.User`); the app's own code and Quit in the tray menu (`CloseReason.App`); Windows logging off or shutting down (`CloseReason.SessionEnd`). With `.CloseToTray()`, the close button hides the window, which is not a close; Quit asks.
 - **One request at a time:** a second click while a request is open joins it, and an answer from a page that has since navigated away is ignored.
 - **Secondary windows** are asked before the main window: closing the main window asks each open secondary window, then itself, and keeps them all open if any answers keep.
-- **Session end:** guards run with `sessionEnd` and a short deadline, about 5 s, so they can save. They cannot keep the window open or ask: an ask counts as close, and Spar never blocks Windows from logging off.
-- **Automated mode,** when tests or an agent drive the app: guards still run, so saving on close is tested, with `automated` true, and an ask counts as close. The test host turns it on, and a test of a guard's prompt turns it off for that close. Outside tests, the devtools agent session turns it on, and so does the environment variable `SPAR_AUTOMATED=1`, in Development and Test builds only: a Production build ignores it, so nothing outside a shipped app can make it skip its prompts.
-- **A page that does not answer** within about 5 s, with no dialog of its own open, or a page that is already hung, gets a native "Wait / Close anyway" dialog. Close anyway skips only the page's guard: the backend's guard still runs, then the window closes. Wait keeps the request open and asks again after about 20 s, then 40 s, 80 s and every 160 s (decision "What "Wait" does after the hung-page dialog").
+- **Session end:** guards run with `sessionEnd` so they can save, the page's for at most 2 s and both together for at most 3 s; then the window closes and the app's services are disposed, and Spar returns to Windows 4 s after it was told the session ends, whatever is left (decision "Window tests: closing, session-end budget, test theme and any-character keys"). Guards cannot keep the window open or ask: an ask counts as close, and Spar never blocks Windows from logging off.
+- **Automated mode,** when tests or an agent drive the app: guards still run, so saving on close is tested, with `automated` true, and an ask counts as close. The test host turns it on, and a test of a guard's prompt turns it off for that close and answers the question itself (6.12). Outside tests, the devtools agent session turns it on, and so does the environment variable `SPAR_AUTOMATED=1`, in Development and Test builds only: a Production build ignores it, so nothing outside a shipped app can make it skip its prompts.
+- **A page that does not answer** within about 5 s, with no dialog of its own open (a modal `<dialog>` or a visible `aria-modal` element; a script `confirm()` blocks the page and does not count), or a page that is already hung, gets a native "Wait / Close anyway" dialog. Close anyway skips only the page's guard: the backend's guard still runs, then the window closes. Wait keeps the request open and asks again after about 20 s, then 40 s, 80 s and every 160 s (decision "What "Wait" does after the hung-page dialog").
 - **After the decision** the window's teardown runs (plan section 3), including the page's closing work.
 - **A shutdown that does not finish:** after about 10 s of closing (commands settling, the web view closing, the app's services being disposed), Spar shows a native "Keep waiting / Exit now" prompt, and again every 30 s after "Keep waiting". It goes away by itself when the shutdown finishes. "Exit now" ends the process at once with the fixed exit code 10, so scripts and installers can tell it from a clean exit (0); Spar never ends the process on its own, and in the automated mode it shows no prompt and keeps waiting.
 
@@ -1748,7 +1748,52 @@ public sealed class ConnectionsWindowTests
 - **Assertions retry** until they hold, for 5 s unless `Timeout` says otherwise (actions wait 10 s); `Not` turns each one around. A failure names what was searched for and what was found at the last try, such as `no element matches GetByRole(Button, "Save"); near: button <button> "Cancel"; button <button> "Save draft"`.
 - **Also there:** `EvaluateAsync`, page and element `ScreenshotAsync`, `WaitForURLAsync`, `WaitForUiReadyAsync`, `GotoAsync`, `ReloadAsync`, `Keyboard` and `Mouse`, and what the page reported: `ConsoleMessages`, `PageErrors` and `Dialogs` (dismissed unless `AcceptDialogs`). `app.Problems` lists every warning and error Spar logged for the app: refused or dropped bridge messages, CSP violations and page errors.
 - **Isolation:** each window has an InPrivate profile of its own on one browser per test process, so nothing a test stores reaches the next one, and the window's renderer must have exited when the test ends.
+- **Light by default:** `o.ColorScheme` is `SparColorScheme.Light` unless a test asks for `Dark` or `System`, so the page's `prefers-color-scheme`, the window's own colours, and so every screenshot, are the same on every machine.
+- **Keys:** `PressAsync` takes a key name (`"Enter"`, `"Control+End"`) or any one character; typing goes one character at a time, never half an emoji. A character the US keyboard has no key for (`è`, `€`, `中`) still sends `keydown` and `keyup`, with `event.key` the character and an empty `event.code`. Dead keys, other layouts and input-method composition are not modelled.
 - **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=Window"`, and in the NativeAOT lane, which leaves out the browser tests. They never take the focus, so they can run while someone uses the computer.
+
+**Closing the window** (decision "Window tests: closing, session-end budget, test theme and any-character keys"). `app.Window.CloseAsync()` closes the window as its close button does, through its close request (6.11): the page's guard, then the backend's. A window test never shows a dialog: by default the close is automated, so an ask counts as close; a test of a guard's prompt turns that off and gives the answer.
+
+File `SqlTool.EndToEndTests/ClosingWindowTests.cs`:
+
+```csharp
+using Spar.Testing;
+using static Spar.Testing.SparAssertions;
+
+namespace SqlTool.EndToEndTests;
+
+[Trait("Surface", "Window")]
+public sealed class ClosingWindowTests
+{
+    [Fact]
+    public async Task Closing_with_an_unsaved_query_asks_first_and_tests_close_without_asking()
+    {
+        await using var app = await SparTestApp.StartAsync<Program>(
+            o => o.Surface = SparTestSurface.Window,
+            TestContext.Current.CancellationToken);
+        var query = app.Page.GetByRole(SparRole.Textbox, new() { Name = "Query" });
+        await query.FillAsync("select name from sys.databases");
+
+        // Testing the guard's prompt: the test answers in place of the native confirmation.
+        var kept = await app.Window.CloseAsync(new()
+        {
+            Automated = false,
+            Answer = CloseAnswer.KeepOpen,
+        });
+        Assert.Equal(CloseOutcome.Kept, kept.Outcome);
+        Assert.Equal("The query has unsaved changes. Close without saving?", kept.Question);
+        await Expect(query).ToHaveValueAsync("select name from sys.databases");
+
+        // Automated, as tests and agents close the app: the guard saves, and the window closes.
+        var result = await app.Window.CloseAsync();
+        Assert.Equal(CloseOutcome.Closed, result.Outcome);
+    }
+}
+```
+
+- **The result:** `Outcome` is `Closed` once the window and its renderer are gone, after which `app.Page` can no longer be driven, or `Kept`; `Question` is the last question a guard asked (also one that counted as close), null when none did; `PageDidNotAnswer` says the page did not answer in time and "Wait / Close anyway" was answered.
+- **The options:** `Automated` (true by default); `Answer`, `CloseAnswer.CloseAnyway` or `KeepOpen`, required when `Automated` is false, and given to every question of that close (`KeepOpen` is "Wait" for a page that does not answer); `Reason`, `CloseReason.User` by default, or `App` and `SessionEnd` to test those guards (a session end's rules, without Windows' own message); `Timeout`, 30 s by default.
+- **One request at a time:** a close while another is open joins it and gets its result.
 
 ## 7. Still open in this model
 
@@ -1756,7 +1801,7 @@ public sealed class ConnectionsWindowTests
 - **Configuration:**
   - the type names of the configuration builders behind `spar.Window(…)` and the other calls of section 2 not built yet (the check's stand-ins call them `SparBuilder` and `WindowOptions`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example. `CspBuilder`, `CspReports`, `PermissionsBuilder` and `Permission` are Spar's own since M1b.
 - **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
-- **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open); for window tests (6.12), how scenes and a fixed clock are declared, and a public way to close the window through its close request.
+- **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open); for window tests (6.12), how scenes and a fixed clock are declared; an app's own "close this window" API (`CloseReason.App` from app code), which nothing calls yet.
 
 Decided since this list was first written, and shown above:
 - streams with declared errors (decision "Streams may declare errors");

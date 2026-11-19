@@ -6,6 +6,7 @@ import type { BridgeChannel } from "./connection.js";
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import { resetConfiguration, type Call, type CallError, type ErrorCases } from "./results.js";
 import { connectSpar } from "./sdk.js";
+import type { CloseRequest, GuardsOutcome } from "./windows.js";
 
 /** @internal One command as the generated testing module describes it: its names and its wire functions. */
 export interface CommandCodec {
@@ -81,6 +82,20 @@ export interface FakeSpar {
   on<F extends Command>(command: F): Script<RequestOf<F>, ValueOf<F>, ErrorsOf<F>>;
   /** The requests the page sent to one command, in order, read back from the wire. */
   calls<F extends Command>(command: F): readonly RequestOf<F>[];
+  /**
+   * Asks the page's close guards (`windows.onCloseRequested`) as the host does when its window is asked to close, and
+   * resolves with their answer: `"close"`, `"keep"`, `{ ask }`, or `"failed"` when a guard threw. A user's close that
+   * is not automated unless the request says otherwise; aborting `signal` ends the request without the guards, as a
+   * session-end deadline does, and rejects with the signal's reason.
+   */
+  requestClose(request?: FakeCloseRequest): Promise<GuardsOutcome>;
+}
+
+/** A close request a page test sends: by default a user's, not automated. */
+export interface FakeCloseRequest {
+  readonly reason?: CloseRequest["reason"];
+  readonly automated?: boolean;
+  readonly signal?: AbortSignal;
 }
 
 type Answer =
@@ -109,6 +124,7 @@ export function createFakeSpar(commands: ReadonlyMap<unknown, CommandCodec>, fin
   return {
     on: command => scriptFor(host, codecOf(commands, command)),
     calls: command => host.calls(codecOf(commands, command)) as never,
+    requestClose: request => host.requestClose(request ?? {}),
   };
 }
 
@@ -147,6 +163,8 @@ class FakeHost implements BridgeChannel {
   readonly #scripts = new Map<CommandCodec, Behaviour>();
   readonly #calls = new Map<CommandCodec, unknown[]>();
   readonly #inFlight = new Map<number, { settled: boolean }>();
+  readonly #closeAnswers = new Map<number, (outcome: GuardsOutcome) => void>();
+  #closeSeq = 0;
   readonly #fingerprint: string;
   #received: ((message: string) => void) | undefined;
 
@@ -179,10 +197,33 @@ class FakeHost implements BridgeChannel {
       case "cancel":
         this.#cancel(message.id!);
         break;
+      case "close-answer":
+        this.#closeAnswers.get(message.seq!)?.(closeOutcomeOf(message.payload));
+        break;
       default:
         // ready and closing-done need no answer.
         break;
     }
+  }
+
+  requestClose(request: FakeCloseRequest): Promise<GuardsOutcome> {
+    const seq = ++this.#closeSeq;
+    const payload = JSON.stringify({ reason: request.reason ?? "user", automated: request.automated ?? false });
+    return new Promise<GuardsOutcome>((resolve, reject) => {
+      const signal = request.signal;
+      const onAbort = (): void => {
+        this.#closeAnswers.delete(seq);
+        this.#deliver({ type: "close-ended", seq, payload: "" });
+        reject(signal!.reason);
+      };
+      this.#closeAnswers.set(seq, outcome => {
+        this.#closeAnswers.delete(seq);
+        signal?.removeEventListener("abort", onAbort);
+        resolve(outcome);
+      });
+      signal?.addEventListener("abort", onAbort, { once: true });
+      this.#deliver({ type: "close-request", seq, payload });
+    });
   }
 
   script(codec: CommandCodec, behaviour: Behaviour): void {
@@ -276,5 +317,20 @@ class FakeHost implements BridgeChannel {
   #deliver(message: BridgeMessage): void {
     const text = encode(message);
     queueMicrotask(() => this.#received?.(text));
+  }
+}
+
+/** The page's `close-answer` payload, as the host reads it. */
+function closeOutcomeOf(payload: string): GuardsOutcome {
+  const parsed = JSON.parse(payload) as { readonly answer?: unknown; readonly question?: unknown };
+  switch (parsed.answer) {
+    case "close":
+    case "keep":
+    case "failed":
+      return parsed.answer;
+    case "ask":
+      return { ask: String(parsed.question) };
+    default:
+      throw new Error(`fakeSpar: the page answered a close request with ${payload}.`);
   }
 }

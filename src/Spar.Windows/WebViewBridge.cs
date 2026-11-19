@@ -66,8 +66,17 @@ internal sealed class WebViewBridge
     /// <summary>Raised on the UI thread when the current document's epoch ends (navigation, renderer exit, closing).</summary>
     public event Action? DocumentClosed;
 
-    /// <summary>Raised on the UI thread with the <c>seq</c> of each <c>pong</c> from the current document.</summary>
-    public event Action<long>? Answered;
+    /// <summary>
+    /// Raised on the UI thread with the <c>seq</c> of each <c>pong</c> from the current document, and whether the page
+    /// said it shows a modal dialog of its own.
+    /// </summary>
+    public event Action<long, bool>? Answered;
+
+    /// <summary>
+    /// Raised on the UI thread with the <c>seq</c> of each <c>close-answer</c> from the current document, read, and why
+    /// it could not be read (null when it could). An answer from a document that has since gone is dropped here.
+    /// </summary>
+    public event Action<long, PageCloseAnswer, string?>? CloseAnswered;
 
     /// <summary>Whether a document is open and reported <c>ui-ready</c>.</summary>
     public bool HasReadyDocument => _current is { IsReady: true, IsClosed: false };
@@ -107,7 +116,13 @@ internal sealed class WebViewBridge
         session.Dropped += reason => _log.Warn($"Bridge, document {id}: dropped {reason}");
         session.Ready += () => _ui.Post(() => Ready(document), "bridge ui-ready");
         session.ClosingDone += () => document.ClosingDone.TrySetResult();
-        session.Pong += seq => _ui.Post(() => Ponged(document, seq), "heartbeat answer");
+        session.Pong += (seq, dialog) => _ui.Post(() => Ponged(document, seq, dialog), "heartbeat answer");
+        session.CloseAnswered += (seq, payload) =>
+        {
+            // Read on the reader task; only the small result crosses to the UI thread.
+            var answer = PageCloseAnswer.Read(payload.Span, out var problem);
+            _ui.Post(() => ClosingAnswered(document, seq, answer, problem), "close answer");
+        };
         if (_violations is { } violations)
         {
             // On the reader task: the batch is copied and queued; it is parsed and logged on the log's own task.
@@ -183,6 +198,22 @@ internal sealed class WebViewBridge
     /// </summary>
     public bool Ping(long seq) => _current is { IsClosed: false } document && document.Session.Ping(seq);
 
+    /// <summary>
+    /// Asks the current document's close guards (UI thread): false when there is no document, or its page did not list
+    /// <c>close-request</c> (it has no SDK, or an older one). The answer arrives through <see cref="CloseAnswered"/>.
+    /// </summary>
+    public bool RequestClose(long seq, CloseReason reason, bool automated) =>
+        _current is { IsClosed: false } document && document.Session.RequestClose(seq, PageCloseAnswer.RequestPayload(reason, automated));
+
+    /// <summary>The close request <paramref name="seq"/> ended without the page's answer: its guards' signal is aborted (UI thread).</summary>
+    public void EndClose(long seq)
+    {
+        if (_current is { IsClosed: false } document)
+        {
+            document.Session.EndClose(seq);
+        }
+    }
+
     /// <summary>Stops admitting calls: the current document's session closes, which cancels its calls (UI thread).</summary>
     public Task CloseAsync(string why)
     {
@@ -213,11 +244,19 @@ internal sealed class WebViewBridge
         DocumentClosed?.Invoke();
     }
 
-    private void Ponged(Document document, long seq)
+    private void Ponged(Document document, long seq, bool dialog)
     {
         if (document == _current && !document.IsClosed)
         {
-            Answered?.Invoke(seq);
+            Answered?.Invoke(seq, dialog);
+        }
+    }
+
+    private void ClosingAnswered(Document document, long seq, PageCloseAnswer answer, string? problem)
+    {
+        if (document == _current && !document.IsClosed)
+        {
+            CloseAnswered?.Invoke(seq, answer, problem);
         }
     }
 

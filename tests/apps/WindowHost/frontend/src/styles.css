@@ -14,3 +14,9 @@ label { display: block; margin-top: 6px; }
 .dialog { position: fixed; top: 80px; left: 30%; width: 40%; background: white; border: 1px solid #556; padding: 16px;
   box-shadow: 0 8px 24px #0004; transition: transform 150ms ease-out, opacity 150ms ease-out; }
 .dialog.entering { transform: translateY(40px); opacity: 0; }
+/* Dark text when the page is dark; the background stays the window's own colour (plan 3d). */
+@media (prefers-color-scheme: dark) {
+  body { color: #e8e8ee; }
+  .dialog, .overlay { background: #2a2a30; }
+}
+.jumped { transform: translateY(60px); }

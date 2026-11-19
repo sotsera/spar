@@ -44,7 +44,9 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         _profile = process.RentProfile();
         _log.UseAppLogging(running.Services);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
-        _theme = WindowTheme.Read(app.Builder.MainWindow, running.Folders.DataRoot);
+        _theme = request.Dark is { } dark
+            ? WindowTheme.Fixed(app.Builder.MainWindow, dark)
+            : WindowTheme.Read(app.Builder.MainWindow, running.Folders.DataRoot);
 
         var source = new BrowserSource
         {
@@ -94,10 +96,17 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     public Task<IReadOnlyList<int>> RendererProcessesAsync() =>
         OnUiAsync(() => _window.View?.RendererProcessesAsync() ?? Task.FromResult<IReadOnlyList<int>>([]));
 
-    public Task RequestCloseAsync() => OnUiAsync(() =>
+    public Task PostCloseMessageAsync() => OnUiAsync(() =>
     {
         PInvoke.PostMessage(_window.Handle, PInvoke.WM_CLOSE, default, default);
         return Task.CompletedTask;
+    });
+
+    public Task<SparTestCloseReport> RequestCloseAsync(SparTestClose close) => OnUiAsync(async () =>
+    {
+        var questions = close.CloseAnyway is { } closeAnyway ? new TestAnswers(closeAnyway) : null;
+        var report = await _window.RequestCloseAsync(close.Reason, close.Automated, questions);
+        return new SparTestCloseReport(report.Closed, report.Question, report.Unanswered);
     });
 
     public Task<int> CloseAsync()
@@ -105,6 +114,14 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         _process.Ui.Post(() => _ = _window.TeardownAsync(0), "test window close");
         return _closed.Task;
     }
+
+    public unsafe Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => OnUiAsync(() =>
+    {
+        BOOL dark = false;
+        var read = PInvoke.DwmGetWindowAttribute(_window.Handle, global::Windows.Win32.Graphics.Dwm.DWMWINDOWATTRIBUTE.DWMWA_USE_IMMERSIVE_DARK_MODE, &dark, (uint)sizeof(BOOL));
+        read.ThrowOnFailure();
+        return Task.FromResult(((bool)dark, _window.WindowColour));
+    });
 
     public Task<nint> SendMessageAsync(uint message, nint wParam, nint lParam) => OnUiAsync(() =>
     {
@@ -122,7 +139,18 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         _ = Task.Run(FinishAsync);
     }
 
-    Task? IAppWindowOwner.SessionEnded() => null;
+    /// <summary>At session end the app's services are disposed inside the window's hold, as an app's are; the test host's later disposal finds them done.</summary>
+    Task? IAppWindowOwner.SessionEnded() => Task.Run(async () =>
+    {
+        try
+        {
+            await (await _running).DisposeAsync();
+        }
+        catch (Exception exception)
+        {
+            _log.Error("The app's services did not stop cleanly at session end", exception);
+        }
+    });
 
     private void Start()
     {
@@ -138,7 +166,24 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         }
     }
 
-    private Task BeforeFirstNavigationAsync() => _request.BeforeFirstNavigation?.Invoke(this) ?? Task.CompletedTask;
+    /// <summary>
+    /// Before the first navigation: the page's colour scheme, when the test fixed one, then the page driver. The
+    /// profile's <c>PreferredColorScheme</c> did not reach <c>prefers-color-scheme</c> on a test's InPrivate profile
+    /// (pitfalls), so the scheme is also emulated on the page's DevTools session, where it lasts across navigations.
+    /// </summary>
+    private async Task BeforeFirstNavigationAsync()
+    {
+        if (_request.Dark is { } dark)
+        {
+            var scheme = dark ? "dark" : "light";
+            await CallDevToolsAsync("Emulation.setEmulatedMedia", $$"""{"features":[{"name":"prefers-color-scheme","value":"{{scheme}}"}]}""");
+        }
+
+        if (_request.BeforeFirstNavigation is { } install)
+        {
+            await install(this);
+        }
+    }
 
     private void OnPhase(string phase)
     {
@@ -252,7 +297,9 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     }
 
     private ICoreWebView2_22 WebViewOrThrow() =>
-        _window.View?.WebView ?? throw new InvalidOperationException("The app's page is not open: its window is starting or closed.");
+        _window.View?.WebView ?? throw new InvalidOperationException(_closed.Task.IsCompleted || _window.IsClosing
+            ? "The app's window is closed (app.Window.CloseAsync or the test's end closed it): its page can no longer be driven."
+            : "The app's page is not open: its window is starting.");
 
     /// <summary>Runs <paramref name="work"/> on the UI thread; its task's result and failures reach the caller off it.</summary>
     private Task<T> OnUiAsync<T>(Func<Task<T>> work)
@@ -278,6 +325,14 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         {
             result.TrySetException(exception);
         }
+    }
+
+    /// <summary>A window test's answer in place of every native dialog of its close request.</summary>
+    private sealed class TestAnswers(bool closeAnyway) : ICloseQuestions
+    {
+        public Task<bool> ConfirmAsync(string question) => Task.FromResult(closeAnyway);
+
+        public Task<bool> CloseUnansweredAsync() => Task.FromResult(closeAnyway);
     }
 
     /// <summary>A DevTools event subscription; disposing it removes the handler on the UI thread.</summary>

@@ -1,3 +1,4 @@
+using System.Text;
 using Spar.Testing;
 
 namespace Spar.WindowTests;
@@ -36,12 +37,38 @@ public sealed class PageApiUnitTests
     }
 
     [Fact]
-    public void Characters_off_the_US_keyboard_have_no_key()
+    public void Characters_off_the_US_keyboard_have_no_key_of_their_own()
     {
-        Assert.Equal(("A", true), (KeyboardLayout.ForCharacter('A')!.Value.Key.Name, KeyboardLayout.ForCharacter('A')!.Value.Shift));
-        Assert.True(KeyboardLayout.ForCharacter('?')!.Value.Shift);
-        Assert.Null(KeyboardLayout.ForCharacter('ü'));
-        Assert.Null(KeyboardLayout.ForCharacter('—'));
+        Assert.Equal(("A", true), (KeyboardLayout.ForCharacter(new Rune('A'))!.Value.Key.Name, KeyboardLayout.ForCharacter(new Rune('A'))!.Value.Shift));
+        Assert.True(KeyboardLayout.ForCharacter(new Rune('?'))!.Value.Shift);
+        Assert.Null(KeyboardLayout.ForCharacter(new Rune('ü')));
+        Assert.Null(KeyboardLayout.ForCharacter(new Rune('—')));
+        Assert.Null(KeyboardLayout.ForCharacter(new Rune(0x1F600)));
+    }
+
+    [Theory]
+    [InlineData("è")]
+    [InlineData("€")]
+    [InlineData("ñ")]
+    [InlineData("😀")]
+    [InlineData("𝄞")]
+    [InlineData("中")]
+    [InlineData("\u0301")]
+    public void Any_one_character_is_a_key_with_no_code(string character)
+    {
+        var (modifiers, key) = KeyboardLayout.Parse(character);
+
+        Assert.Equal((character, "", 0, character, 0), (key.Name, key.Code, key.VirtualKey, key.Text, (int)modifiers));
+    }
+
+    [Fact]
+    public void A_character_off_the_US_keyboard_takes_modifiers_and_two_characters_are_no_key()
+    {
+        var (modifiers, key) = KeyboardLayout.Parse("Control+é");
+
+        Assert.Equal(("é", 2), (key.Name, (int)modifiers));
+        Assert.Throws<ArgumentException>(() => KeyboardLayout.Parse("éé"));
+        Assert.Throws<ArgumentException>(() => KeyboardLayout.Parse("e\u0301"));
     }
 
     [Theory]

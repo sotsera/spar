@@ -10,7 +10,11 @@ internal enum CloseVerdictKind
     Ask,
 }
 
-/// <summary>A close request's outcome; <see cref="Question"/> is set for <see cref="CloseVerdictKind.Ask"/>.</summary>
+/// <summary>
+/// A close request's outcome. <see cref="Question"/> is the question a guard asked: for <see cref="CloseVerdictKind.Ask"/>
+/// the one to show, and also kept on a <see cref="CloseVerdictKind.Close"/> that an ask became because nobody could
+/// answer it (session end, the automated mode), so a test can read what would have been asked.
+/// </summary>
 internal readonly record struct CloseVerdict(CloseVerdictKind Kind, string? Question = null)
 {
     public static CloseVerdict Close { get; } = new(CloseVerdictKind.Close);
@@ -29,8 +33,12 @@ internal sealed class CloseGuard(
     ILogger logger,
     int sessionEndDeadlineMilliseconds = CloseGuard.SessionEndDeadlineMilliseconds)
 {
-    /// <summary>How long guards get when Windows logs off or shuts down (decision "Two-stage close").</summary>
-    public const int SessionEndDeadlineMilliseconds = 5_000;
+    /// <summary>
+    /// The longest the guards get when Windows ends the session: the page's and the backend's share 3 s from the start
+    /// of <c>WM_ENDSESSION</c>, so the teardown and the services' disposal still fit in 4 s (decision "Window tests:
+    /// closing, session-end budget, test theme and any-character keys").
+    /// </summary>
+    public const int SessionEndDeadlineMilliseconds = 3_000;
 
     /// <summary>The question shown when the guard itself failed: closing might lose work, so the user decides.</summary>
     public const string FailedGuardQuestion = "The app could not check whether it is safe to close. Close anyway?";
@@ -47,8 +55,12 @@ internal sealed class CloseGuard(
     /// <summary>Whether the app declared a guard; without one every request closes.</summary>
     public bool HasGuard => guard is not null;
 
-    /// <summary>Asks the backend's guard, on the thread pool, and applies the rules of the request's reason and mode.</summary>
-    public async Task<CloseVerdict> DecideAsync(CloseRequest request, CancellationToken cancellationToken)
+    /// <summary>
+    /// Asks the backend's guard, on the thread pool, and applies the rules of the request's reason and mode. At session
+    /// end the guard gets <paramref name="sessionEndBudget"/>, what the page's guard left of the shared deadline, or
+    /// the whole deadline when null; with nothing left it is not asked.
+    /// </summary>
+    public async Task<CloseVerdict> DecideAsync(CloseRequest request, CancellationToken cancellationToken, TimeSpan? sessionEndBudget = null)
     {
         if (guard is null)
         {
@@ -56,8 +68,15 @@ internal sealed class CloseGuard(
         }
 
         var sessionEnd = request.Reason == CloseReason.SessionEnd;
+        var budget = sessionEndBudget ?? TimeSpan.FromMilliseconds(sessionEndDeadlineMilliseconds);
+        if (sessionEnd && budget <= TimeSpan.Zero)
+        {
+            GuardLate(logger, request.Window, 0, null);
+            return CloseVerdict.Close;
+        }
+
         using var deadline = sessionEnd ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : null;
-        deadline?.CancelAfter(sessionEndDeadlineMilliseconds);
+        deadline?.CancelAfter(budget);
         var token = deadline?.Token ?? cancellationToken;
 
         CloseDecision decision;
@@ -70,13 +89,13 @@ internal sealed class CloseGuard(
         }
         catch (OperationCanceledException) when (deadline is not null && deadline.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {
-            GuardLate(logger, request.Window, sessionEndDeadlineMilliseconds, null);
+            GuardLate(logger, request.Window, (int)budget.TotalMilliseconds, null);
             return CloseVerdict.Close;
         }
         catch (Exception exception) when (!cancellationToken.IsCancellationRequested)
         {
             GuardFailed(logger, request.Window, request.Reason.ToString(), exception);
-            return Unanswerable(request) ? CloseVerdict.Close : new CloseVerdict(CloseVerdictKind.Ask, FailedGuardQuestion);
+            return Apply(request, CloseDecision.Ask(FailedGuardQuestion));
         }
 
         Decided(logger, request.Window, request.Reason.ToString(), decision.ToString(), null);
@@ -85,7 +104,8 @@ internal sealed class CloseGuard(
 
     /// <summary>
     /// The rules of decision "Two-stage close": at session end nothing keeps the window open or asks, and in the
-    /// automated mode an ask counts as close, so a test of saving on close needs no person.
+    /// automated mode an ask counts as close, so a test of saving on close needs no person. An ask that counts as close
+    /// keeps its question.
     /// </summary>
     internal static CloseVerdict Apply(CloseRequest request, CloseDecision decision)
     {
@@ -96,17 +116,14 @@ internal sealed class CloseGuard(
 
         if (request.Reason == CloseReason.SessionEnd)
         {
-            return CloseVerdict.Close;
+            return new CloseVerdict(CloseVerdictKind.Close, decision.Question);
         }
 
         if (decision.IsAsk)
         {
-            return request.IsAutomated ? CloseVerdict.Close : new CloseVerdict(CloseVerdictKind.Ask, decision.Question);
+            return new CloseVerdict(request.IsAutomated ? CloseVerdictKind.Close : CloseVerdictKind.Ask, decision.Question);
         }
 
         return CloseVerdict.Keep;
     }
-
-    /// <summary>Nobody can answer a question at session end or in the automated mode.</summary>
-    private static bool Unanswerable(CloseRequest request) => request.Reason == CloseReason.SessionEnd || request.IsAutomated;
 }

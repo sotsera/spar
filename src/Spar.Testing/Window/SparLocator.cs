@@ -352,6 +352,13 @@ public sealed class SparLocator
                 return Attempt<bool>.Retry($"{PageJson.String(result, "hit")} received the press instead; trying again");
             }
 
+            if (landed is { } moved && PageJson.Bool(moved, "moved"))
+            {
+                // The element moved between the press and the release (an animation that started after the stability
+                // check): the click that reached something else was stopped before the page saw it.
+                return Attempt<bool>.Retry("it moved between the press and the release; trying again", again: true);
+            }
+
             return Attempt<bool>.Success(true);
         });
     }

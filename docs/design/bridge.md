@@ -98,6 +98,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | `closing-done` | none: the page's close work finished | empty |
   | `pong` | `seq`: the `seq` of the `ping` it answers (added in M1b, decision "Hangs: heartbeat, stall probe and shutdown prompt"); sent by the host-injected script since M1b step 4 | empty |
   | `csp` | none: Content Security Policy violations, from the host-injected script (section 3b; added in M1b step 4) | `{"groups":[{"directive","blocked","source","line","column","sample","count"}…],"overflow":N}`, with `"stopped":true` once the script stopped listening in that document |
+  | `close-answer` | `seq`: the `close-request` it answers (added in M1b step 8, decision "Window tests: closing, session-end budget, test theme and any-character keys") | `{"answer":"close"}`, `{"answer":"keep"}`, `{"answer":"ask","question":"…"}`, or `{"answer":"failed"}` when a guard threw or answered something else |
 
   **Host to page:**
 
@@ -111,9 +112,12 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | `event` | `name` (a host event, for example `backend-updated`) | the event's JSON, or empty |
   | `closing` | none: run the close work and answer `closing-done` | empty |
   | `ping` | `seq`: the heartbeat's number, a safe integer from 1 (section 3, "Hung pages"; added in M1b) | empty |
+  | `close-request` | `seq`: the close request's number, a safe integer from 1 (added in M1b step 8) | `{"reason":"user"|"app"|"sessionEnd","automated":true|false}` |
+  | `close-ended` | `seq`: the request that ended without the page's answer (a session-end deadline, "Close anyway", the teardown) | empty |
 
   **Rules:**
   - **The heartbeat:** the desktop host sends `ping` only to a document that has its injected script (section 3b, every document of the app's origin but an error page), from the document's creation, before `hello`; at most one unanswered at a time; the injected script answers `pong` with the same `seq` at once, from its message handler (decision "Page security (implementation record; choices for review)"). The SDK neither lists `ping` in `hello` nor answers it, and `hello`'s `types` no longer arm anything. `seq` is not a call id: it follows no id rule and never touches a call. A `ping` or `pong` without a valid `seq` is malformed and dropped. Loopback never pings.
+  - **The page's close guards** (decision "Two-stage close"; added in M1b step 8 without a protocol version change, as new types the host sends only to a page that lists them): the SDK lists `close-request` and `close-ended` in `hello`; the host sends `close-request` only then, right after a `ping`, and otherwise falls back to the ping alone (a page without guards agrees when it answers). The page runs its guards and answers `close-answer` with the same `seq`, unless `close-ended` came first, which aborts the guards' `signal`. `seq` is not a call id and follows no id rule; a message without a valid `seq` is malformed and dropped. The host reads the answer as untrusted text (a question is cut at 500 characters) and ignores an answer for a request that is no longer open, or from a document that has gone. The injected script's `pong` carries `{"dialog":true}` while the page shows a modal dialog of its own (an open modal `<dialog>` or a visible `aria-modal="true"` element).
   - **One terminal per call:** exactly one of `result`, `end` or `failure` ends a call; anything for that id afterwards is dropped.
   - **Failures are `CallError` one for one:** `kind`, `code` and `execution` are the decided values (decision "`CallError` kinds"). A confirmed cancel is `kind: "cancelled"` with `execution` `stopped`, or `notStarted` with code `cancelled-before-start`. The page adds `contract` and `command` from its own record of the call id, so a `CallError` names its call without anything more on the wire.
   - **The fingerprint is checked once per document:** the host answers `hello` with its own in `open`. When they differ, every call of that document fails with `rejected` / `contract-mismatch` / `notStarted`, and the page can show a "reload" message at once.

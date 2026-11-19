@@ -9,7 +9,7 @@ namespace Spar.Sdk.Tasks.Client;
 /// <summary>
 /// The <c>@spar/app</c> package under <c>obj/spar/client</c> (plan section 2, "Generated client"): a module per
 /// contract, <c>shared</c> when contracts share types, <c>spar</c> with the fingerprint, <c>testing</c> with the fake
-/// backend for page tests, and the compiled SDK under
+/// backend for page tests, <c>windows</c> with the page's close guard, and the compiled SDK under
 /// <c>sdk/</c> with its TypeScript sources under <c>sdk/src/</c>. The whole folder belongs to the client step.
 /// </summary>
 internal static class ClientPackage
@@ -41,6 +41,8 @@ internal static class ClientPackage
         Text("spar.d.ts", DeclarationEmitter.Spar());
         Text("testing.js", ModuleEmitter.Testing(layout));
         Text("testing.d.ts", DeclarationEmitter.Testing());
+        Text("windows.js", ModuleEmitter.Windows());
+        Text("windows.d.ts", DeclarationEmitter.Windows());
 
         if (layout.Shared.Any())
         {
@@ -167,6 +169,7 @@ internal static class ClientPackage
             Export(json, "vite", "sdk/vite/index");
             Export(json, "spar", "spar");
             Export(json, "testing", "testing");
+            Export(json, "windows", "windows");
             foreach (var contract in layout.Contracts)
             {
                 Export(json, contract.Model.WireName, contract.Model.WireName);

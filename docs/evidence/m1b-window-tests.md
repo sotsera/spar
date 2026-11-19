@@ -1,6 +1,6 @@
 # M1b: window tests on Windows (step 8a)
 
-Recorded 2026-11-18. What it shows: the `Window` surface of plan section 5 (level 5) on Windows, with Spar's own page API (decision "Step 8's shape: window tests driven by Spar's own API"), the required host tests of section 5, the window-test budget, flakiness over repeated runs, and that none of it reaches a Production executable. The implementation record is decision "Window tests on Windows (implementation record; choices for review)".
+Recorded 2026-11-18. What it shows: the `Window` surface of plan section 5 (level 5) on Windows, with Spar's own page API (decision "Step 8's shape: window tests driven by Spar's own API"), the required host tests of section 5, the window-test budget, flakiness over repeated runs, and that none of it reaches a Production executable. The implementation record is decision "Window tests on Windows (implementation record; choices for review)". Its follow-up (closing from a test and the page's close guard, the session end within 4 s, light by default, keys for any character) is recorded in [`m1b-window-close.md`](m1b-window-close.md).
 
 ## Environment
 
@@ -110,7 +110,7 @@ The Production Notebook (`dotnet publish samples/Notebook -c Release`, NativeAOT
 
 ### Screenshots (observed)
 
-[`window-page.png`](m1b-window-tests/window-page.png) and [`window-conflict.png`](m1b-window-tests/window-conflict.png) are the Notebook's window at 1100 × 720 in the system's dark theme, taken by its journeys; [`window-host.png`](m1b-window-tests/window-host.png) is the window tests' own page.
+[`window-page.png`](m1b-window-tests/window-page.png) and [`window-conflict.png`](m1b-window-tests/window-conflict.png) are the Notebook's window at 1100 × 720, taken by its journeys; [`window-host.png`](m1b-window-tests/window-host.png) is the window tests' own page. They were dark here only because this machine's theme is; since the follow-up window tests are light by default, and the three were replaced by the follow-up's light ones (2026-11-18, [`m1b-window-close.md`](m1b-window-close.md)).
 
 ## Not verified
 

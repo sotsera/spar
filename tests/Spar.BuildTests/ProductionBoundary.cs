@@ -22,6 +22,11 @@ internal static class ProductionBoundary
         // engine and its isolated world, which only Spar.Testing carries.
         "TestWindowProcess", "ISparTestWindow", "SparTestWindowRequest", "FrameProcessesCompleted",
         "SparDevToolsException", "__sparAutomation",
+
+        // Closing from a window test (decision "Window tests: closing, session-end budget, test theme and any-character
+        // keys"): the test host's close request and its report. The close request itself, the page's guard and the
+        // answers seam (ICloseQuestions) are production code.
+        "SparTestClose", "SparCloseOptions", "SparCloseResult",
     ];
 
     private static readonly string[] Literals =
@@ -29,7 +34,7 @@ internal static class ProductionBoundary
         "/_spar/channel", "/_spar/send", "Spar.TestHost.IsSupported", "SPAR_DEV_PAGE_HANG", "SPAR_DEV_HEARTBEAT_MS",
         "SPAR_DEV_UI_STALL_MS", "SPAR_DEV_SLOW_DISPOSE_MS", "The UI thread stalled",
         "differs from the one the build read", "Allow it with csp.", "SPAR_DEV_INPUT", "remote-debugging-port",
-        "spar-automation", "Spar test anchor", "Spar UI (tests)", "spartest",
+        "spar-automation", "Spar test anchor", "Spar UI (tests)", "spartest", "app.Window.CloseAsync",
     ];
 
     /// <summary>

@@ -164,6 +164,9 @@ public static class BridgeCodec
                 break;
             case BridgeMessageType.Ping:
             case BridgeMessageType.Pong:
+            case BridgeMessageType.CloseRequest:
+            case BridgeMessageType.CloseAnswer:
+            case BridgeMessageType.CloseEnded:
                 writer.WriteNumber("seq"u8, message.Seq ?? throw new ArgumentException($"A '{BridgeMessage.TypeNameOf(message.Type)}' message needs a seq."));
                 break;
         }
@@ -200,7 +203,8 @@ public static class BridgeCodec
         BridgeMessageType.Failure when message.Code is null => "code",
         BridgeMessageType.Failure when message.Execution is null => "execution",
         BridgeMessageType.Event when message.Name is null => "name",
-        BridgeMessageType.Ping or BridgeMessageType.Pong when message.Seq is null => "seq",
+        BridgeMessageType.Ping or BridgeMessageType.Pong or BridgeMessageType.CloseRequest or BridgeMessageType.CloseAnswer
+            or BridgeMessageType.CloseEnded when message.Seq is null => "seq",
         _ => null,
     };
 

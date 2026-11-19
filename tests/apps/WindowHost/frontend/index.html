@@ -47,6 +47,7 @@
           <button type="button" id="covered">Covered button</button>
           <div class="overlay" id="overlay">Loading…</div>
         </div>
+        <button type="button" id="jumpy">Jumpy button</button>
         <button type="button" id="later">Show the late button</button>
         <div id="late"></div>
       </section>
@@ -68,6 +69,25 @@
         <button type="button" hidden>Hidden</button>
       </section>
 
+      <section aria-label="Closing">
+        <h2>Closing</h2>
+        <label for="guard">Close guard</label>
+        <select id="guard">
+          <option value="none">No guard</option>
+          <option value="close">Close</option>
+          <option value="keep">Keep</option>
+          <option value="ask">Ask</option>
+          <option value="late-keep">Keep after a second</option>
+          <option value="slow">Keep after 5 seconds, ignoring the signal</option>
+          <option value="silent">Never answer</option>
+          <option value="dialog">Ask in the page</option>
+          <option value="throw">Throw</option>
+        </select>
+        <button type="button" id="hang">Hang for 12 seconds</button>
+        <label for="keys">Keys</label>
+        <input id="keys" autocomplete="off">
+      </section>
+
       <nav aria-label="Pages">
         <a href="/other.html">Second page</a>
       </nav>
@@ -78,6 +98,11 @@
       <p>The order goes out today.</p>
       <button type="button" id="confirm">Confirm</button>
       <button type="button" id="cancel">Cancel</button>
+    </div>
+    <div id="discard-dialog" role="alertdialog" aria-modal="true" aria-labelledby="discard-title" class="dialog" hidden>
+      <h2 id="discard-title">Discard the changes?</h2>
+      <button type="button" id="discard">Discard</button>
+      <button type="button" id="stay">Stay</button>
     </div>
   </body>
 </html>

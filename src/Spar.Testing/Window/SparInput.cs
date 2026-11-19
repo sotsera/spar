@@ -27,7 +27,9 @@ public sealed class SparKeyboard
 
     /// <summary>
     /// Presses and releases a key or a combination: <c>"Enter"</c>, <c>"a"</c>, <c>"Control+End"</c>, <c>"Shift+Tab"</c>.
-    /// The modifiers go down first and up last.
+    /// The modifiers go down first and up last. Any one character is a key, also one the US keyboard has no key for
+    /// (<c>"è"</c>, <c>"€"</c>, an emoji): the page gets its <c>keydown</c> and <c>keyup</c> with <c>event.key</c> the
+    /// character and an empty <c>event.code</c>.
     /// </summary>
     public async Task PressAsync(string key)
     {
@@ -56,17 +58,22 @@ public sealed class SparKeyboard
     }
 
     /// <summary>
-    /// Types <paramref name="text"/> one key at a time, each with its key events, as a person typing; a character the US
-    /// keyboard has no key for is inserted as text.
+    /// Types <paramref name="text"/> one character at a time, each with its key events, as a person typing. The text is
+    /// split into Unicode scalar values, never UTF-16 units, so an emoji or 𝄞 is one key, and a combining sequence one
+    /// key per code point (the value the page ends with is the text). A character the US keyboard has no key for gets
+    /// <c>keydown</c> and <c>keyup</c> with <c>event.key</c> the character and an empty <c>event.code</c>.
     /// </summary>
     public async Task TypeAsync(string text)
     {
+        ArgumentNullException.ThrowIfNull(text);
         await _session.BeforeInputAsync(TimeSpan.FromSeconds(5));
-        foreach (var character in text)
+        foreach (var rune in text.EnumerateRunes())
         {
-            if (KeyboardLayout.ForCharacter(character) is not { } typed)
+            if (KeyboardLayout.ForCharacter(rune) is not { } typed)
             {
-                await InsertTextAsync(character.ToString());
+                var key = KeyboardLayout.Unmapped(rune);
+                await DownAsync(key, KeyboardLayout.Modifiers.None);
+                await UpAsync(key, KeyboardLayout.Modifiers.None);
                 continue;
             }
 

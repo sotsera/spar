@@ -6,11 +6,19 @@ var app = SparApplication.Create(args, spar =>
 {
     spar.Window(w => w.Size(1000, 700));
 
-    // Every close request is recorded, so a test can see which reason reached the backend's guard.
-    spar.OnCloseRequested((request, services) =>
+    // Every close request is recorded, so a test can see which reason reached the backend's guard; the test picks the
+    // answer, and how long it takes, through Activity.
+    spar.OnCloseRequested(async (request, services, _) =>
     {
-        services.GetRequiredService<Activity>().CloseRequested(request);
-        return CloseDecision.Close;
+        var activity = services.GetRequiredService<Activity>();
+        activity.CloseRequested(request);
+        if (activity.BackendGuardDelay > TimeSpan.Zero)
+        {
+            // Ignores its token on purpose: the session end's deadline must hold anyway.
+            await Task.Delay(activity.BackendGuardDelay, CancellationToken.None);
+        }
+
+        return activity.BackendAnswer;
     });
 
     spar.Services.AddSingleton<Activity>();
@@ -20,12 +28,24 @@ return app.Run();
 namespace WindowHost
 {
     /// <summary>What the backend saw, for the tests to read through <c>app.Services</c>.</summary>
-    public sealed class Activity
+    public sealed class Activity : IAsyncDisposable
     {
         private readonly Lock _gate = new();
         private readonly List<CloseRequest> _closeRequests = [];
         private readonly List<string> _events = [];
         private int _running;
+
+        /// <summary>What the backend's close guard answers; close unless a test says otherwise.</summary>
+        public CloseDecision BackendAnswer { get; set; } = CloseDecision.Close;
+
+        /// <summary>How long the backend's close guard takes, ignoring its token.</summary>
+        public TimeSpan BackendGuardDelay { get; set; }
+
+        /// <summary>How long disposing the app's services takes: a slow service's cleanup.</summary>
+        public TimeSpan DisposeDelay { get; set; }
+
+        /// <summary>When the services' disposal finished, or null while it has not.</summary>
+        public DateTime? DisposedAt { get; private set; }
 
         /// <summary>Calls that have started and not ended yet.</summary>
         public int Running => Volatile.Read(ref _running);
@@ -61,6 +81,8 @@ namespace WindowHost
             }
         }
 
+        public void Noted(string text) => Add("note " + text);
+
         public void Started(string name)
         {
             Interlocked.Increment(ref _running);
@@ -71,6 +93,16 @@ namespace WindowHost
         {
             Add(how + " " + name);
             Interlocked.Decrement(ref _running);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (DisposeDelay > TimeSpan.Zero)
+            {
+                await Task.Delay(DisposeDelay, CancellationToken.None);
+            }
+
+            DisposedAt = DateTime.UtcNow;
         }
 
         private void Add(string text)
@@ -88,6 +120,14 @@ namespace WindowHost
     {
         [SparCommand]
         public Task<string> EchoAsync(string text) => Task.FromResult(text);
+
+        /// <summary>Records what the page says, such as its close guard's request, so a test reads it after the window closed.</summary>
+        [SparCommand]
+        public Task NoteAsync(string text)
+        {
+            activity.Noted(text);
+            return Task.CompletedTask;
+        }
 
         /// <summary>Runs until its call is cancelled: a long call that honours cancellation.</summary>
         [SparCommand]

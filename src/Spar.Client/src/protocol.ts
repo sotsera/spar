@@ -14,6 +14,7 @@ export type MessageType =
   | "pong"
   | "csp"
   | "errors"
+  | "close-answer"
   | "open"
   | "result"
   | "items"
@@ -21,11 +22,13 @@ export type MessageType =
   | "failure"
   | "event"
   | "closing"
-  | "ping";
+  | "ping"
+  | "close-request"
+  | "close-ended";
 
 const knownTypes: ReadonlySet<string> = new Set<MessageType>([
-  "hello", "call", "stream", "credits", "cancel", "ready", "closing-done", "pong", "csp", "errors",
-  "open", "result", "items", "end", "failure", "event", "closing", "ping",
+  "hello", "call", "stream", "credits", "cancel", "ready", "closing-done", "pong", "csp", "errors", "close-answer",
+  "open", "result", "items", "end", "failure", "event", "closing", "ping", "close-request", "close-ended",
 ]);
 
 /** One bridge message. Fields a type does not use are absent; the payload is located, never parsed. */
@@ -50,7 +53,10 @@ export interface BridgeMessage {
   readonly execution?: string;
   readonly itemsSent?: number;
   readonly name?: string;
-  /** In `ping` and `pong`: the heartbeat's number, a safe integer from 1. */
+  /**
+   * In `ping` and `pong`, the heartbeat's number; in `close-request`, `close-answer` and `close-ended`, the close
+   * request's. A safe integer from 1 either way.
+   */
   readonly seq?: number;
   /** The text after the TAB; empty when there is none. */
   readonly payload: string;
@@ -157,6 +163,9 @@ export function encode(message: BridgeMessage): string {
       break;
     case "ping":
     case "pong":
+    case "close-request":
+    case "close-answer":
+    case "close-ended":
       add("seq", requireSeq(message));
       break;
   }
@@ -486,6 +495,9 @@ function missingField(message: BridgeMessage): string | undefined {
       return message.name === undefined ? "name" : undefined;
     case "ping":
     case "pong":
+    case "close-request":
+    case "close-answer":
+    case "close-ended":
       return message.seq === undefined ? "seq" : undefined;
     default:
       return undefined;

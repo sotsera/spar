@@ -5,16 +5,6 @@ using Windows.Win32.Foundation;
 
 namespace Spar.Windows;
 
-/// <summary>What the page's side of a close request decided (until the page's own close guard is built).</summary>
-internal enum PageCloseAnswer
-{
-    /// <summary>The page answers, or there is no page to ask: the backend's guard is asked next.</summary>
-    Agree,
-
-    /// <summary>The page does not answer and the user chose "Close anyway": only the page's guard is skipped.</summary>
-    CloseAnyway,
-}
-
 /// <summary>
 /// The hung-page heartbeat of the main window (plan section 3, "Hung pages"), on the UI thread: a thread-pool timer
 /// posts a tick every 5 s, each tick decides with <see cref="PageHeartbeat"/> and, at most, posts one small ping
@@ -23,9 +13,10 @@ internal enum PageCloseAnswer
 /// anyway" while a close request is open (decision "What "Wait" does after the hung-page dialog"); the dialog runs on a
 /// thread of its own and closes by itself when the page answers again. Each change reaches the app's hook
 /// (<c>spar.OnPageUnresponsive</c>), which only observes. Nothing is ended or reloaded except by the user's answer; in
-/// the automated mode nobody can answer, so no dialog shows, and a close closes anyway.
+/// the automated mode nobody can answer, so no dialog shows, and a close closes anyway. The page's side of a close
+/// request, its close guards, is in <c>PageWatch.Closing.cs</c>.
 /// </summary>
-internal sealed class PageWatch
+internal sealed partial class PageWatch
 {
     private const string MainWindow = "main";
     private const int WaitId = 200;
@@ -46,8 +37,6 @@ internal sealed class PageWatch
     private ITimer? _timer;
     private PromptDialog? _dialog;
     private bool _dialogForClose;
-    private TaskCompletionSource<PageCloseAnswer>? _closeWait;
-    private bool _answeredSinceCloseRequest;
     private bool _stopped;
     private long _hangSince;
     private long _ticks;
@@ -80,6 +69,7 @@ internal sealed class PageWatch
         bridge.DocumentOpened += OnDocumentOpened;
         bridge.DocumentClosed += OnDocumentClosed;
         bridge.Answered += OnAnswered;
+        bridge.CloseAnswered += OnCloseAnswered;
         view.RendererUnresponsive += OnRendererUnresponsive;
     }
 
@@ -103,74 +93,10 @@ internal sealed class PageWatch
 
         _stopped = true;
         _timer?.Dispose();
-        _dialog?.Dismiss();
-        _dialog = null;
-        _closeWait?.TrySetResult(PageCloseAnswer.Agree);
+        DismissDialog();
+        _close?.Done.TrySetResult(PageCloseResult.NoPage);
         var longest = Stopwatch.GetElapsedTime(0, _longestTick).TotalMilliseconds;
         _log.Info($"Heartbeat: {_ticks} ticks, {_pings} pings, longest tick on the UI thread {longest:0.000} ms.");
-    }
-
-    /// <summary>
-    /// The page's side of a close request (UI thread). A page already unresponsive gets "Wait / Close anyway" at once;
-    /// one that answers pings must answer one within an interval (about 5 s), or it gets the same dialog. Wait keeps the
-    /// request open on the dialog's schedule; a page that answers meanwhile lets the request go on. The page's own close
-    /// guard (<c>windows.onCloseRequested</c>) is not built yet: when it is, its answer takes the ping's place.
-    /// </summary>
-    public async Task<PageCloseAnswer> AskBeforeCloseAsync()
-    {
-        if (_stopped || (!_heartbeat.IsArmed && !_heartbeat.IsUnresponsive))
-        {
-            return PageCloseAnswer.Agree;
-        }
-
-        _closeWait = new TaskCompletionSource<PageCloseAnswer>(TaskCreationOptions.RunContinuationsAsynchronously);
-        _answeredSinceCloseRequest = false;
-        try
-        {
-            if (_heartbeat.IsUnresponsive)
-            {
-                AskWhileClosing();
-            }
-            else
-            {
-                SendPing(_heartbeat.PingNow(Stopwatch.GetTimestamp()));
-                if (!_heartbeat.IsArmed)
-                {
-                    // The document went away, or cannot be pinged: there is no page left to wait for.
-                    return PageCloseAnswer.Agree;
-                }
-
-                var first = await Task.WhenAny(_closeWait.Task, Task.Delay(_interval));
-                if (first != _closeWait.Task && !_answeredSinceCloseRequest && !_stopped && _heartbeat.IsArmed)
-                {
-                    _log.Warn($"The page did not answer the close request within {_interval} ms.");
-                    Apply(_heartbeat.ReportedUnresponsive(Stopwatch.GetTimestamp()), "did not answer the close request");
-                }
-            }
-
-            return await _closeWait.Task;
-        }
-        finally
-        {
-            _closeWait = null;
-        }
-    }
-
-    /// <summary>The close request ended without closing (the backend's guard or the user kept the window): back to watching.</summary>
-    public void CloseRequestKept()
-    {
-        if (_heartbeat.IsUnresponsive && _heartbeat.IsAsking && _dialog is null)
-        {
-            _heartbeat.Waited();
-        }
-    }
-
-    /// <summary>The window is closing while its page does not answer, after "Close anyway" (UI thread).</summary>
-    public void ReportClosedAnyway()
-    {
-        var duration = HangDuration();
-        _log.Step($"window closed anyway; the page had not answered for {duration.TotalSeconds:0.0} s");
-        _hook.Report(new PageHang(MainWindow, PageHangState.ClosedAnyway, duration));
     }
 
     /// <summary>On the timer's thread: the tick runs on the UI thread, behind what is queued there.</summary>
@@ -247,44 +173,24 @@ internal sealed class PageWatch
     /// <summary>Shows the dialog for the current situation, replacing an open one of the other kind.</summary>
     private void Ask()
     {
+        if (_close is not null)
+        {
+            AskWhileClosing(silentGuard: false);
+            return;
+        }
+
         if (_automated)
         {
-            // Nobody can answer: a close closes anyway, as an ask does in the automated mode; otherwise keep watching.
+            // Nobody can answer: keep watching.
             _log.Info("The automated mode shows no hung-page dialog.");
-            if (_closeWait is not null)
-            {
-                _closeWait.TrySetResult(PageCloseAnswer.CloseAnyway);
-            }
-            else
-            {
-                _heartbeat.Waited();
-            }
-
+            _heartbeat.Waited();
             return;
         }
 
-        if (_closeWait is not null)
-        {
-            AskWhileClosing();
-            return;
-        }
-
-        Show(forClose: false);
+        Show(forClose: false, HangDuration());
     }
 
-    private void AskWhileClosing()
-    {
-        if (_automated)
-        {
-            _log.Info("The automated mode closes a page that does not answer without asking.");
-            _closeWait?.TrySetResult(PageCloseAnswer.CloseAnyway);
-            return;
-        }
-
-        Show(forClose: true);
-    }
-
-    private void Show(bool forClose)
+    private void Show(bool forClose, TimeSpan silentFor)
     {
         if (_dialog is not null)
         {
@@ -296,7 +202,7 @@ internal sealed class PageWatch
             _dialog.Dismiss();
         }
 
-        var seconds = Math.Max(1, (int)Math.Round(HangDuration().TotalSeconds));
+        var seconds = Math.Max(1, (int)Math.Round(silentFor.TotalSeconds));
         var instruction = $"{_title} is not responding";
         var content = forClose
             ? $"The page has not answered for {seconds} seconds. You can wait for it, or close the window anyway: what the page has not saved is lost."
@@ -323,16 +229,23 @@ internal sealed class PageWatch
         {
             case WaitId:
                 _log.Step("hung-page dialog: Wait");
-                _heartbeat.Waited();
+                Waited();
                 break;
             case ReloadId:
                 Reload();
                 break;
             case CloseAnywayId:
                 _log.Step("hung-page dialog: Close anyway");
-                _closeWait?.TrySetResult(PageCloseAnswer.CloseAnyway);
+                _close?.Done.TrySetResult(PageCloseResult.CloseAnyway);
                 break;
         }
+    }
+
+    /// <summary>Wait: the heartbeat's schedule for a hung page, and the close request's for a silent guard.</summary>
+    private void Waited()
+    {
+        _heartbeat.Waited();
+        _close?.Waited(Stopwatch.GetTimestamp(), _interval);
     }
 
     private void Reload()
@@ -349,9 +262,22 @@ internal sealed class PageWatch
         var duration = HangDuration();
         _log.Step($"the page answered again after {duration.TotalSeconds:0.0} s");
         _hook.Report(new PageHang(MainWindow, PageHangState.Recovered, duration));
+        if (_close is not { SilentAsked: true })
+        {
+            DismissDialog();
+        }
+
+        if (_close is { Sent: false } wait)
+        {
+            // A page without close guards that answers again agrees; one with guards answers the request it now reads.
+            wait.Done.TrySetResult(PageCloseResult.NoPage);
+        }
+    }
+
+    private void DismissDialog()
+    {
         _dialog?.Dismiss();
         _dialog = null;
-        _closeWait?.TrySetResult(PageCloseAnswer.Agree);
     }
 
     private void OnDocumentOpened(bool answersPing)
@@ -373,7 +299,10 @@ internal sealed class PageWatch
         }
     }
 
-    /// <summary>The document is gone: a hung one was replaced (its renderer ended and the page reloaded, or it navigated).</summary>
+    /// <summary>
+    /// The document is gone: a hung one was replaced (its renderer ended and the page reloaded, or it navigated). A close
+    /// request it was asked goes on without it: the page that was asked is gone, so its answer no longer counts.
+    /// </summary>
     private void OnDocumentClosed()
     {
         if (_stopped)
@@ -386,27 +315,34 @@ internal sealed class PageWatch
             var duration = HangDuration();
             _log.Step($"the unresponsive page was replaced after {duration.TotalSeconds:0.0} s");
             _hook.Report(new PageHang(MainWindow, PageHangState.Reloaded, duration));
-            _dialog?.Dismiss();
-            _dialog = null;
+            DismissDialog();
         }
 
         _heartbeat.Disarm();
-        _closeWait?.TrySetResult(PageCloseAnswer.Agree);
+        if (_close is { } wait && wait.Done.TrySetResult(PageCloseResult.NoPage))
+        {
+            _log.Step($"close request {wait.Seq}: the page that was asked went away; its answer no longer counts");
+        }
     }
 
-    private void OnAnswered(long seq)
+    private void OnAnswered(long seq, bool dialog)
     {
         if (_stopped)
         {
             return;
         }
 
-        _answeredSinceCloseRequest = true;
-        Apply(_heartbeat.Answered(seq), "");
-        if (!_heartbeat.IsUnresponsive)
+        if (_close is { } wait)
         {
-            _closeWait?.TrySetResult(PageCloseAnswer.Agree);
+            wait.Ponged(dialog);
+            if (!wait.Sent && !_heartbeat.IsUnresponsive)
+            {
+                // A page without close guards (no SDK, or an older one) that answers agrees, as before guards existed.
+                wait.Done.TrySetResult(PageCloseResult.NoPage);
+            }
         }
+
+        Apply(_heartbeat.Answered(seq), "");
     }
 
     private void OnRendererUnresponsive()

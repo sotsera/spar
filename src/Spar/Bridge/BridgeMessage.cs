@@ -31,6 +31,13 @@ public enum BridgeMessageType
     /// </summary>
     Errors,
 
+    /// <summary>
+    /// The page's answer to <see cref="CloseRequest"/>, with its <c>seq</c> (decision "Two-stage close"; added in M1b
+    /// step 8): the payload is <c>{"answer":"close"}</c>, <c>{"answer":"keep"}</c>,
+    /// <c>{"answer":"ask","question":"…"}</c>, or <c>{"answer":"failed"}</c> when a guard threw. Untrusted page text.
+    /// </summary>
+    CloseAnswer,
+
     // Host to page.
     Open,
     Result,
@@ -44,6 +51,19 @@ public enum BridgeMessageType
     /// The heartbeat (plan section 3, "Hung pages"), sent only by a host whose injected script answers it in the page.
     /// </summary>
     Ping,
+
+    /// <summary>
+    /// A request to close the page's window, numbered by <c>seq</c>, with the payload
+    /// <c>{"reason":"user"|"app"|"sessionEnd","automated":true|false}</c>. Sent only to a page that listed it in
+    /// <c>hello</c>; the page's guards answer <see cref="CloseAnswer"/>.
+    /// </summary>
+    CloseRequest,
+
+    /// <summary>
+    /// The close request <c>seq</c> ended without the page's answer (a session-end deadline, "Close anyway", the
+    /// teardown): the page aborts the request's <c>signal</c>. Sent only to a page that listed it in <c>hello</c>.
+    /// </summary>
+    CloseEnded,
 
     /// <summary>A well-formed message of a type this side does not know (a newer peer).</summary>
     Unknown,
@@ -96,7 +116,10 @@ public sealed record BridgeMessage(BridgeMessageType Type)
     /// <summary>In <c>event</c>: the event's name.</summary>
     public string? Name { get; init; }
 
-    /// <summary>In <c>ping</c> and <c>pong</c>: the heartbeat's number, a safe integer from 1.</summary>
+    /// <summary>
+    /// In <c>ping</c> and <c>pong</c>, the heartbeat's number; in <c>close-request</c>, <c>close-answer</c> and
+    /// <c>close-ended</c>, the close request's. A safe integer from 1 either way.
+    /// </summary>
     public long? Seq { get; init; }
 
     /// <summary>The JSON after the TAB, as UTF-8; empty when there is none.</summary>
@@ -122,6 +145,9 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         BridgeMessageType.Event => "event",
         BridgeMessageType.Closing => "closing",
         BridgeMessageType.Ping => "ping",
+        BridgeMessageType.CloseRequest => "close-request",
+        BridgeMessageType.CloseAnswer => "close-answer",
+        BridgeMessageType.CloseEnded => "close-ended",
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, "An unknown message has no type name of its own."),
     };
 
@@ -145,6 +171,9 @@ public sealed record BridgeMessage(BridgeMessageType Type)
         "event" => BridgeMessageType.Event,
         "closing" => BridgeMessageType.Closing,
         "ping" => BridgeMessageType.Ping,
+        "close-request" => BridgeMessageType.CloseRequest,
+        "close-answer" => BridgeMessageType.CloseAnswer,
+        "close-ended" => BridgeMessageType.CloseEnded,
         _ => BridgeMessageType.Unknown,
     };
 }

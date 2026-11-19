@@ -31,12 +31,10 @@ internal interface IAppWindowOwner
 /// The app's main window: the window, shown at once in the theme's colour (plan 3d), the WebView, the bridge to the
 /// app's services, the page's heartbeat (<see cref="PageWatch"/>), and the two-stage close (decision "Two-stage
 /// close"): every close of the window is a close request, the page is checked and the backend's guard decides or asks,
-/// and only an approved request starts the teardown. When Windows ends the session, the window closes as a
-/// non-cancellable, best-effort phase: the guards run with <see cref="CloseReason.SessionEnd"/> and their deadline, and
-/// the window holds <c>WM_ENDSESSION</c>, pumping, until its teardown and its owner's last work are done or the phase's
-/// limit has passed. Everything here runs on the window's UI thread unless a member says otherwise.
+/// and only an approved request starts the teardown; that part, and the end of the session, is in
+/// <c>AppWindow.Closing.cs</c>. Everything here runs on the window's UI thread unless a member says otherwise.
 /// </summary>
-internal sealed class AppWindow : IWindowMessages, IReportsErrors
+internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
 {
     /// <summary>A Development or Test build may set it to <c>default</c> to keep the WebView's own background (measurements).</summary>
     public const string WebViewBackgroundVariable = "SPAR_DEV_WEBVIEW_BACKGROUND";
@@ -49,12 +47,6 @@ internal sealed class AppWindow : IWindowMessages, IReportsErrors
 
     /// <summary>How long teardown waits for cancelled commands to end before closing the WebView anyway.</summary>
     private const int CommandSettleMilliseconds = 3_000;
-
-    /// <summary>
-    /// How long <c>WM_ENDSESSION</c> is held at most: the guards' 5 s, the page's close work and the calls' settling.
-    /// Windows may end the process once the message returns.
-    /// </summary>
-    private const int SessionEndMilliseconds = 10_000;
 
     private readonly SparApp _app;
     private readonly HostLog _log;
@@ -79,7 +71,6 @@ internal sealed class AppWindow : IWindowMessages, IReportsErrors
     private HWND _window;
     private HBRUSH _background;
     private State _state;
-    private bool _closeRequestOpen;
     private bool _failed;
     private bool _destroyed;
     private int _exitCode;
@@ -112,6 +103,9 @@ internal sealed class AppWindow : IWindowMessages, IReportsErrors
 
     /// <summary>The window's handle, once <see cref="Start"/> created it.</summary>
     public HWND Handle => _window;
+
+    /// <summary>The colour the window paints behind the transparent page now, as <c>0x00BBGGRR</c>; 0 before <see cref="Start"/>.</summary>
+    public uint WindowColour => _theme?.Background.ColorRef ?? 0;
 
     /// <summary>The run's exit code: 0, or the code of the failure that ended it.</summary>
     public int ExitCode => _exitCode;
@@ -246,9 +240,10 @@ internal sealed class AppWindow : IWindowMessages, IReportsErrors
     /// <summary>
     /// Plan section 3, "Teardown": mark closing, let the page finish its close work, stop admitting calls and let the
     /// cancelled ones settle (bounded, still pumping), close the controller on this thread, and destroy the window. A
-    /// page that does not answer gets no close work, and its renderer is ended before the controller closes.
+    /// page that does not answer gets no close work, and its renderer is ended before the controller closes. At session end
+    /// <paramref name="deadline"/>, a <see cref="Stopwatch"/> timestamp, cuts both waits short.
     /// </summary>
-    public async Task TeardownAsync(int exitCode)
+    public async Task TeardownAsync(int exitCode, long? deadline = null)
     {
         if (_state == State.Closing)
         {
@@ -271,12 +266,12 @@ internal sealed class AppWindow : IWindowMessages, IReportsErrors
             var bridge = _bridge.Task.Result;
             if (!pageHung)
             {
-                await bridge.RunPageCloseWorkAsync(TimeSpan.FromMilliseconds(PageCloseWorkMilliseconds));
+                await bridge.RunPageCloseWorkAsync(Bounded(PageCloseWorkMilliseconds, deadline));
             }
 
             var settled = bridge.CloseAsync("window closing");
             _log.Step("calls stopped");
-            var first = await Task.WhenAny(settled, Task.Delay(CommandSettleMilliseconds));
+            var first = await Task.WhenAny(settled, Task.Delay(Bounded(CommandSettleMilliseconds, deadline)));
             _log.Step(first == settled ? "calls settled" : "calls still running at the limit");
         }
 
@@ -363,115 +358,6 @@ internal sealed class AppWindow : IWindowMessages, IReportsErrors
         if (_state == State.Starting)
         {
             _state = State.Running;
-        }
-    }
-
-    private void OnCloseMessage()
-    {
-        if (_state == State.Closing || _closeRequestOpen)
-        {
-            // A second click joins the open request; during teardown there is nothing left to ask.
-            return;
-        }
-
-        _ = CloseRequestedAsync(CloseReason.User);
-    }
-
-    /// <summary>
-    /// The two-stage close: the page's guard, then the backend's, each closing, keeping or asking. Only an approved
-    /// request starts the teardown.
-    /// </summary>
-    private async Task CloseRequestedAsync(CloseReason reason)
-    {
-        _closeRequestOpen = true;
-        try
-        {
-            var request = new CloseRequest("main", reason, _automated);
-            _log.Step($"close requested ({reason}{(_automated ? ", automated" : "")})");
-
-            // The page first: a page that does not answer within about 5 s, or is already hung, gets "Wait / Close
-            // anyway". The page's own guard (windows.onCloseRequested) is asked here too when it is built; its "keep"
-            // will end the request before the backend is asked.
-            var page = _watch is null ? PageCloseAnswer.Agree : await _watch.AskBeforeCloseAsync();
-            if (_state == State.Closing)
-            {
-                return;
-            }
-
-            var verdict = _guard is null ? CloseVerdict.Close : await _guard.DecideAsync(request, _stopping.Token);
-            if (verdict.Kind == CloseVerdictKind.Keep)
-            {
-                _log.Step("close kept by the backend's guard");
-                _watch?.CloseRequestKept();
-                return;
-            }
-
-            if (verdict.Kind == CloseVerdictKind.Ask && !NativeDialog.ConfirmClose(_window, _title, verdict.Question!))
-            {
-                _log.Step("close kept by the user");
-                _watch?.CloseRequestKept();
-                return;
-            }
-
-            if (page == PageCloseAnswer.CloseAnyway)
-            {
-                _watch?.ReportClosedAnyway();
-            }
-
-            await TeardownAsync(0);
-        }
-        catch (Exception exception)
-        {
-            _log.Error("The close request failed", exception);
-        }
-        finally
-        {
-            _closeRequestOpen = false;
-        }
-    }
-
-    /// <summary>
-    /// Windows ends the session (<c>WM_ENDSESSION</c> with <c>TRUE</c>): a non-cancellable, best-effort close. Nobody
-    /// can answer a dialog, so the page is not asked; the backend's guard runs with its session-end deadline and cannot
-    /// keep the window; then the teardown. The message is held, pumping, until the window is gone and its owner's last
-    /// work is done, or until the phase's limit: Windows may end the process as soon as it returns.
-    /// </summary>
-    private void EndSession()
-    {
-        _log.Step("session ending");
-        var limit = Stopwatch.GetTimestamp() + Stopwatch.Frequency * SessionEndMilliseconds / 1_000;
-        if (_state != State.Closing)
-        {
-            _ = SessionEndAsync();
-        }
-
-        var quit = MessagePump.Until(() => _destroyed, limit);
-        if (_destroyed && _owner.SessionEnded() is { } remaining)
-        {
-            quit = MessagePump.Until(() => remaining.IsCompleted, limit) ?? quit;
-        }
-
-        _log.Step(_destroyed ? "session end: window closed" : "session end: the window did not close in time");
-        if (quit is { } code)
-        {
-            // The loop below this one ends when it sees the quit message the pump took.
-            PInvoke.PostQuitMessage(code);
-        }
-    }
-
-    private async Task SessionEndAsync()
-    {
-        try
-        {
-            var request = new CloseRequest("main", CloseReason.SessionEnd, _automated);
-            var verdict = _guard is null ? CloseVerdict.Close : await _guard.DecideAsync(request, _stopping.Token);
-            _log.Step($"session end: the backend's guard answered {verdict.Kind}; closing");
-            await TeardownAsync(0);
-        }
-        catch (Exception exception)
-        {
-            _log.Error("The session-end close failed", exception);
-            await TeardownAsync(0);
         }
     }
 

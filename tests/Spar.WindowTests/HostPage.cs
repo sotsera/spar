@@ -35,6 +35,16 @@ internal sealed class HostPage : IAsyncDisposable
         return page;
     }
 
+    /// <summary>Picks the page's close guard: none, close, keep, ask, late-keep, slow, silent, dialog or throw.</summary>
+    public Task GuardAsync(string mode) => Page.GetByLabel("Close guard").SelectOptionAsync(mode);
+
+    /// <summary>What the page's close guard told the backend, in order: <c>"close user automated keep"</c> and so on.</summary>
+    public IReadOnlyList<string> GuardNotes => NotesOf(Activity);
+
+    /// <summary>The page guard's notes, from an <see cref="Activity"/> held from before the window closed (its services may be gone).</summary>
+    public static List<string> NotesOf(Activity activity) =>
+        [.. activity.Events.Where(e => e.StartsWith("note close ", StringComparison.Ordinal)).Select(e => e["note ".Length..])];
+
     /// <summary>Clicks a button by its name.</summary>
     public Task ClickAsync(string name) => Page.GetByRole(SparRole.Button, new() { Name = name, Exact = true }).ClickAsync();
 

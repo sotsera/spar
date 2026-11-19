@@ -27,6 +27,12 @@ internal sealed class WindowSurface : IAsyncDisposable
             ProfilesFolder = TestDataRoots.Profiles,
             BeforeFirstNavigation = InstallAsync,
             OnPhase = options.WindowPhase,
+            Dark = options.ColorScheme switch
+            {
+                SparColorScheme.Dark => true,
+                SparColorScheme.System => null,
+                _ => false,
+            },
         };
     }
 

@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using Spar.Testing;
 using Spar;
 using static Spar.Testing.SparAssertions;
+using static Spar.WindowTests.HostPage;
 
 namespace Spar.WindowTests;
 
@@ -133,20 +134,72 @@ public sealed class HostTests
     {
         var phases = new ConcurrentQueue<string>();
         await using var host = await HostPage.OpenAsync(options => options.WindowPhase = phases.Enqueue);
+        var activity = host.Activity;
+        await host.GuardAsync("keep");
         await host.ClickAsync("Start a long call");
         await host.WaitForRunningAsync(1);
 
         var allowed = await host.App.Window.SendMessageAsync(QueryEndSession, 0, Logoff);
 
-        // WM_ENDSESSION returns only once the window has closed: Windows may end the process when it does.
+        // WM_ENDSESSION returns only once the window has closed and the services are disposed: Windows may end the
+        // process when it does.
         await host.App.Window.SendMessageAsync(EndSession, 1, Logoff);
 
         Assert.Equal(1, allowed);
         Assert.True(phases.Contains("closing"), "WM_ENDSESSION returned before the window's controller closed.");
+        Assert.NotNull(activity.DisposedAt);
         Assert.Equal(0, await host.App.Window.Closed.WaitAsync(TimeSpan.FromSeconds(15), TestContext.Current.CancellationToken));
-        Assert.Equal(CloseReason.SessionEnd, Assert.Single(host.Activity.CloseRequests).Reason);
-        Assert.Contains("cancelled hold", host.Activity.Events);
-        Assert.Equal(0, host.Activity.Running);
+
+        // The page's guard ran with its reason, and its keep kept nothing; then the backend's.
+        Assert.Equal(["close sessionEnd automated keep"], NotesOf(activity));
+        Assert.Equal(CloseReason.SessionEnd, Assert.Single(activity.CloseRequests).Reason);
+        Assert.Contains("cancelled hold", activity.Events);
+        Assert.Equal(0, activity.Running);
+    }
+
+    [Fact]
+    public async Task The_end_of_the_session_holds_the_message_under_four_seconds_however_slow_the_guards_and_the_cleanup()
+    {
+        var phases = new ConcurrentQueue<string>();
+        await using var host = await HostPage.OpenAsync(options => options.WindowPhase = phases.Enqueue);
+        var activity = host.Activity;
+        await host.GuardAsync("slow");
+        activity.BackendGuardDelay = TimeSpan.FromSeconds(5);
+        activity.DisposeDelay = TimeSpan.FromSeconds(5);
+        await host.ClickAsync("Start a slow call");
+        await host.WaitForRunningAsync(1);
+
+        var held = System.Diagnostics.Stopwatch.StartNew();
+        await host.App.Window.SendMessageAsync(EndSession, 1, Logoff);
+        held.Stop();
+
+        // Page guard 2 s, backend guard the rest of 3 s, then the teardown and the disposal until 4 s: the message
+        // returns with the disposal still running, as Windows may end the process from then on.
+        var hold = Assert.Single(phases, phase => phase.StartsWith("session end held ", StringComparison.Ordinal));
+        Results.Append("session-end.txt", $"slow guards and disposal: WM_ENDSESSION held {held.ElapsedMilliseconds} ms ({hold})");
+        Assert.InRange(held.ElapsedMilliseconds, 3_500, 4_250);
+        Assert.Null(activity.DisposedAt);
+        Assert.Equal(["close sessionEnd automated slow"], NotesOf(activity));
+        Assert.Equal(CloseReason.SessionEnd, Assert.Single(activity.CloseRequests).Reason);
+        Assert.Equal(0, await host.App.Window.Closed.WaitAsync(TimeSpan.FromSeconds(15), TestContext.Current.CancellationToken));
+        await Waits.UntilAsync(() => activity.DisposedAt is not null, TimeSpan.FromSeconds(10), "the slow disposal to finish");
+    }
+
+    [Fact]
+    public async Task The_end_of_the_session_returns_as_soon_as_the_window_and_the_services_are_done()
+    {
+        var phases = new ConcurrentQueue<string>();
+        await using var host = await HostPage.OpenAsync(options => options.WindowPhase = phases.Enqueue);
+        var activity = host.Activity;
+
+        var held = System.Diagnostics.Stopwatch.StartNew();
+        await host.App.Window.SendMessageAsync(EndSession, 1, Logoff);
+        held.Stop();
+
+        Results.Append("session-end.txt", $"fast guards and disposal: WM_ENDSESSION held {held.ElapsedMilliseconds} ms");
+        Assert.InRange(held.ElapsedMilliseconds, 0, 2_000);
+        Assert.NotNull(activity.DisposedAt);
+        Assert.Equal(0, await host.App.Window.Closed.WaitAsync(TimeSpan.FromSeconds(15), TestContext.Current.CancellationToken));
     }
 
     [Fact]

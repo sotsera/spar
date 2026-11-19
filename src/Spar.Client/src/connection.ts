@@ -2,6 +2,7 @@
 // aborts confirmed by the backend, and a lost channel turned into the decided failures. Never retries a call.
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import type { CallError, CallErrorKind, CallName, CallOptions, Execution, Outcome } from "./results.js";
+import { runCloseGuards, type CloseRequest, type GuardsOutcome } from "./windows.js";
 
 /** The host's channel for one document: strings both ways, never structured messages. */
 export interface BridgeChannel {
@@ -27,9 +28,10 @@ const confirmationTimeoutMs = 5_000;
 /**
  * The host-to-page types this SDK understands, announced in hello. The heartbeat's `ping` is not among them: the desktop
  * host's injected script answers it from the document's creation, before this SDK connects (plan section 3, "Hung
- * pages"), and this connection ignores it.
+ * pages"), and this connection ignores it. `close-request` and `close-ended` run the page's close guards (decision
+ * "Two-stage close"); a host sends them only to a page that lists them.
  */
-const understoodTypes = ["open", "result", "failure", "event", "closing"] as const;
+const understoodTypes = ["open", "result", "failure", "event", "closing", "close-request", "close-ended"] as const;
 
 interface Pending {
   readonly name: CallName;
@@ -45,6 +47,7 @@ export class Connection {
   readonly #waitingForOpen: Array<() => void> = [];
   readonly #eventListeners = new Map<string, Set<(payload: string) => void>>();
   readonly #closingWork: Array<() => Promise<unknown>> = [];
+  readonly #closeRequests = new Map<number, AbortController>();
   #state: "opening" | "open" | "closed" = "opening";
   #nextId = 1;
   #document: string | undefined;
@@ -156,6 +159,12 @@ export class Connection {
       case "closing":
         void this.#runClosingWork();
         break;
+      case "close-request":
+        void this.#runCloseGuards(message.seq!, message.payload);
+        break;
+      case "close-ended":
+        this.#closeRequests.get(message.seq!)?.abort();
+        break;
       default:
         // An unexpected type for a pending call fails that call, so no call can hang.
         if (message.id !== undefined) {
@@ -223,12 +232,33 @@ export class Connection {
   /** The host went away: a call it received may have run (`lost`); one it never received did not (`unavailable`). */
   #closed(): void {
     this.#state = "closed";
+    for (const request of this.#closeRequests.values()) {
+      request.abort();
+    }
+
     this.#waitingForOpen.length = 0;
     for (const id of [...this.#pending.keys()]) {
       const pending = this.#take(id)!;
       pending.resolve(pending.sent
         ? failure(pending.name, "transport", "lost", "unknown")
         : failure(pending.name, "unavailable", "unavailable", "notStarted"));
+    }
+  }
+
+  /** One close request: the guards in order, then their answer, unless the request ended without them. */
+  async #runCloseGuards(seq: number, payload: string): Promise<void> {
+    const { reason, automated } = closeRequestOf(payload);
+    const controller = new AbortController();
+    this.#closeRequests.set(seq, controller);
+    let outcome: GuardsOutcome;
+    try {
+      outcome = await runCloseGuards(reason, automated, controller.signal);
+    } finally {
+      this.#closeRequests.delete(seq);
+    }
+
+    if (!controller.signal.aborted) {
+      this.#send({ type: "close-answer", seq, payload: closeAnswerPayload(outcome) });
     }
   }
 
@@ -321,4 +351,26 @@ function errorOutcome(pending: Pending, payload: string): Outcome {
   }
 
   return { ok: false, code, payload: decoded, call: pending.name };
+}
+
+/** A close request's payload, `{"reason":"user","automated":false}`, read as untrusted: anything unexpected is a user's close. */
+function closeRequestOf(payload: string): Pick<CloseRequest, "reason" | "automated"> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(payload);
+  } catch {
+    parsed = undefined;
+  }
+
+  const fields = typeof parsed === "object" && parsed !== null ? parsed : {};
+  const reason = ownString(fields, "reason");
+  const automated = Object.prototype.hasOwnProperty.call(fields, "automated") && (fields as { automated?: unknown }).automated === true;
+  return { reason: reason === "app" || reason === "sessionEnd" ? reason : "user", automated };
+}
+
+/** The guards' answer on the wire: `{"answer":"close"}`, `{"answer":"ask","question":"…"}` and so on. */
+function closeAnswerPayload(outcome: GuardsOutcome): string {
+  return typeof outcome === "string"
+    ? JSON.stringify({ answer: outcome })
+    : JSON.stringify({ answer: "ask", question: outcome.ask });
 }

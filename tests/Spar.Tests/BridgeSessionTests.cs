@@ -225,7 +225,7 @@ public sealed class BridgeSessionTests : IAsyncLifetime
         // The host's injected script answers from the document's creation, before the page says hello.
         using var session = Session(includeDetails: false, answersPing: true);
         var pongs = new List<long>();
-        session.Pong += pongs.Add;
+        session.Pong += (seq, _) => pongs.Add(seq);
 
         Assert.True(session.Ping(1));
         var ping = await _lastSent.NextAsync();

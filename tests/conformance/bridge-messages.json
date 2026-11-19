@@ -143,6 +143,21 @@
       "wire": "{\"type\":\"pong\",\"seq\":12}\t"
     },
     {
+      "name": "close-request",
+      "message": { "type": "close-request", "seq": 3, "payload": "{\"reason\":\"user\",\"automated\":false}" },
+      "wire": "{\"type\":\"close-request\",\"seq\":3}\t{\"reason\":\"user\",\"automated\":false}"
+    },
+    {
+      "name": "close-answer",
+      "message": { "type": "close-answer", "seq": 3, "payload": "{\"answer\":\"ask\",\"question\":\"Close without saving?\"}" },
+      "wire": "{\"type\":\"close-answer\",\"seq\":3}\t{\"answer\":\"ask\",\"question\":\"Close without saving?\"}"
+    },
+    {
+      "name": "close-ended",
+      "message": { "type": "close-ended", "seq": 3, "payload": "" },
+      "wire": "{\"type\":\"close-ended\",\"seq\":3}\t"
+    },
+    {
       "name": "csp",
       "message": { "type": "csp", "payload": "{\"groups\":[{\"directive\":\"img-src\",\"blocked\":\"https://example.com/a.png\",\"source\":\"\",\"line\":0,\"column\":0,\"sample\":\"\",\"count\":3}],\"overflow\":0}" },
       "wire": "{\"type\":\"csp\"}\t{\"groups\":[{\"directive\":\"img-src\",\"blocked\":\"https://example.com/a.png\",\"source\":\"\",\"line\":0,\"column\":0,\"sample\":\"\",\"count\":3}],\"overflow\":0}"
@@ -227,6 +242,9 @@
     { "name": "a ping without its seq", "wire": "{\"type\":\"ping\"}\t", "id": null },
     { "name": "a pong with seq zero", "wire": "{\"type\":\"pong\",\"seq\":0}\t", "id": null },
     { "name": "a pong with an unsafe seq", "wire": "{\"type\":\"pong\",\"seq\":9007199254740992}\t", "id": null },
-    { "name": "a pong with seq as a string", "wire": "{\"type\":\"pong\",\"seq\":\"3\"}\t", "id": null }
+    { "name": "a pong with seq as a string", "wire": "{\"type\":\"pong\",\"seq\":\"3\"}\t", "id": null },
+    { "name": "a close-request without its seq", "wire": "{\"type\":\"close-request\"}\t{\"reason\":\"user\",\"automated\":true}", "id": null },
+    { "name": "a close-answer with seq zero", "wire": "{\"type\":\"close-answer\",\"seq\":0}\t{\"answer\":\"close\"}", "id": null },
+    { "name": "a close-ended with a fractional seq", "wire": "{\"type\":\"close-ended\",\"seq\":2.5}\t", "id": null }
   ]
 }

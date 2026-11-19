@@ -28,6 +28,28 @@ class FakeEvent {
   }
 }
 
+/** A DOM with just what the dialog check reads: querySelectorAll on the document and checkVisibility on elements. */
+function fakeDom(dialogs: readonly boolean[]) {
+  class Element {
+    constructor(readonly visible: boolean) {}
+
+    checkVisibility(): boolean {
+      return this.visible;
+    }
+  }
+
+  class Document {
+    selectors: string[] = [];
+
+    querySelectorAll(selector: string): Element[] {
+      this.selectors.push(selector);
+      return dialogs.map(visible => new Element(visible));
+    }
+  }
+
+  return { Document, Element, document: new Document() };
+}
+
 function run(options: {
   reports?: boolean;
   origin?: string;
@@ -37,6 +59,8 @@ function run(options: {
   maxErrorGroups?: number;
   maxErrors?: number;
   wrapConsole?: boolean;
+  /** The modal dialogs the page shows: each found by the selector, visible or not; no DOM at all when absent. */
+  dialogs?: readonly boolean[];
 } = {}): Fake {
   const posted: string[] = [];
   const logged: unknown[][] = [];
@@ -75,8 +99,9 @@ function run(options: {
     .replace("__SPAR_WRAP_CONSOLE__", String(options.wrapConsole ?? true));
   const globals = { chrome: { webview }, console: fakeConsole };
   const location = { origin: options.origin ?? "https://app.localhost" };
-  new Function("globalThis", "location", "window", "performance", "setTimeout", "Event", text)(
-    globals, location, window, { now: () => Date.now() }, setTimeout, FakeEvent);
+  const dom = options.dialogs === undefined ? undefined : fakeDom(options.dialogs);
+  new Function("globalThis", "location", "window", "performance", "setTimeout", "Event", "Document", "Element", "document", text)(
+    globals, location, window, { now: () => Date.now() }, setTimeout, FakeEvent, dom?.Document, dom?.Element, dom?.document);
 
   const dispatch = (type: string, fields: Record<string, unknown>) => {
     const event = Object.assign(new FakeEvent(), { fakeTarget: window, ...fields });
@@ -125,6 +150,20 @@ describe("the heartbeat", () => {
     page.deliver("{\"type\":\"ping\",\"seq\":9007199254740991}\t");
 
     expect(page.posted).toEqual(["{\"type\":\"pong\",\"seq\":1}\t", "{\"type\":\"pong\",\"seq\":9007199254740991}\t"]);
+  });
+
+  test("a pong says when the page shows a visible modal dialog of its own", () => {
+    const none = run({ dialogs: [] });
+    const hidden = run({ dialogs: [false] });
+    const shown = run({ dialogs: [false, true] });
+
+    for (const page of [none, hidden, shown]) {
+      page.deliver("{\"type\":\"ping\",\"seq\":2}	");
+    }
+
+    expect(none.posted).toEqual(["{\"type\":\"pong\",\"seq\":2}	"]);
+    expect(hidden.posted).toEqual(["{\"type\":\"pong\",\"seq\":2}	"]);
+    expect(shown.posted).toEqual(["{\"type\":\"pong\",\"seq\":2}	{\"dialog\":true}"]);
   });
 
   test("anything else is left to the SDK: other messages, malformed pings, objects", () => {

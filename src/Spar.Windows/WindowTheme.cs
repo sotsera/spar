@@ -53,6 +53,13 @@ internal sealed class WindowTheme
     public static WindowTheme Read(WindowOptions options, string dataRoot) =>
         new(options, SavedChoice(dataRoot), SystemIsDark());
 
+    /// <summary>
+    /// A fixed scheme, whatever the system and the saved choice say: a window test's light or dark, so its screenshots
+    /// match on every machine. The window, its title bar and its page all take it, and a change of the system's theme
+    /// changes nothing.
+    /// </summary>
+    public static WindowTheme Fixed(WindowOptions options, bool dark) => new(options, dark, systemDark: dark);
+
     /// <summary>Sets the title bar's theme; called before the window is first shown, and on a change.</summary>
     public unsafe void ApplyTitleBar(HWND window)
     {

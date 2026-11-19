@@ -110,6 +110,20 @@ public sealed partial class PageApiTests
     }
 
     [Fact]
+    public async Task A_click_whose_element_moves_between_press_and_release_is_stopped_and_tried_again()
+    {
+        await using var host = await HostPage.OpenAsync();
+
+        // The button jumps 60 px on its first press, so that release lands elsewhere: the stray click is stopped before
+        // the page sees it, and the second try clicks the button where it now is.
+        await host.ClickAsync("Jumpy button");
+
+        await Expect(host.Status).ToHaveTextAsync("Jumpy button clicked");
+        Assert.Equal("[\"jumpy\"]", await host.Page.EvaluateAsync<string>("JSON.stringify(window.hostClicks)"));
+        host.AssertClean();
+    }
+
+    [Fact]
     public async Task Chains_filters_and_positions_narrow_a_locator()
     {
         await using var host = await HostPage.OpenAsync();

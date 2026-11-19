@@ -926,6 +926,26 @@
     return { x: (left + right) / 2, y: (top + bottom) / 2 };
   }
 
+  /**
+   * Whether a running animation or transition moves the element or one of its ancestors: one frame of the same box can
+   * fall between two frames of an animation that has started, or just before one starts. A finished or paused one,
+   * and one the element does not sit in, does not count.
+   */
+  function isAnimating(element) {
+    if (typeof document.getAnimations !== "function") {
+      return false;
+    }
+
+    for (const animation of document.getAnimations()) {
+      const target = animation.effect && animation.effect.target;
+      if (animation.playState === "running" && target instanceof Element && contains(target, element)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   const sameBox = (a, b) => a.x === b.x && a.y === b.y && a.width === b.width && a.height === b.height;
 
   /**
@@ -965,7 +985,7 @@
     const before = element.getBoundingClientRect();
     await nextFrame();
     const after = element.getBoundingClientRect();
-    if (!element.isConnected || !sameBox(before, after)) {
+    if (!element.isConnected || !sameBox(before, after) || isAnimating(element)) {
       return { retry: name + ": not stable", unstable: true };
     }
 
@@ -981,51 +1001,73 @@
 
   // The armed watcher: the next press must land on the element. If it does not (the page moved something over it
   // between the check and the input), the press and the click it would cause are stopped before the page sees them,
-  // and the action is tried again, as the browser automation library does.
+  // and the action is tried again, as the browser automation library does. A press that landed but whose click does
+  // not reach the element, which is still in the page, means the element moved between the press and the release (an
+  // animation that started after the stability check): that click, on whatever was under the release, is stopped too,
+  // and the action is tried again. An element the page removed on the press or the release is no miss, and only the
+  // first click counts: a label's click on its control comes after it.
+  // Its listeners are registered once, when the engine is installed at the document's creation, before any page
+  // script: listeners on one target run in the order they were added, so stopping an event here keeps it from every
+  // listener of the page, its own capturing ones on the window included. They do nothing while no action is armed.
   let armed = null;
 
-  function armPointer(element) {
-    disarm();
-    const watch = { element, seen: false, onTarget: false, hit: null, listeners: [] };
-    const stopIfMissed = event => {
-      if (watch.seen && !watch.onTarget) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-      }
-    };
-    const onDown = event => {
-      if (watch.seen) {
-        stopIfMissed(event);
-        return;
-      }
-
-      watch.seen = true;
-      const target = event.composedPath()[0];
-      watch.onTarget = contains(element, target);
-      if (!watch.onTarget) {
-        watch.hit = target instanceof Element ? describe(target, newCache()) : String(target);
-        stopIfMissed(event);
-      }
-    };
-
-    watch.listeners.push(["pointerdown", onDown], ["mousedown", stopIfMissed], ["pointerup", stopIfMissed],
-      ["mouseup", stopIfMissed], ["click", stopIfMissed]);
-    for (const [type, listener] of watch.listeners) {
-      addEventListener(type, listener, true);
+  const stopIfMissed = event => {
+    if (armed !== null && armed.seen && !armed.onTarget) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
     }
+  };
 
-    armed = watch;
-  }
-
-  function disarm() {
-    if (armed === null) {
+  const onDown = event => {
+    const watch = armed;
+    if (watch === null) {
       return;
     }
 
-    for (const [type, listener] of armed.listeners) {
-      removeEventListener(type, listener, true);
+    if (watch.seen) {
+      stopIfMissed(event);
+      return;
     }
 
+    watch.seen = true;
+    const target = event.composedPath()[0];
+    watch.onTarget = contains(watch.element, target);
+    if (!watch.onTarget) {
+      watch.hit = target instanceof Element ? describe(target, newCache()) : String(target);
+      stopIfMissed(event);
+    }
+  };
+
+  const onClick = event => {
+    const watch = armed;
+    if (watch === null) {
+      return;
+    }
+
+    stopIfMissed(event);
+    if (!watch.seen || !watch.onTarget || watch.clicks++ > 0) {
+      return;
+    }
+
+    if (contains(watch.element, event.composedPath()[0])) {
+      watch.clicked = true;
+    } else if (watch.element.isConnected) {
+      watch.moved = true;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  };
+
+  for (const [type, listener] of [["pointerdown", onDown], ["mousedown", stopIfMissed], ["pointerup", stopIfMissed],
+    ["mouseup", stopIfMissed], ["click", onClick]]) {
+    addEventListener(type, listener, true);
+  }
+
+  function armPointer(element) {
+    armed = { element, seen: false, onTarget: false, hit: null, clicked: false, moved: false, clicks: 0 };
+  }
+
+  function disarm() {
     armed = null;
   }
 
@@ -1037,7 +1079,7 @@
       return { seen: false, onTarget: false };
     }
 
-    return { seen: watch.seen, onTarget: watch.onTarget, hit: watch.hit };
+    return { seen: watch.seen, onTarget: watch.onTarget, hit: watch.hit, clicked: watch.clicked, moved: watch.moved };
   }
 
   // ---- The other operations ------------------------------------------------------------------------------------

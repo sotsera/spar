@@ -30,7 +30,28 @@ internal sealed class SparTestWindowRequest
 
     /// <summary>Each of the host's start-up and shutdown phases as it is reached, for Spar's own host tests (UI thread).</summary>
     public Action<string>? OnPhase { get; init; }
+
+    /// <summary>
+    /// The colour scheme the window and its page get: true dark, false light (the default of window tests, so screenshots
+    /// match on every machine), null the system's or the app's saved choice, as an app's window does.
+    /// </summary>
+    public bool? Dark { get; init; }
 }
+
+/// <summary>A window test's close request (<c>app.Window.CloseAsync</c>).</summary>
+/// <param name="Reason">Why the window closes, as the guards read it.</param>
+/// <param name="Automated">Whether the guards see the automated mode, where an ask counts as close.</param>
+/// <param name="CloseAnyway">
+/// What the test answers in place of a native dialog: true "Close anyway", false "Keep open" (and "Wait" for a page
+/// that does not answer); null when it gave no answer, which only the automated mode allows.
+/// </param>
+internal sealed record SparTestClose(CloseReason Reason, bool Automated, bool? CloseAnyway);
+
+/// <summary>What a window test's close request came to.</summary>
+/// <param name="Closed">The window closed; false when a guard or the test's answer kept it open.</param>
+/// <param name="Question">The last question a guard asked, null when none did.</param>
+/// <param name="Unanswered">The page did not answer, and "Wait / Close anyway" was asked.</param>
+internal sealed record SparTestCloseReport(bool Closed, string? Question, bool Unanswered);
 
 /// <summary>
 /// The app's window in a test process: the page's in-process DevTools Protocol session, which the page driver of
@@ -60,14 +81,26 @@ internal interface ISparTestWindow
     /// <summary>The ids of the renderer processes that render the page now.</summary>
     Task<IReadOnlyList<int>> RendererProcessesAsync();
 
-    /// <summary>A close of the window by the user (<c>WM_CLOSE</c>): the close request, the guards, then the teardown.</summary>
-    Task RequestCloseAsync();
+    /// <summary>A close of the window by the user (<c>WM_CLOSE</c>, posted): the close request, the guards, then the teardown.</summary>
+    Task PostCloseMessageAsync();
+
+    /// <summary>
+    /// A close request with the test's reason, mode and answers, which join an open one. Completes when the request
+    /// ends: kept, or the window's teardown done.
+    /// </summary>
+    Task<SparTestCloseReport> RequestCloseAsync(SparTestClose close);
 
     /// <summary>The test's end: the teardown at once, without asking the guards. Completes when the window is gone.</summary>
     Task<int> CloseAsync();
 
     /// <summary>Sends a window message to the app's window on its UI thread and returns the window procedure's result.</summary>
     Task<nint> SendMessageAsync(uint message, nint wParam, nint lParam);
+
+    /// <summary>
+    /// The window's own colours as Windows has them: whether its title bar is dark (<c>DWMWA_USE_IMMERSIVE_DARK_MODE</c>)
+    /// and the colour it paints behind the transparent page, as <c>0x00BBGGRR</c>.
+    /// </summary>
+    Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync();
 }
 
 /// <summary>

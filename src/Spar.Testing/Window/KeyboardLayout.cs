@@ -1,11 +1,15 @@
 using System.Collections.Frozen;
+using System.Text;
 
 namespace Spar.Testing;
 
 /// <summary>
 /// The US keyboard as the DevTools Protocol's <c>Input.dispatchKeyEvent</c> takes it: each key's <c>key</c>,
 /// <c>code</c>, Windows virtual-key code and text, and the shifted characters. Key names follow the UI Events
-/// <c>key</c> values, as the browser automation library's do ("Enter", "ArrowDown", "Control+End").
+/// <c>key</c> values, as the browser automation library's do ("Enter", "ArrowDown", "Control+End"). A character the US
+/// keyboard has no key for (<c>è</c>, <c>€</c>, an emoji) is still a key: its <c>key</c> is the character, its
+/// <c>code</c> empty and its virtual-key code 0, so the page sees <c>keydown</c> and <c>keyup</c> with the right
+/// <c>event.key</c> and the text arrives as typed. Dead keys, other layouts and input-method composition are not modelled.
 /// </summary>
 internal static class KeyboardLayout
 {
@@ -80,14 +84,20 @@ internal static class KeyboardLayout
         }
 
         var key = Find(parts[^1]) ?? throw new ArgumentException(
-            $"Unknown key \"{parts[^1]}\" in \"{combination}\": use a character, or a key name such as Enter, Tab, Escape, ArrowDown or F5.",
+            $"Unknown key \"{parts[^1]}\" in \"{combination}\": use one character, or a key name such as Enter, Tab, Escape, ArrowDown or F5.",
             nameof(combination));
         return (modifiers, key);
     }
 
-    /// <summary>The key that types <paramref name="character"/> on a US keyboard, with whether Shift is held; null when none does.</summary>
-    public static (Key Key, bool Shift)? ForCharacter(char character)
+    /// <summary>The key that types <paramref name="rune"/> on a US keyboard, with whether Shift is held; null when none does.</summary>
+    public static (Key Key, bool Shift)? ForCharacter(Rune rune)
     {
+        if (!rune.IsBmp)
+        {
+            return null;
+        }
+
+        var character = (char)rune.Value;
         if (character is >= 'a' and <= 'z')
         {
             return (Letter(character, character), false);
@@ -128,7 +138,22 @@ internal static class KeyboardLayout
             return Named["Space"];
         }
 
-        return name.Length == 1 && ForCharacter(name[0]) is { } typed ? typed.Key : null;
+        if (!Rune.TryGetRuneAt(name, 0, out var rune) || rune.Utf16SequenceLength != name.Length)
+        {
+            return null;
+        }
+
+        return ForCharacter(rune) is { } typed ? typed.Key : Unmapped(rune);
+    }
+
+    /// <summary>
+    /// A character with no key on the US keyboard, as one key: <c>key</c> and text the character, no <c>code</c>, no
+    /// virtual-key code. One Unicode scalar value, so its text is at most two UTF-16 units, under DevTools' limit of three.
+    /// </summary>
+    public static Key Unmapped(Rune rune)
+    {
+        var text = rune.ToString();
+        return new Key(text, "", 0, text);
     }
 
     private static Key Letter(char lower, char typed) =>

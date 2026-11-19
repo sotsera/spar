@@ -37,6 +37,17 @@ internal static class Results
         return folder;
     }
 
+    private static readonly Lock AppendGate = new();
+
+    /// <summary>Appends a line of evidence to <c>artifacts/test-results/Spar.WindowTests/&lt;file&gt;</c>, with the time.</summary>
+    public static void Append(string file, string line)
+    {
+        lock (AppendGate)
+        {
+            File.AppendAllLines(Path.Combine(Folder("."), file), [$"{DateTime.UtcNow:O} {line}"]);
+        }
+    }
+
     /// <summary>The repository's root, the folder holding <c>global.json</c> and <c>artifacts</c>, above the test's output.</summary>
     public static string RepositoryRoot => Root.Value;
 

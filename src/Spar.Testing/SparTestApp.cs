@@ -48,6 +48,12 @@ public sealed class SparTestOptions
 
     public SparTestSurface Surface { get; set; } = SparTestSurface.None;
 
+    /// <summary>
+    /// The Window surface's colour scheme: <see cref="SparColorScheme.Light"/> by default, so the page's
+    /// <c>prefers-color-scheme</c> and the window's own colours, and so its screenshots, are the same on every machine.
+    /// </summary>
+    public SparColorScheme ColorScheme { get; set; } = SparColorScheme.Light;
+
     /// <summary>Keep the app's data root after the test (it is deleted by default).</summary>
     public bool KeepData { get; set; }
 
@@ -89,6 +95,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     private readonly ConcurrentQueue<string> _problems = new();
     private readonly SparTestLog _log;
     private SparPage? _page;
+    private SparWindow? _window;
     private long _nextCallId;
 
     private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options, SparTestLog log)
@@ -141,8 +148,13 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
 
     internal SparTestOptions Options => _options;
 
-    /// <summary>The app's window (the Window surface), for Spar's own host tests.</summary>
-    internal ISparTestWindow Window => _session.OpenedWindow ?? throw new InvalidOperationException("The app has no window.");
+    /// <summary>
+    /// The app's window, for the Window surface: <c>CloseAsync</c> closes it through its close request, as the close
+    /// button does, so the page's and the backend's close guards run.
+    /// </summary>
+    public SparWindow Window => _window ??= _session.OpenedWindow is { } opened
+        ? new SparWindow(opened)
+        : throw new InvalidOperationException("The app has no window: start it with o.Surface = SparTestSurface.Window to close it.");
 
     /// <summary>
     /// Runs <typeparamref name="TApp"/>'s top-level statements on a thread of their own. Their

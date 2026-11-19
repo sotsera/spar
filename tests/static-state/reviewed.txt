@@ -31,6 +31,7 @@ Spar | Spar.Hosting.CloseGuard.GuardFailed | readonly | A log message delegate, 
 Spar | Spar.Hosting.CloseGuard.GuardLate | readonly | A log message delegate, as above.
 Spar | Spar.Hosting.CloseVerdict.<Close>k__BackingField | readonly | An immutable value (a readonly record struct), copied on use.
 Spar | Spar.Hosting.CloseVerdict.<Keep>k__BackingField | readonly | An immutable value, as above.
+Spar | Spar.Hosting.PageCloseAnswer.<Close>k__BackingField | readonly | An immutable value (a readonly struct with get-only properties), copied on use.
 Spar | Spar.Hosting.SparDevelopment.<IsSupported>k__BackingField | readonly | The development feature switch, read once from AppContext: one value for the whole app by design (its variant), constant-folded by the trimmer.
 Spar | Spar.Hosting.RelaunchMessage.StrictUtf8 | readonly | A UTF8Encoding that throws on invalid bytes: immutable, and GetString is thread-safe.
 Spar | Spar.Hosting.RelaunchQueue.HandlerFailed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
@@ -108,6 +109,8 @@ Spar.Windows | <Spar_Windows_Interop_ControllerCompleted>F{file}__ComClassInform
 Spar.Windows | <Spar_Windows_Interop_ScriptCompleted>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache for a class the host implements: filled on first use from constants; a racing writer stores an equivalent table, never app data.
 Spar.Windows | <Spar_Windows_Interop_EnvironmentCompleted>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
 Spar.Windows | <Spar_Windows_Interop_WebView2EventHandler>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | Spar.Windows.PageCloseResult.<CloseAnyway>k__BackingField | readonly | An immutable value (a readonly struct with get-only properties), copied on use.
+Spar.Windows | Spar.Windows.PageCloseResult.<NoPage>k__BackingField | readonly | An immutable value, as above.
 Spar.Windows | Spar.Windows.HostLog.Failed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
 Spar.Windows | Spar.Windows.HostLog.Note | readonly | A log message delegate, as above.
 Spar.Windows | Spar.Windows.HostLog.PhaseReached | readonly | A log message delegate, as above.
@@ -197,6 +200,7 @@ Spar.Testing | Spar.Testing.PageRetry.Pauses | readonly | An array of constant p
 Spar.Testing | Spar.Testing.PageSession.Events | readonly | An array of constant event names, filled once, never written.
 Spar.Testing | Spar.Testing.SparKeyboard.ModifierKeys | readonly | An array of constant tuples, filled once, never written.
 Spar.Testing | Spar.Testing.WindowSurface.OpenLimit | readonly | A TimeSpan constant.
+Spar.Testing | Spar.Testing.SparWindow.DefaultTimeout | readonly | A TimeSpan constant.
 
 # Spar.Testing.Browser (the Browser surface)
 # No static fields besides compiler data.
