@@ -59,6 +59,14 @@ internal sealed class WindowsApp : IAppWindowOwner
     {
         // The levels first, so the host's first line is filtered as the app asked; logging.json is a small local file.
         // Without a file (spar.Logging(l => l.WithoutFile())), the host's early lines go to standard error only.
+        // A data root on a network drive is refused before the log file or logging.json is touched there.
+        if (SparFolders.DataRootProblem(_folders.DataRoot) is { } networkRoot)
+        {
+            var refused = StartupFailure.ReportConfiguration(networkRoot, AppWindow.StartFailedExitCode, Startup);
+            _log.Close();
+            return refused;
+        }
+
         var logging = _app.Builder.LoggingOptions;
         _levels = SparLogging.Levels(logging, _folders.DataRoot, SparDevelopment.IsSupported, out var problem);
         if (logging.WritesFile)
@@ -168,6 +176,11 @@ internal sealed class WindowsApp : IAppWindowOwner
         _instance = claim.Instance;
         _log.Phase("single instance");
 
+        if (CreateProfileFolder() is { } unusableProfile)
+        {
+            return StartupFailure.ReportConfiguration(unusableProfile, AppWindow.StartFailedExitCode, Startup);
+        }
+
         if (Prerequisites.CheckRuntime() is { } runtime)
         {
             return StartupFailure.Report(runtime, Startup);
@@ -184,6 +197,24 @@ internal sealed class WindowsApp : IAppWindowOwner
         var exitCode = _window.ExitCode;
         _log.Step($"exit {exitCode}");
         return exitCode;
+    }
+
+    /// <summary>
+    /// Creates the browser profile's folder before the environment exists, once this process holds the single
+    /// instance. WebView2 reports a folder it cannot create as a failed controller, which would read as a broken Runtime
+    /// (exit 5, "install it again"); a folder problem is the app's configuration (exit 70) and names the folder.
+    /// </summary>
+    private string? CreateProfileFolder()
+    {
+        try
+        {
+            Directory.CreateDirectory(_folders.Profile);
+            return null;
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+        {
+            return $"The browser profile folder '{_folders.Profile}' cannot be created: {exception.Message}";
+        }
     }
 
     /// <summary>Builds the app's services on the thread pool while the window and the WebView start.</summary>

@@ -122,7 +122,7 @@ public sealed class BlackBoxTests
     }
 
     [Fact]
-    public async Task A_start_that_cannot_create_its_browser_shows_its_message_and_exits_5()
+    public async Task A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70()
     {
         SkipOffWindows();
         string root;
@@ -135,7 +135,7 @@ public sealed class BlackBoxTests
 
         try
         {
-            // The browser profile's folder is a file: the WebView2 environment cannot start.
+            // The browser profile's folder is a file: the host cannot create it, and says so before the browser starts.
             var profile = Path.Combine(root, "LocalAppData", Projects.Notebook.AppId, "WebView2");
             Directory.Delete(profile, recursive: true);
             await File.WriteAllTextAsync(profile, "not a folder", Token);
@@ -148,9 +148,10 @@ public sealed class BlackBoxTests
             var dialog = await broken.WaitForDialogAsync(cancellationToken: Token);
             Assert.Equal("Notebook", dialog.Title);
             Assert.Contains("Notebook can't start", dialog.Text, StringComparison.Ordinal);
+            Assert.Contains($"The browser profile folder '{profile}' cannot be created", dialog.Text, StringComparison.Ordinal);
             await dialog.PressAsync("Close");
-            Assert.Equal(5, await broken.WaitForExitAsync(Token));
-            Assert.Contains("Exit code 5.", broken.StandardError, StringComparison.Ordinal);
+            Assert.Equal(70, await broken.WaitForExitAsync(Token));
+            Assert.Contains("The app's configuration stops its start", broken.StandardError, StringComparison.Ordinal);
         }
         finally
         {

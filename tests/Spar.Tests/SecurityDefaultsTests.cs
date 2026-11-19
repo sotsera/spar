@@ -81,6 +81,25 @@ public sealed class SecurityDefaultsTests
     [Fact]
     public void No_profile_choice_is_no_problem() => Assert.Null(SparFolders.ProfileProblem(null));
 
+    [Theory]
+    [InlineData(@"C:\Users\someone\AppData\Local\com.example.SqlTool", false)]
+    [InlineData(@"\\?\C:\Data\com.example.SqlTool", false)]
+    [InlineData(@"\\server\share\com.example.SqlTool", true)]
+    [InlineData("//server/share/com.example.SqlTool", true)]
+    [InlineData(@"\\?\UNC\server\share\com.example.SqlTool", true)]
+    public void A_data_root_on_a_network_drive_is_refused(string dataRoot, bool refused)
+    {
+        // A network LOCALAPPDATA gives such a root: the host refuses it at start, never falling back to another folder.
+        Assert.SkipUnless(OperatingSystem.IsWindows(), "Windows path forms");
+        var found = SparFolders.DataRootProblem(dataRoot);
+
+        Assert.Equal(refused, found is not null);
+        if (refused)
+        {
+            Assert.Contains("is on a network drive", found, StringComparison.Ordinal);
+        }
+    }
+
     [Fact]
     public void A_moved_profile_is_recorded_and_both_folders_stay_out_of_reach()
     {

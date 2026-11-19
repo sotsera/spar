@@ -50,6 +50,12 @@ public sealed class SparBlackBoxOptions
     /// </summary>
     internal SparBlackBoxPlacement? Placement { get; set; }
 
+    /// <summary>
+    /// A <c>LOCALAPPDATA</c> in place of the data root's, for Spar's own test of the host's refusal of a network path.
+    /// Internal: an app's test never moves the app's folders outside its disposable root.
+    /// </summary>
+    internal string? LocalAppData { get; set; }
+
     /// <summary>Refuses options the fixture cannot honour, before anything starts.</summary>
     internal void Validate()
     {

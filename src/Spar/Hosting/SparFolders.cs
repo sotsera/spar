@@ -75,16 +75,34 @@ public sealed partial record SparFolders(string DataRoot, string Data, string Lo
     }
 
     /// <summary>
+    /// Why the app's data root cannot be used, or null when it can: a root on a network drive, which a network
+    /// <c>LOCALAPPDATA</c> gives, is refused at start, before anything is read or written there (decision "M1b's
+    /// remaining questions without a spike", its security review). Falling back to the known folder instead would move
+    /// the app's data somewhere the process that started it did not ask for.
+    /// </summary>
+    internal static string? DataRootProblem(string dataRoot)
+    {
+        if (!IsNetwork(dataRoot))
+        {
+            return null;
+        }
+
+        return $"The app's data folder '{dataRoot}' is on a network drive (LOCALAPPDATA or spar.Folders), slow and " +
+            "readable by others: the app keeps its data, logs and browser profile on a local drive.";
+    }
+
+    /// <summary>
     /// The platform's per-user data folder. On Windows it is read from <c>LOCALAPPDATA</c> (decision "M1b's remaining
     /// questions without a spike": the black-box data root is the environment only), falling back to the known folder
-    /// when the variable is missing, relative, or a network path, which the profile must never be.
+    /// when the variable is missing or relative. A network path is kept, and the host refuses it at start
+    /// (<see cref="DataRootProblem"/>).
     /// </summary>
     private static string PerUserRoot()
     {
         if (OperatingSystem.IsWindows())
         {
             var variable = Environment.GetEnvironmentVariable("LOCALAPPDATA");
-            if (!string.IsNullOrEmpty(variable) && Path.IsPathFullyQualified(variable) && !IsNetwork(variable))
+            if (!string.IsNullOrEmpty(variable) && Path.IsPathFullyQualified(variable))
             {
                 return variable;
             }

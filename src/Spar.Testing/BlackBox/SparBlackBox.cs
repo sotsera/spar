@@ -79,7 +79,7 @@ public static class SparBlackBox
             }
         }
 
-        environment["LOCALAPPDATA"] = folders.LocalAppData;
+        environment["LOCALAPPDATA"] = options.LocalAppData ?? folders.LocalAppData;
         environment["APPDATA"] = folders.RoamingAppData;
         environment["TEMP"] = folders.Temp;
         environment["TMP"] = folders.Temp;

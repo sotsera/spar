@@ -59,4 +59,10 @@ The Production Notebook (`dotnet publish samples/Notebook -c Release`) is **5,23
 - Linux; Windows 10; other Runtimes; the hosted CI runner (the workflow's steps have not run).
 - Real input, focus and the first click (Windows Sandbox, step 8c).
 - Exit 9 (a launch by another user on the same data folder); a crash record at the next start.
-- A UNC `LOCALAPPDATA` (it would write into the developer's own profile: implementation record, Found).
+- A UNC `LOCALAPPDATA` that reaches a real share (the test uses a name that never resolves, refused by its form).
+
+## After review: the two folder findings fixed (2026-11-19)
+
+- **A network data root is refused at start.** `SparFolders.PerUserRoot` keeps a fully qualified `LOCALAPPDATA` even when it is a network path, and the Windows host refuses a data root on a network drive (`SparFolders.DataRootProblem`) before it reads `logging.json` or opens its log file: the configuration message, exit 70. `BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written` launches WindowHost's Production executable with `LOCALAPPDATA=\spar-refused.invalid\share` (a name that never resolves; the path is refused by its form): the message names the folder, exit 70, no logs folder, and the real `%LOCALAPPDATA%\<app id>` as it was before. Five path forms in `SecurityDefaultsTests`.
+- **A profile folder that cannot be created is the app's configuration, not a broken Runtime.** The host creates the profile folder once it holds the single instance, before the WebView2 environment; a failure shows the configuration message naming the folder and exits 70. The Notebook's start-up failure test (a file where the profile folder goes) now expects exit 70 and the folder in the message.
+- **Runs:** the fixture's 12 black-box tests and the Notebook's 6, three times each on CoreCLR, 0 failures; `Spar.Tests` 524 of 524 with no failure.

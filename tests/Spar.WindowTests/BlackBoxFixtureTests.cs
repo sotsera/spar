@@ -104,6 +104,31 @@ public sealed class BlackBoxFixtureTests
     }
 
     [Fact]
+    public async Task A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written()
+    {
+        WindowSupport.SkipUnlessSupported();
+
+        // A name that never resolves (.invalid, RFC 6761): the host refuses the path by its form, before any access.
+        var real = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Projects.WindowHost.AppId);
+        var existedBefore = Directory.Exists(real);
+        await using var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, o =>
+        {
+            o.LocalAppData = @"\\spar-refused.invalid\share";
+            o.WaitForReady = false;
+        }, Token);
+
+        var dialog = await app.WaitForDialogAsync(TimeSpan.FromSeconds(15), Token);
+        Assert.Equal("WindowHost", dialog.Title);
+        Assert.Contains(@"'\\spar-refused.invalid\share\" + Projects.WindowHost.AppId + "' is on a network drive", dialog.Text, StringComparison.Ordinal);
+        await dialog.PressAsync("Close");
+
+        Assert.Equal(70, await app.WaitForExitAsync(Token));
+        Assert.Contains("The app's configuration stops its start", app.StandardError, StringComparison.Ordinal);
+        Assert.Equal(existedBefore, Directory.Exists(real));
+        Assert.False(Directory.Exists(app.LogsFolder), "Nothing was written for the refused data root.");
+    }
+
+    [Fact]
     public async Task A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8()
     {
         WindowSupport.SkipUnlessSupported();
