@@ -4185,3 +4185,10 @@ Spike: `spikes/webview2-flags/` (background agent; WebView2 Runtime 157.0.4341.6
   - **Window test (≤ 700 ms):** 324.3 ms CoreCLR, 342.6 ms NativeAOT.
   - **Notebook NativeAOT executable (≤ 6 MB):** 5,237,248 B.
 - **Not measured here:** the launch of the Notebook itself (WindowHost is the measured app: its page is a Vite bundle with the SDK, as the Notebook's), a cold start after a reboot, and other machines; M4 sets the real budgets.
+
+## M1c's first questions (user decisions, 2026-11-19)
+
+- **Software GPU detection: spike the methods first.** A spike measures the accuracy and start-up cost of a throwaway EGL display reading `GL_RENDERER` (llvmpipe, softpipe, lavapipe, SwiftShader), a `/dev/dri` render-node access check, and both combined, in WSLg (llvmpipe and, where present, its D3D12 driver), a container and a real GPU if one is reachable; the method is chosen from its numbers.
+- **The option: `spar.Browser(b => b.HardwareAcceleration(HardwareAcceleration.Always))`,** with `Auto` (the default: acceleration off and cairo on a software GPU, the decision of 2026-11-14), `Always` and `Never` (also for a buggy real driver). Linux only at first, and documented as such. It is not an `Allow…` method: it is not a security opt-in.
+- **`connect-src` on Linux: `spar://app`, named explicitly as on Windows, after a check** in WebKitGTK 2.52 and 2.54 that `fetch` to `spar://app` works under it and that `ws:`/`wss:` to any host are refused.
+- **Linux window tests: Spar ships the Dockerfile only** (CI builds the image; publishing one waits for releases, M4). They run under Xvfb in a container or in WSL, and **WSLg is allowed for local runs**, where the windows show on the Windows desktop. For agents that is real windows and input on the user's desktop, so `AGENTS.md`'s rule applies: ask first whether the user is using the monitor.
