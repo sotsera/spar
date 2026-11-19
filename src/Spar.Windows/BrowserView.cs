@@ -517,6 +517,14 @@ internal sealed partial class BrowserView
         if (_closing || _ending)
         {
             _log.Info($"A browser process failed during shutdown (kind {kind}); nothing is recovered.");
+            if (kind is WebView2Values.RenderProcessExited or WebView2Values.BrowserProcessExited)
+            {
+                // The page went with it: its document ends now, so a close request it was asked goes on without its
+                // answer and its close work is not waited for. Before, a session end whose renderer died waited out
+                // the page's 2 s and the close work's 1 s for a page that was gone (spikes/renderer-sharing).
+                bridge.OnRendererExited();
+            }
+
             return;
         }
 
@@ -542,7 +550,7 @@ internal sealed partial class BrowserView
     /// <summary>The page is gone with its renderer: its document ends, and a new one loads once, with no command replayed.</summary>
     private void OnRendererExited(WebViewBridge bridge)
     {
-        bridge.OnNavigationStarting();
+        bridge.OnRendererExited();
         _log.Step("renderer exited");
         if (_userReload)
         {

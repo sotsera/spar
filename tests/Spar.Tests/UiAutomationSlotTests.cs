@@ -15,7 +15,7 @@ public sealed class UiAutomationSlotTests
 
         var problems = ComSlots.Problems(header, "Spar.Testing", out var declared);
 
-        Assert.Equal(6, declared);
+        Assert.Equal(7, declared);
         Assert.True(problems.Count == 0, string.Join("\n", problems));
     }
 

@@ -100,6 +100,9 @@ internal sealed class WebViewBridge
     /// <summary>A navigation started: the current document's epoch ends (UI thread).</summary>
     public void OnNavigationStarting() => CloseCurrent("navigation");
 
+    /// <summary>The page's renderer exited: its document is gone with it (UI thread).</summary>
+    public void OnRendererExited() => CloseCurrent("renderer exited");
+
     /// <summary>
     /// The new document is loading: its session opens, before any of its scripts can send, and the heartbeat is armed
     /// for it unless it is an error page (UI thread).

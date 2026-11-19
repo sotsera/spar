@@ -11,7 +11,8 @@ namespace Spar.Testing;
 /// The fixture's UI Automation client: one MTA thread of its own, placed on the desktop the apps run on
 /// (<c>SetThreadDesktop</c>, before it makes any window), with one <c>CUIAutomation8</c> object. Every call runs there,
 /// one at a time; the elements a call finds are released when it returns, so nothing of the app's tree is kept between
-/// calls and every query reads the app as it is now.
+/// calls and every query reads the app as it is now. The object's <c>AutoSetFocus</c> is off: an action such as Invoke
+/// moves no window to the foreground (pitfalls, "Windows host").
 /// </summary>
 [SupportedOSPlatform("windows10.0.17763")]
 internal sealed class AutomationThread : IDisposable
@@ -77,7 +78,13 @@ internal sealed class AutomationThread : IDisposable
             var iid = AutomationInterface;
             void* pointer;
             PInvoke.CoCreateInstance(&clsid, null, CLSCTX.CLSCTX_INPROC_SERVER, &iid, &pointer).ThrowOnFailure();
-            _uia = new Uia(Uia.Take<IUIAutomation>((nint)pointer));
+            var automation = Uia.Take<IUIAutomation>((nint)pointer);
+
+            // Invoke would otherwise first give the element the focus, which brings its window to the foreground: on a
+            // desktop that is not the input desktop that never happens, and UI Automation gives up after about 2 s before
+            // it invokes. Invoke is no input, so it moves no focus; the page still focuses the element it clicks.
+            ((IUIAutomation2)automation).PutAutoSetFocus(0);
+            _uia = new Uia(automation);
             _started.TrySetResult();
         }
         catch (Exception exception)

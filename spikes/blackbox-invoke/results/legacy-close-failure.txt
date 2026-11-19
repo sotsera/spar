@@ -1,0 +1,54 @@
+variant,launch,action,index,call_start_ms,call_ms,first_page_event,first_page_event_ms,click_page_ms,click_backend_ms,focusin_page_ms,trusted,active_at_click,dialog_seen_ms,foreground_hits
+mta-legacy,64316,legacy:Count,1,0,12,focusin,12,12,13,12,true,count,,0
+mta-legacy,64316,legacy:Count,2,0,11,pointerdown,11,11,11,,true,count,,0
+mta-legacy,64316,legacy:Count,3,0,12,pointerdown,12,12,12,,true,count,,0
+mta-legacy,64316,legacy:Count,4,0,11,pointerdown,11,11,12,,true,count,,0
+mta-legacy,64316,legacy:Count,5,0,10,pointerdown,10,10,11,,true,count,,0
+mta-legacy,64316,legacy:Count,6,0,11,pointerdown,11,11,11,,true,count,,0
+mta-legacy,64316,legacy:Count,7,0,11,pointerdown,11,11,11,,true,count,,0
+mta-legacy,64316,legacy:Count,8,0,10,pointerdown,10,10,10,,true,count,,0
+mta-legacy,64316,legacy:Count,9,0,11,pointerdown,11,11,11,,true,count,,0
+mta-legacy,64316,legacy:Count,10,0,11,pointerdown,11,11,11,,true,count,,0
+mta-legacy,64316,legacy:Open dialog,1,0,14,focusin,15,15,15,15,true,open,42,0
+mta-legacy,65448,legacy:Count,1,0,15,focusin,15,16,16,15,true,count,,0
+mta-legacy,65448,legacy:Count,2,0,14,pointerdown,14,14,15,,true,count,,0
+mta-legacy,65448,legacy:Count,3,0,14,pointerdown,14,14,15,,true,count,,0
+mta-legacy,65448,legacy:Count,4,0,14,pointerdown,14,14,14,,true,count,,0
+mta-legacy,65448,legacy:Count,5,0,13,pointerdown,13,13,13,,true,count,,0
+mta-legacy,65448,legacy:Count,6,0,13,pointerdown,13,14,14,,true,count,,0
+mta-legacy,65448,legacy:Count,7,0,13,pointerdown,13,13,13,,true,count,,0
+mta-legacy,65448,legacy:Count,8,0,17,pointerdown,16,17,17,,true,count,,0
+mta-legacy,65448,legacy:Count,9,0,13,pointerdown,13,13,14,,true,count,,0
+mta-legacy,65448,legacy:Count,10,0,14,pointerdown,14,14,14,,true,count,,0
+mta-legacy,65448,legacy:Open dialog,1,0,24,focusin,24,24,24,24,true,open,66,0
+mta-legacy,56656,legacy:Count,1,0,14,focusin,14,14,14,14,true,count,,0
+mta-legacy,56656,legacy:Count,2,0,15,pointerdown,14,15,16,,true,count,,0
+mta-legacy,56656,legacy:Count,3,0,17,pointerdown,17,17,17,,true,count,,0
+mta-legacy,56656,legacy:Count,4,0,14,pointerdown,14,14,14,,true,count,,0
+mta-legacy,56656,legacy:Count,5,0,13,pointerdown,13,13,13,,true,count,,0
+mta-legacy,56656,legacy:Count,6,0,14,pointerdown,14,14,15,,true,count,,0
+mta-legacy,56656,legacy:Count,7,0,14,pointerdown,14,14,15,,true,count,,0
+mta-legacy,56656,legacy:Count,8,0,16,pointerdown,16,16,16,,true,count,,0
+mta-legacy,56656,legacy:Count,9,0,13,pointerdown,13,13,14,,true,count,,0
+mta-legacy,56656,legacy:Count,10,0,13,pointerdown,13,13,14,,true,count,,0
+mta-legacy,56656,legacy:Open dialog,1,0,23,focusin,23,23,23,23,true,open,60,0
+  app.log tail:
+    2026-11-19T13:54:30.351Z INFO  Spar.Host  [e34c6f5c] controller at 202.5 ms
+    2026-11-19T13:54:30.352Z INFO  Spar.Host  [e34c6f5c] Browser settings set (0.14 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+    2026-11-19T13:54:30.391Z INFO  Spar.Host  [e34c6f5c] Page file picker blocked in 38.1 ms (Page.enable 37.7 ms).
+    2026-11-19T13:54:30.391Z INFO  Spar.Host  [e34c6f5c] page script added at 242.2 ms
+    2026-11-19T13:54:30.391Z INFO  Spar.Host  [e34c6f5c] navigation started at 242.2 ms
+    2026-11-19T13:54:30.443Z INFO  Spar.Host  [e34c6f5c] Bridge: document 677818cb15b73e33 opened.
+    2026-11-19T13:54:30.443Z INFO  Spar.Host  [e34c6f5c] Heartbeat armed for the new document.
+    2026-11-19T13:54:30.443Z INFO  Spar.Host  [e34c6f5c] first document at 294.1 ms
+    2026-11-19T13:54:30.449Z INFO  Spar.Host  [e34c6f5c] first bridge message at 300.2 ms
+    2026-11-19T13:54:30.449Z INFO  Spar.Host  [e34c6f5c] first bridge reply at 300.5 ms
+    2026-11-19T13:54:30.449Z INFO  Spar.Host  [e34c6f5c] ui-ready at 300.5 ms
+    2026-11-19T13:54:30.449Z INFO  Spar.Host  [e34c6f5c] Bridge: document 677818cb15b73e33 reported ui-ready.
+    2026-11-19T13:54:30.455Z INFO  Spar.Host  [e34c6f5c] first navigation completed at 306.8 ms
+    2026-11-19T13:54:30.458Z INFO  Spar.Host  [e34c6f5c] 404 for /favicon.ico
+    
+  at failure: top windows [UAC_InputIndicatorOverlayWnd owner=False | UAC Input Indicator owner=False | Spar.Window owner=False]; dialogs []; exited no
+# mta-legacy launch 1: exit 0; call median 11 ms (10-12, n=10); first page event after start median 11 ms (10-12, n=10); click median 11 ms (10-12, n=10); foreground hits 0; stats 7 reports, frames/s 60 (59-61), 100 ms ticks/s 10 (10-10), report interval ms 1000 (994-1006), visible in 7, focused in 5; visibility events [window-blur:visible/false window-focus:visible/true window-blur:visible/false window-focus:visible/true window-focus:visible/true window-blur:visible/false]
+# mta-legacy launch 2: exit 0; call median 14 ms (13-17, n=10); first page event after start median 14 ms (13-16, n=10); click median 14 ms (13-17, n=10); foreground hits 0; stats 7 reports, frames/s 60 (58-61), 100 ms ticks/s 10 (10-10), report interval ms 1000 (999-1008), visible in 7, focused in 5; visibility events [window-blur:visible/false window-focus:visible/true window-blur:visible/false window-focus:visible/true window-blur:visible/false window-focus:visible/true]
+# mta-legacy launch 3: FAILED TimeoutException: The operation has timed out.; stderr tail: elapsed=1000 frames=60 ticks=10 vis=visible focus=true active=open mark 1795096490460.0 1795096490459.6 stats elapsed=1000 frames=60 ticks=10 vis=visible focus=true active=open mark 1795096491460.0 1795096491459.7 stats elapsed=1000 frames=60 ticks=10 vis=visible focus=true active=open mark 1795096492450.7 1795096492450.0 stats elapsed=990 frames=59 ticks=10 vis=visible focus=true active=open 

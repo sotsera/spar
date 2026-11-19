@@ -54,6 +54,78 @@ internal partial interface IUIAutomation
     nint CreateOrCondition(nint condition1, nint condition2);
 }
 
+/// <summary>
+/// <c>IUIAutomation2</c> (slots 3–59): IUIAutomation's slots, all placeholders here, then <c>AutoSetFocus</c>. The fixture
+/// calls only <see cref="PutAutoSetFocus"/>, on each client object it creates.
+/// </summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("34723aff-0c9d-49d0-9896-7ab52df8cd8a")]
+internal partial interface IUIAutomation2
+{
+    [PreserveSig] int Slot003_CompareElements();
+    [PreserveSig] int Slot004_CompareRuntimeIds();
+    [PreserveSig] int Slot005_GetRootElement();
+    [PreserveSig] int Slot006_ElementFromHandle();
+    [PreserveSig] int Slot007_ElementFromPoint();
+    [PreserveSig] int Slot008_GetFocusedElement();
+    [PreserveSig] int Slot009_GetRootElementBuildCache();
+    [PreserveSig] int Slot010_ElementFromHandleBuildCache();
+    [PreserveSig] int Slot011_ElementFromPointBuildCache();
+    [PreserveSig] int Slot012_GetFocusedElementBuildCache();
+    [PreserveSig] int Slot013_CreateTreeWalker();
+    [PreserveSig] int Slot014_GetControlViewWalker();
+    [PreserveSig] int Slot015_GetContentViewWalker();
+    [PreserveSig] int Slot016_GetRawViewWalker();
+    [PreserveSig] int Slot017_GetRawViewCondition();
+    [PreserveSig] int Slot018_GetControlViewCondition();
+    [PreserveSig] int Slot019_GetContentViewCondition();
+    [PreserveSig] int Slot020_CreateCacheRequest();
+    [PreserveSig] int Slot021_CreateTrueCondition();
+    [PreserveSig] int Slot022_CreateFalseCondition();
+    [PreserveSig] int Slot023_CreatePropertyCondition();
+    [PreserveSig] int Slot024_CreatePropertyConditionEx();
+    [PreserveSig] int Slot025_CreateAndCondition();
+    [PreserveSig] int Slot026_CreateAndConditionFromArray();
+    [PreserveSig] int Slot027_CreateAndConditionFromNativeArray();
+    [PreserveSig] int Slot028_CreateOrCondition();
+    [PreserveSig] int Slot029_CreateOrConditionFromArray();
+    [PreserveSig] int Slot030_CreateOrConditionFromNativeArray();
+    [PreserveSig] int Slot031_CreateNotCondition();
+    [PreserveSig] int Slot032_AddAutomationEventHandler();
+    [PreserveSig] int Slot033_RemoveAutomationEventHandler();
+    [PreserveSig] int Slot034_AddPropertyChangedEventHandlerNativeArray();
+    [PreserveSig] int Slot035_AddPropertyChangedEventHandler();
+    [PreserveSig] int Slot036_RemovePropertyChangedEventHandler();
+    [PreserveSig] int Slot037_AddStructureChangedEventHandler();
+    [PreserveSig] int Slot038_RemoveStructureChangedEventHandler();
+    [PreserveSig] int Slot039_AddFocusChangedEventHandler();
+    [PreserveSig] int Slot040_RemoveFocusChangedEventHandler();
+    [PreserveSig] int Slot041_RemoveAllEventHandlers();
+    [PreserveSig] int Slot042_IntNativeArrayToSafeArray();
+    [PreserveSig] int Slot043_IntSafeArrayToNativeArray();
+    [PreserveSig] int Slot044_RectToVariant();
+    [PreserveSig] int Slot045_VariantToRect();
+    [PreserveSig] int Slot046_SafeArrayToRectNativeArray();
+    [PreserveSig] int Slot047_CreateProxyFactoryEntry();
+    [PreserveSig] int Slot048_GetProxyFactoryMapping();
+    [PreserveSig] int Slot049_GetPropertyProgrammaticName();
+    [PreserveSig] int Slot050_GetPatternProgrammaticName();
+    [PreserveSig] int Slot051_PollForPotentialSupportedPatterns();
+    [PreserveSig] int Slot052_PollForPotentialSupportedProperties();
+    [PreserveSig] int Slot053_CheckNotSupported();
+    [PreserveSig] int Slot054_GetReservedNotSupportedValue();
+    [PreserveSig] int Slot055_GetReservedMixedAttributeValue();
+    [PreserveSig] int Slot056_ElementFromIAccessible();
+    [PreserveSig] int Slot057_ElementFromIAccessibleBuildCache();
+    [PreserveSig] int Slot058_GetAutoSetFocus();
+
+    /// <summary>
+    /// Whether the object's action methods (Invoke, the Value pattern's SetValue, …) first give the element the focus, which
+    /// brings its window to the foreground; a <c>BOOL</c>, true by default, held per client object.
+    /// </summary>
+    void PutAutoSetFocus(int autoSetFocus);
+}
+
 /// <summary><c>IUIAutomationElement</c> (slots 3–45).</summary>
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("d22108aa-8ac5-49a5-837b-37bbb3d7591e")]
