@@ -36,7 +36,7 @@ BASE = ("default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'
         "require-trusted-types-for 'script'; report-uri /_spar/csp-report")
 CSP = None if args.profile == "none" else BASE.format(connect="spar://app" if args.profile == "spar" else "'self'")
 TYPES = {".html": "text/html", ".js": "text/javascript", ".json": "application/json"}
-TARGETS = ["ws", "wss", "wsLocalhost", "fetch", "fetchLocalhost", "xhr", "es", "beacon", "wfetch", "wws", "wxhr"]
+TARGETS = ["ws", "wss", "wsLocalhost", "wsApp", "wssApp", "httpsApp", "fetch", "fetchLocalhost", "xhr", "es", "beacon", "wfetch", "wws", "wxhr"]
 
 started = time.monotonic()
 state = {"requests": [], "reports": [], "page": None, "done": False}

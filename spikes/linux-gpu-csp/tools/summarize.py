@@ -105,12 +105,14 @@ def accel(directory):
     for f in files:
         r = json.load(open(f))
         env = " ".join(f"{k}={v}" for k, v in r["env"].items() if v and k != "GDK_BACKEND") or "-"
-        text = (r.get("pageText") or r.get("pageTextError") or "").replace("\n", " / ")
+        lines = (r.get("pageText") or "").splitlines()
         excerpt = []
-        for key in ["Hardware accelerated", "Compositing", "DMA-BUF", "Renderer", "GL_RENDERER", "Platform", "Buffer format", "Disabled"]:
-            i = text.find(key)
-            if i >= 0:
-                excerpt.append(text[i:i + 60])
+        for key in ["Policy", "2D canvas", "Renderer", "Native interface", "GL_RENDERER"]:
+            if key in lines:
+                i = lines.index(key)
+                excerpt.append(f"{key}: {lines[i + 1] if i + 1 < len(lines) else ''}")
+        if r.get("pageTextError"):
+            excerpt.append("error: " + r["pageTextError"])
         out.append(f"| {os.path.basename(f)} | {env} | {r.get('settingsPolicy')} | {r.get('gskRenderer')} | "
                    f"{r.get('privateMbTotal')} | {r.get('loadFinishedMs')} | {' ¦ '.join(excerpt)[:400]} |")
     return out

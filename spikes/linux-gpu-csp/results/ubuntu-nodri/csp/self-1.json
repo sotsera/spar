@@ -1,0 +1,652 @@
+{
+ "label": "ubuntu-nodri-self-1",
+ "profile": "self",
+ "csp": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report",
+ "webkit": "2.52.6",
+ "gtk": "4.14.5",
+ "elapsedMs": 9496,
+ "listeners": {
+  "ws": {
+   "port": 42895,
+   "connections": []
+  },
+  "wss": {
+   "port": 35189,
+   "connections": []
+  },
+  "wsLocalhost": {
+   "port": 34431,
+   "connections": []
+  },
+  "wsApp": {
+   "port": 35639,
+   "connections": []
+  },
+  "wssApp": {
+   "port": 45385,
+   "connections": []
+  },
+  "httpsApp": {
+   "port": 44887,
+   "connections": []
+  },
+  "fetch": {
+   "port": 45189,
+   "connections": []
+  },
+  "fetchLocalhost": {
+   "port": 35495,
+   "connections": []
+  },
+  "xhr": {
+   "port": 40725,
+   "connections": []
+  },
+  "es": {
+   "port": 39799,
+   "connections": []
+  },
+  "beacon": {
+   "port": 44575,
+   "connections": []
+  },
+  "wfetch": {
+   "port": 36645,
+   "connections": []
+  },
+  "wws": {
+   "port": 33135,
+   "connections": []
+  },
+  "wxhr": {
+   "port": 33563,
+   "connections": []
+  }
+ },
+ "requests": [
+  {
+   "t": 165,
+   "method": "GET",
+   "uri": "spar://app/index.html",
+   "bodyBytes": 0
+  },
+  {
+   "t": 175,
+   "method": "GET",
+   "uri": "spar://app/probes.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 182,
+   "method": "GET",
+   "uri": "spar://app/probe.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 204,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 467,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 723,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 654
+  },
+  {
+   "t": 973,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 1230,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 1486,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 653
+  },
+  {
+   "t": 1736,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 654
+  },
+  {
+   "t": 1987,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 653
+  },
+  {
+   "t": 2237,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 641
+  },
+  {
+   "t": 2955,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 647
+  },
+  {
+   "t": 3205,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 648
+  },
+  {
+   "t": 3456,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 650
+  },
+  {
+   "t": 3706,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 655
+  },
+  {
+   "t": 3957,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 655
+  },
+  {
+   "t": 4207,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 655
+  },
+  {
+   "t": 4458,
+   "method": "GET",
+   "uri": "spar://app/events",
+   "bodyBytes": 0
+  },
+  {
+   "t": 4709,
+   "method": "GET",
+   "uri": "spar://app/events",
+   "bodyBytes": 0
+  },
+  {
+   "t": 4960,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 655
+  },
+  {
+   "t": 5711,
+   "method": "POST",
+   "uri": "spar://app/_spar/csp-report",
+   "bodyBytes": 655
+  },
+  {
+   "t": 5961,
+   "method": "GET",
+   "uri": "spar://app/worker.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 5967,
+   "method": "GET",
+   "uri": "spar://app/probes.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 5972,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6226,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6482,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  }
+ ],
+ "reports": [
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"spar://other/data.json\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":30,\"column-number\":15}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"ws://127.0.0.1:42895/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":53,\"column-number\":25}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"wss://127.0.0.1:35189/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":53,\"column-number\":25}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"ws://localhost:34431/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":53,\"column-number\":25}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"ws://app/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":53,\"column-number\":25}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"ws://app:35639/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":53,\"column-number\":25}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"wss://app:45385/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":53,\"column-number\":25}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"https://app:44887/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":30,\"column-number\":15}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"http://127.0.0.1:45189/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":30,\"column-number\":15}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"http://localhost:35495/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":30,\"column-number\":15}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"http://127.0.0.1:40725/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":42,\"column-number\":13}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"http://127.0.0.1:39799/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":68,\"column-number\":27}}",
+  "{\"type\":\"csp-violation\",\"url\":\"spar://app/index.html\",\"csp-report\":{\"document-uri\":\"spar://app/index.html\",\"referrer\":\"\",\"violated-directive\":\"connect-src\",\"effective-directive\":\"connect-src\",\"original-policy\":\"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report\",\"blocked-uri\":\"http://127.0.0.1:44575/\",\"status-code\":0,\"source-file\":\"spar://app/probes.js\",\"line-number\":80,\"column-number\":62}}"
+ ],
+ "page": {
+  "type": "done",
+  "info": {
+   "origin": "spar://app",
+   "isSecureContext": true,
+   "trustedTypes": true,
+   "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15"
+  },
+  "page": [
+   {
+    "name": "fetch relative data.json",
+    "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "fetch absolute spar://app/data.json",
+    "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "fetch spar://other/data.json",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": [
+     {
+      "blockedURI": "spar://other/data.json",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 30
+     }
+    ]
+   },
+   {
+    "name": "xhr relative data.json",
+    "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "xhr absolute spar://app/data.json",
+    "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://127.0.0.1",
+    "outcome": "threw SecurityError: The operation is insecure.",
+    "violations": [
+     {
+      "blockedURI": "ws://127.0.0.1:42895/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 53
+     }
+    ]
+   },
+   {
+    "name": "websocket wss://127.0.0.1",
+    "outcome": "threw SecurityError: The operation is insecure.",
+    "violations": [
+     {
+      "blockedURI": "wss://127.0.0.1:35189/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 53
+     }
+    ]
+   },
+   {
+    "name": "websocket ws://localhost",
+    "outcome": "threw SecurityError: The operation is insecure.",
+    "violations": [
+     {
+      "blockedURI": "ws://localhost:34431/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 53
+     }
+    ]
+   },
+   {
+    "name": "websocket ws://app",
+    "outcome": "threw SecurityError: The operation is insecure.",
+    "violations": [
+     {
+      "blockedURI": "ws://app/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 53
+     }
+    ]
+   },
+   {
+    "name": "websocket wss://app",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://app:port",
+    "outcome": "threw SecurityError: The operation is insecure.",
+    "violations": [
+     {
+      "blockedURI": "ws://app:35639/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 53
+     }
+    ]
+   },
+   {
+    "name": "websocket wss://app:port",
+    "outcome": "threw SecurityError: The operation is insecure.",
+    "violations": [
+     {
+      "blockedURI": "wss://app:45385/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 53
+     }
+    ]
+   },
+   {
+    "name": "fetch https://app:port",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": [
+     {
+      "blockedURI": "https://app:44887/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 30
+     }
+    ]
+   },
+   {
+    "name": "fetch http://127.0.0.1",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": [
+     {
+      "blockedURI": "http://127.0.0.1:45189/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 30
+     }
+    ]
+   },
+   {
+    "name": "fetch http://localhost",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": [
+     {
+      "blockedURI": "http://localhost:35495/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 30
+     }
+    ]
+   },
+   {
+    "name": "xhr http://127.0.0.1",
+    "outcome": "error event, status 0",
+    "violations": [
+     {
+      "blockedURI": "http://127.0.0.1:40725/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 42
+     }
+    ]
+   },
+   {
+    "name": "eventsource spar://app/events",
+    "outcome": "message scheme",
+    "violations": []
+   },
+   {
+    "name": "eventsource relative events",
+    "outcome": "message scheme",
+    "violations": []
+   },
+   {
+    "name": "eventsource http://127.0.0.1",
+    "outcome": "threw SecurityError: The operation is insecure.",
+    "violations": [
+     {
+      "blockedURI": "http://127.0.0.1:39799/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 68
+     }
+    ]
+   },
+   {
+    "name": "sendBeacon spar://app/beacon",
+    "outcome": "threw TypeError: Beacons can only be sent over HTTP(S)",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon relative beacon",
+    "outcome": "threw TypeError: Beacons can only be sent over HTTP(S)",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon http://127.0.0.1",
+    "outcome": "returned true",
+    "violations": [
+     {
+      "blockedURI": "http://127.0.0.1:44575/",
+      "violatedDirective": "connect-src",
+      "effectiveDirective": "connect-src",
+      "disposition": "enforce",
+      "statusCode": 0,
+      "sourceFile": "probes.js",
+      "lineNumber": 80
+     }
+    ]
+   }
+  ],
+  "worker": {
+   "origin": "spar://app",
+   "isSecureContext": true,
+   "results": [
+    {
+     "name": "worker fetch relative data.json",
+     "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker fetch absolute spar://app/data.json",
+     "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker xhr relative data.json",
+     "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker fetch http://127.0.0.1",
+     "outcome": "rejected TypeError: Load failed",
+     "violations": []
+    },
+    {
+     "name": "worker xhr http://127.0.0.1",
+     "outcome": "error event, status 0",
+     "violations": []
+    },
+    {
+     "name": "worker websocket ws://127.0.0.1",
+     "outcome": "threw SecurityError: The operation is insecure.",
+     "violations": []
+    }
+   ],
+   "all": []
+  },
+  "allPageViolations": [
+   {
+    "blockedURI": "spar://other/data.json",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 30
+   },
+   {
+    "blockedURI": "ws://127.0.0.1:42895/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 53
+   },
+   {
+    "blockedURI": "wss://127.0.0.1:35189/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 53
+   },
+   {
+    "blockedURI": "ws://localhost:34431/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 53
+   },
+   {
+    "blockedURI": "ws://app/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 53
+   },
+   {
+    "blockedURI": "ws://app:35639/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 53
+   },
+   {
+    "blockedURI": "wss://app:45385/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 53
+   },
+   {
+    "blockedURI": "https://app:44887/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 30
+   },
+   {
+    "blockedURI": "http://127.0.0.1:45189/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 30
+   },
+   {
+    "blockedURI": "http://localhost:35495/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 30
+   },
+   {
+    "blockedURI": "http://127.0.0.1:40725/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 42
+   },
+   {
+    "blockedURI": "http://127.0.0.1:39799/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 68
+   },
+   {
+    "blockedURI": "http://127.0.0.1:44575/",
+    "violatedDirective": "connect-src",
+    "effectiveDirective": "connect-src",
+    "disposition": "enforce",
+    "statusCode": 0,
+    "sourceFile": "probes.js",
+    "lineNumber": 80
+   }
+  ]
+ }
+}

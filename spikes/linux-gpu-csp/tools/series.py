@@ -20,7 +20,10 @@ def evict(paths):
     dropped = 0
     seen = set()
     for root_dir in paths:
-        for root, _dirs, files in os.walk(root_dir):
+        for root, dirs, files in os.walk(root_dir):
+            # The WSL driver share (/usr/lib/wsl, mounted in the dxg containers) is slow to walk and is not on the
+            # default path.
+            dirs[:] = [d for d in dirs if os.path.join(root, d) != "/usr/lib/wsl"]
             for name in files:
                 p = os.path.join(root, name)
                 if ".so" not in name and not os.access(p, os.X_OK):

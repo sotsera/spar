@@ -28,4 +28,4 @@ tag=$( [ "$image" = ubuntu ] && echo ubuntu24.04 || echo fedora43)
 docker run --rm --init --shm-size=1g --security-opt seccomp=unconfined -u 1000 \
   --name "spar-spike-linux-gpu-csp-$image-$env-$task" "${flags[@]}" -e "LABEL=$image-$env" \
   -v "$spike:/spike:ro" -v "$repo/artifacts/linux-gpu-csp:/probe:ro" -v "$(cd "$out" && pwd -W):/out" \
-  "spar-spike-linux-gpu-csp:$tag" bash /spike/docker/in-container.sh "$task" "$@"
+  --add-host app:127.0.0.1 "spar-spike-linux-gpu-csp:$tag" bash /spike/docker/in-container.sh "$task" "$@"

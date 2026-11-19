@@ -1,0 +1,68 @@
+{
+ "label": "never-cairo-2",
+ "policy": "never",
+ "uri": "webkit://gpu",
+ "env": {
+  "GSK_RENDERER": "cairo",
+  "WEBKIT_DISABLE_DMABUF_RENDERER": null,
+  "GDK_BACKEND": "x11",
+  "LIBGL_ALWAYS_SOFTWARE": null,
+  "GALLIUM_DRIVER": null
+ },
+ "loadFinishedMs": 104.0,
+ "pageText": "Copy to clipboardPrint in stdout\nVersion Information\nWebKit version\nWebKitGTK 2.52.6 (tarball)\nOperating system\nLinux 6.18.58.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct 27 00:24:11 UTC 2026 x86_64\nDesktop\nUnknown\nGStreamer version\n1.24.2 (build) GStreamer 1.24.2 (runtime)\nGTK version\n4.14.5 (build) 4.14.5 (runtime)\nDisplay Information\nIdentifier\n1\nType\nX11\nScreen geometry\n0,0 1280x1024\nScreen work area\n0,0 1280x1024\nDevice scale\n1\nDepth\n24\nBits per color component\n8\nFont Scaling DPI\n96\nScreen DPI\n95.93320717510538\nVBlank type\nTimer\nVBlank refresh rate\n60Hz\nView Information\nSize\n1000x800\nState\nin window, visible, focused, active\nToplevel state\nnormal\nHardware Acceleration Information\nPolicy\nnever\nWebGL enabled\nYes\n2D canvas\nAccelerated",
+ "gskRenderer": "GskCairoRenderer",
+ "memory": [
+  {
+   "pid": 925,
+   "comm": "python3",
+   "privateMb": 56.7,
+   "rssMb": 179.1
+  },
+  {
+   "pid": 1077,
+   "comm": "bwrap",
+   "privateMb": 0.1,
+   "rssMb": 2.1
+  },
+  {
+   "pid": 1078,
+   "comm": "bwrap",
+   "privateMb": 0.2,
+   "rssMb": 1.4
+  },
+  {
+   "pid": 1079,
+   "comm": "WebKitWebProces",
+   "privateMb": 20.0,
+   "rssMb": 142.7
+  },
+  {
+   "pid": 1072,
+   "comm": "bwrap",
+   "privateMb": 0.1,
+   "rssMb": 2.0
+  },
+  {
+   "pid": 1073,
+   "comm": "bwrap",
+   "privateMb": 0.2,
+   "rssMb": 1.4
+  },
+  {
+   "pid": 1074,
+   "comm": "xdg-dbus-proxy",
+   "privateMb": 0.4,
+   "rssMb": 5.6
+  },
+  {
+   "pid": 1000,
+   "comm": "WebKitNetworkPr",
+   "privateMb": 6.8,
+   "rssMb": 44.6
+  }
+ ],
+ "privateMbTotal": 84.5,
+ "webkit": "2.52.6",
+ "settingsPolicy": "never"
+}

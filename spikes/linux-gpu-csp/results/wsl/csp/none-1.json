@@ -1,0 +1,373 @@
+{
+ "label": "wsl-none-1",
+ "profile": "none",
+ "csp": null,
+ "webkit": "2.52.6",
+ "gtk": "4.14.5",
+ "elapsedMs": 10184,
+ "listeners": {
+  "ws": {
+   "port": 43067,
+   "connections": [
+    {
+     "t": 1607,
+     "first": "GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/"
+    }
+   ]
+  },
+  "wss": {
+   "port": 33909,
+   "connections": [
+    {
+     "t": 1935,
+     "first": "\u0016\u0003\u0003\u0002\u0000\u0001\u0000\u0001\u00fc\u0003\u0003\u00fd\u0084\u0088RWyP=\u00d7\u00efc*\u00d1 \u00e5l_\b\u0088\u00e7\u00ef\u00df\u00fd\u009f\u00c2\u00cd\u00d3N\u00f1\u00e0e7 \u00ad\u00b2v\u009b\u00d9(\u00c3 \"u\u00eb\u00b4\u00ba\\\u0018\u009fkDM\u00e4\u00e5#\u00cd>o\u008d\u000b\u00aeXk\u009e\u0090\u0000:\u0013\u0002"
+    }
+   ]
+  },
+  "wsLocalhost": {
+   "port": 38157,
+   "connections": [
+    {
+     "t": 2289,
+     "first": "GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/"
+    }
+   ]
+  },
+  "wsApp": {
+   "port": 33779,
+   "connections": []
+  },
+  "wssApp": {
+   "port": 33667,
+   "connections": []
+  },
+  "httpsApp": {
+   "port": 37763,
+   "connections": []
+  },
+  "fetch": {
+   "port": 44127,
+   "connections": [
+    {
+     "t": 4242,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "fetchLocalhost": {
+   "port": 40053,
+   "connections": [
+    {
+     "t": 4493,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "xhr": {
+   "port": 39647,
+   "connections": [
+    {
+     "t": 4744,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "es": {
+   "port": 35857,
+   "connections": [
+    {
+     "t": 5498,
+     "first": "GET / HTTP/1.1\r\nAccept: text/event-stream\r\nCache-Control: no-cache\r\nOrigin: spar"
+    }
+   ]
+  },
+  "beacon": {
+   "port": 42835,
+   "connections": [
+    {
+     "t": 6250,
+     "first": "POST / HTTP/1.1\r\nContent-Type: text/plain;charset=UTF-8\r\nAccept: */*\r\nOrigin: sp"
+    }
+   ]
+  },
+  "wfetch": {
+   "port": 41059,
+   "connections": [
+    {
+     "t": 7329,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "wws": {
+   "port": 35365,
+   "connections": [
+    {
+     "t": 7832,
+     "first": "GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/"
+    }
+   ]
+  },
+  "wxhr": {
+   "port": 37999,
+   "connections": [
+    {
+     "t": 7580,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  }
+ },
+ "requests": [
+  {
+   "t": 269,
+   "method": "GET",
+   "uri": "spar://app/index.html",
+   "bodyBytes": 0
+  },
+  {
+   "t": 278,
+   "method": "GET",
+   "uri": "spar://app/probes.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 288,
+   "method": "GET",
+   "uri": "spar://app/probe.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 295,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 551,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 829,
+   "method": "GET",
+   "uri": "spar://other/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 1080,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 1340,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 4995,
+   "method": "GET",
+   "uri": "spar://app/events",
+   "bodyBytes": 0
+  },
+  {
+   "t": 5247,
+   "method": "GET",
+   "uri": "spar://app/events",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6500,
+   "method": "GET",
+   "uri": "spar://app/worker.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6525,
+   "method": "GET",
+   "uri": "spar://app/probes.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6541,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6808,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 7068,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  }
+ ],
+ "reports": [],
+ "page": {
+  "type": "done",
+  "info": {
+   "origin": "spar://app",
+   "isSecureContext": true,
+   "trustedTypes": true,
+   "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15"
+  },
+  "page": [
+   {
+    "name": "fetch relative data.json",
+    "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "fetch absolute spar://app/data.json",
+    "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "fetch spar://other/data.json",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": []
+   },
+   {
+    "name": "xhr relative data.json",
+    "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "xhr absolute spar://app/data.json",
+    "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://127.0.0.1",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket wss://127.0.0.1",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://localhost",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://app",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket wss://app",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://app:port",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket wss://app:port",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "fetch https://app:port",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": []
+   },
+   {
+    "name": "fetch http://127.0.0.1",
+    "outcome": "ok 200 loopback",
+    "violations": []
+   },
+   {
+    "name": "fetch http://localhost",
+    "outcome": "ok 200 loopback",
+    "violations": []
+   },
+   {
+    "name": "xhr http://127.0.0.1",
+    "outcome": "load 200 loopback",
+    "violations": []
+   },
+   {
+    "name": "eventsource spar://app/events",
+    "outcome": "message scheme",
+    "violations": []
+   },
+   {
+    "name": "eventsource relative events",
+    "outcome": "message scheme",
+    "violations": []
+   },
+   {
+    "name": "eventsource http://127.0.0.1",
+    "outcome": "message loopback",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon spar://app/beacon",
+    "outcome": "threw TypeError: Beacons can only be sent over HTTP(S)",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon relative beacon",
+    "outcome": "threw TypeError: Beacons can only be sent over HTTP(S)",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon http://127.0.0.1",
+    "outcome": "returned true",
+    "violations": []
+   }
+  ],
+  "worker": {
+   "origin": "spar://app",
+   "isSecureContext": true,
+   "results": [
+    {
+     "name": "worker fetch relative data.json",
+     "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker fetch absolute spar://app/data.json",
+     "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker xhr relative data.json",
+     "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker fetch http://127.0.0.1",
+     "outcome": "ok 200 loopback",
+     "violations": []
+    },
+    {
+     "name": "worker xhr http://127.0.0.1",
+     "outcome": "load 200 loopback",
+     "violations": []
+    },
+    {
+     "name": "worker websocket ws://127.0.0.1",
+     "outcome": "error event, readyState 3",
+     "violations": []
+    }
+   ],
+   "all": []
+  },
+  "allPageViolations": []
+ }
+}

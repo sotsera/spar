@@ -66,3 +66,12 @@ case "$task" in
     run never-only never
     ;;
 esac
+# forced <rounds>: the hardware control, GALLIUM_DRIVER=d3d12 (only meaningful in the dxg containers).
+if [ "$task" = forced ]; then
+  export GALLIUM_DRIVER=d3d12
+  rm -f /out/forced-d3d12.jsonl
+  python3 -I /spike/tools/series.py "$probe" /out/forced-d3d12.jsonl "$LABEL-d3d12" "$1" 0 \
+    combined egl+--platform+surfaceless egl+--platform+surfaceless+--no-context
+  xvfb
+  dbus-run-session -- python3 -I /spike/tools/series.py "$probe" /out/forced-d3d12.jsonl "$LABEL-d3d12-xvfb" "$1" 0 gdk+--window
+fi
