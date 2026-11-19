@@ -79,6 +79,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     private State _state;
     private bool _failed;
     private bool _destroyed;
+    private bool _sessionEnding;
+    private bool _tornDown;
     private int _exitCode;
 
     /// <param name="offscreen">
@@ -217,6 +219,9 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
                 }
 
                 return default(LRESULT);
+            case DestroyAfterSessionEnd:
+                PInvoke.DestroyWindow(_window);
+                return default(LRESULT);
             case PInvoke.WM_DESTROY:
                 _destroyed = true;
                 DeleteBackground();
@@ -290,6 +295,16 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
 
         _view?.Close();
         _log.Step("controller closed");
+        if (_sessionEnding)
+        {
+            // Windows ended the process as soon as the window holding WM_ENDSESSION was gone, before the services' last
+            // lines reached the log (a real sign-out in Windows Sandbox, 2026-11-19). It is destroyed once the message
+            // returns; Windows' documentation says an ending session need not destroy windows at all.
+            _tornDown = true;
+            _log.Step("window kept until WM_ENDSESSION returns");
+            return;
+        }
+
         PInvoke.DestroyWindow(_window);
         _log.Step("window destroyed");
     }

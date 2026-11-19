@@ -154,13 +154,14 @@ public sealed class SessionEndHostTests
         await Waits.UntilAsync(() => File.Exists(file) && Read(file).Contains("during shutdown", StringComparison.Ordinal), TimeSpan.FromSeconds(5), "the lost renderer in the log");
         var log = Read(file);
         var lost = Since(log, "during shutdown");
-        var destroyed = Since(log, "window destroyed");
-        Results.Append("session-end.txt", $"renderer test: renderer ended at {killed} ms, seen lost at {lost:0} ms, window destroyed at {destroyed:0} ms (host's log, from 'session ending'); WM_ENDSESSION held {held.ElapsedMilliseconds} ms");
+        // At session end the window stays until the message returns, so the page's part ends when the controller closes.
+        var closed = Since(log, "controller closed");
+        Results.Append("session-end.txt", $"renderer test: renderer ended at {killed} ms, seen lost at {lost:0} ms, controller closed at {closed:0} ms (host's log, from 'session ending'); WM_ENDSESSION held {held.ElapsedMilliseconds} ms");
 
-        // From the report of the lost renderer to the window's end, nothing waits for the page.
+        // From the report of the lost renderer to the controller's close, nothing waits for the page.
         var context = $"WM_ENDSESSION held {held.ElapsedMilliseconds} ms. The host's log:{Environment.NewLine}{SessionLines(log)}";
-        Assert.True(lost >= 0 && destroyed >= 0, context);
-        Assert.True(destroyed - lost < 500, context);
+        Assert.True(lost >= 0 && closed >= 0, context);
+        Assert.True(closed - lost < 500, context);
         Assert.Contains("closed (renderer exited)", log, StringComparison.Ordinal);
         Assert.DoesNotContain("did not answer within", log, StringComparison.Ordinal);
         Assert.DoesNotContain("page close work timed out", log, StringComparison.Ordinal);

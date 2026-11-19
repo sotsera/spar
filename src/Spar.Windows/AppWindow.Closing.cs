@@ -38,6 +38,9 @@ internal sealed partial class AppWindow
     /// <summary>How long <c>WM_ENDSESSION</c> is held at most, from its start: guards, teardown and the services' disposal.</summary>
     private const int SessionEndMilliseconds = 4_000;
 
+    /// <summary>A message of the window's own (<c>WM_APP + 0x51</c>): destroy it once <c>WM_ENDSESSION</c> has returned.</summary>
+    private const uint DestroyAfterSessionEnd = 0x8000 + 0x51;
+
     /// <summary>The open close request, which a second one joins.</summary>
     private Task<CloseReport>? _closeRequest;
 
@@ -160,11 +163,13 @@ internal sealed partial class AppWindow
 
     /// <summary>
     /// Windows ends the session (<c>WM_ENDSESSION</c> with <c>TRUE</c>): the session-end close, while the message is
-    /// held, pumping, until the window is gone and its owner's last work is done, or 4 s from the message's start.
+    /// held, pumping, until the page and its controller are closed and its owner's last work is done, or 4 s from the
+    /// message's start. The window itself stays until the message returns (see <see cref="TeardownAsync"/>).
     /// </summary>
     private void EndSession()
     {
         var start = Stopwatch.GetTimestamp();
+        _sessionEnding = true;
         _log.Step("session ending");
 
         // Windows ends the browser's processes too: nothing is recovered from here on.
@@ -175,16 +180,17 @@ internal sealed partial class AppWindow
             _closeRequest = SessionEndAsync(start, _automated);
         }
 
-        var quit = MessagePump.Until(() => _destroyed, limit);
+        var quit = MessagePump.Until(() => _destroyed || _tornDown, limit);
+        var closed = _destroyed || _tornDown;
         var finished = false;
-        if (_destroyed && _owner.SessionEnded() is { } remaining)
+        if (closed && _owner.SessionEnded() is { } remaining)
         {
             quit = MessagePump.Until(() => remaining.IsCompleted, limit) ?? quit;
             finished = remaining.IsCompleted;
         }
 
         var held = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
-        var outcome = !_destroyed ? "the window did not close in time" : finished ? "window closed, last work done" : "window closed, last work still running";
+        var outcome = !closed ? "the window did not close in time" : finished ? "window closed, last work done" : "window closed, last work still running";
         _log.Step($"session end: {outcome}; WM_ENDSESSION held {held:0} ms");
         if (SparTestSession.IsSupported)
         {
@@ -193,6 +199,12 @@ internal sealed partial class AppWindow
 
         // Windows may end the process once this returns: the log's queued lines go to the disk first, within the budget.
         _owner.SessionEndLogged(TimeSpan.FromMilliseconds(SessionEndMilliseconds - held));
+        if (_tornDown && !_destroyed)
+        {
+            // Destroyed only after this returns, should the process outlive the session end.
+            PInvoke.PostMessage(_window, DestroyAfterSessionEnd, default, default);
+        }
+
         if (quit is { } code)
         {
             // The loop below this one ends when it sees the quit message the pump took.

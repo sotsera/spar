@@ -121,9 +121,18 @@ The host-side tests of both fixes:
 - `LogFileTests.A_bounded_close_writes_what_is_queued_before_it_returns_and_a_spent_budget_does_not_wait`: the bounded close itself.
 - In the full window suite the renderer test first disturbed another window's session end (3.0–3.1 s instead of about 0.1 s, in 5 of 6 runs), although it ended one renderer, its own window's. It now runs with no other test at the same time, and the suite then passed 5 of 5 (106 tests each). The Production Notebook is 5,236,736 B after the two fixes (+1,024 B).
 
+## Run 6 (`205820`), with the user's allow (2026-11-19)
+
+`SPAR_SANDBOX_DESKTOP=allow dotnet test --project tests/Spar.SandboxTests` on the M1b step-9 tree: 32 results, 31 passed, 1 failed, 2 min 50 s; three sandboxes (130.7, 10.6 and 27.1 s).
+
+- **Passed:** the SYSTEM jobs (window tests 5, Notebook 1, the deadline job), the user-session jobs (window tests 5: the Production input checks, focus, the first click, Tab into the page and the close confirmation answered with real keys and the mouse, after its run-5 change; Notebook 2), and the clean-machine job (1).
+- **Failed: the sign-out** (`Signing_the_guest_out_ends_the_app_within_the_session_end_budget`): "The app's log has no 'WM_ENDSESSION held' line". The rest of the session end was in the log and fast: `session ending` at 4,270.8 ms, the page's guard answered (its renderer had exited) at 4,286.4, the backend's at 4,286.5, the controller closed at 4,287.8, `window destroyed` at 4,290.8 and `services disposed` at 4,290.9 ms. The final line, written once the pump sees the services disposed (it checks every 20 ms), never came. The guest's own test process ended at 21:00:51.77 local, the app's last line at 20:00:51.791 UTC.
+- **Reading:** Windows ended the process as soon as the window holding `WM_ENDSESSION` was destroyed, without waiting for the handler to return. Run 5's fix (the log closed before the message returns) was right but came after that point. Microsoft's documentation for `WM_ENDSESSION` says an application need not destroy its windows when the session ends.
+- **Fix (not yet run in a sandbox):** at session end the teardown closes the page and the controller and keeps the window; `WM_ENDSESSION` waits for that, the services' disposal and the final line with the log's flush, then posts a message of the window's own that destroys it after the handler returns, should the process outlive it. The host's session-end tests check the order locally (their `WM_ENDSESSION` comes from `SendMessage`, which does not end the process, so they cannot show the kill itself); the renderer test now measures to `controller closed`. The window suite passed 118 of 118 twice on CoreCLR and once on NativeAOT, the Notebook's window (10) and black-box (6) tests too.
+
 ## Not run here
 
-- The sign-out after the two host fixes, and the close confirmation after its change: run 5 was the last allowed user-session run.
+- The sign-out after run 6's fix (the window kept until `WM_ENDSESSION` returns): run 6 was the last allowed user-session run. The close confirmation passed after its change in run 6.
 - A browser process (rather than a renderer) lost during a session end on the host: the test process's window tests share one browser, so the host test ends the renderer.
 - The page's `online` and `offline` events: the guest has no network adapter to switch (its configuration turns networking off), so only "starts offline" is checked.
 - `RunnerTests` on a machine without Windows Sandbox (it would be one skip naming why).
