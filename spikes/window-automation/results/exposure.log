@@ -1,0 +1,16 @@
+port=56952 (from the test process's log)
+--- curl /json/list from another process
+[ {   "description": "",   "devtoolsFrontendUrl": "https://aka.ms/docs-landing-page/serve_rev/@fbcb2989a6c61b72a4919fe1028e58e70131cd46/inspector.html?ws=127.0.0.1:56952/devtools/page/3846CD95C3CEE76958E64CA6D905E06F",   "id": "3846CD95C3CEE76958E64CA6D905E06F",   "title": "Orders",   "type": "page",   "url": "https://app.localhost/settings",   "webSocketDebuggerUrl": "ws://127.0.0.1:56952/
+
+--- node exposure.mjs from another process
+EXPOSE /json/version Browser=Edg/157.0.4341.60 Protocol=1.3 browser-ws=yes
+EXPOSE /json/list type=page url=https://app.localhost/settings ws=yes
+EXPOSE /json/list type=page url=about:blank ws=yes
+EXPOSE page attach + Runtime.evaluate: Orders | status: undefined | url: /settings
+EXPOSE page screenshot: 11788 base64 chars
+EXPOSE browser attach + Target.getTargets: 2 targets (page, page)
+--- after the test process exited
+port file left: yes (56952)
+curl to the old port: 000 exit=7
+listening on the old port: 0
+root removed: yes

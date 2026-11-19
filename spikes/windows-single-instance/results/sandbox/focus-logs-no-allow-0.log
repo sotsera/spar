@@ -1,0 +1,22 @@
+417185.021 pid=7520 start run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-allow-0 --log C:\spar\out\focus\logs-no-allow-0 --window normal --hold-ms 6000 -- first
+417186.555 pid=7520 lock taken 0.2 ms after main, attempt 1
+417189.688 pid=7520 primary serving spar-65ff5649940942d3da50c0d532782df6 sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+417201.476 pid=7520 window 0x601ee 'spar-si-primary-7520' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+417381.819 pid=7232 start launcher --exe C:\spar\in\si-074958.exe --log C:\spar\out\focus\logs-no-allow-0 --hold-ms 4000 -- run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-allow-0 --log C:\spar\out\focus\logs-no-allow-0 --no-allow-fg -- open focus-no-allow-0.sql
+417397.142 pid=7232 window 0x501e0 'spar-si-launcher' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+417884.171 pid=3100 start click --log C:\spar\out\focus\logs-no-allow-0 --title spar-si-launcher
+417889.672 pid=3100 click: before, foreground=0x100f0 owner=5992 title='Program Manager'
+418159.353 pid=7232 launcher: clicked, started pid 5000; foreground=0x501e0 owner=7232 title='spar-si-launcher'
+418168.775 pid=5000 start run --t0 4180284566 --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-no-allow-0 --log C:\spar\out\focus\logs-no-allow-0 --no-allow-fg -- open focus-no-allow-0.sql
+418170.811 pid=5000 connected to pid 7520 in 1.0 ms; AllowSetForegroundWindow skipped
+418171.649 pid=7520 received args=[open focus-no-allow-0.sql] from_launch_ms=143.2 from_main_ms=2.0
+418172.426 pid=5000 forwarded; ack 'ok' 2.6 ms after connecting
+418173.624 pid=5000 exit 0
+418187.509 pid=7520 activate for [open focus-no-allow-0.sql]: iconic=False visible=True SetForegroundWindow=True; foreground=0x601ee owner=7520 title='spar-si-primary-7520'
+418215.314 pid=3100 click: sent 2; after, foreground=0x601ee owner=7520 title='spar-si-primary-7520'
+418223.507 pid=3100 exit 0
+418516.464 pid=7520 300 ms after activating: foreground=True; foreground=0x601ee owner=7520 title='spar-si-primary-7520'
+421390.033 pid=7232 exit 0
+423212.245 pid=7520 primary stopped serving
+423224.840 pid=7520 primary released the lock
+423227.510 pid=7520 exit 0

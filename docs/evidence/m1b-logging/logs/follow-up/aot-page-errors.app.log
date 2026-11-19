@@ -1,0 +1,53 @@
+2026-11-18T07:02:33.511Z INFO  Spar.Host  [06a25c5a] Host started 27.5 ms after the process.
+2026-11-18T07:02:33.511Z INFO  Spar.Host  [06a25c5a] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-page-errors\com.example.tests.SecurityProbe
+2026-11-18T07:02:33.512Z INFO  Spar.Host  [06a25c5a] single instance at 1.7 ms
+2026-11-18T07:02:33.512Z INFO  Spar.Host  [06a25c5a] prerequisites checked at 2 ms
+2026-11-18T07:02:33.513Z INFO  Spar.Host  [06a25c5a] services built at 3 ms
+2026-11-18T07:02:33.519Z INFO  Spar.Host  [06a25c5a] window shown at 8.5 ms
+2026-11-18T07:02:33.519Z INFO  Spar.Host  [06a25c5a] Theme dark (system), window #1f1f1f.
+2026-11-18T07:02:33.520Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-18T07:02:33.524Z INFO  Spar.Host  [06a25c5a] environment at 13.8 ms
+2026-11-18T07:02:33.524Z INFO  Spar.Host  [06a25c5a] WebView2 Runtime 157.0.4341.46
+2026-11-18T07:02:33.524Z INFO  Spar.Host  [06a25c5a] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-page-errors\com.example.tests.SecurityProbe\WebView2
+2026-11-18T07:02:33.528Z INFO  Spar.Host  [06a25c5a] Heartbeat every 5000 ms.
+2026-11-18T07:02:33.528Z INFO  Spar.Host  [06a25c5a] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-18T07:02:33.528Z INFO  Spar.Host  [06a25c5a] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-18T07:02:33.723Z INFO  Spar.Host  [06a25c5a] controller at 213.2 ms
+2026-11-18T07:02:33.724Z INFO  Spar.Host  [06a25c5a] Browser settings set (0.08 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-18T07:02:33.772Z INFO  Spar.Host  [06a25c5a] Page file picker blocked in 48.7 ms (Page.enable 47.9 ms).
+2026-11-18T07:02:33.772Z INFO  Spar.Host  [06a25c5a] page script added at 262.1 ms
+2026-11-18T07:02:33.772Z INFO  Spar.Host  [06a25c5a] navigation started at 262.2 ms
+2026-11-18T07:02:33.821Z INFO  Spar.Host  [06a25c5a] Bridge: document 03fc9a3ea930c027 opened.
+2026-11-18T07:02:33.821Z INFO  Spar.Host  [06a25c5a] Heartbeat armed for the new document.
+2026-11-18T07:02:33.821Z INFO  Spar.Host  [06a25c5a] first document at 310.5 ms
+2026-11-18T07:02:33.829Z INFO  Spar.Host  [06a25c5a] first bridge message at 318.5 ms
+2026-11-18T07:02:33.829Z INFO  Spar.Host  [06a25c5a] first bridge reply at 318.7 ms
+2026-11-18T07:02:33.829Z INFO  Spar.Host  [06a25c5a] ui-ready at 318.7 ms
+2026-11-18T07:02:33.829Z INFO  Spar.Host  [06a25c5a] Bridge: document 03fc9a3ea930c027 reported ui-ready.
+2026-11-18T07:02:33.832Z INFO  Spar.Host  [06a25c5a] first navigation completed at 322 ms
+2026-11-18T07:02:33.836Z INFO  Spar.Host  [06a25c5a] 404 for /favicon.ico
+2026-11-18T07:02:33.936Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:4346: probe: the settings could not be read SyntaxError: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+    SyntaxError: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+        at JSON.parse (<anonymous>)
+        at page-errors (https://app.localhost/assets/index-B_HLBId8.js:6:4309)
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:33.936Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-B_HLBId8.js:6:4182: Uncaught TypeError: probe: a timer's callback failed
+    TypeError: probe: a timer's callback failed
+        at https://app.localhost/assets/index-B_HLBId8.js:6:4188
+2026-11-18T07:02:33.936Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:4253: RangeError: probe: a promise nobody awaited
+    RangeError: probe: a promise nobody awaited
+        at page-errors (https://app.localhost/assets/index-B_HLBId8.js:6:4253)
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:37.412Z INFO  Spar.Host  [06a25c5a] close requested (User) at 3901.5 ms
+2026-11-18T07:02:37.412Z INFO  Spar.Host  [06a25c5a] closing at 3902 ms
+2026-11-18T07:02:37.412Z INFO  Spar.Host  [06a25c5a] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-18T07:02:37.413Z INFO  Spar.Host  [06a25c5a] page close work done at 3902.3 ms
+2026-11-18T07:02:37.413Z INFO  Spar.Host  [06a25c5a] Bridge: document 03fc9a3ea930c027 closed (window closing).
+2026-11-18T07:02:37.413Z INFO  Spar.Host  [06a25c5a] calls stopped at 3902.3 ms
+2026-11-18T07:02:37.413Z INFO  Spar.Host  [06a25c5a] calls settled at 3902.3 ms
+2026-11-18T07:02:37.413Z INFO  Spar.Host  [06a25c5a] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-18T07:02:37.429Z INFO  Spar.Host  [06a25c5a] controller closed at 3918.7 ms
+2026-11-18T07:02:37.432Z INFO  Spar.Host  [06a25c5a] window destroyed at 3921.4 ms
+2026-11-18T07:02:37.435Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 3 errors, 0 batches dropped (queue full)
+2026-11-18T07:02:37.435Z INFO  Spar.Host  [06a25c5a] services disposed at 3925.2 ms
+2026-11-18T07:02:37.435Z INFO  Spar.Host  [06a25c5a] exit 0 at 3925.2 ms

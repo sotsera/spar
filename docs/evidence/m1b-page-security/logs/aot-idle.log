@@ -1,0 +1,43 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle]
+      91,7 | run: window moved offscreen
+      96,5 | spar info +0.2 ms: [d57d20be] Host started 27.8 ms after the process.
+      96,6 | spar info +0.9 ms: [d57d20be] single instance at 0.9 ms
+      96,6 | spar info +1.1 ms: [d57d20be] prerequisites checked at 1.1 ms
+      96,6 | spar info +1.2 ms: [d57d20be] services built at 1.2 ms
+      96,6 | spar info +9.6 ms: [d57d20be] window shown at 9.6 ms
+      96,6 | spar info +9.8 ms: [d57d20be] Theme dark (system), window #1f1f1f.
+      96,6 | spar info +11.4 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      96,6 | spar info +20.9 ms: [d57d20be] environment at 20.9 ms
+      96,6 | spar info +21.0 ms: [d57d20be] WebView2 Runtime 157.0.4341.46
+      96,6 | spar info +26.3 ms: [d57d20be] Heartbeat every 5000 ms.
+      96,6 | spar info +26.9 ms: [d57d20be] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      96,6 | spar info +27.0 ms: [d57d20be] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     356,3 | spar info +265.4 ms: [d57d20be] controller at 265.4 ms
+     404,9 | spar info +327.1 ms: [d57d20be] page script added at 327.1 ms
+     404,9 | spar info +327.2 ms: [d57d20be] navigation started at 327.2 ms
+     480,2 | spar info +381.0 ms: [d57d20be] Bridge: document 4a77b92956d1cd1e opened.
+     480,2 | spar info +381.0 ms: [d57d20be] Heartbeat armed for the new document.
+     480,3 | spar info +381.0 ms: [d57d20be] first document at 381 ms
+     480,3 | spar info +390.0 ms: [d57d20be] first bridge message at 390 ms
+     480,3 | spar info +390.2 ms: [d57d20be] first bridge reply at 390.2 ms
+     480,3 | spar info +390.2 ms: [d57d20be] ui-ready at 390.2 ms
+     480,3 | spar info +390.2 ms: [d57d20be] Bridge: document 4a77b92956d1cd1e reported ui-ready.
+     480,3 | spar info +395.6 ms: [d57d20be] first navigation completed at 395.6 ms
+     480,3 | probe: ready; nonce meta present
+     480,3 | probe: done idle
+     480,3 | spar info +399.5 ms: [d57d20be] 404 for /favicon.ico
+     519,0 | run: found 'done idle'
+    1554,6 | run: app working set 24204 KiB, peak seen 24204 KiB, private 8256 KiB
+    1555,0 | run: WM_CLOSE
+    1800,9 | spar info +1490.3 ms: [d57d20be] close requested (User) at 1490.3 ms
+    1800,9 | spar info +1490.7 ms: [d57d20be] closing at 1490.7 ms
+    1800,9 | spar info +1490.7 ms: [d57d20be] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1800,9 | spar info +1490.9 ms: [d57d20be] page close work done at 1490.9 ms
+    1800,9 | spar info +1491.0 ms: [d57d20be] Bridge: document 4a77b92956d1cd1e closed (window closing).
+    1800,9 | spar info +1491.0 ms: [d57d20be] calls stopped at 1491 ms
+    1800,9 | spar info +1491.0 ms: [d57d20be] calls settled at 1491 ms
+    1800,9 | spar info +1505.5 ms: [d57d20be] controller closed at 1505.5 ms
+    1800,9 | spar info +1507.6 ms: [d57d20be] window destroyed at 1507.6 ms
+    1800,9 | spar info +1510.2 ms: [d57d20be] services disposed at 1510.2 ms
+    1800,9 | spar info +1510.3 ms: [d57d20be] exit 0 at 1510.3 ms
+    1801,1 | run: exit 0

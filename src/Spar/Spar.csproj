@@ -11,14 +11,19 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
   </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Spar.Loopback" />
+    <InternalsVisibleTo Include="Spar.Windows" />
     <InternalsVisibleTo Include="Spar.Testing" />
     <InternalsVisibleTo Include="Spar.Testing.Browser" />
     <InternalsVisibleTo Include="Spar.Tests" />
     <InternalsVisibleTo Include="Spar.Sdk.Tasks.Tests" />
+
+    <!-- The window tests drive the test window's lifetime (Testing/SparTestWindow.cs) for the required host tests. -->
+    <InternalsVisibleTo Include="Spar.WindowTests" />
 
     <!-- The console harness hosts the bridge the way a desktop host will (tests/apps/Spar.Harness). -->
     <InternalsVisibleTo Include="Spar.Harness" />

@@ -1,0 +1,20 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The renderer-sharing spike's probe (../RESULTS.md): window tests on tests/apps/WindowHost, as Spar.WindowTests runs
+    them, that list each test window's renderer processes, end one window's renderer and watch the others, and replay
+    the session-end tests' overlap. The assembly is named Spar.WindowTests only to reach the internals Spar and
+    Spar.Testing give that project (the window's renderer listing, its window messages and the host's phases); it is a
+    throwaway and never built with the solution.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <AssemblyName>Spar.WindowTests</AssemblyName>
+    <RootNamespace>RendererSharing</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\..\..\tests\apps\WindowHost\WindowHost.csproj" />
+  </ItemGroup>
+</Project>

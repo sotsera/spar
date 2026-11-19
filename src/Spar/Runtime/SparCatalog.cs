@@ -39,8 +39,20 @@ public sealed class SparCatalog
     /// <summary>The app's assembly, which carries its packed page and notices; set by the generated catalog.</summary>
     public System.Reflection.Assembly? AppAssembly { get; init; }
 
+    /// <summary>
+    /// The app id the build checked (<c>&lt;SparAppId&gt;</c>, plan section 3c), which names the app's folders and its
+    /// identity to the OS; set by the generated catalog, null when the build had none.
+    /// </summary>
+    public string? AppId { get; init; }
+
     /// <summary>The interface contracts, whose implementations come from the app's own registrations.</summary>
     public IReadOnlyList<SparInterfaceContract> Interfaces { get; init; } = [];
+
+    /// <summary>
+    /// The page security the build read from <c>Program.cs</c> (<c>spar.ContentSecurity</c>, <c>spar.Permissions</c>);
+    /// null when no generator set it, and the run's own declaration is used.
+    /// </summary>
+    public SparPageSecurity? PageSecurity { get; init; }
 
     /// <summary>16 hex characters of the SHA-256 of the contracts' wire shape (plan section 2c, "The messages").</summary>
     public string Fingerprint { get; }

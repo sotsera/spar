@@ -1,0 +1,87 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=visibility SPAR_AUTOMATED=1]
+      95,8 | spar info +0.2 ms: [b9615c57] Host started 39.0 ms after the process.
+      95,8 | spar info +0.3 ms: [b9615c57] App id com.example.tests.SecurityProbe, folder E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\m1b-host-details\current-visibility\com.example.tests.SecurityProbe
+      95,8 | spar info +1.9 ms: [b9615c57] single instance at 1.9 ms
+      95,8 | spar info +2.1 ms: [b9615c57] prerequisites checked at 2.1 ms
+      95,8 | spar info +2.3 ms: [b9615c57] services built at 2.3 ms
+      95,8 | spar info +13.9 ms: [b9615c57] window shown at 13.9 ms
+      95,8 | spar info +14.1 ms: [b9615c57] Theme dark (system), window #1f1f1f.
+     118,8 | run: window 0x5D0624 moved offscreen
+     124,7 | spar info +14.8 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     124,7 | spar info +20.6 ms: [b9615c57] environment at 20.6 ms
+     124,7 | spar info +20.6 ms: [b9615c57] WebView2 Runtime 157.0.4341.46
+     124,7 | spar info +20.7 ms: [b9615c57] Browser profile folder E:\Ghidello\Git\spar.v7\artifacts\webview2-profiles\m1b-host-details\current-visibility\com.example.tests.SecurityProbe\WebView2
+     124,7 | spar info +24.9 ms: [b9615c57] Heartbeat every 5000 ms.
+     124,7 | spar info +25.0 ms: [b9615c57] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-l0uFZYlkrSB/vRE7OKIXR6OwCwC1mmWWH9pblwCuVHQ=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     124,7 | spar info +25.0 ms: [b9615c57] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     314,6 | spar info +218.9 ms: [b9615c57] controller at 218.9 ms
+     314,6 | spar info +219.0 ms: [b9615c57] Browser settings set (0.09 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     377,5 | spar info +264.9 ms: [b9615c57] Page file picker blocked in 45.8 ms (Page.enable 45.5 ms).
+     377,5 | spar info +264.9 ms: [b9615c57] page script added at 264.9 ms
+     377,5 | spar info +264.9 ms: [b9615c57] navigation started at 264.9 ms
+     438,9 | spar info +321.9 ms: [b9615c57] Bridge: document 6f264e2b270aa2a2 opened.
+     439,0 | spar info +321.9 ms: [b9615c57] Heartbeat armed for the new document.
+     439,0 | spar info +321.9 ms: [b9615c57] first document at 321.9 ms
+     439,0 | spar info +328.7 ms: [b9615c57] first bridge message at 328.7 ms
+     439,0 | spar info +328.9 ms: [b9615c57] first bridge reply at 328.9 ms
+     439,0 | spar info +328.9 ms: [b9615c57] ui-ready at 328.9 ms
+     439,0 | spar info +328.9 ms: [b9615c57] Bridge: document 6f264e2b270aa2a2 reported ui-ready.
+     439,0 | spar info +332.1 ms: [b9615c57] first navigation completed at 332.1 ms
+     439,0 | probe: visibility: ready, active body, hasFocus false, visible, 1024x768, values [||]
+     439,0 | probe: done visibility
+     439,0 | spar info +335.0 ms: [b9615c57] 404 for /favicon.ico
+     461,3 | run: found 'done visibility'
+    1429,7 | probe: visibility: visible 1005 ms, intervals 20, frames 58, 1024x768
+    2440,4 | probe: visibility: visible 997 ms, intervals 20, frames 59, 1024x768
+    3434,5 | probe: visibility: visible 1003 ms, intervals 20, frames 61, 1024x768
+    3508,2 | run: handles: app 352, browser 1368, crashpad 208, gpu 766, network 404, renderer 267, storage 249
+    3511,7 | run: minimize: visible 1, iconic 1, at -32000,-32000, foreground is the app False
+    3545,0 | probe: visibility: visibilitychange hidden at 3166 ms
+    4792,2 | probe: visibility: hidden 1364 ms, intervals 3, frames 5, 1024x768
+    5791,2 | probe: visibility: hidden 998 ms, intervals 1, frames 0, 1024x768
+    6787,1 | probe: visibility: hidden 996 ms, intervals 1, frames 0, 1024x768
+    7808,7 | probe: visibility: hidden 1007 ms, intervals 1, frames 0, 1024x768
+    8801,9 | probe: visibility: hidden 994 ms, intervals 1, frames 0, 1024x768
+    9806,4 | probe: visibility: hidden 1003 ms, intervals 1, frames 0, 1024x768
+   10807,2 | probe: visibility: hidden 1004 ms, intervals 1, frames 0, 1024x768
+   11524,0 | run: restore: visible 1, iconic 0, at -20000,0, foreground is the app False
+   11531,1 | probe: visibility: visibilitychange visible at 11177 ms
+   11531,2 | probe: visibility: visible 739 ms, intervals 1, frames 0, 1024x768
+   12441,9 | probe: visibility: visible 891 ms, intervals 18, frames 54, 1024x768
+   13456,4 | probe: visibility: visible 1000 ms, intervals 20, frames 60, 1024x768
+   14433,9 | probe: visibility: visible 1005 ms, intervals 20, frames 61, 1024x768
+   14551,8 | run: hide: visible 0, iconic 0, at -20000,0, foreground is the app False
+   14588,3 | probe: visibility: visibilitychange hidden at 14206 ms
+   15801,2 | probe: visibility: hidden 1356 ms, intervals 4, frames 7, 1024x768
+   16792,1 | probe: visibility: hidden 1008 ms, intervals 1, frames 0, 1024x768
+   17792,1 | probe: visibility: hidden 999 ms, intervals 1, frames 0, 1024x768
+   18794,4 | probe: visibility: hidden 1001 ms, intervals 1, frames 0, 1024x768
+   19810,4 | probe: visibility: hidden 997 ms, intervals 1, frames 0, 1024x768
+   20788,4 | probe: visibility: hidden 999 ms, intervals 1, frames 0, 1024x768
+   21789,2 | probe: visibility: hidden 1000 ms, intervals 1, frames 0, 1024x768
+   22559,9 | run: show: visible 1, iconic 0, at -20000,0, foreground is the app False
+   22567,1 | probe: visibility: visibilitychange visible at 22213 ms
+   22567,1 | probe: visibility: visible 781 ms, intervals 1, frames 0, 1024x768
+   23451,6 | probe: visibility: visible 856 ms, intervals 18, frames 52, 1024x768
+   24451,9 | probe: visibility: visible 999 ms, intervals 20, frames 60, 1024x768
+   25451,9 | probe: visibility: visible 1004 ms, intervals 20, frames 61, 1024x768
+   25582,6 | run: move:0,40: visible 1, iconic 0, at -20000,40, foreground is the app False
+   25894,4 | run: move:0,40: visible 1, iconic 0, at -20000,80, foreground is the app False
+   26433,3 | probe: visibility: visible 1000 ms, intervals 20, frames 60, 1024x768
+   27433,1 | probe: visibility: visible 995 ms, intervals 20, frames 59, 1024x768
+   27914,9 | run: handles: app 354, browser 1379, crashpad 208, gpu 764, network 406, renderer 265, storage 249
+   27915,1 | run: close: visible 1, iconic 0, at -20000,80, foreground is the app False
+   28154,1 | spar info +27833.6 ms: [b9615c57] close requested (User) at 27833.6 ms
+   28154,1 | spar info +27834.0 ms: [b9615c57] closing at 27834 ms
+   28154,1 | spar info +27834.0 ms: [b9615c57] Heartbeat: 5 ticks, 2 pings, longest tick on the UI thread 0.086 ms.
+   28154,2 | spar info +27834.2 ms: [b9615c57] page close work done at 27834.2 ms
+   28154,2 | spar info +27834.3 ms: [b9615c57] Bridge: document 6f264e2b270aa2a2 closed (window closing).
+   28154,2 | spar info +27834.3 ms: [b9615c57] calls stopped at 27834.3 ms
+   28154,2 | spar info +27834.3 ms: [b9615c57] calls settled at 27834.3 ms
+   28154,2 | spar info +27834.3 ms: [b9615c57] Window: 0 focus moves, 0 Tab past the page, 4 visibility changes, 4 moves.
+   28154,2 | spar info +27847.1 ms: [b9615c57] controller closed at 27847.1 ms
+   28154,2 | spar info +27849.4 ms: [b9615c57] window destroyed at 27849.4 ms
+   28154,2 | spar info +27852.0 ms: [b9615c57] services disposed at 27852 ms
+   28154,2 | spar info +27852.0 ms: [b9615c57] exit 0 at 27852 ms
+   28154,4 | run: exit 0
+   29170,8 | run: WebView2 processes left from this run: 0

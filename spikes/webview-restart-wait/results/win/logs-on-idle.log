@@ -1,0 +1,10 @@
+       0.0 | options --reps 1 --gap 1000 --profile default --smartscreen on --dwell 3000 --window shown --env new --wait none --folder same --overlap false --args "--log-net-log=<repo>\artifacts\webview-restart-wait\browserlogs\net-idle-{n}.json --net-log-capture-mode=Default" --exit wait --sample false
+       6.7 | Runtime 157.0.4341.60
+    3360.6 | cycle 0: controller 262 ms, navigation 70 ms, browser 64088 new True, environment 6 ms
+    3593.2 |   BrowserProcessExited pid 64088 kind 0
+    7667.3 | cycle 1: controller 234 ms, navigation 46 ms, browser 55836 new True, environment 0 ms, close->create 1003 ms (waited 0), previous browser exited before create True, previous exit +226 ms / event +233 ms after its close
+    9525.0 |   BrowserProcessExited pid 55836 kind 0
+    9539.3 | cycle 0 browser 64088: close->exit +226 ms, BrowserProcessExited +233 ms
+    9539.4 | cycle 1 browser 55836: close->exit +261 ms, BrowserProcessExited +1858 ms
+   10045.3 | processes of the root left: 0 
+   10045.3 | summary: first controller 262 ms; restarts n=1 controller p50 234 ms (min 234, max 234), to first navigation p50 280 ms, multi-second (>=2000 ms) 0, new browser 1; close->exit p50 243 ms (max 261)

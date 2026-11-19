@@ -1,0 +1,45 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=permissions]
+      60,5 | run: window moved offscreen
+      65,4 | spar info +0.2 ms: [7fc42150] Host started 20.5 ms after the process.
+      65,5 | spar info +0.7 ms: [7fc42150] single instance at 0.7 ms
+      65,5 | spar info +0.9 ms: [7fc42150] prerequisites checked at 0.9 ms
+      65,5 | spar info +1.0 ms: [7fc42150] services built at 1 ms
+      65,5 | spar info +9.4 ms: [7fc42150] window shown at 9.4 ms
+      65,5 | spar info +9.8 ms: [7fc42150] Theme dark (system), window #1f1f1f.
+      65,5 | spar info +10.8 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      65,5 | spar info +19.7 ms: [7fc42150] environment at 19.7 ms
+      65,5 | spar info +19.8 ms: [7fc42150] WebView2 Runtime 157.0.4341.46
+      65,5 | spar info +26.2 ms: [7fc42150] Heartbeat every 5000 ms.
+      65,5 | spar info +26.3 ms: [7fc42150] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      65,5 | spar info +26.9 ms: [7fc42150] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     348,3 | spar info +280.2 ms: [7fc42150] controller at 280.2 ms
+     392,0 | spar info +333.7 ms: [7fc42150] page script added at 333.7 ms
+     392,1 | spar info +333.7 ms: [7fc42150] navigation started at 333.7 ms
+     441,1 | spar info +397.0 ms: [7fc42150] Bridge: document 0d5a40b211bca773 opened.
+     441,2 | spar info +397.0 ms: [7fc42150] Heartbeat armed for the new document.
+     441,2 | spar info +397.0 ms: [7fc42150] first document at 397 ms
+     441,2 | spar info +410.8 ms: [7fc42150] first bridge message at 410.8 ms
+     489,1 | spar info +411.9 ms: [7fc42150] first bridge reply at 411.9 ms
+     489,1 | spar info +411.9 ms: [7fc42150] ui-ready at 411.9 ms
+     489,2 | spar info +411.9 ms: [7fc42150] Bridge: document 0d5a40b211bca773 reported ui-ready.
+     489,2 | spar info +416.0 ms: [7fc42150] first navigation completed at 416 ms
+     489,2 | spar info +426.5 ms: [7fc42150] Permission request for notifications from https://app.localhost/: denied (not declared in spar.Permissions); later requests of this kind are not logged.
+     489,2 | spar info +427.0 ms: [7fc42150] 404 for /favicon.ico
+     489,2 | spar info +432.7 ms: [7fc42150] Permission request for Midi from https://app.localhost/: granted (declared); later requests of this kind are not logged.
+     534,2 | probe: permissions: notifications denied, geolocation error 1, midi granted
+     534,3 | probe: done permissions
+     574,2 | run: found 'done permissions'
+    1585,4 | run: app working set 24256 KiB, peak seen 24256 KiB, private 8124 KiB
+    1585,8 | run: WM_CLOSE
+    1830,8 | spar info +1556.0 ms: [7fc42150] close requested (User) at 1556 ms
+    1830,9 | spar info +1556.4 ms: [7fc42150] closing at 1556.4 ms
+    1830,9 | spar info +1556.5 ms: [7fc42150] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1830,9 | spar info +1556.7 ms: [7fc42150] page close work done at 1556.7 ms
+    1830,9 | spar info +1556.7 ms: [7fc42150] Bridge: document 0d5a40b211bca773 closed (window closing).
+    1830,9 | spar info +1556.7 ms: [7fc42150] calls stopped at 1556.7 ms
+    1830,9 | spar info +1556.7 ms: [7fc42150] calls settled at 1556.7 ms
+    1830,9 | spar info +1570.2 ms: [7fc42150] controller closed at 1570.2 ms
+    1830,9 | spar info +1573.2 ms: [7fc42150] window destroyed at 1573.2 ms
+    1830,9 | spar info +1575.8 ms: [7fc42150] services disposed at 1575.8 ms
+    1830,9 | spar info +1575.9 ms: [7fc42150] exit 0 at 1575.9 ms
+    1831,1 | run: exit 0

@@ -9,7 +9,7 @@ public sealed class EmitterTests
         var files = ClientHarness.Emit(Fixtures.Shop);
 
         Assert.Equal(
-            ["orders.d.ts", "orders.d.ts.map", "orders.js", "package.json", "shared.d.ts", "shared.d.ts.map", "shared.js", "spar.d.ts", "spar.js", "stock.d.ts", "stock.d.ts.map", "stock.js", "testing.d.ts", "testing.js"],
+            ["csp.json", "orders.d.ts", "orders.d.ts.map", "orders.js", "package.json", "shared.d.ts", "shared.d.ts.map", "shared.js", "spar.d.ts", "spar.js", "stock.d.ts", "stock.d.ts.map", "stock.js", "testing.d.ts", "testing.js", "windows.d.ts", "windows.js"],
             files.Keys);
         Assert.Contains("\"./orders\": {\n      \"types\": \"./orders.d.ts\",\n      \"default\": \"./orders.js\"\n    }", files["package.json"], StringComparison.Ordinal);
         Assert.Contains("\"version\": \"0.0.0\"", files["package.json"], StringComparison.Ordinal);
@@ -19,6 +19,9 @@ public sealed class EmitterTests
         Assert.Contains("import * as orders$ from \"./orders.js\";\n", files["testing.js"], StringComparison.Ordinal);
         Assert.Contains("  add(commands, orders$.orders, orders$.__sparTesting);\n  add(commands, stock$.stock, stock$.__sparTesting);\n", files["testing.js"], StringComparison.Ordinal);
         Assert.Matches("export const fingerprint = \"[0-9a-f]{16}\";", files["spar.js"]);
+        Assert.Contains("\"./windows\": {\n      \"types\": \"./windows.d.ts\",\n      \"default\": \"./windows.js\"\n    }", files["package.json"], StringComparison.Ordinal);
+        Assert.EndsWith("export { windows } from \"./sdk/windows.js\";\n", files["windows.js"], StringComparison.Ordinal);
+        Assert.Contains("export { windows, type CloseAnswer, type CloseGuard, type CloseRequest } from \"./sdk/windows.js\";", files["windows.d.ts"], StringComparison.Ordinal);
     }
 
     [Fact]

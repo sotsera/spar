@@ -13,6 +13,8 @@ public sealed class FolderOptions
 
     internal string? CrashesFolder { get; private set; }
 
+    internal string? ProfileFolder { get; private set; }
+
     /// <summary>The root every other folder defaults under (the WebView profile, settings, logs, crashes).</summary>
     public FolderOptions Data(string path)
     {
@@ -26,9 +28,70 @@ public sealed class FolderOptions
         return this;
     }
 
+    /// <summary>The browser profile: an absolute path on a local drive, or the start stops with a message.</summary>
+    public FolderOptions Profile(string path)
+    {
+        ProfileFolder = path;
+        return this;
+    }
+
     public FolderOptions Crashes(string path)
     {
         CrashesFolder = path;
+        return this;
+    }
+}
+
+/// <summary>The folders in use: the SparFolders service, and what spar.ResolveFolders() gives Program.cs (3.13).</summary>
+public sealed record SparFolders(string DataRoot, string Data, string Logs, string Cache, string Profile);
+
+/// <summary>What Spar records for diagnosing the app on a user's machine (3.13).</summary>
+public sealed class DiagnosticsOptions
+{
+    internal DiagnosticsOptions()
+    {
+    }
+
+    internal bool KeepsStallProbe { get; private set; }
+
+    /// <summary>Keeps the UI-thread stall probe in a Production build, logging only.</summary>
+    public DiagnosticsOptions KeepStallProbe()
+    {
+        KeepsStallProbe = true;
+        return this;
+    }
+}
+
+/// <summary>The log file's levels (3.13): a default and levels by category prefix; a per-user logging.json overrides them.</summary>
+public sealed class LoggingOptions
+{
+    internal LoggingOptions()
+    {
+    }
+
+    internal Microsoft.Extensions.Logging.LogLevel? DefaultLevel { get; private set; }
+
+    internal List<(string Category, Microsoft.Extensions.Logging.LogLevel Level)> Categories { get; } = [];
+
+    public LoggingOptions Level(Microsoft.Extensions.Logging.LogLevel level)
+    {
+        DefaultLevel = level;
+        return this;
+    }
+
+    public LoggingOptions Level(string category, Microsoft.Extensions.Logging.LogLevel level)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(category);
+        Categories.Add((category, level));
+        return this;
+    }
+
+    internal bool WritesFile { get; private set; } = true;
+
+    /// <summary>No log file: support has no local file, and failures before the services exist reach only stderr.</summary>
+    public LoggingOptions WithoutFile()
+    {
+        WritesFile = false;
         return this;
     }
 }

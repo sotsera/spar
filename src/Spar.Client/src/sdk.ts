@@ -19,6 +19,7 @@ export {
 } from "./results.js";
 export { unknownErrorCase, type BridgeChannel, type Decoder } from "./connection.js";
 export { loopbackChannel, takeToken, type LoopbackOptions, type TokenPage } from "./loopback.js";
+export { hostChannel, webViewChannel, webViewPort, type WebViewOptions, type WebViewPort } from "./webview.js";
 
 let current: Connection | undefined;
 

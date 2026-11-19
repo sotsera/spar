@@ -15,7 +15,7 @@ public sealed partial class AppModelTests
     private static readonly string Check = FindCheck();
 
     [Theory]
-    [InlineData("verbatim", "27 blocks, 0 differ")]
+    [InlineData("verbatim", "36 blocks, 0 differ")]
     [InlineData("contracts", "no rule broken")]
     [InlineData("check:ts7", null)]
     [InlineData("check:ts6", null)]
@@ -60,6 +60,18 @@ public sealed partial class AppModelTests
         var snapshot = File.ReadAllText(Path.Combine(Check, "Real", "SqlTool.Real.contracts.snapshot"));
         var contracts = snapshot.Split('\n').Where(line => line.StartsWith("contract ", StringComparison.Ordinal)).Select(line => line.Split(' ')[1]);
         Assert.Equal(["connections", "crashReport", "script"], contracts);
+    }
+
+    /// <summary>
+    /// The document's window test (6.12) through real Spar: Spar.Sdk's test project, the real test host and page API,
+    /// and the document's app built in the Test variant. Compiled only; the document's app has no page to drive.
+    /// </summary>
+    [Fact]
+    public async Task The_documents_window_test_builds_with_real_Spar()
+    {
+        var (exit, output) = await RunAsync("dotnet", "build", Path.Combine("RealTests", "SqlTool.EndToEndTests.Real.csproj"), "-nologo", "-nr:false", "-v:q");
+
+        Assert.True(exit == 0, output);
     }
 
     [Fact]

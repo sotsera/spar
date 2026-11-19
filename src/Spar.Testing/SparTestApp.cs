@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spar.Hosting;
 using Spar.Runtime;
 
 namespace Spar.Testing;
@@ -17,6 +18,13 @@ public enum SparTestSurface
     /// page with <c>o.Page(folder)</c> and open <c>app.PageUrl()</c> with Playwright. End-to-end projects only.
     /// </summary>
     Browser,
+
+    /// <summary>
+    /// The app's real window, as users get it, in the test process: the app's own packed page in its WebView2 window
+    /// (WebKitGTK on Linux), offscreen and never activated, driven through <c>app.Page</c>. End-to-end projects only;
+    /// window tests run as their own invocation (plan section 5).
+    /// </summary>
+    Window,
 }
 
 /// <summary>A test's changes to the app.</summary>
@@ -32,7 +40,19 @@ public sealed class SparTestOptions
     /// <summary>Starts the Browser surface; set by <c>Spar.Testing.Browser</c>, so this package carries no web server.</summary>
     internal Func<SparTestApp, CancellationToken, Task<IAsyncDisposable>>? StartBrowser { get; set; }
 
+    /// <summary>The Window surface's start-up and shutdown phases as the host reaches them, for Spar's own host tests (UI thread).</summary>
+    internal Action<string>? WindowPhase { get; set; }
+
+    /// <summary>Whether <c>StartAsync</c> waits for the window's first page; Spar's host tests that close it earlier do not.</summary>
+    internal bool WaitForPage { get; set; } = true;
+
     public SparTestSurface Surface { get; set; } = SparTestSurface.None;
+
+    /// <summary>
+    /// The Window surface's colour scheme: <see cref="SparColorScheme.Light"/> by default, so the page's
+    /// <c>prefers-color-scheme</c> and the window's own colours, and so its screenshots, are the same on every machine.
+    /// </summary>
+    public SparColorScheme ColorScheme { get; set; } = SparColorScheme.Light;
 
     /// <summary>Keep the app's data root after the test (it is deleted by default).</summary>
     public bool KeepData { get; set; }
@@ -74,6 +94,8 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     private readonly SparTestOptions _options;
     private readonly ConcurrentQueue<string> _problems = new();
     private readonly SparTestLog _log;
+    private SparPage? _page;
+    private SparWindow? _window;
     private long _nextCallId;
 
     private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options, SparTestLog log)
@@ -110,7 +132,14 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     public TimeProvider Time => _app.Dispatcher.Time;
 
     /// <summary>What the bridge refused or dropped, and the page's CSP violations, so far. A clean run has none.</summary>
-    public IReadOnlyList<string> Problems => [.. _problems];
+    public IReadOnlyList<string> Problems => Surface is WindowSurface window ? [.. _problems, .. window.Problems] : [.. _problems];
+
+    /// <summary>
+    /// The page in the app's window, for the Window surface: locators, trusted input, screenshots and assertions
+    /// (<see cref="SparAssertions"/>), with the method names of Microsoft's browser automation library.
+    /// </summary>
+    public SparPage Page => _page ?? throw new InvalidOperationException(
+        "The app has no window: start it with o.Surface = SparTestSurface.Window to drive its page.");
 
     /// <summary>The surface in front of the backend, when it is not <see cref="SparTestSurface.None"/>.</summary>
     internal IAsyncDisposable? Surface { get; private set; }
@@ -118,6 +147,14 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     internal SparRunningApp RunningApp => _app;
 
     internal SparTestOptions Options => _options;
+
+    /// <summary>
+    /// The app's window, for the Window surface: <c>CloseAsync</c> closes it through its close request, as the close
+    /// button does, so the page's and the backend's close guards run.
+    /// </summary>
+    public SparWindow Window => _window ??= _session.OpenedWindow is { } opened
+        ? new SparWindow(opened)
+        : throw new InvalidOperationException("The app has no window: start it with o.Surface = SparTestSurface.Window to close it.");
 
     /// <summary>
     /// Runs <typeparamref name="TApp"/>'s top-level statements on a thread of their own. Their
@@ -136,12 +173,14 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         configure?.Invoke(options);
 
         SparTestLog? log = null;
+        var window = options.Surface == SparTestSurface.Window ? new WindowSurface(options) : null;
         var session = new SparTestSession
         {
             DataRoot = TestDataRoots.Next(),
             ConfigureServices = services => options.ServiceActions.ForEach(action => action(services)),
             AllowedExternals = options.AllowedExternals,
             CreateLog = time => log = new SparTestLog(time),
+            Window = window?.Request,
         };
 
         var exit = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -151,7 +190,11 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         SparTestSession.Current = null;
 
         var first = await Task.WhenAny(session.Started, exit.Task).WaitAsync(TimeSpan.FromSeconds(30), cancellationToken);
-        if (first == exit.Task)
+
+        // Run completes Started before it returns, also when the app fails to build (it then returns 70). Both tasks
+        // run their continuations asynchronously, so WhenAny can still pick the exit: a completed Started means Run was
+        // called, and its outcome, the build failure included, is the answer.
+        if (first == exit.Task && !session.Started.IsCompleted)
         {
             throw new InvalidOperationException($"The app's Program.cs returned {await exit.Task} without calling Run.");
         }
@@ -163,6 +206,12 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
             if (options.Surface == SparTestSurface.Browser)
             {
                 await testApp.StartBrowserSurfaceAsync(cancellationToken);
+            }
+
+            if (window is not null)
+            {
+                testApp.Surface = window;
+                testApp._page = await window.StartAsync(session.OpenedWindow!, cancellationToken);
             }
         }
         catch
@@ -198,7 +247,9 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         _session.Stop();
         await Step(failures, async () =>
         {
-            var code = await _exit.WaitAsync(TimeSpan.FromSeconds(10));
+            // A window's teardown settles its calls and checks its renderer processes are gone, within about 10 s.
+            var limit = _session.Window is null ? TimeSpan.FromSeconds(10) : TimeSpan.FromSeconds(30);
+            var code = await _exit.WaitAsync(limit);
             if (code != 0)
             {
                 throw new InvalidOperationException($"The app exited with {code}.");

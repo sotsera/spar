@@ -30,6 +30,12 @@ internal sealed class LoopbackOptions
     /// <summary>Whether failures carry their detail (Development and tests only).</summary>
     public bool IncludeDetails { get; init; }
 
+    /// <summary>The app's page security, from its generated catalog: the policy every response carries.</summary>
+    public SparPageSecurity Security { get; init; } = SparPageSecurity.Default;
+
+    /// <summary>The page's import-map hashes, which <c>script-src</c> names (<see cref="PageHtml"/>).</summary>
+    public IReadOnlyList<string> ScriptHashes { get; init; } = [];
+
     /// <summary>What the host refused or dropped, and the page's CSP violations. Called from any thread.</summary>
     public Action<string>? Log { get; init; }
 }
@@ -52,6 +58,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
     private readonly byte[] _token;
     private readonly ConcurrentDictionary<string, Document> _documents = new(StringComparer.Ordinal);
     private readonly CancellationTokenSource _stopping = new();
+    private readonly ConcurrentDictionary<string, PagePolicy> _policies = new(StringComparer.Ordinal);
     private int _port;
 
     private LoopbackHost(WebApplication server, LoopbackOptions options)
@@ -129,7 +136,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
         }
 
         var origin = $"http://{request.Host.Value!.ToLowerInvariant()}";
-        foreach (var (name, value) in SparPageHeaders.For(origin))
+        foreach (var (name, value) in PolicyFor(origin).Headers())
         {
             response.Headers[name] = value;
         }
@@ -141,8 +148,17 @@ internal sealed class LoopbackHost : IAsyncDisposable
             return;
         }
 
-        await AssetAsync(context, path);
+        await AssetAsync(context, path, PolicyFor(origin));
     }
+
+    /// <summary>
+    /// The policy for one of the two names the page may use (127.0.0.1 or localhost), composed once: connect-src names
+    /// the origin. A Development or Test build is the only one with a loopback host, so DevelopmentOnly reports here.
+    /// </summary>
+    private PagePolicy PolicyFor(string origin) => _policies.GetOrAdd(
+        origin,
+        static (name, options) => new PagePolicy(options.Security, name, development: true, options.ScriptHashes),
+        _options);
 
     private bool IsThisHost(HostString host)
     {
@@ -152,7 +168,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
         return named && host.Port == _port;
     }
 
-    private async Task AssetAsync(HttpContext context, string path)
+    private async Task AssetAsync(HttpContext context, string path, PagePolicy policy)
     {
         var request = context.Request;
         var response = context.Response;
@@ -170,6 +186,15 @@ internal sealed class LoopbackHost : IAsyncDisposable
         {
             await RefuseAsync(response, StatusCodes.Status404NotFound, "not-found");
             return;
+        }
+
+        // As the desktop hosts do: a document gets a fresh style nonce, in its policy and in a meta element.
+        if (policy.StyleNonce && contentType.StartsWith("text/html", StringComparison.Ordinal))
+        {
+            var nonce = PageHtml.NewNonce();
+            var at = PageHtml.NonceInsertionPoint(content.Span);
+            content = (byte[])[.. content.Span[..at], .. PageHtml.NonceMeta(nonce), .. content.Span[at..]];
+            response.Headers.ContentSecurityPolicy = policy.ContentSecurityPolicyWithNonce(nonce);
         }
 
         response.ContentType = contentType;
@@ -192,7 +217,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
         }
 
         // The browser sends CSP reports itself, without the token; they are only logged.
-        if (path == SparPageHeaders.CspReportPath)
+        if (path == PagePolicy.ReportPath)
         {
             await ReportAsync(context);
             return;

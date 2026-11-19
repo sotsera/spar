@@ -1,0 +1,80 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=54.9ms since-process-start=61ms xtest=2.2 input=script csp=False
+dbus-daemon[4059]: [session uid=1000 pid=4059] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=4060 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[4059]: [session uid=1000 pid=4059] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[4216]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=4060 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[4216]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[4059]: [session uid=1000 pid=4059] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=4224 comm="/usr/bin/xdg-dbus-proxy --args=25" label="kernel")
+dbus-daemon[4059]: [session uid=1000 pid=4059] Activating service name='org.freedesktop.portal.Documents' requested by ':1.6' (uid=1000 pid=4252 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[4059]: [session uid=1000 pid=4059] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.7' (uid=1000 pid=4258 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[4059]: [session uid=1000 pid=4059] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[4059]: [session uid=1000 pid=4059] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.572: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.572: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[4059]: [session uid=1000 pid=4059] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.6' (uid=1000 pid=4252 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[4059]: [session uid=1000 pid=4059] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.608: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.608: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.609: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.609: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.609: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.609: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.610: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.610: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.611: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.611: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][02832.803027] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][02832.803092] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.613: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.613: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.614: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:4252): xdg-desktop-portal-WARNING **: 20:42:04.614: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[4059]: [session uid=1000 pid=4059] Successfully activated service 'org.freedesktop.portal.Desktop'
+ACTION engine call, no work (location.href)     n=100 min=0.2 p50=0.3 p95=3.0 max=5.0
+ACTION evaluate 1+1 (main world)                n=100 min=0.1 p50=0.2 p95=0.3 max=3.1
+ACTION resolve role button "Actions" (count)    n=100 min=0.3 p50=0.3 p95=0.5 max=3.1
+ACTION resolve role, exact heading              n=100 min=0.2 p50=0.3 p95=0.5 max=3.2
+ACTION resolve role listitem in named list      n=100 min=0.2 p50=0.2 p95=0.3 max=3.2
+ACTION resolve role right after a DOM change    n=100 min=0.2 p50=0.3 p95=3.0 max=6.0
+ACTION resolve label right after a DOM change   n=100 min=0.2 p50=0.3 p95=0.3 max=1.5
+ACTION resolve label                            n=100 min=0.2 p50=0.2 p95=0.3 max=0.3
+ACTION resolve text                             n=100 min=0.2 p50=0.2 p95=0.3 max=2.9
+ACTION actionable, pointer (1 frame)            n=100 min=0.4 p50=6.8 p95=15.8 max=16.5
+ACTION actionable, no pointer                   n=100 min=0.3 p50=0.5 p95=3.1 max=5.0
+ACTION view geometry (UI thread + XTranslateCoordinates) n=100 min=0.0 p50=0.0 p95=0.1 max=3.0
+ACTION mouse move (send only)                   n=100 min=0.0 p50=0.0 p95=0.0 max=0.0
+ACTION click on empty area (arm, input, landed) n=100 min=0.7 p50=0.8 p95=1.6 max=3.9
+ACTION key press Escape (arm, input, landed)    n=100 min=0.5 p50=0.7 p95=0.9 max=3.8
+ACTION full ClickAsync (open menu) + Escape     n=100 min=21.1 p50=32.3 p95=36.8 max=53.2
+ACTION expect text (already true, idle)         n=100 min=0.3 p50=0.4 p95=1.9 max=3.3
+ACTION expect text right after the menu closed  n=100 min=0.4 p50=1.0 p95=3.0 max=6.0
+ACTION type 12 characters (keys, landed)        n=100 min=5.5 p50=8.2 p95=10.5 max=11.9
+ACTION fill 12 characters (insertText)          n=100 min=1.1 p50=1.5 p95=1.9 max=5.3
+ACTION screenshot (visible region, PNG)         n=100 min=4.4 p50=5.5 p95=7.6 max=8.7
+ACTION snapshot only (pixels, no PNG)           n=100 min=2.5 p50=3.4 p95=6.1 max=6.9
+ACTION accessibility tree of the page (engine)  n=100 min=1.3 p50=1.5 p95=3.4 max=3.6
+RETRY     7 x expect / count is (not yet)
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:42:15.446: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-ad6bd247-f6f1-41cd-b8bd-b31b21c035e2: The connection is closed
+TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=0 (names truncated by the kernel; counts include other runs)
+RUN exit=0 wall=11579ms
+PROCESSES before=[] after=[]

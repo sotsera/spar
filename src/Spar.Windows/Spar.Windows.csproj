@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The Windows host (plan section 3, "Windows"): one STA thread owns the window, the WebView2 environment and
+    controller, serves the app's packed page on https://app.localhost and carries the bridge. Spar.Sdk adds it to apps
+    whose SparPlatforms include windows; apps never reference it themselves. WebView2 is reached through hand-declared
+    [GeneratedComInterface] declarations (Interop/, checked slot by slot against WebView2.h by Spar.Tests), Win32
+    through CsWin32. The loader is linked statically under NativeAOT and loaded from WebView2Loader.dll on CoreCLR;
+    Spar.Sdk supplies both to the app.
+  -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>The Spar Windows host: the app's window, WebView2, the page on https://app.localhost and the bridge.</Description>
+    <RootNamespace>Spar.Windows</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar\Spar.csproj" />
+  </ItemGroup>
+
+  <!-- The script the host adds to every document: the heartbeat's answer and the CSP listener (PageScript.cs). -->
+  <ItemGroup>
+    <EmbeddedResource Include="PageScript.js" LogicalName="Spar.Windows.PageScript.js" WithCulture="false" Type="Non-Resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Tests" />
+  </ItemGroup>
+</Project>

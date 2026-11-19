@@ -1,0 +1,85 @@
+       4,5 > start Notebook.exe env [SPAR_DEV_HEARTBEAT_MS=500 SPAR_DEV_PAGE_HANG=2000]
+     111,7 | spar info +12.2 ms: [f03f16ff] Host started 86.0 ms after the process.
+     121,5 | spar info +22.1 ms: [f03f16ff] single instance at 21 ms
+     123,8 | spar info +27.8 ms: [f03f16ff] prerequisites checked at 27.8 ms
+     137,8 | spar info +41.6 ms: [f03f16ff] UI-thread stall probe on.
+     152,6 | spar info +56.5 ms: [f03f16ff] services built at 56.5 ms
+     165,3 | spar info +69.2 ms: [f03f16ff] window shown at 69.2 ms
+     165,5 | spar info +69.5 ms: [f03f16ff] Theme dark (system), window #1d1f24.
+     180,7 | spar info +84.6 ms: [f03f16ff] environment at 84.6 ms
+     181,3 | spar info +85.2 ms: [f03f16ff] WebView2 Runtime 157.0.4341.46
+     192,0 | spar info +95.9 ms: [f03f16ff] Heartbeat every 500 ms.
+     370,6 | spar info +274.4 ms: [f03f16ff] controller at 274.4 ms
+     374,3 | spar info +278.2 ms: [f03f16ff] navigation started at 278.2 ms
+     473,3 | spar info +377.2 ms: [f03f16ff] Bridge: document 285581e11c06022d opened.
+     473,5 | spar info +377.3 ms: [f03f16ff] first document at 377.3 ms
+     495,8 | spar info +399.7 ms: [f03f16ff] first bridge message at 399.7 ms
+     500,1 | spar info +404.0 ms: [f03f16ff] first navigation completed at 404 ms
+     503,9 | spar info +407.8 ms: [f03f16ff] first bridge reply at 407.8 ms
+     504,1 | spar info +408.1 ms: [f03f16ff] Heartbeat armed for the new document.
+     514,5 | spar info +418.4 ms: [f03f16ff] ui-ready at 418.4 ms
+     514,6 | spar info +418.4 ms: [f03f16ff] Bridge: document 285581e11c06022d reported ui-ready.
+     515,3 | spar info +419.3 ms: [f03f16ff] 404 for /favicon.ico
+    2522,4 | spar warn +2426.2 ms: [f03f16ff] Development trigger: the page hangs from now.
+    2522,5 > seen 'the page hangs from now'
+    4200,9 | spar warn +4104.8 ms: [f03f16ff] The page is not responding: it did not answer three heartbeats (1.5 s without an answer).
+    4201,0 > seen 'The page is not responding'
+    4201,7 | spar info +4105.6 ms: [f03f16ff] hung-page dialog shown (Wait / Reload page) at 4105.6 ms
+    4263,6 > dialog 'Notebook' owner the app's window
+    4263,9 > press 200 on 'Notebook'
+    4288,3 | spar info +4192.2 ms: [f03f16ff] hung-page dialog: Wait at 4192.2 ms
+    6194,0 | spar warn +6097.9 ms: [f03f16ff] The page still does not answer after 3 s; asking again.
+    6194,0 > seen 'asking again'
+    6194,1 | spar info +6098.1 ms: [f03f16ff] hung-page dialog shown (Wait / Reload page) at 6098 ms
+    6241,6 > dialog 'Notebook' owner the app's window
+    6241,9 > press 200 on 'Notebook'
+    6256,6 | spar info +6160.5 ms: [f03f16ff] hung-page dialog: Wait at 6160.5 ms
+   10200,2 | spar warn +10104.0 ms: [f03f16ff] The page still does not answer after 7 s; asking again.
+   10200,2 > seen 'asking again'
+   10200,3 | spar info +10104.2 ms: [f03f16ff] hung-page dialog shown (Wait / Reload page) at 10104.2 ms
+   10245,3 > dialog 'Notebook' owner the app's window
+   10245,7 > press 200 on 'Notebook'
+   10258,0 | spar info +10161.9 ms: [f03f16ff] hung-page dialog: Wait at 10161.9 ms
+   18198,5 | spar warn +18102.3 ms: [f03f16ff] The page still does not answer after 15 s; asking again.
+   18198,6 | spar info +18102.5 ms: [f03f16ff] hung-page dialog shown (Wait / Reload page) at 18102.5 ms
+   18198,7 > seen 'asking again'
+   18244,0 > dialog 'Notebook' owner the app's window
+   18244,3 > press 200 on 'Notebook'
+   18262,0 | spar info +18165.9 ms: [f03f16ff] hung-page dialog: Wait at 18165.9 ms
+   34205,5 | spar warn +34109.3 ms: [f03f16ff] The page still does not answer after 32 s; asking again.
+   34205,6 | spar info +34109.5 ms: [f03f16ff] hung-page dialog shown (Wait / Reload page) at 34109.5 ms
+   34205,7 > seen 'asking again'
+   34252,6 > dialog 'Notebook' owner the app's window
+   34253,0 > press 200 on 'Notebook'
+   34265,5 | spar info +34169.4 ms: [f03f16ff] hung-page dialog: Wait at 34169.4 ms
+   50205,2 | spar warn +50109.1 ms: [f03f16ff] The page still does not answer after 48 s; asking again.
+   50205,4 > seen 'asking again'
+   50205,6 | spar info +50109.3 ms: [f03f16ff] hung-page dialog shown (Wait / Reload page) at 50109.3 ms
+   50251,8 > dialog 'Notebook' owner the app's window
+   50252,2 > press 201 on 'Notebook'
+   50267,3 > dialog gone
+   50270,9 | spar info +50174.6 ms: [f03f16ff] hung-page dialog: Reload page, after 47.6 s at 50174.6 ms
+   50272,9 | spar info +50176.9 ms: [f03f16ff] renderer processes ended: 1 at 50176.9 ms
+   50279,0 | spar info +50182.9 ms: [f03f16ff] Bridge: document 285581e11c06022d closed (navigation).
+   50279,1 | spar info +50183.1 ms: [f03f16ff] renderer exited at 50183.1 ms
+   50279,3 | spar info +50183.3 ms: [f03f16ff] page reloaded after the hung renderer was ended at 50183.3 ms
+   50348,5 | spar info +50252.3 ms: [f03f16ff] Bridge: document dcbda1b1c4cc2b7c opened.
+   50368,6 | spar info +50272.4 ms: [f03f16ff] Heartbeat armed for the new document.
+   50388,1 | spar info +50292.0 ms: [f03f16ff] Bridge: document dcbda1b1c4cc2b7c reported ui-ready.
+   50388,2 > seen 'ui-ready'
+   50388,7 > WM_CLOSE to the window
+   50390,3 | spar info +50294.3 ms: [f03f16ff] close requested (User) at 50294.3 ms
+   50396,8 | spar info +50300.7 ms: Close request for window main (User): the backend's guard answered Close
+   50397,9 | spar info +50301.9 ms: [f03f16ff] closing at 50301.9 ms
+   50398,1 | spar info +50302.1 ms: [f03f16ff] Heartbeat: 100 ticks, 6 pings, longest tick on the UI thread 1.746 ms.
+   50399,0 | spar info +50302.9 ms: [f03f16ff] page close work done at 50302.9 ms
+   50399,2 | spar info +50303.1 ms: [f03f16ff] Bridge: document dcbda1b1c4cc2b7c closed (window closing).
+   50399,2 | spar info +50303.2 ms: [f03f16ff] calls stopped at 50303.2 ms
+   50399,2 | spar info +50303.2 ms: [f03f16ff] calls settled at 50303.2 ms
+   50414,9 | spar info +50318.8 ms: [f03f16ff] controller closed at 50318.8 ms
+   50432,4 | spar info +50336.3 ms: [f03f16ff] window destroyed at 50336.3 ms
+   50440,8 | spar info +50344.7 ms: [f03f16ff] services disposed at 50344.7 ms
+   50440,8 | spar info +50344.7 ms: [f03f16ff] exit 0 at 50344.7 ms
+   50455,9 > exit 0
+   57111,0 > browser processes left for this root 6,7 s after the exit: 0
+   57111,0 > RESULT OK

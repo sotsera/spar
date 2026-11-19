@@ -13,8 +13,44 @@
                       UndefineProperties="SparVariant;SparTestLane" />
   </ItemGroup>
 
-  <!-- The static-state test (tests/static-state/), for the Spar assemblies in this output; it reads their files, so CoreCLR only. -->
+  <!--
+    An app's own logging configuration, for the order of Spar's levels against it (AppConfigurationTests); Spar itself
+    does not reference these (decision "Configuration stays the app's choice").
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" />
+  </ItemGroup>
+
+  <!--
+    The Windows host, for the slot-order test of its WebView2 declarations against the header of the WebView2 package
+    it was written from (copied beside the tests), and for the static-state test. Spar.Sdk references that package in
+    every Windows test project, for the loader of the Window surface.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Windows\Spar.Windows.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
+    <None Include="$(PkgMicrosoft_Web_WebView2)\build\native\include\WebView2.h" Link="WebView2.h" Visible="false"
+          CopyToOutputDirectory="PreserveNewest" Condition="'$(PkgMicrosoft_Web_WebView2)' != ''" />
+  </ItemGroup>
+
+  <!--
+    Where Spar.Sdk does not add the package (a Linux build, whose tests load no WebView2), the header still comes from
+    it: the slot-order test runs on every OS. Items are evaluated after every property, so the SDK's choice is known here.
+  -->
+  <ItemGroup Condition="'$(_SparWebView2Loader)' != 'true'">
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <!--
+    Tests that read files of the test's output (the static-state test, tests/static-state/, and the slot-order tests
+    read assemblies' metadata), so CoreCLR only.
+  -->
   <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
     <Compile Include="../static-state/StaticStateTests.cs" Link="StaticStateTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTestLane)' == 'Aot'">
+    <Compile Remove="WebView2SlotTests.cs;UiAutomationSlotTests.cs;ComSlots.cs" />
   </ItemGroup>
 </Project>

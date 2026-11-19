@@ -18,6 +18,11 @@
     <AdditionalFiles Include="AnalyzerReleases.Unshipped.md" />
   </ItemGroup>
 
+  <!-- One rule for a CSP source, at build time (SPAR104) and at run time (CspBuilder). -->
+  <ItemGroup>
+    <Compile Include="..\Spar\Hosting\CspSourceRule.cs" Link="Shared\CspSourceRule.cs" />
+  </ItemGroup>
+
   <!-- The client step runs this same analysis before the compile (plan section 1, pipeline step 3). -->
   <ItemGroup>
     <InternalsVisibleTo Include="Spar.Sdk.Tasks" />

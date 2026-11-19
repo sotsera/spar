@@ -1,0 +1,30 @@
+SETUP runtime=aot env+anchor=197.1ms since-process-start=219ms
+ISOLATION anchor=private
+ISOLATION consecutive test 0: open=123 ms found=[- cookie=-]
+ISOLATION consecutive test 1: open=88 ms found=[test0 cookie=c=test0]
+ISOLATION consecutive test 2: open=97 ms found=[test1 cookie=c=test1]
+ISOLATION consecutive test 3: open=88 ms found=[test2 cookie=c=test2]
+ISOLATION consecutive test 4: open=96 ms found=[test3 cookie=c=test3]
+ISOLATION simultaneous InPrivate, profile names (default)/(default): b found=[from-a cookie=c=from-a]
+ISOLATION simultaneous InPrivate, profile names t1/t2: b found=[- cookie=-]
+TEARDOWN browser exited=True leftover=0 root deleted=True
+SETUP runtime=aot env+anchor=240.3ms since-process-start=264ms
+ISOLATION anchor=default
+ISOLATION consecutive test 0: open=134 ms found=[- cookie=-]
+ISOLATION consecutive test 1: open=108 ms found=[- cookie=-]
+ISOLATION consecutive test 2: open=115 ms found=[- cookie=-]
+ISOLATION consecutive test 3: open=131 ms found=[- cookie=-]
+ISOLATION consecutive test 4: open=98 ms found=[- cookie=-]
+ISOLATION simultaneous InPrivate, profile names (default)/(default): b found=[from-a cookie=c=from-a]
+ISOLATION simultaneous InPrivate, profile names t1/t2: b found=[- cookie=-]
+TEARDOWN browser exited=True leftover=0 root deleted=True
+SETUP runtime=aot env+anchor=5.5ms since-process-start=28ms
+ISOLATION anchor=none
+ISOLATION consecutive test 0: open=308 ms found=[- cookie=-]
+ISOLATION consecutive test 1: open=121 ms found=[- cookie=-]
+ISOLATION consecutive test 2: open=120 ms found=[- cookie=-]
+ISOLATION consecutive test 3: open=105 ms found=[- cookie=-]
+ISOLATION consecutive test 4: open=118 ms found=[- cookie=-]
+ISOLATION simultaneous InPrivate, profile names (default)/(default): b found=[from-a cookie=c=from-a]
+ISOLATION simultaneous InPrivate, profile names t1/t2: b found=[- cookie=-]
+TEARDOWN browser exited=True leftover=0 root deleted=True

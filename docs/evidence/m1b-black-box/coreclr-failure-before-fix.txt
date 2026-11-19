@@ -1,0 +1,8 @@
+failed Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8 (5s 378ms)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.InvalidOperationException : The app did not stop cleanly after the test.
+  ---- System.InvalidOperationException : The data root E:\Ghidello\Git\spar.v7\artifacts\test-host\20261119-075037-48264\black-box-006 could not be deleted: The process cannot access the file 'CrashpadMetrics-active.pma' because it is being used by another process.
+  -------- System.IO.IOException : The process cannot access the file 'CrashpadMetrics-active.pma' because it is being used by another process.
+    at SparTestHooks.SparTeardownHookAttribute.After(MethodInfo methodUnderTest, IXunitTest test) in E:\Ghidello\Git\spar.v7\src\Spar.Sdk\Sdk\Testing\SparTeardownHook.Xunit.cs:26
+    at Spar.Testing.TestDataRoots.Delete(String root) in E:\Ghidello\Git\spar.v7\src\Spar.Testing\TestDataRoots.cs:52
+    at Spar.Testing.SparBlackBoxApp.DisposeAsync() in E:\Ghidello\Git\spar.v7\src\Spar.Testing\BlackBox\SparBlackBoxApp.cs:184
+E:\Ghidello\Git\spar.v7\tests\Spar.WindowTests\bin\Development\Debug\net11.0\win-x64\Spar.WindowTests.dll (net11.0|x64) failed with 1 error(s) [+10/x1/?0] (16s 760ms)

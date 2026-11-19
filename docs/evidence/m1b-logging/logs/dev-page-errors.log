@@ -1,0 +1,48 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=page-errors SPAR_AUTOMATED=1]
+     267,3 | spar info +10.0 ms: [1247533e] Host started 222.0 ms after the process.
+     267,3 | spar info +12.0 ms: [1247533e] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-page-errors\com.example.tests.SecurityProbe.Development
+     267,3 | spar info +19.7 ms: [1247533e] single instance at 17.4 ms
+     321,7 | run: window moved offscreen
+     326,4 | spar info +21.3 ms: [1247533e] prerequisites checked at 21.3 ms
+     326,4 | spar info +29.7 ms: [1247533e] UI-thread stall probe on.
+     326,5 | spar info +38.9 ms: [1247533e] window shown at 38.9 ms
+     326,5 | spar info +39.2 ms: [1247533e] Theme dark (system), window #1f1f1f.
+     326,6 | spar info +42.4 ms: [1247533e] services built at 42.4 ms
+     326,6 | spar info +45.7 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     326,6 | spar info +62.1 ms: [1247533e] environment at 62.1 ms
+     326,6 | spar info +62.7 ms: [1247533e] WebView2 Runtime 157.0.4341.46
+     326,6 | spar info +63.2 ms: [1247533e] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-page-errors\com.example.tests.SecurityProbe.Development\WebView2
+     326,6 | spar info +74.2 ms: [1247533e] Heartbeat every 5000 ms.
+     326,6 | spar info +76.1 ms: [1247533e] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-PPCDxJ0a3mrhp+ZRnKIDD0gQNDpllZMu9T4EdLpTN7U=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     326,6 | spar info +76.1 ms: [1247533e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     552,1 | spar info +276.3 ms: [1247533e] controller at 276.3 ms
+     552,1 | spar info +281.7 ms: [1247533e] Browser settings read back (2.36 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     630,9 | spar info +345.2 ms: [1247533e] Page file picker blocked in 63.2 ms (Page.enable 62.6 ms).
+     630,9 | spar info +345.3 ms: [1247533e] page script added at 345.3 ms
+     630,9 | spar info +345.9 ms: [1247533e] navigation started at 345.9 ms
+     680,8 | spar info +396.7 ms: [1247533e] Bridge: document cdaa4cb092458714 opened.
+     680,8 | spar info +396.9 ms: [1247533e] Heartbeat armed for the new document.
+     680,8 | spar info +397.0 ms: [1247533e] first document at 397 ms
+     680,8 | spar info +402.1 ms: [1247533e] first bridge message at 402 ms
+     680,8 | spar info +405.4 ms: [1247533e] first navigation completed at 405.4 ms
+     680,8 | spar info +407.3 ms: [1247533e] 404 for /favicon.ico
+     680,8 | spar info +409.0 ms: [1247533e] first bridge reply at 409 ms
+     680,8 | spar info +409.3 ms: [1247533e] ui-ready at 409.3 ms
+     680,8 | spar info +409.4 ms: [1247533e] Bridge: document cdaa4cb092458714 reported ui-ready.
+    2200,2 | probe: done page-errors
+    2239,9 | run: found 'done page-errors'
+    4257,9 | run: app working set 50072 KiB, peak seen 50072 KiB, private 16032 KiB
+    4258,2 | run: WM_CLOSE
+    4520,7 | spar info +4013.5 ms: [1247533e] close requested (User, automated) at 4013.5 ms
+    4520,7 | spar info +4018.9 ms: [1247533e] closing at 4018.9 ms
+    4520,7 | spar info +4019.2 ms: [1247533e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    4520,7 | spar info +4020.2 ms: [1247533e] page close work done at 4020.1 ms
+    4520,7 | spar info +4020.7 ms: [1247533e] Bridge: document cdaa4cb092458714 closed (window closing).
+    4520,8 | spar info +4020.9 ms: [1247533e] calls stopped at 4020.9 ms
+    4520,8 | spar info +4020.9 ms: [1247533e] calls settled at 4020.9 ms
+    4520,8 | spar info +4021.0 ms: [1247533e] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    4520,8 | spar info +4035.8 ms: [1247533e] controller closed at 4035.8 ms
+    4520,8 | spar info +4037.7 ms: [1247533e] window destroyed at 4037.7 ms
+    4520,8 | spar info +4044.4 ms: [1247533e] services disposed at 4044.4 ms
+    4520,8 | spar info +4044.4 ms: [1247533e] exit 0 at 4044.4 ms
+    4520,9 | run: exit 0

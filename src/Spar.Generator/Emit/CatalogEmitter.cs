@@ -13,7 +13,7 @@ internal static class CatalogEmitter
 {
     private const string Runtime = "global::Spar.Runtime";
 
-    public static void Emit(CodeWriter code, IReadOnlyList<ContractModel> contracts)
+    public static void Emit(CodeWriter code, IReadOnlyList<ContractModel> contracts, PageSecurityModel? security = null, string appId = "")
     {
         code.Open("internal static class SparContracts");
         code.Line($"public static {Runtime}.SparCatalog Catalog {{ get; }} = new(");
@@ -31,7 +31,13 @@ internal static class CatalogEmitter
         code.Line("    AddServices)");
         code.Line("{");
         code.Line("    AppAssembly = typeof(SparContracts).Assembly,");
+        if (appId.Length > 0)
+        {
+            code.Line($"    AppId = {Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(appId, quote: true)},");
+        }
+
         EmitInterfaces(code, contracts);
+        EmitPageSecurity(code, security);
         code.Line("};");
         code.Line();
 
@@ -73,6 +79,80 @@ internal static class CatalogEmitter
         }
 
         code.Line("    ],");
+    }
+
+    /// <summary>
+    /// The page security Program.cs declares (plan section 3b), for the hosts: only what differs from the strict default,
+    /// so an app that widens nothing gets <c>PageSecurity = new()</c>. Nothing when the app has no Create call.
+    /// </summary>
+    private static void EmitPageSecurity(CodeWriter code, PageSecurityModel? security)
+    {
+        if (security is null)
+        {
+            return;
+        }
+
+        var lines = new List<string>();
+        Sources(lines, "FontSrc", security.FontSrc);
+        Sources(lines, "ImgSrc", security.ImgSrc);
+        Sources(lines, "ConnectSrc", security.ConnectSrc);
+        Sources(lines, "MediaSrc", security.MediaSrc);
+        Sources(lines, "ScriptSrc", security.ScriptSrc);
+        Sources(lines, "StyleSrc", security.StyleSrc);
+        Sources(lines, "FrameSrc", security.FrameSrc);
+        Flag(lines, "AllowInlineStyles", security.AllowInlineStyles, true);
+        Flag(lines, "AllowEval", security.AllowEval, true);
+        Flag(lines, "AllowWebAssembly", security.AllowWebAssembly, true);
+        Flag(lines, "StyleNonce", security.StyleNonce, true);
+        Flag(lines, "TrustedTypes", security.TrustedTypes, false);
+        Flag(lines, "Integrity", security.Integrity, false);
+        if (security.Listener != "Always")
+        {
+            lines.Add($"Listener = global::Spar.CspReports.{security.Listener},");
+        }
+
+        if (security.Endpoint != "Always")
+        {
+            lines.Add($"Endpoint = global::Spar.CspReports.{security.Endpoint},");
+        }
+
+        if (security.Permissions.Length > 0)
+        {
+            lines.Add($"Permissions = [{string.Join(", ", security.Permissions.Select(p => "global::Spar.Permission." + p))}],");
+        }
+
+        if (lines.Count == 0)
+        {
+            code.Line($"    PageSecurity = new {Runtime}.SparPageSecurity(),");
+            return;
+        }
+
+        code.Line($"    PageSecurity = new {Runtime}.SparPageSecurity");
+        code.Line("    {");
+        foreach (var line in lines)
+        {
+            code.Line("        " + line);
+        }
+
+        code.Line("    },");
+    }
+
+    private static void Sources(List<string> lines, string name, EquatableArray<string> sources)
+    {
+        if (sources.Length > 0)
+        {
+            var literals = sources.Select(s => Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(s, quote: true));
+            lines.Add($"{name} = [{string.Join(", ", literals)}],");
+        }
+    }
+
+    /// <summary>A flag, written only when it is <paramref name="whenSet"/>, the opposite of its default.</summary>
+    private static void Flag(List<string> lines, string name, bool value, bool whenSet)
+    {
+        if (value == whenSet)
+        {
+            lines.Add($"{name} = {(value ? "true" : "false")},");
+        }
     }
 
     private static void EmitHandler(CodeWriter code, ContractModel contract, CommandModel command)

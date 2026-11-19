@@ -1,0 +1,544 @@
+2026-11-17T23:26:26.207Z INFO  Spar.Host  [0fafac58] Host started 49.3 ms after the process.
+2026-11-17T23:26:26.208Z INFO  Spar.Host  [0fafac58] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-distinct-uncaught-100k\com.example.tests.SecurityProbe.Development
+2026-11-17T23:26:26.215Z INFO  Spar.Host  [0fafac58] single instance at 16.8 ms
+2026-11-17T23:26:26.216Z INFO  Spar.Host  [0fafac58] prerequisites checked at 20.5 ms
+2026-11-17T23:26:26.224Z INFO  Spar.Host  [0fafac58] UI-thread stall probe on.
+2026-11-17T23:26:26.233Z INFO  Spar.Host  [0fafac58] window shown at 37.7 ms
+2026-11-17T23:26:26.234Z INFO  Spar.Host  [0fafac58] Theme dark (system), window #1f1f1f.
+2026-11-17T23:26:26.237Z INFO  Spar.Host  [0fafac58] services built at 41.2 ms
+2026-11-17T23:26:26.243Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-17T23:26:26.259Z INFO  Spar.Host  [0fafac58] environment at 63.6 ms
+2026-11-17T23:26:26.260Z INFO  Spar.Host  [0fafac58] WebView2 Runtime 157.0.4341.46
+2026-11-17T23:26:26.260Z INFO  Spar.Host  [0fafac58] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-distinct-uncaught-100k\com.example.tests.SecurityProbe.Development\WebView2
+2026-11-17T23:26:26.271Z INFO  Spar.Host  [0fafac58] Heartbeat every 5000 ms.
+2026-11-17T23:26:26.273Z INFO  Spar.Host  [0fafac58] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-PPCDxJ0a3mrhp+ZRnKIDD0gQNDpllZMu9T4EdLpTN7U=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-17T23:26:26.273Z INFO  Spar.Host  [0fafac58] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-17T23:26:26.455Z INFO  Spar.Host  [0fafac58] controller at 259.1 ms
+2026-11-17T23:26:26.458Z INFO  Spar.Host  [0fafac58] Browser settings read back (1.13 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-17T23:26:26.508Z INFO  Spar.Host  [0fafac58] Page file picker blocked in 49.9 ms (Page.enable 49.7 ms).
+2026-11-17T23:26:26.508Z INFO  Spar.Host  [0fafac58] page script added at 312.1 ms
+2026-11-17T23:26:26.508Z INFO  Spar.Host  [0fafac58] navigation started at 312.5 ms
+2026-11-17T23:26:26.584Z INFO  Spar.Host  [0fafac58] Bridge: document 9b7d2718ecdb0cc9 opened.
+2026-11-17T23:26:26.584Z INFO  Spar.Host  [0fafac58] Heartbeat armed for the new document.
+2026-11-17T23:26:26.584Z INFO  Spar.Host  [0fafac58] first document at 388.7 ms
+2026-11-17T23:26:26.590Z INFO  Spar.Host  [0fafac58] first bridge message at 394.5 ms
+2026-11-17T23:26:26.593Z INFO  Spar.Host  [0fafac58] first navigation completed at 397.6 ms
+2026-11-17T23:26:26.597Z INFO  Spar.Host  [0fafac58] 404 for /favicon.ico
+2026-11-17T23:26:26.599Z INFO  Spar.Host  [0fafac58] first bridge reply at 403.6 ms
+2026-11-17T23:26:26.599Z INFO  Spar.Host  [0fafac58] ui-ready at 403.8 ms
+2026-11-17T23:26:26.600Z INFO  Spar.Host  [0fafac58] Bridge: document 9b7d2718ecdb0cc9 reported ui-ready.
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 0
+    Error: probe uncaught 0
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 1
+    Error: probe uncaught 1
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 2
+    Error: probe uncaught 2
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 3
+    Error: probe uncaught 3
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 4
+    Error: probe uncaught 4
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 5
+    Error: probe uncaught 5
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 6
+    Error: probe uncaught 6
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 7
+    Error: probe uncaught 7
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 8
+    Error: probe uncaught 8
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 9
+    Error: probe uncaught 9
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 10
+    Error: probe uncaught 10
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 11
+    Error: probe uncaught 11
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 12
+    Error: probe uncaught 12
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 13
+    Error: probe uncaught 13
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 14
+    Error: probe uncaught 14
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 15
+    Error: probe uncaught 15
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 16
+    Error: probe uncaught 16
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 17
+    Error: probe uncaught 17
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 18
+    Error: probe uncaught 18
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 19
+    Error: probe uncaught 19
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 20
+    Error: probe uncaught 20
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 21
+    Error: probe uncaught 21
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 22
+    Error: probe uncaught 22
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 23
+    Error: probe uncaught 23
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 24
+    Error: probe uncaught 24
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 25
+    Error: probe uncaught 25
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 26
+    Error: probe uncaught 26
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 27
+    Error: probe uncaught 27
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 28
+    Error: probe uncaught 28
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 29
+    Error: probe uncaught 29
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 30
+    Error: probe uncaught 30
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 31
+    Error: probe uncaught 31
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 32
+    Error: probe uncaught 32
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 33
+    Error: probe uncaught 33
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 34
+    Error: probe uncaught 34
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 35
+    Error: probe uncaught 35
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 36
+    Error: probe uncaught 36
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 37
+    Error: probe uncaught 37
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 38
+    Error: probe uncaught 38
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 39
+    Error: probe uncaught 39
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 40
+    Error: probe uncaught 40
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 41
+    Error: probe uncaught 41
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 42
+    Error: probe uncaught 42
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 43
+    Error: probe uncaught 43
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 44
+    Error: probe uncaught 44
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 45
+    Error: probe uncaught 45
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 46
+    Error: probe uncaught 46
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 47
+    Error: probe uncaught 47
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 48
+    Error: probe uncaught 48
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 49
+    Error: probe uncaught 49
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 50
+    Error: probe uncaught 50
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 51
+    Error: probe uncaught 51
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 52
+    Error: probe uncaught 52
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 53
+    Error: probe uncaught 53
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 54
+    Error: probe uncaught 54
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 55
+    Error: probe uncaught 55
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 56
+    Error: probe uncaught 56
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 57
+    Error: probe uncaught 57
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 58
+    Error: probe uncaught 58
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 59
+    Error: probe uncaught 59
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 60
+    Error: probe uncaught 60
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 61
+    Error: probe uncaught 61
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.055Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 62
+    Error: probe uncaught 62
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 63
+    Error: probe uncaught 63
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 64
+    Error: probe uncaught 64
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 65
+    Error: probe uncaught 65
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 66
+    Error: probe uncaught 66
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 67
+    Error: probe uncaught 67
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 68
+    Error: probe uncaught 68
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 69
+    Error: probe uncaught 69
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 70
+    Error: probe uncaught 70
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 71
+    Error: probe uncaught 71
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 72
+    Error: probe uncaught 72
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 73
+    Error: probe uncaught 73
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 74
+    Error: probe uncaught 74
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 75
+    Error: probe uncaught 75
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 76
+    Error: probe uncaught 76
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 77
+    Error: probe uncaught 77
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 78
+    Error: probe uncaught 78
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 79
+    Error: probe uncaught 79
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 80
+    Error: probe uncaught 80
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 81
+    Error: probe uncaught 81
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 82
+    Error: probe uncaught 82
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 83
+    Error: probe uncaught 83
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 84
+    Error: probe uncaught 84
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 85
+    Error: probe uncaught 85
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 86
+    Error: probe uncaught 86
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 87
+    Error: probe uncaught 87
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 88
+    Error: probe uncaught 88
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 89
+    Error: probe uncaught 89
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 90
+    Error: probe uncaught 90
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 91
+    Error: probe uncaught 91
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 92
+    Error: probe uncaught 92
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 93
+    Error: probe uncaught 93
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 94
+    Error: probe uncaught 94
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 95
+    Error: probe uncaught 95
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 96
+    Error: probe uncaught 96
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 97
+    Error: probe uncaught 97
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 98
+    Error: probe uncaught 98
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:3631: Uncaught Error: probe uncaught 99
+    Error: probe uncaught 99
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3631
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:27.056Z WARN  Spar.Page  The page raised so many errors that Spar's script stopped reporting them in this document
+2026-11-17T23:26:36.278Z INFO  Spar.Page  The page's errors in the last 9.7 s: past the group limit: 900
+2026-11-17T23:26:39.128Z INFO  Spar.Host  [0fafac58] close requested (User, automated) at 12932.4 ms
+2026-11-17T23:26:39.133Z INFO  Spar.Host  [0fafac58] closing at 12936.8 ms
+2026-11-17T23:26:39.133Z INFO  Spar.Host  [0fafac58] Heartbeat: 2 ticks, 3 pings, longest tick on the UI thread 0.674 ms.
+2026-11-17T23:26:39.134Z INFO  Spar.Host  [0fafac58] page close work done at 12938 ms
+2026-11-17T23:26:39.134Z INFO  Spar.Host  [0fafac58] Bridge: document 9b7d2718ecdb0cc9 closed (window closing).
+2026-11-17T23:26:39.134Z INFO  Spar.Host  [0fafac58] calls stopped at 12938.6 ms
+2026-11-17T23:26:39.134Z INFO  Spar.Host  [0fafac58] calls settled at 12938.6 ms
+2026-11-17T23:26:39.134Z INFO  Spar.Host  [0fafac58] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-17T23:26:39.148Z INFO  Spar.Host  [0fafac58] controller closed at 12952.4 ms
+2026-11-17T23:26:39.151Z INFO  Spar.Host  [0fafac58] window destroyed at 12954.9 ms
+2026-11-17T23:26:39.157Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-17T23:26:39.158Z INFO  Spar.Host  [0fafac58] services disposed at 12962.2 ms
+2026-11-17T23:26:39.158Z INFO  Spar.Host  [0fafac58] exit 0 at 12962.2 ms

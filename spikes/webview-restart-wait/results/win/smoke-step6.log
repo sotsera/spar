@@ -1,0 +1,16 @@
+       0.0 | options --reps 3 --gap 1000 --profile default --smartscreen on --dwell 0 --window shown --env keep --wait none --folder same --overlap false --args "" --exit wait
+       6.5 | Runtime 157.0.4341.60
+     344.9 | cycle 0: controller 251 ms, navigation 67 ms, browser 44912 new True, environment 6 ms
+    1259.7 |   BrowserProcessExited pid 44912 kind 0
+    1681.2 | cycle 1: controller 251 ms, navigation 58 ms, browser 58012 new True, close->create 1007 ms (waited 0), previous browser exited before create True, previous exit +908 ms / event +915 ms after its close
+    8206.4 |   BrowserProcessExited pid 58012 kind 0
+    8449.4 | cycle 2: controller 5667 ms, navigation 67 ms, browser 30880 new True, close->create 1010 ms (waited 0), previous browser exited before create False, previous exit +6518 ms / event +6525 ms after its close
+   14966.1 |   BrowserProcessExited pid 30880 kind 0
+   15203.7 | cycle 3: controller 5680 ms, navigation 49 ms, browser 72928 new True, close->create 1006 ms (waited 0), previous browser exited before create False, previous exit +6508 ms / event +6517 ms after its close
+   21713.8 |   BrowserProcessExited pid 72928 kind 0
+   21731.9 | cycle 0 browser 44912: close->exit +908 ms, BrowserProcessExited +915 ms
+   21732.0 | cycle 1 browser 58012: close->exit +6518 ms, BrowserProcessExited +6525 ms
+   21732.0 | cycle 2 browser 30880: close->exit +6508 ms, BrowserProcessExited +6517 ms
+   21732.0 | cycle 3 browser 72928: close->exit +6504 ms, BrowserProcessExited +6510 ms
+   22241.2 | processes of the root left: 0 
+   22241.3 | summary: first controller 251 ms; restarts n=3 controller p50 5667 ms (min 251, max 5680), to first navigation p50 5730 ms, multi-second (>=2000 ms) 2, new browser 3; close->exit p50 6506 ms (max 6518)

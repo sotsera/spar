@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Black-box desktop spike (M1b step 8b): the Production Notebook on a desktop of its own (CreateDesktop,
+    STARTUPINFO.lpDesktop) against the fallback, shown without activation on the normal desktop. It compiles the
+    fixture's own process, desktop and UI Automation sources from src/Spar.Testing/BlackBox by link, so its numbers are
+    for the declarations the fixture ships. Throwaway.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BlackBoxDesktop</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\Spar.Testing\BlackBox\AppProcess.cs;..\..\src\Spar.Testing\BlackBox\CommandLine.cs;..\..\src\Spar.Testing\BlackBox\ThreadControl.cs;..\..\src\Spar.Testing\BlackBox\HiddenDesktop.cs;..\..\src\Spar.Testing\BlackBox\IBlackBoxProcess.cs" LinkBase="Fixture" />
+    <Compile Include="..\..\src\Spar.Testing\BlackBox\Automation\AutomationThread.cs;..\..\src\Spar.Testing\BlackBox\Automation\TopWindows.cs;..\..\src\Spar.Testing\BlackBox\Automation\Uia.cs;..\..\src\Spar.Testing\BlackBox\Interop\UiAutomation.cs" LinkBase="Fixture" />
+    <AdditionalFiles Include="..\..\src\Spar.Testing\NativeMethods.txt;..\..\src\Spar.Testing\NativeMethods.json" />
+  </ItemGroup>
+</Project>

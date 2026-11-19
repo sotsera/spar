@@ -1,0 +1,34 @@
+Production Notebook, NativeAOT (dotnet publish samples/Notebook -c Release, IlcGenerateMapFile=true)
+before step 8a (git archive of 192b995): 5194240 B
+after step 8a: 5200896 B
+
+Markers searched in the image after step 8a (UTF-8 type names, UTF-16 literals; scan.js):
+TestWindowProcess: utf8=false utf16=false
+ISparTestWindow: utf8=false utf16=false
+SparTestWindowRequest: utf8=false utf16=false
+FrameProcessesCompleted: utf8=false utf16=false
+SparDevToolsException: utf8=false utf16=false
+__sparAutomation: utf8=false utf16=false
+spar-automation: utf8=false utf16=false
+Spar test anchor: utf8=false utf16=false
+Spar UI (tests): utf8=false utf16=false
+spartest: utf8=false utf16=false
+SparTestSession: utf8=false utf16=false
+Spar.Testing: utf8=false utf16=false
+PageSession: utf8=false utf16=false
+SharedEnvironmentAsync: utf8=false utf16=false
+Runtime.callFunctionOn: utf8=false utf16=false
+Input.dispatchMouseEvent: utf8=false utf16=false
+Page.addScriptToEvaluateOnNewDocument: utf8=false utf16=false
+
+The same markers in the NativeAOT window-test executable (they must be there, or the markers would prove nothing):
+TestWindowProcess: utf8=true utf16=false
+ISparTestWindow: utf8=true utf16=false
+SparTestWindowRequest: utf8=true utf16=false
+FrameProcessesCompleted: utf8=true utf16=false
+SparDevToolsException: utf8=true utf16=false
+__sparAutomation: utf8=true utf16=true
+spar-automation: utf8=false utf16=true
+Spar test anchor: utf8=false utf16=true
+Spar UI (tests): utf8=false utf16=true
+spartest: utf8=false utf16=true

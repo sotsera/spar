@@ -17,6 +17,7 @@ internal static class ConsumerFiles
         CopyFolder(page, Path.Combine(root, "App", "ui"));
         WriteTests(Path.Combine(root, "App.Tests"));
         WriteEndToEndTests(Path.Combine(root, "App.EndToEndTests"), playwrightVersion);
+        WriteBlackBoxTests(Path.Combine(root, "App.BlackBoxTests"));
     }
 
     /// <summary>
@@ -90,6 +91,7 @@ internal static class ConsumerFiles
                 <ImplicitUsings>enable</ImplicitUsings>
                 <AssemblyName>NotesTool</AssemblyName>
                 <RootNamespace>NotesTool</RootNamespace>
+                <SparAppId>org.example.notes.Tool</SparAppId>
                 <SparFrontendPath>ui</SparFrontendPath>
                 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
                 <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
@@ -223,6 +225,57 @@ internal static class ConsumerFiles
 
                     await Expect(page.GetByRole(AriaRole.Status)).ToHaveTextAsync("4 words");
                     Assert.Empty(app.Problems);
+                }
+            }
+
+            """);
+    }
+
+    /// <summary>
+    /// A black-box test project (docs/app-model.md 6.13): the app's Production executable, published by the packaged
+    /// SDK beside the tests, launched and read through UI Automation. Its app's assembly name names Projects' property.
+    /// </summary>
+    private static void WriteBlackBoxTests(string folder)
+    {
+        Directory.CreateDirectory(folder);
+        File.WriteAllText(Path.Combine(folder, "Notes.App.BlackBoxTests.csproj"), """
+            <Project Sdk="Spar.Sdk">
+              <PropertyGroup>
+                <OutputType>Exe</OutputType>
+                <TargetFramework>net11.0</TargetFramework>
+                <Nullable>enable</Nullable>
+                <ImplicitUsings>enable</ImplicitUsings>
+                <IsTestProject>true</IsTestProject>
+                <SparBlackBoxTests>true</SparBlackBoxTests>
+                <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+                <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+              </PropertyGroup>
+
+              <ItemGroup>
+                <SparTestedApplication Include="..\App\Notes.App.csproj" />
+              </ItemGroup>
+            </Project>
+
+            """);
+        File.WriteAllText(Path.Combine(folder, "LaunchTests.cs"), """
+            using Spar;
+            using Spar.Testing;
+
+            namespace NotesTool.BlackBoxTests;
+
+            public sealed class LaunchTests
+            {
+                [Fact]
+                public async Task The_published_app_starts_shows_its_page_and_closes_cleanly()
+                {
+                    Assert.SkipUnless(OperatingSystem.IsWindows(), "The black-box fixture runs on Windows until the Linux host.");
+                    var token = TestContext.Current.CancellationToken;
+                    // This page never reports ui-ready (it speaks to the loopback host only), so the test waits for its heading.
+                    await using var app = await SparBlackBox.LaunchAsync(Projects.NotesTool, o => o.WaitForReady = false, token);
+
+                    await app.Window.GetByRole(SparRole.Heading, new() { Name = "Word count" }).WaitForAsync();
+                    Assert.Equal(0, await app.CloseAsync(token));
+                    Assert.True(await app.WaitForProcessTreeExitAsync());
                 }
             }
 

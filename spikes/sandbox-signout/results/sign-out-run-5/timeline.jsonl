@@ -1,0 +1,35 @@
+{"step":"start","at_ms":1079.5,"took_ms":1079,"exit":0,"wsb":"{ \u0022Id\u0022: \u0022<id>\u0022 }"}
+{"step":"ready-system","at_ms":1392.3,"took_ms":312.7,"attempts":1}
+{"step":"marker","at_ms":1705.4,"took_ms":312.9,"guestExit":0}
+{"step":"webview2-registration","at_ms":2023.9,"took_ms":318.3,"guestExit":0}
+{"step":"client-window","at_ms":2492.4,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2492.4,"visible":false,"foreground":false}
+{"step":"client-minimize","at_ms":2715.3,"wasForeground":false}
+{"step":"client-window","at_ms":2715.3,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2946.3,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2946.3,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2954.7,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2954.8,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2954.8,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2954.8,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2954.8,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":2954.8,"visible":false,"foreground":false}
+{"step":"client-minimize","at_ms":3289.7,"wasForeground":true}
+{"step":"client-minimize","at_ms":3400.2,"wasForeground":true}
+{"step":"client-window","at_ms":3520.1,"visible":false,"foreground":false}
+{"step":"ready-user-session","at_ms":5275.1,"took_ms":3222.9,"attempts":6}
+{"step":"connect","at_ms":5275.2,"took_ms":3242.7,"connectExited":true}
+{"step":"stage","at_ms":5285.4,"took_ms":10.2,"job":"window-tests/SignOut","stage":"j01-002609","files":3,"bytes":24368338}
+{"step":"stage-visible","at_ms":5777.8,"took_ms":492.3,"attempts":1}
+{"step":"run","at_ms":11624.1,"took_ms":5845.9,"job":"window-tests/SignOut","stage":"j01-002609","lane":"UserSession","guestExit":1073807364,"timedOut":false,"wsb":"{ \u0022ExitCode\u0022: 1073807364 }"}
+{"step":"collect","at_ms":11630,"took_ms":5.8,"exitFile":"1073807364"}
+{"step":"client-window","at_ms":13709.2,"visible":false,"foreground":false}
+{"step":"client-minimize","at_ms":13816.5,"wasForeground":true}
+{"step":"client-minimize","at_ms":13925.8,"wasForeground":true}
+{"step":"collect-logs","at_ms":27122.3,"took_ms":488.6,"guestExit":1}
+{"step":"after-session-end","at_ms":27656,"took_ms":263.6,"listed":true,"userSessionExit":null,"wsb":"Failed to start process in Windows Sandbox environment: A specified logon session does not exist. It may already have been terminated. (0x80070520)"}
+{"step":"job-end","at_ms":27661.6,"took_ms":25637.6,"job":"window-tests/SignOut","exit":1073807364,"tests":1,"problem":null}
+{"step":"stop","at_ms":28475.8,"took_ms":814,"exit":0,"wsb":""}
+{"step":"close-clients","at_ms":28535.2,"took_ms":59.3,"leftAfterStop":5,"leftAfterClose":0}
+{"step":"list-after","at_ms":28799.1,"stillListed":false,"running":0}
+{"step":"session-end","at_ms":28799.1,"took_ms":28799.1,"minimizes":5,"jobs":1}

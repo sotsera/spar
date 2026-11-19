@@ -1,0 +1,50 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=worker]
+      62,0 | run: window moved offscreen
+      67,7 | spar info +0.3 ms: [4749fb27] Host started 21.3 ms after the process.
+      67,7 | spar info +0.8 ms: [4749fb27] single instance at 0.8 ms
+      67,7 | spar info +1.0 ms: [4749fb27] prerequisites checked at 1 ms
+      67,7 | spar info +1.1 ms: [4749fb27] services built at 1.1 ms
+      67,7 | spar info +10.8 ms: [4749fb27] window shown at 10.8 ms
+      67,7 | spar info +11.0 ms: [4749fb27] Theme dark (system), window #1f1f1f.
+      67,8 | spar info +12.0 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      67,8 | spar info +21.0 ms: [4749fb27] environment at 21 ms
+      67,8 | spar info +21.1 ms: [4749fb27] WebView2 Runtime 157.0.4341.46
+      67,8 | spar info +26.9 ms: [4749fb27] Heartbeat every 5000 ms.
+      67,8 | spar info +27.0 ms: [4749fb27] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      67,8 | spar info +27.2 ms: [4749fb27] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     300,5 | spar info +236.6 ms: [4749fb27] controller at 236.6 ms
+     347,6 | spar info +288.7 ms: [4749fb27] page script added at 288.7 ms
+     347,6 | spar info +288.7 ms: [4749fb27] navigation started at 288.7 ms
+     393,7 | spar info +335.7 ms: [4749fb27] Bridge: document 8446ce0a331d1991 opened.
+     393,7 | spar info +335.8 ms: [4749fb27] Heartbeat armed for the new document.
+     393,7 | spar info +335.8 ms: [4749fb27] first document at 335.8 ms
+     393,7 | spar info +348.5 ms: [4749fb27] first bridge message at 348.5 ms
+     393,7 | spar info +348.8 ms: [4749fb27] first bridge reply at 348.8 ms
+     393,7 | spar info +348.8 ms: [4749fb27] ui-ready at 348.8 ms
+     393,7 | spar info +348.8 ms: [4749fb27] Bridge: document 8446ce0a331d1991 reported ui-ready.
+     393,7 | spar info +353.7 ms: [4749fb27] first navigation completed at 353.7 ms
+     393,7 | spar info +361.2 ms: [4749fb27] 404 for /favicon.ico
+     443,0 | probe: worker: {"eval":"blocked (EvalError)","function":"blocked (EvalError)","webassembly":"blocked (CompileError)"}
+     443,1 | probe: done worker
+     443,1 | spar warn +370.2 ms: Content Security Policy: require-trusted-types-for blocked trusted-types-sink ("eval|1 + 1") at https://app.localhost/assets/worker-BinqY6sO.js:5:3
+     443,1 | spar warn +370.4 ms: Content Security Policy: require-trusted-types-for blocked trusted-types-sink ("Function|(
+     443,1 | ) {
+     443,1 | return 2
+     443,1 | })") at https://app.localhost/assets/worker-BinqY6sO.js:11:29
+     443,1 | spar warn +370.5 ms: Content Security Policy: script-src blocked wasm-eval at https://app.localhost/assets/worker-BinqY6sO.js:18:13
+     479,8 | run: found 'done worker'
+    3490,7 | run: app working set 23896 KiB, peak seen 23896 KiB, private 7848 KiB
+    3491,2 | run: WM_CLOSE
+    3737,0 | spar info +3460.2 ms: [4749fb27] close requested (User) at 3460.2 ms
+    3737,1 | spar info +3460.8 ms: [4749fb27] closing at 3460.8 ms
+    3737,1 | spar info +3460.8 ms: [4749fb27] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    3737,1 | spar info +3461.0 ms: [4749fb27] page close work done at 3461 ms
+    3737,1 | spar info +3461.0 ms: [4749fb27] Bridge: document 8446ce0a331d1991 closed (window closing).
+    3737,1 | spar info +3461.0 ms: [4749fb27] calls stopped at 3461 ms
+    3737,1 | spar info +3461.0 ms: [4749fb27] calls settled at 3461 ms
+    3737,2 | spar info +3478.9 ms: [4749fb27] controller closed at 3478.9 ms
+    3737,2 | spar info +3481.1 ms: [4749fb27] window destroyed at 3481.1 ms
+    3737,2 | spar info +3484.2 ms: Content Security Policy reports in this run: 0 listener batches, 3 report-uri reports read, 0 refused unread (rate or size), 0 dropped (queue full)
+    3737,2 | spar info +3484.2 ms: [4749fb27] services disposed at 3484.2 ms
+    3737,2 | spar info +3484.2 ms: [4749fb27] exit 0 at 3484.2 ms
+    3737,4 | run: exit 0

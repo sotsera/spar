@@ -149,6 +149,20 @@ public sealed class BridgeSessionTests : IAsyncLifetime
         Assert.True(await _sent.StaysQuietAsync(TimeSpan.FromMilliseconds(200)));
     }
 
+    /// <summary>A desktop host closes a document at navigation; a message of it still in flight must not run a command.</summary>
+    [Fact]
+    public async Task After_close_a_call_runs_no_command()
+    {
+        await OpenAsync();
+
+        _session.Close();
+        _session.Receive(Call(1, "slow", "wait", ""));
+        await _session.WhenIdleAsync();
+
+        Assert.True(await _sent.StaysQuietAsync(TimeSpan.FromMilliseconds(200)));
+        Assert.DoesNotContain("slow.wait", _backend.Started);
+    }
+
     [Fact]
     public async Task Details_reach_the_page_only_when_the_host_allows_them()
     {
@@ -205,11 +219,76 @@ public sealed class BridgeSessionTests : IAsyncLifetime
         Assert.True(closingDone);
     }
 
-    private BridgeSession Session(bool includeDetails)
+    [Fact]
+    public async Task A_document_with_the_hosts_script_is_pinged_from_its_creation_and_its_pongs_are_reported()
+    {
+        // The host's injected script answers from the document's creation, before the page says hello.
+        using var session = Session(includeDetails: false, answersPing: true);
+        var pongs = new List<long>();
+        session.Pong += (seq, _) => pongs.Add(seq);
+
+        Assert.True(session.Ping(1));
+        var ping = await _lastSent.NextAsync();
+        session.Receive("{\"type\":\"pong\",\"seq\":1}\t");
+        session.Receive("{\"type\":\"pong\",\"seq\":0}\t");
+
+        Assert.Equal((BridgeMessageType.Ping, 1L), (ping.Type, ping.Seq!.Value));
+        Assert.Equal([1L], pongs);
+        Assert.Single(_dropped);
+    }
+
+    [Fact]
+    public async Task A_document_without_the_hosts_script_is_never_pinged_even_if_its_hello_lists_ping()
+    {
+        var opened = 0;
+        _session.Opened += () => opened++;
+        _session.Receive("{\"type\":\"hello\",\"protocol\":1,\"types\":[\"open\",\"result\",\"ping\"],\"contracts\":\"0123456789abcdef\"}\t");
+        Assert.Equal(BridgeMessageType.Open, (await _sent.NextAsync()).Type);
+
+        Assert.False(_session.Ping(1));
+
+        Assert.Equal(1, opened);
+        Assert.True(await _sent.StaysQuietAsync(TimeSpan.FromMilliseconds(100)));
+    }
+
+    [Fact]
+    public void A_csp_batch_reaches_the_host_as_its_payload_and_is_no_call()
+    {
+        var batches = new List<string>();
+        _session.Violations += payload => batches.Add(Encoding.UTF8.GetString(payload.Span));
+
+        _session.Receive("{\"type\":\"csp\"}\t{\"groups\":[],\"overflow\":0}");
+
+        Assert.Equal(["{\"groups\":[],\"overflow\":0}"], batches);
+        Assert.Empty(_dropped);
+    }
+
+    [Fact]
+    public async Task A_closed_document_is_not_pinged_and_a_pong_never_touches_a_call()
+    {
+        using var session = Session(includeDetails: false, answersPing: true);
+        session.Receive(Hello);
+        Assert.Equal(BridgeMessageType.Open, (await _lastSent.NextAsync()).Type);
+
+        // A pong is no call: its seq is not an id, so the next call may still use id 1.
+        session.Receive("{\"type\":\"pong\",\"seq\":5}\t");
+        session.Receive(Call(1, "pages", "get", "{\"id\":\"ideas\"}"));
+        var result = await _lastSent.NextAsync();
+        Assert.Equal((BridgeMessageType.Result, 1L), (result.Type, result.Id!.Value));
+
+        session.Close();
+        Assert.False(session.Ping(2));
+        Assert.Empty(_dropped);
+    }
+
+    private BridgeSession Session(bool includeDetails, bool answersPing = false)
     {
         var sent = _session is null ? _sent : new SentMessages();
         _lastSent = sent;
-        var session = new BridgeSession(_backend.Dispatcher, TestBackend.Fingerprint, "doc-1", sent.Add, includeDetails);
+        var session = new BridgeSession(_backend.Dispatcher, TestBackend.Fingerprint, "doc-1", sent.Add, includeDetails)
+        {
+            HostAnswersPing = answersPing,
+        };
         session.Dropped += reason => { lock (_dropped) { _dropped.Add(reason); } };
         return session;
     }

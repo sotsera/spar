@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    spikes/test-host/Spar.Mini, linked unchanged, except Windows/WebViewWindow.cs: the copy here takes the WebView2
+    runtime folder from SPIKE_WEBVIEW2_BROWSER_FOLDER (the Sandbox guest's registration can be stale).
+  -->
+  <PropertyGroup>
+    <RootNamespace>Spar</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+    <DefineConstants>$(DefineConstants);SPAR_GTK4</DefineConstants>
+    <SpikeSource>..\..\..\test-host\Spar.Mini\</SpikeSource>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <InternalsVisibleTo Include="Spar.Mini.Testing" />
+    <InternalsVisibleTo Include="SampleApp.Tests" />
+    <InternalsVisibleTo Include="SampleApp.AotTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="$(SpikeSource)**\*.cs" Exclude="$(SpikeSource)bin\**;$(SpikeSource)obj\**;$(SpikeSource)Windows\WebViewWindow.cs" LinkBase="Linked" />
+    <Compile Include="..\..\..\react\React.Desktop\Interop\WebView2.cs" Link="Windows\Interop\WebView2.cs" />
+    <Compile Include="..\..\..\react\React.Desktop\Interop\Handlers.cs" Link="Windows\Interop\Handlers.cs" />
+    <Compile Include="..\..\..\linux-desktop\Linux.Desktop\Native.cs" Link="Linux\Interop\Native.cs" />
+  </ItemGroup>
+</Project>

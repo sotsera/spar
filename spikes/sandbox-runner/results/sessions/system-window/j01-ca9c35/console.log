@@ -1,0 +1,24 @@
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/win-x64] (.NET 11.0.0)
+  Discovering: SampleApp.AotTests
+  Discovered:  SampleApp.AotTests
+  Starting:    SampleApp.AotTests
+    SampleApp.Tests.WindowTests.Page_facts [FAIL]
+      React.Desktop.Interop.ComFailureException : CreateCoreWebView2Controller failed: 0x80080005
+      Stack Trace:
+           at Spar.Windows.WebViewWindow.<CreateAsync>d__27.MoveNext()
+        --- End of stack trace from previous location ---
+           at Spar.Windows.WebViewWindow.<>c__DisplayClass18_0.<<OpenForTestAsync>b__0>d.MoveNext()
+        --- End of stack trace from previous location ---
+           at Spar.Windows.UiThread.<>c__DisplayClass15_0`1.<<InvokeAsync>b__0>d.MoveNext()
+        --- End of stack trace from previous location ---
+           at Spar.Testing.SparTestApp.<OpenSurfaceAsync>d__32.MoveNext()
+        --- End of stack trace from previous location ---
+           at Spar.Testing.SparTestApp.<StartAsync>d__24.MoveNext()
+        --- End of stack trace from previous location ---
+           at SampleApp.Tests.WindowTests.<Page_facts>d__6.MoveNext()
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+  Finished:    SampleApp.AotTests (ID = '3c4485227409036850ce8eee3f58255eaf19ff13cde69793dda83e3921b98ecc')
+=== TEST EXECUTION SUMMARY ===
+   SampleApp.AotTests  Total: 1, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 0.328s

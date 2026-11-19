@@ -1,0 +1,31 @@
+Run 20261119-113556: 51.9 s, user session not allowed
+
+session s01: 51562 ms, client minimized 0 times
+  start                       1060 ms  (at 1067)
+  ready-system                 328 ms  (at 1397)
+  marker                       320 ms  (at 1718)
+  stage                         11 ms  (at 1731)
+  stage-visible                309 ms  (at 2040)
+  run                          795 ms  (at 2835)
+  collect                        2 ms  (at 2838)
+  collect-logs                 304 ms  (at 3142)
+  job-end                     1435 ms  (at 3155)
+  stage                          7 ms  (at 3162)
+  stage-visible                300 ms  (at 3463)
+  run                          782 ms  (at 4245)
+  collect                        0 ms  (at 4245)
+  collect-logs                 332 ms  (at 4578)
+  job-end                     1428 ms  (at 4583)
+  stage                         10 ms  (at 4594)
+  stage-visible                287 ms  (at 4881)
+  run                        45051 ms  (at 49931)
+  deadline-kill                417 ms  (at 50349)
+  collect                       60 ms  (at 50408)
+  collect-logs                 299 ms  (at 50708)
+  job-end                    46130 ms  (at 50713)
+  stop                         575 ms  (at 51289)
+  session-end                51561 ms  (at 51561)
+
+job window-tests/System: exit 0, 1435 ms, 3 Passed
+job notebook/System: exit 0, 1428 ms, 1 Passed
+job window-tests/Deadline: exit 1, 46130 ms, 1 Unfinished, 3 Passed; The run reached its deadline and was ended in the guest.

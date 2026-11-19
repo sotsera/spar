@@ -39,11 +39,17 @@
     <SparVariant Condition="'$(SparVariant)' == ''">Development</SparVariant>
   </PropertyGroup>
 
-  <!-- Each variant builds into its own folders; restore output stays shared in obj/. -->
+  <!--
+    Each variant builds into its own folders; restore output stays shared in obj/. A black-box test project's publish of
+    its app (SparBlackBoxBuild, Sdk.targets) has folders of its own beside the variant's, since it can run in the same
+    build as an ordinary Release build of the app.
+  -->
   <PropertyGroup>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(SparVariant)\$(Configuration)\</IntermediateOutputPath>
+    <_SparOutputFolder>$(SparVariant)</_SparOutputFolder>
+    <_SparOutputFolder Condition="'$(SparBlackBoxBuild)' == 'true'">$(SparVariant).BlackBox</_SparOutputFolder>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(_SparOutputFolder)\$(Configuration)\</IntermediateOutputPath>
     <BaseOutputPath Condition="'$(BaseOutputPath)' == ''">bin\</BaseOutputPath>
-    <OutputPath>$(BaseOutputPath)$(SparVariant)\$(Configuration)\</OutputPath>
+    <OutputPath>$(BaseOutputPath)$(_SparOutputFolder)\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <!--

@@ -50,14 +50,14 @@ internal static class GeneratorHarness
     public static async Task<IReadOnlyList<string>> MessagesAsync(string source, IEnumerable<MetadataReference>? libraries = null, string listed = "") =>
         [.. (await DiagnosticsAsync(source, libraries, listed)).Select(d => $"{d.Id}: {d.GetMessage(System.Globalization.CultureInfo.InvariantCulture)}")];
 
-    /// <summary>Runs the generator (in <paramref name="variant"/>) and compiles the app with its output.</summary>
-    public static GeneratorRun Generate(string source, string variant = "Development", IEnumerable<MetadataReference>? libraries = null, string listed = "")
+    /// <summary>Runs the generator (in <paramref name="variant"/>, with the project's <c>SparAppId</c>) and compiles the app with its output.</summary>
+    public static GeneratorRun Generate(string source, string variant = "Development", IEnumerable<MetadataReference>? libraries = null, string listed = "", string appId = "")
     {
         var compilation = Compile(source, libraries: libraries);
         var driver = CSharpGeneratorDriver.Create(
             [new SparGenerator().AsSourceGenerator()],
             parseOptions: ParseOptions,
-            optionsProvider: new BuildOptions(variant, listed));
+            optionsProvider: new BuildOptions(variant, listed, appId));
         driver.RunGeneratorsAndUpdateCompilation(compilation, out var output, out var generatorDiagnostics, TestContext.Current.CancellationToken);
 
         var files = output.SyntaxTrees
@@ -80,9 +80,9 @@ internal static class GeneratorHarness
 
     private static async Task<IReadOnlyList<Diagnostic>> DiagnosticsAsync(string source, IEnumerable<MetadataReference>? libraries, string listed)
     {
-        var options = new AnalyzerOptions([], new BuildOptions("Development", listed));
+        var options = new AnalyzerOptions([], new BuildOptions("Development", listed, ""));
         var diagnostics = await Compile(source, libraries: libraries)
-            .WithAnalyzers([new ContractAnalyzer()], options)
+            .WithAnalyzers([new ContractAnalyzer(), new PageSecurityAnalyzer()], options)
             .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
         return [.. diagnostics.OrderBy(d => d.Location.SourceSpan.Start).ThenBy(d => d.GetMessage(), StringComparer.Ordinal)];
     }
@@ -102,16 +102,16 @@ internal static class GeneratorHarness
             .Select(path => MetadataReference.CreateFromFile(path))];
     }
 
-    /// <summary>The build properties the generator and analyzer read: the variant and the <c>SparContracts</c> list.</summary>
-    private sealed class BuildOptions(string variant, string listed) : AnalyzerConfigOptionsProvider
+    /// <summary>The build properties the generator and analyzer read: the variant, the <c>SparContracts</c> list and the app id.</summary>
+    private sealed class BuildOptions(string variant, string listed, string appId) : AnalyzerConfigOptionsProvider
     {
-        public override AnalyzerConfigOptions GlobalOptions { get; } = new Options(variant, listed);
+        public override AnalyzerConfigOptions GlobalOptions { get; } = new Options(variant, listed, appId);
 
         public override AnalyzerConfigOptions GetOptions(SyntaxTree tree) => GlobalOptions;
 
         public override AnalyzerConfigOptions GetOptions(AdditionalText textFile) => GlobalOptions;
 
-        private sealed class Options(string variant, string listed) : AnalyzerConfigOptions
+        private sealed class Options(string variant, string listed, string appId) : AnalyzerConfigOptions
         {
             public override bool TryGetValue(string key, [NotNullWhen(true)] out string? value)
             {
@@ -119,6 +119,7 @@ internal static class GeneratorHarness
                 {
                     "build_property.SparVariant" => variant,
                     "build_property.SparContractAssemblies" => listed,
+                    "build_property.SparAppId" when appId.Length > 0 => appId,
                     _ => null,
                 };
                 return value is not null;

@@ -1,7 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spar;
 using SqlTool.Connections;
+using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
+using SqlTool.Support;
 
 var app = SparApplication.Create(args, spar =>
 {
@@ -25,8 +28,14 @@ var app = SparApplication.Create(args, spar =>
             .Separator()
             .Item("Quit", TrayAction.Quit)));
 
-    // The strict CSP is the default; each addition is explicit (plan 3b). Decided.
-    spar.ContentSecurity(csp => csp.FontSrc("https://fonts.gstatic.com"));
+    // The strict CSP is the default; each addition is explicit (plan 3b). A directive method takes several sources and
+    // may be called again: Spar sends each directive once, its sources together. Violations are reported in every
+    // build by default; here report-uri, the backstop, reports only in Development and Test builds. Decided.
+    spar.ContentSecurity(csp => csp
+        .FontSrc("https://fonts.gstatic.com", "https://fonts.example-cdn.com")
+        .FontSrc("https://fonts.gstatic.com")
+        .ImgSrc("data:")
+        .Reporting(listener: CspReports.Always, endpoint: CspReports.DevelopmentOnly));
 
     // Powerful features are denied unless declared (plan 3b). Decided.
     spar.Permissions(p => p.Allow(Permission.ClipboardRead));
@@ -38,6 +47,11 @@ var app = SparApplication.Create(args, spar =>
     // Here logs sit next to the executable, as in a portable install.
     spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")));
 
+    // The folders the services will get, resolved now for what Program.cs builds itself: the hang record goes in the
+    // logs folder chosen above without repeating its path (3.13). spar.Folders(…) throws after this call. Built; the
+    // shape is for review (decision "Configuration stays the app's choice").
+    var folders = spar.ResolveFolders();
+
     // Window kinds the page opens by name (6.7). Decided.
     spar.Window("settings", w => w
         .Route("/settings")
@@ -48,10 +62,47 @@ var app = SparApplication.Create(args, spar =>
         .Commands(c => c.Allow<IConnections>()));
     spar.Window("queryEditor", w => w.Route("/query").Size(1000, 700).Zoom(min: 0.5, max: 3).FindInPage());
 
+    // Closing asks first: the page's guard, then this one, which asks while a copy runs (6.11). Decided.
+    spar.OnCloseRequested((request, services) => services.GetRequiredService<RunningCopies>().Any
+        ? CloseDecision.Ask("A copy is still running. Close anyway?")
+        : CloseDecision.Close);
+
+    // A second launch shows and focuses the main window, then hands its arguments here (3.14). Decided.
+    spar.OnRelaunch((relaunch, services) =>
+    {
+        if (relaunch.Arguments is ["--recipe", var file])
+        {
+            services.GetRequiredService<RecipeQueue>().TryAdd(relaunch.ResolvePath(file));
+        }
+    });
+
+    // A missing prerequisite opens the company's install guide in place of Spar's message (3.15). Decided.
+    spar.OnStartupProblem(SupportPage.TryOpen);
+
+    // A page that stops responding is recorded for support; Spar's own dialog still asks the user (3.16). Decided.
+    spar.OnPageUnresponsive((hang, services, cancellationToken) =>
+        services.GetRequiredService<HangLog>().RecordAsync(hang, cancellationToken));
+
+    // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
+    spar.Diagnostics(d => d.KeepStallProbe());
+
+    // The log file: Information and above, and Debug for the copy jobs; a logging.json in the per-user folder overrides
+    // these on a user's machine without a new build (3.13). Decided.
+    spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
+
+    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
+    if (SupportBuild.IsSupportBuild)
+    {
+        spar.Browser(b => b.AllowDevTools());
+    }
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
+    spar.Services.AddSingleton<RunningCopies>();
+    spar.Services.AddSingleton<RecipeQueue>();
+    spar.Services.AddSingleton(new HangLog(folders.Logs));
 });
 
 return app.Run();

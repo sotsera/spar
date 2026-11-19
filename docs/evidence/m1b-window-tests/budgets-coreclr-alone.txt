@@ -1,0 +1,8 @@
+Recorded 2026-11-18 22:16:42 +01:00
+Window test: open, journey and close: 300.88 ms (282.85–895.19, n = 20), p95 345.80 ms [Debug, CoreCLR]
+Window test: open (to the page's Ready): 128.27 ms (119.11–613.15, n = 20) [Debug, CoreCLR]
+Window test: journey (fill, check, select, click, 3 assertions): 157.26 ms (148.60–256.34, n = 20) [Debug, CoreCLR]
+Window test: close (teardown and the renderer's exit): 14.48 ms (13.58–25.70, n = 20) [Debug, CoreCLR]
+Window test: its InPrivate controller: 23.71 ms (22.14–44.88, n = 20) [Debug, CoreCLR]
+Window test: the shared environment, first window of the process: 427.03 ms (427.03–427.03, n = 1) [Debug, CoreCLR]
+Window test: the shared environment, later windows: 2.80 ms (2.40–11.76, n = 19) [Debug, CoreCLR]

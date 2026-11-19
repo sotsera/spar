@@ -1,0 +1,116 @@
+spar info +0.2 ms: [87488d29] Host started 38.4 ms after the process.
+spar info +2.7 ms: [87488d29] App id com.example.tests.SecurityProbe, folder C:\spar-work\focus-current\com.example.tests.SecurityProbe
+spar info +9.3 ms: [87488d29] single instance at 9.3 ms
+spar info +20.3 ms: [87488d29] prerequisites checked at 20.3 ms
+spar info +23.2 ms: [87488d29] services built at 23.2 ms
+spar info +42.6 ms: [87488d29] window shown at 42.6 ms
+spar info +44.9 ms: [87488d29] Theme light (system), window #ffffff.
+spar info +48.3 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+spar info +66.5 ms: [87488d29] environment at 66.5 ms
+spar info +67.8 ms: [87488d29] WebView2 Runtime 157.0.4341.46
+spar info +68.9 ms: [87488d29] Browser profile folder C:\spar-work\focus-current\com.example.tests.SecurityProbe\WebView2
+spar info +73.5 ms: [87488d29] Heartbeat every 5000 ms.
+spar info +74.0 ms: [87488d29] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-l0uFZYlkrSB/vRE7OKIXR6OwCwC1mmWWH9pblwCuVHQ=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +74.5 ms: [87488d29] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+spar info +331.6 ms: [87488d29] controller at 331.6 ms
+spar info +334.3 ms: [87488d29] Browser settings set (0.08 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+spar info +410.3 ms: [87488d29] Page file picker blocked in 75.5 ms (Page.enable 74.9 ms).
+spar info +410.7 ms: [87488d29] page script added at 410.7 ms
+spar info +411.0 ms: [87488d29] navigation started at 411 ms
+spar info +481.2 ms: [87488d29] Bridge: document a0da6f6aa81d7c0a opened.
+spar info +481.7 ms: [87488d29] Heartbeat armed for the new document.
+spar info +482.1 ms: [87488d29] first document at 482.1 ms
+spar info +490.4 ms: [87488d29] first bridge message at 490.4 ms
+spar info +491.1 ms: [87488d29] first bridge reply at 491.1 ms
+spar info +491.4 ms: [87488d29] ui-ready at 491.4 ms
+spar info +491.7 ms: [87488d29] Bridge: document a0da6f6aa81d7c0a reported ui-ready.
+spar info +495.8 ms: [87488d29] first navigation completed at 495.8 ms
+probe: focus: select at 20,140 size 200x40, dpr 1
+spar info +500.0 ms: [87488d29] 404 for /favicon.ico
+probe: focus: ready, active body, hasFocus true, visible, 1024x736, values [||]
+probe: done focus
+probe: focus: key a on body
+probe: focus: key b on body
+probe: focus: key c on body
+probe: focus: state active body, hasFocus true, visible, 1024x736, values [||]
+probe: focus: key Tab on body
+probe: focus: focusin first
+probe: focus: key Tab on first
+probe: focus: focusin second
+probe: focus: key Tab on second
+probe: focus: focusin last
+probe: focus: key Tab on last
+probe: focus: focusin choice
+probe: focus: key Tab on choice
+probe: focus: window blur
+probe: focus: window focus
+probe: focus: focusin first
+probe: focus: key t on first
+probe: focus: state active first, hasFocus true, visible, 1024x736, values [t||]
+probe: focus: key Shift on first
+probe: focus: key Tab on first
+probe: focus: window blur
+probe: focus: window focus
+probe: focus: focusin choice
+probe: focus: window focus
+probe: focus: key s on choice
+probe: focus: select changed to six
+probe: focus: state active choice, hasFocus true, visible, 1024x736, values [t||]
+probe: focus: window blur
+probe: focus: window focus
+probe: focus: focusin choice
+probe: focus: key r on choice
+probe: focus: state active choice, hasFocus true, visible, 1024x736, values [t||]
+probe: focus: window blur
+probe: focus: visibilitychange hidden at 9989 ms
+probe: focus: visibilitychange visible at 11613 ms
+probe: focus: window focus
+probe: focus: window focus
+probe: focus: focusin choice
+probe: focus: focusin choice
+probe: focus: window focus
+probe: focus: window blur
+probe: focus: window blur
+probe: focus: focusin choice
+probe: focus: key m on choice
+probe: focus: state active choice, hasFocus true, visible, 1024x736, values [t||]
+probe: focus: hang for 25 s
+spar warn +29874.8 ms: [87488d29] WebView2 reports the page's renderer is not responding.
+spar warn +29884.8 ms: [87488d29] The page is not responding: it was reported unresponsive by WebView2 (14.8 s without an answer).
+spar info +29885.6 ms: [87488d29] hung-page dialog shown (Wait / Reload page) at 29885.6 ms
+probe: focus: hang ended
+probe: focus: window blur
+spar info +38837.0 ms: [87488d29] the page answered again after 23.8 s at 38837 ms
+probe: focus: window focus
+probe: focus: focusin choice
+probe: focus: key h on choice
+probe: focus: state active choice, hasFocus true, visible, 1024x736, values [t||]
+probe: focus: hang for 25 s
+spar warn +56341.4 ms: [87488d29] WebView2 reports the page's renderer is not responding.
+spar warn +56350.3 ms: [87488d29] The page is not responding: it was reported unresponsive by WebView2 (11.3 s without an answer).
+spar info +56350.9 ms: [87488d29] hung-page dialog shown (Wait / Reload page) at 56350.8 ms
+spar info +57062.3 ms: [87488d29] hung-page dialog: Wait at 57062.3 ms
+probe: focus: hang ended
+probe: focus: window blur
+probe: focus: focusin choice
+probe: focus: window focus
+spar info +65305.6 ms: [87488d29] the page answered again after 20.2 s at 65305.6 ms
+probe: focus: key k on choice
+probe: focus: state active choice, hasFocus true, visible, 1024x736, values [t||]
+probe: focus: key Alt on choice
+probe: focus: key ArrowDown on choice
+probe: focus: state active choice, hasFocus true, visible, 1024x736, values [t||]
+probe: focus: key Alt on choice
+probe: focus: key F4 on choice
+spar info +74474.4 ms: [87488d29] close requested (User) at 74474.4 ms
+spar info +74475.5 ms: [87488d29] closing at 74475.5 ms
+spar info +74475.8 ms: [87488d29] Heartbeat: 14 ticks, 7 pings, longest tick on the UI thread 0.102 ms.
+spar info +74476.3 ms: [87488d29] page close work done at 74476.3 ms
+spar info +74476.6 ms: [87488d29] Bridge: document a0da6f6aa81d7c0a closed (window closing).
+spar info +74476.9 ms: [87488d29] calls stopped at 74476.9 ms
+spar info +74477.1 ms: [87488d29] calls settled at 74477.1 ms
+spar info +74477.3 ms: [87488d29] Window: 9 focus moves, 2 Tab past the page, 2 visibility changes, 22 moves.
+spar info +74496.9 ms: [87488d29] controller closed at 74496.9 ms
+spar info +74510.4 ms: [87488d29] window destroyed at 74510.4 ms
+spar info +74514.4 ms: [87488d29] services disposed at 74514.4 ms
+spar info +74514.8 ms: [87488d29] exit 0 at 74514.8 ms

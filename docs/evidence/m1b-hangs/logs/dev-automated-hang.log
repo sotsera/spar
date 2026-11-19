@@ -1,0 +1,46 @@
+       5,0 > start Notebook.exe env [SPAR_AUTOMATED=1 SPAR_DEV_PAGE_HANG=3000]
+     117,2 | spar info +13.3 ms: [46564b44] Host started 89.8 ms after the process.
+     128,0 | spar info +24.0 ms: [46564b44] single instance at 23 ms
+     130,6 | spar info +30.2 ms: [46564b44] prerequisites checked at 30.2 ms
+     148,7 | spar info +48.1 ms: [46564b44] UI-thread stall probe on.
+     162,6 | spar info +62.2 ms: [46564b44] services built at 62.2 ms
+     176,6 | spar info +76.3 ms: [46564b44] window shown at 76.2 ms
+     176,9 | spar info +76.6 ms: [46564b44] Theme dark (system), window #1d1f24.
+     193,8 | spar info +93.3 ms: [46564b44] environment at 93.3 ms
+     194,2 | spar info +94.0 ms: [46564b44] WebView2 Runtime 157.0.4341.46
+     204,8 | spar info +104.5 ms: [46564b44] Heartbeat every 5000 ms.
+     381,9 | spar info +281.5 ms: [46564b44] controller at 281.5 ms
+     385,4 | spar info +285.0 ms: [46564b44] navigation started at 285 ms
+     492,0 | spar info +391.7 ms: [46564b44] Bridge: document 8008dfaa91753855 opened.
+     492,2 | spar info +391.7 ms: [46564b44] first document at 391.7 ms
+     517,8 | spar info +417.5 ms: [46564b44] first bridge message at 417.5 ms
+     519,9 | spar info +419.3 ms: [46564b44] first navigation completed at 419.3 ms
+     526,2 | spar info +425.8 ms: [46564b44] first bridge reply at 425.8 ms
+     526,7 | spar info +426.4 ms: [46564b44] Heartbeat armed for the new document.
+     538,3 | spar info +437.9 ms: [46564b44] ui-ready at 437.9 ms
+     538,4 | spar info +438.0 ms: [46564b44] Bridge: document 8008dfaa91753855 reported ui-ready.
+     540,9 | spar info +440.5 ms: [46564b44] 404 for /favicon.ico
+    3554,7 | spar warn +3454.4 ms: [46564b44] Development trigger: the page hangs from now.
+   20207,8 | spar warn +20107.4 ms: [46564b44] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20207,9 > seen 'The page is not responding'
+   20208,0 | spar info +20107.7 ms: [46564b44] The automated mode shows no hung-page dialog.
+   23209,0 > no dialog (as expected)
+   23209,8 > WM_CLOSE to the window
+   23211,7 | spar info +23111.4 ms: [46564b44] close requested (User, automated) at 23111.4 ms
+   23212,4 | spar info +23112.0 ms: [46564b44] The automated mode closes a page that does not answer without asking.
+   23212,5 > seen 'closes a page that does not answer'
+   23215,2 | spar info +23114.7 ms: Close request for window main (User): the backend's guard answered Close
+   23215,5 | spar info +23115.2 ms: [46564b44] window closed anyway; the page had not answered for 18.0 s at 23115.2 ms
+   23216,3 | spar info +23116.0 ms: [46564b44] closing at 23116 ms
+   23216,5 | spar info +23116.2 ms: [46564b44] Heartbeat: 4 ticks, 1 pings, longest tick on the UI thread 0.816 ms.
+   23217,1 | spar info +23116.7 ms: [46564b44] Bridge: document 8008dfaa91753855 closed (window closing).
+   23217,1 | spar info +23116.9 ms: [46564b44] calls stopped at 23116.9 ms
+   23217,2 | spar info +23116.9 ms: [46564b44] calls settled at 23116.9 ms
+   23219,0 | spar info +23118.7 ms: [46564b44] renderer processes ended: 1 at 23118.7 ms
+   23235,0 | spar info +23134.6 ms: [46564b44] controller closed at 23134.6 ms
+   23252,1 | spar info +23151.7 ms: [46564b44] window destroyed at 23151.6 ms
+   23260,2 | spar info +23159.8 ms: [46564b44] services disposed at 23159.8 ms
+   23260,6 | spar info +23159.9 ms: [46564b44] exit 0 at 23159.9 ms
+   23272,4 > exit 0
+   23561,6 > browser processes left for this root 0,3 s after the exit: 0
+   23561,6 > RESULT OK

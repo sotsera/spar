@@ -1,0 +1,139 @@
+87526546.714 pid=58456 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --hold-ms 40000 -- first
+87526547.131 pid=58456 lock taken 0.1 ms after main, attempt 1
+87526547.979 pid=58456 primary serving spar-9f659e5a3bcc603a74f2675fdab2e88b sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+87526581.116 pid=42916 start suspend --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87526581.468 pid=42916 suspended 58456: status 0x0
+87526581.530 pid=42916 exit 0
+87526604.943 pid=22300 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-0.sql
+87526643.242 pid=51044 start run --t0 875266051927 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-0.sql
+87526644.253 pid=51044 server pid 58456 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87526644.725 pid=51044 connected to pid 58456 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87528655.554 pid=51044 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+87528664.174 pid=51044 exit 10
+87528666.974 pid=22300 spawned #0 pid 51044: exit 10 after 2061.3 ms
+87528782.181 pid=22300 exit 0
+87528804.334 pid=12004 start resume --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87528804.957 pid=12004 resumed 58456: status 0x0
+87528805.025 pid=12004 exit 0
+87528805.201 pid=58456 received args=[open hung-0.sql] from_launch_ms=2200.0 from_main_ms=2161.7
+87528806.075 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+87529147.357 pid=62284 start suspend --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87529150.904 pid=62284 suspended 58456: status 0x0
+87529150.991 pid=62284 exit 0
+87529171.085 pid=22892 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-1.sql
+87529205.861 pid=8632 start run --t0 875291713211 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-1.sql
+87529206.927 pid=8632 server pid 58456 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87529207.222 pid=8632 connected to pid 58456 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87531221.758 pid=8632 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+87531230.623 pid=8632 exit 10
+87531233.818 pid=22892 spawned #0 pid 8632: exit 10 after 2061.8 ms
+87531346.836 pid=22892 exit 0
+87531368.710 pid=63136 start resume --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87531369.048 pid=63136 resumed 58456: status 0x0
+87531369.090 pid=58456 received args=[open hung-1.sql] from_launch_ms=2197.8 from_main_ms=2162.9
+87531369.109 pid=63136 exit 0
+87531369.434 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+87531702.384 pid=54584 start suspend --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87531702.777 pid=54584 suspended 58456: status 0x0
+87531702.841 pid=54584 exit 0
+87531722.891 pid=63836 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-2.sql
+87531757.718 pid=62452 start run --t0 875317231171 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-2.sql
+87531758.673 pid=62452 server pid 58456 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87531758.973 pid=62452 connected to pid 58456 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87533768.958 pid=62452 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+87533778.290 pid=62452 exit 10
+87533781.214 pid=63836 spawned #0 pid 62452: exit 10 after 2057.7 ms
+87533894.399 pid=63836 exit 0
+87533920.632 pid=30216 start resume --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87533921.059 pid=30216 resumed 58456: status 0x0
+87533921.113 pid=58456 received args=[open hung-2.sql] from_launch_ms=2198.0 from_main_ms=2163.2
+87533921.148 pid=30216 exit 0
+87533921.361 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+87534249.950 pid=13144 start suspend --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87534250.318 pid=13144 suspended 58456: status 0x0
+87534250.393 pid=13144 exit 0
+87534270.851 pid=61724 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-3.sql
+87534308.026 pid=5292 start run --t0 875342710715 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-3.sql
+87534308.979 pid=5292 server pid 58456 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87534309.315 pid=5292 connected to pid 58456 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87536324.992 pid=5292 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+87536334.450 pid=5292 exit 10
+87536337.226 pid=61724 spawned #0 pid 5292: exit 10 after 2065.7 ms
+87536448.887 pid=61724 exit 0
+87536471.077 pid=42156 start resume --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87536471.440 pid=42156 resumed 58456: status 0x0
+87536471.483 pid=58456 received args=[open hung-3.sql] from_launch_ms=2200.4 from_main_ms=2163.2
+87536471.503 pid=42156 exit 0
+87536471.690 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+87536795.852 pid=17640 start suspend --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87536796.203 pid=17640 suspended 58456: status 0x0
+87536796.264 pid=17640 exit 0
+87536817.448 pid=61044 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-4.sql
+87536856.648 pid=63900 start run --t0 875368177446 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-4.sql
+87536857.655 pid=63900 server pid 58456 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87536857.963 pid=63900 connected to pid 58456 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87538864.860 pid=63900 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+87538874.037 pid=63900 exit 10
+87538881.353 pid=61044 spawned #0 pid 63900: exit 10 after 2062.9 ms
+87538988.291 pid=61044 exit 0
+87539013.623 pid=44892 start resume --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87539014.064 pid=44892 resumed 58456: status 0x0
+87539014.114 pid=58456 received args=[open hung-4.sql] from_launch_ms=2196.4 from_main_ms=2157.2
+87539014.160 pid=44892 exit 0
+87539014.341 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+87539352.050 pid=21300 start suspend --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87539352.426 pid=21300 suspended 58456: status 0x0
+87539352.492 pid=21300 exit 0
+87539372.622 pid=11344 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --count 2 --parallel -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-pair-{i}.sql
+87539406.995 pid=17396 start run --t0 875393728718 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-pair-0.sql
+87539407.987 pid=17396 server pid 58456 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87539408.299 pid=17396 connected to pid 58456 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87539409.043 pid=57324 start run --t0 875393752657 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\data --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs -- open hung-pair-1.sql
+87539519.530 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87539660.522 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87539801.642 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87539942.064 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87540083.097 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87540224.380 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87540362.851 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87540503.150 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87540644.950 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87540785.326 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87540924.459 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87541065.160 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87541206.174 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87541346.562 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87541409.940 pid=17396 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+87541413.556 pid=17396 exit 10
+87541421.507 pid=11344 spawned #0 pid 17396: exit 10 after 2047.9 ms
+87541487.404 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87541627.011 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87541767.841 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87541906.495 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87542044.669 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87542185.491 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87542327.100 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87542468.385 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87542608.032 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87542749.436 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87542888.117 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87543028.820 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87543170.290 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87543309.957 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87543450.301 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87543592.068 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87543733.734 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87543872.164 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87544011.742 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87544151.765 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87544289.735 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87544432.053 pid=57324 connect: no free instance of spar-9f659e5a3bcc603a74f2675fdab2e88b within 100 ms
+87544432.289 pid=57324 the lock stays held and nobody serves spar-9f659e5a3bcc603a74f2675fdab2e88b after 5000 ms; giving up
+87544432.531 pid=57324 exit 11
+87544435.813 pid=11344 spawned #1 pid 57324: exit 11 after 5060.5 ms
+87544435.928 pid=11344 exit 0
+87544455.747 pid=42956 start resume --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\hung\logs --pid 58456
+87544456.094 pid=42956 resumed 58456: status 0x0
+87544456.168 pid=42956 exit 0
+87544456.260 pid=58456 received args=[open hung-pair-0.sql] from_launch_ms=5083.4 from_main_ms=5049.0
+87544456.470 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled

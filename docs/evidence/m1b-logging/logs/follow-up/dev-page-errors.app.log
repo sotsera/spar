@@ -1,0 +1,56 @@
+2026-11-18T07:02:55.962Z INFO  Spar.Host  [6c457956] Host started 226.8 ms after the process.
+2026-11-18T07:02:55.962Z INFO  Spar.Host  [6c457956] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-page-errors\com.example.tests.SecurityProbe.Development
+2026-11-18T07:02:55.970Z INFO  Spar.Host  [6c457956] single instance at 23.8 ms
+2026-11-18T07:02:55.971Z INFO  Spar.Host  [6c457956] prerequisites checked at 27.9 ms
+2026-11-18T07:02:55.980Z INFO  Spar.Host  [6c457956] UI-thread stall probe on.
+2026-11-18T07:02:55.989Z INFO  Spar.Host  [6c457956] window shown at 45.8 ms
+2026-11-18T07:02:55.990Z INFO  Spar.Host  [6c457956] Theme dark (system), window #1f1f1f.
+2026-11-18T07:02:55.994Z INFO  Spar.Host  [6c457956] services built at 50.9 ms
+2026-11-18T07:02:55.997Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-18T07:02:56.012Z INFO  Spar.Host  [6c457956] environment at 69 ms
+2026-11-18T07:02:56.013Z INFO  Spar.Host  [6c457956] WebView2 Runtime 157.0.4341.46
+2026-11-18T07:02:56.013Z INFO  Spar.Host  [6c457956] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-page-errors\com.example.tests.SecurityProbe.Development\WebView2
+2026-11-18T07:02:56.024Z INFO  Spar.Host  [6c457956] Heartbeat every 5000 ms.
+2026-11-18T07:02:56.026Z INFO  Spar.Host  [6c457956] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-18T07:02:56.026Z INFO  Spar.Host  [6c457956] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-18T07:02:56.230Z INFO  Spar.Host  [6c457956] controller at 286.5 ms
+2026-11-18T07:02:56.233Z INFO  Spar.Host  [6c457956] Browser settings read back (1.10 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-18T07:02:56.283Z INFO  Spar.Host  [6c457956] Development console: the page's console errors come from the DevTools Protocol.
+2026-11-18T07:02:56.283Z INFO  Spar.Host  [6c457956] Page file picker blocked in 49.3 ms (Page.enable 48.8 ms).
+2026-11-18T07:02:56.283Z INFO  Spar.Host  [6c457956] page script added at 339.3 ms
+2026-11-18T07:02:56.283Z INFO  Spar.Host  [6c457956] navigation started at 339.8 ms
+2026-11-18T07:02:56.343Z INFO  Spar.Host  [6c457956] Bridge: document de9ef90066047a23 opened.
+2026-11-18T07:02:56.344Z INFO  Spar.Host  [6c457956] Heartbeat armed for the new document.
+2026-11-18T07:02:56.344Z INFO  Spar.Host  [6c457956] first document at 400.3 ms
+2026-11-18T07:02:56.349Z INFO  Spar.Host  [6c457956] first bridge message at 405.5 ms
+2026-11-18T07:02:56.351Z INFO  Spar.Host  [6c457956] first navigation completed at 407.6 ms
+2026-11-18T07:02:56.354Z INFO  Spar.Host  [6c457956] 404 for /favicon.ico
+2026-11-18T07:02:56.357Z INFO  Spar.Host  [6c457956] first bridge reply at 413.7 ms
+2026-11-18T07:02:56.357Z INFO  Spar.Host  [6c457956] ui-ready at 413.9 ms
+2026-11-18T07:02:56.357Z INFO  Spar.Host  [6c457956] Bridge: document de9ef90066047a23 reported ui-ready.
+2026-11-18T07:02:56.367Z DEBUG SecurityProbe.ProbeService  The page asked for its probe: page-errors
+2026-11-18T07:02:56.376Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:4346: probe: the settings could not be read SyntaxError: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+    SyntaxError: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+        at JSON.parse (<anonymous>)
+        at page-errors (https://app.localhost/assets/index-B_HLBId8.js:6:4309)
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:56.472Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-B_HLBId8.js:6:4188: Uncaught TypeError: probe: a timer's callback failed
+    TypeError: probe: a timer's callback failed
+        at https://app.localhost/assets/index-B_HLBId8.js:6:4188
+2026-11-18T07:02:56.472Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-B_HLBId8.js:6:4253: RangeError: probe: a promise nobody awaited
+    RangeError: probe: a promise nobody awaited
+        at page-errors (https://app.localhost/assets/index-B_HLBId8.js:6:4253)
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:59.957Z INFO  Spar.Host  [6c457956] close requested (User, automated) at 4014 ms
+2026-11-18T07:02:59.965Z INFO  Spar.Host  [6c457956] closing at 4021.2 ms
+2026-11-18T07:02:59.965Z INFO  Spar.Host  [6c457956] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-18T07:02:59.966Z INFO  Spar.Host  [6c457956] page close work done at 4022.9 ms
+2026-11-18T07:02:59.967Z INFO  Spar.Host  [6c457956] Bridge: document de9ef90066047a23 closed (window closing).
+2026-11-18T07:02:59.968Z INFO  Spar.Host  [6c457956] calls stopped at 4024.3 ms
+2026-11-18T07:02:59.968Z INFO  Spar.Host  [6c457956] calls settled at 4024.3 ms
+2026-11-18T07:02:59.968Z INFO  Spar.Host  [6c457956] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-18T07:02:59.984Z INFO  Spar.Host  [6c457956] controller closed at 4040.5 ms
+2026-11-18T07:02:59.986Z INFO  Spar.Host  [6c457956] window destroyed at 4042.9 ms
+2026-11-18T07:02:59.993Z INFO  Spar.Page  The page's error reports in this run: 2 batches, 3 errors, 0 batches dropped (queue full)
+2026-11-18T07:02:59.994Z INFO  Spar.Host  [6c457956] services disposed at 4050.3 ms
+2026-11-18T07:02:59.994Z INFO  Spar.Host  [6c457956] exit 0 at 4050.4 ms

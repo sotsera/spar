@@ -1,0 +1,50 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=navigate]
+      58,3 | run: window moved offscreen
+      63,2 | spar info +0.2 ms: [34eb625e] Host started 21.4 ms after the process.
+      63,3 | spar info +0.7 ms: [34eb625e] single instance at 0.7 ms
+      63,3 | spar info +1.0 ms: [34eb625e] prerequisites checked at 1 ms
+      63,3 | spar info +1.1 ms: [34eb625e] services built at 1.1 ms
+      63,3 | spar info +10.3 ms: [34eb625e] window shown at 10.3 ms
+      63,3 | spar info +10.5 ms: [34eb625e] Theme dark (system), window #1f1f1f.
+      63,3 | spar info +11.9 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      63,3 | spar info +20.3 ms: [34eb625e] environment at 20.3 ms
+      63,3 | spar info +20.4 ms: [34eb625e] WebView2 Runtime 157.0.4341.46
+      63,3 | spar info +26.8 ms: [34eb625e] Heartbeat every 5000 ms.
+      63,3 | spar info +27.5 ms: [34eb625e] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      63,3 | spar info +27.6 ms: [34eb625e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     284,2 | spar info +224.0 ms: [34eb625e] controller at 224 ms
+     328,5 | spar info +273.7 ms: [34eb625e] page script added at 273.7 ms
+     328,5 | spar info +273.8 ms: [34eb625e] navigation started at 273.8 ms
+     392,5 | spar info +345.1 ms: [34eb625e] Bridge: document 1828f70b4cfe5ba8 opened.
+     392,5 | spar info +345.1 ms: [34eb625e] Heartbeat armed for the new document.
+     392,5 | spar info +345.1 ms: [34eb625e] first document at 345.1 ms
+     392,5 | spar info +354.2 ms: [34eb625e] first bridge message at 354.2 ms
+     392,5 | spar info +354.4 ms: [34eb625e] first bridge reply at 354.4 ms
+     392,5 | spar info +354.4 ms: [34eb625e] ui-ready at 354.4 ms
+     392,6 | spar info +354.4 ms: [34eb625e] Bridge: document 1828f70b4cfe5ba8 reported ui-ready.
+     392,6 | spar info +357.2 ms: [34eb625e] first navigation completed at 357.2 ms
+     392,6 | spar warn +361.4 ms: [34eb625e] Navigation lock: a new window for https://example.com/opened-by-script was blocked; only a user's click opens an external address.
+     440,9 | spar warn +362.1 ms: [34eb625e] Navigation lock: a new window for https://example.com/blank-by-script was blocked; only a user's click opens an external address.
+     440,9 | spar warn +367.4 ms: [34eb625e] Navigation lock: a navigation to https://example.com/top-level was cancelled; the window shows only the app's own page.
+     440,9 | spar warn +369.1 ms: [34eb625e] 403 for a document outside the app's origin: https://example.com/top-level
+     440,9 | spar info +370.8 ms: [34eb625e] 404 for /favicon.ico
+     441,0 | spar warn +375.5 ms: [34eb625e] Navigation 3 failed with web error status 14.
+     922,2 | spar warn +872.0 ms: [34eb625e] Navigation lock: a navigation to mailto:someone@example.com was cancelled; the window shows only the app's own page.
+     922,2 | spar warn +872.6 ms: [34eb625e] Navigation 4 failed with web error status 14.
+    1440,5 | probe: navigate: still on https://app.localhost/
+    1440,5 | probe: done navigate
+    1477,7 | run: found 'done navigate'
+    3494,4 | run: app working set 24260 KiB, peak seen 24260 KiB, private 8208 KiB
+    3495,0 | run: WM_CLOSE
+    3740,6 | spar info +3464.4 ms: [34eb625e] close requested (User) at 3464.4 ms
+    3740,6 | spar info +3464.9 ms: [34eb625e] closing at 3464.9 ms
+    3740,6 | spar info +3464.9 ms: [34eb625e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    3740,7 | spar info +3465.2 ms: [34eb625e] page close work done at 3465.2 ms
+    3740,7 | spar info +3465.2 ms: [34eb625e] Bridge: document 1828f70b4cfe5ba8 closed (window closing).
+    3740,7 | spar info +3465.2 ms: [34eb625e] calls stopped at 3465.2 ms
+    3740,7 | spar info +3465.2 ms: [34eb625e] calls settled at 3465.2 ms
+    3740,7 | spar info +3486.8 ms: [34eb625e] controller closed at 3486.8 ms
+    3740,7 | spar info +3490.0 ms: [34eb625e] window destroyed at 3490 ms
+    3740,7 | spar info +3492.9 ms: [34eb625e] services disposed at 3492.9 ms
+    3740,7 | spar info +3492.9 ms: [34eb625e] exit 0 at 3492.9 ms
+    3740,9 | run: exit 0

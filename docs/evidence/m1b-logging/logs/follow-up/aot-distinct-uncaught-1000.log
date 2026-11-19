@@ -1,0 +1,48 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=distinct-uncaught:1000]
+      54,1 | run: window moved offscreen
+      59,0 | spar info +0.3 ms: [b36366e9] Host started 19.7 ms after the process.
+      59,0 | spar info +0.4 ms: [b36366e9] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-distinct-uncaught-1000\com.example.tests.SecurityProbe
+      59,0 | spar info +1.7 ms: [b36366e9] single instance at 1.7 ms
+      59,0 | spar info +1.9 ms: [b36366e9] prerequisites checked at 1.9 ms
+      59,0 | spar info +2.9 ms: [b36366e9] services built at 2.9 ms
+      59,0 | spar info +8.2 ms: [b36366e9] window shown at 8.2 ms
+      59,1 | spar info +8.5 ms: [b36366e9] Theme dark (system), window #1f1f1f.
+      59,1 | spar info +9.1 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      59,1 | spar info +13.4 ms: [b36366e9] environment at 13.4 ms
+      59,1 | spar info +13.5 ms: [b36366e9] WebView2 Runtime 157.0.4341.46
+      59,1 | spar info +13.6 ms: [b36366e9] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-distinct-uncaught-1000\com.example.tests.SecurityProbe\WebView2
+      59,1 | spar info +17.0 ms: [b36366e9] Heartbeat every 5000 ms.
+      59,1 | spar info +17.2 ms: [b36366e9] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      59,2 | spar info +17.2 ms: [b36366e9] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     249,7 | spar info +202.7 ms: [b36366e9] controller at 202.7 ms
+     249,7 | spar info +202.8 ms: [b36366e9] Browser settings set (0.10 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     295,8 | spar info +251.0 ms: [b36366e9] Page file picker blocked in 48.1 ms (Page.enable 47.5 ms).
+     295,8 | spar info +251.0 ms: [b36366e9] page script added at 251 ms
+     295,8 | spar info +251.1 ms: [b36366e9] navigation started at 251.1 ms
+     342,3 | spar info +305.4 ms: [b36366e9] Bridge: document 72ecc5896e2f9af1 opened.
+     342,3 | spar info +305.4 ms: [b36366e9] Heartbeat armed for the new document.
+     342,3 | spar info +305.4 ms: [b36366e9] first document at 305.4 ms
+     342,3 | spar info +312.6 ms: [b36366e9] first bridge message at 312.6 ms
+     342,3 | spar info +312.8 ms: [b36366e9] first bridge reply at 312.8 ms
+     342,3 | spar info +312.9 ms: [b36366e9] ui-ready at 312.9 ms
+     342,3 | spar info +312.9 ms: [b36366e9] Bridge: document 72ecc5896e2f9af1 reported ui-ready.
+     374,7 | spar info +315.6 ms: [b36366e9] first navigation completed at 315.6 ms
+     374,7 | probe: distinct-uncaught: first 1000 in 10.9 ms, the other 0 in 0.2 ms
+     374,7 | probe: done distinct-uncaught:1000
+     374,7 | spar info +328.2 ms: [b36366e9] 404 for /favicon.ico
+     413,7 | run: found 'done distinct-uncaught:1000'
+    2433,4 | run: app working set 26192 KiB, peak seen 26192 KiB, private 9980 KiB
+    2433,7 | run: WM_CLOSE
+    2680,5 | spar info +2404.9 ms: [b36366e9] close requested (User) at 2404.9 ms
+    2680,5 | spar info +2405.4 ms: [b36366e9] closing at 2405.4 ms
+    2680,5 | spar info +2405.4 ms: [b36366e9] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    2680,5 | spar info +2405.6 ms: [b36366e9] page close work done at 2405.6 ms
+    2680,6 | spar info +2405.6 ms: [b36366e9] Bridge: document 72ecc5896e2f9af1 closed (window closing).
+    2680,6 | spar info +2405.6 ms: [b36366e9] calls stopped at 2405.6 ms
+    2680,6 | spar info +2405.6 ms: [b36366e9] calls settled at 2405.6 ms
+    2680,6 | spar info +2405.6 ms: [b36366e9] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    2680,6 | spar info +2418.9 ms: [b36366e9] controller closed at 2418.9 ms
+    2680,6 | spar info +2420.7 ms: [b36366e9] window destroyed at 2420.7 ms
+    2680,6 | spar info +2423.8 ms: [b36366e9] services disposed at 2423.8 ms
+    2680,6 | spar info +2423.8 ms: [b36366e9] exit 0 at 2423.8 ms
+    2680,8 | run: exit 0

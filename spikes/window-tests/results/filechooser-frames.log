@@ -1,0 +1,7 @@
+START t=09:01:01.819 pid=55900 only=frames
+FRAME t=09:01:04.437 frame=https://app.localhost/inner.html autoAttach=false dialog=none cdpEvents=[{"backendNodeId":11,"frameId":"3D61A94F51BCF68D480CB1198427027B","mode":"selectSingle"}] page=[{"type":"framed:click","trusted":true,"files":0}]
+FRAME t=09:01:05.805 frame=https://frame.invalid/inner.html autoAttach=false dialog=OPENED(#32770/"Open"/pid=browser after=309ms closedAfter=176ms stillOpen=False) cdpEvents=[] page=[{"type":"framed:click","trusted":true,"files":0},{"type":"framed:cancel","trusted":true,"files":0}]
+AUTO-ATTACH t=09:01:05.805 {}
+FRAME t=09:01:08.171 frame=https://frame.invalid/inner.html autoAttach=true attached=[iframe:D4C46CAB,enabled:D4C46CAB,iframe:6EC259B1,enabled:6EC259B1] dialog=none cdpEvents=[session=6EC259B1 {"backendNodeId":6,"frameId":"444FDE6B268208A014C61B402139859B","mode":"selectSingle"}] page=[{"type":"framed:click","trusted":true,"files":0}]
+FRAME t=09:01:10.524 frame=https://frame.invalid/inner.html?again autoAttach=true attached=[iframe:6BF0C2BE,enabled:6BF0C2BE] dialog=none cdpEvents=[session=6BF0C2BE {"backendNodeId":9,"frameId":"D3067A7F8B2BD80A2329AA3825E86280","mode":"selectSingle"}] page=[{"type":"framed:click","trusted":true,"files":0}]
+CLEANUP t=09:01:10.740 deleted=True 

@@ -1,0 +1,544 @@
+2026-11-17T23:26:53.242Z INFO  Spar.Host  [41260f9a] Host started 50.1 ms after the process.
+2026-11-17T23:26:53.242Z INFO  Spar.Host  [41260f9a] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-distinct-rejections-100k\com.example.tests.SecurityProbe.Development
+2026-11-17T23:26:53.250Z INFO  Spar.Host  [41260f9a] single instance at 17.7 ms
+2026-11-17T23:26:53.251Z INFO  Spar.Host  [41260f9a] prerequisites checked at 21.6 ms
+2026-11-17T23:26:53.260Z INFO  Spar.Host  [41260f9a] UI-thread stall probe on.
+2026-11-17T23:26:53.270Z INFO  Spar.Host  [41260f9a] window shown at 40.3 ms
+2026-11-17T23:26:53.270Z INFO  Spar.Host  [41260f9a] Theme dark (system), window #1f1f1f.
+2026-11-17T23:26:53.274Z INFO  Spar.Host  [41260f9a] services built at 44.1 ms
+2026-11-17T23:26:53.279Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-17T23:26:53.299Z INFO  Spar.Host  [41260f9a] environment at 69.9 ms
+2026-11-17T23:26:53.300Z INFO  Spar.Host  [41260f9a] WebView2 Runtime 157.0.4341.46
+2026-11-17T23:26:53.300Z INFO  Spar.Host  [41260f9a] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-distinct-rejections-100k\com.example.tests.SecurityProbe.Development\WebView2
+2026-11-17T23:26:53.312Z INFO  Spar.Host  [41260f9a] Heartbeat every 5000 ms.
+2026-11-17T23:26:53.315Z INFO  Spar.Host  [41260f9a] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-PPCDxJ0a3mrhp+ZRnKIDD0gQNDpllZMu9T4EdLpTN7U=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-17T23:26:53.315Z INFO  Spar.Host  [41260f9a] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-17T23:26:53.547Z INFO  Spar.Host  [41260f9a] controller at 318 ms
+2026-11-17T23:26:53.552Z INFO  Spar.Host  [41260f9a] Browser settings read back (1.89 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-17T23:26:53.591Z INFO  Spar.Host  [41260f9a] Page file picker blocked in 39.1 ms (Page.enable 38.8 ms).
+2026-11-17T23:26:53.591Z INFO  Spar.Host  [41260f9a] page script added at 361.7 ms
+2026-11-17T23:26:53.592Z INFO  Spar.Host  [41260f9a] navigation started at 362.1 ms
+2026-11-17T23:26:53.660Z INFO  Spar.Host  [41260f9a] Bridge: document 56966a0a5a91e8a9 opened.
+2026-11-17T23:26:53.661Z INFO  Spar.Host  [41260f9a] Heartbeat armed for the new document.
+2026-11-17T23:26:53.661Z INFO  Spar.Host  [41260f9a] first document at 431.3 ms
+2026-11-17T23:26:53.667Z INFO  Spar.Host  [41260f9a] first bridge message at 438 ms
+2026-11-17T23:26:53.672Z INFO  Spar.Host  [41260f9a] first navigation completed at 442.6 ms
+2026-11-17T23:26:53.674Z INFO  Spar.Host  [41260f9a] 404 for /favicon.ico
+2026-11-17T23:26:53.675Z INFO  Spar.Host  [41260f9a] first bridge reply at 445.6 ms
+2026-11-17T23:26:53.675Z INFO  Spar.Host  [41260f9a] ui-ready at 445.8 ms
+2026-11-17T23:26:53.675Z INFO  Spar.Host  [41260f9a] Bridge: document 56966a0a5a91e8a9 reported ui-ready.
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 0
+    Error: probe rejection 0
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 1
+    Error: probe rejection 1
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 2
+    Error: probe rejection 2
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 3
+    Error: probe rejection 3
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 4
+    Error: probe rejection 4
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 5
+    Error: probe rejection 5
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 6
+    Error: probe rejection 6
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 7
+    Error: probe rejection 7
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 8
+    Error: probe rejection 8
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 9
+    Error: probe rejection 9
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 10
+    Error: probe rejection 10
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 11
+    Error: probe rejection 11
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 12
+    Error: probe rejection 12
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 13
+    Error: probe rejection 13
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 14
+    Error: probe rejection 14
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 15
+    Error: probe rejection 15
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 16
+    Error: probe rejection 16
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 17
+    Error: probe rejection 17
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 18
+    Error: probe rejection 18
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 19
+    Error: probe rejection 19
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 20
+    Error: probe rejection 20
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 21
+    Error: probe rejection 21
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 22
+    Error: probe rejection 22
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 23
+    Error: probe rejection 23
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 24
+    Error: probe rejection 24
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 25
+    Error: probe rejection 25
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 26
+    Error: probe rejection 26
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 27
+    Error: probe rejection 27
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 28
+    Error: probe rejection 28
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 29
+    Error: probe rejection 29
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 30
+    Error: probe rejection 30
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 31
+    Error: probe rejection 31
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 32
+    Error: probe rejection 32
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 33
+    Error: probe rejection 33
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 34
+    Error: probe rejection 34
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 35
+    Error: probe rejection 35
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 36
+    Error: probe rejection 36
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 37
+    Error: probe rejection 37
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 38
+    Error: probe rejection 38
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 39
+    Error: probe rejection 39
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 40
+    Error: probe rejection 40
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 41
+    Error: probe rejection 41
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 42
+    Error: probe rejection 42
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 43
+    Error: probe rejection 43
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 44
+    Error: probe rejection 44
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 45
+    Error: probe rejection 45
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 46
+    Error: probe rejection 46
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 47
+    Error: probe rejection 47
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 48
+    Error: probe rejection 48
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 49
+    Error: probe rejection 49
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 50
+    Error: probe rejection 50
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 51
+    Error: probe rejection 51
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 52
+    Error: probe rejection 52
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 53
+    Error: probe rejection 53
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 54
+    Error: probe rejection 54
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 55
+    Error: probe rejection 55
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 56
+    Error: probe rejection 56
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 57
+    Error: probe rejection 57
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 58
+    Error: probe rejection 58
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 59
+    Error: probe rejection 59
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 60
+    Error: probe rejection 60
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 61
+    Error: probe rejection 61
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 62
+    Error: probe rejection 62
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 63
+    Error: probe rejection 63
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 64
+    Error: probe rejection 64
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 65
+    Error: probe rejection 65
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 66
+    Error: probe rejection 66
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 67
+    Error: probe rejection 67
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 68
+    Error: probe rejection 68
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 69
+    Error: probe rejection 69
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 70
+    Error: probe rejection 70
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 71
+    Error: probe rejection 71
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 72
+    Error: probe rejection 72
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 73
+    Error: probe rejection 73
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 74
+    Error: probe rejection 74
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 75
+    Error: probe rejection 75
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 76
+    Error: probe rejection 76
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 77
+    Error: probe rejection 77
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 78
+    Error: probe rejection 78
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 79
+    Error: probe rejection 79
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 80
+    Error: probe rejection 80
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 81
+    Error: probe rejection 81
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 82
+    Error: probe rejection 82
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 83
+    Error: probe rejection 83
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 84
+    Error: probe rejection 84
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 85
+    Error: probe rejection 85
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 86
+    Error: probe rejection 86
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 87
+    Error: probe rejection 87
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 88
+    Error: probe rejection 88
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 89
+    Error: probe rejection 89
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 90
+    Error: probe rejection 90
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 91
+    Error: probe rejection 91
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 92
+    Error: probe rejection 92
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 93
+    Error: probe rejection 93
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 94
+    Error: probe rejection 94
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 95
+    Error: probe rejection 95
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 96
+    Error: probe rejection 96
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 97
+    Error: probe rejection 97
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 98
+    Error: probe rejection 98
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.105Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:3766: Error: probe rejection 99
+    Error: probe rejection 99
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3766
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:3926
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:26:54.106Z WARN  Spar.Page  The page raised so many errors that Spar's script stopped reporting them in this document
+2026-11-17T23:27:03.318Z INFO  Spar.Page  The page's errors in the last 9.7 s: past the group limit: 900
+2026-11-17T23:27:06.202Z INFO  Spar.Host  [41260f9a] close requested (User, automated) at 12972.8 ms
+2026-11-17T23:27:06.206Z INFO  Spar.Host  [41260f9a] closing at 12976.9 ms
+2026-11-17T23:27:06.207Z INFO  Spar.Host  [41260f9a] Heartbeat: 2 ticks, 3 pings, longest tick on the UI thread 0.643 ms.
+2026-11-17T23:27:06.208Z INFO  Spar.Host  [41260f9a] page close work done at 12978.1 ms
+2026-11-17T23:27:06.208Z INFO  Spar.Host  [41260f9a] Bridge: document 56966a0a5a91e8a9 closed (window closing).
+2026-11-17T23:27:06.208Z INFO  Spar.Host  [41260f9a] calls stopped at 12979 ms
+2026-11-17T23:27:06.208Z INFO  Spar.Host  [41260f9a] calls settled at 12979 ms
+2026-11-17T23:27:06.209Z INFO  Spar.Host  [41260f9a] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-17T23:27:06.222Z INFO  Spar.Host  [41260f9a] controller closed at 12992.8 ms
+2026-11-17T23:27:06.224Z INFO  Spar.Host  [41260f9a] window destroyed at 12994.9 ms
+2026-11-17T23:27:06.230Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-17T23:27:06.231Z INFO  Spar.Host  [41260f9a] services disposed at 13001.6 ms
+2026-11-17T23:27:06.231Z INFO  Spar.Host  [41260f9a] exit 0 at 13001.6 ms

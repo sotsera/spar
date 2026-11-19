@@ -1,0 +1,10 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=67.0ms since-process-start=78ms xtest=2.2 input=xtest csp=False
+dbus-daemon[4504]: [session uid=1000 pid=4504] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=4506 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[4504]: [session uid=1000 pid=4504] Successfully activated service 'org.a11y.Bus'
+bwrap: Can't make symlink at /var/tmp: destination exists and is not a symlink
+
+** (process:4506): ERROR **: 20:08:09.741: Failed to fully launch dbus-proxy: Child process exited with code 1
+RUN exit=133 wall=3148ms
+LEFT harness=0 web=0 network=0 xvfb=0

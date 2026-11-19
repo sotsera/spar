@@ -1,0 +1,8 @@
+Recorded 2026-11-18 22:16:49 +01:00
+Window test: open, journey and close: 302.53 ms (281.99–653.06, n = 20), p95 324.99 ms [Release, NativeAOT]
+Window test: open (to the page's Ready): 126.79 ms (119.13–376.18, n = 20) [Release, NativeAOT]
+Window test: journey (fill, check, select, click, 3 assertions): 160.50 ms (147.22–261.91, n = 20) [Release, NativeAOT]
+Window test: close (teardown and the renderer's exit): 14.79 ms (13.38–19.42, n = 20) [Release, NativeAOT]
+Window test: its InPrivate controller: 24.29 ms (22.51–51.91, n = 20) [Release, NativeAOT]
+Window test: the shared environment, first window of the process: 227.54 ms (227.54–227.54, n = 1) [Release, NativeAOT]
+Window test: the shared environment, later windows: 2.56 ms (2.33–4.08, n = 19) [Release, NativeAOT]

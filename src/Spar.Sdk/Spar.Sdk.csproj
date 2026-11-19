@@ -35,10 +35,12 @@
     <PropertyGroup>
       <SparVersionProps>$(IntermediateOutputPath)Spar.Sdk.Version.props</SparVersionProps>
       <_SparXunitVersion>@(PackageVersion->WithMetadataValue('Identity', 'xunit.v3')->'%(Version)')</_SparXunitVersion>
+      <_SparWebView2Version>@(PackageVersion->WithMetadataValue('Identity', 'Microsoft.Web.WebView2')->'%(Version)')</_SparWebView2Version>
     </PropertyGroup>
     <Error Condition="'$(_SparXunitVersion)' == ''" Text="Directory.Packages.props has no xunit.v3 version for Spar.Sdk to write." />
+    <Error Condition="'$(_SparWebView2Version)' == ''" Text="Directory.Packages.props has no Microsoft.Web.WebView2 version for Spar.Sdk to write." />
     <WriteLinesToFile File="$(SparVersionProps)" Overwrite="true" WriteOnlyWhenDifferent="true"
-                      Lines="&lt;Project&gt;&lt;PropertyGroup&gt;&lt;SparSdkVersion&gt;$(PackageVersion)&lt;/SparSdkVersion&gt;&lt;SparXunitVersion&gt;$(_SparXunitVersion)&lt;/SparXunitVersion&gt;&lt;/PropertyGroup&gt;&lt;/Project&gt;" />
+                      Lines="&lt;Project&gt;&lt;PropertyGroup&gt;&lt;SparSdkVersion&gt;$(PackageVersion)&lt;/SparSdkVersion&gt;&lt;SparXunitVersion&gt;$(_SparXunitVersion)&lt;/SparXunitVersion&gt;&lt;SparWebView2Version&gt;$(_SparWebView2Version)&lt;/SparWebView2Version&gt;&lt;/PropertyGroup&gt;&lt;/Project&gt;" />
     <ItemGroup>
       <FileWrites Include="$(SparVersionProps)" />
     </ItemGroup>

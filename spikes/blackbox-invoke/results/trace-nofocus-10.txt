@@ -1,0 +1,486 @@
+variant,launch,action,index,call_start_ms,call_ms,first_page_event,first_page_event_ms,click_page_ms,click_backend_ms,focusin_page_ms,trusted,active_at_click,dialog_seen_ms,foreground_hits
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 11.0 backend 11.3: focusin count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.3 backend 11.5: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.5: click count trusted=true vis=visible focus=true active=count
+  trace page 11.3 backend 11.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 10.8
+mta-nofocus,47208,invoke:Count,1,0,11,focusin,11,11,11,11,true,count,,0
+  trace page 11.5 backend 11.7: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.5 backend 11.8: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.6 backend 11.9: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 11.9: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 11.9: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.4
+mta-nofocus,47208,invoke:Count,2,0,11,pointerdown,11,12,12,,true,count,,0
+  trace page 13.0 backend 13.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 13.0 backend 13.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 13.2 backend 13.3: click count trusted=true vis=visible focus=true active=count
+  trace page 13.1 backend 13.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 13.1 backend 13.4: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 12.9
+mta-nofocus,47208,invoke:Count,3,0,13,pointerdown,13,13,13,,true,count,,0
+  trace page 10.9 backend 11.0: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.1: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.1: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.1: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.0 backend 11.1: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.7
+mta-nofocus,47208,invoke:Count,4,0,11,pointerdown,11,11,11,,true,count,,0
+  trace page 10.6 backend 10.8: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.8 backend 10.9: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.7 backend 10.9: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.8 backend 10.9: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.8 backend 11.0: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.6
+mta-nofocus,47208,invoke:Count,5,0,11,pointerdown,11,11,11,,true,count,,0
+  trace page 19.0 backend 19.1: focusin open trusted=true vis=visible focus=true active=open
+  trace page 19.0 backend 19.2: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 19.0 backend 19.2: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 19.1 backend 19.3: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 19.1 backend 19.3: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 19.1 backend 19.4: click open trusted=true vis=visible focus=true active=open
+  trace page 20.0 backend 20.1: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 18.8
+mta-nofocus,47208,invoke:Open dialog,1,0,19,focusin,19,19,19,19,true,open,44,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 11.9 backend 12.1: focusin count trusted=true vis=visible focus=true active=count
+  trace page 12.1 backend 12.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 12.1 backend 12.2: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 12.2 backend 12.2: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 12.2 backend 12.3: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 12.2 backend 12.3: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.6
+mta-nofocus,28460,invoke:Count,1,0,12,focusin,12,12,12,12,true,count,,0
+  trace page 13.1 backend 13.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 13.3 backend 13.4: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 13.2 backend 13.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 13.3 backend 13.6: click count trusted=true vis=visible focus=true active=count
+  trace page 13.3 backend 13.7: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 13.0
+mta-nofocus,28460,invoke:Count,2,0,13,pointerdown,13,13,14,,true,count,,0
+  trace page 11.2 backend 11.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.6: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.7: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.7: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.2
+mta-nofocus,28460,invoke:Count,3,0,11,pointerdown,11,11,12,,true,count,,0
+  trace page 10.7 backend 11.0: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.1: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.8 backend 11.1: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.2: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.2: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.7
+mta-nofocus,28460,invoke:Count,4,0,11,pointerdown,11,11,11,,true,count,,0
+  trace page 11.1 backend 11.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.4: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.4: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.4: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.0
+mta-nofocus,28460,invoke:Count,5,0,11,pointerdown,11,11,11,,true,count,,0
+  trace page 17.7 backend 17.9: focusin open trusted=true vis=visible focus=true active=open
+  trace page 17.8 backend 18.1: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.1: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.1: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.1: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.2: click open trusted=true vis=visible focus=true active=open
+  trace page 18.8 backend 18.9: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 17.6
+mta-nofocus,28460,invoke:Open dialog,1,0,18,focusin,18,18,18,18,true,open,45,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 12.7 backend 12.8: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 12.4 backend 12.8: focusin count trusted=true vis=visible focus=true active=count
+  trace page 12.7 backend 12.9: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 12.7 backend 13.0: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 12.8 backend 13.0: click count trusted=true vis=visible focus=true active=count
+  trace page 12.7 backend 13.0: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 12.3
+mta-nofocus,60880,invoke:Count,1,0,12,focusin,12,13,13,12,true,count,,0
+  trace page 10.6 backend 10.9: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.7 backend 11.0: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.7 backend 11.0: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.7 backend 11.0: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.8 backend 11.2: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.6
+mta-nofocus,60880,invoke:Count,2,0,11,pointerdown,11,11,11,,true,count,,0
+  trace page 10.2 backend 10.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.2 backend 10.5: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.3 backend 10.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.3 backend 10.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.3 backend 10.6: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.2
+mta-nofocus,60880,invoke:Count,3,0,10,pointerdown,10,10,11,,true,count,,0
+  trace page 11.7 backend 11.9: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 12.0: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 12.0: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.8 backend 12.0: click count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 12.0: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 11.7
+mta-nofocus,60880,invoke:Count,4,0,12,pointerdown,12,12,12,,true,count,,0
+  trace page 10.5 backend 10.7: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.5 backend 10.8: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.5 backend 10.9: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.5 backend 10.9: click count trusted=true vis=visible focus=true active=count
+  trace page 10.5 backend 10.9: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 10.4
+mta-nofocus,60880,invoke:Count,5,0,10,pointerdown,10,10,11,,true,count,,0
+  trace page 16.6 backend 16.8: focusin open trusted=true vis=visible focus=true active=open
+  trace page 16.6 backend 17.0: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 16.6 backend 17.0: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 16.6 backend 17.0: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 16.6 backend 17.0: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 16.7 backend 17.0: click open trusted=true vis=visible focus=true active=open
+  trace page 17.5 backend 17.8: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 16.6
+mta-nofocus,60880,invoke:Open dialog,1,0,17,focusin,17,17,17,17,true,open,40,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 11.6 backend 11.7: focusin count trusted=true vis=visible focus=true active=count
+  trace page 11.8 backend 11.8: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.8 backend 11.8: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.9 backend 11.9: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.9 backend 11.9: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 12.0 backend 11.9: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.4
+mta-nofocus,63212,invoke:Count,1,0,11,focusin,12,12,12,12,true,count,,0
+  trace page 10.4 backend 10.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.5 backend 10.7: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.6 backend 10.7: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.6 backend 10.7: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.6 backend 10.7: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.3
+mta-nofocus,63212,invoke:Count,2,0,10,pointerdown,10,11,11,,true,count,,0
+  trace page 18.8 backend 19.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 18.8 backend 19.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 18.9 backend 19.4: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 19.0 backend 19.4: click count trusted=true vis=visible focus=true active=count
+  trace page 18.9 backend 19.4: pointerup count trusted=true vis=visible focus=true active=count
+  trace call returned 18.7
+mta-nofocus,63212,invoke:Count,3,0,19,pointerdown,19,19,19,,true,count,,0
+  trace page 12.1 backend 12.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 12.1 backend 12.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 12.3 backend 12.4: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 12.3 backend 12.4: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 12.3 backend 12.4: click count trusted=true vis=visible focus=true active=count
+  trace call returned 12.0
+mta-nofocus,63212,invoke:Count,4,0,12,pointerdown,12,12,12,,true,count,,0
+  trace page 21.5 backend 21.7: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 21.5 backend 21.8: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 21.6 backend 21.9: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 21.6 backend 21.9: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 21.6 backend 21.9: click count trusted=true vis=visible focus=true active=count
+  trace call returned 21.3
+mta-nofocus,63212,invoke:Count,5,0,21,pointerdown,21,22,22,,true,count,,0
+  trace page 17.4 backend 17.5: focusin open trusted=true vis=visible focus=true active=open
+  trace page 17.5 backend 17.7: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 17.5 backend 17.7: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 17.5 backend 17.7: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 17.6 backend 17.7: click open trusted=true vis=visible focus=true active=open
+  trace page 17.4 backend 17.8: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 18.4 backend 18.4: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 17.1
+mta-nofocus,63212,invoke:Open dialog,1,0,17,focusin,17,18,18,17,true,open,42,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 11.2 backend 11.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.3: focusin count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.5: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.4 backend 11.5: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.5 backend 11.6: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.9
+mta-nofocus,60776,invoke:Count,1,0,11,focusin,11,11,12,11,true,count,,0
+  trace page 10.7 backend 10.9: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.8 backend 11.0: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.1: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.8 backend 11.1: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.9 backend 11.2: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.7
+mta-nofocus,60776,invoke:Count,2,0,11,pointerdown,11,11,11,,true,count,,0
+  trace page 12.4 backend 12.6: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 12.5 backend 12.7: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 12.5 backend 12.7: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 12.5 backend 12.7: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 12.5 backend 12.7: click count trusted=true vis=visible focus=true active=count
+  trace call returned 12.4
+mta-nofocus,60776,invoke:Count,3,0,12,pointerdown,12,13,13,,true,count,,0
+  trace page 11.6 backend 11.8: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.6 backend 11.8: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.6 backend 11.8: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 11.8: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 11.8: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.5
+mta-nofocus,60776,invoke:Count,4,0,11,pointerdown,12,12,12,,true,count,,0
+  trace page 11.1 backend 11.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.3: click count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.3: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 10.9
+mta-nofocus,60776,invoke:Count,5,0,11,pointerdown,11,11,11,,true,count,,0
+  trace page 17.9 backend 18.0: focusin open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.1: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.1: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.1: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.1: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 17.9 backend 18.2: click open trusted=true vis=visible focus=true active=open
+  trace page 18.9 backend 18.9: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 17.7
+mta-nofocus,60776,invoke:Open dialog,1,0,18,focusin,18,18,18,18,true,open,44,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 11.0 backend 11.4: focusin count trusted=true vis=visible focus=true active=count
+  trace page 11.3 backend 11.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.3 backend 11.5: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.3 backend 11.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.3 backend 11.6: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.9
+mta-nofocus,2672,invoke:Count,1,0,11,focusin,11,11,12,11,true,count,,0
+  trace page 10.2 backend 10.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 10.3 backend 10.7: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 10.4 backend 10.7: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 10.4 backend 10.8: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 10.5 backend 10.8: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.2
+mta-nofocus,2672,invoke:Count,2,0,10,pointerdown,10,11,11,,true,count,,0
+  trace page 14.0 backend 14.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 14.0 backend 14.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 14.0 backend 14.3: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 14.0 backend 14.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 14.0 backend 14.4: click count trusted=true vis=visible focus=true active=count
+  trace call returned 13.9
+mta-nofocus,2672,invoke:Count,3,0,14,pointerdown,14,14,14,,true,count,,0
+  trace page 11.6 backend 12.1: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.8 backend 12.2: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.7 backend 12.2: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.8 backend 12.2: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.8 backend 12.2: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.7
+mta-nofocus,2672,invoke:Count,4,0,12,pointerdown,12,12,12,,true,count,,0
+  trace page 11.8 backend 12.1: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.9 backend 12.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.8 backend 12.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.9 backend 12.3: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.9 backend 12.3: click count trusted=true vis=visible focus=true active=count
+  trace call returned 11.8
+mta-nofocus,2672,invoke:Count,5,0,12,pointerdown,12,12,12,,true,count,,0
+  trace page 2025.2 backend 2026.2: window-blur vis=visible focus=false active=count
+  trace page 2025.8 backend 2026.9: focusin count trusted=true vis=visible focus=true active=count
+  trace page 2025.7 backend 2026.9: window-focus vis=visible focus=true active=count
+  trace page 2026.0 backend 2026.9: window-blur vis=visible focus=false active=count
+  trace page 2026.6 backend 2028.2: window-focus vis=visible focus=true active=count
+  trace page 2026.6 backend 2028.2: focusin count trusted=true vis=visible focus=true active=count
+  trace page 2026.7 backend 2028.2: focusin open trusted=true vis=visible focus=true active=open
+  trace page 2027.1 backend 2028.3: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 2027.1 backend 2028.3: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 2027.2 backend 2028.3: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 2027.2 backend 2028.3: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 2027.2 backend 2028.4: click open trusted=true vis=visible focus=true active=open
+  trace page 2028.1 backend 2028.4: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 2027.1
+mta-nofocus,2672,invoke:Open dialog,1,0,2027,focusin,2026,2027,2028,2026,true,open,2051,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 15.2 backend 15.4: focusin count trusted=true vis=visible focus=true active=count
+  trace page 15.4 backend 15.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 15.4 backend 15.5: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 15.4 backend 15.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 15.5 backend 15.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 15.5 backend 16.1: click count trusted=true vis=visible focus=true active=count
+  trace call returned 15.0
+mta-nofocus,68444,invoke:Count,1,0,15,focusin,15,16,16,15,true,count,,0
+  trace page 14.2 backend 14.4: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 14.3 backend 14.6: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 14.4 backend 14.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 14.4 backend 14.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 14.4 backend 14.7: click count trusted=true vis=visible focus=true active=count
+  trace call returned 14.1
+mta-nofocus,68444,invoke:Count,2,0,14,pointerdown,14,14,15,,true,count,,0
+  trace page 16.2 backend 16.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 16.2 backend 16.5: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 16.3 backend 16.5: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 16.3 backend 16.5: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 16.4 backend 16.7: click count trusted=true vis=visible focus=true active=count
+  trace call returned 16.1
+mta-nofocus,68444,invoke:Count,3,0,16,pointerdown,16,16,17,,true,count,,0
+  trace page 14.1 backend 14.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 14.2 backend 14.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 14.3 backend 14.4: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 14.3 backend 14.5: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 14.3 backend 14.5: click count trusted=true vis=visible focus=true active=count
+  trace call returned 14.1
+mta-nofocus,68444,invoke:Count,4,0,14,pointerdown,14,14,14,,true,count,,0
+  trace page 12.2 backend 12.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 12.3 backend 12.6: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 12.4 backend 12.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 12.4 backend 12.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 12.4 backend 12.7: click count trusted=true vis=visible focus=true active=count
+  trace call returned 12.2
+mta-nofocus,68444,invoke:Count,5,0,12,pointerdown,12,12,13,,true,count,,0
+  trace page 20.7 backend 20.8: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 20.6 backend 20.8: focusin open trusted=true vis=visible focus=true active=open
+  trace page 20.7 backend 20.8: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 20.8 backend 20.8: click open trusted=true vis=visible focus=true active=open
+  trace page 20.8 backend 20.8: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 20.8 backend 20.8: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 21.6 backend 21.7: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 20.5
+mta-nofocus,68444,invoke:Open dialog,1,0,21,focusin,21,21,21,21,true,open,61,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 15.2 backend 15.4: focusin count trusted=true vis=visible focus=true active=count
+  trace page 15.4 backend 15.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 15.5 backend 15.5: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 15.5 backend 15.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 15.5 backend 15.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 15.5 backend 15.7: click count trusted=true vis=visible focus=true active=count
+  trace call returned 15.1
+mta-nofocus,39228,invoke:Count,1,0,15,focusin,15,16,16,15,true,count,,0
+  trace page 14.3 backend 14.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 14.4 backend 14.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 14.4 backend 14.6: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 14.6 backend 14.7: click count trusted=true vis=visible focus=true active=count
+  trace page 14.4 backend 14.7: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 14.2
+mta-nofocus,39228,invoke:Count,2,0,14,pointerdown,14,15,15,,true,count,,0
+  trace page 14.1 backend 14.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 14.2 backend 14.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 14.2 backend 14.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 14.3 backend 14.3: click count trusted=true vis=visible focus=true active=count
+  trace page 14.2 backend 14.3: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 14.1
+mta-nofocus,39228,invoke:Count,3,0,14,pointerdown,14,14,14,,true,count,,0
+  trace page 13.6 backend 13.8: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 13.6 backend 13.9: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 13.7 backend 13.9: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 13.7 backend 13.9: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 13.7 backend 13.9: click count trusted=true vis=visible focus=true active=count
+  trace call returned 13.5
+mta-nofocus,39228,invoke:Count,4,0,14,pointerdown,14,14,14,,true,count,,0
+  trace page 12.3 backend 12.5: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 12.3 backend 12.6: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 12.3 backend 12.6: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 12.4 backend 12.6: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 12.4 backend 12.6: click count trusted=true vis=visible focus=true active=count
+  trace call returned 12.2
+mta-nofocus,39228,invoke:Count,5,0,12,pointerdown,12,12,13,,true,count,,0
+  trace page 20.5 backend 20.8: focusin open trusted=true vis=visible focus=true active=open
+  trace page 20.6 backend 20.8: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 20.7 backend 20.9: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 20.7 backend 20.9: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 20.7 backend 21.0: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 20.7 backend 21.0: click open trusted=true vis=visible focus=true active=open
+  trace page 21.6 backend 21.7: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 20.5
+mta-nofocus,39228,invoke:Open dialog,1,0,20,focusin,21,21,21,21,true,open,58,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 16.8 backend 17.0: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 16.6 backend 17.0: focusin count trusted=true vis=visible focus=true active=count
+  trace page 16.8 backend 17.1: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 16.9 backend 17.1: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 16.9 backend 17.1: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 17.0 backend 17.1: click count trusted=true vis=visible focus=true active=count
+  trace call returned 16.5
+mta-nofocus,64652,invoke:Count,1,0,17,focusin,17,17,17,17,true,count,,0
+  trace page 14.9 backend 15.3: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 15.0 backend 15.4: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 15.1 backend 15.4: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 15.1 backend 15.4: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 15.1 backend 15.4: click count trusted=true vis=visible focus=true active=count
+  trace call returned 15.0
+mta-nofocus,64652,invoke:Count,2,0,15,pointerdown,15,15,15,,true,count,,0
+  trace page 15.5 backend 15.8: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 15.6 backend 15.9: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 15.6 backend 15.9: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 15.6 backend 15.9: click count trusted=true vis=visible focus=true active=count
+  trace page 15.6 backend 15.9: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 15.5
+mta-nofocus,64652,invoke:Count,3,0,15,pointerdown,15,16,16,,true,count,,0
+  trace page 15.7 backend 16.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 15.7 backend 16.2: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 15.7 backend 16.2: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 15.8 backend 16.2: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 15.8 backend 16.3: click count trusted=true vis=visible focus=true active=count
+  trace call returned 15.7
+mta-nofocus,64652,invoke:Count,4,0,16,pointerdown,16,16,16,,true,count,,0
+  trace page 13.4 backend 13.6: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 13.4 backend 13.7: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 13.4 backend 13.7: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 13.5 backend 13.7: click count trusted=true vis=visible focus=true active=count
+  trace page 13.5 backend 13.7: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 13.3
+mta-nofocus,64652,invoke:Count,5,0,13,pointerdown,13,13,14,,true,count,,0
+  trace page 21.2 backend 21.5: focusin open trusted=true vis=visible focus=true active=open
+  trace page 21.3 backend 21.5: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 21.3 backend 21.6: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 21.3 backend 21.6: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 21.3 backend 21.6: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 21.3 backend 21.6: click open trusted=true vis=visible focus=true active=open
+  trace page 22.2 backend 22.4: focusin close trusted=true vis=visible focus=true active=close
+  trace call returned 21.1
+mta-nofocus,64652,invoke:Open dialog,1,0,21,focusin,21,21,22,21,true,open,60,0
+[mta-nofocus] AutoSetFocus=0 ConnectionTimeout=2000 TransactionTimeout=20000
+  trace page 11.0 backend 11.1: focusin count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 11.1 backend 11.2: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.3: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 11.2 backend 11.4: click count trusted=true vis=visible focus=true active=count
+  trace call returned 10.7
+mta-nofocus,45588,invoke:Count,1,0,11,focusin,11,11,11,11,true,count,,0
+  trace page 16.9 backend 17.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 17.1 backend 17.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 17.1 backend 17.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 17.2 backend 17.4: click count trusted=true vis=visible focus=true active=count
+  trace page 17.2 backend 17.4: mouseup count trusted=true vis=visible focus=true active=count
+  trace call returned 16.9
+mta-nofocus,45588,invoke:Count,2,0,17,pointerdown,17,17,17,,true,count,,0
+  trace page 17.1 backend 17.4: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 17.3 backend 17.8: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 17.2 backend 17.8: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 17.3 backend 17.8: pointerup count trusted=true vis=visible focus=true active=count
+  trace page 17.3 backend 17.8: click count trusted=true vis=visible focus=true active=count
+  trace call returned 17.1
+mta-nofocus,45588,invoke:Count,3,0,17,pointerdown,17,17,18,,true,count,,0
+  trace page 20.0 backend 20.2: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 20.0 backend 20.3: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 20.1 backend 20.3: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 20.1 backend 20.3: click count trusted=true vis=visible focus=true active=count
+  trace page 20.1 backend 20.3: pointerup count trusted=true vis=visible focus=true active=count
+  trace call returned 20.0
+mta-nofocus,45588,invoke:Count,4,0,20,pointerdown,20,20,20,,true,count,,0
+  trace page 13.8 backend 14.0: pointerdown count trusted=true vis=visible focus=true active=count
+  trace page 13.9 backend 14.1: mousedown count trusted=true vis=visible focus=true active=count
+  trace page 13.9 backend 14.1: mouseup count trusted=true vis=visible focus=true active=count
+  trace page 14.0 backend 14.1: click count trusted=true vis=visible focus=true active=count
+  trace page 13.9 backend 14.1: pointerup count trusted=true vis=visible focus=true active=count
+  trace call returned 13.8
+mta-nofocus,45588,invoke:Count,5,0,14,pointerdown,14,14,14,,true,count,,0
+  trace page 25.3 backend 26.5: window-blur vis=visible focus=false active=count
+  trace page 26.1 backend 27.1: window-focus vis=visible focus=true active=count
+  trace page 26.1 backend 27.1: focusin count trusted=true vis=visible focus=true active=count
+  trace page 26.4 backend 27.2: window-blur vis=visible focus=false active=count
+  trace page 2037.7 backend 2038.6: window-focus vis=visible focus=true active=count
+  trace page 2038.1 backend 2042.1: pointerdown open trusted=true vis=visible focus=true active=open
+  trace page 2037.8 backend 2042.1: focusin count trusted=true vis=visible focus=true active=count
+  trace page 2038.1 backend 2042.1: mousedown open trusted=true vis=visible focus=true active=open
+  trace page 2038.1 backend 2042.1: pointerup open trusted=true vis=visible focus=true active=open
+  trace page 2038.1 backend 2042.1: mouseup open trusted=true vis=visible focus=true active=open
+  trace page 2038.2 backend 2042.1: click open trusted=true vis=visible focus=true active=open
+  trace page 2037.8 backend 2042.1: focusin open trusted=true vis=visible focus=true active=open
+  trace page 2039.1 backend 2042.8: focusin close trusted=true vis=visible focus=true active=close
+  trace page 2041.7 backend 2042.8: focusin close trusted=true vis=visible focus=true active=close
+  trace page 2040.9 backend 2042.8: window-blur vis=visible focus=false active=close
+  trace page 2041.7 backend 2042.8: window-focus vis=visible focus=true active=close
+  trace call returned 2038.1
+mta-nofocus,45588,invoke:Open dialog,1,0,2038,focusin,26,2038,2042,26,true,open,2053,0
+# mta-nofocus launch 1: exit 0; call median 11 ms (11-13, n=5); first page event after start median 11 ms (11-13, n=5); click median 11 ms (11-13, n=5); foreground hits 0; stats 3 reports, frames/s 60 (58-60), 100 ms ticks/s 10 (10-10), report interval ms 1002 (1000-1002), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 2: exit 0; call median 11 ms (11-13, n=5); first page event after start median 11 ms (11-13, n=5); click median 11 ms (11-13, n=5); foreground hits 0; stats 3 reports, frames/s 59 (59-61), 100 ms ticks/s 10 (10-10), report interval ms 1001 (999-1002), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 3: exit 0; call median 11 ms (10-12, n=5); first page event after start median 11 ms (10-12, n=5); click median 11 ms (10-13, n=5); foreground hits 0; stats 3 reports, frames/s 60 (59-62), 100 ms ticks/s 10 (10-10), report interval ms 998 (998-1004), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 4: exit 0; call median 12 ms (10-21, n=5); first page event after start median 12 ms (10-21, n=5); click median 12 ms (11-22, n=5); foreground hits 0; stats 3 reports, frames/s 59 (59-61), 100 ms ticks/s 10 (10-10), report interval ms 1003 (994-1005), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 5: exit 0; call median 11 ms (11-12, n=5); first page event after start median 11 ms (11-12, n=5); click median 11 ms (11-13, n=5); foreground hits 0; stats 3 reports, frames/s 60 (58-61), 100 ms ticks/s 10 (10-10), report interval ms 1001 (1001-1008), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 6: exit 0; call median 12 ms (10-14, n=5); first page event after start median 12 ms (10-14, n=5); click median 12 ms (11-14, n=5); foreground hits 0; stats 5 reports, frames/s 60 (58-61), 100 ms ticks/s 10 (10-10), report interval ms 1001 (1000-1007), visible in 5, focused in 5; visibility events [window-blur:visible/false window-focus:visible/true window-blur:visible/false window-focus:visible/true]
+# mta-nofocus launch 7: exit 0; call median 14 ms (12-16, n=5); first page event after start median 14 ms (12-16, n=5); click median 14 ms (12-16, n=5); foreground hits 0; stats 3 reports, frames/s 60 (59-61), 100 ms ticks/s 10 (10-10), report interval ms 1002 (1000-1004), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 8: exit 0; call median 14 ms (12-15, n=5); first page event after start median 14 ms (12-15, n=5); click median 14 ms (12-16, n=5); foreground hits 0; stats 3 reports, frames/s 61 (59-61), 100 ms ticks/s 10 (10-10), report interval ms 1001 (999-1013), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 9: exit 0; call median 15 ms (13-17, n=5); first page event after start median 15 ms (13-17, n=5); click median 16 ms (13-17, n=5); foreground hits 0; stats 3 reports, frames/s 60 (60-60), 100 ms ticks/s 10 (10-10), report interval ms 1006 (1000-1008), visible in 3, focused in 3; visibility events []
+# mta-nofocus launch 10: exit 0; call median 17 ms (11-20, n=5); first page event after start median 17 ms (11-20, n=5); click median 17 ms (11-20, n=5); foreground hits 0; stats 5 reports, frames/s 60 (58-60), 100 ms ticks/s 10 (10-10), report interval ms 1000 (999-1002), visible in 5, focused in 3; visibility events [window-blur:visible/false window-focus:visible/true window-blur:visible/false window-focus:visible/true window-blur:visible/false window-focus:visible/true]

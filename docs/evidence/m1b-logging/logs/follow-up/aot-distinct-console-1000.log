@@ -1,0 +1,48 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=distinct-console:1000]
+      49,8 | run: window moved offscreen
+      55,3 | spar info +0.3 ms: [6d11d4a7] Host started 20.7 ms after the process.
+      55,3 | spar info +0.4 ms: [6d11d4a7] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-distinct-console-1000\com.example.tests.SecurityProbe
+      55,3 | spar info +1.8 ms: [6d11d4a7] single instance at 1.8 ms
+      55,3 | spar info +2.0 ms: [6d11d4a7] prerequisites checked at 2 ms
+      55,3 | spar info +2.9 ms: [6d11d4a7] services built at 2.9 ms
+      55,3 | spar info +9.1 ms: [6d11d4a7] window shown at 9.1 ms
+      55,4 | spar info +9.3 ms: [6d11d4a7] Theme dark (system), window #1f1f1f.
+      55,4 | spar info +9.9 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      55,4 | spar info +14.0 ms: [6d11d4a7] environment at 14 ms
+      55,4 | spar info +14.0 ms: [6d11d4a7] WebView2 Runtime 157.0.4341.46
+      55,4 | spar info +14.1 ms: [6d11d4a7] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-distinct-console-1000\com.example.tests.SecurityProbe\WebView2
+      55,4 | spar info +17.5 ms: [6d11d4a7] Heartbeat every 5000 ms.
+      55,4 | spar info +17.5 ms: [6d11d4a7] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      55,4 | spar info +17.6 ms: [6d11d4a7] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     246,7 | spar info +201.3 ms: [6d11d4a7] controller at 201.3 ms
+     246,7 | spar info +201.4 ms: [6d11d4a7] Browser settings set (0.09 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     323,8 | spar info +258.4 ms: [6d11d4a7] Page file picker blocked in 57.0 ms (Page.enable 56.4 ms).
+     323,8 | spar info +258.5 ms: [6d11d4a7] page script added at 258.5 ms
+     323,8 | spar info +258.5 ms: [6d11d4a7] navigation started at 258.5 ms
+     356,2 | spar info +311.3 ms: [6d11d4a7] Bridge: document b47b2fe4cb3eb94a opened.
+     356,2 | spar info +311.3 ms: [6d11d4a7] Heartbeat armed for the new document.
+     356,3 | spar info +311.3 ms: [6d11d4a7] first document at 311.3 ms
+     356,3 | spar info +319.3 ms: [6d11d4a7] first bridge message at 319.3 ms
+     356,3 | spar info +319.6 ms: [6d11d4a7] first bridge reply at 319.5 ms
+     356,3 | spar info +319.6 ms: [6d11d4a7] ui-ready at 319.6 ms
+     356,3 | spar info +319.6 ms: [6d11d4a7] Bridge: document b47b2fe4cb3eb94a reported ui-ready.
+     356,3 | spar info +322.6 ms: [6d11d4a7] first navigation completed at 322.6 ms
+     388,4 | probe: distinct-console: first 1000 in 8.2 ms, the other 0 in 0.1 ms
+     388,4 | spar info +332.6 ms: [6d11d4a7] 404 for /favicon.ico
+     388,4 | probe: done distinct-console:1000
+     412,5 | run: found 'done distinct-console:1000'
+    2429,4 | run: app working set 26140 KiB, peak seen 26140 KiB, private 9952 KiB
+    2429,6 | run: WM_CLOSE
+    2662,5 | spar info +2399.6 ms: [6d11d4a7] close requested (User) at 2399.6 ms
+    2662,5 | spar info +2400.0 ms: [6d11d4a7] closing at 2400 ms
+    2662,5 | spar info +2400.0 ms: [6d11d4a7] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    2662,5 | spar info +2400.3 ms: [6d11d4a7] page close work done at 2400.3 ms
+    2662,5 | spar info +2400.4 ms: [6d11d4a7] Bridge: document b47b2fe4cb3eb94a closed (window closing).
+    2662,5 | spar info +2400.4 ms: [6d11d4a7] calls stopped at 2400.4 ms
+    2662,6 | spar info +2400.4 ms: [6d11d4a7] calls settled at 2400.4 ms
+    2662,6 | spar info +2400.4 ms: [6d11d4a7] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    2662,6 | spar info +2412.5 ms: [6d11d4a7] controller closed at 2412.5 ms
+    2662,6 | spar info +2414.7 ms: [6d11d4a7] window destroyed at 2414.7 ms
+    2662,6 | spar info +2417.9 ms: [6d11d4a7] services disposed at 2417.9 ms
+    2662,6 | spar info +2417.9 ms: [6d11d4a7] exit 0 at 2417.9 ms
+    2662,7 | run: exit 0

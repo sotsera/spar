@@ -1,0 +1,45 @@
+       4,3 > start Notebook.exe env [SPAR_DEV_UI_STALL_MS=300]
+     116,5 | spar info +16.8 ms: [c6b9ef5e] Host started 90.9 ms after the process.
+     126,9 | spar info +27.1 ms: [c6b9ef5e] single instance at 26.1 ms
+     129,1 | spar info +32.6 ms: [c6b9ef5e] prerequisites checked at 32.6 ms
+     145,0 | spar info +48.3 ms: [c6b9ef5e] UI-thread stall probe on.
+     159,8 | spar info +63.2 ms: [c6b9ef5e] services built at 63.2 ms
+     176,1 | spar info +79.6 ms: [c6b9ef5e] window shown at 79.6 ms
+     176,4 | spar info +79.9 ms: [c6b9ef5e] Theme dark (system), window #1d1f24.
+     192,0 | spar info +95.4 ms: [c6b9ef5e] environment at 95.4 ms
+     192,6 | spar info +96.0 ms: [c6b9ef5e] WebView2 Runtime 157.0.4341.46
+     202,7 | spar info +106.2 ms: [c6b9ef5e] Heartbeat every 5000 ms.
+     376,8 | spar info +280.2 ms: [c6b9ef5e] controller at 280.2 ms
+     380,8 | spar info +284.3 ms: [c6b9ef5e] navigation started at 284.3 ms
+     475,7 | spar info +379.2 ms: [c6b9ef5e] Bridge: document 66a46ca10632cac6 opened.
+     475,8 | spar info +379.2 ms: [c6b9ef5e] first document at 379.2 ms
+     500,9 | spar info +404.3 ms: [c6b9ef5e] first bridge message at 404.3 ms
+     502,9 | spar info +406.4 ms: [c6b9ef5e] first navigation completed at 406.4 ms
+     511,9 | spar info +415.1 ms: [c6b9ef5e] first bridge reply at 415.1 ms
+     512,5 | spar info +415.4 ms: [c6b9ef5e] Heartbeat armed for the new document.
+     524,5 | spar info +427.9 ms: [c6b9ef5e] ui-ready at 427.9 ms
+     524,6 | spar info +428.0 ms: [c6b9ef5e] Bridge: document 66a46ca10632cac6 reported ui-ready.
+     524,6 > seen 'ui-ready'
+     524,8 | spar warn +428.2 ms: [c6b9ef5e] Development trigger: stalling the UI thread for 300 ms.
+     840,1 | spar warn +742.2 ms: The UI thread stalled 312.5 ms; the slowest Spar callback meanwhile was development stall trigger (312.5 ms)
+     840,2 > seen 'development stall trigger'
+     840,3 | spar info +743.7 ms: [c6b9ef5e] 404 for /favicon.ico
+    1352,6 > suspend the UI thread 64088 for 200 ms
+    1569,7 | spar warn +1472.3 ms: The UI thread stalled 203.5 ms outside Spar's callbacks
+    1569,7 > seen 'outside Spar's callbacks'
+    1570,2 > WM_CLOSE to the window
+    1571,8 | spar info +1475.3 ms: [c6b9ef5e] close requested (User) at 1475.3 ms
+    1577,4 | spar info +1480.8 ms: Close request for window main (User): the backend's guard answered Close
+    1578,8 | spar info +1482.2 ms: [c6b9ef5e] closing at 1482.2 ms
+    1578,9 | spar info +1482.5 ms: [c6b9ef5e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1580,0 | spar info +1483.5 ms: [c6b9ef5e] page close work done at 1483.5 ms
+    1580,5 | spar info +1484.1 ms: [c6b9ef5e] Bridge: document 66a46ca10632cac6 closed (window closing).
+    1580,7 | spar info +1484.2 ms: [c6b9ef5e] calls stopped at 1484.2 ms
+    1580,7 | spar info +1484.2 ms: [c6b9ef5e] calls settled at 1484.2 ms
+    1596,6 | spar info +1500.0 ms: [c6b9ef5e] controller closed at 1499.9 ms
+    1611,2 | spar info +1514.6 ms: [c6b9ef5e] window destroyed at 1514.6 ms
+    1616,7 | spar info +1520.2 ms: [c6b9ef5e] services disposed at 1520.2 ms
+    1616,8 | spar info +1520.3 ms: [c6b9ef5e] exit 0 at 1520.3 ms
+    1627,1 > exit 0
+    8037,9 > browser processes left for this root 6,4 s after the exit: 0
+    8038,0 > RESULT OK

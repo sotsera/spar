@@ -1,0 +1,48 @@
+       0,0 | run: start ConfigCost.exe env []
+      49,9 | run: window moved offscreen
+      55,3 | spar info +0.3 ms: [beb2cc90] Host started 20.8 ms after the process.
+      55,3 | spar info +0.4 ms: [beb2cc90] App id com.example.spikes.ConfigCost, folder <repo>\artifacts\webview2-profiles\configuration-cost\startup\s1-v3-3\com.example.spikes.ConfigCost
+      55,3 | spar info +1.6 ms: [beb2cc90] single instance at 1.6 ms
+      55,4 | spar info +1.8 ms: [beb2cc90] prerequisites checked at 1.8 ms
+      55,4 | spar info +2.8 ms: [beb2cc90] services built at 2.8 ms
+      55,4 | spar info +8.7 ms: [beb2cc90] window shown at 8.7 ms
+      55,4 | spar info +8.8 ms: [beb2cc90] Theme dark (system), window #1f1f1f.
+      55,5 | spar info +14.0 ms: [beb2cc90] environment at 14 ms
+      55,5 | spar info +14.0 ms: [beb2cc90] WebView2 Runtime 157.0.4341.46
+      55,5 | spar info +14.0 ms: [beb2cc90] Browser profile folder <repo>\artifacts\webview2-profiles\configuration-cost\startup\s1-v3-3\com.example.spikes.ConfigCost\WebView2
+      55,5 | spar info +18.2 ms: [beb2cc90] Heartbeat every 5000 ms.
+      55,5 | spar info +19.1 ms: [beb2cc90] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      55,5 | spar info +19.1 ms: [beb2cc90] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     261,3 | spar info +213.8 ms: [beb2cc90] controller at 213.8 ms
+     261,3 | spar info +213.9 ms: [beb2cc90] Browser settings set (0.05 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     309,2 | spar info +259.4 ms: [beb2cc90] Page file picker blocked in 45.5 ms (Page.enable 45.2 ms).
+     309,3 | spar info +259.4 ms: [beb2cc90] page script added at 259.4 ms
+     309,3 | spar info +259.5 ms: [beb2cc90] navigation started at 259.5 ms
+    5333,4 | spar info +5293.7 ms: [beb2cc90] Bridge: document ec390608fb0676dd opened.
+    5333,5 | spar info +5293.7 ms: [beb2cc90] Heartbeat armed for the new document.
+    5333,5 | spar info +5293.7 ms: [beb2cc90] first document at 5293.7 ms
+    5380,1 | spar info +5304.9 ms: [beb2cc90] first bridge message at 5304.9 ms
+    5380,2 | spar info +5305.0 ms: [beb2cc90] first bridge reply at 5305 ms
+    5380,2 | spar info +5305.0 ms: [beb2cc90] ui-ready at 5305 ms
+    5380,2 | spar info +5305.0 ms: [beb2cc90] Bridge: document ec390608fb0676dd reported ui-ready.
+    5380,2 | spar info +5305.3 ms: [beb2cc90] first navigation completed at 5305.3 ms
+    5380,2 | probe: details variant 2+; options greeting=from-file count=3 tags=a,b; Logging:LogLevel:Default=Warning
+    5380,2 | probe: done
+    5380,2 | spar info +5308.5 ms: [beb2cc90] 404 for /favicon.ico
+    5404,0 | run: found 'ui-ready'
+    5407,1 | run: at found: app working set 25900 KiB, private 9364 KiB, threads 11
+    6441,3 | run: app working set 25900 KiB, peak seen 25900 KiB, private 9364 KiB, threads 11
+    6441,6 | run: WM_CLOSE
+    6704,9 | spar info +6411.0 ms: [beb2cc90] close requested (User) at 6411 ms
+    6704,9 | spar info +6411.6 ms: [beb2cc90] closing at 6411.6 ms
+    6704,9 | spar info +6411.6 ms: [beb2cc90] Heartbeat: 1 ticks, 1 pings, longest tick on the UI thread 0.041 ms.
+    6704,9 | spar info +6411.9 ms: [beb2cc90] page close work done at 6411.9 ms
+    6704,9 | spar info +6411.9 ms: [beb2cc90] Bridge: document ec390608fb0676dd closed (window closing).
+    6704,9 | spar info +6411.9 ms: [beb2cc90] calls stopped at 6411.9 ms
+    6704,9 | spar info +6411.9 ms: [beb2cc90] calls settled at 6411.9 ms
+    6705,0 | spar info +6411.9 ms: [beb2cc90] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    6705,0 | spar info +6447.7 ms: [beb2cc90] controller closed at 6447.7 ms
+    6705,0 | spar info +6449.5 ms: [beb2cc90] window destroyed at 6449.5 ms
+    6705,0 | spar info +6453.3 ms: [beb2cc90] services disposed at 6453.3 ms
+    6705,0 | spar info +6453.3 ms: [beb2cc90] exit 0 at 6453.3 ms
+    6705,1 | run: exit 0

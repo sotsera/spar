@@ -1,0 +1,7 @@
+       0.0 | options --reps 0 --gap 1000 --profile named --smartscreen off --dwell 0 --window shown --env keep --wait none --folder same --overlap false --args "--log-net-log=<repo>\artifacts\webview-restart-wait\browserlogs\net-named-13.json --net-log-capture-mode=Default" --exit wait --sample true
+       6.1 | Runtime 157.0.4341.60
+     387.6 | cycle 0: controller 249 ms, navigation 114 ms, browser 73476 new True, environment 6 ms
+     542.2 |   BrowserProcessExited pid 73476 kind 0
+     550.8 | cycle 0 browser 73476: close->exit +149 ms, BrowserProcessExited +155 ms
+    1060.7 | processes of the root left: 0 
+    1060.7 | summary: no restarts

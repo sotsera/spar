@@ -1,0 +1,52 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=picker SPAR_AUTOMATED=1 SPAR_DEV_INPUT=wait:1500;click:120,40;wait:500;click:120,40]
+     276,3 | spar info +10.5 ms: [6b8ba213] Host started 230.3 ms after the process.
+     276,4 | spar info +12.7 ms: [6b8ba213] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-picker\com.example.tests.SecurityProbe.Development
+     276,4 | spar info +18.7 ms: [6b8ba213] single instance at 18 ms
+     276,4 | spar info +24.1 ms: [6b8ba213] prerequisites checked at 24.1 ms
+     339,8 | run: window moved offscreen
+     344,8 | spar info +33.4 ms: [6b8ba213] UI-thread stall probe on.
+     344,9 | spar info +41.9 ms: [6b8ba213] services built at 41.9 ms
+     345,0 | spar info +43.4 ms: [6b8ba213] window shown at 43.4 ms
+     345,0 | spar info +43.7 ms: [6b8ba213] Theme dark (system), window #1f1f1f.
+     345,0 | spar info +50.6 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     345,0 | spar info +69.2 ms: [6b8ba213] environment at 69.2 ms
+     345,0 | spar info +70.1 ms: [6b8ba213] WebView2 Runtime 157.0.4341.46
+     345,0 | spar info +70.7 ms: [6b8ba213] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-picker\com.example.tests.SecurityProbe.Development\WebView2
+     345,0 | spar info +86.9 ms: [6b8ba213] Heartbeat every 5000 ms.
+     345,0 | spar info +89.1 ms: [6b8ba213] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-vjmfouqbK1MxQAssYbQXh0A/+f2ik4zc/bQ37VrPL7c=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     345,0 | spar info +89.1 ms: [6b8ba213] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     543,3 | spar info +261.2 ms: [6b8ba213] controller at 261.2 ms
+     543,3 | spar info +265.8 ms: [6b8ba213] Browser settings read back (2.06 ms): devtools on, keys on (devtools keys only), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     588,9 | spar info +302.6 ms: [6b8ba213] Page file picker blocked in 36.6 ms (Page.enable 36.3 ms).
+     589,0 | spar info +302.7 ms: [6b8ba213] page script added at 302.7 ms
+     589,0 | spar info +303.3 ms: [6b8ba213] navigation started at 303.3 ms
+     667,6 | spar info +380.5 ms: [6b8ba213] Bridge: document fc8ccc6d0c0c74c6 opened.
+     667,7 | spar info +380.8 ms: [6b8ba213] Heartbeat armed for the new document.
+     667,7 | spar info +380.9 ms: [6b8ba213] first document at 380.9 ms
+     667,7 | spar info +385.9 ms: [6b8ba213] first bridge message at 385.9 ms
+     667,7 | spar info +389.0 ms: [6b8ba213] first navigation completed at 389 ms
+     667,7 | spar info +390.9 ms: [6b8ba213] 404 for /favicon.ico
+     667,7 | spar info +394.0 ms: [6b8ba213] first bridge reply at 394 ms
+     667,8 | spar info +394.2 ms: [6b8ba213] ui-ready at 394.2 ms
+     667,8 | spar info +394.2 ms: [6b8ba213] Bridge: document fc8ccc6d0c0c74c6 reported ui-ready.
+     667,8 | probe: picker: ready at 20,20
+    2186,6 | spar info +1911.7 ms: [6b8ba213] Development input: sent click:120,40.
+    2703,8 | spar info +2428.5 ms: [6b8ba213] Development input: sent click:120,40.
+    2703,8 | spar info +2428.5 ms: [6b8ba213] Development input: all steps sent.
+    6692,9 | probe: picker: click 2, change 0, cancel 0, files 0
+    6693,0 | probe: done picker
+    6730,8 | run: found 'done picker'
+    7264,5 | run: app working set 49084 KiB, peak seen 49084 KiB, private 15232 KiB
+    7264,8 | run: WM_CLOSE
+    7525,7 | spar info +7014.8 ms: [6b8ba213] close requested (User, automated) at 7014.8 ms
+    7525,7 | spar info +7019.0 ms: [6b8ba213] closing at 7019 ms
+    7525,7 | spar info +7019.2 ms: [6b8ba213] Heartbeat: 1 ticks, 2 pings, longest tick on the UI thread 0.769 ms.
+    7525,7 | spar info +7020.2 ms: [6b8ba213] page close work done at 7020.2 ms
+    7525,7 | spar info +7020.8 ms: [6b8ba213] Bridge: document fc8ccc6d0c0c74c6 closed (window closing).
+    7525,7 | spar info +7020.9 ms: [6b8ba213] calls stopped at 7020.9 ms
+    7525,8 | spar info +7020.9 ms: [6b8ba213] calls settled at 7020.9 ms
+    7525,8 | spar info +7036.3 ms: [6b8ba213] controller closed at 7036.3 ms
+    7525,8 | spar info +7038.9 ms: [6b8ba213] window destroyed at 7038.9 ms
+    7525,8 | spar info +7044.9 ms: [6b8ba213] services disposed at 7044.9 ms
+    7525,8 | spar info +7045.0 ms: [6b8ba213] exit 0 at 7045 ms
+    7526,0 | run: exit 0

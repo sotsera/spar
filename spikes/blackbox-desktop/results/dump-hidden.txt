@@ -1,0 +1,37 @@
+# window 'Notebook', 36 elements
+50033	pane		Chrome_WidgetWin_1	Notebook
+50033	pane		Intermediate D3D Window	
+50033	region	region	BrowserRootView	Notebook - Web content
+50033	region	region	NonClientView	
+50033	region	region	EmbeddedBrowserFrameView	
+50033	region	region	BrowserView	
+50033	region	region	TopContainerView	
+50033	region	region	SidebarContentsSplitView	
+50033	region	region	SidebarContentsSplitView	
+50033	region	region	MultiContentsView	
+50033	region	region	View	
+50033	region	region	View	
+50030	document	document		Notebook
+50026	group	group		
+50026	complementary	complementary	flex w-72 shrink-0 flex-col border-r border-line bg-sheet/60 dark:border-line-dark dark:bg-sheet-dark/60	
+50026	section header	group	flex items-center gap-2 px-4 pt-4 pb-3	
+50020	heading	heading	text-[15px] font-semibold tracking-tight	Notebook
+50000	button	button	ml-auto inline-flex items-center gap-1.5 rounded-md bg-accent px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-accent/90 dark:bg-accent-dark dark:text-paper-dark	New page
+50020	text	description		Search pages
+50004	edit	searchbox	w-full rounded-md border border-line bg-sheet py-1.5 pr-2 pl-8 text-sm placeholder:text-muted dark:border-line-dark dark:bg-sheet-dark dark:placeholder:text-muted-dark	Search pages
+50026	navigation	navigation	min-h-0 flex-1 overflow-y-auto px-2 pb-4	Pages
+50020	text	description		No pages yet.
+50026	main	main	flex min-w-0 flex-1 bg-sheet dark:bg-sheet-dark	
+50020	heading	heading	text-lg font-semibold tracking-tight	Start your notebook
+50020	text	description		Pages are Markdown files you can open anywhere.
+50000	button	button	mt-5 inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white shadow-sm hover:bg-accent/90 dark:bg-accent-dark dark:text-paper-dark	New page
+50026	group	group	pointer-events-none fixed right-4 bottom-4 left-4 flex justify-center	
+50033	region	region	EmbeddedBrowserDownloadView	
+50033	region	region	EmbeddedBrowserTabRootView	
+50033	region	region	TopContainerOverlayView	
+50037	title bar			
+50010	menu bar			System
+50011	menu item			System
+50000	button			Minimize
+50000	button			Maximize
+50000	button			Close

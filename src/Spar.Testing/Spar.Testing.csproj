@@ -1,20 +1,52 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <!--
     Spar's test library (plan section 5): runs the app's own Program.cs inside the test process with the test's
-    overrides. The None surface; Browser is in Spar.Testing.Browser, and Window follows in M1b (Windows) and M1c (Linux).
+    overrides. The None and Window surfaces, and the window tests' page API with its page engine; Browser is in
+    Spar.Testing.Browser. Apps never reference it, so none of it reaches an app's executable.
   -->
   <PropertyGroup>
     <IsPackable>true</IsPackable>
     <Description>Spar test host: runs an app's own Program.cs inside the test process.</Description>
     <RootNamespace>Spar.Testing</RootNamespace>
     <IsAotCompatible>true</IsAotCompatible>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Spar\Spar.csproj" />
   </ItemGroup>
 
+  <!--
+    The black-box fixture (BlackBox/): Win32 through CsWin32 (process creation, the job object, the hidden desktop),
+    UI Automation through hand-declared [GeneratedComInterface] declarations, checked slot by slot against the Windows
+    SDK's UIAutomationClient.h by Spar.Tests.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- The window tests' page engine (Window/PageEngine.js), host-neutral, run in the page's isolated world. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Window\PageEngine.js" LogicalName="Spar.Testing.PageEngine.js" WithCulture="false" Type="Non-Resx" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Spar.Testing.Browser" />
+
+    <!-- Spar's own host tests (tests/Spar.WindowTests) reach the window's lifetime and the host's phases. -->
+    <InternalsVisibleTo Include="Spar.WindowTests" />
+
+    <!--
+      The pin of the ready line against the line the Windows host writes, the UI Automation slot-order test, and the
+      Sandbox runner's unit tests (its configuration, guest script, results reader and the real-input guard).
+    -->
+    <InternalsVisibleTo Include="Spar.Tests" />
+
+    <!--
+      Windows Sandbox (step 8c): the runner, driven by Spar.SandboxTests; and real input on the black-box window, which
+      the Notebook's Sandbox checks of its Production executable use. Internal until M3's app-facing layer.
+    -->
+    <InternalsVisibleTo Include="Spar.SandboxTests" />
+    <InternalsVisibleTo Include="Notebook.EndToEndTests" />
   </ItemGroup>
 </Project>

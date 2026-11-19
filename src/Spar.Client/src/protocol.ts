@@ -11,17 +11,24 @@ export type MessageType =
   | "cancel"
   | "ready"
   | "closing-done"
+  | "pong"
+  | "csp"
+  | "errors"
+  | "close-answer"
   | "open"
   | "result"
   | "items"
   | "end"
   | "failure"
   | "event"
-  | "closing";
+  | "closing"
+  | "ping"
+  | "close-request"
+  | "close-ended";
 
 const knownTypes: ReadonlySet<string> = new Set<MessageType>([
-  "hello", "call", "stream", "credits", "cancel", "ready", "closing-done",
-  "open", "result", "items", "end", "failure", "event", "closing",
+  "hello", "call", "stream", "credits", "cancel", "ready", "closing-done", "pong", "csp", "errors", "close-answer",
+  "open", "result", "items", "end", "failure", "event", "closing", "ping", "close-request", "close-ended",
 ]);
 
 /** One bridge message. Fields a type does not use are absent; the payload is located, never parsed. */
@@ -46,6 +53,11 @@ export interface BridgeMessage {
   readonly execution?: string;
   readonly itemsSent?: number;
   readonly name?: string;
+  /**
+   * In `ping` and `pong`, the heartbeat's number; in `close-request`, `close-answer` and `close-ended`, the close
+   * request's. A safe integer from 1 either way.
+   */
+  readonly seq?: number;
   /** The text after the TAB; empty when there is none. */
   readonly payload: string;
 }
@@ -149,6 +161,13 @@ export function encode(message: BridgeMessage): string {
     case "event":
       add("name", message.name);
       break;
+    case "ping":
+    case "pong":
+    case "close-request":
+    case "close-answer":
+    case "close-ended":
+      add("seq", requireSeq(message));
+      break;
   }
 
   return `{${parts.join(",")}}\t${message.payload}`;
@@ -163,6 +182,14 @@ export function isValidTraceParent(value: string): boolean {
 
   const [, version, traceId, parentId] = match;
   return version !== "ff" && /[^0]/.test(traceId!) && /[^0]/.test(parentId!);
+}
+
+function requireSeq(message: BridgeMessage): number {
+  if (message.seq === undefined) {
+    throw new Error(`A '${message.type}' message needs a seq.`);
+  }
+
+  return message.seq;
 }
 
 function requireId(message: BridgeMessage): number {
@@ -301,6 +328,7 @@ interface Fields {
   execution?: string;
   itemsSent?: number;
   name?: string;
+  seq?: number;
 }
 
 /** Reads the known fields from their raw text, one by one; unknown fields are ignored. */
@@ -353,6 +381,7 @@ function readFields(raw: ReadonlyMap<string, string>): Fields {
   setIf(fields, "execution", text("execution"));
   setIf(fields, "itemsSent", integer("itemsSent", 0, Number.MAX_SAFE_INTEGER, "'itemsSent' must be a count."));
   setIf(fields, "name", text("name"));
+  setIf(fields, "seq", integer("seq", 1, Number.MAX_SAFE_INTEGER, "'seq' must be a safe integer from 1."));
   return fields;
 }
 
@@ -426,6 +455,7 @@ function toMessage(fields: Fields, payload: string): BridgeMessage {
   copy(message, "execution", fields.execution);
   copy(message, "itemsSent", fields.itemsSent);
   copy(message, "name", fields.name);
+  copy(message, "seq", fields.seq);
   return message;
 }
 
@@ -463,6 +493,12 @@ function missingField(message: BridgeMessage): string | undefined {
       return message.kind === undefined ? "kind" : message.code === undefined ? "code" : message.execution === undefined ? "execution" : undefined;
     case "event":
       return message.name === undefined ? "name" : undefined;
+    case "ping":
+    case "pong":
+    case "close-request":
+    case "close-answer":
+    case "close-ended":
+      return message.seq === undefined ? "seq" : undefined;
     default:
       return undefined;
   }

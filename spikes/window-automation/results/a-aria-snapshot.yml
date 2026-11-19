@@ -1,0 +1,18 @@
+- form "New order":
+  - text: Customer name
+  - textbox "Customer name"
+  - checkbox "Express delivery"
+  - text: Express delivery
+  - checkbox "Gift wrap"
+  - text: Gift wrap Region
+  - combobox "Region":
+    - option "Americas" [selected]
+    - option "Europe"
+    - option "Asia"
+  - text: Priority
+  - combobox "Priority": Normal
+  - text: Notes
+  - textbox "Notes"
+  - text: Attachment
+  - button "Attachment"
+  - button "Place order" [disabled]

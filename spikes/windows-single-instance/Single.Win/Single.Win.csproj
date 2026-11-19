@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Windows single-instance spike: an exclusive lock file in the app's data folder plus a named pipe whose name comes
+    from that folder, with CurrentUserOnly on both ends. One NativeAOT executable with verbs: "run" (the app: primary or
+    secondary), "squat" (holds a pipe name with an open DACL), "probe" (connects without CurrentUserOnly), "suspend" and
+    "resume" (a hung primary), "launcher" and "click" (the focus handoff after a real click).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Spar.SingleInstance</RootNamespace>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+</Project>

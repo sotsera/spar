@@ -1,0 +1,10 @@
+START t=08:55:49.711 mode=udf count=2 root=<repo>\artifacts\webview2-profiles\window-tests\first-udf-4 pid=52048 cache=http://127.0.0.1:56908
+BODY t=08:55:50.264 mode=udf i=0 leftovers=[] before={"cookie":null,"idb":null,"ls":null,"sw":0,"wm":"prompt"} screens=granted:2 permissionEvents=[kind=12 user=1 saves=1] stored=[12:https://app.localhost/:1] cacheFirstLoad=1 cacheSecondLoad=0 after={"cookie":"token=T0","idb":"T0","ls":"T0","sw":1,"wm":"granted"} browserPrivateMB=164.1
+TEST t=08:55:50.472 mode=udf i=0 setupMs=253.0 envMs=5.8 controllerMs=176.1 pageMs=71.2 teardownMs=207.7 totalMs=460.7 browserExited=True exitMs=184.1 gone=True deleted=True
+BODY t=08:55:51.026 mode=udf i=1 leftovers=[] before={"cookie":null,"idb":null,"ls":null,"sw":0,"wm":"prompt"} screens=granted:2 permissionEvents=[kind=12 user=1 saves=1] stored=[12:https://app.localhost/:1] cacheFirstLoad=1 cacheSecondLoad=0 after={"cookie":"token=T1","idb":"T1","ls":"T1","sw":1,"wm":"granted"} browserPrivateMB=164.7
+TEST t=08:55:51.308 mode=udf i=1 setupMs=256.1 envMs=0.5 controllerMs=175.2 pageMs=80.5 teardownMs=281.8 totalMs=537.9 browserExited=True exitMs=179.1 gone=True deleted=True
+SUMMARY t=08:55:51.308 mode=udf setup n=2 min=253.0 p50=253.0 p95=256.1 max=256.1
+SUMMARY t=08:55:51.308 mode=udf setup-after-first n=1 min=256.1 p50=256.1 p95=256.1 max=256.1
+SUMMARY t=08:55:51.308 mode=udf teardown n=2 min=207.7 p50=207.7 p95=281.8 max=281.8
+SUMMARY t=08:55:51.308 mode=udf total n=2 min=460.7 p50=460.7 p95=537.9 max=537.9
+SUMMARY t=08:55:51.308 mode=udf leaks=[]

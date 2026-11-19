@@ -19,7 +19,8 @@ The example is a small part of Spar's first consumer, the SQL Server tool: saved
 
 ```text
 SqlTool/
-  SqlTool.csproj            <Project Sdk="Spar.Sdk">, with <SparPlatforms>windows;linux</SparPlatforms>
+  SqlTool.csproj            <Project Sdk="Spar.Sdk">, with <SparAppId>com.example.SqlTool</SparAppId>
+                            and <SparPlatforms>windows;linux</SparPlatforms>
   Program.cs
   Connections/              one folder per feature
   CopyJobs/
@@ -34,6 +35,7 @@ SqlTool.EndToEndTests/      optional: browser and window tests, the black-box ex
 global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 ```
 
+- The app id, `SparAppId`, is required: reverse-DNS, checked by the build. It names the app to the OS and its per-user folders: `%LOCALAPPDATA%\com.example.SqlTool` on Windows, the XDG folders on Linux, and `com.example.SqlTool.Development` for a Debug build, so Debug never shares data with an installed copy (decision "M1b's remaining questions without a spike").
 - The target hosts come from `SparPlatforms` (both by default); `Spar.Sdk` adds the host packages itself.
 - The frontend is found through `SparFrontendPath`, by default `frontend/`.
 - The generated client lives under `obj/spar/client/` and is never written into `node_modules`.
@@ -63,15 +65,18 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
   - the permissions (plan 3b);
   - the window kinds, whose names become a TypeScript union in `@spar/app/windows` (6.7);
   - the window colours (plan 3d).
-- **Run at start-up, so ordinary values are fine:** every other configuration call runs when the app starts and may use run-time values. The example does so with `spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")))` and with the tray menu's lambda.
+- **Run at start-up, so ordinary values are fine:** every other configuration call runs when the app starts and may use run-time values. The example does so with `spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")))` and with the tray menu's lambda. `spar.ResolveFolders()` gives the configuration the folders the app's services will get, for what it builds itself (3.13).
 
 File `SqlTool/Program.cs`:
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spar;
 using SqlTool.Connections;
+using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
+using SqlTool.Support;
 
 var app = SparApplication.Create(args, spar =>
 {
@@ -95,8 +100,14 @@ var app = SparApplication.Create(args, spar =>
             .Separator()
             .Item("Quit", TrayAction.Quit)));
 
-    // The strict CSP is the default; each addition is explicit (plan 3b). Decided.
-    spar.ContentSecurity(csp => csp.FontSrc("https://fonts.gstatic.com"));
+    // The strict CSP is the default; each addition is explicit (plan 3b). A directive method takes several sources and
+    // may be called again: Spar sends each directive once, its sources together. Violations are reported in every
+    // build by default; here report-uri, the backstop, reports only in Development and Test builds. Decided.
+    spar.ContentSecurity(csp => csp
+        .FontSrc("https://fonts.gstatic.com", "https://fonts.example-cdn.com")
+        .FontSrc("https://fonts.gstatic.com")
+        .ImgSrc("data:")
+        .Reporting(listener: CspReports.Always, endpoint: CspReports.DevelopmentOnly));
 
     // Powerful features are denied unless declared (plan 3b). Decided.
     spar.Permissions(p => p.Allow(Permission.ClipboardRead));
@@ -108,6 +119,11 @@ var app = SparApplication.Create(args, spar =>
     // Here logs sit next to the executable, as in a portable install.
     spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")));
 
+    // The folders the services will get, resolved now for what Program.cs builds itself: the hang record goes in the
+    // logs folder chosen above without repeating its path (3.13). spar.Folders(…) throws after this call. Built; the
+    // shape is for review (decision "Configuration stays the app's choice").
+    var folders = spar.ResolveFolders();
+
     // Window kinds the page opens by name (6.7). Decided.
     spar.Window("settings", w => w
         .Route("/settings")
@@ -118,10 +134,47 @@ var app = SparApplication.Create(args, spar =>
         .Commands(c => c.Allow<IConnections>()));
     spar.Window("queryEditor", w => w.Route("/query").Size(1000, 700).Zoom(min: 0.5, max: 3).FindInPage());
 
+    // Closing asks first: the page's guard, then this one, which asks while a copy runs (6.11). Decided.
+    spar.OnCloseRequested((request, services) => services.GetRequiredService<RunningCopies>().Any
+        ? CloseDecision.Ask("A copy is still running. Close anyway?")
+        : CloseDecision.Close);
+
+    // A second launch shows and focuses the main window, then hands its arguments here (3.14). Decided.
+    spar.OnRelaunch((relaunch, services) =>
+    {
+        if (relaunch.Arguments is ["--recipe", var file])
+        {
+            services.GetRequiredService<RecipeQueue>().TryAdd(relaunch.ResolvePath(file));
+        }
+    });
+
+    // A missing prerequisite opens the company's install guide in place of Spar's message (3.15). Decided.
+    spar.OnStartupProblem(SupportPage.TryOpen);
+
+    // A page that stops responding is recorded for support; Spar's own dialog still asks the user (3.16). Decided.
+    spar.OnPageUnresponsive((hang, services, cancellationToken) =>
+        services.GetRequiredService<HangLog>().RecordAsync(hang, cancellationToken));
+
+    // The UI-thread stall probe stays in this Production build, logging only, for users' machines (3.13). Decided.
+    spar.Diagnostics(d => d.KeepStallProbe());
+
+    // The log file: Information and above, and Debug for the copy jobs; a logging.json in the per-user folder overrides
+    // these on a user's machine without a new build (3.13). Decided.
+    spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
+
+    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
+    if (SupportBuild.IsSupportBuild)
+    {
+        spar.Browser(b => b.AllowDevTools());
+    }
+
     // Services: Microsoft DI, one scope per command call.
     spar.Services.AddSingleton<IConnectionStore, FileConnectionStore>();
     spar.Services.AddScoped<IConnections, ConnectionsApi>();
     spar.Services.AddSingleton<IMonitor, InstanceMonitor>();
+    spar.Services.AddSingleton<RunningCopies>();
+    spar.Services.AddSingleton<RecipeQueue>();
+    spar.Services.AddSingleton(new HangLog(folders.Logs));
 });
 
 return app.Run();
@@ -129,7 +182,14 @@ return app.Run();
 
 - **Class contracts** are registered by the generated code.
 - **Interface contracts** need their implementation registered, as `IConnections` above, whether the app declares them or a library it lists does (3.4). An app that registers none does not start: the error names the contract and its interface.
-- **Overrides of security defaults** (plan 3c) go in the same configuration. Spar logs each one at startup, and `spar doctor` lists them.
+- **Overrides of security defaults** (plan 3c) go in the same configuration: the page's in `ContentSecurity` and `Permissions` below, the browser's in `Browser` (3.17). Spar logs each one at startup, and `spar doctor` lists them.
+- **Page security** (plan 3b; decision "Page security's public shape"; built in M1b):
+  - `ContentSecurity` and `Permissions` are read by the build: each a statement of its own directly in `Create`, with constant values. Anything else is an error at its place: SPAR101 for a call elsewhere (a condition, a helper method), SPAR102 for a value that is not a constant, SPAR103 for a shape the build cannot read (a delegate variable, other statements in the lambda), SPAR104 for a source the policy refuses.
+  - The directive methods (`FontSrc`, `ImgSrc`, `ConnectSrc`, `MediaSrc`, `ScriptSrc`, `StyleSrc`, `FrameSrc`) take hosts and schemes only, and `FrameSrc` also `'self'`. A keyword or a nonce in them is SPAR104, whose message names the method that gives it: `AllowInlineStyles()`, `AllowEval()`, `AllowWebAssembly()` or `StyleNonce()`. Each of those, and `WithoutTrustedTypes()` and `WithoutIntegrity()`, documents its risk, when it is reasonable and the safer alternative.
+  - The policy above is sent as `font-src 'self' https://fonts.gstatic.com https://fonts.example-cdn.com` and `img-src 'self' data:`, with the rest of the strict default; duplicates are dropped. With `AllowInlineStyles()`, `style-src` gets no nonce or hash, which browsers would let override `'unsafe-inline'`, so `StyleNonce()` beside it is the SPAR105 warning.
+  - `Reporting(listener, endpoint)` sets each channel to `Always` (the default), `DevelopmentOnly` or `Off`: the listener is the host's script in each document, `endpoint` the `report-uri` backstop. Violations are logged grouped and with flood limits; in Development each new one says what C# would allow it.
+  - Under Trusted Types (on unless `WithoutTrustedTypes()`), `new Worker(url)` is a script sink: pass the worker's address through a policy, `trustedTypes.createPolicy("worker", { createScriptURL: url => url }).createScriptURL(address)`. Styles added from script use constructed stylesheets or `StyleNonce()`.
+  - `Permissions` declares the features the page may use (`Permission.Camera`, `Microphone`, `Geolocation`, `ClipboardRead`, `Sensors`, `LocalFonts`, `Midi`, `WindowManagement`, `Autoplay`). A declared feature is granted when the page asks, with no prompt; everything else is denied, also in the `Permissions-Policy` header. The browser never remembers an answer.
 
 ## 3. Contracts
 
@@ -783,11 +843,23 @@ public sealed class NetworkAwareMonitor(INetworkStatus network, IMonitor monitor
 
 ### 3.13 Logs and crash reports
 
-**Decided** (2026-11-14).
-- **Logs:** Spar logs through `ILogger`. In Production it writes rotating files, by default 5 files of 10 MB, at a level that configuration can raise without a new build.
-- **Page errors:** console errors, uncaught exceptions and unhandled rejections reach the same log, grouped with flood limits.
+**Decided** (2026-11-14; the log's shape in decision "Logging's public shape", built in M1b).
+- **One log file, in every app:** `app.log` in the logs folder gets Spar's lines and every `ILogger` of the app's services, from the host's first moment, so a start-up failure is there too. Inject `ILogger<T>` as usual: the app's services use Microsoft.Extensions.Logging's logger factory, and an app may add its own providers (`AddLogging`, for a console or OpenTelemetry), which work beside the file. Writing never waits for the disk: a full queue drops the newest lines and the file says how many. Rotation comes in M3 (5 files of 10 MB); until then a file over 5 MB is moved aside to `app.1.log` when the app starts.
+- **Without a file:** `spar.Logging(l => l.WithoutFile())` adds no file, for an app that sends its logs only to a sink of its own. The risk: support has no local file to ask for, and a failure before the app's services exist (a missing WebView2 Runtime, a relaunch that cannot reach the running app) reaches only standard error, which an app started from its icon does not have; the start-up message then names no log file.
+- **Levels:** Information and above in Production, Debug and above in Development and Test builds. `spar.Logging(l => l.Level(…).Level("SqlTool.CopyJobs", LogLevel.Debug))` (section 2) sets the minimum and the level of a category and of every category it is a prefix of, as Microsoft.Extensions.Logging's filter rules do: case-insensitive, the longest match winning, one `*` allowed. They are the app's levels, for every provider, the file and any the app adds: they are applied after the app's own `AddLogging` configuration, so they replace its `SetMinimumLevel`, while a rule the app adds for one provider (`AddFilter<ConsoleLoggerProvider>(…)`, or the file's alias `SparFile`) still applies to that provider.
+- **The app's own logging rules override `spar.Logging`:** Microsoft.Extensions.Logging uses a matching rule before the minimum level, and the default of `spar.Logging` is the minimum. So a `"Default"` in the app's own `Logging` configuration section, or an `AddFilter` without a category, sets the level of every category without a rule of its own, Spar's `Spar.*` lines in `app.log` included: with `"Default": "Warning"`, the host's Information lines (`ui-ready`, the security headers, the exit) leave the file. A category rule of the app's replaces the one `spar.Logging` sets for the same category. That is the app's choice; to keep Spar's lines under a stricter default, give them their own level, `"Spar": "Information"` in the app's configuration or `spar.Logging(l => l.Level("Spar", LogLevel.Information))`.
+- **Without a new build:** a `logging.json` in the app's per-user folder (`SparFolders.DataRoot`, `%LOCALAPPDATA%\<app id>` on Windows) overrides those levels when the app starts, writable without administrator rights and kept across updates. Its `"level"` holds over the app's own configuration too: Spar applies it after every configuration of the levels, whatever the order, and again when the app's configuration reloads, as the level of every category, so support can raise it even in an app whose configuration sets a `"Default"`. A category level, the app's or `spar.Logging`'s, is more specific and keeps its level; the file's `"categories"` apply last, so naming the same category there changes it. A file Spar cannot use (another shape, an unknown level, a comment) is ignored with one warning in the log, and the app starts with the levels of `Program.cs`. Its whole shape:
+
+```json
+{ "level": "Debug", "categories": { "SqlTool.CopyJobs": "Trace" } }
+```
+
+- **Lines:** one line per entry, in UTC, readable in any editor: `2026-11-17T22:41:07.318Z INFO  SqlTool.CopyJobs.CopyJobsService  Copied 1200 rows`. A message's further lines and an exception's type, message and stack follow indented by four spaces, so nothing the app or the page logs can look like another entry; scopes and the message's structured values are not written.
+- **Page errors:** `console.error` calls, uncaught exceptions and unhandled rejections reach the same log under `Spar.Page`, grouped by kind, text and place in the page: the first of each group at once, as an error with its stack, the rest counted in a summary at most every 10 s, with bounds per document. The page's own console is unchanged. A Development build reads `console.error` from the devtools' own console events, so the devtools' links point at the page's code; Production and Test builds wrap it in the page.
+- **Test runs** write the same file in the test's own logs folder, deleted with its data root.
 - **Crashes:** an unhandled .NET exception writes a crash record before the process ends.
-- **Folders:** every folder has a per-user default and can be set in `Program.cs` (`spar.Folders(…)`, as above). Test runs move them all under their own data root.
+- **Folders:** every folder has a per-user default under the app id's folder (section 1) and can be set in `Program.cs` (`spar.Folders(…)`, as above; the browser profile in 3.17). App code reads the folders in use from the `SparFolders` service (`DataRoot`, `Data`, `Logs`, `Cache`, `Profile`). `Program.cs` gets the same value earlier from `spar.ResolveFolders()`, for what it builds before the services exist, as the SQL tool does for its hang record (section 2): the per-user folder (`%LOCALAPPDATA%\<app id>`, with `.Development` after the id in a Development build), the app's `spar.Folders(…)` choices, or a test run's own root. Call `spar.Folders(…)` first: after `ResolveFolders()` it throws, so the two can never differ. Test runs move them all under their own data root; a black-box test does it through the environment, since the Production executable takes no data-root switch.
+- **The app's own configuration:** Spar reads no `appsettings.json` and takes no configuration package. An app that wants one adds Microsoft.Extensions.Configuration itself; its packages work in a NativeAOT build without warnings, and a JSON file applied to logging measured about 350 KB of executable. The file can sit in the app's data folder without repeating Spar's folder rule: `var folders = spar.ResolveFolders();`, then `new ConfigurationBuilder().AddJsonFile(Path.Combine(folders.Data, "appsettings.json"), optional: true).Build()`, applied with `spar.Services.AddLogging(b => b.AddConfiguration(configuration.GetSection("Logging")))`. Its `"Default"` then overrides `spar.Logging`, as above, and `logging.json` still overrides it.
 
 File `SqlTool/Status/CrashReport.cs`:
 
@@ -812,8 +884,206 @@ public sealed class CrashReport(IAppHealth health)
 - **Spar never uploads anything by itself.** What happens with a report is the app's choice.
 - **"Send logs":** `diagnostics.collect()` on the page, or `IAppHealth.CollectAsync` in C#, packs logs and crash records into one zip saved through a grant, ready to attach to an email.
 - **Secrets:** Spar's own entries never contain secrets. Apps keep theirs out too, because the zip is sent to other people.
+- **The UI-thread stall probe** (decision "Hangs: the page's hook, the Production stall probe and "Exit now""): Development and Test builds log each stall of the window's thread over 50 ms as a warning, naming the Spar callback that was running. A Production build has no probe unless `spar.Diagnostics(d => d.KeepStallProbe())` keeps it, as the SQL tool does (section 2); it then only logs. Without the call the probe's code is not in the executable at all.
 
-## 4. On the wire
+### 3.14 Single instance and relaunches
+
+**Decided** (decisions "Windows single instance: a lock file plus a pipe" and "The relaunch handler"). One instance of the app runs per data folder. Launching it again hands the new launch's arguments to the running instance: Spar shows and focuses the main window, then calls the handler in `Program.cs` (section 2). The SQL tool's handler accepts `--recipe <file>`, so a shortcut or a scheduled task can queue a saved recipe in the running tool.
+
+File `SqlTool/CopyJobs/RecipeQueue.cs`:
+
+```csharp
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+
+namespace SqlTool.CopyJobs;
+
+/// <summary>Saved recipes handed over by a relaunch (Program.cs), run one after another by the copy jobs.</summary>
+public sealed class RecipeQueue
+{
+    private readonly ConcurrentQueue<string> _files = new();
+
+    /// <summary>Queues a recipe file. A relaunch's arguments come from any process of this user, so they are checked.</summary>
+    public bool TryAdd(string path)
+    {
+        if (!path.EndsWith(".sqlrecipe", StringComparison.OrdinalIgnoreCase) || !File.Exists(path))
+        {
+            return false;
+        }
+
+        _files.Enqueue(path);
+        return true;
+    }
+
+    public bool TryTake([NotNullWhen(true)] out string? path) => _files.TryDequeue(out path);
+}
+```
+
+- **What a relaunch does:** the second process hands its arguments and working directory to the running instance, then exits. Spar shows and focuses the main window, restoring it from the tray or from minimized, then runs the handler. Without a handler, the window is focused and the arguments are ignored.
+- **The handler** runs off the UI thread, one relaunch at a time in arrival order. It receives the app's root services, as the close guard does; for a scoped service it creates a scope. An async overload, `(relaunch, services, cancellationToken) => ValueTask`, gets a token that is cancelled at shutdown. A relaunch is acknowledged when it is queued, before the handler runs, and is never replayed.
+- **Arguments are untrusted input:** any process of the same user can start the app with any arguments, so the handler checks them, as `TryAdd` does. `ResolvePath` resolves a relative path against the relaunch's working directory, not the running instance's.
+- **The first launch** gets its arguments in `Program.cs`'s `args`, as usual. Only later launches reach the handler.
+- **The page** sees nothing unless the app passes it on, for example through a subscription.
+- **When the running instance cannot be reached,** the second process shows a native message, writes stderr and the system log, and exits with a fixed code, as start-up errors do (plan section 3):
+  - 8 when the app is running but not responding: it is hung (no answer within 2 s), or still closing after about 5 s;
+  - 9 when it runs for another user on the same data folder.
+
+  In the automated mode the message goes only to stderr and the log.
+- **Several instances:** an app that needs them says so in C#. The option is designed when an app needs it, together with how their data folders are kept apart.
+- **How:** a lock file in the app's data folder, plus a named pipe on Windows and a Unix socket on Linux, only for the same user. The handoff takes about 1 ms once the second process runs.
+
+### 3.15 Start-up problems
+
+**Decided** (user, 2026-11-17; decision "Start-up: prerequisites, single instance and theme"). An app launched from an icon has no terminal, so when it cannot start, Spar shows a native message saying what is wrong and how to fix it, then exits with a fixed code (plan section 3, "Missing prerequisites"). An app can show its own message instead, through `spar.OnStartupProblem` in `Program.cs` (section 2). The SQL tool is installed by a company's IT department, whose users cannot install the WebView2 Runtime themselves, so it opens the company's install guide in place of Microsoft's download page.
+
+File `SqlTool/Support/SupportPage.cs`:
+
+```csharp
+using System.ComponentModel;
+using System.Diagnostics;
+using Spar;
+
+namespace SqlTool.Support;
+
+/// <summary>The install guide the company's IT department keeps, for what users cannot fix themselves.</summary>
+public static class SupportPage
+{
+    private const string Guide = "https://intranet.example.com/sqltool/install";
+
+    /// <summary>Opens the guide for a missing or outdated prerequisite; true when it opened, so Spar shows no message.</summary>
+    public static bool TryOpen(StartupProblem problem)
+    {
+        if (problem.Kind is not (StartupProblemKind.Missing or StartupProblemKind.TooOld or StartupProblemKind.OsTooOld))
+        {
+            return false;
+        }
+
+        try
+        {
+            var page = $"{Guide}?component={Uri.EscapeDataString(problem.Component)}";
+            Process.Start(new ProcessStartInfo(page) { UseShellExecute = true })?.Dispose();
+            return true;
+        }
+        catch (Win32Exception)
+        {
+            return false;
+        }
+    }
+}
+```
+
+- **What a problem says:** `Kind`, `Component` (for example `"WebView2 Runtime"` or `"Windows"`), the `Found` and `Required` versions when a version matters, `Details` (a sentence for people, with an error code when there is one) and `HelpUrl` (where to get or repair the component, or null).
+- **The kinds and their exit codes,** the same on every OS and for every app:
+  - `Missing` 3 and `TooOld` 4: the web engine (the WebView2 Runtime on Windows, WebKitGTK on Linux) is not installed, or older than Spar's minimum (Runtime 139 on Windows);
+  - `Broken` 5: it is installed but does not start;
+  - `OsTooOld` 7: Windows older than Windows 10 22H2;
+  - `NotResponding` 8 and `OtherUser` 9: a relaunch could not reach the running app (3.14).
+
+  The one other fixed code is not a start-up problem: 10 when shutdown did not finish and the user chose "Exit now" (6.11).
+- **Return true only when the app showed its own message;** Spar then shows none. Returning false, or throwing, leaves Spar's message: on Windows a task dialog naming what is missing, with Microsoft's download page as a link and a button.
+- **Written regardless:** standard error and the per-user log (`app.log` in the logs folder, 3.13) get the problem, and the exit code is the kind's, whatever the hook returns.
+- **Before the app's services exist:** the hook gets no service provider. It runs on a thread of its own, which may show a window or a message box, and it should return promptly, since the process exits after it.
+- **In the automated mode** (tests and agents, 6.11) the hook is not called, and no message is shown: standard error and the log only.
+
+### 3.16 A page that stops responding
+
+**Decided** (decisions "What "Wait" does after the hung-page dialog" and "Hangs: the page's hook, the Production stall probe and "Exit now""). While a window is visible, Spar pings its page every 5 s, and the page's SDK answers from its message handler. A page that misses three pings in a row (15 to 20 s after it stopped) gets Spar's native dialog, "Wait / Reload page". Wait asks again after about 20 s, then 40 s, 80 s and every 160 s while the page stays silent, and a page that answers again closes the dialog itself. Reload page ends the page's process, then loads the page again once; the backend keeps running, and no command is sent again. The app cannot replace the dialog: an app has no UI of its own to show while its page does not answer. It can observe each change through `spar.OnPageUnresponsive` in `Program.cs` (section 2), which the SQL tool uses to keep a record for its support team. The hook returns a `ValueTask` and gets a `CancellationToken`, like the close guard and the relaunch handler; a hook that finishes at once can take the shorter form `(hang, services) => …`.
+
+File `SqlTool/Support/HangLog.cs`:
+
+```csharp
+using System.Collections.Concurrent;
+using System.Globalization;
+using Spar;
+
+namespace SqlTool.Support;
+
+/// <summary>
+/// The page's hangs, for the status page and support reports: kept in memory for this run, and appended to
+/// <c>hangs.txt</c> in the logs folder for the support team. Program.cs records each change.
+/// </summary>
+public sealed class HangLog
+{
+    private const int Kept = 50;
+
+    private readonly ConcurrentQueue<PageHang> _changes = new();
+    private readonly string _filePath;
+
+    /// <summary>A record in <paramref name="logsFolder"/>, the logs folder Program.cs resolved.</summary>
+    public HangLog(string logsFolder)
+    {
+        _filePath = Path.Combine(logsFolder, "hangs.txt");
+    }
+
+    /// <summary>
+    /// One change: unresponsive, recovered, reloaded or closed anyway. Spar's dialog has already asked the user. Spar
+    /// awaits it before the next change, and cancels the token when the app exits and stops waiting.
+    /// </summary>
+    public async ValueTask RecordAsync(PageHang hang, CancellationToken cancellationToken)
+    {
+        _changes.Enqueue(hang);
+        while (_changes.Count > Kept && _changes.TryDequeue(out _))
+        {
+        }
+
+        var line = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{DateTimeOffset.UtcNow:O} {hang.Window} {hang.State} after {hang.Duration.TotalSeconds:0.0} s{Environment.NewLine}");
+        await File.AppendAllTextAsync(_filePath, line, cancellationToken);
+    }
+
+    /// <summary>How often the page stopped responding in this run, and the longest it went without answering.</summary>
+    public (int Hangs, TimeSpan Longest) Summary()
+    {
+        var hangs = _changes.Count(change => change.State == PageHangState.Unresponsive);
+        var longest = _changes.Select(change => change.Duration).DefaultIfEmpty(TimeSpan.Zero).Max();
+        return (hangs, longest);
+    }
+}
+```
+
+- **What the hook gets:** the window kind (`main` for the main window, as in a close request), the `State` (`Unresponsive`, `Recovered`, `Reloaded` or `ClosedAnyway`), and the `Duration` the page had not answered, from the first ping it missed.
+- **When it runs:** off the window's UI thread, one change at a time in order, each awaited before the next, with the app's root services. A hook that throws is logged, and the next change still reaches it. At exit the changes already reported still reach it within about 3 s; then its token is cancelled and the rest are dropped. It only observes: it cannot hide the dialog, reload the page or close the window.
+- **What else counts as unresponsive:** WebView2 reporting the page's renderer unresponsive, which it does only after input reaches a hung page, and a page that answers nothing for about 5 s after a close request (6.11). They are the same state, with one dialog. A page that still answers but whose close guard is silent gets the same "Wait / Close anyway" without being reported here: it is not hung.
+- **What is not pinged:** a minimized or hidden window, whose page the browser throttles, and a page that never connected the SDK, which cannot answer.
+- **In the automated mode** (6.11) no dialog shows: the change is logged and the hook is called, and a close of a page that does not answer closes anyway.
+
+### 3.17 The browser's defaults, the app id and the profile
+
+**Decided** (decisions "M1b's remaining questions without a spike" and "Security defaults' public shape"; built in M1b). The browser in a Production build is locked down, and the app loosens a default only by name in `spar.Browser(b => …)`, whose methods each document the risk, when the opt-in is reasonable and the safer alternative. Every window shares one browser profile, so each opt-in is for the whole app, and Spar logs every opt-in in force at start-up. The SQL tool keeps them all; only the support build its team sends to one user turns devtools on (section 2).
+
+File `SqlTool/Support/SupportBuild.cs`:
+
+```csharp
+namespace SqlTool.Support;
+
+/// <summary>
+/// Whether this is the support build, which the team sends to a user whose problem it cannot reproduce: the project
+/// built with -p:DefineConstants=SUPPORT_BUILD. A shipped build keeps every browser default.
+/// </summary>
+public static class SupportBuild
+{
+#if SUPPORT_BUILD
+    public static bool IsSupportBuild { get; } = true;
+#else
+    public static bool IsSupportBuild { get; }
+#endif
+}
+```
+
+- **The defaults and their opt-ins:**
+  - devtools (F12 and Inspect): `AllowDevTools()`;
+  - the browser's own keys (reload, print, find, zoom, back and forward): `AllowAcceleratorKeys()`;
+  - saving passwords and general autofill, so a database password typed into the page is never offered for saving: `AllowPasswordSaving()`;
+  - downloads the page starts: `AllowDownloads()`;
+  - back and forward to another document, from the mouse's side buttons, Alt+Left, a swipe or `history.back()`: `AllowHistoryNavigation()`; a router's moves within one document always work;
+  - the browser's full context menu: `AllowContextMenu()`; without it editable fields keep Cut, Copy, Paste and Select all, and elsewhere no menu shows;
+  - the page's own file pickers, `<input type="file">` and `showOpenFilePicker`, `showSaveFilePicker`, `showDirectoryPicker`: `AllowPagePicker()`; the safer way is the file commands of 3.6, which hand the page a grant, never a path;
+  - the WebView2 environment variables that change the browser before it starts (`WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS`, `WEBVIEW2_BROWSER_EXECUTABLE_FOLDER`, `WEBVIEW2_USER_DATA_FOLDER`, the release-channel and script-debugger variables): `AllowBrowserEnvironmentOverrides()`. Without it Spar removes them from its process before the browser starts and logs each one by name. Policies an administrator sets in the registry stay in force.
+- **Always off, with no opt-in:** host objects in the page, and a remote debugging port opened by Spar. SmartScreen's reputation check is off while the page stays on the app's origin, which the navigation lock guarantees.
+- **A Debug build** has the same defaults, except devtools and the reload keys (F5, Ctrl+R), so a blocked download or picker shows while developing rather than after shipping.
+- **The app id** (section 1) names the app to the OS: it is the process's AppUserModelID on Windows, with `.Development` in a Debug build, and the key an administrator's WebView2 policies are found under. It reaches the app through the build, never by reflection.
+- **The browser profile** is the `WebView2` folder under the app's per-user folder: `%LOCALAPPDATA%\com.example.SqlTool\WebView2`, or `com.example.SqlTool.Development` for a Debug build. `spar.Folders(f => f.Profile(path))` moves it; the path must be absolute and on a local drive, or the app shows a message and exits with code 70, its own start failure, since a profile on a share is slow and readable by others. The same message and code come when the profile folder cannot be created, and when `LOCALAPPDATA` itself is a network path: the app then refuses to start rather than use another folder. Spar checks the folder the browser actually uses, which a policy can move, logs a moved one, and no file grant ever reaches either folder.
 
 **Decided** (decisions "Contract syntax in the generator" and "Bridge messages: encoding C header fields"; plan sections 2 and 2c). Each message is a JSON header, a TAB (shown as `⇥`), then the payload's JSON. The call `copyJobs.plan`, id 7:
 
@@ -1380,13 +1650,245 @@ test("an answer can depend on the request", async () => {
 - **`fakeSpar()` resets `configureSpar`'s hooks**, so every test starts from the defaults. A test of the hooks configures them after `fakeSpar()`.
 - **Production bundles never contain it:** nothing in the app imports `@spar/app/testing`, and the build drops the generated code only it uses.
 
+### 6.11 Closing a window
+
+**Decided** (decision "Two-stage close"). Closing a window first asks: the page's guard, then the backend's, may save, keep the window open, or have Spar ask the user. The window closes only when both agree. The backend's guard is in `Program.cs` (section 2); it reads how many copies are running.
+
+File `SqlTool/CopyJobs/RunningCopies.cs`:
+
+```csharp
+namespace SqlTool.CopyJobs;
+
+/// <summary>How many copies are running, for the close guard in Program.cs.</summary>
+public sealed class RunningCopies
+{
+    private int _running;
+
+    public bool Any => Volatile.Read(ref _running) > 0;
+
+    public void Started() => Interlocked.Increment(ref _running);
+
+    public void Ended() => Interlocked.Decrement(ref _running);
+}
+```
+
+File `frontend/src/closing.ts`:
+
+```ts
+import { windows } from "@spar/app/windows";
+
+declare const editor: { readonly hasUnsavedChanges: boolean; save(): Promise<void> };
+
+// The page answers first; the backend's guard in Program.cs is asked only if the page agrees.
+export const stopGuarding = windows.onCloseRequested(async request => {
+  if (!editor.hasUnsavedChanges) {
+    return "close";
+  }
+
+  // When Windows shuts down, or tests or an agent close the app, nobody can answer: save, then close.
+  if (request.reason === "sessionEnd" || request.automated) {
+    await editor.save();
+    return "close";
+  }
+
+  return { ask: "The query has unsaved changes. Close without saving?" };
+});
+```
+
+- **Answers:** close, keep, or ask. An ask shows one native confirmation owned by the window, "Close anyway" or "Keep open", so the backend never needs UI of its own. A page may show its own dialog instead and answer close or keep.
+- **Order:** the page's guard, then the backend's. Either one keeping the window open ends the request; the backend's guard is not asked after a page that keeps it.
+- **What asks:** the close button, Alt+F4 or the taskbar (`CloseReason.User`); the app's own code and Quit in the tray menu (`CloseReason.App`); Windows logging off or shutting down (`CloseReason.SessionEnd`). With `.CloseToTray()`, the close button hides the window, which is not a close; Quit asks.
+- **One request at a time:** a second click while a request is open joins it, and an answer from a page that has since navigated away is ignored.
+- **Secondary windows** are asked before the main window: closing the main window asks each open secondary window, then itself, and keeps them all open if any answers keep.
+- **Session end:** guards run with `sessionEnd` so they can save, the page's for at most 2 s and both together for at most 3 s; then the window closes and the app's services are disposed, and Spar returns to Windows 4 s after it was told the session ends, whatever is left (decision "Window tests: closing, session-end budget, test theme and any-character keys"). Guards cannot keep the window open or ask: an ask counts as close, and Spar never blocks Windows from logging off.
+- **Automated mode,** when tests or an agent drive the app: guards still run, so saving on close is tested, with `automated` true, and an ask counts as close. The test host turns it on, and a test of a guard's prompt turns it off for that close and answers the question itself (6.12). Outside tests, the devtools agent session turns it on, and so does the environment variable `SPAR_AUTOMATED=1`, in Development and Test builds only: a Production build ignores it, so nothing outside a shipped app can make it skip its prompts.
+- **A page that does not answer** within about 5 s, with no dialog of its own open (a modal `<dialog>` or a visible `aria-modal` element; a script `confirm()` blocks the page and does not count), or a page that is already hung, gets a native "Wait / Close anyway" dialog. Close anyway skips only the page's guard: the backend's guard still runs, then the window closes. Wait keeps the request open and asks again after about 20 s, then 40 s, 80 s and every 160 s (decision "What "Wait" does after the hung-page dialog").
+- **After the decision** the window's teardown runs (plan section 3), including the page's closing work.
+- **A shutdown that does not finish:** after about 10 s of closing (commands settling, the web view closing, the app's services being disposed), Spar shows a native "Keep waiting / Exit now" prompt, and again every 30 s after "Keep waiting". It goes away by itself when the shutdown finishes. "Exit now" ends the process at once with the fixed exit code 10, so scripts and installers can tell it from a clean exit (0); Spar never ends the process on its own, and in the automated mode it shows no prompt and keeps waiting.
+
+### 6.12 Window tests
+
+**Decided** (decision "Step 8's shape: window tests driven by Spar's own API"; built on Windows in M1b step 8a, the Linux host follows in M1c). A window test runs the app's own `Program.cs` in the test process with its real window: the app's own packed page in WebView2, shown offscreen, never activated and with no taskbar button. `app.Page` drives the page with Spar's own API, which takes the method names of Microsoft's browser automation library, so a window journey reads like a browser journey of the same end-to-end project.
+
+File `SqlTool.EndToEndTests/ConnectionsWindowTests.cs`:
+
+```csharp
+using Spar.Testing;
+using static Spar.Testing.SparAssertions;
+
+namespace SqlTool.EndToEndTests;
+
+// Window tests carry this trait, so they run as their own invocation: a native engine abort ends only that run.
+[Trait("Surface", "Window")]
+public sealed class ConnectionsWindowTests
+{
+    [Fact]
+    public async Task Removing_a_connection_asks_first_and_takes_it_off_the_list()
+    {
+        await using var app = await SparTestApp.StartAsync<Program>(
+            o => o.Surface = SparTestSurface.Window,
+            TestContext.Current.CancellationToken);
+        var page = app.Page;
+        var connections = page.GetByRole(SparRole.List, new() { Name = "Connections" });
+
+        await connections.GetByRole(SparRole.Listitem).Filter(new() { HasText = "Production" })
+            .GetByRole(SparRole.Button, new() { Name = "Remove" }).ClickAsync();
+        await page.GetByRole(SparRole.Alertdialog).GetByRole(SparRole.Button, new() { Name = "Remove" }).ClickAsync();
+
+        await Expect(connections.GetByRole(SparRole.Listitem)).ToHaveCountAsync(1);
+        await Expect(page.GetByRole(SparRole.Status)).ToHaveTextAsync("Production removed");
+        Assert.Empty(app.Problems);
+        Assert.Empty(page.PageErrors);
+    }
+}
+```
+
+- **Finding elements:** by role and accessible name (`GetByRole`), label (`GetByLabel`), text (`GetByText`), placeholder, alt text and title, chained from one another, filtered (`Filter`) and picked (`First`, `Last`, `Nth`). There are no test ids: the page carries no markup for tests, and finding elements as assistive technology names them also checks that it names them. `Locator(css)` is there for structure that roles do not name.
+- **Actions wait** until their element is attached, visible, stable, enabled (and editable, for text), scrolled into view and, for the pointer, the element that receives the press. An action needs exactly one element: a locator that finds several fails at once and lists them. Input is trusted: the page sees `isTrusted` events with user activation, sent through the window's own in-process DevTools session, with no port and no second process.
+- **Assertions retry** until they hold, for 5 s unless `Timeout` says otherwise (actions wait 10 s); `Not` turns each one around. A failure names what was searched for and what was found at the last try, such as `no element matches GetByRole(Button, "Save"); near: button <button> "Cancel"; button <button> "Save draft"`.
+- **Also there:** `EvaluateAsync`, page and element `ScreenshotAsync`, `WaitForURLAsync`, `WaitForUiReadyAsync`, `GotoAsync`, `ReloadAsync`, `Keyboard` and `Mouse`, and what the page reported: `ConsoleMessages`, `PageErrors` and `Dialogs` (dismissed unless `AcceptDialogs`). `app.Problems` lists every warning and error Spar logged for the app: refused or dropped bridge messages, CSP violations and page errors.
+- **Isolation:** each window has an InPrivate profile of its own on one browser per test process, so nothing a test stores reaches the next one, and the window's renderer must have exited when the test ends.
+- **Light by default:** `o.ColorScheme` is `SparColorScheme.Light` unless a test asks for `Dark` or `System`, so the page's `prefers-color-scheme`, the window's own colours, and so every screenshot, are the same on every machine.
+- **Keys:** `PressAsync` takes a key name (`"Enter"`, `"Control+End"`) or any one character; typing goes one character at a time, never half an emoji. A character the US keyboard has no key for (`è`, `€`, `中`) still sends `keydown` and `keyup`, with `event.key` the character and an empty `event.code`. Dead keys, other layouts and input-method composition are not modelled.
+- **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=Window"`, and in the NativeAOT lane, which leaves out the browser tests. They never take the focus, so they can run while someone uses the computer.
+
+**Closing the window** (decision "Window tests: closing, session-end budget, test theme and any-character keys"). `app.Window.CloseAsync()` closes the window as its close button does, through its close request (6.11): the page's guard, then the backend's. A window test never shows a dialog: by default the close is automated, so an ask counts as close; a test of a guard's prompt turns that off and gives the answer.
+
+File `SqlTool.EndToEndTests/ClosingWindowTests.cs`:
+
+```csharp
+using Spar.Testing;
+using static Spar.Testing.SparAssertions;
+
+namespace SqlTool.EndToEndTests;
+
+[Trait("Surface", "Window")]
+public sealed class ClosingWindowTests
+{
+    [Fact]
+    public async Task Closing_with_an_unsaved_query_asks_first_and_tests_close_without_asking()
+    {
+        await using var app = await SparTestApp.StartAsync<Program>(
+            o => o.Surface = SparTestSurface.Window,
+            TestContext.Current.CancellationToken);
+        var query = app.Page.GetByRole(SparRole.Textbox, new() { Name = "Query" });
+        await query.FillAsync("select name from sys.databases");
+
+        // Testing the guard's prompt: the test answers in place of the native confirmation.
+        var kept = await app.Window.CloseAsync(new()
+        {
+            Automated = false,
+            Answer = CloseAnswer.KeepOpen,
+        });
+        Assert.Equal(CloseOutcome.Kept, kept.Outcome);
+        Assert.Equal("The query has unsaved changes. Close without saving?", kept.Question);
+        await Expect(query).ToHaveValueAsync("select name from sys.databases");
+
+        // Automated, as tests and agents close the app: the guard saves, and the window closes.
+        var result = await app.Window.CloseAsync();
+        Assert.Equal(CloseOutcome.Closed, result.Outcome);
+    }
+}
+```
+
+- **The result:** `Outcome` is `Closed` once the window and its renderer are gone, after which `app.Page` can no longer be driven, or `Kept`; `Question` is the last question a guard asked (also one that counted as close), null when none did; `PageDidNotAnswer` says the page did not answer in time and "Wait / Close anyway" was answered.
+- **The options:** `Automated` (true by default); `Answer`, `CloseAnswer.CloseAnyway` or `KeepOpen`, required when `Automated` is false, and given to every question of that close (`KeepOpen` is "Wait" for a page that does not answer); `Reason`, `CloseReason.User` by default, or `App` and `SessionEnd` to test those guards (a session end's rules, without Windows' own message); `Timeout`, 30 s by default.
+- **One request at a time:** a close while another is open joins it and gets its result.
+
+### 6.13 Black-box tests
+
+**Decided** (decision "Step 8b's shape: the black-box fixture"; built on Windows in M1b step 8b, the Linux host follows in M1c). A black-box test launches the app's exact Production executable, the one users get, with nothing replaced: no test host, no devtools, no service overrides. It is for what only the shipped executable shows: that it starts and closes cleanly, which files it writes, what happens across processes (a second launch, a start-up failure and its exit code). Everything else belongs to the faster levels (6.10, 6.12).
+
+The test project asks for it in its project file, and the build then names each app the project tests in a generated `Projects` class and publishes that app's Production NativeAOT executable beside the tests:
+
+```xml
+<SparBlackBoxTests>true</SparBlackBoxTests>
+```
+
+File `SqlTool.EndToEndTests/BlackBoxTests.cs`:
+
+```csharp
+using Spar;
+using Spar.Testing;
+
+namespace SqlTool.EndToEndTests;
+
+// Black-box tests launch processes and take seconds: they run as their own invocation, like window tests.
+[Trait("Surface", "BlackBox")]
+public sealed class BlackBoxTests
+{
+    private static CancellationToken Token => TestContext.Current.CancellationToken;
+
+    [Fact]
+    public async Task The_shipped_executable_starts_and_closes_cleanly()
+    {
+        await using var app = await SparBlackBox.LaunchAsync(Projects.SqlTool, cancellationToken: Token);
+
+        await app.Window.GetByRole(SparRole.List, new() { Name = "Connections" }).WaitForAsync();
+        await app.Window.GetByRole(SparRole.Button, new() { Name = "Add connection" }).InvokeAsync();
+        await app.Window.GetByRole(SparRole.Dialog, new() { Name = "Add connection" }).WaitForAsync();
+
+        Assert.Equal(0, await app.CloseAsync(Token));
+        Assert.True(File.Exists(app.LogFile));
+        Assert.True(await app.WaitForProcessTreeExitAsync());
+    }
+
+    [Fact]
+    public async Task A_second_launch_hands_its_recipe_to_the_running_app()
+    {
+        await using var first = await SparBlackBox.LaunchAsync(Projects.SqlTool, cancellationToken: Token);
+
+        await using var second = await SparBlackBox.LaunchAsync(Projects.SqlTool, o =>
+        {
+            o.DataRoot = first.DataRoot;
+            o.Arguments.Add("--recipe");
+            o.Arguments.Add("nightly-copy.json");
+            o.WaitForReady = false;
+        }, Token);
+
+        Assert.Equal(0, await second.WaitForExitAsync(Token));
+    }
+
+    [Fact]
+    public async Task A_relaunch_the_running_app_never_answers_says_so_and_exits_8()
+    {
+        await using var first = await SparBlackBox.LaunchAsync(Projects.SqlTool, cancellationToken: Token);
+        Assert.Equal(0, await first.CloseAsync(Token));
+
+        // The lock of an instance that serves nobody: the next launch waits for it, then gives up.
+        var lockFile = Path.Combine(first.AppFolder, "instance.lock");
+        await using var held = new FileStream(lockFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+        await using var relaunch = await SparBlackBox.LaunchAsync(Projects.SqlTool, o =>
+        {
+            o.DataRoot = first.DataRoot;
+            o.WaitForReady = false;
+        }, Token);
+
+        var dialog = await relaunch.WaitForDialogAsync(cancellationToken: Token);
+        Assert.Contains("SqlTool can't start", dialog.Text, StringComparison.Ordinal);
+        await dialog.PressAsync("Close");
+        Assert.Equal(8, await relaunch.WaitForExitAsync(Token));
+    }
+}
+```
+
+- **The data root:** each launch gets a disposable root of its own under `artifacts/` (beside the tests elsewhere), and the app's per-user folders go there through the environment only: `LOCALAPPDATA`, `APPDATA`, `TEMP` and `TMP` point into it, since a Production app takes no switch for its folders (decision "M1b's remaining questions without a spike"). `app.AppFolder`, `DataFolder`, `LogsFolder` and `LogFile` are the folders a Production build uses there. `o.DataRoot = first.DataRoot` starts a second instance on the same data, as a second launch by the same user would; the first launch's handle keeps the root and deletes it, unless `KeepData`. The app never gets a `WEBVIEW2_*` or `SPAR_*` variable; `o.Environment` adds the app's own.
+- **Ready** means the host's `ui-ready` line in the app's log file (the page connected its bridge and called `ready()`, 6.3) and UI Automation finding the app's window, within `ReadyTimeout` (30 s). The line is `<time> INFO  Spar.Host  [<run id>] ui-ready at <ms> ms`, a format Spar keeps stable; an app that moves its logs folder or raises `Spar.Host` above `Information` has none: it launches with `o.WaitForReady = false` and waits for an element of its page. `WaitForReady = false` also returns at once for a launch that hands over or fails.
+- **The window** is read and driven through UI Automation, never through input: `app.Window.TitleAsync()`, and locators named as in the page API (`GetByRole` with `Name`, `Exact`, `NameRegex` and `Disabled`, `GetByText`, `First`, `Last`, `Nth`) with `WaitForAsync`, `CountAsync`, `IsVisibleAsync`, `NameAsync`, `AllNamesAsync`, `InputValueAsync` and `InvokeAsync`, a button's press through the Invoke pattern. The page's elements come with their ARIA roles and accessible names, as the browser exposes them to assistive technology. An action needs one element: a locator that finds several fails at once.
+- **Native messages** (a start-up failure, a failed relaunch, a close question): `WaitForDialogAsync()` reads the first one the app shows, with its `Title`, `Text` and `Buttons`, and `PressAsync(name)` answers it.
+- **Closing and exit codes:** `CloseAsync()` closes the window as its close button does, so the guards of 6.11 run, and returns the exit code; `WaitForExitAsync()` waits for an exit the app makes on its own; both wait `ExitTimeout` (15 s). `Kill()` ends the app and everything it started.
+- **Nothing is left behind:** the app runs in a job object that ends it, the browser's processes included, when the test process ends, however it ends. Disposal ends what is still running (an app asked to exit gets `ExitTimeout` first), waits until every process of the app is gone and deletes the root. A cleanup that cannot finish, or a browser process that outlives a clean exit, fails the test.
+- **Nothing shows:** on Windows the app runs on a desktop of the test process's own, never on the monitor, so it never takes the focus or input of the person at the computer. On a CI service (the `CI` or `TF_BUILD` variable set), where no one is at the screen, it shows on the runner's own desktop without taking the focus, because a second desktop there cannot always host the browser. Checks that need real input or focus run in Windows Sandbox.
+- **The build:** for each `SparTestedApplication`, `Projects.<App>` carries the app's name, `AppId`, `ProjectDirectory` and `ExecutablePath`, the Production executable published incrementally into the test project's `obj/` and copied beside the tests, so the path also works from a publish of the test project (the NativeAOT lane). `<SparBlackBoxPublish>false</SparBlackBoxPublish>` keeps the class and skips the publish, for a pipeline that puts the executable there itself.
+- **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=BlackBox"`, and in the NativeAOT lane.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**
 - **Configuration:**
-  - the type names of the configuration builders behind `spar.Window(…)`, `spar.ContentSecurity(…)`, `spar.Permissions(…)` and the other calls of section 2 (the check's stand-ins call them `SparBuilder`, `WindowOptions`, `CspBuilder` and `PermissionsBuilder`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example.
+  - the type names of the configuration builders behind `spar.Window(…)` and the other calls of section 2 not built yet (the check's stand-ins call them `SparBuilder` and `WindowOptions`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example. `CspBuilder`, `CspReports`, `PermissionsBuilder` and `Permission` are Spar's own since M1b.
 - **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
-- **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open).
+- **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open); for window tests (6.12), how scenes and a fixed clock are declared; an app's own "close this window" API (`CloseReason.App` from app code), which nothing calls yet.
 
 Decided since this list was first written, and shown above:
 - streams with declared errors (decision "Streams may declare errors");

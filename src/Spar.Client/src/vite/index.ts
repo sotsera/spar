@@ -1,12 +1,25 @@
 // @spar/app/vite: the Vite plugin every Spar frontend uses (docs/app-model.md section 1). For a production build it
 // sets what the default Content Security Policy needs (plan section 3b): no asset inlined as a `data:` URL, which the
 // policy blocks, no source maps, which never ship (plan section 3c), and pages served from the root of the app's own
-// origin; and it collects the bundled dependencies' licences for the executable's third-party notices (plan 3c). The
-// development server's part arrives with the development loop.
-import type { Plugin, UserConfig } from "vite";
+// origin; and it collects the bundled dependencies' licences for the executable's third-party notices (plan 3c).
+// It also applies Subresource Integrity to the built page (`integrity.ts`), unless Program.cs turned it off, and fails
+// on an external script or stylesheet without a hash, in every build and on the development server. The page security
+// Program.cs declares reaches it as `csp.json`, which the build writes next to this package. The development server's
+// policy header arrives with the development loop.
+import { readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import type { Plugin, ResolvedConfig, UserConfig } from "vite";
+import { addIntegrity, missingIntegrity, missingIntegrityMessage } from "./integrity.js";
+
+/** The parts of `csp.json` this plugin reads; the build writes it from `spar.ContentSecurity(…)` in Program.cs. */
+interface PageSecurity {
+  /** False after `csp.WithoutIntegrity()`. */
+  readonly integrity: boolean;
+}
 
 /** Spar's Vite plugin: `plugins: [react(), spar()]` in `vite.config.ts`. */
 export default function spar(): Plugin {
+  let outDir = "";
   return {
     name: "spar",
     config(): UserConfig {
@@ -23,5 +36,76 @@ export default function spar(): Plugin {
         },
       };
     },
+    configResolved(config: ResolvedConfig): void {
+      outDir = resolve(config.root, config.build.outDir);
+    },
+    transformIndexHtml: {
+      order: "pre",
+      handler(html: string, context: { readonly path: string }): string {
+        checkExternals(context.path, html);
+        return html;
+      },
+    },
+    writeBundle(_options, bundle): void {
+      if (!readPageSecurity().integrity) {
+        return;
+      }
+
+      const files = new Map<string, Uint8Array | string>();
+      const lazyChunks: string[] = [];
+      for (const output of Object.values(bundle)) {
+        files.set(output.fileName, output.type === "chunk" ? output.code : output.source);
+        if (output.type === "chunk") {
+          lazyChunks.push(output.fileName);
+        }
+      }
+
+      const readFile = (path: string): Uint8Array | string | undefined => files.get(path) ?? readFromDisk(outDir, path);
+      for (const [fileName, content] of files) {
+        if (!fileName.endsWith(".html")) {
+          continue;
+        }
+
+        const html = typeof content === "string" ? content : new TextDecoder().decode(content);
+        checkExternals(fileName, html);
+        const result = addIntegrity(html, readFile, lazyChunks);
+        // In place: Vite has written the bundle, and the packing step reads the folder after this build.
+        writeFileSync(join(outDir, fileName), result.html);
+      }
+    },
   };
+}
+
+/** Fails on an external script or stylesheet without a hash, unless Program.cs turned integrity off. */
+function checkExternals(page: string, html: string): void {
+  const missing = missingIntegrity(html);
+  if (missing.length > 0 && readPageSecurity().integrity) {
+    throw new Error(missingIntegrityMessage(page, missing));
+  }
+}
+
+/**
+ * `csp.json`, read on every use, relative to this file: the plugin is `sdk/vite/index.js` in the generated package and
+ * the file is at the package's root. Without it (the SDK's own tests) the defaults apply.
+ */
+function readPageSecurity(): PageSecurity {
+  let text: string;
+  try {
+    text = readFileSync(new URL("../../csp.json", import.meta.url), "utf8");
+  } catch {
+    return { integrity: true };
+  }
+
+  const parsed: unknown = JSON.parse(text);
+  const integrity = typeof parsed === "object" && parsed !== null ? Reflect.get(parsed, "integrity") : undefined;
+  return { integrity: integrity !== false };
+}
+
+/** A file the bundle did not produce but the page loads from the app (Vite's public folder). */
+function readFromDisk(outDir: string, path: string): Uint8Array | undefined {
+  try {
+    return readFileSync(join(outDir, path));
+  } catch {
+    return undefined;
+  }
 }

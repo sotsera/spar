@@ -1,0 +1,13 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=64.1ms since-process-start=72ms xtest=2.2 input=xtest csp=False
+TREE orders: 29 nodes in 2.5 ms
+HOLD orders
+TREE menu: 6 nodes in 0.9 ms
+HOLD menu
+TREE dialog: 6 nodes in 4.5 ms
+HOLD dialog
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:26:09.818: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-c033aa23-a1e2-44c1-8dbe-357774d5a50e: The connection is closed
+TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=0 (names truncated by the kernel; counts include other runs)
+RUN exit=0

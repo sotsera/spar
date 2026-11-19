@@ -1,0 +1,51 @@
+2026-11-18T07:03:30.535Z INFO  Spar.Host  [ab6eb653] Host started 55.0 ms after the process.
+2026-11-18T07:03:30.535Z INFO  Spar.Host  [ab6eb653] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-uncaught-100k\com.example.tests.SecurityProbe.Development
+2026-11-18T07:03:30.542Z INFO  Spar.Host  [ab6eb653] single instance at 23 ms
+2026-11-18T07:03:30.544Z INFO  Spar.Host  [ab6eb653] prerequisites checked at 26.8 ms
+2026-11-18T07:03:30.552Z INFO  Spar.Host  [ab6eb653] UI-thread stall probe on.
+2026-11-18T07:03:30.561Z INFO  Spar.Host  [ab6eb653] window shown at 44.6 ms
+2026-11-18T07:03:30.562Z INFO  Spar.Host  [ab6eb653] Theme dark (system), window #1f1f1f.
+2026-11-18T07:03:30.566Z INFO  Spar.Host  [ab6eb653] services built at 49.6 ms
+2026-11-18T07:03:30.570Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-18T07:03:30.585Z INFO  Spar.Host  [ab6eb653] environment at 68.1 ms
+2026-11-18T07:03:30.585Z INFO  Spar.Host  [ab6eb653] WebView2 Runtime 157.0.4341.46
+2026-11-18T07:03:30.586Z INFO  Spar.Host  [ab6eb653] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-uncaught-100k\com.example.tests.SecurityProbe.Development\WebView2
+2026-11-18T07:03:30.596Z INFO  Spar.Host  [ab6eb653] Heartbeat every 5000 ms.
+2026-11-18T07:03:30.598Z INFO  Spar.Host  [ab6eb653] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-18T07:03:30.598Z INFO  Spar.Host  [ab6eb653] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-18T07:03:30.765Z INFO  Spar.Host  [ab6eb653] controller at 248.5 ms
+2026-11-18T07:03:30.768Z INFO  Spar.Host  [ab6eb653] Browser settings read back (1.07 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-18T07:03:30.826Z INFO  Spar.Host  [ab6eb653] Development console: the page's console errors come from the DevTools Protocol.
+2026-11-18T07:03:30.826Z INFO  Spar.Host  [ab6eb653] Page file picker blocked in 58.2 ms (Page.enable 57.9 ms).
+2026-11-18T07:03:30.826Z INFO  Spar.Host  [ab6eb653] page script added at 309.5 ms
+2026-11-18T07:03:30.827Z INFO  Spar.Host  [ab6eb653] navigation started at 309.8 ms
+2026-11-18T07:03:30.888Z INFO  Spar.Host  [ab6eb653] Bridge: document ee8d43306161bc93 opened.
+2026-11-18T07:03:30.888Z INFO  Spar.Host  [ab6eb653] Heartbeat armed for the new document.
+2026-11-18T07:03:30.888Z INFO  Spar.Host  [ab6eb653] first document at 371.2 ms
+2026-11-18T07:03:30.894Z INFO  Spar.Host  [ab6eb653] first bridge message at 376.9 ms
+2026-11-18T07:03:30.897Z INFO  Spar.Host  [ab6eb653] first navigation completed at 380.2 ms
+2026-11-18T07:03:30.899Z INFO  Spar.Host  [ab6eb653] 404 for /favicon.ico
+2026-11-18T07:03:30.900Z INFO  Spar.Host  [ab6eb653] first bridge reply at 383.2 ms
+2026-11-18T07:03:30.900Z INFO  Spar.Host  [ab6eb653] ui-ready at 383.3 ms
+2026-11-18T07:03:30.900Z INFO  Spar.Host  [ab6eb653] Bridge: document ee8d43306161bc93 reported ui-ready.
+2026-11-18T07:03:30.913Z DEBUG SecurityProbe.ProbeService  The page asked for its probe: uncaught:100000
+2026-11-18T07:03:33.666Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-B_HLBId8.js:6:3569: Uncaught Error: probe uncaught
+    Error: probe uncaught
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3569
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:03:33.666Z WARN  Spar.Page  The page raised so many errors that Spar stopped reporting them in this document
+2026-11-18T07:03:40.603Z INFO  Spar.Page  The page's errors in the last 9.7 s: Uncaught exception "Uncaught Error: probe uncaught": 999 more
+2026-11-18T07:03:45.722Z INFO  Spar.Host  [ab6eb653] close requested (User, automated) at 15205.5 ms
+2026-11-18T07:03:45.726Z INFO  Spar.Host  [ab6eb653] closing at 15209.5 ms
+2026-11-18T07:03:45.727Z INFO  Spar.Host  [ab6eb653] Heartbeat: 3 ticks, 4 pings, longest tick on the UI thread 0.727 ms.
+2026-11-18T07:03:45.727Z INFO  Spar.Host  [ab6eb653] page close work done at 15210.6 ms
+2026-11-18T07:03:45.728Z INFO  Spar.Host  [ab6eb653] Bridge: document ee8d43306161bc93 closed (window closing).
+2026-11-18T07:03:45.728Z INFO  Spar.Host  [ab6eb653] calls stopped at 15211.3 ms
+2026-11-18T07:03:45.728Z INFO  Spar.Host  [ab6eb653] calls settled at 15211.3 ms
+2026-11-18T07:03:45.728Z INFO  Spar.Host  [ab6eb653] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-18T07:03:45.742Z INFO  Spar.Host  [ab6eb653] controller closed at 15225.5 ms
+2026-11-18T07:03:45.746Z INFO  Spar.Host  [ab6eb653] window destroyed at 15228.7 ms
+2026-11-18T07:03:45.752Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-18T07:03:45.753Z INFO  Spar.Host  [ab6eb653] services disposed at 15235.8 ms
+2026-11-18T07:03:45.753Z INFO  Spar.Host  [ab6eb653] exit 0 at 15235.9 ms

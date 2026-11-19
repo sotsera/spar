@@ -1,6 +1,8 @@
 // The notebook's state: the list of pages, the open page with its draft, and saving. Every outcome of every call is
-// handled here, declared errors by name, so the components only render what this hook decides.
+// handled here, declared errors by name, so the components only render what this hook decides. Closing the window
+// saves a draft that is not saved yet first, and asks before losing one that cannot be saved (docs/app-model.md 6.11).
 import { pages, type Page, type PageSummary } from "@spar/app/pages";
+import { windows, type CloseAnswer, type CloseRequest } from "@spar/app/windows";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /** How long the editor waits after the last keystroke before it saves. */
@@ -42,6 +44,9 @@ export function useNotebook(): Notebook {
   const [notice, setNotice] = useState<string>();
   const currentRef = useRef(current);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const saving = useRef<Promise<SaveState> | undefined>(undefined);
+  // The newest draft, typed or saved, read when a save comes back: React may apply a state update after it returns.
+  const newestDraft = useRef<string>("");
   currentRef.current = current;
 
   const refresh = useCallback(async () => {
@@ -68,41 +73,59 @@ export function useNotebook(): Notebook {
     });
   }, []);
 
-  /** Saves the draft over `baseRevision`; a draft typed while the save was on its way stays unsaved. */
-  const saveOver = useCallback(async (baseRevision: bigint) => {
-    const state = currentRef.current;
-    if (state.kind !== "open") {
-      return;
-    }
-
-    const sent = state.draft;
-    setCurrent({ ...state, save: { kind: "saving" } });
-    const outcome = await pages.save({ id: state.page.id, markdown: sent, baseRevision }).match({
-      success: (page): SaveState | Page => page,
-      errors: {
-        changedElsewhere: (error): SaveState => ({ kind: "conflict", currentRevision: error.currentRevision }),
-        notFound: (): SaveState => ({ kind: "failed", message: "This page was deleted elsewhere." }),
-        titleTaken: (): SaveState => ({ kind: "failed", message: "The page could not be saved." }),
-        invalidTitle: (): SaveState => ({ kind: "failed", message: "The page could not be saved." }),
-      },
-      failure: (): SaveState => ({ kind: "failed", message: "Not saved: the notebook could not be reached." }),
-    });
-
-    setCurrent(latest => {
-      if (latest.kind !== "open" || latest.page.id !== state.page.id) {
-        return latest;
+  /**
+   * Saves the draft over `baseRevision`; a draft typed while the save was on its way stays unsaved. Resolves with how
+   * the save ended, which a close of the window waits for.
+   */
+  const saveOver = useCallback((baseRevision: bigint): Promise<SaveState> => {
+    const run = saveDraft(baseRevision);
+    saving.current = run;
+    void run.finally(() => {
+      if (saving.current === run) {
+        saving.current = undefined;
       }
+    });
+    return run;
+
+    async function saveDraft(base: bigint): Promise<SaveState> {
+      const state = currentRef.current;
+      if (state.kind !== "open") {
+        return { kind: "saved" };
+      }
+
+      const sent = state.draft;
+      newestDraft.current = sent;
+      setCurrent({ ...state, save: { kind: "saving" } });
+      const outcome = await pages.save({ id: state.page.id, markdown: sent, baseRevision: base }).match({
+        success: (page): SaveState | Page => page,
+        errors: {
+          changedElsewhere: (error): SaveState => ({ kind: "conflict", currentRevision: error.currentRevision }),
+          notFound: (): SaveState => ({ kind: "failed", message: "This page was deleted elsewhere." }),
+          titleTaken: (): SaveState => ({ kind: "failed", message: "The page could not be saved." }),
+          invalidTitle: (): SaveState => ({ kind: "failed", message: "The page could not be saved." }),
+        },
+        failure: (): SaveState => ({ kind: "failed", message: "Not saved: the notebook could not be reached." }),
+      });
+
+      const ended: SaveState = "revision" in outcome ? { kind: newestDraft.current === sent ? "saved" : "unsaved" } : outcome;
+      setCurrent(latest => {
+        if (latest.kind !== "open" || latest.page.id !== state.page.id) {
+          return latest;
+        }
+
+        if ("revision" in outcome) {
+          const unchanged = latest.draft === sent;
+          return { kind: "open", page: outcome, draft: latest.draft, save: { kind: unchanged ? "saved" : "unsaved" } };
+        }
+
+        return { ...latest, save: outcome };
+      });
 
       if ("revision" in outcome) {
-        const unchanged = latest.draft === sent;
-        return { kind: "open", page: outcome, draft: latest.draft, save: { kind: unchanged ? "saved" : "unsaved" } };
+        void refresh();
       }
 
-      return { ...latest, save: outcome };
-    });
-
-    if ("revision" in outcome) {
-      void refresh();
+      return ended;
     }
   }, [refresh]);
 
@@ -125,7 +148,43 @@ export function useNotebook(): Notebook {
     return () => clearTimeout(timer.current);
   }, [current, save]);
 
+  /** Saves what is not saved yet (a failed save is tried once more) and resolves with how the last save ended. */
+  const flushDraft = useCallback(async (): Promise<SaveState> => {
+    clearTimeout(timer.current);
+    for (let round = 0; round < 3; round++) {
+      const before = saving.current;
+      if (before !== undefined) {
+        const ended = await before;
+        if (ended.kind !== "unsaved") {
+          return ended;
+        }
+      }
+
+      const state = currentRef.current;
+      if (state.kind !== "open" || state.save.kind === "saved") {
+        return { kind: "saved" };
+      }
+
+      if (state.save.kind === "conflict") {
+        // Saving again would overwrite the other change: the person decides.
+        return state.save;
+      }
+
+      const ended = await saveOver(state.page.revision);
+      if (ended.kind !== "unsaved") {
+        return ended;
+      }
+    }
+
+    return { kind: "unsaved" };
+  }, [saveOver]);
+
+  // Closing the window: a draft not saved yet is saved first, and one on its way is waited for. When it cannot be saved,
+  // the person decides; at session end, or when tests or an agent close the app, nobody can, so the window closes.
+  useEffect(() => windows.onCloseRequested(async request => answerClose(request, await flushDraft())), [flushDraft]);
+
   const edit = useCallback((markdown: string) => {
+    newestDraft.current = markdown;
     setCurrent(state => {
       if (state.kind !== "open") {
         return state;
@@ -198,4 +257,18 @@ export function useNotebook(): Notebook {
     dismissNotice: () => setNotice(undefined),
     showNotice: setNotice,
   };
+}
+
+/** The close guard's answer once the draft was saved, or could not be. */
+export function answerClose(request: CloseRequest, saved: SaveState): CloseAnswer {
+  if (saved.kind === "saved" || request.automated || request.reason === "sessionEnd") {
+    return "close";
+  }
+
+  const why = saved.kind === "conflict"
+    ? "This page was changed elsewhere."
+    : saved.kind === "failed"
+      ? saved.message
+      : "Your last changes are still being saved.";
+  return { ask: `${why} Close without your last changes?` };
 }

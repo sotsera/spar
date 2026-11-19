@@ -1,0 +1,359 @@
+// The probe page: asks the backend which probe to run, runs it, and reports each result through the probe contract,
+// which writes it to the app's standard error. Nothing a probe does may open a window or reach the network. The probes
+// of the browser defaults that need input get it from the Development-only SPAR_DEV_INPUT trigger, the in-process
+// DevTools Protocol, never from the desktop's real mouse and keyboard.
+import { connectSpar, hostChannel } from "@spar/app/sdk";
+import { fingerprint } from "@spar/app/spar";
+import { probe } from "@spar/app/probe";
+
+const connection = connectSpar(hostChannel(), fingerprint);
+connection.ready();
+
+const report = text => probe.report(text);
+const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// Places an element at a fixed CSS pixel, through the CSSOM: the policy blocks style attributes, not style properties.
+const place = (element, left, top) => {
+  Object.assign(element.style, { position: "absolute", left: `${left}px`, top: `${top}px`, width: "200px", height: "40px" });
+  document.body.append(element);
+  return element;
+};
+
+// The first document opens a second one, which runs `back`; the probe reports where each document ends up.
+const backToFirst = async (back, interact = false) => {
+  const step = sessionStorage.getItem("history") ?? "first";
+  if (step === "first") {
+    if (interact) {
+      // A click first: the browser's back button skips entries of documents the user never interacted with.
+      await new Promise(resolve => {
+        document.addEventListener("click", resolve, { once: true });
+        setTimeout(resolve, 3_000);
+      });
+    }
+
+    sessionStorage.setItem("history", "second");
+    await report("history: opening a second document");
+    location.href = "/index.html?second";
+    return "stay";
+  }
+
+  if (step === "second") {
+    sessionStorage.setItem("history", "back");
+    await report(`history: on the second document, ${history.length} entries; going back`);
+    await back();
+    await pause(2_000);
+    await report(`history: still on the second document (${location.search})`);
+    return undefined;
+  }
+
+  await report("history: back on the first document");
+  return undefined;
+};
+
+const probes = {
+  // Nothing: a baseline, and the policy's own checks of the page as built.
+  idle: async () => {
+    await report(`ready; nonce meta ${document.querySelector("meta[property=csp-nonce]")?.nonce ? "present" : "absent"}`);
+  },
+
+  // The folders app code sees through the SparFolders service, and in the app-configuration build whether they are the
+  // ones Program.cs resolved early (docs/evidence/m1b-logging.md, "Configuration").
+  folders: async () => {
+    await report(`folders: ${await probe.folders().unwrap()}`);
+  },
+
+  // N violations of one group: a style attribute set from script, which style-src-attr blocks.
+  flood: async count => {
+    const element = document.getElementById("status");
+    const started = performance.now();
+    for (let i = 0; i < count; i++) {
+      element.setAttribute("style", "color: red");
+    }
+
+    await report(`flood: raised ${count} in ${(performance.now() - started).toFixed(1)} ms`);
+  },
+
+  // N violations in N groups: images from N addresses, which img-src blocks before any request.
+  distinct: async count => {
+    const started = performance.now();
+    for (let i = 0; i < count; i++) {
+      new Image().src = `https://blocked.invalid/${i}.png`;
+    }
+
+    await report(`distinct: raised ${count} in ${(performance.now() - started).toFixed(1)} ms`);
+  },
+
+  // The page's errors (docs/evidence/m1b-logging.md): N of one kind, the same each time or all different, timed in two
+  // parts, the first 1,000 (which the host's script reports) and the rest (past its bound, which it no longer sees).
+  ...Object.fromEntries([
+    ["console", i => console.error("probe console error", new Error("same"))],
+    ["distinct-console", i => console.error(`probe console error ${i}`)],
+    ["uncaught", () => reportError(new Error("probe uncaught"))],
+    ["distinct-uncaught", i => reportError(new Error(`probe uncaught ${i}`))],
+    ["rejections", () => { Promise.reject(new Error("probe rejection")); }],
+    ["distinct-rejections", i => { Promise.reject(new Error(`probe rejection ${i}`)); }],
+  ].map(([name, raise]) => [name, async count => {
+    const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+    const first = Math.min(count, 1_000);
+    let started = performance.now();
+    for (let i = 0; i < first; i++) {
+      raise(i);
+    }
+
+    await settle();
+    const head = performance.now() - started;
+    started = performance.now();
+    for (let i = first; i < count; i++) {
+      raise(i);
+    }
+
+    await settle();
+    const rest = performance.now() - started;
+    await report(`${name}: first ${first} in ${head.toFixed(1)} ms, the other ${count - first} in ${rest.toFixed(1)} ms`);
+  }])),
+
+  // One error of each kind from real code paths, for the log's own lines: a throw in a timer, a rejection nobody
+  // handles, and a console.error with an exception.
+  "page-errors": async () => {
+    setTimeout(() => {
+      throw new TypeError("probe: a timer's callback failed");
+    }, 0);
+    Promise.reject(new RangeError("probe: a promise nobody awaited"));
+    try {
+      JSON.parse("{ not json");
+    } catch (error) {
+      console.error("probe: the settings could not be read", error);
+    }
+
+    await pause(1_500);
+  },
+
+  // A module worker the host serves: does its own response carry the policy? Under Trusted Types a worker's address
+  // must come from a policy (the Worker constructor is a script sink), so the address Vite emits is passed through one.
+  worker: async () => {
+    const policy = trustedTypes.createPolicy("probe-worker", { createScriptURL: url => url });
+    const address = new URL("./worker.js", import.meta.url).href;
+    const worker = new Worker(policy.createScriptURL(address), { type: "module" });
+    const result = await new Promise(resolve => {
+      worker.onmessage = event => resolve(event.data);
+      worker.onerror = event => resolve({ error: event.message });
+    });
+    await report(`worker: ${JSON.stringify(result)}`);
+  },
+
+  // The style nonce: a <style> with it applies, one without is blocked.
+  nonce: async () => {
+    const nonce = document.querySelector("meta[property=csp-nonce]")?.nonce ?? "";
+    const allowed = document.createElement("style");
+    allowed.nonce = nonce;
+    allowed.textContent = "#status { margin-left: 7px; }";
+    document.head.append(allowed);
+    const blocked = document.createElement("style");
+    blocked.textContent = "#status { margin-right: 9px; }";
+    document.head.append(blocked);
+    const style = getComputedStyle(document.getElementById("status"));
+    await report(`nonce: length ${nonce.length}, with nonce ${style.marginLeft}, without ${style.marginRight}`);
+  },
+
+  // The navigation lock, by script only (a user's click cannot be made here): each must leave the page where it is.
+  navigate: async () => {
+    window.open("https://example.com/opened-by-script");
+    const link = document.createElement("a");
+    link.href = "https://example.com/blank-by-script";
+    link.target = "_blank";
+    document.body.append(link);
+    link.click();
+    location.href = "https://example.com/top-level";
+    await pause(500);
+    location.href = "mailto:someone@example.com";
+    await pause(500);
+    await report(`navigate: still on ${location.href}`);
+  },
+
+  // Permissions: notifications and geolocation are not declared, MIDI is.
+  permissions: async () => {
+    const notifications = await Notification.requestPermission();
+    const geolocation = await new Promise(resolve => navigator.geolocation.getCurrentPosition(
+      () => resolve("granted"),
+      error => resolve(`error ${error.code}`),
+      { timeout: 5_000 }));
+    const midi = await navigator.requestMIDIAccess({ sysex: true }).then(() => "granted", error => `refused (${error.name})`);
+    // The camera and microphone are never asked for here: on a desktop with a person, a real device may prompt.
+    await report(`permissions: notifications ${notifications}, geolocation ${geolocation}, midi ${midi}`);
+  },
+
+  // A page that hangs in its start-up code: the host's script must still be the one that stops answering.
+  "hang-early": async () => {
+    await report("hang-early: going to hang.html");
+    location.href = "/hang.html";
+  },
+
+  // The browser defaults a page can observe without input (plan section 3c): the folders app code sees, the File
+  // System Access pickers, host objects, and a download the page builds itself.
+  defaults: async () => {
+    await report(`folders: ${await probe.folders().unwrap()}`);
+    const pickers = ["showOpenFilePicker", "showSaveFilePicker", "showDirectoryPicker"].map(name => `${name} ${typeof window[name]}`);
+    await report(`pickers: ${pickers.join(", ")}`);
+    await report(`hostObjects: ${typeof window.chrome?.webview?.hostObjects}`);
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob(["Spar M1b step 5 probe download\n"], { type: "text/plain" }));
+    link.download = "spar-step5-probe-download.txt";
+    document.body.append(link);
+    link.click();
+    await pause(2_000);
+    await report("download: clicked");
+  },
+
+  // History navigation to another document: the first document opens a second one, which goes back by script, the
+  // same navigation kind as the mouse's back button. Each document runs this probe again from sessionStorage.
+  history: async () => backToFirst(async () => {
+    history.back();
+  }),
+
+  // The same, with the mouse's back button through the Development-only input trigger (SPAR_DEV_INPUT click:x,y, then
+// back:x,y), after a click on the first document.
+  "mouse-back": async () => backToFirst(async () => {
+    await pause(4_000);
+  }, true),
+
+  // A move within one document (pushState), then the mouse's back button: not a navigation, so it is not cancelled.
+  "mouse-back-same": async () => {
+    history.pushState({ step: 1 }, "", "#one");
+    history.pushState({ step: 2 }, "", "#two");
+    await report(`mouse-back-same: on ${location.hash}`);
+    await pause(4_000);
+    await report(`mouse-back-same: after the back button on ${location.hash}`);
+  },
+
+  // <input type="file"> clicked by trusted input (SPAR_DEV_INPUT click:120,40): no picker, no change, no files.
+  picker: async () => {
+    const input = place(document.createElement("input"), 20, 20);
+    input.type = "file";
+    const seen = { click: 0, change: 0, cancel: 0 };
+    for (const name of Object.keys(seen)) {
+      input.addEventListener(name, () => seen[name]++);
+    }
+
+    await report("picker: ready at 20,20");
+    await pause(6_000);
+    await report(`picker: click ${seen.click}, change ${seen.change}, cancel ${seen.cancel}, files ${input.files?.length ?? 0}`);
+  },
+
+  // Context menus by trusted input (SPAR_DEV_INPUT right:x,y): the host logs what it kept. A text field at 20,100.
+  menu: async () => {
+    const field = place(document.createElement("input"), 20, 100);
+    field.value = "editable";
+    let menus = 0;
+    document.addEventListener("contextmenu", () => menus++);
+    await report("menu: field at 20,100");
+    await pause(5_000);
+    await report(`menu: contextmenu events ${menus}`);
+  },
+
+  // Browser keys by trusted input (SPAR_DEV_INPUT key:…): reloads are counted across documents, print by beforeprint.
+  keys: async () => {
+    const loads = Number(sessionStorage.getItem("keys") ?? "0") + 1;
+    sessionStorage.setItem("keys", String(loads));
+    const seen = [];
+    document.addEventListener("keydown", event => seen.push(`${event.ctrlKey ? "ctrl+" : ""}${event.altKey ? "alt+" : ""}${event.key}`));
+    let printed = 0;
+    window.addEventListener("beforeprint", () => printed++);
+    await report(`keys: load ${loads}`);
+    await pause(loads === 1 ? 12_000 : 8_000);
+    await report(`keys: load ${loads} saw [${seen.join(" ")}], print opened ${printed}`);
+  },
+};
+
+// The host details of plan M1b step 6 (docs/evidence/m1b-host-details.md), observed from the page.
+const elementName = element => element?.id || element?.tagName?.toLowerCase() || "none";
+const pageState = () =>
+  `active ${elementName(document.activeElement)}, hasFocus ${document.hasFocus()}, ${document.visibilityState}, ` +
+  `${innerWidth}x${innerHeight}, values [${["first", "second", "last"].map(id => document.getElementById(id)?.value ?? "").join("|")}]`;
+
+const watchPage = label => {
+  addEventListener("focus", () => report(`${label}: window focus`));
+  addEventListener("blur", () => report(`${label}: window blur`));
+  addEventListener("resize", () => report(`${label}: resize ${innerWidth}x${innerHeight}`));
+  document.addEventListener("visibilitychange", () =>
+    report(`${label}: visibilitychange ${document.visibilityState} at ${performance.now().toFixed(0)} ms`));
+  document.addEventListener("freeze", () => report(`${label}: freeze`));
+  document.addEventListener("resume", () => report(`${label}: resume`));
+};
+
+Object.assign(probes, {
+  // Focus and typing with real input (Windows Sandbox): three fields and a <select>; every focus change and key is
+  // reported. F8 reports the page's state; F9 makes the page hang for 25 s, so the hung-page dialog shows over it.
+  focus: async () => {
+    watchPage("focus");
+    for (const [id, top] of [["first", 20], ["second", 80], ["last", 200]]) {
+      place(document.createElement("input"), 20, top).id = id;
+    }
+
+    const select = place(document.createElement("select"), 20, 140);
+    select.id = "choice";
+    for (const name of ["one", "two", "three", "four", "five", "six"]) {
+      select.append(new Option(name, name));
+    }
+
+    select.addEventListener("change", () => report(`focus: select changed to ${select.value}`));
+    document.addEventListener("focusin", event => report(`focus: focusin ${elementName(event.target)}`));
+    document.addEventListener("keydown", event => {
+      if (event.key === "F8") {
+        report(`focus: state ${pageState()}`);
+        return;
+      }
+
+      if (event.key === "F9") {
+        report("focus: hang for 25 s").then(() => {
+          const end = performance.now() + 25_000;
+          while (performance.now() < end) {
+            // A page that does not answer: no message is handled until the loop ends.
+          }
+
+          report("focus: hang ended");
+        });
+        return;
+      }
+
+      report(`focus: key ${event.key} on ${elementName(event.target)}`);
+    });
+
+    const box = select.getBoundingClientRect();
+    await report(`focus: select at ${box.left},${box.top} size ${box.width}x${box.height}, dpr ${devicePixelRatio}`);
+    await report(`focus: ready, ${pageState()}`);
+  },
+
+  // Visibility and throttling: once a second, how many 50 ms interval callbacks and animation frames ran since the
+  // last report, with the page's visibility; every visibility, size, focus and lifecycle change at once.
+  visibility: async () => {
+    watchPage("visibility");
+    let intervals = 0;
+    let frames = 0;
+    let last = performance.now();
+    setInterval(() => intervals++, 50);
+    const frame = () => {
+      frames++;
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+    setInterval(() => {
+      const now = performance.now();
+      report(`visibility: ${document.visibilityState} ${(now - last).toFixed(0)} ms, intervals ${intervals}, frames ${frames}, ${innerWidth}x${innerHeight}`);
+      intervals = 0;
+      frames = 0;
+      last = now;
+    }, 1_000);
+    await report(`visibility: ready, ${pageState()}`);
+  },
+});
+
+const mode = await probe.mode().unwrap();
+const [name, argument] = mode.split(":");
+const run = probes[name];
+if (run === undefined) {
+  await report(`unknown mode ${mode}`);
+} else {
+  if (await run(Number(argument ?? "0")) !== "stay") {
+    await report(`done ${mode}`);
+  }
+}

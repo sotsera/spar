@@ -1,0 +1,47 @@
+       4,9 > start Notebook.exe env []
+      63,5 | spar info +0.5 ms: [7538c969] Host started 38.9 ms after the process.
+      63,7 | spar info +1.5 ms: [7538c969] single instance at 1.4 ms
+      63,7 | spar info +1.8 ms: [7538c969] prerequisites checked at 1.8 ms
+      63,7 | spar info +2.2 ms: [7538c969] services built at 2.2 ms
+      91,8 | spar info +30.5 ms: [7538c969] window shown at 30.5 ms
+      91,9 | spar info +30.6 ms: [7538c969] Theme dark (system), window #1d1f24.
+      97,3 | spar info +36.0 ms: [7538c969] environment at 36 ms
+      97,4 | spar info +36.0 ms: [7538c969] WebView2 Runtime 157.0.4341.46
+     100,7 | spar info +39.4 ms: [7538c969] Heartbeat every 5000 ms.
+     286,0 | spar info +224.7 ms: [7538c969] controller at 224.7 ms
+     287,5 | spar info +225.4 ms: [7538c969] navigation started at 225.4 ms
+     389,7 | spar info +328.4 ms: [7538c969] Bridge: document af5fe887ef1e3903 opened.
+     390,3 | spar info +328.4 ms: [7538c969] first document at 328.4 ms
+     412,7 | spar info +351.4 ms: [7538c969] first bridge message at 351.4 ms
+     412,8 | spar info +351.6 ms: [7538c969] first bridge reply at 351.6 ms
+     412,8 | spar info +351.6 ms: [7538c969] Heartbeat armed for the new document.
+     414,3 | spar info +353.1 ms: [7538c969] first navigation completed at 353.1 ms
+     434,8 | spar info +373.5 ms: [7538c969] ui-ready at 373.5 ms
+     434,9 > seen 'ui-ready'
+     435,0 | spar info +373.5 ms: [7538c969] Bridge: document af5fe887ef1e3903 reported ui-ready.
+     435,2 | spar info +373.9 ms: [7538c969] 404 for /favicon.ico
+    2464,7 > suspend renderer 68832
+   20104,4 | spar warn +20043.1 ms: [7538c969] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20104,5 > seen 'The page is not responding'
+   20104,5 | spar info +20043.3 ms: [7538c969] hung-page dialog shown (Wait / Reload page) at 20043.3 ms
+   20151,5 > dialog 'Notebook' owner the app's window
+   22165,4 > resume renderer 68832
+   22166,8 | spar info +22105.5 ms: [7538c969] the page answered again after 17.1 s at 22105.5 ms
+   22185,4 > dialog gone
+   22185,5 > seen 'answered again'
+   22185,8 > WM_CLOSE to the window
+   22187,7 | spar info +22126.4 ms: [7538c969] close requested (User) at 22126.4 ms
+   22189,3 | spar info +22128.0 ms: Close request for window main (User): the backend's guard answered Close
+   22189,4 | spar info +22128.2 ms: [7538c969] closing at 22128.2 ms
+   22189,4 | spar info +22128.2 ms: [7538c969] Heartbeat: 4 ticks, 2 pings, longest tick on the UI thread 0.208 ms.
+   22189,9 | spar info +22128.5 ms: [7538c969] page close work done at 22128.5 ms
+   22189,9 | spar info +22128.5 ms: [7538c969] Bridge: document af5fe887ef1e3903 closed (window closing).
+   22189,9 | spar info +22128.5 ms: [7538c969] calls stopped at 22128.5 ms
+   22190,0 | spar info +22128.5 ms: [7538c969] calls settled at 22128.5 ms
+   22208,0 | spar info +22146.5 ms: [7538c969] controller closed at 22146.5 ms
+   22213,6 | spar info +22152.3 ms: [7538c969] window destroyed at 22152.3 ms
+   22218,3 | spar info +22157.0 ms: [7538c969] services disposed at 22157 ms
+   22218,4 | spar info +22157.1 ms: [7538c969] exit 0 at 22157.1 ms
+   22227,7 > exit 0
+   22506,0 > browser processes left for this root 0,3 s after the exit: 0
+   22506,1 > RESULT OK

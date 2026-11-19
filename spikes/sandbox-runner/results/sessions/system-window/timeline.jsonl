@@ -1,0 +1,11 @@
+{"t_ms":318,"step":"list-before","ms":304,"ids":"","raw":"exit=0 out={   \u0022WindowsSandboxEnvironments\u0022: [] } err=","serverProcesses":1,"clientProcesses":0}
+{"t_ms":1423,"step":"start","ms":1085,"id":"\u003Cid\u003E","raw":"exit=0 out={   \u0022Id\u0022: \u0022\u003Cid\u003E\u0022 } err=","clientWindows":0}
+{"t_ms":1795,"step":"exec-ready-System","ms":372,"attempts":1,"sinceStart_ms":1476.3,"lastCall_ms":372.1}
+{"t_ms":1802,"step":"stage-copy","ms":7,"run":"j01-ca9c35","files":3,"bytes":22940071,"exe":"SampleApp.AotTests.exe"}
+{"t_ms":2200,"step":"stage-visible","ms":397,"run":"j01-ca9c35","seen":true,"attempts":1,"prestaged":false}
+{"t_ms":3481,"step":"run","ms":1281,"run":"j01-ca9c35","as":"System","guestExit":1,"timedOut":false,"raw":"exit=0 out={   \u0022ExitCode\u0022: 1 } err="}
+{"t_ms":3493,"step":"collect","ms":12,"run":"j01-ca9c35","exitFile":"1","trx":"\u003CCounters total=\u00221\u0022 executed=\u00221\u0022 passed=\u00220\u0022 failed=\u00221\u0022 error=\u00220\u0022 timeout=\u00220\u0022 aborted=\u00220\u0022 inconclusive=\u00220\u0022 passedButRunAborted=\u00220\u0022 notRunnable=\u00220\u0022 notExecuted=\u00220\u0022 disconnected=\u00220\u0022 warning=\u00220\u0022 completed=\u00220\u0022 inProgress=\u00220\u0022 pending=\u00220\u0022 /\u003E","summary":"SampleApp.AotTests  Total: 1, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 0.328s"}
+{"t_ms":4144,"step":"stop","ms":651,"raw":"exit=0 out= err="}
+{"t_ms":4161,"step":"close-clients","ms":17,"connectStillRunning":false,"windowsLeftAfterStop":0,"windowsLeftAfterClose":0}
+{"t_ms":4507,"step":"list-after","ms":340,"ids":"","oursStillListed":false,"clientProcesses":0}
+{"t_ms":4507,"step":"total","ms":4188}

@@ -1,5 +1,6 @@
 using Spar.Hosting;
 using Spar.Loopback;
+using Spar.Runtime;
 
 namespace Spar.Testing;
 
@@ -51,7 +52,8 @@ public static class SparBrowserSurface
     private static async Task<IAsyncDisposable> StartAsync(SparTestApp app, CancellationToken cancellationToken)
     {
         var running = app.RunningApp;
-        ILoopbackPage page = app.Options.PageFolders.Count > 0 ? Folders(app.Options.PageFolders) : Packed(running.Catalog.AppAssembly);
+        var packed = app.Options.PageFolders.Count > 0 ? null : await PackedAsync(running.Catalog.AppAssembly);
+        ILoopbackPage page = packed is null ? Folders(app.Options.PageFolders) : new PackedPage(packed);
         var host = await LoopbackHost.StartAsync(
             new LoopbackOptions
             {
@@ -60,6 +62,10 @@ public static class SparBrowserSurface
                 Page = page,
                 IncludeDetails = true,
                 Log = app.ReportProblem,
+
+                // The policy the app's window sends: its declared page security and its page's import-map hashes.
+                Security = running.Catalog.PageSecurity ?? SparPageSecurity.Default,
+                ScriptHashes = packed is null ? [] : PageHtml.ImportMapHashes(packed),
             },
             cancellationToken);
         return new Surface(host);
@@ -76,16 +82,16 @@ public static class SparBrowserSurface
         return assets;
     }
 
-    private static PackedPage Packed(System.Reflection.Assembly? assembly)
+    private static async Task<SparFrontend> PackedAsync(System.Reflection.Assembly? assembly)
     {
         var frontend = (assembly is null ? null : SparFrontend.Open(assembly))
             ?? throw new InvalidOperationException(
                 "The app's executable carries no page: Development builds serve it from Vite instead. Test projects build " +
                 "the app in the Test variant, which packs it; check that the app has a frontend folder.");
 
-        // As a host does at start: decode the compressed files off the thread that serves them.
-        _ = Task.Run(frontend.DecodeAll);
-        return new PackedPage(frontend);
+        // As a host does at start: decode the compressed files off the thread that serves them, before the hashes.
+        await Task.Run(frontend.DecodeAll);
+        return frontend;
     }
 
     /// <summary>The running loopback host; disposing the app stops it before the backend.</summary>

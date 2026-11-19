@@ -10,9 +10,11 @@ using Spar.Generator.Emit;
 namespace Spar.Generator;
 
 /// <summary>
-/// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog; the interceptor that
-/// hands the catalog to <c>SparApplication.Create</c>; and, in the Test variant, the test entry point and typed test
-/// clients. It reports nothing itself: the analyzer shows problems at their locations.
+/// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog, with the page security
+/// <c>Program.cs</c> declares (plan section 3b); the interceptor that hands the catalog to <c>SparApplication.Create</c>;
+/// the interceptor that hands <c>app.Run()</c> the desktop host the build references (in the Test variant too, for the
+/// test session's Window surface); and, in the Test variant, the test entry point and typed test clients.
+/// It reports nothing itself: the analyzer shows problems at their locations.
 /// </summary>
 [Generator]
 public sealed class SparGenerator : IIncrementalGenerator
@@ -46,12 +48,58 @@ public sealed class SparGenerator : IIncrementalGenerator
             .Where(static call => call is not null)
             .Collect();
 
+        // The page security Program.cs declares, read from the first Create call; null when there is none.
+        var security = context.SyntaxProvider.CreateSyntaxProvider(
+                static (node, _) => node is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Create" } },
+                static (syntax, cancellationToken) => PageSecurity(syntax, cancellationToken))
+            .Where(static model => model is not null)
+            .Collect()
+            .Select(static (models, _) => models.FirstOrDefault());
+
+        var runCalls = context.SyntaxProvider.CreateSyntaxProvider(
+                static (node, _) => node is InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Run" } },
+                static (syntax, cancellationToken) => RunCall(syntax, cancellationToken))
+            .Where(static call => call is not null)
+            .Collect();
+
         var isTest = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
             options.GlobalOptions.TryGetValue("build_property.SparVariant", out var variant) && variant == "Test");
+        var hosts = context.CompilationProvider.Select(static (compilation, _) =>
+            new HostsModel(compilation.GetTypeByMetadataName(HostEmitter.WindowsHost) is not null));
         var entry = context.CompilationProvider.Select(static (compilation, cancellationToken) => EntryPoint(compilation, cancellationToken));
 
-        context.RegisterSourceOutput(contracts, static (output, models) => EmitContracts(output, models));
+        // The app id the build checked (SparAppId, plan section 3c), for the catalog; empty when the project has none.
+        var appId = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.SparAppId", out var id) ? id.Trim() : "");
+
+        // A black-box test project's tested apps (SparBlackBoxTests): the build passes each as an AdditionalFiles item
+        // with its name, app id, executable and folder as metadata; the Projects class names them for the fixture.
+        var blackBox = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.SparBlackBoxTests", out var value) && string.Equals(value.Trim(), "true", System.StringComparison.OrdinalIgnoreCase));
+        var testedApps = context.AdditionalTextsProvider
+            .Combine(context.AnalyzerConfigOptionsProvider)
+            .Select(static (input, _) => TestedApp(input.Right.GetOptions(input.Left)))
+            .Where(static app => app is not null)
+            .Collect();
+        context.RegisterSourceOutput(testedApps.Combine(blackBox), static (output, input) =>
+        {
+            var (apps, enabled) = input;
+            if (enabled && apps.Length > 0)
+            {
+                output.AddSource("Spar.Projects.g.cs", ProjectsEmitter.Emit(apps.Select(app => app!).ToImmutableArray()));
+            }
+        });
+
+        context.RegisterSourceOutput(contracts.Combine(security).Combine(appId), static (output, input) =>
+            EmitContracts(output, input.Left.Left, input.Left.Right, input.Right));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
+        // Every variant hands Run its host: in the test variant the test session runs the app instead, and opens its
+        // window through the host for the Window surface (plan section 5, level 5).
+        context.RegisterSourceOutput(runCalls.Combine(hosts), static (output, input) =>
+        {
+            var (calls, found) = input;
+            HostEmitter.Emit(output, calls!, found);
+        });
         context.RegisterSourceOutput(contracts.Combine(entry).Combine(isTest), static (output, input) =>
         {
             var ((models, entryPoint), test) = input;
@@ -69,7 +117,25 @@ public sealed class SparGenerator : IIncrementalGenerator
         });
     }
 
-    private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models)
+    /// <summary>A tested app from its item's metadata (<c>SparBlackBoxApp</c> and the rest), or null for any other additional file.</summary>
+    private static TestedAppModel? TestedApp(Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions options)
+    {
+        string Read(string name) => options.TryGetValue("build_metadata.AdditionalFiles." + name, out var value) ? value.Trim() : "";
+
+        if (!string.Equals(Read("SparBlackBoxApp"), "true", System.StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var name = Read("SparAppName");
+        var appId = Read("SparAppId");
+        var executable = Read("SparAppExecutable");
+        return name.Length == 0 || appId.Length == 0 || executable.Length == 0
+            ? null
+            : new TestedAppModel(name, appId, executable, Read("SparAppDirectory"));
+    }
+
+    private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models, PageSecurityModel? security, string appId)
     {
         var contracts = models.OrderBy(c => c.WireName, System.StringComparer.Ordinal).ToList();
         var types = contracts.SelectMany(c => c.Types).GroupBy(t => t.Key).Select(g => g.First()).OrderBy(t => t.Key, System.StringComparer.Ordinal).ToList();
@@ -82,7 +148,7 @@ public sealed class SparGenerator : IIncrementalGenerator
             .Line("#nullable enable")
             .Line()
             .Open("namespace Spar.Generated");
-        CatalogEmitter.Emit(code, contracts);
+        CatalogEmitter.Emit(code, contracts, security, appId);
         code.Line();
         SerializerEmitter.Emit(code, types, records, errors, enums);
         code.Close();
@@ -136,6 +202,28 @@ public sealed class SparGenerator : IIncrementalGenerator
 
         var location = syntax.SemanticModel.GetInterceptableLocation(invocation, cancellationToken);
         return location is null ? null : new CreateCallModel(location.Version, location.Data);
+    }
+
+    private static PageSecurityModel? PageSecurity(GeneratorSyntaxContext syntax, CancellationToken cancellationToken)
+    {
+        var invocation = (InvocationExpressionSyntax)syntax.Node;
+        return PageSecurityAnalysis.IsCreate(invocation, syntax.SemanticModel, cancellationToken)
+            ? PageSecurityAnalysis.Read(invocation, syntax.SemanticModel, cancellationToken).Model
+            : null;
+    }
+
+    private static RunCallModel? RunCall(GeneratorSyntaxContext syntax, CancellationToken cancellationToken)
+    {
+        var invocation = (InvocationExpressionSyntax)syntax.Node;
+        if (syntax.SemanticModel.GetSymbolInfo(invocation, cancellationToken).Symbol is not IMethodSymbol method
+            || method.ContainingType.ToDisplayString() != "Spar.SparApp"
+            || method.Parameters.Length != 0)
+        {
+            return null;
+        }
+
+        var location = syntax.SemanticModel.GetInterceptableLocation(invocation, cancellationToken);
+        return location is null ? null : new RunCallModel(location.Version, location.Data);
     }
 
     private static EntryPointModel? EntryPoint(Compilation compilation, CancellationToken cancellationToken)

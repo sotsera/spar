@@ -1,0 +1,7 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle SPAR_AUTOMATED=1 SECURITY_PROBE_PROFILE=relative\profile]
+     237,3 | run: 'x-never' not found within 8 s
+     439,7 | spar info +8.2 ms: [91f5fe85] Host started 181.6 ms after the process.
+     439,7 | spar info +10.4 ms: [91f5fe85] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-profile-relative\com.example.tests.SecurityProbe.Development
+     439,7 | spar fail +12.5 ms: [91f5fe85] The app's configuration stops its start: The browser profile folder 'relative\profile' (spar.Folders) is not an absolute path on a local drive.
+     439,8 | spar info +12.8 ms: [91f5fe85] The automated mode shows no start-up message.
+     440,0 | run: exit 70

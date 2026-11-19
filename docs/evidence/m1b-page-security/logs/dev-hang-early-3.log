@@ -1,0 +1,52 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=hang-early SPAR_AUTOMATED=1]
+     150,1 | run: window moved offscreen
+     154,5 | spar info +7.2 ms: [b56f6416] Host started 45.8 ms after the process.
+     154,5 | spar info +12.9 ms: [b56f6416] single instance at 12.3 ms
+     154,5 | spar info +15.9 ms: [b56f6416] prerequisites checked at 15.9 ms
+     154,6 | spar info +24.3 ms: [b56f6416] UI-thread stall probe on.
+     154,6 | spar info +31.0 ms: [b56f6416] services built at 31 ms
+     154,6 | spar info +36.5 ms: [b56f6416] window shown at 36.5 ms
+     154,6 | spar info +37.0 ms: [b56f6416] Theme dark (system), window #1f1f1f.
+     154,6 | spar info +52.2 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     154,7 | spar info +80.5 ms: [b56f6416] environment at 80.5 ms
+     154,7 | spar info +81.4 ms: [b56f6416] WebView2 Runtime 157.0.4341.46
+     154,7 | spar info +98.4 ms: [b56f6416] Heartbeat every 5000 ms.
+     154,7 | spar warn +102.7 ms: The UI thread stalled 53.6 ms outside Spar's callbacks
+     154,7 | spar info +103.8 ms: [b56f6416] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     154,8 | spar info +103.9 ms: [b56f6416] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     387,3 | spar info +311.0 ms: [b56f6416] controller at 311 ms
+     434,8 | spar info +362.5 ms: [b56f6416] page script added at 362.5 ms
+     434,8 | spar info +362.9 ms: [b56f6416] navigation started at 362.9 ms
+     510,6 | spar info +427.2 ms: [b56f6416] Bridge: document 41b304d7dd108628 opened.
+     510,6 | spar info +427.7 ms: [b56f6416] Heartbeat armed for the new document.
+     510,6 | spar info +427.7 ms: [b56f6416] first document at 427.7 ms
+     510,6 | spar info +433.2 ms: [b56f6416] first bridge message at 433.2 ms
+     510,6 | spar info +436.0 ms: [b56f6416] first navigation completed at 436 ms
+     510,6 | spar info +440.8 ms: [b56f6416] 404 for /favicon.ico
+     510,6 | spar info +442.4 ms: [b56f6416] first bridge reply at 442.4 ms
+     510,6 | spar info +442.6 ms: [b56f6416] ui-ready at 442.6 ms
+     510,6 | spar info +442.7 ms: [b56f6416] Bridge: document 41b304d7dd108628 reported ui-ready.
+     558,1 | probe: hang-early: going to hang.html
+     558,1 | probe: done hang-early
+     558,1 | spar info +476.8 ms: [b56f6416] Bridge: document 41b304d7dd108628 closed (navigation).
+     558,1 | spar info +483.8 ms: [b56f6416] Bridge: document d848569678d7f160 opened.
+     558,1 | spar info +483.8 ms: [b56f6416] Heartbeat armed for the new document.
+   20183,6 | spar warn +20110.2 ms: [b56f6416] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20183,7 | spar info +20110.4 ms: [b56f6416] The automated mode shows no hung-page dialog.
+   20222,5 | run: found 'The page is not responding'
+   21236,4 | run: app working set 49392 KiB, peak seen 49392 KiB, private 15360 KiB
+   21236,9 | run: WM_CLOSE
+   21499,9 | spar info +21188.2 ms: [b56f6416] close requested (User, automated) at 21188.2 ms
+   21499,9 | spar info +21188.9 ms: [b56f6416] The automated mode closes a page that does not answer without asking.
+   21499,9 | spar info +21190.3 ms: [b56f6416] window closed anyway; the page had not answered for 16.1 s at 21190.3 ms
+   21499,9 | spar info +21191.2 ms: [b56f6416] closing at 21191.1 ms
+   21499,9 | spar info +21191.4 ms: [b56f6416] Heartbeat: 4 ticks, 1 pings, longest tick on the UI thread 0.800 ms.
+   21500,0 | spar info +21191.6 ms: [b56f6416] Bridge: document d848569678d7f160 closed (window closing).
+   21500,0 | spar info +21191.6 ms: [b56f6416] calls stopped at 21191.6 ms
+   21500,0 | spar info +21191.7 ms: [b56f6416] calls settled at 21191.7 ms
+   21500,0 | spar info +21193.8 ms: [b56f6416] renderer processes ended: 1 at 21193.8 ms
+   21500,0 | spar info +21212.1 ms: [b56f6416] controller closed at 21212.1 ms
+   21500,0 | spar info +21216.3 ms: [b56f6416] window destroyed at 21216.3 ms
+   21500,0 | spar info +21222.1 ms: [b56f6416] services disposed at 21222.1 ms
+   21500,0 | spar info +21222.2 ms: [b56f6416] exit 0 at 21222.2 ms
+   21500,2 | run: exit 0

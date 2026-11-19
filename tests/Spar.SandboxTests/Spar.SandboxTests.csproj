@@ -1,0 +1,49 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    Spar's Windows Sandbox tests (plan section 5, issue J; M1b step 8c): Spar.WindowTests and Notebook.EndToEndTests
+    published with NativeAOT, their Sandbox-tagged tests run inside one Windows Sandbox by the runner in Spar.Testing,
+    and each guest test reported here as a test of its own. Minutes, a local lane only (Windows 11 Pro or later with the
+    feature on; hosted CI runners have no Windows Sandbox), so it is in Spar.slnx but not built or run with it:
+    dotnet test with this project (the spar-testing skill). Its user-session lane runs only with SPAR_SANDBOX_DESKTOP=allow.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.SandboxTests</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    The payloads: each test project published with NativeAOT (its CI lane, SparTestLane=Aot) into this project's obj/,
+    in-process (decision "D3: variant builds run in-proc"): restore as its own call, then Publish in Release with
+    _IsPublishing, as dotnet publish does. The tests read each folder from the assembly's metadata. Windows only, and
+    never in a design-time build.
+  -->
+  <ItemGroup>
+    <SparSandboxPayload Include="..\Spar.WindowTests\Spar.WindowTests.csproj" PayloadName="Spar.WindowTests" />
+    <SparSandboxPayload Include="..\..\samples\Notebook.EndToEndTests\Notebook.EndToEndTests.csproj" PayloadName="Notebook.EndToEndTests" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <_SparSandboxPayloads>$([MSBuild]::NormalizeDirectory($(MSBuildProjectDirectory), $(BaseIntermediateOutputPath), 'sandbox-payloads'))</_SparSandboxPayloads>
+    <_SparSandboxProperties>Configuration=Release;SparTestLane=Aot</_SparSandboxProperties>
+    <_SparSandboxRemoved>SparVariant;RuntimeIdentifier;SelfContained;PublishAot;TargetFramework;Platform;NoBuild;CurrentSolutionConfigurationContents;BuildingSolutionFile</_SparSandboxRemoved>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="SandboxPayload:Spar.WindowTests" Value="$(_SparSandboxPayloads)Spar.WindowTests\" />
+    <AssemblyMetadata Include="SandboxPayload:Notebook.EndToEndTests" Value="$(_SparSandboxPayloads)Notebook.EndToEndTests\" />
+  </ItemGroup>
+
+  <Target Name="SparSandboxPayloads"
+          AfterTargets="Build"
+          Condition="'$(DesignTimeBuild)' != 'true' and $([MSBuild]::IsOSPlatform('Windows'))">
+    <MSBuild Projects="%(SparSandboxPayload.FullPath)" Targets="Restore"
+             Properties="$(_SparSandboxProperties);MSBuildRestoreSessionId=$([MSBuild]::StableStringHash('%(SparSandboxPayload.FullPath)'))"
+             RemoveProperties="$(_SparSandboxRemoved)" />
+
+    <MSBuild Projects="%(SparSandboxPayload.FullPath)" Targets="Publish"
+             Properties="$(_SparSandboxProperties);_IsPublishing=true;PublishDir=$(_SparSandboxPayloads)%(SparSandboxPayload.PayloadName)\"
+             RemoveProperties="$(_SparSandboxRemoved)" />
+  </Target>
+</Project>

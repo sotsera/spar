@@ -1,0 +1,48 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle]
+      55,8 | run: window moved offscreen
+      61,0 | spar info +0.3 ms: [d43f1c6d] Host started 20.9 ms after the process.
+      61,0 | spar info +0.4 ms: [d43f1c6d] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\cfg-logging-json-level\com.example.tests.SecurityProbe
+      61,1 | spar info +1.7 ms: [d43f1c6d] single instance at 1.6 ms
+      61,1 | spar info +1.9 ms: [d43f1c6d] prerequisites checked at 1.9 ms
+      61,1 | spar info +2.9 ms: [d43f1c6d] services built at 2.9 ms
+      61,1 | spar info +9.0 ms: [d43f1c6d] window shown at 9 ms
+      61,1 | spar info +9.1 ms: [d43f1c6d] Theme dark (system), window #1f1f1f.
+      61,2 | spar info +9.8 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      61,2 | spar info +15.7 ms: [d43f1c6d] environment at 15.7 ms
+      61,2 | spar info +15.8 ms: [d43f1c6d] WebView2 Runtime 157.0.4341.60
+      61,2 | spar info +19.2 ms: [d43f1c6d] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\cfg-logging-json-level\com.example.tests.SecurityProbe\WebView2
+      61,2 | spar info +22.6 ms: [d43f1c6d] Heartbeat every 5000 ms.
+      61,2 | spar info +22.7 ms: [d43f1c6d] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-pGQzzpdg/hxQplPojUJmp5QjUYiorJ8RI5sqiITCfuY=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      61,2 | spar info +22.7 ms: [d43f1c6d] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     283,8 | spar info +235.0 ms: [d43f1c6d] controller at 235 ms
+     283,9 | spar info +235.0 ms: [d43f1c6d] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     347,8 | spar info +293.6 ms: [d43f1c6d] Page file picker blocked in 58.5 ms (Page.enable 57.8 ms).
+     347,8 | spar info +293.6 ms: [d43f1c6d] page script added at 293.6 ms
+     347,8 | spar info +293.7 ms: [d43f1c6d] navigation started at 293.7 ms
+     410,5 | spar info +351.9 ms: [d43f1c6d] Bridge: document 782992e60f66a855 opened.
+     410,5 | spar info +351.9 ms: [d43f1c6d] Heartbeat armed for the new document.
+     410,5 | spar info +352.0 ms: [d43f1c6d] first document at 352 ms
+     410,5 | spar info +361.1 ms: [d43f1c6d] first bridge message at 361.1 ms
+     410,5 | spar info +361.3 ms: [d43f1c6d] first bridge reply at 361.3 ms
+     410,5 | spar info +361.3 ms: [d43f1c6d] ui-ready at 361.3 ms
+     410,5 | spar info +361.3 ms: [d43f1c6d] Bridge: document 782992e60f66a855 reported ui-ready.
+     410,5 | spar info +364.7 ms: [d43f1c6d] first navigation completed at 364.7 ms
+     410,5 | probe: ready; nonce meta present
+     410,5 | probe: done idle
+     410,5 | spar info +368.4 ms: [d43f1c6d] 404 for /favicon.ico
+     435,0 | run: found 'done idle'
+    1440,5 | run: app working set 25428 KiB, peak seen 25428 KiB, private 8940 KiB
+    1440,7 | run: WM_CLOSE
+    1674,6 | spar info +1410.3 ms: [d43f1c6d] close requested (User) at 1410.3 ms
+    1674,6 | spar info +1410.9 ms: [d43f1c6d] closing at 1410.9 ms
+    1674,6 | spar info +1410.9 ms: [d43f1c6d] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1674,6 | spar info +1411.2 ms: [d43f1c6d] page close work done at 1411.2 ms
+    1674,6 | spar info +1411.2 ms: [d43f1c6d] Bridge: document 782992e60f66a855 closed (window closing).
+    1674,6 | spar info +1411.2 ms: [d43f1c6d] calls stopped at 1411.2 ms
+    1674,7 | spar info +1411.2 ms: [d43f1c6d] calls settled at 1411.2 ms
+    1674,7 | spar info +1411.2 ms: [d43f1c6d] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    1674,7 | spar info +1425.6 ms: [d43f1c6d] controller closed at 1425.6 ms
+    1674,7 | spar info +1427.0 ms: [d43f1c6d] window destroyed at 1427 ms
+    1674,7 | spar info +1430.6 ms: [d43f1c6d] services disposed at 1430.6 ms
+    1674,7 | spar info +1430.6 ms: [d43f1c6d] exit 0 at 1430.6 ms
+    1674,8 | run: exit 0

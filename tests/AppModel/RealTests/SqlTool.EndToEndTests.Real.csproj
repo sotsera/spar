@@ -1,0 +1,26 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The document's window and black-box tests (docs/app-model.md 6.12, 6.13) built by real Spar: Spar.Sdk's test project,
+    the real test host, page API and black-box fixture, and the document's app (../Real) in the Test variant. Compiled
+    only: the document's app has no page.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>SqlTool.EndToEndTests</RootNamespace>
+
+    <!-- The black-box test (6.13): the generated Projects class, without the publish, since nothing here is run. -->
+    <SparBlackBoxTests>true</SparBlackBoxTests>
+    <SparBlackBoxPublish>false</SparBlackBoxPublish>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\Real\SqlTool.Real.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SqlTool.EndToEndTests\ConnectionsWindowTests.cs" Link="ConnectionsWindowTests.cs" />
+    <Compile Include="..\SqlTool.EndToEndTests\ClosingWindowTests.cs" Link="ClosingWindowTests.cs" />
+    <Compile Include="..\SqlTool.EndToEndTests\BlackBoxTests.cs" Link="BlackBoxTests.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,48 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The configuration-cost spike's app (RESULTS.md): a Spar app built like tests/apps/SecurityProbe, published
+    Production NativeAOT once per ConfigCostVariant (see ../Directory.Build.props). Its page asks for the run's details,
+    reports them through the one contract to standard error, and signals ui-ready.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ConfigCost</RootNamespace>
+    <SparAppId>com.example.spikes.ConfigCost</SparAppId>
+    <SparTypeCheck>false</SparTypeCheck>
+
+    <!-- Every trim or AOT warning reported at its own call site, not folded into one per assembly. -->
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+
+    <!-- Size attribution: the ILC map (per node) and the mstat file. -->
+    <IlcGenerateMapFile>true</IlcGenerateMapFile>
+    <IlcGenerateMstatFile>true</IlcGenerateMstatFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ConfigCostVariant)' &gt;= '1'">
+    <DefineConstants>$(DefineConstants);CONFIG_V1</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(ConfigCostVariant)' == '2' or '$(ConfigCostVariant)' == '3'">
+    <DefineConstants>$(DefineConstants);CONFIG_V2</DefineConstants>
+    <!-- Options binding by Microsoft's source generator: no reflection binding. -->
+    <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(ConfigCostVariant)' == '3'">
+    <DefineConstants>$(DefineConstants);CONFIG_V3</DefineConstants>
+  </PropertyGroup>
+  <!-- Variant 4: variant 1 with the app reading the file itself and handing it over with AddJsonStream (no file provider). -->
+  <PropertyGroup Condition="'$(ConfigCostVariant)' == '4'">
+    <DefineConstants>$(DefineConstants);CONFIG_STREAM</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(ConfigCostVariant)' &gt;= '1'">
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(ConfigCostVariant)' == '2' or '$(ConfigCostVariant)' == '3'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+</Project>

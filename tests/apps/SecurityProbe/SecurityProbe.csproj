@@ -1,0 +1,40 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    A test app for the Windows host's page security, security defaults and host details (plan M1b, build steps 4 to 6;
+    docs/evidence/m1b-page-security.md, docs/evidence/m1b-security-defaults.md, docs/evidence/m1b-host-details.md):
+    its page runs one probe, named by
+    SECURITY_PROBE_MODE, and reports what happened through its one contract to standard error. Run by
+    hand, published or in Debug with SparDevServer=false, from the evidence's probe; not in Spar.slnx.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>SecurityProbe</RootNamespace>
+    <SparAppId>com.example.tests.SecurityProbe</SparAppId>
+
+    <!-- The page is plain JavaScript: there is nothing for the type-check to check. -->
+    <SparTypeCheck>false</SparTypeCheck>
+
+    <!-- -p:SecurityProbeListenerOff=true builds the probe with the violation listener off, to measure what it costs. -->
+    <DefineConstants Condition="'$(SecurityProbeListenerOff)' == 'true'">$(DefineConstants);PROBE_LISTENER_OFF</DefineConstants>
+
+    <!-- -p:SecurityProbeOptIns=true builds the probe with every browser opt-in (docs/evidence/m1b-security-defaults.md). -->
+    <DefineConstants Condition="'$(SecurityProbeOptIns)' == 'true'">$(DefineConstants);PROBE_OPT_INS</DefineConstants>
+
+    <!-- -p:SecurityProbeAddLogging=true adds the app's own AddLogging, -p:SecurityProbeWithoutFile=true spar.Logging(l => l.WithoutFile()). -->
+    <DefineConstants Condition="'$(SecurityProbeAddLogging)' == 'true'">$(DefineConstants);PROBE_ADD_LOGGING</DefineConstants>
+    <DefineConstants Condition="'$(SecurityProbeWithoutFile)' == 'true'">$(DefineConstants);PROBE_WITHOUT_FILE</DefineConstants>
+
+    <!--
+      -p:SecurityProbeAppConfiguration=true adds the app's own configuration: appsettings.json in the data folder from
+      spar.ResolveFolders(), its "Logging" section through AddLogging (docs/evidence/m1b-logging.md, "Configuration").
+      The packages are this probe's alone; Spar and the Notebook reference none of them.
+    -->
+    <DefineConstants Condition="'$(SecurityProbeAppConfiguration)' == 'true'">$(DefineConstants);PROBE_APP_CONFIGURATION</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SecurityProbeAppConfiguration)' == 'true'">
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" />
+  </ItemGroup>
+</Project>

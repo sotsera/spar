@@ -1,0 +1,51 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle SPAR_AUTOMATED=1 WEBVIEW2_USER_DATA_FOLDER=<repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-opt-ins-env-folders\moved-profile WEBVIEW2_BROWSER_EXECUTABLE_FOLDER=<repo>\artifacts\m1b-security-defaults\runtime-copy]
+      95,9 | spar info +8.2 ms: [5b419cf9] Host started 47.7 ms after the process.
+      96,0 | spar info +10.6 ms: [5b419cf9] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-opt-ins-env-folders\com.example.tests.SecurityProbe.Development
+      96,0 | spar warn +12.0 ms: [5b419cf9] Browser opt-ins in force: AllowDevTools() AllowAcceleratorKeys() AllowPasswordSaving() AllowDownloads() AllowHistoryNavigation() AllowContextMenu() AllowPagePicker() AllowBrowserEnvironmentOverrides()
+      96,1 | spar warn +12.2 ms: [5b419cf9] WEBVIEW2_BROWSER_EXECUTABLE_FOLDER in force (AllowBrowserEnvironmentOverrides).
+      96,1 | spar warn +12.2 ms: [5b419cf9] WEBVIEW2_USER_DATA_FOLDER in force (AllowBrowserEnvironmentOverrides).
+      96,1 | spar info +25.7 ms: [5b419cf9] single instance at 25.1 ms
+      96,1 | spar info +29.8 ms: [5b419cf9] prerequisites checked at 29.8 ms
+      96,1 | spar info +38.6 ms: [5b419cf9] UI-thread stall probe on.
+     138,4 | run: window moved offscreen
+     144,1 | spar info +46.4 ms: [5b419cf9] services built at 46.4 ms
+     144,2 | spar info +49.5 ms: [5b419cf9] window shown at 49.5 ms
+     144,2 | spar info +49.9 ms: [5b419cf9] Theme dark (system), window #1f1f1f.
+     144,2 | spar info +56.6 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     144,2 | spar info +73.6 ms: [5b419cf9] environment at 73.6 ms
+     144,2 | spar info +74.1 ms: [5b419cf9] WebView2 Runtime 157.0.4341.46
+     144,2 | spar warn +74.4 ms: [5b419cf9] Browser profile folder moved by a policy or an allowed variable: <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-opt-ins-env-folders\moved-profile
+     144,2 | spar info +85.2 ms: [5b419cf9] Heartbeat every 5000 ms.
+     144,2 | spar info +87.7 ms: [5b419cf9] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-eea5XUJ4+QCnH2kZNuJmJqSRjYtjSU+ByGEcjm7EkfU=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     144,2 | spar info +87.8 ms: [5b419cf9] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     719,4 | spar info +649.5 ms: [5b419cf9] controller at 649.5 ms
+     719,5 | spar info +653.3 ms: [5b419cf9] Browser settings read back (1.24 ms): devtools on, keys on, password autosave on, autofill on, swipe on, host objects off, reputation check off; menu full, downloads allowed, history allowed.
+     767,0 | spar info +693.9 ms: [5b419cf9] page script added at 693.9 ms
+     767,0 | spar info +694.4 ms: [5b419cf9] navigation started at 694.4 ms
+     816,4 | spar info +751.7 ms: [5b419cf9] Bridge: document 9a691f15a37ede23 opened.
+     816,4 | spar info +752.0 ms: [5b419cf9] Heartbeat armed for the new document.
+     816,4 | spar info +752.1 ms: [5b419cf9] first document at 752.1 ms
+     816,4 | spar info +757.7 ms: [5b419cf9] first bridge message at 757.7 ms
+     816,4 | spar info +761.0 ms: [5b419cf9] first navigation completed at 761 ms
+     816,4 | spar info +763.7 ms: [5b419cf9] 404 for /favicon.ico
+     862,1 | spar info +765.4 ms: [5b419cf9] first bridge reply at 765.3 ms
+     862,1 | spar info +765.5 ms: [5b419cf9] ui-ready at 765.5 ms
+     862,1 | spar info +765.6 ms: [5b419cf9] Bridge: document 9a691f15a37ede23 reported ui-ready.
+     862,2 | probe: ready; nonce meta present
+     862,2 | probe: done idle
+     899,1 | run: found 'done idle'
+     906,9 | run: WebView2 processes started from <repo>\artifacts\m1b-security-defaults\runtime-copy
+    1433,3 | run: app working set 46336 KiB, peak seen 46336 KiB, private 12724 KiB
+    1433,7 | run: WM_CLOSE
+    1694,5 | spar info +1383.3 ms: [5b419cf9] close requested (User, automated) at 1383.3 ms
+    1694,5 | spar info +1388.4 ms: [5b419cf9] closing at 1388.4 ms
+    1694,5 | spar info +1388.7 ms: [5b419cf9] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1694,5 | spar info +1389.6 ms: [5b419cf9] page close work done at 1389.6 ms
+    1694,5 | spar info +1390.1 ms: [5b419cf9] Bridge: document 9a691f15a37ede23 closed (window closing).
+    1694,5 | spar info +1390.3 ms: [5b419cf9] calls stopped at 1390.3 ms
+    1694,5 | spar info +1390.3 ms: [5b419cf9] calls settled at 1390.3 ms
+    1694,5 | spar info +1405.0 ms: [5b419cf9] controller closed at 1405 ms
+    1694,5 | spar info +1407.0 ms: [5b419cf9] window destroyed at 1407 ms
+    1694,5 | spar info +1415.2 ms: [5b419cf9] services disposed at 1415.2 ms
+    1694,5 | spar info +1415.9 ms: [5b419cf9] exit 0 at 1415.9 ms
+    1694,6 | run: exit 0

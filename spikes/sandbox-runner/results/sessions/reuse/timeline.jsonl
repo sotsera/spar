@@ -1,0 +1,48 @@
+{"t_ms":331,"step":"list-before","ms":318,"ids":"","raw":"exit=0 out={   \u0022WindowsSandboxEnvironments\u0022: [] } err=","serverProcesses":1,"clientProcesses":0}
+{"t_ms":1516,"step":"start","ms":1163,"id":"\u003Cid\u003E","raw":"exit=0 out={   \u0022Id\u0022: \u0022\u003Cid\u003E\u0022 } err=","clientWindows":0}
+{"t_ms":1895,"step":"exec-ready-System","ms":379,"attempts":1,"sinceStart_ms":1562.8,"lastCall_ms":379}
+{"t_ms":2587,"step":"client-window","since_connect_ms":672.9,"visible":false,"minimized":false,"foreground":false,"title":"Windows Sandbox"}
+{"t_ms":2587,"step":"client-window","since_connect_ms":673,"visible":false,"minimized":false,"foreground":false,"title":"Default IME"}
+{"t_ms":2715,"step":"client-minimize","since_connect_ms":801.5,"n":1,"wasForeground":false}
+{"t_ms":2715,"step":"client-window","since_connect_ms":801.8,"visible":false,"minimized":false,"foreground":false,"title":"MSCTFIME UI"}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.2,"visible":false,"minimized":false,"foreground":false,"title":""}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.3,"visible":false,"minimized":false,"foreground":false,"title":""}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.3,"visible":false,"minimized":false,"foreground":false,"title":""}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.3,"visible":false,"minimized":false,"foreground":false,"title":""}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.3,"visible":false,"minimized":false,"foreground":false,"title":"Default IME"}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.3,"visible":false,"minimized":false,"foreground":false,"title":"Default IME"}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.3,"visible":false,"minimized":false,"foreground":false,"title":"Default IME"}
+{"t_ms":2833,"step":"client-window","since_connect_ms":919.3,"visible":false,"minimized":false,"foreground":false,"title":"Default IME"}
+{"t_ms":3216,"step":"client-minimize","since_connect_ms":1302.7,"n":2,"wasForeground":false}
+{"t_ms":3361,"step":"client-minimize","since_connect_ms":1447.7,"n":3,"wasForeground":true}
+{"t_ms":3499,"step":"client-window","since_connect_ms":1585.4,"visible":false,"minimized":false,"foreground":false,"title":""}
+{"t_ms":4630,"step":"exec-ready-ExistingLogin","ms":2694,"attempts":5,"sinceStart_ms":4297.9,"lastCall_ms":382.6}
+{"t_ms":4630,"step":"connect","ms":2716,"sessionReady":true,"connectExited":true}
+{"t_ms":4638,"step":"stage-copy","ms":8,"run":"j01-2e1265","files":3,"bytes":16902182,"exe":"WireShapes.Tests.exe"}
+{"t_ms":5058,"step":"stage-visible","ms":420,"run":"j01-2e1265","seen":true,"attempts":1,"prestaged":false}
+{"t_ms":5975,"step":"run","ms":917,"run":"j01-2e1265","as":"System","guestExit":1,"timedOut":false,"raw":"exit=0 out={   \u0022ExitCode\u0022: 1 } err="}
+{"t_ms":5992,"step":"collect","ms":17,"run":"j01-2e1265","exitFile":"1","trx":"\u003CCounters total=\u002279\u0022 executed=\u002279\u0022 passed=\u002278\u0022 failed=\u00221\u0022 error=\u00220\u0022 timeout=\u00220\u0022 aborted=\u00220\u0022 inconclusive=\u00220\u0022 passedButRunAborted=\u00220\u0022 notRunnable=\u00220\u0022 notExecuted=\u00220\u0022 disconnected=\u00220\u0022 warning=\u00220\u0022 completed=\u00220\u0022 inProgress=\u00220\u0022 pending=\u00220\u0022 /\u003E","summary":"WireShapes.Tests  Total: 79, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 0.050s"}
+{"t_ms":6001,"step":"stage-copy","ms":9,"run":"j02-919a90","files":3,"bytes":22940071,"exe":"SampleApp.AotTests.exe"}
+{"t_ms":6394,"step":"stage-visible","ms":393,"run":"j02-919a90","seen":true,"attempts":1,"prestaged":false}
+{"t_ms":47650,"step":"run","ms":41256,"run":"j02-919a90","as":"ExistingLogin","guestExit":0,"timedOut":false,"raw":"exit=0 out={   \u0022ExitCode\u0022: 0 } err="}
+{"t_ms":47663,"step":"collect","ms":14,"run":"j02-919a90","exitFile":"0","trx":"\u003CCounters total=\u002215\u0022 executed=\u002215\u0022 passed=\u002215\u0022 failed=\u00220\u0022 error=\u00220\u0022 timeout=\u00220\u0022 aborted=\u00220\u0022 inconclusive=\u00220\u0022 passedButRunAborted=\u00220\u0022 notRunnable=\u00220\u0022 notExecuted=\u00220\u0022 disconnected=\u00220\u0022 warning=\u00220\u0022 completed=\u00220\u0022 inProgress=\u00220\u0022 pending=\u00220\u0022 /\u003E","summary":"SampleApp.AotTests  Total: 15, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 40.316s"}
+{"t_ms":47670,"step":"stage-copy","ms":7,"run":"j03-2434fb","files":3,"bytes":16902182,"exe":"WireShapes.Tests.exe"}
+{"t_ms":48013,"step":"stage-visible","ms":343,"run":"j03-2434fb","seen":true,"attempts":1,"prestaged":false}
+{"t_ms":48792,"step":"run","ms":779,"run":"j03-2434fb","as":"System","guestExit":0,"timedOut":false,"raw":"exit=0 out={   \u0022ExitCode\u0022: 0 } err="}
+{"t_ms":48807,"step":"collect","ms":15,"run":"j03-2434fb","exitFile":"0","trx":"\u003CCounters total=\u002279\u0022 executed=\u002279\u0022 passed=\u002279\u0022 failed=\u00220\u0022 error=\u00220\u0022 timeout=\u00220\u0022 aborted=\u00220\u0022 inconclusive=\u00220\u0022 passedButRunAborted=\u00220\u0022 notRunnable=\u00220\u0022 notExecuted=\u00220\u0022 disconnected=\u00220\u0022 warning=\u00220\u0022 completed=\u00220\u0022 inProgress=\u00220\u0022 pending=\u00220\u0022 /\u003E","summary":"WireShapes.Tests  Total: 79, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 0.032s"}
+{"t_ms":48816,"step":"stage-copy","ms":9,"run":"j04-40f373","files":3,"bytes":22940071,"exe":"SampleApp.AotTests.exe"}
+{"t_ms":49155,"step":"stage-visible","ms":339,"run":"j04-40f373","seen":true,"attempts":1,"prestaged":false}
+{"t_ms":89112,"step":"run","ms":39956,"run":"j04-40f373","as":"ExistingLogin","guestExit":0,"timedOut":false,"raw":"exit=0 out={   \u0022ExitCode\u0022: 0 } err="}
+{"t_ms":89124,"step":"collect","ms":12,"run":"j04-40f373","exitFile":"0","trx":"\u003CCounters total=\u002215\u0022 executed=\u002215\u0022 passed=\u002215\u0022 failed=\u00220\u0022 error=\u00220\u0022 timeout=\u00220\u0022 aborted=\u00220\u0022 inconclusive=\u00220\u0022 passedButRunAborted=\u00220\u0022 notRunnable=\u00220\u0022 notExecuted=\u00220\u0022 disconnected=\u00220\u0022 warning=\u00220\u0022 completed=\u00220\u0022 inProgress=\u00220\u0022 pending=\u00220\u0022 /\u003E","summary":"SampleApp.AotTests  Total: 15, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 39.112s"}
+{"t_ms":89131,"step":"stage-copy","ms":7,"run":"j05-f84e27","files":3,"bytes":16902182,"exe":"WireShapes.Tests.exe"}
+{"t_ms":89520,"step":"stage-visible","ms":389,"run":"j05-f84e27","seen":true,"attempts":1,"prestaged":false}
+{"t_ms":90346,"step":"run","ms":826,"run":"j05-f84e27","as":"System","guestExit":0,"timedOut":false,"raw":"exit=0 out={   \u0022ExitCode\u0022: 0 } err="}
+{"t_ms":90360,"step":"collect","ms":13,"run":"j05-f84e27","exitFile":"0","trx":"\u003CCounters total=\u002279\u0022 executed=\u002279\u0022 passed=\u002279\u0022 failed=\u00220\u0022 error=\u00220\u0022 timeout=\u00220\u0022 aborted=\u00220\u0022 inconclusive=\u00220\u0022 passedButRunAborted=\u00220\u0022 notRunnable=\u00220\u0022 notExecuted=\u00220\u0022 disconnected=\u00220\u0022 warning=\u00220\u0022 completed=\u00220\u0022 inProgress=\u00220\u0022 pending=\u00220\u0022 /\u003E","summary":"WireShapes.Tests  Total: 79, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 0.030s"}
+{"t_ms":90366,"step":"stage-copy","ms":6,"run":"j06-dcad15","files":3,"bytes":22940071,"exe":"SampleApp.AotTests.exe"}
+{"t_ms":90668,"step":"stage-visible","ms":302,"run":"j06-dcad15","seen":true,"attempts":1,"prestaged":false}
+{"t_ms":130967,"step":"run","ms":40298,"run":"j06-dcad15","as":"ExistingLogin","guestExit":0,"timedOut":false,"raw":"exit=0 out={   \u0022ExitCode\u0022: 0 } err="}
+{"t_ms":130981,"step":"collect","ms":14,"run":"j06-dcad15","exitFile":"0","trx":"\u003CCounters total=\u002215\u0022 executed=\u002215\u0022 passed=\u002215\u0022 failed=\u00220\u0022 error=\u00220\u0022 timeout=\u00220\u0022 aborted=\u00220\u0022 inconclusive=\u00220\u0022 passedButRunAborted=\u00220\u0022 notRunnable=\u00220\u0022 notExecuted=\u00220\u0022 disconnected=\u00220\u0022 warning=\u00220\u0022 completed=\u00220\u0022 inProgress=\u00220\u0022 pending=\u00220\u0022 /\u003E","summary":"SampleApp.AotTests  Total: 15, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 39.028s"}
+{"t_ms":131946,"step":"stop","ms":965,"raw":"exit=0 out= err="}
+{"t_ms":131979,"step":"close-clients","ms":33,"connectStillRunning":false,"windowsLeftAfterStop":0,"windowsLeftAfterClose":0}
+{"t_ms":132291,"step":"list-after","ms":301,"ids":"","oursStillListed":false,"clientProcesses":0}
+{"t_ms":132291,"step":"total","ms":131959}

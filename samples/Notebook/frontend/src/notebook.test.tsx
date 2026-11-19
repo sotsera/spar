@@ -141,3 +141,65 @@ test("a taken title is explained to the person creating the page", async () => {
   expect(message).toBe("There is already a page called “Welcome”.");
   expect(spar.calls(pages.create)).toEqual([{ title: "Welcome", markdown: null }]);
 });
+
+test("closing the window saves the draft first, then lets it close", async () => {
+  spar.on(pages.save).succeed({ ...welcome, markdown: "# Before closing", revision: 4n });
+  await start();
+  await openWelcome();
+
+  act(() => notebook.edit("# Before closing"));
+  let answer: unknown;
+  await act(async () => {
+    answer = await spar.requestClose();
+  });
+
+  expect(answer).toBe("close");
+  expect(spar.calls(pages.save)).toEqual([{ id: "welcome", markdown: "# Before closing", baseRevision: 3n }]);
+});
+
+test("closing waits for a save on its way", async () => {
+  let release: () => void = () => {};
+  const arrived = new Promise<void>(resolve => (release = resolve));
+  spar.on(pages.save).answer(async (request, reply) => {
+    await arrived;
+    return reply.succeed({ ...welcome, markdown: request.markdown, revision: 4n });
+  });
+  await start();
+  await openWelcome();
+  act(() => notebook.edit("# Saving"));
+  await act(async () => notebook.save());
+
+  const answer = spar.requestClose();
+  await act(async () => release());
+
+  expect(await answer).toBe("close");
+  expect(spar.calls(pages.save)).toHaveLength(1);
+});
+
+test("a draft that cannot be saved makes closing ask, unless nobody can answer", async () => {
+  spar.on(pages.save).failWith({ kind: "transport", code: "lost", execution: "unknown" });
+  await start();
+  await openWelcome();
+  act(() => notebook.edit("# Unsure"));
+
+  let asked: unknown;
+  let automated: unknown;
+  let sessionEnd: unknown;
+  await act(async () => {
+    asked = await spar.requestClose();
+    automated = await spar.requestClose({ automated: true });
+    sessionEnd = await spar.requestClose({ reason: "sessionEnd" });
+  });
+
+  expect(asked).toEqual({ ask: "Not saved: the notebook could not be reached. Close without your last changes?" });
+  expect([automated, sessionEnd]).toEqual(["close", "close"]);
+  expect(notebook.current).toMatchObject({ draft: "# Unsure" });
+});
+
+test("with nothing to save, closing closes at once", async () => {
+  await start();
+  await openWelcome();
+
+  expect(await spar.requestClose()).toBe("close");
+  expect(spar.calls(pages.save)).toEqual([]);
+});

@@ -1,0 +1,41 @@
+SETUP env+anchor=273.7ms port-file=8.3ms driver-start=410.2ms connect=35.8ms total=727.9ms since-process-start=785ms port=63469 contexts=1 version=157.0.4341.60
+MEMORY driver=node pid=59872 private=127.9MB ws=112.5MB; node pid=22988 private=127.9MB ws=113.3MB test-process=18.6MB
+MEMORY browser=184.4MB driver=node pid=59872 private=127.9MB ws=112.5MB; node pid=22988 private=170.6MB ws=126.9MB test-process=26.6MB
+TEST create controller            n=15 min=55.0 p50=65.5 p95=87.6 max=87.6
+TEST navigate                     n=15 min=30.3 p50=35.3 p95=62.8 max=62.8
+TEST find page                    n=15 min=0.0 p50=0.0 p95=1.0 max=1.0
+TEST journey                      n=15 min=1228.0 p50=1705.7 p95=1780.9 max=1780.9
+TEST close                        n=15 min=9.7 p50=13.6 p95=17.7 max=17.7
+TEST per test                     n=15 min=1343.3 p50=1814.1 p95=1926.5 max=1926.5
+STEP 01 ready (two frames)        n=15 min=39.3 p50=47.8 p95=66.0 max=66.0
+STEP 02 expect heading            n=15 min=16.1 p50=20.1 p95=31.3 max=31.3
+STEP 03 fill name                 n=15 min=6.5 p50=7.2 p95=12.5 max=12.5
+STEP 04 check native              n=15 min=27.0 p50=34.2 p95=54.4 max=54.4
+STEP 05 check radix               n=15 min=32.2 p50=35.5 p95=38.6 max=38.6
+STEP 06 select option             n=15 min=3.2 p50=3.5 p95=7.4 max=7.4
+STEP 07 open listbox              n=15 min=34.6 p50=39.8 p95=42.9 max=42.9
+STEP 08 pick option               n=15 min=29.2 p50=30.1 p95=47.7 max=47.7
+STEP 09 expect listbox text       n=15 min=1.3 p50=1.4 p95=9.0 max=9.0
+STEP 10 open menu                 n=15 min=35.0 p50=35.6 p95=48.6 max=48.6
+STEP 11 pick menu item            n=15 min=29.9 p50=34.3 p95=35.2 max=35.2
+STEP 12 expect status             n=15 min=1.1 p50=1.2 p95=1.8 max=1.8
+STEP 13 wait async list           n=15 min=308.0 p50=817.3 p95=827.0 max=827.0
+STEP 14 expect enabled later      n=15 min=1.1 p50=1.4 p95=3.3 max=3.3
+STEP 15 fill filter               n=15 min=3.1 p50=4.1 p95=7.6 max=7.6
+STEP 16 press Enter               n=15 min=3.4 p50=4.2 p95=9.6 max=9.6
+STEP 17 expect filtered           n=15 min=0.9 p50=1.2 p95=2.2 max=2.2
+STEP 18 expect item text          n=15 min=1.0 p50=1.3 p95=3.0 max=3.0
+STEP 19 open dialog               n=15 min=31.7 p50=35.6 p95=43.8 max=43.8
+STEP 20 expect dialog             n=15 min=1.1 p50=1.6 p95=2.1 max=2.1
+STEP 21 cancel dialog             n=15 min=225.2 p50=229.4 p95=265.6 max=265.6
+STEP 22 expect dialog hidden      n=15 min=0.9 p50=0.9 p95=1.7 max=1.7
+STEP 23 reopen dialog             n=15 min=31.4 p50=34.7 p95=36.3 max=36.3
+STEP 24 confirm                   n=15 min=229.6 p50=231.5 p95=267.2 max=267.2
+STEP 25 expect placed             n=15 min=1.0 p50=1.1 p95=2.0 max=2.0
+STEP 26 click link                n=15 min=38.3 p50=39.8 p95=42.0 max=42.0
+STEP 27 wait for URL              n=15 min=0.2 p50=0.3 p95=7.5 max=7.5
+STEP 28 expect route text         n=15 min=1.2 p50=1.8 p95=2.6 max=2.6
+RESULT runs=15 failures=0 pages-left=1
+TEARDOWN playwright disposed in 10.3ms; browser exited already=False
+TEARDOWN browser exited=True leftover=0 port-file-left=True
+TEARDOWN root deleted=True

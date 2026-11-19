@@ -4,7 +4,8 @@ namespace Spar.PackageTests;
 
 /// <summary>
 /// An app and its tests built from Spar's packages alone (plan M1a, "the package-only consumer test"): they build and
-/// pass, its page works in Chromium against its backend, the packaged analyzer reports a contract problem at its line, a design-time build runs no Spar step, the app
+/// pass, its page works in Chromium against its backend, a black-box test project publishes the app and launches it, the
+/// packaged analyzer reports a contract problem at its line, a design-time build runs no Spar step, the app
 /// publishes with NativeAOT, and an update and a downgrade of Spar.Sdk while MSBuild is warm each build with their own
 /// SDK. The builds share the consumer's folders, so they stay in this one class, whose tests xUnit runs one at a time.
 /// </summary>
@@ -37,6 +38,35 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
 
         Assert.True(exit == 0, output);
         Assert.Contains("succeeded: 1", output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task A_black_box_test_project_publishes_the_app_once_and_launches_it()
+    {
+        Assert.Equal(0, (await FirstAsync()).Exit);
+        var project = Path.Combine("App.BlackBoxTests", "Notes.App.BlackBoxTests.csproj");
+
+        var (exit, output) = await consumer.DotnetAsync("", "test", "--project", project);
+
+        Assert.True(exit == 0, output);
+        Assert.Contains(OperatingSystem.IsWindows() ? "succeeded: 1" : "skipped: 1", output, StringComparison.Ordinal);
+        if (!OperatingSystem.IsWindows())
+        {
+            // The publish is on by default where the fixture runs: Windows, until the Linux host (M1c).
+            return;
+        }
+
+        const string name = "NotesTool.exe";
+        var beside = Directory.GetFiles(Path.Combine(consumer.Root, "App.BlackBoxTests", "bin"), name, SearchOption.AllDirectories);
+        var published = Assert.Single(beside, path => path.Contains(Path.Combine("spar-apps", "NotesTool"), StringComparison.Ordinal));
+        var written = File.GetLastWriteTimeUtc(published);
+
+        // An unchanged build publishes nothing again: the executable beside the tests is the same file.
+        var (rebuilt, again) = await consumer.DotnetAsync("", "build", project, "-nologo", "-v:m");
+
+        Assert.True(rebuilt == 0, again);
+        Assert.DoesNotContain("Generating native code", again, StringComparison.Ordinal);
+        Assert.Equal(written, File.GetLastWriteTimeUtc(published));
     }
 
     [Fact]
@@ -111,6 +141,36 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     }
 
     [Fact]
+    public async Task An_app_without_a_valid_app_id_does_not_build()
+    {
+        Assert.Equal(0, (await FirstAsync()).Exit);
+        var app = Path.Combine(consumer.Root, "App", "Notes.App.csproj");
+        var appProject = File.ReadAllText(app);
+        try
+        {
+            File.WriteAllText(app, appProject.Replace("<SparAppId>org.example.notes.Tool</SparAppId>", "", StringComparison.Ordinal));
+            var (missing, missingOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+            Assert.NotEqual(0, missing);
+            Assert.Contains("error SPAR130", missingOutput, StringComparison.Ordinal);
+            Assert.Contains("has no SparAppId", missingOutput, StringComparison.Ordinal);
+
+            // The last is 117 characters, one over the cap that keeps "<id>.Development" within Windows' 128.
+            var tooLong = "org.example." + new string('n', 105);
+            foreach (var invalid in new[] { "NotesTool", "org.example.1notes", "org.example.notes-tool", "org..notes", tooLong })
+            {
+                File.WriteAllText(app, appProject.Replace("org.example.notes.Tool", invalid, StringComparison.Ordinal));
+                var (failed, failedOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+                Assert.NotEqual(0, failed);
+                Assert.Contains($"SparAppId '{invalid}' is not a valid app id", failedOutput, StringComparison.Ordinal);
+            }
+        }
+        finally
+        {
+            File.WriteAllText(app, appProject);
+        }
+    }
+
+    [Fact]
     public async Task A_design_time_build_runs_no_Spar_step()
     {
         Assert.Equal(0, (await FirstAsync()).Exit);
@@ -128,16 +188,30 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         Assert.Equal(0, (await FirstAsync()).Exit);
         var publish = Path.Combine(consumer.RunRoot, "publish");
 
-        var (exit, output) = await consumer.DotnetAsync("App", "publish", "-c", "Release", "-o", publish, "-nologo");
+        // Published without the Windows host, so running it opens no window here: the host itself is checked on the
+        // Notebook (docs/evidence/m1b-host.md), and this run checks the error of a build with no host for its OS.
+        var (exit, output) = await consumer.DotnetAsync(
+            "App", "publish", "-c", "Release", "-o", publish, "-nologo", "-p:SparPlatforms=linux");
 
         Assert.True(exit == 0, output);
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "NotesTool.exe" : "NotesTool");
         // The page from ui/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
-        var (ran, said) = await Tool.RunAsync(publish, executable, [], new Dictionary<string, string>());
+        // The app id reaches the runtime through the generated catalog, a string literal (UTF-16) in the image. On
+        // Linux nothing reads it until the Linux host (M1c), so the trimmer drops it there; on Windows the message of
+        // a build with no host for its OS logs into the app id's folder.
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.True(Contains(File.ReadAllBytes(executable), System.Text.Encoding.Unicode.GetBytes("org.example.notes.Tool")),
+                "The published executable does not carry the app id.");
+        }
+        // The app's per-user folders follow LOCALAPPDATA, so a run that ever reaches a host stays inside this test's root
+        // and never writes into the developer's own profile (AGENTS.md).
+        var perUser = Path.Combine(consumer.RunRoot, "local-app-data");
+        var (ran, said) = await Tool.RunAsync(publish, executable, [], new Dictionary<string, string> { ["LOCALAPPDATA"] = perUser });
 
-        // M1a has no desktop host: the executable says so and exits with 2.
-        Assert.Equal(2, ran);
+        // No host for this OS in the build (Spar.Linux does not exist yet): the executable says so and exits with 3.
+        Assert.Equal(3, ran);
         Assert.Contains("no desktop host", said, StringComparison.Ordinal);
     }
 

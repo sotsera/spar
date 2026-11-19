@@ -1,0 +1,17 @@
+lock held: dialog after 5125 ms (owned by the window: False); title 'Notebook'
+  texts: Notebook can't start | The app is still running or closing, and did not let another start within 5 seconds. Wait a moment, then start it again.
+  buttons: See details | Close
+  pressed 'Close'; exit 8 after 15 ms; tree gone True
+  stderr: spar info +0.3 ms: [a4312351] Host started 23.2 ms after the process.
+spar info +0.3 ms: [a4312351] App id com.example.Notebook, folder E:\Ghidello\Git\spar.v7\artifacts\blackbox-spike\20261119-070135\hidden-001\LocalAppData\com.example.Notebook
+spar fail +5001.9 ms: [a4312351] Start-up problem NotResponding: The running app. The app is still running or closing, and did not let another start within 5 seconds. Wait a moment, then start it again. Exit code 8.
+spar info +7117.7 ms: [a4312351] The start-up message was closed.
+primary suspended: dialog after 2093 ms (owned by the window: False); title 'Notebook'
+  texts: Notebook can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in Task Manager.
+  buttons: See details | Close
+  pressed 'Close'; exit 8 after 11 ms; tree gone True
+  stderr: spar info +0.2 ms: [709514f1] Host started 19.0 ms after the process.
+spar info +0.2 ms: [709514f1] App id com.example.Notebook, folder E:\Ghidello\Git\spar.v7\artifacts\blackbox-spike\20261119-070135\hidden-002\LocalAppData\com.example.Notebook
+spar fail +2016.0 ms: [709514f1] Start-up problem NotResponding: The running app. The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in Task Manager. Exit code 8.
+spar info +4093.7 ms: [709514f1] The start-up message was closed.
+primary killed; tree gone: True

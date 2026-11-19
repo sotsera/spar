@@ -54,8 +54,15 @@ public sealed class HarnessTests(Workspace workspace) : IDisposable
             $"NativeAOT harness: {image.Length:N0} bytes (budget {SizeBudget:N0})."));
         Assert.True(image.Length <= SizeBudget, $"The harness is {image.Length:N0} bytes, over its budget of {SizeBudget:N0}.");
 
-        var found = ProductionBoundary.Find(image);
+        // The harness keeps the stall probe, so only the probe's markers may appear; the Notebook, which does not keep
+        // it, must carry none of them (NotebookBuildTests).
+        var probe = ProductionBoundary.StallProbe.Select(marker => marker.Text).ToList();
+        var found = ProductionBoundary.Find(image).Except(probe).ToList();
         Assert.True(found.Count == 0, $"The Production harness contains: {string.Join(", ", found)}.");
+        foreach (var (text, encoding) in ProductionBoundary.StallProbe)
+        {
+            Assert.True(ProductionBoundary.Contains(image, text, encoding), $"KeepStallProbe() did not keep {text} in the harness.");
+        }
 
         // The control: the bridge survived trimming, so the absence above is not an empty program's.
         foreach (var kept in new[] { "BridgeSession", "SparDispatcher", "BridgeCodec" })

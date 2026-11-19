@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Build.Framework;
+using Spar.Generator;
 using Spar.Generator.Emit;
 
 namespace Spar.Sdk.Tasks.Client;
@@ -8,18 +9,29 @@ namespace Spar.Sdk.Tasks.Client;
 /// <summary>
 /// The <c>@spar/app</c> package under <c>obj/spar/client</c> (plan section 2, "Generated client"): a module per
 /// contract, <c>shared</c> when contracts share types, <c>spar</c> with the fingerprint, <c>testing</c> with the fake
-/// backend for page tests, and the compiled SDK under
+/// backend for page tests, <c>windows</c> with the page's close guard, and the compiled SDK under
 /// <c>sdk/</c> with its TypeScript sources under <c>sdk/src/</c>. The whole folder belongs to the client step.
 /// </summary>
 internal static class ClientPackage
 {
+    /// <summary>
+    /// The page security Program.cs declares, for the Vite plugin, which reads it relative to itself
+    /// (<c>sdk/vite/index.js</c> → <c>../../csp.json</c>) on every build and page load (plan section 3b).
+    /// </summary>
+    public const string CspFile = "csp.json";
+
     /// <summary>
     /// Every file of the package, by its path relative to the package folder, with <c>/</c> separators.
     /// <paramref name="sourcePrefix"/> is the way from the package folder to the project
     /// folder (<c>../../../</c> for <c>obj/spar/client</c>), so the declaration maps reach the C# files.
     /// </summary>
     public static SortedDictionary<string, byte[]> Files(
-        ClientLayout layout, AbsolutePath sdkDirectory, AbsolutePath sdkSourceDirectory, string sdkVersion, string sourcePrefix)
+        ClientLayout layout,
+        AbsolutePath sdkDirectory,
+        AbsolutePath sdkSourceDirectory,
+        string sdkVersion,
+        string sourcePrefix,
+        PageSecurityModel? security = null)
     {
         var files = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
         void Text(string path, string text) => files[path] = Encoding.UTF8.GetBytes(text);
@@ -29,6 +41,8 @@ internal static class ClientPackage
         Text("spar.d.ts", DeclarationEmitter.Spar());
         Text("testing.js", ModuleEmitter.Testing(layout));
         Text("testing.d.ts", DeclarationEmitter.Testing());
+        Text("windows.js", ModuleEmitter.Windows());
+        Text("windows.d.ts", DeclarationEmitter.Windows());
 
         if (layout.Shared.Any())
         {
@@ -60,6 +74,7 @@ internal static class ClientPackage
         }
 
         Text("package.json", PackageJson(layout, sdkVersion));
+        Text(CspFile, CspJson(security));
         return files;
     }
 
@@ -154,6 +169,7 @@ internal static class ClientPackage
             Export(json, "vite", "sdk/vite/index");
             Export(json, "spar", "spar");
             Export(json, "testing", "testing");
+            Export(json, "windows", "windows");
             foreach (var contract in layout.Contracts)
             {
                 Export(json, contract.Model.WireName, contract.Model.WireName);
@@ -165,6 +181,59 @@ internal static class ClientPackage
 
         return Encoding.UTF8.GetString(buffer.ToArray()) + "\n";
     }
+
+    /// <summary>
+    /// <c>csp.json</c>: the declaration as the build read it, the defaults when the app has no Create call. Its names
+    /// are the C# methods' in camelCase; the values are already normalized.
+    /// </summary>
+    internal static string CspJson(PageSecurityModel? security)
+    {
+        using var buffer = new MemoryStream();
+        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, NewLine = "\n" }))
+        {
+            json.WriteStartObject();
+            Sources(json, "fontSrc", security?.FontSrc);
+            Sources(json, "imgSrc", security?.ImgSrc);
+            Sources(json, "connectSrc", security?.ConnectSrc);
+            Sources(json, "mediaSrc", security?.MediaSrc);
+            Sources(json, "scriptSrc", security?.ScriptSrc);
+            Sources(json, "styleSrc", security?.StyleSrc);
+            Sources(json, "frameSrc", security?.FrameSrc);
+            json.WriteBoolean("allowInlineStyles", security?.AllowInlineStyles ?? false);
+            json.WriteBoolean("allowEval", security?.AllowEval ?? false);
+            json.WriteBoolean("allowWebAssembly", security?.AllowWebAssembly ?? false);
+            json.WriteBoolean("styleNonce", security?.StyleNonce ?? false);
+            json.WriteBoolean("trustedTypes", security?.TrustedTypes ?? true);
+            json.WriteBoolean("integrity", security?.Integrity ?? true);
+            json.WriteStartObject("reporting");
+            json.WriteString("listener", CamelCase(security?.Listener ?? "Always"));
+            json.WriteString("endpoint", CamelCase(security?.Endpoint ?? "Always"));
+            json.WriteEndObject();
+            json.WriteStartArray("permissions");
+            foreach (var permission in security?.Permissions ?? default)
+            {
+                json.WriteStringValue(CamelCase(permission));
+            }
+
+            json.WriteEndArray();
+            json.WriteEndObject();
+        }
+
+        return Encoding.UTF8.GetString(buffer.ToArray()) + "\n";
+    }
+
+    private static void Sources(Utf8JsonWriter json, string name, EquatableArray<string>? sources)
+    {
+        json.WriteStartArray(name);
+        foreach (var source in sources ?? default)
+        {
+            json.WriteStringValue(source);
+        }
+
+        json.WriteEndArray();
+    }
+
+    private static string CamelCase(string name) => name.Length == 0 ? name : char.ToLowerInvariant(name[0]) + name[1..];
 
     private static void Export(Utf8JsonWriter json, string subpath, string file)
     {

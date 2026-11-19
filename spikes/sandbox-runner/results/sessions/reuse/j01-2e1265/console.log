@@ -1,0 +1,16 @@
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/win-x64] (.NET 11.0.0)
+  Discovering: WireShapes.Tests
+  Discovered:  WireShapes.Tests
+  Starting:    WireShapes.Tests
+    WireShapes.Tests.RatesContractTests.Without_an_implementation_the_app_does_not_start [FAIL]
+      Assert.StartsWith() Failure: String start does not match
+      String:         "The app's Program.cs returned 70 without calling R"···
+      Expected start: "The contract 'rates' is the interface WireShapes.L"···
+      Stack Trace:
+           at WireShapes.Tests.RatesContractTests.<Without_an_implementation_the_app_does_not_start>d__4.MoveNext()
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+  Finished:    WireShapes.Tests (ID = '0f0612e9cec9e071ce5ef26d6362affb4a7c517bc0b72886a99df078695823bb')
+=== TEST EXECUTION SUMMARY ===
+   WireShapes.Tests  Total: 79, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 0.050s

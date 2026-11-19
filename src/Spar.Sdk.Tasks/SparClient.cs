@@ -94,9 +94,9 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
         var read = ContractSource.Read(inputs, CancellationToken.None);
         if (read.Problems.Count > 0)
         {
-            // The build stops here, before the frontend steps and the C# compile, so a contract problem is the first and
-            // only error: a type-check against a client without the new names would otherwise fail first. Nothing is
-            // written, so the last good client and the contract snapshot stay as they were.
+            // The build stops here, before the frontend steps and the C# compile, so a contract or page security problem
+            // is the first and only error: a type-check against a client without the new names would otherwise fail
+            // first. Nothing is written, so the last good client and the contract snapshot stay as they were.
             foreach (var problem in read.Problems)
             {
                 LogProblem(problem);
@@ -111,7 +111,7 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
         var output = TaskEnvironment.GetAbsolutePath(OutputDirectory);
         Directory.CreateDirectory(output);
         var sourcePrefix = Path.GetRelativePath(output, project).Replace('\\', '/') + "/";
-        var files = ClientPackage.Files(layout, sdk, sdkSources, SdkVersion, sourcePrefix);
+        var files = ClientPackage.Files(layout, sdk, sdkSources, SdkVersion, sourcePrefix, read.PageSecurity);
         // The app's variants build at the same time and share this folder, which the frontend's package.json names.
         var leasePath = new AbsolutePath(Path.TrimEndingDirectorySeparator(output.Value) + ".lease");
         using var lease = FileLease.Acquire(leasePath, Log, "Spar: waiting for another build to finish writing the client.");

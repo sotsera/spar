@@ -1,0 +1,126 @@
+before,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.Every_file_it_writes_is_under_its_data_root,698
+before,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70,2647
+before,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.A_relaunch_that_gets_no_answer_shows_its_message_and_exits_8,7757
+before,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.A_second_launch_hands_over_to_the_running_instance_and_exits_0,628
+before,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.It_starts_shows_its_page_and_closes_cleanly,721
+before,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.Invoking_a_page_button_opens_its_dialog,2783
+before,nb,1,suite,exit 0,Notebook.EndToEndTests  Total: 6, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 16.602s
+before,wt,1,Pass,Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after,1167
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8,5535
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported,2594
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started,195
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure,5518
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written,2150
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot;\&quot;),0
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;plain\&quot;, \&quot;with space\&quot;, \&quot;\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; plain \\\&quot;with space\\\&quot; \\\&quot;\\\&quot;\&quot;),0
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;say \\\&quot;hi\\\&quot;\&quot;, \&quot;end\\\\\&quot;, \&quot;dir\\\\ x\\\\\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; \\\&quot;say \\\\\\\&quot;hi\\\\\\\&quot;\\\&quot; end\\\\ \\\&quot;dir\\\\ x\\\\\\\\\\\&quot;\&quot;),0
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_environment_points_into_the_root_and_leaves_out_the_browser_and_Spar_variables,1
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation,5495
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts,4
+before,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted,88
+before,wt,1,suite,exit 0,Spar.WindowTests  Total: 13, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 21.681s
+after,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.A_relaunch_that_gets_no_answer_shows_its_message_and_exits_8,5803
+after,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.Every_file_it_writes_is_under_its_data_root,561
+after,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.It_starts_shows_its_page_and_closes_cleanly,727
+after,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70,669
+after,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.Invoking_a_page_button_opens_its_dialog,723
+after,nb,1,Pass,Notebook.EndToEndTests.BlackBoxTests.A_second_launch_hands_over_to_the_running_instance_and_exits_0,5629
+after,nb,1,suite,exit 0,Notebook.EndToEndTests  Total: 6, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 14.576s
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started,304
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted,101
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8,2813
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported,2647
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation,1541
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_environment_points_into_the_root_and_leaves_out_the_browser_and_Spar_variables,2
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot;\&quot;),0
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;plain\&quot;, \&quot;with space\&quot;, \&quot;\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; plain \\\&quot;with space\\\&quot; \\\&quot;\\\&quot;\&quot;),0
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;say \\\&quot;hi\\\&quot;\&quot;, \&quot;end\\\\\&quot;, \&quot;dir\\\\ x\\\\\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; \\\&quot;say \\\\\\\&quot;hi\\\\\\\&quot;\\\&quot; end\\\\ \\\&quot;dir\\\\ x\\\\\\\\\\\&quot;\&quot;),0
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts,3
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written,163
+after,wt,1,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure,5625
+after,wt,1,Pass,Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after,655
+after,wt,1,suite,exit 0,Spar.WindowTests  Total: 13, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 13.381s
+before,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.Every_file_it_writes_is_under_its_data_root,645
+before,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70,2708
+before,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.A_relaunch_that_gets_no_answer_shows_its_message_and_exits_8,7923
+before,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.A_second_launch_hands_over_to_the_running_instance_and_exits_0,625
+before,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.It_starts_shows_its_page_and_closes_cleanly,836
+before,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.Invoking_a_page_button_opens_its_dialog,2743
+before,nb,2,suite,exit 0,Notebook.EndToEndTests  Total: 6, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 16.299s
+before,wt,2,Pass,Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after,570
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8,9973
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported,2554
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started,189
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure,5485
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written,2252
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot;\&quot;),0
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;plain\&quot;, \&quot;with space\&quot;, \&quot;\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; plain \\\&quot;with space\\\&quot; \\\&quot;\\\&quot;\&quot;),0
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;say \\\&quot;hi\\\&quot;\&quot;, \&quot;end\\\\\&quot;, \&quot;dir\\\\ x\\\\\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; \\\&quot;say \\\\\\\&quot;hi\\\\\\\&quot;\\\&quot; end\\\\ \\\&quot;dir\\\\ x\\\\\\\\\\\&quot;\&quot;),0
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_environment_points_into_the_root_and_leaves_out_the_browser_and_Spar_variables,3
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation,5702
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts,3
+before,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted,92
+before,wt,2,suite,exit 0,Spar.WindowTests  Total: 13, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 26.353s
+after,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.A_relaunch_that_gets_no_answer_shows_its_message_and_exits_8,5756
+after,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.Every_file_it_writes_is_under_its_data_root,542
+after,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.It_starts_shows_its_page_and_closes_cleanly,704
+after,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70,699
+after,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.Invoking_a_page_button_opens_its_dialog,711
+after,nb,2,Pass,Notebook.EndToEndTests.BlackBoxTests.A_second_launch_hands_over_to_the_running_instance_and_exits_0,565
+after,nb,2,suite,exit 0,Notebook.EndToEndTests  Total: 6, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 9.432s
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started,220
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted,79
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8,2728
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported,2563
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation,2009
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_environment_points_into_the_root_and_leaves_out_the_browser_and_Spar_variables,1
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot;\&quot;),0
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;plain\&quot;, \&quot;with space\&quot;, \&quot;\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; plain \\\&quot;with space\\\&quot; \\\&quot;\\\&quot;\&quot;),0
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;say \\\&quot;hi\\\&quot;\&quot;, \&quot;end\\\\\&quot;, \&quot;dir\\\\ x\\\\\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; \\\&quot;say \\\\\\\&quot;hi\\\\\\\&quot;\\\&quot; end\\\\ \\\&quot;dir\\\\ x\\\\\\\\\\\&quot;\&quot;),0
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts,2
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written,310
+after,wt,2,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure,5598
+after,wt,2,Pass,Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after,496
+after,wt,2,suite,exit 0,Spar.WindowTests  Total: 13, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 13.612s
+before,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.Every_file_it_writes_is_under_its_data_root,719
+before,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70,2714
+before,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.A_relaunch_that_gets_no_answer_shows_its_message_and_exits_8,7699
+before,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.A_second_launch_hands_over_to_the_running_instance_and_exits_0,616
+before,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.It_starts_shows_its_page_and_closes_cleanly,723
+before,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.Invoking_a_page_button_opens_its_dialog,2757
+before,nb,3,suite,exit 0,Notebook.EndToEndTests  Total: 6, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 15.796s
+before,wt,3,Pass,Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after,569
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8,4829
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported,2536
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started,177
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure,5488
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written,2220
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot;\&quot;),0
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;plain\&quot;, \&quot;with space\&quot;, \&quot;\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; plain \\\&quot;with space\\\&quot; \\\&quot;\\\&quot;\&quot;),0
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;say \\\&quot;hi\\\&quot;\&quot;, \&quot;end\\\\\&quot;, \&quot;dir\\\\ x\\\\\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; \\\&quot;say \\\\\\\&quot;hi\\\\\\\&quot;\\\&quot; end\\\\ \\\&quot;dir\\\\ x\\\\\\\\\\\&quot;\&quot;),0
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_environment_points_into_the_root_and_leaves_out_the_browser_and_Spar_variables,5
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation,5713
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts,3
+before,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted,86
+before,wt,3,suite,exit 0,Spar.WindowTests  Total: 13, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 21.153s
+after,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.A_relaunch_that_gets_no_answer_shows_its_message_and_exits_8,5912
+after,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.Every_file_it_writes_is_under_its_data_root,582
+after,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.It_starts_shows_its_page_and_closes_cleanly,964
+after,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70,1046
+after,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.Invoking_a_page_button_opens_its_dialog,1418
+after,nb,3,Pass,Notebook.EndToEndTests.BlackBoxTests.A_second_launch_hands_over_to_the_running_instance_and_exits_0,915
+after,nb,3,suite,exit 0,Notebook.EndToEndTests  Total: 6, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 11.668s
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started,434
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted,267
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8,2957
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported,2661
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation,1554
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.The_environment_points_into_the_root_and_leaves_out_the_browser_and_Spar_variables,1
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot;\&quot;),0
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;plain\&quot;, \&quot;with space\&quot;, \&quot;\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; plain \\\&quot;with space\\\&quot; \\\&quot;\\\&quot;\&quot;),0
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Arguments_reach_the_app_as_given(arguments: [\&quot;say \\\&quot;hi\\\&quot;\&quot;, \&quot;end\\\\\&quot;, \&quot;dir\\\\ x\\\\\&quot;], expected: \&quot;\\\&quot;C:\\\\a b\\\\app.exe\\\&quot; \\\&quot;say \\\\\\\&quot;hi\\\\\\\&quot;\\\&quot; end\\\\ \\\&quot;dir\\\\ x\\\\\\\\\\\&quot;\&quot;),0
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts,2
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written,128
+after,wt,3,Pass,Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure,5507
+after,wt,3,Pass,Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after,1090
+after,wt,3,suite,exit 0,Spar.WindowTests  Total: 13, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 13.641s

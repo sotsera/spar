@@ -134,31 +134,19 @@ internal sealed class NotebookPage : IAsyncDisposable
     }
 }
 
-/// <summary>Folders of this repository the tests write to.</summary>
+/// <summary>
+/// Where the tests write: this project's results (<c>artifacts/test-results/Notebook.EndToEndTests/</c> in the
+/// repository, or the folder the runner names).
+/// </summary>
 internal static class Built
 {
-    private static readonly Lazy<string> Root = new(FindRoot);
-
     public static string Results
     {
         get
         {
-            var folder = Path.Combine(Root.Value, "artifacts", "test-results", "Notebook.EndToEndTests", "screenshots");
+            var folder = Path.Combine(TestArtifacts.Results("Notebook.EndToEndTests"), "screenshots");
             Directory.CreateDirectory(folder);
             return folder;
         }
-    }
-
-    private static string FindRoot()
-    {
-        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "Spar.slnx")))
-            {
-                return directory.FullName;
-            }
-        }
-
-        throw new InvalidOperationException("These tests run from a build inside the Spar repository.");
     }
 }

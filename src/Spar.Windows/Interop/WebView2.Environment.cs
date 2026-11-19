@@ -1,0 +1,115 @@
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
+
+namespace Spar.Windows.Interop;
+
+// The WebView2 environment and controller, hand-declared from WebView2.h (Microsoft.Web.WebView2 1.0.4314.35) as flat
+// interfaces: every slot of every base interface in header order, IUnknown's three first. Slots the host does not call
+// are [PreserveSig] placeholders named SlotNNN_<header name>, which keep the offsets of the ones it does. Spar.Tests'
+// slot-order test checks every declared method against the header. A method that hands out an interface returns the
+// raw pointer, with one reference the caller owns (Com.Take). An interface the host only calls is generated for calling
+// only (ComInterfaceOptions.ComObjectWrapper): the host never hands WebView2 a managed object of it, and the vtable for
+// one would be dead code in every image. The handler interfaces (WebView2.Handlers.cs) keep both directions.
+
+/// <summary>The C <c>RECT</c>: left, top, right, bottom.</summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct Rect
+{
+    public int Left;
+    public int Top;
+    public int Right;
+    public int Bottom;
+}
+
+/// <summary>What an <c>add_</c> method returns, for its <c>remove_</c>.</summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct EventRegistrationToken
+{
+    public long Value;
+}
+
+/// <summary><c>ICoreWebView2Environment10</c>, flat: Environment 3–7, _2 8, _3 9–10, _4 11, _5 12–13, _6 14, _7 15, _8 16–18, _9 19, _10 20–22.</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("ee0eb9df-6f12-46ce-b53f-3f47b9c928e0")]
+internal partial interface ICoreWebView2Environment10
+{
+    // ICoreWebView2Environment
+    void CreateCoreWebView2Controller(nint parentWindow, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler handler);
+    nint CreateWebResourceResponse(nint content, int statusCode, string reasonPhrase, string headers);
+    string GetBrowserVersionString();
+    [PreserveSig] int Slot006_AddNewBrowserVersionAvailable();
+    [PreserveSig] int Slot007_RemoveNewBrowserVersionAvailable();
+    // ICoreWebView2Environment2
+    [PreserveSig] int Slot008_CreateWebResourceRequest();
+    // ICoreWebView2Environment3
+    [PreserveSig] int Slot009_CreateCoreWebView2CompositionController();
+    [PreserveSig] int Slot010_CreateCoreWebView2PointerInfo();
+    // ICoreWebView2Environment4
+    [PreserveSig] int Slot011_GetAutomationProviderForWindow();
+    // ICoreWebView2Environment5
+    EventRegistrationToken AddBrowserProcessExited(ICoreWebView2BrowserProcessExitedEventHandler eventHandler);
+    void RemoveBrowserProcessExited(EventRegistrationToken token);
+    // ICoreWebView2Environment6
+    [PreserveSig] int Slot014_CreatePrintSettings();
+    // ICoreWebView2Environment7
+    string GetUserDataFolder();
+    // ICoreWebView2Environment8
+    [PreserveSig] int Slot016_AddProcessInfosChanged();
+    [PreserveSig] int Slot017_RemoveProcessInfosChanged();
+    nint GetProcessInfos();
+    // ICoreWebView2Environment9
+    [PreserveSig] int Slot019_CreateContextMenuItem();
+    // ICoreWebView2Environment10
+    nint CreateCoreWebView2ControllerOptions();
+    void CreateCoreWebView2ControllerWithOptions(nint parentWindow, nint options, ICoreWebView2CreateCoreWebView2ControllerCompletedHandler handler);
+    [PreserveSig] int Slot022_CreateCoreWebView2CompositionControllerWithOptions();
+}
+
+/// <summary><c>ICoreWebView2Controller</c>, the base interface (slots 3–25).</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("4d00c0d1-9434-4eb6-8078-8697a560334f")]
+internal partial interface ICoreWebView2Controller
+{
+    // ICoreWebView2Controller
+    int GetIsVisible();
+    void PutIsVisible(int isVisible);
+    [PreserveSig] int Slot005_GetBounds();
+    void PutBounds(Rect bounds);
+    [PreserveSig] int Slot007_GetZoomFactor();
+    [PreserveSig] int Slot008_PutZoomFactor();
+    [PreserveSig] int Slot009_AddZoomFactorChanged();
+    [PreserveSig] int Slot010_RemoveZoomFactorChanged();
+    [PreserveSig] int Slot011_SetBoundsAndZoomFactor();
+    void MoveFocus(int reason);
+    EventRegistrationToken AddMoveFocusRequested(ICoreWebView2MoveFocusRequestedEventHandler eventHandler);
+    void RemoveMoveFocusRequested(EventRegistrationToken token);
+    [PreserveSig] int Slot015_AddGotFocus();
+    [PreserveSig] int Slot016_RemoveGotFocus();
+    [PreserveSig] int Slot017_AddLostFocus();
+    [PreserveSig] int Slot018_RemoveLostFocus();
+    EventRegistrationToken AddAcceleratorKeyPressed(ICoreWebView2AcceleratorKeyPressedEventHandler eventHandler);
+    void RemoveAcceleratorKeyPressed(EventRegistrationToken token);
+    [PreserveSig] int Slot021_GetParentWindow();
+    [PreserveSig] int Slot022_PutParentWindow();
+    void NotifyParentWindowPositionChanged();
+    void Close();
+    nint GetCoreWebView2();
+}
+
+/// <summary><c>ICoreWebView2ProcessInfoCollection</c>: the browser's processes, from <c>GetProcessInfos</c> (STA only).</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("402b99cd-a0cc-4fa5-b7a5-51d86a1d2339")]
+internal partial interface ICoreWebView2ProcessInfoCollection
+{
+    uint GetCount();
+    nint GetValueAtIndex(uint index);
+}
+
+/// <summary><c>ICoreWebView2ProcessInfo</c>: one process's id and kind (<see cref="WebView2Values.RendererProcess"/>).</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("84fa7612-3f3d-4fbf-889d-fad000492d72")]
+internal partial interface ICoreWebView2ProcessInfo
+{
+    int GetProcessId();
+    int GetKind();
+}

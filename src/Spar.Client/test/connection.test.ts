@@ -43,7 +43,7 @@ describe("opening", () => {
     expect(host.sent[0]).toEqual({
       type: "hello",
       protocol: 1,
-      types: ["open", "result", "failure", "event", "closing"],
+      types: ["open", "result", "failure", "event", "closing", "close-request", "close-ended"],
       contracts: "0123456789abcdef",
       payload: "",
     });
@@ -236,5 +236,20 @@ describe("host messages", () => {
     expect(events).toEqual(["{\"revision\":3}"]);
     expect(flushed).toBe(true);
     expect(host.last("ready")).toEqual({ type: "ready", payload: "" });
+  });
+});
+
+describe("heartbeat", () => {
+  // The desktop host's injected script answers pings from the document's creation (plan section 3, "Hung pages"), so
+  // a page that hangs before it connects is seen too; the SDK leaves them alone.
+  test("a ping is not the SDK's to answer, and touches no pending call", async () => {
+    host.open();
+    const outcome = connection.invoke("pages", "get", "{}", pageDecoder);
+
+    host.deliver({ type: "ping", seq: 7, payload: "" });
+    host.deliver({ type: "result", id: 1, ok: true, payload: "{\"id\":\"a\",\"title\":\"A\"}" });
+
+    expect(host.last("pong")).toBeUndefined();
+    expect(await outcome).toEqual({ ok: true, value: { id: "a", title: "A" } });
   });
 });

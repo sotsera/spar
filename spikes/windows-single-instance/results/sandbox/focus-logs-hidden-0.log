@@ -1,0 +1,22 @@
+454286.679 pid=2756 start run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-hidden-0 --log C:\spar\out\focus\logs-hidden-0 --window hidden --hold-ms 6000 -- first
+454288.303 pid=2756 lock taken 0.2 ms after main, attempt 1
+454291.101 pid=2756 primary serving spar-99f524e042f8aa3ed53143e0e748e016 sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+454294.678 pid=2756 window 0xf01ac 'spar-si-primary-2756' start=hidden; foreground=0x100f0 owner=5992 title='Program Manager'
+454396.064 pid=2424 start launcher --exe C:\spar\in\si-074958.exe --log C:\spar\out\focus\logs-hidden-0 --hold-ms 4000 -- run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-hidden-0 --log C:\spar\out\focus\logs-hidden-0 -- open focus-hidden-0.sql
+454406.662 pid=2424 window 0xd01f4 'spar-si-launcher' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+454771.096 pid=7440 start click --log C:\spar\out\focus\logs-hidden-0 --title spar-si-launcher
+454772.237 pid=7440 click: before, foreground=0x100f0 owner=5992 title='Program Manager'
+454963.877 pid=2424 launcher: clicked, started pid 3016; foreground=0xd01f4 owner=2424 title='spar-si-launcher'
+454972.257 pid=3016 start run --t0 4549012672 --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-hidden-0 --log C:\spar\out\focus\logs-hidden-0 -- open focus-hidden-0.sql
+454975.564 pid=3016 connected to pid 2756 in 2.1 ms; AllowSetForegroundWindow=True error=0; foreground=0xd01f4 owner=2424 title='spar-si-launcher'
+454976.653 pid=2756 received args=[open focus-hidden-0.sql] from_launch_ms=75.4 from_main_ms=3.5
+454977.484 pid=3016 forwarded; ack 'ok' 4.1 ms after connecting
+454978.517 pid=3016 exit 0
+455077.002 pid=7440 click: sent 2; after, foreground=0xd01f4 owner=2424 title='spar-si-launcher'
+455081.333 pid=7440 exit 0
+455402.280 pid=2756 activate for [open focus-hidden-0.sql]: iconic=False visible=False SetForegroundWindow=True; foreground=0xf01ac owner=2756 title='spar-si-primary-2756'
+455719.187 pid=2756 300 ms after activating: foreground=True; foreground=0xf01ac owner=2756 title='spar-si-primary-2756'
+458393.781 pid=2424 exit 0
+460303.838 pid=2756 primary stopped serving
+460305.259 pid=2756 primary released the lock
+460308.728 pid=2756 exit 0

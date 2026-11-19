@@ -1,0 +1,26 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    Spar's window tests (plan section 5, level 5): the Window surface on the real WebView2 window of a test app
+    (tests/apps/WindowHost), in the test process. The page API and its engine against a page made for their rules, the
+    required host tests of section 5, and the window-test budget. Every class has the trait Surface=Window, so CI runs
+    them as their own invocation (a native engine abort loses only that run). Also published in the NativeAOT lane.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.WindowTests</RootNamespace>
+
+    <!-- The black-box fixture's own tests (BlackBoxFixtureTests): WindowHost's Production executable beside the tests. -->
+    <SparBlackBoxTests>true</SparBlackBoxTests>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\apps\WindowHost\WindowHost.csproj" />
+  </ItemGroup>
+
+  <!-- The budget recorder of the command tests (plan, "Provisional budgets"). -->
+  <ItemGroup>
+    <Compile Include="../WireShapes.Tests/Budgets.cs" Link="Budgets.cs" />
+  </ItemGroup>
+</Project>

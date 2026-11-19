@@ -1,0 +1,3 @@
+before: first AutoSetFocus=1 ConnectionTimeout=2000 TransactionTimeout=20000; second AutoSetFocus=1 ConnectionTimeout=2000 TransactionTimeout=20000
+after setting the first: first AutoSetFocus=0 ConnectionTimeout=300 TransactionTimeout=3000; second AutoSetFocus=1 ConnectionTimeout=300 TransactionTimeout=3000
+a third, created afterwards: AutoSetFocus=1 ConnectionTimeout=300 TransactionTimeout=3000

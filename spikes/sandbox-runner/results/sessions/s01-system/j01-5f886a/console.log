@@ -1,0 +1,16 @@
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/win-x64] (.NET 11.0.0)
+  Discovering: WireShapes.Tests
+  Discovered:  WireShapes.Tests
+  Starting:    WireShapes.Tests
+    WireShapes.Tests.BudgetTests.Command_test_app_start [FAIL]
+      System.InvalidOperationException : These tests run from a build inside the Spar repository.
+      Stack Trace:
+           at WireShapes.Tests.Budgets.Root()
+           at WireShapes.Tests.Budgets.Record(String, String)
+           at WireShapes.Tests.BudgetTests.<Command_test_app_start>d__1.MoveNext()
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+  Finished:    WireShapes.Tests (ID = '9ba8626398c89217a04647016efc75ce254b526e57447a6e3f1794badb880179')
+=== TEST EXECUTION SUMMARY ===
+   WireShapes.Tests  Total: 79, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 0.042s

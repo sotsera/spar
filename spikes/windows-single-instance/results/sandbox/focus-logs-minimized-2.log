@@ -1,0 +1,22 @@
+448154.547 pid=2616 start run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-minimized-2 --log C:\spar\out\focus\logs-minimized-2 --window minimized --hold-ms 6000 -- first
+448156.421 pid=2616 lock taken 0.2 ms after main, attempt 1
+448159.834 pid=2616 primary serving spar-ce453aa2e3ed55aaa3264b204e3008ca sddl=O:BAD:(A;;0x1f019f;;;BA) args=[first]
+448165.655 pid=2616 window 0x1001a8 'spar-si-primary-2616' start=minimized; foreground=0x100f0 owner=5992 title='Program Manager'
+448352.242 pid=3396 start launcher --exe C:\spar\in\si-074958.exe --log C:\spar\out\focus\logs-minimized-2 --hold-ms 4000 -- run --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-minimized-2 --log C:\spar\out\focus\logs-minimized-2 -- open focus-minimized-2.sql
+448361.186 pid=3396 window 0xd01cc 'spar-si-launcher' start=normal; foreground=0x100f0 owner=5992 title='Program Manager'
+448879.436 pid=5336 start click --log C:\spar\out\focus\logs-minimized-2 --title spar-si-launcher
+448884.691 pid=5336 click: before, foreground=0x100f0 owner=5992 title='Program Manager'
+449133.041 pid=3396 launcher: clicked, started pid 6708; foreground=0xd01cc owner=3396 title='spar-si-launcher'
+449146.432 pid=6708 start run --t0 4490761550 --data C:\Users\WDAGUtilityAccount\AppData\Local\SparProbe\focus-minimized-2 --log C:\spar\out\focus\logs-minimized-2 -- open focus-minimized-2.sql
+449150.850 pid=6708 connected to pid 2616 in 2.8 ms; AllowSetForegroundWindow=True error=0; foreground=0xd01cc owner=3396 title='spar-si-launcher'
+449152.318 pid=2616 received args=[open focus-minimized-2.sql] from_launch_ms=76.1 from_main_ms=4.6
+449153.637 pid=6708 forwarded; ack 'ok' 5.7 ms after connecting
+449154.754 pid=6708 exit 0
+449186.390 pid=2616 activate for [open focus-minimized-2.sql]: iconic=True visible=True SetForegroundWindow=True; foreground=0x1001a8 owner=2616 title='spar-si-primary-2616'
+449216.332 pid=5336 click: sent 2; after, foreground=0x1001a8 owner=2616 title='spar-si-primary-2616'
+449220.603 pid=5336 exit 0
+449500.677 pid=2616 300 ms after activating: foreground=True; foreground=0x1001a8 owner=2616 title='spar-si-primary-2616'
+452362.517 pid=3396 exit 0
+454178.778 pid=2616 primary stopped serving
+454180.656 pid=2616 primary released the lock
+454181.790 pid=2616 exit 0

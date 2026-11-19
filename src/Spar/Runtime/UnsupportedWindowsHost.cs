@@ -1,0 +1,74 @@
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using Microsoft.Extensions.Logging;
+using Spar.Hosting;
+using Spar.Logging;
+
+namespace Spar.Runtime;
+
+/// <summary>
+/// What Spar's generated code hands <c>app.Run()</c> on a Windows too old to load the Windows host at all (below
+/// Windows 10 1809, WebView2's own floor; .NET still runs on Windows Server 2016): it reports "OS too old" with exit
+/// code 7, as the host reports a Windows older than Spar's minimum (plan section 3, "Missing prerequisites"). Standard
+/// error and the per-user log get the line, the app's hook runs, and a message box shows unless the hook showed the
+/// app's own message.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public sealed partial class UnsupportedWindowsHost : ISparHost
+{
+    private const uint MessageBoxOk = 0x0;
+    private const uint MessageBoxIconError = 0x10;
+    private const uint MessageBoxSetForeground = 0x10000;
+
+    public int Run(SparApp app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        var title = app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
+        var problem = new StartupProblem(
+            StartupProblemKind.OsTooOld,
+            "Windows",
+            Environment.OSVersion.Version.ToString(3),
+            $"10.0.{StartupReport.MinimumWindowsBuild}",
+            "This app needs Windows 10 version 22H2 or later. Update Windows, then start the app again.",
+            null);
+
+        var line = StartupReport.Describe(problem);
+        Console.Error.WriteLine("spar fail: " + line);
+
+        // The app's log file, through the same writer as the host's lines, unless the app writes none; closed (briefly
+        // flushed) before the exit.
+        var log = app.Builder.LoggingOptions.WritesFile
+            ? LogFile.Open(app.Builder.ResolveFolders().Logs)
+            : null;
+        log?.Write(LogLevel.Error, SparLogging.HostCategory, line);
+        try
+        {
+            if (SparDevelopment.IsAutomatedFromEnvironment())
+            {
+                return problem.ExitCode;
+            }
+
+            var ownMessage = StartupReport.AppShowedItsOwnMessage(
+                app.Builder.StartupProblemHandler,
+                problem,
+                (message, exception) =>
+                {
+                    Console.Error.WriteLine($"spar fail: {message}: {exception}");
+                    log?.Write(LogLevel.Error, SparLogging.HostCategory, message, exception);
+                });
+            if (!ownMessage)
+            {
+                _ = MessageBox(0, $"{title} can't start\n\n{problem.Details}", title, MessageBoxOk | MessageBoxIconError | MessageBoxSetForeground);
+            }
+
+            return problem.ExitCode;
+        }
+        finally
+        {
+            log?.Close();
+        }
+    }
+
+    [LibraryImport("user32", EntryPoint = "MessageBoxW", StringMarshalling = StringMarshalling.Utf16)]
+    private static partial int MessageBox(nint owner, string text, string caption, uint type);
+}

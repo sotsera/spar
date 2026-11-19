@@ -10,6 +10,7 @@ internal static class Descriptors
 {
     private const string Contracts = "Spar.Contracts";
     private const string ProgramShape = "Spar.Program";
+    private const string PageSecurity = "Spar.PageSecurity";
 
     /// <summary>The restated descriptors of <see cref="InReferencedAssembly"/>, by ID and message.</summary>
     private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, DiagnosticDescriptor> Referenced = new();
@@ -129,6 +130,31 @@ internal static class Descriptors
     public static readonly DiagnosticDescriptor NotReturningRun = Error(
         "SPAR061", "Program.cs must return app.Run()",
         "The top-level statements of Program.cs must end with 'return app.Run();' (an int); they return '{0}'", ProgramShape);
+
+    /// <summary>{0}: the method, <c>ContentSecurity</c> or <c>Permissions</c>.</summary>
+    public static readonly DiagnosticDescriptor NotDirectlyInCreate = Error(
+        "SPAR101", "Page security must be declared directly in SparApplication.Create",
+        "spar.{0}(…) must be a statement of its own directly in the SparApplication.Create configuration of Program.cs, on its builder parameter, so the build can read it without running the app; not inside a condition, a loop, a helper method or another lambda",
+        PageSecurity);
+
+    /// <summary>{0}: the argument as written; {1}: the fix.</summary>
+    public static readonly DiagnosticDescriptor NotConstant = Error(
+        "SPAR102", "Page security values must be constants",
+        "'{0}' is not a constant. The build reads the page security from Program.cs without running the app. {1}.", PageSecurity);
+
+    /// <summary>{0}: what to write instead.</summary>
+    public static readonly DiagnosticDescriptor UnsupportedShape = Error(
+        "SPAR103", "Unsupported page security configuration",
+        "The build cannot read this page security configuration: {0}", PageSecurity);
+
+    /// <summary>{0}: why the value is refused, naming the method to use instead where there is one.</summary>
+    public static readonly DiagnosticDescriptor InvalidValue = Error(
+        "SPAR104", "Invalid page security value", "{0}", PageSecurity);
+
+    public static readonly DiagnosticDescriptor NonceWithInlineStyles = new(
+        "SPAR105", "StyleNonce() has no effect with AllowInlineStyles()",
+        "Browsers ignore 'unsafe-inline' next to a nonce, so with AllowInlineStyles() Spar puts no nonce in style-src and StyleNonce() has no effect; keep one of the two",
+        PageSecurity, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     /// <summary>
     /// The same diagnostic about a symbol in a referenced assembly, which has no place in the project: its message

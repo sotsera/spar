@@ -1,0 +1,80 @@
+       4,9 > start Notebook.exe env []
+      59,8 | spar info +0.3 ms: [aca109d8] Host started 38.2 ms after the process.
+      60,0 | spar info +1.1 ms: [aca109d8] single instance at 1 ms
+      60,0 | spar info +1.4 ms: [aca109d8] prerequisites checked at 1.4 ms
+      60,0 | spar info +1.7 ms: [aca109d8] services built at 1.7 ms
+      61,9 | spar info +4.0 ms: [aca109d8] UI-thread stall probe on.
+      85,2 | spar info +27.2 ms: [aca109d8] window shown at 27.2 ms
+      85,3 | spar info +27.2 ms: [aca109d8] Theme dark (system), window #1d1f24.
+      91,3 | spar info +33.3 ms: [aca109d8] environment at 33.3 ms
+      91,4 | spar info +33.3 ms: [aca109d8] WebView2 Runtime 157.0.4341.46
+      94,8 | spar info +36.8 ms: [aca109d8] Heartbeat every 5000 ms.
+     272,7 | spar info +214.7 ms: [aca109d8] controller at 214.7 ms
+     273,2 | spar info +215.2 ms: [aca109d8] navigation started at 215.2 ms
+     379,7 | spar info +321.7 ms: [aca109d8] Bridge: document 09e47c5d73868662 opened.
+     379,9 | spar info +321.7 ms: [aca109d8] first document at 321.7 ms
+     404,1 | spar info +346.0 ms: [aca109d8] first bridge message at 346 ms
+     404,4 | spar info +346.4 ms: [aca109d8] first bridge reply at 346.4 ms
+     404,5 | spar info +346.5 ms: [aca109d8] Heartbeat armed for the new document.
+     405,9 | spar info +347.9 ms: [aca109d8] first navigation completed at 347.9 ms
+     426,3 | spar info +368.2 ms: [aca109d8] ui-ready at 368.2 ms
+     426,3 > seen 'ui-ready'
+     426,4 | spar info +368.3 ms: [aca109d8] Bridge: document 09e47c5d73868662 reported ui-ready.
+     427,6 | spar info +369.6 ms: [aca109d8] 404 for /favicon.ico
+    2458,3 > suspend renderer 57752
+   20102,6 | spar warn +20044.6 ms: [aca109d8] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20102,8 | hook: main Unresponsive after 15.0 s
+   20102,9 | spar info +20044.8 ms: [aca109d8] hung-page dialog shown (Wait / Reload page) at 20044.8 ms
+   20102,9 > seen 'hook: main Unresponsive'
+   20150,8 > dialog 'Notebook' owner the app's window
+   21162,2 > press 201 on 'Notebook'
+   21173,7 | spar info +21115.5 ms: [aca109d8] hung-page dialog: Reload page, after 16.1 s at 21115.5 ms
+   21173,8 | hook: main Reloaded after 16.1 s
+   21173,8 | spar info +21115.8 ms: [aca109d8] renderer processes ended: 1 at 21115.7 ms
+   21173,8 > seen 'hook: main Reloaded'
+   21179,2 | spar info +21121.3 ms: [aca109d8] Bridge: document 09e47c5d73868662 closed (navigation).
+   21179,6 | spar info +21121.3 ms: [aca109d8] renderer exited at 21121.3 ms
+   21179,6 | spar info +21121.3 ms: [aca109d8] page reloaded after the hung renderer was ended at 21121.3 ms
+   21218,7 | spar info +21160.7 ms: [aca109d8] Bridge: document 3078097df5136725 opened.
+   21240,0 | spar info +21182.0 ms: [aca109d8] Heartbeat armed for the new document.
+   21262,4 | spar info +21204.3 ms: [aca109d8] Bridge: document 3078097df5136725 reported ui-ready.
+   21262,5 > seen 'ui-ready'
+   23277,7 > suspend renderer 56500
+   40097,9 | spar warn +40039.9 ms: [aca109d8] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   40098,1 | hook: main Unresponsive after 15.0 s
+   40098,1 | spar info +40040.0 ms: [aca109d8] hung-page dialog shown (Wait / Reload page) at 40040 ms
+   40098,1 > seen 'hook: main Unresponsive'
+   40143,7 > dialog 'Notebook' owner the app's window
+   40155,6 > resume renderer 56500
+   40156,4 | spar info +40098.3 ms: [aca109d8] the page answered again after 15.0 s at 40098.3 ms
+   40156,5 | hook: main Recovered after 15.0 s
+   40156,5 > seen 'hook: main Recovered'
+   41179,9 > suspend renderer 56500
+   60098,3 | spar warn +60040.2 ms: [aca109d8] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   60098,4 | hook: main Unresponsive after 15.0 s
+   60098,5 | spar info +60040.4 ms: [aca109d8] hung-page dialog shown (Wait / Reload page) at 60040.4 ms
+   60098,6 > seen 'hook: main Unresponsive'
+   60099,1 > WM_CLOSE to the window
+   60099,8 | spar info +60041.8 ms: [aca109d8] close requested (User) at 60041.8 ms
+   60099,9 | spar info +60041.9 ms: [aca109d8] hung-page dialog shown (Wait / Close anyway) at 60041.9 ms
+   60099,9 > seen 'Wait / Close anyway'
+   60612,1 > dialog 'Notebook' owner the app's window
+   60612,6 > press 202 on 'Notebook'
+   60624,7 | spar info +60566.7 ms: [aca109d8] hung-page dialog: Close anyway at 60566.7 ms
+   60624,9 | spar info +60567.0 ms: Close request for window main (User): the backend's guard answered Close
+   60625,1 | spar info +60567.0 ms: [aca109d8] window closed anyway; the page had not answered for 15.5 s at 60567 ms
+   60625,2 | hook: main ClosedAnyway after 15.5 s
+   60625,2 > seen 'hook: main ClosedAnyway'
+   60625,4 | spar info +60567.2 ms: [aca109d8] closing at 60567.2 ms
+   60625,4 | spar info +60567.2 ms: [aca109d8] Heartbeat: 12 ticks, 3 pings, longest tick on the UI thread 0.227 ms.
+   60625,4 | spar info +60567.2 ms: [aca109d8] Bridge: document 3078097df5136725 closed (window closing).
+   60625,4 | spar info +60567.2 ms: [aca109d8] calls stopped at 60567.2 ms
+   60625,4 | spar info +60567.2 ms: [aca109d8] calls settled at 60567.2 ms
+   60625,5 | spar info +60567.4 ms: [aca109d8] renderer processes ended: 1 at 60567.4 ms
+   60639,9 | spar info +60581.9 ms: [aca109d8] controller closed at 60581.9 ms
+   60663,4 | spar info +60605.4 ms: [aca109d8] window destroyed at 60605.4 ms
+   60667,7 | spar info +60609.5 ms: [aca109d8] services disposed at 60609.5 ms
+   60667,8 | spar info +60609.6 ms: [aca109d8] exit 0 at 60609.6 ms
+   60678,5 > exit 0
+   60965,2 > browser processes left for this root 0,3 s after the exit: 0
+   60965,2 > RESULT OK

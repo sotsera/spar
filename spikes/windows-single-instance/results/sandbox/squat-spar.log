@@ -1,0 +1,18 @@
+825130.592 pid=7116 start squat --data C:\SparData\squat-spar --log C:\spar\out\squat-spar\system --owner BA --hold-ms 9000 --accept
+825132.990 pid=7116 squat: holding spar-b870c28e72b9f57d89eb0740b4801061 sddl=O:BAD:(A;;FA;;;WD)
+830963.075 pid=5848 start run --data C:\SparData\squat-spar --log C:\spar\out\squat-spar\logs --security spar --hold-ms 3000 -- first
+830963.981 pid=5848 lock taken 0.0 ms after main, attempt 1
+830965.201 pid=5848 primary without a pipe: spar-b870c28e72b9f57d89eb0740b4801061 is taken (IOException: CreateNamedPipe failed, error 231)
+831037.005 pid=5900 start spawn --log C:\spar\out\squat-spar\logs --count 1 -- run --data C:\SparData\squat-spar --log C:\spar\out\squat-spar\logs --security spar -- open to-system-squatter.sql
+831106.381 pid=5824 start run --t0 8310383776 --data C:\SparData\squat-spar --log C:\spar\out\squat-spar\logs --security spar -- open to-system-squatter.sql
+831108.914 pid=5824 server pid 7116 user S-1-5-18 session 0 (ours S-1-5-21-2047949552-857980807-821054962-504 session 1); pipe O:BAD:(A;;FA;;;WD)
+831109.439 pid=5824 connect refused: the server process runs as S-1-5-18, not as this user
+831109.986 pid=5824 exit 12
+831110.003 pid=7116 squat: a client connected and sent 0 bytes; answering with a fake ack
+831110.846 pid=7116 squat: the client left (Pipe is broken.)
+831112.500 pid=5900 spawned #0 pid 5824: exit 12 after 73.7 ms
+831213.710 pid=5900 exit 0
+833965.967 pid=5848 primary stopped serving
+833972.819 pid=5848 primary released the lock
+833976.514 pid=5848 exit 13
+834140.822 pid=7116 exit 0

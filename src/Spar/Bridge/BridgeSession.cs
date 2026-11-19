@@ -71,8 +71,42 @@ internal sealed class BridgeSession : IDisposable
     /// <summary>Raised when the page has finished its close work.</summary>
     public event Action? ClosingDone;
 
+    /// <summary>Raised after the page's <c>hello</c> was answered.</summary>
+    public event Action? Opened;
+
+    /// <summary>
+    /// Raised with the <c>seq</c> of each <c>pong</c>, the page's answer to a <see cref="Ping"/>, and whether its payload
+    /// says the page shows a modal dialog of its own (<c>{"dialog":true}</c>, from the host-injected script).
+    /// </summary>
+    public event Action<long, bool>? Pong;
+
+    /// <summary>
+    /// Raised with the payload of each <c>csp</c> message: a batch of Content Security Policy violations from the
+    /// host-injected script (plan section 3b). The payload is the page's, untrusted; the host parses it.
+    /// </summary>
+    public event Action<ReadOnlyMemory<byte>>? Violations;
+
+    /// <summary>
+    /// Raised with the payload of each <c>errors</c> message: a batch of the page's console errors, uncaught exceptions
+    /// and unhandled rejections from the host-injected script. The payload is the page's, untrusted; the host parses it.
+    /// </summary>
+    public event Action<ReadOnlyMemory<byte>>? PageErrors;
+
+    /// <summary>
+    /// Raised with the <c>seq</c> and the payload of each <c>close-answer</c>, the page guards' answer to a
+    /// <see cref="RequestClose"/>. The payload is the page's, untrusted; the host reads it with <c>PageCloseAnswer</c>.
+    /// </summary>
+    public event Action<long, ReadOnlyMemory<byte>>? CloseAnswered;
+
     /// <summary>Messages that could not be used, with why; for the host's log.</summary>
     public event Action<string>? Dropped;
+
+    /// <summary>
+    /// Whether the document has the host's injected script, which answers the heartbeat's <c>ping</c> (plan section 3,
+    /// "Hung pages"): set by a host that adds it to every document. A session without it is never pinged, so the
+    /// loopback host, whose pages have no injected script, never pings.
+    /// </summary>
+    public bool HostAnswersPing { get; init; }
 
     public void Receive(string message)
     {
@@ -112,6 +146,18 @@ internal sealed class BridgeSession : IDisposable
             case BridgeMessageType.ClosingDone:
                 ClosingDone?.Invoke();
                 break;
+            case BridgeMessageType.Pong:
+                Pong?.Invoke(decoded.Seq!.Value, ShowsDialog(decoded.Payload.Span));
+                break;
+            case BridgeMessageType.Csp:
+                Violations?.Invoke(decoded.Payload);
+                break;
+            case BridgeMessageType.Errors:
+                PageErrors?.Invoke(decoded.Payload);
+                break;
+            case BridgeMessageType.CloseAnswer:
+                CloseAnswered?.Invoke(decoded.Seq!.Value, decoded.Payload);
+                break;
             default:
                 Unexpected(decoded);
                 break;
@@ -120,6 +166,57 @@ internal sealed class BridgeSession : IDisposable
 
     /// <summary>The page asks for its close work; it answers <c>closing-done</c>.</summary>
     public void RequestClosing() => Send(new BridgeMessage(BridgeMessageType.Closing));
+
+    /// <summary>
+    /// The heartbeat's ping (plan section 3, "Hung pages"); the host's injected script answers <c>pong</c> from its message
+    /// handler. False, with nothing sent, when the document has no such script or is closed.
+    /// </summary>
+    public bool Ping(long seq)
+    {
+        lock (_gate)
+        {
+            if (_closed || !HostAnswersPing)
+            {
+                return false;
+            }
+        }
+
+        Send(new BridgeMessage(BridgeMessageType.Ping) { Seq = seq });
+        return true;
+    }
+
+    /// <summary>
+    /// Asks the page's close guards (decision "Two-stage close"): <c>close-request</c> numbered <paramref name="seq"/>,
+    /// with the payload <c>{"reason":…,"automated":…}</c>. False, with nothing sent, when the page did not list
+    /// <c>close-request</c> in its <c>hello</c> (no SDK, or an older one) or the document is closed.
+    /// </summary>
+    public bool RequestClose(long seq, ReadOnlyMemory<byte> payload)
+    {
+        lock (_gate)
+        {
+            if (_closed || !_pageTypes.Contains("close-request"))
+            {
+                return false;
+            }
+        }
+
+        Send(new BridgeMessage(BridgeMessageType.CloseRequest) { Seq = seq, Payload = payload });
+        return true;
+    }
+
+    /// <summary>The close request <paramref name="seq"/> ended without the page's answer: its guards' signal is aborted.</summary>
+    public void EndClose(long seq)
+    {
+        lock (_gate)
+        {
+            if (_closed || !_pageTypes.Contains("close-ended"))
+            {
+                return;
+            }
+        }
+
+        Send(new BridgeMessage(BridgeMessageType.CloseEnded) { Seq = seq });
+    }
 
     /// <summary>A host event (for example <c>backend-updated</c>), sent only when the page listed <c>event</c>.</summary>
     public void SendEvent(string name, ReadOnlyMemory<byte> payload)
@@ -175,6 +272,45 @@ internal sealed class BridgeSession : IDisposable
         _closing.Dispose();
     }
 
+    /// <summary>
+    /// Whether a <c>pong</c>'s payload is <c>{"dialog":true}</c>: the page shows a modal dialog of its own, so a close
+    /// guard that has not answered yet is waiting for the person, not hung. Anything else, an empty payload included, is no.
+    /// </summary>
+    internal static bool ShowsDialog(ReadOnlySpan<byte> payload)
+    {
+        if (payload.IsEmpty)
+        {
+            return false;
+        }
+
+        try
+        {
+            var reader = new Utf8JsonReader(payload, new JsonReaderOptions { MaxDepth = 2 });
+            if (!reader.Read() || reader.TokenType != JsonTokenType.StartObject)
+            {
+                return false;
+            }
+
+            while (reader.Read() && reader.TokenType == JsonTokenType.PropertyName)
+            {
+                var dialog = reader.ValueTextEquals("dialog"u8);
+                reader.Read();
+                if (dialog)
+                {
+                    return reader.TokenType == JsonTokenType.True;
+                }
+
+                reader.Skip();
+            }
+        }
+        catch (JsonException)
+        {
+            // A page can post anything as a pong; a payload that is not JSON says nothing.
+        }
+
+        return false;
+    }
+
     private void Hello(BridgeMessage hello)
     {
         lock (_gate)
@@ -186,6 +322,7 @@ internal sealed class BridgeSession : IDisposable
 
         var protocol = Math.Min(hello.Protocol!.Value, BridgeCodec.ProtocolVersion);
         Send(new BridgeMessage(BridgeMessageType.Open) { Protocol = protocol, Doc = _doc, Contracts = _fingerprint });
+        Opened?.Invoke();
     }
 
     /// <summary>A call starts when a slot is free, waits in the queue when one is not, and is refused as busy past both.</summary>
@@ -195,6 +332,12 @@ internal sealed class BridgeSession : IDisposable
         SparFailure? refusal = null;
         lock (_gate)
         {
+            // A closed document runs nothing more: its page is going away, and no reply could reach it.
+            if (_closed)
+            {
+                return;
+            }
+
             if (!TakeId(id))
             {
                 Dropped?.Invoke($"call {id}: an id must be higher than every earlier one in the document");

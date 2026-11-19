@@ -1,0 +1,67 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=distinct:100000]
+      59,8 | run: window moved offscreen
+      64,8 | spar info +0.2 ms: [a8807824] Host started 20.8 ms after the process.
+      64,8 | spar info +0.8 ms: [a8807824] single instance at 0.7 ms
+      64,8 | spar info +0.9 ms: [a8807824] prerequisites checked at 0.9 ms
+      64,8 | spar info +1.1 ms: [a8807824] services built at 1.1 ms
+      64,8 | spar info +11.5 ms: [a8807824] window shown at 11.5 ms
+      64,8 | spar info +11.8 ms: [a8807824] Theme dark (system), window #1f1f1f.
+      64,8 | spar info +12.8 ms: Page security overrides in this app: StyleNonce(), Reporting(listener: Off, endpoint: Always), Allow(Permission.Midi)
+      64,9 | spar info +22.4 ms: [a8807824] environment at 22.4 ms
+      64,9 | spar info +22.5 ms: [a8807824] WebView2 Runtime 157.0.4341.46
+      64,9 | spar info +28.4 ms: [a8807824] Heartbeat every 5000 ms.
+      64,9 | spar info +29.1 ms: [a8807824] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      64,9 | spar info +29.2 ms: [a8807824] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     298,9 | spar info +239.2 ms: [a8807824] controller at 239.2 ms
+     343,6 | spar info +285.1 ms: [a8807824] page script added at 285.1 ms
+     343,7 | spar info +285.1 ms: [a8807824] navigation started at 285.1 ms
+     439,0 | spar info +356.2 ms: [a8807824] Bridge: document 4705743f048506f1 opened.
+     439,0 | spar info +356.2 ms: [a8807824] Heartbeat armed for the new document.
+     439,0 | spar info +356.2 ms: [a8807824] first document at 356.2 ms
+     439,0 | spar info +367.5 ms: [a8807824] first bridge message at 367.5 ms
+     439,0 | spar info +367.6 ms: [a8807824] first bridge reply at 367.6 ms
+     439,0 | spar info +367.7 ms: [a8807824] ui-ready at 367.7 ms
+     439,0 | spar info +367.7 ms: [a8807824] Bridge: document 4705743f048506f1 reported ui-ready.
+     439,0 | spar info +371.9 ms: [a8807824] first navigation completed at 371.9 ms
+     679,7 | probe: distinct: raised 100000 in 239.3 ms
+     679,8 | spar warn +614.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/0.png at the page
+     679,8 | spar warn +614.2 ms: Content Security Policy: img-src blocked https://blocked.invalid/1.png at the page
+     679,8 | spar warn +614.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/2.png at the page
+     679,8 | spar warn +614.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/3.png at the page
+     679,8 | spar warn +615.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/4.png at the page
+     679,8 | spar warn +616.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/5.png at the page
+     679,8 | spar warn +616.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/6.png at the page
+     679,8 | spar warn +618.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/7.png at the page
+     679,8 | spar warn +618.2 ms: Content Security Policy: img-src blocked https://blocked.invalid/8.png at the page
+     679,8 | spar warn +618.2 ms: Content Security Policy: img-src blocked https://blocked.invalid/9.png at the page
+     679,8 | spar warn +620.3 ms: Content Security Policy: img-src blocked https://blocked.invalid/10.png at the page
+     679,8 | spar warn +620.6 ms: Content Security Policy: img-src blocked https://blocked.invalid/11.png at the page
+     679,9 | spar warn +620.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/12.png at the page
+     679,9 | spar warn +620.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/13.png at the page
+     679,9 | spar warn +623.2 ms: Content Security Policy: img-src blocked https://blocked.invalid/14.png at the page
+     679,9 | spar warn +623.3 ms: Content Security Policy: img-src blocked https://blocked.invalid/15.png at the page
+     679,9 | spar warn +623.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/16.png at the page
+     679,9 | spar warn +623.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/17.png at the page
+     679,9 | spar warn +623.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/18.png at the page
+     679,9 | spar warn +623.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/19.png at the page
+   20101,5 | spar warn +20041.8 ms: [a8807824] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20101,6 | spar info +20042.0 ms: [a8807824] hung-page dialog shown (Wait / Reload page) at 20042 ms
+   20487,9 | probe: done distinct:100000
+   20487,9 | spar info +20439.4 ms: [a8807824] 404 for /favicon.ico
+   20487,9 | spar info +20439.6 ms: [a8807824] the page answered again after 15.4 s at 20439.6 ms
+   20522,8 | run: found 'done distinct:100000'
+   21537,3 | run: app working set 29908 KiB, peak seen 29908 KiB, private 10324 KiB
+   21537,8 | run: WM_CLOSE
+   21797,4 | spar info +21507.2 ms: [a8807824] close requested (User) at 21507.2 ms
+   21797,4 | spar info +21507.6 ms: [a8807824] closing at 21507.6 ms
+   21797,4 | spar info +21507.6 ms: [a8807824] Heartbeat: 4 ticks, 2 pings, longest tick on the UI thread 0.233 ms.
+   21797,4 | spar info +21507.9 ms: [a8807824] page close work done at 21507.9 ms
+   21797,4 | spar info +21507.9 ms: [a8807824] Bridge: document 4705743f048506f1 closed (window closing).
+   21797,4 | spar info +21507.9 ms: [a8807824] calls stopped at 21507.9 ms
+   21797,4 | spar info +21507.9 ms: [a8807824] calls settled at 21507.9 ms
+   21797,4 | spar info +21522.1 ms: [a8807824] controller closed at 21522.1 ms
+   21797,5 | spar info +21529.0 ms: [a8807824] window destroyed at 21529 ms
+   21797,5 | spar info +21532.2 ms: Content Security Policy reports in this run: 0 listener batches, 20 report-uri reports read, 69 refused unread (rate or size), 0 dropped (queue full)
+   21797,5 | spar info +21532.3 ms: [a8807824] services disposed at 21532.3 ms
+   21797,5 | spar info +21532.3 ms: [a8807824] exit 0 at 21532.3 ms
+   21797,6 | run: exit 0

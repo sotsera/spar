@@ -1,0 +1,48 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=folders]
+      50,8 | run: window moved offscreen
+      55,9 | spar info +0.3 ms: [74b892b7] Host started 21.2 ms after the process.
+      55,9 | spar info +0.4 ms: [74b892b7] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\cfg-folders\com.example.tests.SecurityProbe
+      55,9 | spar info +1.6 ms: [74b892b7] single instance at 1.6 ms
+      55,9 | spar info +1.8 ms: [74b892b7] prerequisites checked at 1.8 ms
+      55,9 | spar info +2.9 ms: [74b892b7] services built at 2.9 ms
+      56,0 | spar info +8.5 ms: [74b892b7] window shown at 8.5 ms
+      56,0 | spar info +8.6 ms: [74b892b7] Theme dark (system), window #1f1f1f.
+      56,1 | spar info +9.7 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      56,1 | spar info +14.3 ms: [74b892b7] environment at 14.3 ms
+      56,1 | spar info +14.3 ms: [74b892b7] WebView2 Runtime 157.0.4341.60
+      56,1 | spar info +14.5 ms: [74b892b7] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\cfg-folders\com.example.tests.SecurityProbe\WebView2
+      56,1 | spar info +17.8 ms: [74b892b7] Heartbeat every 5000 ms.
+      56,1 | spar info +17.9 ms: [74b892b7] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-pGQzzpdg/hxQplPojUJmp5QjUYiorJ8RI5sqiITCfuY=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      56,1 | spar info +17.9 ms: [74b892b7] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     306,1 | spar info +235.7 ms: [74b892b7] controller at 235.7 ms
+     306,1 | spar info +235.8 ms: [74b892b7] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     352,4 | spar info +296.1 ms: [74b892b7] Page file picker blocked in 60.4 ms (Page.enable 59.4 ms).
+     352,4 | spar info +296.2 ms: [74b892b7] page script added at 296.2 ms
+     352,4 | spar info +296.2 ms: [74b892b7] navigation started at 296.2 ms
+     417,9 | spar info +355.3 ms: [74b892b7] Bridge: document 9fe6de61686b1c3f opened.
+     417,9 | spar info +355.4 ms: [74b892b7] Heartbeat armed for the new document.
+     417,9 | spar info +355.4 ms: [74b892b7] first document at 355.4 ms
+     417,9 | spar info +362.5 ms: [74b892b7] first bridge message at 362.5 ms
+     417,9 | spar info +362.7 ms: [74b892b7] first bridge reply at 362.7 ms
+     417,9 | spar info +362.7 ms: [74b892b7] ui-ready at 362.7 ms
+     417,9 | spar info +362.7 ms: [74b892b7] Bridge: document 9fe6de61686b1c3f reported ui-ready.
+     417,9 | spar info +366.5 ms: [74b892b7] first navigation completed at 366.5 ms
+     417,9 | probe: folders: data root <repo>\artifacts\webview2-profiles\m1b-logging\cfg-folders\com.example.tests.SecurityProbe; profile <repo>\artifacts\webview2-profiles\m1b-logging\cfg-folders\com.example.tests.SecurityProbe\WebView2; logs <repo>\artifacts\webview2-profiles\m1b-logging\cfg-folders\com.example.tests.SecurityProbe\logs; data <repo>\artifacts\webview2-profiles\m1b-logging\cfg-folders\com.example.tests.SecurityProbe\data; same as Program.cs resolved: True
+     417,9 | probe: done folders
+     417,9 | spar info +371.3 ms: [74b892b7] 404 for /favicon.ico
+     455,1 | run: found 'done folders'
+    1469,0 | run: app working set 25904 KiB, peak seen 25904 KiB, private 9388 KiB
+    1469,2 | run: WM_CLOSE
+    1718,4 | spar info +1438.3 ms: [74b892b7] close requested (User) at 1438.3 ms
+    1718,4 | spar info +1439.0 ms: [74b892b7] closing at 1439 ms
+    1718,4 | spar info +1439.0 ms: [74b892b7] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1718,4 | spar info +1439.3 ms: [74b892b7] page close work done at 1439.3 ms
+    1718,4 | spar info +1439.3 ms: [74b892b7] Bridge: document 9fe6de61686b1c3f closed (window closing).
+    1718,4 | spar info +1439.3 ms: [74b892b7] calls stopped at 1439.3 ms
+    1718,4 | spar info +1439.3 ms: [74b892b7] calls settled at 1439.3 ms
+    1718,4 | spar info +1439.3 ms: [74b892b7] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    1718,4 | spar info +1452.1 ms: [74b892b7] controller closed at 1452.1 ms
+    1718,4 | spar info +1454.8 ms: [74b892b7] window destroyed at 1454.8 ms
+    1718,4 | spar info +1458.4 ms: [74b892b7] services disposed at 1458.4 ms
+    1718,5 | spar info +1462.0 ms: [74b892b7] exit 0 at 1462 ms
+    1718,6 | run: exit 0

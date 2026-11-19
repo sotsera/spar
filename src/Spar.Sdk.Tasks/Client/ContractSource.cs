@@ -20,8 +20,11 @@ internal sealed record ClientInputs(
 /// <summary>One contract as the generator sees it, with the C# documentation and the file that declares it.</summary>
 internal sealed record ClientContract(ContractModel Model, string SourceFile, ClientDocs Docs);
 
-/// <summary>The valid contracts, and every problem the analysis found: the same diagnostics the analyzer reports.</summary>
-internal sealed record ContractRead(IReadOnlyList<ClientContract> Contracts, IReadOnlyList<Diagnostic> Problems);
+/// <summary>
+/// The valid contracts, the page security Program.cs declares (null without a Create call), and every problem the
+/// analysis found: the same diagnostics the analyzers report.
+/// </summary>
+internal sealed record ContractRead(IReadOnlyList<ClientContract> Contracts, IReadOnlyList<Diagnostic> Problems, PageSecurityModel? PageSecurity = null);
 
 /// <summary>
 /// Reads the project's contracts with the generator's own analysis (decision "D1: Compilation pipeline"), so the page's
@@ -54,9 +57,12 @@ internal static class ContractSource
             contracts.Add(new ClientContract(model, source, docs));
         }
 
+        // The page security, read by the same analysis as the generator's and the analyzer's (plan section 3b).
+        var security = PageSecurityAnalysis.Find(compilation, cancellationToken);
+
         // Warnings, such as DateTime on the wire, leave the contract valid; the compiler's analyzer reports them.
-        var errors = found.All.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
-        return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], errors);
+        var errors = found.All.Concat(security?.Problems ?? []).Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
+        return new ContractRead([.. contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal)], errors, security?.Model);
     }
 
     private static CSharpCompilation Compile(ClientInputs inputs, CancellationToken cancellationToken)

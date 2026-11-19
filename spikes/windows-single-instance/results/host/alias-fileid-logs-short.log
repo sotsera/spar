@@ -1,0 +1,15 @@
+89264079.032 pid=41996 start run --data <temp>\single-instance\alias-fileid --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs-short --naming fileid --hold-ms 7000 -- first
+89264080.015 pid=41996 lock taken 0.2 ms after main, attempt 1
+89264080.885 pid=41996 primary serving spar-8c5ab6e3783089a6f3976c1589d7a0c4 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+89264112.892 pid=11864 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs-short --count 1 -- run --data <temp-short>\SINGLE~1\ALIAS-~1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs-short --naming fileid -- open via-short-name.sql
+89264150.591 pid=42264 start run --t0 892641131229 --data <temp-short>\SINGLE~1\ALIAS-~1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\alias-fileid\logs-short --naming fileid -- open via-short-name.sql
+89264152.678 pid=42264 server pid 41996 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+89264153.156 pid=42264 connected to pid 41996 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+89264153.266 pid=41996 received args=[open via-short-name.sql] from_launch_ms=40.1 from_main_ms=2.4
+89264153.455 pid=42264 forwarded; ack 'ok' 1.4 ms after connecting
+89264153.641 pid=42264 exit 0
+89264156.402 pid=11864 spawned #0 pid 42264: exit 0 after 42.9 ms
+89264260.754 pid=11864 exit 0
+89271092.872 pid=41996 primary stopped serving
+89271102.407 pid=41996 primary released the lock
+89271102.568 pid=41996 exit 0

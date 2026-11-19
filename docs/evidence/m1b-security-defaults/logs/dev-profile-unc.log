@@ -1,0 +1,7 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=idle SPAR_AUTOMATED=1 SECURITY_PROBE_PROFILE=//localhost/c$/spar-step5-profile]
+      82,2 | run: 'x-never' not found within 8 s
+     285,6 | spar info +8.1 ms: [8b534edc] Host started 48.1 ms after the process.
+     285,6 | spar info +10.3 ms: [8b534edc] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\dev-profile-unc\com.example.tests.SecurityProbe.Development
+     285,6 | spar fail +12.5 ms: [8b534edc] The app's configuration stops its start: The browser profile folder '//localhost/c$/spar-step5-profile' (spar.Folders) is on a network drive, slow and readable by others: use a local drive.
+     285,6 | spar info +12.8 ms: [8b534edc] The automated mode shows no start-up message.
+     285,8 | run: exit 70

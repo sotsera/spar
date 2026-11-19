@@ -1,0 +1,45 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=nonce]
+      60,5 | run: window moved offscreen
+      65,6 | spar info +0.2 ms: [d3ae19dc] Host started 21.8 ms after the process.
+      65,6 | spar info +0.6 ms: [d3ae19dc] single instance at 0.6 ms
+      65,6 | spar info +0.8 ms: [d3ae19dc] prerequisites checked at 0.8 ms
+      65,6 | spar info +1.0 ms: [d3ae19dc] services built at 1 ms
+      65,7 | spar info +10.5 ms: [d3ae19dc] window shown at 10.5 ms
+      65,7 | spar info +10.7 ms: [d3ae19dc] Theme dark (system), window #1f1f1f.
+      65,7 | spar info +11.8 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      65,7 | spar info +20.8 ms: [d3ae19dc] environment at 20.8 ms
+      65,7 | spar info +20.9 ms: [d3ae19dc] WebView2 Runtime 157.0.4341.46
+      65,7 | spar info +26.6 ms: [d3ae19dc] Heartbeat every 5000 ms.
+      65,7 | spar info +27.0 ms: [d3ae19dc] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      65,7 | spar info +27.2 ms: [d3ae19dc] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     301,1 | spar info +249.8 ms: [d3ae19dc] controller at 249.8 ms
+     346,1 | spar info +293.0 ms: [d3ae19dc] page script added at 293 ms
+     346,1 | spar info +293.1 ms: [d3ae19dc] navigation started at 293.1 ms
+     422,4 | spar info +377.4 ms: [d3ae19dc] Bridge: document c560b83cd5005f3e opened.
+     422,4 | spar info +377.5 ms: [d3ae19dc] Heartbeat armed for the new document.
+     422,4 | spar info +377.5 ms: [d3ae19dc] first document at 377.5 ms
+     422,4 | spar info +384.8 ms: [d3ae19dc] first bridge message at 384.8 ms
+     422,4 | spar info +384.9 ms: [d3ae19dc] first bridge reply at 384.9 ms
+     422,4 | spar info +385.0 ms: [d3ae19dc] ui-ready at 385 ms
+     422,4 | spar info +385.0 ms: [d3ae19dc] Bridge: document c560b83cd5005f3e reported ui-ready.
+     422,4 | spar info +387.9 ms: [d3ae19dc] first navigation completed at 387.9 ms
+     422,4 | probe: nonce: length 24, with nonce 7px, without 0px
+     422,4 | probe: done nonce
+     422,4 | spar warn +390.3 ms: Content Security Policy: style-src-elem blocked inline at https://app.localhost/assets/index-DMSiW3dX.js:6:3199
+     422,4 | spar info +390.5 ms: [d3ae19dc] 404 for /favicon.ico
+     463,4 | run: found 'done nonce'
+    1469,7 | run: app working set 24352 KiB, peak seen 24352 KiB, private 8316 KiB
+    1470,1 | run: WM_CLOSE
+    1716,1 | spar info +1438.8 ms: [d3ae19dc] close requested (User) at 1438.8 ms
+    1716,2 | spar info +1439.4 ms: [d3ae19dc] closing at 1439.4 ms
+    1716,2 | spar info +1439.4 ms: [d3ae19dc] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1716,2 | spar info +1439.7 ms: [d3ae19dc] page close work done at 1439.7 ms
+    1716,2 | spar info +1439.7 ms: [d3ae19dc] Bridge: document c560b83cd5005f3e closed (window closing).
+    1716,2 | spar info +1439.7 ms: [d3ae19dc] calls stopped at 1439.7 ms
+    1716,2 | spar info +1439.7 ms: [d3ae19dc] calls settled at 1439.7 ms
+    1716,2 | spar info +1453.0 ms: [d3ae19dc] controller closed at 1453 ms
+    1716,2 | spar info +1455.4 ms: [d3ae19dc] window destroyed at 1455.4 ms
+    1716,2 | spar info +1457.9 ms: Content Security Policy reports in this run: 1 listener batches, 1 report-uri reports read, 0 refused unread (rate or size), 0 dropped (queue full)
+    1716,2 | spar info +1457.9 ms: [d3ae19dc] services disposed at 1457.9 ms
+    1716,2 | spar info +1457.9 ms: [d3ae19dc] exit 0 at 1457.9 ms
+    1716,4 | run: exit 0

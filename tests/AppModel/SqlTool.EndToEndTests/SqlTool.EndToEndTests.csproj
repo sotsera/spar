@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The document's end-to-end test project (docs/app-model.md 6.12), against the stand-ins, compiled only: the window
+    test block is copied here verbatim. The same file is built by real Spar in ../RealTests.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SqlTool.EndToEndTests</RootNamespace>
+  </PropertyGroup>
+
+  <!-- What Spar.Sdk gives a test project: the test framework and its namespace. -->
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar.Stubs\Spar.Stubs.csproj" />
+    <ProjectReference Include="..\SqlTool\SqlTool.csproj" />
+  </ItemGroup>
+</Project>

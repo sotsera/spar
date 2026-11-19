@@ -1,0 +1,51 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=defaults SECURITY_PROBE_PROFILE=<repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-profile\chosen-profile]
+      53,6 | run: window moved offscreen
+      59,7 | spar info +0.2 ms: [c10ac8d5] Host started 21.1 ms after the process.
+      59,8 | spar info +0.4 ms: [c10ac8d5] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-profile\com.example.tests.SecurityProbe
+      59,8 | spar info +1.7 ms: [c10ac8d5] single instance at 1.7 ms
+      59,8 | spar info +1.9 ms: [c10ac8d5] prerequisites checked at 1.9 ms
+      59,8 | spar info +2.0 ms: [c10ac8d5] services built at 2 ms
+      59,9 | spar info +10.3 ms: [c10ac8d5] window shown at 10.3 ms
+      60,0 | spar info +10.5 ms: [c10ac8d5] Theme dark (system), window #1f1f1f.
+      60,0 | spar info +11.1 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+      60,0 | spar info +15.5 ms: [c10ac8d5] environment at 15.5 ms
+      60,0 | spar info +15.5 ms: [c10ac8d5] WebView2 Runtime 157.0.4341.46
+      60,0 | spar info +19.0 ms: [c10ac8d5] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-profile\chosen-profile
+      60,0 | spar info +22.3 ms: [c10ac8d5] Heartbeat every 5000 ms.
+      60,0 | spar info +22.9 ms: [c10ac8d5] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-vjmfouqbK1MxQAssYbQXh0A/+f2ik4zc/bQ37VrPL7c=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+      60,0 | spar info +22.9 ms: [c10ac8d5] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     245,7 | spar info +197.4 ms: [c10ac8d5] controller at 197.4 ms
+     245,7 | spar info +197.4 ms: [c10ac8d5] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     291,7 | spar info +240.1 ms: [c10ac8d5] Page file picker blocked in 42.6 ms (Page.enable 42.3 ms).
+     291,8 | spar info +240.1 ms: [c10ac8d5] page script added at 240.1 ms
+     291,8 | spar info +240.2 ms: [c10ac8d5] navigation started at 240.2 ms
+     339,3 | spar info +299.1 ms: [c10ac8d5] Bridge: document 9d3db44767d45c45 opened.
+     339,3 | spar info +299.1 ms: [c10ac8d5] Heartbeat armed for the new document.
+     339,3 | spar info +299.1 ms: [c10ac8d5] first document at 299.1 ms
+     339,3 | spar info +305.9 ms: [c10ac8d5] first bridge message at 305.9 ms
+     339,3 | spar info +306.0 ms: [c10ac8d5] first bridge reply at 306 ms
+     339,3 | spar info +306.1 ms: [c10ac8d5] ui-ready at 306.1 ms
+     339,3 | spar info +306.1 ms: [c10ac8d5] Bridge: document 9d3db44767d45c45 reported ui-ready.
+     387,0 | spar info +309.1 ms: [c10ac8d5] first navigation completed at 309.1 ms
+     387,0 | probe: folders: data root <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-profile\com.example.tests.SecurityProbe; profile <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-profile\chosen-profile; logs <repo>\artifacts\webview2-profiles\m1b-security-defaults\aot-profile\com.example.tests.SecurityProbe\logs
+     387,0 | probe: pickers: showOpenFilePicker undefined, showSaveFilePicker undefined, showDirectoryPicker undefined
+     387,0 | probe: hostObjects: function
+     387,0 | spar info +317.3 ms: [c10ac8d5] 404 for /favicon.ico
+     387,0 | spar warn +318.9 ms: [c10ac8d5] A download was cancelled (AllowDownloads allows it).
+    2367,5 | probe: download: clicked
+    2367,5 | probe: done defaults
+    2404,9 | run: found 'done defaults'
+    2910,7 | run: app working set 24500 KiB, peak seen 24500 KiB, private 8344 KiB
+    2911,0 | run: WM_CLOSE
+    3155,0 | spar info +2880.5 ms: [c10ac8d5] close requested (User) at 2880.5 ms
+    3155,1 | spar info +2881.0 ms: [c10ac8d5] closing at 2881 ms
+    3155,1 | spar info +2881.0 ms: [c10ac8d5] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    3155,1 | spar info +2881.3 ms: [c10ac8d5] page close work done at 2881.3 ms
+    3155,1 | spar info +2881.3 ms: [c10ac8d5] Bridge: document 9d3db44767d45c45 closed (window closing).
+    3155,1 | spar info +2881.3 ms: [c10ac8d5] calls stopped at 2881.3 ms
+    3155,1 | spar info +2881.3 ms: [c10ac8d5] calls settled at 2881.3 ms
+    3155,1 | spar info +2896.3 ms: [c10ac8d5] controller closed at 2896.3 ms
+    3155,1 | spar info +2898.5 ms: [c10ac8d5] window destroyed at 2898.5 ms
+    3155,1 | spar info +2900.9 ms: [c10ac8d5] services disposed at 2900.9 ms
+    3155,1 | spar info +2901.0 ms: [c10ac8d5] exit 0 at 2901 ms
+    3155,3 | run: exit 0

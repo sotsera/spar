@@ -162,6 +162,13 @@ public static class BridgeCodec
             case BridgeMessageType.Event:
                 writer.WriteString("name"u8, message.Name);
                 break;
+            case BridgeMessageType.Ping:
+            case BridgeMessageType.Pong:
+            case BridgeMessageType.CloseRequest:
+            case BridgeMessageType.CloseAnswer:
+            case BridgeMessageType.CloseEnded:
+                writer.WriteNumber("seq"u8, message.Seq ?? throw new ArgumentException($"A '{BridgeMessage.TypeNameOf(message.Type)}' message needs a seq."));
+                break;
         }
 
         writer.WriteEndObject();
@@ -196,6 +203,8 @@ public static class BridgeCodec
         BridgeMessageType.Failure when message.Code is null => "code",
         BridgeMessageType.Failure when message.Execution is null => "execution",
         BridgeMessageType.Event when message.Name is null => "name",
+        BridgeMessageType.Ping or BridgeMessageType.Pong or BridgeMessageType.CloseRequest or BridgeMessageType.CloseAnswer
+            or BridgeMessageType.CloseEnded when message.Seq is null => "seq",
         _ => null,
     };
 
@@ -242,6 +251,7 @@ public static class BridgeCodec
         private string? _execution;
         private long? _itemsSent;
         private string? _name;
+        private long? _seq;
 
         public void Read(ReadOnlySpan<byte> header)
         {
@@ -300,6 +310,7 @@ public static class BridgeCodec
             Execution = _execution,
             ItemsSent = _itemsSent,
             Name = _name,
+            Seq = _seq,
             Payload = payload,
         };
 
@@ -366,6 +377,9 @@ public static class BridgeCodec
                 case "name":
                     _name = String(ref reader, name);
                     break;
+                case "seq":
+                    _seq = Sequence(ref reader);
+                    break;
                 default:
                     // Unknown fields are ignored: a newer peer may add them.
                     reader.Skip();
@@ -382,6 +396,17 @@ public static class BridgeCodec
 
             reader.Skip();
             return Fail<long?>("'id' must be a safe integer from 1.");
+        }
+
+        private long? Sequence(ref Utf8JsonReader reader)
+        {
+            if (reader.TokenType == JsonTokenType.Number && reader.TryGetInt64(out var seq) && seq is >= 1 and <= MaxId)
+            {
+                return seq;
+            }
+
+            reader.Skip();
+            return Fail<long?>("'seq' must be a safe integer from 1.");
         }
 
         private string? String(ref Utf8JsonReader reader, string name)

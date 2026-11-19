@@ -1,0 +1,149 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=distinct:100000]
+     100,5 | run: window moved offscreen
+     104,6 | spar info +0.2 ms: [d53f254c] Host started 31.1 ms after the process.
+     104,7 | spar info +0.6 ms: [d53f254c] single instance at 0.6 ms
+     104,7 | spar info +0.8 ms: [d53f254c] prerequisites checked at 0.8 ms
+     104,7 | spar info +1.0 ms: [d53f254c] services built at 1 ms
+     104,7 | spar info +10.3 ms: [d53f254c] window shown at 10.3 ms
+     104,7 | spar info +10.5 ms: [d53f254c] Theme dark (system), window #1f1f1f.
+     104,7 | spar info +11.6 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     104,7 | spar info +21.1 ms: [d53f254c] environment at 21.1 ms
+     104,8 | spar info +21.2 ms: [d53f254c] WebView2 Runtime 157.0.4341.46
+     104,8 | spar info +27.8 ms: [d53f254c] Heartbeat every 5000 ms.
+     104,8 | spar info +28.6 ms: [d53f254c] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     104,8 | spar info +28.7 ms: [d53f254c] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     329,3 | spar info +242.7 ms: [d53f254c] controller at 242.7 ms
+     406,7 | spar info +300.1 ms: [d53f254c] page script added at 300.1 ms
+     406,8 | spar info +300.2 ms: [d53f254c] navigation started at 300.2 ms
+     455,1 | spar info +354.5 ms: [d53f254c] Bridge: document 78c52c557eeb8fe9 opened.
+     455,1 | spar info +354.5 ms: [d53f254c] Heartbeat armed for the new document.
+     455,1 | spar info +354.5 ms: [d53f254c] first document at 354.5 ms
+     455,2 | spar info +367.2 ms: [d53f254c] first bridge message at 367.2 ms
+     455,2 | spar info +367.4 ms: [d53f254c] first bridge reply at 367.4 ms
+     455,2 | spar info +367.4 ms: [d53f254c] ui-ready at 367.4 ms
+     455,2 | spar info +367.4 ms: [d53f254c] Bridge: document 78c52c557eeb8fe9 reported ui-ready.
+     455,2 | spar info +372.6 ms: [d53f254c] first navigation completed at 372.6 ms
+     727,6 | probe: distinct: raised 100000 in 241.8 ms
+     727,6 | spar warn +618.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/0.png at the page
+     727,6 | spar warn +618.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/1.png at the page
+     727,6 | spar warn +618.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/2.png at the page
+     727,6 | spar warn +619.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/3.png at the page
+     727,6 | spar warn +620.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/4.png at the page
+     727,6 | spar warn +620.2 ms: Content Security Policy: img-src blocked https://blocked.invalid/5.png at the page
+     727,6 | spar warn +620.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/6.png at the page
+     727,6 | spar warn +620.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/7.png at the page
+     727,6 | spar warn +620.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/8.png at the page
+     727,6 | spar warn +621.1 ms: Content Security Policy: img-src blocked https://blocked.invalid/9.png at the page
+     727,6 | spar warn +621.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/10.png at the page
+     727,6 | spar warn +622.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/11.png at the page
+     727,6 | spar warn +623.0 ms: Content Security Policy: img-src blocked https://blocked.invalid/12.png at the page
+     727,6 | spar warn +624.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/13.png at the page
+     727,7 | spar warn +624.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/14.png at the page
+     727,7 | spar warn +626.3 ms: Content Security Policy: img-src blocked https://blocked.invalid/15.png at the page
+     727,7 | spar warn +626.4 ms: Content Security Policy: img-src blocked https://blocked.invalid/16.png at the page
+     727,7 | spar warn +626.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/17.png at the page
+     727,7 | spar warn +626.5 ms: Content Security Policy: img-src blocked https://blocked.invalid/18.png at the page
+     727,7 | spar warn +628.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/19.png at the page
+   20141,1 | spar warn +20041.8 ms: [d53f254c] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20141,1 | spar info +20041.9 ms: [d53f254c] hung-page dialog shown (Wait / Reload page) at 20041.9 ms
+   20639,4 | probe: done distinct:100000
+   20639,5 | spar info +20545.4 ms: [d53f254c] 404 for /favicon.ico
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/20.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/21.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/22.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/23.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/24.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/25.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/26.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/27.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/28.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/29.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/30.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/31.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/32.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/33.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/34.png at the page
+   20639,5 | spar warn +20545.7 ms: Content Security Policy: img-src blocked https://blocked.invalid/35.png at the page
+   20639,5 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/36.png at the page
+   20639,5 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/37.png at the page
+   20639,5 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/38.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/39.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/40.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/41.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/42.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/43.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/44.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/45.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/46.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/47.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/48.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/49.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/50.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/51.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/52.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/53.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/54.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/55.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/56.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/57.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/58.png at the page
+   20639,6 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/59.png at the page
+   20639,7 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/60.png at the page
+   20639,7 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/61.png at the page
+   20639,7 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/62.png at the page
+   20639,7 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/63.png at the page
+   20639,7 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/64.png at the page
+   20639,7 | spar warn +20545.8 ms: Content Security Policy: img-src blocked https://blocked.invalid/65.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/66.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/67.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/68.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/69.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/70.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/71.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/72.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/73.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/74.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/75.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/76.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/77.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/78.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/79.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/80.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/81.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/82.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/83.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/84.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/85.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/86.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/87.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/88.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/89.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/90.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/91.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/92.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/93.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/94.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/95.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/96.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/97.png at the page
+   20639,7 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/98.png at the page
+   20639,8 | spar warn +20545.9 ms: Content Security Policy: img-src blocked https://blocked.invalid/99.png at the page
+   20678,2 | run: found 'done distinct:100000'
+   21715,8 | run: app working set 29868 KiB, peak seen 29868 KiB, private 10440 KiB
+   21716,2 | run: WM_CLOSE
+   30340,6 | spar info +21644.5 ms: [d53f254c] close requested (User) at 21644.5 ms
+   30340,6 | spar info +21644.7 ms: [d53f254c] hung-page dialog shown (Wait / Close anyway) at 21644.7 ms
+   30340,6 | spar info +30017.9 ms: Content Security Policy violations in the last 10 s: past the group limit: 99900
+   30340,6 | spar info +30019.9 ms: [d53f254c] the page answered again after 25.0 s at 30019.9 ms
+   30340,6 | spar info +30020.1 ms: [d53f254c] closing at 30020.1 ms
+   30340,6 | spar info +30020.1 ms: [d53f254c] Heartbeat: 5 ticks, 1 pings, longest tick on the UI thread 0.160 ms.
+   30340,6 | spar info +30021.1 ms: [d53f254c] page close work done at 30021.1 ms
+   30340,6 | spar info +30021.1 ms: [d53f254c] Bridge: document 78c52c557eeb8fe9 closed (window closing).
+   30340,6 | spar info +30021.1 ms: [d53f254c] calls stopped at 30021.1 ms
+   30340,6 | spar info +30021.1 ms: [d53f254c] calls settled at 30021.1 ms
+   30340,6 | spar info +30037.4 ms: [d53f254c] controller closed at 30037.4 ms
+   30340,6 | spar info +30042.2 ms: [d53f254c] window destroyed at 30042.2 ms
+   30340,7 | spar info +30044.4 ms: Content Security Policy reports in this run: 1 listener batches, 20 report-uri reports read, 69 refused unread (rate or size), 0 dropped (queue full)
+   30340,7 | spar info +30044.4 ms: [d53f254c] services disposed at 30044.4 ms
+   30340,7 | spar info +30044.4 ms: [d53f254c] exit 0 at 30044.4 ms
+   30341,3 | run: exit 0

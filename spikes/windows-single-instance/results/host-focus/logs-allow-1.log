@@ -1,0 +1,23 @@
+89101033.373 pid=56888 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\data\focus-allow-1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-allow-1 --window normal --hold-ms 6000 -- first
+89101034.081 pid=56888 lock taken 0.2 ms after main, attempt 1
+89101035.422 pid=56888 primary serving spar-7580a2193ae119319184695c7b563756 sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+89101056.386 pid=56888 window 0x50dac 'spar-si-primary-56888' start=normal; foreground=0x50dac owner=56888 title='spar-si-primary-56888'
+89101238.632 pid=62296 start launcher --exe E:\Ghidello\Git\spar.v7\spikes\windows-single-instance\Single.Win\bin\Release\net11.0\win-x64\publish\Single.Win.exe --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-allow-1 --hold-ms 4000 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\data\focus-allow-1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-allow-1 -- open focus-allow-1.sql
+89101264.149 pid=62296 window 0x40db0 'spar-si-launcher' start=normal; foreground=0x40db0 owner=62296 title='spar-si-launcher'
+89101630.656 pid=55872 start click --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-allow-1 --title spar-si-launcher
+89101631.015 pid=55872 click: before, foreground=0x40db0 owner=62296 title='spar-si-launcher'
+89101762.980 pid=62296 launcher: clicked, started pid 66460; foreground=0x40db0 owner=62296 title='spar-si-launcher'
+89101778.416 pid=66460 start run --t0 891017598389 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\data\focus-allow-1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-allow-1 -- open focus-allow-1.sql
+89101779.519 pid=66460 server pid 56888 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+89101780.045 pid=66460 connected to pid 56888 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x40db0 owner=62296 title='spar-si-launcher'
+89101780.195 pid=56888 received args=[open focus-allow-1.sql] from_launch_ms=20.3 from_main_ms=1.4
+89101780.442 pid=66460 forwarded; ack 'ok' 1.5 ms after connecting
+89101780.678 pid=66460 exit 0
+89101783.898 pid=56888 activate for [open focus-allow-1.sql]: iconic=False visible=True SetForegroundWindow=True; foreground=0x50dac owner=56888 title='spar-si-primary-56888'
+89101962.476 pid=55872 click: sent 2; after, foreground=0x50dac owner=56888 title='spar-si-primary-56888'
+89101962.602 pid=55872 exit 0
+89102087.538 pid=56888 300 ms after activating: foreground=True; foreground=0x50dac owner=56888 title='spar-si-primary-56888'
+89105265.528 pid=62296 exit 0
+89107069.407 pid=56888 primary stopped serving
+89107069.667 pid=56888 primary released the lock
+89107069.866 pid=56888 exit 0

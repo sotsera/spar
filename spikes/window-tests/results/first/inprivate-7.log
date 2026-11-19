@@ -1,0 +1,12 @@
+START t=08:55:06.562 mode=inprivate count=2 root=<repo>\artifacts\webview2-profiles\window-tests\first-inprivate-7 pid=57524 cache=http://127.0.0.1:57102
+SHARED-ENV t=08:55:06.568 ms=6.0
+BODY t=08:55:07.097 mode=inprivate i=0 leftovers=[] before={"cookie":null,"idb":null,"ls":null,"sw":0,"wm":"prompt"} screens=granted:2 permissionEvents=[kind=12 user=1 saves=1] stored=[12:https://app.localhost/:1] cacheFirstLoad=1 cacheSecondLoad=0 after={"cookie":"token=T0","idb":"T0","ls":"T0","sw":1,"wm":"granted"} browserPrivateMB=163.5
+TEST t=08:55:07.115 mode=inprivate i=0 setupMs=235.5 envMs=0.0 controllerMs=183.3 pageMs=52.2 teardownMs=18.1 totalMs=253.6 
+BODY t=08:55:07.426 mode=inprivate i=1 leftovers=[] before={"cookie":null,"idb":null,"ls":null,"sw":0,"wm":"prompt"} screens=granted:2 permissionEvents=[kind=12 user=1 saves=1] stored=[12:https://app.localhost/:1] cacheFirstLoad=1 cacheSecondLoad=0 after={"cookie":"token=T1","idb":"T1","ls":"T1","sw":1,"wm":"granted"} browserPrivateMB=167.8
+TEST t=08:55:07.441 mode=inprivate i=1 setupMs=75.2 envMs=0.0 controllerMs=34.3 pageMs=40.9 teardownMs=15.2 totalMs=90.4 
+SUMMARY t=08:55:07.441 mode=inprivate setup n=2 min=75.2 p50=75.2 p95=235.5 max=235.5
+SUMMARY t=08:55:07.441 mode=inprivate setup-after-first n=1 min=75.2 p50=75.2 p95=75.2 max=75.2
+SUMMARY t=08:55:07.441 mode=inprivate teardown n=2 min=15.2 p50=15.2 p95=18.1 max=18.1
+SUMMARY t=08:55:07.441 mode=inprivate total n=2 min=90.4 p50=90.4 p95=253.6 max=253.6
+SUMMARY t=08:55:07.441 mode=inprivate leaks=[]
+SHARED-END t=08:55:07.637 browserExited=True gone=True ms=196.2 files=116 kB=7321 profileFolders=0 deleted=True 

@@ -1,0 +1,58 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=79.0ms since-process-start=85ms xtest=2.2 input=xtest csp=False
+dbus-daemon[12522]: [session uid=1000 pid=12522] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=12524 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[12522]: [session uid=1000 pid=12522] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12765]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12524 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[12765]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[12522]: [session uid=1000 pid=12522] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=12777 comm="/usr/bin/xdg-dbus-proxy --args=25" label="kernel")
+dbus-daemon[12522]: [session uid=1000 pid=12522] Activating service name='org.freedesktop.portal.Documents' requested by ':1.6' (uid=1000 pid=12806 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[12522]: [session uid=1000 pid=12522] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.7' (uid=1000 pid=12812 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[12522]: [session uid=1000 pid=12522] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[12522]: [session uid=1000 pid=12522] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.580: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.580: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[12522]: [session uid=1000 pid=12522] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.6' (uid=1000 pid=12806 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[12522]: [session uid=1000 pid=12522] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.617: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.617: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.617: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.618: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.618: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.618: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.619: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.619: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.620: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.620: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][01363.779551] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][01363.779621] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.623: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.623: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.623: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:12806): xdg-desktop-portal-WARNING **: 20:17:35.624: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[12522]: [session uid=1000 pid=12522] Successfully activated service 'org.freedesktop.portal.Desktop'
+ACTIVATION create requests: timer (no input)=0, XTEST click=1, script click via API=1, window.open via API=1
+ACTIVATION page log: timer isActive=false hasBeenActive=true open=null | click trusted=true isActive=true open=null | click trusted=false isActive=true open=null | api isActive=true open=null
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:17:55.928: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-2704b02d-253a-4242-b624-9c0bae79614b: The connection is closed
+TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=1 (names truncated by the kernel; counts include other runs)
+RUN exit=0 wall=21090ms
+PROCESSES before=[ 1 MSBuild; 1 VBCSCompiler;] after=[ 1 MSBuild; 1 VBCSCompiler;]

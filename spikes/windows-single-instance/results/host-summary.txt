@@ -1,0 +1,111 @@
+== alias-fileid/logs
+   long=<temp>\single-instance\alias-fileid short=<temp-short>\SINGLE~1\ALIAS-~1
+   received: 1; from launch (ms) n=1 min=38.4 median=38.4 max=38.4; from secondary main (ms) n=1 min=1.5 median=1.5 max=1.5
+   secondaries exit 0: 1, wall (ms) n=1 min=41.2 median=41.2 max=41.2
+   +     81.6 pid=33172 connected to pid 58608 in 1.0 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+== alias-fileid/logs-short
+   long=<temp>\single-instance\alias-fileid short=<temp-short>\SINGLE~1\ALIAS-~1
+   received: 1; from launch (ms) n=1 min=40.1 median=40.1 max=40.1; from secondary main (ms) n=1 min=2.4 median=2.4 max=2.4
+   secondaries exit 0: 1, wall (ms) n=1 min=42.9 median=42.9 max=42.9
+   +     74.1 pid=42264 connected to pid 41996 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+== alias-path/logs
+   long=<temp>\single-instance\alias-path short=<temp-short>\SINGLE~1\ALIAS-~1
+   received: 0; from launch (ms) none; from secondary main (ms) none
+   secondaries exit 11: 1, wall (ms) n=1 min=5110.3 median=5110.3 max=5110.3
+   +   5140.4 pid=55892 the lock stays held and nobody serves spar-96e1afc7c6d77a110685889b30a1cd0f after 5000 ms; giving up
+== alias-path/logs-short
+   long=<temp>\single-instance\alias-path short=<temp-short>\SINGLE~1\ALIAS-~1
+   received: 1; from launch (ms) n=1 min=54.2 median=54.2 max=54.2; from secondary main (ms) n=1 min=2.6 median=2.6 max=2.6
+   secondaries exit 0: 1, wall (ms) n=1 min=66.0 median=66.0 max=66.0
+   +     81.8 pid=7188 connected to pid 51156 in 1.1 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+== burst/logs
+   received: 10; from launch (ms) n=10 min=46.3 median=53.0 max=54.6; from secondary main (ms) n=10 min=1.3 median=1.8 max=5.0
+   secondaries exit 0: 10, wall (ms) n=10 min=55.7 median=57.0 max=59.2
+   +     90.6 pid=6536 connected to pid 14168 in 1.2 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +     95.3 pid=48624 connected to pid 14168 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    100.7 pid=6656 connected to pid 14168 in 1.5 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    102.4 pid=61512 connected to pid 14168 in 4.5 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    105.8 pid=45364 connected to pid 14168 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    110.0 pid=39572 connected to pid 14168 in 1.5 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    111.9 pid=54544 connected to pid 14168 in 3.2 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    115.2 pid=24140 connected to pid 14168 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    118.8 pid=63800 connected to pid 14168 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    120.8 pid=13380 connected to pid 14168 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+== exiting-3000/logs
+   received: 0; from launch (ms) none; from secondary main (ms) none
+   secondaries exit 0: 3, wall (ms) n=3 min=3314.4 median=3318.0 max=3325.3
+   +   3557.3 pid=57920 lock taken 2974.1 ms after main, attempt 22
+   +   7571.2 pid=4852 lock taken 2964.9 ms after main, attempt 22
+   +  11612.4 pid=44772 lock taken 2964.7 ms after main, attempt 22
+== exiting-7000/logs
+   received: 0; from launch (ms) none; from secondary main (ms) none
+   secondaries exit 11: 3, wall (ms) n=3 min=5063.0 median=5075.9 max=5082.9
+   +   5609.5 pid=63016 the lock stays held and nobody serves spar-28733af074827481961ff6333f18f2cf after 5000 ms; giving up
+   +  13203.4 pid=14684 the lock stays held and nobody serves spar-28733af074827481961ff6333f18f2cf after 5000 ms; giving up
+   +  20778.2 pid=51536 the lock stays held and nobody serves spar-28733af074827481961ff6333f18f2cf after 5000 ms; giving up
+== hung/logs
+   received: 6; from launch (ms) n=6 min=2196.4 median=2200.0 max=5083.4; from secondary main (ms) n=6 min=2157.2 median=2163.2 max=5049.0
+   secondaries exit 10: 6, wall (ms) n=6 min=2047.9 median=2061.8 max=2065.7
+   secondaries exit 11: 1, wall (ms) n=1 min=5060.5 median=5060.5 max=5060.5
+   +     98.0 pid=51044 connected to pid 58456 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   2108.8 pid=51044 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+   +   2259.4 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+   +   2660.5 pid=8632 connected to pid 58456 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   4675.0 pid=8632 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+   +   4822.7 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+   +   5212.3 pid=62452 connected to pid 58456 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   7222.2 pid=62452 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+   +   7374.6 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+   +   7762.6 pid=5292 connected to pid 58456 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   9778.3 pid=5292 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+   +   9925.0 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+   +  10311.2 pid=63900 connected to pid 58456 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +  12318.1 pid=63900 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+   +  12467.6 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+   +  12861.6 pid=17396 connected to pid 58456 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +  14863.2 pid=17396 the primary (pid 58456) accepted but did not answer within 2000 ms; not starting a second primary
+   +  17885.6 pid=57324 the lock stays held and nobody serves spar-9f659e5a3bcc603a74f2675fdab2e88b after 5000 ms; giving up
+   +  17909.8 pid=58456 the client is gone (Pipe is broken.); its arguments, if any, were handled
+== killed/logs
+   received: 0; from launch (ms) none; from secondary main (ms) none
+   secondaries exit 0: 10, wall (ms) n=10 min=248.4 median=250.4 max=250.9
+== long/logs
+   length=384
+   received: 3; from launch (ms) n=3 min=35.4 median=37.7 max=44.6; from secondary main (ms) n=3 min=1.3 median=1.5 max=1.6
+   secondaries exit 0: 3, wall (ms) n=3 min=37.8 median=40.2 max=47.0
+   +     71.0 pid=52220 connected to pid 14452 in 1.0 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    226.4 pid=62300 connected to pid 14452 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    388.8 pid=24904 connected to pid 14452 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+== normal/logs
+   received: 20; from launch (ms) n=20 min=35.9 median=38.0 max=48.3; from secondary main (ms) n=20 min=1.2 median=1.2 max=1.5
+   secondaries exit 0: 20, wall (ms) n=20 min=38.6 median=41.1 max=51.0
+   +     81.1 pid=11864 connected to pid 46708 in 1.0 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    231.3 pid=2692 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    372.6 pid=30348 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    512.2 pid=51316 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    659.7 pid=23168 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    816.3 pid=44004 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +    961.5 pid=49676 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   1115.2 pid=10252 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   1257.3 pid=53572 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   1402.3 pid=63752 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   1557.4 pid=53444 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   1696.6 pid=12980 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   1839.9 pid=51508 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   1992.6 pid=64396 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   2140.4 pid=43148 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   2295.9 pid=66168 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   2449.8 pid=59264 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   2595.8 pid=22588 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   2748.0 pid=2940 connected to pid 46708 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+   +   2890.2 pid=25884 connected to pid 46708 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+== squat/logs
+   received: 0; from launch (ms) none; from secondary main (ms) none
+   secondaries exit 0: 1, wall (ms) n=1 min=38.6 median=38.6 max=38.6
+   +     72.4 pid=57252 primary without a pipe: spar-f66a20e18bb79d00e823133f42d736ab is taken (IOException: CreateNamedPipe failed, error 231)
+   +    137.5 pid=48880 connected to pid 25848 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+== squat-after/logs
+   received: 1; from launch (ms) n=1 min=37.5 median=37.5 max=37.5; from secondary main (ms) n=1 min=1.5 median=1.5 max=1.5
+   secondaries exit 0: 1, wall (ms) n=1 min=48.5 median=48.5 max=48.5
+   +     43.5 pid=55684 squat: CreateNamedPipe failed, error 231
+   +    102.3 pid=45788 connected to pid 58624 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'

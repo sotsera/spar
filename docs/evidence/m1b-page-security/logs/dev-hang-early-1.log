@@ -1,0 +1,52 @@
+       0,0 | run: start SecurityProbe.exe env [SECURITY_PROBE_MODE=hang-early SPAR_AUTOMATED=1]
+     155,1 | spar info +7.9 ms: [7e14e238] Host started 87.8 ms after the process.
+     155,1 | spar info +16.8 ms: [7e14e238] single instance at 15.9 ms
+     155,2 | spar info +21.5 ms: [7e14e238] prerequisites checked at 21.4 ms
+     155,2 | spar info +31.0 ms: [7e14e238] UI-thread stall probe on.
+     155,2 | spar info +37.6 ms: [7e14e238] services built at 37.6 ms
+     220,4 | run: window moved offscreen
+     224,7 | spar info +44.1 ms: [7e14e238] window shown at 44.1 ms
+     224,7 | spar info +44.6 ms: [7e14e238] Theme dark (system), window #1f1f1f.
+     224,7 | spar info +58.8 ms: Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+     224,8 | spar info +86.9 ms: [7e14e238] environment at 86.9 ms
+     224,8 | spar info +87.9 ms: [7e14e238] WebView2 Runtime 157.0.4341.46
+     224,8 | spar info +106.2 ms: [7e14e238] Heartbeat every 5000 ms.
+     224,8 | spar warn +110.1 ms: The UI thread stalled 56.8 ms outside Spar's callbacks
+     224,8 | spar info +111.2 ms: [7e14e238] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-2qb+bbV1KdKFXuGDPLbwENXNRMHFnjd8rXWO6LiwEYg=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     224,8 | spar info +111.2 ms: [7e14e238] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     455,2 | spar info +309.3 ms: [7e14e238] controller at 309.3 ms
+     501,8 | spar info +355.1 ms: [7e14e238] page script added at 355.1 ms
+     501,8 | spar info +355.5 ms: [7e14e238] navigation started at 355.5 ms
+     549,3 | spar info +423.7 ms: [7e14e238] Bridge: document 54114d15827067c0 opened.
+     549,4 | spar info +424.1 ms: [7e14e238] Heartbeat armed for the new document.
+     549,4 | spar info +424.2 ms: [7e14e238] first document at 424.2 ms
+     549,4 | spar info +429.5 ms: [7e14e238] first bridge message at 429.5 ms
+     549,4 | spar info +432.7 ms: [7e14e238] first navigation completed at 432.7 ms
+     598,1 | spar info +436.8 ms: [7e14e238] 404 for /favicon.ico
+     598,2 | spar info +440.1 ms: [7e14e238] first bridge reply at 440.1 ms
+     598,2 | spar info +440.3 ms: [7e14e238] ui-ready at 440.3 ms
+     598,2 | spar info +440.4 ms: [7e14e238] Bridge: document 54114d15827067c0 reported ui-ready.
+     598,2 | probe: hang-early: going to hang.html
+     598,2 | probe: done hang-early
+     598,2 | spar info +459.6 ms: [7e14e238] Bridge: document 54114d15827067c0 closed (navigation).
+     598,2 | spar info +466.9 ms: [7e14e238] Bridge: document debcbf8544fd6a69 opened.
+     598,2 | spar info +466.9 ms: [7e14e238] Heartbeat armed for the new document.
+   20252,1 | spar warn +20114.3 ms: [7e14e238] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20252,2 | spar info +20114.5 ms: [7e14e238] The automated mode shows no hung-page dialog.
+   20289,1 | run: found 'The page is not responding'
+   21298,9 | run: app working set 49632 KiB, peak seen 49632 KiB, private 15716 KiB
+   21299,4 | run: WM_CLOSE
+   21560,1 | spar info +21188.0 ms: [7e14e238] close requested (User, automated) at 21188 ms
+   21560,1 | spar info +21188.6 ms: [7e14e238] The automated mode closes a page that does not answer without asking.
+   21560,1 | spar info +21190.0 ms: [7e14e238] window closed anyway; the page had not answered for 16.1 s at 21190 ms
+   21560,1 | spar info +21190.8 ms: [7e14e238] closing at 21190.8 ms
+   21560,1 | spar info +21191.0 ms: [7e14e238] Heartbeat: 4 ticks, 1 pings, longest tick on the UI thread 0.842 ms.
+   21560,2 | spar info +21191.2 ms: [7e14e238] Bridge: document debcbf8544fd6a69 closed (window closing).
+   21560,2 | spar info +21191.2 ms: [7e14e238] calls stopped at 21191.2 ms
+   21560,2 | spar info +21191.3 ms: [7e14e238] calls settled at 21191.3 ms
+   21560,2 | spar info +21193.2 ms: [7e14e238] renderer processes ended: 1 at 21193.2 ms
+   21560,2 | spar info +21209.5 ms: [7e14e238] controller closed at 21209.5 ms
+   21560,2 | spar info +21213.1 ms: [7e14e238] window destroyed at 21213.1 ms
+   21560,2 | spar info +21219.8 ms: [7e14e238] services disposed at 21219.8 ms
+   21560,2 | spar info +21219.8 ms: [7e14e238] exit 0 at 21219.8 ms
+   21560,4 | run: exit 0

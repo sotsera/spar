@@ -1,0 +1,404 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+SETUP runtime=aot gtk+context=61.3ms since-process-start=75ms xtest=2.2 input=script csp=False
+dbus-daemon[51657]: [session uid=1000 pid=51657] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=51659 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[51657]: [session uid=1000 pid=51657] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[51813]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=51659 comm="<work>/aot/Ha" label="kernel")
+dbus-daemon[51813]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[51657]: [session uid=1000 pid=51657] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=51818 comm="/usr/bin/xdg-dbus-proxy --args=25" label="kernel")
+dbus-daemon[51657]: [session uid=1000 pid=51657] Activating service name='org.freedesktop.portal.Documents' requested by ':1.6' (uid=1000 pid=51849 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[51657]: [session uid=1000 pid=51657] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.7' (uid=1000 pid=51855 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[51657]: [session uid=1000 pid=51657] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[51657]: [session uid=1000 pid=51657] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.244: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.244: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[51657]: [session uid=1000 pid=51657] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.6' (uid=1000 pid=51849 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[51657]: [session uid=1000 pid=51657] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.280: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.280: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.281: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.281: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.281: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.281: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.282: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.282: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.283: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.283: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][02189.496199] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][02189.496243] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.284: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.285: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.285: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:21.285: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[51657]: [session uid=1000 pid=51657] Successfully activated service 'org.freedesktop.portal.Desktop'
+FAIL run=0 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:31:26.557: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-2895f225-be25-450a-806d-80def3087665: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:26.596: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=1 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:31:31.799: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-cc64fad0-8ca0-4a46-989a-f5337c54d1e8: The connection is closed
+FAIL run=2 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:37.106: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=3 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:31:42.322: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-8a75319e-23e9-4b12-a47b-9da6955028d9: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:42.363: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=4 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:47.627: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=5 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:31:52.846: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-e539482a-ffbc-4bd3-9881-d87ddad9d391: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:52.886: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=6 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:31:58.089: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-f50fb054-f65a-438f-8fe7-f4b4e218db89: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:31:58.129: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=7 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:03.350: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-ae0b0ab8-ddfd-4c38-8765-37983368c556: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:03.391: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=8 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:08.608: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-a33ab2c1-532e-4c4b-a472-3e77f8011526: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:08.649: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=9 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:13.865: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-337b6a93-6861-43a2-86c4-18635479e93a: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:13.911: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=10 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:19.123: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-d92152ed-e747-410f-bdbb-e1042584b366: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:19.162: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=11 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:24.377: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-90a30e29-6346-4152-8466-444db42e2449: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:24.417: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=12 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:29.637: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-18d7b002-deb9-4f68-b0e4-3fa301244038: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:29.677: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=13 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (26 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:34.880: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-ce36e973-589c-43b7-9c47-d6c2370550cc: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:34.921: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=14 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:40.138: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-fe5ca421-35da-4fdb-9523-f3a22bbc64e8: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:40.182: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=15 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:45.398: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-c9f72f29-3e8d-4eac-8d4f-3d59b0bde47d: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:45.441: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=16 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:50.653: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-c5837cab-fad5-4868-b7a6-6e476b1027b9: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:50.693: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=17 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:32:55.906: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-32d83a15-001b-439a-8a07-1ed00f8f9b11: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:32:55.947: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=18 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:01.159: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-784fd0bd-ef1e-4cc9-98e0-ca8aa0aa7b51: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:01.200: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=19 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:06.400: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-316c9d55-03b7-42ed-b19a-e5bfafef8387: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:06.441: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=20 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:11.655: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-821910a7-f0e6-4400-9871-aef44960ca4d: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:11.696: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=21 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:17.016: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=22 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:22.273: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=23 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:27.470: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-d7c5df8c-ac28-49fd-9138-edc7ca1962d6: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:27.510: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=24 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:32.724: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-8042010f-dc00-437f-b479-f92bdbdb3349: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:32.763: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=25 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:37.975: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-0ec6c277-e8ac-424b-91e5-eb995c4a4b52: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:38.015: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=26 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:43.230: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-6746cab2-210a-46ef-8bc8-4e9bd0eafa81: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:43.273: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=27 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:48.489: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-4f6a46c4-0ae6-4fc8-a82d-652384123bd9: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:48.529: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=28 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:53.726: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-8008cf8f-2a30-4565-abcc-98f1fc1db097: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:53.768: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=29 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:33:58.981: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-4b33127d-aa56-4c91-9f33-c4679fcbc2d9: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:33:59.021: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=30 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:04.240: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-9e8497f1-c9c7-481c-a3fe-5a32b4157bd9: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:04.281: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=31 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:09.494: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-fa926d61-f853-43fe-ad88-f9e70f4823be: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:09.536: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=32 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:14.754: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-56bf2a35-0a7a-48b1-98c4-0ebc9a100815: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:14.804: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=33 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:20.037: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-666fbbd1-1624-4c08-af45-1b45a7b1739d: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:20.078: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=34 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:25.292: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-436cc3a2-3759-4f23-bd19-602e2a62cf29: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:25.336: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=35 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (26 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:30.552: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-7c16c26e-f987-4263-a1cb-f36bcee98b49: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:30.596: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=36 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:35.808: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-6a8dcf10-1318-4bce-b8cb-c4576147dd91: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:35.850: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=37 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:41.062: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-c02e2fa7-e461-44ba-ade3-2df181261d80: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:41.103: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=38 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:46.320: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-191f0cb5-57a7-4f7b-9cc8-93a059588b42: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:46.368: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=39 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:51.590: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-966289cf-dd99-452b-bb6c-39e1d6d4b6b2: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:51.638: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=40 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:34:56.872: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-d1f90a9b-2a0f-431b-9bed-adcf71f7d1f7: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:34:56.912: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=41 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (26 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:02.114: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-f123fa73-37fb-40a4-98a1-4e6a18423676: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:02.157: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=42 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:07.368: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-d62de737-0798-48b6-8f82-d19aa30c6f1a: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:07.408: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=43 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:12.665: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=44 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:17.915: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=45 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:23.174: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=46 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:28.389: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-065bff1f-ec8c-479d-8bf0-24da8760c5fa: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:28.433: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=47 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:33.647: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-bd3d58ed-1813-4e3a-82c3-73d8cd48e8e5: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:33.686: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=48 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:38.905: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-59c55ff8-aba6-4e59-b681-973148720d89: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:38.945: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=49 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:44.161: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-d310af67-2d8b-46f1-8455-459ec3d766c9: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:44.204: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=50 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:49.424: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-f3cbcc37-98a4-4f22-aee8-59f74aea2ea8: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:49.472: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=51 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:54.691: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-9a7c373f-51eb-47b4-bbba-12ad4b129ce6: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:54.736: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=52 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:35:59.954: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-7788169f-2149-4ce5-8a39-5fa152a092f6: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:35:59.994: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=53 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:05.206: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-442f94d8-d3f8-4041-95a5-d4864c5b733b: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:36:05.251: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=54 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:10.470: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-cb9ce089-0919-4dfd-9323-a2e1493ab2b4: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:36:10.515: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=55 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+FAIL run=56 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:20.973: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-92eb6687-712f-4cd8-95df-bf885e65c541: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:36:21.014: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=57 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:26.233: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-ef954569-bd4e-4cd4-93fc-99d6862f99e2: The connection is closed
+FAIL run=58 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:31.491: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-46e60912-aa86-4dbb-80a4-d1c5e7fa411f: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:51849): xdg-desktop-portal-WARNING **: 20:36:31.533: Realtime error: Could not map pid: Process ids could not be found: 2
+FAIL run=59 WaitTimeoutException: expect role=combobox[name~="Priority"] to have text /High/: timed out after 5000 ms (25 attempts). Last attempt: no element matches
+FAIL-PAGE "Orders spar://app/"
+TEST create window + view + session           n=60 min=1.0 p50=1.1 p95=1.3 max=8.1
+TEST navigate (load, present)                 n=60 min=61.2 p50=65.0 p95=78.8 max=128.4
+TEST close                                    n=60 min=1.3 p50=1.4 p95=1.9 max=2.1
+TEST per test                                 n=60 min=5236.8 p50=5256.7 p95=5285.5 max=5346.1
+STEP 01 ready (two frames)                    n=60 min=22.9 p50=24.2 p95=26.7 max=29.9
+STEP 02 expect heading                        n=60 min=63.3 p50=67.8 p95=72.3 max=102.5
+STEP 03 fill name                             n=60 min=8.1 p50=14.3 p95=16.7 max=23.1
+STEP 04 check native                          n=60 min=5.3 p50=18.8 p95=22.8 max=25.4
+STEP 05 check radix                           n=60 min=12.9 p50=16.0 p95=17.2 max=17.7
+STEP 06 select option                         n=60 min=2.7 p50=3.4 p95=6.8 max=7.6
+STEP 07 open listbox                          n=60 min=23.5 p50=27.7 p95=29.9 max=31.9
+STEP 08 pick option                           n=60 min=10.1 p50=14.1 p95=15.4 max=16.4
+RETRY  1520 x expect / no element matches
+RESULT runs=60 failures=60 input=script fill=keys
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 20:36:36.749: Error releasing name org.webkit.app-48e384fd0c6a8bdaf59bc0eb5a8b9ee34669ec374c04c80f437d0f958214e0ac.Sandboxed.WebProcess-963b7154-e8f8-40aa-a95c-40f1359cd2b1: The connection is closed
+TEARDOWN WebKitWebProcess=0 WebKitNetworkProcess=0 (names truncated by the kernel; counts include other runs)
+RUN exit=1 wall=316217ms
+PROCESSES before=[] after=[]

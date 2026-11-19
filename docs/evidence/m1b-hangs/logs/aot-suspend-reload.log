@@ -1,0 +1,54 @@
+       4,4 > start Notebook.exe env []
+      64,8 | spar info +0.3 ms: [fc2f7c45] Host started 43.3 ms after the process.
+      65,1 | spar info +1.3 ms: [fc2f7c45] single instance at 1.3 ms
+      65,1 | spar info +1.6 ms: [fc2f7c45] prerequisites checked at 1.6 ms
+      65,2 | spar info +2.4 ms: [fc2f7c45] services built at 2.4 ms
+      90,3 | spar info +27.4 ms: [fc2f7c45] window shown at 27.4 ms
+      90,5 | spar info +27.6 ms: [fc2f7c45] Theme dark (system), window #1d1f24.
+      95,5 | spar info +32.7 ms: [fc2f7c45] environment at 32.7 ms
+      95,6 | spar info +32.7 ms: [fc2f7c45] WebView2 Runtime 157.0.4341.46
+      98,6 | spar info +35.7 ms: [fc2f7c45] Heartbeat every 5000 ms.
+     274,7 | spar info +211.7 ms: [fc2f7c45] controller at 211.7 ms
+     276,2 | spar info +212.3 ms: [fc2f7c45] navigation started at 212.3 ms
+     383,9 | spar info +321.0 ms: [fc2f7c45] Bridge: document 9285821b8fbfe58b opened.
+     384,0 | spar info +321.0 ms: [fc2f7c45] first document at 321 ms
+     409,0 | spar info +345.7 ms: [fc2f7c45] first bridge message at 345.7 ms
+     409,1 | spar info +345.9 ms: [fc2f7c45] first bridge reply at 345.9 ms
+     409,1 | spar info +345.9 ms: [fc2f7c45] Heartbeat armed for the new document.
+     412,9 | spar info +348.3 ms: [fc2f7c45] first navigation completed at 348.3 ms
+     429,9 | spar info +367.1 ms: [fc2f7c45] ui-ready at 367.1 ms
+     430,0 | spar info +367.1 ms: [fc2f7c45] Bridge: document 9285821b8fbfe58b reported ui-ready.
+     430,0 > seen 'ui-ready'
+     434,7 | spar info +371.8 ms: [fc2f7c45] 404 for /favicon.ico
+    2469,8 > suspend renderer 30904
+   20108,2 | spar warn +20045.3 ms: [fc2f7c45] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+   20108,3 | spar info +20045.5 ms: [fc2f7c45] hung-page dialog shown (Wait / Reload page) at 20045.5 ms
+   20108,3 > seen 'The page is not responding'
+   20156,3 > dialog 'Notebook' owner the app's window
+   21168,4 > press 201 on 'Notebook'
+   21180,6 | spar info +21117.7 ms: [fc2f7c45] hung-page dialog: Reload page, after 16.1 s at 21117.7 ms
+   21180,8 | spar info +21118.0 ms: [fc2f7c45] renderer processes ended: 1 at 21118 ms
+   21183,2 > dialog gone
+   21186,5 | spar info +21123.7 ms: [fc2f7c45] Bridge: document 9285821b8fbfe58b closed (navigation).
+   21186,8 | spar info +21123.7 ms: [fc2f7c45] renderer exited at 21123.7 ms
+   21186,8 | spar info +21123.7 ms: [fc2f7c45] page reloaded after the hung renderer was ended at 21123.7 ms
+   21231,9 | spar info +21169.0 ms: [fc2f7c45] Bridge: document 9487420513f19f4e opened.
+   21251,9 | spar info +21188.9 ms: [fc2f7c45] Heartbeat armed for the new document.
+   21271,4 | spar info +21208.6 ms: [fc2f7c45] Bridge: document 9487420513f19f4e reported ui-ready.
+   21271,5 > seen 'ui-ready'
+   21272,0 > WM_CLOSE to the window
+   21272,1 | spar info +21209.3 ms: [fc2f7c45] close requested (User) at 21209.3 ms
+   21273,2 | spar info +21210.4 ms: Close request for window main (User): the backend's guard answered Close
+   21273,3 | spar info +21210.5 ms: [fc2f7c45] closing at 21210.5 ms
+   21273,4 | spar info +21210.5 ms: [fc2f7c45] Heartbeat: 4 ticks, 2 pings, longest tick on the UI thread 0.259 ms.
+   21273,5 | spar info +21210.7 ms: [fc2f7c45] page close work done at 21210.7 ms
+   21273,6 | spar info +21210.7 ms: [fc2f7c45] Bridge: document 9487420513f19f4e closed (window closing).
+   21273,6 | spar info +21210.7 ms: [fc2f7c45] calls stopped at 21210.7 ms
+   21273,6 | spar info +21210.7 ms: [fc2f7c45] calls settled at 21210.7 ms
+   21288,6 | spar info +21225.7 ms: [fc2f7c45] controller closed at 21225.7 ms
+   21302,5 | spar info +21239.6 ms: [fc2f7c45] window destroyed at 21239.6 ms
+   21307,1 | spar info +21244.3 ms: [fc2f7c45] services disposed at 21244.3 ms
+   21307,2 | spar info +21244.3 ms: [fc2f7c45] exit 0 at 21244.3 ms
+   21318,0 > exit 0
+   27696,2 > browser processes left for this root 6,4 s after the exit: 0
+   27696,2 > RESULT OK

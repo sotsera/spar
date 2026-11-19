@@ -1,0 +1,18 @@
+89177627.963 pid=19628 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\data\focus-no-click-1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-no-click-1 --window normal --hold-ms 6000 -- first
+89177628.627 pid=19628 lock taken 0.1 ms after main, attempt 1
+89177630.591 pid=19628 primary serving spar-e5dcd2ffaf60e3764dc04e2e68ade5eb sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+89177648.200 pid=19628 window 0x140da6 'spar-si-primary-19628' start=normal; foreground=0x140da6 owner=19628 title='spar-si-primary-19628'
+89177681.974 pid=46964 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-no-click-1 --count 1 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\data\focus-no-click-1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-no-click-1 -- open focus-no-click-1.sql
+89177727.425 pid=66512 start run --t0 891776822296 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\data\focus-no-click-1 --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host-focus\focus\logs-no-click-1 -- open focus-no-click-1.sql
+89177728.460 pid=66512 server pid 19628 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+89177728.764 pid=66512 connected to pid 19628 in 0.7 ms; AllowSetForegroundWindow=True error=0; foreground=0x140da6 owner=19628 title='spar-si-primary-19628'
+89177728.888 pid=19628 received args=[open focus-no-click-1.sql] from_launch_ms=46.6 from_main_ms=1.2
+89177738.043 pid=19628 activate for [open focus-no-click-1.sql]: iconic=False visible=True SetForegroundWindow=True; foreground=0x140da6 owner=19628 title='spar-si-primary-19628'
+89177738.129 pid=66512 forwarded; ack 'ok' 10.2 ms after connecting
+89177738.412 pid=66512 exit 0
+89177742.894 pid=46964 spawned #0 pid 66512: exit 0 after 60.2 ms
+89177843.810 pid=46964 exit 0
+89178045.549 pid=19628 300 ms after activating: foreground=True; foreground=0x140da6 owner=19628 title='spar-si-primary-19628'
+89183654.472 pid=19628 primary stopped serving
+89183654.695 pid=19628 primary released the lock
+89183654.939 pid=19628 exit 0

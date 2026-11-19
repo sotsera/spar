@@ -1,6 +1,7 @@
 # Spar CI (decision "CI on GitHub Actions"). Every action is pinned to a full commit SHA, its release in a comment
-# (supply-chain default); update them on purpose, never by tag. Before the window tests arrive (M1b), check that they
-# can run on the hosted Windows runner (it may need a self-hosted one with a desktop session).
+# (supply-chain default); update them on purpose, never by tag. The window tests (M1b step 8a) run on the hosted Windows
+# runner as their own steps; whether its session can show WebView2 windows is checked by the first run after the push
+# (a self-hosted runner with a desktop session is the fallback).
 name: ci
 
 on:
@@ -117,8 +118,26 @@ jobs:
           pwsh "$script" install $deps --only-shell chromium
 
       - name: Test (CoreCLR)
+        # Everything but the window and black-box tests, which run as their own invocations below (plan section 5).
         if: matrix.lane == 'tests'
-        run: dotnet test --solution Spar.slnx -c Debug --no-build
+        run: dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait "Surface=Window" --filter-not-trait "Surface=BlackBox"
+
+      - name: Window tests (CoreCLR)
+        # The app's real WebView2 window in the test process (trait Surface=Window), in their own invocations: a native
+        # engine abort ends only this step's process. Windows only until the Linux host (M1c). Spar.WindowTests also
+        # holds the black-box fixture's own tests.
+        if: matrix.lane == 'tests' && runner.os == 'Windows'
+        shell: bash
+        run: |
+          dotnet test --project tests/Spar.WindowTests -c Debug --no-build
+          dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=Window"
+
+      - name: Black-box tests (CoreCLR)
+        # The Notebook's Production NativeAOT executable, published by the build beside its tests and launched on a
+        # desktop of the test process's own, read through UI Automation (trait Surface=BlackBox; plan section 5, level
+        # 7). Windows only until the Linux host (M1c).
+        if: matrix.lane == 'tests' && runner.os == 'Windows'
+        run: dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=BlackBox"
 
       - name: Page tests (the Notebook's page against @spar/app/testing)
         # After the build, which writes the generated @spar/app package and installs the frontend's packages.
@@ -139,21 +158,47 @@ jobs:
           for project in tests/Spar.Tests tests/WireShapes.Tests samples/Notebook.Tests; do
             name=$(basename "$project")
             dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
+            # Each run keeps a TRX report beside the CoreCLR lane's (decision "Every test run keeps a TRX report").
             # xUnit's in-process runner exits 0 when it ran no test; an empty run is a failure (fixture rules).
-            output=$("artifacts/aot/$name/$name") || { echo "$output"; exit 1; }
+            mkdir -p "artifacts/test-results/$name"
+            trx="artifacts/test-results/$name/aot-$(date -u +%Y-%m-%d_%H_%M_%S).trx"
+            output=$("artifacts/aot/$name/$name" -result-trx "$trx") || { echo "$output"; exit 1; }
+            echo "$output"
+            echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }
+          done
+
+      - name: Window tests (NativeAOT lane)
+        # The same window and black-box tests published with NativeAOT, each executable its own invocation;
+        # Notebook.EndToEndTests leaves its browser journeys out of this lane (Playwright cannot run under NativeAOT).
+        # Windows only until M1c.
+        if: matrix.lane == 'aot' && runner.os == 'Windows'
+        shell: bash
+        run: |
+          for project in tests/Spar.WindowTests samples/Notebook.EndToEndTests; do
+            name=$(basename "$project")
+            dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
+            mkdir -p "artifacts/test-results/$name"
+            trx="artifacts/test-results/$name/aot-$(date -u +%Y-%m-%d_%H_%M_%S).trx"
+            output=$("artifacts/aot/$name/$name" -result-trx "$trx") || { echo "$output"; exit 1; }
             echo "$output"
             echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }
           done
 
       - name: Build tests (a clean copy, an unchanged build, the production boundary, the console harness, one build per project)
-        # Not in Spar.slnx: they copy the tree under artifacts/build-tests/ and build it in isolation, in minutes.
+        # Listed in Spar.slnx but not built or run with it (Build Project="false"): they copy the tree under
+        # artifacts/build-tests/ and build it in isolation, in minutes.
         if: matrix.lane == 'build-tests'
         run: dotnet test --project tests/Spar.BuildTests
 
       - name: Package tests (Spar from its own packages, in a consumer outside the repository)
-        # Not in Spar.slnx: it packs Spar into a feed of its own and builds an app from it in a temporary folder.
+        # Listed in Spar.slnx but not built or run with it: it packs Spar into a feed of its own and builds an app from it
+        # in a temporary folder.
         if: matrix.lane == 'package-tests'
         run: dotnet test --project tests/Spar.PackageTests
+
+      # No Windows Sandbox step: tests/Spar.SandboxTests needs Windows Sandbox, a feature of Windows 11 Pro, Enterprise
+      # and Education that hosted runners (Windows Server) do not have. It is a local or self-hosted lane, listed in
+      # Spar.slnx but not built or run with it.
 
       - name: Test results
         if: always()
@@ -162,3 +207,6 @@ jobs:
           name: test-results-${{ matrix.os }}-${{ matrix.lane }}
           path: artifacts/test-results/
           if-no-files-found: ignore
+          # About 2 MB per run before compression (mostly TRX reports); kept long enough to look into a failure, not the
+          # repository's default 90 days (decision "Every test run keeps a TRX report").
+          retention-days: 14

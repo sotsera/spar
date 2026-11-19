@@ -1,0 +1,54 @@
+2026-11-17T23:25:30.795Z INFO  Spar.Host  [1247533e] Host started 222.0 ms after the process.
+2026-11-17T23:25:30.795Z INFO  Spar.Host  [1247533e] App id com.example.tests.SecurityProbe.Development, folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-page-errors\com.example.tests.SecurityProbe.Development
+2026-11-17T23:25:30.803Z INFO  Spar.Host  [1247533e] single instance at 17.4 ms
+2026-11-17T23:25:30.805Z INFO  Spar.Host  [1247533e] prerequisites checked at 21.3 ms
+2026-11-17T23:25:30.813Z INFO  Spar.Host  [1247533e] UI-thread stall probe on.
+2026-11-17T23:25:30.822Z INFO  Spar.Host  [1247533e] window shown at 38.9 ms
+2026-11-17T23:25:30.823Z INFO  Spar.Host  [1247533e] Theme dark (system), window #1f1f1f.
+2026-11-17T23:25:30.826Z INFO  Spar.Host  [1247533e] services built at 42.4 ms
+2026-11-17T23:25:30.830Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-17T23:25:30.846Z INFO  Spar.Host  [1247533e] environment at 62.1 ms
+2026-11-17T23:25:30.846Z INFO  Spar.Host  [1247533e] WebView2 Runtime 157.0.4341.46
+2026-11-17T23:25:30.847Z INFO  Spar.Host  [1247533e] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\dev-page-errors\com.example.tests.SecurityProbe.Development\WebView2
+2026-11-17T23:25:30.858Z INFO  Spar.Host  [1247533e] Heartbeat every 5000 ms.
+2026-11-17T23:25:30.860Z INFO  Spar.Host  [1247533e] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-PPCDxJ0a3mrhp+ZRnKIDD0gQNDpllZMu9T4EdLpTN7U=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-17T23:25:30.860Z INFO  Spar.Host  [1247533e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-17T23:25:31.060Z INFO  Spar.Host  [1247533e] controller at 276.3 ms
+2026-11-17T23:25:31.065Z INFO  Spar.Host  [1247533e] Browser settings read back (2.36 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-17T23:25:31.129Z INFO  Spar.Host  [1247533e] Page file picker blocked in 63.2 ms (Page.enable 62.6 ms).
+2026-11-17T23:25:31.129Z INFO  Spar.Host  [1247533e] page script added at 345.3 ms
+2026-11-17T23:25:31.129Z INFO  Spar.Host  [1247533e] navigation started at 345.9 ms
+2026-11-17T23:25:31.180Z INFO  Spar.Host  [1247533e] Bridge: document cdaa4cb092458714 opened.
+2026-11-17T23:25:31.180Z INFO  Spar.Host  [1247533e] Heartbeat armed for the new document.
+2026-11-17T23:25:31.180Z INFO  Spar.Host  [1247533e] first document at 397 ms
+2026-11-17T23:25:31.186Z INFO  Spar.Host  [1247533e] first bridge message at 402 ms
+2026-11-17T23:25:31.189Z INFO  Spar.Host  [1247533e] first navigation completed at 405.4 ms
+2026-11-17T23:25:31.191Z INFO  Spar.Host  [1247533e] 404 for /favicon.ico
+2026-11-17T23:25:31.193Z INFO  Spar.Host  [1247533e] first bridge reply at 409 ms
+2026-11-17T23:25:31.193Z INFO  Spar.Host  [1247533e] ui-ready at 409.3 ms
+2026-11-17T23:25:31.193Z INFO  Spar.Host  [1247533e] Bridge: document cdaa4cb092458714 reported ui-ready.
+2026-11-17T23:25:31.318Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-BNlKcbzj.js:6:4346: probe: the settings could not be read SyntaxError: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+    SyntaxError: Expected property name or '}' in JSON at position 2 (line 1 column 3)
+        at JSON.parse (<anonymous>)
+        at page-errors (https://app.localhost/assets/index-BNlKcbzj.js:6:4309)
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:25:31.318Z ERROR Spar.Page  Uncaught exception at https://app.localhost/assets/index-BNlKcbzj.js:6:4182: Uncaught TypeError: probe: a timer's callback failed
+    TypeError: probe: a timer's callback failed
+        at https://app.localhost/assets/index-BNlKcbzj.js:6:4188
+2026-11-17T23:25:31.318Z ERROR Spar.Page  Unhandled rejection at https://app.localhost/assets/index-BNlKcbzj.js:6:4253: RangeError: probe: a promise nobody awaited
+    RangeError: probe: a promise nobody awaited
+        at page-errors (https://app.localhost/assets/index-BNlKcbzj.js:6:4253)
+        at https://app.localhost/assets/index-BNlKcbzj.js:7:3501
+2026-11-17T23:25:34.797Z INFO  Spar.Host  [1247533e] close requested (User, automated) at 4013.5 ms
+2026-11-17T23:25:34.802Z INFO  Spar.Host  [1247533e] closing at 4018.9 ms
+2026-11-17T23:25:34.803Z INFO  Spar.Host  [1247533e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-17T23:25:34.804Z INFO  Spar.Host  [1247533e] page close work done at 4020.1 ms
+2026-11-17T23:25:34.804Z INFO  Spar.Host  [1247533e] Bridge: document cdaa4cb092458714 closed (window closing).
+2026-11-17T23:25:34.804Z INFO  Spar.Host  [1247533e] calls stopped at 4020.9 ms
+2026-11-17T23:25:34.804Z INFO  Spar.Host  [1247533e] calls settled at 4020.9 ms
+2026-11-17T23:25:34.804Z INFO  Spar.Host  [1247533e] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-17T23:25:34.819Z INFO  Spar.Host  [1247533e] controller closed at 4035.8 ms
+2026-11-17T23:25:34.821Z INFO  Spar.Host  [1247533e] window destroyed at 4037.7 ms
+2026-11-17T23:25:34.827Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 3 errors, 0 batches dropped (queue full)
+2026-11-17T23:25:34.828Z INFO  Spar.Host  [1247533e] services disposed at 4044.4 ms
+2026-11-17T23:25:34.828Z INFO  Spar.Host  [1247533e] exit 0 at 4044.4 ms

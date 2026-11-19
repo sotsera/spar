@@ -25,6 +25,45 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void Run_is_handed_the_windows_host_the_build_references()
+    {
+        const string Host = """
+            namespace Spar.Windows
+            {
+                public sealed class SparWindowsHost : Spar.Runtime.ISparHost
+                {
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+            """;
+
+        var run = GeneratorHarness.Generate(Program + Host);
+        var test = GeneratorHarness.Generate(Program + Host, "Test");
+
+        Assert.Empty(run.Errors);
+        Assert.Contains("return new global::Spar.Windows.SparWindowsHost();", run.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+        Assert.Contains("IsWindowsVersionAtLeast(10, 0, 17763)", run.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+
+        // Older Windows cannot load the host: Spar's stand-in reports "OS too old" (exit 7) instead of "no host".
+        Assert.Contains("return new global::Spar.Runtime.UnsupportedWindowsHost();", run.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+
+        // The test variant gets the host too: its test session opens the app's window for the Window surface.
+        Assert.Empty(test.Errors);
+        Assert.Contains("return new global::Spar.Windows.SparWindowsHost();", test.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void The_app_id_the_build_checked_reaches_the_catalog()
+    {
+        var withId = GeneratorHarness.Generate(Program + Fixtures.Catalog, appId: "com.example.SqlTool");
+        var withoutId = GeneratorHarness.Generate(Program + Fixtures.Catalog);
+
+        Assert.Empty(withId.Errors);
+        Assert.Contains("AppId = \"com.example.SqlTool\",", withId.Files["Spar.Contracts.g.cs"], StringComparison.Ordinal);
+        Assert.DoesNotContain("AppId =", withoutId.Files["Spar.Contracts.g.cs"], StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Two_contracts_with_one_name_are_left_out_and_the_rest_still_compiles()
     {
         const string Contracts = """

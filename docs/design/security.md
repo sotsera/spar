@@ -17,18 +17,20 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 
   ```
   default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self';
-  connect-src https://app.localhost; worker-src 'self'; manifest-src 'self';
+  connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self';
   base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none';
   require-trusted-types-for 'script';
   report-uri /_spar/csp-report
   ```
 
+  `media-src 'self'` was added when the policy was built (M1b step 4): without it the app could not play its own audio or video, which is no more a risk than its own images, and `MediaSrc(…)` had no base to add to (decision "Page security (implementation record; choices for review)", choice 3).
+
   Anything else (a font CDN, CSS-in-JS needing a nonce or `'unsafe-inline'`) is a conscious addition.
-  - **Styles added at run time** (`spikes/csp-style-injection`; decision "Styles added at run time: a nonce and constructed stylesheets both work"): under the base policy a `<style>` element and a `style` attribute are blocked, while constructed stylesheets, `insertRule` and `style.setProperty` apply, identically on Chromium, WebView2 and WebKitGTK 6.0. A per-document style nonce also works, delivered as `<meta property="csp-nonce">`. Which of these Spar documents or offers as a C# option is decided in M1b.
+  - **Styles added at run time** (`spikes/csp-style-injection`; decision "Styles added at run time: a nonce and constructed stylesheets both work"): under the base policy a `<style>` element and a `style` attribute are blocked, while constructed stylesheets, `insertRule` and `style.setProperty` apply, identically on Chromium, WebView2 and WebKitGTK 6.0. A per-document style nonce also works, delivered as `<meta property="csp-nonce">`. Decided (user, 2026-11-17; decision "M1b's remaining questions without a spike"): the app-author docs recommend build-time CSS and constructed stylesheets, and `csp.StyleNonce()` in C# gives each document a fresh nonce, written into the served HTML as `<meta property="csp-nonce">` and into `style-src`.
   - **What the build adds to this policy by itself:** the hash of the theme style (section 3d), the hash of the SRI import map (below), and in Debug the nonce and the HMR WebSocket (below).
   - **`require-trusted-types-for 'script'`** is part of the base policy, with a C# opt-out (decision "Trusted Types on by default"; see "Trusted Types" below).
   - **`connect-src` names the origin with its scheme** (`https://app.localhost` on Windows), because `'self'` also allows `wss://` to the same host, and WebSockets bypass the host (`spikes/desktop-origin`). The Linux value for `spar://app` still needs a check.
-  - **Verified, with one difference:** the React production bundle ran with 0 violations on WebView2, Chromium (loopback) and WebKitGTK 4.1 and 6.0, honoured as a response header on every host; `<meta>` gave the same results. That run used `connect-src 'self'` on the origin `https://app.spar.invalid` (`spikes/csp-navigation`). The policy above, with `connect-src https://app.localhost` on `app.localhost`, has not been run with the bundle; `spikes/desktop-origin` checked only partial policies (the fetch directives). To run in M1.
+  - **Verified, with one difference:** the React production bundle ran with 0 violations on WebView2, Chromium (loopback) and WebKitGTK 4.1 and 6.0, honoured as a response header on every host; `<meta>` gave the same results. That run used `connect-src 'self'` on the origin `https://app.spar.invalid` (`spikes/csp-navigation`). The policy above, with `connect-src https://app.localhost` on `app.localhost`, ran in M1b step 4 with the Notebook's React bundle, its import map hash and Subresource Integrity, as a Production NativeAOT executable on WebView2 157: 0 violations; its browser journeys under the same policy on loopback Chromium passed (`docs/evidence/m1b-page-security.md`).
   - **It also blocks** same-origin iframes, and WebAssembly. Both become C# opt-ins. Correction from `spikes/webkit-wasm-off`: WebKitGTK 2.52 does enforce the block, but only when a module is instantiated (`compile`, `Module` and streaming compile succeed; every instantiate path fails). 2.54 also blocks compiling. `validate` always succeeds.
 - **Declared in C#,** where the Spar application is configured:
 
@@ -48,7 +50,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - The dev HTML is sent `no-store` without an ETag, because Vite's ETag let a cached page keep an old nonce.
   - Measured in Chromium: Fast Refresh in 37–47 ms with state kept, CSS updates in 12–15 ms, the error overlay in 26–31 ms, 0 violations. A component update took about 90 ms in WebView2 and about 80 ms in WebKitGTK.
   - Violations should appear in development first, never only in Release.
-- **The CSP goes on every host-served response, worker scripts included** (`spikes/webkit-wasm-off`). A worker takes its policy from its own response. On WebKitGTK a worker script served without the header ran `eval` and every WebAssembly path under a page with the base CSP, and it instantiated a module the page had compiled and posted to it. Frames inherit the page's policy. WebView2 and the Vite plugin are to check in M1.
+- **The CSP goes on every host-served response, worker scripts included** (`spikes/webkit-wasm-off`). A worker takes its policy from its own response. On WebKitGTK a worker script served without the header ran `eval` and every WebAssembly path under a page with the base CSP, and it instantiated a module the page had compiled and posted to it. Frames inherit the page's policy. WebView2 checked in M1b step 4: a module worker served with the header had `eval`, `new Function` and WebAssembly blocked. The Vite plugin's development server arrives with the development loop (M1d).
 - **Other headers on every host-served response** (and from the Vite plugin in Debug), next to `Cache-Control: no-store` (section 1):
   - `X-Content-Type-Options: nosniff`, with an exact `Content-Type` for every file type (`text/javascript`, `text/css`, `application/wasm`, `image/svg+xml`, `application/json`, fonts). Honoured on every engine.
     - **The Linux host must repeat `Content-Type` in the header set** passed to `webkit_uri_scheme_response_set_http_headers`. Otherwise WebKitGTK silently blocks the app's own CSS, classic scripts and workers.
@@ -105,10 +107,20 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - **Size:** `/_spar/csp-report` caps the body size and the request rate, and answers 204 to anything over either limit without parsing it.
     - **Off the UI thread:** reports are parsed and logged away from the UI thread.
     - **Numbers:** the intervals and limits are set in M1 from a flood test, for example a page raising 100,000 violations.
-- **A build diagnostic** when a Spar-added hash or nonce shares a directive with the author's `'unsafe-inline'`, which browsers then ignore (`docs/research-review.md`).
+- **A build diagnostic** when a Spar-added hash or nonce shares a directive with the author's `'unsafe-inline'`, which browsers then ignore (`docs/research-review.md`). Built (M1b step 4) as two parts: with `AllowInlineStyles()`, Spar puts no nonce or hash in `style-src` at all, so the author's `'unsafe-inline'` always means what it says; and `StyleNonce()` beside it is the warning SPAR105. `'unsafe-inline'` exists for styles only, so no other directive can meet the case.
 - **Defaults that avoid surprises:** `build.assetsInlineLimit = 0`, so Vite never turns small assets into `data:` URLs. Verified: with Vite's default the 137-byte logo became a `data:` URL and was blocked.
 - **Host-injected scripts** (the bridge, the telemetry settings) run before every page script on both hosts, also under Vite, and the page reads `window.__spar` synchronously. WebView2 exempts them from the page's `eval` ban; WebKitGTK does not.
 - **`isSecureContext` is true on `spar://`** even without registering it as a secure scheme.
+- **Built on Windows** (M1b step 4; decisions "Page security's public shape" and "Page security (implementation record; choices for review)"; `docs/evidence/m1b-page-security.md`):
+  - **The C# declaration:** `spar.ContentSecurity(csp => …)` (`FontSrc`, `ImgSrc`, `ConnectSrc`, `MediaSrc`, `ScriptSrc`, `StyleSrc`, `FrameSrc`, `AllowInlineStyles`, `AllowEval`, `AllowWebAssembly`, `StyleNonce`, `WithoutTrustedTypes`, `WithoutIntegrity`, `Reporting`) and `spar.Permissions(p => p.Allow(Permission.X))`. One source rule (`CspSourceRule`) serves the builder at run time and the analysis at build time; the analyzer reports SPAR101–SPAR104 and the SPAR105 warning at their places, the generator writes the declaration into the catalog, and the client step writes `csp.json` into `@spar/app`. A Development build logs an error when the run's configuration differs from the build's.
+  - **One valid policy:** `PagePolicy` composes each directive once, in a fixed order, with its values grouped (base value, opt-in keywords, the app's sources in the order declared, then the build's hashes and the document's nonce) and duplicates dropped.
+  - **Every response carries it,** worker scripts included: a module worker served by the host had `eval`, `new Function` and WebAssembly blocked on WebView2 157 (the plan's step-9 check).
+  - **The import map's hash** is read by the host from the served HTML at start (only Spar's own `<script type="importmap">`), not passed from the build; `script-src` names it.
+  - **The navigation lock, new windows and the permission gate** on the WebView's events (`PageGuard`): top-level and frame navigations off the origin cancelled (frames may load `about:blank` and `about:srcdoc`), every new window handled, a user's click to `http(s)`, `mailto` or `tel` without credentials opened by `ShellExecuteW` on a thread of its own, and `PermissionRequested` answered allow or deny with `SavesInProfile = false`. A geolocation request denied by `Permissions-Policy` never reached the host's event.
+  - **The host-injected script** (`PageScript.js`, added before the first navigation) answers the heartbeat and runs the violation listener: grouped, one message per second at most, 100 groups per document, and it stops listening after 1,000 violations in a document, since the engine creates an event per violation only while a listener exists.
+  - **Both channels into one log** (`CspViolationLog`): a group's count is the larger of the two channels', so a violation reported twice is counted once; 100 groups per document; summaries at most every 10 s; `report-uri` bodies over 16 KiB or past 20 at once and 5 a second are answered 204 unread.
+  - **Found while building:** Chromium raises one event and one report for identical violations in a document (100,000 identical style attributes gave one of each), so a flood is a flood of distinct violations; Trusted Types make `new Worker(url)` a script sink, so a worker's address must come from a policy (Vite's `new Worker(new URL(…))` included).
+
 - **The spike's questions, all decided on 2026-11-14** (`spikes/csp-navigation/RESULTS.md`):
   - Trusted Types default (decided: on, with a C# opt-out);
   - same-origin iframes in the base policy (decided: blocked, with a C# opt-in);
@@ -121,7 +133,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - `frame-ancestors` and COOP on the desktop;
   - redirects of subresources on WebKitGTK;
   - CSS and overlay hot updates inside the WebViews;
-  - Vite `?worker` under Trusted Types;
+  - Vite `?worker` under Trusted Types (found in M1b: `new Worker(url)` needs a Trusted Types policy);
   - SRI on a large bundle;
   - injected scripts in child frames;
   - a real Linux desktop.
@@ -153,15 +165,19 @@ Constraints fall into three levels:
 3. **Limits on the page only.** File grants hide paths, and page-facing secrets are write-only. The backend can do anything, so an author goes past these by writing their own command. Ready-made options (visible paths, persistent grants for recent files) can come later.
 
 **Production defaults, each with a C# opt-in:**
+
+Built on Windows in M1b step 5 (decisions "Security defaults' public shape" and "Security defaults (implementation record; choices for review)"; `docs/evidence/m1b-security-defaults.md`): the opt-ins are one group, `spar.Browser(b => b.AllowDevTools().AllowAcceleratorKeys().AllowPasswordSaving().AllowDownloads().AllowHistoryNavigation().AllowContextMenu().AllowPagePicker().AllowBrowserEnvironmentOverrides())`, for the whole app, each logged at start-up. A Development build keeps every default except devtools (F12, Inspect) and the reload keys (F5, Ctrl+R).
 - **Browser settings:**
   - On Windows:
     - devtools (F12) and the context menu's "Inspect" are off. **This does not disable automation:** with `AreDevToolsEnabled=false`, in-process CDP still worked unchanged (`spikes/d8-automation`). Only a compile-time or trim-time gate keeps the devtools endpoint out of a build, and the production boundary test proves it;
-    - browser accelerator keys are off (reload, print, devtools);
+    - browser accelerator keys are off (reload, print, devtools); `AreBrowserAcceleratorKeysEnabled` is one switch for every key, so where devtools are on (Development, or `AllowDevTools()`) the setting is on and `AcceleratorKeyPressed` leaves the browser only the devtools keys, and in Development the reload keys (`IsBrowserAcceleratorKeyEnabled = false` for the rest; the page still gets every key);
+    - the default context menu is cut down in `ContextMenuRequested`: editable fields keep Cut, Copy, Paste and Select all, Inspect stays where devtools are on, and anywhere else no menu shows;
     - password saving and general autofill are off, so the SQL tool's password fields are never offered for saving;
     - downloads are denied (`DownloadStarting`);
-    - swipe navigation is off, and so is history navigation (mouse back and forward buttons, Alt+Left);
-    - no host objects (`AddHostObjectToScript`);
-    - `<input type="file">` gets a policy in M1b: the page's own picker would hand it a file outside the grant model.
+    - swipe navigation is off, and so is history navigation (mouse back and forward buttons, Alt+Left); `NavigationStarting` with `NavigationKind` back-or-forward is cancelled, which covers the mouse's buttons, Alt+Left and `history.back()` to another document; moves within one document (a router's `pushState` entries) raise no navigation and stay;
+    - no host objects (`AddHostObjectToScript`); `AreHostObjectsAllowed = false`, with no opt-in;
+    - SmartScreen's reputation check is off (`IsReputationCheckingRequired = false`, decision "SmartScreen default in WebView2"); no app can allow other origins yet, so the automatic switch and its overrides are not built;
+    - `<input type="file">` never opens the engine's picker (decided, user, 2026-11-17; decision "M1b's remaining questions without a spike"): it would hand the page a file outside the grant model. `AllowPagePicker()` in C# brings it back. Linux cancels it from `run-file-chooser`. WebView2 has no API: the host calls `Page.enable`, then `Page.setInterceptFileChooserDialog`, in-process for each WebView, and passes `--disable-blink-features=FileSystemAccessLocal`, so the File System Access pickers are absent as on Linux (decision "Window-test profiles, trusted input, the page's pickers and the Sandbox runner"; `spikes/window-tests`, 46 of 46 clicks opened no dialog).
 
     The history-navigation and file-input items are adopted from the research review (user, 2026-11-15) and built in M1b.
   - On Linux: no `enable-developer-extras`, no windows opened by JavaScript, no `file://` access, downloads denied.
@@ -172,13 +188,13 @@ Constraints fall into three levels:
 
   The filter is a block-list of exactly these names: everything else passes. In particular the Linux GPU workarounds (`__NV_DISABLE_EXPLICIT_SYNC`, `WEBKIT_DISABLE_DMABUF_RENDERER`, `WEBKIT_DISABLE_COMPOSITING_MODE`) keep working, and `spar doctor` suggests them for blank or white windows.
 
-  The opt-in is `AllowBrowserEnvironmentOverrides()`. Administrator policies set in the registry stay in force. Whether clearing a variable in-process is enough is checked in M1.
-- **App identity and folders** (adopted from the research review, user, 2026-11-15; M1b and M1c): an app has a validated app id, from which the per-user data, profile, log and crash folders derive, and Spar exposes them to app code. Development and installed builds never share data or a profile: the folder names differ by channel. The host checks the profile folder actually in use, because policy can redirect it, and no file grant or helper may ever reach the profile folder.
+  The opt-in is `AllowBrowserEnvironmentOverrides()`. Administrator policies set in the registry stay in force. Built in M1b step 5, the Windows list also has the names Microsoft's documentation now uses for the channel (`WEBVIEW2_CHANNEL_SEARCH_KIND`, `WEBVIEW2_RELEASE_CHANNELS`) and the script-debugger variables (`WEBVIEW2_PIPE_FOR_SCRIPT_DEBUGGER`, `WEBVIEW2_WAIT_FOR_SCRIPT_DEBUGGER`), for the user's review. **Clearing a variable in-process is enough:** the host removes each one with `SetEnvironmentVariableW` before the loader's first call; on the published NativeAOT executable `--remote-debugging-port` opened no port, and the profile and Runtime folders did not move, while with the opt-in the port opened (and closed at exit) and both folders moved.
+- **App identity and folders** (adopted from the research review, user, 2026-11-15; M1b and M1c): an app has a validated app id, from which the per-user data, profile, log and crash folders derive, and Spar exposes them to app code. Development and installed builds never share data or a profile: the folder names differ by channel. Decided (user, 2026-11-17; decision "M1b's remaining questions without a spike"): the id is reverse-DNS, `<SparAppId>com.example.SqlTool</SparAppId>`, required and checked by the build with GTK's application-id rules; the folders are `%LOCALAPPDATA%\<app id>` on Windows and `<app id>` under the XDG data, cache and state folders on Linux; Development appends `.Development` to the id everywhere. Production takes no data-root switch: tests move the folders through the platform's own per-user variables (the security review is in that decision). The host checks the profile folder actually in use, because policy can redirect it, and no file grant or helper may ever reach the profile folder. Built on Windows in M1b step 5: a missing or invalid `SparAppId` fails the build with SPAR130; the id reaches the runtime through the generated catalog (`SparCatalog.AppId`); the folders are `%LOCALAPPDATA%<app id>` or `<app id>.Development`, and so is the process's explicit AppUserModelID; app code reads the folders from the `SparFolders` service; the host records the profile folder in use (`ICoreWebView2Environment7.UserDataFolder`) beside the requested one in the internal `BrowserProfile` service, which M3's file grants read.
 - **The browser profile of a shipped app** lives in a per-user, per-app folder, and its location is configurable:
-  - Windows: `%LOCALAPPDATA%\<Company>\<App>\WebView2`;
+  - Windows: `%LOCALAPPDATA%\<app id>\WebView2`;
   - Linux: the app's XDG data and cache folders.
 
-  WebView2's own default, next to the executable, fails under `Program Files`. The `artifacts/webview2-profiles/` rule applies only to Spar's repository, its tests and local development.
+  WebView2's own default, next to the executable, fails under `Program Files`. The `artifacts/webview2-profiles/` rule applies only to Spar's repository, its tests and local development. Built in M1b step 5 (decision "Security defaults' public shape"): `spar.Folders(f => f.Profile(path))` moves it; a path that is not absolute or is on a network drive (UNC, or a drive letter mapped to a share) stops the start with a message and exit code 70, the app's own start failure.
 - **No loopback in Production** (user decision). The desktop host is the only shipped surface.
   - The loopback host is compiled only into development and test variants, like the devtools, and the production boundary test proves it is absent.
   - No real production use was found. Remote use from another machine would be a different product: a web server with TLS and authentication. Revisit only if a real consumer needs it.

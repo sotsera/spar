@@ -1,0 +1,47 @@
+2026-11-18T07:02:37.968Z INFO  Spar.Host  [c7e5ed3a] Host started 20.2 ms after the process.
+2026-11-18T07:02:37.968Z INFO  Spar.Host  [c7e5ed3a] App id com.example.tests.SecurityProbe, folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-console-1000\com.example.tests.SecurityProbe
+2026-11-18T07:02:37.970Z INFO  Spar.Host  [c7e5ed3a] single instance at 1.8 ms
+2026-11-18T07:02:37.970Z INFO  Spar.Host  [c7e5ed3a] prerequisites checked at 2 ms
+2026-11-18T07:02:37.971Z INFO  Spar.Host  [c7e5ed3a] services built at 2.9 ms
+2026-11-18T07:02:37.976Z INFO  Spar.Host  [c7e5ed3a] window shown at 8.6 ms
+2026-11-18T07:02:37.977Z INFO  Spar.Host  [c7e5ed3a] Theme dark (system), window #1f1f1f.
+2026-11-18T07:02:37.977Z INFO  Spar.Host  Page security overrides in this app: StyleNonce(), Allow(Permission.Midi)
+2026-11-18T07:02:37.981Z INFO  Spar.Host  [c7e5ed3a] environment at 13.4 ms
+2026-11-18T07:02:37.981Z INFO  Spar.Host  [c7e5ed3a] WebView2 Runtime 157.0.4341.46
+2026-11-18T07:02:37.981Z INFO  Spar.Host  [c7e5ed3a] Browser profile folder <repo>\artifacts\webview2-profiles\m1b-logging\aot-console-1000\com.example.tests.SecurityProbe\WebView2
+2026-11-18T07:02:37.985Z INFO  Spar.Host  [c7e5ed3a] Heartbeat every 5000 ms.
+2026-11-18T07:02:37.985Z INFO  Spar.Host  [c7e5ed3a] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-XY+SU5i1nABTOB/xUmDvgGCULjoKilCMi3p8iiAeFxw=' 'sha256-Eu0O3t//OgHrG8tzIVOM2O8tANsW1i8iGoNPbdVj/hs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-18T07:02:37.985Z INFO  Spar.Host  [c7e5ed3a] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(self), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-18T07:02:38.170Z INFO  Spar.Host  [c7e5ed3a] controller at 202.1 ms
+2026-11-18T07:02:38.170Z INFO  Spar.Host  [c7e5ed3a] Browser settings set (0.04 ms): devtools off, keys off, password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+2026-11-18T07:02:38.221Z INFO  Spar.Host  [c7e5ed3a] Page file picker blocked in 50.6 ms (Page.enable 50.2 ms).
+2026-11-18T07:02:38.221Z INFO  Spar.Host  [c7e5ed3a] page script added at 252.9 ms
+2026-11-18T07:02:38.221Z INFO  Spar.Host  [c7e5ed3a] navigation started at 252.9 ms
+2026-11-18T07:02:38.300Z INFO  Spar.Host  [c7e5ed3a] Bridge: document 55b30d97d84f7ec7 opened.
+2026-11-18T07:02:38.300Z INFO  Spar.Host  [c7e5ed3a] Heartbeat armed for the new document.
+2026-11-18T07:02:38.300Z INFO  Spar.Host  [c7e5ed3a] first document at 332 ms
+2026-11-18T07:02:38.309Z INFO  Spar.Host  [c7e5ed3a] first bridge message at 341.6 ms
+2026-11-18T07:02:38.310Z INFO  Spar.Host  [c7e5ed3a] first bridge reply at 341.8 ms
+2026-11-18T07:02:38.310Z INFO  Spar.Host  [c7e5ed3a] ui-ready at 341.8 ms
+2026-11-18T07:02:38.310Z INFO  Spar.Host  [c7e5ed3a] Bridge: document 55b30d97d84f7ec7 reported ui-ready.
+2026-11-18T07:02:38.315Z INFO  Spar.Host  [c7e5ed3a] first navigation completed at 347.2 ms
+2026-11-18T07:02:38.340Z INFO  Spar.Host  [c7e5ed3a] 404 for /favicon.ico
+2026-11-18T07:02:38.420Z ERROR Spar.Page  console.error at https://app.localhost/assets/index-B_HLBId8.js:6:3431: probe console error Error: same
+    Error: same
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3459
+        at https://app.localhost/assets/index-B_HLBId8.js:6:3926
+        at https://app.localhost/assets/index-B_HLBId8.js:7:3501
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] close requested (User) at 2450.8 ms
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] closing at 2451.3 ms
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] page close work done at 2451.5 ms
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] Bridge: document 55b30d97d84f7ec7 closed (window closing).
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] calls stopped at 2451.5 ms
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] calls settled at 2451.5 ms
+2026-11-18T07:02:40.419Z INFO  Spar.Host  [c7e5ed3a] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+2026-11-18T07:02:40.432Z INFO  Spar.Host  [c7e5ed3a] controller closed at 2463.8 ms
+2026-11-18T07:02:40.434Z INFO  Spar.Host  [c7e5ed3a] window destroyed at 2466.1 ms
+2026-11-18T07:02:40.437Z INFO  Spar.Page  The page's errors in the last 2.1 s: console.error "probe console error Error: same": 999 more
+2026-11-18T07:02:40.437Z INFO  Spar.Page  The page's error reports in this run: 1 batches, 1000 errors, 0 batches dropped (queue full)
+2026-11-18T07:02:40.437Z INFO  Spar.Host  [c7e5ed3a] services disposed at 2469.4 ms
+2026-11-18T07:02:40.437Z INFO  Spar.Host  [c7e5ed3a] exit 0 at 2469.5 ms

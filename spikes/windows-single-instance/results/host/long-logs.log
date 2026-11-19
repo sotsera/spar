@@ -1,0 +1,29 @@
+87608760.070 pid=14452 start run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\data\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\logs --hold-ms 3000 -- first
+87608761.554 pid=14452 lock taken 1.2 ms after main, attempt 1
+87608762.393 pid=14452 primary serving spar-93a9a04484edae1e57fb6ae114f6f53f sddl=O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>) args=[first]
+87608795.682 pid=43388 start spawn --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\logs --count 3 -- run --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\data\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\logs -- open deep-{i}.sql
+87608829.436 pid=52220 start run --t0 876087958965 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\data\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\logs -- open deep-0.sql
+87608830.483 pid=52220 server pid 14452 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87608831.108 pid=52220 connected to pid 14452 in 1.0 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87608831.286 pid=14452 received args=[open deep-0.sql] from_launch_ms=35.4 from_main_ms=1.6
+87608831.494 pid=52220 forwarded; ack 'ok' 1.6 ms after connecting
+87608831.618 pid=52220 exit 0
+87608834.090 pid=43388 spawned #0 pid 52220: exit 0 after 37.8 ms
+87608984.625 pid=62300 start run --t0 876089488700 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\data\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\logs -- open deep-1.sql
+87608986.038 pid=62300 server pid 14452 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87608986.483 pid=62300 connected to pid 14452 in 0.9 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87608986.611 pid=14452 received args=[open deep-1.sql] from_launch_ms=37.7 from_main_ms=1.5
+87608986.801 pid=62300 forwarded; ack 'ok' 1.4 ms after connecting
+87608986.885 pid=62300 exit 0
+87608989.091 pid=43388 spawned #1 pid 62300: exit 0 after 40.2 ms
+87609147.397 pid=24904 start run --t0 876091043416 --data E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\data\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name\a-rather-long-folder-name --log E:\Ghidello\Git\spar.v7\artifacts\windows-single-instance\host\long\logs -- open deep-2.sql
+87609148.430 pid=24904 server pid 14452 user <host-user-sid> session 1 (ours <host-user-sid> session 1); pipe O:<host-user-sid>D:P(A;;FA;;;<host-user-sid>)
+87609148.854 pid=24904 connected to pid 14452 in 0.8 ms; AllowSetForegroundWindow=True error=0; foreground=0x309a6 owner=22904 title='Claude'
+87609148.980 pid=14452 received args=[open deep-2.sql] from_launch_ms=44.6 from_main_ms=1.3
+87609149.175 pid=24904 forwarded; ack 'ok' 1.3 ms after connecting
+87609149.245 pid=24904 exit 0
+87609151.311 pid=43388 spawned #2 pid 24904: exit 0 after 47.0 ms
+87609260.029 pid=43388 exit 0
+87611768.604 pid=14452 primary stopped serving
+87611768.848 pid=14452 primary released the lock
+87611768.989 pid=14452 exit 0

@@ -87,6 +87,7 @@ public sealed class BridgeVectorTests
         message.Execution,
         message.ItemsSent,
         message.Name,
+        message.Seq,
         Encoding.UTF8.GetString(message.Payload.Span));
 
     private static BridgeMessage ToMessage(JsonElement json)
@@ -113,6 +114,7 @@ public sealed class BridgeVectorTests
             Execution = String(json, "execution"),
             ItemsSent = Long(json, "itemsSent"),
             Name = String(json, "name"),
+            Seq = Long(json, "seq"),
             Payload = Encoding.UTF8.GetBytes(json.GetProperty("payload").GetString()!),
         };
     }

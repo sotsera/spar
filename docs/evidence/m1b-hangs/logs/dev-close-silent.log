@@ -1,0 +1,54 @@
+       4,5 > start Notebook.exe env [SPAR_DEV_PAGE_HANG=3000]
+     118,4 | spar info +13.3 ms: [ba386ebf] Host started 88.2 ms after the process.
+     128,7 | spar info +24.0 ms: [ba386ebf] single instance at 23 ms
+     130,9 | spar info +29.5 ms: [ba386ebf] prerequisites checked at 29.5 ms
+     146,5 | spar info +44.9 ms: [ba386ebf] UI-thread stall probe on.
+     164,4 | spar info +62.9 ms: [ba386ebf] services built at 62.9 ms
+     177,8 | spar info +76.3 ms: [ba386ebf] window shown at 76.3 ms
+     178,0 | spar info +76.6 ms: [ba386ebf] Theme dark (system), window #1d1f24.
+     193,2 | spar info +91.8 ms: [ba386ebf] environment at 91.8 ms
+     193,8 | spar info +92.4 ms: [ba386ebf] WebView2 Runtime 157.0.4341.46
+     205,1 | spar info +103.7 ms: [ba386ebf] Heartbeat every 5000 ms.
+     380,6 | spar info +279.1 ms: [ba386ebf] controller at 279.1 ms
+     385,1 | spar info +283.3 ms: [ba386ebf] navigation started at 283.3 ms
+     496,2 | spar info +394.7 ms: [ba386ebf] Bridge: document 3d6ba224624c418a opened.
+     496,3 | spar info +394.7 ms: [ba386ebf] first document at 394.7 ms
+     520,7 | spar info +419.2 ms: [ba386ebf] first bridge message at 419.2 ms
+     522,3 | spar info +420.8 ms: [ba386ebf] first navigation completed at 420.8 ms
+     528,6 | spar info +427.1 ms: [ba386ebf] first bridge reply at 427.1 ms
+     528,8 | spar info +427.4 ms: [ba386ebf] Heartbeat armed for the new document.
+     540,1 | spar info +438.7 ms: [ba386ebf] ui-ready at 438.7 ms
+     540,3 | spar info +438.7 ms: [ba386ebf] Bridge: document 3d6ba224624c418a reported ui-ready.
+     543,8 | spar info +442.4 ms: [ba386ebf] 404 for /favicon.ico
+    3555,8 | spar warn +3454.3 ms: [ba386ebf] Development trigger: the page hangs from now.
+    3555,9 > seen 'the page hangs from now'
+    4566,0 > WM_CLOSE to the window
+    4568,2 | spar info +4466.6 ms: [ba386ebf] close requested (User) at 4466.6 ms
+    9584,6 | spar warn +9483.0 ms: [ba386ebf] The page did not answer the close request within 5000 ms.
+    9584,6 > seen 'did not answer the close request'
+    9584,7 | spar warn +9483.3 ms: [ba386ebf] The page is not responding: it did not answer the close request (5.0 s without an answer).
+    9585,4 | spar info +9484.0 ms: [ba386ebf] hung-page dialog shown (Wait / Close anyway) at 9484 ms
+    9631,3 > dialog 'Notebook' owner the app's window
+    9631,7 > press 200 on 'Notebook'
+    9652,0 | spar info +9550.5 ms: [ba386ebf] hung-page dialog: Wait at 9550.5 ms
+   25209,8 | spar warn +25108.3 ms: [ba386ebf] The page still does not answer after 21 s; asking again.
+   25209,9 > seen 'asking again'
+   25210,0 | spar info +25108.5 ms: [ba386ebf] hung-page dialog shown (Wait / Close anyway) at 25108.5 ms
+   25257,2 > dialog 'Notebook' owner the app's window
+   25257,6 > press 202 on 'Notebook'
+   25265,7 | spar info +25164.3 ms: [ba386ebf] hung-page dialog: Close anyway at 25164.3 ms
+   25268,7 | spar info +25167.2 ms: Close request for window main (User): the backend's guard answered Close
+   25269,2 | spar info +25167.8 ms: [ba386ebf] window closed anyway; the page had not answered for 20.7 s at 25167.8 ms
+   25270,2 | spar info +25168.7 ms: [ba386ebf] closing at 25168.7 ms
+   25270,4 | spar info +25168.9 ms: [ba386ebf] Heartbeat: 5 ticks, 1 pings, longest tick on the UI thread 0.484 ms.
+   25270,9 | spar info +25169.5 ms: [ba386ebf] Bridge: document 3d6ba224624c418a closed (window closing).
+   25271,0 | spar info +25169.6 ms: [ba386ebf] calls stopped at 25169.6 ms
+   25271,1 | spar info +25169.6 ms: [ba386ebf] calls settled at 25169.6 ms
+   25273,1 | spar info +25171.7 ms: [ba386ebf] renderer processes ended: 1 at 25171.7 ms
+   25292,7 | spar info +25191.3 ms: [ba386ebf] controller closed at 25191.3 ms
+   25300,1 | spar info +25198.6 ms: [ba386ebf] window destroyed at 25198.5 ms
+   25307,8 | spar info +25206.3 ms: [ba386ebf] services disposed at 25206.3 ms
+   25307,9 | spar info +25206.4 ms: [ba386ebf] exit 0 at 25206.4 ms
+   25320,1 > exit 0
+   25607,7 > browser processes left for this root 0,3 s after the exit: 0
+   25607,8 > RESULT OK

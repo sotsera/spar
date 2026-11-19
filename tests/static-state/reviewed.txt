@@ -23,6 +23,165 @@ Spar | Spar.Runtime.SparJson.StrictUtf8 | readonly | A UTF8Encoding that throws 
 Spar | Spar.Runtime.SparJson.Base64Alphabet | readonly | SearchValues of the base64 alphabet: immutable after creation, and its lookups are thread-safe.
 Spar | Spar.SparTestSession.<IsSupported>k__BackingField | readonly | The test-host feature switch, read once from AppContext; the same for the whole process by design, and false in apps (trimmed away).
 Spar | Spar.SparTestSession.CurrentSession | readonly | An AsyncLocal: each test's own flow sees its own session, so two apps in one process never share one.
+Spar | Spar.SparTestSession.WindowCloseLimit | readonly | A TimeSpan constant: how long a test's end waits for its window's teardown.
+Spar | Spar.CloseDecision.<Close>k__BackingField | readonly | An immutable answer object (decision "Two-stage close"), shared by design.
+Spar | Spar.CloseDecision.<Keep>k__BackingField | readonly | An immutable answer object, as above.
+Spar | Spar.Hosting.CloseGuard.Decided | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar | Spar.Hosting.CloseGuard.GuardFailed | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CloseGuard.GuardLate | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CloseVerdict.<Close>k__BackingField | readonly | An immutable value (a readonly record struct), copied on use.
+Spar | Spar.Hosting.CloseVerdict.<Keep>k__BackingField | readonly | An immutable value, as above.
+Spar | Spar.Hosting.PageCloseAnswer.<Close>k__BackingField | readonly | An immutable value (a readonly struct with get-only properties), copied on use.
+Spar | Spar.Hosting.SparDevelopment.<IsSupported>k__BackingField | readonly | The development feature switch, read once from AppContext: one value for the whole app by design (its variant), constant-folded by the trimmer.
+Spar | Spar.Hosting.RelaunchMessage.StrictUtf8 | readonly | A UTF8Encoding that throws on invalid bytes: immutable, and GetString is thread-safe.
+Spar | Spar.Hosting.RelaunchQueue.HandlerFailed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar | Spar.Hosting.RelaunchQueue.Ignored | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.PageHangHook.HookFailed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar | Spar.Hosting.UiStallProbe.StalledInCallback | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.UiStallProbe.StalledOutside | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CspReportReader.Options | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Hosting.CspViolationLog.<SummaryInterval>k__BackingField | readonly | A TimeSpan constant.
+Spar | Spar.Hosting.CspViolationLog.Summary | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar | Spar.Hosting.CspViolationLog.TooMany | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CspViolationLog.Unreadable | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CspViolationLog.Violation | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CspViolationLog.ListenerStopped | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CspViolationLog.Totals | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.CspViolationLog+Work.<Tick>k__BackingField | readonly | An immutable record of the summary tick, shared by design; it carries no data.
+Spar | Spar.Logging.LoggingFile.Options | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Logging.PageErrorReader.Options | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Logging.PageErrorLog.<SummaryInterval>k__BackingField | readonly | A TimeSpan constant.
+Spar | Spar.Logging.PageErrorLog.Reported | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar | Spar.Logging.PageErrorLog.Stopped | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.Summary | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.TooMany | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.Totals | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog.Unreadable | readonly | A log message delegate, as above.
+Spar | Spar.Logging.PageErrorLog+Work.<Tick>k__BackingField | readonly | An immutable record of the summary tick, shared by design; it carries no data.
+Spar | Spar.Hosting.PageHtml.Head | readonly | The bytes of a tag name, filled once, never written.
+Spar | Spar.Hosting.PageHtml.ImportMapStart | readonly | The bytes of the import map's opening tag, as above.
+Spar | Spar.Hosting.PageHtml.ScriptEnd | readonly | The bytes of a closing tag, as above.
+Spar | Spar.Hosting.PagePolicy.AlwaysDenied | readonly | The Permissions-Policy features always denied, filled once, read only.
+Spar | Spar.Hosting.PagePolicy.Declarable | readonly | Feature name to Permission, filled once, read only.
+Spar | Spar.Hosting.PageSecurityMismatch.Differs | readonly | A log message delegate, as above.
+Spar | Spar.Hosting.PageSecuritySetup.Overrides | readonly | A log message delegate, as above.
+Spar | Spar.Runtime.SparPageSecurity.<Default>k__BackingField | readonly | The strict default declaration, an object with init-only properties: never changed.
+
+# Spar.Windows (the Windows host, in Windows apps)
+# The COM source generator's per-interface data: each interface's IID and its vtable of stubs, built from constants.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2BrowserProcessExitedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2BrowserProcessExitedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2BrowserProcessExitedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContentLoadingEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContentLoadingEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContentLoadingEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2Controller>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ControllerOptions3>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2Deferral>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2Environment10>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NavigationCompletedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NavigationCompletedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NavigationCompletedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NavigationStartingEventArgs3>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NavigationStartingEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NavigationStartingEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ProcessFailedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ProcessFailedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ProcessFailedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2Profile>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ExecuteScriptCompletedHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ExecuteScriptCompletedHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ProcessInfo>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ProcessInfoCollection>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2WebMessageReceivedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2WebMessageReceivedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2WebMessageReceivedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2WebResourceRequest>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2WebResourceRequestedEventArgs2>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2WebResourceRequestedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2WebResourceRequestedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2_22>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ControllerCompleted>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache for a class the host implements: filled on first use from constants; a racing writer stores an equivalent table, never app data.
+Spar.Windows | <Spar_Windows_Interop_ScriptCompleted>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache for a class the host implements: filled on first use from constants; a racing writer stores an equivalent table, never app data.
+Spar.Windows | <Spar_Windows_Interop_EnvironmentCompleted>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | <Spar_Windows_Interop_WebView2EventHandler>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | Spar.Windows.PageCloseResult.<CloseAnyway>k__BackingField | readonly | An immutable value (a readonly struct with get-only properties), copied on use.
+Spar.Windows | Spar.Windows.PageCloseResult.<NoPage>k__BackingField | readonly | An immutable value, as above.
+Spar.Windows | Spar.Windows.HostLog.Failed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
+Spar.Windows | Spar.Windows.HostLog.Note | readonly | A log message delegate, as above.
+Spar.Windows | Spar.Windows.HostLog.PhaseReached | readonly | A log message delegate, as above.
+Spar.Windows | Spar.Windows.HostLog.Warned | readonly | A log message delegate, as above.
+Spar.Windows | Spar.Windows.Interop.Com.Wrappers | readonly | A StrategyBasedComWrappers for unique wrappers: its strategies are stateless and it is safe from any thread; every wrapper it makes belongs to the window that asked.
+Spar.Windows | Windows.Win32.DeleteObjectHBRUSHSafeHandle.INVALID_HANDLE_VALUE | readonly | A constant handle value generated by CsWin32.
+Spar.Windows | Windows.Win32.DeleteObjectSafeHandle.INVALID_HANDLE_VALUE | readonly | A constant handle value generated by CsWin32.
+Spar.Windows | Windows.Win32.DestroyCursorSafeHandle.INVALID_HANDLE_VALUE | readonly | A constant handle value generated by CsWin32.
+Spar.Windows | Windows.Win32.FreeLibrarySafeHandle.INVALID_HANDLE_VALUE | readonly | A constant handle value generated by CsWin32.
+Spar.Windows | Windows.Win32.FreeLibraryHINSTANCESafeHandle.INVALID_HANDLE_VALUE | readonly | A constant handle value generated by CsWin32.
+Spar.Windows | Windows.Win32.Foundation.HRESULT.S_FALSE | readonly | A constant HRESULT generated by CsWin32.
+Spar.Windows | Windows.Win32.Foundation.HRESULT.S_OK | readonly | A constant HRESULT generated by CsWin32.
+Spar.Windows | Windows.Win32.PInvoke.IDC_ARROW | readonly | A constant resource id generated by CsWin32.
+Spar.Windows | Windows.Win32.PInvoke.TD_ERROR_ICON | readonly | A constant resource id generated by CsWin32.
+Spar.Windows | Windows.Win32.PInvoke.TD_WARNING_ICON | readonly | A constant resource id generated by CsWin32.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2AddScriptToExecuteOnDocumentCreatedCompletedHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NewWindowRequestedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NewWindowRequestedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2NewWindowRequestedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2PermissionRequestedEventArgs3>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2PermissionRequestedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2PermissionRequestedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2PermissionRequestedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ScriptAdded>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache for a class the host implements: filled on first use from constants; a racing writer stores an equivalent table, never app data.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2AcceleratorKeyPressedEventArgs2>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2AcceleratorKeyPressedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2CallDevToolsProtocolMethodCompletedHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContextMenuItem>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContextMenuItemCollection>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContextMenuRequestedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContextMenuRequestedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContextMenuTarget>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DownloadOperation>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DownloadStartingEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DownloadStartingEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2EnvironmentOptions>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2Settings8>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2AcceleratorKeyPressedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2CallDevToolsProtocolMethodCompletedHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ContextMenuRequestedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DownloadStartingEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2EnvironmentOptions>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_DevToolsCallCompleted>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | <Spar_Windows_EnvironmentOptions>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | <Spar_Windows_PagePicker>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2MoveFocusRequestedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2MoveFocusRequestedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2MoveFocusRequestedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_DevelopmentConsole>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2Environment13>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2GetProcessExtendedInfosCompletedHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2GetProcessExtendedInfosCompletedHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ProcessExtendedInfoCollection>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2ProcessExtendedInfo>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2FrameInfoCollection>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2FrameInfoCollectionIterator>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2FrameInfo2>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_FrameProcessesCompleted>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+
+# The Window surface of window tests (test processes only; behind the test-host feature switch, trimmed from apps)
+Spar.Windows | <Spar_Windows_Testing_DevToolsCall>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | <Spar_Windows_Testing_DevToolsEvents>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache, as above.
+Spar.Windows | Spar.Windows.Testing.TestWindow.RendererExitLimit | readonly | A TimeSpan constant.
+Spar.Windows | Spar.Windows.Testing.TestWindowProcess.ExitWait | readonly | A TimeSpan constant.
+Spar.Windows | Spar.Windows.Testing.TestWindowProcess.Gate | readonly | The lock that guards s_shared and the profile names; holds no data.
+Spar.Windows | Spar.Windows.Testing.TestWindowProcess.s_shared | writable | The test process's one UI thread and shared browsers (plan section 5: one UI thread per test process, one environment per test process), set once under Gate by the first window; each window keeps its own profile name, data root and log, so apps never share state through it. Never set in an app: the test host alone creates it.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DevToolsProtocolEventReceiver>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DevToolsProtocolEventReceivedEventArgs>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DevToolsProtocolEventReceivedEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Windows | <Spar_Windows_Interop_ICoreWebView2DevToolsProtocolEventReceivedEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
 
 # Spar.Loopback (test and development variants only)
 # No static fields besides compiler data.
@@ -33,6 +192,15 @@ Spar.Testing | Spar.Testing.TestDataRoots.Run | readonly | The run's folder name
 Spar.Testing | Spar.Testing.TestDataRoots.s_next | writable | A counter changed only with Interlocked.Increment, so each app instance gets a data root of its own.
 Spar.Testing | Spar.Testing.SparTestCleanup.Watched | readonly | A ConcurrentDictionary keyed by each test's own id: a test's stop failures are kept under its id and removed by its hook, so no two tests share an entry.
 Spar.Testing | Spar.Testing.SparTestCleanup.s_currentTest | writable | How the test framework names the current test, set once with Interlocked.CompareExchange by the teardown hook; one framework runs a test process, so the same function serves every app in it.
+Spar.Testing | Spar.Testing.TestDataRoots.ProfilesBase | readonly | A Lazy of the window tests' profiles folder under artifacts/, computed once, thread-safe; the same for every app in the run by design (each test process takes a root of its own under it).
+Spar.Testing | Spar.Testing.KeyboardLayout.Named | readonly | A FrozenDictionary of the named keys, filled once, read only.
+Spar.Testing | Spar.Testing.KeyboardLayout.Punctuation | readonly | An array of constant tuples, filled once, never written.
+Spar.Testing | Spar.Testing.PageEngineSource.Source | readonly | A Lazy of the embedded engine script's text: the same constant text for every page.
+Spar.Testing | Spar.Testing.PageRetry.Pauses | readonly | An array of constant pauses, filled once, never written.
+Spar.Testing | Spar.Testing.PageSession.Events | readonly | An array of constant event names, filled once, never written.
+Spar.Testing | Spar.Testing.SparKeyboard.ModifierKeys | readonly | An array of constant tuples, filled once, never written.
+Spar.Testing | Spar.Testing.WindowSurface.OpenLimit | readonly | A TimeSpan constant.
+Spar.Testing | Spar.Testing.SparWindow.DefaultTimeout | readonly | A TimeSpan constant.
 
 # Spar.Testing.Browser (the Browser surface)
 # No static fields besides compiler data.
@@ -75,6 +243,12 @@ Spar.Generator | Spar.Generator.Descriptors.UnsupportedEnum | readonly | An immu
 Spar.Generator | Spar.Generator.Descriptors.UnsupportedRequest | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.UnsupportedReturn | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.UnsupportedWireType | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NotDirectlyInCreate | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NotConstant | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.UnsupportedShape | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.InvalidValue | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.NonceWithInlineStyles | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.PageSecurityAnalysis.ReportNames | readonly | The CspReports member names by value, filled once, read only.
 
 # Spar.Sdk.Tasks (MSBuild tasks: one node runs several projects' builds)
 Spar.Sdk.Tasks | Spar.Hosting.SparContentTypes.ByExtension | readonly | The runtime's content-type table, linked in: filled once, read only.
@@ -87,3 +261,39 @@ Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{fi
 Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{file}__Utilities.s_ascii_1000FF03FEFFFF87FEFFFF07 | readonly | The regex generator's character-class data: immutable.
 Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{file}__Utilities.s_defaultTimeout | readonly | The regex generator's timeout, read once from AppContext.
 Spar.Sdk.Tasks | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{file}__Utilities.s_hasTimeout | readonly | The regex generator's timeout flag, as above.
+
+# Spar.Testing's black-box fixture (M1b step 8b): it runs in test processes only, never in an app.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomation>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | Generated by the COM source generator from the declaration: an IID, constant for the process.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomation2>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | As above.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomationElement>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | As above.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomationElementArray>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | As above.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomationInvokePattern>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | As above.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomationValuePattern>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | As above.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomationWindowPattern>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | As above.
+Spar.Testing | Spar.Testing.AutomationHost.CallLimit | readonly | A TimeSpan constant.
+Spar.Testing | Spar.Testing.AutomationHost.Gate | readonly | The lock that guards s_hidden and s_shared; holds no data.
+Spar.Testing | Spar.Testing.AutomationHost.s_hidden | writable | The test process's one hidden desktop and its UI Automation thread, created once under Gate by the first launch that needs it; every launched app is a process of its own with its own data root, so apps share no state through it.
+Spar.Testing | Spar.Testing.AutomationHost.s_shared | writable | The UI Automation thread for apps shown on the test process's own desktop, as above.
+Spar.Testing | Spar.Testing.AutomationThread.AutomationClass | readonly | A GUID constant (CLSID_CUIAutomation8).
+Spar.Testing | Spar.Testing.AutomationThread.AutomationInterface | readonly | A GUID constant (IID_IUIAutomation).
+Spar.Testing | Spar.Testing.SparBlackBox.<Placement>k__BackingField | writable | Where this test run launches apps, one choice for the run: the hidden desktop, or the activated window when the process runs in the user session of a Windows Sandbox guest Spar's runner started (read once at start); internal, never set by an app.
+Spar.Testing | Spar.Testing.SparBlackBoxApp.TreeLimit | readonly | A TimeSpan constant.
+Spar.Testing | Spar.Testing.SparBlackBoxApp.RootLimit | readonly | A TimeSpan constant.
+Spar.Testing | Spar.Testing.SparBlackBoxOptions.FixtureVariables | readonly | An array of constant names, filled once, never written.
+Spar.Testing | Spar.Testing.SparBlackBoxOptions.RemovedPrefixes | readonly | An array of constant prefixes, filled once, never written.
+Spar.Testing | Spar.Testing.Uia.Wrappers | readonly | The COM wrappers for unique instances: stateless strategies, safe from any thread.
+Spar.Testing | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{file}__Pattern_0.Instance | readonly | The regular expression source generator's instance of the ready line's pattern: immutable.
+Spar.Testing | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{file}__Utilities.s_asciiHexDigitsLower | readonly | The regular expression source generator's constant table.
+Spar.Testing | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{file}__Utilities.s_defaultTimeout | readonly | The regular expression source generator's default timeout, read once from the AppContext.
+Spar.Testing | System.Text.RegularExpressions.Generated.<RegexGenerator_g>F{file}__Utilities.s_hasTimeout | readonly | As above.
+Spar.Testing | Windows.Win32.CloseDesktopSafeHandle.INVALID_HANDLE_VALUE | readonly | Generated by CsWin32: a constant handle value.
+Spar.Testing | Windows.Win32.CloseWindowStationSafeHandle.INVALID_HANDLE_VALUE | readonly | Generated by CsWin32: a constant handle value.
+Spar.Testing | Windows.Win32.System.Com.IUnknown.IID_Guid | readonly | Generated by CsWin32: a GUID constant.
+
+# Spar.Testing's Windows Sandbox runner and real input (M1b step 8c): test processes only, never an app.
+Spar.Testing | Spar.Testing.SandboxEvidence.NoteGate | readonly | The lock that keeps two checks' lines in the evidence file whole; holds no data.
+Spar.Testing | Spar.Testing.SandboxSession.CallLimit | readonly | A TimeSpan constant.
+Spar.Testing | Spar.Testing.SandboxSession.Poll | readonly | A TimeSpan constant.
+Spar.Testing | Windows.Win32.DeleteObjectHBITMAPSafeHandle.INVALID_HANDLE_VALUE | readonly | Generated by CsWin32: a constant handle value.
+Spar.Testing | Windows.Win32.DeleteObjectSafeHandle.INVALID_HANDLE_VALUE | readonly | Generated by CsWin32: a constant handle value.
+Spar.Testing | Windows.Win32.FreeLibrarySafeHandle.INVALID_HANDLE_VALUE | readonly | Generated by CsWin32: a constant handle value.
