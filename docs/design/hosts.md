@@ -221,6 +221,12 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - Shown first, the page also lacks focus, and the first Tab is lost.
   - With this order: 167–185 ms warm on GTK3, 214–261 ms on GTK4 (WSLg, software GPU).
 - **Recovery:** handle `web-process-terminated` with a visible message and recovery.
+- **Built in M1c step 1** (`src/Spar.Linux`; decision "The Linux host, first slice (implementation record; choices for review)", `docs/evidence/m1c-host.md`):
+  - **How an app reaches its host:** as on Windows, the generator hands `Spar.Linux.SparLinuxHost` to `app.Run()` behind `OperatingSystem.IsLinux()` when the build references it; the Notebook's Linux executable keeps no Windows host and links `libc` and `libm` only.
+  - **Document epochs on WebKitGTK:** `WEBKIT_LOAD_STARTED` ends the current document's session and `WEBKIT_LOAD_COMMITTED` opens the next, on the app's origin only; a message between the two is dropped. A document's `BridgeSession` is created by the reader for its first message once the services exist, so the view loads and the window is presented without waiting for them.
+  - **The relay:** the handler `spar` and the relay live in the isolated world `spar`, injected into the top frame at document start for `spar://app/*`; page and relay meet as `spar:send` and `spar:receive` events with string details on the top window. A frame of another origin reached nothing (tested).
+  - **Recovery** follows Windows' accepted policy: one silent reload after a lost web process, given back at the next `ui-ready`, and exit 5 with a message on a second loss before it.
+  - **Teardown:** the backend's guard, the page's close work, calls stopped and settled, the view's signals disconnected, the window destroyed, then the loop runs until the app's `WebKit*` descendants have exited (17–49 ms here; at most 3 s).
 - **Startup check:** see "Missing prerequisites get a visible error" above for the order, the messages and the exit codes. It covers the libraries, the WebKit helper folder (found through `/proc/self/maps`) and `bwrap`/`xdg-dbus-proxy`. An earlier prototype exited with code 3 within 7–102 ms, naming what is missing and the package to install. Before it, the app died with an unhandled `DllNotFoundException` after 253–813 ms (exit 134), or with a GLib abort (SIGTRAP, exit 133) after 1.9–4.3 s for a missing helper or `bwrap`.
 - **API differences between 4.1 (GTK3) and 6.0 (GTK4)** (`spikes/linux-desktop`). One code base with a compile-time switch covered both, with about 20 `#if` blocks in the host:
 

@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Spar.Hosting;
 using Spar.Windows.Interop;
 using Windows.Win32;
 using Windows.Win32.Foundation;

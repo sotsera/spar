@@ -4,6 +4,7 @@
 // host checks that each message comes from the app's own origin and top frame, and it assigns the document.
 import type { BridgeChannel } from "./connection.js";
 import { loopbackChannel, type LoopbackOptions } from "./loopback.js";
+import { isWebKitHost, webKitChannel } from "./webkit.js";
 
 /** The part of WebView2's `window.chrome.webview` the transport uses. */
 export interface WebViewPort {
@@ -34,11 +35,16 @@ export function webViewChannel(options: WebViewOptions = {}): BridgeChannel {
 }
 
 /**
- * The host's channel for this document: WebView2's when the page runs in the Windows host, otherwise the loopback one
- * (browser tests, and the page opened from the loopback host's address).
+ * The host's channel for this document: WebView2's when the page runs in the Windows host, the relay's when it runs in
+ * the Linux host (its address is on `spar://app`), otherwise the loopback one (browser tests, and the page opened from
+ * the loopback host's address).
  */
 export function hostChannel(options: LoopbackOptions = {}): BridgeChannel {
-  return webViewPort() === undefined ? loopbackChannel(options) : webViewChannel();
+  if (webViewPort() !== undefined) {
+    return webViewChannel();
+  }
+
+  return isWebKitHost() ? webKitChannel() : loopbackChannel(options);
 }
 
 class WebViewChannel implements BridgeChannel {

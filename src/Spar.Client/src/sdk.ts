@@ -20,6 +20,7 @@ export {
 export { unknownErrorCase, type BridgeChannel, type Decoder } from "./connection.js";
 export { loopbackChannel, takeToken, type LoopbackOptions, type TokenPage } from "./loopback.js";
 export { hostChannel, webViewChannel, webViewPort, type WebViewOptions, type WebViewPort } from "./webview.js";
+export { isWebKitHost, webKitChannel, type RelayTarget, type WebKitOptions } from "./webkit.js";
 
 let current: Connection | undefined;
 

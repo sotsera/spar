@@ -1,0 +1,124 @@
+using System.Runtime.Versioning;
+using System.Text;
+using System.Text.Json;
+using Spar.Hosting;
+using Spar.Linux;
+using Spar.Runtime;
+
+namespace Spar.Tests;
+
+/// <summary>
+/// The Linux host's pure parts, which run on every OS: the app's origin on <c>spar://app</c>, the headers every scheme
+/// response carries, and the script literals that carry the host's messages to the relay. The host itself, in a real
+/// window, is <see cref="LinuxHostTests"/>.
+/// </summary>
+[SupportedOSPlatform("linux")]
+public sealed class LinuxHostUnitTests
+{
+    [Theory]
+    [InlineData("spar://app/", true)]
+    [InlineData("spar://app/assets/index.js?v=1", true)]
+    [InlineData("spar://app", false)]
+    [InlineData("spar://app:1/", false)]
+    [InlineData("spar://apps/", false)]
+    [InlineData("spar://other/", false)]
+    [InlineData("https://app/", false)]
+    [InlineData("about:blank", false)]
+    public void Only_the_apps_own_origin_counts(string address, bool own)
+    {
+        Assert.Equal(own, SchemeServer.IsAppOrigin(address));
+    }
+
+    [Theory]
+    [InlineData("spar://app/", "/")]
+    [InlineData("spar://app/other.html?x=1#top", "/other.html")]
+    [InlineData("spar://app/a%20b/caf%C3%A9.css", "/a b/café.css")]
+    public void A_path_is_decoded_without_its_query_and_fragment(string address, string path)
+    {
+        Assert.Equal(path, PageResponder.PathOf(address, SchemeServer.Origin));
+    }
+
+    [Fact]
+    public void Every_response_repeats_its_type_in_its_headers_and_carries_the_policy_for_spar_app()
+    {
+        var responder = new PageResponder(null, SparPageSecurity.Default, SchemeServer.Origin, development: false);
+        var response = new PageResponse(200, "OK", "text/javascript; charset=utf-8", "x"u8.ToArray());
+
+        var headers = SchemeServer.HeadersOf(response, responder).ToList();
+
+        Assert.Equal(new("Content-Type", "text/javascript; charset=utf-8"), headers[0]);
+        var policy = Assert.Single(headers, header => header.Key == "Content-Security-Policy").Value;
+        Assert.Contains("connect-src spar://app", policy, StringComparison.Ordinal);
+        Assert.DoesNotContain("'self' ws", policy, StringComparison.Ordinal);
+        Assert.Contains(headers, header => header is { Key: "X-Content-Type-Options", Value: "nosniff" });
+        Assert.Contains(headers, header => header is { Key: "Cache-Control", Value: "no-store" });
+        Assert.DoesNotContain(headers, header => header.Key == "Allow");
+        Assert.Equal(headers.Count, headers.Select(header => header.Key).Distinct(StringComparer.OrdinalIgnoreCase).Count());
+    }
+
+    [Fact]
+    public void A_refused_method_says_which_ones_are_allowed_and_nothing_is_a_redirect()
+    {
+        var responder = new PageResponder(null, SparPageSecurity.Default, SchemeServer.Origin, development: false);
+
+        var refused = responder.Answer("/", "POST", _ => { });
+        var missing = responder.Answer("/", "GET", _ => { });
+
+        Assert.Equal(405, refused.Status);
+        Assert.Contains(SchemeServer.HeadersOf(refused, responder), header => header is { Key: "Allow", Value: "GET, HEAD" });
+        Assert.Equal(404, missing.Status);
+        Assert.Equal(PageResponder.NoPage, Encoding.UTF8.GetString(missing.Body.Span));
+    }
+
+    [Theory]
+    [InlineData("{\"type\":\"open\",\"protocol\":1}\t")]
+    [InlineData("{\"type\":\"result\",\"id\":7,\"ok\":true}\t\"a \\\"quoted\\\" \\\\ value\"")]
+    [InlineData("line\nbreak\rand\ttab\u0000nul")]
+    [InlineData("separators \u2028 and \u2029, emoji \U0001F600, accents \u00e0\u00e9")]
+    [InlineData("")]
+    public void A_host_message_becomes_a_script_literal_that_reads_back_exactly(string message)
+    {
+        var literal = ScriptBridge.Literal(message);
+        var text = Encoding.UTF8.GetString(literal);
+
+        // A JavaScript string literal of this form is also a JSON string: read it back with a JSON reader.
+        Assert.EndsWith(",", text, StringComparison.Ordinal);
+        var reader = new Utf8JsonReader(literal.AsSpan(0, literal.Length - 1));
+        Assert.True(reader.Read());
+        Assert.Equal(message, reader.GetString());
+        Assert.DoesNotContain('\n', text);
+        Assert.DoesNotContain((char)0x2028, text);
+        Assert.DoesNotContain((char)0x2029, text);
+    }
+
+    [Fact]
+    public void A_lone_surrogate_is_escaped_so_the_script_stays_valid_UTF_8()
+    {
+        var literal = ScriptBridge.Literal("a\ud800b\udc00c");
+
+        Assert.Equal("\"a\\ud800b\\udc00c\",", Encoding.UTF8.GetString(literal));
+        Assert.Equal(literal, new UTF8Encoding(false, throwOnInvalidBytes: true).GetBytes(Encoding.UTF8.GetString(literal)));
+    }
+
+    [Fact]
+    public void A_burst_of_messages_is_one_script_for_the_relay_in_order()
+    {
+        var script = ScriptBridge.DeliverScript([ScriptBridge.Literal("one"), ScriptBridge.Literal("two")]);
+
+        Assert.Equal(
+            "typeof sparRelay === \"object\" && sparRelay.deliver([\"one\",\"two\",]);",
+            Encoding.UTF8.GetString(script));
+    }
+
+    [Fact]
+    public void The_relay_runs_in_its_own_world_and_defines_nothing_on_the_page()
+    {
+        var relay = ScriptBridge.RelayScript();
+
+        Assert.Contains("const sparRelay = (() => {", relay, StringComparison.Ordinal);
+        Assert.Contains("location.protocol === \"spar:\" && location.host === \"app\"", relay, StringComparison.Ordinal);
+        Assert.DoesNotContain("window.sparRelay", relay, StringComparison.Ordinal);
+        Assert.DoesNotContain("eval(", relay, StringComparison.Ordinal);
+        Assert.DoesNotContain("Function(", relay, StringComparison.Ordinal);
+    }
+}

@@ -1,0 +1,16 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The test app of the host tests that run a real window from outside (tests/Spar.Tests, LinuxHostTests): a page that
+    times calls, moves to a second document, embeds a frame from another origin that tries to reach the bridge, and
+    reports what it saw through the backend's log. What it does is set by the test through BRIDGE_PROBE_PLAN.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>BridgeProbe</RootNamespace>
+    <SparAppId>com.example.tests.BridgeProbe</SparAppId>
+
+    <!-- The page is plain JavaScript: there is nothing for the type-check to check. -->
+    <SparTypeCheck>false</SparTypeCheck>
+  </PropertyGroup>
+</Project>

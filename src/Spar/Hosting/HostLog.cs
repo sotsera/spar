@@ -4,10 +4,8 @@ using System.Security.Cryptography;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spar.Logging;
-using Windows.Win32;
-using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
-namespace Spar.Windows;
+namespace Spar.Hosting;
 
 /// <summary>
 /// The host's instrumentation (plan section 3, "Instrumentation from the first slice"): a run id, monotonic times from
@@ -15,7 +13,7 @@ namespace Spar.Windows;
 /// app's log file from the host's first moment (<see cref="UseFile"/>), through the app's logging once its services
 /// exist (whose factory carries the same file), and, when the process has a standard error handle (a console, or a
 /// launcher that redirected it), there too. Each phase is logged once, with its time from the start; a later repeat (a
-/// recovered browser) is logged again as a new phase.
+/// recovered browser) is logged again as a new phase. Every desktop host uses it (<c>Spar.Windows</c>, <c>Spar.Linux</c>).
 /// </summary>
 internal sealed class HostLog
 {
@@ -119,21 +117,6 @@ internal sealed class HostLog
     public void Warn(string message) => Warned(Logger, RunId, message, null);
 
     public void Error(string message, Exception? exception = null) => Failed(Logger, RunId, message, exception);
-
-    /// <summary>How long the process ran before the host started, from the process's creation time.</summary>
-    public static unsafe double ProcessAgeMilliseconds()
-    {
-        FILETIME created, exited, kernel, user;
-        if (!PInvoke.GetProcessTimes(PInvoke.GetCurrentProcess(), &created, &exited, &kernel, &user))
-        {
-            return double.NaN;
-        }
-
-        PInvoke.GetSystemTimePreciseAsFileTime(out var now);
-        return (Ticks(now) - Ticks(created)) / (double)TimeSpan.TicksPerMillisecond;
-    }
-
-    private static long Ticks(FILETIME time) => ((long)(uint)time.dwHighDateTime << 32) | (uint)time.dwLowDateTime;
 
     /// <summary>
     /// The host's lines: on standard error at Information and above, when the process has one (a desktop executable

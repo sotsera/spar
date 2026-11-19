@@ -95,7 +95,7 @@ internal sealed record CreateCallModel(int Version, string Data);
 internal sealed record RunCallModel(int Version, string Data);
 
 /// <summary>The desktop hosts the compilation references, by their host type's full name.</summary>
-internal sealed record HostsModel(bool Windows);
+internal sealed record HostsModel(bool Windows, bool Linux);
 
 /// <summary>An immutable array compared by its items, so incremental pipeline steps cache correctly.</summary>
 internal readonly struct EquatableArray<T>(ImmutableArray<T> items) : IEquatable<EquatableArray<T>>, IEnumerable<T>

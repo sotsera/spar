@@ -5,21 +5,23 @@ namespace Spar.Generator.Emit;
 
 /// <summary>
 /// Connects <c>app.Run()</c> to the desktop host the app's build references (decision "The Windows host, first slice"):
-/// Spar.Sdk adds <c>Spar.Windows</c> (and later <c>Spar.Linux</c>) for the app's <c>SparPlatforms</c>, and this
-/// interceptor creates the one for the OS the app runs on. No reflection finds it, and each host sits behind its OS
-/// check, which NativeAOT folds per target, so a Windows executable keeps no Linux host and the other way round. An
-/// app that calls <c>Run</c> through anything else, such as the console harness, references no host at all.
+/// Spar.Sdk adds <c>Spar.Windows</c> and <c>Spar.Linux</c> for the app's <c>SparPlatforms</c>, and this interceptor
+/// creates the one for the OS the app runs on. No reflection finds it, and each host sits behind its OS check, which
+/// NativeAOT folds per target, so a Windows executable keeps no Linux host and the other way round. An app that calls
+/// <c>Run</c> through anything else, such as the console harness, references no host at all.
 /// </summary>
 internal static class HostEmitter
 {
     public const string WindowsHost = "Spar.Windows.SparWindowsHost";
+
+    public const string LinuxHost = "Spar.Linux.SparLinuxHost";
 
     /// <summary>Spar's stand-in on a Windows too old for the host (below 1809): it reports "OS too old", exit 7.</summary>
     public const string UnsupportedWindowsHost = "Spar.Runtime.UnsupportedWindowsHost";
 
     public static void Emit(SourceProductionContext output, ImmutableArray<RunCallModel> calls, HostsModel hosts)
     {
-        if (calls.Length == 0 || !hosts.Windows)
+        if (calls.Length == 0 || !(hosts.Windows || hosts.Linux))
         {
             return;
         }
@@ -37,17 +39,29 @@ internal static class HostEmitter
 
         code.Line("public static int Run(this global::Spar.SparApp app) => app.Run(Host());")
             .Line()
-            .Open("private static global::Spar.Runtime.ISparHost? Host()")
-            .Open("if (global::System.OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))")
-            .Line($"return new global::{WindowsHost}();")
-            .Close()
-            .Line()
-            .Line("// Older than WebView2's own floor: the host cannot load, and the app reports \"OS too old\" (exit 7).")
-            .Open("if (global::System.OperatingSystem.IsWindows())")
-            .Line($"return new global::{UnsupportedWindowsHost}();")
-            .Close()
-            .Line()
-            .Line("return null;")
+            .Open("private static global::Spar.Runtime.ISparHost? Host()");
+        if (hosts.Windows)
+        {
+            code.Open("if (global::System.OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))")
+                .Line($"return new global::{WindowsHost}();")
+                .Close()
+                .Line()
+                .Line("// Older than WebView2's own floor: the host cannot load, and the app reports \"OS too old\" (exit 7).")
+                .Open("if (global::System.OperatingSystem.IsWindows())")
+                .Line($"return new global::{UnsupportedWindowsHost}();")
+                .Close()
+                .Line();
+        }
+
+        if (hosts.Linux)
+        {
+            code.Open("if (global::System.OperatingSystem.IsLinux())")
+                .Line($"return new global::{LinuxHost}();")
+                .Close()
+                .Line();
+        }
+
+        code.Line("return null;")
             .Close()
             .Close()
             .Close()

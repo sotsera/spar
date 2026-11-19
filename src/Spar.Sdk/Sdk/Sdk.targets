@@ -21,6 +21,7 @@
   <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
     <SparPlatforms Condition="'$(SparPlatforms)' == ''">windows;linux</SparPlatforms>
     <SparTargetsWindows Condition="$([System.String]::Copy(';$(SparPlatforms);').ToLowerInvariant().Contains(';windows;'))">true</SparTargetsWindows>
+    <SparTargetsLinux Condition="$([System.String]::Copy(';$(SparPlatforms);').ToLowerInvariant().Contains(';linux;'))">true</SparTargetsLinux>
   </PropertyGroup>
 
   <!--
@@ -301,6 +302,19 @@
 
   <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(SparSourceMode)' != 'true'">
     <PackageReference Include="Spar.Windows" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+  <!--
+    The Linux host, for apps whose SparPlatforms include linux, the same way: the generator hands Spar.Linux to app.Run()
+    behind an OS check, so NativeAOT keeps only the host of the OS each executable is published for.
+  -->
+  <ItemGroup Condition="'$(SparTargetsLinux)' == 'true' and '$(SparSourceMode)' == 'true'">
+    <ProjectReference Include="$(SparSourceRoot)Spar.Linux\Spar.Linux.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTargetsLinux)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <PackageReference Include="Spar.Linux" Version="$(SparSdkVersion)" IsImplicitlyDefined="true" />
   </ItemGroup>
 
   <!--

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices.Marshalling;
+using Spar.Hosting;
 using Spar.Windows.Interop;
 
 namespace Spar.Windows;

@@ -12,7 +12,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - `traceparent` reserved in every call.
 - **Transports:**
   - Windows: `postMessage` (0.2 ms unary).
-  - Linux: the script message handler, plus `evaluate_javascript` (0.2–0.3 ms).
+  - Linux: the script message handler, plus `evaluate_javascript` (0.2–0.3 ms). Built in M1c step 1 through a relay in an isolated script world (section 3, "Linux"): a mean of 0.23–0.26 ms per small call on the bridge probe's Production NativeAOT executable.
   - Loopback (built in M1a; decided, user, 2026-11-15; decisions "Loopback transport: one ordered send path" and "Loopback transport accepted; Browser surface in its own package"): one streamed channel per document for every host message, call replies included (`POST /_spar/channel`, opened by the `hello`), and the page's messages posted in order to `POST /_spar/send`, one request at a time, with what queues up meanwhile sent together, one message per line. A `fetch` per call, as `spikes/loopback` did, can deliver ids out of order (they are then dropped) and lets long calls use up the browser's six connections. Requests: `Host` checked on every one; the bearer token and, when sent, the `Origin` on bridge requests; `X-Spar-Doc` names the document on sends.
   - Neither WebView streams intercepted responses usefully, so streams always use credits.
 - **Which window may call what (decided, user, 2026-11-14):**

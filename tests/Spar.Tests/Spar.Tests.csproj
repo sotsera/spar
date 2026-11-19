@@ -5,6 +5,8 @@
     <OutputType>Exe</OutputType>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Spar.Tests</RootNamespace>
+    <!-- The X11 close of the Linux host tests (X11Close.cs) is a source-generated import. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <!-- The loopback host's own tests; the other test projects stay free of a web server. -->
@@ -34,6 +36,11 @@
           CopyToOutputDirectory="PreserveNewest" Condition="'$(PkgMicrosoft_Web_WebView2)' != ''" />
   </ItemGroup>
 
+  <!-- The Linux host, for its unit tests (the relay's literals, the scheme's headers), its host tests and the static-state test. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Linux\Spar.Linux.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
   <!--
     Where Spar.Sdk does not add the package (a Linux build, whose tests load no WebView2), the header still comes from
     it: the slot-order test runs on every OS. Items are evaluated after every property, so the SDK's choice is known here.

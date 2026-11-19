@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Compression;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Spar.Hosting;
@@ -66,6 +67,13 @@ internal sealed class SparFrontend
         content = entry.Compressed ? _decoded.GetOrAdd(path, _ => Decode(entry)) : Stored(entry);
         return true;
     }
+
+    /// <summary>
+    /// Whether <paramref name="content"/> (from <see cref="TryGet"/>) lies in the executable's mapped image, which lives as
+    /// long as the process: a host may then hand it to native code in place, without pinning or copying it.
+    /// </summary>
+    public static bool IsImageMemory(ReadOnlyMemory<byte> content) =>
+        MemoryMarshal.TryGetMemoryManager<byte, ImageMemory>(content, out _);
 
     /// <summary>Decodes every compressed file into the cache; hosts call it off the UI thread at start.</summary>
     public void DecodeAll()

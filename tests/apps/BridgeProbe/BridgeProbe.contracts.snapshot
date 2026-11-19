@@ -1,0 +1,14 @@
+# The contracts of BridgeProbe as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint 4cafa2e0dcf5b90a
+
+contract probe (BridgeProbe.ProbeService)
+  echo(string) -> string
+  frame() -> string
+  note(string) -> void
+  plan() -> BridgeProbe.Plan
+
+record BridgeProbe.Plan
+  steps: string
+  load: int
