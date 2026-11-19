@@ -17,10 +17,14 @@ public static class SparBlackBox
     /// <summary>
     /// Where every launch of this test process puts its app (the hidden desktop unless a launch says otherwise). One
     /// switch for the run: Windows Sandbox's runner (step 8c) runs these tests in its guest with the window activated, so
-    /// real input reaches it.
+    /// real input reaches it; a CI run shows it on the runner's own desktop, where no one is at the screen and where a
+    /// second desktop cannot host WebView2 (GitHub's Windows Server 2025 runner: <c>CreateCoreWebView2Controller</c>
+    /// failed with <c>0x80070578</c> on every desktop but the default one).
     /// </summary>
     internal static SparBlackBoxPlacement Placement { get; set; } =
-        SandboxGuest.IsUserSession ? SparBlackBoxPlacement.Activated : SparBlackBoxPlacement.HiddenDesktop;
+        SandboxGuest.IsUserSession ? SparBlackBoxPlacement.Activated
+        : IsContinuousIntegration(System.Environment.GetEnvironmentVariable) ? SparBlackBoxPlacement.ShownWithoutActivation
+        : SparBlackBoxPlacement.HiddenDesktop;
 
     /// <summary>
     /// Starts <paramref name="project"/>'s Production executable and, unless <see cref="SparBlackBoxOptions.WaitForReady"/>
@@ -90,6 +94,18 @@ public static class SparBlackBox
         }
 
         return environment;
+    }
+
+    /// <summary>
+    /// Whether this test process runs on a CI service: <c>CI</c> set to <c>true</c> or <c>1</c> (GitHub Actions, GitLab,
+    /// and most others), or <c>TF_BUILD</c> set to <c>true</c> (Azure Pipelines).
+    /// </summary>
+    internal static bool IsContinuousIntegration(Func<string, string?> variable)
+    {
+        static bool IsSet(string? value) =>
+            string.Equals(value, "true", StringComparison.OrdinalIgnoreCase) || value == "1";
+
+        return IsSet(variable("CI")) || IsSet(variable("TF_BUILD"));
     }
 
     private static (string Path, bool Owned) Root(SparBlackBoxOptions options)

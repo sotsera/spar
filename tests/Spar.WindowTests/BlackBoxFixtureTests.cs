@@ -31,8 +31,8 @@ public sealed class BlackBoxFixtureTests
             [],
             SparBlackBox.Environment(new SparBlackBoxOptions(), folders),
             root,
-            AutomationHost.For(SparBlackBoxPlacement.HiddenDesktop).Desktop,
-            null);
+            AutomationHost.For(SparBlackBox.Placement).Desktop,
+            SparBlackBox.Placement == SparBlackBoxPlacement.ShownWithoutActivation ? (ushort)4 : null);
         try
         {
             // The browser's processes too: wait until the app has started some.
@@ -196,6 +196,22 @@ public sealed class BlackBoxFixtureTests
         Assert.Contains("Sandbox checks only", outlives.Message, StringComparison.Ordinal);
         await Assert.ThrowsAsync<FileNotFoundException>(() =>
             SparBlackBox.LaunchAsync(new SparProject("Missing", "com.example.Missing", "Missing.exe", ""), cancellationToken: Token));
+    }
+
+    [Theory]
+    [InlineData(null, null, false)]
+    [InlineData("true", null, true)]
+    [InlineData("TRUE", null, true)]
+    [InlineData("1", null, true)]
+    [InlineData("false", null, false)]
+    [InlineData("", null, false)]
+    [InlineData(null, "True", true)]
+    [InlineData("0", "false", false)]
+    public void A_CI_run_is_recognised_by_its_standard_variables(string? ci, string? azure, bool expected)
+    {
+        var variables = new Dictionary<string, string?> { ["CI"] = ci, ["TF_BUILD"] = azure };
+
+        Assert.Equal(expected, SparBlackBox.IsContinuousIntegration(name => variables.GetValueOrDefault(name)));
     }
 
     [Fact]
