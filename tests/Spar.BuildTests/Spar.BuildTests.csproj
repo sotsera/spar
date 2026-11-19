@@ -2,8 +2,8 @@
   <!--
     Build tests (plan section 5, test type 12): a clean copy of the working tree under artifacts/build-tests/, built
     with the MSBuild server off, no node reuse and a compiler server of its own; which Spar steps ran is read back by
-    replaying each build's binary log. Minutes, not seconds, so they are not in Spar.slnx: CI runs them as their own
-    step, and so does a developer, with dotnet test tests/Spar.BuildTests.
+    replaying each build's binary log. Minutes, not seconds, so Spar.slnx lists them without building or running them
+    (Build Project="false"): CI runs them as their own step, and so does a developer, with dotnet test on this project.
   -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>

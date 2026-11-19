@@ -38,6 +38,7 @@ internal sealed partial class BrowserView
     private string? _runtimeVersion;
     private int _generation;
     private bool _closing;
+    private bool _ending;
     private bool _recovering;
     private bool _rendererReloadUsed;
     private bool _browserRecreated;
@@ -171,6 +172,13 @@ internal sealed partial class BrowserView
         _webView.CallDevToolsProtocolMethod(method, parameters, completed);
         return completed.Task;
     }
+
+    /// <summary>
+    /// No recovery from here on (UI thread): an approved close or the session's end has started, so a browser or a renderer
+    /// that is lost is not created or loaded again. At session end Windows ends the browser's processes with the session,
+    /// and recreating it then only delayed the end (Windows Sandbox, 2026-11-19).
+    /// </summary>
+    public void EndRecovery() => _ending = true;
 
     /// <summary>
     /// Teardown step 5 (plan section 3, "Teardown"): no recovery from here on, the events removed, and the controller
@@ -506,7 +514,7 @@ internal sealed partial class BrowserView
             Com.Release(args);
         }
 
-        if (_closing)
+        if (_closing || _ending)
         {
             _log.Info($"A browser process failed during shutdown (kind {kind}); nothing is recovered.");
             return;
@@ -571,7 +579,7 @@ internal sealed partial class BrowserView
             Com.Release(args);
         }
 
-        if (_closing)
+        if (_closing || _ending)
         {
             _log.Step($"browser process {process} exited");
             return;
@@ -585,7 +593,7 @@ internal sealed partial class BrowserView
     /// <summary>The environment and the controller are created again, once; a second loss of the browser ends the app.</summary>
     private async Task RecoverBrowserAsync(int generation, string reason)
     {
-        if (_closing || _recovering || generation != _generation)
+        if (_closing || _ending || _recovering || generation != _generation)
         {
             return;
         }

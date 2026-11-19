@@ -24,7 +24,7 @@ public sealed class InstallPathTests
         WindowSupport.SkipUnlessSupported();
         var executable = Environment.ProcessPath!;
         var name = Path.GetFileName(executable);
-        var parent = Path.Combine(Results.RepositoryRoot, "artifacts", "test-host", $"long-install-{Environment.ProcessId}");
+        var parent = Path.Combine(Results.Artifacts, "test-host", $"long-install-{Environment.ProcessId}");
         var padding = PathLength - (parent.Length + 1 + name.Length + 1);
         Assert.True(padding > 10, $"The repository's path is too long for this test: {parent}");
         var folder = Path.Combine(parent, new string('d', padding));

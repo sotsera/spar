@@ -1,0 +1,55 @@
+{"step":"start","at_ms":1091.2,"took_ms":1085.9,"exit":0,"wsb":"{ \u0022Id\u0022: \u0022<id>\u0022 }"}
+{"step":"ready-system","at_ms":1388.2,"took_ms":295.7,"attempts":1}
+{"step":"marker","at_ms":1683.4,"took_ms":294.9,"guestExit":0}
+{"step":"webview2-registration","at_ms":2019.7,"took_ms":336,"guestExit":0}
+{"step":"stage","at_ms":2030.4,"took_ms":9.1,"job":"window-tests/System","stage":"j01-dca6ae","files":3,"bytes":24348370}
+{"step":"stage-visible","at_ms":2311.6,"took_ms":281.2,"attempts":1}
+{"step":"run","at_ms":3226.4,"took_ms":914.4,"job":"window-tests/System","stage":"j01-dca6ae","lane":"System","guestExit":0,"timedOut":false,"wsb":"{ \u0022ExitCode\u0022: 0 }"}
+{"step":"collect","at_ms":3228.5,"took_ms":1.5,"exitFile":"0"}
+{"step":"collect-logs","at_ms":3524.7,"took_ms":295.2,"guestExit":0}
+{"step":"job-end","at_ms":3532.2,"took_ms":1511.3,"job":"window-tests/System","exit":0,"tests":4,"problem":null}
+{"step":"stage","at_ms":3539.9,"took_ms":7.1,"job":"notebook/System","stage":"j02-3e3ce6","files":3,"bytes":24743596}
+{"step":"stage-visible","at_ms":3840.6,"took_ms":300.7,"attempts":1}
+{"step":"run","at_ms":4713.5,"took_ms":872.7,"job":"notebook/System","stage":"j02-3e3ce6","lane":"System","guestExit":0,"timedOut":false,"wsb":"{ \u0022ExitCode\u0022: 0 }"}
+{"step":"collect","at_ms":4713.8,"took_ms":0.2,"exitFile":"0"}
+{"step":"collect-logs","at_ms":5001.2,"took_ms":287.2,"guestExit":0}
+{"step":"job-end","at_ms":5007.7,"took_ms":1475,"job":"notebook/System","exit":0,"tests":1,"problem":null}
+{"step":"stage","at_ms":5014.9,"took_ms":7.1,"job":"window-tests/Deadline","stage":"j03-002f49","files":3,"bytes":24348370}
+{"step":"stage-visible","at_ms":5297.3,"took_ms":282.4,"attempts":1}
+{"step":"run","at_ms":50348.6,"took_ms":45051.1,"job":"window-tests/Deadline","stage":"j03-002f49","lane":"System","guestExit":null,"timedOut":true,"wsb":""}
+{"step":"deadline-kill","at_ms":50794.3,"took_ms":445.5,"job":"window-tests/Deadline","guestExit":0}
+{"step":"collect","at_ms":50857.1,"took_ms":62.7,"exitFile":"1"}
+{"step":"collect-logs","at_ms":51154.5,"took_ms":297.2,"guestExit":0}
+{"step":"job-end","at_ms":51161.3,"took_ms":46153.5,"job":"window-tests/Deadline","exit":1,"tests":5,"problem":"The run reached its deadline and was ended in the guest."}
+{"step":"client-window","at_ms":51628.9,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51628.9,"visible":false,"foreground":false}
+{"step":"client-minimize","at_ms":51848.3,"wasForeground":false}
+{"step":"client-window","at_ms":51848.3,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958.1,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958.1,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958.1,"visible":false,"foreground":false}
+{"step":"client-window","at_ms":51958.1,"visible":false,"foreground":false}
+{"step":"client-minimize","at_ms":52510.1,"wasForeground":true}
+{"step":"client-window","at_ms":52619.1,"visible":false,"foreground":false}
+{"step":"ready-user-session","at_ms":54164.1,"took_ms":2977.4,"attempts":6}
+{"step":"connect","at_ms":54164.2,"took_ms":2997.6,"connectExited":true}
+{"step":"stage","at_ms":54173.3,"took_ms":9.1,"job":"window-tests/UserSession","stage":"j04-8d4639","files":3,"bytes":24348370}
+{"step":"stage-visible","at_ms":54492.3,"took_ms":319,"attempts":1}
+{"step":"run","at_ms":175301.8,"took_ms":120809.3,"job":"window-tests/UserSession","stage":"j04-8d4639","lane":"UserSession","guestExit":1,"timedOut":false,"wsb":"{ \u0022ExitCode\u0022: 1 }"}
+{"step":"collect","at_ms":175302.2,"took_ms":0.3,"exitFile":"1"}
+{"step":"collect-logs","at_ms":175612.2,"took_ms":309.9,"guestExit":1}
+{"step":"job-end","at_ms":175620.2,"took_ms":124458.8,"job":"window-tests/UserSession","exit":1,"tests":5,"problem":null}
+{"step":"stage","at_ms":175626.7,"took_ms":6.5,"job":"notebook/UserSession","stage":"j05-5086e4","files":3,"bytes":24743596}
+{"step":"stage-visible","at_ms":175910.5,"took_ms":283.7,"attempts":1}
+{"step":"run","at_ms":236856.1,"took_ms":60945.5,"job":"notebook/UserSession","stage":"j05-5086e4","lane":"UserSession","guestExit":1,"timedOut":false,"wsb":"{ \u0022ExitCode\u0022: 1 }"}
+{"step":"collect","at_ms":236856.3,"took_ms":0.1,"exitFile":"1"}
+{"step":"collect-logs","at_ms":237217.2,"took_ms":360.8,"guestExit":0}
+{"step":"job-end","at_ms":237225.2,"took_ms":61604.9,"job":"notebook/UserSession","exit":1,"tests":2,"problem":null}
+{"step":"stop","at_ms":238006.2,"took_ms":779.7,"exit":0,"wsb":""}
+{"step":"close-clients","at_ms":238013.9,"took_ms":6.8,"leftAfterStop":0,"leftAfterClose":0}
+{"step":"list-after","at_ms":238293.2,"stillListed":false,"running":0}
+{"step":"session-end","at_ms":238293.3,"took_ms":238293.3,"minimizes":2,"jobs":5}

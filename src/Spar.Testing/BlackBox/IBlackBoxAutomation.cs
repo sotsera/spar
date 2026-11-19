@@ -30,7 +30,55 @@ internal interface IBlackBoxAutomation
 
     /// <summary>Presses the dialog's button named <paramref name="button"/>; false when the dialog or the button is gone.</summary>
     Task<bool> PressAsync(DialogContent dialog, string button, CancellationToken cancellationToken = default);
+
+    /// <summary>The screen rectangle of the one element <paramref name="target"/> finds (<see cref="ElementOutcome.Bounds"/>).</summary>
+    Task<ElementOutcome> BoundsAsync(int processId, ElementTarget target, CancellationToken cancellationToken = default);
+
+    /// <summary>Gives the one element <paramref name="target"/> finds the keyboard focus, through the accessibility API (no input).</summary>
+    Task<ElementOutcome> FocusAsync(int processId, ElementTarget target, CancellationToken cancellationToken = default);
+
+    /// <summary>The main window's rectangle, its title bar's, and whether it has the foreground; null when the app has no window.</summary>
+    Task<WindowParts?> WindowPartsAsync(int processId, CancellationToken cancellationToken = default);
+
+    /// <summary>Every visible top-level window of <paramref name="processIds"/> (the app and the browser it started), read whole.</summary>
+    Task<IReadOnlyList<TopLevelWindow>> TopLevelWindowsAsync(IReadOnlyList<int> processIds, CancellationToken cancellationToken = default);
+
+    /// <summary>The rectangle of the dialog's button named <paramref name="button"/>; null when the dialog or the button is gone.</summary>
+    Task<ScreenRect?> DialogButtonBoundsAsync(DialogContent dialog, string button, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Ends the app's session as Windows does (<c>WM_QUERYENDSESSION</c>, then <c>WM_ENDSESSION</c> with <c>TRUE</c>, for a
+    /// log-off), to its main window; returns once the window procedure returned <c>WM_ENDSESSION</c>, false when the app
+    /// has no window. For Spar's own tests of the session end on a Production executable.
+    /// </summary>
+    Task<bool> EndSessionAsync(int processId, CancellationToken cancellationToken = default);
+
+    /// <summary>A text dump of every visible top-level window of <paramref name="processIds"/> and the elements under it, for the evidence.</summary>
+    Task<string> DumpAsync(IReadOnlyList<int> processIds, CancellationToken cancellationToken = default);
 }
+
+/// <summary>A rectangle on the screen, in physical pixels.</summary>
+internal readonly record struct ScreenRect(int Left, int Top, int Right, int Bottom)
+{
+    public int Width => Right - Left;
+
+    public int Height => Bottom - Top;
+
+    public bool IsEmpty => Width <= 0 || Height <= 0;
+
+    public (int X, int Y) Center => (Left + (Width / 2), Top + (Height / 2));
+
+    public override string ToString() => $"[{Left},{Top},{Right},{Bottom}]";
+}
+
+/// <summary>A main window as real input needs it: its handle, its rectangle, its title bar's, and whether it is the foreground window.</summary>
+internal sealed record WindowParts(nint Handle, ScreenRect Bounds, ScreenRect? TitleBar, bool IsForeground);
+
+/// <summary>
+/// A visible top-level window of the app's process tree: its process, class, title and control type, and the names of
+/// the menu items under it (a context menu's).
+/// </summary>
+internal sealed record TopLevelWindow(int ProcessId, nint Handle, string ClassName, string Title, int ControlType, IReadOnlyList<string> MenuItems);
 
 /// <summary>What a locator looks for, and which of the matches it takes (null: all; -1: the last).</summary>
 internal sealed record ElementTarget(BlackBoxQuery Query, int? Index);
@@ -48,8 +96,11 @@ internal enum ElementStatus
     Unsupported,
 }
 
-/// <summary>An operation's outcome: its status, the value it read, and the names of the elements found when they were several.</summary>
-internal sealed record ElementOutcome(ElementStatus Status, string? Value = null, IReadOnlyList<string>? Names = null);
+/// <summary>
+/// An operation's outcome: its status, the value it read, the names of the elements found when they were several, and
+/// the element's rectangle when the operation read it.
+/// </summary>
+internal sealed record ElementOutcome(ElementStatus Status, string? Value = null, IReadOnlyList<string>? Names = null, ScreenRect? Bounds = null);
 
 /// <summary>A native dialog as it was read: its window, title, text parts and own buttons.</summary>
 internal sealed record DialogContent(nint Handle, string Title, IReadOnlyList<string> Texts, IReadOnlyList<string> Buttons);

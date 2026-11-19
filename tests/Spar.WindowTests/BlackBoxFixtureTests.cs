@@ -192,6 +192,8 @@ public sealed class BlackBoxFixtureTests
 
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => SparBlackBox.LaunchAsync(Projects.WindowHost, o => o.ReadyTimeout = TimeSpan.Zero, Token));
         await Assert.ThrowsAsync<ArgumentException>(() => SparBlackBox.LaunchAsync(Projects.WindowHost, o => o.DataRoot = Path.GetTempPath(), Token));
+        var outlives = await Assert.ThrowsAsync<ArgumentException>(() => SparBlackBox.LaunchAsync(Projects.WindowHost, o => o.OutlivesTest = true, Token));
+        Assert.Contains("Sandbox checks only", outlives.Message, StringComparison.Ordinal);
         await Assert.ThrowsAsync<FileNotFoundException>(() =>
             SparBlackBox.LaunchAsync(new SparProject("Missing", "com.example.Missing", "Missing.exe", ""), cancellationToken: Token));
     }

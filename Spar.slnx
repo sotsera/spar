@@ -21,6 +21,16 @@
     <Project Path="tests/Spar.WindowTests/Spar.WindowTests.csproj" />
     <Project Path="tests/apps/Spar.Harness/Spar.Harness.csproj" />
     <Project Path="tests/AppModel.Tests/AppModel.Tests.csproj" />
+    <!-- In the solution for the IDE, but not built or run with it: minutes each, run each with dotnet test and its project. -->
+    <Project Path="tests/Spar.BuildTests/Spar.BuildTests.csproj">
+      <Build Project="false" />
+    </Project>
+    <Project Path="tests/Spar.PackageTests/Spar.PackageTests.csproj">
+      <Build Project="false" />
+    </Project>
+    <Project Path="tests/Spar.SandboxTests/Spar.SandboxTests.csproj">
+      <Build Project="false" />
+    </Project>
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/Notebook/Notebook.csproj" />

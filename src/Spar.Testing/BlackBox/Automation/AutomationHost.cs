@@ -12,7 +12,7 @@ namespace Spar.Testing;
 /// abandoned with its thread, which a new one replaces, so one hung app never stalls the next query.
 /// </summary>
 [SupportedOSPlatform("windows10.0.17763")]
-internal sealed class AutomationHost : IBlackBoxAutomation
+internal sealed partial class AutomationHost : IBlackBoxAutomation
 {
     private const int AriaRoleProperty = 30101;
 

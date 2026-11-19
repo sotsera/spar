@@ -51,6 +51,14 @@ public sealed class SparBlackBoxOptions
     internal SparBlackBoxPlacement? Placement { get; set; }
 
     /// <summary>
+    /// The app outlives the test process: its job does not end it when the test process ends. For a check that ends
+    /// the session the test runs in (a sign-out ends the test process first, which would end the app before the session
+    /// end reaches it; Windows Sandbox run of 2026-11-19). Only in a guest Spar's runner started, where the sandbox is
+    /// stopped after the job; refused elsewhere, so a crashed test run never leaves an app on a developer's machine.
+    /// </summary>
+    internal bool OutlivesTest { get; set; }
+
+    /// <summary>
     /// A <c>LOCALAPPDATA</c> in place of the data root's, for Spar's own test of the host's refusal of a network path.
     /// Internal: an app's test never moves the app's folders outside its disposable root.
     /// </summary>
@@ -59,6 +67,11 @@ public sealed class SparBlackBoxOptions
     /// <summary>Refuses options the fixture cannot honour, before anything starts.</summary>
     internal void Validate()
     {
+        if (OutlivesTest && !SandboxGuest.IsRunnerGuest)
+        {
+            throw new ArgumentException("OutlivesTest is for Spar's Sandbox checks only: outside a runner's guest an app must end with its test.", nameof(OutlivesTest));
+        }
+
         if (ReadyTimeout <= TimeSpan.Zero || ExitTimeout <= TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(ReadyTimeout), "ReadyTimeout and ExitTimeout must be positive.");

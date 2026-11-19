@@ -1,0 +1,25 @@
+{"step":"start","at_ms":1066.4,"took_ms":1060.1,"exit":0,"wsb":"{ \u0022Id\u0022: \u0022<id>\u0022 }"}
+{"step":"ready-system","at_ms":1397.4,"took_ms":328.3,"attempts":1}
+{"step":"marker","at_ms":1717.7,"took_ms":319.9,"guestExit":0}
+{"step":"stage","at_ms":1731.2,"took_ms":11.3,"job":"window-tests/System","stage":"j01-396a95","files":3,"bytes":24346834}
+{"step":"stage-visible","at_ms":2040.4,"took_ms":309.1,"attempts":1}
+{"step":"run","at_ms":2835.4,"took_ms":794.6,"job":"window-tests/System","stage":"j01-396a95","lane":"System","guestExit":0,"timedOut":false,"wsb":"{ \u0022ExitCode\u0022: 0 }"}
+{"step":"collect","at_ms":2837.5,"took_ms":1.5,"exitFile":"0"}
+{"step":"collect-logs","at_ms":3142.4,"took_ms":304.1,"guestExit":0}
+{"step":"job-end","at_ms":3154.8,"took_ms":1435.3,"job":"window-tests/System","exit":0,"tests":3,"problem":null}
+{"step":"stage","at_ms":3162.4,"took_ms":7.1,"job":"notebook/System","stage":"j02-6aa632","files":3,"bytes":24745132}
+{"step":"stage-visible","at_ms":3462.7,"took_ms":300.2,"attempts":1}
+{"step":"run","at_ms":4244.7,"took_ms":781.7,"job":"notebook/System","stage":"j02-6aa632","lane":"System","guestExit":0,"timedOut":false,"wsb":"{ \u0022ExitCode\u0022: 0 }"}
+{"step":"collect","at_ms":4245.1,"took_ms":0.4,"exitFile":"0"}
+{"step":"collect-logs","at_ms":4577.6,"took_ms":332.3,"guestExit":0}
+{"step":"job-end","at_ms":4583,"took_ms":1427.6,"job":"notebook/System","exit":0,"tests":1,"problem":null}
+{"step":"stage","at_ms":4593.5,"took_ms":10.5,"job":"window-tests/Deadline","stage":"j03-b72c5c","files":3,"bytes":24346834}
+{"step":"stage-visible","at_ms":4880.7,"took_ms":287.1,"attempts":1}
+{"step":"run","at_ms":49931.4,"took_ms":45050.5,"job":"window-tests/Deadline","stage":"j03-b72c5c","lane":"System","guestExit":null,"timedOut":true,"wsb":""}
+{"step":"deadline-kill","at_ms":50348.8,"took_ms":417.3,"job":"window-tests/Deadline","guestExit":0}
+{"step":"collect","at_ms":50408.5,"took_ms":59.6,"exitFile":"1"}
+{"step":"collect-logs","at_ms":50707.8,"took_ms":299.1,"guestExit":0}
+{"step":"job-end","at_ms":50713.3,"took_ms":46130.3,"job":"window-tests/Deadline","exit":1,"tests":4,"problem":"The run reached its deadline and was ended in the guest."}
+{"step":"stop","at_ms":51289.5,"took_ms":575.1,"exit":0,"wsb":""}
+{"step":"list-after","at_ms":51560.6,"stillListed":false,"running":0}
+{"step":"session-end","at_ms":51560.7,"took_ms":51560.7,"minimizes":0,"jobs":3}

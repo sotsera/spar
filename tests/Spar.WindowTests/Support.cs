@@ -1,3 +1,5 @@
+using Spar.Testing;
+
 namespace Spar.WindowTests;
 
 /// <summary>Where window tests can run: Windows until the Linux host arrives (M1c). Elsewhere each is an explicit skip.</summary>
@@ -25,42 +27,31 @@ internal static class Waits
     }
 }
 
-/// <summary>Folders of this repository the tests write to, under <c>artifacts/test-results/Spar.WindowTests/</c>.</summary>
+/// <summary>
+/// The folders the tests write to: this project's results (<c>artifacts/test-results/Spar.WindowTests/</c> in the
+/// repository, or the folder the runner names, as Windows Sandbox's does in its guest) and the run's artifacts folder.
+/// </summary>
 internal static class Results
 {
-    private static readonly Lazy<string> Root = new(FindRoot);
+    private static readonly Lock AppendGate = new();
+
+    /// <summary>The run's artifacts folder (<c>artifacts/</c> in the repository), where data roots go.</summary>
+    public static string Artifacts =>
+        TestArtifacts.Root ?? throw new InvalidOperationException("These tests run from a build inside the Spar repository, or with SPAR_TEST_ARTIFACTS set.");
 
     public static string Folder(string name)
     {
-        var folder = Path.Combine(Root.Value, "artifacts", "test-results", "Spar.WindowTests", name);
+        var folder = Path.Combine(TestArtifacts.Results("Spar.WindowTests"), name);
         Directory.CreateDirectory(folder);
         return folder;
     }
 
-    private static readonly Lock AppendGate = new();
-
-    /// <summary>Appends a line of evidence to <c>artifacts/test-results/Spar.WindowTests/&lt;file&gt;</c>, with the time.</summary>
+    /// <summary>Appends a line of evidence to this project's results folder, with the time.</summary>
     public static void Append(string file, string line)
     {
         lock (AppendGate)
         {
             File.AppendAllLines(Path.Combine(Folder("."), file), [$"{DateTime.UtcNow:O} {line}"]);
         }
-    }
-
-    /// <summary>The repository's root, the folder holding <c>global.json</c> and <c>artifacts</c>, above the test's output.</summary>
-    public static string RepositoryRoot => Root.Value;
-
-    private static string FindRoot()
-    {
-        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "global.json")) && Directory.Exists(Path.Combine(directory.FullName, "artifacts")))
-            {
-                return directory.FullName;
-            }
-        }
-
-        throw new InvalidOperationException("These tests run from a build inside the Spar repository.");
     }
 }

@@ -97,6 +97,27 @@ public sealed class LogFileTests : IDisposable
     }
 
     [Fact]
+    public void A_bounded_close_writes_what_is_queued_before_it_returns_and_a_spent_budget_does_not_wait()
+    {
+        // The session end's close (WM_ENDSESSION may be the process's last moment): synchronous, within what is left.
+        var file = LogFile.Open(_root);
+        for (var i = 0; i < 1_000; i++)
+        {
+            file.Write(LogLevel.Information, "App", $"line {i}");
+        }
+
+        file.Close(TimeSpan.FromSeconds(2));
+
+        var lines = File.ReadAllLines(Path.Combine(_root, LogFile.FileName));
+        Assert.Equal(1_000, lines.Length);
+        Assert.EndsWith("line 999", lines[^1], StringComparison.Ordinal);
+
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        LogFile.Open(Path.Combine(_root, "spent")).Close(TimeSpan.FromMilliseconds(-5));
+        Assert.InRange(clock.ElapsedMilliseconds, 0, 500);
+    }
+
+    [Fact]
     public async Task Entries_reach_the_file_in_order_and_close_flushes_them()
     {
         var file = LogFile.Open(_root);

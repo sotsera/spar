@@ -111,9 +111,10 @@ internal sealed class AppProcess : IBlackBoxProcess
         IReadOnlyDictionary<string, string> environment,
         string workingDirectory,
         string? desktop,
-        ushort? showWindow)
+        ushort? showWindow,
+        bool killOnClose = true)
     {
-        var job = CreateJob();
+        var job = CreateJob(killOnClose);
         CreateOutputPipe(out var outputRead, out var outputWrite);
         CreateOutputPipe(out var errorRead, out var errorWrite);
         try
@@ -176,8 +177,11 @@ internal sealed class AppProcess : IBlackBoxProcess
         _error.Dispose();
     }
 
-    /// <summary>The job: kill on close, so a crashed test run leaves no app behind.</summary>
-    private static unsafe SafeFileHandle CreateJob()
+    /// <summary>
+    /// The job: kill on close, so a crashed test run leaves no app behind; without it (a check whose test process ends
+    /// before the app, the sign-out), the job only tracks the app's processes.
+    /// </summary>
+    private static unsafe SafeFileHandle CreateJob(bool killOnClose)
     {
         var handle = PInvoke.CreateJobObject((SECURITY_ATTRIBUTES*)null, default(PCWSTR));
         if (handle.IsNull)
@@ -187,7 +191,7 @@ internal sealed class AppProcess : IBlackBoxProcess
 
         var job = new SafeFileHandle(handle, ownsHandle: true);
         var limits = new JOBOBJECT_EXTENDED_LIMIT_INFORMATION();
-        limits.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        limits.BasicLimitInformation.LimitFlags = killOnClose ? JOB_OBJECT_LIMIT.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE : 0;
         var size = (uint)sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION);
         if (!PInvoke.SetInformationJobObject(handle, JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation, &limits, size))
         {

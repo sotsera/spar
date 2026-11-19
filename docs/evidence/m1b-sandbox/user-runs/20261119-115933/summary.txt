@@ -1,0 +1,83 @@
+Run 20261119-115933: 327.3 s, user session allowed
+
+session s01: 238180 ms, client minimized 6 times
+  start                       1107 ms  (at 1113)
+  ready-system                 327 ms  (at 1441)
+  marker                       333 ms  (at 1774)
+  stage                          9 ms  (at 1785)
+  stage-visible                307 ms  (at 2092)
+  run                          782 ms  (at 2875)
+  collect                        1 ms  (at 2877)
+  collect-logs                 307 ms  (at 3185)
+  job-end                     1419 ms  (at 3194)
+  stage                          7 ms  (at 3201)
+  stage-visible                299 ms  (at 3501)
+  run                          765 ms  (at 4266)
+  collect                        0 ms  (at 4267)
+  collect-logs                 295 ms  (at 4562)
+  job-end                     1374 ms  (at 4568)
+  stage                          7 ms  (at 4575)
+  stage-visible                297 ms  (at 4873)
+  run                        45046 ms  (at 49919)
+  deadline-kill                344 ms  (at 50263)
+  collect                        0 ms  (at 50263)
+  collect-logs                 356 ms  (at 50619)
+  job-end                    46059 ms  (at 50627)
+  ready-user-session          3069 ms  (at 53721)
+  connect                     3088 ms  (at 53721)
+  stage                          8 ms  (at 53730)
+  stage-visible                311 ms  (at 54040)
+  run                       120830 ms  (at 174871)
+  collect                        0 ms  (at 174871)
+  collect-logs                 377 ms  (at 175248)
+  job-end                   124631 ms  (at 175257)
+  stage                          7 ms  (at 175264)
+  stage-visible                297 ms  (at 175562)
+  run                        61156 ms  (at 236718)
+  collect                        0 ms  (at 236718)
+  collect-logs                 314 ms  (at 237032)
+  job-end                    61781 ms  (at 237039)
+  stop                         797 ms  (at 237837)
+  close-clients                 72 ms  (at 237910)
+  session-end               238179 ms  (at 238179)
+
+session s02: 36610 ms, client minimized 2 times
+  start                       1004 ms  (at 1005)
+  ready-system                 291 ms  (at 1296)
+  marker                       295 ms  (at 1591)
+  ready-user-session          2464 ms  (at 4084)
+  connect                     2484 ms  (at 4084)
+  stage                          9 ms  (at 4093)
+  stage-visible                315 ms  (at 4408)
+  run                        30763 ms  (at 35171)
+  collect                        0 ms  (at 35171)
+  collect-logs                 311 ms  (at 35483)
+  job-end                    33904 ms  (at 35495)
+  stop                         773 ms  (at 36273)
+  close-clients                 69 ms  (at 36342)
+  session-end                36610 ms  (at 36610)
+
+session s03: 52227 ms, client minimized 2 times
+  start                       1021 ms  (at 1022)
+  ready-system                 294 ms  (at 1315)
+  marker                       297 ms  (at 1612)
+  ready-user-session          2482 ms  (at 4123)
+  connect                     2501 ms  (at 4123)
+  stage                          9 ms  (at 4132)
+  stage-visible                331 ms  (at 4463)
+  run                        30784 ms  (at 35247)
+  collect                        0 ms  (at 35247)
+  collect-logs                 330 ms  (at 50590)
+  after-session-end            341 ms  (at 51193)
+  job-end                    49600 ms  (at 51212)
+  stop                         739 ms  (at 51952)
+  close-clients                  6 ms  (at 51958)
+  session-end                52227 ms  (at 52227)
+
+job window-tests/System: exit 0, 1419 ms, 3 Passed
+job notebook/System: exit 0, 1374 ms, 1 Passed
+job window-tests/Deadline: exit 1, 46059 ms, 3 Passed, 1 Unfinished; The run reached its deadline and was ended in the guest.
+job window-tests/UserSession: exit 1, 124631 ms, 5 Failed
+job notebook/UserSession: exit 1, 61781 ms, 2 Failed
+job notebook/CleanMachine: exit 1, 33904 ms, 1 Failed
+job window-tests/SignOut: exit 1, 49600 ms, 1 Failed

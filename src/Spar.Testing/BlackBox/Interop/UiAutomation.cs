@@ -59,7 +59,9 @@ internal partial interface IUIAutomation
 [Guid("d22108aa-8ac5-49a5-837b-37bbb3d7591e")]
 internal partial interface IUIAutomationElement
 {
-    [PreserveSig] int Slot003_SetFocus();
+    /// <summary>Gives the element the keyboard focus (and its window the foreground): no input is sent.</summary>
+    void SetFocus();
+
     [PreserveSig] int Slot004_GetRuntimeId();
 
     /// <summary>The first match, or 0 when there is none (<c>S_OK</c> with a null element).</summary>
@@ -125,7 +127,9 @@ internal partial interface IUIAutomationElement
     [PreserveSig] int Slot040_GetCurrentFrameworkId();
     [PreserveSig] int Slot041_GetCurrentIsRequiredForForm();
     [PreserveSig] int Slot042_GetCurrentItemStatus();
-    [PreserveSig] int Slot043_GetCurrentBoundingRectangle();
+    /// <summary>The element's rectangle on the screen, in physical pixels; empty when it has none.</summary>
+    UiaRect GetCurrentBoundingRectangle();
+
     [PreserveSig] int Slot044_GetCurrentLabeledBy();
 
     [return: MarshalAs(UnmanagedType.BStr)]
@@ -207,4 +211,22 @@ internal partial struct Variant
 
     [LibraryImport("oleaut32")]
     private static unsafe partial int VariantClear(Variant* variant);
+}
+
+/// <summary>A <c>RECT</c> as UI Automation returns it: left, top, right and bottom, in physical screen pixels.</summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct UiaRect
+{
+    public int Left;
+    public int Top;
+    public int Right;
+    public int Bottom;
+
+    public readonly int Width => Right - Left;
+
+    public readonly int Height => Bottom - Top;
+
+    public readonly bool IsEmpty => Width <= 0 || Height <= 0;
+
+    public override readonly string ToString() => $"[{Left},{Top},{Right},{Bottom}]";
 }

@@ -1,0 +1,80 @@
+window 0x101E8 process 7332 class Spar.Window
+  window (50032) "WindowHost" [252,18,1268,757]
+  pane (50033) "Window host" [260,49,1260,749]
+  pane (50033) "" [260,49,1260,749] disabled
+  region (50033) role=region "Window host - Web content" [260,49,1260,749]
+  region (50033) role=region "" [260,49,1260,749]
+  region (50033) role=region "" [260,49,1260,749]
+  region (50033) role=region "" [260,49,1260,749]
+  region (50033) role=region "" [0,0,0,0]
+  region (50033) role=region "" [260,49,1260,749]
+  region (50033) role=region "" [260,49,1260,749]
+  region (50033) role=region "" [260,49,1260,749]
+  region (50033) role=region "" [260,49,1260,749]
+  region (50033) role=region "" [0,0,0,0]
+  document (50030) role=document "Window host" [260,49,1260,749]
+  header (50026) role=banner "" [260,-145,1245,-93] offscreen
+  heading (50020) role=heading "Window host" [276,-133,389,-106] offscreen
+  status (50017) role=status "" [404,-130,445,-109] offscreen
+  text (50020) role=description "Ready" [404,-130,445,-110] offscreen
+  main (50026) role=main "" [260,-93,1245,749]
+  region (50026) role=region "Calls" [276,-81,747,333]
+  heading (50020) role=heading "Calls" [289,-54,734,-21] offscreen
+  button (50000) role=button "Start a long call" [289,-3,397,19] offscreen
+  button (50000) role=button "Start a slow call" [401,-3,511,19] offscreen
+  button (50000) role=button "Echo" [514,-3,561,19] offscreen
+  region (50026) role=region "Order" [758,-81,1229,333]
+  heading (50020) role=heading "Order" [771,-54,1216,-21] offscreen
+  text (50020) role=description "Customer name" [771,-4,877,17] offscreen
+  edit (50004) role=textbox "Customer name" [771,18,949,40] offscreen
+  text (50020) role=description "Quantity " [771,45,833,66]
+  spin button (50016) role=spinbutton "Quantity" [832,46,1010,68]
+  check box (50002) role=checkbox "Gift wrap" [775,76,789,90]
+  text (50020) role=description "Region" [771,100,818,121]
+  combo box (50003) role=combobox "Region" [771,123,863,143]
+  text (50020) role=description "Delivery day" [771,148,853,169]
+  date picker (50004) role=textbox "Delivery day" [771,190,888,213]
+  spin button (50016) role=spinbutton "Month Delivery day" [774,192,792,210]
+  text (50020) role=description "/" [791,193,799,209]
+  spin button (50016) role=spinbutton "Day Delivery day" [798,192,816,210]
+  text (50020) role=description "/" [815,193,823,209]
+  spin button (50016) role=spinbutton "Year Delivery day" [822,192,854,210]
+  button (50000) role=button "Show date picker Delivery day" [868,192,886,211]
+  edit (50004) role=textbox "Notes" [891,169,1060,206]
+  edit (50004) role=textbox "Message" [771,218,1216,245]
+  button (50000) role=button "Place order" [771,251,856,273] disabled
+  text (50020) role=description "No order yet" [771,287,856,308]
+  region (50026) role=region "Timing" [276,344,747,513]
+  heading (50020) role=heading "Timing" [289,371,734,404]
+  button (50000) role=button "Load orders" [289,422,377,444]
+  button (50000) role=button "Open the dialog" [289,450,400,472]
+  button (50000) role=button "Covered button" [403,450,511,472]
+  button (50000) role=button "Jumpy button" [514,450,611,472]
+  button (50000) role=button "Show the late button" [289,478,427,500]
+  region (50026) role=region "Scrolling" [758,344,1229,513]
+  heading (50020) role=heading "Scrolling" [771,371,1216,404]
+  text (50020) role=description "Scroll down" [772,422,850,443]
+  button (50000) role=button "Far away" [772,823,844,845] offscreen
+  region (50026) role=region "Problems" [276,524,747,704]
+  heading (50020) role=heading "Problems" [289,552,734,585]
+  button (50000) role=button "Log an error" [289,603,378,625]
+  button (50000) role=button "Throw" [381,603,435,625]
+  button (50000) role=button "Show an alert" [438,603,537,625]
+  region (50026) role=region "Closing" [758,524,1229,704]
+  heading (50020) role=heading "Closing" [771,552,1216,585]
+  text (50020) role=description "Close guard" [771,602,851,623]
+  combo box (50003) role=combobox "Close guard" [771,625,1036,645]
+  button (50000) role=button "Hang for 12 seconds" [1039,624,1179,646]
+  text (50020) role=description "Keys" [771,651,802,672]
+  edit (50004) role=textbox "Keys" [771,673,949,695]
+  navigation (50026) role=navigation "Pages" [276,715,747,737]
+  link (50005) role=link "Second page" [276,715,363,736]
+  region (50033) role=region "" [0,0,0,0]
+  region (50033) role=region "" [0,0,0,0]
+  region (50033) role=region "" [260,49,1260,749]
+  title bar (50037) "" [276,21,1260,49]
+  menu bar (50010) "System" [260,26,282,48]
+  menu item (50011) "System" [260,26,282,48]
+  button (50000) "Minimize" [1121,19,1168,49]
+  button (50000) "Maximize" [1168,19,1214,49]
+  button (50000) "Close" [1214,19,1261,49]

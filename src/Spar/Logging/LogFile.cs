@@ -79,10 +79,16 @@ internal sealed partial class LogFile
     /// Ends the file: the entries queued so far are written, within <see cref="FlushLimitMilliseconds"/>. It waits on
     /// the calling thread: call it where nothing that draws waits (process exit, the shutdown watch's own thread).
     /// </summary>
-    public void Close()
+    public void Close() => Close(TimeSpan.FromMilliseconds(FlushLimitMilliseconds));
+
+    /// <summary>
+    /// Ends the file, waiting at most <paramref name="limit"/> for the entries queued so far: at session end, where
+    /// Windows may end the process as soon as <c>WM_ENDSESSION</c> returns, within what is left of its budget.
+    /// </summary>
+    public void Close(TimeSpan limit)
     {
         _entries.Writer.TryComplete();
-        _ = _writer.Wait(FlushLimitMilliseconds);
+        _ = _writer.Wait(limit > TimeSpan.Zero ? limit : TimeSpan.Zero);
     }
 
     /// <summary>Ends the file without blocking: completes once the queued entries are written, or at the limit.</summary>

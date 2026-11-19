@@ -152,6 +152,11 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         }
     });
 
+    /// <summary>A test's session end ends no process: the test host closes the app's log file with the app.</summary>
+    void IAppWindowOwner.SessionEndLogged(TimeSpan limit)
+    {
+    }
+
     private void Start()
     {
         try

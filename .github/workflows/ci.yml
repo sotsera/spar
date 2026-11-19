@@ -180,14 +180,20 @@ jobs:
           done
 
       - name: Build tests (a clean copy, an unchanged build, the production boundary, the console harness, one build per project)
-        # Not in Spar.slnx: they copy the tree under artifacts/build-tests/ and build it in isolation, in minutes.
+        # Listed in Spar.slnx but not built or run with it (Build Project="false"): they copy the tree under
+        # artifacts/build-tests/ and build it in isolation, in minutes.
         if: matrix.lane == 'build-tests'
         run: dotnet test --project tests/Spar.BuildTests
 
       - name: Package tests (Spar from its own packages, in a consumer outside the repository)
-        # Not in Spar.slnx: it packs Spar into a feed of its own and builds an app from it in a temporary folder.
+        # Listed in Spar.slnx but not built or run with it: it packs Spar into a feed of its own and builds an app from it
+        # in a temporary folder.
         if: matrix.lane == 'package-tests'
         run: dotnet test --project tests/Spar.PackageTests
+
+      # No Windows Sandbox step: tests/Spar.SandboxTests needs Windows Sandbox, a feature of Windows 11 Pro, Enterprise
+      # and Education that hosted runners (Windows Server) do not have. It is a local or self-hosted lane, listed in
+      # Spar.slnx but not built or run with it.
 
       - name: Test results
         if: always()

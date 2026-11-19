@@ -166,6 +166,9 @@ internal sealed partial class AppWindow
     {
         var start = Stopwatch.GetTimestamp();
         _log.Step("session ending");
+
+        // Windows ends the browser's processes too: nothing is recovered from here on.
+        _view?.EndRecovery();
         var limit = start + Stopwatch.Frequency * SessionEndMilliseconds / 1_000;
         if (_state != State.Closing)
         {
@@ -187,6 +190,9 @@ internal sealed partial class AppWindow
         {
             _source?.OnPhase?.Invoke($"session end held {held:0} ms");
         }
+
+        // Windows may end the process once this returns: the log's queued lines go to the disk first, within the budget.
+        _owner.SessionEndLogged(TimeSpan.FromMilliseconds(SessionEndMilliseconds - held));
         if (quit is { } code)
         {
             // The loop below this one ends when it sees the quit message the pump took.

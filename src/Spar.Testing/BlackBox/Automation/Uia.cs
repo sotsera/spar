@@ -13,6 +13,7 @@ internal sealed class Uia
 {
     public const int ScopeChildren = 0x2;
     public const int ScopeDescendants = 0x4;
+    public const int ScopeSubtree = 0x7;
 
     public const int ProcessIdProperty = 30002;
     public const int ControlTypeProperty = 30003;
@@ -193,4 +194,6 @@ internal sealed class UiaElement(IUIAutomationElement com)
     public bool IsEnabled => Com.GetCurrentIsEnabled() != 0;
 
     public bool IsOffscreen => Com.GetCurrentIsOffscreen() != 0;
+
+    public UiaRect Bounds => Com.GetCurrentBoundingRectangle();
 }

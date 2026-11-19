@@ -35,6 +35,28 @@ internal static unsafe class TopWindows
         return state.Found;
     }
 
+    /// <summary>
+    /// <c>WM_QUERYENDSESSION</c> (<paramref name="query"/>) or <c>WM_ENDSESSION</c> with <c>TRUE</c>, both for a log-off
+    /// (<c>ENDSESSION_LOGOFF</c>), sent to <paramref name="window"/> and waited for at most 8 s (the session end holds 4).
+    /// </summary>
+    public static void SendSessionEnd(nint window, bool query)
+    {
+        const uint QueryEndSession = 0x0011;
+        const uint EndSession = 0x0016;
+        var logoff = new LPARAM(unchecked((nint)0x80000000));
+        _ = PInvoke.SendMessageTimeout(
+            new HWND((void*)window),
+            query ? QueryEndSession : EndSession,
+            new WPARAM(query ? 0u : 1u),
+            logoff,
+            SEND_MESSAGE_TIMEOUT_FLAGS.SMTO_NORMAL,
+            8_000,
+            null);
+    }
+
+    /// <summary>The foreground window's handle, 0 when none.</summary>
+    public static nint Foreground() => (nint)PInvoke.GetForegroundWindow().Value;
+
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
     private static BOOL Collect(HWND window, LPARAM parameter)
     {

@@ -76,16 +76,8 @@ internal sealed class NotebookWindow : IAsyncDisposable
 
     private static string ResultsFolder()
     {
-        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "Spar.slnx")))
-            {
-                var folder = Path.Combine(directory.FullName, "artifacts", "test-results", "Notebook.EndToEndTests", "screenshots");
-                Directory.CreateDirectory(folder);
-                return folder;
-            }
-        }
-
-        throw new InvalidOperationException("These tests run from a build inside the Spar repository.");
+        var folder = Path.Combine(TestArtifacts.Results("Notebook.EndToEndTests"), "screenshots");
+        Directory.CreateDirectory(folder);
+        return folder;
     }
 }

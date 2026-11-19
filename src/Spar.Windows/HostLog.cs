@@ -81,6 +81,9 @@ internal sealed class HostLog
     /// <summary>Ends the log file: what was logged reaches the disk, within a short limit. Called once, at process exit.</summary>
     public void Close() => _file?.Close();
 
+    /// <summary>Ends the file, waiting at most <paramref name="limit"/> for what is queued (the session end's last lines).</summary>
+    public void Close(TimeSpan limit) => _file?.Close(limit);
+
     /// <summary>
     /// Sends the host's lines through the app's logging once its services exist: its factory carries the log file, so
     /// the file gets each line once, and the app's own providers get them too.

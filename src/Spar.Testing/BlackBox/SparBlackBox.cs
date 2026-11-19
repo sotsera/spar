@@ -19,7 +19,8 @@ public static class SparBlackBox
     /// switch for the run: Windows Sandbox's runner (step 8c) runs these tests in its guest with the window activated, so
     /// real input reaches it.
     /// </summary>
-    internal static SparBlackBoxPlacement Placement { get; set; } = SparBlackBoxPlacement.HiddenDesktop;
+    internal static SparBlackBoxPlacement Placement { get; set; } =
+        SandboxGuest.IsUserSession ? SparBlackBoxPlacement.Activated : SparBlackBoxPlacement.HiddenDesktop;
 
     /// <summary>
     /// Starts <paramref name="project"/>'s Production executable and, unless <see cref="SparBlackBoxOptions.WaitForReady"/>
@@ -133,7 +134,8 @@ public static class SparBlackBox
                 Environment(options, folders),
                 folders.Root,
                 automation.Desktop,
-                show);
+                show,
+                killOnClose: !options.OutlivesTest);
         }
         catch
         {

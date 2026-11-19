@@ -32,6 +32,9 @@ internal static class ProductionBoundary
         // marker the generated Projects class names, which only Spar.Testing carries.
         "SparBlackBox", "SparBlackBoxApp", "SparBlackBoxOptions", "SparNativeDialog", "SparProject", "BlackBoxQuery",
         "IUIAutomationElementArray",
+
+        // The Windows Sandbox runner and real input (M1b step 8c): Spar.Testing only.
+        "SandboxRunner", "SandboxSession", "SandboxGuest", "RealInput", "ScreenCapture", "SandboxEvidence",
     ];
 
     private static readonly string[] Literals =
@@ -41,6 +44,7 @@ internal static class ProductionBoundary
         "differs from the one the build read", "Allow it with csp.", "SPAR_DEV_INPUT", "remote-debugging-port",
         "spar-automation", "Spar test anchor", "Spar UI (tests)", "spartest", "app.Window.CloseAsync",
         "spar-black-box-", "spar-apps",
+        "SPAR_SANDBOX_RUN", "SPAR_SANDBOX_DESKTOP", "WDAGUtilityAccount", "SparSandboxOtherWindow", @"C:\spar\runner",
     ];
 
     /// <summary>

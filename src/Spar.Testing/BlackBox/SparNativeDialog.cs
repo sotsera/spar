@@ -44,5 +44,23 @@ public sealed class SparNativeDialog
         }
     }
 
+    /// <summary>
+    /// Clicks the button named <paramref name="button"/> with a real mouse: Spar's Sandbox checks only (step 8c), refused
+    /// outside the user session of a guest Spar's runner started.
+    /// </summary>
+    internal async Task ClickAsync(string button)
+    {
+        SandboxGuest.EnsureUserSession("send real input");
+        var bounds = await _app.Automation.DialogButtonBoundsAsync(_content, button)
+            ?? throw new InvalidOperationException($"The dialog '{Title}' has no button '{button}' now.");
+        if (!BlackBoxPlatform.IsSupported)
+        {
+            throw BlackBoxPlatform.NotSupported();
+        }
+
+        var (x, y) = bounds.Center;
+        RealInput.Click(x, y);
+    }
+
     public override string ToString() => $"{Title}: {Text.Replace('\n', ' ')} [{string.Join(" | ", Buttons)}]";
 }

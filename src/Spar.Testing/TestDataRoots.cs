@@ -3,9 +3,9 @@ using System.Globalization;
 namespace Spar.Testing;
 
 /// <summary>
-/// One data root per app instance (plan section 5, "Safe by default"): under the repository's disposable
-/// <c>artifacts/test-host/</c> when the test runs inside a repository, otherwise under the system's temporary folder.
-/// Never a per-user app folder.
+/// One data root per app instance (plan section 5, "Safe by default"): under <c>test-host/</c> of the run's artifacts
+/// folder (<see cref="TestArtifacts.Root"/>: the folder the runner names, or the repository's disposable <c>artifacts/</c>),
+/// otherwise under the system's temporary folder. Never a per-user app folder.
 /// </summary>
 internal static class TestDataRoots
 {
@@ -91,23 +91,13 @@ internal static class TestDataRoots
     private static string FindProfiles()
     {
         var testHost = Base.Value;
-        var artifacts = Path.GetDirectoryName(testHost)!;
-        return Path.GetFileName(testHost) == "test-host" && Path.GetFileName(artifacts) == "artifacts"
+        return TestArtifacts.Root is { } artifacts
             ? Path.Combine(artifacts, "webview2-profiles", "test-host")
             : Path.Combine(testHost, "webview2-profiles");
     }
 
-    private static string FindBase()
-    {
-        for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
-        {
-            var artifacts = Path.Combine(directory.FullName, "artifacts");
-            if (File.Exists(Path.Combine(directory.FullName, "global.json")) && Directory.Exists(artifacts))
-            {
-                return Path.Combine(artifacts, "test-host");
-            }
-        }
-
-        return Path.Combine(Path.GetTempPath(), "spar-test-host");
-    }
+    private static string FindBase() =>
+        TestArtifacts.Root is { } artifacts
+            ? Path.Combine(artifacts, "test-host")
+            : Path.Combine(Path.GetTempPath(), "spar-test-host");
 }

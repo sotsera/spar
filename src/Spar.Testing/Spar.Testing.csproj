@@ -36,7 +36,17 @@
     <!-- Spar's own host tests (tests/Spar.WindowTests) reach the window's lifetime and the host's phases. -->
     <InternalsVisibleTo Include="Spar.WindowTests" />
 
-    <!-- The pin of the ready line against the line the Windows host writes, and the UI Automation slot-order test. -->
+    <!--
+      The pin of the ready line against the line the Windows host writes, the UI Automation slot-order test, and the
+      Sandbox runner's unit tests (its configuration, guest script, results reader and the real-input guard).
+    -->
     <InternalsVisibleTo Include="Spar.Tests" />
+
+    <!--
+      Windows Sandbox (step 8c): the runner, driven by Spar.SandboxTests; and real input on the black-box window, which
+      the Notebook's Sandbox checks of its Production executable use. Internal until M3's app-facing layer.
+    -->
+    <InternalsVisibleTo Include="Spar.SandboxTests" />
+    <InternalsVisibleTo Include="Notebook.EndToEndTests" />
   </ItemGroup>
 </Project>

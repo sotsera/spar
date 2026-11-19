@@ -30,7 +30,7 @@ internal static class Budgets
         var line = $"{measure}: {result} [{Configuration()}, {Runtime()}]";
         TestContext.Current.SendDiagnosticMessage(line);
 
-        var folder = Path.Combine(Root(), "artifacts", "test-results", Assembly.GetExecutingAssembly().GetName().Name!);
+        var folder = Path.Combine(ResultsRoot(), Assembly.GetExecutingAssembly().GetName().Name!);
         var file = Path.Combine(folder, "budgets.txt");
         lock (Gate)
         {
@@ -51,16 +51,25 @@ internal static class Budgets
     // PublishAot makes IsDynamicCodeSupported false even under the JIT (docs/pitfalls.md); this one tells them apart.
     private static string Runtime() => RuntimeFeature.IsDynamicCodeCompiled ? "CoreCLR" : "NativeAOT";
 
-    private static string Root()
+    /// <summary>
+    /// The results root: SPAR_TEST_RESULTS when the runner names it (Windows Sandbox's runner in its guest, CI), otherwise
+    /// the repository's <c>artifacts/test-results/</c> above the tests' output (the folder beside <c>global.json</c>).
+    /// </summary>
+    private static string ResultsRoot()
     {
+        if (Environment.GetEnvironmentVariable("SPAR_TEST_RESULTS") is { Length: > 0 } named && Path.IsPathFullyQualified(named))
+        {
+            return named;
+        }
+
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
         {
-            if (File.Exists(Path.Combine(directory.FullName, "Spar.slnx")))
+            if (File.Exists(Path.Combine(directory.FullName, "global.json")) && Directory.Exists(Path.Combine(directory.FullName, "artifacts")))
             {
-                return directory.FullName;
+                return Path.Combine(directory.FullName, "artifacts", "test-results");
             }
         }
 
-        throw new InvalidOperationException("These tests run from a build inside the Spar repository.");
+        throw new InvalidOperationException("These tests write their budgets under the repository's artifacts/, or under SPAR_TEST_RESULTS.");
     }
 }

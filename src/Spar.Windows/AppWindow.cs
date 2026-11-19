@@ -25,6 +25,12 @@ internal interface IAppWindowOwner
     /// be ended (an app disposes its services), which the window waits for while it pumps. Null when there is nothing.
     /// </summary>
     Task? SessionEnded();
+
+    /// <summary>
+    /// The session end's last line is logged and <c>WM_ENDSESSION</c> is about to return, after which Windows may end the
+    /// process at once: an app writes its log file out now, within <paramref name="limit"/> (what is left of the budget).
+    /// </summary>
+    void SessionEndLogged(TimeSpan limit);
 }
 
 /// <summary>
@@ -251,6 +257,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
 
         _state = State.Closing;
+        _view?.EndRecovery();
         _owner.TeardownStarted();
         if (!_failed)
         {

@@ -110,6 +110,9 @@ internal sealed class WindowsApp : IAppWindowOwner
     /// <summary>At session end, the services are disposed while the window still holds <c>WM_ENDSESSION</c>.</summary>
     Task? IAppWindowOwner.SessionEnded() => Task.Run(Stop);
 
+    /// <summary>The log file is closed before <c>WM_ENDSESSION</c> returns: queued lines are lost when Windows ends the process.</summary>
+    void IAppWindowOwner.SessionEndLogged(TimeSpan limit) => _log.Close(limit);
+
     /// <summary>
     /// Before the start-up checks (plan section 3c): the app's identity to the OS, the browser opt-ins in force, each in
     /// the log, the WebView2 environment variables the app did not allow removed before the loader's first call, and the

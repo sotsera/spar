@@ -9,7 +9,7 @@ namespace Spar.Testing;
 /// UI Automation's patterns (<see cref="SparBlackBoxLocator.InvokeAsync"/>), never through input: nothing reaches the
 /// user's mouse or keyboard. Every call reads the window as it is now.
 /// </summary>
-public sealed class SparBlackBoxWindow
+public sealed partial class SparBlackBoxWindow
 {
     /// <summary>How long an action or a wait takes at most, in milliseconds, unless its options say otherwise.</summary>
     public float DefaultTimeout { get; set; } = 10_000;
@@ -39,7 +39,7 @@ public sealed class SparBlackBoxWindow
 }
 
 /// <summary>Elements a <see cref="SparBlackBoxWindow"/> query finds, read again at every call.</summary>
-public sealed class SparBlackBoxLocator
+public sealed partial class SparBlackBoxLocator
 {
     private readonly SparBlackBoxWindow _window;
     private readonly ElementTarget _target;
