@@ -42,6 +42,25 @@ internal sealed unsafe class OtherWindow : IDisposable
         return window;
     }
 
+    /// <summary>
+    /// The foreground window now (handle, class and process), for a check whose window did not take the foreground to
+    /// say which one did.
+    /// </summary>
+    public static string Foreground()
+    {
+        var window = PInvoke.GetForegroundWindow();
+        if (window.IsNull)
+        {
+            return "no foreground window";
+        }
+
+        uint process;
+        PInvoke.GetWindowThreadProcessId(window, &process);
+        var buffer = stackalloc char[256];
+        var length = PInvoke.GetClassName(window, buffer, 256);
+        return $"window 0x{(nint)window.Value:X} class {new string(buffer, 0, Math.Max(0, length))} process {process}";
+    }
+
     /// <summary>Whether this window is the foreground window now.</summary>
     public bool IsForeground => (nint)PInvoke.GetForegroundWindow().Value == _handle;
 

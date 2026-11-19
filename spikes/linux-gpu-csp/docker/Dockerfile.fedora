@@ -1,0 +1,9 @@
+# Fedora 43 with WebKitGTK 6.0 2.54.x, Mesa, Xvfb and the Python GI bindings.
+# Build (from the spike folder): docker build -t spar-spike-linux-gpu-csp:fedora43 -f docker/Dockerfile.fedora docker/
+FROM fedora:43
+RUN dnf -y --setopt=install_weak_deps=False install \
+      webkitgtk6.0 python3-gobject gtk4 libsoup3 gobject-introspection xorg-x11-server-Xvfb bubblewrap \
+      xdg-dbus-proxy mesa-dri-drivers mesa-libEGL mesa-libGL libglvnd-opengl libglvnd-gles libdrm dbus-daemon \
+      procps-ng python3 \
+    && dnf clean all \
+    && useradd -u 1000 -m probe

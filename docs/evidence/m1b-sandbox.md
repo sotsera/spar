@@ -130,9 +130,16 @@ The host-side tests of both fixes:
 - **Reading:** Windows ended the process as soon as the window holding `WM_ENDSESSION` was destroyed, without waiting for the handler to return. Run 5's fix (the log closed before the message returns) was right but came after that point. Microsoft's documentation for `WM_ENDSESSION` says an application need not destroy its windows when the session ends.
 - **Fix (not yet run in a sandbox):** at session end the teardown closes the page and the controller and keeps the window; `WM_ENDSESSION` waits for that, the services' disposal and the final line with the log's flush, then posts a message of the window's own that destroys it after the handler returns, should the process outlive it. The host's session-end tests check the order locally (their `WM_ENDSESSION` comes from `SendMessage`, which does not end the process, so they cannot show the kill itself); the renderer test now measures to `controller closed`. The window suite passed 118 of 118 twice on CoreCLR and once on NativeAOT, the Notebook's window (10) and black-box (6) tests too.
 
+## Run 7 (`211851`), with the user's allow (2026-11-19)
+
+The same command on run 6's fix: 32 results, 31 passed, 1 failed, 3 min 6 s.
+
+- **The sign-out passed:** `session ending` at 4,152.7 ms, `controller closed` at 4,175.7, `window kept until WM_ENDSESSION returns` at 4,175.8, `services disposed` at 4,176.0, and the final line, `session end: window closed, last work done; WM_ENDSESSION held 45 ms`, at 4,197.8 ms, all in the log. The 22 ms between the last two is the pump's 20 ms check.
+- **Failed: the first click on an inactive window** (`The_first_click_on_an_inactive_window_reaches_the_page`), in its setup: the helper window it clicks with real input did not take the foreground within 5 s. The Tab test, with the same setup, passed in the same job, and the check passed in run 6. The run kept no evidence of which window held the foreground. Both tests now note it (the foreground window's class and process, both windows' rectangles) and save a screenshot before failing, so the next run that sees it explains it.
+
 ## Not run here
 
-- The sign-out after run 6's fix (the window kept until `WM_ENDSESSION` returns): run 6 was the last allowed user-session run. The close confirmation passed after its change in run 6.
+- Why the first click's helper window once did not take the foreground (run 7): run 7 was the last allowed user-session run.
 - A browser process (rather than a renderer) lost during a session end on the host: the test process's window tests share one browser, so the host test ends the renderer.
 - The page's `online` and `offline` events: the guest has no network adapter to switch (its configuration turns networking off), so only "starts offline" is checked.
 - `RunnerTests` on a machine without Windows Sandbox (it would be one skip naming why).
