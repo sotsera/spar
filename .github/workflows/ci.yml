@@ -122,6 +122,15 @@ jobs:
         if: matrix.lane == 'tests'
         run: dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait "Surface=Window" --filter-not-trait "Surface=BlackBox"
 
+      - name: Desktop probe (temporary)
+        # Where the hosted runner's processes live (session, window station, desktops), and whether a WebView2 app starts
+        # on the runner's desktop and on a desktop created in its window station. Removed once the black-box tests'
+        # placement on CI is settled.
+        if: matrix.lane == 'tests' && runner.os == 'Windows'
+        continue-on-error: true
+        shell: pwsh
+        run: ./eng/ci/desktop-probe.ps1 -Executable (Resolve-Path tests/Spar.WindowTests/bin/Development/Debug/net11.0/win-x64/spar-apps/WindowHost/WindowHost.exe)
+
       - name: Window tests (CoreCLR)
         # The app's real WebView2 window in the test process (trait Surface=Window), in their own invocations: a native
         # engine abort ends only this step's process. Windows only until the Linux host (M1c). Spar.WindowTests also

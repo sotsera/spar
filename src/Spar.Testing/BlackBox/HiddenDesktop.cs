@@ -45,7 +45,25 @@ internal sealed class HiddenDesktop : IDisposable
             throw new InvalidOperationException($"CreateDesktop failed ({Marshal.GetLastPInvokeError()}).");
         }
 
-        return new HiddenDesktop(new CloseDesktopSafeHandle(desktop, ownsHandle: true), name);
+        // The full name: a desktop name alone is resolved by the window-station connection rules, which pick WinSta0
+        // for a process in the interactive user's logon session even when the test process runs in another station.
+        var handle = new CloseDesktopSafeHandle(desktop, ownsHandle: true);
+        return new HiddenDesktop(handle, StationName() + "\\" + name);
+    }
+
+    /// <summary>The name of the test process's window station: <c>WinSta0</c> on a desktop session, a service's own otherwise.</summary>
+    private static unsafe string StationName()
+    {
+        var station = PInvoke.GetProcessWindowStation();
+        const int Capacity = 256;
+        var buffer = stackalloc char[Capacity];
+        uint needed;
+        if (!PInvoke.GetUserObjectInformation((HANDLE)station.Value, USER_OBJECT_INFORMATION_INDEX.UOI_NAME, buffer, Capacity * sizeof(char), &needed))
+        {
+            throw new InvalidOperationException($"GetUserObjectInformation failed ({Marshal.GetLastPInvokeError()}).");
+        }
+
+        return new string(buffer);
     }
 
     public void Dispose()

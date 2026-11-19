@@ -35,6 +35,14 @@
   </ItemGroup>
 
   <!--
+    Where Spar.Sdk does not add the package (a Linux build, whose tests load no WebView2), the header still comes from
+    it: the slot-order test runs on every OS. Items are evaluated after every property, so the SDK's choice is known here.
+  -->
+  <ItemGroup Condition="'$(_SparWebView2Loader)' != 'true'">
+    <PackageReference Include="Microsoft.Web.WebView2" ExcludeAssets="all" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <!--
     Tests that read files of the test's output (the static-state test, tests/static-state/, and the slot-order tests
     read assemblies' metadata), so CoreCLR only.
   -->
