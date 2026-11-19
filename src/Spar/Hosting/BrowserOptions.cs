@@ -28,6 +28,8 @@ public sealed class BrowserOptions
 
     internal bool EnvironmentOverrides { get; private set; }
 
+    internal HardwareAcceleration Acceleration { get; private set; } = Spar.HardwareAcceleration.Auto;
+
     /// <summary>
     /// The browser's devtools in every build: F12, Ctrl+Shift+I and the context menu's Inspect.
     /// <para><b>Risk:</b> anyone at the keyboard can read and change the page, its storage and every value it holds,
@@ -149,6 +151,30 @@ public sealed class BrowserOptions
         return this;
     }
 
+    /// <summary>
+    /// Whether the browser draws with the GPU (plan section 3, "Software GPUs"). <b>Linux only for now: Windows
+    /// ignores it</b>, and WebView2 keeps its own choice there.
+    /// <para><see cref="Spar.HardwareAcceleration.Auto"/>, the default, turns acceleration off where the only GPU is a
+    /// software renderer (llvmpipe, lavapipe, SwiftShader and the like, as in virtual machines, WSL and containers):
+    /// there it made the first window about 0.35 s slower and the app and its web processes about 270 MB larger,
+    /// for nothing.
+    /// <see cref="Spar.HardwareAcceleration.Always"/> keeps WebKit's and GTK's own GPU drawing even then, and
+    /// <see cref="Spar.HardwareAcceleration.Never"/> turns it off everywhere, for a graphics driver that breaks the
+    /// page.</para>
+    /// <para>It is not a security setting. Spar logs the choice and what it found at start-up. The user's own
+    /// <c>GSK_RENDERER</c> and <c>WEBKIT_DISABLE_DMABUF_RENDERER</c> always win over it.</para>
+    /// </summary>
+    public BrowserOptions HardwareAcceleration(HardwareAcceleration acceleration)
+    {
+        if (!Enum.IsDefined(acceleration))
+        {
+            throw new ArgumentOutOfRangeException(nameof(acceleration), acceleration, "Not a HardwareAcceleration value.");
+        }
+
+        Acceleration = acceleration;
+        return this;
+    }
+
     /// <summary>The opt-ins in force, by their method names, for the start-up log (plan section 3c, level 2); empty for none.</summary>
     internal string Active() => string.Concat(
         DevTools ? " AllowDevTools()" : "",
@@ -159,4 +185,23 @@ public sealed class BrowserOptions
         ContextMenu ? " AllowContextMenu()" : "",
         PagePicker ? " AllowPagePicker()" : "",
         EnvironmentOverrides ? " AllowBrowserEnvironmentOverrides()" : "").TrimStart();
+}
+
+/// <summary>
+/// Whether the browser draws with the GPU, in <c>spar.Browser(b => b.HardwareAcceleration(…))</c>. Linux only for now:
+/// Windows ignores it.
+/// </summary>
+public enum HardwareAcceleration
+{
+    /// <summary>
+    /// The default: the GPU where it is a real one, and no acceleration where the only GPU is a software renderer.
+    /// Spar decides before the window exists, from the GPU's render node and, when there is one, the renderer's name.
+    /// </summary>
+    Auto,
+
+    /// <summary>WebKit's and GTK's own GPU drawing, even on a software renderer.</summary>
+    Always,
+
+    /// <summary>No GPU drawing, on any machine: for a graphics driver that breaks the page.</summary>
+    Never,
 }

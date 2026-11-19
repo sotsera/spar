@@ -81,6 +81,26 @@ internal sealed class BrowserView
 
         _view = NewView(_session, _content);
         _pages.Register(WebKit.webkit_web_view_get_context(_view));
+        SetBackground(background);
+        _loadHandler = GLib.g_signal_connect_data(
+            _view, "load-changed", (delegate* unmanaged<nint, int, nint, void>)&OnLoadChanged, self, 0, 0);
+        _terminatedHandler = GLib.g_signal_connect_data(
+            _view, "web-process-terminated", (delegate* unmanaged<nint, int, nint, void>)&OnWebProcessTerminated, self, 0, 0);
+        _bridge.Attach(_view);
+        _log.Phase("web view created");
+    }
+
+    /// <summary>
+    /// The view's colour before the page paints (loop thread): opaque, the window's, since a transparent view shows
+    /// black without a compositor (plan section 3d).
+    /// </summary>
+    public unsafe void SetBackground(SparColor background)
+    {
+        if (_view == 0)
+        {
+            return;
+        }
+
         var colour = new GdkRgba
         {
             Red = background.Red / 255f,
@@ -89,12 +109,6 @@ internal sealed class BrowserView
             Alpha = 1,
         };
         WebKit.webkit_web_view_set_background_color(_view, &colour);
-        _loadHandler = GLib.g_signal_connect_data(
-            _view, "load-changed", (delegate* unmanaged<nint, int, nint, void>)&OnLoadChanged, self, 0, 0);
-        _terminatedHandler = GLib.g_signal_connect_data(
-            _view, "web-process-terminated", (delegate* unmanaged<nint, int, nint, void>)&OnWebProcessTerminated, self, 0, 0);
-        _bridge.Attach(_view);
-        _log.Phase("web view created");
     }
 
     /// <summary>Opens the app's page (loop thread).</summary>

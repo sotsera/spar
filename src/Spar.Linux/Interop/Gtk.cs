@@ -11,9 +11,52 @@ internal static unsafe partial class Gtk
 {
     private const string Library = "libgtk-4.so.1";
 
+    /// <summary><c>GTK_STYLE_PROVIDER_PRIORITY_APPLICATION</c>: above the theme, below the user's own CSS.</summary>
+    public const uint StyleProviderPriorityApplication = 600;
+
     /// <summary>Opens the display named by the environment; false when there is none.</summary>
     [LibraryImport(Library)]
     public static partial int gtk_init_check();
+
+    /// <summary>The loaded GTK's version: callable before <see cref="gtk_init_check"/>.</summary>
+    [LibraryImport(Library)]
+    public static partial uint gtk_get_major_version();
+
+    [LibraryImport(Library)]
+    public static partial uint gtk_get_minor_version();
+
+    [LibraryImport(Library)]
+    public static partial uint gtk_get_micro_version();
+
+    /// <summary>The default display's settings, borrowed; after <see cref="gtk_init_check"/>.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_settings_get_default();
+
+    /// <summary>Borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gdk_display_get_default();
+
+    /// <summary>Owned.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_css_provider_new();
+
+    /// <summary>Replaces the provider's rules with <paramref name="data"/> (UTF-8, <paramref name="length"/> bytes).</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_css_provider_load_from_data(nint provider, byte* data, nint length);
+
+    /// <summary>The display keeps its own reference on the provider.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_style_context_add_provider_for_display(nint display, nint provider, uint priority);
+
+    [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial void gtk_widget_add_css_class(nint widget, string cssClass);
+
+    /// <summary>
+    /// The startup notification or activation token the window is presented with, so the window manager lets a
+    /// relaunch's window take the focus; set before <see cref="gtk_window_present"/>.
+    /// </summary>
+    [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial void gtk_window_set_startup_id(nint window, string startupId);
 
     [LibraryImport(Library)]
     public static partial nint gtk_window_new();

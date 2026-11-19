@@ -129,6 +129,11 @@ internal sealed class WindowsApp : IAppWindowOwner
             _log.Warn($"Browser opt-ins in force: {active}");
         }
 
+        if (builder.BrowserOptions.Acceleration != HardwareAcceleration.Auto)
+        {
+            _log.Info($"HardwareAcceleration({builder.BrowserOptions.Acceleration}) is for Linux; Windows ignores it.");
+        }
+
         BrowserEnvironment.Filter(builder.BrowserOptions.EnvironmentOverrides, _log);
         if (SparFolders.ProfileProblem(builder.FolderOptions.ProfileFolder) is { } problem)
         {

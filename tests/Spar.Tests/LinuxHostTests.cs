@@ -20,14 +20,13 @@ namespace Spar.Tests;
 /// <c>SPAR_LINUX_TEST_DISPLAY</c> (never WSLg's). Anywhere else they skip, saying why.
 /// </summary>
 [SupportedOSPlatform("linux")]
+[Collection(nameof(LinuxWindowsCollection))]
 public sealed class LinuxHostTests
 {
-    private static readonly TimeSpan Patience = TimeSpan.FromSeconds(20);
-
     [Fact]
     public async Task The_page_calls_moves_to_a_new_document_and_closes_through_the_close_request()
     {
-        await using var app = ProbeRun.Start("facts,echo,navigate");
+        await using var app = LinuxAppRun.Start("facts,echo,navigate");
 
         await app.WaitForAsync(@"probe note: second document (?<doc>[0-9a-f]{16}), echo second");
         var log = app.Log();
@@ -50,17 +49,21 @@ public sealed class LinuxHostTests
         Assert.Contains("close requested (User)", log, StringComparison.Ordinal);
         Assert.Matches(@"web processes exited after [0-9]+ ms", log);
         Assert.Contains("services disposed", log, StringComparison.Ordinal);
-        Assert.All(webProcesses, process => Assert.False(ProbeRun.IsRunning(process.Id), $"{process.Name} {process.Id} outlived the app."));
+        Assert.All(webProcesses, process => Assert.False(LinuxAppRun.IsRunning(process.Id), $"{process.Name} {process.Id} outlived the app."));
     }
 
     [Fact]
     public async Task A_frame_of_another_origin_cannot_reach_the_bridge()
     {
+        // Skip before the foreign site starts: on Windows its listener goes through http.sys, and a port taken in the
+        // meantime failed the test in a NativeAOT run where it had nothing to check.
+        LinuxAppRun.Display();
+        LinuxAppRun.Probe();
         using var foreign = ForeignSite.Start();
-        await using var app = ProbeRun.Start("frame", ("BRIDGE_PROBE_FRAME", foreign.FrameAddress));
+        await using var app = LinuxAppRun.Start("frame", ("BRIDGE_PROBE_FRAME", foreign.FrameAddress));
 
         await app.WaitForAsync("probe note: frame done");
-        await foreign.WaitForAsync("done", Patience);
+        await foreign.WaitForAsync("done", LinuxAppRun.Patience);
 
         // The frame ran, and nothing it tried reached the backend: no note, no message the bridge had to refuse.
         Assert.Equal("absent", foreign.Reports["handler"]);
@@ -78,7 +81,7 @@ public sealed class LinuxHostTests
     [Fact]
     public async Task A_lost_web_process_is_recovered_once_and_the_page_connects_again()
     {
-        await using var app = ProbeRun.Start("");
+        await using var app = LinuxAppRun.Start("");
         await app.WaitForAsync(@"probe note: first document [0-9a-f]{16}$");
 
         app.EndWebProcess();
@@ -95,7 +98,8 @@ public sealed class LinuxHostTests
     [Fact]
     public async Task A_second_loss_before_the_page_is_ready_again_ends_the_app_with_exit_code_5()
     {
-        await using var app = ProbeRun.Start("slow-ready-after-reload", ("SPAR_AUTOMATED", "1"));
+        Assert.SkipUnless(LinuxAppRun.IsDevelopmentProbe(), "Needs the Development build's automated mode: a Production app shows its message and waits.");
+        await using var app = LinuxAppRun.Start("slow-ready-after-reload", ("SPAR_AUTOMATED", "1"));
         await app.WaitForAsync(@"probe note: first document [0-9a-f]{16}$");
 
         app.EndWebProcess();
@@ -124,7 +128,7 @@ public sealed class LinuxHostTests
         var memory = 0.0;
         for (var run = 0; run < 12; run++)
         {
-            await using var app = ProbeRun.Launch(notebook!, "com.example.Notebook", []);
+            await using var app = LinuxAppRun.Launch(notebook!, "com.example.Notebook", []);
             var line = await app.WaitForAsync(@"^(?<time>\S+) INFO  Spar\.Host  \[[0-9a-f]{8}\] ui-ready at [0-9.]+ ms$");
             var readyAt = DateTime.Parse(line.Groups["time"].Value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
             if (run == 1)
@@ -144,7 +148,7 @@ public sealed class LinuxHostTests
         }
 
         // And once more with its web process lost: the page comes back by itself and the app still closes cleanly.
-        await using (var lost = ProbeRun.Launch(notebook!, "com.example.Notebook", []))
+        await using (var lost = LinuxAppRun.Launch(notebook!, "com.example.Notebook", []))
         {
             await lost.WaitForAsync(@"Bridge: document [0-9a-f]{16} reported ui-ready\.");
             lost.EndWebProcess();
@@ -167,226 +171,13 @@ public sealed class LinuxHostTests
             TestContext.Current.CancellationToken);
     }
 
-    private static string Summary(List<double> milliseconds)
+    internal static string Summary(List<double> milliseconds)
     {
         var sorted = milliseconds.Order().ToArray();
         var middle = sorted.Length / 2;
         var median = sorted.Length % 2 == 1 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
         var values = string.Join(", ", milliseconds.Select(value => value.ToString("0.0", CultureInfo.InvariantCulture)));
         return string.Create(CultureInfo.InvariantCulture, $"median {median:0.0} ms ({sorted[0]:0.0}–{sorted[^1]:0.0}, n = {sorted.Length}): {values}");
-    }
-
-    /// <summary>One run of the probe: its process, its private folders and its log.</summary>
-    private sealed class ProbeRun : IAsyncDisposable
-    {
-        private readonly Process _process;
-        private readonly string _display;
-        private readonly string _appFolder;
-        private readonly StringBuilder _output = new();
-
-        /// <summary>When the process was started, in UTC, as the log's times are.</summary>
-        public DateTime Launched { get; }
-
-        public int Id => _process.Id;
-
-        private ProbeRun(Process process, string display, string appFolder, DateTime launched)
-        {
-            _process = process;
-            _display = display;
-            _appFolder = appFolder;
-            Launched = launched;
-            process.OutputDataReceived += (_, line) => Append(line.Data);
-            process.ErrorDataReceived += (_, line) => Append(line.Data);
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-        }
-
-        /// <summary>Starts the bridge probe with <paramref name="plan"/>; skips where the runner provides no probe or display.</summary>
-        public static ProbeRun Start(string plan, params (string Name, string Value)[] variables)
-        {
-            var executable = Environment.GetEnvironmentVariable("SPAR_LINUX_HOST_APP");
-            Assert.SkipWhen(string.IsNullOrEmpty(executable), "Needs SPAR_LINUX_HOST_APP, the bridge probe's executable.");
-            return Launch(executable!, "com.example.tests.BridgeProbe", [("BRIDGE_PROBE_PLAN", plan), .. variables]);
-        }
-
-        /// <summary>
-        /// Starts <paramref name="executable"/> under the run's X server, with every folder the app, GTK, WebKit and its
-        /// sandbox write to under the repository's artifacts (AGENTS.md); <paramref name="appId"/> names its folder under
-        /// <c>XDG_DATA_HOME</c>, where its log is (with ".Development" in a Development build).
-        /// </summary>
-        public static ProbeRun Launch(string executable, string appId, IEnumerable<(string Name, string Value)> variables)
-        {
-            Assert.SkipUnless(OperatingSystem.IsLinux(), "The Linux host runs on Linux only.");
-            var display = Environment.GetEnvironmentVariable("SPAR_LINUX_TEST_DISPLAY");
-            Assert.SkipWhen(string.IsNullOrEmpty(display), "Needs SPAR_LINUX_TEST_DISPLAY, an X server of the run's own (never the user's desktop).");
-
-            var run = Path.Combine(TestFolders.Artifacts(), "linux-homes", "host-tests", Guid.NewGuid().ToString("N")[..12]);
-            var start = new ProcessStartInfo(executable)
-            {
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-            };
-            foreach (var folder in new[] { "home", "data", "config", "cache", "state" })
-            {
-                Directory.CreateDirectory(Path.Combine(run, folder));
-            }
-
-            start.Environment["HOME"] = Path.Combine(run, "home");
-            start.Environment["XDG_DATA_HOME"] = Path.Combine(run, "data");
-            start.Environment["XDG_CONFIG_HOME"] = Path.Combine(run, "config");
-            start.Environment["XDG_CACHE_HOME"] = Path.Combine(run, "cache");
-            start.Environment["XDG_STATE_HOME"] = Path.Combine(run, "state");
-            start.Environment["DISPLAY"] = display;
-            start.Environment["GDK_BACKEND"] = "x11";
-            start.Environment.Remove("WAYLAND_DISPLAY");
-            start.Environment.Remove("WEBKIT_INSPECTOR_SERVER");
-            start.Environment.Remove("WEBKIT_INSPECTOR_HTTP_SERVER");
-            foreach (var (name, value) in variables)
-            {
-                start.Environment[name] = value;
-            }
-
-            var launched = DateTime.UtcNow;
-            var process = Process.Start(start) ?? throw new InvalidOperationException($"{executable} did not start.");
-            var appFolder = Path.Combine(run, "data", appId);
-            return new ProbeRun(process, display!, appFolder, launched);
-        }
-
-        public static bool IsRunning(int process)
-        {
-            try
-            {
-                return File.ReadAllText($"/proc/{process}/comm").StartsWith("WebKit", StringComparison.Ordinal);
-            }
-            catch (IOException)
-            {
-                return false;
-            }
-        }
-
-        public string Log()
-        {
-            try
-            {
-                // The app id's folder, with ".Development" in a Development build.
-                var folder = Directory.EnumerateDirectories(Path.GetDirectoryName(_appFolder)!, Path.GetFileName(_appFolder) + "*").FirstOrDefault();
-                if (folder is null)
-                {
-                    return "";
-                }
-
-                using var stream = new FileStream(Path.Combine(folder, "logs", "app.log"), FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-                using var reader = new StreamReader(stream);
-                return reader.ReadToEnd();
-            }
-            catch (IOException)
-            {
-                return "";
-            }
-        }
-
-        /// <summary>Waits for a line of the app's log that matches <paramref name="pattern"/>, and returns the match.</summary>
-        public async Task<Match> WaitForAsync(string pattern)
-        {
-            var expression = new Regex(pattern, RegexOptions.Multiline);
-            var limit = Stopwatch.StartNew();
-            while (limit.Elapsed < Patience)
-            {
-                if (expression.Match(Log()) is { Success: true } found)
-                {
-                    return found;
-                }
-
-                Assert.False(_process.HasExited, $"The app exited with {(_process.HasExited ? _process.ExitCode : 0)} before '{pattern}'.\n{Describe()}");
-                await Task.Delay(20, TestContext.Current.CancellationToken);
-            }
-
-            Assert.Fail($"No '{pattern}' in the app's log within {Patience.TotalSeconds} s.\n{Describe()}");
-            return Match.Empty;
-        }
-
-        /// <summary>The proportional set size of the app and its WebKit processes, in MB (<c>smaps_rollup</c>).</summary>
-        public double TotalPssMegabytes()
-        {
-            var processes = WebKitProcesses().Select(process => process.Id).Prepend(_process.Id);
-            var kilobytes = 0L;
-            foreach (var process in processes)
-            {
-                var line = File.ReadLines($"/proc/{process}/smaps_rollup").FirstOrDefault(text => text.StartsWith("Pss:", StringComparison.Ordinal));
-                kilobytes += line is null ? 0 : long.Parse(line.Split(' ', StringSplitOptions.RemoveEmptyEntries)[1], CultureInfo.InvariantCulture);
-            }
-
-            return kilobytes / 1024.0;
-        }
-
-        public List<(int Id, string Name)> WebKitProcesses() => WebProcesses.Below(_process.Id);
-
-        /// <summary>Ends the page's web process, as a crash would.</summary>
-        public void EndWebProcess()
-        {
-            var pages = WebKitProcesses().Where(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal)).ToList();
-            Assert.NotEmpty(pages);
-            foreach (var (id, _) in pages)
-            {
-                Process.GetProcessById(id).Kill();
-            }
-        }
-
-        /// <summary>The window manager's close, then the exit code.</summary>
-        public async Task<int> CloseAsync()
-        {
-            Assert.True(X11Close.Send(_display, _process.Id) > 0, "No window of the app was found to close.");
-            return await WaitForExitAsync();
-        }
-
-        public async Task<int> WaitForExitAsync()
-        {
-            using var limit = new CancellationTokenSource(Patience);
-            try
-            {
-                await _process.WaitForExitAsync(limit.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                Assert.Fail($"The app did not exit within {Patience.TotalSeconds} s.\n{Describe()}");
-            }
-
-            return _process.ExitCode;
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            if (!_process.HasExited)
-            {
-                _process.Kill(entireProcessTree: true);
-                await _process.WaitForExitAsync();
-            }
-
-            TestContext.Current.TestOutputHelper?.WriteLine(Describe());
-            _process.Dispose();
-        }
-
-        private string Describe()
-        {
-            lock (_output)
-            {
-                return $"--- app.log ---\n{Log()}\n--- output ---\n{_output}";
-            }
-        }
-
-        private void Append(string? line)
-        {
-            if (line is null)
-            {
-                return;
-            }
-
-            lock (_output)
-            {
-                _output.AppendLine(line);
-            }
-        }
     }
 
     /// <summary>

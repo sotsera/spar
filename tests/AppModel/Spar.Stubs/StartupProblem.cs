@@ -6,6 +6,7 @@ public enum StartupProblemKind
     Missing,
     TooOld,
     Broken,
+    NoGraphicalSession,
     OsTooOld,
     NotResponding,
     OtherUser,

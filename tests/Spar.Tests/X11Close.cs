@@ -17,6 +17,7 @@ internal static unsafe partial class X11Close
     /// <summary>Sends the close to every window of <paramref name="processId"/> on <paramref name="display"/>; returns how many got it.</summary>
     public static int Send(string display, int processId)
     {
+        IgnoreErrors();
         var connection = XOpenDisplay(display);
         if (connection == 0)
         {
@@ -56,6 +57,18 @@ internal static unsafe partial class X11Close
         {
             XCloseDisplay(connection);
         }
+    }
+
+    /// <summary>The windows on <paramref name="connection"/> whose <c>_NET_WM_PID</c> is <paramref name="processId"/>.</summary>
+    internal static List<nuint> WindowsOf(nint connection, int processId)
+    {
+        var pid = XInternAtom(connection, "_NET_WM_PID", 1);
+        if (pid == 0)
+        {
+            return [];
+        }
+
+        return Windows(connection, XDefaultRootWindow(connection)).Where(window => PidOf(connection, window, pid) == processId).ToList();
     }
 
     private static List<nuint> Windows(nint connection, nuint root)
@@ -103,11 +116,23 @@ internal static unsafe partial class X11Close
         }
     }
 
-    [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
-    private static partial nint XOpenDisplay(string name);
+    /// <summary>
+    /// A window can go between finding it and asking about it, and Xlib's default handler then ends the test process:
+    /// errors are ignored instead (the call reports a failure), for every display of the process.
+    /// </summary>
+    internal static void IgnoreErrors() => XSetErrorHandler(&IgnoreError);
+
+    [UnmanagedCallersOnly]
+    private static int IgnoreError(nint display, nint error) => 0;
 
     [LibraryImport(Library)]
-    private static partial int XCloseDisplay(nint display);
+    private static partial nint XSetErrorHandler(delegate* unmanaged<nint, nint, int> handler);
+
+    [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
+    internal static partial nint XOpenDisplay(string name);
+
+    [LibraryImport(Library)]
+    internal static partial int XCloseDisplay(nint display);
 
     [LibraryImport(Library)]
     private static partial nuint XDefaultRootWindow(nint display);
@@ -130,7 +155,7 @@ internal static unsafe partial class X11Close
     private static partial int XFlush(nint display);
 
     [LibraryImport(Library)]
-    private static partial int XFree(void* data);
+    internal static partial int XFree(void* data);
 
     /// <summary>An <c>XClientMessageEvent</c> padded to the 192 bytes of an <c>XEvent</c> (x86-64).</summary>
     [StructLayout(LayoutKind.Explicit, Size = 192)]

@@ -81,6 +81,7 @@ internal sealed partial class AppWindow
         }
 
         _stopping.Cancel();
+        _theme?.Close();
         _view?.Close();
         GLib.g_signal_handler_disconnect(_window, _closeHandler);
         Gtk.gtk_window_destroy(_window);

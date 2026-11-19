@@ -35,9 +35,24 @@ public sealed class BrowserOptions
     /// <summary>The WebView2 environment variables that change the browser before it starts.</summary>
     public BrowserOptions AllowBrowserEnvironmentOverrides() => Allow(nameof(AllowBrowserEnvironmentOverrides));
 
+    /// <summary>Whether the browser draws with the GPU; Linux only for now, Windows ignores it.</summary>
+    public BrowserOptions HardwareAcceleration(HardwareAcceleration acceleration)
+    {
+        _ = acceleration;
+        return this;
+    }
+
     private BrowserOptions Allow(string name)
     {
         _allowed.Add(name);
         return this;
     }
+}
+
+/// <summary>Whether the browser draws with the GPU, in <c>spar.Browser(b => b.HardwareAcceleration(…))</c>.</summary>
+public enum HardwareAcceleration
+{
+    Auto,
+    Always,
+    Never,
 }

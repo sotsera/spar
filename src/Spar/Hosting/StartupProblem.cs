@@ -12,6 +12,13 @@ public enum StartupProblemKind
     /// <summary>It is installed, but does not work. Exit code 5.</summary>
     Broken,
 
+    /// <summary>
+    /// There is no graphical session to show the app in: on Linux, no display named by <c>DISPLAY</c> or
+    /// <c>WAYLAND_DISPLAY</c>, or one GTK cannot open. Nothing graphical can be shown, so the hook is the app's only
+    /// way to say more than standard error and the log. Exit code 6.
+    /// </summary>
+    NoGraphicalSession,
+
     /// <summary>The operating system is older than the app supports. Exit code 7.</summary>
     OsTooOld,
 
@@ -28,7 +35,7 @@ public enum StartupProblemKind
 /// process exits with the code of <see cref="Kind"/>, which no app can change.
 /// </summary>
 /// <param name="Kind">What went wrong.</param>
-/// <param name="Component">What it concerns, for example "WebView2 Runtime" or "Windows".</param>
+/// <param name="Component">What it concerns, for example "WebView2 Runtime", "Windows" or "WebKitGTK".</param>
 /// <param name="Found">The version found, when there is one, as the platform reports it.</param>
 /// <param name="Required">The version the app needs, when a version matters.</param>
 /// <param name="Details">A sentence for people, in English, and the technical detail (an error code) when there is one.</param>
@@ -47,6 +54,7 @@ public sealed record StartupProblem(
         StartupProblemKind.Missing => 3,
         StartupProblemKind.TooOld => 4,
         StartupProblemKind.Broken => 5,
+        StartupProblemKind.NoGraphicalSession => 6,
         StartupProblemKind.OsTooOld => 7,
         StartupProblemKind.NotResponding => 8,
         StartupProblemKind.OtherUser => 9,

@@ -44,6 +44,7 @@ internal sealed partial class AppWindow
     private SchemeServer? _pages;
     private ScriptBridge? _bridge;
     private BrowserView? _view;
+    private WindowTheme? _theme;
     private GCHandle _self;
     private nint _window;
     private nuint _closeHandler;
@@ -70,15 +71,19 @@ internal sealed partial class AppWindow
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
     /// <summary>
-    /// The window and its view, without blocking the loop: the view with its session and the relay, attached and
-    /// loading, the window presented, then the bridge's services once they are built (they are being built meanwhile).
+    /// The window and its view, without blocking the loop: the theme's layers, the view with its session and the
+    /// relay, attached and loading, the window presented in the theme's colour, then the bridge's services once they are
+    /// built (they are being built meanwhile).
     /// </summary>
-    public unsafe void Start(MainLoop ui, Task<SparRunningApp> built)
+    public unsafe void Start(MainLoop ui, WindowTheme theme, Task<SparRunningApp> built)
     {
         _ui = ui;
+        _theme = theme;
         _self = GCHandle.Alloc(this);
         var options = _app.Builder.MainWindow;
         _window = Gtk.gtk_window_new();
+        theme.Apply(_window);
+        _log.Info($"Theme {(theme.IsDark ? "dark" : "light")}, {theme.Background}, from {theme.Source}.");
         Gtk.gtk_window_set_title(_window, _title);
         Gtk.gtk_window_set_default_size(_window, options.InitialSize.Width, options.InitialSize.Height);
         if (options.Minimum is { Width: > 0 } or { Height: > 0 })
@@ -96,12 +101,38 @@ internal sealed partial class AppWindow
         _ = LogPolicyAsync(_pages);
         _bridge = new ScriptBridge(ui, _log, built, development);
         _view = new BrowserView(ui, _log, _pages, _bridge, Fail);
-        _view.Create(_folders.Profile, Path.Combine(_folders.Cache, "WebKit"), ScriptBridge.RelayScript(), options.LightBackground);
+        _view.Create(_folders.Profile, Path.Combine(_folders.Cache, "WebKit"), ScriptBridge.RelayScript(), theme.Background);
         Gtk.gtk_window_set_child(_window, _view.Handle);
         _view.Load();
+        theme.Realize();
         Gtk.gtk_window_present(_window);
         _log.Phase("window shown");
+        theme.Follow(() =>
+        {
+            _view?.SetBackground(theme.Background);
+            _log.Info($"Theme changed to {(theme.IsDark ? "dark" : "light")} by the system.");
+        });
         _ = ConnectAsync(built);
+    }
+
+    /// <summary>
+    /// A relaunch reached this instance (loop thread): the window is shown and presented with the relaunch's
+    /// activation token, so the window manager lets it take the focus.
+    /// </summary>
+    public void BringForward(int argumentCount, string? activationToken)
+    {
+        if (_window == 0 || _state == State.Closing)
+        {
+            return;
+        }
+
+        if (activationToken is { Length: > 0 } token)
+        {
+            Gtk.gtk_window_set_startup_id(_window, token);
+        }
+
+        Gtk.gtk_window_present(_window);
+        _log.Info($"Relaunch with {argumentCount} arguments: the window was presented{(activationToken is null ? "" : " with its activation token")}.");
     }
 
     /// <summary>
@@ -121,6 +152,7 @@ internal sealed partial class AppWindow
         {
             _view?.Release();
             _pages?.Release();
+            _theme?.Release();
             if (_self.IsAllocated)
             {
                 _self.Free();

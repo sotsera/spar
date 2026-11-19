@@ -1,0 +1,25 @@
+23:44:53 EGL check (test process, CoreCLR): 'llvmpipe (LLVM 20.1.2, 256 bits)', software True, first 25.6 ms, again 10.1 ms
+23:45:07 gpu Never: Hardware acceleration Never: off, GPU not checked, checked in 0.1 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+23:45:08 gpu Always: Hardware acceleration Always: on, GPU not checked, checked in 0.1 ms with 10 threads; WebKit's and GTK's own GPU drawing.
+23:45:08 gpu Auto: Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+23:45:08 gpu Auto with GSK_RENDERER=ngl: Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, the user's GSK_RENDERER=ngl kept.
+23:45:11 stopped first instance: the second exits 8 2059.1 ms after the test launched it
+23:45:11 display not served: exit 6, reported 65.1 ms after launch
+23:45:11 no display: exit 6, reported 32.3 ms after launch
+23:45:11 second instance: exit 0 in 40.5 ms from the test; handed over 21.1 ms after its host started
+23:45:12 helpers missing: exit 5, reported 53.4 ms after launch, message shown at 140.0 ms
+23:45:12 sandbox denied: exit 5, reported 90.2 ms after launch, message shown at 179.6 ms
+23:45:13 theme light: 12623 samples from 70 ms, 0 of the other scheme; #ffffff ×11992 from 70 ms, #fbfaf7 ×631 from 131 ms
+23:45:13 theme dark: 12602 samples from 72 ms, 0 of the other scheme; #1d1f24 ×11958 from 72 ms, #16171b ×644 from 135 ms
+23:45:14 theme light: 12494 samples from 72 ms, 0 of the other scheme; #ffffff ×11856 from 72 ms, #fbfaf7 ×638 from 133 ms
+23:45:15 theme dark: 12596 samples from 71 ms, 0 of the other scheme; #1d1f24 ×11966 from 71 ms, #16171b ×630 from 133 ms
+23:45:16 theme light: 12516 samples from 72 ms, 0 of the other scheme; #ffffff ×11890 from 72 ms, #fbfaf7 ×626 from 134 ms
+23:45:16 theme dark: 12428 samples from 71 ms, 0 of the other scheme; #1d1f24 ×11810 from 71 ms, #16171b ×618 from 132 ms
+23:45:17 theme light: 12492 samples from 72 ms, 0 of the other scheme; #ffffff ×11858 from 72 ms, #fbfaf7 ×634 from 134 ms
+23:45:18 theme dark: 12542 samples from 72 ms, 0 of the other scheme; #1d1f24 ×11910 from 72 ms, #16171b ×632 from 136 ms
+23:45:19 theme light: 12562 samples from 72 ms, 0 of the other scheme; #ffffff ×11936 from 72 ms, #fbfaf7 ×626 from 135 ms
+23:45:19 theme dark: 12235 samples from 71 ms, 0 of the other scheme; #1d1f24 ×11614 from 71 ms, #16171b ×621 from 133 ms
+23:45:20 bwrap missing: exit 3, reported 277.5 ms after launch, message shown at 393.4 ms
+23:45:21 GTK missing (no message program here): exit 3, reported 41.9 ms after launch
+23:45:21 too old: exit 4, reported 50.2 ms after launch, message shown at 115.3 ms
+23:45:22 WebKitGTK missing: exit 3, reported 46.6 ms after launch, message shown at 162.5 ms

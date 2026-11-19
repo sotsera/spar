@@ -1,0 +1,14 @@
+23:45:30 EGL check (test process, CoreCLR): 'llvmpipe (LLVM 20.1.2, 256 bits)', software True, first 22.8 ms, again 9.5 ms
+23:45:38 gpu Never: Hardware acceleration Never: off, GPU not checked, checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+23:45:39 gpu Always: Hardware acceleration Always: on, GPU not checked, checked in 0.0 ms with 6 threads; WebKit's and GTK's own GPU drawing.
+23:45:39 gpu Auto: Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+23:45:39 gpu Auto with GSK_RENDERER=ngl: Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, the user's GSK_RENDERER=ngl kept.
+23:45:41 stopped first instance: the second shows its exit-8 message 2075.8 ms after the test launched it
+23:45:42 display not served: exit 6, reported 18.5 ms after launch
+23:45:42 no display: exit 6, reported 1.9 ms after launch
+23:45:42 second instance: exit 0 in 3.3 ms from the test; handed over 1.6 ms after its host started
+23:45:42 helpers missing: exit 5, reported 15.0 ms after launch, message shown at 76.8 ms
+23:45:42 sandbox denied: exit 5, reported 15.7 ms after launch, message shown at 99.4 ms
+23:45:42 bwrap missing: exit 3, reported 141.0 ms after launch, message shown at 206.8 ms
+23:45:43 GTK missing (no message program here): exit 3, reported 4.3 ms after launch
+23:45:43 WebKitGTK missing: exit 3, reported 7.1 ms after launch, message shown at 123.6 ms

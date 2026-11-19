@@ -108,6 +108,8 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   6. WebKitGTK and its version.
   7. The helper folder, `bwrap` and `xdg-dbus-proxy`.
   8. A trial `bwrap` run. A denied sandbox fails it in 1.5 ms; without the trial, WebKit aborts after 4.4–6.7 s with exit 133 and no message.
+
+  **Built in M1c step 2** (decision "Linux start-up: prerequisites, single instance, theme and the software-GPU default"; `docs/evidence/m1c-startup.md`), in a different order: the display, then single instance (as on Windows, so a relaunch hands over at once, 1.6–1.9 ms), then GLib, GTK 4 (4.10 at least, for `GtkAlertDialog`), WebKitGTK and its version, the helpers, `bwrap` and `xdg-dbus-proxy` and the trial run, all without starting GTK; then the software-GPU default and the theme, and only then `g_set_prgname` and `gtk_init_check` (a display that is named but unreachable is exit 6 there). So `GSK_RENDERER=cairo` is set for the message only when a check failed. Linux has no exit 7. Observed: 6 in 1.9–19.9 ms, messages for 3, 4 and 5 shown 77–207 ms after launch under Xvfb.
 - **Linux message:**
   - **With GTK 4 initialised:** the GTK dialog (`GtkAlertDialog`). It takes 91–212 ms with cairo, against 420–820 ms with GTK's GL renderer on a software GPU.
   - **Otherwise,** in this order: kdialog (first on KDE), zenity, yad, a D-Bus notification, notify-send, then xmessage. zenity needs GTK 4 on Ubuntu 24.04, so it fails exactly when GTK 4 is missing.
@@ -248,7 +250,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - **Default on a software GPU (user decision, 2026-11-14):** WebKit acceleration off (`WEBKIT_HARDWARE_ACCELERATION_POLICY_NEVER`) plus GTK4's cairo renderer. Measured on WSLg: 213 MB in total against 379 MB, and a faster cold first frame. An app can turn acceleration back on from C#.
   - On a real GPU the defaults stay as they are (not measured).
   - The host sets `GSK_RENDERER` before `gtk_init` and leaves it alone if the user already set it. The startup error dialog always uses cairo; the app uses it only on a software GPU (decision "Guidance review applied", point 3).
-  - To define in M1: how the host detects a software GPU (for example the GL renderer string, or no `/dev/dri` render node), and the C# option's name.
+  - To define in M1: how the host detects a software GPU (for example the GL renderer string, or no `/dev/dri` render node), and the C# option's name. Decided and built in M1c (decisions "M1c's first questions", "M1c: the software-GPU detection method" and "Linux start-up: prerequisites, single instance, theme and the software-GPU default"): the render node first, then a surfaceless EGL context's `GL_RENDERER`; on software, `WEBKIT_DISABLE_DMABUF_RENDERER=1` and `GSK_RENDERER=cairo` through `setenv`, never overwriting; `spar.Browser(b => b.HardwareAcceleration(HardwareAcceleration.Always))` with `Auto` (default), `Always` and `Never`, Linux only. The Notebook reaches `ui-ready` in 224–226 ms with it (577–582 ms without).
 - **Memory** (`spikes/linux-memory`; WSLg with llvmpipe; total PSS of the app and its WebKit processes, Wayland / X11, in MB):
 
   | At ready, small page | Total | App process | Web process |

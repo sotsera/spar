@@ -19,6 +19,15 @@ internal static unsafe partial class GLib
     /// <summary><c>G_TYPE_STRING</c>, a fundamental type: 16 shifted by <c>G_TYPE_FUNDAMENTAL_SHIFT</c> (2).</summary>
     public const nuint TypeString = 16 << 2;
 
+    /// <summary><c>G_TYPE_BOOLEAN</c>: 5 shifted by <c>G_TYPE_FUNDAMENTAL_SHIFT</c>.</summary>
+    public const nuint TypeBoolean = 5 << 2;
+
+    /// <summary><c>G_BUS_TYPE_SESSION</c>.</summary>
+    public const int BusSession = 2;
+
+    /// <summary><c>G_DBUS_CALL_FLAGS_NO_AUTO_START</c>: a service that is not running is an error at once, never started.</summary>
+    public const int CallNoAutoStart = 1;
+
     private const string Glib = "libglib-2.0.so.0";
     private const string Gobject = "libgobject-2.0.so.0";
     private const string Gio = "libgio-2.0.so.0";
@@ -96,6 +105,81 @@ internal static unsafe partial class GLib
 
     [LibraryImport(Gobject)]
     public static partial void g_value_unset(GValue* value);
+
+    [LibraryImport(Gobject)]
+    public static partial void g_value_set_boolean(GValue* value, int boolean);
+
+    [LibraryImport(Gobject)]
+    public static partial int g_value_get_boolean(GValue* value);
+
+    /// <summary>Borrowed UTF-8, valid while the value is.</summary>
+    [LibraryImport(Gobject)]
+    public static partial nint g_value_get_string(GValue* value);
+
+    /// <summary>Copies a property into <paramref name="value"/>, initialised to the property's type first.</summary>
+    [LibraryImport(Gobject, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial void g_object_get_property(nint instance, string name, GValue* value);
+
+    [LibraryImport(Gobject, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial void g_object_set_property(nint instance, string name, GValue* value);
+
+    /// <summary>
+    /// The session bus, shared by the process (GTK uses the same); owned, <see cref="g_object_unref"/>. 0 with an owned
+    /// <c>GError</c> when there is none. The first call starts GDBus's worker thread.
+    /// </summary>
+    [LibraryImport(Gio)]
+    public static partial nint g_bus_get_sync(int busType, nint cancellable, nint* error);
+
+    /// <summary>
+    /// A method call that waits for its answer, at most <paramref name="timeoutMilliseconds"/>; consumes a floating
+    /// <paramref name="parameters"/>. Returns an owned tuple, or 0 with an owned <c>GError</c>.
+    /// </summary>
+    [LibraryImport(Gio, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial nint g_dbus_connection_call_sync(
+        nint connection, string busName, string objectPath, string interfaceName, string methodName, nint parameters,
+        nint replyType, int flags, int timeoutMilliseconds, nint cancellable, nint* error);
+
+    /// <summary>
+    /// Subscribes to a signal; <paramref name="callback"/> runs in the thread-default main context of the caller's
+    /// thread. Returns the id for <see cref="g_dbus_connection_signal_unsubscribe"/>.
+    /// </summary>
+    [LibraryImport(Gio, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial uint g_dbus_connection_signal_subscribe(
+        nint connection, string sender, string interfaceName, string member, string objectPath, string arg0, int flags,
+        delegate* unmanaged<nint, nint, nint, nint, nint, nint, nint, void> callback, nint data, nint destroyData);
+
+    [LibraryImport(Gio)]
+    public static partial void g_dbus_connection_signal_unsubscribe(nint connection, uint subscription);
+
+    /// <summary>A floating string variant.</summary>
+    [LibraryImport(Glib, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial nint g_variant_new_string(string text);
+
+    /// <summary>A floating tuple, which consumes floating children.</summary>
+    [LibraryImport(Glib)]
+    public static partial nint g_variant_new_tuple(nint* children, nuint count);
+
+    /// <summary>The child at <paramref name="index"/> of a container; owned.</summary>
+    [LibraryImport(Glib)]
+    public static partial nint g_variant_get_child_value(nint container, nuint index);
+
+    /// <summary>The value inside a <c>v</c> variant; owned.</summary>
+    [LibraryImport(Glib)]
+    public static partial nint g_variant_get_variant(nint variant);
+
+    /// <summary>Whether the variant is of the type string <paramref name="type"/> (a <c>GVariantType</c> is its string).</summary>
+    [LibraryImport(Glib)]
+    public static partial int g_variant_is_of_type(nint variant, byte* type);
+
+    [LibraryImport(Glib)]
+    public static partial uint g_variant_get_uint32(nint variant);
+
+    /// <summary>Borrowed UTF-8 of a string variant.</summary>
+    [LibraryImport(Glib)]
+    public static partial nint g_variant_get_string(nint variant, nuint* length);
+
+    [LibraryImport(Glib)]
+    public static partial void g_variant_unref(nint variant);
 
     /// <summary>An input stream over <paramref name="bytes"/>, which it references; owned, <see cref="g_object_unref"/>.</summary>
     [LibraryImport(Gio)]

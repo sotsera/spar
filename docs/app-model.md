@@ -162,10 +162,14 @@ var app = SparApplication.Create(args, spar =>
     // these on a user's machine without a new build (3.13). Decided.
     spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
-    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
+    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17).
+    // Decided. On Linux it also draws without the GPU, which rules a broken graphics driver out (3.17). Built; this use
+    // of the option is for review.
     if (SupportBuild.IsSupportBuild)
     {
-        spar.Browser(b => b.AllowDevTools());
+        spar.Browser(b => b
+            .AllowDevTools()
+            .HardwareAcceleration(HardwareAcceleration.Never));
     }
 
     // Services: Microsoft DI, one scope per command call.
@@ -974,15 +978,16 @@ public static class SupportPage
 
 - **What a problem says:** `Kind`, `Component` (for example `"WebView2 Runtime"` or `"Windows"`), the `Found` and `Required` versions when a version matters, `Details` (a sentence for people, with an error code when there is one) and `HelpUrl` (where to get or repair the component, or null).
 - **The kinds and their exit codes,** the same on every OS and for every app:
-  - `Missing` 3 and `TooOld` 4: the web engine (the WebView2 Runtime on Windows, WebKitGTK on Linux) is not installed, or older than Spar's minimum (Runtime 139 on Windows);
-  - `Broken` 5: it is installed but does not start;
+  - `Missing` 3 and `TooOld` 4: the web engine (the WebView2 Runtime on Windows, WebKitGTK on Linux) is not installed, or older than Spar's minimum (Runtime 139 on Windows, WebKitGTK 2.48 on Linux, where GTK older than 4.10 is too old as well);
+  - `Broken` 5: it is installed but does not start, or, on Linux, its helper programs are missing or the sandbox its web content runs in cannot start;
+  - `NoGraphicalSession` 6: on Linux, no display to show the app in (started over SSH or from a service); nothing graphical can be shown, so the hook is the app's only way to add to standard error and the log;
   - `OsTooOld` 7: Windows older than Windows 10 22H2;
   - `NotResponding` 8 and `OtherUser` 9: a relaunch could not reach the running app (3.14).
 
   The one other fixed code is not a start-up problem: 10 when shutdown did not finish and the user chose "Exit now" (6.11).
-- **Return true only when the app showed its own message;** Spar then shows none. Returning false, or throwing, leaves Spar's message: on Windows a task dialog naming what is missing, with Microsoft's download page as a link and a button.
+- **Return true only when the app showed its own message;** Spar then shows none. Returning false, or throwing, leaves Spar's message: on Windows a task dialog naming what is missing, with Microsoft's download page as a link and a button; on Linux a GTK message naming the package and the command that installs it, or, without GTK 4, kdialog, zenity or xmessage.
 - **Written regardless:** standard error and the per-user log (`app.log` in the logs folder, 3.13) get the problem, and the exit code is the kind's, whatever the hook returns.
-- **Before the app's services exist:** the hook gets no service provider. It runs on a thread of its own, which may show a window or a message box, and it should return promptly, since the process exits after it.
+- **Before the app's services exist:** the hook gets no service provider. It runs on a thread of its own (on Linux the process's main thread, before any window), which may show a window or a message box, and it should return promptly, since the process exits after it.
 - **In the automated mode** (tests and agents, 6.11) the hook is not called, and no message is shown: standard error and the log only.
 
 ### 3.16 A page that stops responding
@@ -1080,6 +1085,7 @@ public static class SupportBuild
   - the browser's full context menu: `AllowContextMenu()`; without it editable fields keep Cut, Copy, Paste and Select all, and elsewhere no menu shows;
   - the page's own file pickers, `<input type="file">` and `showOpenFilePicker`, `showSaveFilePicker`, `showDirectoryPicker`: `AllowPagePicker()`; the safer way is the file commands of 3.6, which hand the page a grant, never a path;
   - the WebView2 environment variables that change the browser before it starts (`WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS`, `WEBVIEW2_BROWSER_EXECUTABLE_FOLDER`, `WEBVIEW2_USER_DATA_FOLDER`, the release-channel and script-debugger variables): `AllowBrowserEnvironmentOverrides()`. Without it Spar removes them from its process before the browser starts and logs each one by name. Policies an administrator sets in the registry stay in force.
+- **GPU drawing, Linux only for now** (decision "M1c's first questions"; built in M1c): `HardwareAcceleration(…)` is not an opt-in, since it is no security setting, and Windows ignores it. With `Auto`, the default, Spar checks the GPU before the window exists and turns WebKit's acceleration and GTK's GL drawing off where the only GPU is a software renderer, as in virtual machines, WSL and containers, where they cost a slower first window and a much larger app for nothing. `Always` keeps them on even there; `Never` turns them off everywhere, for a graphics driver that breaks the page, which is what the SQL tool's support build does. The user's own `GSK_RENDERER` and `WEBKIT_DISABLE_DMABUF_RENDERER` always win, and Spar logs what it found and chose at start-up.
 - **Always off, with no opt-in:** host objects in the page, and a remote debugging port opened by Spar. SmartScreen's reputation check is off while the page stays on the app's origin, which the navigation lock guarantees.
 - **A Debug build** has the same defaults, except devtools and the reload keys (F5, Ctrl+R), so a blocked download or picker shows while developing rather than after shipping.
 - **The app id** (section 1) names the app to the OS: it is the process's AppUserModelID on Windows, with `.Development` in a Debug build, and the key an administrator's WebView2 policies are found under. It reaches the app through the build, never by reflection.

@@ -9,6 +9,26 @@ var app = SparApplication.Create(args, spar =>
     // The foreign frame of the bridge test, served by the test on loopback: another origin than spar://app.
     spar.ContentSecurity(csp => csp.FrameSrc("http://127.0.0.1:*"));
     spar.Services.AddSingleton<BridgeProbe.Loads>();
+
+    // For the start-up tests (M1c step 2): the acceleration the test asks for, later launches' arguments in the log,
+    // and, when asked, the app's own start-up message instead of Spar's, on standard error.
+    if (Environment.GetEnvironmentVariable("BRIDGE_PROBE_ACCELERATION") is { Length: > 0 } acceleration)
+    {
+        spar.Browser(b => b.HardwareAcceleration(Enum.Parse<HardwareAcceleration>(acceleration)));
+    }
+
+    spar.OnRelaunch((relaunch, services) => services.GetRequiredService<ILogger<BridgeProbe.ProbeService>>()
+        .LogInformation("probe relaunch: [{Arguments}]", string.Join(" | ", relaunch.Arguments)));
+    spar.OnStartupProblem(problem =>
+    {
+        if (Environment.GetEnvironmentVariable("BRIDGE_PROBE_OWN_STARTUP_MESSAGE") != "1")
+        {
+            return false;
+        }
+
+        Console.Error.WriteLine($"probe: own start-up message for {problem.Kind}, {problem.Component}");
+        return true;
+    });
 });
 return app.Run();
 
