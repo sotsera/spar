@@ -142,10 +142,10 @@ Checked at each M1 slice exit from the first slice on, instead of first in M4 (u
 | Browser test: app, context and journey, median | ≤ 250 ms | 97–144 ms (`spikes/test-host`); measured in M1a, Windows Release: 122–137 ms on the WireShapes page (same decision) | M1a |
 | NativeAOT console harness (dispatch, serializers, codec, bridge session) | ≤ 3.5 MB (3 MB until 2026-11-16) | 2.24 MB with generated serializers (decision "D1: Compilation pipeline"); 3.10 MB measured in M1a (decision "Console harness built; its budget raised to 3.5 MB; lone surrogates on read") | M1a |
 | Small unary round trip over loopback, median | ≤ 2 ms | 0.7 ms (decision "Bridge streaming, cancellation and push"); measured in M1a, Windows Release: 0.70 ms, timed by the page (same decision) | M1a |
-| Notebook NativeAOT executable, Windows / Linux | ≤ 6 MB (5 MB until 2026-11-17) / ≤ 8 MB | 3.68 MB (`spikes/react`) / 6.9 MB (`spikes/linux-desktop`); 4.77 MB measured after M1b step 5 (decision "Security defaults' choices accepted") | M1b / M1c |
-| Launch to `ui-ready`, warm, Release, Windows / Linux GTK4 | ≤ 400 ms / ≤ 350 ms | 261–370 ms (`spikes/react`) / 271–292 ms under Xvfb (`spikes/linux-desktop`) | M1b / M1c |
-| Small unary round trip on the desktop bridge, median | ≤ 1 ms | 0.2 ms (WebView2), 0.20–0.29 ms (WebKitGTK) | M1b / M1c |
-| App process working set, Windows, NativeAOT | ≤ 60 MB | 37 MB (`spikes/react`) | M1b |
+| Notebook NativeAOT executable, Windows / Linux | ≤ 6 MB (5 MB until 2026-11-17) / ≤ 8 MB | 3.68 MB (`spikes/react`) / 6.9 MB (`spikes/linux-desktop`); 4.77 MB measured after M1b step 5 (decision "Security defaults' choices accepted"); 5.24 MB (5,237,248 B) at the M1b exit (decision "M1b budgets measured at the exit") | M1b / M1c |
+| Launch to `ui-ready`, warm, Release, Windows / Linux GTK4 | ≤ 400 ms / ≤ 350 ms | 261–370 ms (`spikes/react`); measured at the M1b exit, WindowHost's Production NativeAOT executable from the process's start, profile reused: 359.5 ms (338.1–390.2) and 375.7 ms (346.8–430.2) in two runs of 10 (same decision) / 271–292 ms under Xvfb (`spikes/linux-desktop`) | M1b / M1c |
+| Small unary round trip on the desktop bridge, median | ≤ 1 ms | 0.2 ms (WebView2), 0.20–0.29 ms (WebKitGTK); measured at the M1b exit, timed by the page: 0.10 ms, p95 0.20 ms, at the page timer's 0.1 ms resolution (same decision) | M1b / M1c |
+| App process working set, Windows, NativeAOT | ≤ 60 MB | 37 MB (`spikes/react`); measured at the M1b exit: 42.3 MB (39.8–42.5) 2 s after `ui-ready`, about 358 MB with the browser's processes (same decision) | M1b |
 | Window test: open, journey and close, median, Windows / Linux | ≤ 700 ms / ≤ 500 ms | 466–472 ms / 297–301 ms (`spikes/test-host`); measured in M1b step 8a, Windows, 8-step journey: 306 ms CoreCLR, 298 ms NativeAOT (decision "Window tests on Windows (implementation record; choices for review)") | M1b / M1c |
 | Total memory with the web engine, Linux GTK4 (PSS) | recorded, no budget yet | 413–426 MB (`spikes/linux-desktop`) | M1c |
 | Hot Reload of a method body applied | ≤ 4 s | 0.9–3.9 s | M1d |
@@ -297,7 +297,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 **Exit:**
 - The Notebook sample runs on Windows as a single-file NativeAOT executable with the bundle embedded, and its size is recorded. Debug uses the same path through `SparDevServer=false` until M1d.
 - The required host tests, the window tests (CoreCLR and NativeAOT lanes), the black-box smoke test and the production boundary test pass.
-- The M1b budgets are measured and recorded.
+- The M1b budgets are measured and recorded. (done: every one met, decision "M1b budgets measured at the exit")
 - Each section 3c default is verified on the published executable with its opt-in.
 - Evidence is recorded for each result.
 

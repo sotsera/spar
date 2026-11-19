@@ -165,6 +165,21 @@ for (const type of ["keydown", "keypress", "beforeinput", "input", "keyup"]) {
   }));
 }
 
+// The bridge's small unary round trip, timed by the page (plan, "Provisional budgets"): 20 warm-up calls, then 200
+// timed one after another; the times go to a hidden element as JSON for the budget test to summarise.
+on("time-echo", async () => {
+  const times = [];
+  for (let call = 0; call < 220; call++) {
+    const started = performance.now();
+    await host.echo("ping");
+    if (call >= 20) {
+      times.push(performance.now() - started);
+    }
+  }
+
+  document.getElementById("echo-times").textContent = JSON.stringify(times);
+});
+
 // WebAssembly in the page and in its workers: Spar's policy refuses every module unless the app allows WebAssembly.
 // The worker's address goes through a Trusted Types policy, since the Worker constructors are script sinks.
 const wasmModule = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]);
