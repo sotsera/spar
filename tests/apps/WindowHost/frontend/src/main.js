@@ -165,5 +165,38 @@ for (const type of ["keydown", "keypress", "beforeinput", "input", "keyup"]) {
   }));
 }
 
+// WebAssembly in the page and in its workers: Spar's policy refuses every module unless the app allows WebAssembly.
+// The worker's address goes through a Trusted Types policy, since the Worker constructors are script sinks.
+const wasmModule = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]);
+const checkWasm = async () => {
+  if (typeof WebAssembly === "undefined") {
+    return "absent";
+  }
+
+  try {
+    await WebAssembly.instantiate(wasmModule);
+    return "instantiated";
+  } catch (error) {
+    return `refused (${error.name})`;
+  }
+};
+
+on("wasm", async () => {
+  const urls = trustedTypes.createPolicy("wasm-worker", { createScriptURL: url => url });
+  const address = urls.createScriptURL(new URL("./wasm-worker.js", import.meta.url).href);
+  const dedicated = await new Promise(resolve => {
+    const worker = new Worker(address, { type: "module" });
+    worker.onmessage = event => resolve(event.data);
+    worker.onerror = event => resolve(`error (${event.message})`);
+  });
+  const shared = await new Promise(resolve => {
+    const worker = new SharedWorker(address, { type: "module" });
+    worker.port.onmessage = event => resolve(event.data);
+    worker.onerror = event => resolve(`error (${event.message})`);
+  });
+  document.getElementById("webassembly").textContent =
+    `page ${typeof WebAssembly} ${await checkWasm()}; worker ${dedicated}; shared worker ${shared}`;
+});
+
 connection.ready();
 show("Ready");

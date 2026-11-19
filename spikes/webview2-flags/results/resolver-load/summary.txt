@@ -1,0 +1,93 @@
+suite resolver-load: 150 runs
+
+## base  (args: --disable-blink-features=FileSystemAccessLocal; wasmEval false; reputation false)
+runs 25, errors 0, runtime 157.0.4341.60
+environment ms: median 12.9 (range 11.8-20.6, n 25)
+controller ms: median 214.2 (range 195.3-242.7, n 25)
+browser exit after close ms: median 184.0 (range 167.6-206.1, n 25)
+first Navigate -> first script (boot.js) ms: median 53.8 (range 43.6-61.4, n 25)
+first Navigate -> ready ms: median 54.2 (range 44.3-62.1, n 25)
+later Navigate -> ready ms: median 14.9 (range 10.6-21.2, n 50)
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 16.0 (range 12.0-18.0, n 25), total 392
+  [::1]:443 SNI app.localhost x392
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## resolver  (args: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"; wasmEval false; reputation false)
+runs 25, errors 0, runtime 157.0.4341.60
+environment ms: median 12.5 (range 11.5-17.2, n 25)
+controller ms: median 215.8 (range 190.9-322.5, n 25)
+browser exit after close ms: median 182.7 (range 174.7-193.6, n 25)
+first Navigate -> first script (boot.js) ms: median 52.9 (range 41.7-4976.0, n 25)
+first Navigate -> ready ms: median 53.5 (range 42.3-4976.4, n 25)
+later Navigate -> ready ms: median 16.0 (range 8.7-21.6, n 50)
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 0.0 (range 0.0-0.0, n 25), total 0
+  
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## resolver-first  (args: --host-resolver-rules="MAP app.localhost ~NOTFOUND" --disable-blink-features=FileSystemAccessLocal; wasmEval false; reputation false)
+runs 25, errors 0, runtime 157.0.4341.60
+environment ms: median 12.9 (range 11.7-15.8, n 25)
+controller ms: median 213.9 (range 196.9-246.6, n 25)
+browser exit after close ms: median 185.8 (range 162.4-193.8, n 25)
+first Navigate -> first script (boot.js) ms: median 54.0 (range 42.6-63.8, n 25)
+first Navigate -> ready ms: median 54.7 (range 43.0-64.6, n 25)
+later Navigate -> ready ms: median 15.3 (range 9.9-20.9, n 50)
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 0.0 (range 0.0-0.0, n 25), total 0
+  
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## resolver-unquoted  (args: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules=MAP app.localhost ~NOTFOUND; wasmEval false; reputation false)
+runs 25, errors 0, runtime 157.0.4341.60
+environment ms: median 12.8 (range 11.5-15.9, n 25)
+controller ms: median 213.5 (range 187.4-5236.6, n 25)
+browser exit after close ms: median 180.7 (range 164.9-4842.6, n 25)
+first Navigate -> first script (boot.js) ms: median 53.2 (range 42.5-64.3, n 25)
+first Navigate -> ready ms: median 53.7 (range 43.2-65.0, n 25)
+later Navigate -> ready ms: median 14.8 (range 11.2-21.6, n 50)
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 16.0 (range 12.0-20.0, n 25), total 404
+  [::1]:443 SNI app.localhost x404
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules=MAP
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## noexpose  (args: --disable-blink-features=FileSystemAccessLocal --js-flags=--noexpose_wasm; wasmEval false; reputation false)
+runs 25, errors 0, runtime 157.0.4341.60
+environment ms: median 12.9 (range 11.6-20.2, n 25)
+controller ms: median 210.6 (range 184.2-241.4, n 25)
+browser exit after close ms: median 177.6 (range 162.1-4799.1, n 25)
+first Navigate -> first script (boot.js) ms: median 53.6 (range 42.8-65.9, n 25)
+first Navigate -> ready ms: median 54.4 (range 43.5-66.6, n 25)
+later Navigate -> ready ms: median 14.0 (range 11.1-18.8, n 50)
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 16.0 (range 12.0-18.0, n 25), total 384
+  [::1]:443 SNI app.localhost x384
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --js-flags=--noexpose_wasm
+renderer switches: --js-flags=--noexpose_wasm --disable-blink-features=FileSystemAccessLocal
+
+## resolver-noexpose  (args: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND" --js-flags=--noexpose_wasm; wasmEval false; reputation false)
+runs 25, errors 0, runtime 157.0.4341.60
+environment ms: median 12.4 (range 11.3-18.5, n 25)
+controller ms: median 209.3 (range 194.1-247.8, n 25)
+browser exit after close ms: median 182.9 (range 164.3-192.3, n 25)
+first Navigate -> first script (boot.js) ms: median 54.6 (range 37.5-4979.3, n 25)
+first Navigate -> ready ms: median 55.3 (range 37.8-4979.6, n 25)
+later Navigate -> ready ms: median 14.8 (range 9.5-20.4, n 50)
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 0.0 (range 0.0-0.0, n 25), total 0
+  
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND" --js-flags=--noexpose_wasm
+renderer switches: --js-flags=--noexpose_wasm --disable-blink-features=FileSystemAccessLocal
+
+(rounds below 1 are warm-up runs, left out above)

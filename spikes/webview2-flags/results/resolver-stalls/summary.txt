@@ -1,0 +1,33 @@
+suite resolver-stalls: 120 runs
+
+## base  (args: --disable-blink-features=FileSystemAccessLocal; wasmEval false; reputation false)
+runs 60, errors 0, runtime 157.0.4341.60
+environment ms: median 12.7 (range 11.5-17.0, n 60)
+controller ms: median 210.4 (range 187.6-254.0, n 60)
+browser exit after close ms: median 182.6 (range 167.2-4866.6, n 60)
+first Navigate -> first script (boot.js) ms: median 52.2 (range 37.5-78.0, n 60)
+first Navigate -> ready ms: median 52.8 (range 37.9-78.4, n 60)
+later Navigate -> ready ms: n/a
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 6.0 (range 6.0-6.0, n 60), total 360
+  [::1]:443 SNI app.localhost x360
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## resolver  (args: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"; wasmEval false; reputation false)
+runs 60, errors 0, runtime 157.0.4341.60
+environment ms: median 12.3 (range 10.7-16.3, n 60)
+controller ms: median 210.7 (range 177.6-258.2, n 60)
+browser exit after close ms: median 181.1 (range 163.1-4862.6, n 60)
+first Navigate -> first script (boot.js) ms: median 52.9 (range 37.7-4981.8, n 60)
+first Navigate -> ready ms: median 53.5 (range 38.5-4982.2, n 60)
+later Navigate -> ready ms: n/a
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+loopback connections per run (this run's processes): median 0.0 (range 0.0-0.0, n 60), total 0
+  
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+(rounds below 1 are warm-up runs, left out above)

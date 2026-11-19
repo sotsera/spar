@@ -1,0 +1,7 @@
+{
+  "suite": "smartscreen-fresh", "scenario": "smart", "rounds": 4, "listener": true, "stayMs": 20000, "timeoutMs": 180000, "freshProfiles": true,
+  "variants": [
+    { "name": "flag-off", "args": "--disable-blink-features=FileSystemAccessLocal", "reputation": false, "netLog": true },
+    { "name": "flag-on", "args": "--disable-blink-features=FileSystemAccessLocal", "reputation": true, "netLog": true }
+  ]
+}
