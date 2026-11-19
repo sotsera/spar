@@ -35,7 +35,10 @@ aot_lane() {
   for project in tests/Spar.Tests tests/WireShapes.Tests samples/Notebook.Tests; do
     name=$(basename "$project")
     timed dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name" || return 1
-    timed "artifacts/aot/$name/$name" | tail -3
+    # A TRX report of each run, as in CI (decision "Every test run keeps a TRX report").
+    mkdir -p "artifacts/test-results/$name"
+    trx="artifacts/test-results/$name/aot-$(date -u +%Y-%m-%d_%H_%M_%S).trx"
+    timed "artifacts/aot/$name/$name" -result-trx "$trx" | tail -3
   done
 }
 

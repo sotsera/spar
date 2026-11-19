@@ -158,8 +158,11 @@ jobs:
           for project in tests/Spar.Tests tests/WireShapes.Tests samples/Notebook.Tests; do
             name=$(basename "$project")
             dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
+            # Each run keeps a TRX report beside the CoreCLR lane's (decision "Every test run keeps a TRX report").
             # xUnit's in-process runner exits 0 when it ran no test; an empty run is a failure (fixture rules).
-            output=$("artifacts/aot/$name/$name") || { echo "$output"; exit 1; }
+            mkdir -p "artifacts/test-results/$name"
+            trx="artifacts/test-results/$name/aot-$(date -u +%Y-%m-%d_%H_%M_%S).trx"
+            output=$("artifacts/aot/$name/$name" -result-trx "$trx") || { echo "$output"; exit 1; }
             echo "$output"
             echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }
           done
@@ -174,7 +177,9 @@ jobs:
           for project in tests/Spar.WindowTests samples/Notebook.EndToEndTests; do
             name=$(basename "$project")
             dotnet publish "$project" -c Release -p:SparTestLane=Aot -o "artifacts/aot/$name"
-            output=$("artifacts/aot/$name/$name") || { echo "$output"; exit 1; }
+            mkdir -p "artifacts/test-results/$name"
+            trx="artifacts/test-results/$name/aot-$(date -u +%Y-%m-%d_%H_%M_%S).trx"
+            output=$("artifacts/aot/$name/$name" -result-trx "$trx") || { echo "$output"; exit 1; }
             echo "$output"
             echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran in $name."; exit 1; }
           done
@@ -202,3 +207,6 @@ jobs:
           name: test-results-${{ matrix.os }}-${{ matrix.lane }}
           path: artifacts/test-results/
           if-no-files-found: ignore
+          # About 2 MB per run before compression (mostly TRX reports); kept long enough to look into a failure, not the
+          # repository's default 90 days (decision "Every test run keeps a TRX report").
+          retention-days: 14

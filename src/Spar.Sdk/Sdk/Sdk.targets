@@ -39,9 +39,12 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
-  <!-- Test results go to the repository's artifacts/test-results/<project>/ (decision "M1a names"). -->
+  <!--
+    Test results go to the repository's artifacts/test-results/<project>/ (decision "M1a names"), with a TRX report of every
+    run, so a failure that does not recur keeps its message and output (decision "Every test run keeps a TRX report").
+  -->
   <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' == 'true'">
-    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)"</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)" --report-xunit-trx</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
   <!--
