@@ -13,7 +13,7 @@ Use `dotnet-advanced:dotnet-pinvoke` for general `LibraryImport` and marshalling
 - **Make ownership visible.** Mark handles, pointers and object references as owned or borrowed wherever the difference is easy to miss. Release each one with the exact matching operation, on the correct thread.
 - **Keep callbacks safe.** Keep callbacks and buffers alive until the native work has actually completed. Catch managed exceptions at every unmanaged entry point.
 - **Hand-declared COM.**
-  - Declare every slot of every base interface, in header order, even slots you never call; use `[PreserveSig] int SlotNN()` placeholders. Count from the start of the C vtable, IUnknown included. A slot-order test checks each one against the header.
+  - Declare every slot of every base interface, in header order, even slots you never call; use `[PreserveSig] int SlotNN()` placeholders. Count from the start of the C vtable, IUnknown included. A slot-order test checks each one against the header: `tests/Spar.Tests/ComSlots.cs`, for WebView2.h (Spar.Windows) and for the Windows SDK's UIAutomationClient.h (the black-box fixture's UI Automation client in Spar.Testing, an explicit skip where no SDK is installed). A placeholder of a property getter is named `SlotNNN_GetX`.
   - Cast to the interface whose methods you actually call. A derived interface with no reachable method fails its cast only under AOT, at run time.
   - Pass IIDs explicitly, never through `Type.GUID`.
   - Use `[PreserveSig]` where a failure HRESULT is an expected result (cancel, `E_FAIL` from `ClearClientData`).

@@ -27,6 +27,11 @@ internal static class ProductionBoundary
         // keys"): the test host's close request and its report. The close request itself, the page's guard and the
         // answers seam (ICloseQuestions) are production code.
         "SparTestClose", "SparCloseOptions", "SparCloseResult",
+
+        // The black-box fixture (M1b step 8b): the launcher, its handle, its UI Automation client and the tested-app
+        // marker the generated Projects class names, which only Spar.Testing carries.
+        "SparBlackBox", "SparBlackBoxApp", "SparBlackBoxOptions", "SparNativeDialog", "SparProject", "BlackBoxQuery",
+        "IUIAutomationElementArray",
     ];
 
     private static readonly string[] Literals =
@@ -35,6 +40,7 @@ internal static class ProductionBoundary
         "SPAR_DEV_UI_STALL_MS", "SPAR_DEV_SLOW_DISPOSE_MS", "The UI thread stalled",
         "differs from the one the build read", "Allow it with csp.", "SPAR_DEV_INPUT", "remote-debugging-port",
         "spar-automation", "Spar test anchor", "Spar UI (tests)", "spartest", "app.Window.CloseAsync",
+        "spar-black-box-", "spar-apps",
     ];
 
     /// <summary>

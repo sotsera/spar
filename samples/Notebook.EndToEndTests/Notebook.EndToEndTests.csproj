@@ -10,6 +10,9 @@
     <OutputType>Exe</OutputType>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Notebook.EndToEndTests</RootNamespace>
+
+    <!-- The black-box level (BlackBox/): the Notebook's Production executable, published beside the tests (Projects.Notebook). -->
+    <SparBlackBoxTests>true</SparBlackBoxTests>
   </PropertyGroup>
 
   <!-- The Browser surface (Spar.Testing.Browser), added by Spar.Sdk at its own version, and Playwright: CoreCLR only. -->

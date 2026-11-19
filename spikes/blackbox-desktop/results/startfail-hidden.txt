@@ -1,0 +1,35 @@
+profile folder is a file: dialog after 139 ms (owned by the window: True); title 'Notebook'
+  texts: Notebook can't start
+  buttons: See details | Download the WebView2 Runtime | Close | Close
+  pressed 'Close'; exit 5 after 20 ms; tree gone True
+  stderr: spar info +0.3 ms: [d6bcafa4] Host started 20.1 ms after the process.
+spar info +0.3 ms: [d6bcafa4] App id com.example.Notebook, folder E:\Ghidello\Git\spar.v7\artifacts\blackbox-spike\20261119-065616\hidden-001\LocalAppData\com.example.Notebook
+spar info +1.6 ms: [d6bcafa4] single instance at 1.6 ms
+spar info +1.8 ms: [d6bcafa4] prerequisites checked at 1.8 ms
+spar info +2.7 ms: [d6bcafa4] services built at 2.7 ms
+spar info +9.8 ms: [d6bcafa4] window shown at 9.8 ms
+spar info +9.9 ms: [d6bcafa4] Theme dark (system), window #1d1f24.
+spar fail +10.3 ms: [d6bcafa4] The WebView could not start: The Microsoft Edge WebView2 Runtime on this computer could not start (error 0x800700B7). Install it again from Microsoft, then start the app again.
+System.IO.IOException: Cannot create 'E:\Ghidello\Git\spar.v7\artifacts\blackbox-spike\20261119-065616\hidden-001\LocalAppData\com.example.Notebook\WebView2' because a file or directory with the same name already exists.
+   at System.IO.FileSystem.CreateDirectory(String, Byte[])
+   at System.IO.Directory.CreateDirectory(String)
+   at Spar.Windows.BrowserView.<OwnEnvironmentAsync>d__44.MoveNext()
+--- End of stack trace from previous location ---
+   at Spar.Windows.BrowserView.<CreateAsync>d__43.MoveNext()
+--- End of stack trace from previous location ---
+   at Spar.Windows.BrowserView.<StartAsync>d__37.MoveNext()
+spar info +11.0 ms: [d6bcafa4] Heartbeat every 5000 ms.
+spar fail +11.4 ms: [d6bcafa4] Start-up problem Broken: WebView2 Runtime (required 139.0.3405.78). The Microsoft Edge WebView2 Runtime on this computer could not start (error 0x800700B7). Install it again from Microsoft, then start the app again. Help: https://developer.microsoft.com/microsoft-edge/webview2/consumer/ Exit code 5.
+spar info +11.6 ms: [d6bcafa4] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-PLQmC96Zvtn2lvmtS0kytv3unth8KmncTMvzHW6cv9o='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +11.7 ms: [d6bcafa4] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+spar info +2148.7 ms: [d6bcafa4] The start-up message was closed.
+spar info +2151.9 ms: [d6bcafa4] closing at 2151.9 ms
+spar info +2151.9 ms: [d6bcafa4] Heartbeat: 0 ticks, 0 pings, longest tick on the UI thread 0.000 ms.
+spar info +2151.9 ms: [d6bcafa4] calls stopped at 2151.9 ms
+spar info +2151.9 ms: [d6bcafa4] calls settled at 2151.9 ms
+spar info +2151.9 ms: [d6bcafa4] closing at 2151.9 ms
+spar info +2151.9 ms: [d6bcafa4] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+spar info +2151.9 ms: [d6bcafa4] controller closed at 2151.9 ms
+spar info +2158.5 ms: [d6bcafa4] window destroyed at 2158.5 ms
+spar info +2158.8 ms: [d6bcafa4] services disposed at 2158.8 ms
+spar info +2158.8 ms: [d6bcafa4] exit 5 at 2158.8 ms

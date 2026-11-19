@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <!--
-    Tests that read files of the test's output (the static-state test, tests/static-state/, and the slot-order test
+    Tests that read files of the test's output (the static-state test, tests/static-state/, and the slot-order tests
     read assemblies' metadata), so CoreCLR only.
   -->
   <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
@@ -43,6 +43,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(SparTestLane)' == 'Aot'">
-    <Compile Remove="WebView2SlotTests.cs" />
+    <Compile Remove="WebView2SlotTests.cs;UiAutomationSlotTests.cs;ComSlots.cs" />
   </ItemGroup>
 </Project>

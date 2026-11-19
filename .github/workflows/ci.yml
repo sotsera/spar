@@ -118,18 +118,26 @@ jobs:
           pwsh "$script" install $deps --only-shell chromium
 
       - name: Test (CoreCLR)
-        # Everything but the window tests, which run as their own invocation below (plan section 5).
+        # Everything but the window and black-box tests, which run as their own invocations below (plan section 5).
         if: matrix.lane == 'tests'
-        run: dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait "Surface=Window"
+        run: dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait "Surface=Window" --filter-not-trait "Surface=BlackBox"
 
       - name: Window tests (CoreCLR)
         # The app's real WebView2 window in the test process (trait Surface=Window), in their own invocations: a native
-        # engine abort ends only this step's process. Windows only until the Linux host (M1c).
+        # engine abort ends only this step's process. Windows only until the Linux host (M1c). Spar.WindowTests also
+        # holds the black-box fixture's own tests.
         if: matrix.lane == 'tests' && runner.os == 'Windows'
         shell: bash
         run: |
           dotnet test --project tests/Spar.WindowTests -c Debug --no-build
           dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=Window"
+
+      - name: Black-box tests (CoreCLR)
+        # The Notebook's Production NativeAOT executable, published by the build beside its tests and launched on a
+        # desktop of the test process's own, read through UI Automation (trait Surface=BlackBox; plan section 5, level
+        # 7). Windows only until the Linux host (M1c).
+        if: matrix.lane == 'tests' && runner.os == 'Windows'
+        run: dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=BlackBox"
 
       - name: Page tests (the Notebook's page against @spar/app/testing)
         # After the build, which writes the generated @spar/app package and installs the frontend's packages.
@@ -157,8 +165,9 @@ jobs:
           done
 
       - name: Window tests (NativeAOT lane)
-        # The same window tests published with NativeAOT, each executable its own invocation; Notebook.EndToEndTests
-        # leaves its browser journeys out of this lane (Playwright cannot run under NativeAOT). Windows only until M1c.
+        # The same window and black-box tests published with NativeAOT, each executable its own invocation;
+        # Notebook.EndToEndTests leaves its browser journeys out of this lane (Playwright cannot run under NativeAOT).
+        # Windows only until M1c.
         if: matrix.lane == 'aot' && runner.os == 'Windows'
         shell: bash
         run: |

@@ -4,7 +4,8 @@ namespace Spar.PackageTests;
 
 /// <summary>
 /// An app and its tests built from Spar's packages alone (plan M1a, "the package-only consumer test"): they build and
-/// pass, its page works in Chromium against its backend, the packaged analyzer reports a contract problem at its line, a design-time build runs no Spar step, the app
+/// pass, its page works in Chromium against its backend, a black-box test project publishes the app and launches it, the
+/// packaged analyzer reports a contract problem at its line, a design-time build runs no Spar step, the app
 /// publishes with NativeAOT, and an update and a downgrade of Spar.Sdk while MSBuild is warm each build with their own
 /// SDK. The builds share the consumer's folders, so they stay in this one class, whose tests xUnit runs one at a time.
 /// </summary>
@@ -37,6 +38,35 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
 
         Assert.True(exit == 0, output);
         Assert.Contains("succeeded: 1", output, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task A_black_box_test_project_publishes_the_app_once_and_launches_it()
+    {
+        Assert.Equal(0, (await FirstAsync()).Exit);
+        var project = Path.Combine("App.BlackBoxTests", "Notes.App.BlackBoxTests.csproj");
+
+        var (exit, output) = await consumer.DotnetAsync("", "test", "--project", project);
+
+        Assert.True(exit == 0, output);
+        Assert.Contains(OperatingSystem.IsWindows() ? "succeeded: 1" : "skipped: 1", output, StringComparison.Ordinal);
+        if (!OperatingSystem.IsWindows())
+        {
+            // The publish is on by default where the fixture runs: Windows, until the Linux host (M1c).
+            return;
+        }
+
+        const string name = "NotesTool.exe";
+        var beside = Directory.GetFiles(Path.Combine(consumer.Root, "App.BlackBoxTests", "bin"), name, SearchOption.AllDirectories);
+        var published = Assert.Single(beside, path => path.Contains(Path.Combine("spar-apps", "NotesTool"), StringComparison.Ordinal));
+        var written = File.GetLastWriteTimeUtc(published);
+
+        // An unchanged build publishes nothing again: the executable beside the tests is the same file.
+        var (rebuilt, again) = await consumer.DotnetAsync("", "build", project, "-nologo", "-v:m");
+
+        Assert.True(rebuilt == 0, again);
+        Assert.DoesNotContain("Generating native code", again, StringComparison.Ordinal);
+        Assert.Equal(written, File.GetLastWriteTimeUtc(published));
     }
 
     [Fact]

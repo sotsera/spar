@@ -10,6 +10,9 @@
     <OutputType>Exe</OutputType>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Spar.WindowTests</RootNamespace>
+
+    <!-- The black-box fixture's own tests (BlackBoxFixtureTests): WindowHost's Production executable beside the tests. -->
+    <SparBlackBoxTests>true</SparBlackBoxTests>
   </PropertyGroup>
 
   <ItemGroup>

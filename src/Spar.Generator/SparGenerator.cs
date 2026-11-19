@@ -72,6 +72,24 @@ public sealed class SparGenerator : IIncrementalGenerator
         var appId = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
             options.GlobalOptions.TryGetValue("build_property.SparAppId", out var id) ? id.Trim() : "");
 
+        // A black-box test project's tested apps (SparBlackBoxTests): the build passes each as an AdditionalFiles item
+        // with its name, app id, executable and folder as metadata; the Projects class names them for the fixture.
+        var blackBox = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.SparBlackBoxTests", out var value) && string.Equals(value.Trim(), "true", System.StringComparison.OrdinalIgnoreCase));
+        var testedApps = context.AdditionalTextsProvider
+            .Combine(context.AnalyzerConfigOptionsProvider)
+            .Select(static (input, _) => TestedApp(input.Right.GetOptions(input.Left)))
+            .Where(static app => app is not null)
+            .Collect();
+        context.RegisterSourceOutput(testedApps.Combine(blackBox), static (output, input) =>
+        {
+            var (apps, enabled) = input;
+            if (enabled && apps.Length > 0)
+            {
+                output.AddSource("Spar.Projects.g.cs", ProjectsEmitter.Emit(apps.Select(app => app!).ToImmutableArray()));
+            }
+        });
+
         context.RegisterSourceOutput(contracts.Combine(security).Combine(appId), static (output, input) =>
             EmitContracts(output, input.Left.Left, input.Left.Right, input.Right));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
@@ -97,6 +115,24 @@ public sealed class SparGenerator : IIncrementalGenerator
 
             output.AddSource("Spar.TestClients.g.cs", TestEmitter.Clients(models));
         });
+    }
+
+    /// <summary>A tested app from its item's metadata (<c>SparBlackBoxApp</c> and the rest), or null for any other additional file.</summary>
+    private static TestedAppModel? TestedApp(Microsoft.CodeAnalysis.Diagnostics.AnalyzerConfigOptions options)
+    {
+        string Read(string name) => options.TryGetValue("build_metadata.AdditionalFiles." + name, out var value) ? value.Trim() : "";
+
+        if (!string.Equals(Read("SparBlackBoxApp"), "true", System.StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        var name = Read("SparAppName");
+        var appId = Read("SparAppId");
+        var executable = Read("SparAppExecutable");
+        return name.Length == 0 || appId.Length == 0 || executable.Length == 0
+            ? null
+            : new TestedAppModel(name, appId, executable, Read("SparAppDirectory"));
     }
 
     private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models, PageSecurityModel? security, string appId)

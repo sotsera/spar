@@ -1,0 +1,10 @@
+# The fallback, launched on the user's desktop with STARTF_USESHOWWINDOW + SW_SHOWNOACTIVATE (two launches, then stopped:
+# the app's window took the foreground). Copied from the console of `run shown 2` (2026-11-19).
+# FAIL in the "ok" column is the spike's own verdict: foreground_hits > 0 (10 ms samples where GetForegroundWindow
+# belonged to one of the app's processes).
+launch,ok,ready_ms,window_ms,heading_ms,invoke_ms,close_ms,exit,tree_ms,started_processes,foreground_hits,visible_on_input_desktop,desktop_gone,heading_type,heading_aria,failure
+invoke call 473 ms, dialog seen 985 ms
+1,FAIL,623,1158,2164,985,486,0,1276,8,64,1,,heading,heading,
+invoke call 1068 ms, dialog seen 1533 ms
+3,FAIL,605,996,2006,1533,478,0,567,8,62,1,,heading,heading,
+# failures=2 of 2; real-folder-exists-after=False

@@ -116,14 +116,16 @@
     The variant and the test lane mean something only to Spar's own projects, which keep a folder per variant. Any
     other project reference, such as the app's own library, direct or transitive, builds as it would anywhere: given
     them, it would build once per variant into the same obj/ and bin/, and the builds would collide (CS2012, with a
-    library listed in SparContracts). Set before the first call to the references, so none is evaluated with them.
+    library listed in SparContracts). A black-box test project's publish of its app (SparBlackBoxBuild, PublishDir,
+    _IsPublishing) means nothing to them either: without those they are the same build as the test project's own. Set
+    before the first call to the references, so none is evaluated with them.
   -->
   <Target Name="SparPlainReferences"
           AfterTargets="_SplitProjectReferencesByFileExistence"
           Condition="'@(_MSBuildProjectReferenceExistent)' != ''">
     <ItemGroup>
       <_MSBuildProjectReferenceExistent Condition="'%(_MSBuildProjectReferenceExistent.SparTestedApplication)' != 'true'"
-                                        UndefineProperties="%(_MSBuildProjectReferenceExistent.UndefineProperties);SparVariant;SparTestLane" />
+                                        UndefineProperties="%(_MSBuildProjectReferenceExistent.UndefineProperties);SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
     </ItemGroup>
   </Target>
 
@@ -133,6 +135,20 @@
   -->
   <ItemGroup>
     <AdditionalTargetFrameworkInfoProperty Include="SparIsApp" />
+  </ItemGroup>
+
+  <!--
+    What a black-box test project needs of the app it tests, with the same answer: its app id, which names its per-user
+    folder, and the file name of its Production executable.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparAppName>$(AssemblyName)</SparAppName>
+    <SparAppExecutableName>$(AssemblyName)</SparAppExecutableName>
+    <SparAppExecutableName Condition="$(RuntimeIdentifier.StartsWith('win'))">$(AssemblyName).exe</SparAppExecutableName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalTargetFrameworkInfoProperty Include="SparAppId;SparAppName;SparAppExecutableName" />
   </ItemGroup>
 
   <!--
@@ -166,26 +182,94 @@
   </Target>
 
   <!--
+    The black-box level (plan section 5, level 7; decision "M1b's remaining questions without a spike"): a test project
+    with <SparBlackBoxTests>true</SparBlackBoxTests> gets the generated Projects class, one SparProject per
+    SparTestedApplication, and each app's Production NativeAOT executable, published into this project's obj/ and copied
+    beside the tests (and into a publish of them) under spar-apps/<app>/. SparBlackBoxPublish=false keeps the class and
+    skips the publish. The publish is the app's own incremental build in-process (decision "D3: variant builds run
+    in-proc"): restore as its own call, then Publish in Release with _IsPublishing, as dotnet publish does, without the
+    caller's lane, runtime and target framework. Spar's own projects and the app's libraries drop _IsPublishing,
+    PublishDir and SparBlackBoxBuild, so in a Release build or publish they are the very build the test project references,
+    never a second one into the same obj/. SparBlackBoxBuild gives the app's publish output folders of its own (Sdk.props),
+    so it never shares obj/ with a Release build of the same app in the same build. Design-time builds publish nothing.
+  -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparBlackBoxTests)' == 'true'">
+    <!-- On by default where the fixture runs: Windows, until the Linux host and its accessibility client (M1c). -->
+    <SparBlackBoxPublish Condition="'$(SparBlackBoxPublish)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">true</SparBlackBoxPublish>
+    <_SparBlackBoxDirectory>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-apps\</_SparBlackBoxDirectory>
+    <_SparBlackBoxProperties>Configuration=Release;SparVariant=Production;SparBlackBoxBuild=true</_SparBlackBoxProperties>
+    <!--
+      The caller's global properties the publish must not inherit; those it sets itself are passed in Properties. A
+      solution build's configuration map would otherwise give the app's references the solution's configuration: the
+      Production executable was then linked against Debug builds of Spar (13,312 B smaller than its own publish).
+    -->
+    <_SparBlackBoxRemoved>SparTestLane;RuntimeIdentifier;SelfContained;PublishAot;TargetFramework;Platform;NoBuild;CurrentSolutionConfigurationContents;BuildingSolutionFile</_SparBlackBoxRemoved>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparBlackBoxTests)' == 'true'">
+    <CompilerVisibleProperty Include="SparBlackBoxTests" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SparBlackBoxApp" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SparAppName" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SparAppId" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SparAppExecutable" />
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="SparAppDirectory" />
+  </ItemGroup>
+
+  <!-- Each tested app, with what its own GetTargetFrameworks answer carried back: no evaluation of its own. -->
+  <Target Name="SparBlackBoxApps"
+          AfterTargets="SparCheckTestedApplications"
+          Condition="'$(SparIsTestProject)' == 'true' and '$(SparBlackBoxTests)' == 'true'">
+    <ItemGroup>
+      <_SparBlackBoxApp Include="@(_MSBuildProjectReferenceExistent->'%(FullPath)')"
+                        Condition="'%(_MSBuildProjectReferenceExistent.SparTestedApplication)' == 'true'">
+        <SparAppName>$([System.Text.RegularExpressions.Regex]::Match('%(AdditionalPropertiesFromProject)', '&lt;SparAppName&gt;([^&lt;]*)&lt;/SparAppName&gt;').Groups[1].Value)</SparAppName>
+        <SparAppId>$([System.Text.RegularExpressions.Regex]::Match('%(AdditionalPropertiesFromProject)', '&lt;SparAppId&gt;([^&lt;]*)&lt;/SparAppId&gt;').Groups[1].Value)</SparAppId>
+        <SparAppExecutable>$([System.Text.RegularExpressions.Regex]::Match('%(AdditionalPropertiesFromProject)', '&lt;SparAppExecutableName&gt;([^&lt;]*)&lt;/SparAppExecutableName&gt;').Groups[1].Value)</SparAppExecutable>
+        <SparAppDirectory>%(RootDir)%(Directory)</SparAppDirectory>
+      </_SparBlackBoxApp>
+      <AdditionalFiles Include="@(_SparBlackBoxApp)" SparBlackBoxApp="true" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SparBlackBoxPublish"
+          AfterTargets="SparBlackBoxApps"
+          Condition="'$(SparIsTestProject)' == 'true' and '$(SparBlackBoxTests)' == 'true' and '$(SparBlackBoxPublish)' == 'true' and '$(DesignTimeBuild)' != 'true' and '@(_SparBlackBoxApp)' != ''">
+    <MSBuild Projects="%(_SparBlackBoxApp.Identity)" Targets="Restore"
+             Properties="$(_SparBlackBoxProperties);MSBuildRestoreSessionId=$([MSBuild]::StableStringHash('%(_SparBlackBoxApp.Identity)'))"
+             RemoveProperties="$(_SparBlackBoxRemoved)" />
+
+    <MSBuild Projects="%(_SparBlackBoxApp.Identity)" Targets="Publish"
+             Properties="$(_SparBlackBoxProperties);_IsPublishing=true;PublishDir=$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\"
+             RemoveProperties="$(_SparBlackBoxRemoved)" />
+
+    <ItemGroup>
+      <None Include="$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\%(_SparBlackBoxApp.SparAppExecutable)"
+            Link="spar-apps\%(_SparBlackBoxApp.SparAppName)\%(_SparBlackBoxApp.SparAppExecutable)" Visible="false"
+            CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+  <!--
     Source mode: Spar's own projects by reference. Their builds never see an app's variant or lane, so each is built
     once, whoever references it.
   -->
   <ItemGroup Condition="'$(SparSourceMode)' == 'true'">
     <ProjectReference Include="$(SparSourceRoot)Spar\Spar.csproj"
-                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
     <ProjectReference Include="$(SparSourceRoot)Spar.Generator\Spar.Generator.csproj"
-                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;RuntimeIdentifier"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing;RuntimeIdentifier"
                       OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsTestProject)' == 'true'">
     <ProjectReference Include="$(SparSourceRoot)Spar.Testing\Spar.Testing.csproj"
-                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
   </ItemGroup>
 
   <!-- An end-to-end test project asks for the Browser surface (decision "Packages for the package-only consumer"). -->
   <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsTestProject)' == 'true' and '$(SparBrowserTests)' == 'true'">
     <ProjectReference Include="$(SparSourceRoot)Spar.Testing.Browser\Spar.Testing.Browser.csproj"
-                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
   </ItemGroup>
 
   <!--
@@ -209,7 +293,7 @@
   -->
   <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(SparSourceMode)' == 'true'">
     <ProjectReference Include="$(SparSourceRoot)Spar.Windows\Spar.Windows.csproj"
-                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane" />
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(SparTargetsWindows)' == 'true' and '$(SparSourceMode)' != 'true'">
@@ -260,7 +344,7 @@
   <!-- The task assembly, built first so the client step can load it; nothing of it reaches the app. -->
   <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '$(SparIsApp)' == 'true'">
     <ProjectReference Include="$(SparSourceRoot)Spar.Sdk.Tasks\Spar.Sdk.Tasks.csproj"
-                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;RuntimeIdentifier"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing;RuntimeIdentifier"
                       ReferenceOutputAssembly="false" PrivateAssets="all" />
   </ItemGroup>
 

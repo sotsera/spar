@@ -22,12 +22,23 @@ internal static class TestDataRoots
     /// </summary>
     public static string Profiles => ProfilesBase.Value;
 
-    public static string Next()
+    public static string Next() => Next("app");
+
+    /// <summary>A new data root named <paramref name="kind"/>-NNN under this run's folder.</summary>
+    public static string Next(string kind)
     {
-        var name = $"app-{Interlocked.Increment(ref s_next):D3}";
+        var name = $"{kind}-{Interlocked.Increment(ref s_next):D3}";
         var root = Path.Combine(Base.Value, Run, name);
         Directory.CreateDirectory(root);
         return root;
+    }
+
+    /// <summary>Whether <paramref name="path"/> is a data root of this run (a folder directly under its run folder).</summary>
+    public static bool IsDataRoot(string path)
+    {
+        var run = Path.Combine(Base.Value, Run);
+        var parent = Path.GetDirectoryName(Path.TrimEndingDirectorySeparator(Path.GetFullPath(path)));
+        return string.Equals(parent, run, StringComparison.OrdinalIgnoreCase);
     }
 
     public static void Delete(string root)
@@ -47,6 +58,32 @@ internal static class TestDataRoots
             {
                 // A file the app just closed can stay locked for a moment on Windows.
                 Thread.Sleep(100);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Deletes a root a launched app used, trying again for up to <paramref name="limit"/>: the files of a process that was
+    /// just ended (a browser's memory-mapped <c>CrashpadMetrics-active.pma</c>) can stay open for a moment after its job
+    /// reports no process left (seen once in 2 × 12 black-box suite runs, under load).
+    /// </summary>
+    public static async Task DeleteAsync(string root, TimeSpan limit)
+    {
+        var deadline = DateTime.UtcNow + limit;
+        while (true)
+        {
+            try
+            {
+                if (Directory.Exists(root))
+                {
+                    Directory.Delete(root, recursive: true);
+                }
+
+                return;
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException && DateTime.UtcNow < deadline)
+            {
+                await Task.Delay(100, CancellationToken.None);
             }
         }
     }

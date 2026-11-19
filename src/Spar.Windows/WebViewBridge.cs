@@ -268,7 +268,7 @@ internal sealed class WebViewBridge
         }
 
         document.IsReady = true;
-        _log.Phase("ui-ready");
+        _log.Phase(HostPhases.UiReady);
         _log.Info($"Bridge: document {document.Id} reported ui-ready.");
         DocumentReady?.Invoke();
     }

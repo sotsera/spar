@@ -1795,6 +1795,93 @@ public sealed class ClosingWindowTests
 - **The options:** `Automated` (true by default); `Answer`, `CloseAnswer.CloseAnyway` or `KeepOpen`, required when `Automated` is false, and given to every question of that close (`KeepOpen` is "Wait" for a page that does not answer); `Reason`, `CloseReason.User` by default, or `App` and `SessionEnd` to test those guards (a session end's rules, without Windows' own message); `Timeout`, 30 s by default.
 - **One request at a time:** a close while another is open joins it and gets its result.
 
+### 6.13 Black-box tests
+
+**Decided** (decision "Step 8b's shape: the black-box fixture"; built on Windows in M1b step 8b, the Linux host follows in M1c). A black-box test launches the app's exact Production executable, the one users get, with nothing replaced: no test host, no devtools, no service overrides. It is for what only the shipped executable shows: that it starts and closes cleanly, which files it writes, what happens across processes (a second launch, a start-up failure and its exit code). Everything else belongs to the faster levels (6.10, 6.12).
+
+The test project asks for it in its project file, and the build then names each app the project tests in a generated `Projects` class and publishes that app's Production NativeAOT executable beside the tests:
+
+```xml
+<SparBlackBoxTests>true</SparBlackBoxTests>
+```
+
+File `SqlTool.EndToEndTests/BlackBoxTests.cs`:
+
+```csharp
+using Spar;
+using Spar.Testing;
+
+namespace SqlTool.EndToEndTests;
+
+// Black-box tests launch processes and take seconds: they run as their own invocation, like window tests.
+[Trait("Surface", "BlackBox")]
+public sealed class BlackBoxTests
+{
+    private static CancellationToken Token => TestContext.Current.CancellationToken;
+
+    [Fact]
+    public async Task The_shipped_executable_starts_and_closes_cleanly()
+    {
+        await using var app = await SparBlackBox.LaunchAsync(Projects.SqlTool, cancellationToken: Token);
+
+        await app.Window.GetByRole(SparRole.List, new() { Name = "Connections" }).WaitForAsync();
+        await app.Window.GetByRole(SparRole.Button, new() { Name = "Add connection" }).InvokeAsync();
+        await app.Window.GetByRole(SparRole.Dialog, new() { Name = "Add connection" }).WaitForAsync();
+
+        Assert.Equal(0, await app.CloseAsync(Token));
+        Assert.True(File.Exists(app.LogFile));
+        Assert.True(await app.WaitForProcessTreeExitAsync());
+    }
+
+    [Fact]
+    public async Task A_second_launch_hands_its_recipe_to_the_running_app()
+    {
+        await using var first = await SparBlackBox.LaunchAsync(Projects.SqlTool, cancellationToken: Token);
+
+        await using var second = await SparBlackBox.LaunchAsync(Projects.SqlTool, o =>
+        {
+            o.DataRoot = first.DataRoot;
+            o.Arguments.Add("--recipe");
+            o.Arguments.Add("nightly-copy.json");
+            o.WaitForReady = false;
+        }, Token);
+
+        Assert.Equal(0, await second.WaitForExitAsync(Token));
+    }
+
+    [Fact]
+    public async Task A_relaunch_the_running_app_never_answers_says_so_and_exits_8()
+    {
+        await using var first = await SparBlackBox.LaunchAsync(Projects.SqlTool, cancellationToken: Token);
+        Assert.Equal(0, await first.CloseAsync(Token));
+
+        // The lock of an instance that serves nobody: the next launch waits for it, then gives up.
+        var lockFile = Path.Combine(first.AppFolder, "instance.lock");
+        await using var held = new FileStream(lockFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+        await using var relaunch = await SparBlackBox.LaunchAsync(Projects.SqlTool, o =>
+        {
+            o.DataRoot = first.DataRoot;
+            o.WaitForReady = false;
+        }, Token);
+
+        var dialog = await relaunch.WaitForDialogAsync(cancellationToken: Token);
+        Assert.Contains("SqlTool can't start", dialog.Text, StringComparison.Ordinal);
+        await dialog.PressAsync("Close");
+        Assert.Equal(8, await relaunch.WaitForExitAsync(Token));
+    }
+}
+```
+
+- **The data root:** each launch gets a disposable root of its own under `artifacts/` (beside the tests elsewhere), and the app's per-user folders go there through the environment only: `LOCALAPPDATA`, `APPDATA`, `TEMP` and `TMP` point into it, since a Production app takes no switch for its folders (decision "M1b's remaining questions without a spike"). `app.AppFolder`, `DataFolder`, `LogsFolder` and `LogFile` are the folders a Production build uses there. `o.DataRoot = first.DataRoot` starts a second instance on the same data, as a second launch by the same user would; the first launch's handle keeps the root and deletes it, unless `KeepData`. The app never gets a `WEBVIEW2_*` or `SPAR_*` variable; `o.Environment` adds the app's own.
+- **Ready** means the host's `ui-ready` line in the app's log file (the page connected its bridge and called `ready()`, 6.3) and UI Automation finding the app's window, within `ReadyTimeout` (30 s). The line is `<time> INFO  Spar.Host  [<run id>] ui-ready at <ms> ms`, a format Spar keeps stable; an app that moves its logs folder or raises `Spar.Host` above `Information` has none: it launches with `o.WaitForReady = false` and waits for an element of its page. `WaitForReady = false` also returns at once for a launch that hands over or fails.
+- **The window** is read and driven through UI Automation, never through input: `app.Window.TitleAsync()`, and locators named as in the page API (`GetByRole` with `Name`, `Exact`, `NameRegex` and `Disabled`, `GetByText`, `First`, `Last`, `Nth`) with `WaitForAsync`, `CountAsync`, `IsVisibleAsync`, `NameAsync`, `AllNamesAsync`, `InputValueAsync` and `InvokeAsync`, a button's press through the Invoke pattern. The page's elements come with their ARIA roles and accessible names, as the browser exposes them to assistive technology. An action needs one element: a locator that finds several fails at once.
+- **Native messages** (a start-up failure, a failed relaunch, a close question): `WaitForDialogAsync()` reads the first one the app shows, with its `Title`, `Text` and `Buttons`, and `PressAsync(name)` answers it.
+- **Closing and exit codes:** `CloseAsync()` closes the window as its close button does, so the guards of 6.11 run, and returns the exit code; `WaitForExitAsync()` waits for an exit the app makes on its own; both wait `ExitTimeout` (15 s). `Kill()` ends the app and everything it started.
+- **Nothing is left behind:** the app runs in a job object that ends it, the browser's processes included, when the test process ends, however it ends. Disposal ends what is still running (an app asked to exit gets `ExitTimeout` first), waits until every process of the app is gone and deletes the root. A cleanup that cannot finish, or a browser process that outlives a clean exit, fails the test.
+- **Nothing shows:** on Windows the app runs on a desktop of the test process's own, never on the monitor, so it never takes the focus or input of the person at the computer. Checks that need real input or focus run in Windows Sandbox.
+- **The build:** for each `SparTestedApplication`, `Projects.<App>` carries the app's name, `AppId`, `ProjectDirectory` and `ExecutablePath`, the Production executable published incrementally into the test project's `obj/` and copied beside the tests, so the path also works from a publish of the test project (the NativeAOT lane). `<SparBlackBoxPublish>false</SparBlackBoxPublish>` keeps the class and skips the publish, for a pipeline that puts the executable there itself.
+- **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=BlackBox"`, and in the NativeAOT lane.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**
