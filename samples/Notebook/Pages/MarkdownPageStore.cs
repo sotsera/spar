@@ -48,8 +48,16 @@ public sealed class MarkdownPageStore(SparFolders folders, ILogger<MarkdownPageS
             return null;
         }
 
-        var text = await File.ReadAllTextAsync(path, cancellationToken);
-        return Parse(id, text);
+        try
+        {
+            var text = await ReadAsync(path, cancellationToken);
+            return Parse(id, text);
+        }
+        catch (FileNotFoundException)
+        {
+            // Deleted between the check and the read.
+            return null;
+        }
     }
 
     public async Task<IReadOnlyList<PageSummary>> ListAsync(CancellationToken cancellationToken)
@@ -112,6 +120,25 @@ public sealed class MarkdownPageStore(SparFolders folders, ILogger<MarkdownPageS
         {
             _gate.Release();
         }
+    }
+
+    /// <summary>
+    /// Reads a page while letting a write or delete of the same page go ahead: on Windows a file another handle has open
+    /// without <see cref="FileShare.Delete"/> cannot be deleted or replaced, so a read at the wrong moment would make
+    /// <see cref="DeleteAsync"/> or the replace in <see cref="WriteAsync"/> fail.
+    /// </summary>
+    private static async Task<string> ReadAsync(string path, CancellationToken cancellationToken)
+    {
+        var options = new FileStreamOptions
+        {
+            Mode = FileMode.Open,
+            Access = FileAccess.Read,
+            Share = FileShare.ReadWrite | FileShare.Delete,
+            Options = FileOptions.Asynchronous,
+        };
+        await using var stream = new FileStream(path, options);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        return await reader.ReadToEndAsync(cancellationToken);
     }
 
     /// <summary>The page's file, or null for an id that is not one this store made (no paths from the page).</summary>
