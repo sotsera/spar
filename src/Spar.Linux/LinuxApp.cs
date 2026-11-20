@@ -124,6 +124,9 @@ internal sealed class LinuxApp : IAppWindowOwner
     /// </summary>
     void IAppWindowOwner.WindowClosed() => _ = FinishAsync(_ui!);
 
+    /// <summary>Every WebKit process below this one: an app has one window.</summary>
+    List<(int Id, string Name)> IAppWindowOwner.WebKitProcesses() => WebProcesses.Below(Environment.ProcessId);
+
     /// <summary>
     /// Plan section 3's Linux order: the display, then single instance (before anything touches the browser's folders,
     /// and before the slower checks, so a relaunch hands over at once), then the browser's environment overrides, the
@@ -431,11 +434,15 @@ internal sealed class LinuxApp : IAppWindowOwner
 /// app's backend. Apps never reference it; Spar.Sdk adds it for <c>SparPlatforms</c> that include linux.
 /// </summary>
 [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-public sealed class SparLinuxHost : ISparHost
+public sealed class SparLinuxHost : ISparHost, ISparTestWindowHost
 {
     public int Run(SparApp app)
     {
         ArgumentNullException.ThrowIfNull(app);
         return new LinuxApp(app).Run();
     }
+
+    /// <summary>The app's window in a test process (the Window surface), behind the test-host feature switch.</summary>
+    ISparTestWindow ISparTestWindowHost.Open(SparApp app, SparRunningApp running, SparTestWindowRequest request) =>
+        Testing.TestWindow.Open(app, running, request);
 }

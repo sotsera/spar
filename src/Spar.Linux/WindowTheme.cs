@@ -33,6 +33,10 @@ internal sealed class WindowTheme
     private nint _bus;
     private uint _subscription;
     private nint _provider;
+    private nint _display;
+    private string _class = WindowClass;
+    private bool _fixed;
+    private static int s_fixed;
     private nint _window;
     private bool _x11;
     private GCHandle _self;
@@ -77,6 +81,19 @@ internal sealed class WindowTheme
     }
 
     /// <summary>
+    /// A window test's fixed scheme (decision "Window tests: closing, session-end budget, test theme and any-character
+    /// keys": light unless the test asks for dark), whatever the system's. Its CSS rule names a class of this window's
+    /// own, and its provider leaves the display with the window, since a test process's windows share their displays.
+    /// </summary>
+    public static WindowTheme Fixed(WindowOptions options, bool dark)
+    {
+        var theme = new WindowTheme(options, dark, null, 0, "the test's colour scheme");
+        theme._class = $"{WindowClass}-test-{Interlocked.Increment(ref s_fixed)}";
+        theme._fixed = true;
+        return theme;
+    }
+
+    /// <summary>
     /// The layers, on the loop thread after <c>gtk_init</c> and before <paramref name="window"/> is presented: GTK's
     /// settings read first when nothing else decided, then the dark preference and the window's colour.
     /// </summary>
@@ -90,9 +107,10 @@ internal sealed class WindowTheme
         }
 
         _window = window;
-        Gtk.gtk_widget_add_css_class(window, WindowClass);
+        _display = Gtk.gtk_widget_get_display(window);
+        Gtk.gtk_widget_add_css_class(window, _class);
         _provider = Gtk.gtk_css_provider_new();
-        Gtk.gtk_style_context_add_provider_for_display(Gtk.gdk_display_get_default(), _provider, Gtk.StyleProviderPriorityApplication);
+        Gtk.gtk_style_context_add_provider_for_display(_display, _provider, Gtk.StyleProviderPriorityApplication);
         Paint();
     }
 
@@ -142,6 +160,11 @@ internal sealed class WindowTheme
             GLib.g_dbus_connection_signal_unsubscribe(_bus, _subscription);
             _subscription = 0;
         }
+
+        if (SparTestSession.IsSupported && _fixed && _provider != 0 && _display != 0)
+        {
+            Gtk.gtk_style_context_remove_provider_for_display(_display, _provider);
+        }
     }
 
     /// <summary>Frees what native code found this theme by, once the main loop has ended.</summary>
@@ -179,11 +202,14 @@ internal sealed class WindowTheme
         name is not null && (name.EndsWith("-dark", StringComparison.OrdinalIgnoreCase) || name.EndsWith(":dark", StringComparison.OrdinalIgnoreCase));
 
     /// <summary>The CSS rule that paints the app's windows.</summary>
-    internal static string Css(SparColor colour) => $"window.{WindowClass} {{ background-color: {colour}; }}";
+    internal static string Css(SparColor colour) => Css(WindowClass, colour);
+
+    /// <summary>The CSS rule that paints the windows of one CSS class.</summary>
+    internal static string Css(string cssClass, SparColor colour) => $"window.{cssClass} {{ background-color: {colour}; }}";
 
     private unsafe void Paint()
     {
-        var settings = Gtk.gtk_settings_get_default();
+        var settings = Gtk.gtk_settings_get_for_display(_display);
         if (settings != 0)
         {
             GValue value = default;
@@ -193,7 +219,7 @@ internal sealed class WindowTheme
             GLib.g_value_unset(&value);
         }
 
-        var css = Encoding.UTF8.GetBytes(Css(Background));
+        var css = Encoding.UTF8.GetBytes(Css(_class, Background));
         fixed (byte* data = css)
         {
             Gtk.gtk_css_provider_load_from_data(_provider, data, css.Length);

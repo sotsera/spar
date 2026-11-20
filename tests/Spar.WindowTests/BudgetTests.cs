@@ -102,7 +102,7 @@ public sealed partial class BudgetTests
     [Fact]
     public async Task The_Production_app_starts_to_ui_ready_and_holds_its_working_set()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         var ready = new List<double>();
         var app = new List<double>();
         var withBrowser = new List<double>();

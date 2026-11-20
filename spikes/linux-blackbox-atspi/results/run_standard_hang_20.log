@@ -1,0 +1,159 @@
+STEP run standard hang 20 on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:06:59Z
+dbus-daemon[689]: [session uid=1000 pid=689] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=690 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[689]: [session uid=1000 pid=689] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[702]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1000 pid=707 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[702]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[689]: [session uid=1000 pid=689] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.8' (uid=1000 pid=806 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[689]: [session uid=1000 pid=689] Activating service name='org.freedesktop.portal.Documents' requested by ':1.9' (uid=1000 pid=840 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[689]: [session uid=1000 pid=689] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.10' (uid=1000 pid=846 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[689]: [session uid=1000 pid=689] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[689]: [session uid=1000 pid=689] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.807: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.807: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[689]: [session uid=1000 pid=689] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.9' (uid=1000 pid=840 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[689]: [session uid=1000 pid=689] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.854: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.854: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.854: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.854: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.854: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.854: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.855: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.855: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.856: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.857: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00727.559518] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00727.559572] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.859: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.859: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.860: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:06:59.860: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[689]: [session uid=1000 pid=689] Successfully activated service 'org.freedesktop.portal.Desktop'
+hang 1: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.0 ms in 24 calls, cache 0.5 ms same
+hang 1: reference line 20152.7, X11 viewable 20157.5, polled 20156.8, event 20152.6 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; dialog gone from AT-SPI after 261.6 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:07:20.098: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20422.5 ms; then WM_DELETE_WINDOW: exit 0 after 34.9 ms
+hang 2: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.6 ms in 24 calls, cache 0.5 ms same
+hang 2: reference line 20075.8, X11 viewable 20080.7, polled 20080.0, event 20075.8 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 53.9 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:07:40.587: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20139.3 ms; then WM_DELETE_WINDOW: exit 0 after 28.3 ms
+hang 3: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.9 ms in 24 calls, cache 0.5 ms same
+hang 3: reference line 20076.8, X11 viewable 20081.2, polled 20080.5, event 20076.8 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.21 ms; dialog gone from AT-SPI after 264.0 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:08:01.280: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20348.7 ms; then WM_DELETE_WINDOW: exit 0 after 47.2 ms
+hang 4: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.1 ms in 24 calls, cache 0.6 ms same
+hang 4: reference line 20079.0, X11 viewable 20083.2, polled 20082.5, event 20079.0 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 57.9 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:08:21.793: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20140.9 ms; then WM_DELETE_WINDOW: exit 0 after 30.5 ms
+hang 5: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.2 ms in 24 calls, cache 0.5 ms same
+hang 5: reference line 20078.3, X11 viewable 20082.7, polled 20082.1, event 20078.3 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; dialog gone from AT-SPI after 262.3 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:08:42.479: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20350.2 ms; then WM_DELETE_WINDOW: exit 0 after 33.1 ms
+hang 6: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.1 ms in 24 calls, cache 0.5 ms same
+hang 6: reference line 20070.5, X11 viewable 20075.0, polled 20074.4, event 20070.5 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 52.3 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:09:02.957: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20132.9 ms; then WM_DELETE_WINDOW: exit 0 after 42.4 ms
+hang 7: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.7 ms in 24 calls, cache 0.5 ms same
+hang 7: reference line 20077.9, X11 viewable 20082.7, polled 20082.0, event 20077.8 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.21 ms; dialog gone from AT-SPI after 261.9 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:09:23.661: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20349.8 ms; then WM_DELETE_WINDOW: exit 0 after 43.5 ms
+hang 8: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.1 ms in 24 calls, cache 0.5 ms same
+hang 8: reference line 20077.4, X11 viewable 20081.8, polled 20081.2, event 20077.4 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 52.8 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:09:44.158: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20139.4 ms; then WM_DELETE_WINDOW: exit 0 after 47.5 ms
+hang 9: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.3 ms in 24 calls, cache 0.5 ms same
+hang 9: reference line 20077.2, X11 viewable 20081.7, polled 20081.1, event 20077.2 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.22 ms; dialog gone from AT-SPI after 251.6 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:10:04.874: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20348.4 ms; then WM_DELETE_WINDOW: exit 0 after 46.7 ms
+hang 10: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.4 ms in 24 calls, cache 0.5 ms same
+hang 10: reference line 20079.2, X11 viewable 20083.8, polled 20083.1, event 20079.1 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 52.7 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:10:25.358: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20142 ms; then WM_DELETE_WINDOW: exit 0 after 41.6 ms
+hang 11: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.1 ms in 24 calls, cache 0.5 ms same
+hang 11: reference line 20080.5, X11 viewable 20085.7, polled 20085.1, event 20080.5 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.19 ms; dialog gone from AT-SPI after 262.4 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:10:46.064: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20352.3 ms; then WM_DELETE_WINDOW: exit 0 after 29.8 ms
+hang 12: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.0 ms in 24 calls, cache 0.4 ms same
+hang 12: reference line 20075.7, X11 viewable 20080.1, polled 20079.4, event 20075.7 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 52.5 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:11:06.549: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20137.5 ms; then WM_DELETE_WINDOW: exit 0 after 27.1 ms
+hang 13: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.2 ms in 24 calls, cache 0.5 ms same
+hang 13: reference line 20077.9, X11 viewable 20082.6, polled 20081.9, event 20077.8 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.21 ms; dialog gone from AT-SPI after 262.6 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:11:27.238: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20350.1 ms; then WM_DELETE_WINDOW: exit 0 after 41.0 ms
+hang 14: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 9.8 ms in 24 calls, cache 0.8 ms same
+hang 14: reference line 20088.1, X11 viewable 20091.9, polled 20100.8, event 20088.0 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 75.3 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:11:47.797: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20160.2 ms; then WM_DELETE_WINDOW: exit 0 after 58.3 ms
+hang 15: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.5 ms in 24 calls, cache 0.5 ms same
+hang 15: reference line 20078.5, X11 viewable 20083.6, polled 20082.9, event 20078.4 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; dialog gone from AT-SPI after 263.8 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:12:08.498: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20351 ms; then WM_DELETE_WINDOW: exit 0 after 50.4 ms
+hang 16: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.0 ms in 24 calls, cache 0.5 ms same
+hang 16: reference line 20073.0, X11 viewable 20077.4, polled 20076.8, event 20073.1 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 55.2 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:12:29.000: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20134.6 ms; then WM_DELETE_WINDOW: exit 0 after 38.7 ms
+hang 17: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 6.0 ms in 24 calls, cache 0.5 ms same
+hang 17: reference line 20072.7, X11 viewable 20077.3, polled 20076.5, event 20072.6 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.27 ms; dialog gone from AT-SPI after 262.1 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:12:49.694: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20345 ms; then WM_DELETE_WINDOW: exit 0 after 39.0 ms
+hang 18: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.7 ms in 24 calls, cache 0.6 ms same
+hang 18: reference line 20086.8, X11 viewable 20091.6, polled 20091.0, event 20086.9 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 52.7 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:13:10.196: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20150.4 ms; then WM_DELETE_WINDOW: exit 0 after 43.7 ms
+hang 19: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.1 ms in 24 calls, cache 0.5 ms same
+hang 19: reference line 20073.7, X11 viewable 20078.0, polled 20077.4, event 20073.6 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.21 ms; dialog gone from AT-SPI after 262.5 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:13:30.898: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20344.7 ms; then WM_DELETE_WINDOW: exit 0 after 34.5 ms
+hang 20: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.5 ms in 24 calls, cache 0.5 ms same
+hang 20: reference line 20078.3, X11 viewable 20084.0, polled 20083.4, event 20078.3 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 56.6 ms
+
+(/usr/libexec/xdg-desktop-portal:840): xdg-desktop-portal-WARNING **: 19:13:51.394: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20142.9 ms; then WM_DELETE_WINDOW: exit 0 after 40.2 ms
+SUMMARY hang (20 runs, 0 failed)
+  the host's log line to the dialog viewable (X11): n=20 p50=4.5 p95=5.2 min=3.8 max=5.7 ms
+  viewable to found by polling AT-SPI (negative: before the map): n=20 p50=-0.7 p95=-0.6 min=-0.8 max=8.9 ms
+  viewable to the first AT-SPI event (negative: before the map): n=20 p50=-4.7 p95=-4.2 min=-5.8 max=-3.9 ms
+  read the dialog by walking: n=20 p50=5.2 p95=6.0 min=5.0 max=9.8 ms
+  read the dialog from the cache (one call): n=20 p50=0.5 p95=0.6 min=0.4 max=0.8 ms
+  press by DoAction to done (exit or dialog gone): n=10 p50=262.3 p95=264.0 min=251.6 max=264.0 ms
+  press by XTEST click to done (exit or dialog gone): n=10 p50=52.8 p95=75.3 min=52.3 max=75.3 ms
+STEP exit 0 in 412106 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader hang 20
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

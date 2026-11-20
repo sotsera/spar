@@ -35,6 +35,9 @@ internal static class ProductionBoundary
 
         // The Windows Sandbox runner and real input (M1b step 8c): Spar.Testing only.
         "SandboxRunner", "SandboxSession", "SandboxGuest", "RealInput", "ScreenCapture", "SandboxEvidence",
+
+        // The Window surface on Linux (M1c step 7): the test views' sessions and the test process's environment.
+        "TestEnvironment", "TestViews",
     ];
 
     private static readonly string[] Literals =
@@ -49,6 +52,9 @@ internal static class ProductionBoundary
         // The Linux host's own Development trigger (M1c step 3), and the descriptions and read-back lines only a
         // Development build of either host writes (M1c step 6): a Production image carries the values it set.
         "SPAR_DEV_PROMPT_ANSWERS", "Browser settings read back (", "Context menu (",
+
+        // The Window surface on Linux (M1c step 7): the private Xvfb's setting and screen, and its runtime folders.
+        "SPAR_TEST_DISPLAY", "6400x4200x24", "spar-test-",
     ];
 
     /// <summary>

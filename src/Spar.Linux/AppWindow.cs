@@ -15,6 +15,12 @@ internal interface IAppWindowOwner
 
     /// <summary>The window is gone and its web processes have exited: an app ends its main loop.</summary>
     void WindowClosed();
+
+    /// <summary>
+    /// The WebKit processes this window waits for after its destruction (off the loop): an app's are every one below its
+    /// process; a test window's only its own page's, since other tests' windows share the test process.
+    /// </summary>
+    List<(int Id, string Name)> WebKitProcesses();
 }
 
 /// <summary>
@@ -43,6 +49,7 @@ internal sealed partial class AppWindow
     private readonly PageHangHook _hangHook;
     private readonly ConcurrentQueue<string>? _promptAnswers;
     private readonly IAppWindowOwner _owner;
+    private readonly BrowserSource? _source;
     private readonly CancellationTokenSource _stopping = new();
     private CloseGuard? _guard;
     private MainLoop? _ui;
@@ -61,6 +68,7 @@ internal sealed partial class AppWindow
 
     /// <param name="security">The page security in force, resolved before the engine started (it sets WebAssembly).</param>
     /// <param name="promptAnswers">A Development build's scripted answers to the hung-page dialogs; null otherwise.</param>
+    /// <param name="source">A test window's display and page driver (the Window surface); null for an app's window.</param>
     public AppWindow(
         SparApp app,
         SparPageSecurity security,
@@ -71,7 +79,8 @@ internal sealed partial class AppWindow
         BrowserProfile profile,
         PageHangHook hangHook,
         ConcurrentQueue<string>? promptAnswers,
-        IAppWindowOwner owner)
+        IAppWindowOwner owner,
+        BrowserSource? source = null)
     {
         _app = app;
         _security = security;
@@ -83,6 +92,7 @@ internal sealed partial class AppWindow
         _hangHook = hangHook;
         _promptAnswers = promptAnswers;
         _owner = owner;
+        _source = source;
     }
 
     /// <summary>The run's exit code: 0, or the code of the failure that ended it.</summary>
@@ -90,6 +100,12 @@ internal sealed partial class AppWindow
 
     /// <summary>Whether the teardown has started.</summary>
     public bool IsClosing => _state == State.Closing;
+
+    /// <summary>The GTK window; 0 before the start and once it is destroyed (loop thread).</summary>
+    public nint Handle => _window;
+
+    /// <summary>The WebKit view; 0 before the start and from the teardown on (loop thread).</summary>
+    public nint ViewHandle => _view?.Handle ?? 0;
 
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
@@ -135,7 +151,7 @@ internal sealed partial class AppWindow
         var guard = new PageGuard(_log, security, browser.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, browser, development, _automated);
         defaults.KeepGtkInspectorClosed(_window);
-        _view = new BrowserView(ui, _log, _pages, _bridge, guard, defaults, _profile, Fail);
+        _view = new BrowserView(ui, _log, _pages, _bridge, guard, defaults, _profile, Fail, _source);
         _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background);
 
         // The heartbeat follows the view's documents from the first one on, before the services exist.
@@ -150,6 +166,11 @@ internal sealed partial class AppWindow
         Gtk.gtk_window_set_child(_window, _view.Handle);
         _view.Load();
         theme.Realize();
+        if (SparTestSession.IsSupported && _source?.Realized is { } realized)
+        {
+            realized(_window);
+        }
+
         Gtk.gtk_window_present(_window);
         _log.Phase("window shown");
         theme.Follow(() =>
@@ -321,12 +342,11 @@ internal sealed partial class AppWindow
     }
 
     /// <summary>The app's WebKit processes still there when they have all exited or the wait is over.</summary>
-    private static async Task<List<(int Id, string Name)>> WaitForExitAsync(long started)
+    private async Task<List<(int Id, string Name)>> WaitForExitAsync(long started)
     {
-        var self = Environment.ProcessId;
         while (true)
         {
-            var left = await Task.Run(() => WebProcesses.Below(self));
+            var left = await Task.Run(_owner.WebKitProcesses);
             if (left.Count == 0 || Stopwatch.GetElapsedTime(started).TotalMilliseconds >= WebProcessExitMilliseconds)
             {
                 return left;

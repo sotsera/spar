@@ -109,7 +109,7 @@ internal sealed class TestWindowProcess
     {
         if (Prerequisites.CheckWindows() is { } windows)
         {
-            throw new InvalidOperationException("Window tests cannot run here: " + StartupReport.Describe(windows));
+            throw new SparTestWindowUnavailableException("Window tests cannot run here: " + StartupReport.Describe(windows));
         }
 
         var log = new HostLog(standardError: false);
@@ -119,7 +119,7 @@ internal sealed class TestWindowProcess
         BrowserEnvironment.Filter(allowed: false, log);
         if (Prerequisites.CheckRuntime() is { } runtime)
         {
-            throw new InvalidOperationException("Window tests cannot run here: " + StartupReport.Describe(runtime));
+            throw new SparTestWindowUnavailableException("Window tests cannot run here: " + StartupReport.Describe(runtime));
         }
 
         var root = NewRoot(profilesFolder);

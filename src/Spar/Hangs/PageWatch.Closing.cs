@@ -20,6 +20,19 @@ internal readonly struct PageCloseResult(PageCloseAnswer answer, bool closedAnyw
     public static PageCloseResult CloseAnyway { get; } = new(PageCloseAnswer.Close, closedAnyway: true, unanswered: true);
 }
 
+/// <summary>What a window's close request came to: whether the window closed, and the last question a guard asked.</summary>
+/// <param name="closed">The teardown ran; false when a guard or the person kept the window.</param>
+/// <param name="question">The last question a guard asked (the page's or the backend's), null when none asked.</param>
+/// <param name="unanswered">The page did not answer, and "Wait / Close anyway" was asked.</param>
+internal readonly struct CloseReport(bool closed, string? question, bool unanswered)
+{
+    public bool Closed { get; } = closed;
+
+    public string? Question { get; } = question;
+
+    public bool Unanswered { get; } = unanswered;
+}
+
 /// <summary>
 /// How a close request's questions are answered: Spar's native dialogs by default, a window test's answers in its
 /// place (decision "Window tests: closing, session-end budget, test theme and any-character keys"), so a window test

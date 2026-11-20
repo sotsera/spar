@@ -21,13 +21,22 @@ public sealed partial class PageDefaultsTests
 
         await host.ClickAsync("Check WebAssembly");
 
-        // WebView2 keeps the global (no browser switch removes it; on Linux it is absent), and the policy, without
-        // AllowWebAssembly(), refuses every module wherever the page runs code.
-        await Expect(host.Page.GetByLabel("WebAssembly")).ToHaveTextAsync(Refused());
+        // WebView2 keeps the global (no browser switch removes it), and the policy, without AllowWebAssembly(), refuses
+        // every module wherever the page runs code; WebKitGTK has no WebAssembly at all (JSC_useWasm=false).
+        var webAssembly = host.Page.GetByLabel("WebAssembly");
+        await Expect(webAssembly).ToHaveTextAsync(RefusedOrAbsent());
 
         // Each refusal is a reported violation (one per place in the code, deduplicated), and nothing else went wrong.
-        Assert.NotEmpty(host.App.Problems);
-        Assert.All(host.App.Problems, problem => Assert.Contains("script-src blocked wasm-eval", problem, StringComparison.Ordinal));
+        if ((await webAssembly.InnerTextAsync()).Contains("refused", StringComparison.Ordinal))
+        {
+            Assert.NotEmpty(host.App.Problems);
+            Assert.All(host.App.Problems, problem => Assert.Contains("script-src blocked wasm-eval", problem, StringComparison.Ordinal));
+        }
+        else
+        {
+            Assert.Empty(host.App.Problems);
+        }
+
         Assert.Empty(host.Page.PageErrors);
     }
 
@@ -39,7 +48,7 @@ public sealed partial class PageDefaultsTests
         using var listeners = Listeners.TryStart();
         if (listeners is null)
         {
-            Assert.Skip("Port 443 on the loopback addresses is in use on this machine, so connections cannot be counted.");
+            Assert.Skip("Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.");
             return;
         }
 
@@ -52,8 +61,8 @@ public sealed partial class PageDefaultsTests
         Assert.Equal(0, listeners.Accepted);
     }
 
-    [GeneratedRegex(@"^page object refused \(\w+\); worker refused \(\w+\); shared worker refused \(\w+\)$")]
-    private static partial Regex Refused();
+    [GeneratedRegex(@"^page (object refused \(\w+\); worker refused \(\w+\); shared worker refused \(\w+\)|undefined absent; worker absent; shared worker absent)$")]
+    private static partial Regex RefusedOrAbsent();
 
     /// <summary>Listeners on <c>[::1]:443</c> and <c>127.0.0.1:443</c> that count the connections they accept.</summary>
     private sealed class Listeners : IDisposable

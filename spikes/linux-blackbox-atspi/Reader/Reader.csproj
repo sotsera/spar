@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The spike's reader: reads another process's GTK 4 windows and dialogs over AT-SPI (through GIO's GDBus, and through
+    libatspi for the comparison), closes windows the window manager's way (WM_DELETE_WINDOW), and tries the ways a
+    test process can take a launched app down with it. NativeAOT, linux-x64.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Spike.BlackBoxAtSpi</RootNamespace>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IlcTreatWarningsAsErrors>false</IlcTreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

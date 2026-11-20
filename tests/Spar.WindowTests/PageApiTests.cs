@@ -170,6 +170,17 @@ public sealed partial class PageApiTests
         Assert.Contains(page.ConsoleMessages, message => message is { Type: "error", Text: "Something went wrong on purpose" });
         Assert.Contains(page.PageErrors, error => error.Contains("Thrown on purpose", StringComparison.Ordinal));
         Assert.Equal([new SparDialog("alert", "Saved!")], page.Dialogs);
+    }
+
+    [Fact]
+    public async Task Page_errors_reach_the_apps_log_through_the_host()
+    {
+        // The host's own report of the page's errors (the injected script's errors message, plan M1b step 7), which the
+        // Linux host does not send yet (decision "Linux page security": the page's error reports are not built on Linux).
+        WindowSupport.SkipUnlessWindows("The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).");
+        await using var host = await HostPage.OpenAsync();
+
+        await host.ClickAsync("Throw");
 
         // The same errors reach the app's log through the host, so a window test sees them as problems.
         await WaitUntilAsync(() => host.App.Problems.Any(problem => problem.Contains("Thrown on purpose", StringComparison.Ordinal)));
@@ -183,7 +194,7 @@ public sealed partial class PageApiTests
 
         await page.GetByRole(SparRole.Link, new() { Name = "Second page" }).ClickAsync();
         await page.WaitForURLAsync("**/other.html");
-        await Expect(page).ToHaveURLAsync("https://app.localhost/other.html");
+        await Expect(page).ToHaveURLAsync(host.Address("/other.html"));
         await Expect(page.GetByRole(SparRole.Status)).ToHaveTextAsync("Ready");
         await page.GetByRole(SparRole.Button, new() { Name = "Echo" }).ClickAsync();
         await Expect(page.GetByRole(SparRole.Status)).ToHaveTextAsync("Echo: again");

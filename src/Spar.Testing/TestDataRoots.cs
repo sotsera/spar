@@ -14,6 +14,7 @@ internal static class TestDataRoots
 
     private static readonly Lazy<string> Base = new(FindBase);
     private static readonly Lazy<string> ProfilesBase = new(FindProfiles);
+    private static readonly Lazy<string> HomesBase = new(FindHomes);
     private static int s_next;
 
     /// <summary>
@@ -21,6 +22,13 @@ internal static class TestDataRoots
     /// repository, beside the data roots otherwise. Each test process takes a root of its own under it.
     /// </summary>
     public static string Profiles => ProfilesBase.Value;
+
+    /// <summary>
+    /// Where Linux window tests keep the test process's private home and XDG folders (<c>AGENTS.md</c>; plan section 5,
+    /// "Linux isolation"): <c>artifacts/linux-homes/test-host/</c> in a repository, beside the data roots otherwise. Each
+    /// test process takes a root of its own under it.
+    /// </summary>
+    public static string LinuxHomes => HomesBase.Value;
 
     public static string Next() => Next("app");
 
@@ -95,6 +103,11 @@ internal static class TestDataRoots
             ? Path.Combine(artifacts, "webview2-profiles", "test-host")
             : Path.Combine(testHost, "webview2-profiles");
     }
+
+    private static string FindHomes() =>
+        TestArtifacts.Root is { } artifacts
+            ? Path.Combine(artifacts, "linux-homes", "test-host")
+            : Path.Combine(Base.Value, "linux-homes");
 
     private static string FindBase() =>
         TestArtifacts.Root is { } artifacts

@@ -917,6 +917,29 @@
     return box.top >= 0 && box.left >= 0 && box.bottom <= innerHeight && box.right <= innerWidth;
   }
 
+  // Whether the element is in the viewport and not cut off by a scrolling ancestor (a box inside the window can still
+  // be scrolled out of its container's view, where the container, not the element, would get the click).
+  function inView(element) {
+    const box = element.getBoundingClientRect();
+    if (!inViewport(box)) {
+      return false;
+    }
+
+    for (let parent = element.parentElement; parent !== null && parent !== document.body && parent !== document.documentElement; parent = parent.parentElement) {
+      const style = getComputedStyle(parent);
+      if (style.overflowX === "visible" && style.overflowY === "visible") {
+        continue;
+      }
+
+      const clip = parent.getBoundingClientRect();
+      if (box.top < clip.top || box.left < clip.left || box.bottom > clip.bottom || box.right > clip.right) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   /** The point a click aims at: the middle of the part of the box inside the viewport. */
   function clickPoint(box) {
     const left = Math.max(box.left, 0);
@@ -974,7 +997,7 @@
       return { retry: name + ": not editable" };
     }
 
-    if (!inViewport(element.getBoundingClientRect())) {
+    if (!inView(element)) {
       element.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
     }
 
@@ -997,6 +1020,62 @@
 
     armPointer(element);
     return { ok: true, element: name, x: point.x, y: point.y };
+  }
+
+  // Trusted input as the page receives it, counted, so a host whose input travels outside the page (XTEST through the
+  // X server on Linux) can wait until a key or pointer event it sent has arrived, as a DevTools input call does on
+  // Windows. Untrusted events (the page's own dispatches) are not counted.
+  let inputs = 0;
+  const inputWaiters = new Set();
+  const countInput = event => {
+    if (!event.isTrusted) {
+      return;
+    }
+
+    inputs++;
+    for (const waiter of inputWaiters) {
+      waiter();
+    }
+  };
+
+  for (const type of ["keydown", "keyup", "pointerdown", "pointerup", "pointermove", "mousemove", "wheel"]) {
+    addEventListener(type, countInput, true);
+  }
+
+  /** Resolves once more than `after` trusted inputs arrived, or after `timeout` milliseconds; answers whether they did. */
+  function inputAfter(request) {
+    const after = request.after ?? 0;
+    if (inputs > after) {
+      return { seen: true, count: inputs };
+    }
+
+    return new Promise(resolve => {
+      let answered = false;
+      const done = seen => {
+        if (answered) {
+          return;
+        }
+
+        answered = true;
+        inputWaiters.delete(check);
+        clearTimeout(timer);
+        resolve({ seen, count: inputs });
+      };
+      // Answered once the task that delivered the event has ended, its default action (typing, focus) included.
+      const check = () => {
+        if (inputs > after) {
+          inputWaiters.delete(check);
+          setTimeout(() => done(true), 0);
+        }
+      };
+      const timer = setTimeout(() => done(false), request.timeout ?? 1000);
+      inputWaiters.add(check);
+    });
+  }
+
+  /** Text inserted where the focus is, as an input method does: trusted `beforeinput` and `input`, no key events. */
+  function insertText(request) {
+    return { ok: document.execCommand("insertText", false, request.text ?? "") };
   }
 
   // The armed watcher: the next press must land on the element. If it does not (the page moved something over it
@@ -1076,10 +1155,10 @@
     const watch = armed;
     disarm();
     if (watch === null) {
-      return { seen: false, onTarget: false };
+      return { armed: false, seen: false, onTarget: false };
     }
 
-    return { seen: watch.seen, onTarget: watch.onTarget, hit: watch.hit, clicked: watch.clicked, moved: watch.moved };
+    return { armed: true, seen: watch.seen, onTarget: watch.onTarget, hit: watch.hit, clicked: watch.clicked, moved: watch.moved };
   }
 
   // ---- The other operations ------------------------------------------------------------------------------------
@@ -1237,7 +1316,7 @@
       return { retry: describe(element, cache) + ": not visible" };
     }
 
-    if (!inViewport(element.getBoundingClientRect())) {
+    if (!inView(element)) {
       element.scrollIntoView({ block: "center", inline: "center", behavior: "instant" });
     }
 
@@ -1267,6 +1346,9 @@
     explain: request => explain(request.chain, newCache()),
     actionable,
     landed,
+    inputCount: () => ({ count: inputs }),
+    inputAfter,
+    insertText,
     focus,
     prepareFill,
     selectOption,

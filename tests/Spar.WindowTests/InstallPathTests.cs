@@ -33,7 +33,7 @@ public sealed class InstallPathTests
     [Fact]
     public async Task The_window_works_from_an_install_folder_with_a_long_path()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessWindows("Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).");
         var executable = Environment.ProcessPath!;
         var name = Path.GetFileName(executable);
         var parent = Path.Combine(Results.Artifacts, "test-host", $"long-install-{Environment.ProcessId}");

@@ -1714,7 +1714,7 @@ export const stopGuarding = windows.onCloseRequested(async request => {
 
 ### 6.12 Window tests
 
-**Decided** (decision "Step 8's shape: window tests driven by Spar's own API"; built on Windows in M1b step 8a, the Linux host follows in M1c). A window test runs the app's own `Program.cs` in the test process with its real window: the app's own packed page in WebView2, shown offscreen, never activated and with no taskbar button. `app.Page` drives the page with Spar's own API, which takes the method names of Microsoft's browser automation library, so a window journey reads like a browser journey of the same end-to-end project.
+**Decided** (decision "Step 8's shape: window tests driven by Spar's own API"; built on Windows in M1b step 8a and on Linux in M1c step 7). A window test runs the app's own `Program.cs` in the test process with its real window: the app's own packed page in WebView2, shown offscreen, never activated and with no taskbar button, or on Linux in WebKitGTK on a private Xvfb that the test process starts for itself, so no test window ever shows on a desktop. On Linux the test machine needs Xvfb, a D-Bus daemon and the XTEST library beside WebKitGTK; its windows show one colour scheme at a time, since WebKitGTK follows the process's dark preference, and a key with no physical code reads `"Unidentified"` in `event.code`. `app.Page` drives the page with Spar's own API, which takes the method names of Microsoft's browser automation library, so a window journey reads like a browser journey of the same end-to-end project.
 
 File `SqlTool.EndToEndTests/ConnectionsWindowTests.cs`:
 

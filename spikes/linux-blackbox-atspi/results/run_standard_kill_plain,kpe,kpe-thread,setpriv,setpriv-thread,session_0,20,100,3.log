@@ -1,0 +1,1728 @@
+STEP run standard kill plain,kpe,kpe-thread,setpriv,setpriv-thread,session 0,20,100,300,ready 5 on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T17:59:32Z
+unreadable environments of this user's WebKit-like processes before: 0
+dbus-daemon[639]: [session uid=1000 pid=639] Activating service name='org.a11y.Bus' requested by ':1.2' (uid=1000 pid=647 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[639]: [session uid=1000 pid=639] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[742]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=647 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[742]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[639]: [session uid=1000 pid=639] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.6' (uid=1000 pid=751 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[639]: [session uid=1000 pid=639] Activating service name='org.freedesktop.portal.Documents' requested by ':1.7' (uid=1000 pid=788 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[639]: [session uid=1000 pid=639] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.8' (uid=1000 pid=794 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[639]: [session uid=1000 pid=639] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[639]: [session uid=1000 pid=639] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.710: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.710: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[639]: [session uid=1000 pid=639] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.7' (uid=1000 pid=788 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[639]: [session uid=1000 pid=639] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.757: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.758: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.758: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.758: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.758: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.758: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.759: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.760: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.760: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.761: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00280.428071] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00280.428131] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.763: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.763: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.764: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:788): xdg-desktop-portal-WARNING **: 18:59:32.764: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[639]: [session uid=1000 pid=639] Successfully activated service 'org.freedesktop.portal.Desktop'
+plain delay 0 run 1: [launched 647] at the kill 0 []; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 0 run 2: [launched 826] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 0 run 3: [launched 958] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 0 run 4: [launched 1094] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 0 run 5: [launched 1227] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+SUMMARY kill plain delay 0: runs 5, app tree alive at the kill 4, runs with processes left after 3 s 5 (most 8); gone after: no values
+plain delay 20 run 1: [launched 1360] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 20 run 2: [launched 1493] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 20 run 3: [launched 1625] at the kill 3 [BridgeProbe, bwrap x2]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 20 run 4: [launched 1760] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 20 run 5: [launched 1893] at the kill 1 [BridgeProbe]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+SUMMARY kill plain delay 20: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 5 (most 8); gone after: no values
+plain delay 100 run 1: [launched 2025] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 100 run 2: [launched 2158] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 100 run 3: [launched 2291] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 100 run 4: [launched 2424] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 100 run 5: [launched 2557] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+SUMMARY kill plain delay 100: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 5 (most 8); gone after: no values
+plain delay 300 run 1: [launched 2690] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 300 run 2: [launched 2823] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 300 run 3: [launched 2956] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 300 run 4: [launched 3089] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay 300 run 5: [launched 3223] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+SUMMARY kill plain delay 300: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 5 (most 8); gone after: no values
+plain delay ready run 1: [launched 3356 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay ready run 2: [launched 3488 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay ready run 3: [launched 3620 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay ready run 4: [launched 3753 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+plain delay ready run 5: [launched 3885 / ui-ready 134 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; LEFT after 3 s: 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]
+SUMMARY kill plain delay ready: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 5 (most 8); gone after: no values
+kpe delay 0 run 1: [launched 4018] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe delay 0 run 2: [launched 4029] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe delay 0 run 3: [launched 4040] at the kill 1 [BridgeProbe]; all gone 0.4 ms after the holder died
+kpe delay 0 run 4: [launched 4051] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe delay 0 run 5: [launched 4062] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+SUMMARY kill kpe delay 0: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=0.3 p95=0.4 min=0.3 max=0.4 ms
+kpe delay 20 run 1: [launched 4073] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe delay 20 run 2: [launched 4096] at the kill 3 [BridgeProbe, bwrap x2]; all gone 5.8 ms after the holder died
+kpe delay 20 run 3: [launched 4114] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe delay 20 run 4: [launched 4137] at the kill 3 [BridgeProbe, bwrap x2]; all gone 0.4 ms after the holder died
+kpe delay 20 run 5: [launched 4155] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+SUMMARY kill kpe delay 20: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=0.3 p95=5.8 min=0.3 max=5.8 ms
+kpe delay 100 run 1: [launched 4176] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.3 ms after the holder died
+kpe delay 100 run 2: [launched 4307] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 17.4 ms after the holder died
+kpe delay 100 run 3: [launched 4438] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 33.6 ms after the holder died
+kpe delay 100 run 4: [launched 4569] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 17.2 ms after the holder died
+kpe delay 100 run 5: [launched 4700] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 16.9 ms after the holder died
+SUMMARY kill kpe delay 100: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=17.2 p95=33.6 min=11.3 max=33.6 ms
+kpe delay 300 run 1: [launched 4831] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+kpe delay 300 run 2: [launched 4965] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+kpe delay 300 run 3: [launched 5099] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.2 ms after the holder died
+kpe delay 300 run 4: [launched 5233] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+kpe delay 300 run 5: [launched 5367] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.2 ms after the holder died
+SUMMARY kill kpe delay 300: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.0 p95=6.2 min=5.9 max=6.2 ms
+kpe delay ready run 1: [launched 5501 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.2 ms after the holder died
+kpe delay ready run 2: [launched 5636 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+kpe delay ready run 3: [launched 5772 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+kpe delay ready run 4: [launched 5908 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.5 ms after the holder died
+kpe delay ready run 5: [launched 6046 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+SUMMARY kill kpe delay ready: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.0 p95=11.5 min=5.9 max=11.5 ms
+kpe-thread delay 0 run 1: [launched 6182] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe-thread delay 0 run 2: [launched 6194] at the kill 1 [BridgeProbe]; all gone 0.4 ms after the holder died
+kpe-thread delay 0 run 3: [launched 6206] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe-thread delay 0 run 4: [launched 6218] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe-thread delay 0 run 5: [launched 6230] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+SUMMARY kill kpe-thread delay 0: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=0.3 p95=0.4 min=0.3 max=0.4 ms
+kpe-thread delay 20 run 1: [launched 6242] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe-thread delay 20 run 2: [launched 6267] at the kill 1 [BridgeProbe]; all gone 0.4 ms after the holder died
+kpe-thread delay 20 run 3: [launched 6289] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe-thread delay 20 run 4: [launched 6314] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+kpe-thread delay 20 run 5: [launched 6339] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+SUMMARY kill kpe-thread delay 20: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=0.3 p95=0.4 min=0.3 max=0.4 ms
+kpe-thread delay 100 run 1: [launched 6363] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 17.1 ms after the holder died
+kpe-thread delay 100 run 2: [launched 6495] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 22.1 ms after the holder died
+kpe-thread delay 100 run 3: [launched 6627] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 22.4 ms after the holder died
+kpe-thread delay 100 run 4: [launched 6759] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 28.0 ms after the holder died
+kpe-thread delay 100 run 5: [launched 6891] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 17.0 ms after the holder died
+SUMMARY kill kpe-thread delay 100: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=22.1 p95=28.0 min=17.0 max=28.0 ms
+kpe-thread delay 300 run 1: [launched 7023] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+kpe-thread delay 300 run 2: [launched 7158] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+kpe-thread delay 300 run 3: [launched 7293] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.4 ms after the holder died
+kpe-thread delay 300 run 4: [launched 7428] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+kpe-thread delay 300 run 5: [launched 7563] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+SUMMARY kill kpe-thread delay 300: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=5.9 p95=11.4 min=5.9 max=11.4 ms
+kpe-thread delay ready run 1: [launched 7698 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.2 ms after the holder died
+kpe-thread delay ready run 2: [launched 7835 / ui-ready 139 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.8 ms after the holder died
+kpe-thread delay ready run 3: [launched 7972 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.3 ms after the holder died
+kpe-thread delay ready run 4: [launched 8108 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.8 ms after the holder died
+kpe-thread delay ready run 5: [launched 8245 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+SUMMARY kill kpe-thread delay ready: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=5.9 p95=11.3 min=5.8 max=11.3 ms
+setpriv delay 0 run 1: [launched 8384] at the kill 0 []; all gone 0.3 ms after the holder died
+setpriv delay 0 run 2: [launched 8393] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv delay 0 run 3: [launched 8402] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv delay 0 run 4: [launched 8411] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv delay 0 run 5: [launched 8420] at the kill 1 [BridgeProbe]; all gone 0.4 ms after the holder died
+SUMMARY kill setpriv delay 0: runs 5, app tree alive at the kill 4, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=0.3 p95=0.4 min=0.3 max=0.4 ms
+setpriv delay 20 run 1: [launched 8430] at the kill 3 [BridgeProbe, bwrap x2]; all gone 6.0 ms after the holder died
+setpriv delay 20 run 2: [launched 8447] at the kill 3 [BridgeProbe, bwrap x2]; all gone 5.8 ms after the holder died
+setpriv delay 20 run 3: [launched 8464] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv delay 20 run 4: [launched 8486] at the kill 3 [BridgeProbe, bwrap x2]; all gone 5.8 ms after the holder died
+setpriv delay 20 run 5: [launched 8503] at the kill 3 [BridgeProbe, bwrap x2]; all gone 5.8 ms after the holder died
+SUMMARY kill setpriv delay 20: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=5.8 p95=6.0 min=0.3 max=6.0 ms
+setpriv delay 100 run 1: [launched 8520] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 16.8 ms after the holder died
+setpriv delay 100 run 2: [launched 8654] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 22.5 ms after the holder died
+setpriv delay 100 run 3: [launched 8784] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 16.8 ms after the holder died
+setpriv delay 100 run 4: [launched 8914] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 22.3 ms after the holder died
+setpriv delay 100 run 5: [launched 9044] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 22.5 ms after the holder died
+SUMMARY kill setpriv delay 100: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=22.3 p95=22.5 min=16.8 max=22.5 ms
+setpriv delay 300 run 1: [launched 9174] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+setpriv delay 300 run 2: [launched 9307] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+setpriv delay 300 run 3: [launched 9442] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.4 ms after the holder died
+setpriv delay 300 run 4: [launched 9575] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+setpriv delay 300 run 5: [launched 9708] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.1 ms after the holder died
+SUMMARY kill setpriv delay 300: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.0 p95=11.4 min=5.9 max=11.4 ms
+setpriv delay ready run 1: [launched 9841 / ui-ready 145 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+setpriv delay ready run 2: [launched 9975 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.5 ms after the holder died
+setpriv delay ready run 3: [launched 10110 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.6 ms after the holder died
+setpriv delay ready run 4: [launched 10244 / ui-ready 140 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.3 ms after the holder died
+setpriv delay ready run 5: [launched 10379 / ui-ready 136 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.2 ms after the holder died
+SUMMARY kill setpriv delay ready: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.3 p95=11.6 min=6.0 max=11.6 ms
+setpriv-thread delay 0 run 1: [launched 10516] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv-thread delay 0 run 2: [launched 10526] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv-thread delay 0 run 3: [launched 10537] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv-thread delay 0 run 4: [launched 10547] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv-thread delay 0 run 5: [launched 10557] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+SUMMARY kill setpriv-thread delay 0: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=0.3 p95=0.3 min=0.3 max=0.3 ms
+setpriv-thread delay 20 run 1: [launched 10567] at the kill 0 []; all gone 0.3 ms after the holder died
+setpriv-thread delay 20 run 2: [launched 10577] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+setpriv-thread delay 20 run 3: [launched 10600] at the kill 1 [BridgeProbe]; all gone 0.5 ms after the holder died
+setpriv-thread delay 20 run 4: [launched 10615] at the kill 3 [BridgeProbe, bwrap x2]; all gone 6.0 ms after the holder died
+setpriv-thread delay 20 run 5: [launched 10633] at the kill 1 [BridgeProbe]; all gone 0.3 ms after the holder died
+SUMMARY kill setpriv-thread delay 20: runs 5, app tree alive at the kill 4, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=0.3 p95=6.0 min=0.3 max=6.0 ms
+setpriv-thread delay 100 run 1: [launched 10658] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 17.3 ms after the holder died
+setpriv-thread delay 100 run 2: [launched 10789] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 22.7 ms after the holder died
+setpriv-thread delay 100 run 3: [launched 10921] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 23.0 ms after the holder died
+setpriv-thread delay 100 run 4: [launched 11052] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 17.1 ms after the holder died
+setpriv-thread delay 100 run 5: [launched 11183] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 22.6 ms after the holder died
+SUMMARY kill setpriv-thread delay 100: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=22.6 p95=23.0 min=17.1 max=23.0 ms
+setpriv-thread delay 300 run 1: [launched 11314] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+setpriv-thread delay 300 run 2: [launched 11448] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+setpriv-thread delay 300 run 3: [launched 11582] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+setpriv-thread delay 300 run 4: [launched 11716] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+setpriv-thread delay 300 run 5: [launched 11850] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+SUMMARY kill setpriv-thread delay 300: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.0 p95=6.0 min=5.9 max=6.0 ms
+setpriv-thread delay ready run 1: [launched 11984 / ui-ready 145 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 11.4 ms after the holder died
+setpriv-thread delay ready run 2: [launched 12120 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 7.1 ms after the holder died
+setpriv-thread delay ready run 3: [launched 12256 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+setpriv-thread delay ready run 4: [launched 12395 / ui-ready 135 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 6.0 ms after the holder died
+setpriv-thread delay ready run 5: [launched 12531 / ui-ready 136 ms] at the kill 8 [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; all gone 5.9 ms after the holder died
+SUMMARY kill setpriv-thread delay ready: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.0 p95=11.4 min=5.9 max=11.4 ms
+dbus-daemon[12672]: [session uid=1000 pid=12672] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12668 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12672]: [session uid=1000 pid=12672] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12684]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12668 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12684]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 0 run 1: [launched 12690] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.8 ms after the holder died
+dbus-daemon[12700]: [session uid=1000 pid=12700] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12696 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12700]: [session uid=1000 pid=12700] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12712]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12696 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12712]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 0 run 2: [launched 12718] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.8 ms after the holder died
+dbus-daemon[12728]: [session uid=1000 pid=12728] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12724 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12728]: [session uid=1000 pid=12728] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12740]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12724 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12740]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 0 run 3: [launched 12746] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.8 ms after the holder died
+dbus-daemon[12756]: [session uid=1000 pid=12756] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12752 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12756]: [session uid=1000 pid=12756] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12768]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12752 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12768]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 0 run 4: [launched 12774] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.9 ms after the holder died
+dbus-daemon[12784]: [session uid=1000 pid=12784] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12780 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12784]: [session uid=1000 pid=12784] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12796]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12780 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12796]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 0 run 5: [launched 12802] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.9 ms after the holder died
+SUMMARY kill session delay 0: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=5.8 p95=5.9 min=5.8 max=5.9 ms
+dbus-daemon[12812]: [session uid=1000 pid=12812] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12808 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12812]: [session uid=1000 pid=12812] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12824]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12808 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12824]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 20 run 1: [launched 12830] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.9 ms after the holder died
+dbus-daemon[12852]: [session uid=1000 pid=12852] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12848 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12852]: [session uid=1000 pid=12852] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12864]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12848 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12864]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 20 run 2: [launched 12870] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.9 ms after the holder died
+dbus-daemon[12893]: [session uid=1000 pid=12893] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12889 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12893]: [session uid=1000 pid=12893] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12905]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12889 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12905]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 20 run 3: [launched 12911] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.8 ms after the holder died
+dbus-daemon[12933]: [session uid=1000 pid=12933] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12929 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12933]: [session uid=1000 pid=12933] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12945]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12929 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12945]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 20 run 4: [launched 12951] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 6.2 ms after the holder died
+dbus-daemon[12971]: [session uid=1000 pid=12971] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=12967 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12971]: [session uid=1000 pid=12971] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[12983]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=12967 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[12983]: Successfully activated service 'org.a11y.atspi.Registry'
+session delay 20 run 5: [launched 12989] at the kill 5 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe]; all gone 5.9 ms after the holder died
+SUMMARY kill session delay 20: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=5.9 p95=6.2 min=5.8 max=6.2 ms
+dbus-daemon[13012]: [session uid=1000 pid=13012] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=13008 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13012]: [session uid=1000 pid=13012] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[13024]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=13008 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13024]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[13012]: [session uid=1000 pid=13012] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=13123 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[13012]: [session uid=1000 pid=13012] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=13155 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[13012]: [session uid=1000 pid=13012] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=13161 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[13012]: [session uid=1000 pid=13012] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[13012]: [session uid=1000 pid=13012] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.244: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.244: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[13012]: [session uid=1000 pid=13012] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=13155 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.252: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.252: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.252: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.252: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.253: Failed to create GameMode proxy: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.253: No skeleton to export
+error: No session bus: Could not connect: Connection refused
+
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.253: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.253: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.254: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: No skeleton to export
+[W][00422.927250] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00422.927296] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): GLib-GIO-CRITICAL **: 19:01:55.255: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13155): xdg-desktop-portal-WARNING **: 19:01:55.255: No skeleton to export
+session delay 100 run 1: [launched 13030] at the kill 17 [dbus-daemon x4, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 28.2 ms after the holder died
+dbus-daemon[13187]: [session uid=1000 pid=13187] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=13183 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13187]: [session uid=1000 pid=13187] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[13199]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=13183 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13199]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[13187]: [session uid=1000 pid=13187] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=13298 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[13187]: [session uid=1000 pid=13187] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=13330 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[13187]: [session uid=1000 pid=13187] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=13336 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[13187]: [session uid=1000 pid=13187] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[13187]: [session uid=1000 pid=13187] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.589: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.589: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[13187]: [session uid=1000 pid=13187] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=13330 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.598: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.598: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.598: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.598: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.598: Failed to create GameMode proxy: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.598: No skeleton to export
+error: No session bus: Could not connect: Connection refused
+
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.598: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.598: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.599: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: No skeleton to export
+[W][00423.273496] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00423.273547] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.599: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): GLib-GIO-CRITICAL **: 19:01:55.600: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13330): xdg-desktop-portal-WARNING **: 19:01:55.600: No skeleton to export
+session delay 100 run 2: [launched 13205] at the kill 17 [dbus-daemon x4, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 28.1 ms after the holder died
+dbus-daemon[13362]: [session uid=1000 pid=13362] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=13358 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13362]: [session uid=1000 pid=13362] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[13374]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=13358 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13374]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[13362]: [session uid=1000 pid=13362] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=13473 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[13362]: [session uid=1000 pid=13362] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=13505 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.937: g_dbus_proxy_call_sync_internal: assertion 'G_IS_DBUS_PROXY (proxy)' failed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.937: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.937: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.937: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.937: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.938: No permission store: Error calling StartServiceByName for org.freedesktop.impl.portal.PermissionStore: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.938: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.938: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.938: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.938: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.938: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.938: Error while sending AddMatch() message: The connection is closed
+error: No session bus: Could not connect: Connection refused
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.944: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.944: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.944: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.944: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.944: Failed to create GameMode proxy: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.944: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.945: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.945: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: No skeleton to export
+[W][00423.621212] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00423.621269] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): GLib-GIO-CRITICAL **: 19:01:55.946: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13505): xdg-desktop-portal-WARNING **: 19:01:55.946: No skeleton to export
+session delay 100 run 3: [launched 13380] at the kill 16 [dbus-daemon x4, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por, xdg-document-po]; all gone 28.6 ms after the holder died
+dbus-daemon[13522]: [session uid=1000 pid=13522] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=13518 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13522]: [session uid=1000 pid=13522] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[13534]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=13518 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13534]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[13522]: [session uid=1000 pid=13522] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=13633 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[13522]: [session uid=1000 pid=13522] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=13665 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[13522]: [session uid=1000 pid=13522] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=13671 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[13522]: [session uid=1000 pid=13522] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[13522]: [session uid=1000 pid=13522] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.282: No permission store: Error calling StartServiceByName for org.freedesktop.impl.portal.PermissionStore: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.282: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.282: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.282: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.282: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.282: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.282: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.288: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.288: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.288: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.288: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.288: Failed to create GameMode proxy: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.289: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.289: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.289: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.289: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.289: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.289: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.289: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.289: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.289: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.289: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.289: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+[W][00423.966933] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00423.966981] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): GLib-GIO-CRITICAL **: 19:01:56.290: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13665): xdg-desktop-portal-WARNING **: 19:01:56.290: No skeleton to export
+session delay 100 run 4: [launched 13540] at the kill 15 [dbus-daemon x3, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por, xdg-permission-]; all gone 28.0 ms after the holder died
+dbus-daemon[13693]: [session uid=1000 pid=13693] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=13689 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13693]: [session uid=1000 pid=13693] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[13705]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=13689 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13705]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[13693]: [session uid=1000 pid=13693] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=13804 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[13693]: [session uid=1000 pid=13693] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=13836 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[13693]: [session uid=1000 pid=13693] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=13842 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[13693]: [session uid=1000 pid=13693] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[13693]: [session uid=1000 pid=13693] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.628: No permission store: Error calling StartServiceByName for org.freedesktop.impl.portal.PermissionStore: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.628: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.628: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.628: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.634: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.634: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.635: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.635: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.635: Failed to create GameMode proxy: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.635: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.635: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.635: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.635: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+[W][00424.314407] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00424.314460] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.636: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.636: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.637: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.637: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.637: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.637: Error while sending GetNameOwner() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.637: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): GLib-GIO-CRITICAL **: 19:01:56.637: Error while sending AddMatch() message: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.637: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: The connection is closed
+
+(/usr/libexec/xdg-desktop-portal:13836): xdg-desktop-portal-WARNING **: 19:01:56.637: No skeleton to export
+session delay 100 run 5: [launched 13711] at the kill 16 [dbus-daemon x3, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por, xdg-document-po, xdg-permission-]; all gone 28.0 ms after the holder died
+SUMMARY kill session delay 100: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=28.1 p95=28.6 min=28.0 max=28.6 ms
+dbus-daemon[13864]: [session uid=1000 pid=13864] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=13860 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13864]: [session uid=1000 pid=13864] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[13876]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=13860 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[13876]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[13864]: [session uid=1000 pid=13864] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=13975 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[13864]: [session uid=1000 pid=13864] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=14007 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[13864]: [session uid=1000 pid=13864] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=14013 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[13864]: [session uid=1000 pid=13864] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[13864]: [session uid=1000 pid=13864] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:56.977: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:56.977: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[13864]: [session uid=1000 pid=13864] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=14007 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[13864]: [session uid=1000 pid=13864] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:56.999: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:56.999: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:56.999: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:56.999: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:56.999: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.000: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.001: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.001: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.002: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.002: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00424.683155] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00424.683210] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.004: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.004: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.004: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14007): xdg-desktop-portal-WARNING **: 19:01:57.005: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[13864]: [session uid=1000 pid=13864] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay 300 run 1: [launched 13882] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.2 ms after the holder died
+dbus-daemon[14044]: [session uid=1000 pid=14044] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=14040 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14044]: [session uid=1000 pid=14044] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[14056]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=14040 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14056]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[14044]: [session uid=1000 pid=14044] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=14155 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[14044]: [session uid=1000 pid=14044] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=14187 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14044]: [session uid=1000 pid=14044] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=14193 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[14044]: [session uid=1000 pid=14044] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[14044]: [session uid=1000 pid=14044] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.498: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.498: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[14044]: [session uid=1000 pid=14044] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=14187 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14044]: [session uid=1000 pid=14044] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.518: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.518: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.518: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.518: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.518: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.519: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.519: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.520: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.520: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.521: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00425.204356] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00425.204410] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.523: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.523: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.523: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14187): xdg-desktop-portal-WARNING **: 19:01:57.524: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[14044]: [session uid=1000 pid=14044] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay 300 run 2: [launched 14062] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.0 ms after the holder died
+dbus-daemon[14224]: [session uid=1000 pid=14224] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=14220 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14224]: [session uid=1000 pid=14224] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[14236]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=14220 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14236]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[14224]: [session uid=1000 pid=14224] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=14335 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[14224]: [session uid=1000 pid=14224] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=14367 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14224]: [session uid=1000 pid=14224] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=14373 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[14224]: [session uid=1000 pid=14224] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[14224]: [session uid=1000 pid=14224] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.020: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.020: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[14224]: [session uid=1000 pid=14224] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=14367 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14224]: [session uid=1000 pid=14224] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.041: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.041: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.041: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.041: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.041: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.042: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.042: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.043: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.043: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.044: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00425.729531] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00425.729584] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.045: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.045: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.046: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14367): xdg-desktop-portal-WARNING **: 19:01:58.046: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[14224]: [session uid=1000 pid=14224] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay 300 run 3: [launched 14242] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.3 ms after the holder died
+dbus-daemon[14404]: [session uid=1000 pid=14404] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=14400 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14404]: [session uid=1000 pid=14404] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[14416]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=14400 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14416]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[14404]: [session uid=1000 pid=14404] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=14515 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[14404]: [session uid=1000 pid=14404] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=14547 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14404]: [session uid=1000 pid=14404] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=14553 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[14404]: [session uid=1000 pid=14404] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[14404]: [session uid=1000 pid=14404] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.546: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.546: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[14404]: [session uid=1000 pid=14404] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=14547 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14404]: [session uid=1000 pid=14404] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.566: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.566: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.566: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.566: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.566: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.567: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.567: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.568: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.568: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.569: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00426.257151] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00426.257207] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.571: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.571: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.571: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14547): xdg-desktop-portal-WARNING **: 19:01:58.572: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[14404]: [session uid=1000 pid=14404] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay 300 run 4: [launched 14422] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.1 ms after the holder died
+dbus-daemon[14584]: [session uid=1000 pid=14584] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=14580 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14584]: [session uid=1000 pid=14584] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[14596]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=14580 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14596]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[14584]: [session uid=1000 pid=14584] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=14695 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[14584]: [session uid=1000 pid=14584] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=14727 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14584]: [session uid=1000 pid=14584] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=14733 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[14584]: [session uid=1000 pid=14584] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[14584]: [session uid=1000 pid=14584] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.070: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.070: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[14584]: [session uid=1000 pid=14584] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=14727 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14584]: [session uid=1000 pid=14584] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.091: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.091: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.091: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.091: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.091: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.092: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.092: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.093: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.093: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.094: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00426.784462] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00426.784520] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.095: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.095: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.096: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14727): xdg-desktop-portal-WARNING **: 19:01:59.097: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[14584]: [session uid=1000 pid=14584] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay 300 run 5: [launched 14602] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 5.9 ms after the holder died
+SUMMARY kill session delay 300: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.1 p95=6.3 min=5.9 max=6.3 ms
+dbus-daemon[14764]: [session uid=1000 pid=14764] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=14760 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14764]: [session uid=1000 pid=14764] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[14776]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=14760 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14776]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[14764]: [session uid=1000 pid=14764] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=14875 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[14764]: [session uid=1000 pid=14764] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=14907 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14764]: [session uid=1000 pid=14764] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=14913 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[14764]: [session uid=1000 pid=14764] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[14764]: [session uid=1000 pid=14764] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.593: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.593: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[14764]: [session uid=1000 pid=14764] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=14907 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14764]: [session uid=1000 pid=14764] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.614: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.614: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.614: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.614: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.614: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.615: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.615: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.616: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.617: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.617: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00427.310285] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00427.310339] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.619: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.619: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.619: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:14907): xdg-desktop-portal-WARNING **: 19:01:59.620: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[14764]: [session uid=1000 pid=14764] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay ready run 1: [launched 14782 / ui-ready 175 ms] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.0 ms after the holder died
+dbus-daemon[14944]: [session uid=1000 pid=14944] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=14940 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14944]: [session uid=1000 pid=14944] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[14956]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=14940 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[14956]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[14944]: [session uid=1000 pid=14944] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=15055 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[14944]: [session uid=1000 pid=14944] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=15087 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14944]: [session uid=1000 pid=14944] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=15093 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[14944]: [session uid=1000 pid=14944] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[14944]: [session uid=1000 pid=14944] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:00.988: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:00.988: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[14944]: [session uid=1000 pid=14944] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=15087 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[14944]: [session uid=1000 pid=14944] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.008: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.008: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.009: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.009: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.009: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.009: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.010: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.010: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.011: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.011: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00428.711561] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00428.711618] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.013: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.013: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.014: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15087): xdg-desktop-portal-WARNING **: 19:02:01.014: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[14944]: [session uid=1000 pid=14944] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay ready run 2: [launched 14962 / ui-ready 170 ms] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.0 ms after the holder died
+dbus-daemon[15124]: [session uid=1000 pid=15124] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=15120 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[15124]: [session uid=1000 pid=15124] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[15136]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=15120 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[15136]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[15124]: [session uid=1000 pid=15124] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=15235 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[15124]: [session uid=1000 pid=15124] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=15267 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[15124]: [session uid=1000 pid=15124] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=15273 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[15124]: [session uid=1000 pid=15124] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[15124]: [session uid=1000 pid=15124] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.383: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.383: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[15124]: [session uid=1000 pid=15124] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=15267 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[15124]: [session uid=1000 pid=15124] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.404: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.404: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.404: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.404: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.404: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.405: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.405: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.406: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.406: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.407: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00430.114305] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00430.114359] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.408: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.408: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.409: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15267): xdg-desktop-portal-WARNING **: 19:02:02.409: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[15124]: [session uid=1000 pid=15124] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay ready run 3: [launched 15142 / ui-ready 175 ms] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.4 ms after the holder died
+dbus-daemon[15304]: [session uid=1000 pid=15304] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=15300 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[15304]: [session uid=1000 pid=15304] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[15316]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=15300 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[15316]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[15304]: [session uid=1000 pid=15304] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=15415 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[15304]: [session uid=1000 pid=15304] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=15447 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[15304]: [session uid=1000 pid=15304] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=15453 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[15304]: [session uid=1000 pid=15304] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[15304]: [session uid=1000 pid=15304] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.783: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.783: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[15304]: [session uid=1000 pid=15304] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=15447 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[15304]: [session uid=1000 pid=15304] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.803: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.803: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.803: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.803: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.803: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.803: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.804: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.804: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.805: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.805: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00431.520336] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00431.520388] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.807: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.807: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.807: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15447): xdg-desktop-portal-WARNING **: 19:02:03.808: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[15304]: [session uid=1000 pid=15304] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay ready run 4: [launched 15322 / ui-ready 170 ms] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 6.1 ms after the holder died
+dbus-daemon[15484]: [session uid=1000 pid=15484] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=15480 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[15484]: [session uid=1000 pid=15484] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[15496]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=15480 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[15496]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[15484]: [session uid=1000 pid=15484] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.7' (uid=1000 pid=15595 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[15484]: [session uid=1000 pid=15484] Activating service name='org.freedesktop.portal.Documents' requested by ':1.8' (uid=1000 pid=15627 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[15484]: [session uid=1000 pid=15484] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.9' (uid=1000 pid=15633 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[15484]: [session uid=1000 pid=15484] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[15484]: [session uid=1000 pid=15484] Successfully activated service 'org.freedesktop.portal.Documents'
+fusermount3: failed to access mountpoint /dev/shm/spar-lba-kill-standard/doc: Permission denied
+error: fuse init failed: Can't mount path /dev/shm/spar-lba-kill-standard/doc
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.178: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.178: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[15484]: [session uid=1000 pid=15484] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.8' (uid=1000 pid=15627 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[15484]: [session uid=1000 pid=15484] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.198: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.198: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.198: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.198: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.198: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.199: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.199: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.200: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.200: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.201: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00432.923694] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00432.923747] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.203: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.203: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.203: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:15627): xdg-desktop-portal-WARNING **: 19:02:05.204: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[15484]: [session uid=1000 pid=15484] Successfully activated service 'org.freedesktop.portal.Desktop'
+session delay ready run 5: [launched 15502 / ui-ready 175 ms] at the kill 15 [dbus-daemon x2, at-spi-bus-laun, at-spi2-registr, BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces, xdg-desktop-por x2, xdg-permission-]; all gone 5.9 ms after the holder died
+SUMMARY kill session delay ready: runs 5, app tree alive at the kill 5, runs with processes left after 3 s 0 (most 0); gone after: n=5 p50=6.0 p95=6.4 min=5.9 max=6.4 ms
+unreadable environments of this user's WebKit-like processes after: 0
+STEP exit 0 in 153955 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader kill plain,kpe,kpe-thread,setpriv,setpriv-thread,session 0,20,100,300,ready 5
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

@@ -53,7 +53,7 @@ public sealed class BlackBoxFixtureTests
     [Fact]
     public async Task A_hung_app_is_ended_after_its_deadline_and_reported()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, o => o.ExitTimeout = TimeSpan.FromSeconds(1), Token);
         var started = app.ProcessIds;
         app.Process.SuspendProcess();
@@ -72,7 +72,7 @@ public sealed class BlackBoxFixtureTests
     [Fact]
     public async Task A_data_root_that_cannot_be_deleted_is_a_reported_failure()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
         Assert.Equal(0, await app.CloseAsync(Token));
 
@@ -90,7 +90,7 @@ public sealed class BlackBoxFixtureTests
     [Fact]
     public async Task An_app_not_ready_in_time_is_ended_and_its_root_deleted()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         var probe = TestDataRoots.Next("probe");
         var run = Path.GetDirectoryName(probe)!;
         Directory.Delete(probe);
@@ -106,7 +106,7 @@ public sealed class BlackBoxFixtureTests
     [Fact]
     public async Task A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
 
         // A name that never resolves (.invalid, RFC 6761): the host refuses the path by its form, before any access.
         var real = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Projects.WindowHost.AppId);
@@ -131,7 +131,7 @@ public sealed class BlackBoxFixtureTests
     [Fact]
     public async Task A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         await using var first = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
         first.Process.SuspendProcess();
 
@@ -155,7 +155,7 @@ public sealed class BlackBoxFixtureTests
     [Fact]
     public async Task The_window_is_read_and_driven_through_UI_Automation()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         await using var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
         var window = app.Window;
 
@@ -183,7 +183,7 @@ public sealed class BlackBoxFixtureTests
     [Fact]
     public async Task Options_the_fixture_cannot_honour_are_refused_before_anything_starts()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         string[] refused = ["LOCALAPPDATA", "appdata", "TEMP", "TMP", "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "SPAR_AUTOMATED", "A=B"];
         foreach (var name in refused)
         {

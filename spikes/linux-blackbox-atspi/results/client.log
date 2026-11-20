@@ -1,0 +1,14 @@
+STEP client on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+
+added 94 packages, and audited 95 packages in 3s
+
+22 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+STEP exit 0 in 3227 ms: npm ci --ignore-scripts
+
+> build
+> tsc -p tsconfig.json && tsc -p tsconfig.vite.json
+
+STEP exit 0 in 1688 ms: npm run build

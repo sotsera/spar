@@ -4,14 +4,16 @@ namespace Spar.Hosting;
 
 /// <summary>
 /// A desktop host that can open the app's real window inside a test process (plan section 5, level 5, the
-/// <c>Window</c> surface). <c>Spar.Windows</c>'s host implements it; only <see cref="SparTestSession"/> calls it, behind
-/// the test-host feature switch, so an app's executable keeps neither the call nor the implementation.
+/// <c>Window</c> surface). <c>Spar.Windows</c>'s and <c>Spar.Linux</c>'s hosts implement it; only
+/// <see cref="SparTestSession"/> calls it, behind the test-host feature switch, so an app's executable keeps neither the
+/// call nor the implementation.
 /// </summary>
 internal interface ISparTestWindowHost
 {
     /// <summary>
     /// Opens the app's window for <paramref name="running"/>, whose services the test host built, on the test process's
     /// one UI thread. Returns at once; <see cref="ISparTestWindow.Opened"/> completes when the first page has loaded.
+    /// Throws <see cref="SparTestWindowUnavailableException"/> when this machine cannot run window tests.
     /// </summary>
     ISparTestWindow Open(SparApp app, SparRunningApp running, SparTestWindowRequest request);
 }
@@ -19,14 +21,17 @@ internal interface ISparTestWindowHost
 /// <summary>What the test host asks of the window it opens.</summary>
 internal sealed class SparTestWindowRequest
 {
-    /// <summary>The folder under which the test process keeps its shared browser profiles (each run its own root).</summary>
+    /// <summary>The folder under which the test process keeps its shared browser profiles (Windows; each run its own root).</summary>
     public required string ProfilesFolder { get; init; }
 
     /// <summary>
-    /// Runs on the window's UI thread before the first navigation, after the host's own DevTools calls: the page
-    /// driver installs itself here. Its work must be short; it may return a task that the navigation waits for.
+    /// The folder under which the test process keeps its private home and XDG folders (Linux; plan section 5, "Linux
+    /// isolation"; each run its own root).
     /// </summary>
-    public Func<ISparTestWindow, Task>? BeforeFirstNavigation { get; init; }
+    public required string HomesFolder { get; init; }
+
+    /// <summary>The page engine and the receiver of the page's events, installed before the first navigation.</summary>
+    public required SparTestAutomation Automation { get; init; }
 
     /// <summary>Each of the host's start-up and shutdown phases as it is reached, for Spar's own host tests (UI thread).</summary>
     public Action<string>? OnPhase { get; init; }
@@ -36,6 +41,31 @@ internal sealed class SparTestWindowRequest
     /// match on every machine), null the system's or the app's saved choice, as an app's window does.
     /// </summary>
     public bool? Dark { get; init; }
+}
+
+/// <summary>
+/// The page driver's part of a test window: the engine script, run at the start of every document in an isolated
+/// script world of its own, and the receiver of the page's events.
+/// </summary>
+/// <param name="EngineScript">The engine (<c>Spar.Testing</c>'s <c>PageEngine.js</c>), the same file on both hosts.</param>
+/// <param name="World">The isolated world's name: the page's scripts can neither see it nor change what it uses.</param>
+/// <param name="Events">The page's events; raised on the window's UI thread, so each only copies its data out.</param>
+internal sealed record SparTestAutomation(string EngineScript, string World, ISparTestPageEvents Events);
+
+/// <summary>The page's events in a test window, raised on the window's UI thread: each must only record its data.</summary>
+internal interface ISparTestPageEvents
+{
+    /// <summary>The main frame committed a new document (<paramref name="newDocument"/>) or changed its address within one.</summary>
+    void Navigated(string url, bool newDocument);
+
+    /// <summary>The page wrote to its console: the method (<c>log</c>, <c>error</c>, <c>warning</c>…) and the text.</summary>
+    void Console(string type, string text);
+
+    /// <summary>An uncaught exception or unhandled rejection of the page, with its stack when there is one.</summary>
+    void PageError(string text);
+
+    /// <summary>A script dialog (<c>alert</c>, <c>confirm</c>, <c>prompt</c>, <c>beforeunload</c>): true accepts it.</summary>
+    bool Dialog(string type, string message);
 }
 
 /// <summary>A window test's close request (<c>app.Window.CloseAsync</c>).</summary>
@@ -53,10 +83,34 @@ internal sealed record SparTestClose(CloseReason Reason, bool Automated, bool? C
 /// <param name="Unanswered">The page did not answer, and "Wait / Close anyway" was asked.</param>
 internal sealed record SparTestCloseReport(bool Closed, string? Question, bool Unanswered);
 
+/// <summary>One trusted key event: the key's DOM name and code, its Windows virtual key, the modifiers held, and its text.</summary>
+/// <param name="Down">A press; false for the release.</param>
+/// <param name="Key">The DOM <c>key</c>: <c>"a"</c>, <c>"A"</c>, <c>"Enter"</c>, <c>"Shift"</c>, or any one character.</param>
+/// <param name="Code">The DOM <c>code</c> on the US layout (<c>"KeyA"</c>, <c>"Digit1"</c>, <c>"ShiftLeft"</c>); empty for a character the layout has no key for.</param>
+/// <param name="VirtualKey">The Windows virtual key code; 0 for a character the layout has no key for.</param>
+/// <param name="Modifiers">The modifiers held: Alt 1, Control 2, Meta 4, Shift 8.</param>
+/// <param name="Text">The text the press types; null when it types none.</param>
+internal readonly record struct SparTestKey(bool Down, string Key, string Code, int VirtualKey, int Modifiers, string? Text);
+
+/// <summary>What a trusted pointer event does.</summary>
+internal enum SparTestPointerKind
+{
+    Move,
+    Press,
+    Release,
+    Wheel,
+}
+
+/// <summary>One trusted pointer event of the left button, at a point of the page's viewport in CSS pixels.</summary>
+/// <param name="ClickCount">The press's or release's place within a multiple click (1, 2…); 0 for a move or the wheel.</param>
+internal readonly record struct SparTestPointer(SparTestPointerKind Kind, float X, float Y, int ClickCount = 0, float DeltaX = 0, float DeltaY = 0);
+
 /// <summary>
-/// The app's window in a test process: the page's in-process DevTools Protocol session, which the page driver of
-/// <c>Spar.Testing</c> uses, and the window's lifetime. Every member may be called from any thread; the window's own
-/// work runs on its UI thread.
+/// The app's window in a test process, as the page driver of <c>Spar.Testing</c> uses it: the page engine's requests in
+/// its isolated world, script in the page's own world, navigation, trusted input, screenshots, the renderer processes
+/// and the window's lifetime. Each host keeps its own mechanism underneath (Windows the WebView's in-process DevTools
+/// Protocol session, Linux WebKitGTK's API and XTEST). Every member may be called from any thread; the window's own work
+/// runs on its UI thread.
 /// </summary>
 internal interface ISparTestWindow
 {
@@ -66,22 +120,44 @@ internal interface ISparTestWindow
     /// <summary>Completes with the window's exit code once its teardown has finished and the window is gone.</summary>
     Task<int> Closed { get; }
 
-    /// <summary>The page's origin, for example <c>https://app.localhost</c>.</summary>
+    /// <summary>The page's origin: <c>https://app.localhost</c> on Windows, <c>spar://app</c> on Linux.</summary>
     Uri Origin { get; }
 
-    /// <summary>Calls a DevTools Protocol method on the page's session; completes with the result object as JSON.</summary>
-    Task<string> CallDevToolsAsync(string method, string parametersJson);
+    /// <summary>
+    /// One engine request (JSON) in the current document's isolated world, waiting up to <paramref name="wait"/> for a
+    /// document whose engine can answer; the answer as JSON, or null when none could (a navigation in progress, a world
+    /// just destroyed): the caller tries again.
+    /// </summary>
+    Task<string?> EngineAsync(string request, TimeSpan wait);
 
     /// <summary>
-    /// Receives a DevTools Protocol event of the page's session until the returned object is disposed. The callback
-    /// runs on the UI thread: it must only copy the JSON out.
+    /// Runs the expression in the page's own world, calling it when it is a function and awaiting a promise; its value
+    /// as JSON, or null when it is <c>undefined</c>. A script exception is a <see cref="SparTestScriptException"/>.
     /// </summary>
-    Task<IDisposable> SubscribeAsync(string eventName, Action<string> onEvent);
+    Task<string?> EvaluateAsync(string expression);
 
-    /// <summary>The ids of the renderer processes that render the page now.</summary>
+    /// <summary>Opens <paramref name="address"/> (the host's navigation lock still decides on it), or reloads when null.</summary>
+    Task NavigateAsync(string? address);
+
+    /// <summary>A PNG of the viewport, or of <paramref name="clip"/> (x, y, width, height) in CSS pixels.</summary>
+    Task<byte[]> ScreenshotAsync((double X, double Y, double Width, double Height)? clip);
+
+    /// <summary>A trusted key event to the page's focused element; completes once the page received it.</summary>
+    Task KeyAsync(SparTestKey key);
+
+    /// <summary>Inserts text where the focus is, without key events, as an input method does (<c>input</c> events only).</summary>
+    Task InsertTextAsync(string text);
+
+    /// <summary>A trusted pointer event; completes once the page received it.</summary>
+    Task PointerAsync(SparTestPointer pointer);
+
+    /// <summary>The ids of the renderer (web) processes that render the page now.</summary>
     Task<IReadOnlyList<int>> RendererProcessesAsync();
 
-    /// <summary>A close of the window by the user (<c>WM_CLOSE</c>, posted): the close request, the guards, then the teardown.</summary>
+    /// <summary>
+    /// A close of the window by the user (<c>WM_CLOSE</c> on Windows, GTK's close request on Linux): the close request,
+    /// the guards, then the teardown.
+    /// </summary>
     Task PostCloseMessageAsync();
 
     /// <summary>
@@ -93,26 +169,34 @@ internal interface ISparTestWindow
     /// <summary>The test's end: the teardown at once, without asking the guards. Completes when the window is gone.</summary>
     Task<int> CloseAsync();
 
-    /// <summary>Sends a window message to the app's window on its UI thread and returns the window procedure's result.</summary>
+    /// <summary>Sends a window message to the app's window on its UI thread and returns the window procedure's result (Windows only).</summary>
     Task<nint> SendMessageAsync(uint message, nint wParam, nint lParam);
 
     /// <summary>
-    /// The window's own colours as Windows has them: whether its title bar is dark (<c>DWMWA_USE_IMMERSIVE_DARK_MODE</c>)
-    /// and the colour it paints behind the transparent page, as <c>0x00BBGGRR</c>.
+    /// The window's own colours: whether its frame is dark (Windows' <c>DWMWA_USE_IMMERSIVE_DARK_MODE</c>, GTK's dark
+    /// preference on Linux) and the colour it paints behind the page, as <c>0x00BBGGRR</c>.
     /// </summary>
     Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync();
 }
 
 /// <summary>
-/// A DevTools Protocol call the page's session refused: the method, WebView2's failure code, and the protocol's error
-/// object as JSON when WebView2 passed one (such as <c>{"code":-32000,"message":"Cannot find context with specified id"}</c>).
+/// A request the page's window could not run because its document or world went away between the request and the
+/// answer (a navigation, a re-render): the page driver tries again. <see cref="Error"/> is the host's own description.
 /// </summary>
-internal sealed class SparDevToolsException(string method, int code, string? error)
-    : Exception($"{method} failed with 0x{code:X8}{(string.IsNullOrEmpty(error) ? "" : ": " + error)}")
+internal sealed class SparTestCallException(string operation, string? error)
+    : Exception($"{operation} failed{(string.IsNullOrEmpty(error) ? "" : ": " + error)}")
 {
-    public string Method { get; } = method;
-
-    public int Code { get; } = code;
+    public string Operation { get; } = operation;
 
     public string? Error { get; } = error;
 }
+
+/// <summary>Script the test ran in the page threw: the exception's description, with its stack when there is one.</summary>
+internal sealed class SparTestScriptException(string description) : Exception(description);
+
+/// <summary>
+/// This machine cannot run window tests: the host's start-up check's own message (no WebView2 Runtime, no WebKitGTK at
+/// the supported minimum, no Xvfb, user namespaces blocked for the web process's sandbox). Spar's own window tests skip
+/// on it, and fail on CI.
+/// </summary>
+internal sealed class SparTestWindowUnavailableException(string message) : InvalidOperationException(message);

@@ -54,6 +54,26 @@ internal static unsafe partial class Gtk
     [LibraryImport(Library)]
     public static partial void gtk_style_context_add_provider_for_display(nint display, nint provider, uint priority);
 
+    /// <summary>Takes the provider off the display, dropping the display's reference (a test window's theme).</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_style_context_remove_provider_for_display(nint display, nint provider);
+
+    /// <summary>The settings of one display, borrowed: each GDK display has its own (the dark preference among them).</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_settings_get_for_display(nint display);
+
+    /// <summary>The display a widget is on, borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_widget_get_display(nint widget);
+
+    /// <summary>Asks the window to close, as the window manager does: GTK emits <c>close-request</c>.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_close(nint window);
+
+    /// <summary>Moves a window that is not realized yet to another display (a test window's display for its scheme).</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_set_display(nint window, nint display);
+
     [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
     public static partial void gtk_widget_add_css_class(nint widget, string cssClass);
 

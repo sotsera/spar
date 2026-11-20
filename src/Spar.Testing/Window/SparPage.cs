@@ -131,13 +131,13 @@ public sealed class SparPage
         });
 
     /// <summary>Loads the current document again and waits for its load to finish.</summary>
-    public Task ReloadAsync(SparActionOptions? options = null) => NavigateAsync("Page.reload", null, options);
+    public Task ReloadAsync(SparActionOptions? options = null) => NavigateAsync(null, options);
 
     /// <summary>Opens <paramref name="path"/> of the app's own origin (<c>"/settings"</c>) and waits for its load to finish.</summary>
     public Task GotoAsync(string path, SparActionOptions? options = null)
     {
         var address = new Uri(Session.Window.Origin, path).ToString();
-        return NavigateAsync("Page.navigate", address, options);
+        return NavigateAsync(address, options);
     }
 
     /// <summary>The document's title.</summary>
@@ -150,21 +150,7 @@ public sealed class SparPage
     /// <summary>A PNG of the viewport, or of <paramref name="clip"/> in CSS pixels; written to <paramref name="path"/> when given.</summary>
     internal async Task<byte[]> CaptureAsync((double X, double Y, double Width, double Height)? clip, string? path)
     {
-        var result = await Session.CallAsync("Page.captureScreenshot", writer =>
-        {
-            writer.WriteString("format", "png");
-            if (clip is { } area)
-            {
-                writer.WriteStartObject("clip");
-                writer.WriteNumber("x", area.X);
-                writer.WriteNumber("y", area.Y);
-                writer.WriteNumber("width", area.Width);
-                writer.WriteNumber("height", area.Height);
-                writer.WriteNumber("scale", 1);
-                writer.WriteEndObject();
-            }
-        });
-        var png = Convert.FromBase64String(PageJson.String(result, "data") ?? "");
+        var png = await Session.Window.ScreenshotAsync(clip);
         if (path is not null)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path))!);
@@ -193,19 +179,13 @@ public sealed class SparPage
             return Task.FromResult(pattern.IsMatch(url) ? Attempt<bool>.Success(true) : Attempt<bool>.Retry($"the address is {url}"));
         });
 
-    /// <summary>A navigation through the DevTools Protocol, which the host's navigation lock still sees; then its load.</summary>
-    private async Task NavigateAsync(string method, string? address, SparActionOptions? options)
+    /// <summary>A navigation (a reload when <paramref name="address"/> is null), which the host's navigation lock still sees; then its load.</summary>
+    private async Task NavigateAsync(string? address, SparActionOptions? options)
     {
         var started = Stopwatch.GetTimestamp();
         var timeout = Timeout(options?.Timeout);
         var before = Session.Navigations;
-        await Session.CallAsync(method, writer =>
-        {
-            if (address is not null)
-            {
-                writer.WriteString("url", address);
-            }
-        });
+        await Session.Window.NavigateAsync(address);
         var left = PageSession.Remaining(started, timeout);
         await PageRetry.RunAsync($"{(address is null ? "ReloadAsync" : $"GotoAsync(\"{address}\")")}", left, async remaining =>
         {

@@ -40,7 +40,7 @@ internal static class PageRetry
             {
                 result = await attempt(PageSession.Remaining(started, timeout));
             }
-            catch (SparDevToolsException exception)
+            catch (SparTestCallException exception)
             {
                 // A document or world gone between the request and its answer (a navigation, a re-render).
                 result = Attempt<T>.Retry(exception.Error ?? exception.Message);

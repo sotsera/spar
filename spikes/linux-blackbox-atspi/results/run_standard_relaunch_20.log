@@ -1,0 +1,119 @@
+STEP run standard relaunch 20 on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:03:05Z
+dbus-daemon[20804]: [session uid=1000 pid=20804] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=20805 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader r" label="kernel")
+dbus-daemon[20804]: [session uid=1000 pid=20804] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[20817]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1000 pid=20820 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[20817]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[20804]: [session uid=1000 pid=20804] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.8' (uid=1000 pid=20916 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[20804]: [session uid=1000 pid=20804] Activating service name='org.freedesktop.portal.Documents' requested by ':1.9' (uid=1000 pid=20953 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[20804]: [session uid=1000 pid=20804] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.10' (uid=1000 pid=20959 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[20804]: [session uid=1000 pid=20804] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[20804]: [session uid=1000 pid=20804] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.882: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.882: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[20804]: [session uid=1000 pid=20804] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.9' (uid=1000 pid=20953 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[20804]: [session uid=1000 pid=20804] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.919: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.919: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.919: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.919: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.919: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.920: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.920: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.921: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.921: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.922: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00493.629845] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00493.629905] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.923: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.923: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.924: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:20953): xdg-desktop-portal-WARNING **: 19:03:05.924: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[20804]: [session uid=1000 pid=20804] Successfully activated service 'org.freedesktop.portal.Desktop'
+relaunch 1: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.7 ms in 22 calls, cache 0.4 ms same
+relaunch 1: reference line 2034.4, X11 viewable 2091.6, polled 2098.0, event 2090.8 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.24 ms; exit 8 after 255.4 ms
+  first instance resumed and closed: exit 0 after 52.7 ms; stale relaunch dropped: True
+relaunch 2: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.7 ms in 22 calls, cache 0.5 ms same
+relaunch 2: reference line 2015.1, X11 viewable 2072.9, polled 2079.3, event 2070.1 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 44.9 ms
+  first instance resumed and closed: exit 0 after 36.5 ms; stale relaunch dropped: True
+relaunch 3: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.2 ms in 22 calls, cache 0.6 ms same
+relaunch 3: reference line 2009.9, X11 viewable 2071.3, polled 2078.0, event 2066.7 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; exit 8 after 256.8 ms
+  first instance resumed and closed: exit 0 after 36.4 ms; stale relaunch dropped: True
+relaunch 4: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.1 ms in 22 calls, cache 0.4 ms same
+relaunch 4: reference line 2015.9, X11 viewable 2072.3, polled 2078.8, event 2071.9 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 45.8 ms
+  first instance resumed and closed: exit 0 after 36.6 ms; stale relaunch dropped: True
+relaunch 5: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.9 ms in 22 calls, cache 0.4 ms same
+relaunch 5: reference line 2011.2, X11 viewable 2067.7, polled 2074.1, event 2066.3 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; exit 8 after 256.7 ms
+  first instance resumed and closed: exit 0 after 36.1 ms; stale relaunch dropped: True
+relaunch 6: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.8 ms in 22 calls, cache 0.5 ms same
+relaunch 6: reference line 2029.9, X11 viewable 2087.9, polled 2094.7, event 2086.4 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 45.2 ms
+  first instance resumed and closed: exit 0 after 36.0 ms; stale relaunch dropped: True
+relaunch 7: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.7 ms in 22 calls, cache 0.4 ms same
+relaunch 7: reference line 2014.8, X11 viewable 2073.0, polled 2079.6, event 2070.4 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; exit 8 after 255.6 ms
+  first instance resumed and closed: exit 0 after 36.3 ms; stale relaunch dropped: True
+relaunch 8: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.4 ms in 22 calls, cache 0.5 ms same
+relaunch 8: reference line 2021.3, X11 viewable 2090.8, polled 2097.4, event 2086.2 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 45.0 ms
+  first instance resumed and closed: exit 0 after 36.5 ms; stale relaunch dropped: True
+relaunch 9: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.3 ms in 22 calls, cache 0.4 ms same
+relaunch 9: reference line 2028.9, X11 viewable 2092.2, polled 2098.6, event 2090.9 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; exit 8 after 255.2 ms
+  first instance resumed and closed: exit 0 after 52.4 ms; stale relaunch dropped: True
+relaunch 10: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.3 ms in 22 calls, cache 0.6 ms same
+relaunch 10: reference line 2035.4, X11 viewable 2093.8, polled 2100.3, event 2092.1 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 45.1 ms
+  first instance resumed and closed: exit 0 after 53.1 ms; stale relaunch dropped: True
+relaunch 11: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.3 ms in 22 calls, cache 0.4 ms same
+relaunch 11: reference line 2023.8, X11 viewable 2080.8, polled 2087.3, event 2079.1 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; exit 8 after 256.1 ms
+  first instance resumed and closed: exit 0 after 53.3 ms; stale relaunch dropped: True
+relaunch 12: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.4 ms in 22 calls, cache 0.5 ms same
+relaunch 12: reference line 2034.3, X11 viewable 2091.8, polled 2098.2, event 2089.4 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 44.8 ms
+  first instance resumed and closed: exit 0 after 52.0 ms; stale relaunch dropped: True
+relaunch 13: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.4 ms in 22 calls, cache 0.4 ms same
+relaunch 13: reference line 2028.0, X11 viewable 2087.5, polled 2094.0, event 2087.3 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.21 ms; exit 8 after 255.6 ms
+  first instance resumed and closed: exit 0 after 36.7 ms; stale relaunch dropped: True
+relaunch 14: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.7 ms in 22 calls, cache 0.4 ms same
+relaunch 14: reference line 2023.8, X11 viewable 2084.4, polled 2083.6, event 2079.5 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 45.1 ms
+  first instance resumed and closed: exit 0 after 52.9 ms; stale relaunch dropped: True
+relaunch 15: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.7 ms in 22 calls, cache 0.5 ms same
+relaunch 15: reference line 2029.8, X11 viewable 2087.1, polled 2093.7, event 2085.1 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.21 ms; exit 8 after 255.7 ms
+  first instance resumed and closed: exit 0 after 37.1 ms; stale relaunch dropped: True
+relaunch 16: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.7 ms in 22 calls, cache 0.4 ms same
+relaunch 16: reference line 2026.9, X11 viewable 2085.6, polled 2091.9, event 2083.1 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 45.3 ms
+  first instance resumed and closed: exit 0 after 36.5 ms; stale relaunch dropped: True
+relaunch 17: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.8 ms in 22 calls, cache 0.4 ms same
+relaunch 17: reference line 2010.5, X11 viewable 2071.7, polled 2078.5, event 2067.7 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.22 ms; exit 8 after 257.7 ms
+  first instance resumed and closed: exit 0 after 53.4 ms; stale relaunch dropped: True
+relaunch 18: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.0 ms in 22 calls, cache 0.5 ms same
+relaunch 18: reference line 2033.3, X11 viewable 2091.2, polled 2097.8, event 2090.0 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 45.1 ms
+  first instance resumed and closed: exit 0 after 36.7 ms; stale relaunch dropped: True
+relaunch 19: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 4.5 ms in 22 calls, cache 0.4 ms same
+relaunch 19: reference line 2035.6, X11 viewable 2091.7, polled 2098.2, event 2090.9 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.30 ms; exit 8 after 257.4 ms
+  first instance resumed and closed: exit 0 after 36.5 ms; stale relaunch dropped: True
+relaunch 20: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.4 ms in 22 calls, cache 0.4 ms same
+relaunch 20: reference line 2025.4, X11 viewable 2083.0, polled 2089.7, event 2082.2 (StateChanged showing) ms after launch; XTEST click at (281,170) [screen extents (0, 0, 528, 34), window extents (17, 153, 528, 34), X11 origin (0, 0)]; exit 8 after 44.9 ms
+  first instance resumed and closed: exit 0 after 53.2 ms; stale relaunch dropped: True
+SUMMARY relaunch (20 runs, 0 failed)
+  the host's log line to the dialog viewable (X11): n=20 p50=58.0 p95=63.3 min=56.1 max=69.4 ms
+  viewable to found by polling AT-SPI (negative: before the map): n=20 p50=6.5 p95=6.8 min=-0.7 max=6.8 ms
+  viewable to the first AT-SPI event (negative: before the map): n=20 p50=-1.7 p95=-0.4 min=-4.9 max=-0.2 ms
+  read the dialog by walking: n=20 p50=4.9 p95=5.4 min=4.3 max=5.7 ms
+  read the dialog from the cache (one call): n=20 p50=0.4 p95=0.6 min=0.4 max=0.6 ms
+  press by DoAction to done (exit or dialog gone): n=10 p50=255.7 p95=257.7 min=255.2 max=257.7 ms
+  press by XTEST click to done (exit or dialog gone): n=10 p50=45.1 p95=45.8 min=44.8 max=45.8 ms
+STEP exit 0 in 48694 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader relaunch 20
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

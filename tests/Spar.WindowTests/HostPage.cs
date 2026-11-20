@@ -22,9 +22,15 @@ internal sealed class HostPage : IAsyncDisposable
 
     public SparLocator Status => Page.GetByRole(SparRole.Status);
 
+    /// <summary>The page's origin as <c>location.origin</c> reads it: <c>https://app.localhost</c> on Windows, <c>spar://app</c> on Linux.</summary>
+    public string Origin => App.Window.Origin.GetLeftPart(UriPartial.Authority);
+
+    /// <summary>An address of the page's origin, such as <c>Address("/other.html")</c>.</summary>
+    public string Address(string path) => new Uri(App.Window.Origin, path).ToString();
+
     public static async Task<HostPage> OpenAsync(Action<SparTestOptions>? configure = null)
     {
-        WindowSupport.SkipUnlessSupported();
+        await WindowSupport.SkipUnlessSupportedAsync();
         var app = await SparTestApp.StartAsync<Program>(options =>
         {
             options.Surface = SparTestSurface.Window;

@@ -4,19 +4,6 @@ using Windows.Win32;
 
 namespace Spar.Windows;
 
-/// <summary>What a close request came to: whether the window closed, and the last question a guard asked.</summary>
-/// <param name="closed">The teardown ran; false when a guard or the person kept the window.</param>
-/// <param name="question">The last question a guard asked (the page's or the backend's), null when none asked.</param>
-/// <param name="unanswered">The page did not answer, and "Wait / Close anyway" was asked.</param>
-internal readonly struct CloseReport(bool closed, string? question, bool unanswered)
-{
-    public bool Closed { get; } = closed;
-
-    public string? Question { get; } = question;
-
-    public bool Unanswered { get; } = unanswered;
-}
-
 /// <summary>
 /// The two-stage close of the main window (decision "Two-stage close"; <c>docs/app-model.md</c> 6.11): the page's
 /// guards, then the backend's, each closing, keeping or asking, one native confirmation per ask, and the teardown only

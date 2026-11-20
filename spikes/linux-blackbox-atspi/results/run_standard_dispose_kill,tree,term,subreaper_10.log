@@ -1,0 +1,106 @@
+STEP run standard dispose kill,tree,term,subreaper 10 on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:03:55Z
+dbus-daemon[25170]: [session uid=1000 pid=25170] Activating service name='org.a11y.Bus' requested by ':1.2' (uid=1000 pid=25174 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[25170]: [session uid=1000 pid=25170] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[25266]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=25174 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[25266]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[25170]: [session uid=1000 pid=25170] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.6' (uid=1000 pid=25276 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[25170]: [session uid=1000 pid=25170] Activating service name='org.freedesktop.portal.Documents' requested by ':1.7' (uid=1000 pid=25313 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[25170]: [session uid=1000 pid=25170] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.8' (uid=1000 pid=25319 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[25170]: [session uid=1000 pid=25170] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[25170]: [session uid=1000 pid=25170] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.217: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.217: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[25170]: [session uid=1000 pid=25170] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.7' (uid=1000 pid=25313 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[25170]: [session uid=1000 pid=25170] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.252: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.252: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.252: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.252: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.252: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.253: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.253: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.254: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.255: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00542.915385] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00542.915437] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.256: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.256: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.257: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:25313): xdg-desktop-portal-WARNING **: 19:03:55.257: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[25170]: [session uid=1000 pid=25170] Successfully activated service 'org.freedesktop.portal.Desktop'
+the app's tree (pid ppid pgid sid name):
+  25174 25171 15763 15763 BridgeProbe
+    25272 25174 15763 15763 WebKitNetworkPr
+    25274 25174 15763 15763 bwrap
+      25275 25274 15763 15763 bwrap
+        25276 25275 15763 15763 xdg-dbus-proxy
+    25279 25174 15763 15763 bwrap
+      25280 25279 15763 15763 bwrap
+        25282 25280 15763 15763 WebKitWebProces
+pidfd_open: fd 6
+dispose kill run 1: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.8 ms, all gone after 7.0 ms
+dispose kill run 2: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.6 ms, all gone after 6.7 ms
+dispose kill run 3: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.8 ms, all gone after 7.1 ms
+dispose kill run 4: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 4.2 ms, all gone after 7.4 ms
+dispose kill run 5: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.6 ms, all gone after 7.0 ms
+dispose kill run 6: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.9 ms, all gone after 9.7 ms
+dispose kill run 7: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.5 ms, all gone after 9.3 ms
+dispose kill run 8: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.6 ms, all gone after 6.7 ms
+dispose kill run 9: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.4 ms, all gone after 6.4 ms
+dispose kill run 10: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.6 ms, all gone after 9.2 ms
+SUMMARY dispose kill: runs 10, runs with processes left after 3 s 0; all gone after: n=10 p50=7.0 p95=9.7 min=6.4 max=9.7 ms
+dispose tree run 1: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 22.1 ms, all gone after 22.5 ms
+dispose tree run 2: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 21.5 ms, all gone after 21.9 ms
+dispose tree run 3: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 20.4 ms, all gone after 20.7 ms
+dispose tree run 4: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 19.9 ms, all gone after 20.3 ms
+dispose tree run 5: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 20.7 ms, all gone after 21.1 ms
+dispose tree run 6: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 19.3 ms, all gone after 19.7 ms
+dispose tree run 7: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 19.6 ms, all gone after 20.0 ms
+dispose tree run 8: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 20.6 ms, all gone after 21.0 ms
+dispose tree run 9: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 19.5 ms, all gone after 19.9 ms
+dispose tree run 10: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 19.0 ms, all gone after 19.4 ms
+SUMMARY dispose tree: runs 10, runs with processes left after 3 s 0; all gone after: n=10 p50=20.3 p95=22.5 min=19.4 max=22.5 ms
+dispose term run 1: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 4.0 ms, all gone after 6.9 ms; exit code 143
+dispose term run 2: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 4.0 ms, all gone after 7.3 ms; exit code 143
+dispose term run 3: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.1 ms, all gone after 8.5 ms; exit code 143
+dispose term run 4: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.7 ms, all gone after 6.9 ms; exit code 143
+dispose term run 5: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.4 ms, all gone after 8.9 ms; exit code 143
+dispose term run 6: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.7 ms, all gone after 6.8 ms; exit code 143
+dispose term run 7: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.8 ms, all gone after 9.2 ms; exit code 143
+dispose term run 8: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.5 ms, all gone after 8.8 ms; exit code 143
+dispose term run 9: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.9 ms, all gone after 9.4 ms; exit code 143
+dispose term run 10: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.9 ms, all gone after 9.4 ms; exit code 143
+SUMMARY dispose term: runs 10, runs with processes left after 3 s 0; all gone after: n=10 p50=8.5 p95=9.4 min=6.8 max=9.4 ms
+PR_SET_CHILD_SUBREAPER: 0
+dispose subreaper run 1: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.6 ms, all gone after 7.0 ms; reparented to the test process: [  28984 25171 15763 15763 bwrap,   29062 25171 15763 15763 WebKitNetworkPr,   29064 25171 15763 15763 bwrap,   29065 25171 15763 15763 bwrap,   29069 25171 15763 15763 bwrap]
+dispose subreaper run 2: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.5 ms, all gone after 9.9 ms; reparented to the test process: [  29062 25171 15763 15763 WebKitNetworkPr,   29109 25171 15763 15763 bwrap,   29187 25171 15763 15763 WebKitNetworkPr,   29189 25171 15763 15763 bwrap,   29190 25171 15763 15763 bwrap,   29195 25171 15763 15763 bwrap]
+dispose subreaper run 3: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.8 ms, all gone after 7.4 ms; reparented to the test process: [  29234 25171 15763 15763 bwrap,   29312 25171 15763 15763 WebKitNetworkPr,   29314 25171 15763 15763 bwrap,   29315 25171 15763 15763 bwrap,   29319 25171 15763 15763 bwrap]
+dispose subreaper run 4: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.2 ms, all gone after 6.9 ms; reparented to the test process: [  29312 25171 15763 15763 WebKitNetworkPr,   29360 25171 15763 15763 bwrap,   29438 25171 15763 15763 WebKitNetworkPr,   29440 25171 15763 15763 bwrap,   29441 25171 15763 15763 bwrap,   29445 25171 15763 15763 bwrap]
+dispose subreaper run 5: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.5 ms, all gone after 7.1 ms; reparented to the test process: [  29438 25171 15763 15763 WebKitNetworkPr,   29485 25171 15763 15763 bwrap,   29563 25171 15763 15763 WebKitNetworkPr,   29565 25171 15763 15763 bwrap,   29566 25171 15763 15763 bwrap,   29570 25171 15763 15763 bwrap]
+dispose subreaper run 6: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.7 ms, all gone after 10.4 ms; reparented to the test process: [  29563 25171 15763 15763 WebKitNetworkPr,   29610 25171 15763 15763 bwrap,   29688 25171 15763 15763 WebKitNetworkPr,   29690 25171 15763 15763 bwrap,   29691 25171 15763 15763 bwrap,   29695 25171 15763 15763 bwrap]
+dispose subreaper run 7: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.7 ms, all gone after 7.2 ms; reparented to the test process: [  29688 25171 15763 15763 WebKitNetworkPr,   29735 25171 15763 15763 bwrap,   29813 25171 15763 15763 WebKitNetworkPr,   29815 25171 15763 15763 bwrap,   29816 25171 15763 15763 bwrap,   29820 25171 15763 15763 bwrap]
+dispose subreaper run 8: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.4 ms, all gone after 7.0 ms; reparented to the test process: [  29813 25171 15763 15763 WebKitNetworkPr,   29860 25171 15763 15763 bwrap,   29938 25171 15763 15763 WebKitNetworkPr,   29940 25171 15763 15763 bwrap,   29941 25171 15763 15763 bwrap,   29945 25171 15763 15763 bwrap]
+dispose subreaper run 9: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 3.7 ms, all gone after 7.3 ms; reparented to the test process: [  29938 25171 15763 15763 WebKitNetworkPr,   29985 25171 15763 15763 bwrap,   30063 25171 15763 15763 WebKitNetworkPr,   30065 25171 15763 15763 bwrap,   30066 25171 15763 15763 bwrap,   30070 25171 15763 15763 bwrap]
+dispose subreaper run 10: 8 processes [BridgeProbe, WebKitNetworkPr, bwrap x4, xdg-dbus-proxy, WebKitWebProces]; app exited 4.2 ms, all gone after 10.6 ms; reparented to the test process: [  30063 25171 15763 15763 WebKitNetworkPr,   30110 25171 15763 15763 bwrap,   30188 25171 15763 15763 WebKitNetworkPr,   30190 25171 15763 15763 bwrap,   30191 25171 15763 15763 bwrap,   30195 25171 15763 15763 bwrap]
+SUMMARY dispose subreaper: runs 10, runs with processes left after 3 s 0; all gone after: n=10 p50=7.2 p95=10.6 min=6.9 max=10.6 ms
+STEP exit 0 in 17936 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader dispose kill,tree,term,subreaper 10
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

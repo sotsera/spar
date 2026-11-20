@@ -1,12 +1,65 @@
+using Spar.Hosting;
 using Spar.Testing;
+using WindowHost;
 
 namespace Spar.WindowTests;
 
-/// <summary>Where window tests can run: Windows until the Linux host arrives (M1c). Elsewhere each is an explicit skip.</summary>
+/// <summary>
+/// Where window tests can run (decision "M1c step 7's shape: Linux window and black-box tests"): Windows and Linux. The
+/// first window test of the process runs the host's start-up check, by opening WindowHost's window once; when it finds
+/// something missing (no WebView2 Runtime; no Xvfb, no WebKitGTK at the supported minimum, or user namespaces blocked
+/// for the web process's sandbox), every window test skips with the check's own message, and fails when <c>CI=true</c>,
+/// so CI cannot pass by skipping.
+/// </summary>
 internal static class WindowSupport
 {
-    public static void SkipUnlessSupported() =>
-        Assert.SkipUnless(OperatingSystem.IsWindows(), "The Window surface runs on Windows; the Linux host arrives in M1c.");
+    private static readonly Lazy<Task<string?>> Problem = new(FindProblemAsync);
+
+    public static async Task SkipUnlessSupportedAsync()
+    {
+        if (await Problem.Value is not { } problem)
+        {
+            return;
+        }
+
+        if (string.Equals(Environment.GetEnvironmentVariable("CI"), "true", StringComparison.OrdinalIgnoreCase))
+        {
+            Assert.Fail(problem + " (CI=true: a window test that cannot run fails.)");
+        }
+
+        Assert.Skip(problem);
+    }
+
+    /// <summary>A test of a Windows mechanism with no Linux counterpart yet: an explicit skip elsewhere, with why.</summary>
+    public static void SkipUnlessWindows(string why) => Assert.SkipUnless(OperatingSystem.IsWindows(), why);
+
+    /// <summary>The black-box fixture's tests: Windows until the Linux fixture (AT-SPI) is built after its spike.</summary>
+    public static void SkipUnlessBlackBox() =>
+        SkipUnlessWindows("The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).");
+
+    private static async Task<string?> FindProblemAsync()
+    {
+        if (!OperatingSystem.IsWindows() && !OperatingSystem.IsLinux())
+        {
+            return "The Window surface runs on Windows and Linux.";
+        }
+
+        try
+        {
+            // The process's first window: the host's check, its session (Xvfb, D-Bus) or shared browser, and the window.
+            var started = System.Diagnostics.Stopwatch.GetTimestamp();
+            await using (var app = await SparTestApp.StartAsync<Program>(options => options.Surface = SparTestSurface.Window))
+            {
+                Results.Append("first-window.txt", $"first window of the process open in {System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalMilliseconds:0} ms");
+            }
+
+            return null;
+        }
+        catch (SparTestWindowUnavailableException unavailable)
+        {
+            return unavailable.Message;
+        }
+    }
 }
 
 /// <summary>Bounded waits for state the page API does not see, such as the backend's or the log's.</summary>

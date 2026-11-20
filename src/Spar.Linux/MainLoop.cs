@@ -45,6 +45,35 @@ internal sealed class MainLoop : SynchronizationContext
         thread.Join();
     }
 
+    /// <summary>
+    /// A test process's one loop thread (plan section 5: GTK is initialised once, and every test window shares it): runs
+    /// <paramref name="start"/> on a new background thread, then its main loop for the rest of the process, and returns
+    /// once <paramref name="start"/> has; null when it returned false (the loop then never runs).
+    /// </summary>
+    public static MainLoop? StartShared(Action<Exception> report, Func<MainLoop, bool> start)
+    {
+        var loop = new MainLoop(report);
+        var started = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var thread = new Thread(() => loop.Loop(ui =>
+        {
+            try
+            {
+                var ready = start(ui);
+                started.TrySetResult(ready);
+                return ready;
+            }
+            catch (Exception exception)
+            {
+                started.TrySetException(exception);
+                throw;
+            }
+        })) { Name = "Spar UI (tests)", IsBackground = true };
+        thread.Start();
+
+        // The caller is the test host's own thread for the app, never the loop's, so waiting here blocks nothing else.
+        return started.Task.GetAwaiter().GetResult() ? loop : null;
+    }
+
     /// <summary>Runs <paramref name="work"/> on the loop, after what is already queued. Safe from any thread.</summary>
     public void Post(Action work, string name = PostedWork) => Enqueue(static state => ((Action)state!)(), work, name);
 

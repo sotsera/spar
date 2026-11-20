@@ -1,0 +1,103 @@
+STEP window on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.Wait_keeps_a_silent_guards_window_and_Close_anyway_closes_it
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndTests.Signing_out_ends_the_app_within_the_session_end_budget
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.Real_input_and_the_screen_are_refused_as_SYSTEM
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.DeadlineProbeTests.Runs_until_the_runner_ends_it
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.OfflineTests.The_page_starts_offline_and_its_calls_still_work
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.The_guest_has_no_network
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.The_close_confirmation_is_answered_with_real_keys_and_the_mouse
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.A_Production_app_finds_the_guests_WebView2_Runtime
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.The_guests_WebView2_registration_names_a_Runtime_it_has
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.The_runner_names_the_folders_and_marks_the_guest
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.The_first_click_on_an_inactive_window_reaches_the_page
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.Tab_moves_into_the_page_after_the_window_is_activated
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.A_renderer_lost_during_the_session_end_is_neither_reloaded_nor_waited_for
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address
+  Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path
+  Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_holds_the_message_under_four_seconds_however_slow_the_guards_and_the_cleanup
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_returns_as_soon_as_the_window_and_the_services_are_done
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_closes_the_window_with_its_reason_and_settles_its_calls
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started
+  The black-box fixture runs on Windows 10 1809 and later; the Linux host arrives in M1c.
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.ThemeTests.Each_window_keeps_its_own_scheme_beside_another
+  Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.PageApiTests.Page_errors_reach_the_apps_log_through_the_host
+  The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BudgetTests.The_Production_app_starts_to_ui_ready_and_holds_its_working_set
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+94/x0/?30] (48s 780ms)
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-window-tests/repo/artifacts/test-results/Spar.WindowTests/user_host_2026-11-20_19_10_29.930606.trx
+Test run summary: Passed!
+  total: 124
+  failed: 0
+  succeeded: 94
+  skipped: 30
+  duration: 48s 888ms
+STEP exit 0 in 49229 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --
+processes left by the window tests: 0

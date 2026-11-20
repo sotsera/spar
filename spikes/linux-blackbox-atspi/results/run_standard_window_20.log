@@ -1,0 +1,82 @@
+STEP run standard window 20 on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:02:58Z
+dbus-daemon[17827]: [session uid=1000 pid=17827] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=17828 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader w" label="kernel")
+dbus-daemon[17827]: [session uid=1000 pid=17827] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[17840]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1000 pid=17843 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[17840]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[17827]: [session uid=1000 pid=17827] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.8' (uid=1000 pid=17939 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[17827]: [session uid=1000 pid=17827] Activating service name='org.freedesktop.portal.Documents' requested by ':1.9' (uid=1000 pid=17976 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[17827]: [session uid=1000 pid=17827] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.10' (uid=1000 pid=17982 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[17827]: [session uid=1000 pid=17827] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[17827]: [session uid=1000 pid=17827] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.196: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.196: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[17827]: [session uid=1000 pid=17827] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.9' (uid=1000 pid=17976 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[17827]: [session uid=1000 pid=17827] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.234: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.235: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.235: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.235: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.235: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.235: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.236: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.236: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.237: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.238: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00485.906403] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00485.906493] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.239: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.239: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.240: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:17976): xdg-desktop-portal-WARNING **: 19:02:58.241: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[17827]: [session uid=1000 pid=17827] Successfully activated service 'org.freedesktop.portal.Desktop'
+run 1: window polled 95.4 event 79.9 (StateChanged showing) X11 viewable 83.1 ui-ready 199.1 ms; title "BridgeProbe" read in 2.58 ms; AT-SPI window.close (action 0, returned True): exit 0 after 48.1 ms
+run 2: window polled 85.0 event 72.8 (StateChanged showing) X11 viewable 72.6 ui-ready 136.6 ms; title "BridgeProbe" read in 0.43 ms; WM_DELETE_WINDOW: exit 0 after 46.8 ms
+run 3: window polled 78.1 event 70.2 (StateChanged showing) X11 viewable 71.5 ui-ready 129.8 ms; title "BridgeProbe" read in 0.39 ms; AT-SPI window.close (action 0, returned True): exit 0 after 51.0 ms
+run 4: window polled 78.3 event 70.2 (StateChanged showing) X11 viewable 71.7 ui-ready 129.8 ms; title "BridgeProbe" read in 0.36 ms; WM_DELETE_WINDOW: exit 0 after 34.3 ms
+run 5: window polled 84.1 event 71.0 (StateChanged showing) X11 viewable 71.6 ui-ready 136.0 ms; title "BridgeProbe" read in 0.35 ms; AT-SPI window.close (action 0, returned True): exit 0 after 30.0 ms
+run 6: window polled 84.2 event 72.0 (StateChanged showing) X11 viewable 71.6 ui-ready 135.9 ms; title "BridgeProbe" read in 0.40 ms; WM_DELETE_WINDOW: exit 0 after 47.1 ms
+run 7: window polled 85.5 event 73.2 (StateChanged showing) X11 viewable 79.0 ui-ready 142.4 ms; title "BridgeProbe" read in 0.42 ms; AT-SPI window.close (action 0, returned True): exit 0 after 40.3 ms
+run 8: window polled 82.9 event 70.7 (StateChanged showing) X11 viewable 70.4 ui-ready 139.8 ms; title "BridgeProbe" read in 3.33 ms; WM_DELETE_WINDOW: exit 0 after 41.8 ms
+run 9: window polled 83.7 event 70.7 (StateChanged showing) X11 viewable 71.1 ui-ready 135.2 ms; title "BridgeProbe" read in 0.38 ms; AT-SPI window.close (action 0, returned True): exit 0 after 30.4 ms
+run 10: window polled 83.5 event 71.4 (StateChanged showing) X11 viewable 71.1 ui-ready 135.4 ms; title "BridgeProbe" read in 0.45 ms; WM_DELETE_WINDOW: exit 0 after 30.8 ms
+run 11: window polled 78.5 event 70.6 (StateChanged showing) X11 viewable 71.6 ui-ready 135.4 ms; title "BridgeProbe" read in 0.38 ms; AT-SPI window.close (action 0, returned True): exit 0 after 46.2 ms
+run 12: window polled 83.8 event 73.0 (StateChanged showing) X11 viewable 77.3 ui-ready 141.1 ms; title "BridgeProbe" read in 0.60 ms; WM_DELETE_WINDOW: exit 0 after 45.9 ms
+run 13: window polled 83.3 event 71.1 (StateChanged showing) X11 viewable 70.8 ui-ready 134.9 ms; title "BridgeProbe" read in 0.37 ms; AT-SPI window.close (action 0, returned True): exit 0 after 46.9 ms
+run 14: window polled 84.6 event 71.7 (StateChanged showing) X11 viewable 71.9 ui-ready 136.1 ms; title "BridgeProbe" read in 0.36 ms; WM_DELETE_WINDOW: exit 0 after 31.0 ms
+run 15: window polled 84.6 event 72.2 (StateChanged showing) X11 viewable 71.9 ui-ready 136.4 ms; title "BridgeProbe" read in 0.40 ms; AT-SPI window.close (action 0, returned True): exit 0 after 46.4 ms
+run 16: window polled 85.3 event 75.1 (StateChanged showing) X11 viewable 78.8 ui-ready 147.5 ms; title "BridgeProbe" read in 0.34 ms; WM_DELETE_WINDOW: exit 0 after 28.2 ms
+run 17: window polled 85.3 event 72.8 (StateChanged showing) X11 viewable 78.7 ui-ready 136.8 ms; title "BridgeProbe" read in 0.43 ms; AT-SPI window.close (action 0, returned True): exit 0 after 47.4 ms
+run 18: window polled 83.4 event 71.4 (StateChanged showing) X11 viewable 71.2 ui-ready 140.4 ms; title "BridgeProbe" read in 0.44 ms; WM_DELETE_WINDOW: exit 0 after 44.3 ms
+run 19: window polled 83.9 event 71.9 (StateChanged showing) X11 viewable 77.6 ui-ready 141.0 ms; title "BridgeProbe" read in 0.49 ms; AT-SPI window.close (action 0, returned True): exit 0 after 44.0 ms
+run 20: window polled 77.2 event 69.3 (StateChanged showing) X11 viewable 70.8 ui-ready 129.0 ms; title "BridgeProbe" read in 0.44 ms; WM_DELETE_WINDOW: exit 0 after 33.5 ms
+SUMMARY window (20 runs, 0 failed)
+  launch to window found by polling AT-SPI: n=20 p50=83.8 p95=85.5 min=77.2 max=95.4 ms
+  launch to the first AT-SPI event of the window: n=20 p50=71.4 p95=75.1 min=69.3 max=79.9 ms
+  launch to X11 viewable: n=20 p50=71.6 p95=79.0 min=70.4 max=83.1 ms
+  launch to ui-ready (log): n=20 p50=136.1 p95=147.5 min=129.0 max=199.1 ms
+  title read (one call): n=20 p50=0.4 p95=2.6 min=0.3 max=3.3 ms
+  DoAction(window.close) call: n=10 p50=0.3 p95=0.5 min=0.3 max=0.5 ms
+  window.close to exit: n=10 p50=46.2 p95=51.0 min=30.0 max=51.0 ms
+  WM_DELETE_WINDOW to exit: n=10 p50=34.3 p95=47.1 min=28.2 max=47.1 ms
+guard-keep, window.close: running after 1.5 s: True; log: 2026-11-20T18:03:01.860Z INFO  Spar.Host  [7cadef97] close requested (User) at 133 ms | 2026-11-20T18:03:01.861Z INFO  Spar.Host  [7cadef97] close request 1 sent to the page (user) at 133 ms | 2026-11-20T18:03:01.862Z INFO  Spar.Host  [7cadef97] close request 1: the page answered Keep at 134.4 ms | 2026-11-20T18:03:01.862Z INFO  Spar.Host  [7cadef97] close kept by the page's guard at 134.4 ms
+guard-keep, WM_DELETE_WINDOW: running after 1.5 s: True; log: 2026-11-20T18:03:03.530Z INFO  Spar.Host  [fb437708] close requested (User) at 141 ms | 2026-11-20T18:03:03.530Z INFO  Spar.Host  [fb437708] close request 1 sent to the page (user) at 141 ms | 2026-11-20T18:03:03.531Z INFO  Spar.Host  [fb437708] close request 1: the page answered Keep at 142.3 ms | 2026-11-20T18:03:03.531Z INFO  Spar.Host  [fb437708] close kept by the page's guard at 142.3 ms
+STEP exit 0 in 6976 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader window 20
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

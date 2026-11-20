@@ -352,6 +352,13 @@ public sealed class SparLocator
                 return Attempt<bool>.Retry($"{PageJson.String(result, "hit")} received the press instead; trying again");
             }
 
+            if (landed is { } unseen && PageJson.Bool(unseen, "armed") && !PageJson.Bool(unseen, "seen") && clickCount == 1)
+            {
+                // The press never reached the page (input that travels through a display server can be lost, as XTEST's
+                // first press into a window was once): nothing happened, so the click is sent again.
+                return Attempt<bool>.Retry("the press did not reach the page; trying again", again: true);
+            }
+
             if (landed is { } moved && PageJson.Bool(moved, "moved"))
             {
                 // The element moved between the press and the release (an animation that started after the stability

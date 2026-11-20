@@ -28,10 +28,19 @@ public sealed class SessionEndHostTests
 
     private static CancellationToken Token => TestContext.Current.CancellationToken;
 
+    /// <summary>
+    /// Windows ends a session with <c>WM_QUERYENDSESSION</c> and <c>WM_ENDSESSION</c>; Linux with logind's
+    /// <c>PrepareForShutdown</c> and the session's end, which the Linux host does not follow yet. The session end's close
+    /// rules run on both hosts through <c>app.Window.CloseAsync(new() { Reason = CloseReason.SessionEnd })</c> (CloseTests).
+    /// </summary>
+    private static void SkipUnlessWindowsSession() =>
+        WindowSupport.SkipUnlessWindows("The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).");
+
     [Fact]
     [Trait("Surface", "Window")]
     public async Task The_end_of_the_session_closes_the_window_with_its_reason_and_settles_its_calls()
     {
+        SkipUnlessWindowsSession();
         var phases = new ConcurrentQueue<string>();
         await using var host = await HostPage.OpenAsync(options => options.WindowPhase = phases.Enqueue);
         var activity = host.Activity;
@@ -61,6 +70,7 @@ public sealed class SessionEndHostTests
     [Trait("Surface", "Window")]
     public async Task The_end_of_the_session_holds_the_message_under_four_seconds_however_slow_the_guards_and_the_cleanup()
     {
+        SkipUnlessWindowsSession();
         var phases = new ConcurrentQueue<string>();
         await using var host = await HostPage.OpenAsync(options => options.WindowPhase = phases.Enqueue);
         var activity = host.Activity;
@@ -90,6 +100,7 @@ public sealed class SessionEndHostTests
     [Trait("Surface", "Window")]
     public async Task The_end_of_the_session_returns_as_soon_as_the_window_and_the_services_are_done()
     {
+        SkipUnlessWindowsSession();
         await using var host = await HostPage.OpenAsync();
         var activity = host.Activity;
 
@@ -107,7 +118,8 @@ public sealed class SessionEndHostTests
     [Trait("Surface", "BlackBox")]
     public async Task The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after()
     {
-        WindowSupport.SkipUnlessSupported();
+        SkipUnlessWindowsSession();
+        WindowSupport.SkipUnlessBlackBox();
         await using var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
 
         Assert.True(await app.Automation.EndSessionAsync(app.ProcessId, Token));
@@ -131,6 +143,7 @@ public sealed class SessionEndHostTests
     [Trait("Surface", "Window")]
     public async Task A_renderer_lost_during_the_session_end_is_neither_reloaded_nor_waited_for()
     {
+        SkipUnlessWindowsSession();
         var phases = new ConcurrentQueue<string>();
         await using var host = await HostPage.OpenAsync(options => options.WindowPhase = phases.Enqueue);
         await host.GuardAsync("slow");

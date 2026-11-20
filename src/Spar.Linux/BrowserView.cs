@@ -32,6 +32,8 @@ internal sealed class BrowserView
     private readonly BrowserDefaults _defaults;
     private readonly BrowserProfile _profile;
     private readonly Action<int, string> _fail;
+    private readonly BrowserSource? _source;
+    private nint _context;
     private GCHandle _self;
     private nint _view;
     private nint _session;
@@ -53,6 +55,7 @@ internal sealed class BrowserView
     private bool _reloadAfterTermination;
 
     /// <param name="fail">An unrecoverable failure: the exit code and a message.</param>
+    /// <param name="source">A test window's source (the Window surface): an ephemeral session and a web context of its own.</param>
     public BrowserView(
         MainLoop ui,
         HostLog log,
@@ -61,7 +64,8 @@ internal sealed class BrowserView
         PageGuard guard,
         BrowserDefaults defaults,
         BrowserProfile profile,
-        Action<int, string> fail)
+        Action<int, string> fail,
+        BrowserSource? source = null)
     {
         _ui = ui;
         _log = log;
@@ -71,6 +75,7 @@ internal sealed class BrowserView
         _defaults = defaults;
         _profile = profile;
         _fail = fail;
+        _source = source;
         bridge.DocumentReady += () => _reloadUsed = false;
     }
 
@@ -98,8 +103,21 @@ internal sealed class BrowserView
     {
         _self = GCHandle.Alloc(this);
         var self = GCHandle.ToIntPtr(_self);
-        _session = WebKit.webkit_network_session_new(dataFolder, cacheFolder);
-        CheckFolders(dataFolder, cacheFolder);
+        var test = SparTestSession.IsSupported && _source is not null;
+        if (test)
+        {
+            // A test window: nothing kept on disk or shared with another test's window, the InPrivate analogue, and a web
+            // context of its own, so the spar scheme of this context is this window's app only.
+            _session = TestViews.EphemeralSession();
+            _context = TestViews.NewContext();
+            _log.Info("Browser data: an ephemeral network session and a web context of the test window's own.");
+        }
+        else
+        {
+            _session = WebKit.webkit_network_session_new(dataFolder, cacheFolder);
+            CheckFolders(dataFolder, cacheFolder);
+        }
+
         _downloadHandler = Connect(_session, "download-started", (delegate* unmanaged<nint, nint, nint, void>)&OnDownloadStarted, self);
         _content = WebKit.webkit_user_content_manager_new();
         if (WebKit.webkit_user_content_manager_register_script_message_handler(_content, ScriptBridge.Handler, ScriptBridge.World) == 0)
@@ -116,7 +134,7 @@ internal sealed class BrowserView
             0);
         AddRelay(relay);
 
-        _view = NewView(_session, _content);
+        _view = test ? TestViews.NewView(_session, _content, _context) : NewView(_session, _content);
         var context = WebKit.webkit_web_view_get_context(_view);
         _pages.Register(context);
         SetBackground(background);
@@ -166,8 +184,37 @@ internal sealed class BrowserView
         WebKit.webkit_web_view_set_background_color(_view, &colour);
     }
 
-    /// <summary>Opens the app's page (loop thread).</summary>
-    public void Load() => WebKit.webkit_web_view_load_uri(_view, SchemeServer.StartUrl);
+    /// <summary>Opens the app's page (loop thread); a test window's page driver sets itself up first.</summary>
+    public void Load()
+    {
+        if (SparTestSession.IsSupported && _source?.BeforeFirstLoad is { } setUp)
+        {
+            _ = LoadAfterAsync(setUp);
+            return;
+        }
+
+        WebKit.webkit_web_view_load_uri(_view, SchemeServer.StartUrl);
+    }
+
+    /// <summary>A test window's first load, once its page driver is set up (loop thread), unless the window closed meanwhile.</summary>
+    private async Task LoadAfterAsync(Func<nint, nint, Task> setUp)
+    {
+        try
+        {
+            await setUp(_view, _content);
+        }
+        catch (Exception exception)
+        {
+            _log.Error("The test window's page driver could not be set up", exception);
+            _fail(AppWindow.StartFailedExitCode, "The test window's page driver could not be set up: " + exception.Message);
+            return;
+        }
+
+        if (_view != 0 && !_ending)
+        {
+            WebKit.webkit_web_view_load_uri(_view, SchemeServer.StartUrl);
+        }
+    }
 
     /// <summary>No recovery from here on (loop thread): an approved close has started.</summary>
     public void EndRecovery() => _ending = true;
@@ -257,6 +304,13 @@ internal sealed class BrowserView
             GLib.g_signal_handler_disconnect(_session, _downloadHandler);
             GLib.g_object_unref(_session);
             _session = 0;
+        }
+
+        if (_context != 0)
+        {
+            // A test window's own web context; the view holds its own reference until the window is destroyed.
+            GLib.g_object_unref(_context);
+            _context = 0;
         }
     }
 

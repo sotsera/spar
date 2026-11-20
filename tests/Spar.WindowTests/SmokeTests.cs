@@ -15,7 +15,7 @@ public sealed class SmokeTests
         await host.ClickAsync("Echo");
 
         await Expect(host.Status).ToHaveTextAsync("Echo: hello");
-        Assert.Equal("https://app.localhost/", host.Page.Url);
+        Assert.Equal(host.Address("/"), host.Page.Url);
         host.AssertClean();
     }
 
@@ -25,7 +25,7 @@ public sealed class SmokeTests
         await using var host = await HostPage.OpenAsync();
 
         Assert.Equal("Window host", await host.Page.TitleAsync());
-        Assert.Equal("https://app.localhost", await host.Page.EvaluateAsync<string>("location.origin"));
+        Assert.Equal(host.Origin, await host.Page.EvaluateAsync<string>("location.origin"));
 
         // The engine runs in a world of its own: the page's scripts can neither see it nor change what it uses.
         Assert.Equal("undefined", await host.Page.EvaluateAsync<string>("typeof globalThis.__sparAutomation"));
