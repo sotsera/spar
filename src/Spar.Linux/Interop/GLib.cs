@@ -193,6 +193,31 @@ internal static unsafe partial class GLib
     [LibraryImport(Gio)]
     public static partial void g_cancellable_cancel(nint cancellable);
 
+    /// <summary>The type name of a GObject instance, such as <c>WebKitGeolocationPermissionRequest</c>; borrowed.</summary>
+    [LibraryImport(Gobject)]
+    public static partial nint g_type_name_from_instance(nint instance);
+
+    /// <summary>
+    /// Opens <paramref name="uri"/> with the desktop's default handler for its scheme (or the OpenURI portal in a
+    /// sandbox). Synchronous: it may spawn a process or call D-Bus, so never on the main loop. <paramref name="context"/>
+    /// may be 0. False with an owned <c>GError</c> on failure.
+    /// </summary>
+    [LibraryImport(Gio, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial int g_app_info_launch_default_for_uri(string uri, nint context, nint* error);
+
+    /// <summary>
+    /// Reads up to <paramref name="count"/> bytes into <paramref name="buffer"/> without blocking the caller's main
+    /// context: the read runs where the stream decides (a worker thread for a stream that cannot poll), and
+    /// <paramref name="callback"/> runs on the caller's thread-default main context. The buffer must outlive it.
+    /// </summary>
+    [LibraryImport(Gio)]
+    public static partial void g_input_stream_read_all_async(
+        nint stream, void* buffer, nuint count, int priority, nint cancellable, delegate* unmanaged<nint, nint, nint, void> callback, nint data);
+
+    /// <summary>The bytes read before the end of the stream or an error; false with an owned <c>GError</c> on failure.</summary>
+    [LibraryImport(Gio)]
+    public static partial int g_input_stream_read_all_finish(nint stream, nint result, nuint* read, nint* error);
+
     /// <summary>The message of a <c>GError</c> (its third field, after the 32-bit domain and code), copied.</summary>
     public static string ErrorMessage(nint error) =>
         error == 0 ? "" : Marshal.PtrToStringUTF8(Marshal.ReadIntPtr(error, 8)) ?? "";

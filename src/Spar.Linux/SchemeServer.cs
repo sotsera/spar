@@ -13,8 +13,9 @@ namespace Spar.Linux;
 /// as the response's type and inside its header set (WebKit otherwise blocks the app's own CSS, scripts and workers), and
 /// the app's <see cref="PagePolicy"/> headers. It runs on the main loop and answers from memory: a file stored in the
 /// executable is handed to WebKit in place (<c>g_bytes_new_static</c>), anything else as a copy; a request that comes
-/// before the page is prepared is held (a reference on it) and answered when it is. Violation reports to
-/// <c>report-uri</c> are answered 204 and not read yet (M1c step 4).
+/// before the page is prepared is held (a reference on it) and answered when it is. A violation report posted to
+/// <c>report-uri</c> is answered 204 at once; within the rate limit its body is read without blocking the loop, at most
+/// <see cref="CspViolationLog.MaxReportBytes"/>, and handed to the <see cref="CspViolationLog"/>, as on Windows.
 /// </summary>
 internal sealed class SchemeServer
 {
@@ -29,12 +30,18 @@ internal sealed class SchemeServer
     private readonly PageResponder _responder;
     private readonly MainLoop _ui;
     private readonly HostLog _log;
+    private readonly CspViolationLog? _violations;
+    private readonly ReportLimiter _reports = new();
     private GCHandle _self;
 
-    public SchemeServer(SparFrontend? frontend, MainLoop ui, HostLog log, SparPageSecurity security, bool development)
+    /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
+    /// <param name="violations">Where reports go; null when the endpoint does not report in this build.</param>
+    public SchemeServer(
+        SparFrontend? frontend, MainLoop ui, HostLog log, SparPageSecurity security, bool development, CspViolationLog? violations)
     {
         _ui = ui;
         _log = log;
+        _violations = violations;
         _responder = new PageResponder(frontend, security, Origin, development);
         if (frontend is null)
         {
@@ -121,6 +128,13 @@ internal sealed class SchemeServer
             return;
         }
 
+        if (method == "POST" && PageResponder.PathOf(uri, Origin) == PagePolicy.ReportPath)
+        {
+            ReadReport(request);
+            Respond(request, NoContent());
+            return;
+        }
+
         if (_responder.IsPrepared)
         {
             Respond(request, Response(uri, method));
@@ -148,16 +162,79 @@ internal sealed class SchemeServer
         }
     }
 
-    private PageResponse Response(string uri, string method)
+    private static PageResponse NoContent() => new(204, "No Content", "text/plain; charset=utf-8", ReadOnlyMemory<byte>.Empty);
+
+    [UnmanagedCallersOnly]
+    private static unsafe void OnReportRead(nint stream, nint result, nint data)
     {
-        var path = PageResponder.PathOf(uri, Origin);
-        if (method == "POST" && path == PagePolicy.ReportPath)
+        var handle = GCHandle.FromIntPtr(data);
+        var read = (ReportRead)handle.Target!;
+        handle.Free();
+        using var scope = read.Server._ui.Enter("report read");
+        try
         {
-            return new PageResponse(204, "No Content", "text/plain; charset=utf-8", ReadOnlyMemory<byte>.Empty);
+            nuint count = 0;
+            nint error = 0;
+            var ok = GLib.g_input_stream_read_all_finish(stream, result, &count, &error) != 0;
+            if (error != 0)
+            {
+                GLib.g_error_free(error);
+            }
+
+            // One byte more than the limit was asked for: a body that fills it is too large, and dropped unread.
+            if (ok && count > 0 && count <= CspViolationLog.MaxReportBytes)
+            {
+                read.Server._violations?.PostReport(new ReadOnlySpan<byte>(read.Buffer, (int)count).ToArray());
+            }
+            else
+            {
+                read.Server._violations?.NoteRefused();
+            }
+        }
+        catch (Exception exception)
+        {
+            read.Server._log.Error("A violation report could not be read", exception);
+        }
+        finally
+        {
+            NativeMemory.Free(read.Buffer);
+            GLib.g_object_unref(stream);
+        }
+    }
+
+    /// <summary>
+    /// A violation report the browser posted to <c>report-uri</c> (loop thread): past the rate limit, without a body, or
+    /// with the endpoint off in this build, it is dropped unread; otherwise its body is read asynchronously into a
+    /// buffer of its own, one byte more than the limit, and parsed and logged off the loop.
+    /// </summary>
+    private unsafe void ReadReport(nint request)
+    {
+        if (_violations is null)
+        {
+            return;
         }
 
-        return _responder.Answer(path, method, notFound => _log.Info($"404 for {Shorten(notFound)}"));
+        if (!_reports.TryTake(System.Diagnostics.Stopwatch.GetTimestamp()))
+        {
+            _violations.NoteRefused();
+            return;
+        }
+
+        var body = WebKit.webkit_uri_scheme_request_get_http_body(request);
+        if (body == 0)
+        {
+            _violations.NoteRefused();
+            return;
+        }
+
+        const int Asked = CspViolationLog.MaxReportBytes + 1;
+        var read = new ReportRead(this, (byte*)NativeMemory.Alloc(Asked));
+        GLib.g_input_stream_read_all_async(
+            body, read.Buffer, Asked, GLib.PriorityDefault, 0, &OnReportRead, GCHandle.ToIntPtr(GCHandle.Alloc(read)));
     }
+
+    private PageResponse Response(string uri, string method) =>
+        _responder.Answer(PageResponder.PathOf(uri, Origin), method, notFound => _log.Info($"404 for {Shorten(notFound)}"));
 
     /// <summary>
     /// Finishes the request with the response: its body as <c>GBytes</c> (in place when it lives in the executable's
@@ -198,4 +275,12 @@ internal sealed class SchemeServer
     }
 
     private static string Shorten(string text) => text.Length <= 200 ? text : string.Concat(text.AsSpan(0, 200), "…");
+
+    /// <summary>One report being read: its native buffer, which the read writes into until its callback runs.</summary>
+    private sealed unsafe class ReportRead(SchemeServer server, byte* buffer)
+    {
+        public SchemeServer Server { get; } = server;
+
+        public byte* Buffer { get; } = buffer;
+    }
 }

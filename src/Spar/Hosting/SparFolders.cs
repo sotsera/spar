@@ -15,6 +15,12 @@ public sealed partial record SparFolders(string DataRoot, string Data, string Lo
     /// <summary><c>DRIVE_REMOTE</c>, what <c>GetDriveTypeW</c> answers for a drive letter mapped to a share.</summary>
     private const uint DriveRemote = 4;
 
+    /// <summary>
+    /// The browser profile's folder under the data root, named after the engine that writes it (decision "The browser
+    /// profile folder per OS"): <c>WebView2</c> on Windows, <c>WebKit</c> on Linux, as the cache's <c>cache/WebKit</c>.
+    /// </summary>
+    internal static string ProfileFolderName => OperatingSystem.IsWindows() ? "WebView2" : "WebKit";
+
     /// <summary>The folders under <paramref name="dataRoot"/>, with the app's own choices applied.</summary>
     public static SparFolders Under(string dataRoot, FolderOptions options)
     {
@@ -24,7 +30,7 @@ public sealed partial record SparFolders(string DataRoot, string Data, string Lo
             options.DataFolder ?? Path.Combine(dataRoot, "data"),
             options.LogsFolder ?? Path.Combine(dataRoot, "logs"),
             Path.Combine(dataRoot, "cache"),
-            options.ProfileFolder ?? Path.Combine(dataRoot, "WebView2"));
+            options.ProfileFolder ?? Path.Combine(dataRoot, ProfileFolderName));
     }
 
     /// <summary>
@@ -47,7 +53,7 @@ public sealed partial record SparFolders(string DataRoot, string Data, string Lo
         Path.Combine(dataRoot, "data"),
         Path.Combine(dataRoot, "logs"),
         Path.Combine(dataRoot, "cache"),
-        Path.Combine(dataRoot, "WebView2"));
+        Path.Combine(dataRoot, ProfileFolderName));
 
     /// <summary>
     /// Why the profile folder the app chose cannot be used, or null when it can (or the app chose none): it must be an
@@ -167,10 +173,11 @@ public sealed class FolderOptions
     }
 
     /// <summary>
-    /// The browser profile (cookies, storage, cache), by default the <c>WebView2</c> folder under the app's per-user
-    /// folder. It must be an absolute path on a local drive: anything else stops the start with a message. Every window
-    /// shares it, and no other app may use it at the same time. Spar checks the folder the browser actually uses, since
-    /// an administrator's policy can move it, and no file grant ever reaches it.
+    /// The browser profile (cookies, storage, cache), by default the folder named after the web engine under the app's
+    /// per-user folder: <c>WebView2</c> on Windows, <c>WebKit</c> on Linux. It must be an absolute path on a local drive:
+    /// anything else stops the start with a message. Every window shares it, and no other app may use it at the same
+    /// time. Spar checks the folder the browser actually uses, since an administrator's policy can move it, and no file
+    /// grant ever reaches it.
     /// </summary>
     public FolderOptions Profile(string path)
     {

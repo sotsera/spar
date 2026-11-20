@@ -106,7 +106,7 @@ public sealed class SparBuilder
                 FolderOptions.DataRoot ?? Path.Combine(root, "data"),
                 FolderOptions.LogsFolder ?? Path.Combine(root, "logs"),
                 Path.Combine(root, "cache"),
-                FolderOptions.ProfileFolder ?? Path.Combine(root, "WebView2"));
+                FolderOptions.ProfileFolder ?? Path.Combine(root, OperatingSystem.IsWindows() ? "WebView2" : "WebKit"));
         }
 
         return ResolvedFolders;

@@ -38,6 +38,7 @@ internal sealed partial class AppWindow
     private readonly bool _automated;
     private readonly string _title;
     private readonly SparFolders _folders;
+    private readonly BrowserProfile _profile;
     private readonly PageHangHook _hangHook;
     private readonly ConcurrentQueue<string>? _promptAnswers;
     private readonly IAppWindowOwner _owner;
@@ -47,6 +48,7 @@ internal sealed partial class AppWindow
     private SchemeServer? _pages;
     private ScriptBridge? _bridge;
     private BrowserView? _view;
+    private CspViolationLog? _violations;
     private PageWatch? _watch;
     private WindowTheme? _theme;
     private GCHandle _self;
@@ -63,6 +65,7 @@ internal sealed partial class AppWindow
         bool automated,
         string title,
         SparFolders folders,
+        BrowserProfile profile,
         PageHangHook hangHook,
         ConcurrentQueue<string>? promptAnswers,
         IAppWindowOwner owner)
@@ -72,6 +75,7 @@ internal sealed partial class AppWindow
         _automated = automated;
         _title = title;
         _folders = folders;
+        _profile = profile;
         _hangHook = hangHook;
         _promptAnswers = promptAnswers;
         _owner = owner;
@@ -112,11 +116,19 @@ internal sealed partial class AppWindow
         var frontend = _app.Catalog.AppAssembly is { } assembly ? SparFrontend.Open(assembly) : null;
         var security = PageSecuritySetup.Resolve(_app, _log.Logger);
         var development = SparDevelopment.IsSupported;
-        _pages = new SchemeServer(frontend, ui, _log, security, development);
+        var endpointReports = PagePolicy.Reports(security.Endpoint, development);
+        var listenerReports = PagePolicy.Reports(security.Listener, development);
+        if (endpointReports || listenerReports)
+        {
+            // The advice only in Development: behind the feature switch, so the trimmer removes it from Production.
+            _violations = new CspViolationLog(_log.Logger, TimeProvider.System, SparDevelopment.IsSupported ? CspAdvice.For : null);
+        }
+
+        _pages = new SchemeServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
         _ = LogPolicyAsync(_pages);
-        _bridge = new ScriptBridge(ui, _log, built, development);
-        _view = new BrowserView(ui, _log, _pages, _bridge, Fail);
-        _view.Create(_folders.Profile, Path.Combine(_folders.Cache, "WebKit"), ScriptBridge.RelayScript(), theme.Background);
+        _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null);
+        _view = new BrowserView(ui, _log, _pages, _bridge, new PageGuard(_log, security), _profile, Fail);
+        _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background);
 
         // The heartbeat follows the view's documents from the first one on, before the services exist.
         _watch = LinuxPageHost.Watch(
@@ -170,7 +182,19 @@ internal sealed partial class AppWindow
         {
             await bridge.StopAsync();
         }
+
+        if (_violations is { } violations)
+        {
+            // What the reports still counted, and the run's totals, before the services and the log go.
+            await violations.DisposeAsync();
+        }
     }
+
+    /// <summary>
+    /// The browser's cache folder, passed to the network session explicitly beside its data folder (the profile):
+    /// <c>cache/WebKit</c> under the data root, named after the engine as the profile is.
+    /// </summary>
+    internal static string CacheFolder(SparFolders folders) => Path.Combine(folders.Cache, "WebKit");
 
     /// <summary>
     /// Once the main loop has ended and nothing can call back: the handles native callbacks found this window, its view
@@ -253,22 +277,26 @@ internal sealed partial class AppWindow
 
     /// <summary>
     /// After the window is destroyed: the main loop keeps running until the WebKit processes have exited (plan section
-    /// 3, "Threading"), polled off the loop, for at most <see cref="WebProcessExitMilliseconds"/>.
+    /// 3, "Threading"), polled off the loop, for at most <see cref="WebProcessExitMilliseconds"/>. A web process still
+    /// there then has no window left to serve: WebKit keeps the one it started for a navigation that never committed
+    /// (the window sent to an address declared for frames, which the lock stopped), and the app then took about 10 s
+    /// more to end, with SIGABRT (M1c step 4). Such web processes are ended, and the network process, which holds the
+    /// stored data, is waited for again; it is never ended here.
     /// </summary>
     private async Task WaitForWebProcessesAsync()
     {
         var started = Stopwatch.GetTimestamp();
-        var self = Environment.ProcessId;
-        List<(int Id, string Name)> left;
-        while (true)
+        var left = await WaitForExitAsync(started);
+        var pages = left.Where(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal)).ToList();
+        if (pages.Count > 0)
         {
-            left = await Task.Run(() => WebProcesses.Below(self));
-            if (left.Count == 0 || Stopwatch.GetElapsedTime(started).TotalMilliseconds >= WebProcessExitMilliseconds)
+            foreach (var (id, _) in pages)
             {
-                break;
+                _ = Libc.Kill(id, Libc.SigKill);
             }
 
-            await Task.Delay(WebProcessPollMilliseconds);
+            _log.Warn($"Web processes still running after {Stopwatch.GetElapsedTime(started).TotalMilliseconds:0} ms with no window left: {Names(pages)}; ended.");
+            left = await WaitForExitAsync(Stopwatch.GetTimestamp());
         }
 
         var waited = Stopwatch.GetElapsedTime(started).TotalMilliseconds;
@@ -278,7 +306,25 @@ internal sealed partial class AppWindow
         }
         else
         {
-            _log.Warn($"Web processes still running after {waited:0} ms: {string.Join(", ", left.Select(p => $"{p.Name} {p.Id}"))}.");
+            _log.Warn($"WebKit processes still running after {waited:0} ms: {Names(left)}.");
+        }
+
+        static string Names(List<(int Id, string Name)> processes) => string.Join(", ", processes.Select(p => $"{p.Name} {p.Id}"));
+    }
+
+    /// <summary>The app's WebKit processes still there when they have all exited or the wait is over.</summary>
+    private static async Task<List<(int Id, string Name)>> WaitForExitAsync(long started)
+    {
+        var self = Environment.ProcessId;
+        while (true)
+        {
+            var left = await Task.Run(() => WebProcesses.Below(self));
+            if (left.Count == 0 || Stopwatch.GetElapsedTime(started).TotalMilliseconds >= WebProcessExitMilliseconds)
+            {
+                return left;
+            }
+
+            await Task.Delay(WebProcessPollMilliseconds);
         }
     }
 

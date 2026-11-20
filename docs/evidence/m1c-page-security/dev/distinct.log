@@ -1,0 +1,146 @@
+2026-11-20T08:45:39.135Z INFO  Spar.Host  [625f4555] Host started 28 ms after the process.
+2026-11-20T08:45:39.135Z INFO  Spar.Host  [625f4555] App id com.example.tests.BridgeProbe.Development, folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/0d766579cdab/data/com.example.tests.BridgeProbe.Development
+2026-11-20T08:45:39.141Z INFO  Spar.Host  [625f4555] single instance at 18.7 ms
+2026-11-20T08:45:39.157Z INFO  Spar.Host  [625f4555] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T08:45:39.163Z INFO  Spar.Host  [625f4555] Sandbox trial: bwrap exit 0 in 3.5 ms.
+2026-11-20T08:45:39.163Z INFO  Spar.Host  [625f4555] prerequisites checked at 42.9 ms
+2026-11-20T08:45:39.167Z INFO  Spar.Host  [625f4555] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.8 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T08:45:39.167Z INFO  Spar.Host  [625f4555] gpu checked at 47 ms
+2026-11-20T08:45:39.170Z INFO  Spar.Host  [625f4555] theme read at 50 ms
+2026-11-20T08:45:39.187Z INFO  Spar.Host  [625f4555] services built at 67.4 ms
+2026-11-20T08:45:39.200Z INFO  Spar.Host  [625f4555] gtk ready at 80 ms
+2026-11-20T08:45:39.201Z INFO  Spar.Host  [625f4555] UI-thread stall probe on.
+2026-11-20T08:45:39.218Z INFO  Spar.Host  [625f4555] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T08:45:39.222Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T08:45:39.227Z INFO  Spar.Host  [625f4555] Browser data folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/0d766579cdab/data/com.example.tests.BridgeProbe.Development/WebKit, cache /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/0d766579cdab/data/com.example.tests.BridgeProbe.Development/cache/WebKit
+2026-11-20T08:45:39.231Z INFO  Spar.Host  [625f4555] web view created at 110.7 ms
+2026-11-20T08:45:39.231Z INFO  Spar.Host  [625f4555] Heartbeat every 5000 ms.
+2026-11-20T08:45:39.243Z INFO  Spar.Host  [625f4555] window shown at 123.2 ms
+2026-11-20T08:45:39.247Z INFO  Spar.Host  [625f4555] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-psBzrIMh39SiUss7dt4j0Yx5JLTZn/T3cYdTgFRIxsc=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-/Tb2UtsWQf9dyUHbhFbEBwwublB7KqmKLlvhTU54410='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T08:45:39.247Z INFO  Spar.Host  [625f4555] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T08:45:39.292Z INFO  Spar.Host  [625f4555] page committed at 171.7 ms
+2026-11-20T08:45:39.292Z INFO  Spar.Host  [625f4555] Bridge: document bb247074b3f4ca22 opened.
+2026-11-20T08:45:39.292Z INFO  Spar.Host  [625f4555] Heartbeat armed for the new document.
+2026-11-20T08:45:39.302Z INFO  Spar.Host  [625f4555] first bridge message at 181.6 ms
+2026-11-20T08:45:39.308Z INFO  Spar.Host  [625f4555] first bridge reply at 188.5 ms
+2026-11-20T08:45:39.320Z INFO  Spar.Host  [625f4555] ui-ready at 200.1 ms
+2026-11-20T08:45:39.320Z INFO  Spar.Host  [625f4555] Bridge: document bb247074b3f4ca22 reported ui-ready.
+2026-11-20T08:45:39.321Z INFO  BridgeProbe.ProbeService  probe note: first document bb247074b3f4ca22
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/0.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/1.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/2.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/3.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/4.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/5.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/6.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/7.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/8.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/9.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/10.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/11.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/12.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/13.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/14.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/15.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/16.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/17.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/18.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.328Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/19.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/20.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/21.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/22.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/23.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/24.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/25.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/26.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/27.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/28.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/29.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/30.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/31.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/32.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/33.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/34.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/35.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/36.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/37.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/38.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/39.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/40.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/41.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/42.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/43.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/44.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/45.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/46.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/47.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/48.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/49.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/50.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/51.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/52.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/53.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/54.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/55.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/56.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/57.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/58.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/59.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/60.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/61.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/62.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/63.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/64.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/65.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/66.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/67.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/68.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/69.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.499Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/70.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/71.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/72.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/73.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/74.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/75.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/76.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/77.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/78.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/79.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/80.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/81.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/82.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/83.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/84.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/85.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/86.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/87.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/88.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/89.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/90.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/91.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/92.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/93.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/94.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/95.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/96.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/97.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/98.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/99.png at spar://app/assets/index-D5FWBdnh.js:1:3919 Allow it with csp.ImgSrc("https://blocked.invalid").
+2026-11-20T08:45:39.500Z INFO  Spar.Host  Content Security Policy: the page raised so many violations that Spar's listener stopped counting them in this document; report-uri still reports, rate-limited
+2026-11-20T08:45:42.382Z INFO  BridgeProbe.ProbeService  probe note: distinct: raised 2000 in 57.0 ms
+2026-11-20T08:45:42.383Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T08:45:42.388Z INFO  Spar.Host  [625f4555] close requested (User) at 3267.6 ms
+2026-11-20T08:45:42.389Z INFO  Spar.Host  [625f4555] close request 1 sent to the page (user) at 3269.1 ms
+2026-11-20T08:45:42.393Z INFO  Spar.Host  [625f4555] close request 1: the page answered Close at 3273 ms
+2026-11-20T08:45:42.396Z INFO  Spar.Host  [625f4555] closing at 3276 ms
+2026-11-20T08:45:42.396Z INFO  Spar.Host  [625f4555] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T08:45:42.397Z INFO  Spar.Host  [625f4555] page close work done at 3277.5 ms
+2026-11-20T08:45:42.398Z INFO  Spar.Host  [625f4555] Bridge: document bb247074b3f4ca22 closed (window closing).
+2026-11-20T08:45:42.398Z INFO  Spar.Host  [625f4555] calls stopped at 3278.2 ms
+2026-11-20T08:45:42.398Z INFO  Spar.Host  [625f4555] calls settled at 3278.3 ms
+2026-11-20T08:45:42.400Z INFO  Spar.Host  [625f4555] window destroyed at 3280.3 ms
+2026-11-20T08:45:42.430Z INFO  Spar.Host  [625f4555] web processes exited after 29 ms at 3309.9 ms
+2026-11-20T08:45:42.433Z INFO  Spar.Host  Content Security Policy violations in the last 3.1 s: past the group limit: 900
+2026-11-20T08:45:42.433Z INFO  Spar.Host  Content Security Policy reports in this run: 1 listener batches, 20 report-uri reports read, 1980 refused unread (rate or size), 0 dropped (queue full)
+2026-11-20T08:45:42.434Z INFO  Spar.Host  [625f4555] services disposed at 3313.9 ms
+2026-11-20T08:45:42.434Z INFO  Spar.Host  [625f4555] exit 0 at 3314.5 ms

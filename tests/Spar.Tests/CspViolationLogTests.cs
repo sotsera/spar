@@ -60,6 +60,21 @@ public sealed class CspViolationLogTests : IAsyncLifetime
     }
 
     [Fact]
+    public void Without_a_source_file_the_channels_positions_do_not_split_one_violation()
+    {
+        // WebKitGTK's event says line 1, column 1 for a violation of the document itself; its report names no position.
+        _violations.Batch("doc-1", Encoding.UTF8.GetBytes(
+            "{\"groups\":[{\"directive\":\"style-src-attr\",\"blocked\":\"inline\",\"source\":\"\",\"line\":1,\"column\":1,\"sample\":\"\",\"count\":1}],\"overflow\":0}"));
+        _violations.Report(
+            "{\"csp-report\":{\"document-uri\":\"spar://app/\",\"effective-directive\":\"style-src-attr\",\"blocked-uri\":\"inline\",\"status-code\":0}}"u8);
+        _violations.Summarize();
+
+        Assert.Equal(
+            [(LogLevel.Warning, "Content Security Policy: style-src-attr blocked inline at the page")],
+            _log.Entries.Select(e => (e.Level, e.Message)));
+    }
+
+    [Fact]
     public void What_only_report_uri_sees_is_still_logged_and_counted()
     {
         for (var i = 0; i < 4; i++)

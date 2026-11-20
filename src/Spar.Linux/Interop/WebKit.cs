@@ -18,6 +18,21 @@ internal static unsafe partial class WebKit
     /// <summary><c>SOUP_MESSAGE_HEADERS_RESPONSE</c>.</summary>
     public const int SoupHeadersResponse = 1;
 
+    /// <summary><c>WEBKIT_POLICY_DECISION_TYPE_NAVIGATION_ACTION</c>: a document of the main frame or of a frame.</summary>
+    public const int PolicyNavigation = 0;
+
+    /// <summary><c>WEBKIT_POLICY_DECISION_TYPE_NEW_WINDOW_ACTION</c>.</summary>
+    public const int PolicyNewWindow = 1;
+
+    /// <summary><c>WEBKIT_POLICY_DECISION_TYPE_RESPONSE</c>.</summary>
+    public const int PolicyResponse = 2;
+
+    /// <summary><c>WEBKIT_PERMISSION_STATE_DENIED</c>.</summary>
+    public const int PermissionDenied = 1;
+
+    /// <summary><c>WEBKIT_PERMISSION_STATE_PROMPT</c>.</summary>
+    public const int PermissionPrompt = 2;
+
     private const string Library = "libwebkitgtk-6.0.so.4";
     private const string Jsc = "libjavascriptcoregtk-6.0.so.1";
     private const string Soup = "libsoup-3.0.so.0";
@@ -130,6 +145,10 @@ internal static unsafe partial class WebKit
     [LibraryImport(Library)]
     public static partial void webkit_web_view_reload(nint view);
 
+    /// <summary>Stops the view's current load; <c>load-failed</c> follows with a cancellation, and the document stays.</summary>
+    [LibraryImport(Library)]
+    public static partial void webkit_web_view_stop_loading(nint view);
+
     /// <summary>Borrowed UTF-8, or 0 before the first load.</summary>
     [LibraryImport(Library)]
     public static partial nint webkit_web_view_get_uri(nint view);
@@ -155,6 +174,84 @@ internal static unsafe partial class WebKit
     /// </summary>
     [LibraryImport(Library)]
     public static partial int webkit_web_view_get_is_web_process_responsive(nint view);
+
+    /// <summary>The session's data manager; borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_network_session_get_website_data_manager(nint session);
+
+    /// <summary>The folder the manager keeps its data in; borrowed UTF-8, or 0 for an ephemeral one.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_website_data_manager_get_base_data_directory(nint manager);
+
+    /// <summary>The folder the manager keeps its caches in; borrowed UTF-8, or 0 for an ephemeral one.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_website_data_manager_get_base_cache_directory(nint manager);
+
+    /// <summary>A request's body as a stream the caller owns (<see cref="GLib.g_object_unref"/>), or 0 when it has none.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_uri_scheme_request_get_http_body(nint request);
+
+    /// <summary>The navigation of a navigation or new-window decision; borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_navigation_policy_decision_get_navigation_action(nint decision);
+
+    /// <summary>The navigation's request; borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_navigation_action_get_request(nint action);
+
+    /// <summary>Whether a person's input started the navigation (a <c>gboolean</c>).</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_navigation_action_is_user_gesture(nint action);
+
+    /// <summary>Whether the navigation follows a redirect (a <c>gboolean</c>).</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_navigation_action_is_redirect(nint action);
+
+    /// <summary><c>WebKitNavigationType</c>: 0 link, 1 form, 2 back or forward, 3 reload, 4 form again, 5 other.</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_navigation_action_get_navigation_type(nint action);
+
+    /// <summary>Borrowed UTF-8.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_uri_request_get_uri(nint request);
+
+    /// <summary>Answers a policy decision: the navigation, window or response does not happen.</summary>
+    [LibraryImport(Library)]
+    public static partial void webkit_policy_decision_ignore(nint decision);
+
+    /// <summary>A response decision's request; borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_response_policy_decision_get_request(nint decision);
+
+    /// <summary>Whether the response is the main frame's document (a <c>gboolean</c>).</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_response_policy_decision_is_main_frame_main_resource(nint decision);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_permission_request_allow(nint request);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_permission_request_deny(nint request);
+
+    /// <summary>For a <c>WebKitUserMediaPermissionRequest</c>: whether it asks for a microphone (a <c>gboolean</c>).</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_user_media_permission_is_for_audio_device(nint request);
+
+    /// <summary>For a <c>WebKitUserMediaPermissionRequest</c>: whether it asks for a camera (a <c>gboolean</c>).</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_user_media_permission_is_for_video_device(nint request);
+
+    /// <summary>For a <c>WebKitUserMediaPermissionRequest</c>: whether it asks to capture a screen or window (2.34).</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_user_media_permission_is_for_display_device(nint request);
+
+    /// <summary>The feature a <c>navigator.permissions.query</c> asks about (<c>"geolocation"</c>, …); borrowed UTF-8.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_permission_state_query_get_name(nint query);
+
+    /// <summary>Answers a permission query with a <c>WebKitPermissionState</c>: 0 granted, 1 denied, 2 prompt.</summary>
+    [LibraryImport(Library)]
+    public static partial void webkit_permission_state_query_finish(nint query, int state);
 
     [LibraryImport(Jsc)]
     public static partial int jsc_value_is_string(nint value);

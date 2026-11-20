@@ -61,6 +61,88 @@ const sparRelay = (() => {
     return true;
   };
 
+  // The Content Security Policy listener (plan section 3b, "Violations become diagnostics"), the Windows script's with
+  // the same flood limits, written in by the host: violations grouped by directive, blocked address and source location,
+  // at most one `csp` message per interval, a bounded number of groups per document, and after a bounded number of
+  // violations it stops listening, since the engine dispatches an event per violation only while a listener exists.
+  // It sits on the window, capturing, from document start, so it comes before any listener of the page. Violations in
+  // workers raise no event on WebKitGTK and send no report (spikes/linux-gpu-csp): nothing here can see them.
+  if (__SPAR_REPORT_VIOLATIONS__) {
+    const intervalMs = __SPAR_REPORT_INTERVAL_MS__;
+    const firstDelayMs = __SPAR_REPORT_FIRST_DELAY_MS__;
+    const maxGroups = __SPAR_REPORT_MAX_GROUPS__;
+    const maxViolations = __SPAR_REPORT_MAX_VIOLATIONS__;
+    const maxText = 256;
+    const maxSample = 40;
+    const header = "{\"type\":\"csp\"}\t";
+    const now = performance.now.bind(performance);
+    const seen = new Set();
+    let pending = new Map();
+    let overflow = 0;
+    let counted = 0;
+    let stopped = false;
+    let timer = false;
+    let lastPost = -Infinity;
+
+    const text = (value, limit) => {
+      const string = typeof value === "string" ? value : "";
+      return string.length <= limit ? string : string.slice(0, limit);
+    };
+
+    const flush = () => {
+      timer = false;
+      lastPost = now();
+      const groups = Array.from(pending.values());
+      const message = JSON.stringify(stopped ? { groups, overflow, stopped } : { groups, overflow });
+      pending = new Map();
+      overflow = 0;
+      post(header + message);
+    };
+
+    const schedule = () => {
+      if (timer) {
+        return;
+      }
+
+      timer = true;
+      const wait = lastPost + intervalMs - now();
+      setTimeout(flush, wait > firstDelayMs ? wait : firstDelayMs);
+    };
+
+    const onViolation = event => {
+      if (stopped) {
+        return;
+      }
+
+      if (++counted > maxViolations) {
+        stopped = true;
+        page.removeEventListener("securitypolicyviolation", onViolation, true);
+        schedule();
+        return;
+      }
+
+      const directive = text(event.effectiveDirective, maxText);
+      const blocked = text(event.blockedURI, maxText);
+      const source = text(event.sourceFile, maxText);
+      const line = event.lineNumber > 0 ? event.lineNumber : 0;
+      const column = event.columnNumber > 0 ? event.columnNumber : 0;
+      const key = directive + "\n" + blocked + "\n" + source + ":" + line + ":" + column;
+      const group = pending.get(key);
+      if (group !== undefined) {
+        group.count++;
+      } else if (seen.has(key) || seen.size < maxGroups) {
+        seen.add(key);
+        pending.set(key, { directive, blocked, source, line, column, sample: text(event.sample, maxSample), count: 1 });
+      } else {
+        overflow++;
+      }
+
+      schedule();
+    };
+
+    page.addEventListener("securitypolicyviolation", onViolation, true);
+  }
+
   page.addEventListener("spar:send", event => {
     const message = event.detail;
     if (typeof message === "string") {

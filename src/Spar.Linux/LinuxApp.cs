@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using Microsoft.Extensions.DependencyInjection;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Logging;
@@ -35,6 +36,9 @@ internal sealed class LinuxApp : IAppWindowOwner
     private readonly RelaunchQueue _relaunches;
     private readonly PageHangHook _hangHook;
 
+    /// <summary>The browser data folders no file grant may reach, with the one in use once the network session exists.</summary>
+    private readonly BrowserProfile _profile;
+
     /// <summary>A Development build's scripted answers to the prompts; null in Production, where the person answers.</summary>
     private readonly ConcurrentQueue<string>? _promptAnswers;
     private LogLevels? _levels;
@@ -59,6 +63,7 @@ internal sealed class LinuxApp : IAppWindowOwner
         _folders = app.Builder.ResolveFolders();
         _relaunches = new RelaunchQueue(app.Builder.RelaunchHandler, _log.Logger);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
+        _profile = new BrowserProfile(_folders.Profile);
         _promptAnswers = SparDevelopment.IsSupported ? DevelopmentTriggers.PromptAnswers() : null;
     }
 
@@ -168,7 +173,7 @@ internal sealed class LinuxApp : IAppWindowOwner
         _log.Phase("theme read");
 
         var built = Task.Run(Build);
-        _window = new AppWindow(_app, _log, _automated, _title, _folders, _hangHook, _promptAnswers, this);
+        _window = new AppWindow(_app, _log, _automated, _title, _folders, _profile, _hangHook, _promptAnswers, this);
         var started = false;
         MainLoop.Run(_window.Report, ui => started = Start(ui, theme, built));
 
@@ -269,6 +274,12 @@ internal sealed class LinuxApp : IAppWindowOwner
     /// </summary>
     private string? CreateProfileFolder()
     {
+        // An absolute path on a local drive, as on Windows (spar.Folders(f => f.Profile(…))).
+        if (SparFolders.ProfileProblem(_app.Builder.FolderOptions.ProfileFolder) is { } problem)
+        {
+            return problem;
+        }
+
         try
         {
             Directory.CreateDirectory(_folders.Profile);
@@ -284,6 +295,9 @@ internal sealed class LinuxApp : IAppWindowOwner
     private SparRunningApp Build()
     {
         var builder = _app.Builder;
+
+        // The browser data folders no file grant may reach, with the folder in use once the network session exists.
+        builder.Services.AddSingleton(_profile);
 
         // The app's loggers write to the file the host opened at its start; the host closes it at process exit.
         Func<LogFile>? file = _log.File is { } opened ? () => opened : null;

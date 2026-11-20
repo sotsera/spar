@@ -4,6 +4,7 @@ import { connectSpar, hostChannel } from "@spar/app/sdk";
 import { fingerprint } from "@spar/app/spar";
 import { probe } from "@spar/app/probe";
 import { windows } from "@spar/app/windows";
+import { securitySteps } from "./security.js";
 
 const status = document.getElementById("status");
 const connection = connectSpar(hostChannel(), fingerprint);
@@ -110,6 +111,8 @@ const steps = {
     await probe.note("guard silent").unwrap();
   },
 };
+
+Object.assign(steps, securitySteps(connection));
 
 // A step may carry one argument after a colon: busy:10000. A reloaded page runs none: a hang would only come back.
 for (const step of reloaded ? [] : plan) {

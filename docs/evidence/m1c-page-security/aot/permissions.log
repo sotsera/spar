@@ -1,0 +1,43 @@
+2026-11-20T08:50:22.880Z INFO  Spar.Host  [78f88899] Host started 8 ms after the process.
+2026-11-20T08:50:22.880Z INFO  Spar.Host  [78f88899] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/efd5be875e36/data/com.example.tests.BridgeProbe
+2026-11-20T08:50:22.881Z INFO  Spar.Host  [78f88899] single instance at 3.1 ms
+2026-11-20T08:50:22.902Z INFO  Spar.Host  [78f88899] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T08:50:22.907Z INFO  Spar.Host  [78f88899] Sandbox trial: bwrap exit 0 in 4.4 ms.
+2026-11-20T08:50:22.907Z INFO  Spar.Host  [78f88899] prerequisites checked at 29.8 ms
+2026-11-20T08:50:22.907Z INFO  Spar.Host  [78f88899] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.1 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T08:50:22.907Z INFO  Spar.Host  [78f88899] gpu checked at 30 ms
+2026-11-20T08:50:22.909Z INFO  Spar.Host  [78f88899] theme read at 31.9 ms
+2026-11-20T08:50:22.911Z INFO  Spar.Host  [78f88899] services built at 33.1 ms
+2026-11-20T08:50:22.953Z INFO  Spar.Host  [78f88899] gtk ready at 75.5 ms
+2026-11-20T08:50:22.971Z INFO  Spar.Host  [78f88899] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T08:50:22.971Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T08:50:22.973Z INFO  Spar.Host  [78f88899] Browser data folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/efd5be875e36/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/efd5be875e36/data/com.example.tests.BridgeProbe/cache/WebKit
+2026-11-20T08:50:22.975Z INFO  Spar.Host  [78f88899] web view created at 97.4 ms
+2026-11-20T08:50:22.975Z INFO  Spar.Host  [78f88899] Heartbeat every 5000 ms.
+2026-11-20T08:50:22.991Z INFO  Spar.Host  [78f88899] window shown at 113.1 ms
+2026-11-20T08:50:22.993Z INFO  Spar.Host  [78f88899] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-psBzrIMh39SiUss7dt4j0Yx5JLTZn/T3cYdTgFRIxsc=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-/Tb2UtsWQf9dyUHbhFbEBwwublB7KqmKLlvhTU54410='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T08:50:22.993Z INFO  Spar.Host  [78f88899] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T08:50:23.077Z INFO  Spar.Host  [78f88899] page committed at 199.6 ms
+2026-11-20T08:50:23.077Z INFO  Spar.Host  [78f88899] Bridge: document 9f5e22caa2f113bd opened.
+2026-11-20T08:50:23.077Z INFO  Spar.Host  [78f88899] Heartbeat armed for the new document.
+2026-11-20T08:50:23.094Z INFO  Spar.Host  [78f88899] first bridge message at 217 ms
+2026-11-20T08:50:23.099Z INFO  Spar.Host  [78f88899] first bridge reply at 221.6 ms
+2026-11-20T08:50:23.104Z INFO  Spar.Host  [78f88899] ui-ready at 226.1 ms
+2026-11-20T08:50:23.104Z INFO  Spar.Host  [78f88899] Bridge: document 9f5e22caa2f113bd reported ui-ready.
+2026-11-20T08:50:23.104Z INFO  BridgeProbe.ProbeService  probe note: first document 9f5e22caa2f113bd
+2026-11-20T08:50:23.105Z INFO  Spar.Host  [78f88899] Permission request for geolocation from spar://app/: granted (declared); later requests of this kind are not logged.
+2026-11-20T08:50:23.186Z INFO  BridgeProbe.ProbeService  probe note: permissions: {"geolocation":"error 2","notifications":"denied","devices":"0 listed, labels hidden","clipboard":"refused (NotAllowedError)","query geolocation":"granted","query notifications":"prompt","query camera":"prompt","query microphone":"prompt","query clipboard-read":"threw TypeError"}
+2026-11-20T08:50:23.187Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T08:50:23.205Z INFO  Spar.Host  [78f88899] close requested (User) at 327.7 ms
+2026-11-20T08:50:23.205Z INFO  Spar.Host  [78f88899] close request 1 sent to the page (user) at 327.9 ms
+2026-11-20T08:50:23.208Z INFO  Spar.Host  [78f88899] close request 1: the page answered Close at 330.6 ms
+2026-11-20T08:50:23.208Z INFO  Spar.Host  [78f88899] closing at 331 ms
+2026-11-20T08:50:23.209Z INFO  Spar.Host  [78f88899] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T08:50:23.209Z INFO  Spar.Host  [78f88899] page close work done at 332 ms
+2026-11-20T08:50:23.210Z INFO  Spar.Host  [78f88899] Bridge: document 9f5e22caa2f113bd closed (window closing).
+2026-11-20T08:50:23.210Z INFO  Spar.Host  [78f88899] calls stopped at 332.1 ms
+2026-11-20T08:50:23.210Z INFO  Spar.Host  [78f88899] calls settled at 332.2 ms
+2026-11-20T08:50:23.211Z INFO  Spar.Host  [78f88899] window destroyed at 333.8 ms
+2026-11-20T08:50:23.239Z INFO  Spar.Host  [78f88899] web processes exited after 27 ms at 361.2 ms
+2026-11-20T08:50:23.239Z INFO  Spar.Host  [78f88899] services disposed at 361.7 ms
+2026-11-20T08:50:23.239Z INFO  Spar.Host  [78f88899] exit 0 at 361.9 ms

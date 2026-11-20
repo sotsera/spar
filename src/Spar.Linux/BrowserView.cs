@@ -28,6 +28,8 @@ internal sealed class BrowserView
     private readonly HostLog _log;
     private readonly SchemeServer _pages;
     private readonly ScriptBridge _bridge;
+    private readonly PageGuard _guard;
+    private readonly BrowserProfile _profile;
     private readonly Action<int, string> _fail;
     private GCHandle _self;
     private nint _view;
@@ -37,17 +39,25 @@ internal sealed class BrowserView
     private nuint _loadHandler;
     private nuint _terminatedHandler;
     private nuint _responsiveHandler;
+    private nuint _policyHandler;
+    private nuint _permissionHandler;
+    private nuint _queryHandler;
+    private nint _input;
+    private nuint _inputHandler;
     private bool _ending;
     private bool _reloadUsed;
     private bool _reloadAfterTermination;
 
     /// <param name="fail">An unrecoverable failure: the exit code and a message.</param>
-    public BrowserView(MainLoop ui, HostLog log, SchemeServer pages, ScriptBridge bridge, Action<int, string> fail)
+    public BrowserView(
+        MainLoop ui, HostLog log, SchemeServer pages, ScriptBridge bridge, PageGuard guard, BrowserProfile profile, Action<int, string> fail)
     {
         _ui = ui;
         _log = log;
         _pages = pages;
         _bridge = bridge;
+        _guard = guard;
+        _profile = profile;
         _fail = fail;
         bridge.DocumentReady += () => _reloadUsed = false;
     }
@@ -66,14 +76,17 @@ internal sealed class BrowserView
     public nint Handle => _view;
 
     /// <summary>
-    /// Creates the network session, the content manager with the relay, and the view over both, and registers the
-    /// scheme on the view's context (loop thread). The view is not loading yet: the window attaches it first.
+    /// Creates the network session over the app's own data and cache folders, passed explicitly (plan section 3,
+    /// "Data folders"), the content manager with the relay, and the view over both; registers the scheme on the view's
+    /// context and connects the navigation lock and the permission gate (<see cref="PageGuard"/>) before the view loads
+    /// anything (loop thread). The view is not loading yet: the window attaches it first.
     /// </summary>
     public unsafe void Create(string dataFolder, string cacheFolder, string relay, SparColor background)
     {
         _self = GCHandle.Alloc(this);
         var self = GCHandle.ToIntPtr(_self);
         _session = WebKit.webkit_network_session_new(dataFolder, cacheFolder);
+        CheckFolders(dataFolder, cacheFolder);
         _content = WebKit.webkit_user_content_manager_new();
         if (WebKit.webkit_user_content_manager_register_script_message_handler(_content, ScriptBridge.Handler, ScriptBridge.World) == 0)
         {
@@ -90,7 +103,8 @@ internal sealed class BrowserView
         AddRelay(relay);
 
         _view = NewView(_session, _content);
-        _pages.Register(WebKit.webkit_web_view_get_context(_view));
+        var context = WebKit.webkit_web_view_get_context(_view);
+        _pages.Register(context);
         SetBackground(background);
         _loadHandler = GLib.g_signal_connect_data(
             _view, "load-changed", (delegate* unmanaged<nint, int, nint, void>)&OnLoadChanged, self, 0, 0);
@@ -98,6 +112,18 @@ internal sealed class BrowserView
             _view, "web-process-terminated", (delegate* unmanaged<nint, int, nint, void>)&OnWebProcessTerminated, self, 0, 0);
         _responsiveHandler = GLib.g_signal_connect_data(
             _view, "notify::is-web-process-responsive", (delegate* unmanaged<nint, nint, nint, void>)&OnResponsiveChanged, self, 0, 0);
+        _policyHandler = GLib.g_signal_connect_data(
+            _view, "decide-policy", (delegate* unmanaged<nint, nint, int, nint, int>)&OnDecidePolicy, self, 0, 0);
+        _permissionHandler = GLib.g_signal_connect_data(
+            _view, "permission-request", (delegate* unmanaged<nint, nint, nint, int>)&OnPermissionRequest, self, 0, 0);
+        _queryHandler = GLib.g_signal_connect_data(
+            _view, "query-permission-state", (delegate* unmanaged<nint, nint, nint, int>)&OnPermissionQuery, self, 0, 0);
+
+        // Real input on the view, seen before WebKit handles it: only a recent one lets a new window open outside.
+        _input = Gtk.gtk_event_controller_legacy_new();
+        Gtk.gtk_event_controller_set_propagation_phase(_input, 1);
+        _inputHandler = GLib.g_signal_connect_data(_input, "event", (delegate* unmanaged<nint, nint, nint, int>)&OnInputEvent, self, 0, 0);
+        Gtk.gtk_widget_add_controller(_view, _input);
         _bridge.Attach(_view);
         _log.Phase("web view created");
     }
@@ -191,6 +217,10 @@ internal sealed class BrowserView
             GLib.g_signal_handler_disconnect(_view, _loadHandler);
             GLib.g_signal_handler_disconnect(_view, _terminatedHandler);
             GLib.g_signal_handler_disconnect(_view, _responsiveHandler);
+            GLib.g_signal_handler_disconnect(_view, _policyHandler);
+            GLib.g_signal_handler_disconnect(_view, _permissionHandler);
+            GLib.g_signal_handler_disconnect(_view, _queryHandler);
+            GLib.g_signal_handler_disconnect(_input, _inputHandler);
             _bridge.Detach("window closing");
             _view = 0;
         }
@@ -249,6 +279,30 @@ internal sealed class BrowserView
     }
 
     /// <summary>
+    /// The folders the session actually uses (plan section 3c), read back from its data manager: they are recorded in
+    /// <see cref="BrowserProfile"/>, the folders no file grant may reach, and a moved one is logged, as on Windows.
+    /// </summary>
+    private void CheckFolders(string dataFolder, string cacheFolder)
+    {
+        var manager = WebKit.webkit_network_session_get_website_data_manager(_session);
+        var data = Marshal.PtrToStringUTF8(WebKit.webkit_website_data_manager_get_base_data_directory(manager)) ?? "";
+        var cache = Marshal.PtrToStringUTF8(WebKit.webkit_website_data_manager_get_base_cache_directory(manager)) ?? "";
+        if (data.Length == 0 || cache.Length == 0)
+        {
+            _log.Warn("The browser's network session reports no data or cache folder: it may keep nothing on disk.");
+            return;
+        }
+
+        if (_profile.RecordInUse(data) || !BrowserProfile.SameFolder(cache, cacheFolder))
+        {
+            _log.Warn($"Browser data folders differ from the ones Spar passed ({dataFolder}, {cacheFolder}): data {data}, cache {cache}");
+            return;
+        }
+
+        _log.Info($"Browser data folder {data}, cache {cache}");
+    }
+
+    /// <summary>
     /// The relay, at document start, in the top frame, in the bridge's world, and only for documents of the app's
     /// origin (the relay checks it again itself).
     /// </summary>
@@ -269,12 +323,32 @@ internal sealed class BrowserView
         switch (loadEvent)
         {
             case LoadStarted:
-                _bridge.OnLoadStarted();
+                // A main-frame load that the lock let through only as an address declared for frames (decide-policy
+                // cannot tell frames apart, and the view still names the old address here) is stopped at its response:
+                // the current document and its bridge stay. Only a load of the app's origin ends the document's epoch.
+                if (!_guard.LastLetThroughWasDeclaredFrame)
+                {
+                    _bridge.OnLoadStarted();
+                }
+                else
+                {
+                    WebKit.webkit_web_view_stop_loading(_view);
+                    _guard.DeclaredFrameStopped();
+                }
+
                 break;
             case LoadCommitted:
                 var address = Marshal.PtrToStringUTF8(WebKit.webkit_web_view_get_uri(_view)) ?? "";
                 _log.Phase("page committed");
                 _bridge.OnLoadCommitted(address);
+                if (!SchemeServer.IsAppOrigin(address) && !_ending)
+                {
+                    // Nothing the lock lets through should commit here; if a document of another origin does, the
+                    // window does not stay on it.
+                    _guard.ForeignDocument(address);
+                    WebKit.webkit_web_view_load_uri(_view, SchemeServer.StartUrl);
+                }
+
                 break;
         }
     }
@@ -337,6 +411,9 @@ internal sealed class BrowserView
         EngineUnresponsive?.Invoke();
     }
 
+    /// <summary>The address of the view's document (loop thread), or empty.</summary>
+    private string CurrentAddress() => _view == 0 ? "" : Marshal.PtrToStringUTF8(WebKit.webkit_web_view_get_uri(_view)) ?? "";
+
     private void Message(nint value)
     {
         if (WebKit.jsc_value_is_string(value) == 0)
@@ -363,6 +440,65 @@ internal sealed class BrowserView
     [UnmanagedCallersOnly]
     private static void OnResponsiveChanged(nint view, nint property, nint data) =>
         Dispatch(data, "web-process-responsive", browser => browser.ResponsiveChanged());
+
+    /// <summary>
+    /// The input controller's <c>event</c> for every event of the view, motion included, so it only notes a press or a
+    /// release of a button, a key or a touch, and never stops one (FALSE): WebKit handles each as before.
+    /// </summary>
+    [UnmanagedCallersOnly]
+    private static int OnInputEvent(nint controller, nint gdkEvent, nint data)
+    {
+        if (Gtk.gdk_event_get_event_type(gdkEvent) is 2 or 3 or 4 or 17 or 19 && GCHandle.FromIntPtr(data).Target is BrowserView browser)
+        {
+            browser._guard.NoteInput();
+        }
+
+        return 0;
+    }
+
+    /// <summary><c>decide-policy</c>: the view, the decision, its type and the user data; TRUE when answered here.</summary>
+    [UnmanagedCallersOnly]
+    private static int OnDecidePolicy(nint view, nint decision, int type, nint data) => Answer(
+        data, "decide-policy", browser => browser._guard.OnDecidePolicy(decision, type), () => WebKit.webkit_policy_decision_ignore(decision));
+
+    /// <summary><c>permission-request</c>: always answered here (TRUE), so WebKit's own default never decides.</summary>
+    [UnmanagedCallersOnly]
+    private static int OnPermissionRequest(nint view, nint request, nint data) => Answer(
+        data,
+        "permission-request",
+        browser => browser._guard.OnPermissionRequest(request, browser.CurrentAddress()),
+        () => WebKit.webkit_permission_request_deny(request));
+
+    /// <summary><c>query-permission-state</c>: answered here (TRUE); WebKit's default, "prompt", only if that fails.</summary>
+    [UnmanagedCallersOnly]
+    private static int OnPermissionQuery(nint view, nint query, nint data) =>
+        Answer(data, "query-permission-state", browser => browser._guard.OnPermissionQuery(query), refuse: null);
+
+    /// <summary>
+    /// Runs a signal's decision in a named scope; nothing unwinds into GLib. A decision that cannot be made fails
+    /// closed: <paramref name="refuse"/> answers it (WebKit ignores a second answer), so a failure never lets a
+    /// navigation or a permission through.
+    /// </summary>
+    private static int Answer(nint data, string name, Func<BrowserView, bool> decide, Action? refuse)
+    {
+        if (GCHandle.FromIntPtr(data).Target is not BrowserView browser)
+        {
+            refuse?.Invoke();
+            return refuse is null ? 0 : 1;
+        }
+
+        using var scope = browser._ui.Enter(name);
+        try
+        {
+            return decide(browser) ? 1 : 0;
+        }
+        catch (Exception exception)
+        {
+            browser._ui.Report(exception);
+            refuse?.Invoke();
+            return refuse is null ? 0 : 1;
+        }
+    }
 
     /// <summary>The bridge's hot path: one call per message, with no delegate made for it.</summary>
     [UnmanagedCallersOnly]

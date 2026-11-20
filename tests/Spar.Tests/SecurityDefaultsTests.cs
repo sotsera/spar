@@ -28,7 +28,8 @@ public sealed class SecurityDefaultsTests
         var defaults = SparFolders.Under(root, new FolderOptions());
         var chosen = SparFolders.Under(root, new FolderOptions().Profile(profile));
 
-        Assert.Equal(Path.Combine(root, "WebView2"), defaults.Profile);
+        // Named after the engine (decision "The browser profile folder per OS").
+        Assert.Equal(Path.Combine(root, OperatingSystem.IsWindows() ? "WebView2" : "WebKit"), defaults.Profile);
         Assert.Equal(Path.Combine(root, "data"), defaults.Data);
         Assert.Equal(Path.Combine(root, "logs"), defaults.Logs);
         Assert.Equal(profile, chosen.Profile);

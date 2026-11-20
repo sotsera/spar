@@ -113,12 +113,126 @@ public sealed class LinuxHostUnitTests
     [Fact]
     public void The_relay_runs_in_its_own_world_and_defines_nothing_on_the_page()
     {
-        var relay = ScriptBridge.RelayScript();
+        var relay = ScriptBridge.RelayScript(reportViolations: true);
 
         Assert.Contains("const sparRelay = (() => {", relay, StringComparison.Ordinal);
         Assert.Contains("location.protocol === \"spar:\" && location.host === \"app\"", relay, StringComparison.Ordinal);
         Assert.DoesNotContain("window.sparRelay", relay, StringComparison.Ordinal);
         Assert.DoesNotContain("eval(", relay, StringComparison.Ordinal);
         Assert.DoesNotContain("Function(", relay, StringComparison.Ordinal);
+        Assert.DoesNotContain("__SPAR_", relay, StringComparison.Ordinal);
+        Assert.Contains("addEventListener(\"securitypolicyviolation\", onViolation, true)", relay, StringComparison.Ordinal);
+        Assert.Contains("if (false)", ScriptBridge.RelayScript(reportViolations: false), StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("spar://app/other.html", true)]
+    [InlineData("about:srcdoc", false)]
+    [InlineData("about:blank", false)]
+    [InlineData("http://127.0.0.1:5000/frame.html", true)]
+    [InlineData("http://127.0.0.1/frame.html", true)]
+    [InlineData("https://127.0.0.1:5000/frame.html", false)]
+    [InlineData("http://localhost:5000/", false)]
+    [InlineData("https://example.com/", false)]
+    [InlineData("spar://other/", false)]
+    [InlineData("data:text/html,x", false)]
+    [InlineData("blob:spar://app/0a1b", false)]
+    [InlineData("file:///etc/hostname", false)]
+    [InlineData("javascript:alert(1)", false)]
+    public void The_lock_lets_through_the_apps_origin_and_the_declared_frames_only(string address, bool allowed)
+    {
+        Assert.Equal(allowed, PageGuard.Allows(address, ["http://127.0.0.1:*"]));
+    }
+
+    [Theory]
+    [InlineData("https://frames.example/a", "https://frames.example", true)]
+    [InlineData("https://frames.example:443/a", "https://frames.example", true)]
+    [InlineData("https://frames.example:8443/a", "https://frames.example", false)]
+    [InlineData("http://frames.example/a", "https://frames.example", false)]
+    [InlineData("https://FRAMES.example/", "https://frames.example", true)]
+    [InlineData("https://a.frames.example/", "https://*.frames.example", true)]
+    [InlineData("https://frames.example/", "https://*.frames.example", false)]
+    [InlineData("https://evilframes.example/", "https://*.frames.example", false)]
+    [InlineData("https://any.example/x", "https:", true)]
+    [InlineData("http://any.example/x", "https:", false)]
+    [InlineData("http://frames.example/", "frames.example", true)]
+    [InlineData("https://frames.example/", "frames.example", true)]
+    [InlineData("https://frames.example/other/page", "https://frames.example/embed/", true)]
+    [InlineData("https://user@frames.example/", "https://frames.example", false)]
+    [InlineData("spar://app/inner.html", "'self'", true)]
+    [InlineData("https://app/inner.html", "'self'", false)]
+    public void A_declared_frame_source_matches_its_scheme_host_and_port(string address, string source, bool matches)
+    {
+        Assert.Equal(matches, NavigationRules.IsDeclaredFrame(address, [source], SchemeServer.Origin));
+    }
+
+    [Theory]
+    [InlineData("https://example.com/docs", null)]
+    [InlineData("mailto:someone@example.com", null)]
+    [InlineData("spar://app/settings", "not 'spar:'")]
+    [InlineData("https://user:secret@example.com/", "credentials")]
+    [InlineData("file:///etc/passwd", "not 'file:'")]
+    public void A_users_click_opens_only_plain_external_addresses_on_Linux_too(string address, string? refusal)
+    {
+        var reason = NavigationRules.ExternalRefusal(address, SchemeServer.Origin);
+
+        if (refusal is null)
+        {
+            Assert.Null(reason);
+        }
+        else
+        {
+            Assert.Contains(refusal, reason, StringComparison.Ordinal);
+        }
+    }
+
+    [Theory]
+    [InlineData("WebKitGeolocationPermissionRequest", false, false, false, "Geolocation", true)]
+    [InlineData("WebKitGeolocationPermissionRequest", false, false, false, "", false)]
+    [InlineData("WebKitUserMediaPermissionRequest", false, true, false, "Camera", true)]
+    [InlineData("WebKitUserMediaPermissionRequest", true, false, false, "Camera", false)]
+    [InlineData("WebKitUserMediaPermissionRequest", true, false, false, "Microphone", true)]
+    [InlineData("WebKitUserMediaPermissionRequest", true, true, false, "Camera", false)]
+    [InlineData("WebKitUserMediaPermissionRequest", true, true, false, "Camera,Microphone", true)]
+    [InlineData("WebKitUserMediaPermissionRequest", false, true, true, "Camera,Microphone", false)]
+    [InlineData("WebKitUserMediaPermissionRequest", false, false, false, "Camera,Microphone", false)]
+    [InlineData("WebKitClipboardPermissionRequest", false, false, false, "ClipboardRead", true)]
+    [InlineData("WebKitClipboardPermissionRequest", false, false, false, "Geolocation", false)]
+    [InlineData("WebKitDeviceInfoPermissionRequest", false, false, false, "Microphone", true)]
+    [InlineData("WebKitDeviceInfoPermissionRequest", false, false, false, "Geolocation", false)]
+    [InlineData("WebKitNotificationPermissionRequest", false, false, false, "Camera,Microphone,Geolocation,ClipboardRead", false)]
+    [InlineData("WebKitPointerLockPermissionRequest", false, false, false, "Camera,Microphone,Geolocation,ClipboardRead", false)]
+    [InlineData("WebKitMediaKeySystemPermissionRequest", false, false, false, "Camera,Microphone,Geolocation,ClipboardRead", false)]
+    [InlineData("WebKitWebsiteDataAccessPermissionRequest", false, false, false, "Camera,Microphone,Geolocation,ClipboardRead", false)]
+    [InlineData("WebKitXRPermissionRequest", false, false, false, "Camera,Microphone,Geolocation,ClipboardRead", false)]
+    [InlineData("WebKitSomethingNewPermissionRequest", false, false, false, "Camera,Microphone,Geolocation,ClipboardRead", false)]
+    public void A_permission_request_is_granted_only_for_what_the_app_declared(
+        string type, bool audio, bool video, bool display, string declared, bool granted)
+    {
+        var permissions = declared.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Enum.Parse<Permission>).ToArray();
+
+        Assert.Equal(granted, PageGuard.Decide(type, audio, video, display, permissions).Granted);
+    }
+
+    [Fact]
+    public void A_permission_query_says_denied_for_everything_not_declared()
+    {
+        Permission[] declared = [Permission.Geolocation];
+
+        Assert.Equal(2, PageGuard.QueryState("geolocation", declared));
+        Assert.Equal(1, PageGuard.QueryState("camera", declared));
+        Assert.Equal(1, PageGuard.QueryState("notifications", declared));
+        Assert.Equal(1, PageGuard.QueryState("midi", declared));
+    }
+
+    [Fact]
+    public void The_browser_profile_folder_is_named_after_the_engine_and_the_cache_sits_beside_it()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "com.example.SqlTool");
+        var folders = SparFolders.Under(root, new FolderOptions());
+
+        Assert.Equal(Path.Combine(root, OperatingSystem.IsWindows() ? "WebView2" : "WebKit"), folders.Profile);
+        Assert.Equal(Path.Combine(root, "cache", "WebKit"), AppWindow.CacheFolder(folders));
+        Assert.Equal("/elsewhere/profile", SparFolders.Under(root, new FolderOptions().Profile("/elsewhere/profile")).Profile);
     }
 }

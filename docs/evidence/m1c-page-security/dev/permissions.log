@@ -1,0 +1,44 @@
+2026-11-20T08:45:42.851Z INFO  Spar.Host  [aa919241] Host started 35 ms after the process.
+2026-11-20T08:45:42.852Z INFO  Spar.Host  [aa919241] App id com.example.tests.BridgeProbe.Development, folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/97d961e2ed2a/data/com.example.tests.BridgeProbe.Development
+2026-11-20T08:45:42.857Z INFO  Spar.Host  [aa919241] single instance at 17.9 ms
+2026-11-20T08:45:42.870Z INFO  Spar.Host  [aa919241] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T08:45:42.876Z INFO  Spar.Host  [aa919241] Sandbox trial: bwrap exit 0 in 3.3 ms.
+2026-11-20T08:45:42.876Z INFO  Spar.Host  [aa919241] prerequisites checked at 39.5 ms
+2026-11-20T08:45:42.880Z INFO  Spar.Host  [aa919241] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T08:45:42.880Z INFO  Spar.Host  [aa919241] gpu checked at 43.9 ms
+2026-11-20T08:45:42.883Z INFO  Spar.Host  [aa919241] theme read at 46.7 ms
+2026-11-20T08:45:42.900Z INFO  Spar.Host  [aa919241] services built at 63.7 ms
+2026-11-20T08:45:42.913Z INFO  Spar.Host  [aa919241] gtk ready at 76.2 ms
+2026-11-20T08:45:42.914Z INFO  Spar.Host  [aa919241] UI-thread stall probe on.
+2026-11-20T08:45:42.930Z INFO  Spar.Host  [aa919241] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T08:45:42.934Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T08:45:42.939Z INFO  Spar.Host  [aa919241] Browser data folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/97d961e2ed2a/data/com.example.tests.BridgeProbe.Development/WebKit, cache /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/97d961e2ed2a/data/com.example.tests.BridgeProbe.Development/cache/WebKit
+2026-11-20T08:45:42.942Z INFO  Spar.Host  [aa919241] web view created at 105.7 ms
+2026-11-20T08:45:42.943Z INFO  Spar.Host  [aa919241] Heartbeat every 5000 ms.
+2026-11-20T08:45:42.953Z INFO  Spar.Host  [aa919241] window shown at 116.6 ms
+2026-11-20T08:45:42.957Z INFO  Spar.Host  [aa919241] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-psBzrIMh39SiUss7dt4j0Yx5JLTZn/T3cYdTgFRIxsc=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-/Tb2UtsWQf9dyUHbhFbEBwwublB7KqmKLlvhTU54410='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T08:45:42.957Z INFO  Spar.Host  [aa919241] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T08:45:43.001Z INFO  Spar.Host  [aa919241] page committed at 164.9 ms
+2026-11-20T08:45:43.002Z INFO  Spar.Host  [aa919241] Bridge: document db3a8c470f8fe59c opened.
+2026-11-20T08:45:43.002Z INFO  Spar.Host  [aa919241] Heartbeat armed for the new document.
+2026-11-20T08:45:43.011Z INFO  Spar.Host  [aa919241] first bridge message at 174.8 ms
+2026-11-20T08:45:43.018Z INFO  Spar.Host  [aa919241] first bridge reply at 181.7 ms
+2026-11-20T08:45:43.030Z INFO  Spar.Host  [aa919241] ui-ready at 193.1 ms
+2026-11-20T08:45:43.030Z INFO  Spar.Host  [aa919241] Bridge: document db3a8c470f8fe59c reported ui-ready.
+2026-11-20T08:45:43.031Z INFO  BridgeProbe.ProbeService  probe note: first document db3a8c470f8fe59c
+2026-11-20T08:45:43.035Z INFO  Spar.Host  [aa919241] Permission request for geolocation from spar://app/: granted (declared); later requests of this kind are not logged.
+2026-11-20T08:45:43.133Z INFO  BridgeProbe.ProbeService  probe note: permissions: {"geolocation":"error 2","notifications":"denied","devices":"0 listed, labels hidden","clipboard":"refused (NotAllowedError)","query geolocation":"granted","query notifications":"prompt","query camera":"prompt","query microphone":"prompt","query clipboard-read":"threw TypeError"}
+2026-11-20T08:45:43.133Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T08:45:43.152Z INFO  Spar.Host  [aa919241] close requested (User) at 315.1 ms
+2026-11-20T08:45:43.153Z INFO  Spar.Host  [aa919241] close request 1 sent to the page (user) at 316.6 ms
+2026-11-20T08:45:43.157Z INFO  Spar.Host  [aa919241] close request 1: the page answered Close at 320.2 ms
+2026-11-20T08:45:43.159Z INFO  Spar.Host  [aa919241] closing at 322.9 ms
+2026-11-20T08:45:43.160Z INFO  Spar.Host  [aa919241] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T08:45:43.161Z INFO  Spar.Host  [aa919241] page close work done at 324.5 ms
+2026-11-20T08:45:43.161Z INFO  Spar.Host  [aa919241] Bridge: document db3a8c470f8fe59c closed (window closing).
+2026-11-20T08:45:43.162Z INFO  Spar.Host  [aa919241] calls stopped at 325.2 ms
+2026-11-20T08:45:43.162Z INFO  Spar.Host  [aa919241] calls settled at 325.3 ms
+2026-11-20T08:45:43.164Z INFO  Spar.Host  [aa919241] window destroyed at 327.2 ms
+2026-11-20T08:45:43.187Z INFO  Spar.Host  [aa919241] web processes exited after 22 ms at 350.1 ms
+2026-11-20T08:45:43.190Z INFO  Spar.Host  [aa919241] services disposed at 353.9 ms
+2026-11-20T08:45:43.191Z INFO  Spar.Host  [aa919241] exit 0 at 354.5 ms

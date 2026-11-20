@@ -130,4 +130,23 @@ internal static unsafe partial class Gtk
     /// <summary>The button chosen, or -1 with an owned <c>GError</c> when the dialog was dismissed.</summary>
     [LibraryImport(Library)]
     public static partial int gtk_alert_dialog_choose_finish(nint dialog, nint result, nint* error);
+
+    /// <summary>
+    /// A controller that sees every event of its widget as it is (<c>event</c>: the controller, the <c>GdkEvent</c>, the
+    /// user data; TRUE stops it); owned until <see cref="gtk_widget_add_controller"/> takes it.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_event_controller_legacy_new();
+
+    /// <summary><c>GTK_PHASE_CAPTURE</c> (1): the controller sees the event on its way down, before the widget's own.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_event_controller_set_propagation_phase(nint controller, int phase);
+
+    /// <summary>The widget takes the controller (transfer full) and keeps it while it lives.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_widget_add_controller(nint widget, nint controller);
+
+    /// <summary><c>GdkEventType</c>: 2 button press, 3 release, 4 key press, 17 touch begin, 19 touch end.</summary>
+    [LibraryImport(Library)]
+    public static partial int gdk_event_get_event_type(nint gdkEvent);
 }

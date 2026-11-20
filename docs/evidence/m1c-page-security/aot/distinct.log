@@ -1,0 +1,145 @@
+2026-11-20T08:50:19.195Z INFO  Spar.Host  [ce1f349e] Host started 13 ms after the process.
+2026-11-20T08:50:19.195Z INFO  Spar.Host  [ce1f349e] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/cedb4a89f14b/data/com.example.tests.BridgeProbe
+2026-11-20T08:50:19.195Z INFO  Spar.Host  [ce1f349e] single instance at 2 ms
+2026-11-20T08:50:19.210Z INFO  Spar.Host  [ce1f349e] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T08:50:19.213Z INFO  Spar.Host  [ce1f349e] Sandbox trial: bwrap exit 0 in 3.2 ms.
+2026-11-20T08:50:19.213Z INFO  Spar.Host  [ce1f349e] prerequisites checked at 20.7 ms
+2026-11-20T08:50:19.213Z INFO  Spar.Host  [ce1f349e] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.1 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T08:50:19.213Z INFO  Spar.Host  [ce1f349e] gpu checked at 20.9 ms
+2026-11-20T08:50:19.215Z INFO  Spar.Host  [ce1f349e] theme read at 22.2 ms
+2026-11-20T08:50:19.216Z INFO  Spar.Host  [ce1f349e] services built at 23.3 ms
+2026-11-20T08:50:19.255Z INFO  Spar.Host  [ce1f349e] gtk ready at 62.1 ms
+2026-11-20T08:50:19.272Z INFO  Spar.Host  [ce1f349e] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T08:50:19.272Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T08:50:19.274Z INFO  Spar.Host  [ce1f349e] Browser data folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/cedb4a89f14b/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/cedb4a89f14b/data/com.example.tests.BridgeProbe/cache/WebKit
+2026-11-20T08:50:19.276Z INFO  Spar.Host  [ce1f349e] web view created at 83.2 ms
+2026-11-20T08:50:19.276Z INFO  Spar.Host  [ce1f349e] Heartbeat every 5000 ms.
+2026-11-20T08:50:19.289Z INFO  Spar.Host  [ce1f349e] window shown at 96.2 ms
+2026-11-20T08:50:19.291Z INFO  Spar.Host  [ce1f349e] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-psBzrIMh39SiUss7dt4j0Yx5JLTZn/T3cYdTgFRIxsc=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-/Tb2UtsWQf9dyUHbhFbEBwwublB7KqmKLlvhTU54410='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T08:50:19.291Z INFO  Spar.Host  [ce1f349e] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T08:50:19.350Z INFO  Spar.Host  [ce1f349e] page committed at 157.1 ms
+2026-11-20T08:50:19.350Z INFO  Spar.Host  [ce1f349e] Bridge: document 8c80b0a3f6e0bc8b opened.
+2026-11-20T08:50:19.350Z INFO  Spar.Host  [ce1f349e] Heartbeat armed for the new document.
+2026-11-20T08:50:19.363Z INFO  Spar.Host  [ce1f349e] first bridge message at 170.8 ms
+2026-11-20T08:50:19.364Z INFO  Spar.Host  [ce1f349e] first bridge reply at 171.1 ms
+2026-11-20T08:50:19.367Z INFO  Spar.Host  [ce1f349e] ui-ready at 174.2 ms
+2026-11-20T08:50:19.367Z INFO  Spar.Host  [ce1f349e] Bridge: document 8c80b0a3f6e0bc8b reported ui-ready.
+2026-11-20T08:50:19.367Z INFO  BridgeProbe.ProbeService  probe note: first document 8c80b0a3f6e0bc8b
+2026-11-20T08:50:19.368Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/0.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.368Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/1.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.368Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/2.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.368Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/3.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.368Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/4.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/5.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/6.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/7.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/8.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/9.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/10.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/11.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/12.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/13.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/14.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/15.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/16.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/17.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/18.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.369Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/19.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/20.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/21.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/22.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/23.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/24.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/25.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/26.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/27.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/28.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/29.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/30.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/31.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/32.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/33.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/34.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/35.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/36.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/37.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/38.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/39.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/40.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/41.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/42.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/43.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/44.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/45.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/46.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/47.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/48.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/49.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/50.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/51.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/52.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/53.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/54.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/55.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/56.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/57.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.563Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/58.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/59.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/60.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/61.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/62.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/63.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/64.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/65.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/66.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/67.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/68.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/69.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/70.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/71.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/72.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/73.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/74.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/75.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/76.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/77.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/78.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/79.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/80.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/81.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/82.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/83.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/84.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/85.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/86.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/87.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/88.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/89.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/90.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/91.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/92.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/93.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/94.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/95.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/96.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/97.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/98.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z WARN  Spar.Host  Content Security Policy: img-src blocked https://blocked.invalid/99.png at spar://app/assets/index-D5FWBdnh.js:1:3919
+2026-11-20T08:50:19.564Z INFO  Spar.Host  Content Security Policy: the page raised so many violations that Spar's listener stopped counting them in this document; report-uri still reports, rate-limited
+2026-11-20T08:50:22.446Z INFO  BridgeProbe.ProbeService  probe note: distinct: raised 2000 in 78.0 ms
+2026-11-20T08:50:22.447Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T08:50:22.464Z INFO  Spar.Host  [ce1f349e] close requested (User) at 3271 ms
+2026-11-20T08:50:22.464Z INFO  Spar.Host  [ce1f349e] close request 1 sent to the page (user) at 3271.1 ms
+2026-11-20T08:50:22.467Z INFO  Spar.Host  [ce1f349e] close request 1: the page answered Close at 3274.2 ms
+2026-11-20T08:50:22.467Z INFO  Spar.Host  [ce1f349e] closing at 3274.6 ms
+2026-11-20T08:50:22.467Z INFO  Spar.Host  [ce1f349e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T08:50:22.469Z INFO  Spar.Host  [ce1f349e] page close work done at 3276.2 ms
+2026-11-20T08:50:22.469Z INFO  Spar.Host  [ce1f349e] Bridge: document 8c80b0a3f6e0bc8b closed (window closing).
+2026-11-20T08:50:22.469Z INFO  Spar.Host  [ce1f349e] calls stopped at 3276.5 ms
+2026-11-20T08:50:22.469Z INFO  Spar.Host  [ce1f349e] calls settled at 3276.5 ms
+2026-11-20T08:50:22.472Z INFO  Spar.Host  [ce1f349e] window destroyed at 3279.3 ms
+2026-11-20T08:50:22.497Z INFO  Spar.Host  [ce1f349e] web processes exited after 25 ms at 3304.6 ms
+2026-11-20T08:50:22.498Z INFO  Spar.Host  Content Security Policy violations in the last 3.1 s: past the group limit: 900
+2026-11-20T08:50:22.498Z INFO  Spar.Host  Content Security Policy reports in this run: 1 listener batches, 20 report-uri reports read, 1980 refused unread (rate or size), 0 dropped (queue full)
+2026-11-20T08:50:22.498Z INFO  Spar.Host  [ce1f349e] services disposed at 3305.1 ms
+2026-11-20T08:50:22.498Z INFO  Spar.Host  [ce1f349e] exit 0 at 3305.3 ms

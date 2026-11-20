@@ -22,7 +22,7 @@ internal sealed class PageServer
     public const string Origin = "https://app.localhost";
 
     /// <summary>The largest <c>report-uri</c> body read; a larger one is answered 204 and dropped unread.</summary>
-    public const int MaxReportBytes = 16 * 1024;
+    public const int MaxReportBytes = CspViolationLog.MaxReportBytes;
 
     private readonly PageResponder _responder;
     private readonly UiThread _ui;

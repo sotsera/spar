@@ -34,6 +34,15 @@ internal sealed class ScriptBridge
     /// <summary>How the relay's answers start; nothing else the page sends starts like that.</summary>
     private const string PongStart = "{\"type\":\"pong\",";
 
+    /// <summary>How the relay's violation batches start (<c>BridgeRelay.js</c>); the page can send the same itself.</summary>
+    private const string CspStart = "{\"type\":\"csp\"}\t";
+
+    /// <summary>
+    /// The longest violation batch read, in characters: the relay's hold at most 100 groups of texts cut to 256
+    /// characters, well under this; a longer one is dropped unread.
+    /// </summary>
+    private const int MaxBatchLength = 256 * 1024;
+
     private static ReadOnlySpan<byte> DeliverStart => "typeof sparRelay === \"object\" && sparRelay.deliver(["u8;
 
     private static ReadOnlySpan<byte> DeliverEnd => "]);"u8;
@@ -42,6 +51,7 @@ internal sealed class ScriptBridge
     private readonly HostLog _log;
     private readonly Task<SparRunningApp> _app;
     private readonly bool _includeDetails;
+    private readonly CspViolationLog? _violations;
     private readonly Channel<Incoming> _incoming = Channel.CreateUnbounded<Incoming>(new UnboundedChannelOptions { SingleReader = true });
     private readonly List<byte[]> _outgoing = [];
     private readonly Task _reader;
@@ -50,12 +60,14 @@ internal sealed class ScriptBridge
     private bool _flushPosted;
 
     /// <param name="app">The app's services, being built: messages wait for them on the reader, never on the loop.</param>
-    public ScriptBridge(MainLoop ui, HostLog log, Task<SparRunningApp> app, bool includeDetails)
+    /// <param name="violations">Where the relay's violation batches go; null when the listener does not report in this build.</param>
+    public ScriptBridge(MainLoop ui, HostLog log, Task<SparRunningApp> app, bool includeDetails, CspViolationLog? violations)
     {
         _ui = ui;
         _log = log;
         _app = app;
         _includeDetails = includeDetails;
+        _violations = violations;
         _reader = Task.Run(ReadAsync);
     }
 
@@ -86,13 +98,22 @@ internal sealed class ScriptBridge
     /// <summary>The current document's id, or null between documents (loop thread).</summary>
     public string? CurrentDocument => _current is { IsClosed: false } document ? document.Id : null;
 
-    /// <summary>The relay's source (<c>BridgeRelay.js</c>, embedded): read from the executable's image, in memory.</summary>
-    public static string RelayScript()
+    /// <summary>
+    /// The relay's source (<c>BridgeRelay.js</c>, embedded), read from the executable's image, with the violation
+    /// listener's settings written in: the same flood limits as the Windows host's script.
+    /// </summary>
+    /// <param name="reportViolations">Whether the listener reports (<c>csp.Reporting(listener: …)</c> for this build).</param>
+    public static string RelayScript(bool reportViolations)
     {
         using var stream = typeof(ScriptBridge).Assembly.GetManifestResourceStream(RelayResource)
             ?? throw new InvalidOperationException($"The resource {RelayResource} is missing from Spar.Linux.");
         using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
+        return reader.ReadToEnd()
+            .Replace("__SPAR_REPORT_VIOLATIONS__", reportViolations ? "true" : "false", StringComparison.Ordinal)
+            .Replace("__SPAR_REPORT_INTERVAL_MS__", Number(CspViolationLog.ListenerIntervalMilliseconds), StringComparison.Ordinal)
+            .Replace("__SPAR_REPORT_FIRST_DELAY_MS__", Number(CspViolationLog.ListenerFirstDelayMilliseconds), StringComparison.Ordinal)
+            .Replace("__SPAR_REPORT_MAX_GROUPS__", Number(CspViolationLog.ListenerMaxGroups), StringComparison.Ordinal)
+            .Replace("__SPAR_REPORT_MAX_VIOLATIONS__", Number(CspViolationLog.ListenerMaxViolations), StringComparison.Ordinal);
     }
 
     /// <summary>The view whose messages this bridge carries (loop thread); 0 once it is gone.</summary>
@@ -127,6 +148,7 @@ internal sealed class ScriptBridge
 
         var document = new Document(Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(8)));
         _current = document;
+        _violations?.PostDocument(document.Id);
         _log.Info($"Bridge: document {document.Id} opened.");
         DocumentOpened?.Invoke(true);
     }
@@ -277,6 +299,8 @@ internal sealed class ScriptBridge
         return script;
     }
 
+    private static string Number(int value) => value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
     private static void AppendEscape(StringBuilder text, char c) =>
         text.Append("\\u").Append(((int)c).ToString("x4", System.Globalization.CultureInfo.InvariantCulture));
 
@@ -423,6 +447,24 @@ internal sealed class ScriptBridge
         _log.Phase("first bridge reply");
     }
 
+    /// <summary>
+    /// A violation batch of the relay's listener (reader task), as Windows' session hands its <c>csp</c> messages on:
+    /// decoded, its payload copied to the <see cref="CspViolationLog"/>, which parses it untrusted on its own task.
+    /// Dropped when this build's listener does not report, or when it is too long to be one.
+    /// </summary>
+    private void Violations(Document document, string text)
+    {
+        if (_violations is null || text.Length > MaxBatchLength)
+        {
+            return;
+        }
+
+        if (BridgeCodec.TryDecode(text, out var decoded, out _) && decoded is { Type: BridgeMessageType.Csp })
+        {
+            _violations.PostBatch(document.Id, decoded.Payload);
+        }
+    }
+
     /// <summary>The reader: waits for the app's services, then decodes and admits each message off the loop, in order.</summary>
     private async Task ReadAsync()
     {
@@ -436,6 +478,13 @@ internal sealed class ScriptBridge
 
             try
             {
+                if (text.StartsWith(CspStart, StringComparison.Ordinal))
+                {
+                    // Needs no session, so a page that never connects still reports; read on this task, never the loop.
+                    Violations(document, text);
+                    continue;
+                }
+
                 app ??= await _app;
                 SessionOf(document, app)?.Receive(text);
             }

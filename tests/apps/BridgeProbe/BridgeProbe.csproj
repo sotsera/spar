@@ -2,7 +2,9 @@
   <!--
     The test app of the host tests that run a real window from outside (tests/Spar.Tests, LinuxHostTests): a page that
     times calls, moves to a second document, embeds a frame from another origin that tries to reach the bridge, and
-    reports what it saw through the backend's log. What it does is set by the test through BRIDGE_PROBE_PLAN.
+    reports what it saw through the backend's log; it also runs the page-security steps of M1c step 4 (src/security.js:
+    navigations, headers, violations, permissions, a link the test clicks). What it does is set by the test through
+    BRIDGE_PROBE_PLAN.
   -->
 
   <PropertyGroup>
