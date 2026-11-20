@@ -318,19 +318,30 @@ public sealed class LinuxHostTests
     }
 
     /// <summary>
-    /// <c>GTK_DEBUG=interactive</c> in the app's environment, which GTK reads itself at its start: not one of the
-    /// overrides plan section 3c names, so it passes; what it opens is recorded (M1c step 6, for the user's review).
+    /// <c>GTK_DEBUG=interactive</c> in the app's environment, which GTK reads itself at its start and which opens GTK's
+    /// inspector (user decision 2026-11-20): a Production build removes it before GTK starts unless the app calls
+    /// <c>AllowBrowserEnvironmentOverrides()</c>, so only the app's window opens; a Development build keeps it.
     /// </summary>
-    [Fact]
-    public async Task What_GTK_DEBUG_interactive_opens_is_recorded()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task GTK_DEBUG_interactive_opens_GTKs_inspector_only_in_Development_or_with_browser_environment_overrides(bool allowed)
     {
-        await using var app = LinuxAppRun.Start("", ("GTK_DEBUG", "interactive"));
+        var development = LinuxAppRun.IsDevelopmentProbe();
+        await using var app = LinuxAppRun.Start(
+            "",
+            ("GTK_DEBUG", "interactive"),
+            ("BRIDGE_PROBE_BROWSER", allowed ? "AllowBrowserEnvironmentOverrides" : null));
         await app.WaitForAsync(@"probe note: first document [0-9a-f]{16}$");
         await Task.Delay(1_500, TestContext.Current.CancellationToken);
         var titles = X11Frames.Titles(LinuxAppRun.Display(), app.Id);
 
-        Record($"{(LinuxAppRun.IsDevelopmentProbe() ? "development" : "production")}, GTK_DEBUG=interactive: windows [{string.Join(" | ", titles)}]");
-        Assert.NotEmpty(titles);
+        Record(
+            $"{(development ? "development" : "production")}, GTK_DEBUG=interactive, " +
+            $"{(allowed ? "AllowBrowserEnvironmentOverrides()" : "default")}: windows [{string.Join(" | ", titles)}]");
+        var inForce = allowed || development;
+        Assert.Equal(inForce ? 2 : 1, titles.Count);
+        Assert.Contains(inForce ? "GTK_DEBUG in force" : "GTK_DEBUG ignored", app.Log(), StringComparison.Ordinal);
         app.RequestClose();
         Assert.Equal(0, await app.WaitForExitAsync());
     }

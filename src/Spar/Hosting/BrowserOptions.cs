@@ -142,7 +142,8 @@ public sealed class BrowserOptions
     /// <c>WEBVIEW2_USER_DATA_FOLDER</c>, the release-channel variables and the script-debugger variables. On Linux,
     /// WebKitGTK's <c>WEBKIT_INSPECTOR_SERVER</c>, <c>WEBKIT_INSPECTOR_HTTP_SERVER</c> and
     /// <c>WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS</c>, and in a Release build every JavaScriptCore option
-    /// (<c>JSC_*</c>; a Debug build keeps those for debugging). Without this call Spar removes them from its own process
+    /// (<c>JSC_*</c>) and GTK's <c>GTK_DEBUG</c>, whose <c>interactive</c> opens GTK's inspector (a Debug build keeps
+    /// those for debugging). Without this call Spar removes them from its own process
     /// before the browser starts, logs each one it removed by name, and neither the browser nor its child processes see
     /// them. Everything else passes, the Linux GPU workarounds (<c>WEBKIT_DISABLE_DMABUF_RENDERER</c>,
     /// <c>WEBKIT_DISABLE_COMPOSITING_MODE</c>, <c>__NV_DISABLE_EXPLICIT_SYNC</c>) included. <c>JSC_useWasm</c> always
@@ -151,7 +152,8 @@ public sealed class BrowserOptions
     /// <para><b>Risk:</b> whoever can set the app's environment, such as a shortcut or a script that starts it, can open
     /// a remote debugging or inspector port that any local program can use to read and drive the page, start another
     /// browser build, move the profile to a folder they prepared, run the page's web processes without their sandbox,
-    /// or change how JavaScriptCore runs the page's code.</para>
+    /// change how JavaScriptCore runs the page's code, or open GTK's inspector, which can change anything in the
+    /// app's process.</para>
     /// <para><b>Reasonable for:</b> a support build that must be debugged on a user's machine, for a limited time.</para>
     /// <para><b>Safer:</b> a Debug build with its devtools, or <see cref="AllowDevTools"/>, neither of which opens a port.</para>
     /// </summary>

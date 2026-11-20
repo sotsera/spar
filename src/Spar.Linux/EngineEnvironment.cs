@@ -14,7 +14,8 @@ namespace Spar.Linux;
 /// servers and the sandbox switch) are removed in every build unless the app calls
 /// <c>AllowBrowserEnvironmentOverrides()</c>; and every inherited JavaScriptCore option (<c>JSC_*</c>, which
 /// JavaScriptCore reads in this process and in each web process) is removed from a Production build unless the app calls
-/// it, while a Development build keeps them for debugging (user decision 2026-11-20). Everything else passes, the GPU
+/// it, while a Development build keeps them for debugging (user decision 2026-11-20), and so is <c>GTK_DEBUG</c>, whose
+/// <c>interactive</c> opens GTK's inspector at start (user decision 2026-11-20). Everything else passes, the GPU
 /// workarounds in particular. Each variable removed or let through is named in the log, never its value;</item>
 /// <item><see cref="Apply"/>, once the page security is resolved: <c>JSC_useWasm</c>, <c>false</c> unless the app's
 /// page security allows WebAssembly (decision "WebAssembly off on Linux"), always written, so the app's C# decides it
@@ -31,6 +32,12 @@ internal static class EngineEnvironment
 
     /// <summary>The prefix of JavaScriptCore's options in the environment (<c>JSC_&lt;option&gt;</c>).</summary>
     public const string JscPrefix = "JSC_";
+
+    /// <summary>
+    /// GTK's debugging flags, read by GTK itself at its start: <c>interactive</c> opens GTK's inspector, which can change
+    /// any object of the process, so it is treated as JavaScriptCore's options are.
+    /// </summary>
+    public const string GtkDebugVariable = "GTK_DEBUG";
 
     /// <summary>The longest part of an inherited <c>JSC_useWasm</c> value the log repeats.</summary>
     private const int MaxLoggedValue = 100;
@@ -74,9 +81,10 @@ internal static class EngineEnvironment
 
     /// <summary>
     /// For each name in <paramref name="names"/> the filter acts on: whether it is removed, and its log line. A listed
-    /// override goes unless <paramref name="allowed"/>; a <c>JSC_*</c> option goes unless <paramref name="allowed"/> or
-    /// <paramref name="development"/>; <c>JSC_useWasm</c> is not here, since <see cref="Apply"/> always writes it; any
-    /// other name is not listed. In the order of <paramref name="names"/>, each name once.
+    /// override goes unless <paramref name="allowed"/>; a <c>JSC_*</c> option, and <c>GTK_DEBUG</c>, go unless
+    /// <paramref name="allowed"/> or <paramref name="development"/>; <c>JSC_useWasm</c> is not here, since
+    /// <see cref="Apply"/> always writes it; any other name is not listed. In the order of <paramref name="names"/>, each
+    /// name once.
     /// </summary>
     internal static List<(string Name, bool Remove, string Line)> Decide(IEnumerable<string> names, bool allowed, bool development)
     {
@@ -103,6 +111,15 @@ internal static class EngineEnvironment
                     (true, _) => (name, false, $"{name} in force (AllowBrowserEnvironmentOverrides): a JavaScriptCore option, in this app and its web processes."),
                     (false, true) => (name, false, $"{name} in force (a Development build keeps JavaScriptCore options): in this app and its web processes."),
                     _ => (name, true, $"{name} ignored: a JavaScriptCore option (AllowBrowserEnvironmentOverrides allows it)."),
+                });
+            }
+            else if (name == GtkDebugVariable)
+            {
+                decided.Add((allowed, development) switch
+                {
+                    (true, _) => (name, false, $"{name} in force (AllowBrowserEnvironmentOverrides): GTK's debugging flags, its inspector included."),
+                    (false, true) => (name, false, $"{name} in force (a Development build keeps GTK's debugging flags): its inspector included."),
+                    _ => (name, true, $"{name} ignored: GTK's debugging flags, its inspector included (AllowBrowserEnvironmentOverrides allows it)."),
                 });
             }
         }

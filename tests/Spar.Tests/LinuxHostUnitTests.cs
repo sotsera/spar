@@ -259,14 +259,15 @@ public sealed class LinuxHostUnitTests
 
     /// <summary>
     /// The environment filter (plan section 3c; user decision 2026-11-20): the three overrides go unless allowed, in
-    /// every build; JavaScriptCore's options go from a Production build unless allowed; JSC_useWasm is never the
-    /// filter's (it is always written); every other variable passes, the GPU workarounds in particular.
+    /// every build; JavaScriptCore's options and GTK_DEBUG go from a Production build unless allowed; JSC_useWasm is
+    /// never the filter's (it is always written); every other variable passes, the GPU workarounds and GTK's rendering
+    /// choices (GSK_RENDERER, GDK_DEBUG) in particular.
     /// </summary>
     [Theory]
-    [InlineData(false, false, "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS JSC_dumpOptions", "")]
-    [InlineData(false, true, "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "JSC_useDollarVM JSC_dumpOptions")]
-    [InlineData(true, false, "", "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS JSC_dumpOptions")]
-    [InlineData(true, true, "", "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS JSC_dumpOptions")]
+    [InlineData(false, false, "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS GTK_DEBUG JSC_dumpOptions", "")]
+    [InlineData(false, true, "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "JSC_useDollarVM GTK_DEBUG JSC_dumpOptions")]
+    [InlineData(true, false, "", "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS GTK_DEBUG JSC_dumpOptions")]
+    [InlineData(true, true, "", "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS GTK_DEBUG JSC_dumpOptions")]
     public void The_environment_filter_removes_the_overrides_and_Productions_JavaScriptCore_options_only(
         bool allowed, bool development, string removed, string kept)
     {
@@ -274,7 +275,8 @@ public sealed class LinuxHostUnitTests
         [
             "PATH", "WEBKIT_INSPECTOR_SERVER", "JSC_useWasm", "__NV_DISABLE_EXPLICIT_SYNC", "WEBKIT_DISABLE_DMABUF_RENDERER",
             "WEBKIT_DISABLE_COMPOSITING_MODE", "GSK_RENDERER", "WEBKIT_INSPECTOR_HTTP_SERVER", "JSC_useDollarVM",
-            "WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "jsc_lower", "JSC_dumpOptions", "WEBKIT_INSPECTOR_SERVER", "WEBKIT_DEBUG",
+            "WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "GTK_DEBUG", "gtk_debug", "GDK_DEBUG", "jsc_lower", "JSC_dumpOptions",
+            "WEBKIT_INSPECTOR_SERVER", "WEBKIT_DEBUG",
         ];
 
         var decided = EngineEnvironment.Decide(environment, allowed, development);
