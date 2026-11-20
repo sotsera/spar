@@ -21,6 +21,8 @@ namespace Spar.Linux;
 /// <item><c>permission-request</c> is the only gate on Linux, since WebKitGTK ignores <c>Permissions-Policy</c>: a
 /// request is granted only for a feature the app declared, from the app's own page, and denied otherwise, with no
 /// prompt. WebKitGTK remembers no answer;</item>
+/// <item>a back or forward navigation to another document is ignored unless the app allowed history navigation
+/// (plan section 3c);</item>
 /// <item><c>query-permission-state</c> (<c>navigator.permissions.query</c>) is answered "denied" for what is not
 /// declared and "prompt" for what is; WebKit itself shows a "denied" as "prompt" to the page, and a feature it granted
 /// in this document as "granted".</item>
@@ -40,9 +42,16 @@ internal sealed class PageGuard
 
     private const string UserMediaRequest = "WebKitUserMediaPermissionRequest";
 
+    /// <summary><c>WEBKIT_NAVIGATION_TYPE_BACK_FORWARD</c>.</summary>
+    private const int BackForward = 2;
+
     private readonly HostLog _log;
     private readonly SparPageSecurity _security;
+    private readonly bool _allowHistory;
     private int _refused;
+
+    /// <summary>The host reloads the page itself (after a lost or ended web process); its next navigation is that load.</summary>
+    private bool _hostReload;
 
     /// <summary>When the view last had a person's input (a <see cref="System.Diagnostics.Stopwatch"/> timestamp); 0 before any.</summary>
     private long _lastInput;
@@ -53,10 +62,12 @@ internal sealed class PageGuard
     /// <summary>The request kinds already logged, as bits by <see cref="RequestKind"/>.</summary>
     private int _loggedKinds;
 
-    public PageGuard(HostLog log, SparPageSecurity security)
+    /// <param name="allowHistory"><c>AllowHistoryNavigation()</c>: back and forward to another document go ahead.</param>
+    public PageGuard(HostLog log, SparPageSecurity security, bool allowHistory)
     {
         _log = log;
         _security = security;
+        _allowHistory = allowHistory;
     }
 
     /// <summary>What a permission request asks for, as the log names it.</summary>
@@ -205,6 +216,13 @@ internal sealed class PageGuard
     public void DeclaredFrameStopped() =>
         Refused($"Navigation lock: the window started to load {Shorten(_lastDeclaredFrame)}, an address declared for frames only; the load was stopped.");
 
+    /// <summary>
+    /// The host is about to reload the page itself (loop thread): after a lost or ended web process, WebKit loads the
+    /// current history entry again, which it decides as a back or forward navigation (found in M1c step 6), so the next
+    /// navigation to the app's own origin goes ahead whatever its type.
+    /// </summary>
+    public void HostReloads() => _hostReload = true;
+
     /// <summary>A press or release of a button, a key or a touch on the view (loop thread, from its input controller).</summary>
     public void NoteInput() => _lastInput = System.Diagnostics.Stopwatch.GetTimestamp();
 
@@ -268,6 +286,19 @@ internal sealed class PageGuard
     {
         var action = WebKit.webkit_navigation_policy_decision_get_navigation_action(decision);
         var address = AddressOf(WebKit.webkit_navigation_action_get_request(action));
+
+        // History navigation (plan section 3c): the mouse's side buttons and history.back() to another document, which
+        // WebKit decides here; moves within one document (a router's pushState entries) are not decided here and stay.
+        // The host's own reload of the app's page is one too, and goes ahead.
+        var hostReload = _hostReload && SchemeServer.IsAppOrigin(address);
+        _hostReload &= !hostReload;
+        if (!_allowHistory && !hostReload && WebKit.webkit_navigation_action_get_navigation_type(action) == BackForward)
+        {
+            WebKit.webkit_policy_decision_ignore(decision);
+            Refused("Back or forward navigation cancelled (AllowHistoryNavigation allows it).");
+            return true;
+        }
+
         if (Allows(address, _security.FrameSrc))
         {
             LastLetThroughWasDeclaredFrame = !SchemeServer.IsAppOrigin(address);

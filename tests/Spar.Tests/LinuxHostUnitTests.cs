@@ -9,7 +9,8 @@ namespace Spar.Tests;
 
 /// <summary>
 /// The Linux host's pure parts, which run on every OS: the app's origin on <c>spar://app</c>, the headers every scheme
-/// response carries, and the script literals that carry the host's messages to the relay. The host itself, in a real
+/// response carries, the script literals that carry the host's messages to the relay, and the security defaults'
+/// decisions (the environment filter, the context menu). The host itself, in a real
 /// window, is <see cref="LinuxHostTests"/>.
 /// </summary>
 [SupportedOSPlatform("linux")]
@@ -247,4 +248,75 @@ public sealed class LinuxHostUnitTests
         Assert.Equal(allowed ? "true" : "false", EngineEnvironment.Value(allowed));
         Assert.Equal(line, EngineEnvironment.Describe(allowed, inherited));
     }
+
+    [Fact]
+    public void The_environment_overrides_Spar_removes_on_Linux_are_exactly_the_documented_ones()
+    {
+        Assert.Equal(
+            ["WEBKIT_INSPECTOR_SERVER", "WEBKIT_INSPECTOR_HTTP_SERVER", "WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS"],
+            EngineEnvironment.Overrides());
+    }
+
+    /// <summary>
+    /// The environment filter (plan section 3c; user decision 2026-11-20): the three overrides go unless allowed, in
+    /// every build; JavaScriptCore's options go from a Production build unless allowed; JSC_useWasm is never the
+    /// filter's (it is always written); every other variable passes, the GPU workarounds in particular.
+    /// </summary>
+    [Theory]
+    [InlineData(false, false, "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS JSC_dumpOptions", "")]
+    [InlineData(false, true, "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "JSC_useDollarVM JSC_dumpOptions")]
+    [InlineData(true, false, "", "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS JSC_dumpOptions")]
+    [InlineData(true, true, "", "WEBKIT_INSPECTOR_SERVER WEBKIT_INSPECTOR_HTTP_SERVER JSC_useDollarVM WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS JSC_dumpOptions")]
+    public void The_environment_filter_removes_the_overrides_and_Productions_JavaScriptCore_options_only(
+        bool allowed, bool development, string removed, string kept)
+    {
+        string[] environment =
+        [
+            "PATH", "WEBKIT_INSPECTOR_SERVER", "JSC_useWasm", "__NV_DISABLE_EXPLICIT_SYNC", "WEBKIT_DISABLE_DMABUF_RENDERER",
+            "WEBKIT_DISABLE_COMPOSITING_MODE", "GSK_RENDERER", "WEBKIT_INSPECTOR_HTTP_SERVER", "JSC_useDollarVM",
+            "WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "jsc_lower", "JSC_dumpOptions", "WEBKIT_INSPECTOR_SERVER", "WEBKIT_DEBUG",
+        ];
+
+        var decided = EngineEnvironment.Decide(environment, allowed, development);
+
+        Assert.Equal(removed, string.Join(' ', decided.Where(d => d.Remove).Select(d => d.Name)));
+        Assert.Equal(kept, string.Join(' ', decided.Where(d => !d.Remove).Select(d => d.Name)));
+        Assert.All(decided, d => Assert.StartsWith(d.Name + (d.Remove ? " ignored" : " in force"), d.Line, StringComparison.Ordinal));
+        Assert.All(decided.Where(d => d.Remove || allowed), d => Assert.Contains("AllowBrowserEnvironmentOverrides", d.Line, StringComparison.Ordinal));
+        if (development && !allowed)
+        {
+            Assert.Contains(decided, d => d.Line == "JSC_useDollarVM in force (a Development build keeps JavaScriptCore options): in this app and its web processes.");
+        }
+    }
+
+    [Theory]
+    [InlineData(15, true, false, true)] // cut
+    [InlineData(14, true, false, true)] // copy
+    [InlineData(16, true, false, true)] // paste
+    [InlineData(18, true, false, true)] // select all
+    [InlineData(14, false, false, false)] // copy of plain text
+    [InlineData(17, true, false, false)] // delete
+    [InlineData(19, true, false, false)] // input methods
+    [InlineData(0, true, false, false)] // a separator or the app's own item
+    [InlineData(10, false, false, false)] // back
+    [InlineData(13, false, false, false)] // reload
+    [InlineData(3, false, false, false)] // download the link
+    [InlineData(31, false, false, false)] // inspect element
+    [InlineData(31, false, true, true)]
+    [InlineData(31, true, true, true)]
+    public void The_Linux_context_menu_keeps_only_editing_items_and_Inspect_where_devtools_are_on(int action, bool editable, bool devTools, bool kept) =>
+        Assert.Equal(kept, BrowserDefaults.KeptAction(action, editable, devTools));
+
+    [Theory]
+    [InlineData(0x49u, 0b101u, true)] // Ctrl+Shift+I
+    [InlineData(0x69u, 0b101u, true)] // Ctrl+Shift+i
+    [InlineData(0x44u, 0b101u, true)] // Ctrl+Shift+D
+    [InlineData(0x64u, 0b101u, true)] // Ctrl+Shift+d
+    [InlineData(0x49u, 0b1101u, true)] // Ctrl+Shift+Alt+I, stopped too: the page has had it already
+    [InlineData(0x49u, 0b100u, false)] // Ctrl+I is the page's
+    [InlineData(0x49u, 0b001u, false)] // Shift+I is typing
+    [InlineData(0x4Au, 0b101u, false)] // Ctrl+Shift+J
+    [InlineData(0x52u, 0b101u, false)] // Ctrl+Shift+R
+    public void Only_GTKs_inspector_keys_are_stopped(uint keyval, uint state, bool stopped) =>
+        Assert.Equal(stopped, BrowserDefaults.IsGtkInspectorKey(keyval, state));
 }

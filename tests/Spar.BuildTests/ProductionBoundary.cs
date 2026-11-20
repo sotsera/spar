@@ -45,6 +45,10 @@ internal static class ProductionBoundary
         "spar-automation", "Spar test anchor", "Spar UI (tests)", "spartest", "app.Window.CloseAsync",
         "spar-black-box-", "spar-apps",
         "SPAR_SANDBOX_RUN", "SPAR_SANDBOX_DESKTOP", "WDAGUtilityAccount", "SparSandboxOtherWindow", @"C:\spar\runner",
+
+        // The Linux host's own Development trigger (M1c step 3), and the descriptions and read-back lines only a
+        // Development build of either host writes (M1c step 6): a Production image carries the values it set.
+        "SPAR_DEV_PROMPT_ANSWERS", "Browser settings read back (", "Context menu (",
     ];
 
     /// <summary>

@@ -58,6 +58,13 @@ internal static unsafe partial class Libc
     [LibraryImport(Library, EntryPoint = "setenv", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
     public static partial int SetEnv(string name, string value, int overwrite);
 
+    /// <summary>
+    /// Removes a variable from the environment native code reads and child processes inherit; 0, or -1 for a name that
+    /// is empty or holds <c>=</c>. The same thread rule as <see cref="SetEnv"/>.
+    /// </summary>
+    [LibraryImport(Library, EntryPoint = "unsetenv", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
+    public static partial int UnsetEnv(string name);
+
     /// <summary>The current value (borrowed), or 0; it sees what <see cref="SetEnv"/> set, unlike .NET's copy.</summary>
     [LibraryImport(Library, EntryPoint = "getenv", StringMarshalling = StringMarshalling.Utf8)]
     public static partial nint GetEnv(string name);
@@ -162,6 +169,28 @@ internal static unsafe partial class Libc
 
     /// <summary>The value of a variable in the process's environment as native code sees it, or null.</summary>
     public static string? Variable(string name) => Marshal.PtrToStringUTF8(GetEnv(name));
+
+    /// <summary>
+    /// The names in the process's environment as native code sees it (<c>environ</c>), in its order: .NET's own copy,
+    /// taken when it first read the environment, misses what <see cref="SetEnv"/> and <see cref="UnsetEnv"/> changed.
+    /// The list is read in full before anything changes it, since <c>setenv</c> and <c>unsetenv</c> may move the array.
+    /// </summary>
+    public static List<string> VariableNames()
+    {
+        var names = new List<string>();
+        var entries = Environment();
+        for (var at = 0; entries[at] != 0; at++)
+        {
+            var entry = Marshal.PtrToStringUTF8(entries[at]) ?? "";
+            var equals = entry.IndexOf('=', StringComparison.Ordinal);
+            if (equals > 0)
+            {
+                names.Add(entry[..equals]);
+            }
+        }
+
+        return names;
+    }
 
     /// <summary>A time of <see cref="ClockMonotonic"/> in milliseconds, comparable between processes.</summary>
     public static long MonotonicMilliseconds()

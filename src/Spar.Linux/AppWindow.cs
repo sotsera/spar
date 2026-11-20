@@ -131,7 +131,11 @@ internal sealed partial class AppWindow
         _pages = new SchemeServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
         _ = LogPolicyAsync(_pages);
         _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null);
-        _view = new BrowserView(ui, _log, _pages, _bridge, new PageGuard(_log, security), _profile, Fail);
+        var browser = _app.Builder.BrowserOptions;
+        var guard = new PageGuard(_log, security, browser.HistoryNavigation);
+        var defaults = new BrowserDefaults(_log, browser, development, _automated);
+        defaults.KeepGtkInspectorClosed(_window);
+        _view = new BrowserView(ui, _log, _pages, _bridge, guard, defaults, _profile, Fail);
         _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background);
 
         // The heartbeat follows the view's documents from the first one on, before the services exist.

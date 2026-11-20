@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Text.Json;
@@ -21,7 +20,7 @@ namespace Spar.Tests;
 /// </summary>
 [SupportedOSPlatform("linux")]
 [Collection(nameof(LinuxWindowsCollection))]
-public sealed partial class LinuxPageSecurityTests
+public sealed class LinuxPageSecurityTests
 {
     private const string Note = @"^\S+ INFO  BridgeProbe\.ProbeService  probe note: ";
 
@@ -379,11 +378,19 @@ public sealed partial class LinuxPageSecurityTests
         var value = allowed ? "true" : "false";
         Assert.Contains($"JSC_useWasm={value}, replacing the inherited JSC_useWasm={inherited}.", log, StringComparison.Ordinal);
 
-        // The option's name before WebKitGTK 2.48: JavaScriptCore ignores it, and the host names it, as every JSC_ one.
-        Assert.Matches($@"WARN  Spar\.Host  \[[0-9a-f]{{8}}\] JSC_useWebAssembly={inherited} from the environment reaches JavaScriptCore", log);
+        // The option's name before WebKitGTK 2.48: JavaScriptCore ignores it, and the host names it, as every JSC_ one:
+        // removed from a Production build, kept by a Development one (M1c step 6).
+        var development = BuildOf(probe) == "development";
+        Assert.Matches(
+            development
+                ? @"WARN  Spar\.Host  \[[0-9a-f]{8}\] JSC_useWebAssembly in force \(a Development build keeps JavaScriptCore options\)"
+                : @"WARN  Spar\.Host  \[[0-9a-f]{8}\] JSC_useWebAssembly ignored: a JavaScriptCore option",
+            log);
         Assert.Equal(allowed, Regex.IsMatch(log, "Content-Security-Policy: .*script-src [^;]*'wasm-unsafe-eval'"));
         var webProcess = app.WebKitProcesses().First(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
-        Assert.Equal(value, LinuxAppRun.EnvironmentOf(webProcess.Id)["JSC_useWasm"]);
+        var environment = LinuxAppRun.EnvironmentOf(webProcess.Id);
+        Assert.Equal(value, environment["JSC_useWasm"]);
+        Assert.Equal(development, environment.ContainsKey("JSC_useWebAssembly"));
 
         app.EndWebProcess();
         var again = await app.WaitForAsync(Note + @"wasm \(reloaded\): (?<json>.+)$");
@@ -520,63 +527,6 @@ public sealed partial class LinuxPageSecurityTests
                 $"GIO does not pick the stub handler for https here, so the test stops before any click:\n{answer}");
             return opened;
         }
-    }
-
-    /// <summary>Real input on the runner's own X server through XTEST: a left click in the middle of a window.</summary>
-    private static unsafe partial class XTest
-    {
-        public static void ClickMiddle(string display, nuint window)
-        {
-            Assert.NotEqual(0u, window);
-            var connection = XOpenDisplay(display);
-            Assert.NotEqual(0, connection);
-            try
-            {
-                var attributes = stackalloc byte[256];
-                Assert.NotEqual(0, XGetWindowAttributes(connection, window, attributes));
-                int x, y;
-                nuint child;
-                XTranslateCoordinates(connection, window, XDefaultRootWindow(connection), 0, 0, &x, &y, &child);
-                var width = *(int*)(attributes + 8);
-                var height = *(int*)(attributes + 12);
-                XTestFakeMotionEvent(connection, -1, x + (width / 2), y + (height / 2), 0);
-                XTestFakeButtonEvent(connection, 1, 1, 30);
-                XTestFakeButtonEvent(connection, 1, 0, 30);
-                XFlush(connection);
-                XSync(connection, 0);
-            }
-            finally
-            {
-                XCloseDisplay(connection);
-            }
-        }
-
-        [LibraryImport("libX11.so.6", StringMarshalling = StringMarshalling.Utf8)]
-        private static partial nint XOpenDisplay(string name);
-
-        [LibraryImport("libX11.so.6")]
-        private static partial int XCloseDisplay(nint display);
-
-        [LibraryImport("libX11.so.6")]
-        private static partial nuint XDefaultRootWindow(nint display);
-
-        [LibraryImport("libX11.so.6")]
-        private static partial int XGetWindowAttributes(nint display, nuint window, byte* attributes);
-
-        [LibraryImport("libX11.so.6")]
-        private static partial int XTranslateCoordinates(nint display, nuint source, nuint destination, int x, int y, int* toX, int* toY, nuint* child);
-
-        [LibraryImport("libX11.so.6")]
-        private static partial int XFlush(nint display);
-
-        [LibraryImport("libX11.so.6")]
-        private static partial int XSync(nint display, int discard);
-
-        [LibraryImport("libXtst.so.6")]
-        private static partial int XTestFakeMotionEvent(nint display, int screen, int x, int y, nuint delay);
-
-        [LibraryImport("libXtst.so.6")]
-        private static partial int XTestFakeButtonEvent(nint display, uint button, int isPress, nuint delay);
     }
 
     /// <summary>

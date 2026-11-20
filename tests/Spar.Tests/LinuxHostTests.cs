@@ -177,6 +177,353 @@ public sealed class LinuxHostTests
             TestContext.Current.CancellationToken);
     }
 
+    /// <summary>
+    /// The browser environment overrides of plan section 3c (M1c step 6), with every one set in the app's environment:
+    /// without <c>AllowBrowserEnvironmentOverrides()</c> the inspector servers do not listen, the web process stays in
+    /// its bubblewrap sandbox, and neither it nor the network process gets an override; a Production build also keeps
+    /// JavaScriptCore's options from them, a Development build passes them. With the opt-in each one is in force. In
+    /// every case <c>JSC_useWasm</c> is the declaration's, and the GPU workarounds reach the web process.
+    /// </summary>
+    /// <remarks>
+    /// The two inspector servers are tried one at a time, the other left unset: with both set, WebKitGTK 2.52 opened only
+    /// the HTTP one.
+    /// </remarks>
+    [Theory]
+    [InlineData(false, "WEBKIT_INSPECTOR_SERVER")]
+    [InlineData(false, "WEBKIT_INSPECTOR_HTTP_SERVER")]
+    [InlineData(true, "WEBKIT_INSPECTOR_SERVER")]
+    [InlineData(true, "WEBKIT_INSPECTOR_HTTP_SERVER")]
+    public async Task The_browser_environment_overrides_are_ignored_unless_allowed_and_the_GPU_workarounds_pass(bool allowed, string server)
+    {
+        var development = LinuxAppRun.IsDevelopmentProbe();
+        var port = FreePort();
+        var other = server == "WEBKIT_INSPECTOR_SERVER" ? "WEBKIT_INSPECTOR_HTTP_SERVER" : "WEBKIT_INSPECTOR_SERVER";
+        (string Name, string? Value)[] variables =
+        [
+            ("BRIDGE_PROBE_PLAN", "jsc"),
+            ("BRIDGE_PROBE_BROWSER", allowed ? "AllowBrowserEnvironmentOverrides" : null),
+            (server, $"127.0.0.1:{port}"),
+            (other, null),
+            ("WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS", "1"),
+            ("JSC_useDollarVM", "true"),
+            ("JSC_useWasm", "true"),
+            ("__NV_DISABLE_EXPLICIT_SYNC", "1"),
+            ("WEBKIT_DISABLE_COMPOSITING_MODE", "1"),
+        ];
+        await using var app = LinuxAppRun.Launch(LinuxAppRun.Probe(), LinuxAppRun.ProbeAppId, variables);
+
+        var jsc = await app.WaitForAsync(@"probe note: jsc: (?<seen>.+)$");
+        var log = app.Log();
+        var webProcess = app.WebKitProcesses().First(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
+        var network = app.WebKitProcesses().First(process => process.Name.StartsWith("WebKitNetworkPr", StringComparison.Ordinal));
+        var environment = LinuxAppRun.EnvironmentOf(webProcess.Id);
+        var networkEnvironment = LinuxAppRun.EnvironmentOf(network.Id);
+        var listening = ListeningPorts();
+        var sandboxed = Ancestors(webProcess.Id, app.Id).Contains("bwrap");
+
+        foreach (var name in EngineEnvironment.Overrides().Where(name => name != other))
+        {
+            Assert.Contains(allowed ? $"{name} in force (AllowBrowserEnvironmentOverrides)." : $"{name} ignored (AllowBrowserEnvironmentOverrides allows it).", log, StringComparison.Ordinal);
+            Assert.Equal(allowed, environment.ContainsKey(name));
+            Assert.Equal(allowed, networkEnvironment.ContainsKey(name));
+        }
+
+        var jscKept = allowed || development;
+        Assert.Contains(
+            (allowed, development) switch
+            {
+                (true, _) => "JSC_useDollarVM in force (AllowBrowserEnvironmentOverrides)",
+                (false, true) => "JSC_useDollarVM in force (a Development build keeps JavaScriptCore options)",
+                _ => "JSC_useDollarVM ignored: a JavaScriptCore option (AllowBrowserEnvironmentOverrides allows it).",
+            },
+            log,
+            StringComparison.Ordinal);
+        Assert.Equal(jscKept, environment.ContainsKey("JSC_useDollarVM"));
+        Assert.Equal("false", environment["JSC_useWasm"]);
+        Assert.Equal(allowed, log.Contains("Browser opt-ins in force: AllowBrowserEnvironmentOverrides()", StringComparison.Ordinal));
+
+        // The inspector server listens only with the opt-in, and the sandbox goes only with it.
+        Assert.Equal(allowed, listening.Contains(port));
+        Assert.Equal(!allowed, sandboxed);
+
+        // The GPU workarounds pass in every case, and Spar's own software-GPU default reaches the web process too.
+        Assert.Equal("1", environment["__NV_DISABLE_EXPLICIT_SYNC"]);
+        Assert.Equal("1", environment["WEBKIT_DISABLE_COMPOSITING_MODE"]);
+        Assert.True(environment.ContainsKey("WEBKIT_DISABLE_DMABUF_RENDERER"), "Spar's software-GPU default did not reach the web process.");
+
+        // Even where the option reaches JavaScriptCore, a release WebKitGTK refuses it ("invalid option": useDollarVM is
+        // one of its restricted options), so no debugging object reaches the page either way.
+        Assert.StartsWith("$vm undefined", jsc.Groups["seen"].Value, StringComparison.Ordinal);
+        Assert.Equal(jscKept, app.Output.Contains("invalid option: JSC_useDollarVM=true", StringComparison.Ordinal));
+
+        Assert.Equal(0, await app.CloseAsync());
+        Record(
+            $"{(development ? "development" : "production")}, {(allowed ? "AllowBrowserEnvironmentOverrides()" : "default")}: " +
+            $"{server} {(listening.Contains(port) ? "listening" : "closed")}, " +
+            $"web process {(sandboxed ? "under bwrap" : "without bwrap")}, JSC_useDollarVM {(environment.ContainsKey("JSC_useDollarVM") ? "kept" : "removed")}, " +
+            $"page {jsc.Groups["seen"].Value}");
+    }
+
+    /// <summary>
+    /// The inspectors on the published executable: WebKit's (developer extras) off in Production, on in a Development
+    /// build and with <c>AllowDevTools()</c>; GTK's own, which GTK 4 opens on Ctrl+Shift+I in every app by default,
+    /// kept closed outside a Development build. With real input on the run's own X server: Ctrl+Shift+I, which a
+    /// release WebKitGTK does not bind, after a right click on plain text, whose menu holds only Inspect Element where
+    /// devtools are on and shows nothing where they are off.
+    /// </summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task The_inspector_follows_the_build_and_AllowDevTools(bool allowed)
+    {
+        var development = LinuxAppRun.IsDevelopmentProbe();
+        var on = allowed || development;
+        await using var app = LinuxAppRun.Start("menu:plain", ("BRIDGE_PROBE_BROWSER", allowed ? "AllowDevTools" : null));
+        await app.WaitForAsync(@"probe note: menu ready \(plain\)");
+
+        Assert.Matches($@"Browser settings (set|read back) \([0-9.]+ ms\): devtools {(on ? "on" : "off")}, GTK inspector keys {(development ? "on" : "off")}, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled\.", app.Log());
+        var display = LinuxAppRun.Display();
+        var beforeMenu = app.WindowCount();
+        XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id), button: 3);
+        await Task.Delay(800, TestContext.Current.CancellationToken);
+        var menu = X11Frames.Titles(display, app.Id);
+        XTest.Press(display, "Escape");
+        await Task.Delay(300, TestContext.Current.CancellationToken);
+
+        // Last, since GTK's inspector opens over the window where it opens at all.
+        XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id));
+        var before = X11Frames.Titles(display, app.Id);
+        XTest.Press(display, "Control_L+Shift_L+i");
+        await Task.Delay(1_500, TestContext.Current.CancellationToken);
+        var afterKey = X11Frames.Titles(display, app.Id);
+        var pagesAfterKey = WebPages(app);
+        Record(
+            $"{(development ? "development" : "production")}, {(allowed ? "AllowDevTools()" : "default")}: windows [{string.Join(" | ", before)}]; " +
+            $"after Ctrl+Shift+I [{string.Join(" | ", afterKey)}], {pagesAfterKey} web processes; {beforeMenu} windows before the right click, " +
+            $"[{string.Join(" | ", menu)}] with the menu asked");
+
+        // GTK's own inspector opens on its keys only in a Development build; where devtools are off, plain text has no
+        // menu at all, and where they are on, its menu is Inspect Element alone.
+        Assert.Equal(development, afterKey.Count > before.Count);
+        Assert.Equal(1, pagesAfterKey);
+        Assert.Equal(on, menu.Count > beforeMenu);
+        if (development)
+        {
+            Assert.Contains("Context menu (not editable): kept [inspectElement], removed ", app.Log(), StringComparison.Ordinal);
+        }
+
+        // The main window only: GTK's inspector, where it opened, is not the app's to close.
+        app.RequestClose();
+        Assert.Equal(0, await app.WaitForExitAsync());
+    }
+
+    /// <summary>
+    /// <c>GTK_DEBUG=interactive</c> in the app's environment, which GTK reads itself at its start: not one of the
+    /// overrides plan section 3c names, so it passes; what it opens is recorded (M1c step 6, for the user's review).
+    /// </summary>
+    [Fact]
+    public async Task What_GTK_DEBUG_interactive_opens_is_recorded()
+    {
+        await using var app = LinuxAppRun.Start("", ("GTK_DEBUG", "interactive"));
+        await app.WaitForAsync(@"probe note: first document [0-9a-f]{16}$");
+        await Task.Delay(1_500, TestContext.Current.CancellationToken);
+        var titles = X11Frames.Titles(LinuxAppRun.Display(), app.Id);
+
+        Record($"{(LinuxAppRun.IsDevelopmentProbe() ? "development" : "production")}, GTK_DEBUG=interactive: windows [{string.Join(" | ", titles)}]");
+        Assert.NotEmpty(titles);
+        app.RequestClose();
+        Assert.Equal(0, await app.WaitForExitAsync());
+    }
+    private static int WebPages(LinuxAppRun app) =>
+        app.WebKitProcesses().Count(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
+    /// <summary>
+    /// The browser's own keys on the published executable, pressed with real input: the page gets each one, and none
+    /// reloads, zooms, prints, finds or goes back (WebKitGTK binds no such key itself).
+    /// </summary>
+    [Fact]
+    public async Task The_browser_keys_reach_the_page_and_do_nothing_else()
+    {
+        await using var app = LinuxAppRun.Start("keys");
+        await app.WaitForAsync("probe note: keys ready");
+        var display = LinuxAppRun.Display();
+        XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id));
+        string[] keys =
+        [
+            "F5", "Control_L+r", "Control_L+Shift_L+r", "Alt_L+Left", "Alt_L+Right", "Control_L+p", "Control_L+f",
+            "Control_L+equal", "Control_L+minus", "Control_L+0", "F12", "Control_L+s", "Control_L+o",
+        ];
+        foreach (var key in keys)
+        {
+            XTest.Press(display, key);
+            await Task.Delay(150, TestContext.Current.CancellationToken);
+        }
+
+        XTest.Press(display, "Escape");
+        var seen = await app.WaitForAsync(@"probe note: keys: (?<seen>.+)$");
+        var windows = app.WindowCount();
+        var log = app.Log();
+
+        Assert.Matches(@"zoom (?<zoom>\S+) -> \k<zoom>, at /", seen.Groups["seen"].Value);
+        Assert.DoesNotContain("(reloaded)", log, StringComparison.Ordinal);
+        Assert.Single(Regex.Matches(log, @"Bridge: document [0-9a-f]{16} opened\."));
+        Assert.Equal(1, windows);
+        Assert.Equal(0, await app.CloseAsync());
+        Record($"{(LinuxAppRun.IsDevelopmentProbe() ? "development" : "production")}: {string.Join(" ", keys)}: {seen.Groups["seen"].Value}; {windows} window");
+    }
+
+    /// <summary>
+    /// Downloads, the page's file picker and the context menu (M1c step 6), with real input for the picker and the
+    /// menu: refused by default, and the browser's own with <c>AllowDownloads()</c>, <c>AllowPagePicker()</c> and
+    /// <c>AllowContextMenu()</c>. Only a Development build describes its menus in the log.
+    /// </summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Downloads_the_picker_and_the_context_menu_are_refused_unless_allowed(bool allowed)
+    {
+        var development = LinuxAppRun.IsDevelopmentProbe();
+        var run = Path.Combine(TestFolders.Artifacts(), "linux-homes", "host-tests", Guid.NewGuid().ToString("N")[..12]);
+        var downloads = Path.Combine(run, "home", "Downloads");
+        Directory.CreateDirectory(downloads);
+        Directory.CreateDirectory(Path.Combine(run, "config"));
+        File.WriteAllText(Path.Combine(run, "config", "user-dirs.dirs"), "XDG_DOWNLOAD_DIR=\"$HOME/Downloads\"\n");
+        await using var app = LinuxAppRun.Launch(
+            LinuxAppRun.Probe(),
+            LinuxAppRun.ProbeAppId,
+            [("BRIDGE_PROBE_PLAN", "download,picker,menu:editable"), ("BRIDGE_PROBE_BROWSER", allowed ? "AllowDownloads,AllowPagePicker,AllowContextMenu" : null)],
+            runFolder: run);
+        var display = LinuxAppRun.Display();
+
+        await app.WaitForAsync("probe note: download: ");
+        await Task.Delay(2_000, TestContext.Current.CancellationToken);
+        var cancelled = Regex.Matches(app.Log(), @"A download( of \S+)? was cancelled \(AllowDownloads allows it\)\.").Count;
+        var refusedByLock = Regex.Matches(app.Log(), @"Navigation lock: a navigation to (blob|data):").Count;
+        var written = Directory.EnumerateFiles(app.RunFolder, "*", SearchOption.AllDirectories)
+            .Count(path => Path.GetFileName(path) is "other.html" or "probe.txt" or "data.txt");
+
+        await app.WaitForAsync("probe note: picker ready");
+        XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id));
+        await Task.Delay(1_500, TestContext.Current.CancellationToken);
+        var pickerWindows = app.WindowCount();
+        if (allowed)
+        {
+            XTest.Press(display, "Escape");
+        }
+
+        var picker = await app.WaitForAsync(@"probe note: picker: (?<answer>.+)$", TimeSpan.FromSeconds(12));
+
+        await app.WaitForAsync(@"probe note: menu ready \(editable\)");
+        XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id), button: 3);
+        await Task.Delay(1_000, TestContext.Current.CancellationToken);
+        var menuWindows = app.WindowCount();
+        XTest.Press(display, "Escape");
+        var log = app.Log();
+
+        Assert.Equal(allowed ? 0 : 1, cancelled);
+        Assert.Equal(allowed, !log.Contains("The page's file picker was cancelled (AllowPagePicker allows it).", StringComparison.Ordinal));
+        Assert.Equal(0, allowed ? 0 : written);
+        if (development)
+        {
+            Assert.Equal(
+                !allowed,
+                log.Contains("Context menu (editable): kept [cut copy paste selectAll inspectElement], removed ", StringComparison.Ordinal));
+        }
+
+        Assert.Equal(0, await app.CloseAsync());
+        Record(
+            $"{(development ? "development" : "production")}, {(allowed ? "AllowDownloads() AllowPagePicker() AllowContextMenu()" : "default")}: " +
+            $"downloads cancelled {cancelled}, refused by the lock {refusedByLock}, files written {written}; picker '{picker.Groups["answer"].Value}', " +
+            $"{pickerWindows} windows while it was asked; {menuWindows} windows after the right click");
+    }
+
+    /// <summary>
+    /// History navigation (M1c step 6): a move within the document goes back; back to another document, from the
+    /// page's <c>history.back()</c> and from the mouse's back button, is cancelled unless <c>AllowHistoryNavigation()</c>.
+    /// </summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task History_navigation_to_another_document_is_cancelled_unless_allowed(bool allowed)
+    {
+        await using var app = LinuxAppRun.Start("history", ("BRIDGE_PROBE_BROWSER", allowed ? "AllowHistoryNavigation" : null));
+
+        await app.WaitForAsync("probe note: history: within the document back to none");
+        await app.WaitForAsync("probe note: history: going back from the second document");
+        if (!allowed)
+        {
+            await app.WaitForAsync("probe note: history: still at /other.html");
+            var display = LinuxAppRun.Display();
+            XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id), button: 8);
+            await Task.Delay(1_500, TestContext.Current.CancellationToken);
+        }
+        else
+        {
+            await Task.Delay(3_000, TestContext.Current.CancellationToken);
+        }
+
+        var log = app.Log();
+        var cancelled = Regex.Matches(log, @"Back or forward navigation cancelled \(AllowHistoryNavigation allows it\)\.").Count;
+        var commits = Regex.Matches(log, @"Bridge: document [0-9a-f]{16} opened\.").Count;
+
+        Assert.Equal(allowed, cancelled == 0);
+        Assert.Equal(allowed, !log.Contains("probe note: history: still at", StringComparison.Ordinal));
+        Assert.Equal(allowed ? 3 : 2, commits);
+        Assert.Equal(0, await app.CloseAsync());
+        Record($"{(LinuxAppRun.IsDevelopmentProbe() ? "development" : "production")}, {(allowed ? "AllowHistoryNavigation()" : "default")}: {cancelled} cancelled, {commits} documents committed");
+    }
+
+    /// <summary>The loopback ports something listens on (TCP, IPv4 and IPv6), from <c>/proc/net/tcp</c> and <c>tcp6</c>.</summary>
+    private static HashSet<int> ListeningPorts()
+    {
+        var ports = new HashSet<int>();
+        foreach (var table in new[] { "/proc/net/tcp", "/proc/net/tcp6" })
+        {
+            foreach (var line in File.ReadLines(table).Skip(1))
+            {
+                var fields = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (fields.Length > 3 && fields[3] == "0A")
+                {
+                    ports.Add(int.Parse(fields[1][(fields[1].LastIndexOf(':') + 1)..], NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+                }
+            }
+        }
+
+        return ports;
+    }
+
+
+    /// <summary>The names of the processes between <paramref name="process"/> and <paramref name="root"/>, nearest first.</summary>
+    private static List<string> Ancestors(int process, int root)
+    {
+        var names = new List<string>();
+        var current = process;
+        while (current != root && current > 1)
+        {
+            var stat = File.ReadAllText($"/proc/{current}/stat");
+            current = int.Parse(stat[(stat.LastIndexOf(')') + 2)..].Split(' ')[1], CultureInfo.InvariantCulture);
+            if (current != root)
+            {
+                names.Add(File.ReadAllText($"/proc/{current}/comm").Trim());
+            }
+        }
+
+        return names;
+    }
+
+    private static int FreePort()
+    {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        return ((IPEndPoint)listener.LocalEndpoint).Port;
+    }
+
+    private static void Record(string line)
+    {
+        var results = Path.Combine(TestFolders.Artifacts(), "test-results", "Spar.Tests");
+        Directory.CreateDirectory(results);
+        File.AppendAllLines(Path.Combine(results, "linux-security-defaults.txt"), [string.Create(CultureInfo.InvariantCulture, $"{DateTimeOffset.Now:HH:mm:ss} {line}")]);
+    }
+
     /// <summary><c>JSC_useWasm</c> as the app's web process started with it, waiting for the process if it is not there yet.</summary>
     private static string? WebAssemblySetting(LinuxAppRun app)
     {

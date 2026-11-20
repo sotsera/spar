@@ -32,6 +32,28 @@ var app = SparApplication.Create(args, spar =>
         spar.Browser(b => b.HardwareAcceleration(Enum.Parse<HardwareAcceleration>(acceleration)));
     }
 
+    // For the security-default tests (M1c step 6): the browser opt-ins the test names (BRIDGE_PROBE_BROWSER, their
+    // method names separated by commas). They are read at run time, so one build tries each.
+    if (Environment.GetEnvironmentVariable("BRIDGE_PROBE_BROWSER") is { Length: > 0 } optIns)
+    {
+        spar.Browser(b =>
+        {
+            foreach (var optIn in optIns.Split(','))
+            {
+                _ = optIn switch
+                {
+                    "AllowDevTools" => b.AllowDevTools(),
+                    "AllowContextMenu" => b.AllowContextMenu(),
+                    "AllowDownloads" => b.AllowDownloads(),
+                    "AllowPagePicker" => b.AllowPagePicker(),
+                    "AllowHistoryNavigation" => b.AllowHistoryNavigation(),
+                    "AllowBrowserEnvironmentOverrides" => b.AllowBrowserEnvironmentOverrides(),
+                    _ => throw new ArgumentException($"BRIDGE_PROBE_BROWSER: no opt-in '{optIn}'."),
+                };
+            }
+        });
+    }
+
     spar.OnRelaunch((relaunch, services) => services.GetRequiredService<ILogger<BridgeProbe.ProbeService>>()
         .LogInformation("probe relaunch: [{Arguments}]", string.Join(" | ", relaunch.Arguments)));
 
@@ -97,6 +119,10 @@ namespace BridgeProbe
             _ = slow.Count();
             return Task.FromResult(new Plan(Environment.GetEnvironmentVariable("BRIDGE_PROBE_PLAN") ?? "", loads.Next()));
         }
+
+        /// <summary>The steps alone, for the second page: reading them does not count a start of the first page.</summary>
+        [SparCommand]
+        public Task<string> StepsAsync() => Task.FromResult(Environment.GetEnvironmentVariable("BRIDGE_PROBE_PLAN") ?? "");
 
         /// <summary>The foreign frame's address (<c>BRIDGE_PROBE_FRAME</c>), served by the test; empty for none.</summary>
         [SparCommand]

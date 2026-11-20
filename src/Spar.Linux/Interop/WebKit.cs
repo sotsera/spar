@@ -253,6 +253,78 @@ internal static unsafe partial class WebKit
     [LibraryImport(Library)]
     public static partial void webkit_permission_state_query_finish(nint query, int state);
 
+    /// <summary>The view's settings; borrowed. Setters take a <c>gboolean</c>.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_web_view_get_settings(nint view);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_settings_set_enable_developer_extras(nint settings, int enabled);
+
+    [LibraryImport(Library)]
+    public static partial int webkit_settings_get_enable_developer_extras(nint settings);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_settings_set_javascript_can_access_clipboard(nint settings, int enabled);
+
+    [LibraryImport(Library)]
+    public static partial int webkit_settings_get_javascript_can_access_clipboard(nint settings);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_settings_set_javascript_can_open_windows_automatically(nint settings, int enabled);
+
+    [LibraryImport(Library)]
+    public static partial int webkit_settings_get_javascript_can_open_windows_automatically(nint settings);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_settings_set_allow_file_access_from_file_urls(nint settings, int allowed);
+
+    [LibraryImport(Library)]
+    public static partial int webkit_settings_get_allow_file_access_from_file_urls(nint settings);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_settings_set_allow_universal_access_from_file_urls(nint settings, int allowed);
+
+    [LibraryImport(Library)]
+    public static partial int webkit_settings_get_allow_universal_access_from_file_urls(nint settings);
+
+    [LibraryImport(Library)]
+    public static partial void webkit_settings_set_allow_top_navigation_to_data_urls(nint settings, int allowed);
+
+    [LibraryImport(Library)]
+    public static partial int webkit_settings_get_allow_top_navigation_to_data_urls(nint settings);
+
+    /// <summary>How many items the menu holds (a <c>guint</c>).</summary>
+    [LibraryImport(Library)]
+    public static partial uint webkit_context_menu_get_n_items(nint menu);
+
+    /// <summary>The item at <paramref name="position"/>; borrowed, the menu owns it.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_context_menu_get_item_at_position(nint menu, uint position);
+
+    /// <summary>Removes <paramref name="item"/> from the menu, which drops its reference.</summary>
+    [LibraryImport(Library)]
+    public static partial void webkit_context_menu_remove(nint menu, nint item);
+
+    /// <summary>The item's <c>WebKitContextMenuAction</c>: 14 copy, 15 cut, 16 paste, 18 select all, 31 inspect element.</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_context_menu_item_get_stock_action(nint item);
+
+    /// <summary>Whether the menu is for an editable element (a <c>gboolean</c>).</summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_hit_test_result_context_is_editable(nint result);
+
+    /// <summary>Answers a file chooser request with no files, as if the person cancelled the picker.</summary>
+    [LibraryImport(Library)]
+    public static partial void webkit_file_chooser_request_cancel(nint request);
+
+    /// <summary>Stops the download; its <c>failed</c> signal follows with a cancellation, and no file is written.</summary>
+    [LibraryImport(Library)]
+    public static partial void webkit_download_cancel(nint download);
+
+    /// <summary>The download's request; borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_download_get_request(nint download);
+
     [LibraryImport(Jsc)]
     public static partial int jsc_value_is_string(nint value);
 

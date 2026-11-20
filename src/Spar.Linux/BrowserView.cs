@@ -29,6 +29,7 @@ internal sealed class BrowserView
     private readonly SchemeServer _pages;
     private readonly ScriptBridge _bridge;
     private readonly PageGuard _guard;
+    private readonly BrowserDefaults _defaults;
     private readonly BrowserProfile _profile;
     private readonly Action<int, string> _fail;
     private GCHandle _self;
@@ -42,6 +43,9 @@ internal sealed class BrowserView
     private nuint _policyHandler;
     private nuint _permissionHandler;
     private nuint _queryHandler;
+    private nuint _menuHandler;
+    private nuint _chooserHandler;
+    private nuint _downloadHandler;
     private nint _input;
     private nuint _inputHandler;
     private bool _ending;
@@ -50,13 +54,21 @@ internal sealed class BrowserView
 
     /// <param name="fail">An unrecoverable failure: the exit code and a message.</param>
     public BrowserView(
-        MainLoop ui, HostLog log, SchemeServer pages, ScriptBridge bridge, PageGuard guard, BrowserProfile profile, Action<int, string> fail)
+        MainLoop ui,
+        HostLog log,
+        SchemeServer pages,
+        ScriptBridge bridge,
+        PageGuard guard,
+        BrowserDefaults defaults,
+        BrowserProfile profile,
+        Action<int, string> fail)
     {
         _ui = ui;
         _log = log;
         _pages = pages;
         _bridge = bridge;
         _guard = guard;
+        _defaults = defaults;
         _profile = profile;
         _fail = fail;
         bridge.DocumentReady += () => _reloadUsed = false;
@@ -78,8 +90,9 @@ internal sealed class BrowserView
     /// <summary>
     /// Creates the network session over the app's own data and cache folders, passed explicitly (plan section 3,
     /// "Data folders"), the content manager with the relay, and the view over both; registers the scheme on the view's
-    /// context and connects the navigation lock and the permission gate (<see cref="PageGuard"/>) before the view loads
-    /// anything (loop thread). The view is not loading yet: the window attaches it first.
+    /// context and connects the navigation lock and the permission gate (<see cref="PageGuard"/>), and the browser
+    /// settings with their handlers (<see cref="BrowserDefaults"/>), before the view loads anything (loop thread). The
+    /// view is not loading yet: the window attaches it first.
     /// </summary>
     public unsafe void Create(string dataFolder, string cacheFolder, string relay, SparColor background)
     {
@@ -87,6 +100,7 @@ internal sealed class BrowserView
         var self = GCHandle.ToIntPtr(_self);
         _session = WebKit.webkit_network_session_new(dataFolder, cacheFolder);
         CheckFolders(dataFolder, cacheFolder);
+        _downloadHandler = Connect(_session, "download-started", (delegate* unmanaged<nint, nint, nint, void>)&OnDownloadStarted, self);
         _content = WebKit.webkit_user_content_manager_new();
         if (WebKit.webkit_user_content_manager_register_script_message_handler(_content, ScriptBridge.Handler, ScriptBridge.World) == 0)
         {
@@ -118,6 +132,9 @@ internal sealed class BrowserView
             _view, "permission-request", (delegate* unmanaged<nint, nint, nint, int>)&OnPermissionRequest, self, 0, 0);
         _queryHandler = GLib.g_signal_connect_data(
             _view, "query-permission-state", (delegate* unmanaged<nint, nint, nint, int>)&OnPermissionQuery, self, 0, 0);
+        _menuHandler = Connect(_view, "context-menu", (delegate* unmanaged<nint, nint, nint, nint, int>)&OnContextMenu, self);
+        _chooserHandler = Connect(_view, "run-file-chooser", (delegate* unmanaged<nint, nint, nint, int>)&OnFileChooser, self);
+        _defaults.Apply(_view);
 
         // Real input on the view, seen before WebKit handles it: only a recent one lets a new window open outside.
         _input = Gtk.gtk_event_controller_legacy_new();
@@ -220,6 +237,8 @@ internal sealed class BrowserView
             GLib.g_signal_handler_disconnect(_view, _policyHandler);
             GLib.g_signal_handler_disconnect(_view, _permissionHandler);
             GLib.g_signal_handler_disconnect(_view, _queryHandler);
+            GLib.g_signal_handler_disconnect(_view, _menuHandler);
+            GLib.g_signal_handler_disconnect(_view, _chooserHandler);
             GLib.g_signal_handler_disconnect(_input, _inputHandler);
             _bridge.Detach("window closing");
             _view = 0;
@@ -235,6 +254,7 @@ internal sealed class BrowserView
 
         if (_session != 0)
         {
+            GLib.g_signal_handler_disconnect(_session, _downloadHandler);
             GLib.g_object_unref(_session);
             _session = 0;
         }
@@ -247,6 +267,16 @@ internal sealed class BrowserView
         {
             _self.Free();
         }
+    }
+
+    /// <summary>
+    /// Connects a handler that a security default depends on: a signal WebKit does not have (0) stops the start, so a
+    /// default is never silently missing.
+    /// </summary>
+    private static unsafe nuint Connect(nint instance, string signal, void* handler, nint self)
+    {
+        var id = GLib.g_signal_connect_data(instance, signal, handler, self, 0, 0);
+        return id != 0 ? id : throw new InvalidOperationException($"WebKit has no '{signal}' signal, which a security default needs.");
     }
 
     /// <summary>
@@ -374,6 +404,7 @@ internal sealed class BrowserView
             if (_reloadAfterTermination)
             {
                 _reloadAfterTermination = false;
+                _guard.HostReloads();
                 WebKit.webkit_web_view_reload(_view);
                 _log.Step("hung page reloaded");
             }
@@ -390,6 +421,7 @@ internal sealed class BrowserView
 
         _reloadUsed = true;
         _log.Warn($"The web process {why}; the page is reloaded once.");
+        _guard.HostReloads();
         WebKit.webkit_web_view_reload(_view);
         _log.Step("page reloaded after the web process ended");
     }
@@ -473,6 +505,41 @@ internal sealed class BrowserView
     [UnmanagedCallersOnly]
     private static int OnPermissionQuery(nint view, nint query, nint data) =>
         Answer(data, "query-permission-state", browser => browser._guard.OnPermissionQuery(query), refuse: null);
+
+    /// <summary>
+    /// <c>context-menu</c> in 6.0: the view, the menu, the hit test result and the user data; TRUE shows no menu. A
+    /// decision that fails shows none.
+    /// </summary>
+    [UnmanagedCallersOnly]
+    private static int OnContextMenu(nint view, nint menu, nint hitTest, nint data) =>
+        Answer(data, "context-menu", browser => browser._defaults.OnContextMenu(menu, hitTest), () => { });
+
+    /// <summary><c>run-file-chooser</c>: TRUE when answered here; a decision that fails cancels the picker.</summary>
+    [UnmanagedCallersOnly]
+    private static int OnFileChooser(nint view, nint request, nint data) => Answer(
+        data, "run-file-chooser", browser => browser._defaults.OnFileChooser(request), () => WebKit.webkit_file_chooser_request_cancel(request));
+
+    /// <summary><c>download-started</c> on the network session: the session, the download and the user data.</summary>
+    [UnmanagedCallersOnly]
+    private static void OnDownloadStarted(nint session, nint download, nint data)
+    {
+        if (GCHandle.FromIntPtr(data).Target is not BrowserView browser)
+        {
+            WebKit.webkit_download_cancel(download);
+            return;
+        }
+
+        using var scope = browser._ui.Enter("download-started");
+        try
+        {
+            browser._defaults.OnDownloadStarted(download);
+        }
+        catch (Exception exception)
+        {
+            browser._ui.Report(exception);
+            WebKit.webkit_download_cancel(download);
+        }
+    }
 
     /// <summary>
     /// Runs a signal's decision in a named scope; nothing unwinds into GLib. A decision that cannot be made fails

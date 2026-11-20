@@ -4,8 +4,9 @@
     times calls, moves to a second document, embeds a frame from another origin that tries to reach the bridge, and
     reports what it saw through the backend's log; it also runs the page-security steps of M1c step 4 (src/security.js:
     navigations, headers, violations, permissions, a link the test clicks) and the WebAssembly steps of M1c step 5
-    (src/wasm.js: the page, dedicated, shared and service workers). What it does is set by the test through
-    BRIDGE_PROBE_PLAN.
+    (src/wasm.js: the page, dedicated, shared and service workers) and the security-default steps of M1c step 6
+    (src/defaults.js: downloads, the picker, the context menu, keys, history, JavaScriptCore's $vm), with the browser
+    opt-ins the test names in BRIDGE_PROBE_BROWSER. What it does is set by the test through BRIDGE_PROBE_PLAN.
   -->
 
   <PropertyGroup>

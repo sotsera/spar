@@ -4,6 +4,7 @@ import { connectSpar, hostChannel } from "@spar/app/sdk";
 import { fingerprint } from "@spar/app/spar";
 import { probe } from "@spar/app/probe";
 import { windows } from "@spar/app/windows";
+import { defaultsSteps } from "./defaults.js";
 import { securitySteps } from "./security.js";
 import { wasmSteps } from "./wasm.js";
 
@@ -113,7 +114,7 @@ const steps = {
   },
 };
 
-Object.assign(steps, securitySteps(connection), wasmSteps(reloaded));
+Object.assign(steps, securitySteps(connection), wasmSteps(reloaded), defaultsSteps());
 
 // A step may carry one argument after a colon: busy:10000. A reloaded page runs only the steps named "again-<step>"
 // (which a first load skips), so a hang does not come back.

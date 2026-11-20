@@ -32,7 +32,10 @@ public sealed class BrowserOptions
     /// <summary>&lt;input type="file"&gt;'s picker and the File System Access pickers.</summary>
     public BrowserOptions AllowPagePicker() => Allow(nameof(AllowPagePicker));
 
-    /// <summary>The WebView2 environment variables that change the browser before it starts.</summary>
+    /// <summary>
+    /// The environment variables that change the browser before it starts: WebView2's on Windows; on Linux the inspector
+    /// servers, the sandbox switch and, in a Release build, JavaScriptCore's options.
+    /// </summary>
     public BrowserOptions AllowBrowserEnvironmentOverrides() => Allow(nameof(AllowBrowserEnvironmentOverrides));
 
     /// <summary>Whether the browser draws with the GPU; Linux only for now, Windows ignores it.</summary>

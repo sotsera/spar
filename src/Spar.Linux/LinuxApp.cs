@@ -10,9 +10,9 @@ namespace Spar.Linux;
 /// <summary>
 /// One run of the app on Linux (plan section 3, "Linux"). Before anything else, the start-up of plan section 3 on the
 /// process's main thread: a display (exit 6), single instance (a later launch hands its arguments to the running one
-/// and exits), the libraries, WebKitGTK's version, its helpers and a trial sandbox run (3, 4, 5), then, before GTK or
-/// any other native thread starts, the engine's WebAssembly setting and the software-GPU default in the environment,
-/// and the theme. Then the app's services, built on the thread pool while the main window (<see cref="AppWindow"/>)
+/// and exits), the browser's environment overrides removed (plan section 3c), the libraries, WebKitGTK's version, its
+/// helpers and a trial sandbox run (3, 4, 5), then, before GTK or any other native thread starts, the engine's
+/// WebAssembly setting and the software-GPU default in the environment, and the theme. Then the app's services, built on the thread pool while the main window (<see cref="AppWindow"/>)
 /// shows and starts its view on the main-loop thread; once the window is gone and its web processes have exited, the
 /// services' disposal, with the main loop still running so the shutdown hang policy's prompt can show
 /// (<see cref="ShutdownWatch"/>), and the exit code.
@@ -126,8 +126,9 @@ internal sealed class LinuxApp : IAppWindowOwner
 
     /// <summary>
     /// Plan section 3's Linux order: the display, then single instance (before anything touches the browser's folders,
-    /// and before the slower checks, so a relaunch hands over at once), then the libraries and the sandbox, then the
-    /// page security and the environment GTK and WebKit read at their start, and the theme.
+    /// and before the slower checks, so a relaunch hands over at once), then the browser's environment overrides, the
+    /// libraries and the sandbox, then the page security and the environment GTK and WebKit read at their start, and
+    /// the theme.
     /// </summary>
     private int CheckThenRun()
     {
@@ -156,6 +157,14 @@ internal sealed class LinuxApp : IAppWindowOwner
         if (CreateProfileFolder() is { } unusable)
         {
             _log.Error(unusable);
+            return AppWindow.StartFailedExitCode;
+        }
+
+        // The browser's environment overrides before any of WebKit's libraries is loaded (plan section 3c): what is
+        // removed here never reaches this process's WebKit, JavaScriptCore or the web processes.
+        if (EngineEnvironment.Filter(builder.BrowserOptions.EnvironmentOverrides, SparDevelopment.IsSupported, _log) is { } kept)
+        {
+            _log.Error(kept);
             return AppWindow.StartFailedExitCode;
         }
 

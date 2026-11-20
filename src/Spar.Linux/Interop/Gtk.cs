@@ -138,6 +138,13 @@ internal static unsafe partial class Gtk
     [LibraryImport(Library)]
     public static partial nint gtk_event_controller_legacy_new();
 
+    /// <summary>
+    /// A controller for key events (<c>key-pressed</c>: the controller, the keyval, the keycode, the
+    /// <c>GdkModifierType</c> state, the user data; TRUE stops it); owned until <see cref="gtk_widget_add_controller"/>.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_event_controller_key_new();
+
     /// <summary><c>GTK_PHASE_CAPTURE</c> (1): the controller sees the event on its way down, before the widget's own.</summary>
     [LibraryImport(Library)]
     public static partial void gtk_event_controller_set_propagation_phase(nint controller, int phase);
