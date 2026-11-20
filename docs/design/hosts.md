@@ -217,7 +217,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
 - **Bindings:** `[LibraryImport]` and `[UnmanagedCallersOnly]` against gtk, glib, gio and webkit. The AOT exe links only glibc, and the libraries load at first use, so check for them at startup with a clear error.
 - **Assets and the bridge:** a custom scheme (`spar://app/`), and the script message handler.
 - **Origin policy:** messages and scheme requests carry no origin. Use a navigation lock, inject into the top frame only, and run the bridge in an isolated script world with a relay in the top document only (adopted from the research review, user, 2026-11-15). M1c builds it and tests foreign iframes against it. Freezing the bridge entry points and `Object.prototype` as a section 3c opt-in is still to discuss.
-- **Hardening:** ignore `WEBKIT_INSPECTOR_SERVER` and the other browser environment overrides in Production (section 3c). GStreamer, Mesa and dconf write to `~/.cache`.
+- **Hardening:** ignore `WEBKIT_INSPECTOR_SERVER` and the other browser environment overrides in Production (section 3c). GStreamer, Mesa and dconf write to `~/.cache`. `JSC_useWasm` is always set from the app's page security before GTK starts, replacing an inherited value; other `JSC_*` variables pass and are logged (M1c step 5).
 - **The sandbox:** always on with GTK4 (a non-root user, user namespaces). It works in WSL, costing 5–22 ms.
 - **Startup order** (`spikes/linux-wsl-desktop`): create and attach the web view, call `load_uri`, then show the window.
   - Shown first, GTK3 on X11 without the sandbox stalled about 0.5 s. WebKit's draw handler waits for the web process's first frame, while the web process waits for the UI thread to set up its network connection.

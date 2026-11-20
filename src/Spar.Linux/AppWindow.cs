@@ -34,6 +34,7 @@ internal sealed partial class AppWindow
     public const int BrokenExitCode = 5;
 
     private readonly SparApp _app;
+    private readonly SparPageSecurity _security;
     private readonly HostLog _log;
     private readonly bool _automated;
     private readonly string _title;
@@ -58,9 +59,11 @@ internal sealed partial class AppWindow
     private bool _failed;
     private int _exitCode;
 
+    /// <param name="security">The page security in force, resolved before the engine started (it sets WebAssembly).</param>
     /// <param name="promptAnswers">A Development build's scripted answers to the hung-page dialogs; null otherwise.</param>
     public AppWindow(
         SparApp app,
+        SparPageSecurity security,
         HostLog log,
         bool automated,
         string title,
@@ -71,6 +74,7 @@ internal sealed partial class AppWindow
         IAppWindowOwner owner)
     {
         _app = app;
+        _security = security;
         _log = log;
         _automated = automated;
         _title = title;
@@ -114,7 +118,7 @@ internal sealed partial class AppWindow
             _window, "close-request", (delegate* unmanaged<nint, nint, int>)&OnCloseRequest, GCHandle.ToIntPtr(_self), 0, 0);
 
         var frontend = _app.Catalog.AppAssembly is { } assembly ? SparFrontend.Open(assembly) : null;
-        var security = PageSecuritySetup.Resolve(_app, _log.Logger);
+        var security = _security;
         var development = SparDevelopment.IsSupported;
         var endpointReports = PagePolicy.Reports(security.Endpoint, development);
         var listenerReports = PagePolicy.Reports(security.Listener, development);

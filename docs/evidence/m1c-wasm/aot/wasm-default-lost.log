@@ -1,0 +1,54 @@
+2026-11-20T09:35:50.396Z INFO  Spar.Host  [4a6c0e92] Host started 9 ms after the process.
+2026-11-20T09:35:50.396Z INFO  Spar.Host  [4a6c0e92] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-m1c-wasm/repo/artifacts/linux-homes/host-tests/a53c7df1682b/data/com.example.tests.BridgeProbe
+2026-11-20T09:35:50.396Z INFO  Spar.Host  [4a6c0e92] single instance at 1.8 ms
+2026-11-20T09:35:50.408Z INFO  Spar.Host  [4a6c0e92] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T09:35:50.412Z INFO  Spar.Host  [4a6c0e92] Sandbox trial: bwrap exit 0 in 2.9 ms.
+2026-11-20T09:35:50.412Z INFO  Spar.Host  [4a6c0e92] prerequisites checked at 17.6 ms
+2026-11-20T09:35:50.412Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T09:35:50.412Z INFO  Spar.Host  [4a6c0e92] WebAssembly off: JSC_useWasm=false, replacing the inherited JSC_useWasm=true.
+2026-11-20T09:35:50.412Z WARN  Spar.Host  [4a6c0e92] JSC_useWebAssembly=true from the environment reaches JavaScriptCore in this app and its web processes; Spar lets it through.
+2026-11-20T09:35:50.412Z INFO  Spar.Host  [4a6c0e92] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T09:35:50.412Z INFO  Spar.Host  [4a6c0e92] gpu checked at 17.8 ms
+2026-11-20T09:35:50.413Z INFO  Spar.Host  [4a6c0e92] theme read at 19.1 ms
+2026-11-20T09:35:50.414Z INFO  Spar.Host  [4a6c0e92] services built at 20 ms
+2026-11-20T09:35:50.442Z INFO  Spar.Host  [4a6c0e92] gtk ready at 48 ms
+2026-11-20T09:35:50.461Z INFO  Spar.Host  [4a6c0e92] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T09:35:50.463Z INFO  Spar.Host  [4a6c0e92] Browser data folder /var/tmp/spar-m1c-wasm/repo/artifacts/linux-homes/host-tests/a53c7df1682b/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-m1c-wasm/repo/artifacts/linux-homes/host-tests/a53c7df1682b/data/com.example.tests.BridgeProbe/cache/WebKit
+2026-11-20T09:35:50.465Z INFO  Spar.Host  [4a6c0e92] web view created at 70.7 ms
+2026-11-20T09:35:50.465Z INFO  Spar.Host  [4a6c0e92] Heartbeat every 5000 ms.
+2026-11-20T09:35:50.475Z INFO  Spar.Host  [4a6c0e92] window shown at 81 ms
+2026-11-20T09:35:50.476Z INFO  Spar.Host  [4a6c0e92] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-IndXBH70e2cllsHwqUHLFWzeAiKnYY2NRaJ+Ryyh9Ww=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-QJw2QatvWb/nNUzonT+e+u8j1qg8Wb7CR6y2LsjZ+qY='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T09:35:50.476Z INFO  Spar.Host  [4a6c0e92] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T09:35:50.605Z INFO  Spar.Host  [4a6c0e92] page committed at 210.8 ms
+2026-11-20T09:35:50.605Z INFO  Spar.Host  [4a6c0e92] Bridge: document 49e81c72ac9807d3 opened.
+2026-11-20T09:35:50.605Z INFO  Spar.Host  [4a6c0e92] Heartbeat armed for the new document.
+2026-11-20T09:35:50.614Z INFO  Spar.Host  [4a6c0e92] first bridge message at 220.5 ms
+2026-11-20T09:35:50.615Z INFO  Spar.Host  [4a6c0e92] first bridge reply at 220.7 ms
+2026-11-20T09:35:50.616Z INFO  Spar.Host  [4a6c0e92] ui-ready at 222.5 ms
+2026-11-20T09:35:50.616Z INFO  Spar.Host  [4a6c0e92] Bridge: document 49e81c72ac9807d3 reported ui-ready.
+2026-11-20T09:35:50.616Z INFO  BridgeProbe.ProbeService  probe note: first document 49e81c72ac9807d3
+2026-11-20T09:35:50.652Z INFO  BridgeProbe.ProbeService  probe note: wasm: {"page":"undefined","worker":"undefined","shared":"undefined","service":"register refused (TypeError: serviceWorker.register() must be called with a script URL whose protocol is either HTTP or HTTPS)"}
+2026-11-20T09:35:50.652Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T09:35:50.672Z INFO  Spar.Host  [4a6c0e92] Bridge: document 49e81c72ac9807d3 closed (web process ended).
+2026-11-20T09:35:50.672Z WARN  Spar.Host  [4a6c0e92] The web process crashed; the page is reloaded once.
+2026-11-20T09:35:50.678Z INFO  Spar.Host  [4a6c0e92] page reloaded after the web process ended at 284 ms
+2026-11-20T09:35:50.725Z INFO  Spar.Host  [4a6c0e92] Bridge: document d959d5beb471daff opened.
+2026-11-20T09:35:50.725Z INFO  Spar.Host  [4a6c0e92] Heartbeat armed for the new document.
+2026-11-20T09:35:50.734Z INFO  Spar.Host  [4a6c0e92] Bridge: document d959d5beb471daff reported ui-ready.
+2026-11-20T09:35:50.735Z INFO  BridgeProbe.ProbeService  probe note: first document d959d5beb471daff (reloaded)
+2026-11-20T09:35:50.744Z INFO  BridgeProbe.ProbeService  probe note: wasm (reloaded): {"page":"undefined","worker":"undefined","shared":"undefined","service":"register refused (TypeError: serviceWorker.register() must be called with a script URL whose protocol is either HTTP or HTTPS)"}
+2026-11-20T09:35:50.747Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T09:35:50.760Z INFO  Spar.Host  [4a6c0e92] close requested (User) at 365.8 ms
+2026-11-20T09:35:50.760Z INFO  Spar.Host  [4a6c0e92] close request 1 sent to the page (user) at 365.8 ms
+2026-11-20T09:35:50.762Z INFO  Spar.Host  [4a6c0e92] close request 1: the page answered Close at 367.8 ms
+2026-11-20T09:35:50.762Z INFO  Spar.Host  [4a6c0e92] closing at 367.9 ms
+2026-11-20T09:35:50.762Z INFO  Spar.Host  [4a6c0e92] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T09:35:50.762Z INFO  Spar.Host  [4a6c0e92] page close work done at 368.4 ms
+2026-11-20T09:35:50.762Z INFO  Spar.Host  [4a6c0e92] Bridge: document d959d5beb471daff closed (window closing).
+2026-11-20T09:35:50.762Z INFO  Spar.Host  [4a6c0e92] calls stopped at 368.4 ms
+2026-11-20T09:35:50.762Z INFO  Spar.Host  [4a6c0e92] calls settled at 368.4 ms
+2026-11-20T09:35:50.764Z INFO  Spar.Host  [4a6c0e92] window destroyed at 370 ms
+2026-11-20T09:35:53.768Z WARN  Spar.Host  [4a6c0e92] Web processes still running after 3004 ms with no window left: WebKitWebProces 14662; ended.
+2026-11-20T09:35:53.800Z INFO  Spar.Host  [4a6c0e92] web processes exited after 3036 ms at 3405.6 ms
+2026-11-20T09:35:53.800Z INFO  Spar.Host  [4a6c0e92] services disposed at 3405.8 ms
+2026-11-20T09:35:53.800Z INFO  Spar.Host  [4a6c0e92] exit 0 at 3405.9 ms

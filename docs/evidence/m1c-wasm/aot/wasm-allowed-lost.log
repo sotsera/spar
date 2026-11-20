@@ -1,0 +1,54 @@
+2026-11-20T09:35:53.818Z INFO  Spar.Host  [fc3d6587] Host started 10 ms after the process.
+2026-11-20T09:35:53.818Z INFO  Spar.Host  [fc3d6587] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-m1c-wasm/repo/artifacts/linux-homes/host-tests/f5c0adb056c6/data/com.example.tests.BridgeProbe
+2026-11-20T09:35:53.818Z INFO  Spar.Host  [fc3d6587] single instance at 1.9 ms
+2026-11-20T09:35:53.830Z INFO  Spar.Host  [fc3d6587] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T09:35:53.834Z INFO  Spar.Host  [fc3d6587] Sandbox trial: bwrap exit 0 in 2.6 ms.
+2026-11-20T09:35:53.834Z INFO  Spar.Host  [fc3d6587] prerequisites checked at 17.8 ms
+2026-11-20T09:35:53.834Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), AllowWebAssembly(), Allow(Permission.Geolocation)
+2026-11-20T09:35:53.834Z INFO  Spar.Host  [fc3d6587] WebAssembly on (AllowWebAssembly()): JSC_useWasm=true, replacing the inherited JSC_useWasm=false.
+2026-11-20T09:35:53.834Z WARN  Spar.Host  [fc3d6587] JSC_useWebAssembly=false from the environment reaches JavaScriptCore in this app and its web processes; Spar lets it through.
+2026-11-20T09:35:53.834Z INFO  Spar.Host  [fc3d6587] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T09:35:53.834Z INFO  Spar.Host  [fc3d6587] gpu checked at 18 ms
+2026-11-20T09:35:53.835Z INFO  Spar.Host  [fc3d6587] theme read at 19.4 ms
+2026-11-20T09:35:53.836Z INFO  Spar.Host  [fc3d6587] services built at 20.3 ms
+2026-11-20T09:35:53.865Z INFO  Spar.Host  [fc3d6587] gtk ready at 49.2 ms
+2026-11-20T09:35:53.879Z INFO  Spar.Host  [fc3d6587] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T09:35:53.880Z INFO  Spar.Host  [fc3d6587] Browser data folder /var/tmp/spar-m1c-wasm/repo/artifacts/linux-homes/host-tests/f5c0adb056c6/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-m1c-wasm/repo/artifacts/linux-homes/host-tests/f5c0adb056c6/data/com.example.tests.BridgeProbe/cache/WebKit
+2026-11-20T09:35:53.882Z INFO  Spar.Host  [fc3d6587] web view created at 66.2 ms
+2026-11-20T09:35:53.882Z INFO  Spar.Host  [fc3d6587] Heartbeat every 5000 ms.
+2026-11-20T09:35:53.892Z INFO  Spar.Host  [fc3d6587] window shown at 75.9 ms
+2026-11-20T09:35:53.893Z INFO  Spar.Host  [fc3d6587] Content-Security-Policy: default-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'sha256-IndXBH70e2cllsHwqUHLFWzeAiKnYY2NRaJ+Ryyh9Ww=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-QJw2QatvWb/nNUzonT+e+u8j1qg8Wb7CR6y2LsjZ+qY='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T09:35:53.893Z INFO  Spar.Host  [fc3d6587] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T09:35:53.937Z INFO  Spar.Host  [fc3d6587] page committed at 121.5 ms
+2026-11-20T09:35:53.937Z INFO  Spar.Host  [fc3d6587] Bridge: document 094e9a3974c105bb opened.
+2026-11-20T09:35:53.937Z INFO  Spar.Host  [fc3d6587] Heartbeat armed for the new document.
+2026-11-20T09:35:53.947Z INFO  Spar.Host  [fc3d6587] first bridge message at 131.1 ms
+2026-11-20T09:35:53.947Z INFO  Spar.Host  [fc3d6587] first bridge reply at 131.2 ms
+2026-11-20T09:35:53.949Z INFO  Spar.Host  [fc3d6587] ui-ready at 132.9 ms
+2026-11-20T09:35:53.949Z INFO  Spar.Host  [fc3d6587] Bridge: document 094e9a3974c105bb reported ui-ready.
+2026-11-20T09:35:53.949Z INFO  BridgeProbe.ProbeService  probe note: first document 094e9a3974c105bb
+2026-11-20T09:35:53.986Z INFO  BridgeProbe.ProbeService  probe note: wasm: {"page":"object, add(2, 3) = 5","worker":"object, add(2, 3) = 5","shared":"object, add(2, 3) = 5","service":"register refused (TypeError: serviceWorker.register() must be called with a script URL whose protocol is either HTTP or HTTPS)"}
+2026-11-20T09:35:53.986Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T09:35:54.013Z INFO  Spar.Host  [fc3d6587] Bridge: document 094e9a3974c105bb closed (web process ended).
+2026-11-20T09:35:54.013Z WARN  Spar.Host  [fc3d6587] The web process crashed; the page is reloaded once.
+2026-11-20T09:35:54.019Z INFO  Spar.Host  [fc3d6587] page reloaded after the web process ended at 202.9 ms
+2026-11-20T09:35:54.066Z INFO  Spar.Host  [fc3d6587] Bridge: document b8b70722cbc27ef7 opened.
+2026-11-20T09:35:54.066Z INFO  Spar.Host  [fc3d6587] Heartbeat armed for the new document.
+2026-11-20T09:35:54.075Z INFO  Spar.Host  [fc3d6587] Bridge: document b8b70722cbc27ef7 reported ui-ready.
+2026-11-20T09:35:54.076Z INFO  BridgeProbe.ProbeService  probe note: first document b8b70722cbc27ef7 (reloaded)
+2026-11-20T09:35:54.090Z INFO  BridgeProbe.ProbeService  probe note: wasm (reloaded): {"page":"object, add(2, 3) = 5","worker":"object, add(2, 3) = 5","shared":"object, add(2, 3) = 5","service":"register refused (TypeError: serviceWorker.register() must be called with a script URL whose protocol is either HTTP or HTTPS)"}
+2026-11-20T09:35:54.090Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T09:35:54.100Z INFO  Spar.Host  [fc3d6587] close requested (User) at 284.3 ms
+2026-11-20T09:35:54.100Z INFO  Spar.Host  [fc3d6587] close request 1 sent to the page (user) at 284.3 ms
+2026-11-20T09:35:54.101Z INFO  Spar.Host  [fc3d6587] close request 1: the page answered Close at 285.4 ms
+2026-11-20T09:35:54.101Z INFO  Spar.Host  [fc3d6587] closing at 285.6 ms
+2026-11-20T09:35:54.101Z INFO  Spar.Host  [fc3d6587] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T09:35:54.102Z INFO  Spar.Host  [fc3d6587] page close work done at 286 ms
+2026-11-20T09:35:54.102Z INFO  Spar.Host  [fc3d6587] Bridge: document b8b70722cbc27ef7 closed (window closing).
+2026-11-20T09:35:54.102Z INFO  Spar.Host  [fc3d6587] calls stopped at 286.1 ms
+2026-11-20T09:35:54.102Z INFO  Spar.Host  [fc3d6587] calls settled at 286.1 ms
+2026-11-20T09:35:54.104Z INFO  Spar.Host  [fc3d6587] window destroyed at 288 ms
+2026-11-20T09:35:57.104Z WARN  Spar.Host  [fc3d6587] Web processes still running after 3001 ms with no window left: WebKitWebProces 14928; ended.
+2026-11-20T09:35:57.128Z INFO  Spar.Host  [fc3d6587] web processes exited after 3024 ms at 3312.2 ms
+2026-11-20T09:35:57.128Z INFO  Spar.Host  [fc3d6587] services disposed at 3312.3 ms
+2026-11-20T09:35:57.128Z INFO  Spar.Host  [fc3d6587] exit 0 at 3312.4 ms

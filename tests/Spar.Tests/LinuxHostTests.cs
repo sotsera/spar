@@ -151,8 +151,13 @@ public sealed class LinuxHostTests
         await using (var lost = LinuxAppRun.Launch(notebook!, "com.example.Notebook", []))
         {
             await lost.WaitForAsync(@"Bridge: document [0-9a-f]{16} reported ui-ready\.");
+
+            // The Notebook does not allow WebAssembly: its web process runs without it, and so does the one after a loss.
+            Assert.Contains("WebAssembly off: JSC_useWasm=false.", lost.Log(), StringComparison.Ordinal);
+            Assert.Equal("false", WebAssemblySetting(lost));
             lost.EndWebProcess();
             await lost.WaitForAsync(@"page reloaded after the web process ended(.|\n)*Bridge: document [0-9a-f]{16} reported ui-ready\.");
+            Assert.Equal("false", WebAssemblySetting(lost));
             Assert.Equal(0, await lost.CloseAsync());
         }
 
@@ -167,8 +172,37 @@ public sealed class LinuxHostTests
                 $"Launch to ui-ready, warm: {Summary(ready)}",
                 $"Close request to exit, from outside: {Summary(closing)}",
                 string.Create(CultureInfo.InvariantCulture, $"Total PSS, app and WebKit processes, one run: {memory:0.0} MB"),
+                "WebAssembly: JSC_useWasm=false in the web process, and in the one after a loss",
             ],
             TestContext.Current.CancellationToken);
+    }
+
+    /// <summary><c>JSC_useWasm</c> as the app's web process started with it, waiting for the process if it is not there yet.</summary>
+    private static string? WebAssemblySetting(LinuxAppRun app)
+    {
+        var limit = Stopwatch.StartNew();
+        while (limit.Elapsed < LinuxAppRun.Patience)
+        {
+            foreach (var (id, name) in app.WebKitProcesses())
+            {
+                try
+                {
+                    if (name.StartsWith("WebKitWebProces", StringComparison.Ordinal)
+                        && LinuxAppRun.EnvironmentOf(id).TryGetValue("JSC_useWasm", out var value))
+                    {
+                        return value;
+                    }
+                }
+                catch (IOException)
+                {
+                    // The process ended meanwhile.
+                }
+            }
+
+            Thread.Sleep(20);
+        }
+
+        return null;
     }
 
     internal static string Summary(List<double> milliseconds)

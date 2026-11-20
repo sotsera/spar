@@ -434,7 +434,8 @@ The entries below come from earlier Spar versions and other frameworks (`docs/re
 See also "Bridge and loopback" for the heartbeat, and "Page security (CSP, headers, permissions)" for `nosniff`, `Permissions-Policy`, the clipboard setting, injected scripts under the `eval` ban, and WebAssembly and CSP on WebKitGTK.
 
 - **A second instance on the same WebKitGTK data folders starts without any error and corrupts data:** after both exited, `localStorage` was empty, and both instances' writes were lost (2 of 2 on each API). Enforce single instance before the network session exists. (`webview-profiles`)
-- **On a custom scheme (`spar://`), WebKitGTK stores no cookies, and Cache Storage rejects the requests.** Service workers don't work on custom schemes either (from other frameworks, not rechecked). (`webview-profiles`)
+- **On a custom scheme (`spar://`), WebKitGTK stores no cookies, and Cache Storage rejects the requests.** (`webview-profiles`)
+- **WebKitGTK registers no service worker from a custom scheme:** on 2.52.6, `navigator.serviceWorker` exists on `spar://app` (a secure scheme), but `register()` rejects with `TypeError: serviceWorker.register() must be called with a script URL whose protocol is either HTTP or HTTPS`, so no service worker ever runs there. Dedicated and shared workers (module scripts) run, and inherit the UI process's environment, `JSC_useWasm` included. (M1c step 5)
 - **WebKit's website-data type constants differ between the APIs:** `ALL` is `0xFFF` on 6.0 and `0x3FFF` on 4.1. (`webview-profiles`)
 - **Destroying a WebKitGTK window runs `pagehide`, `visibilitychange` and `unload`, but not `beforeunload`.** (`webview-profiles`)
 - **GTK and its dialogs write to the real user config.** A GTK3 file chooser run without private folders created `~/.config/dconf/user` and `~/.config/gtk-3.0`. Printing added `~/.local/share/recently-used.xbel`, and restore added `~/.nuget/NuGet/NuGet.Config`. In tests and spikes, point `HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `XDG_CACHE_HOME` and `XDG_STATE_HOME` at a private folder before starting anything. (`linux-integration`)
@@ -805,6 +806,7 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
   (M1a CI)
 
 - **Git Bash halves backslashes in arguments to native programs:** a script passed to `node -e` lost one of each `\\` pair, so `"\\n"` arrived as `"\n"`, a real newline in the written file. Put such scripts in a file. (M1b page security)
+- **`rsync --exclude bin/` also leaves out `node_modules/vite/bin`:** a pattern without a leading slash matches a folder of that name at any depth, so a copy of an app's folder without its build output lost Vite's entry point, and the frontend build failed with "Cannot find module …/vite/bin/vite.js" while npm, seeing an unchanged `.package-lock.json`, installed nothing. Anchor the pattern to the copied folder: `--exclude /bin/ --exclude /obj/`. (M1c step 5)
 
 ### Tooling: from earlier versions, not rechecked
 

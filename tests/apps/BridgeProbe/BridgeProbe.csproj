@@ -3,7 +3,8 @@
     The test app of the host tests that run a real window from outside (tests/Spar.Tests, LinuxHostTests): a page that
     times calls, moves to a second document, embeds a frame from another origin that tries to reach the bridge, and
     reports what it saw through the backend's log; it also runs the page-security steps of M1c step 4 (src/security.js:
-    navigations, headers, violations, permissions, a link the test clicks). What it does is set by the test through
+    navigations, headers, violations, permissions, a link the test clicks) and the WebAssembly steps of M1c step 5
+    (src/wasm.js: the page, dedicated, shared and service workers). What it does is set by the test through
     BRIDGE_PROBE_PLAN.
   -->
 
@@ -14,5 +15,14 @@
 
     <!-- The page is plain JavaScript: there is nothing for the type-check to check. -->
     <SparTypeCheck>false</SparTypeCheck>
+  </PropertyGroup>
+
+  <!--
+    The WebAssembly opt-in's build (M1c step 5): csp.AllowWebAssembly() in Program.cs. Page security is read by the build,
+    not at run time, so the opt-in cannot come from the environment. Build it from a copy of this folder, so its bin and
+    obj stay apart from the default build's (docs/evidence/m1c-wasm/wsl.sh).
+  -->
+  <PropertyGroup Condition="'$(BridgeProbeWebAssembly)' == 'true'">
+    <DefineConstants>$(DefineConstants);BRIDGE_PROBE_WEBASSEMBLY</DefineConstants>
   </PropertyGroup>
 </Project>

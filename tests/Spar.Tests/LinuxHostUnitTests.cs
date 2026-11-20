@@ -235,4 +235,16 @@ public sealed class LinuxHostUnitTests
         Assert.Equal(Path.Combine(root, "cache", "WebKit"), AppWindow.CacheFolder(folders));
         Assert.Equal("/elsewhere/profile", SparFolders.Under(root, new FolderOptions().Profile("/elsewhere/profile")).Profile);
     }
+
+    [Theory]
+    [InlineData(false, null, "WebAssembly off: JSC_useWasm=false.")]
+    [InlineData(false, "false", "WebAssembly off: JSC_useWasm=false.")]
+    [InlineData(false, "1", "WebAssembly off: JSC_useWasm=false, replacing the inherited JSC_useWasm=1.")]
+    [InlineData(true, null, "WebAssembly on (AllowWebAssembly()): JSC_useWasm=true.")]
+    [InlineData(true, "false", "WebAssembly on (AllowWebAssembly()): JSC_useWasm=true, replacing the inherited JSC_useWasm=false.")]
+    public void The_engines_WebAssembly_setting_follows_the_declaration_whatever_the_environment_held(bool allowed, string? inherited, string line)
+    {
+        Assert.Equal(allowed ? "true" : "false", EngineEnvironment.Value(allowed));
+        Assert.Equal(line, EngineEnvironment.Describe(allowed, inherited));
+    }
 }

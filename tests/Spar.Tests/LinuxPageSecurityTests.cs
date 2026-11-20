@@ -354,6 +354,67 @@ public sealed partial class LinuxPageSecurityTests
         Assert.Contains("is not an absolute path on a local drive", relative.Log(), StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// WebAssembly as the app declared it (M1c step 5; decision "WebAssembly off on Linux"): <c>JSC_useWasm</c> set
+    /// before WebKit starts, replacing an inherited value of the other kind, absent by default and working with
+    /// <c>csp.AllowWebAssembly()</c> (the probe's own build of it, <c>SPAR_LINUX_WASM_APP</c>), in the page and in its
+    /// dedicated and shared workers, and again in the web process that replaces a lost one.
+    /// </summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task WebAssembly_follows_the_declaration_in_the_page_and_its_workers_and_after_a_lost_web_process(bool allowed)
+    {
+        var probe = allowed ? LinuxAppRun.WebAssemblyProbe() : LinuxAppRun.Probe();
+        var inherited = allowed ? "false" : "true";
+        await using var app = LinuxAppRun.Launch(
+            probe,
+            LinuxAppRun.ProbeAppId,
+            [("BRIDGE_PROBE_PLAN", "wasm,again-wasm"), ("JSC_useWasm", inherited), ("JSC_useWebAssembly", inherited)]);
+
+        var first = await app.WaitForAsync(Note + "wasm: (?<json>.+)$");
+
+        AssertWebAssembly(first, allowed);
+        var log = app.Log();
+        var value = allowed ? "true" : "false";
+        Assert.Contains($"JSC_useWasm={value}, replacing the inherited JSC_useWasm={inherited}.", log, StringComparison.Ordinal);
+
+        // The option's name before WebKitGTK 2.48: JavaScriptCore ignores it, and the host names it, as every JSC_ one.
+        Assert.Matches($@"WARN  Spar\.Host  \[[0-9a-f]{{8}}\] JSC_useWebAssembly={inherited} from the environment reaches JavaScriptCore", log);
+        Assert.Equal(allowed, Regex.IsMatch(log, "Content-Security-Policy: .*script-src [^;]*'wasm-unsafe-eval'"));
+        var webProcess = app.WebKitProcesses().First(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
+        Assert.Equal(value, LinuxAppRun.EnvironmentOf(webProcess.Id)["JSC_useWasm"]);
+
+        app.EndWebProcess();
+        var again = await app.WaitForAsync(Note + @"wasm \(reloaded\): (?<json>.+)$");
+
+        AssertWebAssembly(again, allowed);
+        Assert.Equal(0, await app.CloseAsync());
+        Record($"{BuildOf(probe)}, {(allowed ? "AllowWebAssembly()" : "default")}: {first.Groups["json"].Value}; after a lost web process {again.Groups["json"].Value}");
+    }
+
+    /// <summary>"Reload page" ends the web process through WebKit's API; the one it starts has the setting too.</summary>
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task WebAssembly_follows_the_declaration_after_Reload_page_ends_the_web_process(bool allowed)
+    {
+        var probe = allowed ? LinuxAppRun.WebAssemblyProbe() : LinuxAppRun.Probe();
+        Assert.SkipUnless(BuildOf(probe) == "development", "Only a Development build answers the hung-page dialog itself.");
+        await using var app = LinuxAppRun.Launch(
+            probe,
+            LinuxAppRun.ProbeAppId,
+            [("BRIDGE_PROBE_PLAN", "wasm,hang,again-wasm"), ("SPAR_DEV_HEARTBEAT_MS", "500"), ("SPAR_DEV_PROMPT_ANSWERS", "second@100")]);
+
+        AssertWebAssembly(await app.WaitForAsync(Note + "wasm: (?<json>.+)$"), allowed);
+        await app.WaitForAsync("web process ended by the host", TimeSpan.FromSeconds(40));
+        var again = await app.WaitForAsync(Note + @"wasm \(reloaded\): (?<json>.+)$");
+
+        AssertWebAssembly(again, allowed);
+        Assert.Equal(0, await app.CloseAsync());
+        Record($"{BuildOf(probe)}, {(allowed ? "AllowWebAssembly()" : "default")}: after Reload page {again.Groups["json"].Value}");
+    }
+
     private static async Task<(double Raised, (int Batches, int Read, int Refused, int Dropped) Totals, string Log)> FloodAsync(
         int count, (string Name, string? Value)[] variables)
     {
@@ -373,6 +434,28 @@ public sealed partial class LinuxPageSecurityTests
         int Number(string name) => int.Parse(line.Groups[name].Value, CultureInfo.InvariantCulture);
         return (Number("b"), Number("r"), Number("f"), Number("d"));
     }
+
+    /// <summary>
+    /// The page's, the dedicated worker's and the shared worker's answer: no global by default, a module that runs with
+    /// the opt-in. WebKitGTK registers no service worker from <c>spar://app</c>: should that change, a service worker
+    /// needs its own check.
+    /// </summary>
+    private static void AssertWebAssembly(Match note, bool allowed)
+    {
+        using var seen = JsonDocument.Parse(note.Groups["json"].Value);
+        var expected = allowed ? "object, add(2, 3) = 5" : "undefined";
+        foreach (var place in new[] { "page", "worker", "shared" })
+        {
+            Assert.Equal(expected, seen.RootElement.GetProperty(place).GetString());
+        }
+
+        Assert.StartsWith(
+            "register refused (TypeError: serviceWorker.register() must be called with a script URL whose protocol is either HTTP or HTTPS)",
+            seen.RootElement.GetProperty("service").GetString(),
+            StringComparison.Ordinal);
+    }
+
+    private static string BuildOf(string probe) => probe.Contains("/Development/", StringComparison.Ordinal) ? "development" : "production";
 
     private static string Top(string path) => string.Join('/', path.Split('/').Take(2));
 

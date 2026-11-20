@@ -92,6 +92,17 @@ internal sealed class LinuxAppRun : IAsyncDisposable
         return executable!;
     }
 
+    /// <summary>
+    /// The bridge probe built with <c>csp.AllowWebAssembly()</c> (<c>-p:BridgeProbeWebAssembly=true</c>, M1c step 5), or
+    /// a skip: page security is read by the build, so the opt-in is an executable of its own.
+    /// </summary>
+    public static string WebAssemblyProbe()
+    {
+        var executable = Environment.GetEnvironmentVariable("SPAR_LINUX_WASM_APP");
+        Assert.SkipWhen(string.IsNullOrEmpty(executable), "Needs SPAR_LINUX_WASM_APP, the bridge probe built with AllowWebAssembly().");
+        return executable!;
+    }
+
     /// <summary>Whether the probe is a Development build, whose automated mode and test variables a Production one lacks.</summary>
     public static bool IsDevelopmentProbe() => Probe().Contains("/Development/", StringComparison.Ordinal);
 

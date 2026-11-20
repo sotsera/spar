@@ -5,6 +5,7 @@ import { fingerprint } from "@spar/app/spar";
 import { probe } from "@spar/app/probe";
 import { windows } from "@spar/app/windows";
 import { securitySteps } from "./security.js";
+import { wasmSteps } from "./wasm.js";
 
 const status = document.getElementById("status");
 const connection = connectSpar(hostChannel(), fingerprint);
@@ -112,10 +113,15 @@ const steps = {
   },
 };
 
-Object.assign(steps, securitySteps(connection));
+Object.assign(steps, securitySteps(connection), wasmSteps(reloaded));
 
-// A step may carry one argument after a colon: busy:10000. A reloaded page runs none: a hang would only come back.
-for (const step of reloaded ? [] : plan) {
+// A step may carry one argument after a colon: busy:10000. A reloaded page runs only the steps named "again-<step>"
+// (which a first load skips), so a hang does not come back.
+const again = "again-";
+const toRun = reloaded
+  ? plan.filter(step => step.startsWith(again)).map(step => step.slice(again.length))
+  : plan;
+for (const step of toRun) {
   const [name, argument] = step.split(":");
   if (name in steps) {
     await steps[name](argument);

@@ -6,8 +6,14 @@ var app = SparApplication.Create(args, spar =>
 {
     spar.Window(w => w.Size(900, 640));
 
-    // The foreign frame of the bridge test, served by the test on loopback: another origin than spar://app.
+    // The foreign frame of the bridge test, served by the test on loopback: another origin than spar://app. The build
+    // reads the page security, so the WebAssembly opt-in (M1c step 5) is a build of its own:
+    // -p:BridgeProbeWebAssembly=true.
+#if BRIDGE_PROBE_WEBASSEMBLY
+    spar.ContentSecurity(csp => csp.FrameSrc("http://127.0.0.1:*").AllowWebAssembly());
+#else
     spar.ContentSecurity(csp => csp.FrameSrc("http://127.0.0.1:*"));
+#endif
 
     // For the page-security tests (M1c step 4): one declared feature, so a granted request can be seen beside the denied.
     spar.Permissions(p => p.Allow(Permission.Geolocation));
