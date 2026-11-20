@@ -185,6 +185,14 @@ internal static unsafe partial class GLib
     [LibraryImport(Gio)]
     public static partial nint g_memory_input_stream_new_from_bytes(nint bytes);
 
+    /// <summary>A new <c>GCancellable</c>, owned (<see cref="g_object_unref"/>).</summary>
+    [LibraryImport(Gio)]
+    public static partial nint g_cancellable_new();
+
+    /// <summary>Cancels the operations that hold <paramref name="cancellable"/>; their callbacks follow on the loop.</summary>
+    [LibraryImport(Gio)]
+    public static partial void g_cancellable_cancel(nint cancellable);
+
     /// <summary>The message of a <c>GError</c> (its third field, after the 32-bit domain and code), copied.</summary>
     public static string ErrorMessage(nint error) =>
         error == 0 ? "" : Marshal.PtrToStringUTF8(Marshal.ReadIntPtr(error, 8)) ?? "";

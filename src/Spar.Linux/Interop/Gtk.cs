@@ -14,6 +14,12 @@ internal static unsafe partial class Gtk
     /// <summary><c>GTK_STYLE_PROVIDER_PRIORITY_APPLICATION</c>: above the theme, below the user's own CSS.</summary>
     public const uint StyleProviderPriorityApplication = 600;
 
+    /// <summary><c>GDK_TOPLEVEL_STATE_MINIMIZED</c>.</summary>
+    public const uint ToplevelMinimized = 1 << 0;
+
+    /// <summary><c>GDK_TOPLEVEL_STATE_SUSPENDED</c> (GTK 4.12): the surface cannot be seen by the user.</summary>
+    public const uint ToplevelSuspended = 1 << 16;
+
     /// <summary>Opens the display named by the environment; false when there is none.</summary>
     [LibraryImport(Library)]
     public static partial int gtk_init_check();
@@ -80,6 +86,18 @@ internal static unsafe partial class Gtk
     /// <summary>The smallest size the widget accepts; on a window, its minimum size.</summary>
     [LibraryImport(Library)]
     public static partial void gtk_widget_set_size_request(nint widget, int width, int height);
+
+    /// <summary>Whether the widget is mapped (a window: shown, not hidden), as a <c>gboolean</c>.</summary>
+    [LibraryImport(Library)]
+    public static partial int gtk_widget_get_mapped(nint widget);
+
+    /// <summary>The window's <c>GdkSurface</c>, borrowed; 0 before it is realised.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_native_get_surface(nint native);
+
+    /// <summary>A toplevel surface's <c>GdkToplevelState</c> flags (<see cref="ToplevelMinimized"/>, …).</summary>
+    [LibraryImport(Library)]
+    public static partial uint gdk_toplevel_get_state(nint toplevel);
 
     [LibraryImport(Library)]
     public static partial nuint gtk_alert_dialog_get_type();

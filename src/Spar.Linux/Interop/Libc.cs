@@ -149,6 +149,10 @@ internal static unsafe partial class Libc
     [LibraryImport(Library, EntryPoint = "kill", SetLastError = true)]
     public static partial int Kill(int processId, int signal);
 
+    /// <summary>Ends the process at once with <paramref name="status"/>: no exit handlers, no flushing of C streams.</summary>
+    [LibraryImport(Library, EntryPoint = "_exit")]
+    public static partial void ExitNow(int status);
+
     /// <summary>The process's current environment (<c>environ</c>), as <c>posix_spawnp</c> wants it: what setenv changed included.</summary>
     public static nint* Environment()
     {

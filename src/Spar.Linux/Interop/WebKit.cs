@@ -136,11 +136,11 @@ internal static unsafe partial class WebKit
 
     /// <summary>
     /// Runs <paramref name="script"/> (UTF-8, <paramref name="length"/> bytes) in the main frame's script world
-    /// <paramref name="worldName"/>; no callback, so its result is dropped.
+    /// <paramref name="worldName"/>, or the page's own world when it is null; no callback, so its result is dropped.
     /// </summary>
     [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
     public static partial void webkit_web_view_evaluate_javascript(
-        nint view, byte* script, nint length, string worldName, nint sourceUri, nint cancellable, nint callback, nint data);
+        nint view, byte* script, nint length, string? worldName, nint sourceUri, nint cancellable, nint callback, nint data);
 
     [LibraryImport(Library)]
     public static partial void webkit_web_view_set_background_color(nint view, GdkRgba* color);
@@ -148,6 +148,13 @@ internal static unsafe partial class WebKit
     /// <summary>Ends the view's web process; <c>web-process-terminated</c> follows with <c>TERMINATED_BY_API</c>.</summary>
     [LibraryImport(Library)]
     public static partial void webkit_web_view_terminate_web_process(nint view);
+
+    /// <summary>
+    /// Whether WebKit thinks the view's web process answers (a <c>gboolean</c>); its change is the
+    /// <c>notify::is-web-process-responsive</c> signal.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial int webkit_web_view_get_is_web_process_responsive(nint view);
 
     [LibraryImport(Jsc)]
     public static partial int jsc_value_is_string(nint value);

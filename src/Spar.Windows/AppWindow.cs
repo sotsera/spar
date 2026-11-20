@@ -367,7 +367,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             _pageErrors);
         if (_view is { } view && _state != State.Closing)
         {
-            _watch = new PageWatch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
+            _watch = WindowsPageHost.Watch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
             _watch.Start();
             if (SparDevelopment.IsSupported)
             {

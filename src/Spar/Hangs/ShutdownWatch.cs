@@ -1,46 +1,57 @@
 using System.Diagnostics;
-using Spar.Hosting;
-using Windows.Win32.Foundation;
 
-namespace Spar.Windows;
+namespace Spar.Hosting;
 
 /// <summary>
-/// The shutdown hang policy (<see cref="ShutdownHang"/>): from the start of the teardown until the process is about to
-/// return its exit code, a thread of its own waits. If the shutdown has not finished after about 10 s, it shows "Keep
-/// waiting / Exit now", and again every 30 s after "Keep waiting". The prompt has no owner: by then the window may be
-/// destroyed (the app's services are disposed after it), and a window whose thread is the one stuck would block the
-/// prompt itself, since a dialog disables its owner through messages to the owner's thread. A shutdown that finishes
-/// takes the prompt down. Only "Exit now" ends the process, with exit code 10; in the automated mode nobody can answer,
-/// so the watch only logs.
+/// The shutdown hang policy (<see cref="ShutdownHang"/>), for every host: from the start of the teardown until the
+/// process is about to return its exit code, a thread of its own waits. If the shutdown has not finished after about
+/// 10 s, it shows "Keep waiting / Exit now" through the host, and again every 30 s after "Keep waiting". The prompt has
+/// no owner: by then the window may be gone (the app's services are disposed after it). A shutdown that finishes takes
+/// the prompt down. Only "Exit now" ends the process, with exit code 10, through the host; in the automated mode nobody
+/// can answer, so the watch only logs.
 /// </summary>
 internal sealed class ShutdownWatch
 {
-    private const int KeepWaitingId = 300;
-    private const int ExitNowId = 301;
-
     private readonly string _title;
     private readonly HostLog _log;
     private readonly bool _automated;
     private readonly int _firstPrompt;
     private readonly int _askAgain;
+    private readonly Func<HostPromptRequest, IHostPrompt> _show;
+    private readonly Action<int> _exitNow;
     private readonly ManualResetEventSlim _done = new();
     private readonly Lock _gate = new();
     private readonly long _started = Stopwatch.GetTimestamp();
-    private PromptDialog? _prompt;
+    private IHostPrompt? _prompt;
 
-    private ShutdownWatch(string title, HostLog log, bool automated, int firstPrompt, int askAgain)
+    private ShutdownWatch(
+        string title, HostLog log, bool automated, int firstPrompt, int askAgain, Func<HostPromptRequest, IHostPrompt> show, Action<int> exitNow)
     {
         _title = title;
         _log = log;
         _automated = automated;
         _firstPrompt = firstPrompt;
         _askAgain = askAgain;
+        _show = show;
+        _exitNow = exitNow;
     }
 
-    /// <summary>Starts watching the shutdown that begins now.</summary>
-    public static ShutdownWatch Start(string title, HostLog log, bool automated, int firstPrompt, int askAgain)
+    /// <summary>
+    /// Starts watching the shutdown that begins now: the first prompt after <paramref name="firstPrompt"/> ms, then
+    /// <paramref name="askAgain"/> ms after each "Keep waiting". <paramref name="show"/> shows an unowned prompt that
+    /// takes the foreground, called on the watch's thread; <paramref name="exitNow"/> ends the process at once with the
+    /// code it gets.
+    /// </summary>
+    public static ShutdownWatch Start(
+        string title,
+        HostLog log,
+        bool automated,
+        int firstPrompt,
+        int askAgain,
+        Func<HostPromptRequest, IHostPrompt> show,
+        Action<int> exitNow)
     {
-        var watch = new ShutdownWatch(title, log, automated, firstPrompt, askAgain);
+        var watch = new ShutdownWatch(title, log, automated, firstPrompt, askAgain, show, exitNow);
         var thread = new Thread(watch.Watch) { Name = "Spar shutdown watch", IsBackground = true };
         thread.Start();
         return watch;
@@ -73,13 +84,13 @@ internal sealed class ShutdownWatch
                 }
 
                 var choice = Ask(seconds);
-                if (choice == ExitNowId)
+                if (choice == PromptAnswer.Second)
                 {
                     ExitNow(seconds);
                     return;
                 }
 
-                if (choice == PromptDialog.Dismissed)
+                if (choice == PromptAnswer.Dismissed)
                 {
                     return;
                 }
@@ -94,35 +105,27 @@ internal sealed class ShutdownWatch
     }
 
     /// <summary>Shows the prompt and waits for it on this thread, which only watches; the shutdown goes on meanwhile.</summary>
-    private int Ask(double seconds)
+    private PromptAnswer Ask(double seconds)
     {
         var instruction = $"{_title} is taking long to close";
         var content = $"It has been closing for {seconds:0} seconds. You can keep waiting, or exit now: exiting now skips "
             + "the app's remaining cleanup, so what it has not saved yet may be lost.";
-        PromptDialog prompt;
+        IHostPrompt prompt;
         lock (_gate)
         {
             if (_done.IsSet)
             {
-                return PromptDialog.Dismissed;
+                return PromptAnswer.Dismissed;
             }
 
-            prompt = PromptDialog.Show(
-                HWND.Null,
-                _title,
-                instruction,
-                content,
-                new PromptButton(KeepWaitingId, "Keep waiting"),
-                new PromptButton(ExitNowId, "Exit now"),
-                takeForeground: true,
-                exception => _log.Error("The shutdown prompt failed", exception));
+            prompt = _show(new HostPromptRequest(HostPromptKind.Shutdown, instruction, content, "Keep waiting", "Exit now"));
             _prompt = prompt;
         }
 
         _log.Step("shutdown prompt shown (Keep waiting / Exit now)");
 
         // This thread exists to wait: blocking it holds up neither the shutdown nor the prompt, which has its own.
-        var choice = prompt.Result.GetAwaiter().GetResult();
+        var choice = prompt.Answer.GetAwaiter().GetResult();
         lock (_gate)
         {
             _prompt = null;
@@ -136,6 +139,6 @@ internal sealed class ShutdownWatch
     {
         _log.Step($"shutdown prompt: Exit now after {seconds:0.0} s; exit {ShutdownHang.ExitCode}");
         _log.Close();
-        ProcessControl.ExitNow(ShutdownHang.ExitCode);
+        _exitNow(ShutdownHang.ExitCode);
     }
 }

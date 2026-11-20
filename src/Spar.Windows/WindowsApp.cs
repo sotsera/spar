@@ -102,7 +102,14 @@ internal sealed class WindowsApp : IAppWindowOwner
     /// <summary>The teardown started: no more relaunches, and the shutdown is watched until the process returns.</summary>
     void IAppWindowOwner.TeardownStarted()
     {
-        _shutdown = ShutdownWatch.Start(_title, _log, _automated, ShutdownHang.FirstPromptMilliseconds, ShutdownHang.AskAgainMilliseconds);
+        _shutdown = ShutdownWatch.Start(
+            _title,
+            _log,
+            _automated,
+            ShutdownHang.FirstPromptMilliseconds,
+            ShutdownHang.AskAgainMilliseconds,
+            request => WindowsPageHost.ShowShutdownPrompt(_title, _log, request),
+            ProcessControl.ExitNow);
         _instance?.StopListening();
     }
 

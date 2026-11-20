@@ -1,41 +1,32 @@
 using System.Diagnostics;
-using Spar.Hosting;
-using Windows.Win32;
-using Windows.Win32.Foundation;
 
-namespace Spar.Windows;
+namespace Spar.Hosting;
 
 /// <summary>
-/// The hung-page heartbeat of the main window (plan section 3, "Hung pages"), on the UI thread: a thread-pool timer
-/// posts a tick every 5 s, each tick decides with <see cref="PageHeartbeat"/> and, at most, posts one small ping
-/// through the bridge, so pinging costs the UI thread microseconds and never waits. The page answers from its
-/// message handler. A page that stops answering gets Spar's native dialog, "Wait / Reload page", or "Wait / Close
-/// anyway" while a close request is open (decision "What "Wait" does after the hung-page dialog"); the dialog runs on a
-/// thread of its own and closes by itself when the page answers again. Each change reaches the app's hook
+/// The hung-page heartbeat of the main window (plan section 3, "Hung pages"), for every host, on the window's UI thread:
+/// a thread-pool timer posts a tick every 5 s, each tick decides with <see cref="PageHeartbeat"/> and, at most, posts
+/// one small ping through the host's bridge, so pinging costs the UI thread microseconds and never waits. The host's
+/// script in the page answers it. A page that stops answering gets the host's native dialog, "Wait / Reload page", or
+/// "Wait / Close anyway" while a close request is open (decision "What "Wait" does after the hung-page dialog"); the
+/// dialog closes by itself when the page answers again. Each change reaches the app's hook
 /// (<c>spar.OnPageUnresponsive</c>), which only observes. Nothing is ended or reloaded except by the user's answer; in
 /// the automated mode nobody can answer, so no dialog shows, and a close closes anyway. The page's side of a close
-/// request, its close guards, is in <c>PageWatch.Closing.cs</c>.
+/// request, its close guards, is in <c>PageWatch.Closing.cs</c>; what the host provides is <see cref="IPageWatchHost"/>.
 /// </summary>
 internal sealed partial class PageWatch
 {
     private const string MainWindow = "main";
-    private const int WaitId = 200;
-    private const int ReloadId = 201;
-    private const int CloseAnywayId = 202;
 
-    private readonly UiThread _ui;
+    private readonly IPageWatchHost _host;
     private readonly HostLog _log;
-    private readonly HWND _window;
     private readonly string _title;
-    private readonly WebViewBridge _bridge;
-    private readonly BrowserView _view;
     private readonly PageHangHook _hook;
     private readonly bool _automated;
     private readonly int _interval;
     private readonly PageHeartbeat _heartbeat = new();
     private readonly Action _tick;
     private ITimer? _timer;
-    private PromptDialog? _dialog;
+    private IHostPrompt? _dialog;
     private bool _dialogForClose;
     private bool _stopped;
     private long _hangSince;
@@ -44,33 +35,15 @@ internal sealed partial class PageWatch
     private long _longestTick;
 
     /// <param name="interval">The heartbeat's interval; <see cref="PageHeartbeat.IntervalMilliseconds"/> except in a Development override.</param>
-    public PageWatch(
-        UiThread ui,
-        HostLog log,
-        HWND window,
-        string title,
-        WebViewBridge bridge,
-        BrowserView view,
-        PageHangHook hook,
-        bool automated,
-        int interval)
+    public PageWatch(IPageWatchHost host, HostLog log, string title, PageHangHook hook, bool automated, int interval)
     {
-        _ui = ui;
+        _host = host;
         _log = log;
-        _window = window;
         _title = title;
-        _bridge = bridge;
-        _view = view;
         _hook = hook;
         _automated = automated;
         _interval = interval;
         _tick = Tick;
-
-        bridge.DocumentOpened += OnDocumentOpened;
-        bridge.DocumentClosed += OnDocumentClosed;
-        bridge.Answered += OnAnswered;
-        bridge.CloseAnswered += OnCloseAnswered;
-        view.RendererUnresponsive += OnRendererUnresponsive;
     }
 
     /// <summary>Whether the page counts as unresponsive now (UI thread).</summary>
@@ -99,12 +72,98 @@ internal sealed partial class PageWatch
         _log.Info($"Heartbeat: {_ticks} ticks, {_pings} pings, longest tick on the UI thread {longest:0.000} ms.");
     }
 
+    /// <summary>
+    /// A new document is created, before any of its scripts runs (UI thread): <paramref name="answersPing"/> when the
+    /// host's script in it answers the heartbeat; a document without it is not pinged.
+    /// </summary>
+    public void DocumentOpened(bool answersPing)
+    {
+        if (_stopped)
+        {
+            return;
+        }
+
+        if (answersPing)
+        {
+            _heartbeat.Arm();
+            _log.Info("Heartbeat armed for the new document.");
+        }
+        else
+        {
+            _heartbeat.Disarm();
+            _log.Info("The new document does not answer the heartbeat; it is not pinged.");
+        }
+    }
+
+    /// <summary>
+    /// The document is gone (UI thread): a hung one was replaced (its process ended and the page reloaded, or it
+    /// navigated). A close request it was asked goes on without it: the page that was asked is gone, so its answer no
+    /// longer counts.
+    /// </summary>
+    public void DocumentClosed()
+    {
+        if (_stopped)
+        {
+            return;
+        }
+
+        if (_heartbeat.IsUnresponsive)
+        {
+            var duration = HangDuration();
+            _log.Step($"the unresponsive page was replaced after {duration.TotalSeconds:0.0} s");
+            _hook.Report(new PageHang(MainWindow, PageHangState.Reloaded, duration));
+            DismissDialog();
+        }
+
+        _heartbeat.Disarm();
+        if (_close is { } wait && wait.Done.TrySetResult(PageCloseResult.NoPage))
+        {
+            _log.Step($"close request {wait.Seq}: the page that was asked went away; its answer no longer counts");
+        }
+    }
+
+    /// <summary>
+    /// The current document answered the ping <paramref name="seq"/> (UI thread); <paramref name="dialog"/> when it said
+    /// it shows a modal dialog of its own.
+    /// </summary>
+    public void Answered(long seq, bool dialog)
+    {
+        if (_stopped)
+        {
+            return;
+        }
+
+        if (_close is { } wait)
+        {
+            wait.Ponged(dialog);
+            if (!wait.Sent && !_heartbeat.IsUnresponsive)
+            {
+                // A page without close guards (no SDK, or an older one) that answers agrees, as before guards existed.
+                wait.Done.TrySetResult(PageCloseResult.NoPage);
+            }
+        }
+
+        Apply(_heartbeat.Answered(seq), "");
+    }
+
+    /// <summary>
+    /// The web engine reported the page unresponsive (UI thread): one state and one dialog with the heartbeat's alarm.
+    /// <paramref name="engine"/> names it for the log.
+    /// </summary>
+    public void EngineReportedUnresponsive(string engine)
+    {
+        if (!_stopped)
+        {
+            Apply(_heartbeat.ReportedUnresponsive(Stopwatch.GetTimestamp()), $"was reported unresponsive by {engine}");
+        }
+    }
+
     /// <summary>On the timer's thread: the tick runs on the UI thread, behind what is queued there.</summary>
     private void PostTick()
     {
         if (!_stopped)
         {
-            _ui.Post(_tick, "heartbeat");
+            _host.Post(_tick, "heartbeat");
         }
     }
 
@@ -116,8 +175,7 @@ internal sealed partial class PageWatch
         }
 
         var started = Stopwatch.GetTimestamp();
-        var visible = PInvoke.IsWindowVisible(_window) && !PInvoke.IsIconic(_window) && _view.IsShown;
-        Apply(_heartbeat.Tick(visible, started), "did not answer three heartbeats");
+        Apply(_heartbeat.Tick(_host.IsPageVisible, started), "did not answer three heartbeats");
 
         _ticks++;
         _longestTick = Math.Max(_longestTick, Stopwatch.GetTimestamp() - started);
@@ -150,7 +208,7 @@ internal sealed partial class PageWatch
             return;
         }
 
-        if (_bridge.Ping(number))
+        if (_host.Ping(number))
         {
             _pings++;
             return;
@@ -207,18 +265,17 @@ internal sealed partial class PageWatch
         var content = forClose
             ? $"The page has not answered for {seconds} seconds. You can wait for it, or close the window anyway: what the page has not saved is lost."
             : $"The page has not answered for {seconds} seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.";
-        var second = forClose ? new PromptButton(CloseAnywayId, "Close anyway") : new PromptButton(ReloadId, "Reload page");
-        var dialog = PromptDialog.Show(_window, _title, instruction, content, new PromptButton(WaitId, "Wait"), second, takeForeground: false, ReportDialogFailure);
+        var dialog = _host.ShowPrompt(new HostPromptRequest(forClose ? HostPromptKind.HungPageClose : HostPromptKind.HungPage, instruction, content, "Wait", forClose ? "Close anyway" : "Reload page"));
         _dialog = dialog;
         _dialogForClose = forClose;
         _log.Step(forClose ? "hung-page dialog shown (Wait / Close anyway)" : "hung-page dialog shown (Wait / Reload page)");
-        _ = AwaitChoiceAsync(dialog);
+        _ = AwaitChoiceAsync(dialog, forClose);
     }
 
     /// <summary>The user's answer, back on the UI thread; a dialog taken down or replaced meanwhile is ignored.</summary>
-    private async Task AwaitChoiceAsync(PromptDialog dialog)
+    private async Task AwaitChoiceAsync(IHostPrompt dialog, bool forClose)
     {
-        var choice = await dialog.Result;
+        var choice = await dialog.Answer;
         if (dialog != _dialog || _stopped)
         {
             return;
@@ -227,16 +284,16 @@ internal sealed partial class PageWatch
         _dialog = null;
         switch (choice)
         {
-            case WaitId:
+            case PromptAnswer.First:
                 _log.Step("hung-page dialog: Wait");
                 Waited();
                 break;
-            case ReloadId:
-                Reload();
-                break;
-            case CloseAnywayId:
+            case PromptAnswer.Second when forClose:
                 _log.Step("hung-page dialog: Close anyway");
                 _close?.Done.TrySetResult(PageCloseResult.CloseAnyway);
+                break;
+            case PromptAnswer.Second:
+                Reload();
                 break;
         }
     }
@@ -254,7 +311,7 @@ internal sealed partial class PageWatch
         _log.Step($"hung-page dialog: Reload page, after {duration.TotalSeconds:0.0} s");
         _hook.Report(new PageHang(MainWindow, PageHangState.Reloaded, duration));
         _heartbeat.Disarm();
-        _view.ReloadHungPage();
+        _host.ReloadHungPage();
     }
 
     private void Recovered()
@@ -279,81 +336,6 @@ internal sealed partial class PageWatch
         _dialog?.Dismiss();
         _dialog = null;
     }
-
-    private void OnDocumentOpened(bool answersPing)
-    {
-        if (_stopped)
-        {
-            return;
-        }
-
-        if (answersPing)
-        {
-            _heartbeat.Arm();
-            _log.Info("Heartbeat armed for the new document.");
-        }
-        else
-        {
-            _heartbeat.Disarm();
-            _log.Info("The new document does not answer the heartbeat; it is not pinged.");
-        }
-    }
-
-    /// <summary>
-    /// The document is gone: a hung one was replaced (its renderer ended and the page reloaded, or it navigated). A close
-    /// request it was asked goes on without it: the page that was asked is gone, so its answer no longer counts.
-    /// </summary>
-    private void OnDocumentClosed()
-    {
-        if (_stopped)
-        {
-            return;
-        }
-
-        if (_heartbeat.IsUnresponsive)
-        {
-            var duration = HangDuration();
-            _log.Step($"the unresponsive page was replaced after {duration.TotalSeconds:0.0} s");
-            _hook.Report(new PageHang(MainWindow, PageHangState.Reloaded, duration));
-            DismissDialog();
-        }
-
-        _heartbeat.Disarm();
-        if (_close is { } wait && wait.Done.TrySetResult(PageCloseResult.NoPage))
-        {
-            _log.Step($"close request {wait.Seq}: the page that was asked went away; its answer no longer counts");
-        }
-    }
-
-    private void OnAnswered(long seq, bool dialog)
-    {
-        if (_stopped)
-        {
-            return;
-        }
-
-        if (_close is { } wait)
-        {
-            wait.Ponged(dialog);
-            if (!wait.Sent && !_heartbeat.IsUnresponsive)
-            {
-                // A page without close guards (no SDK, or an older one) that answers agrees, as before guards existed.
-                wait.Done.TrySetResult(PageCloseResult.NoPage);
-            }
-        }
-
-        Apply(_heartbeat.Answered(seq), "");
-    }
-
-    private void OnRendererUnresponsive()
-    {
-        if (!_stopped)
-        {
-            Apply(_heartbeat.ReportedUnresponsive(Stopwatch.GetTimestamp()), "was reported unresponsive by WebView2");
-        }
-    }
-
-    private void ReportDialogFailure(Exception exception) => _log.Error("The hung-page dialog failed", exception);
 
     private TimeSpan HangDuration() => _hangSince == 0 ? TimeSpan.Zero : Stopwatch.GetElapsedTime(_hangSince);
 }

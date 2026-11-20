@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [spar()],
   build: {
     rollupOptions: {
-      input: { index: "index.html", other: "other.html" },
+      input: { index: "index.html", other: "other.html", hang: "hang.html" },
     },
   },
 });

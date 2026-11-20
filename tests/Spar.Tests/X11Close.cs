@@ -14,8 +14,11 @@ internal static unsafe partial class X11Close
     private const string Library = "libX11.so.6";
     private const int ClientMessage = 33;
 
-    /// <summary>Sends the close to every window of <paramref name="processId"/> on <paramref name="display"/>; returns how many got it.</summary>
-    public static int Send(string display, int processId)
+    /// <summary>
+    /// Sends the close to every window of <paramref name="processId"/> on <paramref name="display"/>, or only to
+    /// <paramref name="only"/> when it is given; returns how many got it.
+    /// </summary>
+    public static int Send(string display, int processId, nuint only = 0)
     {
         IgnoreErrors();
         var connection = XOpenDisplay(display);
@@ -32,7 +35,7 @@ internal static unsafe partial class X11Close
             var sent = 0;
             foreach (var window in Windows(connection, XDefaultRootWindow(connection)))
             {
-                if (pid == 0 || PidOf(connection, window, pid) != processId)
+                if (pid == 0 || PidOf(connection, window, pid) != processId || (only != 0 && window != only))
                 {
                     continue;
                 }

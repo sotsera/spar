@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Spar.Hosting;
@@ -9,7 +10,7 @@ namespace Spar.Linux;
 /// <summary>What the run that owns a window does at the window's turning points (loop thread).</summary>
 internal interface IAppWindowOwner
 {
-    /// <summary>The teardown started: an app starts watching its shutdown (M1c step 3) and stops taking relaunches (step 2).</summary>
+    /// <summary>The teardown started: an app starts watching its shutdown and stops taking relaunches.</summary>
     void TeardownStarted();
 
     /// <summary>The window is gone and its web processes have exited: an app ends its main loop.</summary>
@@ -37,6 +38,8 @@ internal sealed partial class AppWindow
     private readonly bool _automated;
     private readonly string _title;
     private readonly SparFolders _folders;
+    private readonly PageHangHook _hangHook;
+    private readonly ConcurrentQueue<string>? _promptAnswers;
     private readonly IAppWindowOwner _owner;
     private readonly CancellationTokenSource _stopping = new();
     private CloseGuard? _guard;
@@ -44,6 +47,7 @@ internal sealed partial class AppWindow
     private SchemeServer? _pages;
     private ScriptBridge? _bridge;
     private BrowserView? _view;
+    private PageWatch? _watch;
     private WindowTheme? _theme;
     private GCHandle _self;
     private nint _window;
@@ -52,13 +56,24 @@ internal sealed partial class AppWindow
     private bool _failed;
     private int _exitCode;
 
-    public AppWindow(SparApp app, HostLog log, bool automated, string title, SparFolders folders, IAppWindowOwner owner)
+    /// <param name="promptAnswers">A Development build's scripted answers to the hung-page dialogs; null otherwise.</param>
+    public AppWindow(
+        SparApp app,
+        HostLog log,
+        bool automated,
+        string title,
+        SparFolders folders,
+        PageHangHook hangHook,
+        ConcurrentQueue<string>? promptAnswers,
+        IAppWindowOwner owner)
     {
         _app = app;
         _log = log;
         _automated = automated;
         _title = title;
         _folders = folders;
+        _hangHook = hangHook;
+        _promptAnswers = promptAnswers;
         _owner = owner;
     }
 
@@ -102,6 +117,16 @@ internal sealed partial class AppWindow
         _bridge = new ScriptBridge(ui, _log, built, development);
         _view = new BrowserView(ui, _log, _pages, _bridge, Fail);
         _view.Create(_folders.Profile, Path.Combine(_folders.Cache, "WebKit"), ScriptBridge.RelayScript(), theme.Background);
+
+        // The heartbeat follows the view's documents from the first one on, before the services exist.
+        _watch = LinuxPageHost.Watch(
+            ui, _log, () => _window, _title, _bridge, _view, _hangHook, _automated, HeartbeatInterval(), _promptAnswers);
+        _watch.Start();
+        if (SparDevelopment.IsSupported)
+        {
+            DevelopmentTriggers.Watch(ui, _bridge, _view, _log);
+        }
+
         Gtk.gtk_window_set_child(_window, _view.Handle);
         _view.Load();
         theme.Realize();
@@ -136,30 +161,32 @@ internal sealed partial class AppWindow
     }
 
     /// <summary>
-    /// After the main loop has ended, off it: the bridge's reader, then the handles native callbacks found this window,
-    /// its view and its scheme by. The app's services are disposed by the run after this.
+    /// After the window is gone, off the main loop: the bridge's reader. The app's services are disposed by the run
+    /// after this, and <see cref="Release"/> follows once the loop has ended.
     /// </summary>
     public async Task StopAsync()
     {
-        try
+        if (_bridge is { } bridge)
         {
-            if (_bridge is { } bridge)
-            {
-                await bridge.StopAsync();
-            }
+            await bridge.StopAsync();
         }
-        finally
-        {
-            _view?.Release();
-            _pages?.Release();
-            _theme?.Release();
-            if (_self.IsAllocated)
-            {
-                _self.Free();
-            }
+    }
 
-            _stopping.Dispose();
+    /// <summary>
+    /// Once the main loop has ended and nothing can call back: the handles native callbacks found this window, its view
+    /// and its scheme by.
+    /// </summary>
+    public void Release()
+    {
+        _view?.Release();
+        _pages?.Release();
+        _theme?.Release();
+        if (_self.IsAllocated)
+        {
+            _self.Free();
         }
+
+        _stopping.Dispose();
     }
 
     /// <summary>Once the services exist: the backend's close guard.</summary>
@@ -169,6 +196,7 @@ internal sealed partial class AppWindow
         {
             var running = await built;
             _guard = new CloseGuard(_app.Builder.CloseGuard, running.Services, _log.Logger);
+            _hangHook.Start(running.Services);
         }
         catch (Exception exception)
         {
@@ -253,6 +281,10 @@ internal sealed partial class AppWindow
             _log.Warn($"Web processes still running after {waited:0} ms: {string.Join(", ", left.Select(p => $"{p.Name} {p.Id}"))}.");
         }
     }
+
+    /// <summary>The heartbeat's interval: 5 s, or a Development build's override (the call is trimmed from Production).</summary>
+    private static int HeartbeatInterval() =>
+        SparDevelopment.IsSupported ? DevelopmentTriggers.HeartbeatInterval() : PageHeartbeat.IntervalMilliseconds;
 
     [UnmanagedCallersOnly]
     private static int OnCloseRequest(nint window, nint data)

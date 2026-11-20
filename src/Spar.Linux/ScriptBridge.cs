@@ -15,7 +15,8 @@ namespace Spar.Linux;
 /// message between the two is dropped. Messages are decoded and dispatched off the main loop, in the order they arrived,
 /// once the app's services exist (a page may connect while they are still being built); replies are encoded as script
 /// literals where they are produced, and the main loop only checks that their document is still the current one and
-/// hands what queued up to WebKit in one <c>evaluate_javascript</c> per turn.
+/// hands what queued up to WebKit in one <c>evaluate_javascript</c> per turn. The heartbeat (plan section 3, "Hung pages")
+/// goes the same way, with no session: the relay answers each ping itself, and its answer is read on the loop.
 /// </summary>
 internal sealed class ScriptBridge
 {
@@ -26,6 +27,12 @@ internal sealed class ScriptBridge
     public const string Handler = "spar";
 
     private const string RelayResource = "Spar.Linux.BridgeRelay.js";
+
+    /// <summary>The longest message read on the loop as a heartbeat answer; anything longer goes to the reader.</summary>
+    private const int PongLimit = 128;
+
+    /// <summary>How the relay's answers start; nothing else the page sends starts like that.</summary>
+    private const string PongStart = "{\"type\":\"pong\",";
 
     private static ReadOnlySpan<byte> DeliverStart => "typeof sparRelay === \"object\" && sparRelay.deliver(["u8;
 
@@ -54,6 +61,27 @@ internal sealed class ScriptBridge
 
     /// <summary>Raised on the loop when the current document reports <c>ui-ready</c>.</summary>
     public event Action? DocumentReady;
+
+    /// <summary>
+    /// Raised on the loop when a new document is committed, before any of its scripts runs: true on the app's origin,
+    /// where the relay answers the heartbeat (plan section 3, "Hung pages"), false for a document anywhere else.
+    /// </summary>
+    public event Action<bool>? DocumentOpened;
+
+    /// <summary>Raised on the loop when the current document's epoch ends (a load, the web process ending, closing).</summary>
+    public event Action? DocumentClosed;
+
+    /// <summary>
+    /// Raised on the loop with the <c>seq</c> of each <c>pong</c> from the current document, and whether the page shows
+    /// a modal dialog of its own. The relay answers, so a document answers before its page connects.
+    /// </summary>
+    public event Action<long, bool>? Answered;
+
+    /// <summary>
+    /// Raised on the loop with the <c>seq</c> of each <c>close-answer</c> from the current document, read, and why it
+    /// could not be read (null when it could). An answer from a document that has since gone is dropped here.
+    /// </summary>
+    public event Action<long, PageCloseAnswer, string?>? CloseAnswered;
 
     /// <summary>The current document's id, or null between documents (loop thread).</summary>
     public string? CurrentDocument => _current is { IsClosed: false } document ? document.Id : null;
@@ -93,17 +121,20 @@ internal sealed class ScriptBridge
         if (!SchemeServer.IsAppOrigin(address))
         {
             _log.Warn("Bridge: a document outside the app's origin was committed; it has no bridge.");
+            DocumentOpened?.Invoke(false);
             return;
         }
 
         var document = new Document(Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(8)));
         _current = document;
         _log.Info($"Bridge: document {document.Id} opened.");
+        DocumentOpened?.Invoke(true);
     }
 
     /// <summary>
     /// A script message from the relay (loop thread): the handler exists in the relay's world only, and the relay only
-    /// in the top document of the app's origin, so a message is the current document's. Copied out and queued.
+    /// in the top document of the app's origin, so a message is the current document's. A heartbeat answer is read here,
+    /// before the document has a session and whatever the reader is waiting for; anything else is copied out and queued.
     /// </summary>
     public void OnMessage(string text)
     {
@@ -113,9 +144,39 @@ internal sealed class ScriptBridge
             return;
         }
 
+        if (text.Length <= PongLimit && text.StartsWith(PongStart, StringComparison.Ordinal) && Pong(text))
+        {
+            return;
+        }
+
         _log.Phase("first bridge message");
         _incoming.Writer.TryWrite(new Incoming(document, text));
     }
+
+    /// <summary>
+    /// The heartbeat's ping to the current document (loop thread), which the relay answers: false when there is none.
+    /// It needs no session, so a page that hangs before it connects is pinged too.
+    /// </summary>
+    public bool Ping(long seq)
+    {
+        if (_current is not { IsClosed: false } document)
+        {
+            return false;
+        }
+
+        Deliver(document, Literal(BridgeCodec.EncodeToString(new BridgeMessage(BridgeMessageType.Ping) { Seq = seq })));
+        return true;
+    }
+
+    /// <summary>
+    /// Asks the current document's close guards (loop thread): false when there is no document, it has not connected
+    /// yet, or its page did not list <c>close-request</c>. The answer arrives through <see cref="CloseAnswered"/>.
+    /// </summary>
+    public bool RequestClose(long seq, CloseReason reason, bool automated) =>
+        SessionOfCurrent() is { } session && session.RequestClose(seq, PageCloseAnswer.RequestPayload(reason, automated));
+
+    /// <summary>The close request <paramref name="seq"/> ended without the page's answer: its guards' signal is aborted (loop thread).</summary>
+    public void EndClose(long seq) => SessionOfCurrent()?.EndClose(seq);
 
     /// <summary>
     /// The page's close work (the <c>closing</c> message): the page runs it and answers <c>closing-done</c>; the host
@@ -237,6 +298,41 @@ internal sealed class ScriptBridge
         session?.Close();
         document.ClosingDone.TrySetResult();
         _log.Info($"Bridge: document {document.Id} closed ({why}).");
+        DocumentClosed?.Invoke();
+    }
+
+    /// <summary>A heartbeat answer read on the loop; false when it is not one after all, so the session refuses it.</summary>
+    private bool Pong(string text)
+    {
+        if (!BridgeCodec.TryDecode(text, out var decoded, out _) || decoded is not { Type: BridgeMessageType.Pong, Seq: { } seq })
+        {
+            return false;
+        }
+
+        Answered?.Invoke(seq, BridgeSession.ShowsDialog(decoded.Payload.Span));
+        return true;
+    }
+
+    /// <summary>The current document's session, if it has connected (loop thread).</summary>
+    private BridgeSession? SessionOfCurrent()
+    {
+        if (_current is not { IsClosed: false } document)
+        {
+            return null;
+        }
+
+        lock (document.Gate)
+        {
+            return document.Session;
+        }
+    }
+
+    private void ClosingAnswered(Document document, long seq, PageCloseAnswer answer, string? problem)
+    {
+        if (document == _current && !document.IsClosed)
+        {
+            CloseAnswered?.Invoke(seq, answer, problem);
+        }
     }
 
     /// <summary>The document's session, created by the reader for its first message once the services exist.</summary>
@@ -259,6 +355,12 @@ internal sealed class ScriptBridge
             session.Dropped += reason => _log.Warn($"Bridge, document {document.Id}: dropped {reason}");
             session.Ready += () => _ui.Post(() => Ready(document), "bridge ui-ready");
             session.ClosingDone += () => document.ClosingDone.TrySetResult();
+            session.CloseAnswered += (seq, payload) =>
+            {
+                // Read on the reader task; only the small result crosses to the loop.
+                var answer = PageCloseAnswer.Read(payload.Span, out var problem);
+                _ui.Post(() => ClosingAnswered(document, seq, answer, problem), "close answer");
+            };
             document.Session = session;
             return session;
         }

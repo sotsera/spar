@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Logging;
@@ -11,13 +12,16 @@ namespace Spar.Linux;
 /// and exits), the libraries, WebKitGTK's version, its helpers and a trial sandbox run (3, 4, 5), then, before GTK or
 /// any other native thread starts, the software-GPU default in the environment and the theme. Then the app's services,
 /// built on the thread pool while the main window (<see cref="AppWindow"/>) shows and starts its view on the main-loop
-/// thread; once the window is gone and its web processes have exited, the services' disposal and the exit code. The
-/// shutdown watch comes in M1c step 3.
+/// thread; once the window is gone and its web processes have exited, the services' disposal, with the main loop still
+/// running so the shutdown hang policy's prompt can show (<see cref="ShutdownWatch"/>), and the exit code.
 /// </summary>
 internal sealed class LinuxApp : IAppWindowOwner
 {
     /// <summary>How long the process waits at exit for a relaunch handler that is still running.</summary>
     private const int RelaunchSettleMilliseconds = 3_000;
+
+    /// <summary>How long the process waits at exit for the page hang hook's changes already reported.</summary>
+    private const int HookSettleMilliseconds = 3_000;
 
     /// <summary><c>sysconf(_SC_CLK_TCK)</c>, 100 on every Linux the host runs on.</summary>
     private const double TicksPerSecond = 100;
@@ -29,11 +33,16 @@ internal sealed class LinuxApp : IAppWindowOwner
     private readonly string _identity;
     private readonly SparFolders _folders;
     private readonly RelaunchQueue _relaunches;
+    private readonly PageHangHook _hangHook;
+
+    /// <summary>A Development build's scripted answers to the prompts; null in Production, where the person answers.</summary>
+    private readonly ConcurrentQueue<string>? _promptAnswers;
     private LogLevels? _levels;
     private SingleInstance? _instance;
     private SparRunningApp? _running;
     private MainLoop? _ui;
     private AppWindow? _window;
+    private ShutdownWatch? _shutdown;
     private int _stopped;
 
     /// <summary>The display GTK could not open, when that is why the window never started.</summary>
@@ -49,6 +58,8 @@ internal sealed class LinuxApp : IAppWindowOwner
         _identity = SparFolders.ChannelId(app.AppId, SparDevelopment.IsSupported);
         _folders = app.Builder.ResolveFolders();
         _relaunches = new RelaunchQueue(app.Builder.RelaunchHandler, _log.Logger);
+        _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
+        _promptAnswers = SparDevelopment.IsSupported ? DevelopmentTriggers.PromptAnswers() : null;
     }
 
     public int Run()
@@ -81,14 +92,31 @@ internal sealed class LinuxApp : IAppWindowOwner
         {
             // The socket closes before the lock is released, so no launch is acknowledged by a closing app.
             _instance?.Dispose();
+            _shutdown?.Complete();
             _log.Close();
         }
     }
 
-    /// <summary>The teardown started: no more relaunches (the shutdown watch comes with M1c step 3).</summary>
-    void IAppWindowOwner.TeardownStarted() => _instance?.StopListening();
+    /// <summary>The teardown started: no more relaunches, and the shutdown is watched until the main loop ends.</summary>
+    void IAppWindowOwner.TeardownStarted()
+    {
+        var ui = _ui!;
+        _shutdown = ShutdownWatch.Start(
+            _title,
+            _log,
+            _automated,
+            ShutdownHang.FirstPromptMilliseconds,
+            ShutdownHang.AskAgainMilliseconds,
+            request => LinuxPageHost.ShowShutdownPrompt(ui, _log, _promptAnswers, request),
+            ExitNow);
+        _instance?.StopListening();
+    }
 
-    void IAppWindowOwner.WindowClosed() => _ui?.Quit();
+    /// <summary>
+    /// The window is gone and its web processes have exited (loop thread): the rest of the shutdown runs off the loop,
+    /// which keeps running meanwhile so the shutdown prompt can show, and ends once the shutdown is done.
+    /// </summary>
+    void IAppWindowOwner.WindowClosed() => _ = FinishAsync(_ui!);
 
     /// <summary>
     /// Plan section 3's Linux order: the display, then single instance (before anything touches the browser's folders,
@@ -140,11 +168,13 @@ internal sealed class LinuxApp : IAppWindowOwner
         _log.Phase("theme read");
 
         var built = Task.Run(Build);
-        _window = new AppWindow(_app, _log, _automated, _title, _folders, this);
+        _window = new AppWindow(_app, _log, _automated, _title, _folders, _hangHook, _promptAnswers, this);
         var started = false;
         MainLoop.Run(_window.Report, ui => started = Start(ui, theme, built));
 
+        // Done already when the window ran; the handles native callbacks found it by go once nothing can call back.
         Stop();
+        _window.Release();
         if (_noDisplay is { } closed)
         {
             return StartupFailure.Report(closed, Startup, gtkUsable: false);
@@ -259,7 +289,17 @@ internal sealed class LinuxApp : IAppWindowOwner
         Func<LogFile>? file = _log.File is { } opened ? () => opened : null;
         SparLogging.Add(builder.Services, _levels!, file, ownsFile: false);
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, _folders, builder.BridgeOptions.Freeze());
+        if (SparDevelopment.IsSupported)
+        {
+            DevelopmentTriggers.AddSlowDisposal(builder.Services, _log);
+        }
+
         var running = SparRunningApp.Build(builder.Services, _app.Catalog, _folders);
+        if (SparDevelopment.IsSupported)
+        {
+            DevelopmentTriggers.CreateSlowDisposal(running.Services);
+        }
+
         _log.UseAppLogging(running.Services);
         _log.Phase("services built");
         _running = running;
@@ -267,7 +307,18 @@ internal sealed class LinuxApp : IAppWindowOwner
         return running;
     }
 
-    /// <summary>After the window is gone and the loop has ended: relaunches, the window's bridge, then the app's services.</summary>
+    /// <summary>On the loop, once the window is gone: the shutdown off the loop, then the watch completed and the loop ended.</summary>
+    private async Task FinishAsync(MainLoop ui)
+    {
+        await Task.Run(Stop);
+        _shutdown?.Complete();
+        ui.Quit();
+    }
+
+    /// <summary>
+    /// After the window is gone, off the main loop (which still runs, or has ended when the window never started):
+    /// relaunches, the hang hook, the window's bridge, then the app's services.
+    /// </summary>
     private void Stop()
     {
         if (Interlocked.Exchange(ref _stopped, 1) != 0)
@@ -277,10 +328,15 @@ internal sealed class LinuxApp : IAppWindowOwner
 
         try
         {
-            // The loop's thread has ended, so waiting here blocks nothing.
+            // This is a pool thread or the process's main thread, never the loop's, so waiting here blocks nothing.
             if (!_relaunches.StopAsync().Wait(RelaunchSettleMilliseconds))
             {
                 _log.Warn("A relaunch handler was still running at exit.");
+            }
+
+            if (!_hangHook.StopAsync(TimeSpan.FromMilliseconds(HookSettleMilliseconds)).GetAwaiter().GetResult())
+            {
+                _log.Warn("The page hang hook was still running at exit: its token was cancelled.");
             }
 
             _window?.StopAsync().GetAwaiter().GetResult();
@@ -291,6 +347,21 @@ internal sealed class LinuxApp : IAppWindowOwner
         {
             _log.Error("The app's services did not stop cleanly", exception);
         }
+    }
+
+    /// <summary>
+    /// "Exit now" (the shutdown hang policy): the user chose to end the app, so its WebKit processes that are still
+    /// there go with it, then this process ends at once with <paramref name="exitCode"/>, skipping every cleanup still
+    /// running or waiting, exit handlers included.
+    /// </summary>
+    private static void ExitNow(int exitCode)
+    {
+        foreach (var (id, _) in WebProcesses.Below(Environment.ProcessId))
+        {
+            _ = Libc.Kill(id, Libc.SigKill);
+        }
+
+        Libc.ExitNow(exitCode);
     }
 
     /// <summary>

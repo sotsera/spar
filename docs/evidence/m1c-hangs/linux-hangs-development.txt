@@ -1,0 +1,8 @@
+00:55:06 development: the page's guard kept the window; a silent guard was asked about 5063 ms after the request, Close anyway, exit 0
+00:55:33 development: a close 1 s into a hang: Wait / Close anyway 5019 ms after the request, again 18.8 s after Wait; Close anyway to exit 0 in 36 ms
+00:56:14 development: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.643 ms
+00:56:56 development: a 120 s disposal: the shutdown prompt 10.0 s and again 40.5 s after the teardown began; Exit now, exit 10
+00:57:47 development, 500 ms heartbeat: after each Wait the dialog came back after 1.9, 3.9, 7.9, 15.9, 15.9 s (2, 4, 8, 16, 16 s decided)
+00:58:10 development: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+00:58:31 development: alarm 19.9 s after the hang; Reload page: web process ended 1.8 ms and ui-ready 68 ms after the choice
+00:58:32 development: a 300 ms stall of the main loop reported as 300.1 ms in the development stall trigger; 0 other stalls over 50 ms

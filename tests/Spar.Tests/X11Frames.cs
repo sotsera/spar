@@ -97,6 +97,62 @@ internal static unsafe partial class X11Frames
         }
     }
 
+    /// <summary>The process's largest viewable window on <paramref name="display"/> (its main window), or 0.</summary>
+    public static nuint MainWindow(string display, int processId)
+    {
+        X11Close.IgnoreErrors();
+        var connection = X11Close.XOpenDisplay(display);
+        if (connection == 0)
+        {
+            throw new InvalidOperationException($"The X display {display} cannot be opened.");
+        }
+
+        try
+        {
+            var attributes = stackalloc byte[256];
+            return Largest(connection, processId, attributes);
+        }
+        finally
+        {
+            X11Close.XCloseDisplay(connection);
+        }
+    }
+
+    /// <summary>
+    /// How many windows the process shows on <paramref name="display"/>, viewable and larger than GTK's helpers: the
+    /// app's window, and one more while a dialog of its own is open.
+    /// </summary>
+    public static int Count(string display, int processId)
+    {
+        X11Close.IgnoreErrors();
+        var connection = X11Close.XOpenDisplay(display);
+        if (connection == 0)
+        {
+            throw new InvalidOperationException($"The X display {display} cannot be opened.");
+        }
+
+        try
+        {
+            var attributes = stackalloc byte[256];
+            var count = 0;
+            foreach (var window in X11Close.WindowsOf(connection, processId))
+            {
+                if (XGetWindowAttributes(connection, window, attributes) != 0
+                    && *(int*)(attributes + 92) == IsViewable
+                    && (long)*(int*)(attributes + 8) * *(int*)(attributes + 12) > 2_500)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+        finally
+        {
+            X11Close.XCloseDisplay(connection);
+        }
+    }
+
     /// <summary>The largest viewable window of the process, or 0: GTK also makes small unmapped helper windows.</summary>
     private static nuint Largest(nint connection, int processId, byte* attributes)
     {

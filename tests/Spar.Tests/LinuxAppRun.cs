@@ -221,11 +221,14 @@ internal sealed class LinuxAppRun : IAsyncDisposable
     }
 
     /// <summary>Waits for a line of the app's log that matches <paramref name="pattern"/>, and returns the match.</summary>
-    public async Task<Match> WaitForAsync(string pattern)
+    public Task<Match> WaitForAsync(string pattern) => WaitForAsync(pattern, Patience);
+
+    /// <summary>Waits up to <paramref name="patience"/> for a line of the app's log that matches <paramref name="pattern"/>.</summary>
+    public async Task<Match> WaitForAsync(string pattern, TimeSpan patience)
     {
         var expression = new Regex(pattern, RegexOptions.Multiline);
         var limit = Stopwatch.StartNew();
-        while (limit.Elapsed < Patience)
+        while (limit.Elapsed < patience)
         {
             if (expression.Match(Log()) is { Success: true } found)
             {
@@ -236,7 +239,7 @@ internal sealed class LinuxAppRun : IAsyncDisposable
             await Task.Delay(20, TestContext.Current.CancellationToken);
         }
 
-        Assert.Fail($"No '{pattern}' in the app's log within {Patience.TotalSeconds} s.\n{Describe()}");
+        Assert.Fail($"No '{pattern}' in the app's log within {patience.TotalSeconds} s.\n{Describe()}");
         return Match.Empty;
     }
 
@@ -271,6 +274,19 @@ internal sealed class LinuxAppRun : IAsyncDisposable
         }
     }
 
+    /// <summary>How many windows the process shows: its window, and one more for each dialog of its own that is open.</summary>
+    public int WindowCount() => X11Frames.Count(_display, Id);
+
+    /// <summary>
+    /// The window manager's close to the process's main window only (its largest), without waiting for the exit: as a
+    /// person's click on its close button, which never reaches a dialog the app shows meanwhile.
+    /// </summary>
+    public void RequestClose()
+    {
+        var window = X11Frames.MainWindow(_display, Id);
+        Assert.True(window != 0 && X11Close.Send(_display, Id, window) == 1, "The app's main window was not found to close.");
+    }
+
     /// <summary>The window manager's close to every window of the process, then the exit code.</summary>
     public async Task<int> CloseAsync()
     {
@@ -292,16 +308,18 @@ internal sealed class LinuxAppRun : IAsyncDisposable
         return DateTime.UtcNow - Launched;
     }
 
-    public async Task<int> WaitForExitAsync()
+    public Task<int> WaitForExitAsync() => WaitForExitAsync(Patience);
+
+    public async Task<int> WaitForExitAsync(TimeSpan patience)
     {
-        using var limit = new CancellationTokenSource(Patience);
+        using var limit = new CancellationTokenSource(patience);
         try
         {
             await _process.WaitForExitAsync(limit.Token);
         }
         catch (OperationCanceledException)
         {
-            Assert.Fail($"The app did not exit within {Patience.TotalSeconds} s.\n{Describe()}");
+            Assert.Fail($"The app did not exit within {patience.TotalSeconds} s.\n{Describe()}");
         }
 
         return _process.ExitCode;

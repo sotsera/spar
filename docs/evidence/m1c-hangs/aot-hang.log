@@ -1,0 +1,31 @@
+2026-11-20T00:00:19.420Z INFO  Spar.Host  [f61201d7] Host started 6 ms after the process.
+2026-11-20T00:00:19.420Z INFO  Spar.Host  [f61201d7] App id com.example.tests.BridgeProbe, folder <repo>/artifacts/linux-homes/host-tests/e99e44b22af1/data/com.example.tests.BridgeProbe
+2026-11-20T00:00:19.420Z INFO  Spar.Host  [f61201d7] single instance at 1.7 ms
+2026-11-20T00:00:19.433Z INFO  Spar.Host  [f61201d7] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T00:00:19.436Z INFO  Spar.Host  [f61201d7] Sandbox trial: bwrap exit 0 in 2.5 ms.
+2026-11-20T00:00:19.436Z INFO  Spar.Host  [f61201d7] prerequisites checked at 17.4 ms
+2026-11-20T00:00:19.436Z INFO  Spar.Host  [f61201d7] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T00:00:19.436Z INFO  Spar.Host  [f61201d7] gpu checked at 17.5 ms
+2026-11-20T00:00:19.438Z INFO  Spar.Host  [f61201d7] theme read at 19.1 ms
+2026-11-20T00:00:19.439Z INFO  Spar.Host  [f61201d7] services built at 20 ms
+2026-11-20T00:00:19.469Z INFO  Spar.Host  [f61201d7] gtk ready at 49.9 ms
+2026-11-20T00:00:19.484Z INFO  Spar.Host  [f61201d7] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T00:00:19.484Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*")
+2026-11-20T00:00:19.487Z INFO  Spar.Host  [f61201d7] web view created at 68.2 ms
+2026-11-20T00:00:19.487Z INFO  Spar.Host  [f61201d7] Heartbeat every 5000 ms.
+2026-11-20T00:00:19.498Z INFO  Spar.Host  [f61201d7] window shown at 79.3 ms
+2026-11-20T00:00:19.499Z INFO  Spar.Host  [f61201d7] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-6Zgna3cJF6akHt+rxGHQlZZOiBLiARgscXpvu0RG+DU=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-a75Pj5ojoEv+Pes9kRpoybLnkhlxvYb5d/SQVMudcsc='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T00:00:19.499Z INFO  Spar.Host  [f61201d7] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T00:00:19.544Z INFO  Spar.Host  [f61201d7] page committed at 124.8 ms
+2026-11-20T00:00:19.544Z INFO  Spar.Host  [f61201d7] Bridge: document 2131cbb38b860db0 opened.
+2026-11-20T00:00:19.544Z INFO  Spar.Host  [f61201d7] Heartbeat armed for the new document.
+2026-11-20T00:00:19.553Z INFO  Spar.Host  [f61201d7] first bridge message at 134 ms
+2026-11-20T00:00:19.553Z INFO  Spar.Host  [f61201d7] first bridge reply at 134.2 ms
+2026-11-20T00:00:19.555Z INFO  Spar.Host  [f61201d7] ui-ready at 136.5 ms
+2026-11-20T00:00:19.555Z INFO  Spar.Host  [f61201d7] Bridge: document 2131cbb38b860db0 reported ui-ready.
+2026-11-20T00:00:19.555Z INFO  BridgeProbe.ProbeService  probe note: first document 2131cbb38b860db0
+2026-11-20T00:00:19.556Z INFO  BridgeProbe.ProbeService  probe note: hang starts
+2026-11-20T00:00:19.557Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T00:00:40.860Z WARN  Spar.Host  [f61201d7] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+2026-11-20T00:00:40.860Z INFO  BridgeProbe.ProbeService  probe hang: Unresponsive after 15.0 s
+2026-11-20T00:00:40.874Z INFO  Spar.Host  [f61201d7] hung-page dialog shown (Wait / Reload page) at 20084.2 ms

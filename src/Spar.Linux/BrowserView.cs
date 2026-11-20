@@ -10,7 +10,8 @@ namespace Spar.Linux;
 /// (<see cref="ScriptBridge.World"/>), the <c>spar</c> scheme, and the signals the host follows. It recovers from a web
 /// process that ends (plan section 3, "Recovery"): its document ends with it, and the page is reloaded once, a budget
 /// given back when a document reports <c>ui-ready</c>; a second loss before that is unrecoverable (exit code 5).
-/// Nothing is recovered once the teardown has begun, nor a process the host ended itself.
+/// Nothing is recovered once the teardown has begun, nor a process the host ended itself: that is "Reload page" for a
+/// hung page (plan section 3, "Hung pages"), which reloads once the process is gone, or the teardown of a hung page.
 /// </summary>
 internal sealed class BrowserView
 {
@@ -35,8 +36,10 @@ internal sealed class BrowserView
     private nuint _messageHandler;
     private nuint _loadHandler;
     private nuint _terminatedHandler;
+    private nuint _responsiveHandler;
     private bool _ending;
     private bool _reloadUsed;
+    private bool _reloadAfterTermination;
 
     /// <param name="fail">An unrecoverable failure: the exit code and a message.</param>
     public BrowserView(MainLoop ui, HostLog log, SchemeServer pages, ScriptBridge bridge, Action<int, string> fail)
@@ -48,6 +51,13 @@ internal sealed class BrowserView
         _fail = fail;
         bridge.DocumentReady += () => _reloadUsed = false;
     }
+
+    /// <summary>
+    /// Raised on the loop when WebKit reports the web process unresponsive (<c>is-web-process-responsive</c> turned
+    /// false). It stays true for an idle hang (pitfalls), so the heartbeat is what finds those; this is one more report
+    /// of the same state.
+    /// </summary>
+    public event Action? EngineUnresponsive;
 
     /// <summary>
     /// The view, a widget with a floating reference until its window takes it; 0 before <see cref="Create"/> and after
@@ -86,6 +96,8 @@ internal sealed class BrowserView
             _view, "load-changed", (delegate* unmanaged<nint, int, nint, void>)&OnLoadChanged, self, 0, 0);
         _terminatedHandler = GLib.g_signal_connect_data(
             _view, "web-process-terminated", (delegate* unmanaged<nint, int, nint, void>)&OnWebProcessTerminated, self, 0, 0);
+        _responsiveHandler = GLib.g_signal_connect_data(
+            _view, "notify::is-web-process-responsive", (delegate* unmanaged<nint, nint, nint, void>)&OnResponsiveChanged, self, 0, 0);
         _bridge.Attach(_view);
         _log.Phase("web view created");
     }
@@ -118,6 +130,55 @@ internal sealed class BrowserView
     public void EndRecovery() => _ending = true;
 
     /// <summary>
+    /// "Reload page" in the hung-page dialog (plan section 3, "Hung pages"; loop thread): reloading alone never recovers
+    /// a hung page (pitfalls), so the web process is ended first, and the page loads again once WebKit reports it gone
+    /// (<c>TERMINATED_BY_API</c>, 0–3 ms later in <c>spikes/page-heartbeat</c>). This is the user's choice, so it does
+    /// not use up the automatic reload.
+    /// </summary>
+    public void ReloadHungPage()
+    {
+        if (_view == 0 || _ending)
+        {
+            return;
+        }
+
+        _reloadAfterTermination = true;
+        WebKit.webkit_web_view_terminate_web_process(_view);
+        _log.Step("web process of the hung page ended");
+    }
+
+    /// <summary>
+    /// The teardown of a window whose page does not answer (loop thread): its web process is ended before the window is
+    /// destroyed, since a hung web process outlives the app by about 10 s otherwise (pitfalls).
+    /// </summary>
+    public void TerminateHungWebProcess()
+    {
+        if (_view == 0)
+        {
+            return;
+        }
+
+        _ending = true;
+        WebKit.webkit_web_view_terminate_web_process(_view);
+        _log.Step("web process of the hung page ended before closing");
+    }
+
+    /// <summary>Runs <paramref name="script"/> in the page's own world, ignoring its result (loop thread; Development triggers).</summary>
+    public unsafe void RunPageScript(string script)
+    {
+        if (_view == 0)
+        {
+            return;
+        }
+
+        var bytes = System.Text.Encoding.UTF8.GetBytes(script);
+        fixed (byte* text = bytes)
+        {
+            WebKit.webkit_web_view_evaluate_javascript(_view, text, bytes.Length, null, 0, 0, 0, 0);
+        }
+    }
+
+    /// <summary>
     /// Teardown (loop thread), before the window that holds the view is destroyed: no recovery, the signals
     /// disconnected, the bridge detached, and the session and content manager released. The window's destruction then
     /// releases the view, and the web processes exit once nothing holds them.
@@ -129,6 +190,7 @@ internal sealed class BrowserView
         {
             GLib.g_signal_handler_disconnect(_view, _loadHandler);
             GLib.g_signal_handler_disconnect(_view, _terminatedHandler);
+            GLib.g_signal_handler_disconnect(_view, _responsiveHandler);
             _bridge.Detach("window closing");
             _view = 0;
         }
@@ -235,6 +297,13 @@ internal sealed class BrowserView
         if (reason == TerminatedByApi)
         {
             _log.Step($"web process {why}");
+            if (_reloadAfterTermination)
+            {
+                _reloadAfterTermination = false;
+                WebKit.webkit_web_view_reload(_view);
+                _log.Step("hung page reloaded");
+            }
+
             return;
         }
 
@@ -249,6 +318,23 @@ internal sealed class BrowserView
         _log.Warn($"The web process {why}; the page is reloaded once.");
         WebKit.webkit_web_view_reload(_view);
         _log.Step("page reloaded after the web process ended");
+    }
+
+    private void ResponsiveChanged()
+    {
+        if (_view == 0)
+        {
+            return;
+        }
+
+        if (WebKit.webkit_web_view_get_is_web_process_responsive(_view) != 0)
+        {
+            _log.Info("WebKit reports the web process responsive again.");
+            return;
+        }
+
+        _log.Warn("WebKit reports the web process is not responding.");
+        EngineUnresponsive?.Invoke();
     }
 
     private void Message(nint value)
@@ -272,6 +358,11 @@ internal sealed class BrowserView
     [UnmanagedCallersOnly]
     private static void OnWebProcessTerminated(nint view, int reason, nint data) =>
         Dispatch(data, "web-process-terminated", browser => browser.WebProcessTerminated(reason));
+
+    /// <summary><c>notify::is-web-process-responsive</c>: the object, its <c>GParamSpec</c> and the user data.</summary>
+    [UnmanagedCallersOnly]
+    private static void OnResponsiveChanged(nint view, nint property, nint data) =>
+        Dispatch(data, "web-process-responsive", browser => browser.ResponsiveChanged());
 
     /// <summary>The bridge's hot path: one call per message, with no delegate made for it.</summary>
     [UnmanagedCallersOnly]

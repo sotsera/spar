@@ -3,6 +3,7 @@
 import { connectSpar, hostChannel } from "@spar/app/sdk";
 import { fingerprint } from "@spar/app/spar";
 import { probe } from "@spar/app/probe";
+import { windows } from "@spar/app/windows";
 
 const status = document.getElementById("status");
 const connection = connectSpar(hostChannel(), fingerprint);
@@ -65,11 +66,56 @@ const steps = {
   navigate() {
     location.href = "/other.html";
   },
+
+  // The hang tests (M1c step 3): an endless loop in a task of its own, after ui-ready.
+  async hang() {
+    await probe.note("hang starts").unwrap();
+    setTimeout(() => {
+      for (;;) {
+        // Endless on purpose.
+      }
+    }, 0);
+  },
+
+  // An idle page for the given milliseconds: only timers, nothing busy.
+  async wait(milliseconds) {
+    await new Promise(resolve => setTimeout(resolve, Number(milliseconds)));
+    await probe.note(`waited ${milliseconds} ms`).unwrap();
+  },
+
+  // Finite work of the given milliseconds on the page's main thread.
+  async busy(milliseconds) {
+    await probe.note(`busy ${milliseconds} ms starts`).unwrap();
+    const end = performance.now() + Number(milliseconds);
+    while (performance.now() < end) {
+      // Busy on purpose.
+    }
+
+    await probe.note(`busy ${milliseconds} ms done`).unwrap();
+  },
+
+  // A document that hangs in its own start-up code, before it connects.
+  "hang-before-connect"() {
+    location.href = "/hang.html";
+  },
+
+  // The page's close guard keeps the window, or never answers.
+  async "guard-keep"() {
+    windows.onCloseRequested(() => "keep");
+    await probe.note("guard keep").unwrap();
+  },
+
+  async "guard-silent"() {
+    windows.onCloseRequested(() => new Promise(() => {}));
+    await probe.note("guard silent").unwrap();
+  },
 };
 
-for (const step of plan) {
-  if (step in steps) {
-    await steps[step]();
+// A step may carry one argument after a colon: busy:10000. A reloaded page runs none: a hang would only come back.
+for (const step of reloaded ? [] : plan) {
+  const [name, argument] = step.split(":");
+  if (name in steps) {
+    await steps[name](argument);
   }
 }
 

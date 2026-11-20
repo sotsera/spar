@@ -1,0 +1,33 @@
+2026-11-19T23:59:57.413Z INFO  Spar.Host  [336a63a0] Host started 9 ms after the process.
+2026-11-19T23:59:57.413Z INFO  Spar.Host  [336a63a0] App id com.example.tests.BridgeProbe, folder <repo>/artifacts/linux-homes/host-tests/f4894f9f4cdd/data/com.example.tests.BridgeProbe
+2026-11-19T23:59:57.413Z INFO  Spar.Host  [336a63a0] single instance at 1.9 ms
+2026-11-19T23:59:57.425Z INFO  Spar.Host  [336a63a0] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-19T23:59:57.429Z INFO  Spar.Host  [336a63a0] Sandbox trial: bwrap exit 0 in 2.9 ms.
+2026-11-19T23:59:57.429Z INFO  Spar.Host  [336a63a0] prerequisites checked at 17.9 ms
+2026-11-19T23:59:57.429Z INFO  Spar.Host  [336a63a0] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.1 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-19T23:59:57.429Z INFO  Spar.Host  [336a63a0] gpu checked at 18 ms
+2026-11-19T23:59:57.430Z INFO  Spar.Host  [336a63a0] theme read at 19.4 ms
+2026-11-19T23:59:57.431Z INFO  Spar.Host  [336a63a0] services built at 20.1 ms
+2026-11-19T23:59:57.460Z INFO  Spar.Host  [336a63a0] gtk ready at 49 ms
+2026-11-19T23:59:57.474Z INFO  Spar.Host  [336a63a0] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-19T23:59:57.475Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*")
+2026-11-19T23:59:57.477Z INFO  Spar.Host  [336a63a0] web view created at 66.5 ms
+2026-11-19T23:59:57.477Z INFO  Spar.Host  [336a63a0] Heartbeat every 5000 ms.
+2026-11-19T23:59:57.486Z INFO  Spar.Host  [336a63a0] window shown at 75.6 ms
+2026-11-19T23:59:57.488Z INFO  Spar.Host  [336a63a0] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-6Zgna3cJF6akHt+rxGHQlZZOiBLiARgscXpvu0RG+DU=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-a75Pj5ojoEv+Pes9kRpoybLnkhlxvYb5d/SQVMudcsc='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-19T23:59:57.488Z INFO  Spar.Host  [336a63a0] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-19T23:59:57.532Z INFO  Spar.Host  [336a63a0] page committed at 121.2 ms
+2026-11-19T23:59:57.532Z INFO  Spar.Host  [336a63a0] Bridge: document 159cdb299636bea8 opened.
+2026-11-19T23:59:57.532Z INFO  Spar.Host  [336a63a0] Heartbeat armed for the new document.
+2026-11-19T23:59:57.541Z INFO  Spar.Host  [336a63a0] first bridge message at 130.7 ms
+2026-11-19T23:59:57.542Z INFO  Spar.Host  [336a63a0] first bridge reply at 131 ms
+2026-11-19T23:59:57.543Z INFO  Spar.Host  [336a63a0] ui-ready at 132.6 ms
+2026-11-19T23:59:57.543Z INFO  Spar.Host  [336a63a0] Bridge: document 159cdb299636bea8 reported ui-ready.
+2026-11-19T23:59:57.543Z INFO  BridgeProbe.ProbeService  probe note: first document 159cdb299636bea8
+2026-11-19T23:59:57.545Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-19T23:59:57.545Z INFO  Spar.Host  [336a63a0] Bridge: document 159cdb299636bea8 closed (navigation).
+2026-11-19T23:59:57.546Z INFO  Spar.Host  [336a63a0] Bridge: document 48c6eea61800c651 opened.
+2026-11-19T23:59:57.546Z INFO  Spar.Host  [336a63a0] Heartbeat armed for the new document.
+2026-11-20T00:00:19.321Z WARN  Spar.Host  [336a63a0] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+2026-11-20T00:00:19.321Z INFO  BridgeProbe.ProbeService  probe hang: Unresponsive after 15.0 s
+2026-11-20T00:00:19.335Z INFO  Spar.Host  [336a63a0] hung-page dialog shown (Wait / Reload page) at 20082.5 ms

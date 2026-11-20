@@ -1,7 +1,6 @@
 using System.Diagnostics;
-using Spar.Hosting;
 
-namespace Spar.Windows;
+namespace Spar.Hosting;
 
 /// <summary>What the page's side of a close request came to.</summary>
 /// <param name="answer">The page guards' answer; <see cref="PageCloseAnswer.Close"/> when there is no page to ask.</param>
@@ -85,7 +84,7 @@ internal sealed partial class PageWatch
 
             // The ping first: its pong is read before the request, so a guard that blocks the page cannot hide it.
             SendPing(_heartbeat.PingNow(Stopwatch.GetTimestamp()));
-            wait.Sent = _bridge.RequestClose(wait.Seq, reason, automated);
+            wait.Sent = _host.RequestClose(wait.Seq, reason, automated);
             if (!wait.Sent && (!_heartbeat.IsArmed || sessionEnd))
             {
                 // No page that answers anything, or session end with a page that has no guards: nothing to wait for.
@@ -119,7 +118,7 @@ internal sealed partial class PageWatch
             if (wait.Sent && !wait.AnsweredByPage)
             {
                 // The request ended without the page's answer: its guards' signal is aborted.
-                _bridge.EndClose(wait.Seq);
+                _host.EndClose(wait.Seq);
             }
 
             _close = null;
@@ -148,6 +147,25 @@ internal sealed partial class PageWatch
         var duration = HangDuration();
         _log.Step($"window closed anyway; the page had not answered for {duration.TotalSeconds:0.0} s");
         _hook.Report(new PageHang(MainWindow, PageHangState.ClosedAnyway, duration));
+    }
+
+    /// <summary>The page guards' answer (UI thread); one for a request that is no longer open is ignored.</summary>
+    public void CloseAnswered(long seq, PageCloseAnswer answer, string? problem)
+    {
+        if (_close is not { } wait || wait.Seq != seq)
+        {
+            _log.Info($"A close answer for request {seq} came after its request ended; ignored.");
+            return;
+        }
+
+        if (problem is not null)
+        {
+            _log.Warn($"Close request {seq}: the page's answer could not be read ({problem}).");
+        }
+
+        _log.Step($"close request {seq}: the page answered {answer.Kind}");
+        wait.AnsweredByPage = true;
+        wait.Done.TrySetResult(new PageCloseResult(answer, unanswered: wait.Unanswered));
     }
 
     /// <summary>At session end: the page's answer within its budget, or close without it.</summary>
@@ -254,25 +272,6 @@ internal sealed partial class PageWatch
         {
             Waited();
         }
-    }
-
-    /// <summary>The page guards' answer (UI thread); one for a request that is no longer open is ignored.</summary>
-    private void OnCloseAnswered(long seq, PageCloseAnswer answer, string? problem)
-    {
-        if (_close is not { } wait || wait.Seq != seq)
-        {
-            _log.Info($"A close answer for request {seq} came after its request ended; ignored.");
-            return;
-        }
-
-        if (problem is not null)
-        {
-            _log.Warn($"Close request {seq}: the page's answer could not be read ({problem}).");
-        }
-
-        _log.Step($"close request {seq}: the page answered {answer.Kind}");
-        wait.AnsweredByPage = true;
-        wait.Done.TrySetResult(new PageCloseResult(answer, unanswered: wait.Unanswered));
     }
 
     /// <summary>One close request's page side, on the UI thread.</summary>
