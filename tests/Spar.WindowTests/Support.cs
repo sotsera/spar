@@ -99,12 +99,17 @@ internal static class Results
         return folder;
     }
 
-    /// <summary>Appends a line of evidence to this project's results folder, with the time.</summary>
+    /// <summary>
+    /// Appends a line of evidence to this project's results folder, with the time. The file is shared for writing:
+    /// another test process may append to it at the same time (the install-path test runs a copy of these tests).
+    /// </summary>
     public static void Append(string file, string line)
     {
+        var bytes = System.Text.Encoding.UTF8.GetBytes($"{DateTime.UtcNow:O} {line}\n");
         lock (AppendGate)
         {
-            File.AppendAllLines(Path.Combine(Folder("."), file), [$"{DateTime.UtcNow:O} {line}"]);
+            using var stream = new FileStream(Path.Combine(Folder("."), file), FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+            stream.Write(bytes);
         }
     }
 }
