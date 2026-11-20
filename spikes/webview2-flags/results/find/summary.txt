@@ -1,0 +1,11 @@
+suite find: 3 runs
+
+## rt157  (args: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"; wasmEval false; reputation false)
+runs 3, errors 0, runtime 157.0.4341.60
+environment ms: median 12.2 (range 11.8-13.7, n 3)
+controller ms: median 202.2 (range 180.5-208.1, n 3)
+browser exit after close ms: median 198.5 (range 189.8-212.5, n 3)
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+(rounds below 0 are warm-up runs, left out above)

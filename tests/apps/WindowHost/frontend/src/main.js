@@ -165,5 +165,53 @@ for (const type of ["keydown", "keypress", "beforeinput", "input", "keyup"]) {
   }));
 }
 
+// The bridge's small unary round trip, timed by the page (plan, "Provisional budgets"): 20 warm-up calls, then 200
+// timed one after another; the times go to a hidden element as JSON for the budget test to summarise.
+on("time-echo", async () => {
+  const times = [];
+  for (let call = 0; call < 220; call++) {
+    const started = performance.now();
+    await host.echo("ping");
+    if (call >= 20) {
+      times.push(performance.now() - started);
+    }
+  }
+
+  document.getElementById("echo-times").textContent = JSON.stringify(times);
+});
+
+// WebAssembly in the page and in its workers: Spar's policy refuses every module unless the app allows WebAssembly.
+// The worker's address goes through a Trusted Types policy, since the Worker constructors are script sinks.
+const wasmModule = new Uint8Array([0, 97, 115, 109, 1, 0, 0, 0]);
+const checkWasm = async () => {
+  if (typeof WebAssembly === "undefined") {
+    return "absent";
+  }
+
+  try {
+    await WebAssembly.instantiate(wasmModule);
+    return "instantiated";
+  } catch (error) {
+    return `refused (${error.name})`;
+  }
+};
+
+on("wasm", async () => {
+  const urls = trustedTypes.createPolicy("wasm-worker", { createScriptURL: url => url });
+  const address = urls.createScriptURL(new URL("./wasm-worker.js", import.meta.url).href);
+  const dedicated = await new Promise(resolve => {
+    const worker = new Worker(address, { type: "module" });
+    worker.onmessage = event => resolve(event.data);
+    worker.onerror = event => resolve(`error (${event.message})`);
+  });
+  const shared = await new Promise(resolve => {
+    const worker = new SharedWorker(address, { type: "module" });
+    worker.port.onmessage = event => resolve(event.data);
+    worker.onerror = event => resolve(`error (${event.message})`);
+  });
+  document.getElementById("webassembly").textContent =
+    `page ${typeof WebAssembly} ${await checkWasm()}; worker ${dedicated}; shared worker ${shared}`;
+});
+
 connection.ready();
 show("Ready");

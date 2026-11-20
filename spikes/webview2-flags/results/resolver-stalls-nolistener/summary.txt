@@ -1,0 +1,27 @@
+suite resolver-stalls-nolistener: 120 runs
+
+## base  (args: --disable-blink-features=FileSystemAccessLocal; wasmEval false; reputation false)
+runs 60, errors 0, runtime 157.0.4341.60
+environment ms: median 12.6 (range 11.4-19.1, n 60)
+controller ms: median 211.0 (range 180.4-322.5, n 60)
+browser exit after close ms: median 184.0 (range 164.6-4861.0, n 60)
+first Navigate -> first script (boot.js) ms: median 53.2 (range 39.8-67.0, n 60)
+first Navigate -> ready ms: median 53.9 (range 40.2-67.9, n 60)
+later Navigate -> ready ms: n/a
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+browser switches: --disable-blink-features=FileSystemAccessLocal
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## resolver  (args: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"; wasmEval false; reputation false)
+runs 60, errors 0, runtime 157.0.4341.60
+environment ms: median 12.6 (range 11.4-21.3, n 60)
+controller ms: median 211.2 (range 182.9-241.8, n 60)
+browser exit after close ms: median 186.5 (range 166.5-4852.1, n 60)
+first Navigate -> first script (boot.js) ms: median 54.1 (range 38.3-65.8, n 60)
+first Navigate -> ready ms: median 54.7 (range 38.9-66.6, n 60)
+later Navigate -> ready ms: n/a
+page globals: WebAssembly=object showOpenFilePicker=undefined gc=undefined
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+(rounds below 1 are warm-up runs, left out above)

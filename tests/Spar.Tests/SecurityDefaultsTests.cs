@@ -139,10 +139,13 @@ public sealed class SecurityDefaultsTests
     }
 
     [Fact]
-    public void The_page_pickers_opt_in_drops_Spar_s_browser_argument()
+    public void The_resolver_rule_is_always_passed_and_the_page_pickers_opt_in_drops_only_the_pickers_argument()
     {
-        Assert.Equal("--disable-blink-features=FileSystemAccessLocal", BrowserEnvironment.Arguments(pagePicker: false));
-        Assert.Null(BrowserEnvironment.Arguments(pagePicker: true));
+        // Quoted inside the argument: unquoted, the browser keeps only "MAP" (spikes/webview2-flags).
+        const string Rule = "--host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"";
+
+        Assert.Equal(Rule + " --disable-blink-features=FileSystemAccessLocal", BrowserEnvironment.Arguments(pagePicker: false));
+        Assert.Equal(Rule, BrowserEnvironment.Arguments(pagePicker: true));
     }
 
     [Theory]

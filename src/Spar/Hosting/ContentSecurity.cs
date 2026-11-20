@@ -118,6 +118,11 @@ public sealed class CspBuilder
     /// Allows WebAssembly (<c>'wasm-unsafe-eval'</c> in <c>script-src</c>); on Linux it also turns the engine's
     /// WebAssembly support on.
     /// <para>
+    /// Without it every module is refused, in the page and in its workers, but the global differs: <c>typeof
+    /// WebAssembly</c> is <c>"object"</c> on Windows and <c>"undefined"</c> on Linux. Code that adapts to WebAssembly
+    /// being unavailable should try to compile a module rather than test for the global.
+    /// </para>
+    /// <para>
     /// <b>Risk:</b> compiled code the page loads runs with the page's access, and the engine's WebAssembly compiler is
     /// more attack surface. It cannot evaluate JavaScript strings.
     /// <b>Reasonable</b> for a library shipped as WebAssembly, such as a parser or an image codec, bundled with the app.

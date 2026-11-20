@@ -124,7 +124,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **The spike's questions, all decided on 2026-11-14** (`spikes/csp-navigation/RESULTS.md`):
   - Trusted Types default (decided: on, with a C# opt-out);
   - same-origin iframes in the base policy (decided: blocked, with a C# opt-in);
-  - WebAssembly (decided: blocked by default, with a C# opt-in adding `'wasm-unsafe-eval'`). The Linux host also sets `JSC_useWasm=false` through libc `setenv` before GTK and WebKit start, so the `WebAssembly` global is absent in the page, workers and frames (`spikes/webkit-wasm-off`). The opt-in sets it to `true` explicitly;
+  - WebAssembly (decided: blocked by default, with a C# opt-in adding `'wasm-unsafe-eval'`). The Linux host also sets `JSC_useWasm=false` through libc `setenv` before GTK and WebKit start, so the `WebAssembly` global is absent in the page, workers and frames (`spikes/webkit-wasm-off`). The opt-in sets it to `true` explicitly. On Windows the global stays (user decision 2026-11-19): no browser switch removes it (`--js-flags=--noexpose_wasm`, `--no-expose-wasm` and `--jitless` left it in the page, frames and every kind of worker, `spikes/webview2-flags`), and the policy refuses every module there; so `typeof WebAssembly` is `"object"` on Windows and `"undefined"` on Linux, and a window test checks the refusal in the page and in dedicated and shared workers;
   - the reporting channel (decided: both, deduplicated, with flood limits);
   - SRI default (decided: on, with a C# opt-out; external scripts and stylesheets need a hash);
   - the camera and microphone on WebView2 (decided: the two-layer permission design and the four host rules);

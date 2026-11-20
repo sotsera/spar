@@ -1,0 +1,42 @@
+suite smartscreen: 9 runs
+
+## flag-off  (args: --disable-blink-features=FileSystemAccessLocal; wasmEval false; reputation false)
+runs 3, errors 0, runtime 157.0.4341.60
+environment ms: median 11.6 (range 11.5-11.9, n 3)
+controller ms: median 179.7 (range 173.7-207.2, n 3)
+browser exit after close ms: median 193.8 (range 188.3-205.7, n 3)
+loopback connections per run (this run's processes): median 14.0 (range 12.0-16.0, n 3), total 42
+  [::1]:443 SNI app.localhost x42
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-off-0.json" --net-log-capture-mode=Everything
+browser switches: --disable-blink-features=FileSystemAccessLocal --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-off-1.json" --net-log-capture-mode=Everything
+browser switches: --disable-blink-features=FileSystemAccessLocal --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-off-2.json" --net-log-capture-mode=Everything
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## flag-on  (args: --disable-blink-features=FileSystemAccessLocal; wasmEval false; reputation true)
+runs 3, errors 0, runtime 157.0.4341.60
+environment ms: median 13.2 (range 12.0-13.2, n 3)
+controller ms: median 182.9 (range 177.3-212.0, n 3)
+browser exit after close ms: median 242.2 (range 240.8-255.7, n 3)
+loopback connections per run (this run's processes): median 14.0 (range 14.0-16.0, n 3), total 44
+  [::1]:443 SNI app.localhost x44
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-on-0.json" --net-log-capture-mode=Everything
+browser switches: --disable-blink-features=FileSystemAccessLocal --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-on-1.json" --net-log-capture-mode=Everything
+browser switches: --disable-blink-features=FileSystemAccessLocal --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-on-2.json" --net-log-capture-mode=Everything
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+## flag-off-resolver  (args: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND"; wasmEval false; reputation false)
+runs 3, errors 0, runtime 157.0.4341.60
+environment ms: median 12.1 (range 11.9-12.4, n 3)
+controller ms: median 207.8 (range 179.4-6472.1, n 3)
+browser exit after close ms: median 193.3 (range 188.4-198.2, n 3)
+loopback connections per run (this run's processes): median 0.0 (range 0.0-0.0, n 3), total 0
+  
+  other processes' connections during these runs: 0
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND" --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-off-resolver-0.json" --net-log-capture-mode=Everything
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND" --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-off-resolver-1.json" --net-log-capture-mode=Everything
+browser switches: --disable-blink-features=FileSystemAccessLocal --host-resolver-rules="MAP app.localhost ~NOTFOUND" --log-net-log="E:\Ghidello\Git\spar.v7\artifacts\webview2-flags\smartscreen\netlog-flag-off-resolver-2.json" --net-log-capture-mode=Everything
+renderer switches: --disable-blink-features=FileSystemAccessLocal
+
+(rounds below 0 are warm-up runs, left out above)

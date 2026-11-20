@@ -63,7 +63,7 @@ internal sealed class BrowserDefaults
     public bool BlocksPagePicker => !_options.PagePicker;
 
     /// <summary>The browser arguments for the environment options (<see cref="BrowserEnvironment.Arguments"/>).</summary>
-    public string? BrowserArguments => BrowserEnvironment.Arguments(_options.PagePicker);
+    public string BrowserArguments => BrowserEnvironment.Arguments(_options.PagePicker);
 
     /// <param name="development">A Development build: devtools and the reload keys on, everything else as shipped.</param>
     /// <param name="automated">The automated mode (Development and Test only): no context menu is shown on the desktop.</param>

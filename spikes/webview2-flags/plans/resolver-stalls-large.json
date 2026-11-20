@@ -1,0 +1,8 @@
+{
+  "suite": "resolver-stalls-large", "scenario": "load", "rounds": 400, "warmup": 0, "navigations": 1, "listener": false,
+  "freshProfiles": true, "deleteProfiles": true, "rotate": false,
+  "variants": [
+    { "name": "base", "args": "--disable-blink-features=FileSystemAccessLocal" },
+    { "name": "resolver", "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"" }
+  ]
+}

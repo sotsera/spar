@@ -1,0 +1,62 @@
+{
+  "suite": "wasm",
+  "scenario": "wasm",
+  "rounds": 3,
+  "listener": false,
+  "variants": [
+    {
+      "name": "base",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\""
+    },
+    {
+      "name": "base-eval",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"",
+      "wasmEval": true
+    },
+    {
+      "name": "noexpose",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--noexpose_wasm"
+    },
+    {
+      "name": "noexpose-eval",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--noexpose_wasm",
+      "wasmEval": true
+    },
+    {
+      "name": "noexpose-dash",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--no-expose-wasm"
+    },
+    {
+      "name": "noexpose-gc-quoted",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=\"--noexpose_wasm --expose-gc\""
+    },
+    {
+      "name": "gc-quoted-alone",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=\"--expose-gc\""
+    },
+    {
+      "name": "gc-first-quoted",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=\"--expose-gc --noexpose_wasm\""
+    },
+    {
+      "name": "comma-gc-last",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--noexpose_wasm,--expose-gc"
+    },
+    {
+      "name": "comma-gc-first",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--expose-gc,--noexpose_wasm"
+    },
+    {
+      "name": "two-switches-gc-last",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--noexpose_wasm --js-flags=--expose-gc"
+    },
+    {
+      "name": "two-switches-gc-first",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--expose-gc --js-flags=--noexpose_wasm"
+    },
+    {
+      "name": "jitless",
+      "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\" --js-flags=--jitless"
+    }
+  ]
+}
