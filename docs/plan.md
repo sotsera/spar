@@ -329,9 +329,9 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 #### M1d: the development loop, loopback, the template and the tools
 
 **Decide first:**
-- where page tests run (section 5, issue B);
-- whether typed page-side mocks generated from the contracts land here or in M2 (RR);
-- whether the build identity (a publish receipt, or an identity embedded in the executable) lands here or in M2 (RR).
+- where page tests run (section 5, issue B): settled 2026-11-16, in Node with Vitest (decision "Page tests: @spar/app/testing");
+- whether typed page-side mocks generated from the contracts land here or in M2 (RR): built in M1a, `fakeSpar()` keyed by the generated commands (same decision);
+- whether the build identity (a publish receipt, or an identity embedded in the executable) lands here or in M2 (RR): a minimal embedded identity here, the publish receipt in M2 (decision "M1d's decide-first questions").
 
 **Build:**
 1. **Debug through the app's own origin** on both hosts (section 4): the host fetches from the Vite dev server, with the proxy rules, Vite's nonce under the strict CSP through the proxy, the CSP header on worker scripts from the Vite plugin, and the Linux path through the custom scheme. `SparDevServer=false` keeps the embedded path.
