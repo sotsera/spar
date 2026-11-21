@@ -82,6 +82,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     private bool _sessionEnding;
     private bool _tornDown;
     private int _exitCode;
+    private Spar.DevServer.DevServerSession? _devServer;
 
     /// <param name="offscreen">
     /// A window of a test process (plan section 5): shown offscreen, with no taskbar button, never activated.
@@ -130,6 +131,12 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
     /// <summary>
+    /// A Debug build's development server, which the page comes from (before <see cref="Start"/>). Called only behind
+    /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
+    /// </summary>
+    public void UseDevServer(Spar.DevServer.DevServerSession devServer) => _devServer = devServer;
+
+    /// <summary>
     /// The window first, in the theme's colour and title bar before it is shown (plan 3d), then everything that takes
     /// time, without blocking the thread: the WebView, and the bridge once the app's services exist.
     /// </summary>
@@ -169,6 +176,19 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
 
         var pages = new PageServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
+        if (Spar.DevServer.DevServerSettings.IsSupported && _devServer is { } devServer)
+        {
+            // A development server that stops takes the page to the error page, which offers Retry.
+            pages.UseDevServer(devServer, security);
+            devServer.Stopped += () => ui.Post(() =>
+            {
+                if (_state != State.Closing)
+                {
+                    _view?.WebView?.Navigate(PageServer.StartUrl);
+                }
+            });
+        }
+
         _ = LogPolicyAsync(pages);
         var guard = new PageGuard(_log, security, _app.Builder.BrowserOptions.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, _app.Builder.BrowserOptions, development, _automated);

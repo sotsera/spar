@@ -1,0 +1,89 @@
+       2.2 | run: start <copy>/samples/Notebook/bin/Development/Debug/net11.0/linux-x64/Notebook env [SPAR_DEV_SERVER_URL=http://127.0.0.1:5173]
+      35.4 | out: spar info +14.8 ms: [c637c9ac] Host started 34 ms after the process.
+      55.5 | app: 2026-11-21T18:01:14.813Z INFO  Spar.Host  [c637c9ac] Host started 34 ms after the process.
+      59.8 | app: 2026-11-21T18:01:14.813Z INFO  Spar.Host  [c637c9ac] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-dev-server/externaldown/data/com.example.Notebook.Development
+      74.1 | app: 2026-11-21T18:01:14.819Z INFO  Spar.Host  [c637c9ac] single instance at 19.6 ms
+      75.9 | app: 2026-11-21T18:01:14.832Z INFO  Spar.Host  [c637c9ac] GTK 4.14.5, WebKitGTK 2.52.6.
+      78.7 | out: spar info +16.5 ms: [c637c9ac] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-dev-server/externaldown/data/com.example.Notebook.Development
+     153.6 | out: spar info +22.0 ms: [c637c9ac] single instance at 19.6 ms
+     156.7 | out: spar info +36.0 ms: [c637c9ac] GTK 4.14.5, WebKitGTK 2.52.6.
+     171.3 | app: 2026-11-21T18:01:14.932Z INFO  Spar.Host  [c637c9ac] Sandbox trial: bwrap exit 0 in 97.3 ms.
+     180.5 | app: 2026-11-21T18:01:14.932Z INFO  Spar.Host  [c637c9ac] prerequisites checked at 135.8 ms
+     185.1 | app: 2026-11-21T18:01:14.934Z INFO  Spar.Host  [c637c9ac] WebAssembly off: JSC_useWasm=false.
+     189.3 | app: 2026-11-21T18:01:14.938Z INFO  Spar.Host  [c637c9ac] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+     193.3 | app: 2026-11-21T18:01:14.938Z INFO  Spar.Host  [c637c9ac] gpu checked at 141.7 ms
+     197.7 | app: 2026-11-21T18:01:14.941Z INFO  Spar.Host  [c637c9ac] theme read at 144.7 ms
+     202.8 | out: spar info +135.6 ms: [c637c9ac] Sandbox trial: bwrap exit 0 in 97.3 ms.
+     204.6 | out: spar info +135.8 ms: [c637c9ac] prerequisites checked at 135.8 ms
+     206.1 | out: spar info +137.8 ms: [c637c9ac] WebAssembly off: JSC_useWasm=false.
+     207.6 | out: spar info +141.7 ms: [c637c9ac] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+     208.7 | out: spar info +141.8 ms: [c637c9ac] gpu checked at 141.7 ms
+     210.1 | out: spar info +144.7 ms: [c637c9ac] theme read at 144.7 ms
+     219.3 | out: spar info +150.3 ms: [c637c9ac] Development server http://127.0.0.1:5173, from SPAR_DEV_SERVER_URL: Spar starts none.
+     228.5 | out: libEGL warning: DRI3 error: Could not get DRI3 device
+     229.9 | out: libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+     231.1 | out: spar info +166.7 ms: [c637c9ac] services built at 166.7 ms
+     232.7 | out: spar info +179.5 ms: [c637c9ac] gtk ready at 179.5 ms
+     233.9 | out: spar info +181.0 ms: [c637c9ac] UI-thread stall probe on.
+     245.4 | app: 2026-11-21T18:01:14.947Z INFO  Spar.Host  [c637c9ac] Development server http://127.0.0.1:5173, from SPAR_DEV_SERVER_URL: Spar starts none.
+     248.4 | app: 2026-11-21T18:01:14.963Z INFO  Spar.Host  [c637c9ac] services built at 166.7 ms
+     251.9 | app: 2026-11-21T18:01:14.976Z INFO  Spar.Host  [c637c9ac] gtk ready at 179.5 ms
+     253.1 | app: 2026-11-21T18:01:14.977Z INFO  Spar.Host  [c637c9ac] UI-thread stall probe on.
+     254.8 | app: 2026-11-21T18:01:15.000Z INFO  Spar.Host  [c637c9ac] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+     256.3 | app: 2026-11-21T18:01:15.004Z INFO  Spar.Host  [c637c9ac] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     259.4 | app: 2026-11-21T18:01:15.004Z INFO  Spar.Host  [c637c9ac] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     261.0 | app: 2026-11-21T18:01:15.008Z INFO  Spar.Host  [c637c9ac] Browser data folder <copy>/artifacts/linux-homes/m1d-dev-server/externaldown/data/com.example.Notebook.Development/WebKit, cache <copy>/artifacts/linux-homes/m1d-dev-server/externaldown/data/com.example.Notebook.Development/cache/WebKit
+     263.6 | app: 2026-11-21T18:01:15.012Z INFO  Spar.Host  [c637c9ac] Browser settings read back (0.23 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+     265.4 | app: 2026-11-21T18:01:15.012Z INFO  Spar.Host  [c637c9ac] web view created at 215.7 ms
+     267.4 | app: 2026-11-21T18:01:15.013Z INFO  Spar.Host  [c637c9ac] Heartbeat every 5000 ms.
+     269.6 | out: spar info +203.7 ms: [c637c9ac] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+     271.2 | out: spar info +207.9 ms: [c637c9ac] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     274.7 | out: spar info +207.9 ms: [c637c9ac] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     277.0 | out: spar info +211.7 ms: [c637c9ac] Browser data folder <copy>/artifacts/linux-homes/m1d-dev-server/externaldown/data/com.example.Notebook.Development/WebKit, cache <copy>/artifacts/linux-homes/m1d-dev-server/externaldown/data/com.example.Notebook.Development/cache/WebKit
+     278.6 | out: spar info +215.5 ms: [c637c9ac] Browser settings read back (0.23 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+     280.1 | out: spar info +215.7 ms: [c637c9ac] web view created at 215.7 ms
+     281.6 | out: spar info +216.5 ms: [c637c9ac] Heartbeat every 5000 ms.
+     282.7 | out: spar info +229.3 ms: [c637c9ac] window shown at 229.3 ms
+     293.5 | app: 2026-11-21T18:01:15.026Z INFO  Spar.Host  [c637c9ac] window shown at 229.3 ms
+     368.0 | app: 2026-11-21T18:01:15.138Z WARN  Spar.Host  [c637c9ac] Development error page shown: Nothing answers at http://127.0.0.1:5173: Connection refused (127.0.0.1:5173)
+     387.2 | app: 2026-11-21T18:01:15.142Z INFO  Spar.Host  [c637c9ac] page committed at 346.1 ms
+     400.8 | app: 2026-11-21T18:01:15.143Z INFO  Spar.Host  [c637c9ac] Bridge: document f0d6fe91a488dd26 opened.
+     411.5 | app: 2026-11-21T18:01:15.143Z INFO  Spar.Host  [c637c9ac] Heartbeat armed for the new document.
+     446.5 | out: spar warn +341.3 ms: [c637c9ac] Development error page shown: Nothing answers at http://127.0.0.1:5173: Connection refused (127.0.0.1:5173)
+     448.5 | out: spar info +346.1 ms: [c637c9ac] page committed at 346.1 ms
+     452.2 | out: spar info +346.5 ms: [c637c9ac] Bridge: document f0d6fe91a488dd26 opened.
+     453.5 | out: spar info +346.6 ms: [c637c9ac] Heartbeat armed for the new document.
+     455.0 | run: found 'Development error page shown'
+     964.0 | run: SIGTERM
+     977.2 | app: 2026-11-21T18:01:15.745Z INFO  Spar.Host  [c637c9ac] SIGTERM: the session ends at 948.6 ms
+     982.2 | app: 2026-11-21T18:01:15.747Z INFO  Spar.Host  [c637c9ac] session ending at 950.8 ms
+     985.2 | app: 2026-11-21T18:01:15.751Z INFO  Spar.Host  [c637c9ac] session end: the page's guard answered Close at 954.8 ms
+     987.4 | app: 2026-11-21T18:01:15.754Z INFO  Spar.Host  [c637c9ac] first bridge reply at 957.4 ms
+     989.5 | out: spar info +948.6 ms: [c637c9ac] SIGTERM: the session ends at 948.6 ms
+     991.6 | out: spar info +950.8 ms: [c637c9ac] session ending at 950.8 ms
+     993.3 | out: spar info +954.8 ms: [c637c9ac] session end: the page's guard answered Close at 954.8 ms
+     994.6 | out: spar info +957.4 ms: [c637c9ac] first bridge reply at 957.4 ms
+     996.1 | out: spar info +958.2 ms: Close request for window main (SessionEnd): the backend's guard answered Close
+     997.8 | out: spar info +959.5 ms: [c637c9ac] session end: the backend's guard answered Close; closing at 959.5 ms
+    1002.1 | out: spar info +960.8 ms: [c637c9ac] closing at 960.8 ms
+    1003.6 | out: spar info +961.0 ms: [c637c9ac] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1005.3 | out: spar info +961.5 ms: [c637c9ac] Bridge: document f0d6fe91a488dd26 closed (window closing).
+    1007.3 | out: spar info +961.6 ms: [c637c9ac] calls stopped at 961.6 ms
+    1008.8 | out: spar info +961.7 ms: [c637c9ac] calls settled at 961.7 ms
+    1012.0 | out: spar info +963.3 ms: [c637c9ac] window destroyed at 963.3 ms
+    1024.1 | app: 2026-11-21T18:01:15.755Z INFO  Spar.Host  Close request for window main (SessionEnd): the backend's guard answered Close
+    1026.0 | app: 2026-11-21T18:01:15.756Z INFO  Spar.Host  [c637c9ac] session end: the backend's guard answered Close; closing at 959.5 ms
+    1027.3 | app: 2026-11-21T18:01:15.757Z INFO  Spar.Host  [c637c9ac] closing at 960.8 ms
+    1028.8 | app: 2026-11-21T18:01:15.757Z INFO  Spar.Host  [c637c9ac] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1030.1 | app: 2026-11-21T18:01:15.758Z INFO  Spar.Host  [c637c9ac] Bridge: document f0d6fe91a488dd26 closed (window closing).
+    1031.2 | app: 2026-11-21T18:01:15.758Z INFO  Spar.Host  [c637c9ac] calls stopped at 961.6 ms
+    1032.2 | app: 2026-11-21T18:01:15.758Z INFO  Spar.Host  [c637c9ac] calls settled at 961.7 ms
+    1033.2 | app: 2026-11-21T18:01:15.760Z INFO  Spar.Host  [c637c9ac] window destroyed at 963.3 ms
+    1034.3 | app: 2026-11-21T18:01:15.788Z INFO  Spar.Host  [c637c9ac] web processes exited after 27 ms at 991.3 ms
+    1036.0 | app: 2026-11-21T18:01:15.793Z INFO  Spar.Host  [c637c9ac] services disposed at 996.6 ms
+    1037.5 | app: 2026-11-21T18:01:15.793Z INFO  Spar.Host  [c637c9ac] session end: window closed, last work done; SIGTERM held 48 ms at 997 ms
+    1038.7 | out: spar info +991.3 ms: [c637c9ac] web processes exited after 27 ms at 991.3 ms
+    1039.9 | out: spar info +996.6 ms: [c637c9ac] services disposed at 996.6 ms
+    1041.0 | out: spar info +997.0 ms: [c637c9ac] session end: window closed, last work done; SIGTERM held 48 ms at 997 ms
+    1042.0 | out: spar info +997.3 ms: [c637c9ac] exit 0 at 997.3 ms
+    1354.1 | run: exit 0

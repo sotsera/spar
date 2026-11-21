@@ -21,7 +21,10 @@ internal partial interface ICoreWebView2WebResourceRequestedEventArgs2
     int GetRequestedSourceKind();
 }
 
-/// <summary><c>ICoreWebView2WebResourceRequest</c> (slots 3–9; the host reads the address, the method and the body).</summary>
+/// <summary>
+/// <c>ICoreWebView2WebResourceRequest</c> (slots 3–9; the host reads the address, the method and the body, and a
+/// Development build's proxy to the Vite development server the headers it forwards).
+/// </summary>
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("97055cd4-512c-4264-8b5f-e3f446cea6a5")]
 internal partial interface ICoreWebView2WebResourceRequest
@@ -33,6 +36,21 @@ internal partial interface ICoreWebView2WebResourceRequest
 
     /// <summary>The request body as an <c>IStream</c> (one reference the caller owns), or 0 when it has none.</summary>
     nint GetContent();
+
+    [PreserveSig] int Slot008_PutContent();
+
+    /// <summary>The request's headers, an <see cref="ICoreWebView2HttpRequestHeaders"/> the caller owns.</summary>
+    nint GetHeaders();
+}
+
+/// <summary><c>ICoreWebView2HttpRequestHeaders</c> (slots 3–5): one request's headers, read by name.</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("e86cac0e-5523-465c-b536-8fb9fc8c8c60")]
+internal partial interface ICoreWebView2HttpRequestHeaders
+{
+    string GetHeader(string name);
+    [PreserveSig] int Slot004_GetHeaders();
+    int Contains(string name);
 }
 
 /// <summary><c>ICoreWebView2Deferral</c>: completes a deferred event.</summary>

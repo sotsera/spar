@@ -34,8 +34,10 @@ internal sealed class HostLog
     private readonly HashSet<string> _reached = new(StringComparer.Ordinal);
     private readonly bool _standardError;
     private LogFile? _file;
+    private LogLevels? _levels;
     private ILogger? _fileLogger;
     private ILogger? _appLogger;
+    private ILoggerFactory? _appFactory;
 
     /// <param name="standardError">
     /// Whether the lines also go to standard error. A window in a test process writes only to its app's own log: the
@@ -73,8 +75,15 @@ internal sealed class HostLog
     public void UseFile(string logsFolder, LogLevels levels)
     {
         _file ??= LogFile.Open(logsFolder);
+        _levels = levels;
         _fileLogger = SparLogging.EarlyLogger(_file, levels, SparLogging.HostCategory);
     }
+
+    /// <summary>
+    /// A logger of another of Spar's categories for the run, such as <c>Spar.DevServer</c>: the log file directly until
+    /// the app's logging exists, then through it, like the host's own lines but never on standard error.
+    /// </summary>
+    public ILogger For(string category) => new CategoryLogger(this, category);
 
     /// <summary>Ends the log file: what was logged reaches the disk, within a short limit. Called once, at process exit.</summary>
     public void Close() => _file?.Close();
@@ -88,9 +97,10 @@ internal sealed class HostLog
     /// </summary>
     public void UseAppLogging(IServiceProvider services)
     {
-        if (services.GetService<ILoggerFactory>()?.CreateLogger(SparLogging.HostCategory) is { } app)
+        if (services.GetService<ILoggerFactory>() is { } factory)
         {
-            _appLogger = app;
+            _appFactory = factory;
+            _appLogger = factory.CreateLogger(SparLogging.HostCategory);
         }
     }
 
@@ -157,5 +167,35 @@ internal sealed class HostLog
             LogLevel.Error or LogLevel.Critical => "fail",
             _ => "info",
         };
+    }
+
+    /// <summary>One more category's lines: to the app's logging once it exists, to the log file before.</summary>
+    private sealed class CategoryLogger(HostLog log, string category) : ILogger
+    {
+        private ILogger? _early;
+        private ILogger? _app;
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => Target()?.IsEnabled(logLevel) == true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) =>
+            Target()?.Log(logLevel, eventId, state, exception, formatter);
+
+        private ILogger? Target()
+        {
+            if (log._appFactory is { } factory)
+            {
+                return _app ??= factory.CreateLogger(category);
+            }
+
+            if (log._file is { } file && log._levels is { } levels)
+            {
+                return _early ??= SparLogging.EarlyLogger(file, levels, category);
+            }
+
+            return null;
+        }
     }
 }

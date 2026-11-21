@@ -41,6 +41,11 @@ internal static class ProductionBoundary
 
         // The black box on Linux (M1c step 7): its AT-SPI client, its launched processes and its private desktop.
         "AtSpiAutomation", "AtSpiBus", "LinuxAppProcess", "LinuxDesktop",
+
+        // A Debug build's development server (M1d step 1): the session, its launcher, the output it reads, the record it
+        // finds, the proxy and the error page, and the WebView2 request headers only the proxy reads.
+        "DevServerSession", "DevServerLauncher", "DevServerOutput", "DevServerState", "DevServerProxy", "DevErrorPage",
+        "DevServerOutcome", "ICoreWebView2HttpRequestHeaders",
     ];
 
     private static readonly string[] Literals =
@@ -61,6 +66,12 @@ internal static class ProductionBoundary
 
         // The black box on Linux (M1c step 7): the launch's tag and runtime folders.
         "SPAR_BLACK_BOX_LAUNCH", "spar-bb-",
+
+        // A Debug build's development server (M1d step 1): its variables, its record and output files, the build's
+        // settings, the plugin's nonce placeholder and identity path, the proxy's route and the error page's text.
+        "SPAR_DEV_SERVER_URL", "SPAR_DEV_SERVER_FILE", "spar-dev-server.json", "spar-dev-server.log",
+        "Spar.DevServer.Frontend", "spar-dev-nonce", "/__spar/dev-server", "/_spar/dev-server/",
+        "The page cannot come from the development server", "npm run dev",
     ];
 
     /// <summary>

@@ -1,0 +1,93 @@
+       0,0 | run: start Notebook.exe env [SPAR_DEV_SERVER_URL=http://example.com:5173/]
+      89,3 | app: 2026-11-21T17:40:36.597Z INFO  Spar.Host  [0e1a294e] Host started 60.9 ms after the process.
+      89,4 | app: 2026-11-21T17:40:36.598Z INFO  Spar.Host  [0e1a294e] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-dev-server\invalid-url\root\com.example.Notebook.Development
+      89,4 | app: 2026-11-21T17:40:36.606Z INFO  Spar.Host  [0e1a294e] single instance at 23.5 ms
+      89,4 | app: 2026-11-21T17:40:36.607Z INFO  Spar.Host  [0e1a294e] prerequisites checked at 27.8 ms
+      96,5 | out: spar info +16.2 ms: [0e1a294e] Host started 60.9 ms after the process.
+      96,5 | out: spar info +18.3 ms: [0e1a294e] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-dev-server\invalid-url\root\com.example.Notebook.Development
+      96,6 | out: spar info +25.7 ms: [0e1a294e] single instance at 23.5 ms
+      96,6 | out: spar info +27.8 ms: [0e1a294e] prerequisites checked at 27.8 ms
+      96,6 | out: spar fail +35.0 ms: [0e1a294e] SPAR_DEV_SERVER_URL: 'http://example.com:5173/' is not on this machine: the development server must listen on 127.0.0.1, [::1] or localhost.
+      96,6 | out: spar info +39.5 ms: [0e1a294e] UI-thread stall probe on.
+     141,7 | run: window moved offscreen
+     146,5 | app: 2026-11-21T17:40:36.615Z ERROR Spar.Host  [0e1a294e] SPAR_DEV_SERVER_URL: 'http://example.com:5173/' is not on this machine: the development server must listen on 127.0.0.1, [::1] or localhost.
+     146,5 | app: 2026-11-21T17:40:36.619Z INFO  Spar.Host  [0e1a294e] UI-thread stall probe on.
+     146,6 | app: 2026-11-21T17:40:36.629Z INFO  Spar.Host  [0e1a294e] window shown at 49.7 ms
+     146,6 | app: 2026-11-21T17:40:36.630Z INFO  Spar.Host  [0e1a294e] Theme dark (system), window #1d1f24.
+     146,6 | app: 2026-11-21T17:40:36.633Z INFO  Spar.Host  [0e1a294e] services built at 53.6 ms
+     146,6 | app: 2026-11-21T17:40:36.635Z INFO  Spar.Host  [0e1a294e] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     146,6 | app: 2026-11-21T17:40:36.635Z INFO  Spar.Host  [0e1a294e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     146,6 | app: 2026-11-21T17:40:36.646Z INFO  Spar.Host  [0e1a294e] environment at 66.6 ms
+     146,6 | app: 2026-11-21T17:40:36.647Z INFO  Spar.Host  [0e1a294e] WebView2 Runtime 157.0.4341.60
+     146,6 | app: 2026-11-21T17:40:36.647Z INFO  Spar.Host  [0e1a294e] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-dev-server\invalid-url\root\com.example.Notebook.Development\WebView2
+     146,6 | app: 2026-11-21T17:40:36.656Z INFO  Spar.Host  [0e1a294e] controller requested at 76.7 ms
+     146,6 | app: 2026-11-21T17:40:36.661Z INFO  Spar.Host  [0e1a294e] Heartbeat every 5000 ms.
+     150,8 | out: spar info +49.8 ms: [0e1a294e] window shown at 49.7 ms
+     150,9 | out: spar info +50.1 ms: [0e1a294e] Theme dark (system), window #1d1f24.
+     150,9 | out: spar info +53.6 ms: [0e1a294e] services built at 53.6 ms
+     150,9 | out: spar info +55.3 ms: [0e1a294e] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     150,9 | out: spar info +55.4 ms: [0e1a294e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     150,9 | out: spar info +66.7 ms: [0e1a294e] environment at 66.6 ms
+     150,9 | out: spar info +67.4 ms: [0e1a294e] WebView2 Runtime 157.0.4341.60
+     150,9 | out: spar info +67.7 ms: [0e1a294e] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-dev-server\invalid-url\root\com.example.Notebook.Development\WebView2
+     150,9 | out: spar info +76.7 ms: [0e1a294e] controller requested at 76.7 ms
+     150,9 | out: spar info +81.6 ms: [0e1a294e] Heartbeat every 5000 ms.
+     339,7 | app: 2026-11-21T17:40:36.849Z INFO  Spar.Host  [0e1a294e] controller at 269.7 ms
+     339,7 | app: 2026-11-21T17:40:36.852Z INFO  Spar.Host  [0e1a294e] Browser settings read back (1.07 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     346,7 | out: spar info +269.7 ms: [0e1a294e] controller at 269.7 ms
+     346,7 | out: spar info +272.8 ms: [0e1a294e] Browser settings read back (1.07 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+     385,1 | app: 2026-11-21T17:40:36.889Z INFO  Spar.Host  [0e1a294e] Development console: the page's console errors come from the DevTools Protocol.
+     385,1 | app: 2026-11-21T17:40:36.889Z INFO  Spar.Host  [0e1a294e] Page file picker blocked in 36.4 ms (Page.enable 35.9 ms).
+     385,1 | app: 2026-11-21T17:40:36.889Z INFO  Spar.Host  [0e1a294e] page script added at 309.4 ms
+     385,1 | app: 2026-11-21T17:40:36.889Z INFO  Spar.Host  [0e1a294e] navigation started at 309.9 ms
+     391,1 | out: spar info +309.3 ms: [0e1a294e] Development console: the page's console errors come from the DevTools Protocol.
+     391,2 | out: spar info +309.4 ms: [0e1a294e] Page file picker blocked in 36.4 ms (Page.enable 35.9 ms).
+     391,2 | out: spar info +309.4 ms: [0e1a294e] page script added at 309.4 ms
+     391,2 | out: spar info +309.9 ms: [0e1a294e] navigation started at 309.9 ms
+     415,7 | app: 2026-11-21T17:40:36.915Z WARN  Spar.Host  [0e1a294e] Development error page shown: SPAR_DEV_SERVER_URL is not a development server Spar can use: 'http://example.com:5173/' is not on this machine: the development server must listen on 127.0.0.1, [::1] or localhost.
+     423,2 | out: spar warn +335.1 ms: [0e1a294e] Development error page shown: SPAR_DEV_SERVER_URL is not a development server Spar can use: 'http://example.com:5173/' is not on this machine: the development server must listen on 127.0.0.1, [::1] or localhost.
+     423,4 | run: found 'Development error page shown'
+     447,4 | app: 2026-11-21T17:40:36.957Z INFO  Spar.Host  [0e1a294e] Bridge: document c389ca6019372b66 opened.
+     447,4 | app: 2026-11-21T17:40:36.958Z INFO  Spar.Host  [0e1a294e] Heartbeat armed for the new document.
+     447,4 | app: 2026-11-21T17:40:36.958Z INFO  Spar.Host  [0e1a294e] first document at 378.1 ms
+     454,4 | out: spar info +377.9 ms: [0e1a294e] Bridge: document c389ca6019372b66 opened.
+     454,4 | out: spar info +378.1 ms: [0e1a294e] Heartbeat armed for the new document.
+     454,4 | out: spar info +378.1 ms: [0e1a294e] first document at 378.1 ms
+     454,5 | out: spar warn +391.5 ms: [0e1a294e] Navigation 2 failed with web error status 0.
+     454,5 | out: spar info +391.5 ms: [0e1a294e] navigation failed at 391.5 ms
+     478,1 | app: 2026-11-21T17:40:36.971Z WARN  Spar.Host  [0e1a294e] Navigation 2 failed with web error status 0.
+     478,1 | app: 2026-11-21T17:40:36.971Z INFO  Spar.Host  [0e1a294e] navigation failed at 391.5 ms
+     924,3 | run: WM_CLOSE
+    1287,4 | app: 2026-11-21T17:40:37.450Z INFO  Spar.Host  [0e1a294e] close requested (User) at 870.4 ms
+    1287,5 | app: 2026-11-21T17:40:37.453Z INFO  Spar.Host  [0e1a294e] the page has no close guards; pinging it at 873.7 ms
+    1287,5 | app: 2026-11-21T17:40:37.455Z INFO  Spar.Host  [0e1a294e] first bridge reply at 875.2 ms
+    1287,5 | app: 2026-11-21T17:40:37.456Z INFO  Spar.Host  [0e1a294e] first bridge message at 876.2 ms
+    1287,5 | app: 2026-11-21T17:40:37.463Z INFO  Spar.Host  Close request for window main (User): the backend's guard answered Close
+    1287,5 | app: 2026-11-21T17:40:37.465Z INFO  Spar.Host  [0e1a294e] closing at 885.5 ms
+    1287,5 | app: 2026-11-21T17:40:37.465Z INFO  Spar.Host  [0e1a294e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1287,5 | app: 2026-11-21T17:40:37.466Z INFO  Spar.Host  [0e1a294e] Bridge: document c389ca6019372b66 closed (window closing).
+    1287,5 | app: 2026-11-21T17:40:37.466Z INFO  Spar.Host  [0e1a294e] calls stopped at 886.9 ms
+    1287,5 | app: 2026-11-21T17:40:37.466Z INFO  Spar.Host  [0e1a294e] calls settled at 886.9 ms
+    1287,5 | app: 2026-11-21T17:40:37.467Z INFO  Spar.Host  [0e1a294e] closing at 887 ms
+    1287,5 | app: 2026-11-21T17:40:37.467Z INFO  Spar.Host  [0e1a294e] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    1287,5 | app: 2026-11-21T17:40:37.480Z INFO  Spar.Host  [0e1a294e] controller closed at 900.9 ms
+    1287,5 | app: 2026-11-21T17:40:37.484Z INFO  Spar.Host  [0e1a294e] window destroyed at 904 ms
+    1287,5 | app: 2026-11-21T17:40:37.491Z INFO  Spar.Host  [0e1a294e] services disposed at 911.9 ms
+    1287,5 | app: 2026-11-21T17:40:37.491Z INFO  Spar.Host  [0e1a294e] exit 0 at 912 ms
+    1287,6 | out: spar info +870.4 ms: [0e1a294e] close requested (User) at 870.4 ms
+    1287,6 | out: spar info +873.7 ms: [0e1a294e] the page has no close guards; pinging it at 873.7 ms
+    1287,6 | out: spar info +875.2 ms: [0e1a294e] first bridge reply at 875.2 ms
+    1287,6 | out: spar info +876.2 ms: [0e1a294e] first bridge message at 876.2 ms
+    1287,6 | out: spar info +882.9 ms: Close request for window main (User): the backend's guard answered Close
+    1287,6 | out: spar info +885.5 ms: [0e1a294e] closing at 885.5 ms
+    1287,6 | out: spar info +885.8 ms: [0e1a294e] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    1287,6 | out: spar info +886.8 ms: [0e1a294e] Bridge: document c389ca6019372b66 closed (window closing).
+    1287,6 | out: spar info +886.9 ms: [0e1a294e] calls stopped at 886.9 ms
+    1287,6 | out: spar info +886.9 ms: [0e1a294e] calls settled at 886.9 ms
+    1287,6 | out: spar info +887.0 ms: [0e1a294e] closing at 887 ms
+    1287,6 | out: spar info +887.1 ms: [0e1a294e] Window: 0 focus moves, 0 Tab past the page, 0 visibility changes, 0 moves.
+    1287,6 | out: spar info +901.0 ms: [0e1a294e] controller closed at 900.9 ms
+    1287,6 | out: spar info +904.0 ms: [0e1a294e] window destroyed at 904 ms
+    1287,6 | out: spar info +911.9 ms: [0e1a294e] services disposed at 911.9 ms
+    1287,6 | out: spar info +912.0 ms: [0e1a294e] exit 0 at 912 ms
+    1287,8 | run: exit 0

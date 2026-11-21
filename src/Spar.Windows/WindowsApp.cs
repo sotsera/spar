@@ -40,6 +40,7 @@ internal sealed class WindowsApp : IAppWindowOwner
     private UiThread? _ui;
     private AppWindow? _window;
     private ShutdownWatch? _shutdown;
+    private DevServer.DevServerSession? _devServer;
     private int _stopped;
 
     /// <summary>What a start-up report needs from this run.</summary>
@@ -203,9 +204,18 @@ internal sealed class WindowsApp : IAppWindowOwner
         }
 
         _log.Phase("prerequisites checked");
+        if (DevServer.DevServerSettings.IsSupported && StartDevServer() is { } noNode)
+        {
+            return StartupFailure.Report(noNode, Startup);
+        }
+
         var theme = WindowTheme.Read(builder.MainWindow, _folders.DataRoot);
         var built = Task.Run(() => Build(_folders));
         _window = new AppWindow(_app, _log, _automated, _title, _profile, _hangHook, this);
+        if (DevServer.DevServerSettings.IsSupported && _devServer is not null)
+        {
+            _window.UseDevServer(_devServer);
+        }
 
         UiThread.Run(theme.Background.ColorRef, _window.Report, ui => Start(ui, theme, built));
 
@@ -213,6 +223,26 @@ internal sealed class WindowsApp : IAppWindowOwner
         var exitCode = _window.ExitCode;
         _log.Step($"exit {exitCode}");
         return exitCode;
+    }
+
+    /// <summary>
+    /// A Debug build's development server (plan section 4): found, reused or started beside the services and the window.
+    /// Starting one needs Node and npm, which are checked first; without them the app stops with exit code 3.
+    /// </summary>
+    private StartupProblem? StartDevServer()
+    {
+        if (DevServer.DevServerSettings.Read() is not { } settings)
+        {
+            return null;
+        }
+
+        if (settings.Url is null && DevServer.DevServerLauncher.CheckNode() is { } noNode)
+        {
+            return noNode;
+        }
+
+        _devServer = DevServer.DevServerSession.Start(settings, _log);
+        return null;
     }
 
     /// <summary>
@@ -327,6 +357,12 @@ internal sealed class WindowsApp : IAppWindowOwner
             }
 
             _window?.StopAsync().GetAwaiter().GetResult();
+            // The development server's output stops before the services, whose logging it writes through.
+            if (DevServer.DevServerSettings.IsSupported)
+            {
+                _devServer?.Dispose();
+            }
+
             _running?.DisposeAsync().AsTask().GetAwaiter().GetResult();
             _log.Step("services disposed");
         }

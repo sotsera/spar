@@ -100,6 +100,8 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         Assert.True(Contains(loopback, "LoopbackHost", Encoding.UTF8), "The control search missed LoopbackHost.");
         Assert.True(Contains(loopback, "/_spar/channel", Encoding.Unicode), "The control search missed /_spar/channel.");
         Assert.True(Contains(runtime, "SparTestSession", Encoding.UTF8), "The control search missed SparTestSession.");
+        Assert.True(Contains(runtime, "DevServerProxy", Encoding.UTF8), "The control search missed DevServerProxy.");
+        Assert.True(Contains(runtime, "spar-dev-server.json", Encoding.Unicode), "The control search missed spar-dev-server.json.");
 
         // The DevTools Protocol in Production: exactly the two calls that keep the page's file picker closed; the
         // control is the Windows host's assembly, whose Development-only input trigger names the Input domain. A Linux

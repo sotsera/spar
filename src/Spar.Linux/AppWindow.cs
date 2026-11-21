@@ -66,6 +66,7 @@ internal sealed partial class AppWindow
     private State _state;
     private bool _failed;
     private int _exitCode;
+    private Spar.DevServer.DevServerSession? _devServer;
 
     /// <param name="security">The page security in force, resolved before the engine started (it sets WebAssembly).</param>
     /// <param name="promptAnswers">A Development build's scripted answers to the hung-page dialogs; null otherwise.</param>
@@ -111,6 +112,12 @@ internal sealed partial class AppWindow
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
     /// <summary>
+    /// A Debug build's development server, which the page comes from (before <see cref="Start"/>). Called only behind
+    /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
+    /// </summary>
+    public void UseDevServer(Spar.DevServer.DevServerSession devServer) => _devServer = devServer;
+
+    /// <summary>
     /// The window and its view, without blocking the loop: the theme's layers, the view with its session and the
     /// relay, attached and loading, the window presented in the theme's colour, then the bridge's services once they are
     /// built (they are being built meanwhile).
@@ -146,6 +153,21 @@ internal sealed partial class AppWindow
         }
 
         _pages = new SchemeServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
+        if (Spar.DevServer.DevServerSettings.IsSupported && _devServer is { } devServer)
+        {
+            // A development server that stops takes the page to the error page, which offers Retry.
+            _pages.UseDevServer(devServer, security);
+            devServer.Stopped += () => ui.Post(
+                () =>
+                {
+                    if (_state != State.Closing && _view?.Handle is { } view and not 0)
+                    {
+                        WebKit.webkit_web_view_load_uri(view, SchemeServer.StartUrl);
+                    }
+                },
+                "dev server stopped");
+        }
+
         _ = LogPolicyAsync(_pages);
         _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null);
         var browser = _app.Builder.BrowserOptions;

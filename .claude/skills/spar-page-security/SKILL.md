@@ -27,6 +27,7 @@ The design is plan section 3b, with the defaults and overrides of 3c, in `docs/d
 - **Hashes the build needs** are read by the host from the served HTML at start, off the UI thread: only Spar's own `<script type="importmap">`. Never hash other inline scripts.
 - **The headers go on every response,** worker scripts included (a worker takes its policy from its own response), and an HTML document gets its own policy with a fresh nonce and `<meta property="csp-nonce">` when the app asked. Compose once; only the nonce changes per document. Hosts never compose on the UI thread beyond concatenating the prepared parts.
 - **Loopback serves the same policy** from the catalog (development and test variants only), so browser tests see what the window sees.
+- **The Debug policy through the development server** (M1d step 1): `PagePolicy` with `devServerSocket` adds `ws://127.0.0.1:<port>` to `connect-src` and puts each HTML response's nonce in `script-src` and `style-src` (not `style-src` with `AllowInlineStyles()`). The host composes it and swaps the plugin's `html.cspNonce` placeholder in the body for the fresh nonce; Vite's own headers never reach the page, and a document without the placeholder is the error page. Vite's client under Trusted Types: its server-lost ping is a `SharedWorker` from a `blob:` address, refused on both hosts (one violation and one unhandled rejection when the server dies, Debug only).
 
 ## The host
 

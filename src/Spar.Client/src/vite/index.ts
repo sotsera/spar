@@ -4,11 +4,13 @@
 // origin; and it collects the bundled dependencies' licences for the executable's third-party notices (plan 3c).
 // It also applies Subresource Integrity to the built page (`integrity.ts`), unless Program.cs turned it off, and fails
 // on an external script or stylesheet without a hash, in every build and on the development server. The page security
-// Program.cs declares reaches it as `csp.json`, which the build writes next to this package. The development server's
-// policy header arrives with the development loop.
+// Program.cs declares reaches it as `csp.json`, which the build writes next to this package. On the development server
+// (`vite`, which a Debug build's app starts with `npm run dev`), it sets what the app's origin needs to serve the page
+// from it (`devServer.ts`); the app's host sends the policy header, on every response, worker scripts included.
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { Plugin, ResolvedConfig, UserConfig } from "vite";
+import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig, ViteDevServer } from "vite";
+import { attachLaunch, devServerConfig, readLaunch } from "./devServer.js";
 import { addIntegrity, missingIntegrity, missingIntegrityMessage } from "./integrity.js";
 
 /** The parts of `csp.json` this plugin reads; the build writes it from `spar.ContentSecurity(…)` in Program.cs. */
@@ -22,7 +24,12 @@ export default function spar(): Plugin {
   let outDir = "";
   return {
     name: "spar",
-    config(): UserConfig {
+    config(user: UserConfig, env: ConfigEnv): UserConfig {
+      // The development server only: not a preview of a build, and not Vitest, which loads the same config.
+      if (env.command === "serve" && !env.isPreview && env.mode !== "test") {
+        return { base: "/", ...devServerConfig(user, readLaunch(process.env)) };
+      }
+
       return {
         base: "/",
         build: {
@@ -38,6 +45,12 @@ export default function spar(): Plugin {
     },
     configResolved(config: ResolvedConfig): void {
       outDir = resolve(config.root, config.build.outDir);
+    },
+    configureServer(server: ViteDevServer): void {
+      const launch = readLaunch(process.env);
+      if (launch !== undefined) {
+        attachLaunch(server, launch);
+      }
     },
     transformIndexHtml: {
       order: "pre",

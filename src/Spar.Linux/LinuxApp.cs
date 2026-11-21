@@ -50,6 +50,7 @@ internal sealed class LinuxApp : IAppWindowOwner
     private AppWindow? _window;
     private ShutdownWatch? _shutdown;
     private SessionEndSignals? _signals;
+    private DevServer.DevServerSession? _devServer;
 
     /// <summary>The running session end, once a signal started one: its final line and the log's flush.</summary>
     private Task? _sessionEnd;
@@ -206,10 +207,18 @@ internal sealed class LinuxApp : IAppWindowOwner
         GpuCheck.Apply(builder.BrowserOptions.Acceleration, _log);
         var theme = WindowTheme.Read(builder.MainWindow, _folders.DataRoot);
         _log.Phase("theme read");
+        if (DevServer.DevServerSettings.IsSupported && StartDevServer() is { } noNode)
+        {
+            return StartupFailure.Report(noNode, Startup, gtkUsable);
+        }
 
         var built = Task.Run(Build);
         _window = new AppWindow(
             _app, security, _log, _automated, _title, _folders, _profile, _hangHook, _promptAnswers, this);
+        if (DevServer.DevServerSettings.IsSupported && _devServer is not null)
+        {
+            _window.UseDevServer(_devServer);
+        }
         var started = false;
         MainLoop.Run(_window.Report, ui => started = Start(ui, theme, built));
 
@@ -437,6 +446,12 @@ internal sealed class LinuxApp : IAppWindowOwner
             }
 
             _window?.StopAsync().GetAwaiter().GetResult();
+            // The development server's output stops before the services, whose logging it writes through.
+            if (DevServer.DevServerSettings.IsSupported)
+            {
+                _devServer?.Dispose();
+            }
+
             _running?.DisposeAsync().AsTask().GetAwaiter().GetResult();
             _log.Step("services disposed");
         }
@@ -448,6 +463,26 @@ internal sealed class LinuxApp : IAppWindowOwner
         {
             _stoppedWork.TrySetResult();
         }
+    }
+
+    /// <summary>
+    /// A Debug build's development server (plan section 4): found, reused or started beside the services and the window.
+    /// Starting one needs Node and npm, which are checked first; without them the app stops with exit code 3.
+    /// </summary>
+    private StartupProblem? StartDevServer()
+    {
+        if (DevServer.DevServerSettings.Read() is not { } settings)
+        {
+            return null;
+        }
+
+        if (settings.Url is null && DevServer.DevServerLauncher.CheckNode() is { } noNode)
+        {
+            return noNode;
+        }
+
+        _devServer = DevServer.DevServerSession.Start(settings, _log);
+        return null;
     }
 
     /// <summary>

@@ -1,0 +1,145 @@
+       7.4 | run: start <copy>/samples/Notebook/bin/Development/Debug/net11.0/linux-x64/Notebook env [SPAR_DEV_SERVER_URL=http://127.0.0.1:5173]
+      43.0 | out: spar info +14.8 ms: [47cc0262] Host started 38 ms after the process.
+      58.1 | app: 2026-11-21T18:01:10.837Z INFO  Spar.Host  [47cc0262] Host started 38 ms after the process.
+      61.2 | app: 2026-11-21T18:01:10.837Z INFO  Spar.Host  [47cc0262] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-dev-server/external/data/com.example.Notebook.Development
+      63.5 | app: 2026-11-21T18:01:10.843Z INFO  Spar.Host  [47cc0262] single instance at 20 ms
+      65.6 | out: spar info +16.7 ms: [47cc0262] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-dev-server/external/data/com.example.Notebook.Development
+      67.9 | out: spar info +22.3 ms: [47cc0262] single instance at 20 ms
+      70.4 | out: spar info +37.1 ms: [47cc0262] GTK 4.14.5, WebKitGTK 2.52.6.
+      82.8 | app: 2026-11-21T18:01:10.858Z INFO  Spar.Host  [47cc0262] GTK 4.14.5, WebKitGTK 2.52.6.
+     115.5 | app: 2026-11-21T18:01:10.900Z INFO  Spar.Host  [47cc0262] Sandbox trial: bwrap exit 0 in 39.7 ms.
+     120.9 | app: 2026-11-21T18:01:10.900Z INFO  Spar.Host  [47cc0262] prerequisites checked at 79.7 ms
+     127.3 | app: 2026-11-21T18:01:10.902Z INFO  Spar.Host  [47cc0262] WebAssembly off: JSC_useWasm=false.
+     129.9 | app: 2026-11-21T18:01:10.906Z INFO  Spar.Host  [47cc0262] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+     132.5 | app: 2026-11-21T18:01:10.906Z INFO  Spar.Host  [47cc0262] gpu checked at 85.5 ms
+     134.4 | app: 2026-11-21T18:01:10.909Z INFO  Spar.Host  [47cc0262] theme read at 88.2 ms
+     137.6 | out: spar info +79.5 ms: [47cc0262] Sandbox trial: bwrap exit 0 in 39.7 ms.
+     139.7 | out: spar info +79.7 ms: [47cc0262] prerequisites checked at 79.7 ms
+     141.9 | out: spar info +81.5 ms: [47cc0262] WebAssembly off: JSC_useWasm=false.
+     144.0 | out: spar info +85.4 ms: [47cc0262] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+     147.0 | out: spar info +85.5 ms: [47cc0262] gpu checked at 85.5 ms
+     149.2 | out: spar info +88.2 ms: [47cc0262] theme read at 88.2 ms
+     151.0 | out: spar info +93.8 ms: [47cc0262] Development server http://127.0.0.1:5173, from SPAR_DEV_SERVER_URL: Spar starts none.
+     152.7 | out: libEGL warning: DRI3 error: Could not get DRI3 device
+     154.3 | out: libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+     157.9 | out: spar info +109.2 ms: [47cc0262] services built at 109.2 ms
+     170.5 | app: 2026-11-21T18:01:10.914Z INFO  Spar.Host  [47cc0262] Development server http://127.0.0.1:5173, from SPAR_DEV_SERVER_URL: Spar starts none.
+     172.7 | app: 2026-11-21T18:01:10.930Z INFO  Spar.Host  [47cc0262] services built at 109.2 ms
+     175.1 | app: 2026-11-21T18:01:10.943Z INFO  Spar.Host  [47cc0262] gtk ready at 122.1 ms
+     183.2 | app: 2026-11-21T18:01:10.944Z INFO  Spar.Host  [47cc0262] UI-thread stall probe on.
+     188.4 | out: spar info +122.1 ms: [47cc0262] gtk ready at 122.1 ms
+     194.5 | out: spar info +123.6 ms: [47cc0262] UI-thread stall probe on.
+     198.6 | out: spar info +146.0 ms: [47cc0262] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+     200.5 | out: spar info +149.8 ms: [47cc0262] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     203.5 | out: spar info +149.9 ms: [47cc0262] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     205.1 | out: spar info +153.1 ms: [47cc0262] Browser data folder <copy>/artifacts/linux-homes/m1d-dev-server/external/data/com.example.Notebook.Development/WebKit, cache <copy>/artifacts/linux-homes/m1d-dev-server/external/data/com.example.Notebook.Development/cache/WebKit
+     215.8 | out: spar info +156.8 ms: [47cc0262] Browser settings read back (0.22 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+     217.4 | out: spar info +156.9 ms: [47cc0262] web view created at 156.9 ms
+     222.9 | out: spar info +157.6 ms: [47cc0262] Heartbeat every 5000 ms.
+     238.6 | app: 2026-11-21T18:01:10.967Z INFO  Spar.Host  [47cc0262] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+     244.8 | app: 2026-11-21T18:01:10.970Z INFO  Spar.Host  [47cc0262] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     246.6 | app: 2026-11-21T18:01:10.970Z INFO  Spar.Host  [47cc0262] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+     248.7 | app: 2026-11-21T18:01:10.974Z INFO  Spar.Host  [47cc0262] Browser data folder <copy>/artifacts/linux-homes/m1d-dev-server/external/data/com.example.Notebook.Development/WebKit, cache <copy>/artifacts/linux-homes/m1d-dev-server/external/data/com.example.Notebook.Development/cache/WebKit
+     251.2 | app: 2026-11-21T18:01:10.977Z INFO  Spar.Host  [47cc0262] Browser settings read back (0.22 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+     254.2 | app: 2026-11-21T18:01:10.978Z INFO  Spar.Host  [47cc0262] web view created at 156.9 ms
+     260.2 | app: 2026-11-21T18:01:10.978Z INFO  Spar.Host  [47cc0262] Heartbeat every 5000 ms.
+     263.4 | app: 2026-11-21T18:01:10.990Z INFO  Spar.Host  [47cc0262] window shown at 169.3 ms
+     266.9 | out: spar info +169.3 ms: [47cc0262] window shown at 169.3 ms
+     330.2 | app: 2026-11-21T18:01:11.123Z INFO  Spar.Host  [47cc0262] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src spar://app ws://127.0.0.1:5173; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     343.1 | app: 2026-11-21T18:01:11.124Z DEBUG Spar.DevServer  GET / 200 760 B in 29.4 ms
+     346.8 | out: spar info +301.9 ms: [47cc0262] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src spar://app ws://127.0.0.1:5173; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+     356.0 | out: spar info +307.8 ms: [47cc0262] page committed at 307.8 ms
+     357.9 | out: spar info +308.2 ms: [47cc0262] Bridge: document d7df761bba4175df opened.
+     359.8 | out: spar info +308.3 ms: [47cc0262] Heartbeat armed for the new document.
+     371.5 | app: 2026-11-21T18:01:11.128Z INFO  Spar.Host  [47cc0262] page committed at 307.8 ms
+     377.4 | app: 2026-11-21T18:01:11.129Z INFO  Spar.Host  [47cc0262] Bridge: document d7df761bba4175df opened.
+     379.0 | app: 2026-11-21T18:01:11.129Z INFO  Spar.Host  [47cc0262] Heartbeat armed for the new document.
+     380.2 | app: 2026-11-21T18:01:11.138Z DEBUG Spar.DevServer  GET /@react-refresh 200 118969 B in 7.0 ms
+     381.4 | app: 2026-11-21T18:01:11.139Z DEBUG Spar.DevServer  GET /src/main.tsx 200 4899 B in 7.7 ms
+     382.6 | app: 2026-11-21T18:01:11.153Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react.js?v=88f5b977 200 755 B in 14.1 ms
+     394.0 | app: 2026-11-21T18:01:11.182Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react_jsx-dev-runtime.js?v=88f5b977 200 35641 B in 42.3 ms
+     458.9 | app: 2026-11-21T18:01:11.251Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom_client.js?v=88f5b977 200 3132085 B in 111.4 ms
+     481.4 | app: 2026-11-21T18:01:11.267Z DEBUG Spar.DevServer  GET /src/App.tsx 200 20700 B in 127.6 ms
+     483.4 | app: 2026-11-21T18:01:11.268Z DEBUG Spar.DevServer  GET /src/notebook.ts 200 29958 B in 128.2 ms
+     484.8 | app: 2026-11-21T18:01:11.268Z DEBUG Spar.DevServer  GET /src/spar.ts 200 4535 B in 128.5 ms
+     486.0 | app: 2026-11-21T18:01:11.273Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-D57lpOvP.js?v=88f5b977 200 136642 B in 119.5 ms
+     487.3 | app: 2026-11-21T18:01:11.274Z DEBUG Spar.DevServer  GET /src/styles.css 200 53163 B in 134.8 ms
+     498.8 | app: 2026-11-21T18:01:11.283Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom-CAgWe78a.js?v=88f5b977 200 50848 B in 8.7 ms
+     503.1 | app: 2026-11-21T18:01:11.287Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/spar.js 200 648 B in 11.1 ms
+     516.4 | app: 2026-11-21T18:01:11.296Z DEBUG Spar.DevServer  GET /src/components/Dialogs.tsx 200 20136 B in 20.8 ms
+     532.2 | app: 2026-11-21T18:01:11.296Z DEBUG Spar.DevServer  GET /src/components/Sidebar.tsx 200 15667 B in 21.2 ms
+     536.1 | app: 2026-11-21T18:01:11.297Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/pages.js 200 21314 B in 21.7 ms
+     540.4 | app: 2026-11-21T18:01:11.297Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/windows.js 200 525 B in 21.9 ms
+     552.1 | app: 2026-11-21T18:01:11.322Z DEBUG Spar.DevServer  GET /src/components/PageView.tsx 200 27394 B in 46.5 ms
+     555.1 | app: 2026-11-21T18:01:11.325Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/sdk.js 200 6625 B in 49.5 ms
+     556.3 | app: 2026-11-21T18:01:11.326Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/lucide-react.js?v=88f5b977 200 5620898 B in 51.0 ms
+     557.7 | app: 2026-11-21T18:01:11.334Z DEBUG Spar.DevServer  GET /@vite/client 200 222895 B in 203.2 ms
+     569.3 | app: 2026-11-21T18:01:11.346Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=88f5b977 200 819494 B in 23.3 ms
+     570.7 | app: 2026-11-21T18:01:11.346Z DEBUG Spar.DevServer  GET /src/time.ts 200 3340 B in 48.9 ms
+     572.3 | app: 2026-11-21T18:01:11.351Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/wire.js 200 32737 B in 53.6 ms
+     573.4 | app: 2026-11-21T18:01:11.352Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/windows.js 200 9066 B in 53.6 ms
+     574.5 | app: 2026-11-21T18:01:11.352Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/results.js 200 20225 B in 25.8 ms
+     576.0 | app: 2026-11-21T18:01:11.352Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/webkit.js 200 6310 B in 25.7 ms
+     577.2 | app: 2026-11-21T18:01:11.353Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/connection.js 200 37653 B in 26.8 ms
+     578.3 | app: 2026-11-21T18:01:11.353Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/loopback.js 200 19591 B in 26.9 ms
+     579.7 | app: 2026-11-21T18:01:11.353Z DEBUG Spar.DevServer  GET /node_modules/vite/dist/client/env.mjs 200 3390 B in 5.4 ms
+     580.8 | app: 2026-11-21T18:01:11.354Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/webview.js 200 7000 B in 27.5 ms
+     592.3 | app: 2026-11-21T18:01:11.365Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/jsx-runtime-Bwa3DjwP.js?v=88f5b977 200 37319 B in 0.5 ms
+     593.5 | app: 2026-11-21T18:01:11.365Z DEBUG Spar.DevServer  GET /@fs<copy>/samples/Notebook/obj/spar/client/sdk/protocol.js 200 46102 B in 0.4 ms
+     635.7 | app: 2026-11-21T18:01:11.422Z INFO  Spar.Host  [47cc0262] first bridge message at 601.6 ms
+     642.3 | out: spar info +601.6 ms: [47cc0262] first bridge message at 601.6 ms
+     644.5 | out: spar info +609.6 ms: [47cc0262] first bridge reply at 609.6 ms
+     657.8 | app: 2026-11-21T18:01:11.430Z INFO  Spar.Host  [47cc0262] first bridge reply at 609.6 ms
+     685.8 | app: 2026-11-21T18:01:11.460Z DEBUG Spar.DevServer  GET /node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2 200 48256 B in 1.9 ms
+     742.6 | app: 2026-11-21T18:01:11.528Z INFO  Spar.Host  [47cc0262] ui-ready at 707.5 ms
+     749.7 | app: 2026-11-21T18:01:11.528Z INFO  Spar.Host  [47cc0262] Bridge: document d7df761bba4175df reported ui-ready.
+     753.4 | app: 2026-11-21T18:01:11.528Z INFO  Spar.Host  [47cc0262] Bridge: document d7df761bba4175df reported ui-ready.
+     755.0 | out: spar info +707.6 ms: [47cc0262] ui-ready at 707.5 ms
+     757.2 | out: spar info +707.6 ms: [47cc0262] Bridge: document d7df761bba4175df reported ui-ready.
+     761.0 | out: spar info +707.6 ms: [47cc0262] Bridge: document d7df761bba4175df reported ui-ready.
+     763.3 | run: found 'ui-ready'
+    2273.5 | run: marker 0 written at 1795284073067
+    2300.3 | app: 2026-11-21T18:01:13.093Z DEBUG Spar.DevServer  GET /src/components/Sidebar.tsx?t=1795284073070 200 16419 B in 14.1 ms
+    2304.8 | app: 2026-11-21T18:01:13.093Z DEBUG Spar.DevServer  GET /src/styles.css?t=1795284073070 200 53163 B in 14.8 ms
+    2330.5 | app: 2026-11-21T18:01:13.118Z DEBUG Spar.DevServer  GET /__spar-hmr/0/fgrd6mf2cfa/1795284073113 200 776 B in 4.1 ms
+    2332.9 | run: found '__spar-hmr/0'
+    3344.2 | run: SIGTERM
+    3389.1 | app: 2026-11-21T18:01:14.173Z INFO  Spar.Host  [47cc0262] SIGTERM: the session ends at 3352.7 ms
+    3393.4 | app: 2026-11-21T18:01:14.175Z INFO  Spar.Host  [47cc0262] session ending at 3354.8 ms
+    3407.0 | app: 2026-11-21T18:01:14.177Z INFO  Spar.Host  [47cc0262] close request 1 sent to the page (sessionEnd) at 3356.5 ms
+    3414.3 | app: 2026-11-21T18:01:14.181Z INFO  Spar.Host  [47cc0262] close request 1: the page answered Close at 3360.4 ms
+    3416.4 | app: 2026-11-21T18:01:14.182Z INFO  Spar.Host  [47cc0262] session end: the page's guard answered Close at 3361.5 ms
+    3417.7 | out: spar info +3352.7 ms: [47cc0262] SIGTERM: the session ends at 3352.7 ms
+    3418.7 | out: spar info +3354.8 ms: [47cc0262] session ending at 3354.8 ms
+    3420.3 | out: spar info +3356.5 ms: [47cc0262] close request 1 sent to the page (sessionEnd) at 3356.5 ms
+    3421.3 | out: spar info +3360.4 ms: [47cc0262] close request 1: the page answered Close at 3360.4 ms
+    3422.4 | out: spar info +3361.5 ms: [47cc0262] session end: the page's guard answered Close at 3361.5 ms
+    3423.5 | out: spar info +3363.7 ms: Close request for window main (SessionEnd): the backend's guard answered Close
+    3424.5 | out: spar info +3364.7 ms: [47cc0262] session end: the backend's guard answered Close; closing at 3364.7 ms
+    3426.7 | out: spar info +3366.0 ms: [47cc0262] closing at 3366 ms
+    3428.2 | out: spar info +3366.2 ms: [47cc0262] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    3429.5 | out: spar info +3367.9 ms: [47cc0262] page close work done at 3367.9 ms
+    3431.0 | out: spar info +3368.4 ms: [47cc0262] Bridge: document d7df761bba4175df closed (window closing).
+    3433.6 | out: spar info +3368.6 ms: [47cc0262] calls stopped at 3368.6 ms
+    3434.7 | out: spar info +3368.6 ms: [47cc0262] calls settled at 3368.6 ms
+    3437.7 | out: spar info +3370.7 ms: [47cc0262] window destroyed at 3370.7 ms
+    3447.6 | out: 
+    3452.3 | out: (WebKitWebProcess:2): GLib-GIO-WARNING **: 19:01:14.194: Error releasing name com.example.Notebook.Development.Sandboxed.WebProcess-9a8839b5-9376-4758-bffb-dee9e3eac2cc: The connection is closed
+    3454.7 | out: spar info +3381.4 ms: [47cc0262] web processes exited after 10 ms at 3381.4 ms
+    3459.9 | out: spar info +3386.3 ms: [47cc0262] services disposed at 3386.3 ms
+    3471.1 | out: spar info +3386.7 ms: [47cc0262] session end: window closed, last work done; SIGTERM held 34 ms at 3386.7 ms
+    3478.6 | out: spar info +3386.9 ms: [47cc0262] exit 0 at 3386.9 ms
+    3809.1 | app: 2026-11-21T18:01:14.185Z INFO  Spar.Host  Close request for window main (SessionEnd): the backend's guard answered Close
+    3811.7 | app: 2026-11-21T18:01:14.185Z INFO  Spar.Host  [47cc0262] session end: the backend's guard answered Close; closing at 3364.7 ms
+    3813.0 | app: 2026-11-21T18:01:14.187Z INFO  Spar.Host  [47cc0262] closing at 3366 ms
+    3814.2 | app: 2026-11-21T18:01:14.187Z INFO  Spar.Host  [47cc0262] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+    3825.3 | app: 2026-11-21T18:01:14.188Z INFO  Spar.Host  [47cc0262] page close work done at 3367.9 ms
+    3836.4 | app: 2026-11-21T18:01:14.189Z INFO  Spar.Host  [47cc0262] Bridge: document d7df761bba4175df closed (window closing).
+    3864.7 | app: 2026-11-21T18:01:14.189Z INFO  Spar.Host  [47cc0262] calls stopped at 3368.6 ms
+    3866.9 | app: 2026-11-21T18:01:14.189Z INFO  Spar.Host  [47cc0262] calls settled at 3368.6 ms
+    3880.7 | app: 2026-11-21T18:01:14.191Z INFO  Spar.Host  [47cc0262] window destroyed at 3370.7 ms
+    3892.1 | app: 2026-11-21T18:01:14.202Z INFO  Spar.Host  [47cc0262] web processes exited after 10 ms at 3381.4 ms
+    3908.5 | app: 2026-11-21T18:01:14.207Z INFO  Spar.Host  [47cc0262] services disposed at 3386.3 ms
+    3909.8 | app: 2026-11-21T18:01:14.207Z INFO  Spar.Host  [47cc0262] session end: window closed, last work done; SIGTERM held 34 ms at 3386.7 ms
+    3916.3 | run: exit 0
+    3918.4 | run: restored Sidebar.tsx

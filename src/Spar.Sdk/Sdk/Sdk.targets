@@ -503,6 +503,27 @@
     <SparThirdPartyNotices Condition="'$(SparThirdPartyNotices)' == ''">true</SparThirdPartyNotices>
   </PropertyGroup>
 
+  <!--
+    The development server (plan section 4; decision "M1d step 1's shape: Debug through the app's own origin"): a
+    Development build with a frontend, unless SparDevServer=false, serves its page from the frontend's Vite server through
+    the app's own origin. Its feature switch is off, with Trim="true", in every other build, so none of that code ships.
+    The frontend folder, the obj folder (where the plugin records the server, spar-dev-server.json, and its output goes,
+    spar-dev-server.log) and SparDevServerUrl, the address of a server Spar does not start, reach the run as runtime
+    configuration values, in Development builds only.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparUsesDevServer Condition="'$(SparDevServer)' == 'true' and '$(SparVariant)' == 'Development' and '$(SparHasFrontend)' == 'true'">true</SparUsesDevServer>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.IsSupported" Value="false" Trim="true" Condition="'$(SparUsesDevServer)' != 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.IsSupported" Value="true" Trim="true" Condition="'$(SparUsesDevServer)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.Frontend" Value="$(SparFrontendDirectory)" Condition="'$(SparUsesDevServer)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.Intermediate" Value="$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)'))"
+                                    Condition="'$(SparUsesDevServer)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.Url" Value="$(SparDevServerUrl)" Condition="'$(SparUsesDevServer)' == 'true' and '$(SparDevServerUrl)' != ''" />
+  </ItemGroup>
+
   <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
