@@ -99,9 +99,15 @@ step() {
       echo "Security profile: $( { tr -d '\0' </proc/self/attr/apparmor/current || tr -d '\0' </proc/self/attr/current; } 2>/dev/null || echo none)"
       timed bwrap --unshare-all --die-with-parent --ro-bind / / true \
         || { echo "bwrap cannot create its namespaces or mount in them: run the container with --security-opt seccomp=unconfined and, where the host has AppArmor, --security-opt apparmor=spar-linux-ci (eng/linux-ci/apparmor-profile)."; return 1; }
-      # The mounted tree's switch: the workflow runs this step before copy.
+      # What WebKit's web process sandbox also does: a new /proc in its own PID namespace, and a /dev of its own; then
+      # the same under the network switch, where the window tests run (the mounted tree's switch: this step runs before
+      # copy).
+      local sandbox=(bwrap --unshare-all --die-with-parent --ro-bind / / --proc /proc --dev /dev true)
+      timed "${sandbox[@]}" || { echo "bwrap cannot mount a new /proc or /dev, as WebKit's sandbox does."; return 1; }
       timed sh /src/eng/linux-ci/network-switch.sh sh -c 'test -p "$SPAR_TEST_NETWORK_SWITCH" && ip route show default | grep -q "dev lo"' \
-        || { echo "The network switch did not start (user and network namespaces)."; return 1; } ;;
+        || { echo "The network switch did not start (user and network namespaces)."; return 1; }
+      timed sh /src/eng/linux-ci/network-switch.sh "${sandbox[@]}" \
+        || { echo "Under the network switch, bwrap cannot mount a new /proc or /dev."; return 1; } ;;
     window)
       dotnet_test "" "${switch[@]}" dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait "Surface=Window" || return 1
       dotnet_test "" "${switch[@]}" dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=Window" ;;

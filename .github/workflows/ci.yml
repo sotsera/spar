@@ -259,6 +259,10 @@ jobs:
             --security-opt apparmor=spar-linux-ci -e CI=true -v "$GITHUB_WORKSPACE:/src:ro" spar-linux-ci sleep infinity
           docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh check
 
+      - name: The runner's AppArmor denials (after a failure, for the record)
+        if: failure()
+        run: sudo dmesg | grep -E 'apparmor="(DENIED|AUDIT)"' | tail -40 || true
+
       - name: Copy and build (TypeScript SDK, Spar.WindowTests, Notebook.EndToEndTests)
         run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh copy client build
 
