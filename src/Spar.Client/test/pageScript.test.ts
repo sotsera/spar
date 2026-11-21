@@ -323,7 +323,9 @@ describe("the page's errors", () => {
     expect(group!["stack"]).toBe((thrown.stack ?? "").slice(0, 2048));
     // The caller's place is this test file: Node gives file:// addresses, which the script does not take as a page's.
     expect(group!["source"]).toBe("");
-  });
+    // Each call reads the caller's stack: about 4 s here and 5.2 s on CI's Windows runner, past Vitest's default 5 s.
+    // The test asserts the grouping, not a time.
+  }, 30_000);
 
   test("an uncaught exception and an unhandled rejection are reported with their place and stack", () => {
     const page = run();
