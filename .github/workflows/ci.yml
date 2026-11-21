@@ -218,7 +218,10 @@ jobs:
     # seccomp=unconfined, the container's own profile: Docker's default seccomp profile refuses the user namespaces of
     # WebKit's bwrap sandbox and of the network switch. Its AppArmor profile is eng/linux-ci/apparmor-profile, Docker's
     # docker-default with mounts allowed, which bwrap needs inside its namespaces (decision "The Linux CI container's
-    # AppArmor profile"). The runner's sysctls stay as they are; the job only loads that profile.
+    # AppArmor profile"). systempaths=unconfined leaves /proc unmasked: the kernel lets a user namespace mount a new /proc,
+    # as bwrap does, only where the container's /proc is fully visible; the profile still denies docker-default's /proc
+    # files (kcore, sysrq-trigger, writes in /proc), and the tests run as uid 1000. The runner's sysctls stay as they are;
+    # the job only loads that profile.
     name: window tests (Linux container)
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -256,7 +259,7 @@ jobs:
       - name: Start the container (the repository read-only at /src)
         run: |
           docker run -d --name "$SPAR_CI_CONTAINER" --init --shm-size=1g --security-opt seccomp=unconfined \
-            --security-opt apparmor=spar-linux-ci -e CI=true -v "$GITHUB_WORKSPACE:/src:ro" spar-linux-ci sleep infinity
+            --security-opt apparmor=spar-linux-ci --security-opt systempaths=unconfined -e CI=true -v "$GITHUB_WORKSPACE:/src:ro" spar-linux-ci sleep infinity
           docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh check
 
       - name: The runner's AppArmor denials (after a failure, for the record)

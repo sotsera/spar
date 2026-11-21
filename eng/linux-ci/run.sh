@@ -9,9 +9,11 @@
 # seccomp=unconfined because Docker's default profile refuses the user namespaces of WebKit's bwrap sandbox and of
 # network-switch.sh; on a host with AppArmor, such as GitHub's runners, the profile apparmor-profile beside this file,
 # loaded with `sudo apparmor_parser -r`, because docker-default denies the mounts bwrap makes in its namespaces; a host
-# without AppArmor, such as Docker Desktop's VM, leaves that option out):
+# without AppArmor, such as Docker Desktop's VM, leaves that option out; systempaths=unconfined because the kernel lets
+# bwrap mount a new /proc only where the container's /proc is not masked):
 #   docker run -d --name spar-linux-ci --init --shm-size=1g --security-opt seccomp=unconfined \
-#     --security-opt apparmor=spar-linux-ci -e CI=true -v "$PWD:/src:ro" spar-linux-ci sleep infinity
+#     --security-opt apparmor=spar-linux-ci --security-opt systempaths=unconfined \
+#     -e CI=true -v "$PWD:/src:ro" spar-linux-ci sleep infinity
 #   docker exec spar-linux-ci bash /src/eng/linux-ci/run.sh copy client build window windowaot apps blackbox blackboxdev
 #   docker cp spar-linux-ci:/home/spar/repo/artifacts/test-results artifacts/
 #   docker rm -f spar-linux-ci
@@ -103,7 +105,11 @@ step() {
       # the same under the network switch, where the window tests run (the mounted tree's switch: this step runs before
       # copy).
       local sandbox=(bwrap --unshare-all --die-with-parent --ro-bind / / --proc /proc --dev /dev true)
-      timed "${sandbox[@]}" || { echo "bwrap cannot mount a new /proc or /dev, as WebKit's sandbox does."; return 1; }
+      timed "${sandbox[@]}" || {
+        echo "bwrap cannot mount a new /proc or /dev, as WebKit's sandbox does (a masked /proc needs --security-opt systempaths=unconfined). The mounts on /proc:"
+        grep ' /proc[/ ]' /proc/self/mountinfo
+        return 1
+      }
       timed sh /src/eng/linux-ci/network-switch.sh sh -c 'test -p "$SPAR_TEST_NETWORK_SWITCH" && ip route show default | grep -q "dev lo"' \
         || { echo "The network switch did not start (user and network namespaces)."; return 1; }
       timed sh /src/eng/linux-ci/network-switch.sh "${sandbox[@]}" \
