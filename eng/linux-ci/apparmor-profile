@@ -1,0 +1,55 @@
+# The CI container's AppArmor profile (decision "The Linux CI container's AppArmor profile"), loaded on the runner
+# by the linux-window job (`sudo apparmor_parser -r`) and named with `--security-opt apparmor=spar-linux-ci`.
+#
+# It is Docker's docker-default profile (Moby's template), with one change: mount and pivot_root are allowed, where
+# docker-default denies every mount. WebKit's web process sandbox is bwrap, which mounts its new root inside the user
+# and mount namespaces it creates; under docker-default it fails at once ("Failed to make / slave: Permission
+# denied", the first run on GitHub). The container still has Docker's default capabilities, without CAP_SYS_ADMIN,
+# so its processes can mount only inside namespaces they own, never on the host's.
+#
+# The profile declares ABI 3.0, as Moby's template does, so it does not mediate user namespaces. Ubuntu 24.04's
+# kernel.apparmor_restrict_unprivileged_userns, set on GitHub's runners, applies to unconfined processes and to
+# profiles whose policy mediates user namespaces, and so leaves this one alone.
+abi <abi/3.0>,
+
+#include <tunables/global>
+
+profile spar-linux-ci flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  network,
+  capability,
+  file,
+  umount,
+
+  # The one change from docker-default: bwrap's mounts and its pivot into the new root.
+  mount,
+  pivot_root,
+
+  # Host (privileged) processes and dockerd (unconfined), runc and crun may signal the container's processes; they
+  # signal each other.
+  signal (receive) peer=unconfined,
+  signal (receive) peer=runc,
+  signal (receive) peer=crun,
+  signal (send,receive) peer=spar-linux-ci,
+
+  deny @{PROC}/* w,   # write to files directly in /proc (not in a subfolder)
+  # write to files not in /proc/<number>/** or /proc/sys/**
+  deny @{PROC}/{[^1-9],[^1-9][^0-9],[^1-9s][^0-9y][^0-9s],[^1-9][^0-9][^0-9][^0-9/]*}/** w,
+  deny @{PROC}/sys/[^k]** w,  # /proc/sys except /proc/sys/k* (in effect /proc/sys/kernel)
+  deny @{PROC}/sys/kernel/{?,??,[^s][^h][^m]**} w,  # everything in /proc/sys/kernel/ except shm*
+  deny @{PROC}/sysrq-trigger rwklx,
+  deny @{PROC}/kcore rwklx,
+
+  deny /sys/[^f]*/** wklx,
+  deny /sys/f[^s]*/** wklx,
+  deny /sys/fs/[^c]*/** wklx,
+  deny /sys/fs/c[^g]*/** wklx,
+  deny /sys/fs/cg[^r]*/** wklx,
+  deny /sys/firmware/** rwklx,
+  deny /sys/devices/virtual/powercap/** rwklx,
+  deny /sys/kernel/security/** rwklx,
+
+  # No ptrace denials for `ps` inside the container.
+  ptrace (trace,read,tracedby,readby) peer=spar-linux-ci,
+}

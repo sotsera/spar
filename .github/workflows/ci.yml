@@ -214,11 +214,11 @@ jobs:
   linux-window:
     # The Linux window tests (trait Surface=Window) and black-box tests in Spar's CI image, built here from
     # eng/linux-ci/Dockerfile with buildx's GitHub Actions cache (decision "The Linux CI image and job; online and offline
-    # on Linux"). The runner itself stays as it is: no sysctl, no AppArmor change. The container runs as the image's uid
-    # 1000, with --init (PID 1 reaps the processes the tests leave), and seccomp=unconfined, the container's own profile:
-    # Docker's default seccomp profile refuses the user namespaces of WebKit's bwrap sandbox and of the network switch.
-    # AppArmor keeps Docker's docker-default profile, which declares ABI 3.0 and so does not mediate user namespaces;
-    # apparmor=unconfined would put the container under Ubuntu 24.04's restriction of unconfined user namespaces instead.
+    # on Linux"). The container runs as the image's uid 1000, with --init (PID 1 reaps the processes the tests leave), and
+    # seccomp=unconfined, the container's own profile: Docker's default seccomp profile refuses the user namespaces of
+    # WebKit's bwrap sandbox and of the network switch. Its AppArmor profile is eng/linux-ci/apparmor-profile, Docker's
+    # docker-default with mounts allowed, which bwrap needs inside its namespaces (decision "The Linux CI container's
+    # AppArmor profile"). The runner's sysctls stay as they are; the job only loads that profile.
     name: window tests (Linux container)
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -250,10 +250,13 @@ jobs:
           cache-from: type=gha,scope=linux-ci
           cache-to: type=gha,mode=max,scope=linux-ci
 
+      - name: The container's AppArmor profile (eng/linux-ci/apparmor-profile)
+        run: sudo apparmor_parser -r eng/linux-ci/apparmor-profile
+
       - name: Start the container (the repository read-only at /src)
         run: |
           docker run -d --name "$SPAR_CI_CONTAINER" --init --shm-size=1g --security-opt seccomp=unconfined \
-            -e CI=true -v "$GITHUB_WORKSPACE:/src:ro" spar-linux-ci sleep infinity
+            --security-opt apparmor=spar-linux-ci -e CI=true -v "$GITHUB_WORKSPACE:/src:ro" spar-linux-ci sleep infinity
           docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh check
 
       - name: Copy and build (TypeScript SDK, Spar.WindowTests, Notebook.EndToEndTests)

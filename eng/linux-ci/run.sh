@@ -7,9 +7,11 @@
 #
 # The container, as the workflow starts it (uid 1000 from the image; --init reaps the processes the tests leave to it;
 # seccomp=unconfined because Docker's default profile refuses the user namespaces of WebKit's bwrap sandbox and of
-# network-switch.sh):
+# network-switch.sh; on a host with AppArmor, such as GitHub's runners, the profile apparmor-profile beside this file,
+# loaded with `sudo apparmor_parser -r`, because docker-default denies the mounts bwrap makes in its namespaces; a host
+# without AppArmor, such as Docker Desktop's VM, leaves that option out):
 #   docker run -d --name spar-linux-ci --init --shm-size=1g --security-opt seccomp=unconfined \
-#     -e CI=true -v "$PWD:/src:ro" spar-linux-ci sleep infinity
+#     --security-opt apparmor=spar-linux-ci -e CI=true -v "$PWD:/src:ro" spar-linux-ci sleep infinity
 #   docker exec spar-linux-ci bash /src/eng/linux-ci/run.sh copy client build window windowaot apps blackbox blackboxdev
 #   docker cp spar-linux-ci:/home/spar/repo/artifacts/test-results artifacts/
 #   docker rm -f spar-linux-ci
@@ -90,8 +92,9 @@ step() {
       (cd "$repo" && timed dotnet build tests/Spar.WindowTests -c Debug && timed dotnet build samples/Notebook.EndToEndTests -c Debug) ;;
     check)
       # What the window tests' first window would find, said plainly: bwrap's namespaces, then the switch's.
+      echo "Security profile: $( { tr -d '\0' </proc/self/attr/apparmor/current || tr -d '\0' </proc/self/attr/current; } 2>/dev/null || echo none)"
       timed bwrap --unshare-all --die-with-parent --ro-bind / / true \
-        || { echo "bwrap cannot create its namespaces: run the container with --security-opt seccomp=unconfined (and see the decision for AppArmor)."; return 1; }
+        || { echo "bwrap cannot create its namespaces or mount in them: run the container with --security-opt seccomp=unconfined and, where the host has AppArmor, --security-opt apparmor=spar-linux-ci (eng/linux-ci/apparmor-profile)."; return 1; }
       # The mounted tree's switch: the workflow runs this step before copy.
       timed sh /src/eng/linux-ci/network-switch.sh sh -c 'test -p "$SPAR_TEST_NETWORK_SWITCH" && ip route show default | grep -q "dev lo"' \
         || { echo "The network switch did not start (user and network namespaces)."; return 1; } ;;
