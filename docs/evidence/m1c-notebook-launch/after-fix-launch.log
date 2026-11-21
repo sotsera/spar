@@ -1,0 +1,21 @@
+STEP launch on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, WebKitGTK 2.52.6
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+1/x0/?0] (25s 175ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-21_12_42_27.734906.trx
+
+Test run summary: Passed!
+  total: 1
+  failed: 0
+  succeeded: 1
+  skipped: 0
+  duration: 26s 700ms
+STEP exit 0 in 28449 ms: dotnet test --project tests/Spar.WindowTests -c Release -- --filter-method *The_Production_app_starts_to_ui_ready_and_holds_its_working_set
+kept budgets-launch-134254.txt
+Recorded 2026-11-21 13:42:54 +01:00
+Launch to ui-ready, warm (profile reused), from the process's start (WindowHost, Production NativeAOT): 153.10 ms (141.20–173.40, n = 10) [Release, CoreCLR]
+App process working set 2 s after ui-ready (WindowHost, Production NativeAOT): 159.4 MB (159.0–162.1, n = 10) [Release, CoreCLR]
+Working set with the browser's processes, 2 s after ui-ready (same launches): 374.6 MB (374.0–377.2, n = 10) [Release, CoreCLR]
+Total PSS, the app and WebKit's processes, 2 s after ui-ready (same launches): 200.0 MB (199.8–202.7, n = 10) [Release, CoreCLR]
+processes left by the tests: 0

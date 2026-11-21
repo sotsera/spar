@@ -70,7 +70,8 @@ internal static class LinuxDesktop
     /// <summary>
     /// A private session bus for one launch, with <paramref name="environment"/> (the app's own, so its activated services
     /// share the app's folders), ended with the test process; its address is the process's first line of output. Its
-    /// accessibility bus and registry are running before it is returned (<see cref="StartAccessibility"/>).
+    /// accessibility bus and registry are running before it is returned (<see cref="StartAccessibility"/>), and so is the
+    /// desktop portal where it is installed (<see cref="StartPortal"/>).
     /// </summary>
     public static (Process Daemon, string Address) StartBus(IReadOnlyDictionary<string, string> environment)
     {
@@ -84,6 +85,7 @@ internal static class LinuxDesktop
         try
         {
             StartAccessibility(address);
+            StartPortal(address);
         }
         catch
         {
@@ -92,6 +94,28 @@ internal static class LinuxDesktop
         }
 
         return (daemon, address);
+    }
+
+    /// <summary>
+    /// Starts <c>xdg-desktop-portal</c> on the launch's bus where a service file provides it, as a desktop session has it
+    /// running before any app starts. WebKit's web process asks it for real-time threads from its main thread through a
+    /// synchronous proxy, which on a bus that has to start the portal first waited for that start, about 100 ms in WSL,
+    /// while the page loaded (docs/evidence/m1c-notebook-launch.md). Where no portal is installed (the CI image) the bus
+    /// refuses the name at once, as it then refuses the web process; a portal that fails to start is left to the app too.
+    /// </summary>
+    private static void StartPortal(string sessionAddress)
+    {
+        try
+        {
+            using var session = DBusClient.Connect(sessionAddress);
+            session.Call(
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "StartServiceByName", ["org.freedesktop.portal.Desktop", 0u],
+                limit: AccessibilityStart);
+        }
+        catch (DBusException)
+        {
+            // Not installed, or it did not start: the app meets the same bus a desktop without a portal gives it.
+        }
     }
 
     /// <summary>Ends a helper and waits for it briefly.</summary>

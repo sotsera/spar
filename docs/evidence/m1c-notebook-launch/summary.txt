@@ -1,0 +1,66 @@
+Run 1 (abcdefg on today's Notebook; c, f and g on the step-6 Notebook and WindowHost; its condition a was broken by the driver, see the evidence):
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 14 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 20 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 26 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 32 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 38 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 44 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 50 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 63 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 69 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log: launch 75 (a) has no ui-ready line
+== docs/evidence/m1c-notebook-launch/run1-ab-notebook-new.log
+cond  n                 total             gtk_ready          window_shown        page_committed  first_bridge_message              ui-ready          after_window                before  portal running
+   b 10   314.6 (286.7–634.6)     48.0 (42.7–143.6)     81.3 (71.9–196.0)   209.2 (186.8–347.6)   237.1 (212.5–384.1)   306.1 (278.7–625.6)   227.0 (206.8–429.6)         0.0 (0.0–0.0)  10/10
+   c 10   301.8 (285.8–314.4)      46.6 (42.5–47.6)      73.9 (67.7–75.7)   198.6 (183.5–204.1)   226.2 (209.2–232.5)   297.8 (277.8–304.1)   222.8 (210.1–230.5)      13.0 (12.0–13.0)  10/10
+   d 10   308.9 (284.0–352.0)      46.9 (43.3–52.5)      73.6 (67.6–81.6)   202.5 (182.0–226.2)   230.3 (207.4–257.8)   299.4 (276.0–339.0)   224.9 (208.4–257.4)      13.0 (12.0–24.0)  10/10
+   e 10   317.0 (288.2–330.8)      47.4 (43.3–50.4)      75.2 (69.0–78.9)   202.1 (185.9–216.7)   230.8 (210.8–245.6)   305.1 (279.2–317.8)   229.1 (209.9–241.2)      13.5 (12.0–15.0)  10/10
+   f 10   230.0 (214.0–238.7)      47.7 (43.3–49.6)      74.2 (68.3–77.8)   123.0 (113.2–127.4)   150.9 (138.6–158.1)   220.8 (206.0–230.7)   146.6 (137.5–155.6)     94.0 (82.0–103.0)  10/10
+   g 10   227.5 (210.8–256.3)      47.2 (44.0–51.9)      74.9 (69.7–86.8)   122.5 (112.2–137.5)   150.2 (137.3–167.2)   219.0 (203.9–248.3)   143.8 (133.6–161.5)      13.0 (12.0–15.0)  0/10
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 8 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 11 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 14 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 17 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 24 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 27 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 30 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 33 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 40 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log: launch 43 (a) has no ui-ready line
+== docs/evidence/m1c-notebook-launch/run1-ab-notebook-old.log
+cond  n                 total             gtk_ready          window_shown        page_committed  first_bridge_message              ui-ready          after_window                before  portal running
+   c 10   302.4 (280.2–503.5)     47.0 (43.1–127.8)     74.8 (68.0–174.0)   198.7 (180.6–325.7)   225.9 (206.3–366.2)   294.2 (272.7–492.5)   219.0 (203.8–318.5)      13.0 (11.0–19.0)  10/10
+   f 10   226.9 (207.1–240.5)      46.5 (44.0–47.7)      73.6 (69.0–77.3)   121.9 (114.1–127.2)   148.9 (139.5–156.6)   218.4 (201.1–227.5)   143.8 (132.1–158.2)     91.5 (84.0–129.0)  10/10
+   g 10   224.8 (208.8–228.6)      45.3 (43.3–47.3)      72.2 (68.6–75.1)   120.4 (113.0–122.4)   147.9 (138.1–151.6)   215.8 (204.1–222.9)   141.9 (134.3–149.2)      12.0 (11.0–16.0)  0/10
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 8 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 11 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 14 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 17 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 24 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 27 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 30 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 33 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 40 (a) has no ui-ready line
+docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log: launch 43 (a) has no ui-ready line
+== docs/evidence/m1c-notebook-launch/run1-ab-windowhost.log
+cond  n                 total             gtk_ready          window_shown        page_committed  first_bridge_message              ui-ready          after_window                before  portal running
+   c 10   230.8 (218.6–415.0)     46.7 (44.2–142.0)     74.0 (69.3–198.2)   199.4 (187.2–360.1)   224.1 (209.7–398.5)   225.1 (210.6–399.0)   151.1 (141.3–200.8)      13.0 (12.0–23.0)  10/10
+   f 10   153.1 (138.4–249.0)     45.8 (43.5–110.7)     72.2 (68.2–153.9)   119.5 (111.3–203.6)   143.2 (133.7–234.6)   143.9 (134.4–235.0)      71.8 (66.0–86.9)     90.5 (82.0–128.0)  10/10
+   g 10   149.9 (145.8–164.7)      45.7 (42.5–47.3)      72.3 (68.1–75.1)   117.1 (111.4–125.5)   140.7 (135.1–152.7)   141.6 (135.8–153.7)      69.7 (67.5–79.3)      13.0 (12.0–16.0)  0/10
+
+Run 2 (a, c and f, the driver's condition a fixed):
+== docs/evidence/m1c-notebook-launch/run2-ab-notebook-new.log
+cond  n                 total             gtk_ready          window_shown        page_committed  first_bridge_message              ui-ready          after_window                before  portal running
+   a 10   227.2 (219.4–311.8)      49.8 (48.0–51.6)      82.5 (80.7–86.1)   126.7 (125.0–133.1)   152.8 (151.1–160.8)   221.2 (216.4–306.8)   138.6 (134.8–224.0)         0.0 (0.0–0.0)  0/10
+   c 10   295.6 (290.5–300.5)      45.0 (43.3–46.9)      70.9 (70.0–74.0)   192.0 (188.9–196.0)   218.8 (214.9–222.5)   285.4 (282.5–291.3)   213.9 (212.4–219.7)      13.0 (12.0–14.0)  10/10
+   f 10   219.9 (215.2–233.6)      45.1 (43.6–48.3)      70.9 (69.0–75.5)   117.3 (114.4–124.2)   143.7 (140.1–151.8)   211.4 (206.2–222.5)   140.5 (136.5–148.5)      91.0 (83.0–97.0)  10/10
+== docs/evidence/m1c-notebook-launch/run2-ab-notebook-old.log
+cond  n                 total             gtk_ready          window_shown        page_committed  first_bridge_message              ui-ready          after_window                before  portal running
+   a 10   229.6 (219.8–243.3)      50.5 (48.9–52.3)      83.2 (80.9–87.2)   127.9 (124.2–132.8)   154.6 (149.6–160.4)   220.5 (213.8–230.3)   138.3 (132.7–143.7)         0.0 (0.0–0.0)  0/10
+   c 10   291.9 (289.6–304.1)      44.5 (43.3–46.5)      70.5 (69.4–73.9)   189.6 (185.9–199.1)   216.8 (214.2–226.6)   285.8 (280.6–295.1)   215.2 (210.2–221.2)      12.0 (12.0–13.0)  10/10
+   f 10   223.5 (210.9–230.0)      46.0 (43.7–48.4)      71.8 (69.2–73.8)   118.0 (115.0–122.1)   145.1 (141.0–149.6)   215.4 (205.9–222.9)   143.3 (136.4–150.1)      89.0 (83.0–94.0)  10/10
+== docs/evidence/m1c-notebook-launch/run2-ab-windowhost.log
+cond  n                 total             gtk_ready          window_shown        page_committed  first_bridge_message              ui-ready          after_window                before  portal running
+   a 10   156.1 (152.6–164.0)      49.2 (48.3–51.2)      81.2 (80.1–85.4)   124.6 (123.3–130.6)   147.9 (145.9–155.0)   148.6 (146.7–155.9)      67.8 (65.8–70.5)         0.0 (0.0–0.0)  0/10
+   c 10   225.1 (218.2–240.6)      45.3 (43.8–47.8)      72.5 (69.7–75.9)   192.7 (185.3–203.2)   216.7 (206.4–227.1)   217.4 (209.2–227.6)   144.9 (139.3–152.3)      13.0 (12.0–16.0)  10/10
+   f 10   146.9 (139.9–155.8)      44.4 (42.9–46.0)      69.8 (67.3–73.1)   115.8 (111.6–122.3)   139.1 (133.7–146.9)   139.8 (134.5–147.7)      70.0 (66.8–74.6)      87.0 (83.0–93.0)  10/10
