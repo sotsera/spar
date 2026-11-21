@@ -222,9 +222,15 @@ jobs:
     # as bwrap does, only where the container's /proc is fully visible; the profile still denies docker-default's /proc
     # files (kcore, sysrq-trigger, writes in /proc), and the tests run as uid 1000. The runner's sysctls stay as they are;
     # the job only loads that profile.
-    name: window tests (Linux container)
+    # Two parts on runners of their own, each with the same image, copy and build (about 2.5 minutes): the window tests on
+    # both lanes, and the black-box tests. One job running both took 18 minutes, 11 of them the black-box steps.
+    name: ${{ matrix.part }} tests (Linux container)
+    strategy:
+      fail-fast: false
+      matrix:
+        part: [window, black-box]
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
     env:
       SPAR_CI_CONTAINER: spar-linux-ci
     steps:
@@ -270,22 +276,27 @@ jobs:
         run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh copy client build
 
       - name: Window tests (CoreCLR)
+        if: matrix.part == 'window'
         # Under eng/linux-ci/network-switch.sh, so the online/offline test can switch the network.
         run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh window
 
       - name: Window tests (NativeAOT lane)
+        if: matrix.part == 'window'
         run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh windowaot
 
       - name: Black-box apps (the probe's Development and WebAssembly builds, the Notebook)
+        if: matrix.part == 'black-box'
         run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh apps
 
       - name: Black-box tests (CoreCLR, Production probe)
+        if: matrix.part == 'black-box'
         # Trait Surface=BlackBox without Probe=Development, OS=Windows, Kind=Measurement and Needs=WritableProcSys; a skipped test
         # fails this step, so CI cannot pass by skipping.
         run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh blackbox
 
       - name: Black-box tests (CoreCLR, the probe's Development build)
-        # Trait App=BridgeProbe without Probe=None and Kind=Measurement, on the Development build; no skips either.
+        if: matrix.part == 'black-box'
+        # Only trait Probe=Development, the tests that need that build; no skips either.
         run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh blackboxdev
 
       - name: Collect the test results
@@ -298,7 +309,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: test-results-linux-window
+          name: test-results-linux-${{ matrix.part }}
           path: artifacts/test-results/
           if-no-files-found: ignore
           retention-days: 14

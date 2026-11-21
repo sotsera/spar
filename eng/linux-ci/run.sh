@@ -28,7 +28,7 @@
 #   apps       the BridgeProbe tests' other executables: the probe's Development build, its WebAssembly build, the Notebook
 #   blackbox   the black-box tests (trait Surface=BlackBox) on CoreCLR and the Production probe, without Probe=Development,
 #              OS=Windows, Kind=Measurement and Needs=WritableProcSys; a skipped test fails this step
-#   blackboxdev  the BridgeProbe tests (App=BridgeProbe) on the probe's Development build, without Probe=None; no skips
+#   blackboxdev  the tests that need the probe's Development build (Probe=Development) on it; no skips
 set -uo pipefail
 # No core dumps unless SPAR_CORE_DUMPS=1 (decision "Linux test runs write no core dumps"): WSL and Docker Desktop pipe a
 # crashed process's core to Windows' %TEMP%\wsl-crashes, about 6 GB for each of our apps, and a piped core_pattern
@@ -140,11 +140,11 @@ step() {
           --filter-not-trait "Needs=WritableProcSys") || return 1
       dotnet_test --no-skips dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=BlackBox" ;;
     blackboxdev)
-      # The BridgeProbe tests again on the probe's Development build, the Development-only ones included; not those that
-      # run another executable (Probe=None), which blackbox ran.
+      # Only the tests that need the probe's Development build (its automated mode, triggers, heartbeat interval):
+      # blackbox ran every other one on the Production probe, which is what apps ship. Running them all again on the
+      # Development build took 5.6 minutes of the job.
       (export SPAR_LINUX_HOST_APP=$dev_probe SPAR_LINUX_WASM_APP=$apps/probe-wasm/BridgeProbe
-        dotnet_test --no-skips dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait "App=BridgeProbe" \
-          --filter-not-trait "Probe=None" --filter-not-trait "Kind=Measurement" --filter-not-trait "Needs=WritableProcSys") ;;
+        dotnet_test --no-skips dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait "Probe=Development") ;;
     *) echo "unknown step $1"; return 2 ;;
   esac
 }
