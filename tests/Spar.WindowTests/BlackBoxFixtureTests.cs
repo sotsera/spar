@@ -4,10 +4,13 @@ using Spar.Testing;
 namespace Spar.WindowTests;
 
 /// <summary>
-/// The black-box fixture's own rules, on WindowHost's Production executable (<c>Projects.WindowHost</c>): the job
-/// object that ends the app with its owner, the deadline that ends a hung app, a cleanup that cannot finish reported
-/// as a failure, the ready timeout, the dialog API on a real failed relaunch (a suspended first instance), and the
-/// options refused before anything starts.
+/// The black-box fixture's own rules, on WindowHost's Production executable (<c>Projects.WindowHost</c>), on Windows
+/// and Linux: the job object that ends the app with its owner (Windows), the deadline that ends a hung app, a cleanup
+/// that cannot finish reported as a failure, the ready timeout, the dialog API on a real failed relaunch (a suspended
+/// first instance), the window read and driven through the accessibility API (UI Automation, AT-SPI), and the options
+/// refused before anything starts.
+/// The two tests of Windows-only mechanisms carry <c>OS=Windows</c>, which the Linux CI run leaves out (it takes every
+/// other black-box test with no skip).
 /// </summary>
 [Trait("Surface", "BlackBox")]
 public sealed class BlackBoxFixtureTests
@@ -15,11 +18,15 @@ public sealed class BlackBoxFixtureTests
     private static CancellationToken Token => TestContext.Current.CancellationToken;
 
     [Fact]
+    [Trait("OS", "Windows")]
     public async Task Closing_the_job_ends_the_app_and_everything_it_started()
     {
+        // Linux ends the app with the test process through KillOnParentExit, which only the test process's own death
+        // shows (spikes/linux-blackbox-atspi: 0 processes left in 25 of 25 runs); a test of it needs a holder process.
+        WindowSupport.SkipUnlessWindows("Windows' job object; on Linux the kernel ends the app with the test process (KillOnParentExit), measured by the AT-SPI spike.");
         if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
         {
-            Assert.Skip("The black-box fixture runs on Windows 10 1809 and later; the Linux host arrives in M1c.");
+            Assert.Skip("The black-box fixture runs on Windows 10 1809 and later.");
             return;
         }
 
@@ -55,6 +62,7 @@ public sealed class BlackBoxFixtureTests
     {
         WindowSupport.SkipUnlessBlackBox();
         var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, o => o.ExitTimeout = TimeSpan.FromSeconds(1), Token);
+        await Waits.UntilAsync(() => app.ProcessIds.Count >= 3, TimeSpan.FromSeconds(20), "the browser's processes");
         var started = app.ProcessIds;
         app.Process.SuspendProcess();
 
@@ -76,10 +84,22 @@ public sealed class BlackBoxFixtureTests
         var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
         Assert.Equal(0, await app.CloseAsync(Token));
 
-        var blocker = Path.Combine(app.DataRoot, "held.txt");
-        using (new FileStream(blocker, FileMode.Create, FileAccess.Write, FileShare.None))
+        // What keeps a folder from deletion: a file held open without sharing on Windows, a folder without write access on Linux.
+        var blocker = Path.Combine(app.DataRoot, "held");
+        if (OperatingSystem.IsWindows())
         {
+            using (new FileStream(blocker, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                await app.DisposeAsync();
+            }
+        }
+        else
+        {
+            Directory.CreateDirectory(blocker);
+            File.WriteAllText(Path.Combine(blocker, "kept.txt"), "kept");
+            File.SetUnixFileMode(blocker, UnixFileMode.UserRead | UnixFileMode.UserExecute);
             await app.DisposeAsync();
+            File.SetUnixFileMode(blocker, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
         }
 
         var kept = Assert.Single(SparTestCleanup.End(TestContext.Current.Test!.UniqueID));
@@ -91,21 +111,25 @@ public sealed class BlackBoxFixtureTests
     public async Task An_app_not_ready_in_time_is_ended_and_its_root_deleted()
     {
         WindowSupport.SkipUnlessBlackBox();
-        var probe = TestDataRoots.Next("probe");
-        var run = Path.GetDirectoryName(probe)!;
-        Directory.Delete(probe);
-        var before = Directory.GetDirectories(run, "black-box-*").ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        // The roots this test's own launches create: other black-box tests create theirs beside them meanwhile.
+        var created = new List<string>();
+        TestDataRoots.Created.Value = created;
 
         var failure = await Assert.ThrowsAsync<TimeoutException>(() =>
             SparBlackBox.LaunchAsync(Projects.WindowHost, o => o.ReadyTimeout = TimeSpan.FromMilliseconds(50), Token));
 
         Assert.Contains("was not ready within", failure.Message, StringComparison.Ordinal);
-        Assert.DoesNotContain(Directory.GetDirectories(run, "black-box-*"), root => !before.Contains(root));
+        var root = Assert.Single(created);
+        Assert.False(Directory.Exists(root), $"{root} is still there.");
     }
 
     [Fact]
+    [Trait("OS", "Windows")]
     public async Task A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written()
     {
+        // Linux mounts a network file system at a local path, which the host cannot tell apart: no counterpart.
+        WindowSupport.SkipUnlessWindows("Windows' refusal of a data root on a network drive (a UNC path or a mapped drive); Linux has no such path.");
         WindowSupport.SkipUnlessBlackBox();
 
         // A name that never resolves (.invalid, RFC 6761): the host refuses the path by its form, before any access.
@@ -140,20 +164,29 @@ public sealed class BlackBoxFixtureTests
             o.DataRoot = first.DataRoot;
             o.WaitForReady = false;
         }, Token);
+        var clock = Stopwatch.StartNew();
         var dialog = await second.WaitForDialogAsync(TimeSpan.FromSeconds(15), Token);
+        var found = clock.Elapsed;
 
+        // The host's own words for where to end a stuck app: Task Manager on Windows, the system monitor on Linux.
         Assert.Equal("WindowHost", dialog.Title);
-        Assert.Equal(["WindowHost can't start", "The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in Task Manager."], dialog.Texts);
+        Assert.True(dialog.Texts.Count == 2, $"{dialog}{Environment.NewLine}{await second.Window.DumpAsync()}");
+        Assert.Equal("WindowHost can't start", dialog.Texts[0]);
+        Assert.Matches(
+            @"^The app is already running but did not answer within 2 seconds\. Wait a moment, then start it again, or end it in (Task Manager|the system monitor)\.",
+            dialog.Texts[1]);
         Assert.Contains("Close", dialog.Buttons);
         Assert.DoesNotContain("Minimize", dialog.Buttons);
         await Assert.ThrowsAsync<ArgumentException>(() => dialog.PressAsync("OK"));
 
+        clock.Restart();
         await dialog.PressAsync("Close");
         Assert.Equal(8, await second.WaitForExitAsync(Token));
+        Results.Append("black-box.txt", $"relaunch dialog found {found.TotalMilliseconds:0} ms after the launch; Close to exit 8 in {clock.Elapsed.TotalMilliseconds:0} ms");
     }
 
     [Fact]
-    public async Task The_window_is_read_and_driven_through_UI_Automation()
+    public async Task The_window_is_read_and_driven_through_the_accessibility_API()
     {
         WindowSupport.SkipUnlessBlackBox();
         await using var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
@@ -171,20 +204,26 @@ public sealed class BlackBoxFixtureTests
         await Assert.ThrowsAsync<TimeoutException>(() => window.GetByRole(SparRole.Button, new() { Name = "Place order" }).InvokeAsync(new() { Timeout = 300 }));
         Assert.Throws<NotSupportedException>(() => window.GetByRole(SparRole.Heading, new() { Level = 1 }));
 
+        var clock = Stopwatch.StartNew();
         await window.GetByRole(SparRole.Button, new() { Name = "Show the late button" }).InvokeAsync();
+        var invoked = clock.Elapsed;
         await window.GetByRole(SparRole.Button, new() { Name = "Late button", Exact = true }).InvokeAsync();
         await window.GetByText("Late button clicked").WaitForAsync();
         Assert.Equal("", await window.GetByRole(SparRole.Textbox, new() { Name = "Notes" }).InputValueAsync());
 
+        clock.Restart();
         Assert.Equal(0, await app.CloseAsync(Token));
+        var closed = clock.Elapsed;
         Assert.True(await app.WaitForProcessTreeExitAsync());
+        Results.Append("black-box.txt", $"launch to ready {app.StartedAfter.TotalMilliseconds:0} ms; a button found and invoked in {invoked.TotalMilliseconds:0} ms; close to exit {closed.TotalMilliseconds:0} ms");
     }
 
     [Fact]
     public async Task Options_the_fixture_cannot_honour_are_refused_before_anything_starts()
     {
         WindowSupport.SkipUnlessBlackBox();
-        string[] refused = ["LOCALAPPDATA", "appdata", "TEMP", "TMP", "WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "SPAR_AUTOMATED", "A=B"];
+        string[] browser = OperatingSystem.IsWindows() ? ["WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS"] : [];
+        string[] refused = [.. SparBlackBoxOptions.FixtureVariables, .. browser, "SPAR_AUTOMATED", "A=B"];
         foreach (var name in refused)
         {
             await Assert.ThrowsAsync<ArgumentException>(() => SparBlackBox.LaunchAsync(Projects.WindowHost, o => o.Environment[name] = "x", Token));
@@ -220,15 +259,36 @@ public sealed class BlackBoxFixtureTests
         var folders = BlackBoxFolders.For(Path.Combine(Path.GetTempPath(), "root"));
         var options = new SparBlackBoxOptions();
         options.Environment["APP_SETTING"] = "on";
+        if (OperatingSystem.IsLinux())
+        {
+            // Not started for this: the private display is the fixture's choice, so the check reads it through the option.
+            options.Display = ":0-test";
+        }
 
         var environment = SparBlackBox.Environment(options, folders);
 
-        Assert.Equal(folders.LocalAppData, environment["LOCALAPPDATA"]);
-        Assert.Equal(folders.RoamingAppData, environment["APPDATA"]);
-        Assert.Equal(folders.Temp, environment["TEMP"]);
-        Assert.Equal(folders.Temp, environment["TMP"]);
+        if (OperatingSystem.IsWindows())
+        {
+            Assert.Equal(folders.LocalAppData, environment["LOCALAPPDATA"]);
+            Assert.Equal(folders.RoamingAppData, environment["APPDATA"]);
+            Assert.Equal(folders.Temp, environment["TEMP"]);
+            Assert.Equal(folders.Temp, environment["TMP"]);
+        }
+        else
+        {
+            Assert.Equal(folders.Home, environment["HOME"]);
+            Assert.Equal(folders.LocalAppData, environment["XDG_DATA_HOME"]);
+            Assert.Equal(folders.RoamingAppData, environment["XDG_CONFIG_HOME"]);
+            Assert.Equal(folders.Cache, environment["XDG_CACHE_HOME"]);
+            Assert.Equal(folders.State, environment["XDG_STATE_HOME"]);
+            Assert.Equal(folders.Temp, environment["TMPDIR"]);
+            Assert.StartsWith("/dev/shm/spar-bb-", environment["XDG_RUNTIME_DIR"], StringComparison.Ordinal);
+            Assert.Equal(":0-test", environment["DISPLAY"]);
+            Assert.DoesNotContain(environment.Keys, name => SparBlackBoxOptions.LinuxRemoved.Contains(name) && name != "DISPLAY");
+        }
+
         Assert.Equal("on", environment["APP_SETTING"]);
-        Assert.DoesNotContain(environment.Keys, name => name.StartsWith("WEBVIEW2_", StringComparison.OrdinalIgnoreCase) || name.StartsWith("SPAR_", StringComparison.OrdinalIgnoreCase));
+        Assert.DoesNotContain(environment.Keys, name => SparBlackBoxOptions.RemovedPrefixes.Any(prefix => name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)));
         Assert.Contains(environment.Keys, name => string.Equals(name, "PATH", StringComparison.OrdinalIgnoreCase));
     }
 
@@ -239,7 +299,7 @@ public sealed class BlackBoxFixtureTests
     public void Arguments_reach_the_app_as_given(string[] arguments, string expected) =>
         Assert.Equal(expected, CommandLine.Build(@"C:\a b\app.exe", arguments));
 
-    private static bool Exited(int processId)
+    internal static bool Exited(int processId)
     {
         try
         {

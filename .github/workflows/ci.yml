@@ -124,8 +124,8 @@ jobs:
 
       - name: Window tests (CoreCLR)
         # The app's real WebView2 window in the test process (trait Surface=Window), in their own invocations: a native
-        # engine abort ends only this step's process. Windows only until the Linux host (M1c). Spar.WindowTests also
-        # holds the black-box fixture's own tests.
+        # engine abort ends only this step's process. Spar.WindowTests also holds the black-box fixture's own tests.
+        # On Linux the window tests run in Spar's CI image instead (the linux-window job below).
         if: matrix.lane == 'tests' && runner.os == 'Windows'
         shell: bash
         run: |
@@ -135,7 +135,7 @@ jobs:
       - name: Black-box tests (CoreCLR)
         # The Notebook's Production NativeAOT executable, published by the build beside its tests and launched on a
         # desktop of the test process's own, read through UI Automation (trait Surface=BlackBox; plan section 5, level
-        # 7). Windows only until the Linux host (M1c).
+        # 7). On Linux, in the linux-window job.
         if: matrix.lane == 'tests' && runner.os == 'Windows'
         run: dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait "Surface=BlackBox"
 
@@ -170,7 +170,7 @@ jobs:
       - name: Window tests (NativeAOT lane)
         # The same window and black-box tests published with NativeAOT, each executable its own invocation;
         # Notebook.EndToEndTests leaves its browser journeys out of this lane (Playwright cannot run under NativeAOT).
-        # Windows only until M1c.
+        # On Linux, in the linux-window job.
         if: matrix.lane == 'aot' && runner.os == 'Windows'
         shell: bash
         run: |
@@ -210,3 +210,89 @@ jobs:
           # About 2 MB per run before compression (mostly TRX reports); kept long enough to look into a failure, not the
           # repository's default 90 days (decision "Every test run keeps a TRX report").
           retention-days: 14
+
+  linux-window:
+    # The Linux window tests (trait Surface=Window) and black-box tests in Spar's CI image, built here from
+    # eng/linux-ci/Dockerfile with buildx's GitHub Actions cache (decision "The Linux CI image and job; online and offline
+    # on Linux"). The runner itself stays as it is: no sysctl, no AppArmor change. The container runs as the image's uid
+    # 1000, with --init (PID 1 reaps the processes the tests leave), and seccomp=unconfined, the container's own profile:
+    # Docker's default seccomp profile refuses the user namespaces of WebKit's bwrap sandbox and of the network switch.
+    # AppArmor keeps Docker's docker-default profile, which declares ABI 3.0 and so does not mediate user namespaces;
+    # apparmor=unconfined would put the container under Ubuntu 24.04's restriction of unconfined user namespaces instead.
+    name: window tests (Linux container)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      SPAR_CI_CONTAINER: spar-linux-ci
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: The runner's user-namespace settings (for the record)
+        run: |
+          sysctl kernel.apparmor_restrict_unprivileged_userns user.max_user_namespaces 2>&1 || true
+          docker version --format 'Docker {{.Server.Version}}, kernel {{.Server.KernelVersion}}'
+
+      - name: The SDK version global.json names
+        id: sdk
+        run: |
+          echo "version=$(sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' global.json | head -1)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: The CI image (eng/linux-ci/Dockerfile)
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: eng/linux-ci
+          load: true
+          tags: spar-linux-ci
+          build-args: DOTNET_SDK_VERSION=${{ steps.sdk.outputs.version }}
+          # Layers cached between runs; a change to the Dockerfile or to global.json's SDK rebuilds from that layer on.
+          cache-from: type=gha,scope=linux-ci
+          cache-to: type=gha,mode=max,scope=linux-ci
+
+      - name: Start the container (the repository read-only at /src)
+        run: |
+          docker run -d --name "$SPAR_CI_CONTAINER" --init --shm-size=1g --security-opt seccomp=unconfined \
+            -e CI=true -v "$GITHUB_WORKSPACE:/src:ro" spar-linux-ci sleep infinity
+          docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh check
+
+      - name: Copy and build (TypeScript SDK, Spar.WindowTests, Notebook.EndToEndTests)
+        run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh copy client build
+
+      - name: Window tests (CoreCLR)
+        # Under eng/linux-ci/network-switch.sh, so the online/offline test can switch the network.
+        run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh window
+
+      - name: Window tests (NativeAOT lane)
+        run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh windowaot
+
+      - name: Black-box apps (the probe's Development and WebAssembly builds, the Notebook)
+        run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh apps
+
+      - name: Black-box tests (CoreCLR, Production probe)
+        # Trait Surface=BlackBox without Probe=Development, OS=Windows, Kind=Measurement and Needs=WritableProcSys; a skipped test
+        # fails this step, so CI cannot pass by skipping.
+        run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh blackbox
+
+      - name: Black-box tests (CoreCLR, the probe's Development build)
+        # Trait App=BridgeProbe without Probe=None and Kind=Measurement, on the Development build; no skips either.
+        run: docker exec "$SPAR_CI_CONTAINER" bash /src/eng/linux-ci/run.sh blackboxdev
+
+      - name: Collect the test results
+        if: always()
+        run: |
+          mkdir -p artifacts
+          docker cp "$SPAR_CI_CONTAINER:/home/spar/repo/artifacts/test-results" artifacts/ || true
+
+      - name: Test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-results-linux-window
+          path: artifacts/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Remove the container
+        if: always()
+        run: docker rm -f "$SPAR_CI_CONTAINER" || true

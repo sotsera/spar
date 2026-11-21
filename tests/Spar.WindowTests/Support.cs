@@ -33,9 +33,24 @@ internal static class WindowSupport
     /// <summary>A test of a Windows mechanism with no Linux counterpart yet: an explicit skip elsewhere, with why.</summary>
     public static void SkipUnlessWindows(string why) => Assert.SkipUnless(OperatingSystem.IsWindows(), why);
 
-    /// <summary>The black-box fixture's tests: Windows until the Linux fixture (AT-SPI) is built after its spike.</summary>
-    public static void SkipUnlessBlackBox() =>
-        SkipUnlessWindows("The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).");
+    /// <summary>
+    /// The black-box fixture's tests, on Windows and Linux: where the fixture lacks something (on Linux Xvfb, D-Bus or
+    /// at-spi2-core) they skip with its message, and fail when <c>CI=true</c>.
+    /// </summary>
+    public static void SkipUnlessBlackBox()
+    {
+        if (BlackBoxPlatform.Problem is not { } problem)
+        {
+            return;
+        }
+
+        if (string.Equals(Environment.GetEnvironmentVariable("CI"), "true", StringComparison.OrdinalIgnoreCase))
+        {
+            Assert.Fail(problem + " (CI=true: a black-box test that cannot run fails.)");
+        }
+
+        Assert.Skip(problem);
+    }
 
     private static async Task<string?> FindProblemAsync()
     {

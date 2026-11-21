@@ -28,7 +28,6 @@ internal sealed class TestWindowProcess
     private static TestWindowProcess? s_shared;
     private static SparTestWindowUnavailableException? s_unavailable;
 
-    private readonly Queue<(bool Dark, TaskCompletionSource Turn)> _waiting = new();
     private const int PlaceWidth = 1280;
     private const int PlaceHeight = 840;
     private const int PlaceColumns = 5;
@@ -37,15 +36,14 @@ internal sealed class TestWindowProcess
     private readonly HashSet<int> _owned = [];
     private readonly HashSet<int> _places = [];
     private readonly bool _webAssembly;
-    private int _open;
-    private bool _dark;
-    private bool _schemeSet;
+    private readonly SchemeGate _schemes;
 
     private TestWindowProcess(MainLoop ui, XInput input, bool webAssembly)
     {
         Ui = ui;
         Input = input;
         _webAssembly = webAssembly;
+        _schemes = new SchemeGate(UseScheme);
     }
 
     /// <summary>The test process's one main-loop thread.</summary>
@@ -123,47 +121,17 @@ internal sealed class TestWindowProcess
     }
 
     /// <summary>
-    /// Waits until windows of <paramref name="dark"/>'s scheme may open (loop thread), then counts this one in: GTK's dark
-    /// preference, which WebKitGTK's <c>prefers-color-scheme</c> follows, is the default display's, so the process's
-    /// windows have one scheme at a time (measured: a view on a second display with its own dark preference stayed
-    /// light). A window of the other scheme waits until the open ones closed, and windows asking after it wait behind
-    /// it, so neither scheme waits for ever. <see cref="LeaveScheme"/> when the window is gone.
+    /// Waits until windows of <paramref name="dark"/>'s scheme may open (loop thread), then counts this one in, held by
+    /// <paramref name="holder"/> (the test that opens it, or its app): <see cref="SchemeGate"/>. <see cref="LeaveScheme"/>
+    /// when the window is gone.
     /// </summary>
-    public Task EnterSchemeAsync(bool dark)
-    {
-        if (_waiting.Count == 0 && (_open == 0 || _dark == dark))
-        {
-            UseScheme(dark);
-            return Task.CompletedTask;
-        }
-
-        var turn = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        _waiting.Enqueue((dark, turn));
-        return turn.Task;
-    }
+    public Task EnterSchemeAsync(bool dark, object holder) => _schemes.EnterAsync(dark, holder);
 
     /// <summary>A window counted in by <see cref="EnterSchemeAsync"/> is gone (loop thread): the next scheme may come.</summary>
-    public void LeaveScheme()
-    {
-        _open--;
-        while (_waiting.TryPeek(out var next) && (_open == 0 || _dark == next.Dark))
-        {
-            _waiting.Dequeue();
-            UseScheme(next.Dark);
-            next.Turn.TrySetResult();
-        }
-    }
+    public void LeaveScheme(object holder) => _schemes.Leave(holder);
 
-    private unsafe void UseScheme(bool dark)
+    private static unsafe void UseScheme(bool dark)
     {
-        _open++;
-        if (_schemeSet && _dark == dark)
-        {
-            return;
-        }
-
-        _dark = dark;
-        _schemeSet = true;
         GValue value = default;
         GLib.g_value_init(&value, GLib.TypeBoolean);
         GLib.g_value_set_boolean(&value, dark ? 1 : 0);
@@ -232,7 +200,9 @@ internal sealed class TestWindowProcess
                 ?? throw Unavailable(Prerequisites.DisplayNotOpened(environment.Display));
             var input = XInput.Open(environment.Display, () => TurnAsync(ui));
             var process = new TestWindowProcess(ui, input, security.AllowWebAssembly);
-            AppDomain.CurrentDomain.ProcessExit += (_, _) => environment.Stop();
+            // Nothing is ended at ProcessExit: the shared loop thread still holds its X connection then, and an Xvfb ended
+            // under it makes GDK's I/O error handler call _exit(1) after every test passed (pitfalls). The helpers end
+            // through their tether once this process is gone, and a later run deletes the folders of dead processes.
             log.Info($"Window tests on {environment.DisplayNote}; session under {environment.Root}.");
             return process;
         }

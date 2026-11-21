@@ -1,0 +1,103 @@
+The CI container's three failures of 2026-11-21 (image spar-linux-ci:m1c-step7; GTK 4.14.5+ds-0ubuntu0.10, GLib 2.80,
+Xvfb 21.1). Cores from Docker Desktop's WSL crash capture (%TEMP%\wsl-crashes), read with gdb in a container of the
+same image, the crashed executable copied to its path, GTK's symbols from libgtk-4-1-dbgsym_4.14.5+ds-0ubuntu0.10
+(Launchpad).
+
+1. Characters lost in the Notebook's window journeys (container runs 1-3: 1 of 10 journeys in most runs)
+   Instrumented in the container's copy only (not in the tree): every key the Linux Window surface sent, with the
+   page engine's answer after it (829 keys over one run of the journeys), and the page's own events in the Notebook's
+   page world. 6 of the 829 keys never reached their page; the document lacked the focus for all 6:
+     00:51:54.468 21304 com.example.Notebook key Control down before 16 -> {"focus":false,"edits":1,"active":"TEXTAREA","count":16,"seen":false,"last":"pointerup:"}
+     00:51:55.480 21304 com.example.Notebook key Control up before 18 -> {"seen":false,"focus":false,"last":"keyup:End","active":"TEXTAREA","edits":1,"count":18}
+     00:51:58.560 21304 com.example.Notebook key r down before 2 -> {"focus":false,"edits":0,"last":"keyup:/","active":"INPUT","count":2,"seen":false}
+     00:51:59.562 21304 com.example.Notebook key r up before 2 -> {"edits":0,"active":"INPUT","focus":true,"last":"keyup:/","count":2,"seen":false}
+     00:52:13.569 22403 com.example.Notebook key Control down before 14 -> {"count":14,"last":"pointerup:","seen":false,"edits":1,"focus":false,"active":"TEXTAREA"}
+     00:52:14.577 22403 com.example.Notebook key Control up before 16 -> {"active":"TEXTAREA","seen":false,"focus":false,"last":"keyup:End","edits":1,"count":16}
+   The page's events of a journey that failed (the textarea holds "# Groceries\n", 12 characters; the journey pressed
+   Control+End to reach its end): no Control keydown arrived, and End alone moved the caret to the end of line 1
+   (sel 11, not 12), so the next line was typed before the last character:
+     "208.0 focusin  \"\" t=true target=TEXTAREA len=12 sel=0 focus=false","1245.0 keydown End \"\" t=true target=TEXTAREA len=12 sel=0 focus=true","1249.0 keyup End \"\" t=true target=TEXTAREA len=12 sel=11 focus=true","2262.0 keydown Enter \"\" t=true target=TEXTAREA len=12 sel=11 focus=true","2262.0 beforeinput insertLineBreak \"\" t=
+   Meanwhile another test's window, on the same display, was typing its own Control+End: the X server keeps one
+   keyboard state per display, so this window's Control was a press of a key already down, and the other's release
+   ended it. Looped runs of the 10 journeys (CoreCLR, in the container): 5 of 10 failed before the fixes; 15 of 20 with
+   the per-type confirmation and the server grab; 9 of 20 with the focus wait as well; 0 of 20 with the keyboard held
+   per window (and 0 of 20 again after the fixes 2-5 below).
+   Also found, in the Notebook: saveDraft set { ...state, save: saving } from the state it was called with; a vitest
+   that edits and saves in one act() kept "# Welcome" for "# Hello" (fixed: a functional update).
+
+2. Exit 139: the Development probe, A_page_that_hangs_before_it_connects (container run 2), after "window destroyed"
+   Program terminated with signal SIGSEGV, Segmentation fault.
+   #0  gtk_window_destroy (window=0x7a3e9def69f0) at ../../../gtk/gtkwindow.c:6814
+   #1  g_task_set_task_data () at libgio-2.0.so.0
+   #2  gtk_alert_dialog_choose_finish (self=..., result=..., error=...) at ../../../gtk/gtkalertdialog.c:751
+   #3  ??? (managed: AlertDialog.Chosen)
+   #4  ??? at libgio-2.0.so.0 (the task's deferred return)
+   GTK 4.14.5's gtkalertdialog.c: the message dialog is created with "destroy-with-parent" TRUE; choose keeps it as the
+   task's data with gtk_window_destroy as its destroy notify, no reference taken; choose_finish clears the task data,
+   which destroys it. GLib returns a cancelled task on the next turn of the loop, never from the "cancelled" handler.
+   alert-dialog-race.c, on Xvfb in the same image (GSK_RENDERER=cairo), three runs each:
+     mode 0 (cancel, answer read, then the parent destroyed): "answer -1 (Operation was cancelled) done", exit 0 x3
+     mode 1 (cancel and the parent destroyed in one turn):     "Gtk-CRITICAL **: gtk_window_destroy: assertion
+                                                                'GTK_IS_WINDOW (window)' failed", x3 (a freed window)
+   Fix: WindowDialogs (src/Spar.Linux/AlertDialog.cs); the teardown takes the window's dialogs down and waits for their
+   answers before gtk_window_destroy.
+
+3. Exit 3 with no start-up message: A_missing_bwrap_is_exit_3_with_a_message (container run 3; again 1 in 10 runs of
+   LinuxStartupTests): "No start-up message could be shown" 0.6-0.8 ms after the problem line, gtk_init_check false.
+   xvfb-reset.py, back-to-back XOpenDisplay/XCloseDisplay on a fresh Xvfb (abstract socket, as the black box starts it):
+     reset (one process):              3000 opens, 42 failed (first at 64)
+     reset (one process per open):     300 processes, 0 failed
+     noreset (one process):            3000 opens, 0 failed
+     noreset (one process per open):   300 processes, 0 failed
+   Fix: -noreset on the black box's Xvfb (src/Spar.Testing/BlackBox/Linux/LinuxDesktop.cs). The Window surface's Xvfb
+   always has the test process's own GTK connection, so it never resets.
+
+4. Found while looping (3): exit 134 after "exit 0", The_software_GPU_default_reaches_the_web_processes(option:
+   "Always") (1 in 10 runs of LinuxStartupTests; 0 in 30 runs of the method alone)
+   Bail out! Gdk:ERROR:../../../gdk/x11/gdkdisplay-x11.c:2581:gdk_x11_display_error_trap_pop_internal: assertion
+   failed: (trap->end_sequence == 0)
+   Thread LWP 15293 (not the process's main thread), signal SIGABRT:
+   #7  gdk_x11_display_error_trap_pop_internal (display=..., need_code=0) at ../../../gdk/x11/gdkdisplay-x11.c:2581
+   #8  gdk_x11_display_get_default_seat (display=<optimized out>) at ../../../gdk/x11/gdkdisplay-x11.c:2792
+   #9  _gdk_x11_surface_grab_check_destroy (surface=...) at ../../../gdk/x11/gdkmain-x11.c:115
+   #10 gdk_x11_surface_finalize (object=...) at ../../../gdk/x11/gdksurface-x11.c:1134
+   #12 g_object_unref ()
+   #13 gdk_draw_context_dispose (gobject=...) at ../../../gdk/gdkdrawcontext.c:86
+   #14 g_object_unref ()
+   #15 __GI___nptl_deallocate_tsd () at ./nptl/nptl_deallocate_tsd.c:73
+   Fix: the loop thread calls gdk_gl_context_clear_current before it ends (src/Spar.Linux/MainLoop.cs).
+
+5. Found while looping the Development probe's suite: The_stall_probe_names_a_stalled_main_loop… waited for the first
+   stall line, and under load a slow window start came first ("The UI thread stalled 50.7 ms; the slowest Spar callback
+   meanwhile was window start (50.7 ms)"). Fix: the test waits for the trigger's own line.
+
+6. Found while looping the journeys after 1-5: The_search_box_narrows_the_list_and_slash_focuses_it failed its clean
+   check (14 of 167 runs of the 10 window journeys) on two warnings, "Bridge: a message arrived between documents and
+   was ignored." In the container's copy only, the warning named the message (and, later, the relay tagged each message
+   with a random id of its document and the warning named the tag and the bridge's state):
+     [{"type":"call","id":1,"contract":"pages","command":"list"}]
+     [{"type":"ready"}]
+     [a70b71c0ac36c00d open False tag - gone [a70b71c0ac36c00d] held 0 current none: {"type":"call","id":1,...}]
+     [a70b71c0ac36c00d open False tag - gone [a70b71c0ac36c00d] held 0 current none: {"type":"ready"}]
+     [70fa5072366aa0b3 open False tag - gone [70fa5072366aa0b3] held 0 current none: {"type":"call","id":1,...}]
+   All ten such messages of 5 failing runs carried the tag of the document the reload had just replaced: the first
+   page, reloaded about 50 ms after the window opened, sent its first call and ready only after the reload started.
+   The theory first tried (a new document's messages delivered before its commit) is withdrawn with the tagging.
+   Fix: the journey waits for the empty list's "Start your notebook" before it creates pages and reloads.
+
+7. Found while looping the journeys after 6: Closing_right_after_typing_saves_the_last_words_first, once in 25 runs:
+   "GetByRole(Dialog, "New page").GetByLabel("Title").FillAsync: timed out after 10004 ms ... no element matches
+   GetByRole(Dialog, "New page")": the click on "New page" opened no dialog. Not instrumented. The pointer is the
+   display's one, as the keyboard is: a press and its release were not held against other windows' input (another
+   window's motion or click between them, or a click between another window's modifier and its key). The input hold
+   now covers presses, releases, pointer motion and focus changes as well as keys. Afterwards: 30 of 30 runs of the
+   10 window journeys.
+
+8. Full sequence 2 of 3 (after 1-7), step window: SessionEndHostTests.The_end_of_the_session_holds_the_message_under_
+   four_seconds_however_slow_the_guards_and_the_cleanup, "Timed out after 10 s waiting for the slow disposal to
+   finish" (final-sequence-2-stopped.log; held 3998 ms). The Linux session end started the run's last work (a test
+   window's services' disposal) only when the window had closed within the 4 s budget; under load the teardown (the
+   slow call settling to the deadline, then up to 3 s for the web processes) ended after it, and nothing disposed the
+   services until the test's end. Fix: SessionEnd.RunAsync starts the last work once the window is gone, in time or
+   not, and only its wait is cut at the budget (an app's last work is the normal disposal, already running, so it is
+   unchanged there). The sequence was stopped there; the three sequences were run again from the start.

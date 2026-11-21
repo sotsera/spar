@@ -3,18 +3,20 @@ using System.Globalization;
 using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
 
-namespace Spar.Tests;
+namespace Spar.WindowTests;
 
 /// <summary>
-/// The Linux host's start-up (plan M1c, build step 2), on the bridge probe's executable under the runner's X server:
+/// The Linux host's start-up (plan M1c, build step 2), on the bridge probe's executable under the tests' private Xvfb:
 /// every exit code forced and observed (a library, a helper or <c>bwrap</c> hidden in a bubblewrap mount namespace, the
 /// sandbox denied by one that forbids user namespaces, no display, a raised WebKitGTK minimum in a Development build),
 /// the message each shows and closes, single instance (a hand-over and a stopped first instance), the software-GPU
 /// default in the web processes' environment, and the theme. The times go to
-/// <c>artifacts/test-results/Spar.Tests/linux-startup.txt</c>; they are recorded, not asserted.
+/// <c>artifacts/test-results/Spar.WindowTests/linux-startup.txt</c>; they are recorded, not asserted.
 /// </summary>
 [SupportedOSPlatform("linux")]
-[Collection(nameof(LinuxWindowsCollection))]
+[Collection(nameof(ProbeCollection))]
+[Trait("Surface", "BlackBox")]
+[Trait("App", "BridgeProbe")]
 public sealed class LinuxStartupTests
 {
     private const string LibraryFolder = "/usr/lib/x86_64-linux-gnu";
@@ -22,7 +24,7 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task No_display_is_exit_6_with_its_line_and_the_apps_hook()
     {
-        await using var app = LinuxAppRun.Start("", ("DISPLAY", null), ("BRIDGE_PROBE_OWN_STARTUP_MESSAGE", "1"));
+        await using var app = await ProbeApp.StartAsync("", ("DISPLAY", null), ("BRIDGE_PROBE_OWN_STARTUP_MESSAGE", "1"));
 
         Assert.Equal(6, await app.WaitForExitAsync());
         Record("no display", app);
@@ -34,7 +36,7 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task A_display_nobody_serves_is_exit_6()
     {
-        await using var app = LinuxAppRun.Start("", ("DISPLAY", ":59"));
+        await using var app = await ProbeApp.StartAsync("", ("DISPLAY", ":59"));
 
         Assert.Equal(6, await app.WaitForExitAsync());
         Record("display not served", app);
@@ -42,10 +44,11 @@ public sealed class LinuxStartupTests
     }
 
     [Fact]
+    [Trait("Probe", "Development")]
     public async Task A_WebKitGTK_older_than_required_is_exit_4_with_a_message()
     {
-        Assert.SkipUnless(LinuxAppRun.IsDevelopmentProbe(), "The raised minimum is a Development build's variable.");
-        await using var app = LinuxAppRun.Start("", ("SPAR_DEV_REQUIRE_WEBKITGTK", "99.0"));
+        Assert.SkipUnless(ProbeApp.IsDevelopmentProbe(), "The raised minimum is a Development build's variable.");
+        await using var app = await ProbeApp.StartAsync("", ("SPAR_DEV_REQUIRE_WEBKITGTK", "99.0"));
 
         await ShownThenClosedAsync(app, 4, "too old");
         Assert.Matches(@"Start-up problem TooOld: WebKitGTK 6\.0 \(found 2\.\d+\.\d+, required 99\.0\.0\)", app.Log());
@@ -54,7 +57,7 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task A_missing_WebKitGTK_is_exit_3_with_a_message()
     {
-        await using var app = Hidden(["--ro-bind", "/dev/null", Real(Path.Combine(LibraryFolder, "libwebkitgtk-6.0.so.4"))]);
+        await using var app = await Hidden(["--ro-bind", "/dev/null", Real(Path.Combine(LibraryFolder, "libwebkitgtk-6.0.so.4"))]);
 
         await ShownThenClosedAsync(app, 3, "WebKitGTK missing");
         Assert.Contains("Start-up problem Missing: WebKitGTK 6.0 (required 2.48.0).", app.Log(), StringComparison.Ordinal);
@@ -64,7 +67,7 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task A_missing_GTK_is_exit_3_without_a_GTK_message()
     {
-        await using var app = Hidden(["--ro-bind", "/dev/null", Real(Path.Combine(LibraryFolder, "libgtk-4.so.1"))]);
+        await using var app = await Hidden(["--ro-bind", "/dev/null", Real(Path.Combine(LibraryFolder, "libgtk-4.so.1"))]);
 
         Assert.Equal(3, await app.WaitForExitAsync());
         Record("GTK missing (no message program here)", app);
@@ -75,7 +78,7 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task Missing_WebKit_helpers_are_exit_5_with_a_message()
     {
-        await using var app = Hidden(["--tmpfs", Path.Combine(LibraryFolder, "webkitgtk-6.0")]);
+        await using var app = await Hidden(["--tmpfs", Path.Combine(LibraryFolder, "webkitgtk-6.0")]);
 
         await ShownThenClosedAsync(app, 5, "helpers missing");
         Assert.Contains("Start-up problem Broken: WebKitGTK 6.0.", app.Log(), StringComparison.Ordinal);
@@ -84,16 +87,22 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task A_missing_bwrap_is_exit_3_with_a_message()
     {
-        await using var app = Hidden(["--ro-bind", "/dev/null", "/usr/bin/bwrap"]);
+        await using var app = await Hidden(["--ro-bind", "/dev/null", "/usr/bin/bwrap"]);
 
         await ShownThenClosedAsync(app, 3, "bwrap missing");
         Assert.Contains("Start-up problem Missing: bubblewrap.", app.Log(), StringComparison.Ordinal);
     }
 
+    /// <summary>
+    /// A real denial of user namespaces (bwrap's <c>--disable-userns</c> in a namespace of its own). It writes
+    /// <c>/proc/sys/user/max_user_namespaces</c> there, which a container keeps read-only (Docker: "Read-only file
+    /// system"), so it carries <c>Needs=WritableProcSys</c> and the CI container's runs leave it out; WSL and a VM run it.
+    /// </summary>
     [Fact]
+    [Trait("Needs", "WritableProcSys")]
     public async Task A_sandbox_the_system_denies_is_exit_5_with_a_message()
     {
-        await using var app = Hidden(["--unshare-user", "--disable-userns"]);
+        await using var app = await Hidden(["--unshare-user", "--disable-userns"]);
 
         await ShownThenClosedAsync(app, 5, "sandbox denied");
         Assert.Contains("Start-up problem Broken: Web content sandbox.", app.Log(), StringComparison.Ordinal);
@@ -103,12 +112,12 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task A_second_instance_hands_its_arguments_over_and_exits_0()
     {
-        await using var first = LinuxAppRun.Start("");
+        await using var first = await ProbeApp.StartAsync("");
         await first.WaitForAsync(@"ui-ready at");
 
         var clock = Stopwatch.StartNew();
-        await using var second = LinuxAppRun.Launch(
-            LinuxAppRun.Probe(), LinuxAppRun.ProbeAppId, [("DESKTOP_STARTUP_ID", "spar-test-token")], first.RunFolder, arguments: ["--recipe", "nightly.sqlrecipe"]);
+        await using var second = await ProbeApp.LaunchAsync(
+            ProbeApp.Probe(), ProbeApp.ProbeAppId, [("DESKTOP_STARTUP_ID", "spar-test-token")], first.RunFolder, arguments: ["--recipe", "nightly.sqlrecipe"]);
         Assert.Equal(0, await second.WaitForExitAsync());
         clock.Stop();
 
@@ -122,16 +131,16 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task A_stopped_first_instance_gives_the_second_exit_8_after_2_seconds()
     {
-        await using var first = LinuxAppRun.Start("");
+        await using var first = await ProbeApp.StartAsync("");
         await first.WaitForAsync(@"ui-ready at");
         Signal("STOP", first.Id);
         try
         {
             var clock = Stopwatch.StartNew();
-            await using var second = LinuxAppRun.Launch(
-                LinuxAppRun.Probe(), LinuxAppRun.ProbeAppId, [("SPAR_AUTOMATED", "1")], first.RunFolder, arguments: ["late"]);
+            await using var second = await ProbeApp.LaunchAsync(
+                ProbeApp.Probe(), ProbeApp.ProbeAppId, [("SPAR_AUTOMATED", "1")], first.RunFolder, arguments: ["late"]);
             // A Production build has no automated mode: it shows the message, which the test closes.
-            var development = LinuxAppRun.IsDevelopmentProbe();
+            var development = ProbeApp.IsDevelopmentProbe();
             var code = development ? await second.WaitForExitAsync() : -1;
             var shown = development ? (TimeSpan?)null : await second.WaitForWindowAsync();
             clock.Stop();
@@ -159,7 +168,7 @@ public sealed class LinuxStartupTests
     public async Task The_software_GPU_default_reaches_the_web_processes(
         string? option, string? userRenderer, bool off, string? dmabuf, string? renderer)
     {
-        await using var app = LinuxAppRun.Start("", ("BRIDGE_PROBE_ACCELERATION", option), ("GSK_RENDERER", userRenderer));
+        await using var app = await ProbeApp.StartAsync("", ("BRIDGE_PROBE_ACCELERATION", option), ("GSK_RENDERER", userRenderer));
         await app.WaitForAsync(@"ui-ready at");
 
         var line = Regex.Match(app.Log(), @"Hardware acceleration (?<option>\w+): (?<state>on|off), GPU (?<gpu>.*), checked in (?<ms>[0-9.]+) ms with (?<threads>\d+) threads; (?<applied>.*)\.$", RegexOptions.Multiline);
@@ -167,7 +176,7 @@ public sealed class LinuxStartupTests
         Assert.Equal(option ?? "Auto", line.Groups["option"].Value);
         Assert.Equal(off ? "off" : "on", line.Groups["state"].Value);
         var page = Assert.Single(app.WebKitProcesses(), process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
-        var environment = LinuxAppRun.EnvironmentOf(page.Id);
+        var environment = ProbeApp.EnvironmentOf(page.Id);
         Assert.Equal(dmabuf, environment.GetValueOrDefault("WEBKIT_DISABLE_DMABUF_RENDERER"));
         Assert.Equal(renderer, environment.GetValueOrDefault("GSK_RENDERER"));
         RecordLine($"gpu {option ?? "Auto"}{(userRenderer is null ? "" : $" with GSK_RENDERER={userRenderer}")}: {line.Value[line.Value.IndexOf("Hardware", StringComparison.Ordinal)..]}");
@@ -179,6 +188,7 @@ public sealed class LinuxStartupTests
     /// what the screen showed before cannot pass for the right colour.
     /// </summary>
     [Fact]
+    [Trait("Probe", "None")]
     public async Task The_Notebooks_window_has_the_saved_schemes_colour_from_its_first_frame()
     {
         var notebook = Environment.GetEnvironmentVariable("SPAR_LINUX_NOTEBOOK");
@@ -192,15 +202,15 @@ public sealed class LinuxStartupTests
 
     private static async Task SampleFirstFramesAsync(string notebook, string scheme, uint colour)
     {
-        var display = LinuxAppRun.Display();
-        var run = Path.Combine(TestFolders.Artifacts(), "linux-homes", "host-tests", Guid.NewGuid().ToString("N")[..12]);
+        var display = ProbeApp.Display();
+        var run = ProbeApp.NewRunFolder();
         var dataRoot = Path.Combine(run, "data", "com.example.Notebook");
         Directory.CreateDirectory(dataRoot);
         await File.WriteAllTextAsync(Path.Combine(dataRoot, "color-scheme"), scheme, TestContext.Current.CancellationToken);
 
         using var stop = new CancellationTokenSource();
         var clock = Stopwatch.StartNew();
-        await using var app = LinuxAppRun.Launch(notebook, "com.example.Notebook", [], run);
+        await using var app = await ProbeApp.LaunchAsync(notebook, "com.example.Notebook", [], run);
         var sampling = Task.Factory.StartNew(() => X11Frames.Sample(display, app.Id, clock, stop.Token), TaskCreationOptions.LongRunning);
         await app.WaitForAsync(@"ui-ready at");
         await Task.Delay(500, TestContext.Current.CancellationToken);
@@ -220,12 +230,12 @@ public sealed class LinuxStartupTests
     [Fact]
     public async Task Without_a_portal_GTKs_dark_preference_makes_the_window_dark()
     {
-        var run = Path.Combine(TestFolders.Artifacts(), "linux-homes", "host-tests", Guid.NewGuid().ToString("N")[..12]);
+        var run = ProbeApp.NewRunFolder();
         var settings = Path.Combine(run, "config", "gtk-4.0");
         Directory.CreateDirectory(settings);
         await File.WriteAllTextAsync(Path.Combine(settings, "settings.ini"), "[Settings]\ngtk-application-prefer-dark-theme=1\n", TestContext.Current.CancellationToken);
 
-        await using var app = LinuxAppRun.Launch(LinuxAppRun.Probe(), LinuxAppRun.ProbeAppId, [("BRIDGE_PROBE_PLAN", "")], run);
+        await using var app = await ProbeApp.LaunchAsync(ProbeApp.Probe(), ProbeApp.ProbeAppId, [("BRIDGE_PROBE_PLAN", "")], run);
         await app.WaitForAsync(@"ui-ready at");
 
         Assert.Matches(@"Theme dark, #1f1f1f, from no Settings portal \(.*\); GTK's settings \(prefer-dark True, theme .*\)\.", app.Log());
@@ -239,7 +249,7 @@ public sealed class LinuxStartupTests
         using var bus = PrivateBus.Start();
         using var portal = FakePortal.Start(bus.Address, scheme: 1);
 
-        await using var app = LinuxAppRun.Start("", ("DBUS_SESSION_BUS_ADDRESS", bus.Address));
+        await using var app = await ProbeApp.StartAsync("", ("DBUS_SESSION_BUS_ADDRESS", bus.Address));
         await app.WaitForAsync(@"ui-ready at");
         Assert.Contains("Theme dark, #1f1f1f, from the Settings portal.", app.Log(), StringComparison.Ordinal);
 
@@ -249,11 +259,11 @@ public sealed class LinuxStartupTests
     }
 
     /// <summary>The probe in a bubblewrap mount namespace where <paramref name="change"/> hides or denies something.</summary>
-    private static LinuxAppRun Hidden(string[] change) =>
-        LinuxAppRun.Launch(LinuxAppRun.Probe(), LinuxAppRun.ProbeAppId, [("BRIDGE_PROBE_PLAN", "")], wrapper: ["bwrap", "--dev-bind", "/", "/", .. change, "--"]);
+    private static Task<ProbeApp> Hidden(string[] change) =>
+        ProbeApp.LaunchAsync(ProbeApp.Probe(), ProbeApp.ProbeAppId, [("BRIDGE_PROBE_PLAN", "")], wrapper: ["bwrap", "--dev-bind", "/", "/", .. change, "--"]);
 
     /// <summary>Waits for the start-up message (a window of the process), records when it showed, closes it, checks the code.</summary>
-    private static async Task ShownThenClosedAsync(LinuxAppRun app, int exitCode, string label)
+    private static async Task ShownThenClosedAsync(ProbeApp app, int exitCode, string label)
     {
         var shown = await app.WaitForWindowAsync();
         await app.WaitForAsync(@"ERROR .*Start-up problem");
@@ -261,11 +271,11 @@ public sealed class LinuxStartupTests
         Record(label, app, shown);
     }
 
-    private static void Record(string label, LinuxAppRun app, TimeSpan? shown = null)
+    private static void Record(string label, ProbeApp app, TimeSpan? shown = null)
     {
         var log = app.Log();
         var problem = Regex.Match(log, @"^(?<time>\S+) ERROR .*Start-up problem", RegexOptions.Multiline);
-        var reported = problem.Success ? $"reported {(LinuxAppRun.TimeOf(problem) - app.Launched).TotalMilliseconds:0.0} ms after launch" : "no log line";
+        var reported = problem.Success ? $"reported {(ProbeApp.TimeOf(problem) - app.Launched).TotalMilliseconds:0.0} ms after launch" : "no log line";
         var message = shown is { } window ? $", message shown at {window.TotalMilliseconds:0.0} ms" : "";
         RecordLine(string.Create(CultureInfo.InvariantCulture, $"{label}: exit {app.ExitCode}, {reported}{message}"));
     }
@@ -278,7 +288,7 @@ public sealed class LinuxStartupTests
 
     private static void RecordLine(string line)
     {
-        var results = Path.Combine(TestFolders.Artifacts(), "test-results", "Spar.Tests");
+        var results = Results.Folder(".");
         Directory.CreateDirectory(results);
         File.AppendAllLines(Path.Combine(results, "linux-startup.txt"), [string.Create(CultureInfo.InvariantCulture, $"{DateTimeOffset.Now:HH:mm:ss} {line}")]);
     }

@@ -129,6 +129,23 @@ test("typing while a save is on its way leaves the newer draft unsaved", async (
   expect(saveState()).toEqual({ kind: "unsaved" });
 });
 
+test("a save that starts before React applied the last keystroke keeps that keystroke", async () => {
+  // The autosave's timer can fire between a key's edit and the render that applies it (seen in the CI container: the
+  // window journeys' last characters were lost). The save must not put the older draft it read back over the newer one.
+  spar.on(pages.save).answer(async (request, reply) => reply.succeed({ ...welcome, markdown: request.markdown, revision: 4n }));
+  await start();
+  await openWelcome();
+
+  act(() => {
+    notebook.edit("# Hello");
+    notebook.save();
+  });
+
+  await vi.waitFor(() => expect(notebook.current).toMatchObject({ kind: "open", draft: "# Hello" }));
+  await vi.waitFor(() => expect(saveState()).toEqual({ kind: "saved" }));
+  expect(spar.calls(pages.save).at(-1)).toEqual({ id: "welcome", markdown: "# Hello", baseRevision: expect.any(BigInt) });
+});
+
 test("a taken title is explained to the person creating the page", async () => {
   spar.on(pages.create).fail("titleTaken", { title: "Welcome" });
   await start();

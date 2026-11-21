@@ -4,18 +4,35 @@ namespace Spar.Testing;
 public sealed class SparBlackBoxOptions
 {
     /// <summary>The variables the fixture sets itself, which <see cref="Environment"/> may not name.</summary>
-    internal static readonly string[] FixtureVariables = ["LOCALAPPDATA", "APPDATA", "TEMP", "TMP"];
+    internal static readonly string[] FixtureVariables = OperatingSystem.IsLinux()
+        ? ["HOME", "XDG_DATA_HOME", "XDG_CONFIG_HOME", "XDG_CACHE_HOME", "XDG_STATE_HOME", "XDG_RUNTIME_DIR", "TMPDIR", "DISPLAY", "DBUS_SESSION_BUS_ADDRESS", "GTK_A11Y", "AT_SPI_BUS_ADDRESS", "NO_AT_BRIDGE"]
+        : ["LOCALAPPDATA", "APPDATA", "TEMP", "TMP"];
+
+    /// <summary>
+    /// What a Linux app never inherits from the test process: the session's desktop, bus and accessibility switches
+    /// (<c>GTK_A11Y=none</c> would hide it from AT-SPI), its launcher's tokens, and the variables the fixture sets.
+    /// </summary>
+    internal static readonly string[] LinuxRemoved =
+    [
+        "WAYLAND_DISPLAY", "DBUS_SESSION_BUS_ADDRESS", "GTK_A11Y", "AT_SPI_BUS_ADDRESS", "NO_AT_BRIDGE", "XDG_ACTIVATION_TOKEN",
+        "DESKTOP_STARTUP_ID", "XDG_CURRENT_DESKTOP", "XDG_SESSION_TYPE", "XDG_SESSION_DESKTOP",
+    ];
 
     /// <summary>The variable prefixes the app never gets: the browser's overrides and Spar's own switches.</summary>
-    internal static readonly string[] RemovedPrefixes = ["WEBVIEW2_", "SPAR_"];
+    internal static readonly string[] RemovedPrefixes = OperatingSystem.IsLinux() ? ["WEBKIT_", "JSC_", "SPAR_"] : ["WEBVIEW2_", "SPAR_"];
+
+    /// <summary>The removed prefixes a test may still set: on Linux the engine's, whose filtering by the host is what Spar's tests check.</summary>
+    private static readonly string[] Settable = OperatingSystem.IsLinux() ? ["WEBKIT_", "JSC_"] : [];
 
     /// <summary>The app's command-line arguments, each passed as one argument.</summary>
     public IList<string> Arguments { get; } = [];
 
     /// <summary>
-    /// Variables added to the app's environment, which is otherwise the test process's own, with <c>LOCALAPPDATA</c>,
-    /// <c>APPDATA</c>, <c>TEMP</c> and <c>TMP</c> inside the data root and every <c>WEBVIEW2_*</c> and <c>SPAR_*</c>
-    /// variable removed. None of those may be set here.
+    /// Variables added to the app's environment, which is otherwise the test process's own, with its per-user folders
+    /// inside the data root (Windows: <c>LOCALAPPDATA</c>, <c>APPDATA</c>, <c>TEMP</c> and <c>TMP</c>; Linux: <c>HOME</c>, every
+    /// <c>XDG_*</c> folder and <c>TMPDIR</c>, with <c>DISPLAY</c> and <c>DBUS_SESSION_BUS_ADDRESS</c> the fixture's) and every
+    /// <c>SPAR_*</c> variable and the browser's overrides removed (Windows: <c>WEBVIEW2_*</c>; Linux: inherited <c>WEBKIT_*</c>
+    /// and <c>JSC_*</c>, which may be set here to check that the app ignores them). The fixture's own may not be set here.
     /// </summary>
     public IDictionary<string, string> Environment { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
@@ -64,6 +81,30 @@ public sealed class SparBlackBoxOptions
     /// </summary>
     internal string? LocalAppData { get; set; }
 
+    /// <summary>
+    /// Linux, for Spar's own start-up tests: the app's <c>DISPLAY</c> in place of the private Xvfb (<c>""</c> removes it,
+    /// a number nobody serves fails GTK's start). Internal: an app's test always shows on the private display.
+    /// </summary>
+    internal string? Display { get; set; }
+
+    /// <summary>
+    /// Linux, for Spar's own theme test: a session bus the test started (with its own Settings portal) in place of the
+    /// launch's private one. Its accessibility bus is the one read.
+    /// </summary>
+    internal string? SessionBus { get; set; }
+
+    /// <summary>
+    /// Linux, for Spar's own start-up tests: a command the executable is appended to (<c>bwrap</c> with a mount that hides
+    /// a library or a helper); the app is the wrapper's descendant that runs the executable.
+    /// </summary>
+    internal IReadOnlyList<string>? Wrapper { get; set; }
+
+    /// <summary>
+    /// <c>SPAR_*</c> variables for a Development build Spar's own tests launch (its automated mode, triggers and scripted
+    /// answers): a Production app takes no Spar switch, so these are for a build Spar's runner names (<see cref="SparProject.Built"/>).
+    /// </summary>
+    internal IDictionary<string, string> DevelopmentVariables { get; } = new Dictionary<string, string>(StringComparer.Ordinal);
+
     /// <summary>Refuses options the fixture cannot honour, before anything starts.</summary>
     internal void Validate()
     {
@@ -91,7 +132,8 @@ public sealed class SparBlackBoxOptions
                     nameof(Environment));
             }
 
-            if (RemovedPrefixes.Any(prefix => name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+            if (RemovedPrefixes.Any(prefix => name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                && !Settable.Any(prefix => name.StartsWith(prefix, StringComparison.Ordinal)))
             {
                 throw new ArgumentException(
                     $"{name} is never passed: a Production app takes no Spar switch, and WEBVIEW2_* variables would change its browser.",

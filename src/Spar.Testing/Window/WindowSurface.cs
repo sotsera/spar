@@ -28,6 +28,7 @@ internal sealed class WindowSurface : IAsyncDisposable
             HomesFolder = TestDataRoots.LinuxHomes,
             Automation = _session.Automation,
             OnPhase = options.WindowPhase,
+            Holder = SparTestCleanup.CurrentTest() ?? (object)this,
             Dark = options.ColorScheme switch
             {
                 SparColorScheme.Dark => true,

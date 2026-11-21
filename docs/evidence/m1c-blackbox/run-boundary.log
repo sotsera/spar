@@ -1,0 +1,14 @@
+STEP boundary on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.BuildTests/bin/Debug/net11.0/Spar.BuildTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.BuildTests/bin/Debug/net11.0/Spar.BuildTests.dll (net11.0|x64) passed [+1/x0/?0] (31s 135ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.BuildTests/<user>_<machine>_2026-11-20_23_29_13.486471.trx
+
+Test run summary: Passed!
+  total: 1
+  failed: 0
+  succeeded: 1
+  skipped: 0
+  duration: 31s 932ms
+STEP exit 0 in 32539 ms: dotnet test --project tests/Spar.BuildTests -- --filter-method *The_production_executable_carries_its_page_and_no_test_or_loopback_code --output Detailed

@@ -11,7 +11,7 @@ namespace Spar.Tests;
 /// The Linux host's pure parts, which run on every OS: the app's origin on <c>spar://app</c>, the headers every scheme
 /// response carries, the script literals that carry the host's messages to the relay, and the security defaults'
 /// decisions (the environment filter, the context menu). The host itself, in a real
-/// window, is <see cref="LinuxHostTests"/>.
+/// window, is in <c>tests/Spar.WindowTests/Linux/</c>; the test windows' colour-scheme gate is pure too.
 /// </summary>
 [SupportedOSPlatform("linux")]
 public sealed class LinuxHostUnitTests
@@ -321,4 +321,36 @@ public sealed class LinuxHostUnitTests
     [InlineData(0x52u, 0b101u, false)] // Ctrl+Shift+R
     public void Only_GTKs_inspector_keys_are_stopped(uint keyval, uint state, bool stopped) =>
         Assert.Equal(stopped, BrowserDefaults.IsGtkInspectorKey(keyval, state));
+
+    /// <summary>
+    /// The CI container's deadlock: a test holds a light window and opens a second light one while a dark window waits.
+    /// The second enters at once (its holder has a window of the shown scheme open); a light window of another holder
+    /// still waits behind the dark one, which comes once every light window closed.
+    /// </summary>
+    [Fact]
+    public void A_holder_with_a_window_of_the_shown_scheme_opens_another_ahead_of_the_queue()
+    {
+        var applied = new List<bool>();
+        var gate = new Spar.Linux.Testing.SchemeGate(applied.Add);
+        object test = "test A", other = "test B", darkTest = "test C";
+
+        Assert.True(gate.EnterAsync(dark: false, test).IsCompleted);
+        var dark = gate.EnterAsync(dark: true, darkTest);
+        var second = gate.EnterAsync(dark: false, test);
+        var otherLight = gate.EnterAsync(dark: false, other);
+
+        Assert.False(dark.IsCompleted);
+        Assert.True(second.IsCompleted, "The test's second light window waited for the dark one, which waits for the test's first.");
+        Assert.False(otherLight.IsCompleted);
+        Assert.Equal(2, gate.Open);
+
+        gate.Leave(test);
+        Assert.False(dark.IsCompleted);
+        gate.Leave(test);
+        Assert.True(dark.IsCompleted);
+        Assert.False(otherLight.IsCompleted);
+        gate.Leave(darkTest);
+        Assert.True(otherLight.IsCompleted);
+        Assert.Equal([false, true, false], applied);
+    }
 }

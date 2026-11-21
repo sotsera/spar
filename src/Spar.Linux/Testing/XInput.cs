@@ -43,6 +43,19 @@ internal sealed class XInput
     private readonly Dictionary<uint, byte> _bound = [];
     private readonly HashSet<uint> _held = [];
     private readonly Dictionary<string, byte> _pressed = new(StringComparer.Ordinal);
+
+    /// <summary>
+    /// The display's input, held by one window from its first key or button down to its last key or button up; other
+    /// windows' keys, pointer events and focus changes wait meanwhile. One display has one keyboard state and one pointer:
+    /// another window's Control+End pressed meanwhile made this window's Control a press of a key already down, which
+    /// reached no page, and its release ended this window's Control before its End (measured in the CI container: End
+    /// alone moved the caret; pitfalls). A press and its release are held the same way, and a click between a stroke's
+    /// keys would have taken its modifiers.
+    /// </summary>
+    private readonly SemaphoreSlim _input = new(1, 1);
+    private readonly Lock _inputGate = new();
+    private nuint _inputOwner;
+    private int _inputDown;
     private int _nextSpare;
     private (int X, int Y) _pointer = (-1, -1);
     private nuint _pointerWindow;
@@ -110,8 +123,50 @@ internal sealed class XInput
         return rune.Value < 0x100 ? (uint)rune.Value : 0x01000000u + (uint)rune.Value;
     }
 
+    /// <summary>Gives <paramref name="window"/> the keyboard focus, under the input lock and a server grab, and waits for the server.</summary>
+    public async Task FocusAsync(nuint window)
+    {
+        await HoldInputAsync(window);
+        await _lock.WaitAsync();
+        try
+        {
+            XGrabServer(_display);
+            try
+            {
+                XSetInputFocus(_display, window, 2, 0);
+                XSync(_display, 0);
+            }
+            finally
+            {
+                XUngrabServer(_display);
+            }
+
+            XSync(_display, 0);
+        }
+        finally
+        {
+            _lock.Release();
+            InputDone(window, 0);
+        }
+    }
+
     /// <summary>One key event into <paramref name="window"/>, which gets the input focus first.</summary>
     public async Task KeyAsync(nuint window, SparTestKey key)
+    {
+        await HoldInputAsync(window);
+        var change = 0;
+        try
+        {
+            await SendKeyAsync(window, key);
+            change = key.Down ? 1 : -1;
+        }
+        finally
+        {
+            InputDone(window, change);
+        }
+    }
+
+    private async Task SendKeyAsync(nuint window, SparTestKey key)
     {
         // A key on a spare keycode is pressed and released before another test may bind one: GTK translates a key by the
         // keymap of the moment it reads it, so a binding made between another key's press and its delivery typed the
@@ -137,8 +192,21 @@ internal sealed class XInput
                 keycode = await KeycodeForAsync(key);
             }
 
-            XSetInputFocus(_display, window, 2, 0);
-            XTestFakeKeyEvent(_display, keycode, key.Down ? 1 : 0, 0);
+            // The focus and the key under one server grab, so no other client's focus change (GTK sets the focus itself
+            // when it presents a window and no window manager runs) comes between them. A guard: the measured cause of
+            // lost keys was the shared keyboard state (_keyboard above), and the grab alone did not stop them.
+            XGrabServer(_display);
+            try
+            {
+                XSetInputFocus(_display, window, 2, 0);
+                XTestFakeKeyEvent(_display, keycode, key.Down ? 1 : 0, 0);
+                XSync(_display, 0);
+            }
+            finally
+            {
+                XUngrabServer(_display);
+            }
+
             if (key.Down)
             {
                 _pressed[key.Key] = keycode;
@@ -179,6 +247,51 @@ internal sealed class XInput
         }
     }
 
+    /// <summary>
+    /// Waits until <paramref name="window"/> may send input: at once when it holds the input, else until no window does.
+    /// A hold left by a failed test (keys or the button left down) passes on after 5 s, its count started again.
+    /// </summary>
+    private async Task HoldInputAsync(nuint window)
+    {
+        lock (_inputGate)
+        {
+            if (_inputOwner == window)
+            {
+                return;
+            }
+        }
+
+        await _input.WaitAsync(TimeSpan.FromSeconds(5));
+        lock (_inputGate)
+        {
+            _inputOwner = window;
+            _inputDown = 0;
+        }
+    }
+
+    /// <summary>
+    /// <paramref name="window"/>'s event was sent, with <paramref name="change"/> keys or buttons down (+1), up (-1) or
+    /// neither (0): the input is free again once none is down.
+    /// </summary>
+    private void InputDone(nuint window, int change)
+    {
+        lock (_inputGate)
+        {
+            if (_inputOwner != window)
+            {
+                // The hold passed on meanwhile.
+                return;
+            }
+
+            _inputDown = Math.Max(0, _inputDown + change);
+            if (_inputDown == 0)
+            {
+                _inputOwner = 0;
+                _input.Release();
+            }
+        }
+    }
+
     private bool NeedsSpare(SparTestKey key) =>
         (key.Code.Length == 0 && !NamedKeysyms.ContainsKey(key.Key))
         || ((key.Modifiers & 8) != 0 && !_held.Contains(ShiftKeysym) && key.Key != "Shift" && key.Text is { Length: > 0 });
@@ -207,6 +320,27 @@ internal sealed class XInput
     /// raised first. False when it was a move to where the pointer already is, which sends the page nothing.
     /// </summary>
     public async Task<bool> PointerAsync(nuint window, int x, int y, SparTestPointer pointer)
+    {
+        await HoldInputAsync(window);
+        var change = 0;
+        try
+        {
+            var sent = await SendPointerAsync(window, x, y, pointer);
+            change = pointer.Kind switch
+            {
+                SparTestPointerKind.Press => 1,
+                SparTestPointerKind.Release => -1,
+                _ => 0,
+            };
+            return sent;
+        }
+        finally
+        {
+            InputDone(window, change);
+        }
+    }
+
+    private async Task<bool> SendPointerAsync(nuint window, int x, int y, SparTestPointer pointer)
     {
         await _lock.WaitAsync();
         try

@@ -1,0 +1,88 @@
+STEP windowaot on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Testing -> /home/spar/repo/src/Spar.Testing/bin/Release/net11.0/Spar.Testing.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  WindowHost -> /home/spar/repo/tests/apps/WindowHost/bin/aot/Test/Release/net11.0/linux-x64/WindowHost.dll
+  Spar.WindowTests -> /home/spar/repo/tests/Spar.WindowTests/bin/aot/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll
+  Spar.WindowTests -> /home/spar/repo/artifacts/aot/Spar.WindowTests/
+STEP exit 0 in 1234 ms: dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/linux-x64] (.NET 11.0.0)
+[37m  Discovering: Spar.WindowTests
+[0m[37m  Discovered:  Spar.WindowTests
+[0m[37m  Starting:    Spar.WindowTests
+[0m[93m    Spar.WindowTests.InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path [SKIP]
+[0m[37m      Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+[0m[93m    Spar.WindowTests.PageApiTests.Page_errors_reach_the_apps_log_through_the_host [SKIP]
+[0m[37m      The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+[0m[93m    Spar.WindowTests.SessionEndHostTests.A_renderer_lost_during_the_session_end_is_neither_reloaded_nor_waited_for [SKIP]
+[0m[37m      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+[0m[93m    Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_returns_as_soon_as_the_window_and_the_services_are_done [SKIP]
+[0m[37m      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+[0m[93m    Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_closes_the_window_with_its_reason_and_settles_its_calls [SKIP]
+[0m[37m      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+[0m[93m    Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_holds_the_message_under_four_seconds_however_slow_the_guards_and_the_cleanup [SKIP]
+[0m[37m      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+[0m[93m    Spar.WindowTests.PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address [SKIP]
+[0m[37m      Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+[0mlibEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(process:2): GLib-GIO-WARNING **: 21:19:31.514: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-8f6878c1-8896-4274-9da9-2264fb9904f5: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:33.181: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-c181749f-515a-49db-be50-eecd8d8d5351: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:33.878: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-73a6e8c1-ca11-423a-9c29-a071f4807b08: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:39.147: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-e52ba564-ac96-41c4-996a-3f032a841ed9: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:39.169: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-8f375d28-e412-4d06-b0de-e048e73fc10a: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:44.430: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-c6e8757a-cd06-438e-a2c6-d4b463a9dd78: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:55.142: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-1f483582-2826-4f66-b75b-143547e2ca80: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:55.418: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-e68df448-592b-4027-8036-21556a347efe: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:19:57.662: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-01f6ab44-2d28-4cca-a68f-1c913f5ee5ce: The connection is closed
+[93m    Spar.WindowTests.ThemeTests.Each_window_keeps_its_own_scheme_beside_another [SKIP]
+[0m[37m      Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+[0m[93m    Spar.WindowTests.BudgetTests.The_Production_app_starts_to_ui_ready_and_holds_its_working_set [SKIP]
+[0m[37m      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+[0m[37m  Finished:    Spar.WindowTests (ID = '0aa0b091f3a4210eb3c02e917ecd88d440900333514a47b0576e76af46371ff6')
+[0m[37m=== TEST EXECUTION SUMMARY ===
+[0m[37m   Spar.WindowTests  Total: 66, Errors: 0, Failed: 0, Skipped: 9, Not Run: 0, Time: 53.950s
+[0m[0mSTEP exit 0 in 53978 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh artifacts/aot/Spar.WindowTests/Spar.WindowTests -result-trx artifacts/test-results/Spar.WindowTests/aot-2026-11-20_21_19_30.trx -trait Surface=Window
+  Determining projects to restore...
+  Restored /home/spar/repo/samples/Notebook/Notebook.csproj (in 263 ms).
+  Restored /home/spar/repo/samples/Notebook.EndToEndTests/Notebook.EndToEndTests.csproj (in 264 ms).
+  6 of 8 projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Testing -> /home/spar/repo/src/Spar.Testing/bin/Release/net11.0/Spar.Testing.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar: the page is packed with Brotli (Brotli saves 532,855 B, more than its decoder costs).
+  Spar: the executable carries the third-party notices of 109 packages from Vite's licence file (3058 B); spar doctor lists them.
+  Notebook -> /home/spar/repo/samples/Notebook/bin/aot/Test/Release/net11.0/linux-x64/Notebook.dll
+  Notebook.EndToEndTests -> /home/spar/repo/samples/Notebook.EndToEndTests/bin/aot/Production/Release/net11.0/linux-x64/Notebook.EndToEndTests.dll
+  Generating native code
+  Notebook.EndToEndTests -> /home/spar/repo/artifacts/aot/Notebook.EndToEndTests/
+STEP exit 0 in 19962 ms: dotnet publish samples/Notebook.EndToEndTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Notebook.EndToEndTests
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/linux-x64] (.NET 11.0.0)
+[37m  Discovering: Notebook.EndToEndTests
+[0m[37m  Discovered:  Notebook.EndToEndTests
+[0m[37m  Starting:    Notebook.EndToEndTests
+[0mlibEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 21:20:48.473: Error releasing name org.webkit.app-bf3606de802f2f8282e0b192d903a6ba25c2cfd23ccf940d89df2a78e900ecc3.Sandboxed.WebProcess-e554083c-e558-4c5b-b731-99c46779080b: The connection is closed
+[37m  Finished:    Notebook.EndToEndTests (ID = '1da9491a303be11bef74abd0f26137bbc98553348c736478ac2003998ce08cd4')
+[0m[37m=== TEST EXECUTION SUMMARY ===
+[0m[37m   Notebook.EndToEndTests  Total: 10, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 5.450s
+[0m[0mSTEP exit 0 in 5470 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh artifacts/aot/Notebook.EndToEndTests/Notebook.EndToEndTests -result-trx artifacts/test-results/Notebook.EndToEndTests/aot-2026-11-20_21_20_44.trx -trait Surface=Window

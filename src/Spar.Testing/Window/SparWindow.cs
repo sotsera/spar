@@ -150,6 +150,9 @@ public sealed class SparWindow
     /// <summary>Sends a window message to the app's window on its UI thread, for Spar's own host tests.</summary>
     internal Task<nint> SendMessageAsync(uint message, nint wParam, nint lParam) => _window.SendMessageAsync(message, wParam, lParam);
 
+    /// <summary>The end of the OS session as the host receives it (Windows' <c>WM_ENDSESSION</c>, Linux's <c>SIGTERM</c> path), for Spar's own host tests.</summary>
+    internal Task<bool> EndSessionAsync() => _window.EndSessionAsync();
+
     /// <summary>The window's title bar scheme and its own colour, as Windows has them, for Spar's own host tests.</summary>
     internal Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => _window.NativeThemeAsync();
 

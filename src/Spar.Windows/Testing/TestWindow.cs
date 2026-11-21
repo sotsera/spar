@@ -154,6 +154,17 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return Task.FromResult((nint)result.Value);
     });
 
+    /// <summary><c>WM_QUERYENDSESSION</c> then <c>WM_ENDSESSION</c> with <c>TRUE</c>, both for a log-off, as Windows ends a session.</summary>
+    public async Task<bool> EndSessionAsync()
+    {
+        const uint QueryEndSession = 0x0011;
+        const uint EndSession = 0x0016;
+        var logoff = unchecked((nint)0x80000000);
+        var allowed = await SendMessageAsync(QueryEndSession, 0, logoff);
+        await SendMessageAsync(EndSession, 1, logoff);
+        return allowed != 0;
+    }
+
     void IAppWindowOwner.TeardownStarted() => _ = NoteRenderersAsync();
 
     /// <summary>The window is gone: the rest of its stop and the leftover-process check run off the UI thread.</summary>

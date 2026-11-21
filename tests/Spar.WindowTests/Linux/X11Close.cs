@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace Spar.Tests;
+namespace Spar.WindowTests;
 
 /// <summary>
 /// What a window manager does when its close button is pressed, without one: a <c>WM_DELETE_WINDOW</c> client message

@@ -198,8 +198,8 @@
     so it never shares obj/ with a Release build of the same app in the same build. Design-time builds publish nothing.
   -->
   <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparBlackBoxTests)' == 'true'">
-    <!-- On by default where the fixture runs: Windows, until the Linux host and its accessibility client (M1c). -->
-    <SparBlackBoxPublish Condition="'$(SparBlackBoxPublish)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">true</SparBlackBoxPublish>
+    <!-- On by default where the fixture runs: Windows (UI Automation) and Linux (AT-SPI). -->
+    <SparBlackBoxPublish Condition="'$(SparBlackBoxPublish)' == '' and ($([MSBuild]::IsOSPlatform('Windows')) or $([MSBuild]::IsOSPlatform('Linux')))">true</SparBlackBoxPublish>
     <_SparBlackBoxDirectory>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-apps\</_SparBlackBoxDirectory>
     <_SparBlackBoxProperties>Configuration=Release;SparVariant=Production;SparBlackBoxBuild=true</_SparBlackBoxProperties>
     <!--

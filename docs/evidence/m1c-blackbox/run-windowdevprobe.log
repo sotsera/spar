@@ -1,0 +1,28 @@
+STEP windowdevprobe on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxStartupTests.The_Notebooks_window_has_the_saved_schemes_colour_from_its_first_frame
+  Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+dbus-daemon[95484]: [session uid=1000 pid=95484] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=95493 comm="/var/tmp/spar-m1c-blackbox/repo/tests/apps/BridgeP" label="kernel")
+dbus-daemon[95484]: [session uid=1000 pid=95484] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[95585]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=95493 comm="/var/tmp/spar-m1c-blackbox/repo/tests/apps/BridgeP" label="kernel")
+dbus-daemon[95585]: Successfully activated service 'org.a11y.atspi.Registry'
+skipped Spar.WindowTests.LinuxPageSecurityTests.The_flood_numbers_are_recorded
+  Needs SPAR_LINUX_FLOOD, the flood sizes to measure.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxHostTests.The_Notebook_starts_and_closes_and_its_numbers_are_recorded
+  Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+64/x0/?3] (5m 26s 864ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-20_23_12_03.032267.trx
+
+Test run summary: Passed!
+  total: 67
+  failed: 0
+  succeeded: 64
+  skipped: 3
+  duration: 5m 32s 397ms
+STEP exit 0 in 332741 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- --filter-trait App=BridgeProbe
+processes left by the tests: 0

@@ -1,0 +1,264 @@
+STEP check on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+STEP exit 0 in 2 ms: bwrap --unshare-all --die-with-parent --ro-bind / / true
+STEP exit 0 in 6 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh sh -c test -p "$SPAR_TEST_NETWORK_SWITCH" && ip route show default | grep -q "dev lo"
+STEP window on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+Running tests from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_holds_the_message_under_four_seconds_however_slow_the_guards_and_the_cleanup
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path
+  Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_closes_the_window_with_its_reason_and_settles_its_calls
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.A_renderer_lost_during_the_session_end_is_neither_reloaded_nor_waited_for
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_returns_as_soon_as_the_window_and_the_services_are_done
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(process:2): GLib-GIO-WARNING **: 21:11:58.529: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-b059da31-89b5-421c-985b-04a4691e4cd3: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:11:59.092: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-a459cdfb-a3a2-4d46-b1d6-7eae1bc27716: The connection is closed
+skipped Spar.WindowTests.PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address
+  Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+
+(process:2): GLib-GIO-WARNING **: 21:12:00.948: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-ef6f41f5-d4ed-4ca1-9c47-45b358bee894: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:12:01.267: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-02756e4d-e8a0-42f6-83ef-202a0fe5b6b8: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:12:03.610: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-57025b2b-0a3e-45de-a108-142d5d71ce78: The connection is closed
+skipped Spar.WindowTests.PageApiTests.Page_errors_reach_the_apps_log_through_the_host
+  The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+
+(process:2): GLib-GIO-WARNING **: 21:12:04.093: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-905b4b32-c364-4f52-acb0-4b212bd4cdaf: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:12:08.012: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-c541aeee-51fa-48b3-a9c6-18991cb9352d: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:12:13.128: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-bff10c20-3db5-47a7-a4e2-1bbe1b757793: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:12:18.237: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-d6366cd9-3f7c-4aca-9191-b44471302ccf: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 21:12:37.599: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-dd5f1a6f-3fa1-4b19-a841-7feff87028fd: The connection is closed
+skipped Spar.WindowTests.ThemeTests.Each_window_keeps_its_own_scheme_beside_another
+  Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+
+(process:2): GLib-GIO-WARNING **: 21:12:44.698: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-5b161233-e353-4791-874d-d9b4f62ba28a: The connection is closed
+skipped Spar.WindowTests.BudgetTests.The_Production_app_starts_to_ui_ready_and_holds_its_working_set
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+57/x0/?9] (54s 327ms)
+
+  In process file artifacts produced:
+    - /home/spar/repo/artifacts/test-results/Spar.WindowTests/spar_9412bf4f6801_2026-11-20_21_11_56.965898.trx
+
+Test run summary: Passed!
+  total: 66
+  failed: 0
+  succeeded: 57
+  skipped: 9
+  duration: 54s 916ms
+STEP exit 0 in 55281 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait Surface=Window
+Running tests from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+failed Notebook.EndToEndTests.CloseJourneyTests.Closing_right_after_typing_saves_the_last_words_first (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.CloseJourneyTests.A_draft_that_cannot_be_saved_asks_before_the_window_closes (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.CloseJourneyTests.In_the_automated_mode_an_unsaved_draft_does_not_hold_the_window (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.WindowJourneyTests.A_new_notebook_invites_the_first_page_and_creates_it (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.WindowJourneyTests.Typing_saves_by_itself_and_the_preview_follows (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.WindowJourneyTests.A_taken_or_invalid_title_is_explained_in_the_form (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.WindowJourneyTests.A_page_changed_in_another_window_is_never_overwritten_silently (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.WindowJourneyTests.Deleting_a_page_asks_first_and_removes_its_file (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.WindowJourneyTests.The_search_box_narrows_the_list_and_slash_focuses_it (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+failed Notebook.EndToEndTests.WindowJourneyTests.The_shortcuts_open_a_new_page_and_switch_the_view (0ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: Assembly fixture type 'Notebook.EndToEndTests.SharedBrowser' threw in InitializeAsync
+  ---- Microsoft.Playwright.PlaywrightException : Executable doesn't exist at /home/spar/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+  ╔════════════════════════════════════════════════════════════╗
+  ║ Looks like Playwright was just installed or updated.       ║
+  ║ Please run the following command to download new browsers: ║
+  ║                                                            ║
+  ║     pwsh bin/Debug/netX/playwright.ps1 install             ║
+  ║                                                            ║
+  ║ <3 Playwright Team                                         ║
+  ╚════════════════════════════════════════════════════════════╝
+    
+    ----- Inner Stack Trace -----
+    at Microsoft.Playwright.Transport.Connection.InnerSendMessageToServerAsync[T](ChannelOwner object, String method, Dictionary`2 dictionary, Boolean keepNulls, Nullable`1 timeout) in /_/src/Playwright/Transport/Connection.cs:231
+    at Microsoft.Playwright.Transport.Connection.WrapApiCallAsync[T](Func`1 action, Boolean isInternal, String title) in /_/src/Playwright/Transport/Connection.cs:553
+    at Microsoft.Playwright.Core.BrowserType.LaunchAsync(BrowserTypeLaunchOptions options) in /_/src/Playwright/Core/BrowserType.cs:56
+    at Notebook.EndToEndTests.SharedBrowser.InitializeAsync() in /home/spar/repo/samples/Notebook.EndToEndTests/NotebookPage.cs:19
+/home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64) failed with 10 error(s) [+0/x10/?0] (428ms)
+Exit code: 2
+
+  In process file artifacts produced:
+    - /home/spar/repo/artifacts/test-results/Notebook.EndToEndTests/spar_9412bf4f6801_2026-11-20_21_12_52.282270.trx
+
+Test run summary: Failed!
+  total: 10
+  failed: 10
+  succeeded: 0
+  skipped: 0
+  duration: 538ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
+STEP exit 2 in 927 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait Surface=Window
+STEP window failed

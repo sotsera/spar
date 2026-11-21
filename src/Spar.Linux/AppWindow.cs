@@ -51,6 +51,7 @@ internal sealed partial class AppWindow
     private readonly IAppWindowOwner _owner;
     private readonly BrowserSource? _source;
     private readonly CancellationTokenSource _stopping = new();
+    private readonly WindowDialogs _dialogs = new();
     private CloseGuard? _guard;
     private MainLoop? _ui;
     private SchemeServer? _pages;
@@ -156,7 +157,7 @@ internal sealed partial class AppWindow
 
         // The heartbeat follows the view's documents from the first one on, before the services exist.
         _watch = LinuxPageHost.Watch(
-            ui, _log, () => _window, _title, _bridge, _view, _hangHook, _automated, HeartbeatInterval(), _promptAnswers);
+            ui, _log, () => _window, _dialogs, _title, _bridge, _view, _hangHook, _automated, HeartbeatInterval(), _promptAnswers);
         _watch.Start();
         if (SparDevelopment.IsSupported)
         {
@@ -283,7 +284,7 @@ internal sealed partial class AppWindow
         _view?.EndRecovery();
         if (!_automated)
         {
-            await AlertDialog.ChooseAsync(_window, $"{_title} has to close", message, "Close");
+            await AlertDialog.ChooseAsync(_window, _dialogs, $"{_title} has to close", message, "Close");
         }
 
         await TeardownAsync(exitCode);

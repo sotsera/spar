@@ -6,7 +6,7 @@ using static Microsoft.Playwright.Assertions;
 namespace Notebook.EndToEndTests;
 
 /// <summary>What a person does with the Notebook, in its real page against its real backend.</summary>
-public sealed class JourneyTests(SharedBrowser shared)
+public sealed class JourneyTests(SharedBrowser shared) : IClassFixture<SharedBrowser>
 {
     private static CancellationToken Token => TestContext.Current.CancellationToken;
 

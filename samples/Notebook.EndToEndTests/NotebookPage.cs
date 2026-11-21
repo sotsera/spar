@@ -1,11 +1,12 @@
 using Microsoft.Playwright;
 using Spar.Testing;
 
-[assembly: AssemblyFixture(typeof(Notebook.EndToEndTests.SharedBrowser))]
-
 namespace Notebook.EndToEndTests;
 
-/// <summary>One headless Chromium for the run; each test opens a context of its own.</summary>
+/// <summary>
+/// One headless Chromium for the browser journeys; each test opens a context of its own. A class fixture, so a run of
+/// only the window or black-box tests (as the Linux CI image's, which has no browser) starts no browser.
+/// </summary>
 public sealed class SharedBrowser : IAsyncLifetime
 {
     private IPlaywright? _playwright;

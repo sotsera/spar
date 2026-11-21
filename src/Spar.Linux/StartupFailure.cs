@@ -44,6 +44,34 @@ internal static class StartupFailure
     }
 
     /// <summary>
+    /// A configuration in <c>Program.cs</c> the app cannot start with, such as a browser profile folder that is relative
+    /// or cannot be created: the line on standard error and in the log, then, unless the run is automated, the same
+    /// message as a start-up problem's, before any window exists, as the Windows host shows it. The exit code is
+    /// <paramref name="exitCode"/>, the app's own start failure (70). The start-up hook is not called: it receives problems
+    /// of the machine.
+    /// </summary>
+    public static int ReportConfiguration(string message, int exitCode, StartupContext context)
+    {
+        context.Log.Error($"The app's configuration stops its start: {message}");
+        if (context.Automated)
+        {
+            context.Log.Info("The automated mode shows no start-up message.");
+            return exitCode;
+        }
+
+        if (Prerequisites.CheckDisplay(Environment.GetEnvironmentVariable) is not null)
+        {
+            return exitCode;
+        }
+
+        var heading = $"{context.Title} can't start";
+        var detail = $"{message}\n\nExit code {exitCode}." + (context.Log.FilePath is { } log ? $" Log: {log}" : "");
+        var shown = Prerequisites.CanShowGtkMessage() ? ShowWithGtk(context, heading, detail) : ShowWithProgram(heading, detail, context.Log);
+        context.Log.Info(shown ? "The start-up message was closed." : "No start-up message could be shown.");
+        return exitCode;
+    }
+
+    /// <summary>
     /// The message in a <c>GtkAlertDialog</c> of its own on a main loop of its own, which ends when the dialog is
     /// answered. Cairo draws it unless the user set <c>GSK_RENDERER</c>: GTK's GL renderer on a software GPU shows it
     /// 3–6 times later. False when GTK cannot open the display.
@@ -63,7 +91,7 @@ internal static class StartupFailure
                 }
 
                 shown = true;
-                _ = WaitAsync(ui, AlertDialog.ChooseAsync(0, heading, detail, "Close"));
+                _ = WaitAsync(ui, AlertDialog.ChooseAsync(0, null, heading, detail, "Close"));
                 return true;
             });
         return shown;

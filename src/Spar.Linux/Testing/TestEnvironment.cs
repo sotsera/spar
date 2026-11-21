@@ -15,8 +15,9 @@ namespace Spar.Linux.Testing;
 /// a desktop. <see cref="SessionDisplayVariable"/> set to <c>session</c> uses the session's own display instead (for
 /// watching a test locally; on a machine someone uses, that is their desktop).
 /// <para>
-/// The helpers are tethered to this process through their standard input: when it closes, at exit or when the process
-/// dies, each is ended, so none outlives its tests. A later run deletes the roots and runtime folders whose process is
+/// The helpers are tethered to this process through their standard input: when it closes, once the process has exited or
+/// died, each is ended, so none outlives its tests; nothing ends them earlier, while the test windows' loop may still hold
+/// its X connection. A later run deletes the roots and runtime folders whose process is
 /// gone.
 /// </para>
 /// </summary>
@@ -132,7 +133,7 @@ internal sealed class TestEnvironment
         return environment;
     }
 
-    /// <summary>At process exit: the helpers end, and this process's folders go.</summary>
+    /// <summary>When the session cannot be set up: the helpers end, and this process's folders go (never at process exit: see <see cref="TestWindowProcess"/>).</summary>
     public void Stop()
     {
         foreach (var helper in _helpers)

@@ -1,0 +1,33 @@
+STEP window on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written
+  Windows' refusal of a data root on a network drive (a UNC path or a mapped drive); Linux has no such path.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started
+  Windows' job object; on Linux the kernel ends the app with the test process (KillOnParentExit), measured by the AT-SPI spike.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxStartupTests.The_Notebooks_window_has_the_saved_schemes_colour_from_its_first_frame
+  Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+dbus-daemon[6654]: [session uid=1000 pid=6654] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=6663 comm="/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowT" label="kernel")
+dbus-daemon[6654]: [session uid=1000 pid=6654] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[6750]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=6663 comm="/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowT" label="kernel")
+dbus-daemon[6750]: Successfully activated service 'org.a11y.atspi.Registry'
+skipped Spar.WindowTests.LinuxStartupTests.A_WebKitGTK_older_than_required_is_exit_4_with_a_message
+  The raised minimum is a Development build's variable.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+42/x0/?4] (50s 142ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-20_23_31_46.471859.trx
+
+Test run summary: Passed!
+  total: 46
+  failed: 0
+  succeeded: 42
+  skipped: 4
+  duration: 51s 298ms
+STEP exit 0 in 51660 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- --filter-class Spar.WindowTests.BlackBoxFixtureTests --filter-class Spar.WindowTests.BudgetTests --filter-class Spar.WindowTests.SessionEndHostTests --filter-class Spar.WindowTests.LinuxStartupTests
+processes left by the tests: 0

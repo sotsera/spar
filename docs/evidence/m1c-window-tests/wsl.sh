@@ -104,6 +104,7 @@ step() {
       (cd "$repo" && timed dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests) || return 1
       aot_run Spar.WindowTests "${@:2}"
       census ;;
+    # Superseded by ../m1c-blackbox/wsl.sh (M1c step 7, part 2): these classes moved to tests/Spar.WindowTests/Linux/.
     linuxhost)
       # The Linux host tests left in Spar.Tests (an app process of their own each), on this script's Xvfb.
       xvfb_start 151 || return 1

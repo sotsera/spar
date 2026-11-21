@@ -8,18 +8,20 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace Spar.Tests;
+namespace Spar.WindowTests;
 
 /// <summary>
 /// Page security on the Linux host (plan M1c, build step 4), driven from outside like <see cref="LinuxHostTests"/>: the
 /// bridge probe's page tries to leave, reads its headers, raises violations and asks for permissions as the test's plan
-/// says, and the test reads the host's log. The one click is real input (XTEST) on the runner's own X server, on a link
+/// says, and the test reads the host's log. The one click is real input (XTEST) on the tests' private Xvfb, on a link
 /// whose address goes to a stub handler the test writes into the run's own XDG folders, after checking that GIO picks
 /// it; nothing reaches a real browser or the network beyond a loopback site of the test's own. Numbers go to
-/// <c>artifacts/test-results/Spar.Tests/linux-page-security.txt</c>.
+/// <c>artifacts/test-results/Spar.WindowTests/linux-page-security.txt</c>.
 /// </summary>
 [SupportedOSPlatform("linux")]
-[Collection(nameof(LinuxWindowsCollection))]
+[Collection(nameof(ProbeCollection))]
+[Trait("Surface", "BlackBox")]
+[Trait("App", "BridgeProbe")]
 public sealed class LinuxPageSecurityTests
 {
     private const string Note = @"^\S+ INFO  BridgeProbe\.ProbeService  probe note: ";
@@ -29,7 +31,7 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task Navigations_by_script_leave_the_page_on_its_document_and_each_is_logged()
     {
-        await using var app = LinuxAppRun.Start("nav-script");
+        await using var app = await ProbeApp.StartAsync("nav-script");
 
         var stayed = await app.WaitForAsync(Note + "nav: still on (?<at>\\S+), same document (?<same>\\w+)$");
 
@@ -63,7 +65,7 @@ public sealed class LinuxPageSecurityTests
     [InlineData("srcdoc")]
     public async Task A_frames_first_document_is_refused_in_the_window_and_the_page_stays(string which)
     {
-        await using var app = LinuxAppRun.Start($"nav-about:{which}");
+        await using var app = await ProbeApp.StartAsync($"nav-about:{which}");
 
         var stayed = await app.WaitForAsync(Note + "nav-about: still on (?<at>\\S+), same document (?<same>\\w+)$");
 
@@ -78,10 +80,10 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task A_declared_frame_address_loads_only_in_a_frame_and_a_redirect_away_from_it_is_blocked()
     {
-        LinuxAppRun.Display();
-        LinuxAppRun.Probe();
+        ProbeApp.Display();
+        ProbeApp.Probe();
         using var site = LoopbackSite.Start();
-        await using var app = LinuxAppRun.Start("frames,nav-declared", ("BRIDGE_PROBE_FRAME", site.Page));
+        await using var app = await ProbeApp.StartAsync("frames,nav-declared", ("BRIDGE_PROBE_FRAME", site.Page));
 
         var frames = await app.WaitForAsync(Note + "frames: blank (?<blank>\\S+), srcdoc (?<srcdoc>\\S+)$");
         Assert.Equal("about:blank", frames.Groups["blank"].Value);
@@ -110,7 +112,7 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task Every_response_carries_the_policy_and_the_headers_the_worker_and_404_included()
     {
-        await using var app = LinuxAppRun.Start("headers");
+        await using var app = await ProbeApp.StartAsync("headers");
 
         var line = await app.WaitForAsync(Note + "headers: (?<json>.+)$");
 
@@ -150,7 +152,7 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task A_worker_gets_the_policy_from_its_own_response()
     {
-        await using var app = LinuxAppRun.Start("worker");
+        await using var app = await ProbeApp.StartAsync("worker");
 
         var line = await app.WaitForAsync(Note + "worker: (?<json>.+)$");
 
@@ -169,7 +171,7 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task One_violation_reaches_the_host_by_both_channels_and_is_logged_once()
     {
-        await using var app = LinuxAppRun.Start("violation");
+        await using var app = await ProbeApp.StartAsync("violation");
         await app.WaitForAsync(Note + "violation: raised 1$");
 
         Assert.Equal(0, await app.CloseAsync());
@@ -202,23 +204,26 @@ public sealed class LinuxPageSecurityTests
     /// <summary>
     /// The flood numbers of <c>docs/evidence/m1c-page-security.md</c>, only where the runner asks for them
     /// (<c>SPAR_LINUX_FLOOD</c>, the counts separated by spaces): a long flood keeps a page busy, and a Production probe
-    /// then shows the hung-page dialog on the runner's own display.
+    /// then shows the hung-page dialog on the private display. A measurement, not a check: explicit, so a run takes it
+    /// only when asked (<c>--explicit only</c>, with <c>SPAR_LINUX_FLOOD</c>), and CI, which runs every black-box test with
+    /// no skip, leaves it out by its trait <c>Kind=Measurement</c> (an explicit test still counts as skipped in a run's totals).
     /// </summary>
-    [Fact]
+    [Fact(Explicit = true)]
+    [Trait("Kind", "Measurement")]
     public async Task The_flood_numbers_are_recorded()
     {
         var counts = Environment.GetEnvironmentVariable("SPAR_LINUX_FLOOD");
         Assert.SkipWhen(string.IsNullOrEmpty(counts), "Needs SPAR_LINUX_FLOOD, the flood sizes to measure.");
         foreach (var count in counts!.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(text => int.Parse(text, CultureInfo.InvariantCulture)))
         {
-            var (raised, totals, log) = await FloodAsync(count, LinuxAppRun.IsDevelopmentProbe() ? [("SPAR_AUTOMATED", "1")] : []);
+            var (raised, totals, log) = await FloodAsync(count, ProbeApp.IsDevelopmentProbe() ? [("SPAR_AUTOMATED", "1")] : []);
             var lines = Regex.Matches(log, @"WARN  Spar\.Host  Content Security Policy: ").Count;
             var summaries = Regex.Matches(log, "violations in the last").Count;
             var alarms = Regex.Matches(log, "The page is not responding").Count;
             var line = string.Create(
                 CultureInfo.InvariantCulture,
                 $"{Build()}: {count} distinct raised in {raised:0} ms; {lines} warning lines, {summaries} summaries, {totals.Batches} listener batches, {totals.Read} report-uri read, {totals.Refused} refused, {totals.Dropped} dropped, {alarms} hang alarms");
-            File.AppendAllLines(Path.Combine(Results(), "linux-csp-flood.txt"), [line]);
+            File.AppendAllLines(Path.Combine(ResultsFolder(), "linux-csp-flood.txt"), [line]);
             Record(line);
         }
     }
@@ -226,7 +231,7 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task Only_a_declared_permission_is_granted_and_every_other_request_is_denied_without_a_prompt()
     {
-        await using var app = LinuxAppRun.Start("permissions");
+        await using var app = await ProbeApp.StartAsync("permissions");
 
         var line = await app.WaitForAsync(Note + "permissions: (?<json>.+)$");
 
@@ -260,10 +265,10 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task Requests_a_click_makes_the_page_ask_for_are_denied_when_not_declared()
     {
-        await using var app = LinuxAppRun.Start("permissions-click");
+        await using var app = await ProbeApp.StartAsync("permissions-click");
         await app.WaitForAsync(Note + "permissions-click: ready$");
 
-        XTest.ClickMiddle(LinuxAppRun.Display(), X11Frames.MainWindow(LinuxAppRun.Display(), app.Id));
+        XTest.ClickMiddle(ProbeApp.Display(), X11Frames.MainWindow(ProbeApp.Display(), app.Id));
 
         var line = await app.WaitForAsync(Note + "permissions-click: (?<json>\\{.+)$");
         using var seen = JsonDocument.Parse(line.Groups["json"].Value);
@@ -282,18 +287,18 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task A_users_click_on_an_external_link_opens_it_with_the_desktops_handler_and_a_scripts_does_not()
     {
-        LinuxAppRun.Display();
-        var probe = LinuxAppRun.Probe();
-        var run = NewRunFolder();
+        ProbeApp.Display();
+        var probe = ProbeApp.Probe();
+        var run = ProbeApp.NewRunFolder();
         var opened = StubBrowser.Install(run);
-        await using var app = LinuxAppRun.Launch(probe, LinuxAppRun.ProbeAppId, [("BRIDGE_PROBE_PLAN", "external-link")], runFolder: run);
+        await using var app = await ProbeApp.LaunchAsync(probe, ProbeApp.ProbeAppId, [("BRIDGE_PROBE_PLAN", "external-link")], runFolder: run);
         await app.WaitForAsync(Note + "external: ready$");
 
-        XTest.ClickMiddle(LinuxAppRun.Display(), X11Frames.MainWindow(LinuxAppRun.Display(), app.Id));
+        XTest.ClickMiddle(ProbeApp.Display(), X11Frames.MainWindow(ProbeApp.Display(), app.Id));
 
         await app.WaitForAsync("Opening https://example.invalid/from-click with the desktop's handler");
         var limit = Stopwatch.StartNew();
-        while (!File.Exists(opened) && limit.Elapsed < LinuxAppRun.Patience)
+        while (!File.Exists(opened) && limit.Elapsed < ProbeApp.Patience)
         {
             await Task.Delay(50, TestContext.Current.CancellationToken);
         }
@@ -311,7 +316,7 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task The_network_session_keeps_its_data_and_cache_in_the_folders_Spar_passed()
     {
-        await using var app = LinuxAppRun.Start("");
+        await using var app = await ProbeApp.StartAsync("");
         await app.WaitForAsync(Note + "plan done$");
         var root = app.AppFolder()!;
         var folders = await app.WaitForAsync(@"Browser data folder (?<data>\S+), cache (?<cache>\S+)$");
@@ -337,9 +342,9 @@ public sealed class LinuxPageSecurityTests
     [Fact]
     public async Task A_profile_folder_the_app_chose_is_the_one_the_session_uses_and_a_relative_one_stops_the_start()
     {
-        var run = NewRunFolder();
+        var run = ProbeApp.NewRunFolder();
         var chosen = Path.Combine(run, "chosen-profile");
-        await using (var app = LinuxAppRun.Launch(LinuxAppRun.Probe(), LinuxAppRun.ProbeAppId, [("BRIDGE_PROBE_PLAN", ""), ("BRIDGE_PROBE_PROFILE", chosen)], runFolder: run))
+        await using (var app = await ProbeApp.LaunchAsync(ProbeApp.Probe(), ProbeApp.ProbeAppId, [("BRIDGE_PROBE_PLAN", ""), ("BRIDGE_PROBE_PROFILE", chosen)], runFolder: run))
         {
             await app.WaitForAsync($"Browser data folder {Regex.Escape(chosen)}, cache ");
             await app.WaitForAsync(Note + "plan done$");
@@ -348,8 +353,12 @@ public sealed class LinuxPageSecurityTests
             Assert.False(Directory.Exists(Path.Combine(app.AppFolder()!, "WebKit")), "The default folder was used too.");
         }
 
-        await using var relative = LinuxAppRun.Start("", ("BRIDGE_PROBE_PROFILE", "relative/profile"));
+        // The app's start-up message, as on Windows: a Production build waits for it (answered through AT-SPI), a
+        // Development build in the automated mode shows none.
+        await using var relative = await ProbeApp.StartAsync("", ("BRIDGE_PROBE_PROFILE", "relative/profile"), ("SPAR_AUTOMATED", "1"));
+        await relative.AnswerAsync("Close", TimeSpan.FromSeconds(15));
         Assert.Equal(70, await relative.WaitForExitAsync());
+        Assert.Contains("The app's configuration stops its start", relative.Log(), StringComparison.Ordinal);
         Assert.Contains("is not an absolute path on a local drive", relative.Log(), StringComparison.Ordinal);
     }
 
@@ -364,11 +373,11 @@ public sealed class LinuxPageSecurityTests
     [InlineData(true)]
     public async Task WebAssembly_follows_the_declaration_in_the_page_and_its_workers_and_after_a_lost_web_process(bool allowed)
     {
-        var probe = allowed ? LinuxAppRun.WebAssemblyProbe() : LinuxAppRun.Probe();
+        var probe = allowed ? ProbeApp.WebAssemblyProbe() : ProbeApp.Probe();
         var inherited = allowed ? "false" : "true";
-        await using var app = LinuxAppRun.Launch(
+        await using var app = await ProbeApp.LaunchAsync(
             probe,
-            LinuxAppRun.ProbeAppId,
+            ProbeApp.ProbeAppId,
             [("BRIDGE_PROBE_PLAN", "wasm,again-wasm"), ("JSC_useWasm", inherited), ("JSC_useWebAssembly", inherited)]);
 
         var first = await app.WaitForAsync(Note + "wasm: (?<json>.+)$");
@@ -388,7 +397,7 @@ public sealed class LinuxPageSecurityTests
             log);
         Assert.Equal(allowed, Regex.IsMatch(log, "Content-Security-Policy: .*script-src [^;]*'wasm-unsafe-eval'"));
         var webProcess = app.WebKitProcesses().First(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
-        var environment = LinuxAppRun.EnvironmentOf(webProcess.Id);
+        var environment = ProbeApp.EnvironmentOf(webProcess.Id);
         Assert.Equal(value, environment["JSC_useWasm"]);
         Assert.Equal(development, environment.ContainsKey("JSC_useWebAssembly"));
 
@@ -406,14 +415,16 @@ public sealed class LinuxPageSecurityTests
     [InlineData(true)]
     public async Task WebAssembly_follows_the_declaration_after_Reload_page_ends_the_web_process(bool allowed)
     {
-        var probe = allowed ? LinuxAppRun.WebAssemblyProbe() : LinuxAppRun.Probe();
-        Assert.SkipUnless(BuildOf(probe) == "development", "Only a Development build answers the hung-page dialog itself.");
-        await using var app = LinuxAppRun.Launch(
+        var probe = allowed ? ProbeApp.WebAssemblyProbe() : ProbeApp.Probe();
+        await using var app = await ProbeApp.LaunchAsync(
             probe,
-            LinuxAppRun.ProbeAppId,
+            ProbeApp.ProbeAppId,
             [("BRIDGE_PROBE_PLAN", "wasm,hang,again-wasm"), ("SPAR_DEV_HEARTBEAT_MS", "500"), ("SPAR_DEV_PROMPT_ANSWERS", "second@100")]);
 
         AssertWebAssembly(await app.WaitForAsync(Note + "wasm: (?<json>.+)$"), allowed);
+
+        // A Development build answers by its script; a Production one through AT-SPI, after the 5 s heartbeat's alarm.
+        await app.AnswerAsync("Reload page", TimeSpan.FromSeconds(40));
         await app.WaitForAsync("web process ended by the host", TimeSpan.FromSeconds(40));
         var again = await app.WaitForAsync(Note + @"wasm \(reloaded\): (?<json>.+)$");
 
@@ -425,7 +436,7 @@ public sealed class LinuxPageSecurityTests
     private static async Task<(double Raised, (int Batches, int Read, int Refused, int Dropped) Totals, string Log)> FloodAsync(
         int count, (string Name, string? Value)[] variables)
     {
-        await using var app = LinuxAppRun.Start($"distinct:{count}", variables);
+        await using var app = await ProbeApp.StartAsync($"distinct:{count}", variables);
         var raised = await app.WaitForAsync(Note + "distinct: raised \\d+ in (?<ms>[0-9.]+) ms$", TimeSpan.FromSeconds(180));
         Assert.Equal(0, await app.CloseAsync());
         var log = app.Log();
@@ -462,24 +473,16 @@ public sealed class LinuxPageSecurityTests
             StringComparison.Ordinal);
     }
 
-    private static string BuildOf(string probe) => probe.Contains("/Development/", StringComparison.Ordinal) ? "development" : "production";
+    private static string BuildOf(string probe) => ProbeApp.IsDevelopment(probe) ? "development" : "production";
 
     private static string Top(string path) => string.Join('/', path.Split('/').Take(2));
 
-    private static string NewRunFolder() =>
-        Path.Combine(TestFolders.Artifacts(), "linux-homes", "host-tests", Guid.NewGuid().ToString("N")[..12]);
+    private static string Build() => ProbeApp.IsDevelopmentProbe() ? "development" : "production";
 
-    private static string Build() => LinuxAppRun.IsDevelopmentProbe() ? "development" : "production";
-
-    private static string Results()
-    {
-        var results = Path.Combine(TestFolders.Artifacts(), "test-results", "Spar.Tests");
-        Directory.CreateDirectory(results);
-        return results;
-    }
+    private static string ResultsFolder() => Results.Folder(".");
 
     private static void Record(string line) =>
-        File.AppendAllLines(Path.Combine(Results(), "linux-page-security.txt"), [string.Create(CultureInfo.InvariantCulture, $"{DateTimeOffset.Now:HH:mm:ss} {line}")]);
+        File.AppendAllLines(Path.Combine(ResultsFolder(), "linux-page-security.txt"), [string.Create(CultureInfo.InvariantCulture, $"{DateTimeOffset.Now:HH:mm:ss} {line}")]);
 
     /// <summary>
     /// A handler for <c>http</c>, <c>https</c> and <c>mailto</c> in a run's own XDG folders: a script that appends the

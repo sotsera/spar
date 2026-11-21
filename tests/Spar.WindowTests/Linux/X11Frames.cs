@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace Spar.Tests;
+namespace Spar.WindowTests;
 
 /// <summary>
 /// The colour an app's window shows over time, read back from the test's own X server (Xvfb, no compositor, so a
@@ -236,7 +236,7 @@ internal static unsafe partial class X11Frames
 }
 
 /// <summary>
-/// Real input on the runner's own X server through XTEST: a click of any button in the middle of a window, and key
+/// Real input on the tests' private Xvfb through XTEST: a click of any button in the middle of a window, and key
 /// combinations by their keysym names (<c>Control_L+Shift_L+i</c>). Never on a display that is not the run's own.
 /// </summary>
 [SupportedOSPlatform("linux")]

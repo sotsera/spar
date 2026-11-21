@@ -33,6 +33,12 @@ internal sealed class SparTestWindowRequest
     /// <summary>The page engine and the receiver of the page's events, installed before the first navigation.</summary>
     public required SparTestAutomation Automation { get; init; }
 
+    /// <summary>
+    /// Who holds the window, for the Linux test process's one-scheme-at-a-time gate: the test that opens it (named by the
+    /// test framework's hook), or its test app. A holder with a window of the shown scheme open opens more at once.
+    /// </summary>
+    public object? Holder { get; init; }
+
     /// <summary>Each of the host's start-up and shutdown phases as it is reached, for Spar's own host tests (UI thread).</summary>
     public Action<string>? OnPhase { get; init; }
 
@@ -171,6 +177,14 @@ internal interface ISparTestWindow
 
     /// <summary>Sends a window message to the app's window on its UI thread and returns the window procedure's result (Windows only).</summary>
     Task<nint> SendMessageAsync(uint message, nint wParam, nint lParam);
+
+    /// <summary>
+    /// The end of the OS session as the host receives it: Windows' <c>WM_QUERYENDSESSION</c> then <c>WM_ENDSESSION</c> for a
+    /// log-off; on Linux the path <c>SIGTERM</c> starts, without the signal (the test process's signals are its runner's).
+    /// Completes when the session end returned, the point after which the OS may end the process; true when the session
+    /// end was allowed (Windows' answer to the query; always on Linux).
+    /// </summary>
+    Task<bool> EndSessionAsync();
 
     /// <summary>
     /// The window's own colours: whether its frame is dark (Windows' <c>DWMWA_USE_IMMERSIVE_DARK_MODE</c>, GTK's dark

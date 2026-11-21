@@ -1024,8 +1024,11 @@
 
   // Trusted input as the page receives it, counted, so a host whose input travels outside the page (XTEST through the
   // X server on Linux) can wait until a key or pointer event it sent has arrived, as a DevTools input call does on
-  // Windows. Untrusted events (the page's own dispatches) are not counted.
+  // Windows. Untrusted events (the page's own dispatches) are not counted. Each type is counted too, so a key waits for
+  // its own keydown or keyup: a pointer event the engine did not send (WebKit's mousemove after a layout under a still
+  // pointer) counts as input and once answered for a key that had not arrived.
   let inputs = 0;
+  const inputsByType = new Map();
   const inputWaiters = new Set();
   const countInput = event => {
     if (!event.isTrusted) {
@@ -1033,6 +1036,7 @@
     }
 
     inputs++;
+    inputsByType.set(event.type, (inputsByType.get(event.type) ?? 0) + 1);
     for (const waiter of inputWaiters) {
       waiter();
     }
@@ -1042,11 +1046,39 @@
     addEventListener(type, countInput, true);
   }
 
-  /** Resolves once more than `after` trusted inputs arrived, or after `timeout` milliseconds; answers whether they did. */
+  /**
+   * Resolves once the document has the focus, or after `timeout` milliseconds; answers whether it has. A key sent to a
+   * window that has just been given the X focus, before GTK and WebKit have handled the focus, never reached the page
+   * (measured in the CI container: Control of Control+End, so End alone moved the caret).
+   */
+  function focused(request) {
+    if (document.hasFocus()) {
+      return { focused: true };
+    }
+
+    return new Promise(resolve => {
+      const started = performance.now();
+      const check = () => {
+        if (document.hasFocus() || performance.now() - started >= (request.timeout ?? 1000)) {
+          resolve({ focused: document.hasFocus() });
+          return;
+        }
+
+        setTimeout(check, 5);
+      };
+      check();
+    });
+  }
+
+  /**
+   * Resolves once more than `after` trusted inputs (of `type`, when given) arrived, or after `timeout` milliseconds;
+   * answers whether they did, and whether the document had the focus.
+   */
   function inputAfter(request) {
     const after = request.after ?? 0;
-    if (inputs > after) {
-      return { seen: true, count: inputs };
+    const counted = () => (request.type ? inputsByType.get(request.type) ?? 0 : inputs);
+    if (counted() > after) {
+      return { seen: true, count: counted() };
     }
 
     return new Promise(resolve => {
@@ -1059,11 +1091,11 @@
         answered = true;
         inputWaiters.delete(check);
         clearTimeout(timer);
-        resolve({ seen, count: inputs });
+        resolve({ seen, count: counted(), focused: document.hasFocus() });
       };
       // Answered once the task that delivered the event has ended, its default action (typing, focus) included.
       const check = () => {
-        if (inputs > after) {
+        if (counted() > after) {
           inputWaiters.delete(check);
           setTimeout(() => done(true), 0);
         }
@@ -1346,7 +1378,8 @@
     explain: request => explain(request.chain, newCache()),
     actionable,
     landed,
-    inputCount: () => ({ count: inputs }),
+    inputCount: request => ({ count: request.type ? inputsByType.get(request.type) ?? 0 : inputs, focused: document.hasFocus() }),
+    focused,
     inputAfter,
     insertText,
     focus,

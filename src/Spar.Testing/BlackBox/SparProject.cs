@@ -13,6 +13,7 @@ public sealed class SparProject
     internal const string AppsFolder = "spar-apps";
 
     private readonly string _executable;
+    private readonly string? _builtPath;
 
     /// <summary>The app's name: its assembly's, which also names its executable and the <c>Projects</c> property.</summary>
     public string Name { get; }
@@ -21,7 +22,7 @@ public sealed class SparProject
     public string AppId { get; }
 
     /// <summary>The app's Production executable beside the tests: <c>spar-apps/&lt;name&gt;/&lt;executable&gt;</c>.</summary>
-    public string ExecutablePath => Path.Combine(AppContext.BaseDirectory, AppsFolder, Name, _executable);
+    public string ExecutablePath => _builtPath ?? Path.Combine(AppContext.BaseDirectory, AppsFolder, Name, _executable);
 
     /// <summary>The app's project folder on the machine that built the tests.</summary>
     public string ProjectDirectory { get; }
@@ -35,6 +36,20 @@ public sealed class SparProject
         AppId = appId;
         _executable = executable;
         ProjectDirectory = projectDirectory;
+    }
+
+    /// <summary>
+    /// An executable a runner built elsewhere, by its absolute path, for Spar's own tests: a Development build of a test
+    /// app, or a build with another page-security declaration (read by the build, so an executable of its own). Its app id
+    /// is the folder name the build uses (a Development build's ends in <c>.Development</c>).
+    /// </summary>
+    internal static SparProject Built(string executablePath, string name, string appId) =>
+        new(name, appId, Path.GetFileName(executablePath), Path.GetDirectoryName(executablePath) ?? "", executablePath);
+
+    private SparProject(string name, string appId, string executable, string projectDirectory, string builtPath)
+        : this(name, appId, executable, projectDirectory)
+    {
+        _builtPath = Path.GetFullPath(builtPath);
     }
 
     public override string ToString() => $"{Name} ({AppId})";

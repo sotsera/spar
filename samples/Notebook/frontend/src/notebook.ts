@@ -63,7 +63,10 @@ export function useNotebook(): Notebook {
     clearTimeout(timer.current);
     setCurrent({ kind: "loading", id });
     void pages.get({ id }).match({
-      success: page => setCurrent({ kind: "open", page, draft: page.markdown, save: { kind: "saved" } }),
+      success: page => {
+        newestDraft.current = page.markdown;
+        setCurrent({ kind: "open", page, draft: page.markdown, save: { kind: "saved" } });
+      },
       errors: {
         notFound: () => setCurrent({ kind: "missing", id }),
         titleTaken: () => setCurrent({ kind: "missing", id }),
@@ -93,9 +96,10 @@ export function useNotebook(): Notebook {
         return { kind: "saved" };
       }
 
+      // The draft of the last render, which may be a keystroke behind: an edit React has not applied yet stays in the
+      // state, which is only updated from what it holds now, and the draft stays unsaved until a later save sends it.
       const sent = state.draft;
-      newestDraft.current = sent;
-      setCurrent({ ...state, save: { kind: "saving" } });
+      setCurrent(latest => (latest.kind === "open" && latest.page.id === state.page.id ? { ...latest, save: { kind: "saving" } } : latest));
       const outcome = await pages.save({ id: state.page.id, markdown: sent, baseRevision: base }).match({
         success: (page): SaveState | Page => page,
         errors: {
@@ -212,6 +216,7 @@ export function useNotebook(): Notebook {
   const create = useCallback(async (title: string): Promise<string | undefined> => {
     const message = await pages.create({ title, markdown: null }).match({
       success: page => {
+        newestDraft.current = page.markdown;
         setCurrent({ kind: "open", page, draft: page.markdown, save: { kind: "saved" } });
         return undefined;
       },

@@ -136,10 +136,26 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public async Task KeyAsync(SparTestKey key)
     {
-        var before = await InputCountAsync();
+        // The key's own event, keydown or keyup, is waited for: any trusted input once counted, a pointer event the
+        // engine did not send included.
+        var type = key.Down ? "keydown" : "keyup";
+        var (before, focused) = await InputCountAsync(type);
         var (window, _, _) = await GeometryAsync();
+        if (!focused)
+        {
+            // A key GTK reads before the window has handled its new focus does not reach the document (measured with
+            // parallel windows in the CI container: the 6 keys of 829 that never arrived were all sent while the
+            // document lacked the focus). So the focus first, and the key once the document has it.
+            await _process.Input.FocusAsync(window);
+            await EngineAsync($$"""{"op":"focused","timeout":{{InputArrival}}}""", TimeSpan.FromSeconds(5));
+        }
+
         await _process.Input.KeyAsync(window, key);
-        await InputArrivedAsync(before);
+        if (await InputArrivedAsync(before, type) is { } answer && answer.Contains("\"seen\":false", StringComparison.Ordinal))
+        {
+            // Said in the app's log: a test that then fails on a missing character is explained there.
+            _log.Warn($"The page did not receive the {type} of {key.Key} within {InputArrival} ms: {answer}.");
+        }
     }
 
     public async Task InsertTextAsync(string text)
@@ -200,6 +216,33 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     public Task<nint> SendMessageAsync(uint message, nint wParam, nint lParam) =>
         throw new PlatformNotSupportedException("Window messages are Windows'; a Linux window has none.");
 
+    /// <summary>
+    /// The session end <c>SIGTERM</c> starts in an app (<see cref="SessionEnd"/>), without the signal: the window's
+    /// session-end close, then the app's services disposed within the budget, as an app's are; the test host's later
+    /// disposal finds them done. Its final line goes to the app's log, and its hold to the phases.
+    /// </summary>
+    public async Task<bool> EndSessionAsync()
+    {
+        var window = _window ?? throw new InvalidOperationException("The app's window is not open yet.");
+        var start = Stopwatch.GetTimestamp();
+        var outcome = await SessionEnd.RunAsync(_process.Ui, window, DisposeServicesAsync, start);
+        _log.Step($"session end: {outcome.Text}; held {outcome.HeldMilliseconds:0} ms");
+        _request.OnPhase?.Invoke($"session end held {outcome.HeldMilliseconds:0} ms");
+        return true;
+    }
+
+    private async Task DisposeServicesAsync()
+    {
+        try
+        {
+            await _running.DisposeAsync();
+        }
+        catch (Exception exception)
+        {
+            _log.Error("The app's services did not stop cleanly at session end", exception);
+        }
+    }
+
     public unsafe Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => OnLoopAsync(() =>
     {
         var window = _window?.Handle ?? 0;
@@ -242,6 +285,9 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return [.. WebProcesses.Below(Environment.ProcessId).Where(process => noted.Contains(process.Id))];
     }
 
+    /// <summary>Who holds this window at the scheme gate: the request's holder, or the app.</summary>
+    private object SchemeHolder => _request.Holder ?? _app;
+
     private TestPage Page => _page is { } page && _window is { ViewHandle: not 0 } ? page : throw new InvalidOperationException(_closed.Task.IsCompleted || _window?.IsClosing == true
         ? "The app's window is closed (app.Window.CloseAsync or the test's end closed it): its page can no longer be driven."
         : "The app's page is not open: its window is starting.");
@@ -252,7 +298,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         try
         {
             // The process's windows show one colour scheme at a time (GTK's dark preference is the process's).
-            await _process.EnterSchemeAsync(_request.Dark ?? _theme.AppChoosesDark ?? false);
+            await _process.EnterSchemeAsync(_request.Dark ?? _theme.AppChoosesDark ?? false, SchemeHolder);
             Volatile.Write(ref _inScheme, 1);
             if (_closedBeforeStart)
             {
@@ -284,7 +330,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     {
         if (Interlocked.Exchange(ref _inScheme, 0) == 1)
         {
-            _process.LeaveScheme();
+            _process.LeaveScheme(SchemeHolder);
         }
 
         if (_place is { } place)
@@ -417,15 +463,31 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     }
 
     /// <summary>The count of trusted input events the page has received, before one more is sent.</summary>
-    private async Task<int> InputCountAsync()
+    private async Task<int> InputCountAsync() => (await InputCountAsync(null)).Count;
+
+    /// <summary>The count of trusted input events of <paramref name="type"/> (all, for null), and whether the document has the focus.</summary>
+    private async Task<(int Count, bool Focused)> InputCountAsync(string? type)
     {
-        var answer = await EngineAsync("""{"op":"inputCount"}""", TimeSpan.FromSeconds(5));
-        return answer is null ? 0 : Count(answer);
+        var request = type is null ? """{"op":"inputCount"}""" : $$"""{"op":"inputCount","type":"{{type}}"}""";
+        var answer = await EngineAsync(request, TimeSpan.FromSeconds(5));
+        if (answer is null)
+        {
+            return (0, true);
+        }
+
+        using var json = System.Text.Json.JsonDocument.Parse(answer);
+        var focused = !json.RootElement.TryGetProperty("focused", out var value) || value.ValueKind != System.Text.Json.JsonValueKind.False;
+        return (Count(answer), focused);
     }
 
-    /// <summary>Until the page received more than <paramref name="before"/> trusted input events, or a second passed.</summary>
-    private Task InputArrivedAsync(int before) =>
-        EngineAsync($$"""{"op":"inputAfter","after":{{before}},"timeout":{{InputArrival}}}""", TimeSpan.FromSeconds(5));
+    /// <summary>
+    /// Until the page received more than <paramref name="before"/> trusted input events (of <paramref name="type"/>, when
+    /// given), or a second passed; the engine's answer.
+    /// </summary>
+    private Task<string?> InputArrivedAsync(int before, string? type = null) =>
+        EngineAsync(type is null
+            ? $$"""{"op":"inputAfter","after":{{before}},"timeout":{{InputArrival}}}"""
+            : $$"""{"op":"inputAfter","after":{{before}},"type":"{{type}}","timeout":{{InputArrival}}}""", TimeSpan.FromSeconds(5));
 
     /// <summary>
     /// The window's X window and where the view's top-left corner is on the screen (loop thread): the window's origin on

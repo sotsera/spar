@@ -1,0 +1,12 @@
+Windows 11 Pro 10.0.26320, WebView2 Runtime 157, SDK 11.0.100; summaries of the runs (the test runner's own totals).
+dotnet build Spar.slnx -c Debug: 0 Warning(s), 0 Error(s)
+dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait "Surface=Window" --filter-not-trait "Surface=BlackBox": total 1028, failed 0, succeeded 1005, skipped 23
+  (first run: failed 2: StaticStateTests.Every_static_field_of_Spars_assemblies_is_reviewed (11 new fields, then reviewed) and one WireShapes.EndToEndTests case that passed alone and in the rerun)
+dotnet test --project tests/Spar.WindowTests -c Debug --no-build: total 192, failed 0, succeeded 112, skipped 80
+Spar.WindowTests NativeAOT (dotnet publish -c Release -p:SparTestLane=Aot, then the executable): Total 192, Errors 0, Failed 0, Skipped 68, Not Run 12, Time 77.4 s
+samples/Notebook.EndToEndTests --filter-trait Surface=BlackBox: total 6, failed 0, succeeded 6 (again after the last change: 6 of 6)
+samples/Notebook.EndToEndTests --filter-trait Surface=Window: total 10, failed 0, succeeded 10
+Spar.WindowTests BlackBoxFixtureTests + SessionEndHostTests after the last change: total 25, failed 0, succeeded 25
+dotnet run eng/check-size.cs: Checked 523 source files: 0 errors, 0 warnings
+dotnet test --project tests/AppModel.Tests: total 11, failed 0, succeeded 11
+dotnet test --project tests/Spar.BuildTests -- --filter-method "*The_production_executable_carries_its_page_and_no_test_or_loopback_code": total 1, failed 0, succeeded 1

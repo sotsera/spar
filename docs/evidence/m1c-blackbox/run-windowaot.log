@@ -1,0 +1,86 @@
+STEP windowaot on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /var/tmp/spar-m1c-blackbox/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Windows -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Linux -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Generator -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  WindowHost -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/WindowHost/bin/Production.BlackBox/Release/net11.0/linux-x64/WindowHost.dll
+  WindowHost -> /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/obj/aot/Production/Release/net11.0/linux-x64/spar-apps/WindowHost/
+  BridgeProbe -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/BridgeProbe/bin/Production.BlackBox/Release/net11.0/linux-x64/BridgeProbe.dll
+  BridgeProbe -> /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/obj/aot/Production/Release/net11.0/linux-x64/spar-apps/BridgeProbe/
+  Spar.Testing -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Testing/bin/Release/net11.0/Spar.Testing.dll
+  WindowHost -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/WindowHost/bin/aot/Test/Release/net11.0/linux-x64/WindowHost.dll
+  BridgeProbe -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/BridgeProbe/bin/aot/Test/Release/net11.0/linux-x64/BridgeProbe.dll
+  Spar.WindowTests -> /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/aot/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll
+  Generating native code
+  Spar.WindowTests -> /var/tmp/spar-m1c-blackbox/repo/artifacts/aot/Spar.WindowTests/
+STEP exit 0 in 21949 ms: dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/linux-x64] (.NET 11.0.0)
+  Discovering: Spar.WindowTests
+  Discovered:  Spar.WindowTests
+  Starting:    Spar.WindowTests
+    Spar.WindowTests.InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path [SKIP]
+      Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+    Spar.WindowTests.PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address [SKIP]
+      Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(process:2): GLib-GIO-WARNING **: 00:23:02.038: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-c5c3778a-9a6c-4ad9-953f-09817cebcc85: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 00:23:03.507: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-b3d0b699-8138-4ba7-b00c-08dbda768830: The connection is closed
+    Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written [SKIP]
+      Windows' refusal of a data root on a network drive (a UNC path or a mapped drive); Linux has no such path.
+    Spar.WindowTests.ThemeTests.Each_window_keeps_its_own_scheme_beside_another [SKIP]
+      Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+
+(process:2): GLib-GIO-WARNING **: 00:23:08.539: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-caf4cb82-6f31-4592-9f60-6d68b33270cf: The connection is closed
+    Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started [SKIP]
+      Windows' job object; on Linux the kernel ends the app with the test process (KillOnParentExit), measured by the AT-SPI spike.
+    Spar.WindowTests.PageApiTests.Page_errors_reach_the_apps_log_through_the_host [SKIP]
+      The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+
+(process:2): GLib-GIO-WARNING **: 00:23:14.046: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-ecd733d4-45d1-409e-816c-d696442c03d3: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 00:23:19.451: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-253fbe02-5ee0-45ee-8d5c-ad451f58d2ba: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 00:23:21.792: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-4200c369-9e4f-4cf9-bd2c-ea3cc0e76ba5: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 00:23:45.832: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-f8e60d9f-1261-46f8-b252-141bd8797b47: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 00:23:52.096: Error releasing name org.webkit.app-f82b75d2d598fbe1a74b5604187870d6a31bd2b71d53706c7d6841f48ecee190.Sandboxed.WebProcess-35afe88c-4c3d-4b56-a24b-83da2b581fa3: The connection is closed
+dbus-daemon[130423]: [session uid=1000 pid=130423] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=130430 comm="/var/tmp/spar-m1c-blackbox/repo/artifacts/aot/Spar" label="kernel")
+dbus-daemon[130423]: [session uid=1000 pid=130423] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[130517]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=130430 comm="/var/tmp/spar-m1c-blackbox/repo/artifacts/aot/Spar" label="kernel")
+dbus-daemon[130517]: Successfully activated service 'org.a11y.atspi.Registry'
+    Spar.WindowTests.LinuxStartupTests.A_WebKitGTK_older_than_required_is_exit_4_with_a_message [SKIP]
+      The raised minimum is a Development build's variable.
+    Spar.WindowTests.LinuxStartupTests.The_Notebooks_window_has_the_saved_schemes_colour_from_its_first_frame [SKIP]
+      Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+    Spar.WindowTests.LinuxHangTests.Wait_brings_the_dialog_back_after_4_8_16_then_32_heartbeats [SKIP]
+      Needs the Development build's heartbeat interval and scripted answers.
+    Spar.WindowTests.LinuxHangTests.The_automated_mode_shows_no_dialog_and_closes_a_hung_page_without_asking [SKIP]
+      Needs the Development build's automated mode.
+    Spar.WindowTests.LinuxHostTests.A_second_loss_before_the_page_is_ready_again_ends_the_app_with_exit_code_5 [SKIP]
+      Needs the Development build's automated mode: a Production app shows its message and waits.
+    Spar.WindowTests.LinuxHostTests.The_Notebook_starts_and_closes_and_its_numbers_are_recorded [SKIP]
+      Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+    Spar.WindowTests.LinuxPageSecurityTests.WebAssembly_follows_the_declaration_in_the_page_and_its_workers_and_after_a_lost_web_process(allowed: True) [SKIP]
+      Needs SPAR_LINUX_WASM_APP, the bridge probe built with AllowWebAssembly().
+    Spar.WindowTests.LinuxPageSecurityTests.The_flood_numbers_are_recorded [SKIP]
+      Needs SPAR_LINUX_FLOOD, the flood sizes to measure.
+    Spar.WindowTests.LinuxPageSecurityTests.WebAssembly_follows_the_declaration_after_Reload_page_ends_the_web_process(allowed: True) [SKIP]
+      Needs SPAR_LINUX_WASM_APP, the bridge probe built with AllowWebAssembly().
+    Spar.WindowTests.NetworkStatusTests.The_page_sees_offline_then_online_and_its_calls_work_offline [SKIP]
+      The network switch is not there (SPAR_TEST_NETWORK_SWITCH names no FIFO): run the tests under eng/linux-ci/network-switch.sh, as the Linux CI job does.
+  Finished:    Spar.WindowTests (ID = '2828e890687d28169e2c4f2e556797c13c7f3b1fa65b1b6273fc657256cb684d')
+=== TEST EXECUTION SUMMARY ===
+   Spar.WindowTests  Total: 192, Errors: 0, Failed: 0, Skipped: 16, Not Run: 12, Time: 309.922s
+STEP exit 0 in 315784 ms: artifacts/aot/Spar.WindowTests/Spar.WindowTests -result-trx artifacts/test-results/Spar.WindowTests/aot-2026-11-20_23_22_59.trx
+processes left by the tests: 0

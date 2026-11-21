@@ -204,6 +204,16 @@ internal static unsafe partial class TestNative
     [LibraryImport(Xlib)]
     public static partial int XSetInputFocus(nint display, nuint window, int revertTo, nuint time);
 
+    /// <summary>
+    /// Holds every other client's requests until <see cref="XUngrabServer"/>, so a focus change and the key that needs it
+    /// reach the server with no other client's request between them.
+    /// </summary>
+    [LibraryImport(Xlib)]
+    public static partial int XGrabServer(nint display);
+
+    [LibraryImport(Xlib)]
+    public static partial int XUngrabServer(nint display);
+
     [LibraryImport(Xlib)]
     public static partial int XRaiseWindow(nint display, nuint window);
 

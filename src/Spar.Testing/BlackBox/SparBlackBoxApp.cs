@@ -34,16 +34,16 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
     /// <summary>The disposable root every folder of this launch is under; pass it to a second launch to share the data.</summary>
     public string DataRoot => _folders.Root;
 
-    /// <summary>What the app sees as <c>%LOCALAPPDATA%</c>.</summary>
+    /// <summary>What the app sees as <c>%LOCALAPPDATA%</c> (on Linux, <c>XDG_DATA_HOME</c>, which .NET's <c>LocalApplicationData</c> is).</summary>
     public string LocalAppData => _folders.LocalAppData;
 
-    /// <summary>What the app sees as <c>%APPDATA%</c>.</summary>
+    /// <summary>What the app sees as <c>%APPDATA%</c> (on Linux, <c>XDG_CONFIG_HOME</c>, which .NET's <c>ApplicationData</c> is).</summary>
     public string RoamingAppData => _folders.RoamingAppData;
 
-    /// <summary>What the app sees as <c>%TEMP%</c> and <c>%TMP%</c>.</summary>
+    /// <summary>What the app sees as <c>%TEMP%</c> and <c>%TMP%</c> (on Linux, <c>TMPDIR</c>).</summary>
     public string TempFolder => _folders.Temp;
 
-    /// <summary>The app's per-user folder, <c>%LOCALAPPDATA%\&lt;app id&gt;</c>, as a Production build names it.</summary>
+    /// <summary>The app's per-user folder, <c>%LOCALAPPDATA%\&lt;app id&gt;</c> (Linux: <c>$XDG_DATA_HOME/&lt;app id&gt;</c>), as a Production build names it.</summary>
     public string AppFolder => Path.Combine(_folders.LocalAppData, Project.AppId);
 
     /// <summary>The app's data folder (unless its <c>Program.cs</c> moved it).</summary>
@@ -64,7 +64,7 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
     /// <summary>How long the launch took until the app was ready (or until it started, without the wait).</summary>
     public TimeSpan StartedAfter { get; private set; }
 
-    /// <summary>The app's main window through UI Automation.</summary>
+    /// <summary>The app's main window through the accessibility API (UI Automation on Windows, AT-SPI on Linux).</summary>
     public SparBlackBoxWindow Window => _window ??= new SparBlackBoxWindow(this);
 
     public bool HasExited => _process.Exited.IsCompleted;
@@ -76,6 +76,9 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
     public IReadOnlyList<int> ProcessIds => _process.ProcessIds;
 
     internal IBlackBoxAutomation Automation => _automation;
+
+    /// <summary>The X display the app shows on (Linux): the test process's private Xvfb, for Spar's own tests that read it.</summary>
+    internal string Display => _options.Display ?? _folders.Display;
 
     internal IBlackBoxProcess Process => _process;
 
@@ -98,7 +101,7 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
     }
 
     /// <summary>
-    /// Waits for a native message of the app (a task dialog or a message box) and reads it. With no timeout it waits as
+    /// Waits for a native message of the app (a task dialog or a message box on Windows, a <c>GtkAlertDialog</c> on Linux) and reads it. With no timeout it waits as
     /// long as <see cref="SparBlackBoxOptions.ReadyTimeout"/>; it fails at once when the app exits without one.
     /// </summary>
     public async Task<SparNativeDialog> WaitForDialogAsync(TimeSpan? timeout = null, CancellationToken cancellationToken = default)
@@ -128,7 +131,7 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
 
     /// <summary>
     /// Closes the main window as its close button does (UI Automation's Window pattern sends the window its close
-    /// request), so the page's and the backend's close guards run, and returns the exit code once the app has exited.
+    /// request; on Linux the window's AT-SPI action <c>window.close</c>, GTK's <c>close-request</c>), so the page's and the backend's close guards run, and returns the exit code once the app has exited.
     /// A guard's question shows as a native dialog, which <see cref="WaitForDialogAsync"/> reads and answers meanwhile.
     /// </summary>
     public async Task<int> CloseAsync(CancellationToken cancellationToken = default)
@@ -156,7 +159,7 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
         }
     }
 
-    /// <summary>Ends the app and every process it started at once (the job object); its exit code is then 1.</summary>
+    /// <summary>Ends the app and every process it started at once (the job object; <c>SIGKILL</c> on Linux); its exit code is then 1 (Linux: 137).</summary>
     public void Kill() => _process.Kill();
 
     /// <summary>
@@ -180,6 +183,11 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
         var failures = new List<Exception>();
         await StopAsync(failures);
         _process.Dispose();
+        (_automation as IDisposable)?.Dispose();
+        if (_ownsRoot)
+        {
+            _folders.DeleteRuntime();
+        }
         if (_ownsRoot && !_options.KeepData)
         {
             try
@@ -204,7 +212,7 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
         }
     }
 
-    /// <summary>The ready signal: the host's <c>ui-ready</c> line in the app's log, then its window through UI Automation.</summary>
+    /// <summary>The ready signal: the host's <c>ui-ready</c> line in the app's log, then its window through the accessibility API.</summary>
     internal async Task WaitForReadyAsync(TimeSpan limit, CancellationToken cancellationToken)
     {
         var log = new LogWatch(LogFile);
@@ -223,7 +231,7 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
 
             if (_clock.Elapsed >= limit)
             {
-                var stage = log.Seen ? "UI Automation found no window" : $"its log ({LogFile}) has no ui-ready line";
+                var stage = log.Seen ? "the accessibility API found no window" : $"its log ({LogFile}) has no ui-ready line";
                 throw new TimeoutException($"{Project.Name} was not ready within {limit.TotalSeconds:0.#} s: {stage}.{Output()}");
             }
 

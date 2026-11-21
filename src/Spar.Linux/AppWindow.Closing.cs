@@ -10,7 +10,7 @@ namespace Spar.Linux;
 /// closing, keeping or asking, one native confirmation per ask (or a window test's answer), and the teardown only for an
 /// approved request. A page that does not answer gets "Wait / Close anyway". A second request joins the open one. A
 /// close with <see cref="CloseReason.SessionEnd"/> runs the session end's rules and budgets (the guards' 3 s, the page's
-/// 2 s, 4 s in all); the end of the session through logind, which would start one, comes later.
+/// 2 s, 4 s in all); <c>SIGTERM</c> and <c>SIGINT</c> start one (<see cref="SessionEnd"/>, <see cref="EndSession"/>).
 /// </summary>
 internal sealed partial class AppWindow
 {
@@ -23,6 +23,9 @@ internal sealed partial class AppWindow
     /// <summary>How long the loop keeps running for the web processes to exit once the window is destroyed.</summary>
     private const int WebProcessExitMilliseconds = 3_000;
 
+    /// <summary>How long the teardown waits for the answers of the dialogs it took down; GLib gives them on the next turn.</summary>
+    private const int DialogCloseMilliseconds = 1_000;
+
     /// <summary>How often the web processes are looked for meanwhile; they exited in 3–24 ms in the spikes.</summary>
     private const int WebProcessPollMilliseconds = 5;
 
@@ -33,7 +36,7 @@ internal sealed partial class AppWindow
     private const int SessionEndGuardsMilliseconds = CloseGuard.SessionEndDeadlineMilliseconds;
 
     /// <summary>At session end, everything: the guards, the teardown and the services' disposal.</summary>
-    private const int SessionEndMilliseconds = 4_000;
+    internal const int SessionEndMilliseconds = 4_000;
 
     /// <summary>The open close request, which a second one joins.</summary>
     private Task<CloseReport>? _closeRequest;
@@ -59,6 +62,24 @@ internal sealed partial class AppWindow
         var request = reason == CloseReason.SessionEnd
             ? SessionEndAsync(Stopwatch.GetTimestamp(), automated)
             : CloseRequestedAsync(reason, automated, questions);
+        _closeRequest = request;
+        return request;
+    }
+
+    /// <summary>
+    /// The end of the OS session (<see cref="SessionEnd"/>, loop thread), which started at <paramref name="start"/>: the
+    /// session-end close in its place of an open close request, which can no longer keep the window (as Windows'
+    /// <c>WM_ENDSESSION</c> does); nothing when the teardown has started. Completes once the window is gone.
+    /// </summary>
+    public Task<CloseReport> EndSession(long start)
+    {
+        if (_state == State.Closing)
+        {
+            _log.Step("session ending: the window is already closing");
+            return _closeRequest ?? Task.FromResult(new CloseReport(closed: true, null, false));
+        }
+
+        var request = SessionEndAsync(start, _automated);
         _closeRequest = request;
         return request;
     }
@@ -105,6 +126,12 @@ internal sealed partial class AppWindow
         if (pageHung)
         {
             _view?.TerminateHungWebProcess();
+        }
+
+        // Its dialogs go first, their answers read, so none is destroyed with the window (WindowDialogs).
+        if (!await _dialogs.CloseAllAsync(DialogCloseMilliseconds))
+        {
+            _log.Warn($"A dialog of the window had not answered {DialogCloseMilliseconds} ms after it was taken down.");
         }
 
         _theme?.Close();
@@ -280,7 +307,7 @@ internal sealed partial class AppWindow
             return true;
         }
 
-        var button = await AlertDialog.ChooseAsync(_window, question, "", "Close anyway", "Keep open");
+        var button = await AlertDialog.ChooseAsync(_window, _dialogs, question, "", "Close anyway", "Keep open");
         return button == 0;
     }
 }

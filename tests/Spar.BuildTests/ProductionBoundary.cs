@@ -38,6 +38,9 @@ internal static class ProductionBoundary
 
         // The Window surface on Linux (M1c step 7): the test views' sessions and the test process's environment.
         "TestEnvironment", "TestViews",
+
+        // The black box on Linux (M1c step 7): its AT-SPI client, its launched processes and its private desktop.
+        "AtSpiAutomation", "AtSpiBus", "LinuxAppProcess", "LinuxDesktop",
     ];
 
     private static readonly string[] Literals =
@@ -55,6 +58,9 @@ internal static class ProductionBoundary
 
         // The Window surface on Linux (M1c step 7): the private Xvfb's setting and screen, and its runtime folders.
         "SPAR_TEST_DISPLAY", "6400x4200x24", "spar-test-",
+
+        // The black box on Linux (M1c step 7): the launch's tag and runtime folders.
+        "SPAR_BLACK_BOX_LAUNCH", "spar-bb-",
     ];
 
     /// <summary>

@@ -15,7 +15,16 @@ internal static class TestDataRoots
     private static readonly Lazy<string> Base = new(FindBase);
     private static readonly Lazy<string> ProfilesBase = new(FindProfiles);
     private static readonly Lazy<string> HomesBase = new(FindHomes);
+    private static readonly Lazy<string> LinuxBlackBoxBase = new(() => TestArtifacts.Root is { } artifacts
+        ? Path.Combine(artifacts, "linux-homes", "black-box")
+        : Path.Combine(Base.Value, "linux-homes-black-box"));
     private static int s_next;
+
+    /// <summary>
+    /// The black-box roots the current flow creates, when a test asks (Spar's own fixture tests): a list it set before a
+    /// launch receives each root <see cref="NextBlackBox"/> makes for it, unmixed with those of tests running beside it.
+    /// </summary>
+    internal static readonly AsyncLocal<List<string>?> Created = new();
 
     /// <summary>
     /// Where window tests keep their browser profiles (<c>AGENTS.md</c>): <c>artifacts/webview2-profiles/test-host/</c> in a
@@ -32,6 +41,37 @@ internal static class TestDataRoots
 
     public static string Next() => Next("app");
 
+    /// <summary>
+    /// A new data root for a black-box launch: under this run's folder on Windows; on Linux, where the root holds the
+    /// app's <c>HOME</c> and <c>XDG_*</c> folders, under <c>artifacts/linux-homes/black-box/</c> (<c>AGENTS.md</c>).
+    /// </summary>
+    public static string NextBlackBox()
+    {
+        string root;
+        if (OperatingSystem.IsLinux())
+        {
+            root = Path.Combine(BlackBoxRun, $"black-box-{Interlocked.Increment(ref s_next):D3}");
+            Directory.CreateDirectory(root);
+        }
+        else
+        {
+            root = Next("black-box");
+        }
+
+        if (Created.Value is { } created)
+        {
+            lock (created)
+            {
+                created.Add(root);
+            }
+        }
+
+        return root;
+    }
+
+    /// <summary>The folder this run's black-box roots go in.</summary>
+    public static string BlackBoxRun => OperatingSystem.IsLinux() ? Path.Combine(LinuxBlackBoxBase.Value, Run) : Path.Combine(Base.Value, Run);
+
     /// <summary>A new data root named <paramref name="kind"/>-NNN under this run's folder.</summary>
     public static string Next(string kind)
     {
@@ -44,9 +84,9 @@ internal static class TestDataRoots
     /// <summary>Whether <paramref name="path"/> is a data root of this run (a folder directly under its run folder).</summary>
     public static bool IsDataRoot(string path)
     {
-        var run = Path.Combine(Base.Value, Run);
         var parent = Path.GetDirectoryName(Path.TrimEndingDirectorySeparator(Path.GetFullPath(path)));
-        return string.Equals(parent, run, StringComparison.OrdinalIgnoreCase);
+        return string.Equals(parent, Path.Combine(Base.Value, Run), StringComparison.OrdinalIgnoreCase)
+            || string.Equals(parent, BlackBoxRun, StringComparison.OrdinalIgnoreCase);
     }
 
     public static void Delete(string root)

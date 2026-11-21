@@ -24,6 +24,13 @@ internal static unsafe partial class Gtk
     [LibraryImport(Library)]
     public static partial int gtk_init_check();
 
+    /// <summary>
+    /// Releases the calling thread's current GL context, which GDK keeps referenced in a thread-local slot; nothing when
+    /// there is none, GTK initialised or not.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial void gdk_gl_context_clear_current();
+
     /// <summary>The loaded GTK's version: callable before <see cref="gtk_init_check"/>.</summary>
     [LibraryImport(Library)]
     public static partial uint gtk_get_major_version();

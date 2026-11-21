@@ -9,24 +9,25 @@ using System.Text.RegularExpressions;
 using Spar.Linux;
 using Spar.Testing;
 
-namespace Spar.Tests;
+namespace Spar.WindowTests;
 
 /// <summary>
-/// The Linux host in a real window (plan M1c, build step 1), driven from outside: the bridge probe app
-/// (<c>tests/apps/BridgeProbe</c>, a Development build with its page, <c>-p:SparDevServer=false</c>) runs under the
-/// test's own X server, with private folders under <c>artifacts/linux-homes/&lt;run&gt;/</c>, and the test reads its
-/// log. Until the Linux Window surface and CI image (M1c step 7), these run where a runner provides both: Linux, the
-/// probe's executable in <c>SPAR_LINUX_HOST_APP</c> and an X server that is not the user's desktop in
-/// <c>SPAR_LINUX_TEST_DISPLAY</c> (never WSLg's). Anywhere else they skip, saying why.
+/// The Linux host in a real window (plan M1c, build step 1), driven from outside through the black box
+/// (<see cref="ProbeApp"/>): the bridge probe app (<c>tests/apps/BridgeProbe</c>, its Production NativeAOT executable, or
+/// the Development build a runner names in <c>SPAR_LINUX_HOST_APP</c>) runs on the tests' private Xvfb with its folders in
+/// a black-box data root under <c>artifacts/linux-homes/black-box/</c>, and the test reads its log. Where the black box
+/// cannot run (no Xvfb, D-Bus or at-spi2-core) they skip, saying why, and fail with <c>CI=true</c>.
 /// </summary>
 [SupportedOSPlatform("linux")]
-[Collection(nameof(LinuxWindowsCollection))]
+[Collection(nameof(ProbeCollection))]
+[Trait("Surface", "BlackBox")]
+[Trait("App", "BridgeProbe")]
 public sealed class LinuxHostTests
 {
     [Fact]
     public async Task The_page_calls_moves_to_a_new_document_and_closes_through_the_close_request()
     {
-        await using var app = LinuxAppRun.Start("facts,echo,navigate");
+        await using var app = await ProbeApp.StartAsync("facts,echo,navigate");
 
         await app.WaitForAsync(@"probe note: second document (?<doc>[0-9a-f]{16}), echo second");
         var log = app.Log();
@@ -49,7 +50,7 @@ public sealed class LinuxHostTests
         Assert.Contains("close requested (User)", log, StringComparison.Ordinal);
         Assert.Matches(@"web processes exited after [0-9]+ ms", log);
         Assert.Contains("services disposed", log, StringComparison.Ordinal);
-        Assert.All(webProcesses, process => Assert.False(LinuxAppRun.IsRunning(process.Id), $"{process.Name} {process.Id} outlived the app."));
+        Assert.All(webProcesses, process => Assert.False(ProbeApp.IsRunning(process.Id), $"{process.Name} {process.Id} outlived the app."));
     }
 
     [Fact]
@@ -57,13 +58,13 @@ public sealed class LinuxHostTests
     {
         // Skip before the foreign site starts: on Windows its listener goes through http.sys, and a port taken in the
         // meantime failed the test in a NativeAOT run where it had nothing to check.
-        LinuxAppRun.Display();
-        LinuxAppRun.Probe();
+        ProbeApp.Display();
+        ProbeApp.Probe();
         using var foreign = ForeignSite.Start();
-        await using var app = LinuxAppRun.Start("frame", ("BRIDGE_PROBE_FRAME", foreign.FrameAddress));
+        await using var app = await ProbeApp.StartAsync("frame", ("BRIDGE_PROBE_FRAME", foreign.FrameAddress));
 
         await app.WaitForAsync("probe note: frame done");
-        await foreign.WaitForAsync("done", LinuxAppRun.Patience);
+        await foreign.WaitForAsync("done", ProbeApp.Patience);
 
         // The frame ran, and nothing it tried reached the backend: no note, no message the bridge had to refuse.
         Assert.Equal("absent", foreign.Reports["handler"]);
@@ -81,7 +82,7 @@ public sealed class LinuxHostTests
     [Fact]
     public async Task A_lost_web_process_is_recovered_once_and_the_page_connects_again()
     {
-        await using var app = LinuxAppRun.Start("");
+        await using var app = await ProbeApp.StartAsync("");
         await app.WaitForAsync(@"probe note: first document [0-9a-f]{16}$");
 
         app.EndWebProcess();
@@ -96,10 +97,11 @@ public sealed class LinuxHostTests
     }
 
     [Fact]
+    [Trait("Probe", "Development")]
     public async Task A_second_loss_before_the_page_is_ready_again_ends_the_app_with_exit_code_5()
     {
-        Assert.SkipUnless(LinuxAppRun.IsDevelopmentProbe(), "Needs the Development build's automated mode: a Production app shows its message and waits.");
-        await using var app = LinuxAppRun.Start("slow-ready-after-reload", ("SPAR_AUTOMATED", "1"));
+        Assert.SkipUnless(ProbeApp.IsDevelopmentProbe(), "Needs the Development build's automated mode: a Production app shows its message and waits.");
+        await using var app = await ProbeApp.StartAsync("slow-ready-after-reload", ("SPAR_AUTOMATED", "1"));
         await app.WaitForAsync(@"probe note: first document [0-9a-f]{16}$");
 
         app.EndWebProcess();
@@ -115,10 +117,11 @@ public sealed class LinuxHostTests
     /// names it in <c>SPAR_LINUX_NOTEBOOK</c>: launch to <c>ui-ready</c> (from the test's clock at the launch to the
     /// time of the host's ready line), warm, one run discarded then 11; the close to the exit; and the total memory of
     /// the app and its WebKit processes (PSS) in one run. Recorded in
-    /// <c>artifacts/test-results/Spar.Tests/linux-host-&lt;label&gt;.txt</c> (<c>SPAR_LINUX_NOTEBOOK_LABEL</c>, for runs
+    /// <c>artifacts/test-results/Spar.WindowTests/linux-host-&lt;label&gt;.txt</c> (<c>SPAR_LINUX_NOTEBOOK_LABEL</c>, for runs
     /// with different settings in the environment), not asserted: times vary with the machine.
     /// </summary>
     [Fact]
+    [Trait("Probe", "None")]
     public async Task The_Notebook_starts_and_closes_and_its_numbers_are_recorded()
     {
         var notebook = Environment.GetEnvironmentVariable("SPAR_LINUX_NOTEBOOK");
@@ -128,7 +131,7 @@ public sealed class LinuxHostTests
         var memory = 0.0;
         for (var run = 0; run < 12; run++)
         {
-            await using var app = LinuxAppRun.Launch(notebook!, "com.example.Notebook", []);
+            await using var app = await ProbeApp.LaunchAsync(notebook!, "com.example.Notebook", []);
             var line = await app.WaitForAsync(@"^(?<time>\S+) INFO  Spar\.Host  \[[0-9a-f]{8}\] ui-ready at [0-9.]+ ms$");
             var readyAt = DateTime.Parse(line.Groups["time"].Value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
             if (run == 1)
@@ -148,7 +151,7 @@ public sealed class LinuxHostTests
         }
 
         // And once more with its web process lost: the page comes back by itself and the app still closes cleanly.
-        await using (var lost = LinuxAppRun.Launch(notebook!, "com.example.Notebook", []))
+        await using (var lost = await ProbeApp.LaunchAsync(notebook!, "com.example.Notebook", []))
         {
             await lost.WaitForAsync(@"Bridge: document [0-9a-f]{16} reported ui-ready\.");
 
@@ -162,7 +165,7 @@ public sealed class LinuxHostTests
         }
 
         var size = new FileInfo(notebook!).Length;
-        var results = Path.Combine(TestFolders.Artifacts(), "test-results", "Spar.Tests");
+        var results = Results.Folder(".");
         Directory.CreateDirectory(results);
         await File.WriteAllLinesAsync(
             Path.Combine(results, $"linux-host-{Environment.GetEnvironmentVariable("SPAR_LINUX_NOTEBOOK_LABEL") ?? "default"}.txt"),
@@ -195,7 +198,7 @@ public sealed class LinuxHostTests
     [InlineData(true, "WEBKIT_INSPECTOR_HTTP_SERVER")]
     public async Task The_browser_environment_overrides_are_ignored_unless_allowed_and_the_GPU_workarounds_pass(bool allowed, string server)
     {
-        var development = LinuxAppRun.IsDevelopmentProbe();
+        var development = ProbeApp.IsDevelopmentProbe();
         var port = FreePort();
         var other = server == "WEBKIT_INSPECTOR_SERVER" ? "WEBKIT_INSPECTOR_HTTP_SERVER" : "WEBKIT_INSPECTOR_SERVER";
         (string Name, string? Value)[] variables =
@@ -210,14 +213,14 @@ public sealed class LinuxHostTests
             ("__NV_DISABLE_EXPLICIT_SYNC", "1"),
             ("WEBKIT_DISABLE_COMPOSITING_MODE", "1"),
         ];
-        await using var app = LinuxAppRun.Launch(LinuxAppRun.Probe(), LinuxAppRun.ProbeAppId, variables);
+        await using var app = await ProbeApp.LaunchAsync(ProbeApp.Probe(), ProbeApp.ProbeAppId, variables);
 
         var jsc = await app.WaitForAsync(@"probe note: jsc: (?<seen>.+)$");
         var log = app.Log();
         var webProcess = app.WebKitProcesses().First(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
         var network = app.WebKitProcesses().First(process => process.Name.StartsWith("WebKitNetworkPr", StringComparison.Ordinal));
-        var environment = LinuxAppRun.EnvironmentOf(webProcess.Id);
-        var networkEnvironment = LinuxAppRun.EnvironmentOf(network.Id);
+        var environment = ProbeApp.EnvironmentOf(webProcess.Id);
+        var networkEnvironment = ProbeApp.EnvironmentOf(network.Id);
         var listening = ListeningPorts();
         var sandboxed = Ancestors(webProcess.Id, app.Id).Contains("bwrap");
 
@@ -276,13 +279,13 @@ public sealed class LinuxHostTests
     [InlineData(true)]
     public async Task The_inspector_follows_the_build_and_AllowDevTools(bool allowed)
     {
-        var development = LinuxAppRun.IsDevelopmentProbe();
+        var development = ProbeApp.IsDevelopmentProbe();
         var on = allowed || development;
-        await using var app = LinuxAppRun.Start("menu:plain", ("BRIDGE_PROBE_BROWSER", allowed ? "AllowDevTools" : null));
+        await using var app = await ProbeApp.StartAsync("menu:plain", ("BRIDGE_PROBE_BROWSER", allowed ? "AllowDevTools" : null));
         await app.WaitForAsync(@"probe note: menu ready \(plain\)");
 
         Assert.Matches($@"Browser settings (set|read back) \([0-9.]+ ms\): devtools {(on ? "on" : "off")}, GTK inspector keys {(development ? "on" : "off")}, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled\.", app.Log());
-        var display = LinuxAppRun.Display();
+        var display = ProbeApp.Display();
         var beforeMenu = app.WindowCount();
         XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id), button: 3);
         await Task.Delay(800, TestContext.Current.CancellationToken);
@@ -327,14 +330,14 @@ public sealed class LinuxHostTests
     [InlineData(true)]
     public async Task GTK_DEBUG_interactive_opens_GTKs_inspector_only_in_Development_or_with_browser_environment_overrides(bool allowed)
     {
-        var development = LinuxAppRun.IsDevelopmentProbe();
-        await using var app = LinuxAppRun.Start(
+        var development = ProbeApp.IsDevelopmentProbe();
+        await using var app = await ProbeApp.StartAsync(
             "",
             ("GTK_DEBUG", "interactive"),
             ("BRIDGE_PROBE_BROWSER", allowed ? "AllowBrowserEnvironmentOverrides" : null));
         await app.WaitForAsync(@"probe note: first document [0-9a-f]{16}$");
         await Task.Delay(1_500, TestContext.Current.CancellationToken);
-        var titles = X11Frames.Titles(LinuxAppRun.Display(), app.Id);
+        var titles = X11Frames.Titles(ProbeApp.Display(), app.Id);
 
         Record(
             $"{(development ? "development" : "production")}, GTK_DEBUG=interactive, " +
@@ -345,7 +348,7 @@ public sealed class LinuxHostTests
         app.RequestClose();
         Assert.Equal(0, await app.WaitForExitAsync());
     }
-    private static int WebPages(LinuxAppRun app) =>
+    private static int WebPages(ProbeApp app) =>
         app.WebKitProcesses().Count(process => process.Name.StartsWith("WebKitWebProces", StringComparison.Ordinal));
     /// <summary>
     /// The browser's own keys on the published executable, pressed with real input: the page gets each one, and none
@@ -354,9 +357,9 @@ public sealed class LinuxHostTests
     [Fact]
     public async Task The_browser_keys_reach_the_page_and_do_nothing_else()
     {
-        await using var app = LinuxAppRun.Start("keys");
+        await using var app = await ProbeApp.StartAsync("keys");
         await app.WaitForAsync("probe note: keys ready");
-        var display = LinuxAppRun.Display();
+        var display = ProbeApp.Display();
         XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id));
         string[] keys =
         [
@@ -379,7 +382,7 @@ public sealed class LinuxHostTests
         Assert.Single(Regex.Matches(log, @"Bridge: document [0-9a-f]{16} opened\."));
         Assert.Equal(1, windows);
         Assert.Equal(0, await app.CloseAsync());
-        Record($"{(LinuxAppRun.IsDevelopmentProbe() ? "development" : "production")}: {string.Join(" ", keys)}: {seen.Groups["seen"].Value}; {windows} window");
+        Record($"{(ProbeApp.IsDevelopmentProbe() ? "development" : "production")}: {string.Join(" ", keys)}: {seen.Groups["seen"].Value}; {windows} window");
     }
 
     /// <summary>
@@ -392,18 +395,18 @@ public sealed class LinuxHostTests
     [InlineData(true)]
     public async Task Downloads_the_picker_and_the_context_menu_are_refused_unless_allowed(bool allowed)
     {
-        var development = LinuxAppRun.IsDevelopmentProbe();
-        var run = Path.Combine(TestFolders.Artifacts(), "linux-homes", "host-tests", Guid.NewGuid().ToString("N")[..12]);
+        var development = ProbeApp.IsDevelopmentProbe();
+        var run = ProbeApp.NewRunFolder();
         var downloads = Path.Combine(run, "home", "Downloads");
         Directory.CreateDirectory(downloads);
         Directory.CreateDirectory(Path.Combine(run, "config"));
         File.WriteAllText(Path.Combine(run, "config", "user-dirs.dirs"), "XDG_DOWNLOAD_DIR=\"$HOME/Downloads\"\n");
-        await using var app = LinuxAppRun.Launch(
-            LinuxAppRun.Probe(),
-            LinuxAppRun.ProbeAppId,
+        await using var app = await ProbeApp.LaunchAsync(
+            ProbeApp.Probe(),
+            ProbeApp.ProbeAppId,
             [("BRIDGE_PROBE_PLAN", "download,picker,menu:editable"), ("BRIDGE_PROBE_BROWSER", allowed ? "AllowDownloads,AllowPagePicker,AllowContextMenu" : null)],
             runFolder: run);
-        var display = LinuxAppRun.Display();
+        var display = ProbeApp.Display();
 
         await app.WaitForAsync("probe note: download: ");
         await Task.Delay(2_000, TestContext.Current.CancellationToken);
@@ -456,14 +459,14 @@ public sealed class LinuxHostTests
     [InlineData(true)]
     public async Task History_navigation_to_another_document_is_cancelled_unless_allowed(bool allowed)
     {
-        await using var app = LinuxAppRun.Start("history", ("BRIDGE_PROBE_BROWSER", allowed ? "AllowHistoryNavigation" : null));
+        await using var app = await ProbeApp.StartAsync("history", ("BRIDGE_PROBE_BROWSER", allowed ? "AllowHistoryNavigation" : null));
 
         await app.WaitForAsync("probe note: history: within the document back to none");
         await app.WaitForAsync("probe note: history: going back from the second document");
         if (!allowed)
         {
             await app.WaitForAsync("probe note: history: still at /other.html");
-            var display = LinuxAppRun.Display();
+            var display = ProbeApp.Display();
             XTest.ClickMiddle(display, X11Frames.MainWindow(display, app.Id), button: 8);
             await Task.Delay(1_500, TestContext.Current.CancellationToken);
         }
@@ -480,7 +483,7 @@ public sealed class LinuxHostTests
         Assert.Equal(allowed, !log.Contains("probe note: history: still at", StringComparison.Ordinal));
         Assert.Equal(allowed ? 3 : 2, commits);
         Assert.Equal(0, await app.CloseAsync());
-        Record($"{(LinuxAppRun.IsDevelopmentProbe() ? "development" : "production")}, {(allowed ? "AllowHistoryNavigation()" : "default")}: {cancelled} cancelled, {commits} documents committed");
+        Record($"{(ProbeApp.IsDevelopmentProbe() ? "development" : "production")}, {(allowed ? "AllowHistoryNavigation()" : "default")}: {cancelled} cancelled, {commits} documents committed");
     }
 
     /// <summary>The loopback ports something listens on (TCP, IPv4 and IPv6), from <c>/proc/net/tcp</c> and <c>tcp6</c>.</summary>
@@ -530,23 +533,23 @@ public sealed class LinuxHostTests
 
     private static void Record(string line)
     {
-        var results = Path.Combine(TestFolders.Artifacts(), "test-results", "Spar.Tests");
+        var results = Results.Folder(".");
         Directory.CreateDirectory(results);
         File.AppendAllLines(Path.Combine(results, "linux-security-defaults.txt"), [string.Create(CultureInfo.InvariantCulture, $"{DateTimeOffset.Now:HH:mm:ss} {line}")]);
     }
 
     /// <summary><c>JSC_useWasm</c> as the app's web process started with it, waiting for the process if it is not there yet.</summary>
-    private static string? WebAssemblySetting(LinuxAppRun app)
+    private static string? WebAssemblySetting(ProbeApp app)
     {
         var limit = Stopwatch.StartNew();
-        while (limit.Elapsed < LinuxAppRun.Patience)
+        while (limit.Elapsed < ProbeApp.Patience)
         {
             foreach (var (id, name) in app.WebKitProcesses())
             {
                 try
                 {
                     if (name.StartsWith("WebKitWebProces", StringComparison.Ordinal)
-                        && LinuxAppRun.EnvironmentOf(id).TryGetValue("JSC_useWasm", out var value))
+                        && ProbeApp.EnvironmentOf(id).TryGetValue("JSC_useWasm", out var value))
                     {
                         return value;
                     }

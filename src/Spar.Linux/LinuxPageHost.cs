@@ -16,15 +16,17 @@ internal sealed class LinuxPageHost : IPageWatchHost
     private readonly MainLoop _ui;
     private readonly HostLog _log;
     private readonly Func<nint> _window;
+    private readonly WindowDialogs _dialogs;
     private readonly ScriptBridge _bridge;
     private readonly BrowserView _view;
     private readonly ConcurrentQueue<string>? _answers;
 
-    private LinuxPageHost(MainLoop ui, HostLog log, Func<nint> window, ScriptBridge bridge, BrowserView view, ConcurrentQueue<string>? answers)
+    private LinuxPageHost(MainLoop ui, HostLog log, Func<nint> window, WindowDialogs dialogs, ScriptBridge bridge, BrowserView view, ConcurrentQueue<string>? answers)
     {
         _ui = ui;
         _log = log;
         _window = window;
+        _dialogs = dialogs;
         _bridge = bridge;
         _view = view;
         _answers = answers;
@@ -58,6 +60,7 @@ internal sealed class LinuxPageHost : IPageWatchHost
         MainLoop ui,
         HostLog log,
         Func<nint> window,
+        WindowDialogs dialogs,
         string title,
         ScriptBridge bridge,
         BrowserView view,
@@ -66,7 +69,7 @@ internal sealed class LinuxPageHost : IPageWatchHost
         int interval,
         ConcurrentQueue<string>? answers)
     {
-        var watch = new PageWatch(new LinuxPageHost(ui, log, window, bridge, view, answers), log, title, hook, automated, interval);
+        var watch = new PageWatch(new LinuxPageHost(ui, log, window, dialogs, bridge, view, answers), log, title, hook, automated, interval);
         bridge.DocumentOpened += watch.DocumentOpened;
         bridge.DocumentClosed += watch.DocumentClosed;
         bridge.Answered += watch.Answered;
@@ -77,7 +80,7 @@ internal sealed class LinuxPageHost : IPageWatchHost
 
     /// <summary>The shutdown prompt, from any thread: over no window, since the window may be gone.</summary>
     public static IHostPrompt ShowShutdownPrompt(MainLoop ui, HostLog log, ConcurrentQueue<string>? answers, HostPromptRequest request) =>
-        Prompt.Show(ui, log, () => 0, request, answers);
+        Prompt.Show(ui, log, () => 0, null, request, answers);
 
     public void Post(Action work, string name) => _ui.Post(work, name);
 
@@ -89,7 +92,7 @@ internal sealed class LinuxPageHost : IPageWatchHost
 
     public void ReloadHungPage() => _view.ReloadHungPage();
 
-    public IHostPrompt ShowPrompt(HostPromptRequest request) => Prompt.Show(_ui, _log, _window, request, _answers);
+    public IHostPrompt ShowPrompt(HostPromptRequest request) => Prompt.Show(_ui, _log, _window, _dialogs, request, _answers);
 
     /// <summary>
     /// A <c>GtkAlertDialog</c> as the shared code sees it: its first button the default and the one Escape and closing
@@ -108,16 +111,16 @@ internal sealed class LinuxPageHost : IPageWatchHost
         public Task<PromptAnswer> Answer => _answer.Task;
 
         /// <summary>Shows the prompt on the loop (now when called there, posted otherwise) over <paramref name="parent"/>'s window.</summary>
-        public static Prompt Show(MainLoop ui, HostLog log, Func<nint> parent, HostPromptRequest request, ConcurrentQueue<string>? answers)
+        public static Prompt Show(MainLoop ui, HostLog log, Func<nint> parent, WindowDialogs? owner, HostPromptRequest request, ConcurrentQueue<string>? answers)
         {
             var prompt = new Prompt(ui);
             if (ui.IsCurrent)
             {
-                prompt.Open(log, parent(), request, answers);
+                prompt.Open(log, parent(), owner, request, answers);
             }
             else
             {
-                ui.Post(() => prompt.Open(log, parent(), request, answers), "prompt");
+                ui.Post(() => prompt.Open(log, parent(), owner, request, answers), "prompt");
             }
 
             return prompt;
@@ -135,7 +138,7 @@ internal sealed class LinuxPageHost : IPageWatchHost
             }
         }
 
-        private void Open(HostLog log, nint parent, HostPromptRequest request, ConcurrentQueue<string>? answers)
+        private void Open(HostLog log, nint parent, WindowDialogs? owner, HostPromptRequest request, ConcurrentQueue<string>? answers)
         {
             if (_dismissed)
             {
@@ -144,7 +147,7 @@ internal sealed class LinuxPageHost : IPageWatchHost
 
             try
             {
-                var dialog = AlertDialog.Show(parent, request.Instruction, request.Content, [request.First, request.Second], cancelButton: 0);
+                var dialog = AlertDialog.Show(parent, parent == 0 ? null : owner, request.Instruction, request.Content, [request.First, request.Second], cancelButton: 0);
                 _dialog = dialog;
                 _ = AwaitAsync(dialog);
             }

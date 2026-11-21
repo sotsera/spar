@@ -5,8 +5,6 @@
     <OutputType>Exe</OutputType>
     <IsTestProject>true</IsTestProject>
     <RootNamespace>Spar.Tests</RootNamespace>
-    <!-- The X11 close of the Linux host tests (X11Close.cs) is a source-generated import. -->
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <!-- The loopback host's own tests; the other test projects stay free of a web server. -->

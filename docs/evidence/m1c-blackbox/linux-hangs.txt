@@ -1,0 +1,131 @@
+22:05:18 development: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.031 ms
+22:31:20 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.034 ms
+22:31:35 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+22:31:55 production: a page hung before it connected, alarm 19.8 s after its document opened
+22:31:56 production: no stall probe without KeepStallProbe(), the probe on with it
+22:32:16 production: alarm 19.9 s after the hang, the dialog shown (2 windows); no answer without the Development build
+22:41:02 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.067 ms
+22:41:17 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+22:41:37 production: a page hung before it connected, alarm 19.9 s after its document opened
+22:41:38 production: no stall probe without KeepStallProbe(), the probe on with it
+22:41:58 production: alarm 19.9 s after the hang, the dialog shown (2 windows); no answer without the Development build
+22:46:08 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.051 ms
+22:46:23 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+22:46:44 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+22:46:44 production: no stall probe without KeepStallProbe(), the probe on with it
+22:47:05 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 71 ms after the choice
+22:47:56 production: a close 1 s into a hang: Wait / Close anyway 5013 ms after the request, again 18.8 s after Wait; Close anyway to exit 0 in 8 ms
+23:00:32 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.032 ms
+23:00:48 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:01:08 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:01:09 production: no stall probe without KeepStallProbe(), the probe on with it
+23:01:30 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 69 ms after the choice
+23:01:35 production: the page's guard kept the window; a silent guard was asked about 5016 ms after the request, Close anyway, exit 0
+23:02:01 production: a close 1 s into a hang: Wait / Close anyway 5010 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 24 ms
+23:05:45 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.063 ms
+23:06:01 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:06:21 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:06:22 production: no stall probe without KeepStallProbe(), the probe on with it
+23:06:43 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 69 ms after the choice
+23:06:49 production: the page's guard kept the window; a silent guard was asked about 5013 ms after the request, Close anyway, exit 0
+23:07:15 production: a close 1 s into a hang: Wait / Close anyway 5015 ms after the request, again 18.8 s after Wait; Close anyway to exit 0 in 9 ms
+23:11:01 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.043 ms
+23:11:16 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:11:38 production: a page hung before it connected, alarm 19.8 s after its document opened; closed anyway, exit 0
+23:11:38 production: no stall probe without KeepStallProbe(), the probe on with it
+23:11:59 production: alarm 19.9 s after the hang; Reload page: web process ended 1.1 ms and ui-ready 67 ms after the choice
+23:12:05 production: the page's guard kept the window; a silent guard was asked about 5011 ms after the request, Close anyway, exit 0
+23:12:31 production: a close 1 s into a hang: Wait / Close anyway 5010 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 33 ms
+23:16:16 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.033 ms
+23:16:32 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:16:53 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:16:53 production: no stall probe without KeepStallProbe(), the probe on with it
+23:17:14 production: alarm 19.9 s after the hang; Reload page: web process ended 0.9 ms and ui-ready 73 ms after the choice
+23:17:20 production: the page's guard kept the window; a silent guard was asked about 5010 ms after the request, Close anyway, exit 0
+23:17:46 production: a close 1 s into a hang: Wait / Close anyway 5014 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 20 ms
+23:21:30 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.040 ms
+23:21:45 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:22:06 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:22:07 production: no stall probe without KeepStallProbe(), the probe on with it
+23:22:28 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 70 ms after the choice
+23:22:34 production: the page's guard kept the window; a silent guard was asked about 5014 ms after the request, Close anyway, exit 0
+23:23:00 production: a close 1 s into a hang: Wait / Close anyway 5013 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 24 ms
+23:25:35 development: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.800 ms
+23:26:18 development: a 120 s disposal: the shutdown prompt 10.0 s and again 40.5 s after the teardown began; Exit now, exit 10
+23:26:39 development: a page hung before it connected, alarm 19.8 s after its document opened; closed anyway, exit 0
+23:26:40 development: a 300 ms stall of the main loop reported as 300 ms in the development stall trigger; 0 other stalls over 50 ms
+23:27:31 development, 500 ms heartbeat: after each Wait the dialog came back after 1.9, 3.9, 7.9, 15.9, 15.9 s (2, 4, 8, 16, 16 s decided)
+23:27:53 development: alarm 19.9 s after the hang; Reload page: web process ended 1.9 ms and ui-ready 69 ms after the choice
+23:28:00 development: the page's guard kept the window; a silent guard was asked about 5017 ms after the request, Close anyway, exit 0
+23:28:26 development: a close 1 s into a hang: Wait / Close anyway 5021 ms after the request, again 18.8 s after Wait; Close anyway to exit 0 in 39 ms
+23:31:08 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.036 ms
+23:31:24 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:31:45 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:31:46 production: no stall probe without KeepStallProbe(), the probe on with it
+23:32:06 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 67 ms after the choice
+23:32:13 production: the page's guard kept the window; a silent guard was asked about 5017 ms after the request, Close anyway, exit 0
+23:32:38 production: a close 1 s into a hang: Wait / Close anyway 5016 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 24 ms
+23:38:22 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.034 ms
+23:38:43 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:38:43 production: no stall probe without KeepStallProbe(), the probe on with it
+23:39:04 production: alarm 19.9 s after the hang; Reload page: web process ended 0.9 ms and ui-ready 77 ms after the choice
+23:39:10 production: the page's guard kept the window; a silent guard was asked about 5016 ms after the request, Close anyway, exit 0
+23:39:36 production: a close 1 s into a hang: Wait / Close anyway 5012 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 21 ms
+23:39:52 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:47:30 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.033 ms
+23:47:46 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:48:07 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:48:07 production: no stall probe without KeepStallProbe(), the probe on with it
+23:48:28 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 71 ms after the choice
+23:48:34 production: the page's guard kept the window; a silent guard was asked about 5015 ms after the request, Close anyway, exit 0
+23:49:00 production: a close 1 s into a hang: Wait / Close anyway 5013 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 25 ms
+23:52:51 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.033 ms
+23:53:06 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:53:27 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:53:27 production: no stall probe without KeepStallProbe(), the probe on with it
+23:53:48 production: alarm 19.9 s after the hang; Reload page: web process ended 0.8 ms and ui-ready 72 ms after the choice
+23:53:54 production: the page's guard kept the window; a silent guard was asked about 5011 ms after the request, Close anyway, exit 0
+23:54:19 production: a close 1 s into a hang: Wait / Close anyway 5011 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 9 ms
+23:58:07 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.044 ms
+23:58:23 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+23:58:44 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+23:58:44 production: no stall probe without KeepStallProbe(), the probe on with it
+23:59:05 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 72 ms after the choice
+23:59:10 production: the page's guard kept the window; a silent guard was asked about 5011 ms after the request, Close anyway, exit 0
+23:59:36 production: a close 1 s into a hang: Wait / Close anyway 5016 ms after the request, again 18.8 s after Wait; Close anyway to exit 0 in 10 ms
+00:03:24 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.031 ms
+00:03:39 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+00:04:00 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+00:04:01 production: no stall probe without KeepStallProbe(), the probe on with it
+00:04:22 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 75 ms after the choice
+00:04:28 production: the page's guard kept the window; a silent guard was asked about 5008 ms after the request, Close anyway, exit 0
+00:04:53 production: a close 1 s into a hang: Wait / Close anyway 5012 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 10 ms
+00:08:44 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.031 ms
+00:08:59 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+00:09:20 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+00:09:21 production: no stall probe without KeepStallProbe(), the probe on with it
+00:09:41 production: alarm 19.9 s after the hang; Reload page: web process ended 0.9 ms and ui-ready 69 ms after the choice
+00:09:47 production: the page's guard kept the window; a silent guard was asked about 5010 ms after the request, Close anyway, exit 0
+00:10:13 production: a close 1 s into a hang: Wait / Close anyway 5013 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 17 ms
+00:12:43 development: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.623 ms
+00:13:25 development: a 120 s disposal: the shutdown prompt 10.0 s and again 40.5 s after the teardown began; Exit now, exit 10
+00:13:46 development: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+00:13:47 development: a 300 ms stall of the main loop reported as 300.1 ms in the development stall trigger; 0 other stalls over 50 ms
+00:14:38 development, 500 ms heartbeat: after each Wait the dialog came back after 1.9, 3.9, 7.9, 15.9, 15.9 s (2, 4, 8, 16, 16 s decided)
+00:15:00 development: alarm 19.9 s after the hang; Reload page: web process ended 1.8 ms and ui-ready 71 ms after the choice
+00:15:06 development: the page's guard kept the window; a silent guard was asked about 5014 ms after the request, Close anyway, exit 0
+00:15:32 development: a close 1 s into a hang: Wait / Close anyway 5020 ms after the request, again 18.8 s after Wait; Close anyway to exit 0 in 23 ms
+00:18:26 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.055 ms
+00:18:42 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+00:19:03 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+00:19:03 production: no stall probe without KeepStallProbe(), the probe on with it
+00:19:24 production: alarm 19.9 s after the hang; Reload page: web process ended 1.0 ms and ui-ready 67 ms after the choice
+00:19:30 production: the page's guard kept the window; a silent guard was asked about 5016 ms after the request, Close anyway, exit 0
+00:19:56 production: a close 1 s into a hang: Wait / Close anyway 5009 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 9 ms
+00:25:09 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.045 ms
+00:25:30 production: a page hung before it connected, alarm 19.9 s after its document opened; closed anyway, exit 0
+00:25:31 production: no stall probe without KeepStallProbe(), the probe on with it
+00:25:52 production: alarm 19.9 s after the hang; Reload page: web process ended 0.9 ms and ui-ready 70 ms after the choice
+00:25:58 production: the page's guard kept the window; a silent guard was asked about 5014 ms after the request, Close anyway, exit 0
+00:26:24 production: a close 1 s into a hang: Wait / Close anyway 5010 ms after the request, again 18.9 s after Wait; Close anyway to exit 0 in 9 ms
+00:26:39 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0

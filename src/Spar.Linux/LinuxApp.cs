@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Spar.Hosting;
 using Spar.Linux.Interop;
@@ -48,7 +49,14 @@ internal sealed class LinuxApp : IAppWindowOwner
     private MainLoop? _ui;
     private AppWindow? _window;
     private ShutdownWatch? _shutdown;
+    private SessionEndSignals? _signals;
+
+    /// <summary>The running session end, once a signal started one: its final line and the log's flush.</summary>
+    private Task? _sessionEnd;
     private int _stopped;
+
+    /// <summary>Completes once <see cref="Stop"/> has run: the run's last work, which a session end waits for within its budget.</summary>
+    private readonly TaskCompletionSource _stoppedWork = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     /// <summary>The display GTK could not open, when that is why the window never started.</summary>
     private StartupProblem? _noDisplay;
@@ -96,7 +104,12 @@ internal sealed class LinuxApp : IAppWindowOwner
         }
         finally
         {
+            // A session end's final line comes before the process ends, even when the normal exit got here first
+            // (measured in the CI container: the services were disposed and the exit logged before the line).
+            WaitForSessionEnd();
+
             // The socket closes before the lock is released, so no launch is acknowledged by a closing app.
+            _signals?.Dispose();
             _instance?.Dispose();
             _shutdown?.Complete();
             _log.Close();
@@ -159,8 +172,7 @@ internal sealed class LinuxApp : IAppWindowOwner
 
         if (CreateProfileFolder() is { } unusable)
         {
-            _log.Error(unusable);
-            return AppWindow.StartFailedExitCode;
+            return StartupFailure.ReportConfiguration(unusable, AppWindow.StartFailedExitCode, Startup);
         }
 
         // The browser's environment overrides before any of WebKit's libraries is loaded (plan section 3c): what is
@@ -252,7 +264,54 @@ internal sealed class LinuxApp : IAppWindowOwner
         }
 
         _instance?.Listen(OnRelaunch, _log);
+
+        // From here on a session end has a window to close; before it, the runtime's default ends the process.
+        _signals = SessionEndSignals.Register(OnSessionEnd, OnSignalAgain);
         return true;
+    }
+
+    /// <summary>
+    /// The first <c>SIGTERM</c> or <c>SIGINT</c> (the runtime's signal thread): the session end, off that thread and off the
+    /// loop. Its final line is written and the log flushed within the budget; when the last work is still running then,
+    /// the process ends as Windows ends it after <c>WM_ENDSESSION</c>, with the exit code the session end's close gives (0).
+    /// </summary>
+    private void OnSessionEnd(string signal)
+    {
+        var start = Stopwatch.GetTimestamp();
+        _log.Step($"{signal}: the session ends");
+        var ui = _ui!;
+        var window = _window!;
+        _sessionEnd = Task.Run(async () =>
+        {
+            var outcome = await SessionEnd.RunAsync(ui, window, () => _stoppedWork.Task, start);
+            _log.Step($"session end: {outcome.Text}; {signal} held {outcome.HeldMilliseconds:0} ms");
+            _log.Close(SessionEnd.Left(start) > TimeSpan.FromMilliseconds(250) ? SessionEnd.Left(start) : TimeSpan.FromMilliseconds(250));
+            if (!outcome.Finished)
+            {
+                ExitNow(window.ExitCode);
+            }
+        });
+    }
+
+    /// <summary>Waits briefly for a session end that a signal started: everything it waits for is done by now.</summary>
+    private void WaitForSessionEnd()
+    {
+        try
+        {
+            _ = _sessionEnd?.Wait(SessionEnd.Budget);
+        }
+        catch (AggregateException exception)
+        {
+            _log.Error("The session end failed", exception.InnerException);
+        }
+    }
+
+    /// <summary>A second signal: the process ends at once, with 128 + the signal's number, after one line.</summary>
+    private void OnSignalAgain(string signal, int exitCode)
+    {
+        _log.Step($"{signal} again: exit {exitCode} at once");
+        _log.Close(TimeSpan.FromMilliseconds(250));
+        ExitNow(exitCode);
     }
 
     /// <summary>
@@ -311,7 +370,7 @@ internal sealed class LinuxApp : IAppWindowOwner
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
-            return $"The browser data folder '{_folders.Profile}' cannot be created: {exception.Message}";
+            return $"The browser profile folder '{_folders.Profile}' cannot be created: {exception.Message}";
         }
     }
 
@@ -384,6 +443,10 @@ internal sealed class LinuxApp : IAppWindowOwner
         catch (Exception exception)
         {
             _log.Error("The app's services did not stop cleanly", exception);
+        }
+        finally
+        {
+            _stoppedWork.TrySetResult();
         }
     }
 

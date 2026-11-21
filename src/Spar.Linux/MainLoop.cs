@@ -133,6 +133,11 @@ internal sealed class MainLoop : SynchronizationContext
         finally
         {
             _probe?.Stop();
+
+            // GDK's GL context for this thread is released now, on the loop: left to the thread's exit, its dispose ran
+            // in the thread-local cleanup while the process was exiting, and failed GDK's X error-trap assertion (measured
+            // in the CI container: exit 134 after "exit 0", Hardware acceleration Always on Xvfb; pitfalls).
+            Gtk.gdk_gl_context_clear_current();
             if (_loop != 0)
             {
                 GLib.g_main_loop_unref(_loop);

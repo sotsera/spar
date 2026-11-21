@@ -5,7 +5,7 @@ namespace Notebook.EndToEndTests;
 
 /// <summary>
 /// The Notebook's exact Production executable, launched (plan section 5, level 7): nothing replaced, its per-user
-/// folders in a disposable data root, read and driven through UI Automation on a desktop of the test process's own, so
+/// folders in a disposable data root, read and driven through the accessibility API (UI Automation on Windows, AT-SPI on Linux) on a desktop of the test process's own, so
 /// nothing shows on the monitor. Smoke checks and what spans processes: the clean close, the files, the hand-off to a
 /// running instance, and the native messages of a failed relaunch and a failed start, with their exit codes.
 /// </summary>
@@ -17,7 +17,7 @@ public sealed class BlackBoxTests
     [Fact]
     public async Task It_starts_shows_its_page_and_closes_cleanly()
     {
-        SkipOffWindows();
+        SkipOffDesktop();
         await using var app = await SparBlackBox.LaunchAsync(Projects.Notebook, cancellationToken: Token);
 
         Assert.Equal("Notebook", await app.Window.TitleAsync());
@@ -32,7 +32,7 @@ public sealed class BlackBoxTests
     [Fact]
     public async Task Invoking_a_page_button_opens_its_dialog()
     {
-        SkipOffWindows();
+        SkipOffDesktop();
         await using var app = await SparBlackBox.LaunchAsync(Projects.Notebook, cancellationToken: Token);
 
         // The sidebar and the empty page both have the button: an action needs one, so the test says which.
@@ -48,7 +48,7 @@ public sealed class BlackBoxTests
     [Fact]
     public async Task Every_file_it_writes_is_under_its_data_root()
     {
-        SkipOffWindows();
+        SkipOffDesktop();
         var real = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Projects.Notebook.AppId);
         var before = Snapshot(real);
 
@@ -58,7 +58,9 @@ public sealed class BlackBoxTests
 
         Assert.Equal(before, Snapshot(real));
         Assert.True(File.Exists(app.LogFile), "The app's log is under the data root.");
-        Assert.True(Directory.Exists(Path.Combine(app.AppFolder, "WebView2", "EBWebView")), "The browser profile is under the data root.");
+        // The browser's profile: WebView2's user data on Windows, WebKit's data on Linux.
+        var profile = OperatingSystem.IsWindows() ? Path.Combine(app.AppFolder, "WebView2", "EBWebView") : Path.Combine(app.AppFolder, "WebKit");
+        Assert.True(Directory.Exists(profile), "The browser profile is under the data root.");
         Assert.StartsWith(app.DataRoot, app.AppFolder, StringComparison.OrdinalIgnoreCase);
         var log = await File.ReadAllTextAsync(app.LogFile, Token);
         Assert.Contains($"App id {Projects.Notebook.AppId}, folder {app.AppFolder}", log, StringComparison.Ordinal);
@@ -67,7 +69,7 @@ public sealed class BlackBoxTests
     [Fact]
     public async Task A_second_launch_hands_over_to_the_running_instance_and_exits_0()
     {
-        SkipOffWindows();
+        SkipOffDesktop();
         await using var first = await SparBlackBox.LaunchAsync(Projects.Notebook, cancellationToken: Token);
 
         await using var second = await SparBlackBox.LaunchAsync(Projects.Notebook, o =>
@@ -79,25 +81,26 @@ public sealed class BlackBoxTests
 
         Assert.Equal(0, await second.WaitForExitAsync(Token));
         Assert.Contains("handed to the running instance", second.StandardError, StringComparison.Ordinal);
-        await WaitForLogAsync(first, "relaunch with 1 arguments: window shown");
+        await WaitForLogAsync(first, OperatingSystem.IsWindows() ? "relaunch with 1 arguments: window shown" : "Relaunch with 1 arguments: the window was presented");
         Assert.Equal(0, await first.CloseAsync(Token));
     }
 
     [Fact]
     public async Task A_relaunch_that_gets_no_answer_shows_its_message_and_exits_8()
     {
-        SkipOffWindows();
-        string root;
+        SkipOffDesktop();
+        string root, appFolder;
         await using (var first = await SparBlackBox.LaunchAsync(Projects.Notebook, o => o.KeepData = true, Token))
         {
             Assert.Equal(0, await first.CloseAsync(Token));
             root = first.DataRoot;
+            appFolder = first.AppFolder;
         }
 
         try
         {
             // The lock of a running instance that nobody serves: the relaunch waits for it about 5 s, then gives up.
-            var lockFile = Path.Combine(root, "LocalAppData", Projects.Notebook.AppId, "instance.lock");
+            var lockFile = Path.Combine(appFolder, "instance.lock");
             await using var held = new FileStream(lockFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
             await using var relaunch = await SparBlackBox.LaunchAsync(Projects.Notebook, o =>
             {
@@ -124,19 +127,20 @@ public sealed class BlackBoxTests
     [Fact]
     public async Task A_start_whose_profile_folder_cannot_be_created_shows_its_message_and_exits_70()
     {
-        SkipOffWindows();
-        string root;
+        SkipOffDesktop();
+        string root, appFolder;
         await using (var first = await SparBlackBox.LaunchAsync(Projects.Notebook, o => o.KeepData = true, Token))
         {
             Assert.Equal(0, await first.CloseAsync(Token));
             Assert.True(await first.WaitForProcessTreeExitAsync());
             root = first.DataRoot;
+            appFolder = first.AppFolder;
         }
 
         try
         {
             // The browser profile's folder is a file: the host cannot create it, and says so before the browser starts.
-            var profile = Path.Combine(root, "LocalAppData", Projects.Notebook.AppId, "WebView2");
+            var profile = Path.Combine(appFolder, OperatingSystem.IsWindows() ? "WebView2" : "WebKit");
             Directory.Delete(profile, recursive: true);
             await File.WriteAllTextAsync(profile, "not a folder", Token);
             await using var broken = await SparBlackBox.LaunchAsync(Projects.Notebook, o =>
@@ -159,9 +163,9 @@ public sealed class BlackBoxTests
         }
     }
 
-    /// <summary>The black-box fixture runs on Windows until the Linux host arrives (M1c); elsewhere each test is a skip.</summary>
-    private static void SkipOffWindows() =>
-        Assert.SkipUnless(OperatingSystem.IsWindows(), "The black-box fixture runs on Windows; the Linux host arrives in M1c.");
+    /// <summary>The black-box fixture runs on Windows and Linux; elsewhere each test is a skip.</summary>
+    private static void SkipOffDesktop() =>
+        Assert.SkipUnless(OperatingSystem.IsWindows() || OperatingSystem.IsLinux(), "The black-box fixture runs on Windows and Linux.");
 
     private static async Task WaitForLogAsync(SparBlackBoxApp app, string text)
     {
