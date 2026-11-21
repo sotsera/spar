@@ -1,0 +1,10 @@
+From the same artifact, file Spar.WindowTests/linux-host-default.txt (the black-box step, Production probe, the Notebook named by the apps step).
+Recorded 2026-11-21 09:23:36 +00:00
+Notebook executable: 5141248 B
+Launch to ui-ready, warm: median 391.5 ms (374.1–472.2, n = 11): 374.1, 384.7, 391.5, 375.5, 395.1, 386.1, 472.2, 393.1, 451.7, 388.7, 391.5
+Close request to exit, from outside: median 38.3 ms (29.1–50.0, n = 11): 29.1, 38.3, 34.3, 46.0, 46.2, 37.0, 45.4, 42.6, 31.6, 33.2, 50.0
+Total PSS, app and WebKit processes, one run: 239.9 MB
+WebAssembly: JSC_useWasm=false in the web process, and in the one after a loss
+
+From Spar.WindowTests/linux-startup.txt (the blackboxdev step's raised minimum):
+09:25:40 too old: exit 4, reported 105.7 ms after launch, message shown at 200.4 ms

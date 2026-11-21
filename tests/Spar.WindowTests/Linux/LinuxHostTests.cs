@@ -115,7 +115,8 @@ public sealed class LinuxHostTests
     /// <summary>
     /// The M1c budgets on the Notebook's Production NativeAOT executable (plan, "Provisional budgets"), where the runner
     /// names it in <c>SPAR_LINUX_NOTEBOOK</c>: launch to <c>ui-ready</c> (from the test's clock at the launch to the
-    /// time of the host's ready line), warm, one run discarded then 11; the close to the exit; and the total memory of
+    /// time of the host's ready line, and from the process's start by the host's log), one run discarded then 11, each on a
+    /// new data root; the close to the exit; and the total memory of
     /// the app and its WebKit processes (PSS) in one run. Recorded in
     /// <c>artifacts/test-results/Spar.WindowTests/linux-host-&lt;label&gt;.txt</c> (<c>SPAR_LINUX_NOTEBOOK_LABEL</c>, for runs
     /// with different settings in the environment), not asserted: times vary with the machine.
@@ -127,13 +128,20 @@ public sealed class LinuxHostTests
         var notebook = Environment.GetEnvironmentVariable("SPAR_LINUX_NOTEBOOK");
         Assert.SkipWhen(string.IsNullOrEmpty(notebook), "Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.");
         var ready = new List<double>();
+        var fromProcess = new List<double>();
         var closing = new List<double>();
         var memory = 0.0;
         for (var run = 0; run < 12; run++)
         {
             await using var app = await ProbeApp.LaunchAsync(notebook!, "com.example.Notebook", []);
-            var line = await app.WaitForAsync(@"^(?<time>\S+) INFO  Spar\.Host  \[[0-9a-f]{8}\] ui-ready at [0-9.]+ ms$");
+            var line = await app.WaitForAsync(@"^(?<time>\S+) INFO  Spar\.Host  \[[0-9a-f]{8}\] ui-ready at (?<ready>[0-9.]+) ms$");
             var readyAt = DateTime.Parse(line.Groups["time"].Value, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+            // The same launch from the process's creation, as the budget tests measure it: the host's start after the
+            // process, from its first line, plus its ui-ready time (the test's clock above also counts the black box's
+            // own start of the launch's buses before the app).
+            var started = Regex.Match(app.Log(), @"Host started (?<ms>[0-9.]+) ms after the process");
+            var sinceProcess = double.Parse(started.Groups["ms"].Value, CultureInfo.InvariantCulture) + double.Parse(line.Groups["ready"].Value, CultureInfo.InvariantCulture);
             if (run == 1)
             {
                 // Settled first: the page has loaded its notes by now.
@@ -146,6 +154,7 @@ public sealed class LinuxHostTests
             if (run > 0)
             {
                 ready.Add((readyAt - app.Launched).TotalMilliseconds);
+                fromProcess.Add(sinceProcess);
                 closing.Add(closed.Elapsed.TotalMilliseconds);
             }
         }
@@ -173,6 +182,7 @@ public sealed class LinuxHostTests
                 string.Create(CultureInfo.InvariantCulture, $"Recorded {DateTimeOffset.Now:yyyy-MM-dd HH:mm:ss zzz}"),
                 string.Create(CultureInfo.InvariantCulture, $"Notebook executable: {size} B"),
                 $"Launch to ui-ready, warm: {Summary(ready)}",
+                $"Launch to ui-ready, warm, from the process's start (the host's log): {Summary(fromProcess)}",
                 $"Close request to exit, from outside: {Summary(closing)}",
                 string.Create(CultureInfo.InvariantCulture, $"Total PSS, app and WebKit processes, one run: {memory:0.0} MB"),
                 "WebAssembly: JSC_useWasm=false in the web process, and in the one after a loss",

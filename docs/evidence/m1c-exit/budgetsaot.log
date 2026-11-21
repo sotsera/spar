@@ -1,0 +1,59 @@
+STEP budgetsaot on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, WebKitGTK 2.52.6
+  Determining projects to restore...
+  Restored /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/Spar.WindowTests.csproj (in 256 ms).
+  Restored /var/tmp/spar-m1c-blackbox/repo/tests/apps/BridgeProbe/BridgeProbe.csproj (in 256 ms).
+  Restored /var/tmp/spar-m1c-blackbox/repo/tests/apps/WindowHost/WindowHost.csproj (in 256 ms).
+  6 of 9 projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /var/tmp/spar-m1c-blackbox/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Windows -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Linux -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Generator -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  WindowHost -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/WindowHost/bin/Production.BlackBox/Release/net11.0/linux-x64/WindowHost.dll
+  WindowHost -> /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/obj/aot/Production/Release/net11.0/linux-x64/spar-apps/WindowHost/
+  BridgeProbe -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/BridgeProbe/bin/Production.BlackBox/Release/net11.0/linux-x64/BridgeProbe.dll
+  BridgeProbe -> /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/obj/aot/Production/Release/net11.0/linux-x64/spar-apps/BridgeProbe/
+  Spar.Testing -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Testing/bin/Release/net11.0/Spar.Testing.dll
+  WindowHost -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/WindowHost/bin/aot/Test/Release/net11.0/linux-x64/WindowHost.dll
+  BridgeProbe -> /var/tmp/spar-m1c-blackbox/repo/tests/apps/BridgeProbe/bin/aot/Test/Release/net11.0/linux-x64/BridgeProbe.dll
+  Spar.WindowTests -> /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/aot/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll
+  Generating native code
+  Spar.WindowTests -> /var/tmp/spar-m1c-blackbox/repo/artifacts/aot/Spar.WindowTests/
+STEP exit 0 in 23911 ms: dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/linux-x64] (.NET 11.0.0)
+  Discovering: Spar.WindowTests
+  Discovered:  Spar.WindowTests
+  Starting:    Spar.WindowTests
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+  Finished:    Spar.WindowTests (ID = '2828e890687d28169e2c4f2e556797c13c7f3b1fa65b1b6273fc657256cb684d')
+=== TEST EXECUTION SUMMARY ===
+   Spar.WindowTests  Total: 4, Errors: 0, Failed: 0, Skipped: 0, Not Run: 0, Time: 31.019s
+STEP exit 0 in 32091 ms: artifacts/aot/Spar.WindowTests/Spar.WindowTests -class Spar.WindowTests.BudgetTests
+kept budgets-aot.txt
+Recorded 2026-11-21 11:57:02 +01:00
+Desktop bridge: small unary round trip, timed by the page: 0.00 ms (0.00–4.00, n = 200), p95 1.00 ms, mean 0.245 ms [Release, NativeAOT]
+Window test action: GetByRole, count: 0.32 ms (0.23–3.99, n = 100), p95 0.51 ms [Release, NativeAOT]
+Window test action: GetByLabel, count: 0.30 ms (0.21–0.43, n = 100), p95 0.38 ms [Release, NativeAOT]
+Window test action: an assertion that holds: 0.38 ms (0.30–0.51, n = 100), p95 0.46 ms [Release, NativeAOT]
+Window test action: click (checks, trusted press, landed): 16.20 ms (7.62–19.60, n = 100), p95 18.01 ms [Release, NativeAOT]
+Window test action: fill: 1.36 ms (1.22–5.92, n = 100), p95 4.56 ms [Release, NativeAOT]
+Window test action: key press: 1.24 ms (1.12–5.69, n = 100), p95 3.86 ms [Release, NativeAOT]
+Window test action: evaluate 1+1: 0.15 ms (0.14–3.32, n = 100), p95 0.25 ms [Release, NativeAOT]
+Window test action: viewport screenshot: 19.45 ms (17.18–20.21, n = 20), p95 20.13 ms [Release, NativeAOT]
+Window test: open, journey and close: 189.44 ms (186.68–236.26, n = 20), p95 236.05 ms [Release, NativeAOT]
+Window test: open (to the page's Ready): 89.11 ms (86.09–96.96, n = 20) [Release, NativeAOT]
+Window test: journey (fill, check, select, click, 3 assertions): 92.82 ms (91.28–132.90, n = 20) [Release, NativeAOT]
+Window test: close (teardown and the renderer's exit): 9.77 ms (7.56–12.50, n = 20) [Release, NativeAOT]
+Window test: its InPrivate controller: 7.65 ms (7.38–8.14, n = 20) [Release, NativeAOT]
+Window test: the shared environment, first window of the process: 0.40 ms (0.40–0.40, n = 1) [Release, NativeAOT]
+Window test: the shared environment, later windows: 0.41 ms (0.38–0.46, n = 19) [Release, NativeAOT]
+Launch to ui-ready, warm (profile reused), from the process's start (WindowHost, Production NativeAOT): 213.20 ms (205.20–231.50, n = 10) [Release, NativeAOT]
+App process working set 2 s after ui-ready (WindowHost, Production NativeAOT): 159.4 MB (159.3–162.1, n = 10) [Release, NativeAOT]
+Working set with the browser's processes, 2 s after ui-ready (same launches): 374.5 MB (374.3–377.1, n = 10) [Release, NativeAOT]
+Total PSS, the app and WebKit's processes, 2 s after ui-ready (same launches): 165.7 MB (165.6–168.4, n = 10) [Release, NativeAOT]
+processes left by the tests: 0
