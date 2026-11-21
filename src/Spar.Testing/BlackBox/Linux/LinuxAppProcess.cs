@@ -94,6 +94,12 @@ internal sealed partial class LinuxAppProcess : IBlackBoxProcess
         var tag = Guid.NewGuid().ToString("N");
         var busEnvironment = new Dictionary<string, string>(environment, StringComparer.Ordinal) { [BusVariable] = tag };
         busEnvironment.Remove(LaunchVariable);
+
+        // No display for the bus and what it starts: at-spi2-core's bus launcher publishes its bus's address on the
+        // display's root window (AT_SPI_BUS), where the registry and GTK look before their own session bus. Every launch
+        // of a test process shares one Xvfb, so parallel launchers overwrote each other's address, and a registry
+        // registered on another launch's bus: measured, 10 of 80 starts eight at a time, 80 of 80 without a display.
+        busEnvironment.Remove("DISPLAY");
         var (bus, address) = LinuxDesktop.StartBus(busEnvironment);
         try
         {

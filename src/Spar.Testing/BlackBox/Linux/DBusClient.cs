@@ -39,14 +39,15 @@ internal sealed unsafe class DBusClient : IDisposable
     /// <paramref name="name"/> with <paramref name="arguments"/> (strings, <c>int</c> and <c>uint</c>), and returns the reply
     /// tuple's values.
     /// </summary>
-    public object[] Call(string? name, string path, string interfaceName, string method, object[]? arguments = null, bool autoStart = false)
+    public object[] Call(
+        string? name, string path, string interfaceName, string method, object[]? arguments = null, bool autoStart = false, TimeSpan? limit = null)
     {
         var connection = _connection;
         ObjectDisposedException.ThrowIf(connection == 0, this);
         nint error = 0;
         var reply = Gio.g_dbus_connection_call_sync(
             connection, name, path, interfaceName, method, Tuple(arguments), 0, autoStart ? 0 : Gio.NoAutoStart,
-            (int)CallLimit.TotalMilliseconds, 0, &error);
+            (int)(limit ?? CallLimit).TotalMilliseconds, 0, &error);
         if (reply == 0)
         {
             throw DBusException.From(error, $"{interfaceName}.{method} on {name} {path}");

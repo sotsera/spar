@@ -26,6 +26,7 @@ internal static class LinuxDesktop
     private const string Screen = "3840x2160x24";
 
     private static readonly TimeSpan HelperStart = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan AccessibilityStart = TimeSpan.FromSeconds(20);
     private static readonly Lock Gate = new();
     private static readonly Lazy<string?> Missing = new(FindProblem);
     private static string? s_display;
@@ -68,7 +69,8 @@ internal static class LinuxDesktop
 
     /// <summary>
     /// A private session bus for one launch, with <paramref name="environment"/> (the app's own, so its activated services
-    /// share the app's folders), ended with the test process; its address is the process's first line of output.
+    /// share the app's folders), ended with the test process; its address is the process's first line of output. Its
+    /// accessibility bus and registry are running before it is returned (<see cref="StartAccessibility"/>).
     /// </summary>
     public static (Process Daemon, string Address) StartBus(IReadOnlyDictionary<string, string> environment)
     {
@@ -77,6 +79,16 @@ internal static class LinuxDesktop
         {
             Stop(daemon);
             throw new InvalidOperationException("The black box's private D-Bus session did not start (dbus-daemon printed no address).");
+        }
+
+        try
+        {
+            StartAccessibility(address);
+        }
+        catch
+        {
+            Stop(daemon);
+            throw;
         }
 
         return (daemon, address);
@@ -100,6 +112,34 @@ internal static class LinuxDesktop
         finally
         {
             helper.Dispose();
+        }
+    }
+
+    /// <summary>
+    /// Starts the session's accessibility bus (<c>org.a11y.Bus</c>, at-spi2-core's launcher) and its registry
+    /// (<c>org.a11y.atspi.Registry</c>) and waits until the registry owns its name, as a desktop session has them running
+    /// before any app starts, and a registry that cannot start fails the launch with its own message. On GitHub's runner a
+    /// registry left to the app's registration once took past D-Bus's 25 s ("Unable to register the application: Timeout
+    /// was reached"), and the window never showed over AT-SPI; the cause was a display shared by the launches' buses
+    /// (<see cref="LinuxAppProcess"/>, pitfalls).
+    /// </summary>
+    private static void StartAccessibility(string sessionAddress)
+    {
+        var started = Stopwatch.GetTimestamp();
+        try
+        {
+            using var session = DBusClient.Connect(sessionAddress);
+            var address = (string)session.Call("org.a11y.Bus", "/org/a11y/bus", "org.a11y.Bus", "GetAddress", autoStart: true, limit: AccessibilityStart)[0];
+            using var accessibility = DBusClient.Connect(address);
+            accessibility.Call(
+                "org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus", "StartServiceByName", ["org.a11y.atspi.Registry", 0u],
+                limit: AccessibilityStart);
+        }
+        catch (DBusException exception)
+        {
+            var spent = Stopwatch.GetElapsedTime(started).TotalMilliseconds;
+            throw new InvalidOperationException(
+                $"The black box's accessibility bus or its registry (at-spi2-core) did not start in {spent:0} ms: {exception.Message}", exception);
         }
     }
 
