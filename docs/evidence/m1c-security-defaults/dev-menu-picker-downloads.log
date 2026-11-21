@@ -1,0 +1,53 @@
+2026-11-20T11:20:01.461Z INFO  Spar.Host  [aa3024e7] Host started 37 ms after the process.
+2026-11-20T11:20:01.461Z INFO  Spar.Host  [aa3024e7] App id com.example.tests.BridgeProbe.Development, folder /var/tmp/spar-m1c-security-defaults/repo/artifacts/linux-homes/host-tests/6135c000c71c/data/com.example.tests.BridgeProbe.Development
+2026-11-20T11:20:01.467Z INFO  Spar.Host  [aa3024e7] single instance at 18.4 ms
+2026-11-20T11:20:01.481Z INFO  Spar.Host  [aa3024e7] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T11:20:01.487Z INFO  Spar.Host  [aa3024e7] Sandbox trial: bwrap exit 0 in 3.6 ms.
+2026-11-20T11:20:01.487Z INFO  Spar.Host  [aa3024e7] prerequisites checked at 41.1 ms
+2026-11-20T11:20:01.489Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T11:20:01.490Z INFO  Spar.Host  [aa3024e7] WebAssembly off: JSC_useWasm=false.
+2026-11-20T11:20:01.494Z INFO  Spar.Host  [aa3024e7] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.6 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T11:20:01.494Z INFO  Spar.Host  [aa3024e7] gpu checked at 48 ms
+2026-11-20T11:20:01.497Z INFO  Spar.Host  [aa3024e7] theme read at 50.9 ms
+2026-11-20T11:20:01.514Z INFO  Spar.Host  [aa3024e7] services built at 68.4 ms
+2026-11-20T11:20:01.526Z INFO  Spar.Host  [aa3024e7] gtk ready at 80.5 ms
+2026-11-20T11:20:01.527Z INFO  Spar.Host  [aa3024e7] UI-thread stall probe on.
+2026-11-20T11:20:01.543Z INFO  Spar.Host  [aa3024e7] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T11:20:01.551Z INFO  Spar.Host  [aa3024e7] Browser data folder /var/tmp/spar-m1c-security-defaults/repo/artifacts/linux-homes/host-tests/6135c000c71c/data/com.example.tests.BridgeProbe.Development/WebKit, cache /var/tmp/spar-m1c-security-defaults/repo/artifacts/linux-homes/host-tests/6135c000c71c/data/com.example.tests.BridgeProbe.Development/cache/WebKit
+2026-11-20T11:20:01.554Z INFO  Spar.Host  [aa3024e7] Browser settings read back (0.19 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+2026-11-20T11:20:01.554Z INFO  Spar.Host  [aa3024e7] web view created at 108.7 ms
+2026-11-20T11:20:01.555Z INFO  Spar.Host  [aa3024e7] Heartbeat every 5000 ms.
+2026-11-20T11:20:01.566Z INFO  Spar.Host  [aa3024e7] window shown at 119.9 ms
+2026-11-20T11:20:01.569Z INFO  Spar.Host  [aa3024e7] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-/Jb2t9KGXEoKiwBx246WH8BmnvMxtHGO2pVgUYjae+o=' 'sha256-Oz/7P6AHlnpmHMnjXLd5ERW9sLzdZ49rdyO7R5+NfHI=' 'sha256-nt0tSrTTW46PEOe9PN10ExQTyD7C25pYJ0ITTQ0hIzs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T11:20:01.569Z INFO  Spar.Host  [aa3024e7] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T11:20:01.613Z INFO  Spar.Host  [aa3024e7] page committed at 167.2 ms
+2026-11-20T11:20:01.613Z INFO  Spar.Host  [aa3024e7] Bridge: document aa2cdde18662224d opened.
+2026-11-20T11:20:01.613Z INFO  Spar.Host  [aa3024e7] Heartbeat armed for the new document.
+2026-11-20T11:20:01.624Z INFO  Spar.Host  [aa3024e7] first bridge message at 178.5 ms
+2026-11-20T11:20:01.632Z INFO  Spar.Host  [aa3024e7] first bridge reply at 186.5 ms
+2026-11-20T11:20:01.644Z INFO  Spar.Host  [aa3024e7] ui-ready at 198.2 ms
+2026-11-20T11:20:01.644Z INFO  Spar.Host  [aa3024e7] Bridge: document aa2cdde18662224d reported ui-ready.
+2026-11-20T11:20:01.645Z INFO  BridgeProbe.ProbeService  probe note: first document aa2cdde18662224d
+2026-11-20T11:20:01.650Z WARN  Spar.Host  [aa3024e7] A download of spar://app/other.html was cancelled (AllowDownloads allows it).
+2026-11-20T11:20:02.450Z WARN  Spar.Host  [aa3024e7] Navigation lock: a navigation to blob:spar://app/126cf6c2-42ac-40c3-b253-145dd66c558c was ignored; the window shows only the app's own page.
+2026-11-20T11:20:03.250Z WARN  Spar.Host  [aa3024e7] Navigation lock: a navigation to data:text/plain,probe was ignored; the window shows only the app's own page.
+2026-11-20T11:20:04.051Z INFO  BridgeProbe.ProbeService  probe note: download: own file clicked, blob clicked, data clicked
+2026-11-20T11:20:04.054Z INFO  BridgeProbe.ProbeService  probe note: picker ready
+2026-11-20T11:20:06.135Z WARN  Spar.Host  [aa3024e7] The page's file picker was cancelled (AllowPagePicker allows it).
+2026-11-20T11:20:06.138Z INFO  BridgeProbe.ProbeService  probe note: picker: cancel
+2026-11-20T11:20:06.140Z INFO  BridgeProbe.ProbeService  probe note: menu ready (editable)
+2026-11-20T11:20:06.146Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T11:20:07.669Z INFO  Spar.Host  [aa3024e7] Context menu (editable): kept [cut copy paste selectAll inspectElement], removed 6.
+2026-11-20T11:20:08.742Z INFO  Spar.Host  [aa3024e7] close requested (User) at 7296.2 ms
+2026-11-20T11:20:08.743Z INFO  Spar.Host  [aa3024e7] close request 1 sent to the page (user) at 7297.5 ms
+2026-11-20T11:20:08.746Z INFO  Spar.Host  [aa3024e7] close request 1: the page answered Close at 7300.5 ms
+2026-11-20T11:20:08.749Z INFO  Spar.Host  [aa3024e7] closing at 7303.6 ms
+2026-11-20T11:20:08.749Z INFO  Spar.Host  [aa3024e7] Heartbeat: 1 ticks, 2 pings, longest tick on the UI thread 0.622 ms.
+2026-11-20T11:20:08.751Z INFO  Spar.Host  [aa3024e7] page close work done at 7305.2 ms
+2026-11-20T11:20:08.752Z INFO  Spar.Host  [aa3024e7] Bridge: document aa2cdde18662224d closed (window closing).
+2026-11-20T11:20:08.752Z INFO  Spar.Host  [aa3024e7] calls stopped at 7306 ms
+2026-11-20T11:20:08.752Z INFO  Spar.Host  [aa3024e7] calls settled at 7306.1 ms
+2026-11-20T11:20:08.754Z INFO  Spar.Host  [aa3024e7] window destroyed at 7308.6 ms
+2026-11-20T11:20:08.774Z INFO  Spar.Host  [aa3024e7] web processes exited after 19 ms at 7328.1 ms
+2026-11-20T11:20:08.778Z INFO  Spar.Host  [aa3024e7] services disposed at 7332 ms
+2026-11-20T11:20:08.778Z INFO  Spar.Host  [aa3024e7] exit 0 at 7332.7 ms

@@ -1,0 +1,52 @@
+STEP run none env private on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:02:47Z
+ENV variant=private bus=none session=(none)
+private accessibility bus unix:path=/dev/shm/spar-lba-env-none/a11y/dbus-r161qnBhcM,guid=903d1cc7237faa41b40704716b008b47 started in 1.4 ms
+address from AT_SPI_BUS_ADDRESS in 0.0 ms: unix:path=/dev/shm/spar-lba-env-none/a11y/dbus-r161qnBhcM,guid=903d1cc7237faa41b40704716b008b47
+connected as :1.0 in 2.1 ms
+names on the accessibility bus before the launch: org.freedesktop.DBus :1.0
+registry: not reachable (GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.atspi.Registry was not provided by any .service files)
+launch to: a11y bus name 92.3, window over AT-SPI never (""), X11 viewable 90.0, ui-ready 10001.8 ms
+names of the app on the accessibility bus: :1.1
+registry lists 0 applications: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.atspi.Registry was not provided by any .service files; the app among them: False
+signals received during the run: 9
+     2 Object.BoundsChanged 
+     2 Object.ChildrenChanged add
+     1 Object.StateChanged active
+     1 Object.StateChanged focused
+     1 Object.StateChanged showing
+     1 Object.StateChanged visible
+     1 Window.activate 
+WM_DELETE_WINDOW to 1 window(s) [BridgeProbe]: exit 0 after 35.0 ms
+  stderr +4 ms: spar info +1.9 ms: [a16570d3] Host started 5 ms after the process.
+  stderr +4 ms: spar info +2.0 ms: [a16570d3] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-none/data/com.example.tests.BridgeProbe
+  stderr +4 ms: spar info +2.1 ms: [a16570d3] single instance at 2.1 ms
+  stderr +16 ms: spar info +14.4 ms: [a16570d3] GTK 4.14.5, WebKitGTK 2.52.6.
+  stderr +20 ms: spar info +18.2 ms: [a16570d3] Sandbox trial: bwrap exit 0 in 3.3 ms.
+  stderr +20 ms: spar info +18.2 ms: [a16570d3] prerequisites checked at 18.2 ms
+  stderr +20 ms: spar info +18.3 ms: Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+  stderr +20 ms: spar info +18.3 ms: [a16570d3] WebAssembly off: JSC_useWasm=false.
+  stderr +20 ms: spar info +18.4 ms: [a16570d3] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+  stderr +20 ms: spar info +18.5 ms: [a16570d3] gpu checked at 18.5 ms
+  stderr +26 ms: spar info +24.3 ms: [a16570d3] theme read at 24.3 ms
+  stderr +27 ms: spar info +25.4 ms: [a16570d3] services built at 25.4 ms
+  stderr +36 ms: libEGL warning: DRI3 error: Could not get DRI3 device
+  stderr +36 ms: libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+  stderr +61 ms: spar info +59.9 ms: [a16570d3] gtk ready at 59.9 ms
+  stderr +76 ms: spar info +74.8 ms: [a16570d3] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+  stderr +78 ms: spar info +76.5 ms: [a16570d3] Browser data folder /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-none/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-none/data/com.example.tests.BridgeProbe/cache/WebKit
+  stderr +80 ms: spar info +78.1 ms: [a16570d3] Browser settings set (0.00 ms): devtools off, GTK inspector keys off, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+  stderr +80 ms: spar info +78.1 ms: [a16570d3] web view created at 78.1 ms
+  stderr +80 ms: spar info +78.1 ms: [a16570d3] Heartbeat every 5000 ms.
+  stderr +90 ms: spar info +88.8 ms: [a16570d3] window shown at 88.7 ms
+  stderr +92 ms: spar info +90.1 ms: [a16570d3] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-/Jb2t9KGXEoKiwBx246WH8BmnvMxtHGO2pVgUYjae+o=' 'sha256-Oz/7P6AHlnpmHMnjXLd5ERW9sLzdZ49rdyO7R5+NfHI=' 'sha256-nt0tSrTTW46PEOe9PN10ExQTyD7C25pYJ0ITTQ0hIzs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  stderr +92 ms: spar info +90.1 ms: [a16570d3] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+  stderr +97 ms: 
+  stderr +97 ms: (com.example.tests.BridgeProbe:17563): Gtk-CRITICAL **: 19:02:47.178: Unable to register the application: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.atspi.Registry was not provided by any .service files
+  stderr +98 ms: 
+  stderr +98 ms: (com.example.tests.BridgeProbe:17563): GLib-GIO-CRITICAL **: 19:02:47.179: g_list_model_get_n_items: assertion 'G_IS_LIST_MODEL (list)' failed
+  stderr +101 ms: 
+  stderr +101 ms: (com.example.tests.BridgeProbe:17563): GLib-GIO-CRITICAL **: 19:02:47.182: g_list_model_get_n_items: assertion 'G_IS_LIST_MODEL (list)' failed
+  stderr +104 ms: 
+STEP exit 0 in 10397 ms: /var/tmp/spar-linux-blackbox-atspi/reader/Reader env private
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):
+  left: 17581 dbus-launch --autolaunch=8a40f8bc2bb94088baaf1a2ad0011c4a --binary-syntax --close-stderr 

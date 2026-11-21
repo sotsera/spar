@@ -1,0 +1,137 @@
+Spar.WindowTests per class in CI run 44888383564 (head 308364a), from the .trx files of its artifacts:
+Linux: test-results-linux-window (window step CoreCLR, windowaot step NativeAOT, blackbox and blackboxdev steps CoreCLR).
+Windows: test-results-windows-latest-tests (the Window and BlackBox run, CoreCLR) and test-results-windows-latest-aot (NativeAOT).
+
+BudgetTests: 4 tests; Windows passed 4 (AOT 4); Linux passed 4 (AOT lane 4)
+CloseTests: 15 tests; Windows passed 15 (AOT 15); Linux passed 15 (AOT lane 15)
+HostTests: 8 tests; Windows passed 8 (AOT 8); Linux passed 8 (AOT lane 8)
+InstallPathTests: 1 tests; Windows passed 1 (AOT 1); Linux passed 0 (AOT lane 0)
+   win=Passed linux=NotExecuted aot-linux=NotExecuted InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path :: Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+KeyTests: 9 tests; Windows passed 9 (AOT 9); Linux passed 9 (AOT lane 9)
+NetworkStatusTests: 1 tests; Windows passed 0 (AOT 0); Linux passed 1 (AOT lane 1)
+   win=NotExecuted linux=Passed aot-linux=Passed NetworkStatusTests.The_page_sees_offline_then_online_and_its_calls_work_offline :: 
+PageApiTests: 11 tests; Windows passed 11 (AOT 11); Linux passed 10 (AOT lane 10)
+   win=Passed linux=NotExecuted aot-linux=NotExecuted PageApiTests.Page_errors_reach_the_apps_log_through_the_host :: The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+PageDefaultsTests: 2 tests; Windows passed 2 (AOT 2); Linux passed 1 (AOT lane 1)
+   win=Passed linux=NotExecuted aot-linux=NotExecuted PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address :: Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+PageSecurityTests: 4 tests; Windows passed 4 (AOT 4); Linux passed 4 (AOT lane 4)
+SessionEndHostTests: 5 tests; Windows passed 5 (AOT 5); Linux passed 5 (AOT lane 4)
+SmokeTests: 2 tests; Windows passed 2 (AOT 2); Linux passed 2 (AOT lane 2)
+ThemeTests: 5 tests; Windows passed 5 (AOT 5); Linux passed 4 (AOT lane 4)
+   win=Passed linux=NotExecuted aot-linux=NotExecuted ThemeTests.Each_window_keeps_its_own_scheme_beside_another :: Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+BlackBoxFixtureTests: 20 tests; Windows passed 20 (AOT 20); Linux passed 18 (AOT lane 0)
+   win=Passed linux=absent aot-linux=absent BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written :: 
+   win=Passed linux=absent aot-linux=absent BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started :: 
+
+Linux-only classes left out of each Linux black-box step (by its trait filters):
+blackbox
+   not in this run: LinuxHangTests.The_automated_mode_shows_no_dialog_and_closes_a_hung_page_without_asking
+   not in this run: LinuxHangTests.Wait_brings_the_dialog_back_after_4_8_16_then_32_heartbeats
+   not in this run: LinuxHostTests.A_second_loss_before_the_page_is_ready_again_ends_the_app_with_exit_code_5
+   not in this run: LinuxPageSecurityTests.The_flood_numbers_are_recorded
+   not in this run: LinuxStartupTests.A_WebKitGTK_older_than_required_is_exit_4_with_a_message
+   not in this run: LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message
+blackboxdev
+   not in this run: LinuxHostTests.The_Notebook_starts_and_closes_and_its_numbers_are_recorded
+   not in this run: LinuxPageSecurityTests.The_flood_numbers_are_recorded
+   not in this run: LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message
+   not in this run: LinuxStartupTests.The_Notebooks_window_has_the_saved_schemes_colour_from_its_first_frame
+
+Per run and class:
+== test-results-linux-window/Spar.WindowTests/aot-2026-11-21_09_16_47.trx 66
+  BudgetTests: {'Passed': 4}
+  CloseTests: {'Passed': 15}
+  HostTests: {'Passed': 8}
+  InstallPathTests: {'NotExecuted': 1}
+  KeyTests: {'Passed': 9}
+  NetworkStatusTests: {'Passed': 1}
+  PageApiTests: {'NotExecuted': 1, 'Passed': 10}
+  PageDefaultsTests: {'NotExecuted': 1, 'Passed': 1}
+  PageSecurityTests: {'Passed': 4}
+  SessionEndHostTests: {'Passed': 4}
+  SmokeTests: {'Passed': 2}
+  ThemeTests: {'Passed': 4, 'NotExecuted': 1}
+== test-results-linux-window/Spar.WindowTests/spar_3a444826b709_2026-11-21_09_14_25.691077.trx 66
+  BudgetTests: {'Passed': 4}
+  CloseTests: {'Passed': 15}
+  HostTests: {'Passed': 8}
+  InstallPathTests: {'NotExecuted': 1}
+  KeyTests: {'Passed': 9}
+  NetworkStatusTests: {'Passed': 1}
+  PageApiTests: {'Passed': 10, 'NotExecuted': 1}
+  PageDefaultsTests: {'Passed': 1, 'NotExecuted': 1}
+  PageSecurityTests: {'Passed': 4}
+  SessionEndHostTests: {'Passed': 4}
+  SmokeTests: {'Passed': 2}
+  ThemeTests: {'NotExecuted': 1, 'Passed': 4}
+== test-results-linux-window/Spar.WindowTests/spar_3a444826b709_2026-11-21_09_19_13.220680.trx 80
+  BlackBoxFixtureTests: {'Passed': 18}
+  LinuxHangTests: {'Passed': 7}
+  LinuxHostTests: {'Passed': 17}
+  LinuxPageSecurityTests: {'Passed': 17}
+  LinuxSessionEndTests: {'Passed': 5}
+  LinuxStartupTests: {'Passed': 15}
+  SessionEndHostTests: {'Passed': 1}
+== test-results-linux-window/Spar.WindowTests/spar_3a444826b709_2026-11-21_09_24_18.412778.trx 63
+  LinuxHangTests: {'Passed': 9}
+  LinuxHostTests: {'Passed': 17}
+  LinuxPageSecurityTests: {'Passed': 17}
+  LinuxSessionEndTests: {'Passed': 5}
+  LinuxStartupTests: {'Passed': 15}
+== test-results-windows-latest-tests/Spar.WindowTests/<runner>_2026-11-21_09_16_08.558473.trx 38
+  DeadlineProbeTests: {'NotRunnable': 1}
+  FocusAndDialogTests: {'NotRunnable': 4}
+  OfflineTests: {'NotRunnable': 1}
+  PageApiUnitTests: {'Passed': 26}
+  SessionEndTests: {'NotRunnable': 1}
+  SystemLaneTests: {'NotRunnable': 5}
+== test-results-windows-latest-tests/Spar.WindowTests/<runner>_2026-11-21_09_16_50.291879.trx 192
+  BlackBoxFixtureTests: {'Passed': 20}
+  BudgetTests: {'Passed': 4}
+  CloseTests: {'Passed': 15}
+  DeadlineProbeTests: {'NotRunnable': 1}
+  FocusAndDialogTests: {'NotRunnable': 4}
+  HostTests: {'Passed': 8}
+  InstallPathTests: {'Passed': 1}
+  KeyTests: {'Passed': 9}
+  LinuxHangTests: {'NotExecuted': 9}
+  LinuxHostTests: {'NotExecuted': 18}
+  LinuxPageSecurityTests: {'NotExecuted': 17, 'NotRunnable': 1}
+  LinuxSessionEndTests: {'NotExecuted': 5}
+  LinuxStartupTests: {'NotExecuted': 17}
+  NetworkStatusTests: {'NotExecuted': 1}
+  OfflineTests: {'NotRunnable': 1}
+  PageApiTests: {'Passed': 11}
+  PageApiUnitTests: {'Passed': 26}
+  PageDefaultsTests: {'Passed': 2}
+  PageSecurityTests: {'Passed': 4}
+  SessionEndHostTests: {'Passed': 5}
+  SessionEndTests: {'NotRunnable': 1}
+  SmokeTests: {'Passed': 2}
+  SystemLaneTests: {'NotRunnable': 5}
+  ThemeTests: {'Passed': 5}
+== test-results-windows-latest-aot/Spar.WindowTests/aot-2026-11-21_09_17_01.trx 192
+  BlackBoxFixtureTests: {'Passed': 20}
+  BudgetTests: {'Passed': 4}
+  CloseTests: {'Passed': 15}
+  DeadlineProbeTests: {'NotRunnable': 1}
+  FocusAndDialogTests: {'NotRunnable': 4}
+  HostTests: {'Passed': 8}
+  InstallPathTests: {'Passed': 1}
+  KeyTests: {'Passed': 9}
+  LinuxHangTests: {'NotExecuted': 9}
+  LinuxHostTests: {'NotExecuted': 18}
+  LinuxPageSecurityTests: {'NotExecuted': 17, 'NotRunnable': 1}
+  LinuxSessionEndTests: {'NotExecuted': 5}
+  LinuxStartupTests: {'NotExecuted': 17}
+  NetworkStatusTests: {'NotExecuted': 1}
+  OfflineTests: {'NotRunnable': 1}
+  PageApiTests: {'Passed': 11}
+  PageApiUnitTests: {'Passed': 26}
+  PageDefaultsTests: {'Passed': 2}
+  PageSecurityTests: {'Passed': 4}
+  SessionEndHostTests: {'Passed': 5}
+  SessionEndTests: {'NotRunnable': 1}
+  SmokeTests: {'Passed': 2}
+  SystemLaneTests: {'NotRunnable': 5}
+  ThemeTests: {'Passed': 5}

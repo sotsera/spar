@@ -1,0 +1,5 @@
+00:59:42 production: idle 20 s, then work of 3 s and 10 s, then idle 6 s: no alarm; 7 ticks, 7 pings, longest tick on the loop 0.031 ms
+00:59:57 production: a 15 s disposal: the shutdown prompt 10.0 s after the teardown began, gone when the shutdown finished, exit 0
+01:00:19 production: a page hung before it connected, alarm 19.9 s after its document opened
+01:00:40 production: alarm 19.9 s after the hang, the dialog shown (2 windows); no answer without the Development build
+01:00:41 production: no stall probe without KeepStallProbe(), the probe on with it

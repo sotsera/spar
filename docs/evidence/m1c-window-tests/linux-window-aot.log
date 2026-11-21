@@ -1,0 +1,66 @@
+STEP windowaot on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+  Determining projects to restore...
+  Restored /var/tmp/spar-m1c-window-tests/repo/tests/apps/WindowHost/WindowHost.csproj (in 759 ms).
+  Restored /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/Spar.WindowTests.csproj (in 759 ms).
+  6 of 8 projects are up-to-date for restore.
+  Spar -> /var/tmp/spar-m1c-window-tests/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /var/tmp/spar-m1c-window-tests/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Testing -> /var/tmp/spar-m1c-window-tests/repo/src/Spar.Testing/bin/Release/net11.0/Spar.Testing.dll
+  Spar.Windows -> /var/tmp/spar-m1c-window-tests/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /var/tmp/spar-m1c-window-tests/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /var/tmp/spar-m1c-window-tests/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar: the page is packed stored (Brotli would save 20,036 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  WindowHost -> /var/tmp/spar-m1c-window-tests/repo/tests/apps/WindowHost/bin/aot/Test/Release/net11.0/linux-x64/WindowHost.dll
+  Spar.WindowTests -> /var/tmp/spar-m1c-window-tests/repo/tests/Spar.WindowTests/bin/aot/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll
+  Generating native code
+  Spar.WindowTests -> /var/tmp/spar-m1c-window-tests/repo/artifacts/aot/Spar.WindowTests/
+STEP exit 0 in 24922 ms: dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/linux-x64] (.NET 11.0.0)
+  Discovering: Spar.WindowTests
+  Discovered:  Spar.WindowTests
+  Starting:    Spar.WindowTests
+    Spar.WindowTests.InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path [SKIP]
+      Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+    Spar.WindowTests.PageApiTests.Page_errors_reach_the_apps_log_through_the_host [SKIP]
+      The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+    Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after [SKIP]
+      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+    Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_holds_the_message_under_four_seconds_however_slow_the_guards_and_the_cleanup [SKIP]
+      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+    Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+    Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_closes_the_window_with_its_reason_and_settles_its_calls [SKIP]
+      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+    Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+    Spar.WindowTests.SessionEndHostTests.The_end_of_the_session_returns_as_soon_as_the_window_and_the_services_are_done [SKIP]
+      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+    Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+    Spar.WindowTests.SessionEndHostTests.A_renderer_lost_during_the_session_end_is_neither_reloaded_nor_waited_for [SKIP]
+      The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+    Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8 [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+    Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started [SKIP]
+      The black-box fixture runs on Windows 10 1809 and later; the Linux host arrives in M1c.
+    Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+    Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+    Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+    Spar.WindowTests.PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address [SKIP]
+      Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+
+    Spar.WindowTests.ThemeTests.Each_window_keeps_its_own_scheme_beside_another [SKIP]
+      Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+
+    Spar.WindowTests.BudgetTests.The_Production_app_starts_to_ui_ready_and_holds_its_working_set [SKIP]
+      The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+
+  Finished:    Spar.WindowTests (ID = '74f5f65efa6648a7d0d0de91ff7c5126be1db29bec73cca1e3b3bcf06da8ac90')
+=== TEST EXECUTION SUMMARY ===
+   Spar.WindowTests  Total: 124, Errors: 0, Failed: 0, Skipped: 18, Not Run: 12, Time: 50.505s
+STEP exit 0 in 50536 ms: artifacts/aot/Spar.WindowTests/Spar.WindowTests -result-trx artifacts/test-results/Spar.WindowTests/aot-2026-11-20_19_11_44.trx
+processes left by the window tests: 0

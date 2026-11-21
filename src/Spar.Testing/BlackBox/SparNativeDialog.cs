@@ -1,8 +1,8 @@
 namespace Spar.Testing;
 
 /// <summary>
-/// A native message the launched app shows (a task dialog or a message box: a start-up failure, a failed relaunch, a
-/// close question), as UI Automation read it when it appeared: its title, its text and its buttons. Answer it with
+/// A native message the launched app shows (a task dialog or a message box on Windows, a <c>GtkAlertDialog</c> on Linux: a
+/// start-up failure, a failed relaunch, a close question), as the accessibility API read it when it appeared: its title, its text and its buttons. Answer it with
 /// <see cref="PressAsync"/>, which invokes the button through UI Automation, never through input.
 /// </summary>
 public sealed class SparNativeDialog
@@ -10,7 +10,10 @@ public sealed class SparNativeDialog
     private readonly SparBlackBoxApp _app;
     private readonly DialogContent _content;
 
-    /// <summary>The dialog's title: the app's name, for Spar's own messages.</summary>
+    /// <summary>
+    /// The dialog's title: the app's name, for Spar's own messages. On Linux, where GTK's alert dialog has no title, the
+    /// fixture reports the app's name in its place (substituted, so a test reads the same on both hosts).
+    /// </summary>
     public string Title => _content.Title;
 
     /// <summary>The dialog's text: its parts (a task dialog's heading, then its content) on lines of their own.</summary>
@@ -28,7 +31,10 @@ public sealed class SparNativeDialog
         _content = content;
     }
 
-    /// <summary>Presses the button named <paramref name="button"/> (its whole name) through UI Automation's Invoke pattern.</summary>
+    /// <summary>
+    /// Presses the button named <paramref name="button"/> (its whole name) through UI Automation's Invoke pattern, or on
+    /// Linux AT-SPI's <c>click</c> action (GTK answers about 250 ms later: it shows a keyboard press first).
+    /// </summary>
     public async Task PressAsync(string button)
     {
         ArgumentException.ThrowIfNullOrEmpty(button);
@@ -53,9 +59,9 @@ public sealed class SparNativeDialog
         SandboxGuest.EnsureUserSession("send real input");
         var bounds = await _app.Automation.DialogButtonBoundsAsync(_content, button)
             ?? throw new InvalidOperationException($"The dialog '{Title}' has no button '{button}' now.");
-        if (!BlackBoxPlatform.IsSupported)
+        if (!BlackBoxPlatform.IsWindows)
         {
-            throw BlackBoxPlatform.NotSupported();
+            throw BlackBoxPlatform.NoRealInput();
         }
 
         var (x, y) = bounds.Center;

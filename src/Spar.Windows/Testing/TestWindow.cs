@@ -35,6 +35,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     private readonly HashSet<int> _renderers = [];
     private readonly Task<SparRunningApp> _running;
     private readonly WindowTheme _theme;
+    private TestPage? _page;
 
     private TestWindow(TestWindowProcess process, SparApp app, SparRunningApp running, SparTestWindowRequest request)
     {
@@ -76,7 +77,27 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return window;
     }
 
-    public Task<string> CallDevToolsAsync(string method, string parametersJson) => OnUiAsync(() =>
+    public Task<string?> EngineAsync(string request, TimeSpan wait) => Page.EngineAsync(request, wait);
+
+    public Task<string?> EvaluateAsync(string expression) => Page.EvaluateAsync(expression);
+
+    public Task NavigateAsync(string? address) => Page.NavigateAsync(address);
+
+    public Task<byte[]> ScreenshotAsync((double X, double Y, double Width, double Height)? clip) => Page.ScreenshotAsync(clip);
+
+    public Task KeyAsync(SparTestKey key) => Page.KeyAsync(key);
+
+    public Task InsertTextAsync(string text) => Page.InsertTextAsync(text);
+
+    public Task PointerAsync(SparTestPointer pointer) => Page.PointerAsync(pointer);
+
+    /// <summary>The page's DevTools transport, installed before the first navigation.</summary>
+    private TestPage Page => _page ?? throw new InvalidOperationException(_closed.Task.IsCompleted || _window.IsClosing
+        ? "The app's window is closed (app.Window.CloseAsync or the test's end closed it): its page can no longer be driven."
+        : "The app's page is not open: its window is starting.");
+
+    /// <summary>Calls a DevTools Protocol method on the page's session; completes with the result object as JSON.</summary>
+    private Task<string> CallDevToolsAsync(string method, string parametersJson) => OnUiAsync(() =>
     {
         var webView = WebViewOrThrow();
         var call = new DevToolsCall(method);
@@ -84,7 +105,11 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return call.Task;
     });
 
-    public Task<IDisposable> SubscribeAsync(string eventName, Action<string> onEvent) => OnUiAsync(() =>
+    /// <summary>
+    /// Receives a DevTools Protocol event of the page's session until the returned object is disposed. The callback
+    /// runs on the UI thread: it must only copy the JSON out.
+    /// </summary>
+    private Task<IDisposable> SubscribeAsync(string eventName, Action<string> onEvent) => OnUiAsync(() =>
     {
         var webView = WebViewOrThrow();
         var receiver = Com.Take<ICoreWebView2DevToolsProtocolEventReceiver>(webView.GetDevToolsProtocolEventReceiver(eventName));
@@ -128,6 +153,17 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         var result = PInvoke.SendMessage(_window.Handle, message, new WPARAM((nuint)wParam), new LPARAM(lParam));
         return Task.FromResult((nint)result.Value);
     });
+
+    /// <summary><c>WM_QUERYENDSESSION</c> then <c>WM_ENDSESSION</c> with <c>TRUE</c>, both for a log-off, as Windows ends a session.</summary>
+    public async Task<bool> EndSessionAsync()
+    {
+        const uint QueryEndSession = 0x0011;
+        const uint EndSession = 0x0016;
+        var logoff = unchecked((nint)0x80000000);
+        var allowed = await SendMessageAsync(QueryEndSession, 0, logoff);
+        await SendMessageAsync(EndSession, 1, logoff);
+        return allowed != 0;
+    }
 
     void IAppWindowOwner.TeardownStarted() => _ = NoteRenderersAsync();
 
@@ -184,10 +220,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
             await CallDevToolsAsync("Emulation.setEmulatedMedia", $$"""{"features":[{"name":"prefers-color-scheme","value":"{{scheme}}"}]}""");
         }
 
-        if (_request.BeforeFirstNavigation is { } install)
-        {
-            await install(this);
-        }
+        _page = await TestPage.InstallAsync(CallDevToolsAsync, SubscribeAsync, _request.Automation);
     }
 
     private void OnPhase(string phase)
@@ -251,6 +284,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         }
         finally
         {
+            _page?.Dispose();
             _process.ReturnProfile(_profile);
         }
     }

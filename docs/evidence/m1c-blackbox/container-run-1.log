@@ -1,0 +1,464 @@
+STEP check on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+STEP exit 0 in 3 ms: bwrap --unshare-all --die-with-parent --ro-bind / / true
+sh: 0: cannot open /home/spar/repo/eng/linux-ci/network-switch.sh: No such file
+STEP exit 2 in 1 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh sh -c test -p "$SPAR_TEST_NETWORK_SWITCH" && ip route show default | grep -q "dev lo"
+The network switch did not start (user and network namespaces).
+STEP check failed
+STEP copy on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+copied 439 C# files
+STEP client on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+
+added 94 packages, and audited 95 packages in 14s
+
+22 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+STEP exit 0 in 14294 ms: npm ci --ignore-scripts
+
+> build
+> tsc -p tsconfig.json && tsc -p tsconfig.vite.json
+
+STEP exit 0 in 1740 ms: npm run build
+STEP build on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+  Determining projects to restore...
+  Restored /home/spar/repo/src/Spar/Spar.csproj (in 4.13 sec).
+  Restored /home/spar/repo/src/Spar.Linux/Spar.Linux.csproj (in 4.13 sec).
+  Restored /home/spar/repo/src/Spar.Sdk.Tasks/Spar.Sdk.Tasks.csproj (in 35.99 sec).
+  Restored /home/spar/repo/src/Spar.Generator/Spar.Generator.csproj (in 40.43 sec).
+  Restored /home/spar/repo/src/Spar.Testing/Spar.Testing.csproj (in 46.75 sec).
+  Restored /home/spar/repo/src/Spar.Windows/Spar.Windows.csproj (in 46.75 sec).
+  Restored /home/spar/repo/tests/apps/WindowHost/WindowHost.csproj (in 58.83 sec).
+  Restored /home/spar/repo/tests/apps/BridgeProbe/BridgeProbe.csproj (in 58.83 sec).
+  Restored /home/spar/repo/tests/Spar.WindowTests/Spar.WindowTests.csproj (in 58.83 sec).
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar: npm ci --ignore-scripts in /home/spar/repo/tests/apps/WindowHost/frontend/
+  Spar: the page is packed stored (Brotli would save 20,036 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  WindowHost -> /home/spar/repo/tests/apps/WindowHost/bin/Production.BlackBox/Release/net11.0/linux-x64/WindowHost.dll
+  Generating native code
+  WindowHost -> /home/spar/repo/tests/Spar.WindowTests/obj/Development/Debug/net11.0/linux-x64/spar-apps/WindowHost/
+  Spar: npm ci --ignore-scripts in /home/spar/repo/tests/apps/BridgeProbe/frontend/
+  Spar: the page is packed stored (Brotli would save 22,738 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  BridgeProbe -> /home/spar/repo/tests/apps/BridgeProbe/bin/Production.BlackBox/Release/net11.0/linux-x64/BridgeProbe.dll
+  Generating native code
+  BridgeProbe -> /home/spar/repo/tests/Spar.WindowTests/obj/Development/Debug/net11.0/linux-x64/spar-apps/BridgeProbe/
+  Spar -> /home/spar/repo/src/Spar/bin/Debug/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Debug/net11.0/Spar.Linux.dll
+  Spar.Testing -> /home/spar/repo/src/Spar.Testing/bin/Debug/net11.0/Spar.Testing.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Debug/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Debug/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Debug/net11.0/Spar.Sdk.Tasks.dll
+  Spar: the page is packed stored (Brotli would save 20,036 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  Spar: the page is packed stored (Brotli would save 22,738 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  WindowHost -> /home/spar/repo/tests/apps/WindowHost/bin/Test/Debug/net11.0/linux-x64/WindowHost.dll
+  BridgeProbe -> /home/spar/repo/tests/apps/BridgeProbe/bin/Test/Debug/net11.0/linux-x64/BridgeProbe.dll
+  Spar.WindowTests -> /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:20.01
+STEP exit 0 in 80285 ms: dotnet build tests/Spar.WindowTests -c Debug
+  Determining projects to restore...
+  Restored /home/spar/repo/src/Spar.Loopback/Spar.Loopback.csproj (in 227 ms).
+  Restored /home/spar/repo/samples/Notebook/Notebook.csproj (in 227 ms).
+  Restored /home/spar/repo/src/Spar.Testing.Browser/Spar.Testing.Browser.csproj (in 227 ms).
+  Restored /home/spar/repo/samples/Notebook.EndToEndTests/Notebook.EndToEndTests.csproj (in 49.41 sec).
+  6 of 10 projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar: npm ci --ignore-scripts in /home/spar/repo/samples/Notebook/frontend/
+  Spar: the page is packed with Brotli (Brotli saves 532,855 B, more than its decoder costs).
+  Spar: the executable carries the third-party notices of 109 packages from Vite's licence file (3058 B); spar doctor lists them.
+  Notebook -> /home/spar/repo/samples/Notebook/bin/Production.BlackBox/Release/net11.0/linux-x64/Notebook.dll
+  Generating native code
+  Notebook -> /home/spar/repo/samples/Notebook.EndToEndTests/obj/Development/Debug/net11.0/linux-x64/spar-apps/Notebook/
+  Spar -> /home/spar/repo/src/Spar/bin/Debug/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Debug/net11.0/Spar.Linux.dll
+  Spar.Testing -> /home/spar/repo/src/Spar.Testing/bin/Debug/net11.0/Spar.Testing.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Debug/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Debug/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Debug/net11.0/Spar.Sdk.Tasks.dll
+  Spar.Loopback -> /home/spar/repo/src/Spar.Loopback/bin/Debug/net11.0/Spar.Loopback.dll
+  Spar.Testing.Browser -> /home/spar/repo/src/Spar.Testing.Browser/bin/Debug/net11.0/Spar.Testing.Browser.dll
+  Spar: the page is packed with Brotli (Brotli saves 532,855 B, more than its decoder costs).
+  Spar: the executable carries the third-party notices of 109 packages from Vite's licence file (3058 B); spar doctor lists them.
+  Notebook -> /home/spar/repo/samples/Notebook/bin/Test/Debug/net11.0/linux-x64/Notebook.dll
+  Notebook.EndToEndTests -> /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:01:02.55
+STEP exit 0 in 62731 ms: dotnet build samples/Notebook.EndToEndTests -c Debug
+STEP window on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+Running tests from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path
+  Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.ThemeTests.Each_window_keeps_its_own_scheme_beside_another
+  Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(process:2): GLib-GIO-WARNING **: 23:48:47.690: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-3c0dad83-d5c9-4afc-b8d1-006794d563e5: The connection is closed
+skipped Spar.WindowTests.PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address
+  Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+
+(process:2): GLib-GIO-WARNING **: 23:48:54.237: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-da71641f-df86-45d8-98a5-d422fc47b1f0: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:48:59.253: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-9b66d21a-0203-4b18-a92c-80ab558b5421: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:49:01.144: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-21b679ff-4206-49a8-8a18-8168954221f8: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:49:02.601: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-b42905f5-b689-4d1d-bb1a-717a112a416d: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:49:03.756: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-bc12aac4-d244-4aca-8b6a-a6547e6aad1f: The connection is closed
+skipped Spar.WindowTests.PageApiTests.Page_errors_reach_the_apps_log_through_the_host
+  The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+
+(process:2): GLib-GIO-WARNING **: 23:49:04.031: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-919be1b1-2b17-42d9-9359-35f01af53dfc: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:49:07.727: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-532b4b03-df22-49e3-8066-e9355f32a01a: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:49:12.840: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-7af2afee-314f-43d0-be15-c79b6e0c9cc4: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:49:32.189: Error releasing name org.webkit.app-63adcf26477bac12eaaef072a70de4707975fbadaea28ddfb16c71485d179615.Sandboxed.WebProcess-10691ce5-fb9f-4432-84a0-5cc6215308a1: The connection is closed
+/home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+62/x0/?4] (1m 23s 363ms)
+
+  In process file artifacts produced:
+    - /home/spar/repo/artifacts/test-results/Spar.WindowTests/spar_da3d96ccae5c_2026-11-20_23_48_46.529878.trx
+
+Test run summary: Passed!
+  total: 66
+  failed: 0
+  succeeded: 62
+  skipped: 4
+  duration: 1m 23s 479ms
+STEP exit 0 in 83862 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait Surface=Window
+Running tests from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+failed Notebook.EndToEndTests.WindowJourneyTests.A_page_changed_in_another_window_is_never_overwritten_silently (1s 986ms)
+  from /home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+  Assert.Equal() Failure: Strings differ
+                      ↓ (pos 8)
+  Expected: "# Plans\n\nFrom this window\n"
+  Actual:   "# Plans\nrom this window\n"
+                      ↑ (pos 8)
+    at Notebook.EndToEndTests.WindowJourneyTests.A_page_changed_in_another_window_is_never_overwritten_silently() in /home/spar/repo/samples/Notebook.EndToEndTests/Window/WindowJourneyTests.cs:99
+    at Notebook.EndToEndTests.WindowJourneyTests.A_page_changed_in_another_window_is_never_overwritten_silently() in /home/spar/repo/samples/Notebook.EndToEndTests/Window/WindowJourneyTests.cs:100
+    --- End of stack trace from previous location ---
+/home/spar/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64) failed with 1 error(s) [+9/x1/?0] (5s 611ms)
+Exit code: 2
+
+  In process file artifacts produced:
+    - /home/spar/repo/artifacts/test-results/Notebook.EndToEndTests/spar_da3d96ccae5c_2026-11-20_23_50_10.387055.trx
+
+Test run summary: Failed!
+  total: 10
+  failed: 1
+  succeeded: 9
+  skipped: 0
+  duration: 5s 721ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
+STEP exit 2 in 6097 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build --filter-trait Surface=Window
+STEP window failed
+STEP windowaot on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+  Determining projects to restore...
+  Restored /home/spar/repo/tests/apps/WindowHost/WindowHost.csproj (in 242 ms).
+  Restored /home/spar/repo/tests/apps/BridgeProbe/BridgeProbe.csproj (in 242 ms).
+  Restored /home/spar/repo/tests/Spar.WindowTests/Spar.WindowTests.csproj (in 2.85 sec).
+  6 of 9 projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  WindowHost -> /home/spar/repo/tests/apps/WindowHost/bin/Production.BlackBox/Release/net11.0/linux-x64/WindowHost.dll
+  WindowHost -> /home/spar/repo/tests/Spar.WindowTests/obj/aot/Production/Release/net11.0/linux-x64/spar-apps/WindowHost/
+  BridgeProbe -> /home/spar/repo/tests/apps/BridgeProbe/bin/Production.BlackBox/Release/net11.0/linux-x64/BridgeProbe.dll
+  BridgeProbe -> /home/spar/repo/tests/Spar.WindowTests/obj/aot/Production/Release/net11.0/linux-x64/spar-apps/BridgeProbe/
+  Spar.Testing -> /home/spar/repo/src/Spar.Testing/bin/Release/net11.0/Spar.Testing.dll
+  Spar: the page is packed stored (Brotli would save 20,036 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  WindowHost -> /home/spar/repo/tests/apps/WindowHost/bin/aot/Test/Release/net11.0/linux-x64/WindowHost.dll
+  Spar: the page is packed stored (Brotli would save 22,738 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  BridgeProbe -> /home/spar/repo/tests/apps/BridgeProbe/bin/aot/Test/Release/net11.0/linux-x64/BridgeProbe.dll
+  Spar.WindowTests -> /home/spar/repo/tests/Spar.WindowTests/bin/aot/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll
+  Generating native code
+  Spar.WindowTests -> /home/spar/repo/artifacts/aot/Spar.WindowTests/
+STEP exit 0 in 22654 ms: dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/linux-x64] (.NET 11.0.0)
+  Discovering: Spar.WindowTests
+  Discovered:  Spar.WindowTests
+  Starting:    Spar.WindowTests
+    Spar.WindowTests.InstallPathTests.The_window_works_from_an_install_folder_with_a_long_path [SKIP]
+      Windows' MAX_PATH limit on the executable's path: Linux has no such limit, and the long-path case there is a black-box test (the AT-SPI step).
+    Spar.WindowTests.PageApiTests.Page_errors_reach_the_apps_log_through_the_host [SKIP]
+      The Linux host does not report the page's errors to the app's log yet (M1c step 4 left it).
+    Spar.WindowTests.PageDefaultsTests.Navigations_open_no_connection_to_the_loopback_address [SKIP]
+      Port 443 on the loopback addresses cannot be listened on here (in use, or privileged without root on Linux), so connections cannot be counted.
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+    Spar.WindowTests.ThemeTests.Each_window_keeps_its_own_scheme_beside_another [SKIP]
+      Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.
+
+(process:2): GLib-GIO-WARNING **: 23:50:47.629: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-70aff383-fa9f-4f12-9d77-1710ceb50a08: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:50:48.036: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-3e65621c-0ed5-478c-b2ff-8031757bdc5d: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:50:49.355: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-f117dbee-1461-46a6-b705-b3b0aefcd844: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:50:53.180: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-0c538ffd-7c2d-4d65-acb8-dd1d18047e63: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:50:53.702: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-e09cb386-cd13-433d-a0e0-f1d1104e1511: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:51:04.518: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-154fa5f0-c973-4a69-82dd-047a89ff9bde: The connection is closed
+
+(process:2): GLib-GIO-WARNING **: 23:51:06.987: Error releasing name org.webkit.app-2649591dc0bc86d89f8aeb47193177a8334bd46538f602744fef0d5bd5052026.Sandboxed.WebProcess-cb1beb09-2dbc-46ec-bb43-d1d7451ebd5f: The connection is closed
+  Finished:    Spar.WindowTests (ID = '0aa0b091f3a4210eb3c02e917ecd88d440900333514a47b0576e76af46371ff6')
+=== TEST EXECUTION SUMMARY ===
+   Spar.WindowTests  Total: 66, Errors: 0, Failed: 0, Skipped: 4, Not Run: 0, Time: 78.561s
+STEP exit 0 in 78583 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh artifacts/aot/Spar.WindowTests/Spar.WindowTests -result-trx artifacts/test-results/Spar.WindowTests/aot-2026-11-20_23_50_38.trx -trait Surface=Window
+  Determining projects to restore...
+  Restored /home/spar/repo/samples/Notebook/Notebook.csproj (in 256 ms).
+  Restored /home/spar/repo/samples/Notebook.EndToEndTests/Notebook.EndToEndTests.csproj (in 256 ms).
+  6 of 8 projects are up-to-date for restore.
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Notebook -> /home/spar/repo/samples/Notebook/bin/Production.BlackBox/Release/net11.0/linux-x64/Notebook.dll
+  Notebook -> /home/spar/repo/samples/Notebook.EndToEndTests/obj/aot/Production/Release/net11.0/linux-x64/spar-apps/Notebook/
+  Spar.Testing -> /home/spar/repo/src/Spar.Testing/bin/Release/net11.0/Spar.Testing.dll
+  Spar: the page is packed with Brotli (Brotli saves 532,855 B, more than its decoder costs).
+  Spar: the executable carries the third-party notices of 109 packages from Vite's licence file (3058 B); spar doctor lists them.
+  Notebook -> /home/spar/repo/samples/Notebook/bin/aot/Test/Release/net11.0/linux-x64/Notebook.dll
+  Notebook.EndToEndTests -> /home/spar/repo/samples/Notebook.EndToEndTests/bin/aot/Production/Release/net11.0/linux-x64/Notebook.EndToEndTests.dll
+  Generating native code
+  Notebook.EndToEndTests -> /home/spar/repo/artifacts/aot/Notebook.EndToEndTests/
+STEP exit 0 in 18736 ms: dotnet publish samples/Notebook.EndToEndTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Notebook.EndToEndTests
+xUnit.net v3 In-Process Runner v4.0.3+384aa7f0b4 [native/linux-x64] (.NET 11.0.0)
+  Discovering: Notebook.EndToEndTests
+  Discovered:  Notebook.EndToEndTests
+  Starting:    Notebook.EndToEndTests
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 23:52:21.593: Error releasing name org.webkit.app-bf3606de802f2f8282e0b192d903a6ba25c2cfd23ccf940d89df2a78e900ecc3.Sandboxed.WebProcess-de8a126a-55c6-42a1-9673-3a6179480873: The connection is closed
+    Notebook.EndToEndTests.WindowJourneyTests.The_search_box_narrows_the_list_and_slash_focuses_it [FAIL]
+      Spar.Testing.SparPageException : Expect(GetByRole(Navigation, "Pages")).ToContainTextAsync("Nothing matches “rezzz”."): timed out after 5001 ms (16 tries). Last try: text is "Nothing matches “rezz”."
+      Stack Trace:
+           at Spar.Testing.PageRetry.<RunAsync>d__1`1.MoveNext()
+        --- End of stack trace from previous location ---
+           at Spar.Testing.SparLocatorAssertions.<AssertAsync>d__27.MoveNext()
+        --- End of stack trace from previous location ---
+           at Notebook.EndToEndTests.WindowJourneyTests.<The_search_box_narrows_the_list_and_slash_focuses_it>d__7.MoveNext()
+        --- End of stack trace from previous location ---
+           at Notebook.EndToEndTests.WindowJourneyTests.<The_search_box_narrows_the_list_and_slash_focuses_it>d__7.MoveNext()
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+        --- End of stack trace from previous location ---
+  Finished:    Notebook.EndToEndTests (ID = '1da9491a303be11bef74abd0f26137bbc98553348c736478ac2003998ce08cd4')
+=== TEST EXECUTION SUMMARY ===
+   Notebook.EndToEndTests  Total: 10, Errors: 0, Failed: 1, Skipped: 0, Not Run: 0, Time: 10.307s
+STEP exit 1 in 10325 ms: sh /home/spar/repo/eng/linux-ci/network-switch.sh artifacts/aot/Notebook.EndToEndTests/Notebook.EndToEndTests -result-trx artifacts/test-results/Notebook.EndToEndTests/aot-2026-11-20_23_52_16.trx -trait Surface=Window
+STEP windowaot failed
+STEP apps on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Debug/net11.0/Spar.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Debug/net11.0/Spar.Windows.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Debug/net11.0/Spar.Linux.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Debug/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Debug/net11.0/Spar.Sdk.Tasks.dll
+  Spar: the page is packed stored (Brotli would save 22,738 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  BridgeProbe -> /home/spar/repo/tests/apps/BridgeProbe/bin/Development/Debug/net11.0/linux-x64/BridgeProbe.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.07
+STEP exit 0 in 2253 ms: dotnet build tests/apps/BridgeProbe -c Debug -p:SparDevServer=false
+  Determining projects to restore...
+  Restored /home/spar/repo/src/Spar.Windows/Spar.Windows.csproj (in 248 ms).
+  Restored /home/spar/repo/tests/apps/BridgeProbeWasm/BridgeProbe.csproj (in 248 ms).
+  Restored /home/spar/repo/src/Spar.Sdk.Tasks/Spar.Sdk.Tasks.csproj (in 248 ms).
+  Restored /home/spar/repo/src/Spar/Spar.csproj (in 248 ms).
+  Restored /home/spar/repo/src/Spar.Generator/Spar.Generator.csproj (in 248 ms).
+  Restored /home/spar/repo/src/Spar.Linux/Spar.Linux.csproj (in 248 ms).
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar: the page is packed stored (Brotli would save 22,738 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  BridgeProbe -> /home/spar/repo/tests/apps/BridgeProbeWasm/bin/Production/Release/net11.0/linux-x64/BridgeProbe.dll
+  Generating native code
+  BridgeProbe -> /home/spar/apps/probe-wasm/
+STEP exit 0 in 5455 ms: dotnet publish tests/apps/BridgeProbeWasm -c Release -r linux-x64 -p:BridgeProbeWebAssembly=true -o /home/spar/apps/probe-wasm
+  Determining projects to restore...
+  Restored /home/spar/repo/samples/Notebook/Notebook.csproj (in 222 ms).
+  5 of 6 projects are up-to-date for restore.
+  Spar -> /home/spar/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /home/spar/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> /home/spar/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /home/spar/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /home/spar/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar: the page is packed with Brotli (Brotli saves 532,855 B, more than its decoder costs).
+  Spar: the executable carries the third-party notices of 109 packages from Vite's licence file (3058 B); spar doctor lists them.
+  Notebook -> /home/spar/repo/samples/Notebook/bin/Production/Release/net11.0/linux-x64/Notebook.dll
+  Generating native code
+  Notebook -> /home/spar/apps/notebook/
+STEP exit 0 in 6002 ms: dotnet publish samples/Notebook -c Release -r linux-x64 -o /home/spar/apps/notebook
+-rwxr-xr-x 1 spar spar 5128480 Nov 20 23:52 /home/spar/apps/notebook/Notebook
+-rwxr-xr-x 1 spar spar 4466944 Nov 20 23:52 /home/spar/apps/probe-wasm/BridgeProbe
+-rwxr-xr-x 1 spar spar   32144 Nov 20 23:52 /home/spar/repo/tests/apps/BridgeProbe/bin/Development/Debug/net11.0/linux-x64/BridgeProbe
+STEP blackbox on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+Running tests from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+failed Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted (100ms)
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+  Assert.DoesNotContain() Failure: Filter matched in collection
+               ↓ (pos 0)
+  Collection: ["/home/spar/repo/artifacts/linux-homes/black-box/20"···]
+    at Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted() in /home/spar/repo/tests/Spar.WindowTests/BlackBoxFixtureTests.cs:122
+    --- End of stack trace from previous location ---
+failed Spar.WindowTests.LinuxPageSecurityTests.A_users_click_on_an_external_link_opens_it_with_the_desktops_handler_and_a_scripts_does_not (2ms)
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.ComponentModel.Win32Exception : An error occurred trying to start process 'gio' with working directory '/home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64'. No such file or directory
+    at System.Diagnostics.ProcessUtils.ResolveValidPath(String filename, String workingDirectory)
+    at Microsoft.Win32.SafeHandles.SafeProcessHandle.StartCore(ProcessStartInfo startInfo, SafeFileHandle stdinHandle, SafeFileHandle stdoutHandle, SafeFileHandle stderrHandle, SafeHandle[] inheritedHandles, Holder& waitStateHolder)
+    at System.Diagnostics.Process.Start()
+    at System.Diagnostics.Process.Start(ProcessStartInfo startInfo)
+    at Spar.WindowTests.LinuxPageSecurityTests.StubBrowser.Install(String run) in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxPageSecurityTests.cs:525
+    at Spar.WindowTests.LinuxPageSecurityTests.A_users_click_on_an_external_link_opens_it_with_the_desktops_handler_and_a_scripts_does_not() in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxPageSecurityTests.cs:293
+    --- End of stack trace from previous location ---
+failed Spar.WindowTests.LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message (28ms)
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+  The app exited with 1 before it had a window.
+  --- app.log ---
+  
+  --- output ---
+  bwrap: cannot open /proc/sys/user/max_user_namespaces: Read-only file system
+  
+    at Spar.WindowTests.ProbeApp.WaitForWindowAsync() in /home/spar/repo/tests/Spar.WindowTests/Linux/ProbeApp.cs:323
+    at Spar.WindowTests.LinuxStartupTests.ShownThenClosedAsync(ProbeApp app, Int32 exitCode, String label) in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxStartupTests.cs:262
+    at Spar.WindowTests.LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message() in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxStartupTests.cs:101
+    at Spar.WindowTests.LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message() in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxStartupTests.cs:103
+    --- End of stack trace from previous location ---
+  Standard output
+    --- app.log ---
+    
+    --- output ---
+    bwrap: cannot open /proc/sys/user/max_user_namespaces: Read-only file system
+    
+    
+  Error output
+dbus-daemon[22580]: [session uid=1000 pid=22580] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=22587 comm="/home/spar/repo/tests/Spar.WindowTests/bin/Develop" label="kernel")
+dbus-daemon[22580]: [session uid=1000 pid=22580] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[22674]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=22587 comm="/home/spar/repo/tests/Spar.WindowTests/bin/Develop" label="kernel")
+dbus-daemon[22674]: Successfully activated service 'org.a11y.atspi.Registry'
+/home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) failed with 3 error(s) [+78/x3/?0] (4m 40s 418ms)
+Exit code: 2
+
+  In process file artifacts produced:
+    - /home/spar/repo/artifacts/test-results/Spar.WindowTests/spar_da3d96ccae5c_2026-11-20_23_52_40.572705.trx
+
+Test run summary: Failed!
+  total: 81
+  failed: 3
+  succeeded: 78
+  skipped: 0
+  duration: 4m 40s 525ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
+STEP exit 2 in 280890 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait Surface=BlackBox --filter-not-trait Probe=Development --filter-not-trait OS=Windows --filter-not-trait Kind=Measurement
+STEP blackbox failed
+STEP blackboxdev on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+Running tests from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+failed Spar.WindowTests.LinuxPageSecurityTests.A_users_click_on_an_external_link_opens_it_with_the_desktops_handler_and_a_scripts_does_not (2ms)
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+  Xunit.MicrosoftTestingPlatform.XunitException: System.ComponentModel.Win32Exception : An error occurred trying to start process 'gio' with working directory '/home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64'. No such file or directory
+    at System.Diagnostics.ProcessUtils.ResolveValidPath(String filename, String workingDirectory)
+    at Microsoft.Win32.SafeHandles.SafeProcessHandle.StartCore(ProcessStartInfo startInfo, SafeFileHandle stdinHandle, SafeFileHandle stdoutHandle, SafeFileHandle stderrHandle, SafeHandle[] inheritedHandles, Holder& waitStateHolder)
+    at System.Diagnostics.Process.Start()
+    at System.Diagnostics.Process.Start(ProcessStartInfo startInfo)
+    at Spar.WindowTests.LinuxPageSecurityTests.StubBrowser.Install(String run) in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxPageSecurityTests.cs:525
+    at Spar.WindowTests.LinuxPageSecurityTests.A_users_click_on_an_external_link_opens_it_with_the_desktops_handler_and_a_scripts_does_not() in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxPageSecurityTests.cs:293
+    --- End of stack trace from previous location ---
+failed Spar.WindowTests.LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message (30ms)
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+  The app exited with 1 before it had a window.
+  --- app.log ---
+  
+  --- output ---
+  bwrap: cannot open /proc/sys/user/max_user_namespaces: Read-only file system
+  
+    at Spar.WindowTests.ProbeApp.WaitForWindowAsync() in /home/spar/repo/tests/Spar.WindowTests/Linux/ProbeApp.cs:323
+    at Spar.WindowTests.LinuxStartupTests.ShownThenClosedAsync(ProbeApp app, Int32 exitCode, String label) in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxStartupTests.cs:262
+    at Spar.WindowTests.LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message() in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxStartupTests.cs:101
+    at Spar.WindowTests.LinuxStartupTests.A_sandbox_the_system_denies_is_exit_5_with_a_message() in /home/spar/repo/tests/Spar.WindowTests/Linux/LinuxStartupTests.cs:103
+    --- End of stack trace from previous location ---
+  Standard output
+    --- app.log ---
+    
+    --- output ---
+    bwrap: cannot open /proc/sys/user/max_user_namespaces: Read-only file system
+    
+    
+  Error output
+dbus-daemon[33804]: [session uid=1000 pid=33804] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=33813 comm="/home/spar/repo/tests/apps/BridgeProbe/bin/Develop" label="kernel")
+dbus-daemon[33804]: [session uid=1000 pid=33804] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[33906]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=33813 comm="/home/spar/repo/tests/apps/BridgeProbe/bin/Develop" label="kernel")
+dbus-daemon[33906]: Successfully activated service 'org.a11y.atspi.Registry'
+/home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) failed with 2 error(s) [+62/x2/?0] (5m 21s 798ms)
+Exit code: 2
+
+  In process file artifacts produced:
+    - /home/spar/repo/artifacts/test-results/Spar.WindowTests/spar_da3d96ccae5c_2026-11-20_23_57_21.499508.trx
+
+Test run summary: Failed!
+  total: 64
+  failed: 2
+  succeeded: 62
+  skipped: 0
+  duration: 5m 21s 904ms
+Test run completed with non-success exit code: 2. At least one test failed. See: https://aka.ms/testingplatform/exitcodes
+STEP exit 2 in 322289 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait App=BridgeProbe --filter-not-trait Probe=None --filter-not-trait Kind=Measurement
+STEP blackboxdev failed
+/src/eng/linux-ci/run.sh: line 135: syntax error near unexpected token `)'
+/src/eng/linux-ci/run.sh: line 135: `>/dev/null), $(id -un) uid $(id -u)"'
+RUN EXIT 2

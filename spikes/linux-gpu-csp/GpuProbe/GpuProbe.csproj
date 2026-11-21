@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Software-GPU detection probe for the Linux host: EGL (surfaceless or device platform), render-node access, both
+    combined, and GDK's own GL context. One method per process run, one JSON line on stdout.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Spar.Spikes.GpuProbe</RootNamespace>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);IL2026;IL2046;IL2057;IL2070;IL2072;IL2075;IL2087;IL2091;IL3050;IL3051;IL3052;IL3053</WarningsAsErrors>
+  </PropertyGroup>
+</Project>

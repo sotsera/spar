@@ -1,0 +1,51 @@
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+dbus-daemon[1753]: [session uid=1000 pid=1753] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=1754 comm="python3 -I /mnt/e/Ghidello/Git/spar.v7/spikes/linu" label="kernel")
+dbus-daemon[1753]: [session uid=1000 pid=1753] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[1753]: [session uid=1000 pid=1753] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.3' (uid=1000 pid=1912 comm="/usr/bin/xdg-dbus-proxy --args=19" label="kernel")
+dbus-daemon[1753]: [session uid=1000 pid=1753] Activating service name='org.freedesktop.portal.Documents' requested by ':1.4' (uid=1000 pid=1934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[1753]: [session uid=1000 pid=1753] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.5' (uid=1000 pid=1940 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[1753]: [session uid=1000 pid=1753] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[1753]: [session uid=1000 pid=1753] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.138: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.139: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[1753]: [session uid=1000 pid=1753] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.4' (uid=1000 pid=1934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[1753]: [session uid=1000 pid=1753] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.180: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.181: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.182: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.183: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.183: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.185: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.186: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.187: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.189: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.190: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][02217.319298] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][02217.319739] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.193: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.194: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.196: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:1934): xdg-desktop-portal-WARNING **: 21:42:38.197: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[1753]: [session uid=1000 pid=1753] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[1909]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=1912 comm="/usr/bin/xdg-dbus-proxy --args=19" label="kernel")
+dbus-daemon[1909]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+never-cairo-3: gsk=GskCairoRenderer private=82.5 MB in 2213.2 ms

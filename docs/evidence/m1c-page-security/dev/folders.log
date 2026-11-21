@@ -1,0 +1,42 @@
+2026-11-20T08:45:48.424Z INFO  Spar.Host  [f4cc6f66] Host started 38 ms after the process.
+2026-11-20T08:45:48.425Z INFO  Spar.Host  [f4cc6f66] App id com.example.tests.BridgeProbe.Development, folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/814528ab7545/data/com.example.tests.BridgeProbe.Development
+2026-11-20T08:45:48.430Z INFO  Spar.Host  [f4cc6f66] single instance at 19.8 ms
+2026-11-20T08:45:48.446Z INFO  Spar.Host  [f4cc6f66] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T08:45:48.452Z INFO  Spar.Host  [f4cc6f66] Sandbox trial: bwrap exit 0 in 3.5 ms.
+2026-11-20T08:45:48.452Z INFO  Spar.Host  [f4cc6f66] prerequisites checked at 44.5 ms
+2026-11-20T08:45:48.456Z INFO  Spar.Host  [f4cc6f66] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 3.0 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T08:45:48.456Z INFO  Spar.Host  [f4cc6f66] gpu checked at 48.8 ms
+2026-11-20T08:45:48.460Z INFO  Spar.Host  [f4cc6f66] theme read at 52.2 ms
+2026-11-20T08:45:48.479Z INFO  Spar.Host  [f4cc6f66] services built at 71.4 ms
+2026-11-20T08:45:48.494Z INFO  Spar.Host  [f4cc6f66] gtk ready at 86.3 ms
+2026-11-20T08:45:48.495Z INFO  Spar.Host  [f4cc6f66] UI-thread stall probe on.
+2026-11-20T08:45:48.514Z INFO  Spar.Host  [f4cc6f66] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T08:45:48.518Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T08:45:48.521Z INFO  Spar.Host  [f4cc6f66] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-psBzrIMh39SiUss7dt4j0Yx5JLTZn/T3cYdTgFRIxsc=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-/Tb2UtsWQf9dyUHbhFbEBwwublB7KqmKLlvhTU54410='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T08:45:48.521Z INFO  Spar.Host  [f4cc6f66] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T08:45:48.524Z INFO  Spar.Host  [f4cc6f66] Browser data folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/814528ab7545/data/com.example.tests.BridgeProbe.Development/WebKit, cache /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/814528ab7545/data/com.example.tests.BridgeProbe.Development/cache/WebKit
+2026-11-20T08:45:48.529Z INFO  Spar.Host  [f4cc6f66] web view created at 121.3 ms
+2026-11-20T08:45:48.530Z INFO  Spar.Host  [f4cc6f66] Heartbeat every 5000 ms.
+2026-11-20T08:45:48.542Z INFO  Spar.Host  [f4cc6f66] window shown at 134.3 ms
+2026-11-20T08:45:48.595Z INFO  Spar.Host  [f4cc6f66] page committed at 187.7 ms
+2026-11-20T08:45:48.596Z INFO  Spar.Host  [f4cc6f66] Bridge: document 19ddfe6288c9dd12 opened.
+2026-11-20T08:45:48.596Z INFO  Spar.Host  [f4cc6f66] Heartbeat armed for the new document.
+2026-11-20T08:45:48.606Z INFO  Spar.Host  [f4cc6f66] first bridge message at 198.2 ms
+2026-11-20T08:45:48.613Z INFO  Spar.Host  [f4cc6f66] first bridge reply at 205.8 ms
+2026-11-20T08:45:48.628Z INFO  Spar.Host  [f4cc6f66] ui-ready at 220.4 ms
+2026-11-20T08:45:48.628Z INFO  Spar.Host  [f4cc6f66] Bridge: document 19ddfe6288c9dd12 reported ui-ready.
+2026-11-20T08:45:48.629Z INFO  BridgeProbe.ProbeService  probe note: first document 19ddfe6288c9dd12
+2026-11-20T08:45:48.630Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T08:45:48.636Z INFO  Spar.Host  [f4cc6f66] close requested (User) at 228.6 ms
+2026-11-20T08:45:48.638Z INFO  Spar.Host  [f4cc6f66] close request 1 sent to the page (user) at 230.2 ms
+2026-11-20T08:45:48.641Z INFO  Spar.Host  [f4cc6f66] close request 1: the page answered Close at 233.8 ms
+2026-11-20T08:45:48.645Z INFO  Spar.Host  [f4cc6f66] closing at 237.2 ms
+2026-11-20T08:45:48.645Z INFO  Spar.Host  [f4cc6f66] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T08:45:48.648Z INFO  Spar.Host  [f4cc6f66] page close work done at 240.5 ms
+2026-11-20T08:45:48.649Z INFO  Spar.Host  [f4cc6f66] Bridge: document 19ddfe6288c9dd12 closed (window closing).
+2026-11-20T08:45:48.649Z INFO  Spar.Host  [f4cc6f66] calls stopped at 241.2 ms
+2026-11-20T08:45:48.649Z INFO  Spar.Host  [f4cc6f66] calls settled at 241.3 ms
+2026-11-20T08:45:48.651Z INFO  Spar.Host  [f4cc6f66] window destroyed at 243.4 ms
+2026-11-20T08:45:48.678Z INFO  Spar.Host  [f4cc6f66] web processes exited after 27 ms at 270.8 ms
+2026-11-20T08:45:48.682Z INFO  Spar.Host  [f4cc6f66] services disposed at 274.8 ms
+2026-11-20T08:45:48.683Z INFO  Spar.Host  [f4cc6f66] exit 0 at 275.4 ms

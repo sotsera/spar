@@ -19,7 +19,7 @@ internal sealed partial class DevToolsCall(string method) : ICoreWebView2CallDev
     {
         if (errorCode < 0)
         {
-            _completion.TrySetException(new SparDevToolsException(method, errorCode, returnObjectAsJson));
+            _completion.TrySetException(new DevToolsException(method, errorCode, returnObjectAsJson));
             return;
         }
 
@@ -49,4 +49,18 @@ internal sealed partial class DevToolsEvents(Action<string> onEvent, Action<Exce
             Com.Release(received);
         }
     }
+}
+
+/// <summary>
+/// A DevTools Protocol call the page's session refused: the method, WebView2's failure code, and the protocol's error
+/// object as JSON when WebView2 passed one (such as <c>{"code":-32000,"message":"Cannot find context with specified id"}</c>).
+/// </summary>
+internal sealed class DevToolsException(string method, int code, string? error)
+    : Exception($"{method} failed with 0x{code:X8}{(string.IsNullOrEmpty(error) ? "" : ": " + error)}")
+{
+    public string Method { get; } = method;
+
+    public int Code { get; } = code;
+
+    public string? Error { get; } = error;
 }

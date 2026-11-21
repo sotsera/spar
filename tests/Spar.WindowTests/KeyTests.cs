@@ -30,8 +30,18 @@ public sealed class KeyTests
 
         var events = await EventsAsync(host);
         Report(character, events);
-        Assert.Equal(["keydown", "keypress", "beforeinput", "input", "keyup"], events.Select(e => e.Type));
-        Assert.All(events.Where(e => e.Type is "keydown" or "keypress" or "keyup"), e => Assert.Equal((character, ""), (e.Key, e.Code)));
+        // WebKitGTK names a key beyond the Basic Multilingual Plane "Unidentified" and sends it no keypress (pitfalls,
+        // "Linux host"); its text still arrives whole, by beforeinput and input.
+        var unnamed = events.Any(e => e.Type == "keydown" && e.Key == "Unidentified");
+        Assert.Equal(unnamed ? ["keydown", "beforeinput", "input", "keyup"] : ["keydown", "keypress", "beforeinput", "input", "keyup"], events.Select(e => e.Type));
+        Assert.True(!unnamed || !System.Text.Rune.GetRuneAt(character, 0).IsBmp, "Only a character beyond the BMP may be unnamed.");
+
+        // No physical key: Chromium reports an empty code, WebKit "Unidentified".
+        Assert.All(events.Where(e => e.Type is "keydown" or "keypress" or "keyup"), e =>
+        {
+            Assert.Contains(e.Key, unnamed ? (string[])["Unidentified", character] : [character]);
+            Assert.Contains(e.Code, (string[])["", "Unidentified"]);
+        });
         Assert.Equal(character, events.Single(e => e.Type == "input").Data);
         await Expect(keys).ToHaveValueAsync(character);
         host.AssertClean();
@@ -58,7 +68,13 @@ public sealed class KeyTests
 
         var events = await EventsAsync(host);
         var downs = events.Where(e => e.Type == "keydown").Select(e => e.Key).ToList();
-        Assert.Equal(Mixed.EnumerateRunes().Select(rune => rune.ToString()), downs);
+        var runes = Mixed.EnumerateRunes().ToList();
+        Assert.Equal(runes.Count, downs.Count);
+
+        // One key per scalar value; WebKitGTK names those beyond the BMP "Unidentified" (pitfalls, "Linux host").
+        Assert.All(runes.Zip(downs), pair => Assert.True(
+            pair.Second == pair.First.ToString() || (!pair.First.IsBmp && pair.Second == "Unidentified"),
+            $"{pair.First} arrived as {pair.Second}"));
         Assert.DoesNotContain(events, e => e.Key?.Contains('\uFFFD') == true || e.Data?.Contains('\uFFFD') == true);
         await Expect(keys).ToHaveValueAsync(Mixed);
         host.AssertClean();

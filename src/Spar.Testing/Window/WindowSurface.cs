@@ -5,9 +5,9 @@ using Spar.Hosting;
 namespace Spar.Testing;
 
 /// <summary>
-/// The Window surface of one test app (plan section 5, level 5): what the test host asks of the desktop host, and the
-/// page driver it installs before the window's first navigation. Disposing it stops the driver; the session then
-/// closes the window before the app's services are disposed.
+/// The Window surface of one test app (plan section 5, level 5): what the test host asks of the desktop host, with the
+/// page driver's engine and events the host installs before the window's first navigation. The session then closes
+/// the window before the app's services are disposed.
 /// </summary>
 internal sealed class WindowSurface : IAsyncDisposable
 {
@@ -16,7 +16,7 @@ internal sealed class WindowSurface : IAsyncDisposable
 
     private readonly SparTestOptions _options;
     private readonly ProblemLog _problems = new();
-    private PageSession? _session;
+    private readonly PageSession _session = new();
 
     public WindowSurface(SparTestOptions options)
     {
@@ -25,8 +25,10 @@ internal sealed class WindowSurface : IAsyncDisposable
         Request = new SparTestWindowRequest
         {
             ProfilesFolder = TestDataRoots.Profiles,
-            BeforeFirstNavigation = InstallAsync,
+            HomesFolder = TestDataRoots.LinuxHomes,
+            Automation = _session.Automation,
             OnPhase = options.WindowPhase,
+            Holder = SparTestCleanup.CurrentTest() ?? (object)this,
             Dark = options.ColorScheme switch
             {
                 SparColorScheme.Dark => true,
@@ -42,26 +44,19 @@ internal sealed class WindowSurface : IAsyncDisposable
     public IReadOnlyCollection<string> Problems => _problems.Problems;
 
     /// <summary>
-    /// Waits for the window's first page, unless the test asked not to, and returns the page to drive. Without the
-    /// wait the page exists only once the window got as far as its first navigation.
+    /// Waits for the window's first page, unless the test asked not to, and returns the page to drive; without the
+    /// wait, the page answers once the window got as far as its first document.
     /// </summary>
     public async Task<SparPage?> StartAsync(ISparTestWindow window, CancellationToken cancellationToken)
     {
+        _session.Attach(window);
         if (_options.WaitForPage)
         {
             await window.Opened.WaitAsync(OpenLimit, cancellationToken);
         }
 
-        return _session is { } session ? new SparPage(session) : null;
+        return new SparPage(_session);
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (_session is { } session)
-        {
-            await session.DisposeAsync();
-        }
-    }
-
-    private async Task InstallAsync(ISparTestWindow window) => _session = await PageSession.InstallAsync(window);
+    public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 }

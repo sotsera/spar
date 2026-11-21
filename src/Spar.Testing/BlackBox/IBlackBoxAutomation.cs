@@ -103,7 +103,8 @@ internal enum ElementStatus
 internal sealed record ElementOutcome(ElementStatus Status, string? Value = null, IReadOnlyList<string>? Names = null, ScreenRect? Bounds = null);
 
 /// <summary>A native dialog as it was read: its window, title, text parts and own buttons.</summary>
-internal sealed record DialogContent(nint Handle, string Title, IReadOnlyList<string> Texts, IReadOnlyList<string> Buttons);
+/// <param name="Native">The accessibility client's own reference to the dialog (Linux: its AT-SPI node), when it has no window handle.</param>
+internal sealed record DialogContent(nint Handle, string Title, IReadOnlyList<string> Texts, IReadOnlyList<string> Buttons, object? Native = null);
 
 /// <summary>
 /// What a black-box locator matches, independent of the accessibility API: a role (its ARIA name, and the native

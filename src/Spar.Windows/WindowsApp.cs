@@ -3,6 +3,7 @@ using Spar.Hosting;
 using Spar.Logging;
 using Spar.Runtime;
 using Windows.Win32;
+using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
 
 namespace Spar.Windows;
 
@@ -74,7 +75,7 @@ internal sealed class WindowsApp : IAppWindowOwner
             _log.UseFile(_folders.Logs, _levels);
         }
 
-        _log.Info($"Host started {HostLog.ProcessAgeMilliseconds():0.0} ms after the process.");
+        _log.Info($"Host started {ProcessAgeMilliseconds():0.0} ms after the process.");
         if (problem is not null)
         {
             _log.Warn(problem);
@@ -101,7 +102,14 @@ internal sealed class WindowsApp : IAppWindowOwner
     /// <summary>The teardown started: no more relaunches, and the shutdown is watched until the process returns.</summary>
     void IAppWindowOwner.TeardownStarted()
     {
-        _shutdown = ShutdownWatch.Start(_title, _log, _automated, ShutdownHang.FirstPromptMilliseconds, ShutdownHang.AskAgainMilliseconds);
+        _shutdown = ShutdownWatch.Start(
+            _title,
+            _log,
+            _automated,
+            ShutdownHang.FirstPromptMilliseconds,
+            ShutdownHang.AskAgainMilliseconds,
+            request => WindowsPageHost.ShowShutdownPrompt(_title, _log, request),
+            ProcessControl.ExitNow);
         _instance?.StopListening();
     }
 
@@ -126,6 +134,11 @@ internal sealed class WindowsApp : IAppWindowOwner
         if (builder.BrowserOptions.Active() is { Length: > 0 } active)
         {
             _log.Warn($"Browser opt-ins in force: {active}");
+        }
+
+        if (builder.BrowserOptions.Acceleration != HardwareAcceleration.Auto)
+        {
+            _log.Info($"HardwareAcceleration({builder.BrowserOptions.Acceleration}) is for Linux; Windows ignores it.");
         }
 
         BrowserEnvironment.Filter(builder.BrowserOptions.EnvironmentOverrides, _log);
@@ -322,6 +335,21 @@ internal sealed class WindowsApp : IAppWindowOwner
             _log.Error("The app's services did not stop cleanly", exception);
         }
     }
+
+    /// <summary>How long the process ran before the host started, from the process's creation time.</summary>
+    private static unsafe double ProcessAgeMilliseconds()
+    {
+        FILETIME created, exited, kernel, user;
+        if (!PInvoke.GetProcessTimes(PInvoke.GetCurrentProcess(), &created, &exited, &kernel, &user))
+        {
+            return double.NaN;
+        }
+
+        PInvoke.GetSystemTimePreciseAsFileTime(out var now);
+        return (Ticks(now) - Ticks(created)) / (double)TimeSpan.TicksPerMillisecond;
+    }
+
+    private static long Ticks(FILETIME time) => ((long)(uint)time.dwHighDateTime << 32) | (uint)time.dwLowDateTime;
 }
 
 /// <summary>

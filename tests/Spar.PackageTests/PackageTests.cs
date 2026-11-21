@@ -188,18 +188,20 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         Assert.Equal(0, (await FirstAsync()).Exit);
         var publish = Path.Combine(consumer.RunRoot, "publish");
 
-        // Published without the Windows host, so running it opens no window here: the host itself is checked on the
-        // Notebook (docs/evidence/m1b-host.md), and this run checks the error of a build with no host for its OS.
+        // Published without the host of this OS, so running it opens no window here: the hosts themselves are checked
+        // on the Notebook (docs/evidence/m1b-host.md, docs/evidence/m1c-host.md), and this run checks the error of a
+        // build with no host for its OS.
+        var otherPlatform = OperatingSystem.IsWindows() ? "linux" : "windows";
         var (exit, output) = await consumer.DotnetAsync(
-            "App", "publish", "-c", "Release", "-o", publish, "-nologo", "-p:SparPlatforms=linux");
+            "App", "publish", "-c", "Release", "-o", publish, "-nologo", $"-p:SparPlatforms={otherPlatform}");
 
         Assert.True(exit == 0, output);
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "NotesTool.exe" : "NotesTool");
         // The page from ui/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
         // The app id reaches the runtime through the generated catalog, a string literal (UTF-16) in the image. On
-        // Linux nothing reads it until the Linux host (M1c), so the trimmer drops it there; on Windows the message of
-        // a build with no host for its OS logs into the app id's folder.
+        // Linux a build without its host never reads it, so the trimmer drops it there; on Windows the message of a
+        // build with no host for its OS logs into the app id's folder.
         if (OperatingSystem.IsWindows())
         {
             Assert.True(Contains(File.ReadAllBytes(executable), System.Text.Encoding.Unicode.GetBytes("org.example.notes.Tool")),
@@ -210,7 +212,7 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         var perUser = Path.Combine(consumer.RunRoot, "local-app-data");
         var (ran, said) = await Tool.RunAsync(publish, executable, [], new Dictionary<string, string> { ["LOCALAPPDATA"] = perUser });
 
-        // No host for this OS in the build (Spar.Linux does not exist yet): the executable says so and exits with 3.
+        // No host for this OS in the build: the executable says so and exits with 3.
         Assert.Equal(3, ran);
         Assert.Contains("no desktop host", said, StringComparison.Ordinal);
     }

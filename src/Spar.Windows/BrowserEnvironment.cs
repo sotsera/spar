@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices.Marshalling;
+using Spar.Hosting;
 using Spar.Windows.Interop;
 using Windows.Win32;
 

@@ -53,6 +53,51 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void Run_is_handed_the_linux_host_behind_its_own_check_when_the_build_references_both()
+    {
+        const string Hosts = """
+            namespace Spar.Windows
+            {
+                public sealed class SparWindowsHost : Spar.Runtime.ISparHost
+                {
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+
+            namespace Spar.Linux
+            {
+                public sealed class SparLinuxHost : Spar.Runtime.ISparHost
+                {
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+            """;
+        const string LinuxOnly = """
+            namespace Spar.Linux
+            {
+                public sealed class SparLinuxHost : Spar.Runtime.ISparHost
+                {
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+            """;
+
+        var both = GeneratorHarness.Generate(Program + Hosts);
+        var linux = GeneratorHarness.Generate(Program + LinuxOnly);
+
+        Assert.Empty(both.Errors);
+        var code = both.Files["Spar.Run.g.cs"];
+        Assert.Contains("if (global::System.OperatingSystem.IsLinux())", code, StringComparison.Ordinal);
+        Assert.Contains("return new global::Spar.Linux.SparLinuxHost();", code, StringComparison.Ordinal);
+        Assert.Contains("return new global::Spar.Windows.SparWindowsHost();", code, StringComparison.Ordinal);
+
+        // A build for Linux only keeps no Windows host, nor Windows' "OS too old" stand-in.
+        Assert.Empty(linux.Errors);
+        Assert.Contains("return new global::Spar.Linux.SparLinuxHost();", linux.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+        Assert.DoesNotContain("Windows", linux.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void The_app_id_the_build_checked_reaches_the_catalog()
     {
         var withId = GeneratorHarness.Generate(Program + Fixtures.Catalog, appId: "com.example.SqlTool");

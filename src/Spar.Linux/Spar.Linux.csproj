@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The Linux host (plan section 3, "Linux"): GTK 4 and WebKitGTK 6.0 on one main-loop thread, the app's packed page on
+    spar://app and the bridge through a relay in an isolated script world. Spar.Sdk adds it to apps whose SparPlatforms
+    include linux; apps never reference it themselves. GLib, GTK, WebKit, JavaScriptCore and libsoup are reached through
+    [LibraryImport] declarations (Interop/), loaded at the first call, so the executable links only glibc.
+  -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>The Spar Linux host: the app's window, WebKitGTK, the page on spar://app and the bridge.</Description>
+    <RootNamespace>Spar.Linux</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar\Spar.csproj" />
+  </ItemGroup>
+
+  <!-- The bridge's relay, injected into the top document's isolated world (ScriptBridge.cs). -->
+  <ItemGroup>
+    <EmbeddedResource Include="BridgeRelay.js" LogicalName="Spar.Linux.BridgeRelay.js" WithCulture="false" Type="Non-Resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Tests" />
+    <InternalsVisibleTo Include="Spar.WindowTests" />
+  </ItemGroup>
+</Project>

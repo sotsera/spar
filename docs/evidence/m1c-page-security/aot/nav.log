@@ -1,0 +1,51 @@
+2026-11-20T08:50:23.543Z INFO  Spar.Host  [d40c09c1] Host started 11 ms after the process.
+2026-11-20T08:50:23.543Z INFO  Spar.Host  [d40c09c1] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/73689161682b/data/com.example.tests.BridgeProbe
+2026-11-20T08:50:23.543Z INFO  Spar.Host  [d40c09c1] single instance at 3.2 ms
+2026-11-20T08:50:23.560Z INFO  Spar.Host  [d40c09c1] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T08:50:23.564Z INFO  Spar.Host  [d40c09c1] Sandbox trial: bwrap exit 0 in 3.3 ms.
+2026-11-20T08:50:23.564Z INFO  Spar.Host  [d40c09c1] prerequisites checked at 24.2 ms
+2026-11-20T08:50:23.564Z INFO  Spar.Host  [d40c09c1] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.1 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T08:50:23.564Z INFO  Spar.Host  [d40c09c1] gpu checked at 24.3 ms
+2026-11-20T08:50:23.566Z INFO  Spar.Host  [d40c09c1] theme read at 26.2 ms
+2026-11-20T08:50:23.568Z INFO  Spar.Host  [d40c09c1] services built at 27.9 ms
+2026-11-20T08:50:23.613Z INFO  Spar.Host  [d40c09c1] gtk ready at 73.6 ms
+2026-11-20T08:50:23.632Z INFO  Spar.Host  [d40c09c1] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T08:50:23.632Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T08:50:23.635Z INFO  Spar.Host  [d40c09c1] Browser data folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/73689161682b/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/73689161682b/data/com.example.tests.BridgeProbe/cache/WebKit
+2026-11-20T08:50:23.639Z INFO  Spar.Host  [d40c09c1] web view created at 99 ms
+2026-11-20T08:50:23.639Z INFO  Spar.Host  [d40c09c1] Heartbeat every 5000 ms.
+2026-11-20T08:50:23.658Z INFO  Spar.Host  [d40c09c1] window shown at 118.5 ms
+2026-11-20T08:50:23.660Z INFO  Spar.Host  [d40c09c1] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-psBzrIMh39SiUss7dt4j0Yx5JLTZn/T3cYdTgFRIxsc=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-/Tb2UtsWQf9dyUHbhFbEBwwublB7KqmKLlvhTU54410='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T08:50:23.660Z INFO  Spar.Host  [d40c09c1] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T08:50:23.725Z INFO  Spar.Host  [d40c09c1] page committed at 185.2 ms
+2026-11-20T08:50:23.725Z INFO  Spar.Host  [d40c09c1] Bridge: document 21789f0c0af946c5 opened.
+2026-11-20T08:50:23.725Z INFO  Spar.Host  [d40c09c1] Heartbeat armed for the new document.
+2026-11-20T08:50:23.738Z INFO  Spar.Host  [d40c09c1] first bridge message at 198.8 ms
+2026-11-20T08:50:23.739Z INFO  Spar.Host  [d40c09c1] first bridge reply at 199.1 ms
+2026-11-20T08:50:23.742Z INFO  Spar.Host  [d40c09c1] ui-ready at 202.4 ms
+2026-11-20T08:50:23.742Z INFO  Spar.Host  [d40c09c1] Bridge: document 21789f0c0af946c5 reported ui-ready.
+2026-11-20T08:50:23.742Z INFO  BridgeProbe.ProbeService  probe note: first document 21789f0c0af946c5
+2026-11-20T08:50:23.744Z WARN  Spar.Host  [d40c09c1] Navigation lock: a navigation to https://example.invalid/top was ignored; the window shows only the app's own page.
+2026-11-20T08:50:24.145Z WARN  Spar.Host  [d40c09c1] Navigation lock: a navigation to spar://other/ was ignored; the window shows only the app's own page.
+2026-11-20T08:50:24.545Z WARN  Spar.Host  [d40c09c1] Navigation lock: a navigation to data:text/html,<p>data</p> was ignored; the window shows only the app's own page.
+2026-11-20T08:50:24.946Z WARN  Spar.Host  [d40c09c1] Navigation lock: a navigation to blob:spar://app/479003bf-e002-4e60-a6cd-70d75f7329d8 was ignored; the window shows only the app's own page.
+2026-11-20T08:50:25.748Z WARN  Spar.Host  [d40c09c1] Navigation lock: a navigation to https://example.invalid/link was ignored; the window shows only the app's own page.
+2026-11-20T08:50:26.950Z WARN  Spar.Host  Content Security Policy: form-action blocked https://example.invalid/form at spar://app/assets/index-D5FWBdnh.js:1:1804
+2026-11-20T08:50:27.350Z WARN  Spar.Host  [d40c09c1] Navigation lock: a navigation to https://example.invalid/refresh was ignored; the window shows only the app's own page.
+2026-11-20T08:50:28.354Z INFO  BridgeProbe.ProbeService  probe note: nav: location https: done; location spar-other: done; location data: done; location blob: done; location file: done; link click: done; blank link click: done; window.open: null; form post: done; meta refresh: done
+2026-11-20T08:50:28.355Z INFO  BridgeProbe.ProbeService  probe note: nav: still on spar://app/, same document true
+2026-11-20T08:50:28.357Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T08:50:28.367Z INFO  Spar.Host  [d40c09c1] close requested (User) at 4827.8 ms
+2026-11-20T08:50:28.367Z INFO  Spar.Host  [d40c09c1] close request 1 sent to the page (user) at 4827.8 ms
+2026-11-20T08:50:28.369Z INFO  Spar.Host  [d40c09c1] close request 1: the page answered Close at 4829.7 ms
+2026-11-20T08:50:28.369Z INFO  Spar.Host  [d40c09c1] closing at 4829.9 ms
+2026-11-20T08:50:28.369Z INFO  Spar.Host  [d40c09c1] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T08:50:28.370Z INFO  Spar.Host  [d40c09c1] page close work done at 4830.5 ms
+2026-11-20T08:50:28.370Z INFO  Spar.Host  [d40c09c1] Bridge: document 21789f0c0af946c5 closed (window closing).
+2026-11-20T08:50:28.370Z INFO  Spar.Host  [d40c09c1] calls stopped at 4830.5 ms
+2026-11-20T08:50:28.370Z INFO  Spar.Host  [d40c09c1] calls settled at 4830.5 ms
+2026-11-20T08:50:28.372Z INFO  Spar.Host  [d40c09c1] window destroyed at 4832.7 ms
+2026-11-20T08:50:28.381Z INFO  Spar.Host  [d40c09c1] web processes exited after 9 ms at 4841.2 ms
+2026-11-20T08:50:28.381Z INFO  Spar.Host  Content Security Policy reports in this run: 1 listener batches, 1 report-uri reports read, 0 refused unread (rate or size), 0 dropped (queue full)
+2026-11-20T08:50:28.381Z INFO  Spar.Host  [d40c09c1] services disposed at 4841.5 ms
+2026-11-20T08:50:28.381Z INFO  Spar.Host  [d40c09c1] exit 0 at 4841.6 ms

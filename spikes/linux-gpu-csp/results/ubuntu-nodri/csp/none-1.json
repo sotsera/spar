@@ -1,0 +1,388 @@
+{
+ "label": "ubuntu-nodri-none-1",
+ "profile": "none",
+ "csp": null,
+ "webkit": "2.52.6",
+ "gtk": "4.14.5",
+ "elapsedMs": 10100,
+ "listeners": {
+  "ws": {
+   "port": 42159,
+   "connections": [
+    {
+     "t": 1480,
+     "first": "GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/"
+    }
+   ]
+  },
+  "wss": {
+   "port": 44203,
+   "connections": [
+    {
+     "t": 1772,
+     "first": "\u0016\u0003\u0003\u0002\u0000\u0001\u0000\u0001\u00fc\u0003\u0003F\u0089\u00f7\u0016IiL\u00e2\u009ai?\u00fc\u0006\u00f4*eC\u009bX3\u00a1\u0080\u00ce1\b\u00d5\u00bfO\u0093\u00a7\u009cc s\u00cf\n\u00b0\u00a2\t\u00d9\u00c8!\u00feF8\u00f2\u00ff\u00ddU\u00e4a\u00ce?,\u00b0R\u00b0m\u00d1%\u00b9M+\u0084\u001e\u0000:\u0013\u0002"
+    }
+   ]
+  },
+  "wsLocalhost": {
+   "port": 41127,
+   "connections": [
+    {
+     "t": 2189,
+     "first": "GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/"
+    }
+   ]
+  },
+  "wsApp": {
+   "port": 41133,
+   "connections": [
+    {
+     "t": 3149,
+     "first": "GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/"
+    }
+   ]
+  },
+  "wssApp": {
+   "port": 35549,
+   "connections": [
+    {
+     "t": 3477,
+     "first": "\u0016\u0003\u0003\u0002\u0000\u0001\u0000\u0001\u00fc\u0003\u0003\u00dc\u00ad\u0089\u0016x\u00b6\u00a83\u0097\u00c9\u009f\u00bd\u009b\u0082\u001c\u00dc\u00fc\u00d7\u00ebQ\u0084\u00bb\u008b\"\u00b9\u00c3\u008d\u001f\u0080\u00a0\u00ce\u00a7 \u001c\u009e\u00d2n\u001c\u00ab[\u00a1Z78\u00a9\u00cb$\u00c8\u0099-\r\u0085\u0099$\u00e1\u00c0\u0099\u0083`\u008e\u008e\u00b4\u00c7k\u0003\u0000:\u0013\u0002"
+    }
+   ]
+  },
+  "httpsApp": {
+   "port": 36185,
+   "connections": [
+    {
+     "t": 3822,
+     "first": "\u0016\u0003\u0003\u0002\u0000\u0001\u0000\u0001\u00fc\u0003\u0003\u00a8\u0084\n\u008c\u00ceD\u00d7\u00a1\u0095\u00b9\u00b6\u00f7I\u00d7\u00de\u00e9Q\u00cd(\u00c1\bU\u00c8o\u00b8G\u0018\u00f6$T\u00e0\u00ca \u00cd+g\u0081\u00b7\u0014\u00c4\u00f0\n\u0088\u00904\u00ec\u0082n\u00eb\u00987\u00d1\u0013F\u0019\u00f3\u00857Z6\u0018?H\u00c2t\u0000:\u0013\u0002"
+    }
+   ]
+  },
+  "fetch": {
+   "port": 41325,
+   "connections": [
+    {
+     "t": 4074,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "fetchLocalhost": {
+   "port": 45025,
+   "connections": [
+    {
+     "t": 4325,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "xhr": {
+   "port": 37235,
+   "connections": [
+    {
+     "t": 4576,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "es": {
+   "port": 41419,
+   "connections": [
+    {
+     "t": 5330,
+     "first": "GET / HTTP/1.1\r\nAccept: text/event-stream\r\nCache-Control: no-cache\r\nOrigin: spar"
+    }
+   ]
+  },
+  "beacon": {
+   "port": 41881,
+   "connections": [
+    {
+     "t": 6081,
+     "first": "POST / HTTP/1.1\r\nContent-Type: text/plain;charset=UTF-8\r\nAccept: */*\r\nOrigin: sp"
+    }
+   ]
+  },
+  "wfetch": {
+   "port": 37055,
+   "connections": [
+    {
+     "t": 7249,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  },
+  "wws": {
+   "port": 46873,
+   "connections": [
+    {
+     "t": 7752,
+     "first": "GET / HTTP/1.1\r\nUser-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/"
+    }
+   ]
+  },
+  "wxhr": {
+   "port": 33289,
+   "connections": [
+    {
+     "t": 7500,
+     "first": "GET / HTTP/1.1\r\nOrigin: spar://app\r\nAccept: */*\r\nUser-Agent: Mozilla/5.0 (X11; U"
+    }
+   ]
+  }
+ },
+ "requests": [
+  {
+   "t": 159,
+   "method": "GET",
+   "uri": "spar://app/index.html",
+   "bodyBytes": 0
+  },
+  {
+   "t": 164,
+   "method": "GET",
+   "uri": "spar://app/probes.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 170,
+   "method": "GET",
+   "uri": "spar://app/probe.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 181,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 438,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 704,
+   "method": "GET",
+   "uri": "spar://other/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 955,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 1212,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 4827,
+   "method": "GET",
+   "uri": "spar://app/events",
+   "bodyBytes": 0
+  },
+  {
+   "t": 5078,
+   "method": "GET",
+   "uri": "spar://app/events",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6331,
+   "method": "GET",
+   "uri": "spar://app/worker.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6359,
+   "method": "GET",
+   "uri": "spar://app/probes.js",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6381,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6671,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  },
+  {
+   "t": 6975,
+   "method": "GET",
+   "uri": "spar://app/data.json",
+   "bodyBytes": 0
+  }
+ ],
+ "reports": [],
+ "page": {
+  "type": "done",
+  "info": {
+   "origin": "spar://app",
+   "isSecureContext": true,
+   "trustedTypes": true,
+   "userAgent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/60.5 Safari/605.1.15"
+  },
+  "page": [
+   {
+    "name": "fetch relative data.json",
+    "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "fetch absolute spar://app/data.json",
+    "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "fetch spar://other/data.json",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": []
+   },
+   {
+    "name": "xhr relative data.json",
+    "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "xhr absolute spar://app/data.json",
+    "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://127.0.0.1",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket wss://127.0.0.1",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://localhost",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://app",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket wss://app",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket ws://app:port",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "websocket wss://app:port",
+    "outcome": "error event, readyState 3",
+    "violations": []
+   },
+   {
+    "name": "fetch https://app:port",
+    "outcome": "rejected TypeError: Load failed",
+    "violations": []
+   },
+   {
+    "name": "fetch http://127.0.0.1",
+    "outcome": "ok 200 loopback",
+    "violations": []
+   },
+   {
+    "name": "fetch http://localhost",
+    "outcome": "ok 200 loopback",
+    "violations": []
+   },
+   {
+    "name": "xhr http://127.0.0.1",
+    "outcome": "load 200 loopback",
+    "violations": []
+   },
+   {
+    "name": "eventsource spar://app/events",
+    "outcome": "message scheme",
+    "violations": []
+   },
+   {
+    "name": "eventsource relative events",
+    "outcome": "message scheme",
+    "violations": []
+   },
+   {
+    "name": "eventsource http://127.0.0.1",
+    "outcome": "message loopback",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon spar://app/beacon",
+    "outcome": "threw TypeError: Beacons can only be sent over HTTP(S)",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon relative beacon",
+    "outcome": "threw TypeError: Beacons can only be sent over HTTP(S)",
+    "violations": []
+   },
+   {
+    "name": "sendBeacon http://127.0.0.1",
+    "outcome": "returned true",
+    "violations": []
+   }
+  ],
+  "worker": {
+   "origin": "spar://app",
+   "isSecureContext": true,
+   "results": [
+    {
+     "name": "worker fetch relative data.json",
+     "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker fetch absolute spar://app/data.json",
+     "outcome": "ok 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker xhr relative data.json",
+     "outcome": "load 200 {\"from\": \"spar://app/data.json\"}",
+     "violations": []
+    },
+    {
+     "name": "worker fetch http://127.0.0.1",
+     "outcome": "ok 200 loopback",
+     "violations": []
+    },
+    {
+     "name": "worker xhr http://127.0.0.1",
+     "outcome": "load 200 loopback",
+     "violations": []
+    },
+    {
+     "name": "worker websocket ws://127.0.0.1",
+     "outcome": "error event, readyState 3",
+     "violations": []
+    }
+   ],
+   "all": []
+  },
+  "allPageViolations": []
+ }
+}

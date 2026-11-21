@@ -1,0 +1,39 @@
+STEP budgets on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, WebKitGTK 2.52.6
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+4/x0/?0] (31s 501ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-21_10_53_49.397779.trx
+
+Test run summary: Passed!
+  total: 4
+  failed: 0
+  succeeded: 4
+  skipped: 0
+  duration: 32s 498ms
+STEP exit 0 in 43825 ms: dotnet test --project tests/Spar.WindowTests -c Release --filter-class Spar.WindowTests.BudgetTests
+kept budgets-coreclr.txt
+Recorded 2026-11-21 11:53:54 +01:00
+Window test: open, journey and close: 189.78 ms (183.67–775.43, n = 20), p95 221.73 ms [Release, CoreCLR]
+Window test: open (to the page's Ready): 84.24 ms (82.62–611.22, n = 20) [Release, CoreCLR]
+Window test: journey (fill, check, select, click, 3 assertions): 93.12 ms (90.76–143.98, n = 20) [Release, CoreCLR]
+Window test: close (teardown and the renderer's exit): 11.03 ms (7.72–20.22, n = 20) [Release, CoreCLR]
+Window test: its InPrivate controller: 7.24 ms (6.96–7.73, n = 20) [Release, CoreCLR]
+Window test: the shared environment, first window of the process: 519.48 ms (519.48–519.48, n = 1) [Release, CoreCLR]
+Window test: the shared environment, later windows: 0.64 ms (0.56–0.75, n = 19) [Release, CoreCLR]
+Desktop bridge: small unary round trip, timed by the page: 0.00 ms (0.00–4.00, n = 200), p95 1.00 ms, mean 0.285 ms [Release, CoreCLR]
+Launch to ui-ready, warm (profile reused), from the process's start (WindowHost, Production NativeAOT): 220.85 ms (195.30–229.50, n = 10) [Release, CoreCLR]
+App process working set 2 s after ui-ready (WindowHost, Production NativeAOT): 159.6 MB (159.2–162.3, n = 10) [Release, CoreCLR]
+Working set with the browser's processes, 2 s after ui-ready (same launches): 374.7 MB (374.3–377.3, n = 10) [Release, CoreCLR]
+Total PSS, the app and WebKit's processes, 2 s after ui-ready (same launches): 166.1 MB (165.8–168.7, n = 10) [Release, CoreCLR]
+Window test action: GetByRole, count: 0.33 ms (0.25–4.05, n = 100), p95 0.52 ms [Release, CoreCLR]
+Window test action: GetByLabel, count: 0.24 ms (0.22–0.52, n = 100), p95 0.39 ms [Release, CoreCLR]
+Window test action: an assertion that holds: 0.36 ms (0.31–1.47, n = 100), p95 0.51 ms [Release, CoreCLR]
+Window test action: click (checks, trusted press, landed): 16.48 ms (4.05–24.70, n = 100), p95 18.67 ms [Release, CoreCLR]
+Window test action: fill: 1.45 ms (1.27–7.04, n = 100), p95 6.43 ms [Release, CoreCLR]
+Window test action: key press: 1.37 ms (1.20–6.50, n = 100), p95 5.54 ms [Release, CoreCLR]
+Window test action: evaluate 1+1: 0.15 ms (0.15–4.08, n = 100), p95 0.41 ms [Release, CoreCLR]
+Window test action: viewport screenshot: 21.94 ms (18.98–22.62, n = 20), p95 22.51 ms [Release, CoreCLR]
+processes left by the tests: 0

@@ -61,6 +61,10 @@ public sealed class ThemeTests
     [Fact]
     public async Task Each_window_keeps_its_own_scheme_beside_another()
     {
+        // WebKitGTK's prefers-color-scheme follows GTK's dark preference of the whole process (the default display's;
+        // measured: a view on a second display with its own preference stayed light), so Linux test windows take turns by
+        // scheme and two schemes are never open at once; the other tests here check each scheme on Linux too.
+        WindowSupport.SkipUnlessWindows("Linux test windows show one colour scheme at a time: WebKitGTK follows GTK's dark preference of the whole process.");
         await using var light = await HostPage.OpenAsync();
         await using var dark = await HostPage.OpenAsync(options => options.ColorScheme = SparColorScheme.Dark);
 

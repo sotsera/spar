@@ -1,0 +1,21 @@
+STEP probe on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+  Determining projects to restore...
+  Restored /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar/Spar.csproj (in 529 ms).
+  Restored /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Linux/Spar.Linux.csproj (in 529 ms).
+  Restored /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Sdk.Tasks/Spar.Sdk.Tasks.csproj (in 529 ms).
+  Restored /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Windows/Spar.Windows.csproj (in 529 ms).
+  Restored /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Generator/Spar.Generator.csproj (in 529 ms).
+  Restored /var/tmp/spar-linux-blackbox-atspi/repo/tests/apps/BridgeProbe/BridgeProbe.csproj (in 529 ms).
+  Spar -> /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /var/tmp/spar-linux-blackbox-atspi/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar: npm ci --ignore-scripts in /var/tmp/spar-linux-blackbox-atspi/repo/tests/apps/BridgeProbe/frontend/
+  Spar: the page is packed stored (Brotli would save 22,738 B, less than its decoder costs, so the decoder is left out).
+  Spar: the executable carries the third-party notices of 0 packages from Vite's licence file (69 B); spar doctor lists them.
+  BridgeProbe -> /var/tmp/spar-linux-blackbox-atspi/repo/tests/apps/BridgeProbe/bin/Production/Release/net11.0/linux-x64/BridgeProbe.dll
+  Generating native code
+  BridgeProbe -> /var/tmp/spar-linux-blackbox-atspi/probe-aot/
+STEP exit 0 in 12009 ms: dotnet publish tests/apps/BridgeProbe -c Release -r linux-x64 -o /var/tmp/spar-linux-blackbox-atspi/probe-aot
+-rwxr-xr-x 1 <user> <user> 4429392 Nov 20 18:44 /var/tmp/spar-linux-blackbox-atspi/probe-aot/BridgeProbe

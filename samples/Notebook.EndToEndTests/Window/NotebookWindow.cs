@@ -5,7 +5,7 @@ namespace Notebook.EndToEndTests;
 
 /// <summary>
 /// The Notebook started from its own <c>Program.cs</c> in its real window (the Window surface): its own packed page in
-/// WebView2, offscreen, driven through <c>app.Page</c>.
+/// WebView2 offscreen on Windows, in WebKitGTK on a private Xvfb on Linux, driven through <c>app.Page</c>.
 /// </summary>
 internal sealed class NotebookWindow : IAsyncDisposable
 {
@@ -28,8 +28,9 @@ internal sealed class NotebookWindow : IAsyncDisposable
 
     public static async Task<NotebookWindow> OpenAsync(Action<SparTestOptions>? configure = null)
     {
-        // The Window surface runs on Windows until the Linux host arrives (M1c); elsewhere each journey is a skip.
-        Assert.SkipUnless(OperatingSystem.IsWindows(), "The Window surface runs on Windows; the Linux host arrives in M1c.");
+        // The Window surface runs on Windows and Linux; elsewhere each journey is a skip. A machine without the window's
+        // prerequisites (on Linux Xvfb, D-Bus, XTEST, WebKitGTK and user namespaces) fails the journey with the reason.
+        Assert.SkipUnless(OperatingSystem.IsWindows() || OperatingSystem.IsLinux(), "The Window surface runs on Windows and Linux.");
         var app = await SparTestApp.StartAsync<Program>(options =>
         {
             options.Surface = SparTestSurface.Window;

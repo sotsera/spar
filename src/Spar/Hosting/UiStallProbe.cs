@@ -24,6 +24,28 @@ internal interface IUiThreadWatch
     void Stop();
 }
 
+/// <summary>
+/// One Spar callback on a window's UI thread, from the host's <c>Enter</c> until it is disposed: the stall probe learns
+/// how long it ran. A callback during which the thread pumped (a modal dialog's loop) is not counted as a stall.
+/// </summary>
+internal readonly ref struct CallbackScope
+{
+    private readonly IUiThreadWatch? _probe;
+    private readonly string? _name;
+    private readonly long _started;
+    private readonly long _ticks;
+
+    public CallbackScope(IUiThreadWatch probe, string name)
+    {
+        _probe = probe;
+        _name = name;
+        _started = probe.Now();
+        _ticks = probe.Ticks;
+    }
+
+    public void Dispose() => _probe?.Ran(_name!, _started, _ticks);
+}
+
 /// <summary>One stall of a window's UI thread: how late the probe's work ran, and the slowest Spar callback meanwhile.</summary>
 /// <param name="Delay">How long the probe's work waited in the UI thread's queue.</param>
 /// <param name="Callback">The slowest Spar callback that ran meanwhile; null when the time went outside Spar's callbacks.</param>

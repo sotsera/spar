@@ -30,8 +30,7 @@ public sealed class FocusAndDialogTests
         await app.Window.GetByText("Ready", new() { Exact = true }).WaitForAsync();
 
         using var other = OtherWindow.Show(Beside(await app.Window.PartsAsync()));
-        RealInput.Click(other.Bounds.Center.X, other.Bounds.Center.Y);
-        await UntilAsync(() => Task.FromResult(other.IsForeground), "the other window takes the foreground");
+        await ClickToForegroundAsync(app, other);
         Assert.False(await app.Window.IsForegroundAsync(), "The app's window is inactive before the click.");
         await SandboxLane.EvidenceAsync(app, "first-click-before");
 
@@ -51,8 +50,7 @@ public sealed class FocusAndDialogTests
         await app.Window.GetByText("Ready", new() { Exact = true }).WaitForAsync();
 
         using var other = OtherWindow.Show(Beside(await app.Window.PartsAsync()));
-        RealInput.Click(other.Bounds.Center.X, other.Bounds.Center.Y);
-        await UntilAsync(() => Task.FromResult(other.IsForeground), "the other window takes the foreground");
+        await ClickToForegroundAsync(app, other);
 
         // Activation by the title bar: no click reaches the page, so only the host's focus forwarding gives it the keys.
         await app.Window.ActivateAsync();
@@ -183,6 +181,27 @@ public sealed class FocusAndDialogTests
         return app.Bounds.Left >= 160
             ? new ScreenRect(Math.Max(0, app.Bounds.Left - 300), top, app.Bounds.Left - 4, top + 240)
             : new ScreenRect(app.Bounds.Right + 4, top, app.Bounds.Right + 300, top + 240);
+    }
+
+    /// <summary>
+    /// Clicks <paramref name="other"/> with real input so the app's window becomes inactive. When it does not take the
+    /// foreground (once in Sandbox run 7, after passing in run 6), the guest's notes and evidence say which window held
+    /// it, and where both windows were, before the check fails.
+    /// </summary>
+    internal static async Task ClickToForegroundAsync(SparBlackBoxApp app, OtherWindow other)
+    {
+        RealInput.Click(other.Bounds.Center.X, other.Bounds.Center.Y);
+        try
+        {
+            await UntilAsync(() => Task.FromResult(other.IsForeground), "the other window takes the foreground");
+        }
+        catch (Exception)
+        {
+            var parts = await app.Window.PartsAsync();
+            SandboxLane.Note($"other window not in the foreground: {OtherWindow.Foreground()} holds it; other {other.Bounds}, app {parts.Bounds}, app in the foreground {parts.IsForeground}");
+            await SandboxLane.EvidenceAsync(app, "other-window-not-foreground");
+            throw;
+        }
     }
 
     internal static async Task UntilAsync(Func<Task<bool>> condition, string what, int seconds = 5)

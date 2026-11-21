@@ -17,9 +17,9 @@ public sealed partial class SparBlackBoxWindow
             throw new InvalidOperationException($"The app's window has no title bar to click ({parts.Bounds}).");
         }
 
-        if (!BlackBoxPlatform.IsSupported)
+        if (!BlackBoxPlatform.IsWindows)
         {
-            throw BlackBoxPlatform.NotSupported();
+            throw BlackBoxPlatform.NoRealInput();
         }
 
         RealInput.Click(titleBar.Left + Math.Min(120, titleBar.Width / 4), titleBar.Center.Y);
@@ -29,9 +29,9 @@ public sealed partial class SparBlackBoxWindow
     internal Task PressAsync(string combination)
     {
         SandboxGuest.EnsureUserSession("send real input");
-        if (!BlackBoxPlatform.IsSupported)
+        if (!BlackBoxPlatform.IsWindows)
         {
-            throw BlackBoxPlatform.NotSupported();
+            throw BlackBoxPlatform.NoRealInput();
         }
 
         RealInput.Press(combination);
@@ -71,9 +71,9 @@ public sealed partial class SparBlackBoxLocator
                 return Fail<bool>(outcome);
             }
 
-            if (!BlackBoxPlatform.IsSupported)
+            if (!BlackBoxPlatform.IsWindows)
             {
-                throw BlackBoxPlatform.NotSupported();
+                throw BlackBoxPlatform.NoRealInput();
             }
 
             var (x, y) = bounds.Center;
@@ -94,9 +94,9 @@ public sealed partial class SparBlackBoxLocator
     internal async Task PressAsync(string combination, SparActionOptions? options = null)
     {
         await FocusAsync(options);
-        if (!BlackBoxPlatform.IsSupported)
+        if (!BlackBoxPlatform.IsWindows)
         {
-            throw BlackBoxPlatform.NotSupported();
+            throw BlackBoxPlatform.NoRealInput();
         }
 
         RealInput.Press(combination);
@@ -106,9 +106,9 @@ public sealed partial class SparBlackBoxLocator
     internal async Task TypeAsync(string text, SparActionOptions? options = null)
     {
         await FocusAsync(options);
-        if (!BlackBoxPlatform.IsSupported)
+        if (!BlackBoxPlatform.IsWindows)
         {
-            throw BlackBoxPlatform.NotSupported();
+            throw BlackBoxPlatform.NoRealInput();
         }
 
         RealInput.Type(text);

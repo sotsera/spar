@@ -1,0 +1,86 @@
+STEP sync on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+synced 773 C# files
+== build
+    0 Warning(s)
+    0 Error(s)
+STEP exit 0 in 23322 ms: dotnet build Spar.slnx -c Debug
+== test
+  total: 1028
+  failed: 0
+  succeeded: 987
+  skipped: 41
+STEP exit 0 in 17160 ms: dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait Surface=Window --filter-not-trait Surface=BlackBox
+== window 1
+  total: 192
+  failed: 0
+  succeeded: 164
+  skipped: 28
+STEP exit 0 in 316525 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --
+processes left by the tests: 0
+== window 2
+  total: 192
+  failed: 0
+  succeeded: 164
+  skipped: 28
+STEP exit 0 in 317548 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --
+processes left by the tests: 0
+== window 3
+  total: 192
+  failed: 0
+  succeeded: 164
+  skipped: 28
+STEP exit 0 in 318103 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --
+processes left by the tests: 0
+== window 4
+  total: 192
+  failed: 0
+  succeeded: 164
+  skipped: 28
+STEP exit 0 in 316659 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --
+processes left by the tests: 0
+== window 5
+  total: 192
+  failed: 0
+  succeeded: 164
+  skipped: 28
+STEP exit 0 in 319457 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --
+processes left by the tests: 0
+== windowdevprobe
+STEP exit 0 in 2826 ms: dotnet build tests/apps/BridgeProbe -c Debug -p:SparDevServer=false
+  total: 67
+  failed: 0
+  succeeded: 64
+  skipped: 3
+STEP exit 0 in 332741 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- --filter-trait App=BridgeProbe
+processes left by the tests: 0
+== windowdev
+STEP exit 0 in 5451 ms: dotnet publish tests/apps/BridgeProbeWasm -c Release -r linux-x64 -p:BridgeProbeWebAssembly=true -o /var/tmp/spar-m1c-blackbox/probe-wasm-aot
+STEP exit 0 in 4551 ms: dotnet publish samples/Notebook -c Release -r linux-x64 -o /var/tmp/spar-m1c-blackbox/notebook
+  total: 67
+  failed: 0
+  succeeded: 62
+  skipped: 5
+STEP exit 0 in 280119 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- --filter-trait App=BridgeProbe
+processes left by the tests: 0
+== notebook
+    0 Warning(s)
+    0 Error(s)
+STEP exit 0 in 1928 ms: dotnet build samples/Notebook.EndToEndTests -c Debug
+  total: 6
+  failed: 0
+  succeeded: 6
+  skipped: 0
+STEP exit 0 in 9137 ms: dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build -- --filter-trait Surface=BlackBox
+processes left by the tests: 0
+== windowaot
+STEP exit 0 in 21949 ms: dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests
+[0m[37m   Spar.WindowTests  Total: 192, Errors: 0, Failed: 0, Skipped: 16, Not Run: 12, Time: 309.922s
+[0m[0mSTEP exit 0 in 315784 ms: artifacts/aot/Spar.WindowTests/Spar.WindowTests -result-trx artifacts/test-results/Spar.WindowTests/aot-2026-11-20_23_22_59.trx
+processes left by the tests: 0
+== boundary
+  total: 1
+  failed: 0
+  succeeded: 1
+  skipped: 0
+STEP exit 0 in 32539 ms: dotnet test --project tests/Spar.BuildTests -- --filter-method *The_production_executable_carries_its_page_and_no_test_or_loopback_code --output Detailed
+CHAIN DONE

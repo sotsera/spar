@@ -10,16 +10,16 @@ namespace Spar.Windows;
 internal static class PageScript
 {
     /// <summary>The most often each report posts a batch.</summary>
-    public const int ReportIntervalMilliseconds = 1_000;
+    public const int ReportIntervalMilliseconds = CspViolationLog.ListenerIntervalMilliseconds;
 
     /// <summary>How long a report collects a burst before its first batch.</summary>
-    public const int ReportFirstDelayMilliseconds = 100;
+    public const int ReportFirstDelayMilliseconds = CspViolationLog.ListenerFirstDelayMilliseconds;
 
     /// <summary>The most distinct groups the listener reports per document; the host keeps its own bound too.</summary>
-    public const int ReportMaxGroups = 100;
+    public const int ReportMaxGroups = CspViolationLog.ListenerMaxGroups;
 
     /// <summary>The most violations the listener counts per document before it stops listening.</summary>
-    public const int ReportMaxViolations = 1_000;
+    public const int ReportMaxViolations = CspViolationLog.ListenerMaxViolations;
 
     /// <summary>The most distinct groups of errors the script reports per document; the host keeps its own bound too.</summary>
     public const int ErrorMaxGroups = 100;

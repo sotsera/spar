@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using Spar.Hosting;
 using Spar.Windows.Interop;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -15,9 +16,6 @@ namespace Spar.Windows;
 /// </summary>
 internal sealed class WindowTheme
 {
-    /// <summary>The app's saved choice in its data root: <c>light</c>, <c>dark</c> or <c>system</c>.</summary>
-    public const string ChoiceFileName = "color-scheme";
-
     private const string PersonalizeKey = @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
 
     private readonly WindowOptions _options;
@@ -47,11 +45,12 @@ internal sealed class WindowTheme
     };
 
     /// <summary>
-    /// Reads the theme before the window exists: the saved choice from <paramref name="dataRoot"/>, else the system's.
-    /// Both are small local reads on the main thread, before any window.
+    /// Reads the theme before the window exists: the saved choice from <paramref name="dataRoot"/>
+    /// (<see cref="SavedColorScheme"/>), else the system's. Both are small local reads on the main thread, before any
+    /// window.
     /// </summary>
     public static WindowTheme Read(WindowOptions options, string dataRoot) =>
-        new(options, SavedChoice(dataRoot), SystemIsDark());
+        new(options, SavedColorScheme.Read(dataRoot), SystemIsDark());
 
     /// <summary>
     /// A fixed scheme, whatever the system and the saved choice say: a window test's light or dark, so its screenshots
@@ -89,28 +88,4 @@ internal sealed class WindowTheme
     }
 
     private static bool SystemIsDark() => Registry.GetValue(PersonalizeKey, "AppsUseLightTheme", 1) is 0;
-
-    /// <summary>The app's saved choice (plan 3d: the SDK's <c>setColorScheme</c> saves it), or null to follow the system.</summary>
-    private static bool? SavedChoice(string dataRoot)
-    {
-        try
-        {
-            var path = Path.Combine(dataRoot, ChoiceFileName);
-            if (!File.Exists(path))
-            {
-                return null;
-            }
-
-            return File.ReadAllText(path).Trim() switch
-            {
-                "dark" => true,
-                "light" => false,
-                _ => null,
-            };
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-        {
-            return null;
-        }
-    }
 }

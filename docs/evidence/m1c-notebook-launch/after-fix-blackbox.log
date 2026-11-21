@@ -1,0 +1,34 @@
+STEP window on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxStartupTests.The_Notebooks_window_has_the_saved_schemes_colour_from_its_first_frame
+  Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+dbus-daemon[6057]: [session uid=1000 pid=6057] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=6125 comm="/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowT" label="kernel")
+dbus-daemon[6057]: [session uid=1000 pid=6057] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[6213]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=6125 comm="/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowT" label="kernel")
+dbus-daemon[6213]: Successfully activated service 'org.a11y.atspi.Registry'
+skipped Spar.WindowTests.LinuxPageSecurityTests.WebAssembly_follows_the_declaration_after_Reload_page_ends_the_web_process(allowed: True)
+  Needs SPAR_LINUX_WASM_APP, the bridge probe built with AllowWebAssembly().
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxPageSecurityTests.WebAssembly_follows_the_declaration_in_the_page_and_its_workers_and_after_a_lost_web_process(allowed: True)
+  Needs SPAR_LINUX_WASM_APP, the bridge probe built with AllowWebAssembly().
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxPageSecurityTests.The_flood_numbers_are_recorded
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxHostTests.The_Notebook_starts_and_closes_and_its_numbers_are_recorded
+  Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+77/x0/?5] (4m 07s 885ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-21_12_43_49.978379.trx
+
+Test run summary: Passed!
+  total: 82
+  failed: 0
+  succeeded: 77
+  skipped: 5
+  duration: 4m 19s 988ms
+STEP exit 0 in 260338 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- --filter-trait Surface=BlackBox --filter-not-trait Probe=Development --filter-not-trait OS=Windows
+processes left by the tests: 0

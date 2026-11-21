@@ -1,0 +1,13 @@
+STEP reader on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+  Determining projects to restore...
+  Restored /var/tmp/spar-linux-blackbox-atspi/repo/spikes/linux-blackbox-atspi/Reader/Reader.csproj (in 144 ms).
+  Reader -> /var/tmp/spar-linux-blackbox-atspi/repo/spikes/linux-blackbox-atspi/Reader/bin/Release/net11.0/linux-x64/Reader.dll
+  Generating native code
+  Reader -> /var/tmp/spar-linux-blackbox-atspi/reader/
+STEP exit 0 in 5637 ms: dotnet publish -c Release -r linux-x64 -o /var/tmp/spar-linux-blackbox-atspi/reader
+warning lines: 0
+-rwxr-xr-x 1 <user> <user> 3072024 Nov 20 19:06 /var/tmp/spar-linux-blackbox-atspi/reader/Reader
+	linux-vdso.so.1 (0x000077c4bc2b5000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000077c4bc1bb000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000077c4bba00000)
+	/lib64/ld-linux-x86-64.so.2 (0x000077c4bc2b7000)

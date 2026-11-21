@@ -31,6 +31,9 @@ public static class SparTestCleanup
     public static IReadOnlyList<Exception> End(string testId) =>
         Watched.TryRemove(testId, out var failures) ? [.. failures] : [];
 
+    /// <summary>The id of the test running on the current flow, when the hook names it; null without the hook.</summary>
+    internal static string? CurrentTest() => Volatile.Read(ref s_currentTest)?.Invoke();
+
     /// <summary>Keeps <paramref name="failure"/> for the current test when the hook watches it; false when nothing does.</summary>
     internal static bool TryKeep(Exception failure)
     {

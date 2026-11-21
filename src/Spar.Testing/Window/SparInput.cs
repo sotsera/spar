@@ -1,10 +1,11 @@
-using System.Text.Json;
+using Spar.Hosting;
 
 namespace Spar.Testing;
 
 /// <summary>
 /// Trusted keyboard input into the page (decision "Window-test profiles, trusted input, the page's pickers and the
-/// Sandbox runner": the DevTools Protocol's <c>Input</c> domain on Windows). The events reach the page as a person's
+/// Sandbox runner": the DevTools Protocol's <c>Input</c> domain on Windows; decision "Trusted input in Linux desktop
+/// tests: XTEST" on Linux, under the test process's own Xvfb). The events reach the page as a person's
 /// would, <c>isTrusted</c> and with user activation, but never the browser's own shortcuts (F5 does not reload) and
 /// never the desktop: the window is never activated.
 /// </summary>
@@ -29,7 +30,7 @@ public sealed class SparKeyboard
     /// Presses and releases a key or a combination: <c>"Enter"</c>, <c>"a"</c>, <c>"Control+End"</c>, <c>"Shift+Tab"</c>.
     /// The modifiers go down first and up last. Any one character is a key, also one the US keyboard has no key for
     /// (<c>"è"</c>, <c>"€"</c>, an emoji): the page gets its <c>keydown</c> and <c>keyup</c> with <c>event.key</c> the
-    /// character and an empty <c>event.code</c>.
+    /// character and an empty <c>event.code</c> (<c>"Unidentified"</c> on Linux, as WebKit names a key with no physical code).
     /// </summary>
     public async Task PressAsync(string key)
     {
@@ -61,7 +62,7 @@ public sealed class SparKeyboard
     /// Types <paramref name="text"/> one character at a time, each with its key events, as a person typing. The text is
     /// split into Unicode scalar values, never UTF-16 units, so an emoji or 𝄞 is one key, and a combining sequence one
     /// key per code point (the value the page ends with is the text). A character the US keyboard has no key for gets
-    /// <c>keydown</c> and <c>keyup</c> with <c>event.key</c> the character and an empty <c>event.code</c>.
+    /// <c>keydown</c> and <c>keyup</c> with <c>event.key</c> the character and an empty <c>event.code</c> (<c>"Unidentified"</c> on Linux).
     /// </summary>
     public async Task TypeAsync(string text)
     {
@@ -83,33 +84,19 @@ public sealed class SparKeyboard
         }
     }
 
+
     /// <summary>Inserts text where the focus is, without key events, as an input method does (<c>input</c> events only).</summary>
-    public Task InsertTextAsync(string text) =>
-        _session.CallAsync("Input.insertText", writer => writer.WriteString("text", text));
+    public Task InsertTextAsync(string text) => _session.Window.InsertTextAsync(text);
 
     private Task DownAsync(KeyboardLayout.Key key, KeyboardLayout.Modifiers modifiers)
     {
         // A combination with Control, Alt or Meta types nothing; the page sees the key and acts on the shortcut.
         var text = (modifiers & ~KeyboardLayout.Modifiers.Shift) == 0 ? key.Text : null;
-        return Dispatch(text is null ? "rawKeyDown" : "keyDown", key, modifiers, text);
+        return _session.Window.KeyAsync(new SparTestKey(Down: true, key.Name, key.Code, key.VirtualKey, (int)modifiers, text));
     }
 
-    private Task UpAsync(KeyboardLayout.Key key, KeyboardLayout.Modifiers modifiers) => Dispatch("keyUp", key, modifiers, null);
-
-    private Task Dispatch(string type, KeyboardLayout.Key key, KeyboardLayout.Modifiers modifiers, string? text) =>
-        _session.CallAsync("Input.dispatchKeyEvent", writer =>
-        {
-            writer.WriteString("type", type);
-            writer.WriteNumber("modifiers", (int)modifiers);
-            writer.WriteString("key", key.Name);
-            writer.WriteString("code", key.Code);
-            writer.WriteNumber("windowsVirtualKeyCode", key.VirtualKey);
-            if (text is not null)
-            {
-                writer.WriteString("text", text);
-                writer.WriteString("unmodifiedText", text);
-            }
-        });
+    private Task UpAsync(KeyboardLayout.Key key, KeyboardLayout.Modifiers modifiers) =>
+        _session.Window.KeyAsync(new SparTestKey(Down: false, key.Name, key.Code, key.VirtualKey, (int)modifiers, null));
 }
 
 /// <summary>Trusted mouse input into the page, in CSS pixels of its viewport (see <see cref="SparKeyboard"/>).</summary>
@@ -122,7 +109,7 @@ public sealed class SparMouse
         _session = session;
     }
 
-    public Task MoveAsync(float x, float y) => DispatchAsync("mouseMoved", x, y, buttons: 0, clickCount: 0);
+    public Task MoveAsync(float x, float y) => _session.Window.PointerAsync(new SparTestPointer(SparTestPointerKind.Move, x, y));
 
     /// <summary>Moves to the point, then presses and releases the left button <paramref name="clickCount"/> times.</summary>
     public async Task ClickAsync(float x, float y, int clickCount = 1)
@@ -131,33 +118,12 @@ public sealed class SparMouse
         await MoveAsync(x, y);
         for (var click = 1; click <= clickCount; click++)
         {
-            await DispatchAsync("mousePressed", x, y, buttons: 1, click);
-            await DispatchAsync("mouseReleased", x, y, buttons: 0, click);
+            await _session.Window.PointerAsync(new SparTestPointer(SparTestPointerKind.Press, x, y, click));
+            await _session.Window.PointerAsync(new SparTestPointer(SparTestPointerKind.Release, x, y, click));
         }
     }
 
     /// <summary>Scrolls by the wheel at the point, in CSS pixels.</summary>
     public Task WheelAsync(float x, float y, float deltaX, float deltaY) =>
-        _session.CallAsync("Input.dispatchMouseEvent", writer =>
-        {
-            writer.WriteString("type", "mouseWheel");
-            writer.WriteNumber("x", x);
-            writer.WriteNumber("y", y);
-            writer.WriteNumber("deltaX", deltaX);
-            writer.WriteNumber("deltaY", deltaY);
-        });
-
-    private Task<JsonElement> DispatchAsync(string type, float x, float y, int buttons, int clickCount) =>
-        _session.CallAsync("Input.dispatchMouseEvent", writer =>
-        {
-            writer.WriteString("type", type);
-            writer.WriteNumber("x", x);
-            writer.WriteNumber("y", y);
-            if (clickCount > 0)
-            {
-                writer.WriteString("button", "left");
-                writer.WriteNumber("buttons", buttons);
-                writer.WriteNumber("clickCount", clickCount);
-            }
-        });
+        _session.Window.PointerAsync(new SparTestPointer(SparTestPointerKind.Wheel, x, y, DeltaX: deltaX, DeltaY: deltaY));
 }

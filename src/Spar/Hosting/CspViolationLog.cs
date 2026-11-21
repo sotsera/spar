@@ -24,6 +24,21 @@ internal sealed class CspViolationLog : IAsyncDisposable
     /// <summary>How many reports and batches may wait to be read; more are dropped and counted.</summary>
     public const int QueueLength = 256;
 
+    /// <summary>The most often the host-injected listener posts a batch, on every host.</summary>
+    public const int ListenerIntervalMilliseconds = 1_000;
+
+    /// <summary>How long the listener collects a burst before its first batch.</summary>
+    public const int ListenerFirstDelayMilliseconds = 100;
+
+    /// <summary>The most distinct groups the listener reports per document; this log keeps its own bound too.</summary>
+    public const int ListenerMaxGroups = 100;
+
+    /// <summary>The most violations the listener counts per document before it stops listening (the engine's cost).</summary>
+    public const int ListenerMaxViolations = 1_000;
+
+    /// <summary>The largest <c>report-uri</c> body a host reads; a larger one is answered 204 and dropped unread.</summary>
+    public const int MaxReportBytes = 16 * 1024;
+
     /// <summary>How many groups one summary line names; the rest are counted.</summary>
     private const int GroupsPerSummary = 10;
 

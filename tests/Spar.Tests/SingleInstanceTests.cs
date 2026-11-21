@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.Versioning;
 using Microsoft.Extensions.Logging;
+using Spar.Hosting;
 using Spar.Logging;
 using Spar.Windows;
 

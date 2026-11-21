@@ -1,0 +1,52 @@
+STEP blackbox on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, spar uid 1000
+Running tests from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after
+  The OS session's end is Windows' WM_ENDSESSION here; the Linux host does not follow logind's session end yet (M1c leaves it).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started
+  The black-box fixture runs on Windows 10 1809 and later; the Linux host arrives in M1c.
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported
+  The black-box fixture runs on Windows; on Linux it waits for the AT-SPI spike and its build step (M1c step 7).
+  from /home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/home/spar/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+12/x0/?9] (265ms)
+
+  In process file artifacts produced:
+    - /home/spar/repo/artifacts/test-results/Spar.WindowTests/spar_9412bf4f6801_2026-11-20_21_14_10.825275.trx
+
+Test run summary: Passed!
+  total: 21
+  failed: 0
+  succeeded: 12
+  skipped: 9
+  duration: 373ms
+STEP exit 0 in 729 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build --filter-trait Surface=BlackBox
+Tests were skipped in a step where every test must run on CI:
+skipped Spar.WindowTests.SessionEndHostTests.The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_network_LOCALAPPDATA_is_refused_with_exit_70_and_nothing_written
+skipped Spar.WindowTests.BlackBoxFixtureTests.An_app_not_ready_in_time_is_ended_and_its_root_deleted
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_data_root_that_cannot_be_deleted_is_a_reported_failure
+skipped Spar.WindowTests.BlackBoxFixtureTests.The_window_is_read_and_driven_through_UI_Automation
+skipped Spar.WindowTests.BlackBoxFixtureTests.Options_the_fixture_cannot_honour_are_refused_before_anything_starts
+skipped Spar.WindowTests.BlackBoxFixtureTests.Closing_the_job_ends_the_app_and_everything_it_started
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_relaunch_to_a_hung_first_instance_shows_its_message_and_exits_8
+skipped Spar.WindowTests.BlackBoxFixtureTests.A_hung_app_is_ended_after_its_deadline_and_reported
+STEP blackbox failed

@@ -141,11 +141,17 @@ public sealed class SparWindow
         return new SparCloseResult(report.Closed ? CloseOutcome.Closed : CloseOutcome.Kept, report.Question, report.Unanswered);
     }
 
+    /// <summary>The page's origin, <c>https://app.localhost</c> on Windows and <c>spar://app</c> on Linux, for Spar's own host tests.</summary>
+    internal Uri Origin => _window.Origin;
+
     /// <summary>A close of the window by the user (<c>WM_CLOSE</c>, posted), for Spar's own host tests.</summary>
     internal Task RequestCloseAsync() => _window.PostCloseMessageAsync();
 
     /// <summary>Sends a window message to the app's window on its UI thread, for Spar's own host tests.</summary>
     internal Task<nint> SendMessageAsync(uint message, nint wParam, nint lParam) => _window.SendMessageAsync(message, wParam, lParam);
+
+    /// <summary>The end of the OS session as the host receives it (Windows' <c>WM_ENDSESSION</c>, Linux's <c>SIGTERM</c> path), for Spar's own host tests.</summary>
+    internal Task<bool> EndSessionAsync() => _window.EndSessionAsync();
 
     /// <summary>The window's title bar scheme and its own colour, as Windows has them, for Spar's own host tests.</summary>
     internal Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => _window.NativeThemeAsync();

@@ -15,9 +15,20 @@
     <SparBlackBoxTests>true</SparBlackBoxTests>
   </PropertyGroup>
 
+  <!--
+    The black-box fixture's own tests and the required host tests use WindowHost; the Linux host tests that run an app as
+    a process of its own (Linux/) use the bridge probe, whose page runs the plan each test names and whose Program.cs
+    takes the browser opt-ins from the environment (a Production build takes no switch, so one build tries each).
+  -->
   <ItemGroup>
     <SparTestedApplication Include="..\apps\WindowHost\WindowHost.csproj" />
+    <SparTestedApplication Include="..\apps\BridgeProbe\BridgeProbe.csproj" Aliases="BridgeProbeApp" />
   </ItemGroup>
+
+  <!-- The Linux host tests' X11 reads, close and real input (Linux/X11Frames.cs, X11Close.cs) are source-generated imports. -->
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
 
   <!-- The budget recorder of the command tests (plan, "Provisional budgets"). -->
   <ItemGroup>

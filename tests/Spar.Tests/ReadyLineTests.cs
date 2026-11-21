@@ -1,15 +1,13 @@
-using System.Runtime.Versioning;
 using Spar.Hosting;
 using Spar.Logging;
 using Spar.Testing;
-using Spar.Windows;
 
 namespace Spar.Tests;
 
 /// <summary>
 /// The black-box fixture's ready signal is a format Spar keeps stable (decision "Step 8b's shape: the black-box
-/// fixture"): the line the Windows host writes to the app's log file when the page reports <c>ui-ready</c> is the line the
-/// fixture waits for, and no other phase is.
+/// fixture"): the line both desktop hosts write (through the shared <see cref="HostLog"/>) to the app's log file when the
+/// page reports <c>ui-ready</c> is the line the fixture waits for, and no other phase is.
 /// </summary>
 public sealed class ReadyLineTests : IDisposable
 {
@@ -24,10 +22,8 @@ public sealed class ReadyLineTests : IDisposable
     }
 
     [Fact]
-    [SupportedOSPlatform("windows10.0.17763")]
     public void The_line_the_host_writes_for_ui_ready_is_the_fixture_s_ready_signal()
     {
-        Assert.SkipUnless(OperatingSystem.IsWindows(), "The Windows host writes this line; the Linux host arrives in M1c.");
         var log = new HostLog(standardError: false);
         log.UseFile(_root, LogLevels.BuildDefault(development: false));
         log.Phase("window shown");

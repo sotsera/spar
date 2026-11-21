@@ -1,0 +1,37 @@
+STEP run bare env default on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:02:34Z
+ENV variant=default bus=bare session=unix:path=/tmp/dbus-OhHF1TGTY2,guid=604196da3b25df7f7c0578476b008b3a
+address from org.a11y.Bus in 2.0 ms: none: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+ui-ready 144.8 ms
+WM_DELETE_WINDOW to 1 window(s) [BridgeProbe]: exit 0 after 31.0 ms
+  stderr +3 ms: spar info +1.8 ms: [bdc0752f] Host started 7 ms after the process.
+  stderr +3 ms: spar info +1.9 ms: [bdc0752f] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-bare/data/com.example.tests.BridgeProbe
+  stderr +3 ms: spar info +2.0 ms: [bdc0752f] single instance at 2 ms
+  stderr +16 ms: spar info +14.2 ms: [bdc0752f] GTK 4.14.5, WebKitGTK 2.52.6.
+  stderr +19 ms: spar info +17.9 ms: [bdc0752f] Sandbox trial: bwrap exit 0 in 3.1 ms.
+  stderr +19 ms: spar info +17.9 ms: [bdc0752f] prerequisites checked at 17.9 ms
+  stderr +19 ms: spar info +18.0 ms: Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+  stderr +19 ms: spar info +18.0 ms: [bdc0752f] WebAssembly off: JSC_useWasm=false.
+  stderr +19 ms: spar info +18.1 ms: [bdc0752f] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+  stderr +19 ms: spar info +18.1 ms: [bdc0752f] gpu checked at 18.1 ms
+  stderr +21 ms: spar info +19.2 ms: [bdc0752f] theme read at 19.2 ms
+  stderr +22 ms: spar info +20.2 ms: [bdc0752f] services built at 20.2 ms
+  stderr +30 ms: libEGL warning: DRI3 error: Could not get DRI3 device
+  stderr +30 ms: libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+  stderr +52 ms: spar info +50.7 ms: [bdc0752f] gtk ready at 50.7 ms
+  stderr +60 ms: 
+  stderr +60 ms: (com.example.tests.BridgeProbe:17044): Gtk-WARNING **: 19:02:34.845: Unable to acquire the address of the accessibility bus: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files. If you are attempting to run GTK without a11y support, GTK_A11Y should be set to 'none'.
+  stderr +68 ms: spar info +66.3 ms: [bdc0752f] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+  stderr +69 ms: spar info +67.9 ms: [bdc0752f] Browser data folder /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-bare/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-bare/data/com.example.tests.BridgeProbe/cache/WebKit
+  stderr +71 ms: spar info +69.5 ms: [bdc0752f] Browser settings set (0.00 ms): devtools off, GTK inspector keys off, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+  stderr +71 ms: spar info +69.5 ms: [bdc0752f] web view created at 69.5 ms
+  stderr +71 ms: spar info +69.5 ms: [bdc0752f] Heartbeat every 5000 ms.
+  stderr +81 ms: spar info +79.8 ms: [bdc0752f] window shown at 79.8 ms
+  stderr +83 ms: spar info +81.2 ms: [bdc0752f] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-/Jb2t9KGXEoKiwBx246WH8BmnvMxtHGO2pVgUYjae+o=' 'sha256-Oz/7P6AHlnpmHMnjXLd5ERW9sLzdZ49rdyO7R5+NfHI=' 'sha256-nt0tSrTTW46PEOe9PN10ExQTyD7C25pYJ0ITTQ0hIzs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  stderr +83 ms: spar info +81.2 ms: [bdc0752f] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+  stderr +97 ms: 
+  stderr +97 ms: ** (process:2): WARNING **: 19:02:34.881: Can't connect to a11y bus: Could not connect: No such file or directory
+  stderr +129 ms: spar info +127.4 ms: [bdc0752f] page committed at 127.4 ms
+  stderr +129 ms: spar info +127.4 ms: [bdc0752f] Bridge: document 2501985f3e4585ca opened.
+  stderr +129 ms: spar info +127.5 ms: [bdc0752f] Heartbeat armed for the new document.
+STEP exit 0 in 684 ms: dbus-run-session --config-file=/var/tmp/spar-linux-blackbox-atspi/bus/bare-session.conf -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader env default
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

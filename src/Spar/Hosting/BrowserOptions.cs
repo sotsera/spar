@@ -3,8 +3,9 @@ namespace Spar;
 /// <summary>
 /// The browser's strict defaults and their opt-ins (plan section 3c, level 2), in <c>spar.Browser(b => …)</c>. Every
 /// window shares one browser profile, so each opt-in is for the whole app. A Production build has all of them off; a
-/// Development build has the same defaults except the devtools (F12, Inspect) and the reload keys (F5, Ctrl+R), so a
-/// blocked download or picker shows while developing, not after shipping. Spar logs every active opt-in at start-up.
+/// Development build has the same defaults except the devtools (F12, Inspect) and, on Windows, the reload keys (F5,
+/// Ctrl+R), and on Linux it keeps JavaScriptCore's options from the environment, so a blocked download or picker shows
+/// while developing, not after shipping. Spar logs every active opt-in at start-up.
 /// </summary>
 public sealed class BrowserOptions
 {
@@ -28,8 +29,11 @@ public sealed class BrowserOptions
 
     internal bool EnvironmentOverrides { get; private set; }
 
+    internal HardwareAcceleration Acceleration { get; private set; } = Spar.HardwareAcceleration.Auto;
+
     /// <summary>
-    /// The browser's devtools in every build: F12, Ctrl+Shift+I and the context menu's Inspect.
+    /// The browser's devtools in every build: F12, Ctrl+Shift+I and the context menu's Inspect (on Linux, WebKitGTK's
+    /// inspector through the menu's Inspect Element; GTK's own inspector stays closed outside a Debug build).
     /// <para><b>Risk:</b> anyone at the keyboard can read and change the page, its storage and every value it holds,
     /// and call the app's commands as the page does, also on a shared or kiosk machine. Devtools do not open a remote
     /// port, and the bridge's checks still apply, but the page is no longer only what you shipped.</para>
@@ -45,7 +49,7 @@ public sealed class BrowserOptions
     /// <summary>
     /// The browser's own keys: reload (F5, Ctrl+R), print (Ctrl+P), find (Ctrl+F), zoom (Ctrl+plus and minus), back and
     /// forward (Alt+Left, Alt+Right) and the devtools keys when devtools are allowed. Editing keys and the page's own
-    /// shortcuts work without this.
+    /// shortcuts work without this. WebKitGTK binds none of these keys itself, so on Linux this changes nothing.
     /// <para><b>Risk:</b> a reload or a history key throws away what the page has not saved and restarts it in the
     /// middle of the user's work, and print and find show browser screens that are not part of the app.</para>
     /// <para><b>Reasonable for:</b> an app that is mostly a document viewer and wants the browser's find and zoom.</para>
@@ -59,6 +63,7 @@ public sealed class BrowserOptions
 
     /// <summary>
     /// The browser's offer to save passwords, and its general autofill of names, addresses and other form fields.
+    /// WebKitGTK has neither, so on Linux this changes nothing.
     /// <para><b>Risk:</b> passwords typed into the page, such as a database's, are kept in the app's browser profile,
     /// where any program running as the user can read them, and offered again in other fields of the page.</para>
     /// <para><b>Reasonable for:</b> an app whose page signs in to a web service the user also uses in a browser.</para>
@@ -132,20 +137,53 @@ public sealed class BrowserOptions
     }
 
     /// <summary>
-    /// The WebView2 environment variables that change the browser before it starts: <c>WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS</c>,
-    /// <c>WEBVIEW2_BROWSER_EXECUTABLE_FOLDER</c>, <c>WEBVIEW2_USER_DATA_FOLDER</c>, the release-channel variables and
-    /// the script-debugger variables. Without this call Spar removes them from its own process before the browser
-    /// starts, logs each one it removed, and the browser never sees them. Policies an administrator sets in the
-    /// registry stay in force either way.
+    /// The environment variables that change the browser before it starts. On Windows, the WebView2 ones:
+    /// <c>WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS</c>, <c>WEBVIEW2_BROWSER_EXECUTABLE_FOLDER</c>,
+    /// <c>WEBVIEW2_USER_DATA_FOLDER</c>, the release-channel variables and the script-debugger variables. On Linux,
+    /// WebKitGTK's <c>WEBKIT_INSPECTOR_SERVER</c>, <c>WEBKIT_INSPECTOR_HTTP_SERVER</c> and
+    /// <c>WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS</c>, and in a Release build every JavaScriptCore option
+    /// (<c>JSC_*</c>) and GTK's <c>GTK_DEBUG</c>, whose <c>interactive</c> opens GTK's inspector (a Debug build keeps
+    /// those for debugging). Without this call Spar removes them from its own process
+    /// before the browser starts, logs each one it removed by name, and neither the browser nor its child processes see
+    /// them. Everything else passes, the Linux GPU workarounds (<c>WEBKIT_DISABLE_DMABUF_RENDERER</c>,
+    /// <c>WEBKIT_DISABLE_COMPOSITING_MODE</c>, <c>__NV_DISABLE_EXPLICIT_SYNC</c>) included. <c>JSC_useWasm</c> always
+    /// follows the page security's <c>AllowWebAssembly()</c>, with or without this call. Policies an administrator sets
+    /// in the registry stay in force either way.
     /// <para><b>Risk:</b> whoever can set the app's environment, such as a shortcut or a script that starts it, can open
-    /// a remote debugging port that any local program can use to read and drive the page, start another browser
-    /// build, or move the profile to a folder they prepared.</para>
+    /// a remote debugging or inspector port that any local program can use to read and drive the page, start another
+    /// browser build, move the profile to a folder they prepared, run the page's web processes without their sandbox,
+    /// change how JavaScriptCore runs the page's code, or open GTK's inspector, which can change anything in the
+    /// app's process.</para>
     /// <para><b>Reasonable for:</b> a support build that must be debugged on a user's machine, for a limited time.</para>
     /// <para><b>Safer:</b> a Debug build with its devtools, or <see cref="AllowDevTools"/>, neither of which opens a port.</para>
     /// </summary>
     public BrowserOptions AllowBrowserEnvironmentOverrides()
     {
         EnvironmentOverrides = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Whether the browser draws with the GPU (plan section 3, "Software GPUs"). <b>Linux only for now: Windows
+    /// ignores it</b>, and WebView2 keeps its own choice there.
+    /// <para><see cref="Spar.HardwareAcceleration.Auto"/>, the default, turns acceleration off where the only GPU is a
+    /// software renderer (llvmpipe, lavapipe, SwiftShader and the like, as in virtual machines, WSL and containers):
+    /// there it made the first window about 0.35 s slower and the app and its web processes about 270 MB larger,
+    /// for nothing.
+    /// <see cref="Spar.HardwareAcceleration.Always"/> keeps WebKit's and GTK's own GPU drawing even then, and
+    /// <see cref="Spar.HardwareAcceleration.Never"/> turns it off everywhere, for a graphics driver that breaks the
+    /// page.</para>
+    /// <para>It is not a security setting. Spar logs the choice and what it found at start-up. The user's own
+    /// <c>GSK_RENDERER</c> and <c>WEBKIT_DISABLE_DMABUF_RENDERER</c> always win over it.</para>
+    /// </summary>
+    public BrowserOptions HardwareAcceleration(HardwareAcceleration acceleration)
+    {
+        if (!Enum.IsDefined(acceleration))
+        {
+            throw new ArgumentOutOfRangeException(nameof(acceleration), acceleration, "Not a HardwareAcceleration value.");
+        }
+
+        Acceleration = acceleration;
         return this;
     }
 
@@ -159,4 +197,23 @@ public sealed class BrowserOptions
         ContextMenu ? " AllowContextMenu()" : "",
         PagePicker ? " AllowPagePicker()" : "",
         EnvironmentOverrides ? " AllowBrowserEnvironmentOverrides()" : "").TrimStart();
+}
+
+/// <summary>
+/// Whether the browser draws with the GPU, in <c>spar.Browser(b => b.HardwareAcceleration(…))</c>. Linux only for now:
+/// Windows ignores it.
+/// </summary>
+public enum HardwareAcceleration
+{
+    /// <summary>
+    /// The default: the GPU where it is a real one, and no acceleration where the only GPU is a software renderer.
+    /// Spar decides before the window exists, from the GPU's render node and, when there is one, the renderer's name.
+    /// </summary>
+    Auto,
+
+    /// <summary>WebKit's and GTK's own GPU drawing, even on a software renderer.</summary>
+    Always,
+
+    /// <summary>No GPU drawing, on any machine: for a graphics driver that breaks the page.</summary>
+    Never,
 }

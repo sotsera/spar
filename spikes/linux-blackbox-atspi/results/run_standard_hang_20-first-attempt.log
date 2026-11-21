@@ -1,0 +1,79 @@
+STEP run standard hang 20 on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:04:13Z
+dbus-daemon[30342]: [session uid=1000 pid=30342] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=30343 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader h" label="kernel")
+dbus-daemon[30342]: [session uid=1000 pid=30342] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[30355]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1000 pid=30358 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[30355]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[30342]: [session uid=1000 pid=30342] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.8' (uid=1000 pid=30454 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[30342]: [session uid=1000 pid=30342] Activating service name='org.freedesktop.portal.Documents' requested by ':1.9' (uid=1000 pid=30491 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[30342]: [session uid=1000 pid=30342] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.10' (uid=1000 pid=30497 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[30342]: [session uid=1000 pid=30342] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[30342]: [session uid=1000 pid=30342] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.756: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.757: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[30342]: [session uid=1000 pid=30342] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.9' (uid=1000 pid=30491 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[30342]: [session uid=1000 pid=30342] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.793: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.793: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.793: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.793: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.793: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.794: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.794: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.795: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.795: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.796: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00561.522875] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00561.522928] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.797: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.797: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.798: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:13.798: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[30342]: [session uid=1000 pid=30342] Successfully activated service 'org.freedesktop.portal.Desktop'
+hang 1: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.2 ms in 24 calls, cache 0.5 ms same
+hang 1: reference line 20085.8, X11 viewable 20090.0, polled 20089.4, event 20085.8 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; dialog gone from AT-SPI after 263.2 ms
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:34.058: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20357.5 ms; then WM_DELETE_WINDOW: exit 0 after 46.4 ms
+hang 2: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 6.0 ms in 24 calls, cache 0.5 ms same
+hang 2: reference line 20075.9, X11 viewable 20080.9, polled 20080.3, event 20075.9 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 53.1 ms
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:04:54.556: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20140.1 ms; then WM_DELETE_WINDOW: exit 0 after 39.5 ms
+hang 3: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 5.1 ms in 24 calls, cache 0.5 ms same
+hang 3: reference line 20075.3, X11 viewable 20079.9, polled 20079.3, event 20075.3 (StateChanged showing) ms after launch; DoAction(Click) = True in 0.20 ms; dialog gone from AT-SPI after 263.5 ms
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:05:15.264: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.3 s at 20347.2 ms; then WM_DELETE_WINDOW: exit 0 after 33.3 ms
+hang 4: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 4.9 ms in 24 calls, cache 0.5 ms same
+hang 4: reference line 20073.7, X11 viewable 20078.0, polled 20077.4, event 20073.7 (StateChanged showing) ms after launch; XTEST click at (413,119) [screen extents (0, 0, 264, 34), window extents (281, 102, 264, 34), X11 origin (0, 0)]; dialog gone from AT-SPI after 53.0 ms
+
+(/usr/libexec/xdg-desktop-portal:30491): xdg-desktop-portal-WARNING **: 19:05:35.741: Realtime error: Could not map pid: Process ids could not be found: 2
+  host log: hung-page dialog: Reload page, after 15.1 s at 20135 ms; then WM_DELETE_WINDOW: exit 0 after 35.1 ms
+hang 5: [dialog] "" modal=True texts [BridgeProbe is not responding | The page has not answered for 15 seconds. You can wait for it, or reload it: what the page has not saved is lost, and the app's other data is kept.] buttons [Wait | Reload page]; walk 6.0 ms in 24 calls, cache 0.5 ms same
+FATAL System.InvalidOperationException: org.a11y.atspi.Accessible.GetRole on :1.15/org/gtk/application/com_example_tests_BridgeProbe/a11y/b4257a36_9224_4868_b2bd_a6144b1b1029: GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: Object does not exist at path “/org/gtk/application/com_example_tests_BridgeProbe/a11y/b4257a36_9224_4868_b2bd_a6144b1b1029”
+   at Spike.BlackBoxAtSpi.AtSpi.Bus.CallOrThrow(String, String, String, String, Object[])
+   at Spike.BlackBoxAtSpi.AtSpi.Bus.Role(Ref)
+   at Spike.BlackBoxAtSpi.AtSpi.Reading.WindowsOf(Bus, Int32)
+   at Spike.BlackBoxAtSpi.Runs.DialogRun.Answer(Bus, AppRun, ISet`1, String, Boolean, Nullable`1, DialogRun.Timings, String, Func`1, Int32, String)
+   at Spike.BlackBoxAtSpi.Runs.DialogRun.Hang(String[])
+   at Program.<Main>$(String[] args)
+STEP exit 1 in 102810 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader hang 20
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

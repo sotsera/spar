@@ -7,10 +7,11 @@ namespace Spar.WindowTests;
 
 /// <summary>
 /// The end of the OS session (plan section 5's required host tests), on the test's window and on WindowHost's
-/// Production executable: the window closes with its reason inside the held <c>WM_ENDSESSION</c>, within 4 s however
-/// slow the guards are and at once when they are quick; the last lines reach the log file even when Windows ends the
-/// process right after (found by Windows Sandbox's real sign-out); and a renderer lost during the session end is
-/// neither reloaded nor waited for.
+/// Production executable, on both hosts: Windows' <c>WM_QUERYENDSESSION</c> and <c>WM_ENDSESSION</c>, and on Linux
+/// <c>SIGTERM</c> (the black box sends it; a test window takes the same path without the signal, which is the test
+/// runner's). The window closes with its reason inside the session end, within 4 s however slow the guards are and at
+/// once when they are quick; the last lines reach the log file even when the OS ends the process right after (found by
+/// Windows Sandbox's real sign-out); and a renderer lost during the session end is neither reloaded nor waited for.
 /// <para>
 /// They are one class so that they never run at the same time as each other: every test window of a test process
 /// shares one UI thread, and a held <c>WM_ENDSESSION</c> pumps that thread's messages inside its handler, so a second
@@ -21,11 +22,6 @@ namespace Spar.WindowTests;
 /// </summary>
 public sealed class SessionEndHostTests
 {
-    /// <summary><c>WM_QUERYENDSESSION</c>, <c>WM_ENDSESSION</c> and <c>ENDSESSION_LOGOFF</c>.</summary>
-    private const uint QueryEndSession = 0x0011;
-    private const uint EndSession = 0x0016;
-    private static readonly nint Logoff = unchecked((nint)0x80000000);
-
     private static CancellationToken Token => TestContext.Current.CancellationToken;
 
     [Fact]
@@ -39,13 +35,10 @@ public sealed class SessionEndHostTests
         await host.ClickAsync("Start a long call");
         await host.WaitForRunningAsync(1);
 
-        var allowed = await host.App.Window.SendMessageAsync(QueryEndSession, 0, Logoff);
+        // The session end returns only once the window has closed and the services are disposed: the OS may end the
+        // process when it does (Windows after WM_ENDSESSION, a session manager after SIGTERM's wait).
+        Assert.True(await host.App.Window.EndSessionAsync());
 
-        // WM_ENDSESSION returns only once the window has closed and the services are disposed: Windows may end the
-        // process when it does.
-        await host.App.Window.SendMessageAsync(EndSession, 1, Logoff);
-
-        Assert.Equal(1, allowed);
         Assert.True(phases.Contains("closing"), "WM_ENDSESSION returned before the window's controller closed.");
         Assert.NotNull(activity.DisposedAt);
         Assert.Equal(0, await host.App.Window.Closed.WaitAsync(TimeSpan.FromSeconds(15), Token));
@@ -71,7 +64,7 @@ public sealed class SessionEndHostTests
         await host.WaitForRunningAsync(1);
 
         var held = Stopwatch.StartNew();
-        await host.App.Window.SendMessageAsync(EndSession, 1, Logoff);
+        await host.App.Window.EndSessionAsync();
         held.Stop();
 
         // Page guard 2 s, backend guard the rest of 3 s, then the teardown and the disposal until 4 s: the message
@@ -94,7 +87,7 @@ public sealed class SessionEndHostTests
         var activity = host.Activity;
 
         var held = Stopwatch.StartNew();
-        await host.App.Window.SendMessageAsync(EndSession, 1, Logoff);
+        await host.App.Window.EndSessionAsync();
         held.Stop();
 
         Results.Append("session-end.txt", $"fast guards and disposal: WM_ENDSESSION held {held.ElapsedMilliseconds} ms");
@@ -105,9 +98,9 @@ public sealed class SessionEndHostTests
 
     [Fact]
     [Trait("Surface", "BlackBox")]
-    public async Task The_session_ends_last_lines_are_in_the_log_when_Windows_ends_the_process_right_after()
+    public async Task The_session_ends_last_lines_are_in_the_log_when_the_OS_ends_the_process_right_after()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         await using var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
 
         Assert.True(await app.Automation.EndSessionAsync(app.ProcessId, Token));
@@ -116,7 +109,7 @@ public sealed class SessionEndHostTests
 
         var log = Read(app.LogFile);
         Assert.Contains("session ending", log, StringComparison.Ordinal);
-        Assert.Matches(@"session end: window closed[^\n]*; WM_ENDSESSION held \d+ ms", log);
+        Assert.Matches(@"session end: window closed[^\n]*; (WM_ENDSESSION|SIGTERM) held \d+ ms", log);
         Results.Append("session-end.txt", "black-box session end then kill: the last line was in the log");
     }
 
@@ -138,7 +131,7 @@ public sealed class SessionEndHostTests
         Assert.NotEmpty(renderers);
 
         var held = Stopwatch.StartNew();
-        var ending = host.App.Window.SendMessageAsync(EndSession, 1, Logoff);
+        var ending = host.App.Window.EndSessionAsync();
         await Task.Delay(300, Token);
         foreach (var id in renderers)
         {
@@ -154,14 +147,15 @@ public sealed class SessionEndHostTests
         await Waits.UntilAsync(() => File.Exists(file) && Read(file).Contains("during shutdown", StringComparison.Ordinal), TimeSpan.FromSeconds(5), "the lost renderer in the log");
         var log = Read(file);
         var lost = Since(log, "during shutdown");
-        var destroyed = Since(log, "window destroyed");
-        Results.Append("session-end.txt", $"renderer test: renderer ended at {killed} ms, seen lost at {lost:0} ms, window destroyed at {destroyed:0} ms (host's log, from 'session ending'); WM_ENDSESSION held {held.ElapsedMilliseconds} ms");
+        // At session end the window stays until the message returns, so the page's part ends when the controller closes.
+        var closed = Since(log, "controller closed|window destroyed");
+        Results.Append("session-end.txt", $"renderer test: renderer ended at {killed} ms, seen lost at {lost:0} ms, controller closed at {closed:0} ms (host's log, from 'session ending'); WM_ENDSESSION held {held.ElapsedMilliseconds} ms");
 
-        // From the report of the lost renderer to the window's end, nothing waits for the page.
+        // From the report of the lost renderer to the controller's close, nothing waits for the page.
         var context = $"WM_ENDSESSION held {held.ElapsedMilliseconds} ms. The host's log:{Environment.NewLine}{SessionLines(log)}";
-        Assert.True(lost >= 0 && destroyed >= 0, context);
-        Assert.True(destroyed - lost < 500, context);
-        Assert.Contains("closed (renderer exited)", log, StringComparison.Ordinal);
+        Assert.True(lost >= 0 && closed >= 0, context);
+        Assert.True(closed - lost < 500, context);
+        Assert.Matches(@"closed \((renderer exited|web process ended)\)", log);
         Assert.DoesNotContain("did not answer within", log, StringComparison.Ordinal);
         Assert.DoesNotContain("page close work timed out", log, StringComparison.Ordinal);
         Assert.DoesNotContain("renderer reloaded", log, StringComparison.Ordinal);
@@ -177,7 +171,7 @@ public sealed class SessionEndHostTests
     {
         var lines = log.Split('\n');
         var start = lines.FirstOrDefault(line => line.Contains("session ending", StringComparison.Ordinal));
-        var end = lines.FirstOrDefault(line => line.Contains(marker, StringComparison.Ordinal));
+        var end = lines.FirstOrDefault(line => System.Text.RegularExpressions.Regex.IsMatch(line, marker));
         if (start is null || end is null || !TryTime(start, out var from) || !TryTime(end, out var to))
         {
             return -1;

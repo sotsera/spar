@@ -1,0 +1,113 @@
+STEP run standard env no-at-bridge on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T18:02:32Z
+ENV variant=no-at-bridge bus=standard session=unix:path=/tmp/dbus-QQYeKJmx77,guid=038225f24bb94e530675d1436b008b38
+dbus-daemon[16423]: [session uid=1000 pid=16423] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=16424 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader e" label="kernel")
+dbus-daemon[16423]: [session uid=1000 pid=16423] Successfully activated service 'org.a11y.Bus'
+address from org.a11y.Bus in 7.5 ms: unix:path=/dev/shm/spar-lba-env-standard/at-spi/bus_63,guid=6162c67f8efed759c72fa46a6b008b38
+connected as :1.0 in 0.9 ms
+names on the accessibility bus before the launch: org.freedesktop.DBus :1.0
+dbus-daemon[16437]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=16424 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader e" label="kernel")
+dbus-daemon[16437]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+  registry <interface name="org.a11y.atspi.Registry">    <method name="RegisterEvent">      <arg direction="in" name="event" type="s" />      <arg direction="in" name="properties" type="as" />      <arg direction="in" name="app_bus_name" type="s" />    </method>    <method name="DeregisterEvent">      <arg direction="in" name="event" type="s" />    </method>    <method name="GetRegisteredEvents">      <arg direction="out" name="events" type="a(ss)" />      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QSpiEventListenerArray" />    </method>    <signal name="EventListenerRegistered">      <arg name="bus" type="s" />      <arg name="path" type="s" />    </signal>    <signal name="EventListenerDeregistered">      <arg name="bus" type="s" />      <arg name="path" type="s" />    </signal>  </interface></node>
+dbus-daemon[16423]: [session uid=1000 pid=16423] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.9' (uid=1000 pid=16542 comm="/usr/bin/xdg-dbus-proxy --args=24" label="kernel")
+dbus-daemon[16423]: [session uid=1000 pid=16423] Activating service name='org.freedesktop.portal.Documents' requested by ':1.10' (uid=1000 pid=16574 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[16423]: [session uid=1000 pid=16423] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.11' (uid=1000 pid=16580 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[16423]: [session uid=1000 pid=16423] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[16423]: [session uid=1000 pid=16423] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.323: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.323: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[16423]: [session uid=1000 pid=16423] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=16574 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[16423]: [session uid=1000 pid=16423] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.362: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.362: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.362: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.362: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.362: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.362: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.363: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.363: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.364: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.364: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00460.064757] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00460.064815] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.366: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.366: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.367: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:16574): xdg-desktop-portal-WARNING **: 19:02:32.367: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[16423]: [session uid=1000 pid=16423] Successfully activated service 'org.freedesktop.portal.Desktop'
+launch to: a11y bus name 84.7, window over AT-SPI 94.3 ("BridgeProbe"), X11 viewable 85.8, ui-ready 204.6 ms
+names of the app on the accessibility bus: :1.2
+registry lists 2 applications; the app among them: True
+window :1.2/org/gtk/application/com_example_tests_BridgeProbe/a11y/aa564628_c10d_481c_9c56_ba06d7ea14b1: interfaces org.a11y.atspi.Accessible,org.a11y.atspi.Component,org.a11y.atspi.Action; states 0x43000002
+window actions: [window.close, window.minimize, window.toggle-maximized, default.activate]
+application: toolkit GTK 4.14.5
+tree from the application root: 11 nodes in 11.5 ms (walked, several calls a node)
+cache GetItems: 6 items in 0.4 ms (one call)
+other connection :1.3: process 16542 (xdg-dbus-proxy)
+other connection :1.4: process 16596 (xdg-desktop-por)
+other connection :1.1: process 16440 (at-spi2-registr)
+libatspi: atspi_init 0 in 1.8 ms
+first read: libatspi 1.2 ms [BridgeProbe], GDBus 1.3 ms [BridgeProbe]
+find by pid + window title, libatspi (desktop walk): n=20 p50=0.8 p95=1.1 min=0.8 max=1.2 ms
+find by pid + window title, GDBus (bus daemon's pid, then the app): n=20 p50=1.3 p95=1.6 min=1.1 max=1.6 ms
+one property read (the title), GDBus: n=20 p50=0.2 p95=0.3 min=0.2 max=0.3 ms
+signals received during the run: 18
+     2 Object.BoundsChanged 
+     5 Object.ChildrenChanged add
+     5 Object.PropertyChange accessible-parent
+     1 Object.StateChanged active
+     1 Object.StateChanged focused
+     1 Object.StateChanged showing
+     1 Object.StateChanged visible
+     1 Object.TextChanged insert
+     1 Window.activate 
+WM_DELETE_WINDOW to 1 window(s) [BridgeProbe]: exit 0 after 27.6 ms
+  stderr +4 ms: spar info +2.0 ms: [5912731a] Host started 4 ms after the process.
+  stderr +4 ms: spar info +2.1 ms: [5912731a] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-standard/data/com.example.tests.BridgeProbe
+  stderr +4 ms: spar info +2.2 ms: [5912731a] single instance at 2.2 ms
+  stderr +17 ms: spar info +15.0 ms: [5912731a] GTK 4.14.5, WebKitGTK 2.52.6.
+  stderr +20 ms: spar info +18.6 ms: [5912731a] Sandbox trial: bwrap exit 0 in 3.1 ms.
+  stderr +20 ms: spar info +18.7 ms: [5912731a] prerequisites checked at 18.7 ms
+  stderr +20 ms: spar info +18.7 ms: Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+  stderr +20 ms: spar info +18.7 ms: [5912731a] WebAssembly off: JSC_useWasm=false.
+  stderr +20 ms: spar info +18.8 ms: [5912731a] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.0 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+  stderr +20 ms: spar info +18.8 ms: [5912731a] gpu checked at 18.8 ms
+  stderr +22 ms: spar info +20.0 ms: [5912731a] theme read at 20 ms
+  stderr +23 ms: spar info +21.1 ms: [5912731a] services built at 21.1 ms
+  stderr +31 ms: libEGL warning: DRI3 error: Could not get DRI3 device
+  stderr +31 ms: libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+  stderr +55 ms: spar info +53.1 ms: [5912731a] gtk ready at 53 ms
+  stderr +71 ms: spar info +69.0 ms: [5912731a] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+  stderr +72 ms: spar info +70.6 ms: [5912731a] Browser data folder /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-standard/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-env-standard/data/com.example.tests.BridgeProbe/cache/WebKit
+  stderr +74 ms: spar info +72.1 ms: [5912731a] Browser settings set (0.00 ms): devtools off, GTK inspector keys off, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+  stderr +74 ms: spar info +72.2 ms: [5912731a] web view created at 72.2 ms
+  stderr +74 ms: spar info +72.2 ms: [5912731a] Heartbeat every 5000 ms.
+  stderr +85 ms: spar info +83.2 ms: [5912731a] window shown at 83.1 ms
+  stderr +86 ms: spar info +84.6 ms: [5912731a] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-/Jb2t9KGXEoKiwBx246WH8BmnvMxtHGO2pVgUYjae+o=' 'sha256-Oz/7P6AHlnpmHMnjXLd5ERW9sLzdZ49rdyO7R5+NfHI=' 'sha256-nt0tSrTTW46PEOe9PN10ExQTyD7C25pYJ0ITTQ0hIzs='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  stderr +86 ms: spar info +84.6 ms: [5912731a] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+  stderr +191 ms: spar info +189.1 ms: [5912731a] page committed at 189.1 ms
+  stderr +191 ms: spar info +189.1 ms: [5912731a] Bridge: document 2228906dd9725a79 opened.
+  stderr +191 ms: spar info +189.1 ms: [5912731a] Heartbeat armed for the new document.
+  stderr +201 ms: spar info +199.0 ms: [5912731a] first bridge message at 198.9 ms
+  stderr +201 ms: spar info +199.2 ms: [5912731a] first bridge reply at 199.2 ms
+  stderr +203 ms: spar info +201.1 ms: [5912731a] ui-ready at 201.1 ms
+  stderr +203 ms: spar info +201.1 ms: [5912731a] Bridge: document 2228906dd9725a79 reported ui-ready.
+STEP exit 0 in 692 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader env no-at-bridge
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

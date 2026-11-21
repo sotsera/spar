@@ -1,0 +1,171 @@
+STEP test on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/WireShapes.Tests/bin/Development/Debug/net11.0/linux-x64/WireShapes.Tests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.Tests/bin/Development/Debug/net11.0/linux-x64/Notebook.Tests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Generator.Tests/bin/Debug/net11.0/Spar.Generator.Tests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/AppModel.Tests/bin/Debug/net11.0/AppModel.Tests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/WireShapes.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/WireShapes.EndToEndTests.dll (net11.0|x64)
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Sdk.Tasks.Tests/bin/Debug/net11.0/Spar.Sdk.Tasks.Tests.dll (net11.0|x64)
+skipped Notebook.EndToEndTests.CleanMachineTests.The_first_run_on_a_clean_offline_machine_starts_shows_its_page_and_closes
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+skipped Notebook.EndToEndTests.ProductionInputTests.A_text_fields_menu_has_only_Cut_Copy_Paste_and_Select_all_and_there_is_none_elsewhere
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+skipped Notebook.EndToEndTests.SystemLaneTests.The_payload_runs_in_the_guest_and_writes_its_results_where_the_runner_said
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+skipped Notebook.EndToEndTests.ProductionInputTests.Devtools_and_browser_keys_and_the_mouse_history_buttons_do_nothing
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.Wait_keeps_a_silent_guards_window_and_Close_anyway_closes_it
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SessionEndTests.Signing_out_ends_the_app_within_the_session_end_budget
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.DeadlineProbeTests.Runs_until_the_runner_ends_it
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.OfflineTests.The_page_starts_offline_and_its_calls_still_work
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.The_runner_names_the_folders_and_marks_the_guest
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.A_Production_app_finds_the_guests_WebView2_Runtime
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.Tab_moves_into_the_page_after_the_window_is_activated
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.The_guest_has_no_network
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.Real_input_and_the_screen_are_refused_as_SYSTEM
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.SystemLaneTests.The_guests_WebView2_registration_names_a_Runtime_it_has
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.The_first_click_on_an_inactive_window_reaches_the_page
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.FocusAndDialogTests.The_close_confirmation_is_answered_with_real_keys_and_the_mouse
+  Not run (due to explicit test filtering)
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+26/x0/?12] (581ms)
+/var/tmp/spar-m1c-blackbox/repo/samples/Notebook.Tests/bin/Development/Debug/net11.0/linux-x64/Notebook.Tests.dll (net11.0|x64) passed [+12/x0/?0] (711ms)
+skipped Spar.Tests.SandboxRunnerTests.Real_input_the_screen_and_a_second_window_are_refused_on_this_machine
+  Real input is Windows only.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.UiAutomationSlotTests.Every_declared_UI_Automation_method_sits_in_its_header_slot
+  No Windows SDK with UIAutomationClient.h is installed (Windows Kits/10/Include/<version>/um).
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.A_later_launch_hands_its_arguments_to_the_first
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.A_data_root_on_a_network_drive_is_refused(dataRoot: "\\\\?\\C:\\Data\\com.example.SqlTool", refused: False)
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.A_data_root_on_a_network_drive_is_refused(dataRoot: "\\\\server\\share\\com.example.SqlTool", refused: True)
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.A_data_root_on_a_network_drive_is_refused(dataRoot: "C:\\Users\\someone\\AppData\\Local\\com.example.SqlTool", refused: False)
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.A_data_root_on_a_network_drive_is_refused(dataRoot: "//server/share/com.example.SqlTool", refused: True)
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.A_data_root_on_a_network_drive_is_refused(dataRoot: "\\\\?\\UNC\\server\\share\\com.example.SqlTool", refused: True)
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/WireShapes.Tests/bin/Development/Debug/net11.0/linux-x64/WireShapes.Tests.dll (net11.0|x64) passed [+79/x0/?0] (799ms)
+skipped Spar.Tests.SingleInstanceTests.A_junction_to_the_data_root_reaches_the_same_instance
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.A_closing_primary_refuses_and_the_launch_says_so
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.A_lock_nobody_serves_gives_not_responding_after_the_lock_wait
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.A_primary_that_does_not_answer_gives_not_responding_after_two_seconds
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.A_Windows_too_old_for_the_host_reports_OS_too_old
+  Windows only
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.A_lock_released_while_waiting_makes_the_launch_the_primary
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "C:relative", problem: "not an absolute path")
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "\\rooted\\but\\no\\drive", problem: "not an absolute path")
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "\\\\server\\share\\profile", problem: "network drive")
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "relative\\profile", problem: "not an absolute path")
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "\\\\?\\C:\\Profiles\\SqlTool", problem: null)
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.The_lock_goes_with_its_holder
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "C:\\Profiles\\SqlTool", problem: null)
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "\\\\?\\UNC\\server\\share\\profile", problem: "network drive")
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SecurityDefaultsTests.The_profile_folder_must_be_absolute_and_local(path: "//server/share/profile", problem: "network drive")
+  Windows path forms
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.Two_runs_appending_to_one_log_file_keep_every_line
+  Windows log file
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.SingleInstanceTests.Ten_launches_in_a_row_all_arrive
+  Windows single instance
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.Generator.Tests/bin/Debug/net11.0/Spar.Generator.Tests.dll (net11.0|x64) passed [+97/x0/?0] (3s 795ms)
+/var/tmp/spar-m1c-blackbox/repo/tests/WireShapes.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/WireShapes.EndToEndTests.dll (net11.0|x64) passed [+17/x0/?0] (3s 959ms)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64) passed [+673/x0/?25] (8s 190ms)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.Sdk.Tasks.Tests/bin/Debug/net11.0/Spar.Sdk.Tasks.Tests.dll (net11.0|x64) passed [+65/x0/?0] (8s 402ms)
+/var/tmp/spar-m1c-blackbox/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64) passed [+7/x0/?4] (8s 678ms)
+/var/tmp/spar-m1c-blackbox/repo/tests/AppModel.Tests/bin/Debug/net11.0/AppModel.Tests.dll (net11.0|x64) passed [+11/x0/?0] (16s 339ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-20_22_45_14.225718.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Notebook.Tests/<user>_<machine>_2026-11-20_22_45_14.233715.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/WireShapes.Tests/<user>_<machine>_2026-11-20_22_45_14.231665.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.Generator.Tests/<user>_<machine>_2026-11-20_22_45_14.234237.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/WireShapes.EndToEndTests/<user>_<machine>_2026-11-20_22_45_14.237351.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.Tests/<user>_<machine>_2026-11-20_22_45_14.229499.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.Sdk.Tasks.Tests/<user>_<machine>_2026-11-20_22_45_14.235159.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Notebook.EndToEndTests/<user>_<machine>_2026-11-20_22_45_14.222667.trx
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/AppModel.Tests/<user>_<machine>_2026-11-20_22_45_14.230770.trx
+
+Test run summary: Passed!
+  /var/tmp/spar-m1c-blackbox/repo/tests/WireShapes.Tests/bin/Development/Debug/net11.0/linux-x64/WireShapes.Tests.dll (net11.0|x64) passed [+79/x0/?0] (799ms)
+  /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/Notebook.EndToEndTests.dll (net11.0|x64) passed [+7/x0/?4] (8s 678ms)
+  /var/tmp/spar-m1c-blackbox/repo/samples/Notebook.Tests/bin/Development/Debug/net11.0/linux-x64/Notebook.Tests.dll (net11.0|x64) passed [+12/x0/?0] (711ms)
+  /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64) passed [+673/x0/?25] (8s 190ms)
+  /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+26/x0/?12] (581ms)
+  /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Generator.Tests/bin/Debug/net11.0/Spar.Generator.Tests.dll (net11.0|x64) passed [+97/x0/?0] (3s 795ms)
+  /var/tmp/spar-m1c-blackbox/repo/tests/AppModel.Tests/bin/Debug/net11.0/AppModel.Tests.dll (net11.0|x64) passed [+11/x0/?0] (16s 339ms)
+  /var/tmp/spar-m1c-blackbox/repo/tests/WireShapes.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/WireShapes.EndToEndTests.dll (net11.0|x64) passed [+17/x0/?0] (3s 959ms)
+  /var/tmp/spar-m1c-blackbox/repo/tests/Spar.Sdk.Tasks.Tests/bin/Debug/net11.0/Spar.Sdk.Tasks.Tests.dll (net11.0|x64) passed [+65/x0/?0] (8s 402ms)
+
+  total: 1028
+  failed: 0
+  succeeded: 987
+  skipped: 41
+  duration: 16s 543ms
+STEP exit 0 in 17160 ms: dotnet test --solution Spar.slnx -c Debug --no-build --filter-not-trait Surface=Window --filter-not-trait Surface=BlackBox

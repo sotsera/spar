@@ -1,0 +1,9 @@
+09:45:39 development: one violation: 1 line, 1 listener batch, 1 report-uri report read
+09:45:42 development: 2,000 distinct violations raised in 57.0 ms: 100 warning lines, 1 listener batches, 20 report-uri read, 1980 refused unread, 0 dropped
+09:45:42 development: after a click {"clipboard":"refused (NotAllowedError)","notifications":"denied","pointerLock":"refused"}; requests the host saw: notifications denied, pointer lock denied
+09:45:43 development: permissions {"geolocation":"error 2","notifications":"denied","devices":"0 listed, labels hidden","clipboard":"refused (NotAllowedError)","query geolocation":"granted","query notifications":"prompt","query camera":"prompt","query microphone":"prompt","query clipboard-read":"threw TypeError"}; requests the host saw: geolocation granted
+09:45:48 development: navigations by script: 6 ignored by the lock, the page stayed on its document
+09:45:48 development: the run wrote 15 files; outside the app's folder: [cache/mesa_shader_cache]; in it: [WebKit/mediakeys, WebKit/storage, cache/WebKit, instance.lock, logs/app.log]
+09:45:50 development: worker {"eval":"blocked (EvalError)","function":"blocked (EvalError)","fetch":"refused (TypeError)"}; its violation reported: False
+09:45:56 development: a user's click on an external link reached the stub handler in 1004 ms after the host's line
+09:46:06 development: a declared frame address in the window was stopped as it started; the site saw [/frame.html?redirect=1, /frame.html]; a web process left without a window ended at exit: True

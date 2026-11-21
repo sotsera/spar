@@ -1,0 +1,68 @@
+{
+ "label": "dmabuf-off-cairo-2",
+ "policy": "default",
+ "uri": "webkit://gpu",
+ "env": {
+  "GSK_RENDERER": "cairo",
+  "WEBKIT_DISABLE_DMABUF_RENDERER": "1",
+  "GDK_BACKEND": "x11",
+  "LIBGL_ALWAYS_SOFTWARE": null,
+  "GALLIUM_DRIVER": null
+ },
+ "loadFinishedMs": 100.9,
+ "pageText": "Copy to clipboardPrint in stdout\nVersion Information\nWebKit version\nWebKitGTK 2.54.2 (tarball)\nOperating system\nLinux 6.18.58.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct 27 00:24:11 UTC 2026 x86_64\nDesktop\nUnknown\nGStreamer version\n1.26.11 (build) GStreamer 1.26.11 (runtime)\nGTK version\n4.20.4 (build) 4.20.4 (runtime)\nDisplay Information\nIdentifier\n1\nType\nX11\nScreen geometry\n0,0 1280x1024\nScreen work area\n0,0 1280x1024\nDevice scale\n1\nDepth\n24\nBits per color component\n8\nFont Scaling DPI\n96\nScreen DPI\n95.93320717510538\nVBlank type\nTimer\nVBlank refresh rate\n60Hz\nView Information\nSize\n1000x800\nState\nin window, visible, focused, active\nToplevel state\nnormal\nHardware Acceleration Information\nPolicy\nnever\nWebGL enabled\nYes\n2D canvas\nAccelerated\nBuffer format\nShared Memory: AR24 [Rendering]",
+ "gskRenderer": "GskCairoRenderer",
+ "memory": [
+  {
+   "pid": 1010,
+   "comm": "python3",
+   "privateMb": 53.9,
+   "rssMb": 172.1
+  },
+  {
+   "pid": 1092,
+   "comm": "bwrap",
+   "privateMb": 0.2,
+   "rssMb": 2.4
+  },
+  {
+   "pid": 1093,
+   "comm": "bwrap",
+   "privateMb": 0.2,
+   "rssMb": 1.5
+  },
+  {
+   "pid": 1094,
+   "comm": "WebKitWebProces",
+   "privateMb": 16.1,
+   "rssMb": 110.9
+  },
+  {
+   "pid": 1087,
+   "comm": "bwrap",
+   "privateMb": 0.1,
+   "rssMb": 2.3
+  },
+  {
+   "pid": 1088,
+   "comm": "bwrap",
+   "privateMb": 0.2,
+   "rssMb": 1.6
+  },
+  {
+   "pid": 1089,
+   "comm": "xdg-dbus-proxy",
+   "privateMb": 0.4,
+   "rssMb": 5.6
+  },
+  {
+   "pid": 1084,
+   "comm": "WebKitNetworkPr",
+   "privateMb": 11.0,
+   "rssMb": 52.8
+  }
+ ],
+ "privateMbTotal": 82.1,
+ "webkit": "2.54.2",
+ "settingsPolicy": "never"
+}

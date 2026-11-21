@@ -90,10 +90,14 @@ var app = SparApplication.Create(args, spar =>
     // these on a user's machine without a new build (3.13). Decided.
     spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
-    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17). Decided.
+    // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17).
+    // Decided. On Linux it also draws without the GPU, which rules a broken graphics driver out (3.17). Built; this use
+    // of the option is for review.
     if (SupportBuild.IsSupportBuild)
     {
-        spar.Browser(b => b.AllowDevTools());
+        spar.Browser(b => b
+            .AllowDevTools()
+            .HardwareAcceleration(HardwareAcceleration.Never));
     }
 
     // Services: Microsoft DI, one scope per command call.

@@ -1,0 +1,45 @@
+2026-11-20T08:50:36.367Z INFO  Spar.Host  [323efe07] Host started 6 ms after the process.
+2026-11-20T08:50:36.367Z INFO  Spar.Host  [323efe07] App id com.example.tests.BridgeProbe, folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/5923ea62c9ec/data/com.example.tests.BridgeProbe
+2026-11-20T08:50:36.367Z INFO  Spar.Host  [323efe07] single instance at 1.9 ms
+2026-11-20T08:50:36.380Z INFO  Spar.Host  [323efe07] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-20T08:50:36.383Z INFO  Spar.Host  [323efe07] Sandbox trial: bwrap exit 0 in 2.6 ms.
+2026-11-20T08:50:36.383Z INFO  Spar.Host  [323efe07] prerequisites checked at 17.4 ms
+2026-11-20T08:50:36.383Z INFO  Spar.Host  [323efe07] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 0.1 ms with 6 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-20T08:50:36.383Z INFO  Spar.Host  [323efe07] gpu checked at 17.5 ms
+2026-11-20T08:50:36.384Z INFO  Spar.Host  [323efe07] theme read at 18.9 ms
+2026-11-20T08:50:36.385Z INFO  Spar.Host  [323efe07] services built at 19.7 ms
+2026-11-20T08:50:36.417Z INFO  Spar.Host  [323efe07] gtk ready at 52 ms
+2026-11-20T08:50:36.432Z INFO  Spar.Host  [323efe07] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-20T08:50:36.432Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*"), Allow(Permission.Geolocation)
+2026-11-20T08:50:36.434Z INFO  Spar.Host  [323efe07] Browser data folder /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/5923ea62c9ec/data/com.example.tests.BridgeProbe/WebKit, cache /var/tmp/spar-m1c-page-security/repo/artifacts/linux-homes/host-tests/5923ea62c9ec/data/com.example.tests.BridgeProbe/cache/WebKit
+2026-11-20T08:50:36.436Z INFO  Spar.Host  [323efe07] web view created at 70.7 ms
+2026-11-20T08:50:36.436Z INFO  Spar.Host  [323efe07] Heartbeat every 5000 ms.
+2026-11-20T08:50:36.447Z INFO  Spar.Host  [323efe07] window shown at 81.7 ms
+2026-11-20T08:50:36.448Z INFO  Spar.Host  [323efe07] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-psBzrIMh39SiUss7dt4j0Yx5JLTZn/T3cYdTgFRIxsc=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-/Tb2UtsWQf9dyUHbhFbEBwwublB7KqmKLlvhTU54410='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-20T08:50:36.448Z INFO  Spar.Host  [323efe07] Permissions-Policy: camera=(), microphone=(), geolocation=(self), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-20T08:50:36.494Z INFO  Spar.Host  [323efe07] page committed at 129.2 ms
+2026-11-20T08:50:36.495Z INFO  Spar.Host  [323efe07] Bridge: document 5e0140f84acd6074 opened.
+2026-11-20T08:50:36.495Z INFO  Spar.Host  [323efe07] Heartbeat armed for the new document.
+2026-11-20T08:50:36.503Z INFO  Spar.Host  [323efe07] first bridge message at 138.1 ms
+2026-11-20T08:50:36.504Z INFO  Spar.Host  [323efe07] first bridge reply at 138.3 ms
+2026-11-20T08:50:36.505Z INFO  Spar.Host  [323efe07] ui-ready at 140.1 ms
+2026-11-20T08:50:36.505Z INFO  Spar.Host  [323efe07] Bridge: document 5e0140f84acd6074 reported ui-ready.
+2026-11-20T08:50:36.506Z INFO  BridgeProbe.ProbeService  probe note: first document 5e0140f84acd6074
+2026-11-20T08:50:36.507Z WARN  Spar.Host  [323efe07] Navigation lock: a new window for https://example.invalid/from-click was blocked; only a user's click opens an external address.
+2026-11-20T08:50:36.507Z INFO  BridgeProbe.ProbeService  probe note: external: ready
+2026-11-20T08:50:36.583Z INFO  Spar.Host  [323efe07] Opening https://example.invalid/from-click with the desktop's handler (a link the user followed).
+2026-11-20T08:50:37.583Z INFO  BridgeProbe.ProbeService  probe note: external: clicked
+2026-11-20T08:50:37.584Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-20T08:50:37.603Z INFO  Spar.Host  [323efe07] close requested (User) at 1237.4 ms
+2026-11-20T08:50:37.603Z INFO  Spar.Host  [323efe07] close request 1 sent to the page (user) at 1237.5 ms
+2026-11-20T08:50:37.604Z INFO  Spar.Host  [323efe07] close request 1: the page answered Close at 1239.2 ms
+2026-11-20T08:50:37.605Z INFO  Spar.Host  [323efe07] closing at 1239.4 ms
+2026-11-20T08:50:37.605Z INFO  Spar.Host  [323efe07] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+2026-11-20T08:50:37.605Z INFO  Spar.Host  [323efe07] page close work done at 1240 ms
+2026-11-20T08:50:37.605Z INFO  Spar.Host  [323efe07] Bridge: document 5e0140f84acd6074 closed (window closing).
+2026-11-20T08:50:37.605Z INFO  Spar.Host  [323efe07] calls stopped at 1240 ms
+2026-11-20T08:50:37.605Z INFO  Spar.Host  [323efe07] calls settled at 1240 ms
+2026-11-20T08:50:37.607Z INFO  Spar.Host  [323efe07] window destroyed at 1242.2 ms
+2026-11-20T08:50:37.632Z INFO  Spar.Host  [323efe07] web processes exited after 25 ms at 1267 ms
+2026-11-20T08:50:37.633Z INFO  Spar.Host  [323efe07] services disposed at 1267.3 ms
+2026-11-20T08:50:37.633Z INFO  Spar.Host  [323efe07] exit 0 at 1267.5 ms

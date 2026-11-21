@@ -9,8 +9,14 @@ namespace Spar.Hosting;
 /// </summary>
 internal readonly record struct CspViolation(string Directive, string Blocked, string Source, int Line, int Column, string Sample, long Count)
 {
-    /// <summary>What groups violations: the directive, the blocked address and the source location (plan section 3b).</summary>
-    public string Key => string.Create(CultureInfo.InvariantCulture, $"{Directive}\n{Blocked}\n{Source}:{Line}:{Column}");
+    /// <summary>
+    /// What groups violations: the directive, the blocked address and the source location (plan section 3b). Without a
+    /// source file the line and column say nothing, and the channels disagree on them: WebKitGTK's event says 1:1 where
+    /// its report names none (M1c step 4), so they are left out and both channels' reports stay one violation.
+    /// </summary>
+    public string Key => Source.Length == 0
+        ? string.Create(CultureInfo.InvariantCulture, $"{Directive}\n{Blocked}\n")
+        : string.Create(CultureInfo.InvariantCulture, $"{Directive}\n{Blocked}\n{Source}:{Line}:{Column}");
 
     /// <summary>Where in the page it happened, for the log: <c>file:line:column</c>, or the page when unknown.</summary>
     public string Where => Source.Length == 0 ? "the page" : string.Create(CultureInfo.InvariantCulture, $"{Source}:{Line}:{Column}");

@@ -124,6 +124,10 @@ public sealed class WindowJourneyTests
     public async Task The_search_box_narrows_the_list_and_slash_focuses_it()
     {
         await using var notebook = await NotebookWindow.OpenAsync();
+
+        // The first page has connected and has its (empty) list before the reload replaces it: a page reloaded while
+        // it is still starting sends its first call and `ready` as it goes, and the host ignores them with a warning.
+        await Expect(notebook.Page.GetByRole(SparRole.Heading, new() { Name = "Start your notebook" })).ToBeVisibleAsync();
         var pages = new PagesClient(notebook.App);
         foreach (var title in new[] { "Reading list", "Recipes", "Travel" })
         {

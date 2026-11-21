@@ -1,0 +1,46 @@
+STEP notebook on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, WebKitGTK 2.52.6
+  Determining projects to restore...
+  Restored /var/tmp/spar-m1c-blackbox/repo/src/Spar.Sdk.Tasks/Spar.Sdk.Tasks.csproj (in 232 ms).
+  Restored /var/tmp/spar-m1c-blackbox/repo/src/Spar.Linux/Spar.Linux.csproj (in 232 ms).
+  Restored /var/tmp/spar-m1c-blackbox/repo/src/Spar.Generator/Spar.Generator.csproj (in 232 ms).
+  Restored /var/tmp/spar-m1c-blackbox/repo/src/Spar/Spar.csproj (in 232 ms).
+  Restored /var/tmp/spar-m1c-blackbox/repo/src/Spar.Windows/Spar.Windows.csproj (in 232 ms).
+  1 of 6 projects are up-to-date for restore.
+  Spar -> /var/tmp/spar-m1c-blackbox/repo/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Windows -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Linux -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Generator -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> /var/tmp/spar-m1c-blackbox/repo/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Notebook -> /var/tmp/spar-m1c-blackbox/repo/samples/Notebook/bin/Production/Release/net11.0/linux-x64/Notebook.dll
+  Notebook -> /var/tmp/spar-m1c-blackbox/notebook-exit/
+STEP exit 0 in 2538 ms: dotnet publish samples/Notebook -c Release -r linux-x64 -o /var/tmp/spar-m1c-blackbox/notebook-exit
+total 13132
+-rwxr-xr-x 1 <user> <user> 5141248 Nov 21 11:58 Notebook
+-rwxr-xr-x 1 <user> <user> 7791208 Nov 21 11:58 Notebook.dbg
+-rw-r--r-- 1 <user> <user>   83172 Nov 21 04:11 Spar.Linux.pdb
+-rw-r--r-- 1 <user> <user>  335472 Nov 21 00:31 Spar.Windows.pdb
+-rw-r--r-- 1 <user> <user>   82948 Nov 21 00:31 Spar.pdb
+Notebook 5141248 B
+Notebook: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=aa0311013761b9816d4b4501cdb5804737416491, for GNU/Linux 3.2.0, stripped
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Production/Release/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+1/x0/?0] (6s 278ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-21_11_01_56.523652.trx
+
+Test run summary: Passed!
+  total: 1
+  failed: 0
+  succeeded: 1
+  skipped: 0
+  duration: 6s 382ms
+STEP exit 0 in 14511 ms: dotnet test --project tests/Spar.WindowTests -c Release -- --filter-method *The_Notebook_starts_and_closes_and_its_numbers_are_recorded --output Detailed
+kept notebook.txt
+Recorded 2026-11-21 12:02:02 +01:00
+Notebook executable: 5141248 B
+Launch to ui-ready, warm: median 283.0 ms (279.1–296.5, n = 11): 296.5, 287.9, 289.0, 279.1, 288.2, 281.6, 283.0, 279.7, 287.0, 279.6, 281.0
+Launch to ui-ready, warm, from the process's start (the host's log): median 283.9 ms (272.7–288.8, n = 11): 288.7, 285.2, 286.5, 280.0, 284.9, 275.3, 283.9, 274.2, 288.8, 272.7, 282.4
+Close request to exit, from outside: median 31.6 ms (21.1–53.9, n = 11): 31.6, 26.7, 23.0, 33.4, 21.1, 38.7, 24.4, 52.9, 40.1, 53.9, 24.6
+Total PSS, app and WebKit processes, one run: 232.8 MB
+WebAssembly: JSC_useWasm=false in the web process, and in the one after a loss
+processes left by the tests: 0

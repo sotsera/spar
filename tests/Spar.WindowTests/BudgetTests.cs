@@ -16,7 +16,8 @@ public sealed class BudgetCollection;
 /// <summary>
 /// The window-test budget (plan, "Provisional budgets": open, journey and close, median, at most 700 ms on Windows),
 /// the cost of the shared browser and of each test's controller, the page API's cost per action, the desktop bridge's
-/// round trip, and a Production executable's launch to ui-ready and working set (the other M1b budgets). Recorded to
+/// round trip, and a Production executable's launch to ui-ready and working set (the other M1b budgets), with its total
+/// PSS on Linux (M1c). Recorded to
 /// <c>artifacts/test-results/Spar.WindowTests/budgets.txt</c>, never asserted: times vary with the machine.
 /// </summary>
 [Trait("Surface", "Window")]
@@ -95,17 +96,21 @@ public sealed partial class BudgetTests
         await host.ClickAsync("Time the echo");
         var times = await EchoTimesAsync(host.Page);
 
-        Budgets.Record("Desktop bridge: small unary round trip, timed by the page", Budgets.Summary(times) + ", p95 " + P95(times));
+        // WebKitGTK's page timer counts in whole milliseconds, so there the median of single calls reads 0 or 1; the mean of
+        // the 200 is the estimate (a call that takes a fraction f of a tick reads 1 ms in about f of the samples).
+        var mean = string.Create(CultureInfo.InvariantCulture, $"{times.Average():0.000} ms");
+        Budgets.Record("Desktop bridge: small unary round trip, timed by the page", Budgets.Summary(times) + ", p95 " + P95(times) + ", mean " + mean);
         host.AssertClean();
     }
 
     [Fact]
     public async Task The_Production_app_starts_to_ui_ready_and_holds_its_working_set()
     {
-        WindowSupport.SkipUnlessSupported();
+        WindowSupport.SkipUnlessBlackBox();
         var ready = new List<double>();
         var app = new List<double>();
         var withBrowser = new List<double>();
+        var proportional = new List<double>();
 
         // The Production NativeAOT executable as a user starts it again: one warm-up launch creates the data root and the
         // browser profile, and every measured launch reuses them (a new root would measure a first start each time).
@@ -124,6 +129,7 @@ public sealed partial class BudgetTests
                 var processes = launched.ProcessIds.Select(TryGetProcess).OfType<Process>().ToList();
                 var appMegabytes = Megabytes(processes.Where(p => p.Id == launched.ProcessId).Sum(p => p.WorkingSet64));
                 var allMegabytes = Megabytes(processes.Sum(p => p.WorkingSet64));
+                var allProportional = OperatingSystem.IsLinux() ? Megabytes(processes.Sum(p => ProportionalSetSize(p.Id))) : 0;
                 processes.ForEach(p => p.Dispose());
                 var log = await ReadSharedAsync(launched.LogFile);
                 await launched.CloseAsync(Token);
@@ -137,6 +143,7 @@ public sealed partial class BudgetTests
                 ready.Add(Number(HostStarted(), log) + Number(UiReady(), log));
                 app.Add(appMegabytes);
                 withBrowser.Add(allMegabytes);
+                proportional.Add(allProportional);
             }
         }
         finally
@@ -150,6 +157,27 @@ public sealed partial class BudgetTests
         Budgets.Record("Launch to ui-ready, warm (profile reused), from the process's start (WindowHost, Production NativeAOT)", Budgets.Summary(ready));
         Budgets.Record("App process working set 2 s after ui-ready (WindowHost, Production NativeAOT)", InMegabytes(app));
         Budgets.Record("Working set with the browser's processes, 2 s after ui-ready (same launches)", InMegabytes(withBrowser));
+        if (OperatingSystem.IsLinux())
+        {
+            // The Linux budget's measure (plan, "Provisional budgets"): PSS shares each shared page among the processes
+            // that map it, so the app's and WebKit's processes add up without counting GTK's and WebKit's libraries twice.
+            Budgets.Record("Total PSS, the app and WebKit's processes, 2 s after ui-ready (same launches)", InMegabytes(proportional));
+        }
+    }
+
+    /// <summary>A process's proportional set size in bytes, from <c>/proc/&lt;id&gt;/smaps_rollup</c>; 0 once it is gone.</summary>
+    private static long ProportionalSetSize(int id)
+    {
+        try
+        {
+            var line = File.ReadLines($"/proc/{id}/smaps_rollup").FirstOrDefault(text => text.StartsWith("Pss:", StringComparison.Ordinal));
+            return line is null ? 0 : 1024 * long.Parse(line.Split(' ', StringSplitOptions.RemoveEmptyEntries)[1], CultureInfo.InvariantCulture);
+        }
+        catch (IOException)
+        {
+            // Gone since the fixture listed it (a file that cannot be read for its permissions fails the test instead).
+            return 0;
+        }
     }
 
     /// <summary>A short journey through the order form, the shape of a typical window test's steps.</summary>

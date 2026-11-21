@@ -1,0 +1,68 @@
+{
+ "label": "never-only-3",
+ "policy": "never",
+ "uri": "webkit://gpu",
+ "env": {
+  "GSK_RENDERER": null,
+  "WEBKIT_DISABLE_DMABUF_RENDERER": null,
+  "GDK_BACKEND": "x11",
+  "LIBGL_ALWAYS_SOFTWARE": null,
+  "GALLIUM_DRIVER": null
+ },
+ "loadFinishedMs": 255.1,
+ "pageText": "Copy to clipboardPrint in stdout\nVersion Information\nWebKit version\nWebKitGTK 2.52.6 (tarball)\nOperating system\nLinux 6.18.58.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Tue Oct 27 00:24:11 UTC 2026 x86_64\nDesktop\nUnknown\nGStreamer version\n1.24.2 (build) GStreamer 1.24.2 (runtime)\nGTK version\n4.14.2 (build) 4.14.5 (runtime)\nDisplay Information\nIdentifier\n1\nType\nX11\nScreen geometry\n0,0 1280x1024\nScreen work area\n0,0 1280x1024\nDevice scale\n1\nDepth\n24\nBits per color component\n8\nFont Scaling DPI\n96\nScreen DPI\n95.93320717510538\nVBlank type\nTimer\nVBlank refresh rate\n60Hz\nView Information\nSize\n1000x800\nState\nin window, visible, focused, active\nToplevel state\nnormal\nHardware Acceleration Information\nPolicy\nnever\nWebGL enabled\nYes\n2D canvas\nAccelerated",
+ "gskRenderer": "GskGLRenderer",
+ "memory": [
+  {
+   "pid": 2918,
+   "comm": "python3",
+   "privateMb": 112.7,
+   "rssMb": 253.5
+  },
+  {
+   "pid": 3079,
+   "comm": "bwrap",
+   "privateMb": 0.1,
+   "rssMb": 2.0
+  },
+  {
+   "pid": 3080,
+   "comm": "bwrap",
+   "privateMb": 0.2,
+   "rssMb": 1.6
+  },
+  {
+   "pid": 3081,
+   "comm": "WebKitWebProces",
+   "privateMb": 20.1,
+   "rssMb": 143.2
+  },
+  {
+   "pid": 3074,
+   "comm": "bwrap",
+   "privateMb": 0.1,
+   "rssMb": 2.0
+  },
+  {
+   "pid": 3075,
+   "comm": "bwrap",
+   "privateMb": 0.2,
+   "rssMb": 1.6
+  },
+  {
+   "pid": 3076,
+   "comm": "xdg-dbus-proxy",
+   "privateMb": 0.4,
+   "rssMb": 5.6
+  },
+  {
+   "pid": 2993,
+   "comm": "WebKitNetworkPr",
+   "privateMb": 6.9,
+   "rssMb": 44.6
+  }
+ ],
+ "privateMbTotal": 140.7,
+ "webkit": "2.52.6",
+ "settingsPolicy": "never"
+}

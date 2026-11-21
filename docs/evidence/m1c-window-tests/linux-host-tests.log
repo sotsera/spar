@@ -1,0 +1,113 @@
+STEP linuxhost on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=3692 comm="/var/tmp/spar-m1c-window-tests/repo/tests/apps/Bri" label="kernel")
+dbus-daemon[3507]: [session uid=1000 pid=3507] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[3800]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1000 pid=3804 comm="/var/tmp/spar-m1c-window-tests/repo/tests/apps/Bri" label="kernel")
+dbus-daemon[3800]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.9' (uid=1000 pid=3902 comm="/usr/bin/xdg-dbus-proxy --args=86" label="kernel")
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.portal.Documents' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.11' (uid=1000 pid=3940 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[3507]: [session uid=1000 pid=3507] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[3507]: [session uid=1000 pid=3507] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.440: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.440: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3957): Gtk-WARNING **: 20:13:34.448: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.457: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.458: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.458: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.458: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.458: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3961): Gtk-WARNING **: 20:13:34.463: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.463: Failed to create file chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.463: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.463: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3963): Gtk-WARNING **: 20:13:34.468: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.469: Failed to create app chooser proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.469: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.469: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3965): Gtk-WARNING **: 20:13:34.474: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.475: Failed to create print proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.475: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.475: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3967): Gtk-WARNING **: 20:13:34.480: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.480: Failed to create notification proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.480: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.480: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3969): Gtk-WARNING **: 20:13:34.485: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.486: Failed to create inhibit proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.486: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.486: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3971): Gtk-WARNING **: 20:13:34.490: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.491: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.491: No skeleton to export
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3973): Gtk-WARNING **: 20:13:34.496: cannot open display: 
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3975): Gtk-WARNING **: 20:13:34.501: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.502: Failed to create access proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.502: No skeleton to export
+[W][02480.589577] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][02480.589620] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.503: Failed connect to PipeWire: Couldn't create PipeWire context
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.503: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3977): Gtk-WARNING **: 20:13:34.508: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.509: Failed to create account proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.509: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.509: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3979): Gtk-WARNING **: 20:13:34.513: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.514: Failed to create email proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.514: No skeleton to export
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.514: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.10' (uid=1000 pid=3934 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+(xdg-desktop-portal-gtk:3981): Gtk-WARNING **: 20:13:34.518: cannot open display: 
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.519: Failed to create dynamic_launcher proxy: Error calling StartServiceByName for org.freedesktop.impl.portal.desktop.gtk: Process org.freedesktop.impl.portal.desktop.gtk exited with status 1
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:13:34.519: No skeleton to export
+dbus-daemon[3507]: [session uid=1000 pid=3507] Successfully activated service 'org.freedesktop.portal.Desktop'
+dbus-daemon[4930]: [session uid=1000 pid=4930] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=4938 comm="/var/tmp/spar-m1c-window-tests/repo/tests/apps/Bri" label="kernel")
+dbus-daemon[4930]: [session uid=1000 pid=4930] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[5031]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=4938 comm="/var/tmp/spar-m1c-window-tests/repo/tests/apps/Bri" label="kernel")
+dbus-daemon[5031]: Successfully activated service 'org.a11y.atspi.Registry'
+skipped Spar.Tests.LinuxStartupTests.The_Notebooks_window_has_the_saved_schemes_colour_from_its_first_frame
+  Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:16:19.394: Realtime error: Could not map pid: Process ids could not be found: 2
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:17:07.777: Realtime error: Could not map pid: Process ids could not be found: 2
+skipped Spar.Tests.LinuxHostTests.The_Notebook_starts_and_closes_and_its_numbers_are_recorded
+  Needs SPAR_LINUX_NOTEBOOK, the Notebook's published executable.
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:17:27.042: Realtime error: Could not map pid: Process ids could not be found: 2
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:17:27.422: Realtime error: Could not map pid: Process ids could not be found: 2
+dbus-daemon[3507]: [session uid=1000 pid=3507] Activating service name='ca.desrt.dconf' requested by ':1.102' (uid=1000 pid=8701 comm="/var/tmp/spar-m1c-window-tests/repo/tests/apps/Bri" label="kernel")
+dbus-daemon[3507]: [session uid=1000 pid=3507] Successfully activated service 'ca.desrt.dconf'
+skipped Spar.Tests.LinuxPageSecurityTests.The_flood_numbers_are_recorded
+  Needs SPAR_LINUX_FLOOD, the flood sizes to measure.
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:18:04.694: Realtime error: Could not map pid: Process ids could not be found: 2
+skipped Spar.Tests.LinuxPageSecurityTests.WebAssembly_follows_the_declaration_in_the_page_and_its_workers_and_after_a_lost_web_process(allowed: True)
+  Needs SPAR_LINUX_WASM_APP, the bridge probe built with AllowWebAssembly().
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+skipped Spar.Tests.LinuxPageSecurityTests.WebAssembly_follows_the_declaration_after_Reload_page_ends_the_web_process(allowed: True)
+  Needs SPAR_LINUX_WASM_APP, the bridge probe built with AllowWebAssembly().
+  from /var/tmp/spar-m1c-window-tests/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64)
+(/usr/libexec/xdg-desktop-portal:3934): xdg-desktop-portal-WARNING **: 20:18:10.103: Realtime error: Could not map pid: Process ids could not be found: 2
+/var/tmp/spar-m1c-window-tests/repo/tests/Spar.Tests/bin/Development/Debug/net11.0/linux-x64/Spar.Tests.dll (net11.0|x64) passed [+217/x0/?5] (4m 57s 873ms)
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-window-tests/repo/artifacts/test-results/Spar.Tests/user_host_2026-11-20_19_13_26.534362.trx
+Test run summary: Passed!
+  total: 222
+  failed: 0
+  succeeded: 217
+  skipped: 5
+  duration: 4m 57s 988ms
+STEP exit 0 in 298385 ms: dbus-run-session -- dotnet test --project tests/Spar.Tests -c Debug --no-build -- --filter-class Spar.Tests.LinuxStartupTests --filter-class Spar.Tests.LinuxStartupUnitTests --filter-class Spar.Tests.LinuxHostTests --filter-class Spar.Tests.LinuxHostUnitTests --filter-class Spar.Tests.LinuxHangTests --filter-class Spar.Tests.LinuxPageSecurityTests --output Detailed

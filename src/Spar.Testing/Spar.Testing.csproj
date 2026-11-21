@@ -19,7 +19,7 @@
   <!--
     The black-box fixture (BlackBox/): Win32 through CsWin32 (process creation, the job object, the hidden desktop),
     UI Automation through hand-declared [GeneratedComInterface] declarations, checked slot by slot against the Windows
-    SDK's UIAutomationClient.h by Spar.Tests.
+    SDK's UIAutomationClient.h by Spar.Tests. On Linux (BlackBox/Linux/): AT-SPI through GIO's GDBus, LibraryImport only.
   -->
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />

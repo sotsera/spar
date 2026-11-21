@@ -1,0 +1,48 @@
+2026-11-19T23:54:58.063Z INFO  Spar.Host  [f6b1a810] Host started 43 ms after the process.
+2026-11-19T23:54:58.063Z INFO  Spar.Host  [f6b1a810] App id com.example.tests.BridgeProbe.Development, folder <repo>/artifacts/linux-homes/host-tests/9ce89c8dbcd7/data/com.example.tests.BridgeProbe.Development
+2026-11-19T23:54:58.069Z INFO  Spar.Host  [f6b1a810] single instance at 21 ms
+2026-11-19T23:54:58.145Z INFO  Spar.Host  [f6b1a810] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-19T23:54:58.154Z INFO  Spar.Host  [f6b1a810] Sandbox trial: bwrap exit 0 in 5.2 ms.
+2026-11-19T23:54:58.154Z INFO  Spar.Host  [f6b1a810] prerequisites checked at 108.9 ms
+2026-11-19T23:54:58.159Z INFO  Spar.Host  [f6b1a810] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 3.2 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-19T23:54:58.159Z INFO  Spar.Host  [f6b1a810] gpu checked at 113.7 ms
+2026-11-19T23:54:58.163Z INFO  Spar.Host  [f6b1a810] theme read at 118.1 ms
+2026-11-19T23:54:58.186Z INFO  Spar.Host  [f6b1a810] services built at 141.2 ms
+2026-11-19T23:54:58.221Z INFO  Spar.Host  [f6b1a810] gtk ready at 175.6 ms
+2026-11-19T23:54:58.222Z INFO  Spar.Host  [f6b1a810] UI-thread stall probe on.
+2026-11-19T23:54:58.254Z INFO  Spar.Host  [f6b1a810] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+2026-11-19T23:54:58.258Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*")
+2026-11-19T23:54:58.291Z INFO  Spar.Host  [f6b1a810] web view created at 245.5 ms
+2026-11-19T23:54:58.291Z INFO  Spar.Host  [f6b1a810] Heartbeat every 500 ms.
+2026-11-19T23:54:58.309Z INFO  Spar.Host  [f6b1a810] window shown at 263.5 ms
+2026-11-19T23:54:58.317Z WARN  Spar.Host  The UI thread stalled 87.6 ms; the slowest Spar callback meanwhile was window start (87.6 ms)
+2026-11-19T23:54:58.317Z INFO  Spar.Host  [f6b1a810] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-6Zgna3cJF6akHt+rxGHQlZZOiBLiARgscXpvu0RG+DU=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-a75Pj5ojoEv+Pes9kRpoybLnkhlxvYb5d/SQVMudcsc='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-19T23:54:58.317Z INFO  Spar.Host  [f6b1a810] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-19T23:54:58.503Z INFO  Spar.Host  [f6b1a810] page committed at 457.4 ms
+2026-11-19T23:54:58.503Z INFO  Spar.Host  [f6b1a810] Bridge: document a20375b5dbeb3be9 opened.
+2026-11-19T23:54:58.503Z INFO  Spar.Host  [f6b1a810] Heartbeat armed for the new document.
+2026-11-19T23:54:58.514Z INFO  Spar.Host  [f6b1a810] first bridge message at 468.9 ms
+2026-11-19T23:54:58.522Z INFO  Spar.Host  [f6b1a810] first bridge reply at 476.4 ms
+2026-11-19T23:54:58.534Z INFO  Spar.Host  [f6b1a810] ui-ready at 489 ms
+2026-11-19T23:54:58.534Z INFO  Spar.Host  [f6b1a810] Bridge: document a20375b5dbeb3be9 reported ui-ready.
+2026-11-19T23:54:58.535Z INFO  BridgeProbe.ProbeService  probe note: first document a20375b5dbeb3be9
+2026-11-19T23:54:58.540Z INFO  BridgeProbe.ProbeService  probe note: hang starts
+2026-11-19T23:54:58.541Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-19T23:55:00.294Z WARN  Spar.Host  [f6b1a810] The page is not responding: it did not answer three heartbeats (1.5 s without an answer).
+2026-11-19T23:55:00.295Z INFO  Spar.Host  [f6b1a810] The automated mode shows no hung-page dialog.
+2026-11-19T23:55:00.295Z INFO  BridgeProbe.ProbeService  probe hang: Unresponsive after 1.5 s
+2026-11-19T23:55:00.318Z INFO  Spar.Host  [f6b1a810] close requested (User, automated) at 2273.3 ms
+2026-11-19T23:55:00.319Z INFO  Spar.Host  [f6b1a810] The automated mode closes a page that does not answer without asking.
+2026-11-19T23:55:00.321Z INFO  Spar.Host  [f6b1a810] window closed anyway; the page had not answered for 1.5 s at 2275.8 ms
+2026-11-19T23:55:00.321Z INFO  BridgeProbe.ProbeService  probe hang: ClosedAnyway after 1.5 s
+2026-11-19T23:55:00.322Z INFO  Spar.Host  [f6b1a810] closing at 2276.9 ms
+2026-11-19T23:55:00.322Z INFO  Spar.Host  [f6b1a810] Heartbeat: 4 ticks, 1 pings, longest tick on the UI thread 0.868 ms.
+2026-11-19T23:55:00.323Z INFO  Spar.Host  [f6b1a810] Bridge: document a20375b5dbeb3be9 closed (window closing).
+2026-11-19T23:55:00.323Z INFO  Spar.Host  [f6b1a810] calls stopped at 2277.8 ms
+2026-11-19T23:55:00.323Z INFO  Spar.Host  [f6b1a810] calls settled at 2277.9 ms
+2026-11-19T23:55:00.324Z INFO  Spar.Host  [f6b1a810] The web process ended during shutdown (ended by the host); nothing is recovered.
+2026-11-19T23:55:00.324Z INFO  Spar.Host  [f6b1a810] web process of the hung page ended before closing at 2279.1 ms
+2026-11-19T23:55:00.325Z INFO  Spar.Host  [f6b1a810] window destroyed at 2279.7 ms
+2026-11-19T23:55:00.349Z INFO  Spar.Host  [f6b1a810] web processes exited after 24 ms at 2304 ms
+2026-11-19T23:55:00.352Z INFO  Spar.Host  [f6b1a810] services disposed at 2306.9 ms
+2026-11-19T23:55:00.353Z INFO  Spar.Host  [f6b1a810] exit 0 at 2307.5 ms

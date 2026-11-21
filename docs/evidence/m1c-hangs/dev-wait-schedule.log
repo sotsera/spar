@@ -1,0 +1,77 @@
+2026-11-19T23:56:56.668Z INFO  Spar.Host  [b2838af6] Host started 37 ms after the process.
+2026-11-19T23:56:56.668Z INFO  Spar.Host  [b2838af6] App id com.example.tests.BridgeProbe.Development, folder <repo>/artifacts/linux-homes/host-tests/2fa49629e78f/data/com.example.tests.BridgeProbe.Development
+2026-11-19T23:56:56.673Z INFO  Spar.Host  [b2838af6] single instance at 19.2 ms
+2026-11-19T23:56:56.687Z INFO  Spar.Host  [b2838af6] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-19T23:56:56.692Z INFO  Spar.Host  [b2838af6] Sandbox trial: bwrap exit 0 in 3.5 ms.
+2026-11-19T23:56:56.692Z INFO  Spar.Host  [b2838af6] prerequisites checked at 40.9 ms
+2026-11-19T23:56:56.697Z INFO  Spar.Host  [b2838af6] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.8 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-19T23:56:56.697Z INFO  Spar.Host  [b2838af6] gpu checked at 45.1 ms
+2026-11-19T23:56:56.699Z INFO  Spar.Host  [b2838af6] theme read at 47.9 ms
+2026-11-19T23:56:56.718Z INFO  Spar.Host  [b2838af6] services built at 66 ms
+2026-11-19T23:56:56.730Z INFO  Spar.Host  [b2838af6] gtk ready at 78.2 ms
+2026-11-19T23:56:56.731Z INFO  Spar.Host  [b2838af6] UI-thread stall probe on.
+2026-11-19T23:56:56.748Z INFO  Spar.Host  [b2838af6] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-19T23:56:56.752Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*")
+2026-11-19T23:56:56.759Z INFO  Spar.Host  [b2838af6] web view created at 107.5 ms
+2026-11-19T23:56:56.760Z INFO  Spar.Host  [b2838af6] Heartbeat every 500 ms.
+2026-11-19T23:56:56.770Z INFO  Spar.Host  [b2838af6] window shown at 118.6 ms
+2026-11-19T23:56:56.774Z INFO  Spar.Host  [b2838af6] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-6Zgna3cJF6akHt+rxGHQlZZOiBLiARgscXpvu0RG+DU=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-a75Pj5ojoEv+Pes9kRpoybLnkhlxvYb5d/SQVMudcsc='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-19T23:56:56.774Z INFO  Spar.Host  [b2838af6] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-19T23:56:56.820Z INFO  Spar.Host  [b2838af6] page committed at 168.8 ms
+2026-11-19T23:56:56.821Z INFO  Spar.Host  [b2838af6] Bridge: document 70a3afd27f07f38f opened.
+2026-11-19T23:56:56.821Z INFO  Spar.Host  [b2838af6] Heartbeat armed for the new document.
+2026-11-19T23:56:56.829Z INFO  Spar.Host  [b2838af6] first bridge message at 177.5 ms
+2026-11-19T23:56:56.836Z INFO  Spar.Host  [b2838af6] first bridge reply at 184.7 ms
+2026-11-19T23:56:56.848Z INFO  Spar.Host  [b2838af6] ui-ready at 196.9 ms
+2026-11-19T23:56:56.849Z INFO  Spar.Host  [b2838af6] Bridge: document 70a3afd27f07f38f reported ui-ready.
+2026-11-19T23:56:56.849Z INFO  BridgeProbe.ProbeService  probe note: first document 70a3afd27f07f38f
+2026-11-19T23:56:56.850Z INFO  BridgeProbe.ProbeService  probe note: hang starts
+2026-11-19T23:56:56.850Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-19T23:56:58.757Z WARN  Spar.Host  [b2838af6] The page is not responding: it did not answer three heartbeats (1.5 s without an answer).
+2026-11-19T23:56:58.758Z INFO  BridgeProbe.ProbeService  probe hang: Unresponsive after 1.5 s
+2026-11-19T23:56:58.775Z INFO  Spar.Host  [b2838af6] hung-page dialog shown (Wait / Reload page) at 2123.5 ms
+2026-11-19T23:56:58.877Z WARN  Spar.Host  [b2838af6] Development trigger: the prompt is answered with its first button.
+2026-11-19T23:56:58.877Z INFO  Spar.Host  [b2838af6] hung-page dialog: Wait at 2225.5 ms
+2026-11-19T23:57:02.147Z WARN  Spar.Host  [b2838af6] The page still does not answer after 3 s; asking again.
+2026-11-19T23:57:02.161Z INFO  Spar.Host  [b2838af6] hung-page dialog shown (Wait / Reload page) at 4122.3 ms
+2026-11-19T23:57:02.261Z WARN  Spar.Host  [b2838af6] Development trigger: the prompt is answered with its first button.
+2026-11-19T23:57:02.261Z INFO  Spar.Host  [b2838af6] hung-page dialog: Wait at 4222.9 ms
+2026-11-19T23:57:06.147Z WARN  Spar.Host  [b2838af6] The page still does not answer after 7 s; asking again.
+2026-11-19T23:57:06.161Z INFO  Spar.Host  [b2838af6] hung-page dialog shown (Wait / Reload page) at 8122.1 ms
+2026-11-19T23:57:06.260Z WARN  Spar.Host  [b2838af6] Development trigger: the prompt is answered with its first button.
+2026-11-19T23:57:06.260Z INFO  Spar.Host  [b2838af6] hung-page dialog: Wait at 8221.4 ms
+2026-11-19T23:57:14.147Z WARN  Spar.Host  [b2838af6] The page still does not answer after 15 s; asking again.
+2026-11-19T23:57:14.161Z INFO  Spar.Host  [b2838af6] hung-page dialog shown (Wait / Reload page) at 16122.2 ms
+2026-11-19T23:57:14.259Z WARN  Spar.Host  [b2838af6] Development trigger: the prompt is answered with its first button.
+2026-11-19T23:57:14.259Z INFO  Spar.Host  [b2838af6] hung-page dialog: Wait at 16220.6 ms
+2026-11-19T23:57:30.149Z WARN  Spar.Host  [b2838af6] The page still does not answer after 32 s; asking again.
+2026-11-19T23:57:30.164Z INFO  Spar.Host  [b2838af6] hung-page dialog shown (Wait / Reload page) at 32125.1 ms
+2026-11-19T23:57:30.263Z WARN  Spar.Host  [b2838af6] Development trigger: the prompt is answered with its first button.
+2026-11-19T23:57:30.263Z INFO  Spar.Host  [b2838af6] hung-page dialog: Wait at 32224.5 ms
+2026-11-19T23:57:47.410Z WARN  Spar.Host  [b2838af6] The page still does not answer after 47 s; asking again.
+2026-11-19T23:57:47.424Z INFO  Spar.Host  [b2838af6] hung-page dialog shown (Wait / Reload page) at 48122 ms
+2026-11-19T23:57:47.522Z WARN  Spar.Host  [b2838af6] Development trigger: the prompt is answered with its second button.
+2026-11-19T23:57:47.522Z INFO  Spar.Host  [b2838af6] hung-page dialog: Reload page, after 47.6 s at 48220.7 ms
+2026-11-19T23:57:47.523Z INFO  BridgeProbe.ProbeService  probe hang: Reloaded after 47.6 s
+2026-11-19T23:57:47.523Z INFO  Spar.Host  [b2838af6] Bridge: document 70a3afd27f07f38f closed (web process ended).
+2026-11-19T23:57:47.524Z INFO  Spar.Host  [b2838af6] web process ended by the host at 48221.8 ms
+2026-11-19T23:57:47.529Z INFO  Spar.Host  [b2838af6] hung page reloaded at 48227.3 ms
+2026-11-19T23:57:47.529Z INFO  Spar.Host  [b2838af6] web process of the hung page ended at 48227.3 ms
+2026-11-19T23:57:47.576Z INFO  Spar.Host  [b2838af6] Bridge: document 78490ef0e726aaff opened.
+2026-11-19T23:57:47.576Z INFO  Spar.Host  [b2838af6] Heartbeat armed for the new document.
+2026-11-19T23:57:47.586Z INFO  Spar.Host  [b2838af6] Bridge: document 78490ef0e726aaff reported ui-ready.
+2026-11-19T23:57:47.586Z INFO  BridgeProbe.ProbeService  probe note: first document 78490ef0e726aaff (reloaded)
+2026-11-19T23:57:47.586Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-19T23:57:47.597Z INFO  Spar.Host  [b2838af6] close requested (User) at 48295 ms
+2026-11-19T23:57:47.598Z INFO  Spar.Host  [b2838af6] close request 1 sent to the page (user) at 48296.3 ms
+2026-11-19T23:57:47.604Z INFO  Spar.Host  [b2838af6] close request 1: the page answered Close at 48302 ms
+2026-11-19T23:57:47.607Z INFO  Spar.Host  [b2838af6] closing at 48304.9 ms
+2026-11-19T23:57:47.607Z INFO  Spar.Host  [b2838af6] Heartbeat: 96 ticks, 2 pings, longest tick on the UI thread 19.214 ms.
+2026-11-19T23:57:47.608Z INFO  Spar.Host  [b2838af6] page close work done at 48306.6 ms
+2026-11-19T23:57:47.609Z INFO  Spar.Host  [b2838af6] Bridge: document 78490ef0e726aaff closed (window closing).
+2026-11-19T23:57:47.609Z INFO  Spar.Host  [b2838af6] calls stopped at 48306.9 ms
+2026-11-19T23:57:47.609Z INFO  Spar.Host  [b2838af6] calls settled at 48306.9 ms
+2026-11-19T23:57:47.610Z INFO  Spar.Host  [b2838af6] window destroyed at 48308.5 ms
+2026-11-19T23:57:47.619Z INFO  Spar.Host  [b2838af6] web processes exited after 8 ms at 48317.1 ms
+2026-11-19T23:57:47.622Z INFO  Spar.Host  [b2838af6] services disposed at 48320 ms
+2026-11-19T23:57:47.622Z INFO  Spar.Host  [b2838af6] exit 0 at 48320.6 ms

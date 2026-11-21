@@ -1,0 +1,71 @@
+STEP run standard relaunch 1 on 6.18.58.1-microsoft-standard-WSL2, 2026-11-20T17:56:26Z
+dbus-daemon[644]: [session uid=1000 pid=644] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=645 comm="/var/tmp/spar-linux-blackbox-atspi/reader/Reader r" label="kernel")
+dbus-daemon[644]: [session uid=1000 pid=644] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[657]: Activating service name='org.a11y.atspi.Registry' requested by ':1.1' (uid=1000 pid=662 comm="/var/tmp/spar-linux-blackbox-atspi/probe-aot/Bridg" label="kernel")
+dbus-daemon[657]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[644]: [session uid=1000 pid=644] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.8' (uid=1000 pid=758 comm="/usr/bin/xdg-dbus-proxy --args=23" label="kernel")
+dbus-daemon[644]: [session uid=1000 pid=644] Activating service name='org.freedesktop.portal.Documents' requested by ':1.9' (uid=1000 pid=795 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[644]: [session uid=1000 pid=644] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.10' (uid=1000 pid=801 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[644]: [session uid=1000 pid=644] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[644]: [session uid=1000 pid=644] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.079: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.079: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[644]: [session uid=1000 pid=644] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.9' (uid=1000 pid=795 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[644]: [session uid=1000 pid=644] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.133: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.133: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.133: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.133: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.133: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.134: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.134: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.135: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.135: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.136: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00094.759784] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00094.759845] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.139: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.139: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.140: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:795): xdg-desktop-portal-WARNING **: 18:56:27.140: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[644]: [session uid=1000 pid=644] Successfully activated service 'org.freedesktop.portal.Desktop'
+  signal +-78.2 :1.2 (pid 776) /org/a11y/atspi/accessible/root org.a11y.atspi.Event.Object.ChildrenChanged add 1 0 (":1.4", "/org/a11y/atspi/accessible/root")
+  signal +-21.0 :1.1 (pid 662) /org/gtk/application/com_example_tests_BridgeProbe/a11y/a9f7469a_9182_49e5_8705_69c97691b4ef org.a11y.atspi.Event.Object.ChildrenChanged add 0 0 (":1.1", "/org/gtk/application/com_example_tests_BridgeProbe/a11y/bc046976_900d_4330_90c0_52ed8bb88019")
+  signal +2087.0 :1.5 (pid 829) /org/gtk/application/com_example_tests_BridgeProbe/a11y/ef5ccc69_febb_415d_899d_40d2634eb777 org.a11y.atspi.Event.Object.StateChanged showing 0 0 "0"
+  signal +2087.0 :1.5 (pid 829) /org/gtk/application/com_example_tests_BridgeProbe/a11y/ef5ccc69_febb_415d_899d_40d2634eb777 org.a11y.atspi.Event.Object.StateChanged visible 0 0 "0"
+  signal +2087.5 :1.5 (pid 829) /org/gtk/application/com_example_tests_BridgeProbe/a11y/920e9e88_890a_4a7c_a0e0_27c17b81d3c0 org.a11y.atspi.Event.Object.StateChanged focused 1 0 "0"
+  signal +2087.6 :1.5 (pid 829) /org/gtk/application/com_example_tests_BridgeProbe/a11y/ef5ccc69_febb_415d_899d_40d2634eb777 org.a11y.atspi.Event.Object.StateChanged active 1 0 "0"
+  signal +2088.5 :1.5 (pid 829) /org/gtk/application/com_example_tests_BridgeProbe/a11y/920e9e88_890a_4a7c_a0e0_27c17b81d3c0 org.a11y.atspi.Event.Object.BoundsChanged  0 0 (17, 5, 528, 34)
+  signal +2088.5 :1.5 (pid 829) /org/gtk/application/com_example_tests_BridgeProbe/a11y/ef5ccc69_febb_415d_899d_40d2634eb777 org.a11y.atspi.Event.Object.BoundsChanged  0 0 (0, 0, 528, 182)
+  signal +2090.6 :1.2 (pid 776) /org/a11y/atspi/accessible/root org.a11y.atspi.Event.Object.ChildrenChanged add 2 0 (":1.5", "/org/a11y/atspi/accessible/root")
+relaunch 1: [dialog] "" modal=True texts [BridgeProbe can't start | The app is already running but did not answer within 2 seconds. Wait a moment, then start it again, or end it in the system monitor.  Exit code 8. Log: /var/tmp/spar-linux-blackbox-atspi/repo/artifacts/linux-homes/blackbox-atspi-relaunch-standard/data/com.example.tests.BridgeProbe/logs/app.log] buttons [Close]; walk 5.9 ms in 22 calls, cache 0.6 ms same
+relaunch 1: reference line 2025.0, X11 viewable 2090.8, polled 2097.3, event - () ms after launch; DoAction(Click) = True in 0.22 ms; exit 8 after 255.2 ms
+  first instance resumed and closed: exit 0 after 52.6 ms; stale relaunch dropped: True
+SUMMARY relaunch (1 runs, 0 failed)
+  the host's log line to the dialog viewable (X11): n=1 p50=65.8 p95=65.8 min=65.8 max=65.8 ms
+  viewable to found by polling AT-SPI (negative: before the map): n=1 p50=6.5 p95=6.5 min=6.5 max=6.5 ms
+  viewable to the first AT-SPI event (negative: before the map): no values
+  read the dialog by walking: n=1 p50=5.9 p95=5.9 min=5.9 max=5.9 ms
+  read the dialog from the cache (one call): n=1 p50=0.6 p95=0.6 min=0.6 max=0.6 ms
+  press by DoAction to done (exit or dialog gone): n=1 p50=255.2 p95=255.2 min=255.2 max=255.2 ms
+  press by XTEST click to done (exit or dialog gone): no values
+STEP exit 0 in 3340 ms: dbus-run-session -- /var/tmp/spar-linux-blackbox-atspi/reader/Reader relaunch 1
+census after the run (processes with this run's XDG_RUNTIME_DIR; none expected):

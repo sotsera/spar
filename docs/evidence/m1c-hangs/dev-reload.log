@@ -1,0 +1,57 @@
+2026-11-19T23:58:10.275Z INFO  Spar.Host  [c4dceba8] Host started 39 ms after the process.
+2026-11-19T23:58:10.275Z INFO  Spar.Host  [c4dceba8] App id com.example.tests.BridgeProbe.Development, folder <repo>/artifacts/linux-homes/host-tests/21f92d23caa7/data/com.example.tests.BridgeProbe.Development
+2026-11-19T23:58:10.281Z INFO  Spar.Host  [c4dceba8] single instance at 19.3 ms
+2026-11-19T23:58:10.294Z INFO  Spar.Host  [c4dceba8] GTK 4.14.5, WebKitGTK 2.52.6.
+2026-11-19T23:58:10.300Z INFO  Spar.Host  [c4dceba8] Sandbox trial: bwrap exit 0 in 3.5 ms.
+2026-11-19T23:58:10.300Z INFO  Spar.Host  [c4dceba8] prerequisites checked at 41.2 ms
+2026-11-19T23:58:10.304Z INFO  Spar.Host  [c4dceba8] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 3.0 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+2026-11-19T23:58:10.304Z INFO  Spar.Host  [c4dceba8] gpu checked at 45.5 ms
+2026-11-19T23:58:10.307Z INFO  Spar.Host  [c4dceba8] theme read at 48.4 ms
+2026-11-19T23:58:10.326Z INFO  Spar.Host  [c4dceba8] services built at 67.1 ms
+2026-11-19T23:58:10.338Z INFO  Spar.Host  [c4dceba8] gtk ready at 78.9 ms
+2026-11-19T23:58:10.339Z INFO  Spar.Host  [c4dceba8] UI-thread stall probe on.
+2026-11-19T23:58:10.357Z INFO  Spar.Host  [c4dceba8] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+2026-11-19T23:58:10.360Z INFO  Spar.Host  Page security overrides in this app: FrameSrc("http://127.0.0.1:*")
+2026-11-19T23:58:10.368Z INFO  Spar.Host  [c4dceba8] web view created at 109.3 ms
+2026-11-19T23:58:10.369Z INFO  Spar.Host  [c4dceba8] Heartbeat every 5000 ms.
+2026-11-19T23:58:10.380Z INFO  Spar.Host  [c4dceba8] window shown at 120.5 ms
+2026-11-19T23:58:10.383Z INFO  Spar.Host  [c4dceba8] Content-Security-Policy: default-src 'none'; script-src 'self' 'sha256-6Zgna3cJF6akHt+rxGHQlZZOiBLiARgscXpvu0RG+DU=' 'sha256-c9ydT6mHblTKriS79lxccC6+fi1GcIUYIFw9eZuXQLs=' 'sha256-a75Pj5ojoEv+Pes9kRpoybLnkhlxvYb5d/SQVMudcsc='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; frame-src http://127.0.0.1:*; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+2026-11-19T23:58:10.383Z INFO  Spar.Host  [c4dceba8] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+2026-11-19T23:58:10.429Z INFO  Spar.Host  [c4dceba8] page committed at 169.6 ms
+2026-11-19T23:58:10.429Z INFO  Spar.Host  [c4dceba8] Bridge: document a62fbd32f435f7fb opened.
+2026-11-19T23:58:10.429Z INFO  Spar.Host  [c4dceba8] Heartbeat armed for the new document.
+2026-11-19T23:58:10.438Z INFO  Spar.Host  [c4dceba8] first bridge message at 179.4 ms
+2026-11-19T23:58:10.446Z INFO  Spar.Host  [c4dceba8] first bridge reply at 186.6 ms
+2026-11-19T23:58:10.457Z INFO  Spar.Host  [c4dceba8] ui-ready at 197.8 ms
+2026-11-19T23:58:10.457Z INFO  Spar.Host  [c4dceba8] Bridge: document a62fbd32f435f7fb reported ui-ready.
+2026-11-19T23:58:10.458Z INFO  BridgeProbe.ProbeService  probe note: first document a62fbd32f435f7fb
+2026-11-19T23:58:10.461Z INFO  BridgeProbe.ProbeService  probe note: hang starts
+2026-11-19T23:58:10.461Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-19T23:58:30.366Z WARN  Spar.Host  [c4dceba8] The page is not responding: it did not answer three heartbeats (15.0 s without an answer).
+2026-11-19T23:58:30.367Z INFO  BridgeProbe.ProbeService  probe hang: Unresponsive after 15.0 s
+2026-11-19T23:58:30.383Z INFO  Spar.Host  [c4dceba8] hung-page dialog shown (Wait / Reload page) at 20123.9 ms
+2026-11-19T23:58:31.383Z WARN  Spar.Host  [c4dceba8] Development trigger: the prompt is answered with its second button.
+2026-11-19T23:58:31.383Z INFO  Spar.Host  [c4dceba8] hung-page dialog: Reload page, after 16.0 s at 21124.2 ms
+2026-11-19T23:58:31.383Z INFO  BridgeProbe.ProbeService  probe hang: Reloaded after 16.0 s
+2026-11-19T23:58:31.385Z INFO  Spar.Host  [c4dceba8] Bridge: document a62fbd32f435f7fb closed (web process ended).
+2026-11-19T23:58:31.385Z INFO  Spar.Host  [c4dceba8] web process ended by the host at 21126 ms
+2026-11-19T23:58:31.391Z INFO  Spar.Host  [c4dceba8] hung page reloaded at 21132 ms
+2026-11-19T23:58:31.391Z INFO  Spar.Host  [c4dceba8] web process of the hung page ended at 21132.1 ms
+2026-11-19T23:58:31.441Z INFO  Spar.Host  [c4dceba8] Bridge: document c9c6ae73c39af1cb opened.
+2026-11-19T23:58:31.441Z INFO  Spar.Host  [c4dceba8] Heartbeat armed for the new document.
+2026-11-19T23:58:31.451Z INFO  Spar.Host  [c4dceba8] Bridge: document c9c6ae73c39af1cb reported ui-ready.
+2026-11-19T23:58:31.451Z INFO  BridgeProbe.ProbeService  probe note: first document c9c6ae73c39af1cb (reloaded)
+2026-11-19T23:58:31.452Z INFO  BridgeProbe.ProbeService  probe note: plan done
+2026-11-19T23:58:31.472Z INFO  Spar.Host  [c4dceba8] close requested (User) at 21213.3 ms
+2026-11-19T23:58:31.474Z INFO  Spar.Host  [c4dceba8] close request 1 sent to the page (user) at 21214.8 ms
+2026-11-19T23:58:31.477Z INFO  Spar.Host  [c4dceba8] close request 1: the page answered Close at 21218.3 ms
+2026-11-19T23:58:31.480Z INFO  Spar.Host  [c4dceba8] closing at 21221.3 ms
+2026-11-19T23:58:31.481Z INFO  Spar.Host  [c4dceba8] Heartbeat: 4 ticks, 2 pings, longest tick on the UI thread 18.078 ms.
+2026-11-19T23:58:31.482Z INFO  Spar.Host  [c4dceba8] page close work done at 21223.1 ms
+2026-11-19T23:58:31.482Z INFO  Spar.Host  [c4dceba8] Bridge: document c9c6ae73c39af1cb closed (window closing).
+2026-11-19T23:58:31.482Z INFO  Spar.Host  [c4dceba8] calls stopped at 21223.4 ms
+2026-11-19T23:58:31.482Z INFO  Spar.Host  [c4dceba8] calls settled at 21223.4 ms
+2026-11-19T23:58:31.484Z INFO  Spar.Host  [c4dceba8] window destroyed at 21225.3 ms
+2026-11-19T23:58:31.510Z INFO  Spar.Host  [c4dceba8] web processes exited after 25 ms at 21251.4 ms
+2026-11-19T23:58:31.514Z INFO  Spar.Host  [c4dceba8] services disposed at 21254.5 ms
+2026-11-19T23:58:31.514Z INFO  Spar.Host  [c4dceba8] exit 0 at 21255.1 ms

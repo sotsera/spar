@@ -18,7 +18,7 @@ public sealed class HostTests
     [Fact]
     public async Task Closing_while_the_controller_is_created_ends_cleanly()
     {
-        WindowSupport.SkipUnlessSupported();
+        await WindowSupport.SkipUnlessSupportedAsync();
         var phases = new ConcurrentQueue<string>();
         var requested = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         await using var app = await SparTestApp.StartAsync<Program>(options =>
@@ -136,6 +136,28 @@ public sealed class HostTests
 
         // The window's own check waited for them; each process the page had is gone.
         Assert.All(processes, process => Assert.True(process.HasExited, $"renderer {process.Id} still runs"));
+    }
+
+    [Fact]
+    public async Task A_lost_renderer_is_recovered_once_and_the_page_connects_again()
+    {
+        await using var host = await HostPage.OpenAsync();
+        var documents = host.Page.Navigations();
+        var renderers = await host.App.Window.RendererProcessesAsync();
+        Assert.NotEmpty(renderers);
+
+        foreach (var id in renderers)
+        {
+            using var process = System.Diagnostics.Process.GetProcessById(id);
+            process.Kill();
+        }
+
+        // The host reloads the page once in a new renderer; its bridge connects again and calls work.
+        await Waits.UntilAsync(() => host.Page.Navigations() > documents, TimeSpan.FromSeconds(15), "the page to load again");
+        await Expect(host.Status).ToHaveTextAsync("Ready");
+        await host.ClickAsync("Echo");
+        await Expect(host.Status).ToHaveTextAsync("Echo: hello");
+        Assert.Empty(host.Page.PageErrors);
     }
 
     /// <summary>A window opened afterwards on the same shared environment loads and calls its backend.</summary>

@@ -1,0 +1,8 @@
+# Ubuntu 24.04 with WebKitGTK 6.0, Mesa, Xvfb and the Python GI bindings, for the GPU-detection and connect-src probes.
+# Build (from the spike folder): docker build -t spar-spike-linux-gpu-csp:ubuntu24.04 -f docker/Dockerfile.ubuntu docker/
+FROM ubuntu:24.04
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+      libwebkitgtk-6.0-4 gir1.2-webkit-6.0 gir1.2-gtk-4.0 gir1.2-soup-3.0 python3-gi xvfb xauth dbus dbus-bin \
+      bubblewrap xdg-dbus-proxy libegl1 libegl-mesa0 libgl1-mesa-dri mesa-libgallium libgles2 libopengl0 libgl1 \
+      libdrm2 mesa-utils-bin ca-certificates \
+    && rm -rf /var/lib/apt/lists/*

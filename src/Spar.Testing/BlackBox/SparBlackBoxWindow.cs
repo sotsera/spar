@@ -3,9 +3,10 @@ using System.Runtime.InteropServices;
 namespace Spar.Testing;
 
 /// <summary>
-/// A launched app's main window through UI Automation (<c>app.Window</c>): its title, and locators named as in the
-/// window tests' page API (<c>GetByRole</c>, <c>GetByText</c>), resolved against the window's UI Automation tree, the
-/// page's elements included, which the browser exposes with their ARIA roles and accessible names. Actions go through
+/// A launched app's main window through the accessibility API (<c>app.Window</c>; UI Automation on Windows, AT-SPI on
+/// Linux): its title, and locators named as in the window tests' page API (<c>GetByRole</c>, <c>GetByText</c>), resolved
+/// against the window's accessibility tree, the page's elements included, which the browser exposes with their ARIA
+/// roles and accessible names. Actions go through
 /// UI Automation's patterns (<see cref="SparBlackBoxLocator.InvokeAsync"/>), never through input: nothing reaches the
 /// user's mouse or keyboard. Every call reads the window as it is now.
 /// </summary>
@@ -163,6 +164,11 @@ public sealed partial class SparBlackBoxLocator
             catch (COMException exception)
             {
                 // The element went away between finding and reading it: look again.
+                last = exception.Message;
+            }
+            catch (DBusException exception) when (exception.IsGone)
+            {
+                // The same on Linux: its node went between two AT-SPI calls.
                 last = exception.Message;
             }
 

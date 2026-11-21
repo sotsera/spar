@@ -1,3 +1,4 @@
+using Spar.Hosting;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
@@ -14,38 +15,10 @@ namespace Spar.Windows;
 internal static class ExternalLinks
 {
     /// <summary>The longest address handed to the system: longer ones are refused, not cut.</summary>
-    public const int MaxLength = 2_048;
+    public const int MaxLength = NavigationRules.MaxExternalLength;
 
-    /// <summary>Why <paramref name="address"/> may not be opened outside the app; null when it may.</summary>
-    public static string? Refusal(string address)
-    {
-        if (address.Length == 0 || address.Length > MaxLength)
-        {
-            return $"the address is empty or longer than {MaxLength} characters";
-        }
-
-        foreach (var character in address)
-        {
-            if (character <= ' ' || character == '"' || character == '\x7f')
-            {
-                return "the address has spaces, quotes or control characters";
-            }
-        }
-
-        var colon = address.IndexOf(':', StringComparison.Ordinal);
-        var scheme = colon <= 0 ? "" : address[..colon].ToLowerInvariant();
-        switch (scheme)
-        {
-            case "http" or "https" when PageServer.IsAppOrigin(address):
-                return "the app's own pages do not open in new windows";
-            case "http" or "https":
-                return HttpRefusal(address, colon);
-            case "mailto" or "tel":
-                return colon + 1 < address.Length ? null : "the address is empty";
-            default:
-                return $"only http, https, mailto and tel open outside the app, not '{(scheme.Length == 0 ? "?" : scheme)}:'";
-        }
-    }
+    /// <summary>Why <paramref name="address"/> may not be opened outside the app; null when it may (the core's rule).</summary>
+    public static string? Refusal(string address) => NavigationRules.ExternalRefusal(address, PageServer.Origin);
 
     /// <summary>Opens an allowed address with the system's handler, on a thread of its own; failures are logged.</summary>
     public static void Open(string address, HostLog log)
@@ -53,25 +26,6 @@ internal static class ExternalLinks
         var thread = new Thread(() => Execute(address, log)) { IsBackground = true, Name = "Spar external link" };
         thread.SetApartmentState(ApartmentState.STA);
         thread.Start();
-    }
-
-    /// <summary><c>scheme://host…</c> with a host and no <c>user:password@</c> before it.</summary>
-    private static string? HttpRefusal(string address, int colon)
-    {
-        if (string.CompareOrdinal(address, colon, "://", 0, 3) != 0)
-        {
-            return "the address has no host";
-        }
-
-        var authorityStart = colon + 3;
-        var authorityEnd = address.IndexOfAny(['/', '?', '#'], authorityStart);
-        var authority = authorityEnd < 0 ? address[authorityStart..] : address[authorityStart..authorityEnd];
-        if (authority.Length == 0)
-        {
-            return "the address has no host";
-        }
-
-        return authority.Contains('@', StringComparison.Ordinal) ? "the address carries credentials" : null;
     }
 
     private static unsafe void Execute(string address, HostLog log)

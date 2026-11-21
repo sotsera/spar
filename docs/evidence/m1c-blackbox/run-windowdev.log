@@ -1,0 +1,34 @@
+STEP windowdev on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+Running tests from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxHangTests.The_automated_mode_shows_no_dialog_and_closes_a_hung_page_without_asking
+  Needs the Development build's automated mode.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxHangTests.Wait_brings_the_dialog_back_after_4_8_16_then_32_heartbeats
+  Needs the Development build's heartbeat interval and scripted answers.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+dbus-daemon[109748]: [session uid=1000 pid=109748] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=109757 comm="/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowT" label="kernel")
+dbus-daemon[109748]: [session uid=1000 pid=109748] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[109844]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=109757 comm="/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowT" label="kernel")
+dbus-daemon[109844]: Successfully activated service 'org.a11y.atspi.Registry'
+skipped Spar.WindowTests.LinuxStartupTests.A_WebKitGTK_older_than_required_is_exit_4_with_a_message
+  The raised minimum is a Development build's variable.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxPageSecurityTests.The_flood_numbers_are_recorded
+  Needs SPAR_LINUX_FLOOD, the flood sizes to measure.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+skipped Spar.WindowTests.LinuxHostTests.A_second_loss_before_the_page_is_ready_again_ends_the_app_with_exit_code_5
+  Needs the Development build's automated mode: a Production app shows its message and waits.
+  from /var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64)
+/var/tmp/spar-m1c-blackbox/repo/tests/Spar.WindowTests/bin/Development/Debug/net11.0/linux-x64/Spar.WindowTests.dll (net11.0|x64) passed [+62/x0/?5] (4m 33s 524ms)
+
+  In process file artifacts produced:
+    - /var/tmp/spar-m1c-blackbox/repo/artifacts/test-results/Spar.WindowTests/<user>_<machine>_2026-11-20_23_17_46.081837.trx
+
+Test run summary: Passed!
+  total: 67
+  failed: 0
+  succeeded: 62
+  skipped: 5
+  duration: 4m 39s 767ms
+STEP exit 0 in 280119 ms: dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- --filter-trait App=BridgeProbe
+processes left by the tests: 0
