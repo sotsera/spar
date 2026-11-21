@@ -8,6 +8,10 @@
 # in /dev/shm (WebKit's sandbox refuses one under /var/tmp). The SDK and NuGet packages are eng/wsl's shared cache.
 # Windows come up on an Xvfb of this script's own, never on WSLg's display.
 set -uo pipefail
+# No core dumps unless SPAR_CORE_DUMPS=1 (decision "Linux test runs write no core dumps"): WSL and Docker Desktop pipe a
+# crashed process's core to Windows' %TEMP%\wsl-crashes, about 6 GB for each of our apps, and a piped core_pattern
+# ignores a limit of 0; a limit of exactly 1 byte turns it off. Children inherit it.
+[ "${SPAR_CORE_DUMPS:-}" = 1 ] || prlimit --core=1 --pid $$
 source_repo=$(cd "$(dirname "$0")/../../.." && pwd)
 base=/var/tmp/spar-m1c-host
 repo=$base/repo

@@ -12,6 +12,10 @@
 # address with a stub handler it writes into the app run's own XDG folders, and first checks that GIO picks the stub.
 # `explore <plan> [seconds]` runs the Development probe once with that plan and prints its log, for looking around.
 set -uo pipefail
+# No core dumps unless SPAR_CORE_DUMPS=1 (decision "Linux test runs write no core dumps"): WSL and Docker Desktop pipe a
+# crashed process's core to Windows' %TEMP%\wsl-crashes, about 6 GB for each of our apps, and a piped core_pattern
+# ignores a limit of 0; a limit of exactly 1 byte turns it off. Children inherit it.
+[ "${SPAR_CORE_DUMPS:-}" = 1 ] || prlimit --core=1 --pid $$
 source_repo=$(cd "$(dirname "$0")/../../.." && pwd)
 base=/var/tmp/spar-m1c-page-security
 repo=$base/repo

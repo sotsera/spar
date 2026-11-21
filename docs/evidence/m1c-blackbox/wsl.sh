@@ -14,6 +14,10 @@
 # folder under its data root in the copy's artifacts/linux-homes/black-box/, XDG_RUNTIME_DIR in /dev/shm. DISPLAY and
 # WAYLAND_DISPLAY are unset, so nothing ever opens on WSLg's display. Nothing here touches another run's processes.
 set -uo pipefail
+# No core dumps unless SPAR_CORE_DUMPS=1 (decision "Linux test runs write no core dumps"): WSL and Docker Desktop pipe a
+# crashed process's core to Windows' %TEMP%\wsl-crashes, about 6 GB for each of our apps, and a piped core_pattern
+# ignores a limit of 0; a limit of exactly 1 byte turns it off. Children inherit it.
+[ "${SPAR_CORE_DUMPS:-}" = 1 ] || prlimit --core=1 --pid $$
 source_repo=$(cd "$(dirname "$0")/../../.." && pwd)
 base=/var/tmp/spar-m1c-blackbox
 repo=$base/repo

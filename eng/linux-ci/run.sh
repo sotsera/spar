@@ -28,6 +28,10 @@
 #              OS=Windows, Kind=Measurement and Needs=WritableProcSys; a skipped test fails this step
 #   blackboxdev  the BridgeProbe tests (App=BridgeProbe) on the probe's Development build, without Probe=None; no skips
 set -uo pipefail
+# No core dumps unless SPAR_CORE_DUMPS=1 (decision "Linux test runs write no core dumps"): WSL and Docker Desktop pipe a
+# crashed process's core to Windows' %TEMP%\wsl-crashes, about 6 GB for each of our apps, and a piped core_pattern
+# ignores a limit of 0; a limit of exactly 1 byte turns it off. Children inherit it.
+[ "${SPAR_CORE_DUMPS:-}" = 1 ] || prlimit --core=1 --pid $$
 repo=$HOME/repo
 switch=(sh "$repo/eng/linux-ci/network-switch.sh")
 apps=$HOME/apps
