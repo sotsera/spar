@@ -8,13 +8,18 @@ namespace Spar.Generator.Emit;
 /// Spar.Sdk adds <c>Spar.Windows</c> and <c>Spar.Linux</c> for the app's <c>SparPlatforms</c>, and this interceptor
 /// creates the one for the OS the app runs on. No reflection finds it, and each host sits behind its OS check, which
 /// NativeAOT folds per target, so a Windows executable keeps no Linux host and the other way round. An app that calls
-/// <c>Run</c> through anything else, such as the console harness, references no host at all.
+/// <c>Run</c> through anything else, such as the console harness, references no host at all. A Development build also
+/// references <c>Spar.Loopback</c> (Spar.Sdk adds it to that variant only): its host comes first and is chosen only when
+/// <c>SPAR_HOST</c> names it, and a Production build has neither the reference nor this branch.
 /// </summary>
 internal static class HostEmitter
 {
     public const string WindowsHost = "Spar.Windows.SparWindowsHost";
 
     public const string LinuxHost = "Spar.Linux.SparLinuxHost";
+
+    /// <summary>The loopback host of a Development build, chosen by <c>SPAR_HOST=Loopback</c> (plan section 4).</summary>
+    public const string LoopbackHost = "Spar.Loopback.SparLoopbackHost";
 
     /// <summary>Spar's stand-in on a Windows too old for the host (below 1809): it reports "OS too old", exit 7.</summary>
     public const string UnsupportedWindowsHost = "Spar.Runtime.UnsupportedWindowsHost";
@@ -40,6 +45,15 @@ internal static class HostEmitter
         code.Line("public static int Run(this global::Spar.SparApp app) => app.Run(Host());")
             .Line()
             .Open("private static global::Spar.Runtime.ISparHost? Host()");
+        if (hosts.Loopback)
+        {
+            code.Line("// A Development build: SPAR_HOST=Loopback (the Loopback launch profile) serves the page to a browser instead.")
+                .Open($"if (global::{LoopbackHost}.Chosen() is {{ }} loopback)")
+                .Line("return loopback;")
+                .Close()
+                .Line();
+        }
+
         if (hosts.Windows)
         {
             code.Open("if (global::System.OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))")

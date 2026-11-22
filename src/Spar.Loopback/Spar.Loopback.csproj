@@ -2,7 +2,8 @@
   <!--
     The loopback host (plan section 2c): the page in an ordinary browser, its bridge over HTTP on 127.0.0.1. Compiled
     only into development and test variants, never into Production (plan section 3c, "No loopback in Production").
-    In M1a only the test host's Browser surface (Spar.Testing.Browser) uses it.
+    The test host's Browser surface (Spar.Testing.Browser) uses it, and so does an app's Development build, which
+    Spar.Sdk gives it at build time for SPAR_HOST=Loopback (the Loopback launch profile; M1d step 2).
   -->
   <PropertyGroup>
     <IsPackable>true</IsPackable>

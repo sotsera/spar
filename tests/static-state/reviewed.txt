@@ -205,7 +205,9 @@ Spar.Linux | Spar.Linux.Testing.XInput.PunctuationCodes | readonly | A frozen di
 Spar.Linux | Spar.Linux.WindowTheme.s_fixed | writable | A counter changed only with Interlocked.Increment, so each test window's fixed theme gets a CSS class of its own; only WindowTheme.Fixed, which the test host alone calls, changes it.
 
 # Spar.Loopback (test and development variants only)
-# No static fields besides compiler data.
+Spar.Loopback | Spar.Loopback.LoopbackApp.PortWait | readonly | A TimeSpan constant.
+Spar.Loopback | Spar.Loopback.LoopbackApp.TouchInterval | readonly | A TimeSpan constant.
+Spar.Loopback | Spar.Loopback.LoopbackSession.SessionGap | readonly | A TimeSpan constant.
 
 # Spar.Testing (the test host)
 Spar.Testing | Spar.Testing.TestDataRoots.Base | readonly | A Lazy of the run's base folder under artifacts/, computed once, thread-safe; the same for every app in the run by design.

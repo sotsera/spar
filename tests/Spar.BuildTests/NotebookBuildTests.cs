@@ -99,6 +99,8 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         var runtime = File.ReadAllBytes(Assert.Single(Directory.GetFiles(testOutput, "Spar.dll", SearchOption.AllDirectories)));
         Assert.True(Contains(loopback, "LoopbackHost", Encoding.UTF8), "The control search missed LoopbackHost.");
         Assert.True(Contains(loopback, "/_spar/channel", Encoding.Unicode), "The control search missed /_spar/channel.");
+        Assert.True(Contains(loopback, "SparLoopbackHost", Encoding.UTF8), "The control search missed SparLoopbackHost.");
+        Assert.True(Contains(loopback, "spar-loopback.json", Encoding.Unicode), "The control search missed spar-loopback.json.");
         Assert.True(Contains(runtime, "SparTestSession", Encoding.UTF8), "The control search missed SparTestSession.");
         Assert.True(Contains(runtime, "DevServerProxy", Encoding.UTF8), "The control search missed DevServerProxy.");
         Assert.True(Contains(runtime, "spar-dev-server.json", Encoding.Unicode), "The control search missed spar-dev-server.json.");

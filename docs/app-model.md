@@ -22,6 +22,8 @@ SqlTool/
   SqlTool.csproj            <Project Sdk="Spar.Sdk">, with <SparAppId>com.example.SqlTool</SparAppId>
                             and <SparPlatforms>windows;linux</SparPlatforms>
   Program.cs
+  Properties/
+    launchSettings.json     the launch profiles: Desktop (the default, first) and Loopback
   Connections/              one folder per feature
   CopyJobs/
   frontend/                 an ordinary Vite + React + TypeScript project
@@ -41,6 +43,20 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 - **A Debug build serves the page from the frontend's Vite development server,** through the app's own origin, so hot reload works with the policy, storage and secure context of a Release build (decisions "Debug serves Vite through the app's own origin" and "M1d step 1's shape"). The app starts it with the frontend's own `dev` script (`npm run dev`, which runs `vite`, with the Spar Vite plugin in `vite.config.ts`), or reuses the one it started before, and leaves it running for the next start; Vite's output goes to the app's log under `Spar.DevServer`. If it fails or stops, the window shows what happened with Vite's last output and a Retry button, and the app keeps running. Without Node.js, the app stops with a message saying how to install it.
   - `SPAR_DEV_SERVER_URL`, in the environment, or `<SparDevServerUrl>`, in the project (read when the app is built), names a development server the app did not start, such as one an orchestrator or the developer runs: the app uses it and starts none. It must be `http://` on this machine (`127.0.0.1`, `[::1]` or `localhost`) with its port, such as `http://127.0.0.1:5173`; the variable wins over the property.
   - `-p:SparDevServer=false` embeds the page in a Debug build through a Release build's code, without hot reload.
+- **A Debug build runs in its window, or in a browser** (decisions "M1d step 2's shape: loopback in the development loop" and "Loopback in the development loop (implementation record; choices for review)"). `dotnet run` uses the first launch profile, `Desktop`, the window; `dotnet run -lp Loopback` sets `SPAR_HOST=Loopback`, and the app serves its page on `127.0.0.1` to an ordinary browser, with the same backend, page security and development server, and no window. The app's own command-line arguments stay its own. A Release build has no loopback host and ignores `SPAR_HOST`. If the window cannot start (on Linux, no display), the app stops with a message that names `dotnet run -lp Loopback`; it never switches by itself.
+
+  ```json
+  {
+    "profiles": {
+      "Desktop": { "commandName": "Project" },
+      "Loopback": { "commandName": "Project", "environmentVariables": { "SPAR_HOST": "Loopback" } }
+    }
+  }
+  ```
+
+  - The app prints the page's address with its token, `http://127.0.0.1:<port>/#token=…`, and logs it. The first run of a dev session opens the default browser there; later runs keep the port and the token, so a restart does not open another tab: the open page waits for the backend and reloads by itself, once. A call that was running when the backend stopped ends as `transport` / `lost`, and nothing is sent again.
+  - The port and the token are recorded in the project's `obj/spar-loopback.json`, readable by its owner only. A dev session ends when no run has held that record for 4 hours; the next run then takes a new token and opens the browser again, and a page left open from before is told to open the new address.
+  - `SPAR_LOOPBACK_PORT` and `SPAR_LOOPBACK_TOKEN` (base64url of 16 to 48 bytes) set the address for an orchestrator: no record, and no browser. `SPAR_LOOPBACK_BROWSER` names the program that opens the page (`browser --profile dev {url}`), or `none`.
 - The generated client lives under `obj/spar/client/` and is never written into `node_modules`.
 - Each contract is a subpath of `@spar/app`: `@spar/app/copyJobs`, `@spar/app/connections`. The SDK is `@spar/app/sdk`.
 - A test project names the app it tests with `SparTestedApplication` (decision "SparTestedApplication: the test project names its app"), so the app builds in the Test variant, with the test host and the typed test clients. A plain `ProjectReference` to the app fails the build (SPAR121); other projects, such as a library, are referenced as usual. An end-to-end project also sets `<SparBrowserTests>true</SparBrowserTests>` for the Browser surface.

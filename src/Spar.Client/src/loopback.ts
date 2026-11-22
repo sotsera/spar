@@ -4,6 +4,7 @@
 // then reach the host in the order they were given, and a long call never holds one of the browser's six connections.
 import type { BridgeChannel } from "./connection.js";
 import { decode } from "./protocol.js";
+import { awaitRestart, runHeader, type RestartPage } from "./restart.js";
 
 const tokenKey = "spar.token";
 
@@ -15,6 +16,11 @@ export interface LoopbackOptions {
   readonly token?: string;
   /** For tests: the `fetch` to use. */
   readonly fetch?: typeof fetch;
+  /**
+   * For tests: what waiting for a dev session's next run uses (`restart.ts`), or `false` never to wait. A page whose
+   * channel names its backend's run (a dev session's `X-Spar-Run` header) waits for the next run and reloads.
+   */
+  readonly restart?: RestartPage | false;
 }
 
 /** What `takeToken` needs from the page; the browser's own objects by default. */
@@ -28,7 +34,7 @@ export interface TokenPage {
 export function loopbackChannel(options: LoopbackOptions = {}): BridgeChannel {
   const origin = options.origin ?? location.origin;
   const token = options.token ?? takeToken();
-  return new LoopbackChannel(origin, token, options.fetch ?? globalThis.fetch.bind(globalThis));
+  return new LoopbackChannel(origin, token, options.fetch ?? globalThis.fetch.bind(globalThis), options.restart);
 }
 
 /**
@@ -67,12 +73,16 @@ class LoopbackChannel implements BridgeChannel {
   #opening = false;
   #posting = false;
   #closed = false;
+  readonly #restart: RestartPage | false | undefined;
   #doc: string | undefined;
+  #run: string | undefined;
+  #openedAt: number | undefined;
 
-  constructor(origin: string, token: string, fetchFunction: typeof fetch) {
+  constructor(origin: string, token: string, fetchFunction: typeof fetch, restart: RestartPage | false | undefined) {
     this.#origin = origin;
     this.#token = token;
     this.#fetch = fetchFunction;
+    this.#restart = restart;
   }
 
   listen(received: (message: string) => void, closed: () => void): void {
@@ -109,6 +119,8 @@ class LoopbackChannel implements BridgeChannel {
       this.#close();
       return;
     }
+
+    this.#run = response.headers.get(runHeader) ?? undefined;
 
     await this.#read(response.body);
     this.#close();
@@ -152,6 +164,7 @@ class LoopbackChannel implements BridgeChannel {
       const decoded = decode(message);
       if (decoded.ok && decoded.message.type === "open") {
         this.#doc = decoded.message.doc;
+        this.#openedAt = this.#now();
         void this.#post();
       }
     }
@@ -206,6 +219,17 @@ class LoopbackChannel implements BridgeChannel {
     this.#queue.length = 0;
     this.#stop.abort();
     this.#closedListener?.();
+
+    // A dev session's backend went away: wait for its next run and reload. Only a document that connected, so a page
+    // whose channel never opened never reloads.
+    if (this.#run !== undefined && this.#openedAt !== undefined && this.#restart !== false) {
+      const lost = { origin: this.#origin, token: this.#token, run: this.#run, openedAt: this.#openedAt };
+      void (this.#restart === undefined ? awaitRestart(lost) : awaitRestart(lost, this.#restart));
+    }
+  }
+
+  #now(): number {
+    return this.#restart === undefined || this.#restart === false ? Date.now() : this.#restart.now();
   }
 }
 

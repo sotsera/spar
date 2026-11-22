@@ -103,6 +103,8 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 
 - **A feature switch read into a local of an async method is not folded:** `var shared = SparTestSession.IsSupported && …; … shared ? await A() : await B()` kept `A` and its state machine (451 B of test-only code) in the Production Notebook, because the local lives in the state machine. Read the switch in each condition itself. (M1b step 8a)
 - **A namespace is not one string in a NativeAOT image:** the metadata stores `Spar.Windows.Testing` in parts, so a boundary marker of a dotted namespace never matches, even in a test image that has the namespace. Use type names (UTF-8) and literals (UTF-16). (M1b step 8a)
+- **NuGet's restore sees each project once, by path:** it walks references without their `AdditionalProperties`, with the restore's own global properties, and every Spar variant shares `obj/project.assets.json`. A reference conditioned on `SparVariant` would make the variants' restores differ, so a Release build or a black-box publish rewrites the file a Debug build uses. Add a variant-only reference in a target, outside restore (`MSBuildIsRestoring`), as `SparLoopbackReference` does. (M1d step 2)
+- **A `FrameworkReference` added in a target does not rewrite an existing `runtimeconfig.json`:** its input hash covers runtime configuration options, the runtime identifier and a few properties, not the frameworks, so an incremental build kept the file without `Microsoft.AspNetCore.App`. Spar's loopback adds a runtime configuration option in the same variant, which changes the hash. (M1d step 2)
 
 ## dotnet watch and the development loop
 
@@ -118,6 +120,9 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 - **Vite's client pings a lost server from a `SharedWorker` made from a `blob:` address,** which Trusted Types refuse (`trusted-types-sink`, "SharedWorker constructor"), and `worker-src 'self'` would refuse too: one violation and an unhandled rejection in the page whenever the development server dies, on WebView2 and WebKitGTK. Harmless in Spar's Debug builds, whose host takes the window to its error page about a second later. (M1d step 1)
 - **Tailwind rebuilds the stylesheet on every component edit:** each Fast Refresh of a `.tsx` file in the Notebook also sent a CSS update (`hmr update /src/components/Sidebar.tsx, /src/styles.css`), and a CSS edit's stylesheet took 29–58 ms to transform. Compare HMR numbers between apps with that in mind. (M1d step 1)
 - **npm prints its update notice into a server's output;** `npm_config_update_notifier=false` in the launched server's environment stops it. (M1d step 1)
+- **Killing the app's process tree also kills the Vite server it started:** Vite runs under the app's `cmd.exe` and npm (Windows `taskkill /T`; a process-group signal on Linux does the same), so a "restart" that ends the tree loses the server that step 1 keeps across restarts, and the page then gets Vite's lost-server `SharedWorker` violation. End the app's own process. (M1d step 2)
+- **`dotnet watch --non-interactive` (SDK 11.0.100) does not restart for every edit you would expect:** a new optional parameter on a private method was applied by Hot Reload, and an edited project file and a static method made an instance one were both "No managed code changes to apply". A test that needs a restart cannot rely on these edits. (M1d step 2)
+- **Spar takes `LOCALAPPDATA` only when it is a full path:** a relative value silently falls back to the user's real folder, and npm, started in the frontend folder, then writes its cache relative to it (`frontend/<value>/npm-cache`). Give test runs an absolute root. (M1d step 2)
 
 ## npm, Vite and TypeScript
 
@@ -633,6 +638,8 @@ Entries tied to one host's API stay in that host's section. See also, in "Window
 - **Disposing an `HttpClient` response with an unread, endless body does not close the connection at once:** the handler drains it for up to 2 s, hoping to reuse the connection, so the server saw the channel close late. A test that stands in for a page going away cancels a pending read instead, which aborts the connection. (M1a loopback)
 - **Playwright's `EvaluateAsync` has no deadline:** a page promise that never settles (a call the host dropped) hangs the test run. Give every evaluation its own deadline. (M1a loopback)
 - **A loopback listener in a test also receives connections from other apps on the same origin** (other WebView2 apps' preconnects). Attribute connections by process. (`desktop-origin`)
+- **A page waiting for its backend fills the console:** Chromium logs every failed `fetch` as "Failed to load resource: net::ERR_CONNECTION_REFUSED", once per look while the loopback backend is down; a clean-console check must allow these across a restart. Unlike .NET's 2 s on Windows, Chromium's refused loopback connections failed in well under a second on both OSes. (M1d step 2)
+- **A stopping Kestrel can still answer on a kept-alive connection:** a page that asks "which run is this?" right after its channel closed may reach the run that is shutting down and take it for the live one. The dev session's probe answers 503 once the host is stopping. (M1d step 2, by design; not reproduced)
 - **A heartbeat armed at `NavigationCompleted` misses hangs during load,** and one armed on a page without the injected script reports a healthy page after 20 s. Arm at document creation and only with the script. (`page-heartbeat`)
 
 ## Page security (CSP, headers, permissions)

@@ -46,6 +46,10 @@ internal static class ProductionBoundary
         // finds, the proxy and the error page, and the WebView2 request headers only the proxy reads.
         "DevServerSession", "DevServerLauncher", "DevServerOutput", "DevServerState", "DevServerProxy", "DevErrorPage",
         "DevServerOutcome", "ICoreWebView2HttpRequestHeaders",
+
+        // Loopback in the development loop (M1d step 2): the host Spar.Sdk adds to Development builds only, its run, its
+        // dev session and the browser opener.
+        "SparLoopbackHost", "LoopbackApp", "LoopbackSession", "LoopbackAddress", "BrowserOpener",
     ];
 
     private static readonly string[] Literals =
@@ -72,6 +76,11 @@ internal static class ProductionBoundary
         "SPAR_DEV_SERVER_URL", "SPAR_DEV_SERVER_FILE", "spar-dev-server.json", "spar-dev-server.log",
         "Spar.DevServer.Frontend", "spar-dev-nonce", "/__spar/dev-server", "/_spar/dev-server/",
         "The page cannot come from the development server", "npm run dev",
+
+        // Loopback in the development loop (M1d step 2): its variables, its record and runtime configuration value, the
+        // dev session's probe and header, and the Linux no-display hint of Development builds.
+        "SPAR_HOST", "SPAR_LOOPBACK_PORT", "SPAR_LOOPBACK_TOKEN", "SPAR_LOOPBACK_BROWSER", "spar-loopback.json",
+        "Spar.Loopback.SessionFile", "/_spar/session", "X-Spar-Run", "-lp Loopback",
     ];
 
     /// <summary>

@@ -67,7 +67,8 @@ public sealed class SparGenerator : IIncrementalGenerator
         var hosts = context.CompilationProvider.Select(static (compilation, _) =>
             new HostsModel(
                 compilation.GetTypeByMetadataName(HostEmitter.WindowsHost) is not null,
-                compilation.GetTypeByMetadataName(HostEmitter.LinuxHost) is not null));
+                compilation.GetTypeByMetadataName(HostEmitter.LinuxHost) is not null,
+                compilation.GetTypeByMetadataName(HostEmitter.LoopbackHost) is not null));
         var entry = context.CompilationProvider.Select(static (compilation, cancellationToken) => EntryPoint(compilation, cancellationToken));
 
         // The app id the build checked (SparAppId, plan section 3c), for the catalog; empty when the project has none.

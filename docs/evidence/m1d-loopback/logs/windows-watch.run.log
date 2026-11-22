@@ -1,0 +1,54 @@
+    196.0 watch: dotnet watch 🔥 Hot reload enabled. For a list of supported edits, see https://aka.ms/dotnet/hot-reload.
+    196.2 watch: dotnet watch 💡 Press Ctrl+R to restart.
+    403.9 watch:   Determining projects to restore...
+   1126.3 watch:   Restored <repo>\samples\Notebook\Notebook.csproj (in 628 ms).
+   1126.5 watch:   5 of 6 projects are up-to-date for restore.
+   1204.7 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+   1252.4 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+   1252.5 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+   1252.6 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+   1298.2 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+   1331.8 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+   1520.5 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+   1522.0 watch: 
+   1522.1 watch: Build succeeded.
+   1522.1 watch:     0 Warning(s)
+   1522.2 watch:     0 Error(s)
+   1522.2 watch: 
+   1522.3 watch: Time Elapsed 00:00:01.16
+   1839.3 watch: dotnet watch ⌚ Loading projects ...
+   2264.3 watch: dotnet watch ⌚ Loaded 6 project(s) in 0,4s.
+   2732.3 watch: dotnet watch ⚠ msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+   2732.5 watch: dotnet watch ⚠ msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+   3208.2 watch: Using launch settings from samples\Notebook\Properties\launchSettings.json...
+   3528.1 watch: spar info +10.5 ms: [de23aa1b] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-loopback\watch\local\com.example.Notebook.Development
+   3539.5 watch: spar info +22.9 ms: [de23aa1b] The development server recorded at http://127.0.0.1:55480 has ended: a new one starts.
+   3548.3 watch: spar info +31.7 ms: [de23aa1b] services built at 29.5 ms
+   3553.5 watch: dotnet watch ⌚ Waiting for changes
+   3556.9 watch: spar info +40.3 ms: [de23aa1b] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 44808), port 58268.
+   3582.8 watch: spar info +66.2 ms: [de23aa1b] loopback listening at 66.2 ms
+   3585.6 watch: Spar: the page is at http://127.0.0.1:58269/#token=fQHfrbP_plI9tpHo1Fp9WuvI19fXIvIp (a new dev session). Ctrl+C stops the app.
+   3585.8 watch: spar info +69.1 ms: [de23aa1b] Loopback page at http://127.0.0.1:58269/#token=fQHfrbP_plI9tpHo1Fp9WuvI19fXIvIp (a new dev session).
+   3593.6 watch: spar info +77.0 ms: [de23aa1b] <user>\AppData\Local\Author Software\nvm\.nodejs\node.exe was asked to open the page.
+   3980.9 watch: > dev
+   3981.1 watch: > vite
+   4265.4 watch: spar info +748.9 ms: [de23aa1b] Development server ready at http://127.0.0.1:58268 in 725 ms (Vite pid 63752).
+   4311.3 watch:   VITE v8.3.8  ready in 185 ms
+   4311.5 watch:   ?  Local:   http://127.0.0.1:58268/
+   4653.3 watch: spar info +1136.7 ms: [de23aa1b] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:58269 ws://127.0.0.1:58268; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   4890.3 run: page console debug: [vite] connecting...
+   4913.1 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+   4934.8 run: page load 1
+   4965.5 run: page console debug: [vite] connected.
+   4966.9 watch: spar info +1450.4 ms: [de23aa1b] ui-ready at 1450.3 ms
+   5005.1 run: PASS the page works on the first run
+   5005.4 run: rude edit written: Format is no longer static
+   5073.1 watch: dotnet watch ⌚ File updated: .\samples\Notebook\Pages\MarkdownPageStore.cs
+   5147.4 watch: dotnet watch ⌚ No managed code changes to apply.
+ 125008.1 run: FAIL Error: no /Spar: the page is at (http:\/\/127\.0\.0\.1:(\d+)\/#token=([A-Za-z0-9_-]+)) \(([^)]*)\)/ within 120000 ms
+    at waitFor (file:///<repo>/docs/evidence/m1d-loopback/watch-run.mjs:66:9)
+    at async file:///<repo>/docs/evidence/m1d-loopback/watch-run.mjs:87:18
+ 125023.5 watch: dotnet watch ⌚ File updated: .\samples\Notebook\Pages\MarkdownPageStore.cs
+ 125025.0 watch: dotnet watch ⌚ No managed code changes to apply.
+ 125529.9 run: vite 63752 ended
+ 125530.0 run: 1 failures

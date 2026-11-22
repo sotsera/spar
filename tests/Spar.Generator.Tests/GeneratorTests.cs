@@ -98,6 +98,37 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void A_development_build_with_the_loopback_host_asks_it_first()
+    {
+        const string Hosts = """
+            namespace Spar.Windows
+            {
+                public sealed class SparWindowsHost : Spar.Runtime.ISparHost
+                {
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+
+            namespace Spar.Loopback
+            {
+                public sealed class SparLoopbackHost : Spar.Runtime.ISparHost
+                {
+                    public static Spar.Runtime.ISparHost? Chosen() => null;
+
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+            """;
+
+        var run = GeneratorHarness.Generate(Program + Hosts);
+
+        Assert.Empty(run.Errors);
+        var code = run.Files["Spar.Run.g.cs"];
+        var loopback = code.IndexOf("if (global::Spar.Loopback.SparLoopbackHost.Chosen() is { } loopback)", StringComparison.Ordinal);
+        Assert.InRange(loopback, 0, code.IndexOf("return new global::Spar.Windows.SparWindowsHost();", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public void The_app_id_the_build_checked_reaches_the_catalog()
     {
         var withId = GeneratorHarness.Generate(Program + Fixtures.Catalog, appId: "com.example.SqlTool");

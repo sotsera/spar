@@ -318,6 +318,55 @@
   </ItemGroup>
 
   <!--
+    The loopback host in an app's Development build (plan section 4, "Launch profiles"; M1d step 2): SPAR_HOST=Loopback,
+    which the Loopback launch profile sets, serves the page to a browser on 127.0.0.1 instead of the window, and the
+    generator hands Run that host when Spar.Loopback is referenced. Development only: no other variant references it,
+    or the ASP.NET Core shared framework it runs on (decision "Loopback in the development loop (implementation record;
+    choices for review)").
+
+    The reference is added at build time, after restore, so the restore output every variant shares in obj/ stays the
+    same for all of them: a reference that restore saw only in Development would make a Release build (or a black-box
+    publish) restore again and rewrite it, and leave a Development build with a Production restore. Restore never walks
+    it, so its framework comes as an explicit FrameworkReference here (the targeting pack ships with the .NET SDK). In
+    package mode the package is downloaded in every variant (PackageDownload, which adds no reference and no
+    dependency) and its assembly referenced by path in Development.
+
+    The dev session's record, obj/spar-loopback.json, reaches the run as a runtime configuration value; it is also what
+    makes the runtime configuration's input hash change when a build first references the host, so its frameworks are
+    written again.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparUsesLoopback Condition="'$(SparVariant)' == 'Development'">true</SparUsesLoopback>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <PackageDownload Include="Spar.Loopback" Version="[$(SparSdkVersion)]" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparUsesLoopback)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.Loopback.SessionFile"
+                                    Value="$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'spar-loopback.json'))" />
+  </ItemGroup>
+
+  <Target Name="SparLoopbackReference"
+          BeforeTargets="AssignProjectConfiguration;ProcessFrameworkReferences"
+          Condition="'$(SparUsesLoopback)' == 'true' and '$(MSBuildIsRestoring)' != 'true'">
+    <ItemGroup Condition="'$(SparSourceMode)' == 'true'">
+      <ProjectReference Include="$(SparSourceRoot)Spar.Loopback\Spar.Loopback.csproj"
+                        SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+      <!-- NuGetPackageRoot has no trailing slash when NUGET_PACKAGES sets it without one. -->
+      <Reference Include="$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))spar.loopback\$(SparSdkVersion.ToLowerInvariant())\lib\$(TargetFramework)\Spar.Loopback.dll" Private="true" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'@(FrameworkReference->WithMetadataValue('Identity', 'Microsoft.AspNetCore.App'))' == ''">
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+  </Target>
+
+  <!--
     The WebView2 loader (plan section 3, "Bindings"), from the Microsoft.Web.WebView2 package, used for its native
     files only: linked statically into a NativeAOT executable (DirectPInvoke plus the static library, so the
     publication is one file), and WebView2Loader.dll beside a CoreCLR build or publication. The version comes from

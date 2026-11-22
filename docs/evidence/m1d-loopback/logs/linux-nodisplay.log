@@ -1,0 +1,7 @@
+STEP nodisplay on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, node v24.22.3
+Using launch settings from samples/Notebook/Properties/launchSettings.json...
+spar info +15.7 ms: [5ef83a97] Host started 32 ms after the process.
+spar info +17.6 ms: [5ef83a97] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-loopback/nodisplay/data/com.example.Notebook.Development
+spar fail +20.3 ms: [5ef83a97] Start-up problem NoGraphicalSession: Display. No graphical session: neither DISPLAY nor WAYLAND_DISPLAY is set. Start the app from the desktop. In development, run the page in a browser instead: dotnet run -lp Loopback (or SPAR_HOST=Loopback). Exit code 6.
+STEP exit 6 in 626 ms: dotnet run --no-build --project samples/Notebook -lp Desktop
+exit code above; expected 6
