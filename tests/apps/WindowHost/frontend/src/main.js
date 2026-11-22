@@ -143,13 +143,17 @@ windows.onCloseRequested(async request => {
   }
 });
 
-// Blocks the page's thread for 12 s, a moment after the click, so the click itself returns.
-on("hang", () => setTimeout(() => {
+// Blocks the page's thread for 12 s, in the task right after the click's, so the click itself returns. A message on a
+// channel of its own, not a timer: a test window is offscreen and never activated, where Chromium may delay timers, and
+// a 50 ms timer that fired late let a close request in before the hang (CloseTests, once on CI's Windows runner).
+const hangChannel = new MessageChannel();
+hangChannel.port1.onmessage = () => {
   const end = Date.now() + 12_000;
   while (Date.now() < end) {
     // Busy on purpose: a hung page.
   }
-}, 50));
+};
+on("hang", () => hangChannel.port2.postMessage(null));
 
 // What the key tests read: every keyboard and input event of the Keys field, in order.
 const keys = document.getElementById("keys");
