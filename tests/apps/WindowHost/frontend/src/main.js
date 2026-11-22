@@ -143,20 +143,18 @@ windows.onCloseRequested(async request => {
   }
 });
 
-// Blocks the page's thread for 12 s, a moment after the click, so whatever started it returns first. Then the page
-// tells the backend "hang started" and hangs in the next task: the note is sent synchronously, before the loop, and a
-// test waits for it instead of guessing a delay (HostPage.HangAsync, which clicks from script: a trusted click waits
-// for the renderer's acknowledgement, which a hang that starts first holds for the 12 s).
-const hangChannel = new MessageChannel();
-hangChannel.port1.onmessage = () => {
+// Blocks the page's thread for 12 s, a moment after the click, so whatever started it returns first. The page tells the
+// backend "hang started" and hangs in the same task: the call's message leaves synchronously, before the loop, so no
+// host message (a close request) can run between the note and the hang. A test waits for the note instead of guessing
+// a delay (HostPage.HangAsync, which clicks from script: a trusted click waits for the renderer's acknowledgement,
+// which a hang that starts first holds for the 12 s). Hanging in a later task, through a MessageChannel, let a close
+// request delivered after the note run the guard first (Linux NativeAOT lane on CI).
+on("hang", () => setTimeout(() => {
+  host.note("hang started");
   const end = Date.now() + 12_000;
   while (Date.now() < end) {
     // Busy on purpose: a hung page.
   }
-};
-on("hang", () => setTimeout(() => {
-  host.note("hang started");
-  hangChannel.port2.postMessage(null);
 }, 50));
 
 // What the key tests read: every keyboard and input event of the Keys field, in order.
