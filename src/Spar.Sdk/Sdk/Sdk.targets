@@ -331,6 +331,11 @@
     package mode the package is downloaded in every variant (PackageDownload, which adds no reference and no
     dependency) and its assembly referenced by path in Development.
 
+    Since restore never walks the reference, in source mode the target restores Spar.Loopback itself when that project has
+    no restore output yet, as a call of its own with a property of its own (a fresh evaluation), before the reference is
+    built. Without it a clean tree's Development build of an app alone failed with NETSDK1004 for Spar.Loopback (the build
+    tests' clean copy on CI); a solution build had always restored it first.
+
     The dev session's record, obj/spar-loopback.json, reaches the run as a runtime configuration value; it is also what
     makes the runtime configuration's input hash change when a build first references the host, so its frameworks are
     written again.
@@ -351,8 +356,18 @@
   <Target Name="SparLoopbackReference"
           BeforeTargets="AssignProjectConfiguration;ProcessFrameworkReferences"
           Condition="'$(SparUsesLoopback)' == 'true' and '$(MSBuildIsRestoring)' != 'true'">
+    <PropertyGroup Condition="'$(SparSourceMode)' == 'true'">
+      <_SparLoopbackProject>$(SparSourceRoot)Spar.Loopback\Spar.Loopback.csproj</_SparLoopbackProject>
+      <_SparLoopbackAssets>$(SparSourceRoot)Spar.Loopback\obj\project.assets.json</_SparLoopbackAssets>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(_SparLoopbackProject)" Targets="Restore"
+             Properties="_SparLoopbackRestore=true"
+             RemoveProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing"
+             Condition="'$(SparSourceMode)' == 'true' and !Exists('$(_SparLoopbackAssets)')" />
+
     <ItemGroup Condition="'$(SparSourceMode)' == 'true'">
-      <ProjectReference Include="$(SparSourceRoot)Spar.Loopback\Spar.Loopback.csproj"
+      <ProjectReference Include="$(_SparLoopbackProject)"
                         SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
     </ItemGroup>
 
