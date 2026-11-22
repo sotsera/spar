@@ -1,0 +1,25 @@
+/* The app's own colours: a blue page once it is ready, so a frame of it is told from the theme colour and the mark. */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+main {
+  position: fixed;
+  inset: 0;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 24px;
+}
+
+main[hidden] {
+  display: none;
+}
+
+/* The splash's mark: a square in the middle of the window, orange in both schemes. */
+#spar-splash .mark {
+  width: 160px;
+  height: 160px;
+  border-radius: 24px;
+  background: #e8a33d;
+}

@@ -5,6 +5,7 @@
 
 # Spar (the runtime, in every app's process)
 Spar | Spar.Bridge.BridgeCodec.HeaderOptions | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Bridge.HostCommands.NotSaved | readonly | The bytes of a fixed error payload, filled once, never written.
 Spar | Spar.Bridge.BridgeSession.CommandFailed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
 Spar | Spar.Bridge.BridgeSession.EarlyCancelMemory | readonly | A TimeSpan constant.
 Spar | Spar.Bridge.BridgeSession.ResultTooLarge | readonly | A log message delegate, as above.
@@ -73,6 +74,9 @@ Spar | Spar.Logging.PageErrorLog+Work.<Tick>k__BackingField | readonly | An immu
 Spar | Spar.Hosting.PageHtml.Head | readonly | The bytes of a tag name, filled once, never written.
 Spar | Spar.Hosting.PageHtml.ImportMapStart | readonly | The bytes of the import map's opening tag, as above.
 Spar | Spar.Hosting.PageHtml.ScriptEnd | readonly | The bytes of a closing tag, as above.
+Spar | Spar.Hosting.PageHtml.SplashStyleStart | readonly | The bytes of the splash style's opening tag, as above.
+Spar | Spar.Hosting.PageHtml.StyleEnd | readonly | The bytes of a closing tag, as above.
+Spar | Spar.Hosting.PageHtml.ThemeStyleStart | readonly | The bytes of the theme style's opening tag, as above.
 Spar | Spar.Hosting.PagePolicy.AlwaysDenied | readonly | The Permissions-Policy features always denied, filled once, read only.
 Spar | Spar.Hosting.PagePolicy.Declarable | readonly | Feature name to Permission, filled once, read only.
 Spar | Spar.Hosting.PageSecurityMismatch.Differs | readonly | A log message delegate, as above.
@@ -274,7 +278,10 @@ Spar.Generator | Spar.Generator.Descriptors.NotConstant | readonly | An immutabl
 Spar.Generator | Spar.Generator.Descriptors.UnsupportedShape | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.InvalidValue | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.NonceWithInlineStyles | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.WindowColours | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.PageSecurityAnalysis.ReportNames | readonly | The CspReports member names by value, filled once, read only.
+Spar.Generator | Spar.Generator.WindowColorsAnalysis.Colour | readonly | A compiled Regex: thread-safe, keeps no state between matches.
+Spar.Generator | Spar.Generator.WindowColorsModel.<Default>k__BackingField | readonly | An immutable record of two strings, made once.
 
 # Spar.Sdk.Tasks (MSBuild tasks: one node runs several projects' builds)
 Spar.Sdk.Tasks | Spar.Hosting.SparContentTypes.ByExtension | readonly | The runtime's content-type table, linked in: filled once, read only.

@@ -29,6 +29,7 @@ internal sealed class WebViewBridge
     private readonly bool _includeDetails;
     private readonly CspViolationLog? _violations;
     private readonly PageErrorLog _pageErrors;
+    private readonly HostCommands _hostCommands;
     private readonly Channel<Incoming> _incoming = Channel.CreateUnbounded<Incoming>(new UnboundedChannelOptions { SingleReader = true });
     private readonly Task _reader;
     private readonly IDisposable? _backendUpdates;
@@ -37,6 +38,7 @@ internal sealed class WebViewBridge
 
     /// <param name="violations">Where the listener's batches go; null when the listener does not report in this build.</param>
     /// <param name="pageErrors">Where the page's error batches go.</param>
+    /// <param name="hostCommands">The window's own commands every document may call, such as <c>setColorScheme</c>.</param>
     public WebViewBridge(
         UiThread ui,
         HostLog log,
@@ -44,8 +46,10 @@ internal sealed class WebViewBridge
         string fingerprint,
         bool includeDetails,
         CspViolationLog? violations,
-        PageErrorLog pageErrors)
+        PageErrorLog pageErrors,
+        HostCommands hostCommands)
     {
+        _hostCommands = hostCommands;
         _ui = ui;
         _log = log;
         _dispatcher = dispatcher;
@@ -121,6 +125,7 @@ internal sealed class WebViewBridge
         var session = new BridgeSession(_dispatcher, _fingerprint, id, message => Send(document, message), _includeDetails)
         {
             HostAnswersPing = !isErrorPage,
+            HostCommands = _hostCommands,
         };
         session.Dropped += reason => _log.Warn($"Bridge, document {id}: dropped {reason}");
         session.Ready += () => _ui.Post(() => Ready(document), "bridge ui-ready");

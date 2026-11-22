@@ -9,7 +9,7 @@ import "./styles.css";
 const connection = connectSpar(hostChannel(), fingerprint);
 
 function Root() {
-  // The page is usable once its first render is on screen: the window shows it from then on.
+  // The page is usable once its first render is on screen: the splash, if index.html has one, goes, then ui-ready.
   useEffect(() => connection.ready(), []);
 
   return <App />;

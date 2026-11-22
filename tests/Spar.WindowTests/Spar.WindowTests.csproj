@@ -18,11 +18,14 @@
   <!--
     The black-box fixture's own tests and the required host tests use WindowHost; the Linux host tests that run an app as
     a process of its own (Linux/) use the bridge probe, whose page runs the plan each test names and whose Program.cs
-    takes the browser opt-ins from the environment (a Production build takes no switch, so one build tries each).
+    takes the browser opt-ins from the environment (a Production build takes no switch, so one build tries each); the
+    page start-up tests (StartupTests, plan section 3d) use the start-up probe, whose splash page takes its start from
+    its address.
   -->
   <ItemGroup>
     <SparTestedApplication Include="..\apps\WindowHost\WindowHost.csproj" />
     <SparTestedApplication Include="..\apps\BridgeProbe\BridgeProbe.csproj" Aliases="BridgeProbeApp" />
+    <SparTestedApplication Include="..\apps\StartupProbe\StartupProbe.csproj" Aliases="StartupProbeApp" />
   </ItemGroup>
 
   <!-- The Linux host tests' X11 reads, close and real input (Linux/X11Frames.cs, X11Close.cs) are source-generated imports. -->

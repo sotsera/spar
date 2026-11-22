@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Spar.Bridge;
 using Spar.Hosting;
 using Spar.Logging;
 using Spar.Runtime;
@@ -384,7 +385,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             _running.Catalog.Fingerprint,
             SparDevelopment.IsSupported,
             _listenerReports ? _violations : null,
-            _pageErrors);
+            _pageErrors,
+            new HostCommands(_running.Folders.DataRoot, ChooseSchemeAsync, _log.Logger));
         if (_view is { } view && _state != State.Closing)
         {
             _watch = WindowsPageHost.Watch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
@@ -479,11 +481,70 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             return;
         }
 
-        DeleteBackground();
-        _background = PInvoke.CreateSolidBrush(new COLORREF(_theme.Background.ColorRef));
-        _theme.ApplyTitleBar(window);
-        PInvoke.InvalidateRect(window, (RECT*)null, true);
+        Repaint(window, _theme);
         _log.Step($"system theme changed to {(_theme.IsDark ? "dark" : "light")}");
+    }
+
+    /// <summary>
+    /// The page's <c>setColorScheme</c> (any thread): the window takes the choice on its UI thread, as it takes a change
+    /// of the system's theme, and the task completes once it has. The bridge's host command saved it already.
+    /// </summary>
+    private Task ChooseSchemeAsync(bool? dark)
+    {
+        var applied = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (_ui is not { } ui)
+        {
+            applied.TrySetResult();
+            return applied.Task;
+        }
+
+        ui.Post(() => _ = ApplySchemeAsync(dark, applied), "colour scheme");
+        return applied.Task;
+    }
+
+    /// <summary>
+    /// The window colour, the title bar and the page's scheme (the profile's <c>PreferredColorScheme</c>, which
+    /// <c>prefers-color-scheme</c> follows), together (UI thread). A test window also emulates the scheme on the page.
+    /// </summary>
+    private async Task ApplySchemeAsync(bool? dark, TaskCompletionSource applied)
+    {
+        try
+        {
+            if (_theme is not { } theme || _state == State.Closing || _window.IsNull)
+            {
+                return;
+            }
+
+            var changed = theme.Choose(dark);
+            _view?.SetPageScheme(theme.PageScheme);
+            if (changed)
+            {
+                Repaint(_window, theme);
+            }
+
+            _log.Step($"colour scheme chosen by the page: {SavedColorScheme.NameOf(dark)}, the window {(theme.IsDark ? "dark" : "light")}");
+            if (SparTestSession.IsSupported && _source?.ColorSchemeChosen is { } chosen)
+            {
+                await chosen(theme.IsDark);
+            }
+        }
+        catch (Exception exception)
+        {
+            _log.Error("The colour scheme could not be applied", exception);
+        }
+        finally
+        {
+            applied.TrySetResult();
+        }
+    }
+
+    /// <summary>The window colour and the title bar in the theme's scheme now (UI thread).</summary>
+    private unsafe void Repaint(HWND window, WindowTheme theme)
+    {
+        DeleteBackground();
+        _background = PInvoke.CreateSolidBrush(new COLORREF(theme.Background.ColorRef));
+        theme.ApplyTitleBar(window);
+        PInvoke.InvalidateRect(window, (RECT*)null, true);
     }
 
     private void DeleteBackground()

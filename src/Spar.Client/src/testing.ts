@@ -5,6 +5,7 @@
 import type { BridgeChannel } from "./connection.js";
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import { resetConfiguration, type Call, type CallError, type ErrorCases } from "./results.js";
+import { setColorScheme } from "./colorScheme.js";
 import { connectSpar } from "./sdk.js";
 import type { CloseRequest, GuardsOutcome } from "./windows.js";
 
@@ -78,9 +79,12 @@ export interface Script<R, T, E extends ErrorCases> {
  * call a real one. A command nobody scripted is refused (`rejected` / `unknown-command`), with a console error naming it.
  */
 export interface FakeSpar {
-  /** Scripts one command, such as `spar.on(pages.get)`. */
+  /**
+   * Scripts one command, such as `spar.on(pages.get)`. The SDK's own `setColorScheme` is a command too: it succeeds
+   * until a test scripts it otherwise, such as `spar.on(setColorScheme).fail("notSaved")`.
+   */
   on<F extends Command>(command: F): Script<RequestOf<F>, ValueOf<F>, ErrorsOf<F>>;
-  /** The requests the page sent to one command, in order, read back from the wire. */
+  /** The requests the page sent to one command, in order, read back from the wire: `spar.calls(setColorScheme)` gives the schemes. */
   calls<F extends Command>(command: F): readonly RequestOf<F>[];
   /**
    * Asks the page's close guards (`windows.onCloseRequested`) as the host does when its window is asked to close, and
@@ -129,9 +133,12 @@ const replies: Replies<unknown, Record<string, unknown>> = {
  * @internal Called by the generated `fakeSpar`: resets the failure hooks and connects the page's SDK to a new fake host.
  * `commands` maps each generated command function to its names and wire functions.
  */
-export function createFakeSpar(commands: ReadonlyMap<unknown, CommandCodec>, fingerprint: string): FakeSpar {
+export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, fingerprint: string): FakeSpar {
   resetConfiguration();
+  const commands = new Map(appCommands);
+  commands.set(setColorScheme, colorSchemeCodec);
   const host = new FakeHost(commands, fingerprint);
+  host.script(colorSchemeCodec, () => ({ kind: "value", value: undefined }));
   connectSpar(host, fingerprint);
   return {
     on: command => scriptFor(host, codecOf(commands, command)),
@@ -140,6 +147,14 @@ export function createFakeSpar(commands: ReadonlyMap<unknown, CommandCodec>, fin
     backendUpdate: update => host.backendUpdate(update ?? {}),
   };
 }
+
+/** The host's own `spar.setColorScheme`, as a host answers it: the scheme's name, no value, `notSaved` without a payload. */
+const colorSchemeCodec: CommandCodec = {
+  contract: "spar",
+  command: "setColorScheme",
+  request: json => JSON.parse(json) as unknown,
+  error: code => JSON.stringify({ code }),
+};
 
 function scriptFor<R, T, E extends ErrorCases>(host: FakeHost, codec: CommandCodec): Script<R, T, E> {
   const always = (answer: Answer): void => host.script(codec, () => answer);

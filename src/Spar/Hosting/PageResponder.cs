@@ -113,13 +113,14 @@ internal sealed class PageResponder
 
     /// <summary>
     /// What the page and its decoded files need, prepared once off the UI thread: every compressed file decoded, and the
-    /// policy composed with the page's import-map hashes.
+    /// policy composed with the page's import-map hashes and its theme and splash style hashes.
     /// </summary>
     private static PagePolicy Prepare(SparFrontend? frontend, SparPageSecurity security, string origin, bool development)
     {
         frontend?.DecodeAll();
-        var hashes = frontend is null ? [] : PageHtml.ImportMapHashes(frontend);
-        return new PagePolicy(security, origin, development, hashes);
+        var scripts = frontend is null ? [] : PageHtml.ImportMapHashes(frontend);
+        var styles = frontend is null ? [] : PageHtml.StyleHashes(frontend);
+        return new PagePolicy(security, origin, development, scripts, styles);
     }
 
     /// <summary>

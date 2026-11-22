@@ -1381,25 +1381,52 @@ export function CopyProgressView({ jobId }: { readonly jobId: string }) {
 
 ### 6.3 Start-up, readiness and theme
 
+**Decided** (decision "M1d step 5's shape: the page side of start-up"; built in M1d step 5). The window shows at once in the colour `spar.Window(w => w.Background(light, dark))` declares (section 2), and the page agrees with it from its first frame: the Spar Vite plugin adds `<meta name="color-scheme" content="light dark">` and a small theme style in the same colours to every page, its hash in the Content Security Policy by itself.
+
+File `frontend/index.html`, the optional splash:
+
+```html
+<body>
+  <div id="spar-splash" role="status" aria-label="Loading the SQL tool">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+    </svg>
+  </div>
+  <div id="root"></div>
+</body>
+```
+
 File `frontend/src/main.tsx`:
 
 ```tsx
+import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { ready, setColorScheme } from "@spar/app/sdk";
+import { connectSpar, hostChannel, setColorScheme } from "@spar/app/sdk";
+import { fingerprint } from "@spar/app/spar";
 import { CopyProgressView } from "./CopyProgressView";
 
-createRoot(document.getElementById("root")!).render(<CopyProgressView jobId="job-1" />);
+const connection = connectSpar(hostChannel(), fingerprint);
 
-// Manual splash mode only: by default the SDK reports ui-ready, and removes the splash, by itself.
-ready();
+function Root() {
+  // The first view has rendered: the splash goes, then the host reports ui-ready.
+  useEffect(() => connection.ready(), []);
 
-// The app's own theme choice; the host saves it and applies it before the next start.
-export const useDark = () => setColorScheme("dark");
+  return <CopyProgressView jobId="job-1" />;
+}
+
+createRoot(document.getElementById("root")!).render(<Root />);
+
+// The app's own theme choice: the window takes it at once, and the next start shows it from the first frame.
+export const useDark = () =>
+  setColorScheme("dark").match({
+    success: () => undefined,
+    errors: { notSaved: () => console.warn("Dark until the app closes: the choice could not be saved.") },
+  });
 ```
 
-- **Splash** (Decided): static HTML in `index.html`. It never shows on a fast start, and it is removed at `ui-ready`, or at `ready()` in manual mode.
-- **Theme** (Decided): the window colours come from `spar.Window(…)` in C#. The SDK's `setColorScheme("light" | "dark" | "system")` stores the app's choice.
-- **Open:** the exact SDK export names, `ready` against `spar.ready()`.
+- **Readiness:** `connection.ready()` is the page's one way to report that it is ready, called once its first view has rendered (here the root's first effect; an app that waits for its first data calls it then). The host's `ui-ready`, which window tests, the black box (6.13) and tools wait for, follows it. Later calls in the same document do nothing. A page that never calls it never reports `ui-ready`.
+- **Splash:** optional, static HTML in `index.html` inside the element with the id `spar-splash`; its content (the mark) is the app's. The Vite plugin adds its style: an opaque cover in the window colour from the first frame, whose content fades in 350 ms after the page's first frame through a CSS animation delay, so a fast start never shows it; `aria-busy="true"` on `<body>` while it is there; no fade under `prefers-reduced-motion`. `ready()` removes it, at once while the mark has not appeared, else once it has been visible 400 ms, with a 150 ms fade-out; the host hears `ready` once the removal has had a frame. The timing is the plugin's option: `spar({ splash: { delay: 350, minimumVisible: 400, fadeIn: 120, fadeOut: 150 } })`. Style the mark in the app's own stylesheet; no `style` attribute is needed or allowed.
+- **Theme:** the window colours come from `spar.Window(…)` in C#, as constants the build reads (SPAR106 otherwise). `setColorScheme("light" | "dark" | "system")` sets the app's own choice: the window's colour, its title bar, the WebView's background and the page's `prefers-color-scheme` change together, as for a change of the system's theme, and the host saves the choice in the app's data folder for the next start. Its declared error `notSaved`: the window took the choice, but the next start shows the earlier one. In a browser on loopback the choice is saved for the window, and the browser keeps its own scheme. `fakeSpar()` answers it in page tests (6.10), success unless a test scripts `spar.on(setColorScheme).fail("notSaved")`, and `spar.calls(setColorScheme)` lists the choices.
 
 ### 6.4 Actions, context menus and shortcuts
 
@@ -1951,7 +1978,6 @@ export const stopListening = onBackendUpdate((update: BackendUpdate) => {
 - **Contracts and wire:**
 - **Configuration:**
   - the type names of the configuration builders behind `spar.Window(…)` and the other calls of section 2 not built yet (the check's stand-ins call them `SparBuilder` and `WindowOptions`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example. `CspBuilder`, `CspReports`, `PermissionsBuilder` and `Permission` are Spar's own since M1b.
-- **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
 - **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open); for window tests (6.12), how scenes and a fixed clock are declared; an app's own "close this window" API (`CloseReason.App` from app code), which nothing calls yet.
 
 Decided since this list was first written, and shown above:
@@ -1960,4 +1986,5 @@ Decided since this list was first written, and shown above:
 - the committed contract snapshot (decision "The contract snapshot is committed");
 - `Call` as a `Promise` subclass (decision "TypeScript SDK: `Call` as a `Promise` subclass, `toStringTag`, Vue augmentation");
 - the `Program.cs` shape (decision "`Program.cs` shape confirmed");
-- the declaration of permissions (decision "Camera, microphone and other permissions").
+- the declaration of permissions (decision "Camera, microphone and other permissions");
+- readiness through `connection.ready()` alone, the splash and `setColorScheme` (decision "M1d step 5's shape: the page side of start-up").

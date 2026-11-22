@@ -166,6 +166,23 @@ public sealed class ContentSecurityTests
         Assert.Empty(PageHtml.ImportMapHashes("<script>inline()</script><script type=importmap>{}</script>"u8));
     }
 
+    [Fact]
+    public void The_theme_and_splash_style_hashes_are_of_the_plugins_own_styles_only_exactly_as_served()
+    {
+        const string Theme = ":where(html){color-scheme:light dark;background-color:#ffffff}";
+        const string Splash = "#spar-splash{position:fixed}";
+        var html = Encoding.UTF8.GetBytes(
+            $"<head><style id=\"spar-theme\">{Theme}</style><style id=\"spar-splash-style\">{Splash}</style>" +
+            "<style>body{}</style><style id=\"app\">p{}</style><style id=spar-theme>x{}</style></head>");
+
+        var hashes = PageHtml.StyleHashes(html);
+
+        Assert.Equal([Hash(Theme), Hash(Splash)], hashes);
+        Assert.Empty(PageHtml.StyleHashes("<style>body{}</style><style nonce=\"n\" id=\"spar-theme\">x{}</style>"u8));
+
+        static string Hash(string text) => $"'sha256-{Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(text)))}'";
+    }
+
     [Theory]
     [InlineData("<!doctype html><html><head><meta charset=\"utf-8\"></head>", 27)]
     [InlineData("<html><HEAD lang=\"en\">x", 22)]

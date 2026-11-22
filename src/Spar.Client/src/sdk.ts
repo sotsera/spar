@@ -2,6 +2,7 @@
 import { addBackendUpdateHandler, listenForBackendUpdates, type BackendUpdate } from "./backendUpdate.js";
 import { Connection, type BridgeChannel, type Decoder } from "./connection.js";
 import { callOf, type Call, type CallOptions, type ErrorCases, type Outcome } from "./results.js";
+import { watchFrames } from "./splash.js";
 
 export {
   configureSpar,
@@ -24,11 +25,14 @@ export { unknownErrorCase, type BridgeChannel, type Decoder } from "./connection
 export { loopbackChannel, takeToken, type LoopbackOptions, type TokenPage } from "./loopback.js";
 export { hostChannel, webViewChannel, webViewPort, type WebViewOptions, type WebViewPort } from "./webview.js";
 export { isWebKitHost, webKitChannel, type RelayTarget, type WebKitOptions } from "./webkit.js";
+export { setColorScheme, type ColorScheme, type ColorSchemeError } from "./colorScheme.js";
 
 let current: Connection | undefined;
 
 /** Opens the bridge for this document over the host's channel; the host's start-up code calls it once. */
 export function connectSpar(channel: BridgeChannel, contracts: string): Connection {
+  // At the bundle's start, before the app's own start-up work: the splash counts its minimum visible time from frames.
+  watchFrames();
   current = new Connection(channel, contracts);
   // Development only. `vite build` folds the test to false and drops what it guards; written with `?.` because a page
   // can load the SDK without Vite (a test page served as it is), where `import.meta.env` does not exist.

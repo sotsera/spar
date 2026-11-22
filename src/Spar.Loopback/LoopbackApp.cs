@@ -157,6 +157,8 @@ internal sealed class LoopbackApp
             IncludeDetails = development,
             Security = security,
             ScriptHashes = frontend is null ? [] : PageHtml.ImportMapHashes(frontend),
+            StyleHashes = frontend is null ? [] : PageHtml.StyleHashes(frontend),
+            DataRoot = running.Folders.DataRoot,
             Port = at.Port,
             Token = at.Token,
             RunId = runId,

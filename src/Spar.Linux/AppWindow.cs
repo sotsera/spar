@@ -169,7 +169,7 @@ internal sealed partial class AppWindow
         }
 
         _ = LogPolicyAsync(_pages);
-        _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null);
+        _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null, ChooseSchemeAsync);
         var browser = _app.Builder.BrowserOptions;
         var guard = new PageGuard(_log, security, browser.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, browser, development, _automated);
@@ -310,6 +310,53 @@ internal sealed partial class AppWindow
         }
 
         await TeardownAsync(exitCode);
+    }
+
+    /// <summary>
+    /// The page's <c>setColorScheme</c> (any thread; the bridge's host command saved it already): the window takes it
+    /// on the loop, as it takes a change of the system's theme, and the task completes once it has. For the system's
+    /// scheme without a portal followed since the start, the portal is read here first, off the loop.
+    /// </summary>
+    private async Task ChooseSchemeAsync(bool? dark)
+    {
+        if (_ui is not { } ui || _theme is not { } theme)
+        {
+            return;
+        }
+
+        var portal = dark is null && !theme.HasPortal ? await Task.Run(WindowTheme.ReadPortalScheme) : default;
+        var applied = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        ui.Post(
+            () =>
+            {
+                try
+                {
+                    ApplyScheme(theme, dark, portal);
+                }
+                finally
+                {
+                    applied.TrySetResult();
+                }
+            },
+            "colour scheme");
+        await applied.Task;
+    }
+
+    /// <summary>The window's layers and the view's background in the chosen scheme (loop thread).</summary>
+    private void ApplyScheme(WindowTheme theme, bool? dark, (nint Bus, bool? Dark) portal)
+    {
+        theme.AdoptPortal(portal.Bus, portal.Dark);
+        if (_state == State.Closing || _window == 0)
+        {
+            return;
+        }
+
+        if (theme.Choose(dark))
+        {
+            _view?.SetBackground(theme.Background);
+        }
+
+        _log.Info($"Colour scheme chosen by the page: {SavedColorScheme.NameOf(dark)}, the window {(theme.IsDark ? "dark" : "light")}.");
     }
 
     /// <summary>The policy the page gets, in the log once it is composed (off the loop).</summary>

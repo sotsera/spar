@@ -108,6 +108,12 @@ internal sealed class BridgeSession : IDisposable
     /// </summary>
     public bool HostAnswersPing { get; init; }
 
+    /// <summary>
+    /// The host's own commands (contract <c>spar</c>, such as the SDK's <c>setColorScheme</c>): null for a session whose
+    /// host has none, where they are unknown commands like any other name the app does not have.
+    /// </summary>
+    public HostCommands? HostCommands { get; init; }
+
     public void Receive(string message)
     {
         var received = _telemetry.Now();
@@ -400,7 +406,9 @@ internal sealed class BridgeSession : IDisposable
         SparOutcome outcome;
         try
         {
-            outcome = await _dispatcher.InvokeAsync(call.Contract!, call.Command!, id, call.Payload, token.Token);
+            outcome = HostCommands is { } host && HostCommands.IsHostContract(call.Contract!)
+                ? await host.InvokeAsync(call.Command!, call.Payload, token.Token)
+                : await _dispatcher.InvokeAsync(call.Contract!, call.Command!, id, call.Payload, token.Token);
         }
         finally
         {

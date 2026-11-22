@@ -76,6 +76,61 @@ internal static unsafe partial class X11Frames
         return samples;
     }
 
+    /// <summary>
+    /// Samples the middle of the process's window and a point 16 pixels in from its top-left corner until
+    /// <paramref name="stop"/> is set: the time since <paramref name="started"/> and both colours as <c>0xRRGGBB</c>.
+    /// </summary>
+    public static List<(double Milliseconds, uint Middle, uint Corner)> SampleMiddleAndCorner(
+        string display, int processId, Stopwatch started, CancellationToken stop)
+    {
+        X11Close.IgnoreErrors();
+        var connection = X11Close.XOpenDisplay(display);
+        if (connection == 0)
+        {
+            throw new InvalidOperationException($"The X display {display} cannot be opened.");
+        }
+
+        var samples = new List<(double, uint, uint)>();
+        try
+        {
+            var attributes = stackalloc byte[256];
+            nuint window = 0;
+            while (!stop.IsCancellationRequested)
+            {
+                if (window == 0)
+                {
+                    window = Largest(connection, processId, attributes);
+                    if (window == 0)
+                    {
+                        Thread.Sleep(1);
+                        continue;
+                    }
+                }
+
+                if (XGetWindowAttributes(connection, window, attributes) == 0 || *(int*)(attributes + 92) != IsViewable)
+                {
+                    window = 0;
+                    continue;
+                }
+
+                var width = *(int*)(attributes + 8);
+                var height = *(int*)(attributes + 12);
+                if (Pixel(connection, window, width / 2, height / 2) is not { } middle || Pixel(connection, window, Inset, Inset) is not { } corner)
+                {
+                    continue;
+                }
+
+                samples.Add((started.Elapsed.TotalMilliseconds, middle, corner));
+            }
+        }
+        finally
+        {
+            X11Close.XCloseDisplay(connection);
+        }
+
+        return samples;
+    }
+
     /// <summary>Whether the process shows a window on <paramref name="display"/>: viewable, and larger than GTK's helpers.</summary>
     public static bool Shows(string display, int processId)
     {
@@ -212,6 +267,20 @@ internal static unsafe partial class X11Frames
         }
 
         return bestArea > 2_500 ? best : 0;
+    }
+
+    /// <summary>One pixel of a window as <c>0xRRGGBB</c>, or null when the server could not read it.</summary>
+    private static uint? Pixel(nint connection, nuint window, int x, int y)
+    {
+        var image = XGetImage(connection, window, Math.Max(0, x), Math.Max(0, y), 1, 1, nuint.MaxValue, ZPixmap);
+        if (image == 0)
+        {
+            return null;
+        }
+
+        var pixel = (uint)XGetPixel(image, 0, 0) & 0xFFFFFF;
+        XDestroyImage(image);
+        return pixel;
     }
 
     /// <summary><c>XWindowAttributes</c> (136 bytes on x86-64): width at 8, height at 12, <c>map_state</c> at 92.</summary>

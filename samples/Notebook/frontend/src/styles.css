@@ -38,6 +38,31 @@
 }
 
 /*
+ * The splash's mark and name (index.html). Spar's Vite plugin styles the splash itself: a cover in the window colour
+ * whose content fades in after a short delay, so a fast start never shows it.
+ */
+#spar-splash .splash-mark {
+  color: var(--color-accent);
+}
+
+#spar-splash .splash-name {
+  margin: 0;
+  font: 600 0.9375rem/1 var(--font-sans);
+  letter-spacing: 0.01em;
+  color: var(--color-muted);
+}
+
+@media (prefers-color-scheme: dark) {
+  #spar-splash .splash-mark {
+    color: var(--color-accent-dark);
+  }
+
+  #spar-splash .splash-name {
+    color: var(--color-muted-dark);
+  }
+}
+
+/*
  * GitHub-style task lists (remark-gfm marks them): the checkbox is the bullet. Outside any layer, because the
  * typography plugin's list styles sit in the utilities layer, which a components rule cannot override.
  */

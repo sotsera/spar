@@ -64,6 +64,15 @@ internal sealed class LoopbackOptions
     /// <summary>The page's import-map hashes, which <c>script-src</c> names (<see cref="PageHtml"/>).</summary>
     public IReadOnlyList<string> ScriptHashes { get; init; } = [];
 
+    /// <summary>The page's theme and splash style hashes, which <c>style-src</c> names (<see cref="PageHtml"/>).</summary>
+    public IReadOnlyList<string> StyleHashes { get; init; } = [];
+
+    /// <summary>
+    /// The app's data root, where the page's <c>setColorScheme</c> saves its choice for the window's next start; null
+    /// for a host that answers no host command. The browser keeps its own colour scheme either way.
+    /// </summary>
+    public string? DataRoot { get; init; }
+
     /// <summary>What the host refused or dropped, and the page's CSP violations. Called from any thread.</summary>
     public Action<string>? Log { get; init; }
 }
@@ -92,6 +101,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
     private readonly CancellationTokenSource _stopping = new();
     private readonly ConcurrentDictionary<string, PagePolicy> _policies = new(StringComparer.Ordinal);
     private readonly ConcurrentDictionary<string, DevServerProxy> _proxies = new(StringComparer.Ordinal);
+    private readonly HostCommands? _hostCommands;
     private int _port;
 
     private LoopbackHost(WebApplication server, LoopbackOptions options, byte[] token)
@@ -100,6 +110,9 @@ internal sealed class LoopbackHost : IAsyncDisposable
         _options = options;
         _token = token;
         Token = Base64Url.EncodeToString(_token);
+
+        // No window here: the page's colour scheme choice is saved for the window's next start, and the browser keeps its own.
+        _hostCommands = options.DataRoot is { } dataRoot ? new HostCommands(dataRoot, apply: null, options.Dispatcher.Logger) : null;
     }
 
     /// <summary>The bearer token, which the page gets from the URL fragment only (plan section 3c).</summary>
@@ -239,7 +252,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
     /// </summary>
     private PagePolicy PolicyFor(string origin) => _policies.GetOrAdd(
         origin,
-        static (name, options) => new PagePolicy(options.Security, name, development: true, options.ScriptHashes),
+        static (name, options) => new PagePolicy(options.Security, name, development: true, options.ScriptHashes, options.StyleHashes),
         _options);
 
     private bool IsThisHost(HostString host)
@@ -450,7 +463,10 @@ internal sealed class LoopbackHost : IAsyncDisposable
             _options.Fingerprint,
             id,
             message => outbox.Writer.TryWrite(message),
-            _options.IncludeDetails);
+            _options.IncludeDetails)
+        {
+            HostCommands = _hostCommands,
+        };
 
         session.Ready += () => DocumentReady?.Invoke(id);
         session.Dropped += reason => _options.Log?.Invoke($"document {id}: dropped {reason}");
