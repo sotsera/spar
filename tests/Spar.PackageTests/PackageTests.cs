@@ -3,81 +3,44 @@ using System.Text.Json;
 namespace Spar.PackageTests;
 
 /// <summary>
-/// An app and its tests built from Spar's packages alone (plan M1a, "the package-only consumer test"): they build and
-/// pass, its page works in Chromium against its backend, a black-box test project publishes the app and launches it, the
-/// packaged analyzer reports a contract problem at its line, a design-time build runs no Spar step, the app
-/// publishes with NativeAOT, and an update and a downgrade of Spar.Sdk while MSBuild is warm each build with their own
-/// SDK. The builds share the consumer's folders, so they stay in this one class, whose tests xUnit runs one at a time.
+/// The build machinery of an app made from the template, from Spar's packages alone (plan M1a, "the package-only
+/// consumer test"): its first build and fast tests, the packaged analyzer reporting a contract problem at its line,
+/// the SDK's checks of the tested app and the app id, a design-time build that runs no Spar step, the app's NativeAOT
+/// publication, and an update and a downgrade of Spar.Sdk while MSBuild is warm, each building with its own SDK. The
+/// template's tests themselves are <see cref="TemplateTests"/>. Both build the main consumer's folders, so they share
+/// one collection and run one at a time.
 /// </summary>
+[Collection(Consumer.MainCollection)]
 public sealed class PackageTests(Consumer consumer) : IDisposable
 {
-    private static Task<(int Exit, string Output)>? s_first;
+    private const string App = Consumer.App;
 
     [Fact]
-    public async Task The_app_and_its_tests_build_and_pass_from_Spars_packages_alone()
+    public async Task The_app_and_its_fast_tests_build_and_pass_from_Spars_packages_alone()
     {
-        var (exit, output) = await FirstAsync();
+        var (exit, output) = await consumer.FirstAsync();
 
         Assert.True(exit == 0, output);
+        Assert.Contains("succeeded: 2", output, StringComparison.Ordinal);
         Assert.Equal(consumer.First, ClientVersion());
         Assert.Equal("0.0.0", ClientPackage().GetProperty("version").GetString());
-        var lockfile = File.ReadAllText(Path.Combine(consumer.Root, "App", "ui", "package-lock.json"));
-        var committed = File.ReadAllText(Path.Combine(consumer.Repository, "tests", "Spar.PackageTests", "consumer-ui", "package-lock.json"));
-        Assert.True(lockfile == committed, "The build changed the app's committed lockfile.");
-        Assert.True(File.Exists(Path.Combine(consumer.Root, "App", "Notes.App.contracts.snapshot")), "No contract snapshot.");
+        var lockfile = File.ReadAllText(Path.Combine(consumer.Root, App, "frontend", "package-lock.json"));
+        var committed = File.ReadAllText(Path.Combine(ConsumerFiles.Template(consumer.Repository), "MyApp", "frontend", "package-lock.json"));
+        Assert.True(lockfile == ConsumerFiles.Rename(committed, App), "The build changed the template's committed lockfile.");
+        Assert.True(File.Exists(Path.Combine(consumer.Root, App, $"{App}.contracts.snapshot")), "No contract snapshot.");
         var restored = Path.Combine(consumer.Environment["NUGET_PACKAGES"], "spar", consumer.First.ToLowerInvariant());
         Assert.True(Directory.Exists(restored), $"Spar {consumer.First} was not restored from the run's feed.");
     }
 
     [Fact]
-    public async Task The_apps_page_works_in_a_browser_against_its_backend()
-    {
-        Assert.Equal(0, (await FirstAsync()).Exit);
-
-        var (exit, output) = await consumer.DotnetAsync("", "test", "--project", Path.Combine("App.EndToEndTests", "Notes.App.EndToEndTests.csproj"));
-
-        Assert.True(exit == 0, output);
-        Assert.Contains("succeeded: 1", output, StringComparison.Ordinal);
-    }
-
-    [Fact]
-    public async Task A_black_box_test_project_publishes_the_app_once_and_launches_it()
-    {
-        Assert.Equal(0, (await FirstAsync()).Exit);
-        var project = Path.Combine("App.BlackBoxTests", "Notes.App.BlackBoxTests.csproj");
-
-        var (exit, output) = await consumer.DotnetAsync("", "test", "--project", project);
-
-        Assert.True(exit == 0, output);
-        Assert.Contains(OperatingSystem.IsWindows() ? "succeeded: 1" : "skipped: 1", output, StringComparison.Ordinal);
-        if (!OperatingSystem.IsWindows())
-        {
-            // The publish is on by default where the fixture runs: Windows, until the Linux host (M1c).
-            return;
-        }
-
-        const string name = "NotesTool.exe";
-        var beside = Directory.GetFiles(Path.Combine(consumer.Root, "App.BlackBoxTests", "bin"), name, SearchOption.AllDirectories);
-        var published = Assert.Single(beside, path => path.Contains(Path.Combine("spar-apps", "NotesTool"), StringComparison.Ordinal));
-        var written = File.GetLastWriteTimeUtc(published);
-
-        // An unchanged build publishes nothing again: the executable beside the tests is the same file.
-        var (rebuilt, again) = await consumer.DotnetAsync("", "build", project, "-nologo", "-v:m");
-
-        Assert.True(rebuilt == 0, again);
-        Assert.DoesNotContain("Generating native code", again, StringComparison.Ordinal);
-        Assert.Equal(written, File.GetLastWriteTimeUtc(published));
-    }
-
-    [Fact]
     public async Task The_packaged_analyzer_reports_a_contract_problem_at_its_line()
     {
-        Assert.Equal(0, (await FirstAsync()).Exit);
-        var broken = Path.Combine(consumer.Root, "App", "Broken.cs");
-        File.WriteAllText(broken, "using Spar;\n\nnamespace NotesTool;\n\n[SparContract]\npublic class Broken\n{\n}\n");
+        Assert.Equal(0, (await consumer.FirstAsync()).Exit);
+        var broken = Path.Combine(consumer.Root, App, "Broken.cs");
+        File.WriteAllText(broken, $"using Spar;\n\nnamespace {App};\n\n[SparContract]\npublic class Broken\n{{\n}}\n");
         try
         {
-            var (exit, output) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+            var (exit, output) = await consumer.DotnetAsync(App, "build", "-nologo", "-v:m");
 
             Assert.NotEqual(0, exit);
             Assert.Contains("Broken.cs(6,14", output, StringComparison.Ordinal);
@@ -92,10 +55,12 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     [Fact]
     public async Task A_test_project_must_name_its_app_with_SparTestedApplication()
     {
-        Assert.Equal(0, (await FirstAsync()).Exit);
-        var tests = Path.Combine(consumer.Root, "App.Tests", "Notes.App.Tests.csproj");
-        var app = Path.Combine(consumer.Root, "App", "Notes.App.csproj");
+        Assert.Equal(0, (await consumer.FirstAsync()).Exit);
+        var testsFolder = $"{App}.Tests";
+        var tests = Path.Combine(consumer.Root, testsFolder, $"{App}.Tests.csproj");
+        var app = Path.Combine(consumer.Root, App, $"{App}.csproj");
         var library = Path.Combine(consumer.Root, "Lib", "Lib.csproj");
+        var appItem = $"..\\{App}\\{App}.csproj";
         var testsProject = File.ReadAllText(tests);
         var appProject = File.ReadAllText(app);
         Directory.CreateDirectory(Path.GetDirectoryName(library)!);
@@ -104,31 +69,31 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         {
             // The app through a plain reference: it would build as Development, without the test host.
             File.WriteAllText(tests, testsProject.Replace("<SparTestedApplication ", "<ProjectReference ", StringComparison.Ordinal));
-            var (plain, plainOutput) = await consumer.DotnetAsync("App.Tests", "build", "-nologo", "-v:m");
+            var (plain, plainOutput) = await consumer.DotnetAsync(testsFolder, "build", "-nologo", "-v:m");
             Assert.NotEqual(0, plain);
             Assert.Contains("error SPAR121", plainOutput, StringComparison.Ordinal);
             // MSBuild writes the item's path with the platform's separator.
-            var item = Path.Combine("..", "App", "Notes.App.csproj");
+            var item = Path.Combine("..", App, $"{App}.csproj");
             Assert.Contains($"<SparTestedApplication Include=\"{item}\" />", plainOutput, StringComparison.Ordinal);
 
             // The item's own metadata reaches the compiler's reference to the app.
-            File.WriteAllText(tests, testsProject.Replace("<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\"",
-                "<SparTestedApplication Include=\"..\\App\\Notes.App.csproj\" Aliases=\"notes\"", StringComparison.Ordinal));
-            var (resolved, resolvedOutput) = await consumer.DotnetAsync("App.Tests", "msbuild", "-t:ResolveReferences",
+            File.WriteAllText(tests, testsProject.Replace($"<SparTestedApplication Include=\"{appItem}\"",
+                $"<SparTestedApplication Include=\"{appItem}\" Aliases=\"notes\"", StringComparison.Ordinal));
+            var (resolved, resolvedOutput) = await consumer.DotnetAsync(testsFolder, "msbuild", "-t:ResolveReferences",
                 "-getItem:ReferencePath", "-nologo");
             Assert.True(resolved == 0, resolvedOutput);
-            Assert.Equal("notes", ReferenceAliases(resolvedOutput, "NotesTool.dll"));
+            Assert.Equal("notes", ReferenceAliases(resolvedOutput, $"{App}.dll"));
 
             // A library named as the tested app.
-            File.WriteAllText(tests, testsProject.Replace("..\\App\\Notes.App.csproj", "..\\Lib\\Lib.csproj", StringComparison.Ordinal));
-            var (notAnApp, notAnAppOutput) = await consumer.DotnetAsync("App.Tests", "build", "-nologo", "-v:m");
+            File.WriteAllText(tests, testsProject.Replace(appItem, "..\\Lib\\Lib.csproj", StringComparison.Ordinal));
+            var (notAnApp, notAnAppOutput) = await consumer.DotnetAsync(testsFolder, "build", "-nologo", "-v:m");
             Assert.NotEqual(0, notAnApp);
             Assert.Contains("error SPAR122", notAnAppOutput, StringComparison.Ordinal);
 
             // The item outside a test project.
             File.WriteAllText(tests, testsProject);
             File.WriteAllText(app, appProject.Replace("</Project>", "  <ItemGroup>\n    <SparTestedApplication Include=\"..\\Lib\\Lib.csproj\" />\n  </ItemGroup>\n</Project>", StringComparison.Ordinal));
-            var (misplaced, misplacedOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+            var (misplaced, misplacedOutput) = await consumer.DotnetAsync(App, "build", "-nologo", "-v:m");
             Assert.NotEqual(0, misplaced);
             Assert.Contains("error SPAR120", misplacedOutput, StringComparison.Ordinal);
         }
@@ -143,23 +108,24 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     [Fact]
     public async Task An_app_without_a_valid_app_id_does_not_build()
     {
-        Assert.Equal(0, (await FirstAsync()).Exit);
-        var app = Path.Combine(consumer.Root, "App", "Notes.App.csproj");
+        Assert.Equal(0, (await consumer.FirstAsync()).Exit);
+        var app = Path.Combine(consumer.Root, App, $"{App}.csproj");
+        var appId = $"com.example.{App}";
         var appProject = File.ReadAllText(app);
         try
         {
-            File.WriteAllText(app, appProject.Replace("<SparAppId>org.example.notes.Tool</SparAppId>", "", StringComparison.Ordinal));
-            var (missing, missingOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+            File.WriteAllText(app, appProject.Replace($"<SparAppId>{appId}</SparAppId>", "", StringComparison.Ordinal));
+            var (missing, missingOutput) = await consumer.DotnetAsync(App, "build", "-nologo", "-v:m");
             Assert.NotEqual(0, missing);
             Assert.Contains("error SPAR130", missingOutput, StringComparison.Ordinal);
             Assert.Contains("has no SparAppId", missingOutput, StringComparison.Ordinal);
 
             // The last is 117 characters, one over the cap that keeps "<id>.Development" within Windows' 128.
             var tooLong = "org.example." + new string('n', 105);
-            foreach (var invalid in new[] { "NotesTool", "org.example.1notes", "org.example.notes-tool", "org..notes", tooLong })
+            foreach (var invalid in new[] { App, "org.example.1notes", "org.example.notes-tool", "org..notes", tooLong })
             {
-                File.WriteAllText(app, appProject.Replace("org.example.notes.Tool", invalid, StringComparison.Ordinal));
-                var (failed, failedOutput) = await consumer.DotnetAsync("App", "build", "-nologo", "-v:m");
+                File.WriteAllText(app, appProject.Replace(appId, invalid, StringComparison.Ordinal));
+                var (failed, failedOutput) = await consumer.DotnetAsync(App, "build", "-nologo", "-v:m");
                 Assert.NotEqual(0, failed);
                 Assert.Contains($"SparAppId '{invalid}' is not a valid app id", failedOutput, StringComparison.Ordinal);
             }
@@ -173,9 +139,9 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     [Fact]
     public async Task A_design_time_build_runs_no_Spar_step()
     {
-        Assert.Equal(0, (await FirstAsync()).Exit);
+        Assert.Equal(0, (await consumer.FirstAsync()).Exit);
 
-        var (exit, output) = await consumer.DotnetAsync("App", "msbuild", "-t:Compile", "-p:DesignTimeBuild=true",
+        var (exit, output) = await consumer.DotnetAsync(App, "msbuild", "-t:Compile", "-p:DesignTimeBuild=true",
             "-p:BuildingInsideVisualStudio=true", "-p:SkipCompilerExecution=true", "-p:ProvideCommandLineArgs=true", "-nologo", "-v:n");
 
         Assert.True(exit == 0, output);
@@ -185,26 +151,26 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     [Fact]
     public async Task The_app_publishes_with_NativeAOT_and_its_executable_runs()
     {
-        Assert.Equal(0, (await FirstAsync()).Exit);
+        Assert.Equal(0, (await consumer.FirstAsync()).Exit);
         var publish = Path.Combine(consumer.RunRoot, "publish");
 
         // Published without the host of this OS, so running it opens no window here: the hosts themselves are checked
-        // on the Notebook (docs/evidence/m1b-host.md, docs/evidence/m1c-host.md), and this run checks the error of a
-        // build with no host for its OS.
+        // by the template's black-box test (TemplateTests) and on the Notebook, and this run checks the error of a build
+        // with no host for its OS.
         var otherPlatform = OperatingSystem.IsWindows() ? "linux" : "windows";
         var (exit, output) = await consumer.DotnetAsync(
-            "App", "publish", "-c", "Release", "-o", publish, "-nologo", $"-p:SparPlatforms={otherPlatform}");
+            App, "publish", "-c", "Release", "-o", publish, "-nologo", $"-p:SparPlatforms={otherPlatform}");
 
         Assert.True(exit == 0, output);
-        var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "NotesTool.exe" : "NotesTool");
-        // The page from ui/, built by Vite and packed by the SDK's task, is in the executable.
+        var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? $"{App}.exe" : App);
+        // The page from frontend/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
         // The app id reaches the runtime through the generated catalog, a string literal (UTF-16) in the image. On
         // Linux a build without its host never reads it, so the trimmer drops it there; on Windows the message of a
         // build with no host for its OS logs into the app id's folder.
         if (OperatingSystem.IsWindows())
         {
-            Assert.True(Contains(File.ReadAllBytes(executable), System.Text.Encoding.Unicode.GetBytes("org.example.notes.Tool")),
+            Assert.True(Contains(File.ReadAllBytes(executable), System.Text.Encoding.Unicode.GetBytes($"com.example.{App}")),
                 "The published executable does not carry the app id.");
         }
         // The app's per-user folders follow LOCALAPPDATA, so a run that ever reaches a host stays inside this test's root
@@ -220,7 +186,7 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     [Fact]
     public async Task An_update_and_a_downgrade_while_MSBuild_is_warm_each_build_with_their_own_SDK()
     {
-        Assert.Equal(0, (await FirstAsync()).Exit);
+        Assert.Equal(0, (await consumer.FirstAsync()).Exit);
         try
         {
             foreach (var version in new[] { consumer.First, consumer.Second, consumer.First })
@@ -243,16 +209,12 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
 
     public void Dispose() => consumer.Report(TestContext.Current.TestState?.Result == TestResult.Passed);
 
-    /// <summary>The consumer's first build: its tests, restored and built from the feed, then run.</summary>
-    private Task<(int Exit, string Output)> FirstAsync() =>
-        s_first ??= consumer.DotnetAsync("", "test", "--project", Path.Combine("App.Tests", "Notes.App.Tests.csproj"));
-
-    /// <summary>A build with node reuse and the MSBuild server on, both under this run's handshake salt.</summary>
+    /// <summary>A build of the app with node reuse and the MSBuild server on, both under this run's handshake salt.</summary>
     private Task<(int Exit, string Output)> WarmAsync(params string[] arguments)
     {
         var environment = new Dictionary<string, string>(consumer.Environment) { ["DOTNET_CLI_USE_MSBUILD_SERVER"] = "true" };
         environment.Remove("MSBUILDDISABLENODEREUSE");
-        return Tool.RunAsync(Path.Combine(consumer.Root, "App"), "dotnet", arguments, environment);
+        return Tool.RunAsync(Path.Combine(consumer.Root, App), "dotnet", arguments, environment);
     }
 
     /// <summary>The SDK that generated the app's @spar/app package, from its sparSdk field; its version stays 0.0.0.</summary>
@@ -261,7 +223,7 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     /// <summary>The app's generated package.json.</summary>
     private JsonElement ClientPackage()
     {
-        var package = Path.Combine(consumer.Root, "App", "obj", "spar", "client", "package.json");
+        var package = Path.Combine(consumer.Root, App, "obj", "spar", "client", "package.json");
         return JsonDocument.Parse(File.ReadAllText(package)).RootElement.Clone();
     }
 

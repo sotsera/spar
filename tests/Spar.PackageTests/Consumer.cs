@@ -6,8 +6,9 @@ using System.Text;
 namespace Spar.PackageTests;
 
 /// <summary>
-/// Spar packed twice, at two versions no build has used, into a feed of this run's own; and a consumer that uses Spar
-/// from that feed alone (decisions "Package-only consumer" and "Packages for the package-only consumer"): a folder
+/// Spar packed twice, at two versions no build has used, into a feed of this run's own; and consumers that use Spar
+/// from that feed alone (decisions "Package-only consumer" and "Packages for the package-only consumer"), the main one a
+/// new app from the app template's content (decision "M1d step 4's shape: tests in the template"). Each is a folder
 /// outside any repository whose path has a space and non-ASCII letters, a nuget.config that maps Spar's packages to
 /// the feed, and its own MSBuild handshake and compiler server. NuGet's package folder and HTTP cache are kept apart
 /// from the user's and shared across runs, so only the first run downloads: the HTTP cache alone is not enough, since
@@ -31,6 +32,13 @@ public sealed class Consumer : IAsyncLifetime
 
     private int _passed;
     private int _failed;
+    private Task<(int Exit, string Output)>? _first;
+
+    /// <summary>The name the template's app gets in the main consumer, in place of <see cref="ConsumerFiles.Placeholder"/>.</summary>
+    public const string App = "Notes";
+
+    /// <summary>The collection of the test classes that build the main consumer's folders, so they run one at a time.</summary>
+    public const string MainCollection = "The main consumer";
 
     public string Repository { get; } = FindRepository();
 
@@ -92,6 +100,10 @@ public sealed class Consumer : IAsyncLifetime
             ["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1",
             ["DOTNET_NOLOGO"] = "1",
             ["SharedCompilationId"] = $"spar-package-tests-{salt}",
+
+            // The consumer's test hosts keep their data roots and browser profiles in this repository's disposable
+            // artifacts/ (AGENTS.md), never in the system's temporary or per-user folders.
+            ["SPAR_TEST_ARTIFACTS"] = Path.Combine(Repository, "artifacts"),
         };
 
         // Packing must write only under bin/ and obj/: the working tree reads the same before and after.
@@ -100,7 +112,7 @@ public sealed class Consumer : IAsyncLifetime
         await PackAsync(Second);
         Assert.Equal(before, await WorkingTreeAsync());
         var page = Path.Combine(Repository, "tests", "Spar.PackageTests", "consumer-ui");
-        ConsumerFiles.Write(Root, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Playwright"));
+        ConsumerFiles.WriteFromTemplate(Root, Feed, First, RepositorySdkVersion(), ConsumerFiles.Template(Repository), App);
         Directory.CreateDirectory(CentralRoot);
         ConsumerFiles.WriteCentral(CentralRoot, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Extensions.DependencyInjection"));
         LibraryConsumerFiles.WriteLibrary(LibraryRoot, Feed, First, RepositorySdkVersion());
@@ -133,6 +145,13 @@ public sealed class Consumer : IAsyncLifetime
             Interlocked.Increment(ref _failed);
         }
     }
+
+    /// <summary>
+    /// The main consumer's first build: its fast tests, restored and built from the feed, then run. Once per run: every
+    /// test of the main consumer starts by awaiting it (they share one collection, so they run one at a time).
+    /// </summary>
+    public Task<(int Exit, string Output)> FirstAsync() =>
+        _first ??= DotnetAsync("", "test", "--project", Path.Combine($"{App}.Tests", $"{App}.Tests.csproj"));
 
     /// <summary>Points the consumer's global.json at a version of Spar.Sdk, as an update or a downgrade would.</summary>
     public void UseSdk(string version) => ConsumerFiles.WriteGlobalJson(Root, version, RepositorySdkVersion());
@@ -175,7 +194,7 @@ public sealed class Consumer : IAsyncLifetime
     }
 
     /// <summary>A package's version from the repository's central package management, so the consumer uses the same.</summary>
-    private string PackageVersion(string id)
+    public string PackageVersion(string id)
     {
         var props = System.Xml.Linq.XDocument.Load(Path.Combine(Repository, "Directory.Packages.props"));
         var version = props.Descendants("PackageVersion").Single(p => (string?)p.Attribute("Include") == id).Attribute("Version");

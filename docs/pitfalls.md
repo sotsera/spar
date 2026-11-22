@@ -107,6 +107,9 @@ Surprising behaviours found while building the M0 spikes. Each one was observed 
 - **NuGet's restore sees each project once, by path:** it walks references without their `AdditionalProperties`, with the restore's own global properties, and every Spar variant shares `obj/project.assets.json`. A reference conditioned on `SparVariant` would make the variants' restores differ, so a Release build or a black-box publish rewrites the file a Debug build uses. Add a variant-only reference in a target, outside restore (`MSBuildIsRestoring`), as `SparLoopbackReference` does. (M1d step 2)
 - **A `FrameworkReference` added in a target does not rewrite an existing `runtimeconfig.json`:** its input hash covers runtime configuration options, the runtime identifier and a few properties, not the frameworks, so an incremental build kept the file without `Microsoft.AspNetCore.App`. Spar's loopback adds a runtime configuration option in the same variant, which changes the hash. (M1d step 2)
 
+- **`MSBuildTreatWarningsAsErrors` also turns compiler and analyzer warnings into errors,** since MSBuild's logger sees them as warnings of the `Csc` task: a test project with `TreatWarningsAsErrors=false` still failed with `error xUnit1051` (a warning in xunit.analyzers 2.3.0), because the repository's `Directory.Build.props` sets `MSBuildTreatWarningsAsErrors`. Only both off make it a warning again. So xUnit1051 is an error in an app from the template without Spar.Sdk raising it. (M1d step 4)
+- **An XML comment cannot contain `--`:** a project file whose comment showed `dotnet test --filter-trait …` did not load ("An XML comment cannot contain '--'"), and every build of it failed at once. Write command lines in project-file comments without double dashes. (M1d step 4)
+
 ## dotnet watch and the development loop
 
 - **`dotnet watch` (SDK 11.0.100) does not mark its builds.** There is no property and no variable, and the builds run in reused MSBuild nodes. `CustomCollectWatchItems` runs in dotnet-watch's own process, after each build. The app process does get `DOTNET_WATCH=1`. (`react`)
@@ -882,6 +885,9 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 - **`tar` of a working tree that another process is changing exits 1** ("file changed as we read it", here `.git` during another session's commit). The CI image's copy leaves `.git` out; the build needs no repository even with `ContinuousIntegrationBuild=true`. (M1c step 7)
 - **A copy refreshed with `rsync -a` can keep stale build output:** `rsync -a` gives a restored file its source's older modification time, so after a file of the WSL copy was edited for an experiment and synced back, MSBuild saw no input newer than its output and ran the edited build. Touch the restored files (or rebuild) after an edited copy is synced back. (M1c exit)
 - **The document portal leaves its FUSE mount when ended with `SIGKILL`:** `xdg-document-portal`, which `xdg-desktop-portal` starts, mounts `$XDG_RUNTIME_DIR/doc`; killed together with its bus it left the mount, and the folder could not be deleted ("Is a directory") until `fusermount3 -u`. Stop the bus first and let its services see it go. (M1c Notebook launch)
+
+- **`npm.cmd` started by its bare name looks for npm's scripts in the working directory:** `Process.Start("npm.cmd")` from a frontend folder failed with "Cannot find module '…\frontend\node_modules\npm\bin\npm-cli.js'". Start it by its full path from `PATH`. (M1d step 4)
+- **Editing any file of the tree while `Spar.PackageTests` packs fails every package test:** its fixture compares `git status` before and after packing Spar (about 45 s on Windows), so a documentation edit made meanwhile failed all 18 tests at 0 ms in the fixture ("Strings differ" on the status). Edit only after the run's consumers exist under its temporary folder, or wait for the run. (M1d step 4)
 
 ### Tooling: from earlier versions, not rechecked
 

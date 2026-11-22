@@ -171,6 +171,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         var clock = Stopwatch.StartNew();
         var options = new SparTestOptions();
         configure?.Invoke(options);
+        RequireSurfaceTrait(options.Surface);
 
         SparTestLog? log = null;
         var window = options.Surface == SparTestSurface.Window ? new WindowSurface(options) : null;
@@ -301,6 +302,33 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         }
 
         Surface = await _options.StartBrowser(this, cancellationToken);
+    }
+
+    /// <summary>
+    /// A test that starts the Window or Browser surface carries the matching trait, <c>[Trait("Surface", "Window")]</c>
+    /// or <c>[Trait("Surface", "Browser")]</c>, on the method, its class or the assembly: the trait keeps it out of the
+    /// fast invocation and runs it in its own (decision "M1d step 4's shape: tests in the template"). The test's traits
+    /// come from the test framework's hook; an app started where no hook watches (no hook, or a fixture) is not checked.
+    /// </summary>
+    private static void RequireSurfaceTrait(SparTestSurface surface)
+    {
+        var name = surface switch
+        {
+            SparTestSurface.Window => "Window",
+            SparTestSurface.Browser => "Browser",
+            _ => null,
+        };
+        if (name is null || SparTestCleanup.CurrentSurfaces() is not { } surfaces
+            || surfaces.Contains(name, StringComparer.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var trait = SparTestCleanup.SurfaceTrait;
+        throw new InvalidOperationException(
+            $"This test starts the {name} surface but has no [Trait(\"{trait}\", \"{name}\")]. Add the trait to the test, its class "
+            + $"or its assembly, so that --filter-trait \"{trait}={name}\" runs it with the other {name.ToLowerInvariant()} tests as "
+            + $"their own invocation and --filter-not-trait \"{trait}={name}\" keeps it out of the fast tests.");
     }
 
     private static void RunEntryPoint<TApp>(TaskCompletionSource<int> exit)

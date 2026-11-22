@@ -1,24 +1,46 @@
 namespace Spar.PackageTests;
 
 /// <summary>
-/// The consumer an app author would write with Spar's packages alone (no template yet: decision "Packages for the
-/// package-only consumer"): an app whose project and assembly names differ, with one contract, and a test project that
-/// calls the contract through the generated typed client. The app's page sits in <c>ui/</c>, not the default folder, with
-/// its committed lockfile; an end-to-end project opens it in Chromium. Warnings fail every build, as an app from the
-/// template has it.
+/// The consumers' files. The main consumer is the app template's content (decision "M1d step 4's shape: tests in the
+/// template"): the app with its frontend, its fast test project and its end-to-end project, copied from
+/// <c>src/Spar.Templates/content/spar-app/</c> with its placeholder name replaced, as <c>dotnet new</c> will (plan, M1d
+/// step 6). The other consumers are written here as an author would without the template: an app whose project and
+/// assembly names differ, with one contract, its page in <c>ui/</c> rather than the default folder with its committed
+/// lockfile, and a test project that calls the contract through the generated typed client. Warnings fail every build,
+/// as in an app from the template.
 /// </summary>
 internal static class ConsumerFiles
 {
-    public static void Write(string root, string feed, string sparVersion, string dotnetSdk, string page, string playwrightVersion)
+    /// <summary>The template's placeholder for the app's name, in paths and in files.</summary>
+    public const string Placeholder = "MyApp";
+
+    /// <summary>The app template's content in the repository.</summary>
+    public static string Template(string repository) => Path.Combine(repository, "src", "Spar.Templates", "content", "spar-app");
+
+    /// <summary>A new app from the template, named <paramref name="name"/>, using Spar from <paramref name="feed"/>.</summary>
+    public static void WriteFromTemplate(string root, string feed, string sparVersion, string dotnetSdk, string template, string name)
     {
         WriteGlobalJson(root, sparVersion, dotnetSdk);
         File.WriteAllText(Path.Combine(root, "nuget.config"), NugetConfig(feed));
-        WriteApp(Path.Combine(root, "App"));
-        CopyFolder(page, Path.Combine(root, "App", "ui"));
-        WriteTests(Path.Combine(root, "App.Tests"));
-        WriteEndToEndTests(Path.Combine(root, "App.EndToEndTests"), playwrightVersion);
-        WriteBlackBoxTests(Path.Combine(root, "App.BlackBoxTests"));
+        foreach (var file in Directory.EnumerateFiles(template, "*", SearchOption.AllDirectories))
+        {
+            // What a build of the content in place would leave there is not part of it.
+            var relative = Path.GetRelativePath(template, file);
+            if (relative.Split(Path.DirectorySeparatorChar).Any(part => part is "bin" or "obj" or "node_modules"))
+            {
+                continue;
+            }
+
+            var destination = Path.Combine(root, Rename(relative, name));
+            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+            File.WriteAllText(destination, Rename(File.ReadAllText(file), name));
+        }
     }
+
+    /// <summary>The template's text for an app named <paramref name="name"/>: the placeholder, and its lower case (npm's package name).</summary>
+    public static string Rename(string text, string name) => text
+        .Replace(Placeholder, name, StringComparison.Ordinal)
+        .Replace(Placeholder.ToLowerInvariant(), name.ToLowerInvariant(), StringComparison.Ordinal);
 
     /// <summary>
     /// The same app and test project in a folder that manages package versions centrally, as many solutions do: a
@@ -164,118 +186,6 @@ internal static class ConsumerFiles
                     var note = await new NotesClient(app).CountAsync("hello package world", token);
 
                     Assert.Equal(3, note.Words);
-                }
-            }
-
-            """);
-    }
-
-    private static void WriteEndToEndTests(string folder, string playwrightVersion)
-    {
-        Directory.CreateDirectory(folder);
-        File.WriteAllText(Path.Combine(folder, "Notes.App.EndToEndTests.csproj"), $$"""
-            <Project Sdk="Spar.Sdk">
-              <PropertyGroup>
-                <OutputType>Exe</OutputType>
-                <TargetFramework>net11.0</TargetFramework>
-                <Nullable>enable</Nullable>
-                <ImplicitUsings>enable</ImplicitUsings>
-                <IsTestProject>true</IsTestProject>
-                <SparBrowserTests>true</SparBrowserTests>
-                <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-                <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
-              </PropertyGroup>
-
-              <ItemGroup>
-                <PackageReference Include="Microsoft.Playwright" Version="{{playwrightVersion}}" />
-              </ItemGroup>
-
-              <ItemGroup>
-                <SparTestedApplication Include="..\App\Notes.App.csproj" />
-              </ItemGroup>
-            </Project>
-
-            """);
-        File.WriteAllText(Path.Combine(folder, "PageTests.cs"), """
-            using Microsoft.Playwright;
-            using NotesTool;
-            using Spar.Testing;
-            using static Microsoft.Playwright.Assertions;
-
-            namespace NotesTool.EndToEndTests;
-
-            public sealed class PageTests
-            {
-                [Fact]
-                public async Task The_page_counts_words_through_the_backend()
-                {
-                    var token = TestContext.Current.CancellationToken;
-                    await using var app = await SparTestApp.StartAsync<Program>(o =>
-                    {
-                        o.Surface = SparTestSurface.Browser;
-                        o.Page();
-                    }, token);
-                    using var playwright = await Playwright.CreateAsync();
-                    await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
-                    var page = await browser.NewPageAsync();
-
-                    await page.GotoAsync(app.PageUrl().ToString());
-                    await page.GetByLabel("Text").FillAsync("one two three four");
-                    await page.GetByRole(AriaRole.Button, new() { Name = "Count" }).ClickAsync();
-
-                    await Expect(page.GetByRole(AriaRole.Status)).ToHaveTextAsync("4 words");
-                    Assert.Empty(app.Problems);
-                }
-            }
-
-            """);
-    }
-
-    /// <summary>
-    /// A black-box test project (docs/app-model.md 6.13): the app's Production executable, published by the packaged
-    /// SDK beside the tests, launched and read through UI Automation. Its app's assembly name names Projects' property.
-    /// </summary>
-    private static void WriteBlackBoxTests(string folder)
-    {
-        Directory.CreateDirectory(folder);
-        File.WriteAllText(Path.Combine(folder, "Notes.App.BlackBoxTests.csproj"), """
-            <Project Sdk="Spar.Sdk">
-              <PropertyGroup>
-                <OutputType>Exe</OutputType>
-                <TargetFramework>net11.0</TargetFramework>
-                <Nullable>enable</Nullable>
-                <ImplicitUsings>enable</ImplicitUsings>
-                <IsTestProject>true</IsTestProject>
-                <SparBlackBoxTests>true</SparBlackBoxTests>
-                <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-                <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
-              </PropertyGroup>
-
-              <ItemGroup>
-                <SparTestedApplication Include="..\App\Notes.App.csproj" />
-              </ItemGroup>
-            </Project>
-
-            """);
-        File.WriteAllText(Path.Combine(folder, "LaunchTests.cs"), """
-            using Spar;
-            using Spar.Testing;
-
-            namespace NotesTool.BlackBoxTests;
-
-            public sealed class LaunchTests
-            {
-                [Fact]
-                public async Task The_published_app_starts_shows_its_page_and_closes_cleanly()
-                {
-                    Assert.SkipUnless(OperatingSystem.IsWindows(), "The black-box fixture runs on Windows until the Linux host.");
-                    var token = TestContext.Current.CancellationToken;
-                    // This page never reports ui-ready (it speaks to the loopback host only), so the test waits for its heading.
-                    await using var app = await SparBlackBox.LaunchAsync(Projects.NotesTool, o => o.WaitForReady = false, token);
-
-                    await app.Window.GetByRole(SparRole.Heading, new() { Name = "Word count" }).WaitForAsync();
-                    Assert.Equal(0, await app.CloseAsync(token));
-                    Assert.True(await app.WaitForProcessTreeExitAsync());
                 }
             }
 

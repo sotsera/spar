@@ -75,6 +75,8 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
   </Project>
   ```
 
+- **What a test project gets** (decision "M1d step 4's shape: tests in the template"; built in M1d step 4). `dotnet test` writes its results under the test project's own `obj/test-results/` (`<SparTestResultsDirectory>` names another folder), and leaves no `TestResults/` folder behind. A new app's two test projects, from the template, also have `[assembly: CaptureConsole]`, so what the code writes to the console lands in each test's own output, and treat warnings as errors, which makes xUnit's xUnit1051 (a call that could take `TestContext.Current.CancellationToken` and does not) an error. Browser, window and black-box tests carry a `Surface` trait (`Browser`, `Window`, `BlackBox`) and run as their own invocations, `dotnet test --filter-trait "Surface=Window"` and the others, apart from the fast tests; Spar checks the first two (6.12). Page tests run with `npm test` in `frontend/`; `dotnet test` runs only the C# tests.
+
 ## 2. `Program.cs`
 
 **Decided** (user, 2026-11-15; decision "`Program.cs` shape confirmed"). `Program.cs` holds exactly one `SparApplication.Create` and one `Run`, directly in the top-level statements; anything else is a diagnostic (plan section 2, "`Program.cs`").
@@ -1776,6 +1778,7 @@ public sealed class ConnectionsWindowTests
 - **Light by default:** `o.ColorScheme` is `SparColorScheme.Light` unless a test asks for `Dark` or `System`, so the page's `prefers-color-scheme`, the window's own colours, and so every screenshot, are the same on every machine.
 - **Keys:** `PressAsync` takes a key name (`"Enter"`, `"Control+End"`) or any one character; typing goes one character at a time, never half an emoji. A character the US keyboard has no key for (`è`, `€`, `中`) still sends `keydown` and `keyup`, with `event.key` the character and an empty `event.code`. Dead keys, other layouts and input-method composition are not modelled.
 - **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=Window"`, and in the NativeAOT lane, which leaves out the browser tests. They never take the focus, so they can run while someone uses the computer.
+- **The trait is checked** (decision "M1d step 4's shape: tests in the template"). A test that starts the Window surface without `[Trait("Surface", "Window")]`, on the method, its class or the assembly, fails at once, before anything starts: `This test starts the Window surface but has no [Trait("Surface", "Window")]. Add the trait to the test, its class or its assembly, …`. A browser test needs `[Trait("Surface", "Browser")]` the same way. Without the trait, a window test would run in the fast tests' invocation, where a native engine abort takes every result of that run with it.
 
 **Closing the window** (decision "Window tests: closing, session-end budget, test theme and any-character keys"). `app.Window.CloseAsync()` closes the window as its close button does, through its close request (6.11): the page's guard, then the backend's. A window test never shows a dialog: by default the close is automated, so an ask counts as close; a test of a guard's prompt turns that off and gives the answer.
 

@@ -1,0 +1,36 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  background: #ffffff;
+  color: #1d1f24;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    background: #1d1f24;
+    color: #e8e9ec;
+  }
+}
+
+main {
+  max-width: 32rem;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+}
+
+form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+input {
+  flex: 1;
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+}
+
+button {
+  font: inherit;
+  padding: 0.35rem 0.9rem;
+}

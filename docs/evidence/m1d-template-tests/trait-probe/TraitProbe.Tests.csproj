@@ -1,0 +1,10 @@
+<Project Sdk="Spar.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <SparTestedApplication Include="..\..\..\tests\apps\WireShapes\WireShapes.csproj" />
+  </ItemGroup>
+</Project>

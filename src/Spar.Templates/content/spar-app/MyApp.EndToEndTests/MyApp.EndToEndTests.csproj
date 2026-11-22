@@ -1,0 +1,40 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The end-to-end tests. Each kind carries its Surface trait and runs as an invocation of its own, apart from the fast
+    tests: dotnet test with filter-trait "Surface=Browser" (Browser/, the page in Chromium), "Surface=Window" (Window/,
+    the app's real window) or "Surface=BlackBox" (BlackBox/, the Production executable). The NativeAOT lane
+    (SparTestLane=Aot) leaves the browser tests out: Playwright cannot run under NativeAOT.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsTestProject>true</IsTestProject>
+
+    <!-- The black-box tests: the build publishes the app's Production executable beside the tests (Projects.MyApp). -->
+    <SparBlackBoxTests>true</SparBlackBoxTests>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- The Browser surface, which Spar.Sdk adds, and Playwright to drive Chromium. -->
+  <PropertyGroup Condition="'$(SparTestLane)' != 'Aot'">
+    <SparBrowserTests>true</SparBrowserTests>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparTestLane)' != 'Aot'">
+    <PackageReference Include="Microsoft.Playwright" Version="1.64.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparTestLane)' == 'Aot'">
+    <Compile Remove="Browser\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\MyApp\MyApp.csproj" />
+  </ItemGroup>
+</Project>

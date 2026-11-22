@@ -41,11 +41,18 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <!--
-    Test results go to the repository's artifacts/test-results/<project>/ (decision "M1a names"), with a TRX report of every
-    run, so a failure that does not recur keeps its message and output (decision "Every test run keeps a TRX report").
+    Where dotnet test writes a test project's results, so no TestResults/ folder is left in the working directory (plan
+    section 5, "Template defaults"): an app's test project writes under its own obj/test-results/; SparTestResultsDirectory
+    names another folder. In this repository (source mode) they go to artifacts/test-results/<project>/ (decision "M1a
+    names"), with a TRX report of every run, so a failure that does not recur keeps its message and output (decision
+    "Every test run keeps a TRX report"). No trailing separator: inside the quotes it would escape the closing one.
   -->
-  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' == 'true'">
-    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)" --report-xunit-trx</TestingPlatformCommandLineArguments>
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <SparTestResultsDirectory Condition="'$(SparTestResultsDirectory)' == '' and '$(SparSourceMode)' == 'true'">$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)</SparTestResultsDirectory>
+    <SparTestResultsDirectory Condition="'$(SparTestResultsDirectory)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'test-results'))</SparTestResultsDirectory>
+    <SparTestResultsDirectory>$(SparTestResultsDirectory.TrimEnd('\').TrimEnd('/'))</SparTestResultsDirectory>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparTestResultsDirectory)"</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments Condition="'$(SparSourceMode)' == 'true'">$(TestingPlatformCommandLineArguments) --report-xunit-trx</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
   <!--
