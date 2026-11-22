@@ -52,12 +52,14 @@ internal sealed class HostPage : IAsyncDisposable
         [.. activity.Events.Where(e => e.StartsWith("note close ", StringComparison.Ordinal)).Select(e => e["note ".Length..])];
 
     /// <summary>
-    /// Clicks "Hang for 12 seconds" and returns once the page has told the backend its hang starts: the page's thread is
-    /// then blocked, or blocks in its next task, whatever a timer's delay in a test window.
+    /// Starts the page's 12 s hang and returns once the page has told the backend it starts: the page's thread is then
+    /// blocked, or blocks in its next task. The button is clicked from script, not with trusted input: a trusted click
+    /// returns only when the renderer acknowledges it, and on CI's Windows runner a test window's slow frames let the
+    /// hang start first, so the click itself waited out the 12 s (CloseTests' hung-page cases, about one run in three).
     /// </summary>
     public async Task HangAsync()
     {
-        await ClickAsync("Hang for 12 seconds");
+        await Page.EvaluateAsync("document.getElementById('hang').click(), true");
         await Waits.UntilAsync(() => Activity.Events.Contains("note hang started"), TimeSpan.FromSeconds(5), "the page's hang to start");
     }
 

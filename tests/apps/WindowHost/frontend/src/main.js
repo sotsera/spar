@@ -143,11 +143,10 @@ windows.onCloseRequested(async request => {
   }
 });
 
-// Blocks the page's thread for 12 s, a moment after the click, so the click and its acknowledgement return first (on
-// Linux a click waits for the page's acknowledgement, which a hang in the very next task would hold for the 12 s). The
-// timer can fire late in a test window, which is offscreen and never activated, so the page tells the backend
-// "hang started" and only then hangs, in the next task: the note leaves with this task's microtasks, and a test waits
-// for it instead of guessing a delay (CloseTests: a late timer let a close request in before the hang, once on CI).
+// Blocks the page's thread for 12 s, a moment after the click, so whatever started it returns first. Then the page
+// tells the backend "hang started" and hangs in the next task: the note is sent synchronously, before the loop, and a
+// test waits for it instead of guessing a delay (HostPage.HangAsync, which clicks from script: a trusted click waits
+// for the renderer's acknowledgement, which a hang that starts first holds for the 12 s).
 const hangChannel = new MessageChannel();
 hangChannel.port1.onmessage = () => {
   const end = Date.now() + 12_000;
