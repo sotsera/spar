@@ -143,9 +143,11 @@ windows.onCloseRequested(async request => {
   }
 });
 
-// Blocks the page's thread for 12 s, in the task right after the click's, so the click itself returns. A message on a
-// channel of its own, not a timer: a test window is offscreen and never activated, where Chromium may delay timers, and
-// a 50 ms timer that fired late let a close request in before the hang (CloseTests, once on CI's Windows runner).
+// Blocks the page's thread for 12 s, a moment after the click, so the click and its acknowledgement return first (on
+// Linux a click waits for the page's acknowledgement, which a hang in the very next task would hold for the 12 s). The
+// timer can fire late in a test window, which is offscreen and never activated, so the page tells the backend
+// "hang started" and only then hangs, in the next task: the note leaves with this task's microtasks, and a test waits
+// for it instead of guessing a delay (CloseTests: a late timer let a close request in before the hang, once on CI).
 const hangChannel = new MessageChannel();
 hangChannel.port1.onmessage = () => {
   const end = Date.now() + 12_000;
@@ -153,7 +155,10 @@ hangChannel.port1.onmessage = () => {
     // Busy on purpose: a hung page.
   }
 };
-on("hang", () => hangChannel.port2.postMessage(null));
+on("hang", () => setTimeout(() => {
+  host.note("hang started");
+  hangChannel.port2.postMessage(null);
+}, 50));
 
 // What the key tests read: every keyboard and input event of the Keys field, in order.
 const keys = document.getElementById("keys");

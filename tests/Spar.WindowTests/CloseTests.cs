@@ -206,8 +206,7 @@ public sealed class CloseTests
     {
         await using var host = await HostPage.OpenAsync();
         var activity = host.Activity;
-        await host.ClickAsync("Hang for 12 seconds");
-        await Task.Delay(200, TestContext.Current.CancellationToken);
+        await host.HangAsync();
         var started = System.Diagnostics.Stopwatch.StartNew();
 
         var result = await host.App.Window.CloseAsync(new() { Automated = false, Answer = CloseAnswer.CloseAnyway });
@@ -224,8 +223,7 @@ public sealed class CloseTests
     {
         await using var host = await HostPage.OpenAsync();
         await host.GuardAsync("keep");
-        await host.ClickAsync("Hang for 12 seconds");
-        await Task.Delay(200, TestContext.Current.CancellationToken);
+        await host.HangAsync();
 
         var started = System.Diagnostics.Stopwatch.StartNew();
         var result = await host.App.Window.CloseAsync(new() { Automated = false, Answer = CloseAnswer.KeepOpen });

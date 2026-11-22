@@ -51,6 +51,16 @@ internal sealed class HostPage : IAsyncDisposable
     public static List<string> NotesOf(Activity activity) =>
         [.. activity.Events.Where(e => e.StartsWith("note close ", StringComparison.Ordinal)).Select(e => e["note ".Length..])];
 
+    /// <summary>
+    /// Clicks "Hang for 12 seconds" and returns once the page has told the backend its hang starts: the page's thread is
+    /// then blocked, or blocks in its next task, whatever a timer's delay in a test window.
+    /// </summary>
+    public async Task HangAsync()
+    {
+        await ClickAsync("Hang for 12 seconds");
+        await Waits.UntilAsync(() => Activity.Events.Contains("note hang started"), TimeSpan.FromSeconds(5), "the page's hang to start");
+    }
+
     /// <summary>Clicks a button by its name.</summary>
     public Task ClickAsync(string name) => Page.GetByRole(SparRole.Button, new() { Name = name, Exact = true }).ClickAsync();
 
