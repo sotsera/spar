@@ -14,6 +14,9 @@ public sealed class ToolTests(Consumer consumer) : IDisposable
 {
     private const string App = Consumer.App;
 
+    /// <summary>Doctor's checks of a window's prerequisites on Linux (<see cref="MachineLacksADesktop"/>).</summary>
+    private static readonly string[] DesktopChecks = ["linux-gtk4", "linux-webkitgtk", "linux-sandbox-tools"];
+
     [Fact]
     public async Task The_tool_restores_from_the_manifest_and_doctor_finds_nothing_to_fix_in_the_new_app()
     {
@@ -160,8 +163,12 @@ public sealed class ToolTests(Consumer consumer) : IDisposable
     /// A Linux machine without WebKitGTK 6.0 or GTK 4 (CI's hosted runner), where doctor rightly reports them; the
     /// window and black-box tests skip there for the same reason (TemplateTests).
     /// </summary>
+    /// <summary>
+    /// A Linux machine without WebKitGTK 6.0 (CI's package-test runner) has no window: doctor's errors for the window's
+    /// libraries and for WebKitGTK's sandbox tools are then right, and the only ones the test accepts.
+    /// </summary>
     private static bool MachineLacksADesktop(string problem = "") =>
-        OperatingSystem.IsLinux() && (problem.Length == 0 || problem.StartsWith("linux-webkitgtk:", StringComparison.Ordinal) || problem.StartsWith("linux-gtk4:", StringComparison.Ordinal))
+        OperatingSystem.IsLinux() && (problem.Length == 0 || DesktopChecks.Any(id => problem.StartsWith(id + ":", StringComparison.Ordinal)))
         && !Libraries().Any(folder => File.Exists(Path.Combine(folder, "libwebkitgtk-6.0.so.4")));
 
     private static IEnumerable<string> Libraries() =>

@@ -129,6 +129,11 @@ step() {
       (cd "$repo" && timed dotnet build samples/Notebook.EndToEndTests -c Debug) || return 1
       (cd "$repo" && timed dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build -- --filter-trait "Surface=BlackBox" "${@:2}")
       census ;;
+    notebookwindow)
+      # The Notebook's window journeys on CoreCLR (Surface=Window), which the black-box step above leaves out.
+      (cd "$repo" && timed dotnet build samples/Notebook.EndToEndTests -c Debug) || return 1
+      (cd "$repo" && timed dotnet test --project samples/Notebook.EndToEndTests -c Debug --no-build -- --filter-trait "Surface=Window" "${@:2}")
+      census ;;
     packagetests)
       # Spar.PackageTests (M1d step 4, docs/evidence/m1d-template-tests.md): Spar packed into a feed of its own and the
       # app template's content built from it in /tmp, its fast, NativeAOT, page, browser, window and black-box tests

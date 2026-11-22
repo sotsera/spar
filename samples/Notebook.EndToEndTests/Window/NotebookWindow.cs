@@ -39,6 +39,18 @@ internal sealed class NotebookWindow : IAsyncDisposable
         return new NotebookWindow(app);
     }
 
+    /// <summary>
+    /// Waits until the page has sent its <c>ready</c>. The page sends it only once its splash is gone and a frame has
+    /// drawn without it, which takes the splash's minimum time when the start was slow, so content on the screen does
+    /// not yet mean the page is done starting: a reload before then replaces a document that still has <c>ready</c> to
+    /// send, and the host ignores it with a warning.
+    /// </summary>
+    public async Task WaitForReadyAsync()
+    {
+        await Expect(Page.Locator("#spar-splash")).ToHaveCountAsync(0);
+        await Page.WaitForUiReadyAsync();
+    }
+
     /// <summary>Creates a page through the dialog, as a person would.</summary>
     public async Task CreateAsync(string title)
     {

@@ -125,9 +125,11 @@ public sealed class WindowJourneyTests
     {
         await using var notebook = await NotebookWindow.OpenAsync();
 
-        // The first page has connected and has its (empty) list before the reload replaces it: a page reloaded while
-        // it is still starting sends its first call and `ready` as it goes, and the host ignores them with a warning.
+        // The first page has connected, has its (empty) list and has reported ready before the reload replaces it: a
+        // page reloaded while it is still starting sends its first call and `ready` as it goes, and the host ignores
+        // them with a warning. `ready` waits for the splash, so the visible list alone is not enough.
         await Expect(notebook.Page.GetByRole(SparRole.Heading, new() { Name = "Start your notebook" })).ToBeVisibleAsync();
+        await notebook.WaitForReadyAsync();
         var pages = new PagesClient(notebook.App);
         foreach (var title in new[] { "Reading list", "Recipes", "Travel" })
         {
