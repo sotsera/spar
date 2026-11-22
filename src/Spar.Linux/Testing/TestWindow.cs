@@ -33,6 +33,9 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     /// <summary>The least an engine call is waited for, even at the end of an action's time.</summary>
     private static readonly TimeSpan MinimumWait = TimeSpan.FromMilliseconds(100);
 
+    /// <summary>How often a waiting engine call checks whether a navigation replaced its document.</summary>
+    private static readonly TimeSpan DocumentCheck = TimeSpan.FromMilliseconds(50);
+
     private readonly TestWindowProcess _process;
     private readonly SparApp _app;
     private readonly SparRunningApp _running;
@@ -91,15 +94,16 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         while (true)
         {
             // An answer that never comes (a document that stopped running its frames) is a retry, never a hang.
+            var document = _page?.Documents;
             var call = OnLoopAsync(() => Page.EngineAsync(request));
-            var left = wait - Stopwatch.GetElapsedTime(started);
-            if (await Task.WhenAny(call, Task.Delay(left > MinimumWait ? left : MinimumWait)) != call)
+            var waited = await AwaitEngineAsync(call, document, started, wait);
+            if (waited == EngineWait.Silent)
             {
-                await NoteSilentEngineAsync(request);
+                await NoteSilentEngineAsync(request, document);
                 return null;
             }
 
-            var answer = await call;
+            var answer = waited == EngineWait.Answered ? await call : null;
             if (answer is not null || Stopwatch.GetElapsedTime(started) >= wait || _closed.Task.IsCompleted)
             {
                 return answer;
@@ -110,16 +114,49 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         }
     }
 
-    /// <summary>An engine call that did not answer in time: what the page's state was, in the app's log (once per window).</summary>
-    private async Task NoteSilentEngineAsync(string request)
+    /// <summary>
+    /// Waits for one engine call: answered; silent past the wait (and at least <see cref="MinimumWait"/>); or sent to a
+    /// document a navigation replaced meanwhile, which never answers it (a click on a link, measured on CI's Linux
+    /// container: the request waited out its whole wait, then was taken for a page that stopped answering).
+    /// </summary>
+    private async Task<EngineWait> AwaitEngineAsync(Task<string?> call, int? document, long started, TimeSpan wait)
     {
-        if (Interlocked.Exchange(ref _notedSilence, 1) != 0)
+        var callStarted = Stopwatch.GetTimestamp();
+        while (true)
+        {
+            var forWait = wait - Stopwatch.GetElapsedTime(started);
+            var forMinimum = MinimumWait - Stopwatch.GetElapsedTime(callStarted);
+            var left = forWait > forMinimum ? forWait : forMinimum;
+            if (left <= TimeSpan.Zero)
+            {
+                return EngineWait.Silent;
+            }
+
+            if (await Task.WhenAny(call, Task.Delay(left < DocumentCheck ? left : DocumentCheck)) == call)
+            {
+                return EngineWait.Answered;
+            }
+
+            if (_page?.Documents != document)
+            {
+                return EngineWait.Replaced;
+            }
+        }
+    }
+
+    /// <summary>
+    /// An engine call that did not answer in time: what the page's state was, in the app's log (once per window). Not
+    /// when a navigation replaced the document it was sent to meanwhile: that document never answers, and nothing is wrong.
+    /// </summary>
+    private async Task NoteSilentEngineAsync(string request, int? document)
+    {
+        var state = OnLoopAsync(() => Page.EvaluateAsync("document.visibilityState + ' ' + document.hasFocus() + ' ' + document.readyState"));
+        var shown = await Task.WhenAny(state, Task.Delay(1_000)) == state && state.IsCompletedSuccessfully ? state.Result : "no answer";
+        if (_page?.Documents != document || Interlocked.Exchange(ref _notedSilence, 1) != 0)
         {
             return;
         }
 
-        var state = OnLoopAsync(() => Page.EvaluateAsync("document.visibilityState + ' ' + document.hasFocus() + ' ' + document.readyState"));
-        var shown = await Task.WhenAny(state, Task.Delay(1_000)) == state && state.IsCompletedSuccessfully ? state.Result : "no answer";
         _log.Warn($"The page engine did not answer {request} in time; the page: {shown}.");
     }
 
@@ -558,6 +595,14 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     {
         using var json = System.Text.Json.JsonDocument.Parse(answer);
         return json.RootElement.TryGetProperty("count", out var count) && count.TryGetInt32(out var number) ? number : 0;
+    }
+
+    /// <summary>How one engine call ended (<see cref="AwaitEngineAsync"/>).</summary>
+    private enum EngineWait
+    {
+        Answered,
+        Silent,
+        Replaced,
     }
 
     /// <summary>A window test's answer in place of every native dialog of its close request.</summary>
