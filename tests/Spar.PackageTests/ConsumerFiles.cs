@@ -1,41 +1,23 @@
 namespace Spar.PackageTests;
 
 /// <summary>
-/// The consumers' files. The main consumer is the app template's content (decision "M1d step 4's shape: tests in the
-/// template"): the app with its frontend, its fast test project and its end-to-end project, copied from
-/// <c>src/Spar.Templates/content/spar-app/</c> with its placeholder name replaced, as <c>dotnet new</c> will (plan, M1d
-/// step 6). The other consumers are written here as an author would without the template: an app whose project and
-/// assembly names differ, with one contract, its page in <c>ui/</c> rather than the default folder with its committed
-/// lockfile, and a test project that calls the contract through the generated typed client. Warnings fail every build,
-/// as in an app from the template.
+/// The consumers' files. The main consumer is made by <c>dotnet new spar-app</c> from the packed template (see
+/// <see cref="Consumer"/>), so only its nuget.config is written here. The other consumers are written here as an author
+/// would without the template: an app whose project and assembly names differ, with one contract, its page in
+/// <c>ui/</c> rather than the default folder with its committed lockfile, and a test project that calls the contract
+/// through the generated typed client. Warnings fail every build, as in an app from the template.
 /// </summary>
 internal static class ConsumerFiles
 {
-    /// <summary>The template's placeholder for the app's name, in paths and in files.</summary>
+    /// <summary>The template's placeholder for the app's name, in paths and in files (its <c>appName</c> symbol).</summary>
     public const string Placeholder = "MyApp";
 
     /// <summary>The app template's content in the repository.</summary>
     public static string Template(string repository) => Path.Combine(repository, "src", "Spar.Templates", "content", "spar-app");
 
-    /// <summary>A new app from the template, named <paramref name="name"/>, using Spar from <paramref name="feed"/>.</summary>
-    public static void WriteFromTemplate(string root, string feed, string sparVersion, string dotnetSdk, string template, string name)
-    {
-        WriteGlobalJson(root, sparVersion, dotnetSdk);
+    /// <summary>The nuget.config of a consumer: Spar's packages from <paramref name="feed"/> only.</summary>
+    public static void WriteNugetConfig(string root, string feed) =>
         File.WriteAllText(Path.Combine(root, "nuget.config"), NugetConfig(feed));
-        foreach (var file in Directory.EnumerateFiles(template, "*", SearchOption.AllDirectories))
-        {
-            // What a build of the content in place would leave there is not part of it.
-            var relative = Path.GetRelativePath(template, file);
-            if (relative.Split(Path.DirectorySeparatorChar).Any(part => part is "bin" or "obj" or "node_modules"))
-            {
-                continue;
-            }
-
-            var destination = Path.Combine(root, Rename(relative, name));
-            Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
-            File.WriteAllText(destination, Rename(File.ReadAllText(file), name));
-        }
-    }
 
     /// <summary>The template's text for an app named <paramref name="name"/>: the placeholder, and its lower case (npm's package name).</summary>
     public static string Rename(string text, string name) => text
@@ -49,7 +31,7 @@ internal static class ConsumerFiles
     public static void WriteCentral(string root, string feed, string sparVersion, string dotnetSdk, string page, string pinnedVersion)
     {
         WriteGlobalJson(root, sparVersion, dotnetSdk);
-        File.WriteAllText(Path.Combine(root, "nuget.config"), NugetConfig(feed));
+        WriteNugetConfig(root, feed);
         File.WriteAllText(Path.Combine(root, "Directory.Packages.props"), $$"""
             <Project>
               <PropertyGroup>

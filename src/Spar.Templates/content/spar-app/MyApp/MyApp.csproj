@@ -7,6 +7,9 @@
 
     <!-- Names the app to the OS and its per-user folders: reverse-DNS, unique to this app. -->
     <SparAppId>com.example.MyApp</SparAppId>
+
+    <!-- The OSes the app runs on: windows, linux, or both. Each executable is published on its own OS. -->
+    <SparPlatforms>windows;linux</SparPlatforms>
   </PropertyGroup>
 
   <!-- Every warning fails the build, the compiler's and MSBuild's, the SDK's and NuGet's. -->

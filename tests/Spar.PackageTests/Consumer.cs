@@ -8,7 +8,8 @@ namespace Spar.PackageTests;
 /// <summary>
 /// Spar packed twice, at two versions no build has used, into a feed of this run's own; and consumers that use Spar
 /// from that feed alone (decisions "Package-only consumer" and "Packages for the package-only consumer"), the main one a
-/// new app from the app template's content (decision "M1d step 4's shape: tests in the template"). Each is a folder
+/// new app made by <c>dotnet new spar-app</c> from the packed template (plan, M1d step 6), installed into a template hive
+/// of this run's own, never the user's. Each is a folder
 /// outside any repository whose path has a space and non-ASCII letters, a nuget.config that maps Spar's packages to
 /// the feed, and its own MSBuild handshake and compiler server. NuGet's package folder and HTTP cache are kept apart
 /// from the user's and shared across runs, so only the first run downloads: the HTTP cache alone is not enough, since
@@ -34,7 +35,7 @@ public sealed class Consumer : IAsyncLifetime
     private int _failed;
     private Task<(int Exit, string Output)>? _first;
 
-    /// <summary>The name the template's app gets in the main consumer, in place of <see cref="ConsumerFiles.Placeholder"/>.</summary>
+    /// <summary>The name the template's app gets in the main consumer (<c>dotnet new spar-app -n Notes</c>).</summary>
     public const string App = "Notes";
 
     /// <summary>The collection of the test classes that build the main consumer's folders, so they run one at a time.</summary>
@@ -46,6 +47,15 @@ public sealed class Consumer : IAsyncLifetime
 
     /// <summary>The consumer's own folder; a space and non-ASCII letters, as a user's documents folder can have.</summary>
     public string Root => Path.Combine(RunRoot, "Nötes Äpp");
+
+    /// <summary>The template engine's settings and installed templates for this run: <c>--debug:custom-hive</c>.</summary>
+    public string TemplateHive => Path.Combine(RunRoot, "template-hive");
+
+    /// <summary>The main consumer's files as <c>dotnet new</c> wrote them, before the run added its nuget.config.</summary>
+    public IReadOnlyList<string> NewAppFiles { get; private set; } = [];
+
+    /// <summary>The main consumer's global.json as <c>dotnet new</c> wrote it.</summary>
+    public string NewAppGlobalJson { get; private set; } = "";
 
     /// <summary>A second consumer of the same packages, whose solution manages package versions centrally.</summary>
     public string CentralRoot => Path.Combine(RunRoot, "Central Äpp");
@@ -112,7 +122,16 @@ public sealed class Consumer : IAsyncLifetime
         await PackAsync(Second);
         Assert.Equal(before, await WorkingTreeAsync());
         var page = Path.Combine(Repository, "tests", "Spar.PackageTests", "consumer-ui");
-        ConsumerFiles.WriteFromTemplate(Root, Feed, First, RepositorySdkVersion(), ConsumerFiles.Template(Repository), App);
+        var (installed, installOutput) = await DotnetInAsync(RunRoot, "", "new", "install",
+            Path.Combine(Feed, $"Spar.Templates.{First}.nupkg"), "--debug:custom-hive", TemplateHive);
+        Assert.True(installed == 0, $"dotnet new install:\n{installOutput}");
+        var (created, createOutput) = await NewAppAsync(Root, "-n", App);
+        Assert.True(created == 0, $"dotnet new spar-app:\n{createOutput}");
+        NewAppFiles = [.. Directory.EnumerateFiles(Root, "*", SearchOption.AllDirectories)
+            .Select(file => Path.GetRelativePath(Root, file).Replace('\\', '/'))
+            .Order(StringComparer.Ordinal)];
+        NewAppGlobalJson = File.ReadAllText(Path.Combine(Root, "global.json"));
+        ConsumerFiles.WriteNugetConfig(Root, Feed);
         Directory.CreateDirectory(CentralRoot);
         ConsumerFiles.WriteCentral(CentralRoot, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Extensions.DependencyInjection"));
         LibraryConsumerFiles.WriteLibrary(LibraryRoot, Feed, First, RepositorySdkVersion());
@@ -153,8 +172,25 @@ public sealed class Consumer : IAsyncLifetime
     public Task<(int Exit, string Output)> FirstAsync() =>
         _first ??= DotnetAsync("", "test", "--project", Path.Combine($"{App}.Tests", $"{App}.Tests.csproj"));
 
-    /// <summary>Points the consumer's global.json at a version of Spar.Sdk, as an update or a downgrade would.</summary>
-    public void UseSdk(string version) => ConsumerFiles.WriteGlobalJson(Root, version, RepositorySdkVersion());
+    /// <summary>
+    /// Makes a new app from the installed template into <paramref name="folder"/>, with the run's hive and no update check
+    /// (which would ask NuGet for a newer Spar.Templates), from the run's folder: <c>dotnet new spar-app -o folder …</c>.
+    /// The new folder has no nuget.config: the caller writes the one that names the run's feed.
+    /// </summary>
+    public Task<(int Exit, string Output)> NewAppAsync(string folder, params string[] options) =>
+        DotnetInAsync(RunRoot, "", ["new", "spar-app", "-o", folder, .. options, "--debug:custom-hive", TemplateHive, "--no-update-check"]);
+
+    /// <summary>
+    /// Points the consumer's global.json at a version of Spar.Sdk, as an update or a downgrade would: the template's own
+    /// file, with only that version changed.
+    /// </summary>
+    public void UseSdk(string version)
+    {
+        var path = Path.Combine(Root, "global.json");
+        var json = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(path))!;
+        json["msbuild-sdks"]!["Spar.Sdk"] = version;
+        File.WriteAllText(path, json.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }) + "\n");
+    }
 
     /// <summary>Runs <c>dotnet</c> in the consumer with its isolated environment, from <paramref name="directory"/> (relative to the root).</summary>
     public Task<(int Exit, string Output)> DotnetAsync(string directory, params string[] arguments) =>
@@ -169,12 +205,12 @@ public sealed class Consumer : IAsyncLifetime
         Tool.RunAsync(Path.Combine(root, directory), "dotnet", arguments, Environment);
 
     /// <summary>
-    /// Packs Spar's seven packages at <paramref name="version"/> into the feed, from this repository with its own build
+    /// Packs Spar's eight packages at <paramref name="version"/> into the feed, from this repository with its own build
     /// settings: the MSBuild server off and no node reuse, so a pack never shares a node with the consumer.
     /// </summary>
     private async Task PackAsync(string version)
     {
-        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk"];
+        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk", "Spar.Templates"];
         var suffix = version["0.1.0-".Length..];
         foreach (var project in projects)
         {
@@ -201,7 +237,7 @@ public sealed class Consumer : IAsyncLifetime
         return version?.Value ?? throw new InvalidOperationException($"Directory.Packages.props has no version for {id}.");
     }
 
-    private string RepositorySdkVersion()
+    public string RepositorySdkVersion()
     {
         var json = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Repository, "global.json")));
         return json.RootElement.GetProperty("sdk").GetProperty("version").GetString()!;

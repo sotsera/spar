@@ -19,9 +19,12 @@
 //   restore:<f>    restore one edited file (body: MarkdownPageStore.cs; dto: PageTypes.cs and notebook.test.tsx;
 //                  probe: main.tsx; toastoff: spar.ts)
 //   client:<text>  the generated obj/spar/client/pages.d.ts contains <text> (or, with a leading !, does not)
+//   edit:<f>|<a>|<b> replace the text <a> by <b> in the file <f> (relative to the project), restored at the end
 //   ctrlc          a Ctrl+C to this run's console (the app attaches to it when it has none), as a terminal sends
 //   suspend:<ms>   suspend every thread of the app's process (NtSuspendProcess, as a debugger's break does) for <ms>,
 //                  then resume it
+// With --command <line> the run starts that command line in the project instead of dotnet watch (M1d step 6a, the
+// getting-started guide's `dotnet run` and `dotnet watch` on a new app: docs/evidence/m1d-template-package.md).
 // With --exe <path> the run starts that executable instead (the Debug apphost, as an IDE's F5 starts it: the launch
 // profile's variables, DOTNET_MODIFIABLE_ASSEMBLIES=debug as Visual Studio sets for Hot Reload, and --cwd as its working
 // directory), with no dotnet watch.
@@ -29,7 +32,7 @@
 // dotnet watch tree, then the development server by its record). Each line of the run's log is the run's clock (ms),
 // the UTC time, and `app:` (app.log), `watch:` (dotnet watch's output) or `run:`.
 // --free-console true lets go of the run's own console first, so the app is started by a parent without one.
-//   dotnet run WatchDesktop.cs -- --project <app dir> --root <dir> --log <file> --steps "a;b;c" [--exe <path> --cwd <dir> --env K=V] [--free-console true]
+//   dotnet run WatchDesktop.cs -- --project <app dir> --root <dir> --log <file> --steps "a;b;c" [--command <line> | --exe <path> --cwd <dir>] [--env K=V] [--free-console true]
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -54,7 +57,7 @@ static unsafe class WatchDesktop
     static int Main(string[] argv)
     {
         string project = "", root = "", logPath = "", steps = "";
-        string? exe = null, cwd = null;
+        string? exe = null, cwd = null, commandLine = null;
         var freeConsole = false;
         var extra = new List<(string, string)>();
         for (var i = 0; i < argv.Length; i += 2)
@@ -67,6 +70,7 @@ static unsafe class WatchDesktop
                 case "--steps": steps = argv[i + 1]; break;
                 case "--exe": exe = Path.GetFullPath(argv[i + 1]); break;
                 case "--cwd": cwd = Path.GetFullPath(argv[i + 1]); break;
+                case "--command": commandLine = argv[i + 1]; break;
                 case "--free-console": freeConsole = argv[i + 1] == "true"; break;
                 case "--env":
                     var pair = argv[i + 1].Split('=', 2);
@@ -111,9 +115,9 @@ static unsafe class WatchDesktop
             throw new InvalidOperationException($"CreateDesktop failed: {Marshal.GetLastPInvokeError()}");
         }
 
-        var command = exe is null
+        var command = commandLine ?? (exe is null
             ? $"dotnet watch --non-interactive --verbose --project \"{project}\" -lp Desktop"
-            : $"\"{exe}\"";
+            : $"\"{exe}\"");
         Note($"desktop {desktopName}; {command} in {cwd ?? project}, with [{string.Join(" ", extra.Select(e => e.Item1 + "=" + e.Item2))}]");
         if (freeConsole)
         {
@@ -195,6 +199,10 @@ static unsafe class WatchDesktop
                     case "toastoff":
                         Edit(project, "frontend/src/spar.ts", "  configureSpar({\n", "  configureSpar({\n    backendUpdateToast: false,\n");
                         break;
+                    case "edit":
+                        var parts = value.Split('|');
+                        Edit(project, parts[0], parts[1], parts[2]);
+                        break;
                     case "body":
                         Edit(project, "Pages/MarkdownPageStore.cs", "new PageSummary(page.Id, page.Title, page.UpdatedAt)",
                             "new PageSummary(page.Id, page.Title + \" (edited)\", page.UpdatedAt)");
@@ -213,7 +221,7 @@ static unsafe class WatchDesktop
 
                         break;
                     case "suspend":
-                        var target = exe is null ? AppProcess(pid) : pid;
+                        var target = exe is null ? AppProcess(project) : pid;
                         using (var suspended = Process.GetProcessById(target))
                         {
                             NtSuspendProcess(suspended.Handle);
@@ -270,9 +278,9 @@ static unsafe class WatchDesktop
         return result;
     }
 
-    /// <summary>The app's process under dotnet watch: the newest process whose executable is the app's apphost.</summary>
-    static int AppProcess(int watchPid) =>
-        Process.GetProcessesByName("Notebook").OrderByDescending(p => p.StartTime).First().Id;
+    /// <summary>The app's process under dotnet watch: the newest process whose executable is the app's apphost, named as its project folder.</summary>
+    static int AppProcess(string project) =>
+        Process.GetProcessesByName(Path.GetFileName(project)).OrderByDescending(p => p.StartTime).First().Id;
 
     static void Edit(string project, string relative, string from, string to)
     {

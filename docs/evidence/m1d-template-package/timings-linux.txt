@@ -1,0 +1,56 @@
+   0.42 s  exit 0   repo> git status --porcelain --untracked-files=all
+   2.15 s  exit 0   repo> dotnet pack <copy>/src/Spar/Spar.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   4.23 s  exit 0   repo> dotnet pack <copy>/src/Spar.Windows/Spar.Windows.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   2.01 s  exit 0   repo> dotnet pack <copy>/src/Spar.Linux/Spar.Linux.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.44 s  exit 0   repo> dotnet pack <copy>/src/Spar.Loopback/Spar.Loopback.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   2.68 s  exit 0   repo> dotnet pack <copy>/src/Spar.Testing/Spar.Testing.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.87 s  exit 0   repo> dotnet pack <copy>/src/Spar.Testing.Browser/Spar.Testing.Browser.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   2.15 s  exit 0   repo> dotnet pack <copy>/src/Spar.Sdk/Spar.Sdk.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.01 s  exit 0   repo> dotnet pack <copy>/src/Spar.Templates/Spar.Templates.csproj -c Release -p:VersionSuffix=dev.20261122211038.1 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.44 s  exit 0   repo> dotnet pack <copy>/src/Spar/Spar.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   2.33 s  exit 0   repo> dotnet pack <copy>/src/Spar.Windows/Spar.Windows.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.53 s  exit 0   repo> dotnet pack <copy>/src/Spar.Linux/Spar.Linux.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.26 s  exit 0   repo> dotnet pack <copy>/src/Spar.Loopback/Spar.Loopback.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.92 s  exit 0   repo> dotnet pack <copy>/src/Spar.Testing/Spar.Testing.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.78 s  exit 0   repo> dotnet pack <copy>/src/Spar.Testing.Browser/Spar.Testing.Browser.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.63 s  exit 0   repo> dotnet pack <copy>/src/Spar.Sdk/Spar.Sdk.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   1.01 s  exit 0   repo> dotnet pack <copy>/src/Spar.Templates/Spar.Templates.csproj -c Release -p:VersionSuffix=dev.20261122211038.2 -o /tmp/spar-package-tests/20261122211038/feed -nologo -nr:false -v:q
+   0.01 s  exit 0   repo> git status --porcelain --untracked-files=all
+   0.34 s  exit 0   20261122211038> dotnet new install /tmp/spar-package-tests/20261122211038/feed/Spar.Templates.0.1.0-dev.20261122211038.1.nupkg --debug:custom-hive /tmp/spar-package-tests/20261122211038/template-hive
+   0.24 s  exit 0   20261122211038> dotnet new spar-app -o /tmp/spar-package-tests/20261122211038/Nötes Äpp -n Notes --debug:custom-hive /tmp/spar-package-tests/20261122211038/template-hive --no-update-check
+   3.36 s  exit 0   Tags Library> dotnet pack Notes.Tags.csproj -c Release -p:Version=1.0.0-dev.20261122211038 -o /tmp/spar-package-tests/20261122211038/library-feed -nologo
+  53.04 s  exit 0   Central Äpp> dotnet restore App.Tests/Notes.App.Tests.csproj -p:SparTestLane=Aot
+  68.40 s  exit 0   Library Äpp> dotnet test --project App.Tests/Notes.App.Tests.csproj
+  24.03 s  exit 0   Central Äpp> dotnet test --project App.Tests/Notes.App.Tests.csproj
+  77.76 s  exit 0   Nötes Äpp> dotnet test --project Notes.Tests/Notes.Tests.csproj
+ 126.69 s  exit 2   Nötes Äpp> dotnet test --project Notes.EndToEndTests/Notes.EndToEndTests.csproj --filter-class Notes.EndToEndTests.UntaggedWindowTests
+   2.56 s  exit 0   Nötes Äpp> dotnet test --project Notes.EndToEndTests/Notes.EndToEndTests.csproj --filter-trait Surface=BlackBox
+   1.24 s  exit 0   Nötes Äpp> dotnet build Notes.EndToEndTests/Notes.EndToEndTests.csproj -nologo -v:m
+  16.90 s  exit 0   Nötes Äpp> dotnet publish Notes.Tests/Notes.Tests.csproj -c Release -p:SparTestLane=Aot -o /tmp/spar-package-tests/20261122211038/aot-tests -nologo
+   0.01 s  exit 0   aot-tests> /tmp/spar-package-tests/20261122211038/aot-tests/Notes.Tests 
+   0.47 s  exit 0   frontend> /usr/bin/npm test
+   2.45 s  exit 0   Nötes Äpp> dotnet test --project Notes.EndToEndTests/Notes.EndToEndTests.csproj --filter-trait Surface=Browser
+   2.20 s  exit 0   Nötes Äpp> dotnet test --project Notes.EndToEndTests/Notes.EndToEndTests.csproj --filter-trait Surface=Window
+   0.49 s  exit 0   Notes> dotnet msbuild -t:Compile -p:DesignTimeBuild=true -p:BuildingInsideVisualStudio=true -p:SkipCompilerExecution=true -p:ProvideCommandLineArgs=true -nologo -v:n
+   0.79 s  exit 1   Notes.Tests> dotnet build -nologo -v:m
+   0.58 s  exit 0   Notes.Tests> dotnet msbuild -t:ResolveReferences -getItem:ReferencePath -nologo
+   0.97 s  exit 1   Notes.Tests> dotnet build -nologo -v:m
+   0.73 s  exit 1   Notes> dotnet build -nologo -v:m
+   3.98 s  exit 0   Notes> dotnet publish -c Release -o /tmp/spar-package-tests/20261122211038/publish -nologo -p:SparPlatforms=windows
+   0.00 s  exit 3   publish> /tmp/spar-package-tests/20261122211038/publish/Notes 
+   1.62 s  exit 1   Notes> dotnet build -nologo -v:m
+   0.79 s  exit 1   Notes> dotnet build -nologo -v:m
+   0.77 s  exit 1   Notes> dotnet build -nologo -v:m
+   0.78 s  exit 1   Notes> dotnet build -nologo -v:m
+   0.79 s  exit 1   Notes> dotnet build -nologo -v:m
+   0.78 s  exit 1   Notes> dotnet build -nologo -v:m
+   0.76 s  exit 1   Notes> dotnet build -nologo -v:m
+   1.59 s  exit 0   Notes> dotnet build -nologo
+   1.55 s  exit 0   Notes> dotnet build -nologo
+   0.48 s  exit 0   Notes> dotnet build -nologo
+   0.37 s  exit 0   Notes> dotnet build-server shutdown --msbuild
+   0.26 s  exit 0   20261122211038> dotnet new spar-app -o /tmp/spar-package-tests/20261122211038/Fast Äpp -n Notes --no-end-to-end-tests --debug:custom-hive /tmp/spar-package-tests/20261122211038/template-hive --no-update-check
+   3.88 s  exit 0   Fast Äpp> dotnet test
+   0.25 s  exit 0   20261122211038> dotnet new spar-app -o /tmp/spar-package-tests/20261122211038/One Äpp -n Notes --platforms linux --app-id org.example.notes.Single --debug:custom-hive /tmp/spar-package-tests/20261122211038/template-hive --no-update-check
+   0.25 s  exit 0   20261122211038> dotnet new spar-app -o /tmp/spar-package-tests/20261122211038/Other Äpp -n Notes --platforms windows --no-end-to-end-tests --debug:custom-hive /tmp/spar-package-tests/20261122211038/template-hive --no-update-check
+   2.54 s  exit 0   Notes> dotnet build -nologo -v:m

@@ -34,8 +34,11 @@ SqlTool/
   SqlTool.contracts.snapshot   committed; written by the build (decided 2026-11-14)
 SqlTool.Tests/              fast tests, run by every dotnet test
 SqlTool.EndToEndTests/      optional: browser and window tests, the black-box executable, containers
+SqlTool.slnx                the solution, with the projects above
 global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
 ```
+
+- `dotnet new spar-app -n SqlTool` writes this layout from the `Spar.Templates` package (plan, M1d step 6), with one contract and its tests as a start, `global.json` naming the template's own Spar version, and a `.gitignore`; `--platforms`, `--app-id` and `--no-end-to-end-tests` choose `SparPlatforms`, `SparAppId` and whether the end-to-end project is made. [The getting-started guide](guide/getting-started.md) goes from an empty machine to a published app.
 
 - The app id, `SparAppId`, is required: reverse-DNS, checked by the build. It names the app to the OS and its per-user folders: `%LOCALAPPDATA%\com.example.SqlTool` on Windows, the XDG folders on Linux, and `com.example.SqlTool.Development` for a Debug build, so Debug never shares data with an installed copy (decision "M1b's remaining questions without a spike").
 - The target hosts come from `SparPlatforms` (both by default); `Spar.Sdk` adds the host packages itself.

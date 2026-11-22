@@ -1,0 +1,10 @@
+# Build output, generated files and caches: every project's bin/ and obj/ (the generated @spar/app client, the test
+# results), and the frontend's installed packages. The contract snapshot (MyApp/MyApp.contracts.snapshot) and the
+# frontend's package-lock.json are committed.
+bin/
+obj/
+node_modules/
+
+# Editors' per-user files.
+.vs/
+*.user

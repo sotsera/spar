@@ -14,6 +14,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - Running on a platform the app does not target stops with a clear error that names the property.
     - NativeAOT does not cross-compile between operating systems, so each executable is published on its own OS or in a container of it.
   - Testing packages per test level.
+  - `Spar.Templates`, the `dotnet new spar-app` template, packed with the others at the same version (M1d step 6a): the new app's `global.json` names that version for `Spar.Sdk`, filled in when the package is packed.
   - The `spar` .NET tool, versioned with the SDK.
 - **Package rules:**
   - Never reuse a version.
