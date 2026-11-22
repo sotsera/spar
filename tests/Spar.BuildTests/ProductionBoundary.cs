@@ -54,6 +54,10 @@ internal static class ProductionBoundary
         // The Hot Reload signal (M1d step 3): the handler the runtime calls after an applied update, and the generated
         // enum whose member restarts the app for a contract edit (a Development build's generator output only).
         "BackendUpdates", "SparContractShape",
+
+        // The parent console's Ctrl+C of a Development WinExe app (decision "Step 3's two follow-ups"): never in Production.
+        // Not "ParentConsole": Production has StartupFailure.WriteToParentConsole.
+        "ConsoleInterrupt",
     ];
 
     private static readonly string[] Literals =
@@ -88,6 +92,7 @@ internal static class ProductionBoundary
 
         // The Hot Reload signal (M1d step 3): the event's name and the hosts' line for each applied update.
         "backend-updated", "Hot Reload applied revision",
+        "Attached to the parent's console", "from the parent's console",
     ];
 
     /// <summary>

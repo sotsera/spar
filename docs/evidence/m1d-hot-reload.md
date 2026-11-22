@@ -168,10 +168,68 @@ Undo the edits after.
   `backend-updated`, `Hot Reload applied revision`) and page markers (`backend-updated`, `data-spar-dev-overlay`,
   `Backend updated`), with controls in `Spar.dll`, `Spar.Loopback.dll` and the generated package.
 
+## Follow-up: the parent's console and the reload guard
+
+Recorded later on 2026-11-22, on top of `e03a935`; decision "Step 3's two follow-ups" (user decisions) and the
+implementation record "Step 3's follow-ups: the parent's console and the reload guard". The "before" numbers are the
+runs above, made with the same runners on the committed step.
+
+### Windows: `dotnet watch`'s Ctrl+C now closes the app
+
+| | Before (step 3) | After |
+|---|---|---|
+| Window, DTO edit to the restarted `ui-ready` | 10.8–10.9 s | 5.4–6.0 s ([`windows-desktop-console.run.log`](m1d-hot-reload/logs/windows-desktop-console.run.log)) |
+| Window, `dotnet watch`'s Ctrl+C to the app's exit | 5 s wait, then killed (exit -1) | 77 and 71 ms, exit 0, through "close requested (User)" |
+| Loopback, contract edit to the new run listening (8 restarts) | 9.1–14.6 s | 4.3–5.4 s ([`windows-loopback-console.run.log`](m1d-hot-reload/logs/windows-loopback-console.run.log)) |
+| Loopback, contract edit to the page reloaded by itself | 10.2–15.6 s | 5.0–6.5 s |
+| The development server across restarts | killed with the tree each time, a new one each run (about 0.8 s) | reused by every run (one Vite pid for the whole session, checked in 23–34 ms) |
+| The page's console when the backend restarts | Vite's lost-server `TrustedScriptURL` violation once per restart | none |
+
+- **What runs:** each Development run logs "Attached to the parent's console (Development): its Ctrl+C closes the app as
+  its window's close does."; on the Ctrl+C the window logs "Ctrl+C from the parent's console: the app closes." and its
+  close request (`User`), the loopback run "SIGINT received: the app stops.", and `dotnet run` exits 0.
+- **Without `dotnet watch`** (`WatchDesktop.cs --exe` with its `ctrlc` step, a Ctrl+C to the console the app attached
+  to, as a terminal sends): the window closed 39 ms after it, exit 0; the loopback run stopped 7 ms after it, exit 0
+  ([`windows-ctrlc-desktop.run.log`](m1d-hot-reload/logs/windows-ctrlc-desktop.run.log),
+  [`windows-ctrlc-loopback.run.log`](m1d-hot-reload/logs/windows-ctrlc-loopback.run.log)).
+- **The loopback run's first try failed:** with the attach placed just before its own `SIGINT` registration, the handler
+  never ran and the Ctrl+C ended the process (exit `0xC000013A`, `STATUS_CONTROL_C_EXIT`) in all 8 restarts (that log was replaced by the run above). Moving the
+  attach to the start of the run, before anything registers a signal handler, fixed it. The window host's handler is
+  the process's first, and worked from the start (pitfalls).
+- **Without a parent console** (`--free-console true`: the run let go of its own console before starting the apphost, as
+  an IDE's F5 or Explorer has none): no attach line, `ui-ready` in 1.2 s, nothing else changed
+  ([`windows-f5-no-console.run.log`](m1d-hot-reload/logs/windows-f5-no-console.run.log)). A process with a console of
+  its own (a test process) never attaches: `BackendUpdatesTests.A_process_with_its_own_console_is_left_as_it_is`.
+- **No console window:** attaching joins the parent's console; it creates none. Under `dotnet watch` that console is
+  `dotnet watch`'s (here without a window: the runner starts it with `CREATE_NO_WINDOW` on a desktop of its own); in a
+  terminal, the terminal's.
+- **Standard output and input:** `dotnet run` hands its standard handles down to the app, so they are valid before the
+  attach, and `AttachConsole` leaves valid handles as they are: the app's lines went on reaching `dotnet watch`'s output
+  in every run. The development server's input (step 1's choice 6) is the app's own when it is a pipe, otherwise a pipe
+  of its own, as before: the attach does not change which. Under `dotnet watch` the server outlived every app run and
+  ended with the `dotnet watch` session (it was gone when the runner ended that session's tree), consistent with its
+  input being the session's pipe (inferred; its own log was overwritten by the next run's server). The server runs in a
+  hidden console of its own (`CreateNoWindow`), so the Ctrl+C sent to `dotnet run`'s console never reaches it.
+
+### Linux: quick restarts no longer stop the page's reloads
+
+`wsl.sh watch` with `EDITS=dto,error,command,limit SETTLE=300` (the next write 0.3 s after each reload, where step 3's
+runs had to wait 5.5 s): 8 contract restarts, the page reloaded by itself after every one (3.9–8.2 s after the write;
+the new run 3.4–7.1 s), and no "keeps stopping" or "stopped before the page could connect" line
+([`linux-loopback-fast.run.log`](m1d-hot-reload/logs/linux-loopback-fast.run.log)). Before the follow-up, the same
+quick edits stopped the reloads at the third restart. Windows' loopback run above also wrote 0.3 s after each reload.
+
+A backend that keeps failing before the page connects is checked by `src/Spar.Client/test/restart.test.ts` only (the
+third reload in a row into a document that got no `open` stops the reloads): no real backend was made to fail that way.
+
 ## Not verified
 
 - F5 in Visual Studio and VS Code (the user's table); a managed debugger attached from the command line.
 - Interactive `dotnet watch` on Windows (run only in WSL's pseudo-terminal), and its "Always" answer.
 - A contract library's edit (`SparContracts`) under `dotnet watch`: the app's shape is computed from it, but no run edited one.
-- The toast's look (no screenshot judged; its text and count were read).
-- A real terminal's Ctrl+C for a `WinExe` app under `dotnet run` (it never reaches the app, as for `dotnet watch`).
+- The toast's look on Windows (one Linux screenshot only).
+- A real terminal's Ctrl+C (the runner's `ctrlc` step sends the same event to a console without a window), and closing
+  the terminal (`CTRL_CLOSE_EVENT`, not handled: Windows ends the attached app after its timeout).
+- A backend that keeps failing before the page connects, in a real browser (unit tests only).
+- An app whose own `Program.cs` registers a signal handler before `app.Run()`: by the pitfall above, the console's Ctrl+C
+  may then not reach Spar's handler.

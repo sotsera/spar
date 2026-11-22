@@ -5,7 +5,8 @@
 # Steps:
 #   watch    watch-run.mjs: `dotnet watch --non-interactive -lp Loopback` on the Debug Notebook, its page in Playwright's
 #            headless Chromium (the copy the repository's browser tests use; never WSLg's display, never a browser of
-#            the user's), then every edit: body, toastoff, dto, error, command, limit
+#            the user's), then every edit: body, toastoff, dto, error, command, limit (EDITS picks others, SETTLE the
+#            wait after a restart's reload, LOGNAME_WATCH the log's name)
 #   desktop  `dotnet watch -lp Desktop` on a private Xvfb (:97, an abstract socket only) with a private D-Bus session:
 #            the window's page reports ui-ready, then a method-body edit is applied, the host sends backend-updated
 #            (app.log) and the page's probe (added to main.tsx for the run) reports the event with the toasts it sees,
@@ -57,9 +58,9 @@ step() {
       local node_bin
       node_bin=$(command -v node || echo "$package/../node/linux-x64/node")
       (cd "$repo" && timed "$node_bin" "$source_repo/docs/evidence/m1d-hot-reload/watch-run.mjs" --project samples/Notebook \
-        --root "$homes/watch" --log "$logs/watch.run.log" --playwright "$package" \
-        --edits "${EDITS:-body,toastoff,dto,error,command,limit}" --verbose true)
-      grep -E "PASS|FAIL|failures" "$logs/watch.run.log" ;;
+        --root "$homes/watch" --log "$logs/${LOGNAME_WATCH:-watch}.run.log" --playwright "$package" \
+        --edits "${EDITS:-body,toastoff,dto,error,command,limit}" --verbose true ${SETTLE:+--settle "$SETTLE"})
+      grep -E "PASS|FAIL|failures" "$logs/${LOGNAME_WATCH:-watch}.run.log" ;;
     desktop)
       LD_LIBRARY_PATH=$tools/root/usr/lib/x86_64-linux-gnu bwrap --die-with-parent --dev-bind / / --bind /usr/bin "$tools/realbin" \
         --bind "$tools/usrbin" /usr/bin -- "$tools/root/usr/bin/Xvfb" :97 -screen 0 1600x1000x24 -nolisten tcp -nolisten unix \

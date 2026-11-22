@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Spar.Hosting;
+using Spar.HotReload;
 using Spar.Logging;
 using Spar.Runtime;
 using Windows.Win32;
@@ -217,6 +218,10 @@ internal sealed class WindowsApp : IAppWindowOwner
             _window.UseDevServer(_devServer);
         }
 
+        // A WinExe app has no console: in a Development build it attaches to its parent's, when it has one, so the Ctrl+C
+        // dotnet watch sends before a restart (or a terminal's) closes the window as its close button does.
+        var window = _window;
+        using var console = SparDevelopment.IsSupported ? ConsoleInterrupt.Listen(_log, window.CloseFromConsole) : null;
         UiThread.Run(theme.Background.ColorRef, _window.Report, ui => Start(ui, theme, built));
 
         Stop();

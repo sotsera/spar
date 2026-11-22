@@ -85,6 +85,11 @@ internal sealed class LoopbackApp
             _log.Warn(levelProblem);
         }
 
+        // A WinExe app on Windows has no console: attached to its parent's (dotnet run's, under dotnet watch), it gets the
+        // Ctrl+C that asks it to stop, and stops as for its own signals (decision "Step 3's two follow-ups"). First, before
+        // anything registers a signal handler: one registered while the process had no console never saw the Ctrl+C.
+        ConsoleInterrupt.TryAttach(_log);
+
         DevServerSession? devServer = null;
         SparFrontend? frontend = null;
         if (DevServerSettings.IsSupported && DevServerSettings.Read() is { } settings)

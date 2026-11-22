@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Spar.Bridge;
+using Spar.Hosting;
 using Spar.HotReload;
 
 namespace Spar.Tests;
@@ -93,6 +94,24 @@ public sealed class BackendUpdatesTests
         BackendUpdates.UpdateApplication([typeof(Sample)]);
 
         Assert.Equal(0, seen);
+    }
+
+    /// <summary>
+    /// The parent's console (decision "Step 3's two follow-ups"): a process that has a console of its own, as this test
+    /// process does, never attaches and registers no Ctrl+C handler; nor does one off Windows. That a WinExe app does,
+    /// and closes on the Ctrl+C, is checked by running it (docs/evidence/m1d-hot-reload.md).
+    /// </summary>
+    [Fact]
+    public void A_process_with_its_own_console_is_left_as_it_is()
+    {
+        var log = new HostLog(standardError: false);
+        var asked = false;
+
+        using var listening = ConsoleInterrupt.Listen(log, () => asked = true);
+
+        Assert.Null(listening);
+        Assert.False(ConsoleInterrupt.TryAttach(log));
+        Assert.False(asked);
     }
 
     private sealed class Sample

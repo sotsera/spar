@@ -1,8 +1,10 @@
-// A loopback dev session's restarts: the page waits for the backend's next run, reloads once, and never loops.
+// A loopback dev session's restarts: the page waits for the backend's next run, reloads once, and never loops. A reload
+// counts against the loop guard only when its document then gets no backend (no `open`), never when a newer run
+// answers it (decision "Step 3's two follow-ups").
 import { describe, expect, test } from "vitest";
 import { Connection } from "../src/connection.js";
 import { loopbackChannel } from "../src/loopback.js";
-import { awaitRestart, delayFor, type LostBackend, type RestartPage } from "../src/restart.js";
+import { awaitRestart, backendOpened, delayFor, type LostBackend, type RestartPage } from "../src/restart.js";
 
 const open = "{\"type\":\"open\",\"protocol\":1,\"doc\":\"d1\",\"contracts\":\"0123456789abcdef\"}\t";
 
@@ -28,6 +30,7 @@ class FakePage {
     sessionStorage: {
       getItem: key => this.storage.get(key) ?? null,
       setItem: (key, value) => this.storage.set(key, value),
+      removeItem: key => this.storage.delete(key),
     },
     now: () => this.time,
     wait: async ms => {
@@ -52,15 +55,16 @@ class FakePage {
   };
 }
 
-function lost(page: FakePage, livedMs = 60_000): LostBackend {
-  return { origin: "http://127.0.0.1:5000", token: "t0k", run: "run-1", openedAt: page.time - livedMs };
+/** A document's ended channel: it named `run` (null: none) and, unless said otherwise, got its backend. */
+function lost(run: string | null = "run-1", opened = true): LostBackend {
+  return { origin: "http://127.0.0.1:5000", token: "t0k", run: run ?? undefined, opened };
 }
 
 describe("waiting for the next run", () => {
   test("the page looks with its token until a new run answers, then reloads once", async () => {
     const fake = new FakePage(["down", { status: 503 }, "down", { status: 200, body: "run-2" }]);
 
-    const outcome = await awaitRestart(lost(fake), fake.page);
+    const outcome = await awaitRestart(lost(), fake.page);
 
     expect(outcome).toBe("reloaded");
     expect(fake.reloads).toBe(1);
@@ -72,14 +76,14 @@ describe("waiting for the next run", () => {
   test("the same run still answering means the channel ended for another reason: no reload", async () => {
     const fake = new FakePage([{ status: 200, body: "run-1" }]);
 
-    expect(await awaitRestart(lost(fake), fake.page)).toBe("same-run");
+    expect(await awaitRestart(lost(), fake.page)).toBe("same-run");
     expect(fake.reloads).toBe(0);
   });
 
   test("a refused token is a new dev session: the page stops and says so", async () => {
     const fake = new FakePage(["down", { status: 401 }]);
 
-    expect(await awaitRestart(lost(fake), fake.page)).toBe("refused");
+    expect(await awaitRestart(lost(), fake.page)).toBe("refused");
     expect(fake.reloads).toBe(0);
     expect(fake.lines.at(-1)).toContain("open the address it printed");
   });
@@ -87,29 +91,67 @@ describe("waiting for the next run", () => {
   test("something that is not the app's backend is not waited for", async () => {
     const fake = new FakePage([{ status: 404 }]);
 
-    expect(await awaitRestart(lost(fake), fake.page)).toBe("foreign");
+    expect(await awaitRestart(lost(), fake.page)).toBe("foreign");
     expect(fake.reloads).toBe(0);
   });
 
-  test("a backend that keeps stopping soon after the page connects stops the reloads after three in a row", async () => {
+  test("quick restarts that a newer run answers each time never count: the page reloads for every one", async () => {
     const fake = new FakePage([]);
     const outcomes: string[] = [];
-    for (let round = 0; round < 4; round++) {
-      // Each reloaded document loses its backend 1 s after it connected, and a new run answers at once.
+    for (let round = 0; round < 6; round++) {
+      // Each reloaded document gets its backend (open), which is replaced a moment later by a newer run, as
+      // `dotnet watch` does for contract edits a second apart.
+      backendOpened(fake.page);
       fake.answers.push({ status: 200, body: `run-${round + 2}` });
-      outcomes.push(await awaitRestart(lost(fake, 1_000), fake.page));
+      outcomes.push(await awaitRestart(lost(`run-${round + 1}`), fake.page));
     }
 
-    expect(fake.reloads).toBe(3);
-    expect(outcomes).toEqual(["reloaded", "reloaded", "reloaded", "too-many"]);
+    expect(outcomes).toEqual(["reloaded", "reloaded", "reloaded", "reloaded", "reloaded", "reloaded"]);
+    expect(fake.reloads).toBe(6);
+    expect(fake.lines.some(line => line.startsWith("error"))).toBe(false);
   });
 
-  test("a document that stayed connected breaks a run of short reloads", async () => {
+  test("a backend that keeps failing before the page connects stops the reloads after three in a row", async () => {
     const fake = new FakePage([{ status: 200, body: "run-2" }]);
-    fake.storage.set("spar.restart.reloads", "3");
+    const outcomes: string[] = [await awaitRestart(lost("run-1"), fake.page)];
+    for (let round = 0; round < 3; round++) {
+      // Each reloaded document's channel names the new run, which stops before sending open; a newer one answers.
+      fake.answers.push({ status: 200, body: `run-${round + 3}` });
+      outcomes.push(await awaitRestart(lost(`run-${round + 2}`, false), fake.page));
+    }
 
-    expect(await awaitRestart(lost(fake, 5_000), fake.page)).toBe("reloaded");
+    expect(outcomes).toEqual(["reloaded", "reloaded", "reloaded", "too-many"]);
+    expect(fake.reloads).toBe(3);
+    expect(fake.lines.at(-1)).toContain("stopped before the page could connect, 3 times in a row");
+    expect(fake.storage.has("spar.restart.run")).toBe(false);
+  });
+
+  test("a document that gets its backend starts the count again", async () => {
+    const fake = new FakePage([{ status: 200, body: "run-3" }]);
+    fake.storage.set("spar.restart.run", "run-2");
+    fake.storage.set("spar.restart.reloads", "2");
+
+    backendOpened(fake.page);
+
+    expect(fake.storage.get("spar.restart.reloads")).toBe("0");
+    expect(fake.storage.has("spar.restart.run")).toBe(false);
+    expect(await awaitRestart(lost("run-2"), fake.page)).toBe("reloaded");
+  });
+
+  test("a reloaded document whose channel never started waits past the run it reloaded for", async () => {
+    const fake = new FakePage(["down", { status: 200, body: "run-2" }, { status: 200, body: "run-3" }]);
+    fake.storage.set("spar.restart.run", "run-2");
+
+    expect(await awaitRestart(lost(null, false), fake.page)).toBe("same-run");
     expect(fake.storage.get("spar.restart.reloads")).toBe("1");
+  });
+
+  test("nothing to wait for: a channel that names no run, or a document no reload made that never connected", async () => {
+    const fake = new FakePage([{ status: 200, body: "run-2" }]);
+
+    expect(await awaitRestart(lost(null, true), fake.page)).toBe("none");
+    expect(await awaitRestart(lost("run-1", false), fake.page)).toBe("none");
+    expect(fake.probes).toHaveLength(0);
   });
 
   test("after a minute of waiting it looks every 5 s", () => {
@@ -182,7 +224,7 @@ describe("the loopback channel of a dev session", () => {
     expect(fake.reloads).toBe(0);
   });
 
-  test("a document that never received open never reloads", async () => {
+  test("a document that never received open, and that no automatic reload made, never reloads", async () => {
     const host = scripted("run-1");
     const fake = new FakePage([{ status: 200, body: "run-2" }]);
     const channel = loopbackChannel({ origin: "http://127.0.0.1:5000", token: "t0k", fetch: host.fetch, restart: fake.page });
@@ -192,5 +234,42 @@ describe("the loopback channel of a dev session", () => {
     await settle();
 
     expect(fake.probes).toHaveLength(0);
+  });
+
+  test("an automatic reload whose document gets open is not counted, however soon it loses its backend", async () => {
+    const fake = new FakePage([]);
+    fake.storage.set("spar.restart.run", "run-2");
+    fake.storage.set("spar.restart.reloads", "2");
+    const host = scripted("run-2");
+    const channel = loopbackChannel({ origin: "http://127.0.0.1:5000", token: "t0k", fetch: host.fetch, restart: fake.page });
+    new Connection(channel, "0123456789abcdef");
+    await settle();
+    host.write(open);
+    await settle();
+
+    expect(fake.storage.get("spar.restart.reloads")).toBe("0");
+    fake.answers.push({ status: 200, body: "run-3" });
+    host.end();
+    await settle();
+    await settle();
+
+    expect(fake.reloads).toBe(1);
+    expect(fake.storage.get("spar.restart.run")).toBe("run-3");
+    expect(fake.storage.get("spar.restart.reloads")).toBe("0");
+  });
+
+  test("an automatic reload whose document gets no open counts, and waits for the next run", async () => {
+    const fake = new FakePage([{ status: 200, body: "run-3" }]);
+    fake.storage.set("spar.restart.run", "run-2");
+    const host = scripted("run-2");
+    const channel = loopbackChannel({ origin: "http://127.0.0.1:5000", token: "t0k", fetch: host.fetch, restart: fake.page });
+    new Connection(channel, "0123456789abcdef");
+    await settle();
+    host.end();
+    await settle();
+    await settle();
+
+    expect(fake.storage.get("spar.restart.reloads")).toBe("1");
+    expect(fake.reloads).toBe(1);
   });
 });

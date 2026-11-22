@@ -105,6 +105,8 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         Assert.True(Contains(runtime, "DevServerProxy", Encoding.UTF8), "The control search missed DevServerProxy.");
         Assert.True(Contains(runtime, "spar-dev-server.json", Encoding.Unicode), "The control search missed spar-dev-server.json.");
         Assert.True(Contains(runtime, "BackendUpdates", Encoding.UTF8), "The control search missed BackendUpdates.");
+        Assert.True(Contains(runtime, "ConsoleInterrupt", Encoding.UTF8), "The control search missed ConsoleInterrupt.");
+        Assert.True(Contains(runtime, "Attached to the parent's console", Encoding.Unicode), "The control search missed the console line.");
         Assert.True(Contains(loopback, "Hot Reload applied revision", Encoding.Unicode), "The control search missed the Hot Reload line.");
         Assert.True(Contains(loopback, "backend-updated", Encoding.Unicode), "The control search missed backend-updated.");
 

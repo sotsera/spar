@@ -19,6 +19,7 @@
 //   restore:<f>    restore one edited file (body: MarkdownPageStore.cs; dto: PageTypes.cs and notebook.test.tsx;
 //                  probe: main.tsx; toastoff: spar.ts)
 //   client:<text>  the generated obj/spar/client/pages.d.ts contains <text> (or, with a leading !, does not)
+//   ctrlc          a Ctrl+C to this run's console (the app attaches to it when it has none), as a terminal sends
 //   suspend:<ms>   suspend every thread of the app's process (NtSuspendProcess, as a debugger's break does) for <ms>,
 //                  then resume it
 // With --exe <path> the run starts that executable instead (the Debug apphost, as an IDE's F5 starts it: the launch
@@ -27,7 +28,8 @@
 // Every edited file is restored at the end, whatever happened, and every process this run started is ended (the
 // dotnet watch tree, then the development server by its record). Each line of the run's log is the run's clock (ms),
 // the UTC time, and `app:` (app.log), `watch:` (dotnet watch's output) or `run:`.
-//   dotnet run WatchDesktop.cs -- --project <app dir> --root <dir> --log <file> --steps "a;b;c" [--exe <path> --cwd <dir> --env K=V]
+// --free-console true lets go of the run's own console first, so the app is started by a parent without one.
+//   dotnet run WatchDesktop.cs -- --project <app dir> --root <dir> --log <file> --steps "a;b;c" [--exe <path> --cwd <dir> --env K=V] [--free-console true]
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -53,6 +55,7 @@ static unsafe class WatchDesktop
     {
         string project = "", root = "", logPath = "", steps = "";
         string? exe = null, cwd = null;
+        var freeConsole = false;
         var extra = new List<(string, string)>();
         for (var i = 0; i < argv.Length; i += 2)
         {
@@ -64,6 +67,7 @@ static unsafe class WatchDesktop
                 case "--steps": steps = argv[i + 1]; break;
                 case "--exe": exe = Path.GetFullPath(argv[i + 1]); break;
                 case "--cwd": cwd = Path.GetFullPath(argv[i + 1]); break;
+                case "--free-console": freeConsole = argv[i + 1] == "true"; break;
                 case "--env":
                     var pair = argv[i + 1].Split('=', 2);
                     extra.Add((pair[0], pair[1]));
@@ -111,6 +115,13 @@ static unsafe class WatchDesktop
             ? $"dotnet watch --non-interactive --verbose --project \"{project}\" -lp Desktop"
             : $"\"{exe}\"";
         Note($"desktop {desktopName}; {command} in {cwd ?? project}, with [{string.Join(" ", extra.Select(e => e.Item1 + "=" + e.Item2))}]");
+        if (freeConsole)
+        {
+            // As a parent without a console starts the app (an IDE's F5, Explorer): the app finds no console to attach to.
+            FreeConsole();
+            Note("this run let go of its console before the start");
+        }
+
         var (pid, thread, handle) = Start(command, cwd ?? project, outputPath, environment, $@"WinSta0\{desktopName}");
         using var watch = Process.GetProcessById(pid);
         string? appLog = null;
@@ -212,6 +223,13 @@ static unsafe class WatchDesktop
                             Note($"app process {target} resumed");
                         }
 
+                        break;
+                    case "ctrlc":
+                        // The Ctrl+C a terminal (or dotnet watch) sends to its console, which the app attached to; this run
+                        // ignores it itself.
+                        SetConsoleCtrlHandler(0, 1);
+                        GenerateConsoleCtrlEvent(0, 0);
+                        Note($"Ctrl+C sent to this run's console at {DateTime.UtcNow:HH:mm:ss.fff}");
                         break;
                     case "client":
                         var negate = value.StartsWith('!');
@@ -443,6 +461,15 @@ static unsafe class WatchDesktop
 
     [DllImport("user32")]
     static extern int CloseDesktop(nint desktop);
+
+    [DllImport("kernel32")]
+    static extern int FreeConsole();
+
+    [DllImport("kernel32")]
+    static extern int SetConsoleCtrlHandler(nint handler, int add);
+
+    [DllImport("kernel32")]
+    static extern int GenerateConsoleCtrlEvent(uint ctrlEvent, uint processGroup);
 
     [DllImport("ntdll")]
     static extern int NtSuspendProcess(nint process);

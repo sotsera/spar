@@ -4,7 +4,7 @@
 // then reach the host in the order they were given, and a long call never holds one of the browser's six connections.
 import type { BridgeChannel } from "./connection.js";
 import { decode } from "./protocol.js";
-import { awaitRestart, runHeader, type RestartPage } from "./restart.js";
+import { awaitRestart, backendOpened, runHeader, type RestartPage } from "./restart.js";
 
 const tokenKey = "spar.token";
 
@@ -76,7 +76,7 @@ class LoopbackChannel implements BridgeChannel {
   readonly #restart: RestartPage | false | undefined;
   #doc: string | undefined;
   #run: string | undefined;
-  #openedAt: number | undefined;
+  #opened = false;
 
   constructor(origin: string, token: string, fetchFunction: typeof fetch, restart: RestartPage | false | undefined) {
     this.#origin = origin;
@@ -164,7 +164,12 @@ class LoopbackChannel implements BridgeChannel {
       const decoded = decode(message);
       if (decoded.ok && decoded.message.type === "open") {
         this.#doc = decoded.message.doc;
-        this.#openedAt = this.#now();
+        this.#opened = true;
+        if (this.#run !== undefined && this.#restart !== false) {
+          // The page got its backend: an automatic reload that brought it here succeeded (restart.ts).
+          backendOpened(this.#restart);
+        }
+
         void this.#post();
       }
     }
@@ -220,16 +225,13 @@ class LoopbackChannel implements BridgeChannel {
     this.#stop.abort();
     this.#closedListener?.();
 
-    // A dev session's backend went away: wait for its next run and reload. Only a document that connected, so a page
-    // whose channel never opened never reloads.
-    if (this.#run !== undefined && this.#openedAt !== undefined && this.#restart !== false) {
-      const lost = { origin: this.#origin, token: this.#token, run: this.#run, openedAt: this.#openedAt };
+    // A dev session's backend went away: wait for its next run and reload. restart.ts decides: a document that got its
+    // backend always waits; one that never did waits only when an automatic reload made it, and that reload counts
+    // against the loop guard; a channel that names no run (the test host) never waits.
+    if (this.#restart !== false) {
+      const lost = { origin: this.#origin, token: this.#token, run: this.#run, opened: this.#opened };
       void (this.#restart === undefined ? awaitRestart(lost) : awaitRestart(lost, this.#restart));
     }
-  }
-
-  #now(): number {
-    return this.#restart === undefined || this.#restart === false ? Date.now() : this.#restart.now();
   }
 }
 

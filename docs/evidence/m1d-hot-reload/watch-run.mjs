@@ -19,7 +19,7 @@
 // token, the page reloading by itself once (step 2's mechanism) and working (the list); each restored edit restarts again.
 // Times: from the write to dotnet watch's line, to the event (the toast, or the list's request), and to the new run.
 //   node watch-run.mjs --project <app dir> --root <dir> --log <file> --playwright <.playwright/package dir>
-//        --edits body,toastoff,dto,error,command,limit [--verbose true]
+//        --edits body,toastoff,dto,error,command,limit [--verbose true] [--settle <ms after a restart's reload>]
 import { spawn, spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -122,6 +122,7 @@ const restartNeeded = /Restart is needed|rude edit|Restarting/i;
 const updateLine = /Hot Reload applied revision (\d+) \(([^)]*)\); sent to (\d+) document/;
 const client = join(project, "obj", "spar", "client");
 const ms = (from, to) => `${(to - from).toFixed(0)} ms`;
+const settleMs = Number(options.settle ?? 5_500);
 
 const { chromium } = await import(pathToFileURL(join(options.playwright, "index.mjs")).href);
 const browser = await chromium.launch({ headless: true });
@@ -212,10 +213,10 @@ async function restart(name, write, clientHas) {
   await listShows("Welcome");
   check(true, `${name}: the reloaded page lists the notebook's page`);
 
-  // The next edit waits until the reloaded document has kept its backend 5 s: three reloads in a row into documents
-  // that lost their backend sooner stop the page's automatic reloads (step 2's loop guard), which quick successive
-  // restarts trigger (docs/evidence/m1d-hot-reload.md).
-  await sleep(5_500);
+  // The next edit waits --settle ms (5.5 s by default). Before the follow-up decision "Step 3's two follow-ups" three
+  // reloads into documents that each lost their backend within 5 s stopped the page's automatic reloads; with
+  // --settle 300 the run checks they no longer do (a reload counts only when its document gets no open).
+  await sleep(settleMs);
 }
 
 const edits = {
