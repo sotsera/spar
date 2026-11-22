@@ -79,7 +79,7 @@ internal sealed class LoopbackApp
             _log.UseFile(folders.Logs, levels);
         }
 
-        _log.Info($"Host started on loopback (no window): app id {SparFolders.ChannelId(_app.AppId, development: true)}, folder {folders.DataRoot}");
+        _log.Info($"Host started on loopback (no window); {BuildIdentity.Describe(_app.Catalog.BuildIdentity.Span)}; app id {SparFolders.ChannelId(_app.AppId, development: true)}, folder {folders.DataRoot}");
         if (levelProblem is not null)
         {
             _log.Warn(levelProblem);

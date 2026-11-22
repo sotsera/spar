@@ -87,7 +87,7 @@ internal sealed class LinuxApp : IAppWindowOwner
             _log.UseFile(_folders.Logs, _levels);
         }
 
-        _log.Info($"Host started {ProcessAgeMilliseconds():0} ms after the process.");
+        _log.Info($"Host started {ProcessAgeMilliseconds():0} ms after the process; {BuildIdentity.Describe(_app.Catalog.BuildIdentity.Span)}.");
         if (problem is not null)
         {
             _log.Warn(problem);

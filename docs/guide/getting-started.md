@@ -88,6 +88,7 @@ The template's options:
 Notes/
   Notes.slnx                    the solution, with the projects below
   global.json                   pins the .NET SDK and Spar.Sdk, and the test runner
+  .config/dotnet-tools.json     the local tool manifest: the spar tool, at the same Spar version
   .gitignore
   Notes/                        the app
     Notes.csproj                <Project Sdk="Spar.Sdk">, its SparAppId and SparPlatforms
@@ -193,6 +194,37 @@ dotnet publish Notes -c Release
 
 This builds the page with Vite, packs it into the executable, and publishes one NativeAOT executable for the OS you run it on, in `Notes/bin/Production/Release/net11.0/<runtime>/publish/`: `win-x64/publish/Notes.exe` on Windows, `linux-x64/publish/Notes` on Linux, about 4.7 MB for the new app, beside its debug symbols (`Notes.pdb`, `Notes.dbg`), which you do not ship. NativeAOT does not cross-compile between OSes: publish each OS's executable on that OS, or in a container of it. The executable needs no .NET or Node.js on the user's machine; on Windows it needs the WebView2 Runtime, on Linux GTK 4 and WebKitGTK 6.0.
 
+## 8. Check and wire with the spar tool
+
+A new app's local tool manifest, `.config/dotnet-tools.json`, names the `spar` tool (the `Spar.Tool` package) at the app's own Spar version. Restore it once, from the solution's folder ([`dotnet tool restore`](https://learn.microsoft.com/dotnet/core/tools/dotnet-tool-restore)):
+
+```sh
+dotnet tool restore
+```
+
+Then check the machine, the app and its last build, from the solution's folder or the app's:
+
+```sh
+dotnet spar doctor
+```
+
+It checks the .NET SDK against `global.json` and Spar.Sdk; Node.js and npm (and names a Node.js that a version manager such as nvm, fnm, Volta, mise or asdf installed but that is not on `PATH`); the WebView2 Runtime and NativeAOT's C++ build tools on Windows, or GTK 4, WebKitGTK 6.0, ICU, OpenSSL, `clang` and zlib on Linux; the app's frontend folder, its `@spar/app` dependency, Spar's Vite plugin, the `dev` and `build` scripts, the lockfile and `node_modules`, the contract snapshot and the launch profiles; and the build identity of the newest build under `bin/`: the variant, the git revision, whether the work tree had uncommitted changes, and the contracts' fingerprint. Each finding has a stable id, a severity and its fix. `--json` writes them as JSON, `--app <file>` reads the identity of another executable (a published one, say) without running it, and the exit code is 0 with nothing to fix, 1 with warnings and 2 with errors. The app writes the same identity in the first line of its log.
+
+`dotnet spar init frontend`, in the app's folder, wires a Vite frontend into an app. An app from the template has its frontend wired already, and there it says so and changes nothing:
+
+```sh
+cd Notes
+dotnet spar init frontend
+```
+
+In an app with no frontend folder yet, `--framework react` (or `vue`) first makes one with Vite's own scaffolder, with TypeScript, and then wires it:
+
+```sh
+dotnet spar init frontend --framework react
+```
+
+It adds the `@spar/app` dependency and Spar's Vite plugin, and `SparFrontendPath` in the project when the folder is not `frontend/` (`--frontend <folder>` names it), then runs `npm install --ignore-scripts` for the lockfile. It shows every change as a diff and asks before writing; `--yes` writes without asking, and without a terminal to ask in it writes nothing unless given `--yes`. When `vite.config` is too unusual to edit safely, it prints the lines to add instead. Build the app after it (`dotnet build`), and commit the new lockfile.
+
 ## Where things live
 
 | What | Where |
@@ -203,3 +235,4 @@ This builds the page with Vite, packs it into the executable, and publishes one 
 | Vite's development server | its record and log in `Notes/obj/` (`spar-dev-server.json`, `spar-dev-server.log`); it ends 60 s after its last use. |
 | The app's data and log | the per-user folders named by the app id: on Windows `%LOCALAPPDATA%\com.example.Notes` (`com.example.Notes.Development` for a Debug build, so Debug never shares data with an installed copy), on Linux the XDG folders (`~/.local/share/com.example.Notes` and the others). The log is `logs/app.log` there. |
 | Test results | each test project's `obj/test-results/`. |
+| The spar tool | `.config/dotnet-tools.json` names it; `dotnet tool restore` puts it in NuGet's package folder, like any package. |

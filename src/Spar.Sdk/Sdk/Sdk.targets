@@ -92,6 +92,77 @@
   </Target>
 
   <!--
+    The build's identity (decision "M1d's decide-first questions"; plan, M1d step 6): the generator writes the variant,
+    the git revision, whether the work tree had uncommitted changes and the contracts' fingerprint into the app as one
+    marked block, which the host writes in its first log line and spar doctor reads from the file. The revision is the
+    .NET SDK's SourceRevisionId (Source Link reads it from .git, no process); the tree's state is git's status of the
+    whole work tree (tracked changes, staged or not, and untracked files that are not ignored), one git process per
+    build of an app in a git work tree, with no optional locks so it never takes the index from the developer's own git
+    commands. Outside a work tree, or with git missing or refusing the folder, the value is empty: unknown, not an error.
+    A design-time build runs no git: it reads the record the last build wrote, so the editorconfig it writes for the
+    generator is the build's own, and the next build stays incremental. SparBuildIdentity=false leaves the revision and
+    the tree's state out.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparBuildIdentityRecord>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-build-identity.txt</SparBuildIdentityRecord>
+    <_SparBuildIdentityDependsOn Condition="'$(SourceControlInformationFeatureSupported)' == 'true' and '$(DesignTimeBuild)' != 'true'">InitializeSourceControlInformation</_SparBuildIdentityDependsOn>
+    <_SparNoStandardError Condition="$([MSBuild]::IsOSPlatform('Windows'))">2&gt;nul</_SparNoStandardError>
+    <_SparNoStandardError Condition="!$([MSBuild]::IsOSPlatform('Windows'))">2&gt;/dev/null</_SparNoStandardError>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <CompilerVisibleProperty Include="SparBuildRevision" />
+    <CompilerVisibleProperty Include="SparBuildDirty" />
+  </ItemGroup>
+
+  <Target Name="SparBuildIdentity"
+          BeforeTargets="GenerateMSBuildEditorConfigFileCore"
+          DependsOnTargets="$(_SparBuildIdentityDependsOn)"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparBuildIdentity)' != 'false' and '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <SparBuildRevision>$(SourceRevisionId)</SparBuildRevision>
+      <_SparGitRoot>@(SourceRoot->WithMetadataValue('SourceControl', 'git')->WithMetadataValue('NestedRoot', ''))</_SparGitRoot>
+      <_SparGitRoot Condition="$(_SparGitRoot.Contains(';'))">$(_SparGitRoot.Substring(0, $(_SparGitRoot.IndexOf(';'))))</_SparGitRoot>
+    </PropertyGroup>
+
+    <Exec Condition="'$(_SparGitRoot)' != ''"
+          Command="git --no-optional-locks status --porcelain $(_SparNoStandardError)"
+          WorkingDirectory="$(_SparGitRoot)"
+          ConsoleToMSBuild="true" EchoOff="true" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="low" StandardErrorImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_SparGitStatus" />
+      <Output TaskParameter="ExitCode" PropertyName="_SparGitExit" />
+    </Exec>
+
+    <PropertyGroup>
+      <SparBuildDirty Condition="'$(_SparGitExit)' == '0' and '$(_SparGitStatus)' == ''">false</SparBuildDirty>
+      <SparBuildDirty Condition="'$(_SparGitExit)' == '0' and '$(_SparGitStatus)' != ''">true</SparBuildDirty>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(SparBuildIdentityRecord)" Lines="revision=$(SparBuildRevision);dirty=$(SparBuildDirty)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(SparBuildIdentityRecord)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SparBuildIdentityDesignTime"
+          BeforeTargets="GenerateMSBuildEditorConfigFileCore"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparBuildIdentity)' != 'false' and '$(DesignTimeBuild)' == 'true' and Exists('$(SparBuildIdentityRecord)')">
+    <ReadLinesFromFile File="$(SparBuildIdentityRecord)">
+      <Output TaskParameter="Lines" ItemName="_SparBuildIdentityLine" />
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <_SparBuildIdentityRevision Include="@(_SparBuildIdentityLine)" Condition="$([System.String]::Copy('%(Identity)').StartsWith('revision='))" />
+      <_SparBuildIdentityDirty Include="@(_SparBuildIdentityLine)" Condition="$([System.String]::Copy('%(Identity)').StartsWith('dirty='))" />
+    </ItemGroup>
+    <PropertyGroup>
+      <SparBuildRevision>@(_SparBuildIdentityRevision->Replace('revision=', ''))</SparBuildRevision>
+      <SparBuildDirty>@(_SparBuildIdentityDirty->Replace('dirty=', ''))</SparBuildDirty>
+    </PropertyGroup>
+  </Target>
+
+  <!--
     The test-host hook exists only where a test process turns it on. Apps turn it off, and the trimmer removes it
     from their publications (the production boundary test proves it).
   -->

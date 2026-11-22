@@ -86,6 +86,10 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         var image = File.ReadAllBytes(Path.Combine(publish, name));
         Assert.True(Contains(image, "SPARFE", Encoding.ASCII), "The executable carries no packed page.");
 
+        // The build's identity, read from the file as spar doctor reads it: Production, the repository's revision and state.
+        var identity = await BuildIdentityExpectation.OfAsync(workspace, "Production");
+        identity.Check(Spar.Tool.Identity.BuildIdentityReader.Read(Path.Combine(publish, name)).Identity);
+
         var found = ProductionBoundary.Find(image);
         Assert.True(found.Count == 0, $"The Production executable contains: {string.Join(", ", found)}.");
 

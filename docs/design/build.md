@@ -15,7 +15,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - NativeAOT does not cross-compile between operating systems, so each executable is published on its own OS or in a container of it.
   - Testing packages per test level.
   - `Spar.Templates`, the `dotnet new spar-app` template, packed with the others at the same version (M1d step 6a): the new app's `global.json` names that version for `Spar.Sdk`, filled in when the package is packed.
-  - The `spar` .NET tool, versioned with the SDK.
+  - The `spar` .NET tool, versioned with the SDK: the package `Spar.Tool` (command `spar`), framework-dependent, packed with the others at the same version and named by a new app's local tool manifest (M1d step 6b).
 - **Package rules:**
   - Never reuse a version.
   - The runtime package is referenced implicitly at the SDK's version.

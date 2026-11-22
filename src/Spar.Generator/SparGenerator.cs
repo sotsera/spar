@@ -13,7 +13,8 @@ namespace Spar.Generator;
 /// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog, with the page security
 /// <c>Program.cs</c> declares (plan section 3b); the interceptor that hands the catalog to <c>SparApplication.Create</c>;
 /// the interceptor that hands <c>app.Run()</c> the desktop host the build references (in the Test variant too, for the
-/// test session's Window surface); in the Development variant, the contracts' shape, so a contract edit restarts the app
+/// test session's Window surface); the build's identity, which the host logs and <c>spar doctor</c> reads from the file
+/// (<see cref="IdentityEmitter"/>); in the Development variant, the contracts' shape, so a contract edit restarts the app
 /// under Hot Reload instead of being patched (<see cref="ShapeEmitter"/>); and, in the Test variant, the test entry
 /// point and typed test clients.
 /// It reports nothing itself: the analyzer shows problems at their locations.
@@ -99,6 +100,16 @@ public sealed class SparGenerator : IIncrementalGenerator
 
         context.RegisterSourceOutput(contracts.Combine(security).Combine(appId).Combine(isDevelopment), static (output, input) =>
             EmitContracts(output, input.Left.Left.Left, input.Left.Left.Right, input.Left.Right, input.Right));
+
+        // The build's identity (IdentityEmitter): the variant, the revision and the tree's state from the build, and the
+        // contracts' fingerprint. Its own output, so an identity change leaves the contracts' code and shape alone.
+        var identity = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+        {
+            string Read(string name) => options.GlobalOptions.TryGetValue("build_property." + name, out var value) ? value : "";
+            return new IdentityModel(Read("SparVariant"), Read("SparBuildRevision"), Read("SparBuildDirty"));
+        });
+        context.RegisterSourceOutput(contracts.Combine(identity), static (output, input) =>
+            output.AddSource("Spar.BuildIdentity.g.cs", IdentityEmitter.Emit(input.Right, CatalogEmitter.Fingerprint(input.Left))));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
         // Every variant hands Run its host: in the test variant the test session runs the app instead, and opens its
         // window through the host for the Window surface (plan section 5, level 5).

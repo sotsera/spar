@@ -26,9 +26,20 @@ public sealed class NewAppTests(Consumer consumer) : IDisposable
 
         Assert.Equal(expected, consumer.NewAppFiles);
 
-        // The tool manifest comes with the spar tool (M1d step 6b); Spar's packages come from the user's own NuGet sources.
-        Assert.DoesNotContain(".config/dotnet-tools.json", consumer.NewAppFiles);
+        // The local tool manifest names the spar tool (M1d step 6b); Spar's packages come from the user's own NuGet sources.
+        Assert.Contains(".config/dotnet-tools.json", consumer.NewAppFiles);
         Assert.DoesNotContain("nuget.config", consumer.NewAppFiles);
+    }
+
+    [Fact]
+    public void The_new_apps_tool_manifest_names_the_spar_tool_at_the_packages_own_version()
+    {
+        var manifest = JsonDocument.Parse(File.ReadAllText(Path.Combine(consumer.Root, ".config", "dotnet-tools.json"))).RootElement;
+        var tool = manifest.GetProperty("tools").GetProperty("spar.tool");
+
+        Assert.True(manifest.GetProperty("isRoot").GetBoolean());
+        Assert.Equal(consumer.First, tool.GetProperty("version").GetString());
+        Assert.Equal(["spar"], tool.GetProperty("commands").EnumerateArray().Select(command => command.GetString()));
     }
 
     [Fact]

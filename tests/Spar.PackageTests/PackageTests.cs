@@ -152,17 +152,14 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
     public async Task The_app_publishes_with_NativeAOT_and_its_executable_runs()
     {
         Assert.Equal(0, (await consumer.FirstAsync()).Exit);
-        var publish = Path.Combine(consumer.RunRoot, "publish");
 
         // Published without the host of this OS, so running it opens no window here: the hosts themselves are checked
         // by the template's black-box test (TemplateTests) and on the Notebook, and this run checks the error of a build
-        // with no host for its OS.
-        var otherPlatform = OperatingSystem.IsWindows() ? "linux" : "windows";
-        var (exit, output) = await consumer.DotnetAsync(
-            App, "publish", "-c", "Release", "-o", publish, "-nologo", $"-p:SparPlatforms={otherPlatform}");
+        // with no host for its OS. ToolTests reads the same executable's build identity.
+        var (exit, output, executable) = await consumer.PublishedAsync();
 
         Assert.True(exit == 0, output);
-        var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? $"{App}.exe" : App);
+        var publish = Path.GetDirectoryName(executable)!;
         // The page from frontend/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
         // The app id reaches the runtime through the generated catalog, a string literal (UTF-16) in the image. On

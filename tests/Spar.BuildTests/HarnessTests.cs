@@ -71,6 +71,24 @@ public sealed class HarnessTests(Workspace workspace) : IDisposable
         }
     }
 
+    [Fact]
+    public async Task The_NativeAOT_executable_and_the_CoreCLR_assembly_carry_the_builds_identity()
+    {
+        var runs = await RunsAsync();
+        var expected = await BuildIdentityExpectation.OfAsync(workspace, "Production");
+
+        var (native, nativeFile, nativeProblem) = Spar.Tool.Identity.BuildIdentityReader.Read(runs.Executable);
+        var (coreClr, coreClrFile, coreClrProblem) = Spar.Tool.Identity.BuildIdentityReader.Read(runs.Assembly);
+
+        Assert.True(native is not null, nativeProblem);
+        Assert.True(coreClr is not null, coreClrProblem);
+        Assert.Equal(runs.Executable, nativeFile);
+        Assert.Equal(runs.Assembly, coreClrFile);
+        expected.Check(native);
+        expected.Check(coreClr);
+        Assert.Equal(native, coreClr);
+    }
+
     public void Dispose() => workspace.Report(TestContext.Current.TestState?.Result == TestResult.Passed);
 
     private Task<Runs> RunsAsync() => s_runs ??= BuildAndRunAsync();
@@ -92,7 +110,7 @@ public sealed class HarnessTests(Workspace workspace) : IDisposable
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "Spar.Harness.exe" : "Spar.Harness");
         var native = await RunAsync(executable, vectors);
 
-        return new Runs(coreClr, native, executable);
+        return new Runs(coreClr, native, executable, assembly);
     }
 
     /// <summary>Runs a program and reads its standard output as the UTF-8 bytes it wrote, standard error apart.</summary>
@@ -121,5 +139,5 @@ public sealed class HarnessTests(Workspace workspace) : IDisposable
 
     private sealed record Run(int Exit, string Output);
 
-    private sealed record Runs(Run CoreClr, Run Native, string Executable);
+    private sealed record Runs(Run CoreClr, Run Native, string Executable, string Assembly);
 }

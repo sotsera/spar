@@ -31,6 +31,9 @@ internal static class CatalogEmitter
         code.Line("    AddServices)");
         code.Line("{");
         code.Line("    AppAssembly = typeof(SparContracts).Assembly,");
+
+        // By name only: the identity's values are in their own file, so they never change this one (ShapeEmitter).
+        code.Line("    BuildIdentity = SparBuildIdentity.Block.ToArray(),");
         if (appId.Length > 0)
         {
             code.Line($"    AppId = {Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(appId, quote: true)},");

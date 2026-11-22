@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The spar tool's tests (src/Spar.Tool): doctor's checks against a fake machine (nothing installed or removed), its
+    project checks and init's edits on app folders of their own under artifacts/tool-tests/, init's flow with a fake
+    npm, and the build identity's format and reader. The identity read from real built executables is in
+    Spar.BuildTests (inside a git work tree) and Spar.PackageTests (outside any).
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Spar.Tool.Tests</RootNamespace>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(MSBuildThisFileDirectory)..\..\artifacts\test-results\$(MSBuildProjectName)" --report-xunit-trx</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Tool\Spar.Tool.csproj" />
+  </ItemGroup>
+</Project>

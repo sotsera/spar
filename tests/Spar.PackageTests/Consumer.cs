@@ -34,6 +34,7 @@ public sealed class Consumer : IAsyncLifetime
     private int _passed;
     private int _failed;
     private Task<(int Exit, string Output)>? _first;
+    private Task<(int Exit, string Output, string Executable)>? _published;
 
     /// <summary>The name the template's app gets in the main consumer (<c>dotnet new spar-app -n Notes</c>).</summary>
     public const string App = "Notes";
@@ -173,6 +174,34 @@ public sealed class Consumer : IAsyncLifetime
         _first ??= DotnetAsync("", "test", "--project", Path.Combine($"{App}.Tests", $"{App}.Tests.csproj"));
 
     /// <summary>
+    /// The main consumer's app published with NativeAOT into the run's <c>publish/</c>, once per run: without the host of
+    /// this OS (<c>SparPlatforms</c> the other one), so running it opens no window here. Its executable's path.
+    /// </summary>
+    public Task<(int Exit, string Output, string Executable)> PublishedAsync() => _published ??= PublishAsync();
+
+    /// <summary>
+    /// The environment of the spar tool's commands (<c>dotnet tool restore</c>, <c>dotnet spar</c>): the consumers', with
+    /// the .NET CLI's home folder in the run's folder, where the local tools' resolver cache goes, never the user's
+    /// <c>~/.dotnet</c>.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> ToolEnvironment => new Dictionary<string, string>(Environment)
+    {
+        ["DOTNET_CLI_HOME"] = Path.Combine(RunRoot, "dotnet-cli-home"),
+    };
+
+    /// <summary>Runs a tool command (<c>dotnet tool …</c> or <c>dotnet spar …</c>) under <paramref name="root"/>, in <paramref name="directory"/>.</summary>
+    public Task<(int Exit, string Output)> ToolInAsync(string root, string directory, params string[] arguments) =>
+        Tool.RunAsync(Path.Combine(root, directory), "dotnet", arguments, ToolEnvironment);
+
+    private async Task<(int Exit, string Output, string Executable)> PublishAsync()
+    {
+        var publish = Path.Combine(RunRoot, "publish");
+        var otherPlatform = OperatingSystem.IsWindows() ? "linux" : "windows";
+        var (exit, output) = await DotnetAsync(App, "publish", "-c", "Release", "-o", publish, "-nologo", $"-p:SparPlatforms={otherPlatform}");
+        return (exit, output, Path.Combine(publish, OperatingSystem.IsWindows() ? $"{App}.exe" : App));
+    }
+
+    /// <summary>
     /// Makes a new app from the installed template into <paramref name="folder"/>, with the run's hive and no update check
     /// (which would ask NuGet for a newer Spar.Templates), from the run's folder: <c>dotnet new spar-app -o folder …</c>.
     /// The new folder has no nuget.config: the caller writes the one that names the run's feed.
@@ -205,12 +234,12 @@ public sealed class Consumer : IAsyncLifetime
         Tool.RunAsync(Path.Combine(root, directory), "dotnet", arguments, Environment);
 
     /// <summary>
-    /// Packs Spar's eight packages at <paramref name="version"/> into the feed, from this repository with its own build
+    /// Packs Spar's nine packages at <paramref name="version"/> into the feed, from this repository with its own build
     /// settings: the MSBuild server off and no node reuse, so a pack never shares a node with the consumer.
     /// </summary>
     private async Task PackAsync(string version)
     {
-        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk", "Spar.Templates"];
+        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk", "Spar.Templates", "Spar.Tool"];
         var suffix = version["0.1.0-".Length..];
         foreach (var project in projects)
         {

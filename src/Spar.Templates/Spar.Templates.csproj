@@ -4,7 +4,8 @@
     the same version. It ships content/ as it is written here, except the template's template.json, whose two version
     placeholders are filled in when the package is packed (target SparTemplateVersions): the .NET SDK from this
     repository's global.json and Spar.Sdk at this package's own version. The template engine then writes them into the
-    new app's global.json, so an app builds with the Spar that made it. Nothing here is compiled: the content is built
+    new app's global.json and its local tool manifest (.config/dotnet-tools.json, the spar tool at the same version), so an
+    app builds, and runs dotnet spar, with the Spar that made it. Nothing here is compiled: the content is built
     only from packages, by tests/Spar.PackageTests.
   -->
   <PropertyGroup>
