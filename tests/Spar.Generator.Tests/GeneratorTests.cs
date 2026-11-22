@@ -21,7 +21,7 @@ public sealed class GeneratorTests
         var run = GeneratorHarness.Generate(Program + Fixtures.Catalog);
 
         Assert.Empty(run.Errors);
-        Assert.Equal(["Spar.Contracts.g.cs", "Spar.Create.g.cs"], run.Files.Keys.Order());
+        Assert.Equal(["Spar.ContractShape.g.cs", "Spar.Contracts.g.cs", "Spar.Create.g.cs"], run.Files.Keys.Order(StringComparer.Ordinal));
     }
 
     [Fact]

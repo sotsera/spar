@@ -1907,6 +1907,42 @@ public sealed class BlackBoxTests
 - **The build:** for each `SparTestedApplication`, `Projects.<App>` carries the app's name, `AppId`, `ProjectDirectory` and `ExecutablePath`, the Production executable published incrementally into the test project's `obj/` and copied beside the tests, so the path also works from a publish of the test project (the NativeAOT lane). `<SparBlackBoxPublish>false</SparBlackBoxPublish>` keeps the class and skips the publish, for a pipeline that puts the executable there itself.
 - **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=BlackBox"`, and in the NativeAOT lane.
 
+### 6.14 Backend updates while developing
+
+**Decided** (plan section 4, "Hot Reload signal"; decision "M1d step 3's shape: dotnet watch and Hot Reload"). Under `dotnet watch`, or an IDE's Hot Reload, a C# edit that Hot Reload can apply patches the running backend without a restart. In a Debug build the page is told: after each applied edit, `onBackendUpdate` handlers run, and Spar's development overlay shows a small toast, "Backend updated: CopyJobsService (revision 3)", which a click dismisses. A production build has neither: `onBackendUpdate` does nothing there, and the bundler removes it and the toast.
+
+File `frontend/src/backendUpdates.ts`:
+
+```ts
+import { configureSpar, onBackendUpdate, type BackendUpdate } from "@spar/app/sdk";
+import { copyJobs } from "@spar/app/copyJobs";
+
+declare function toast(text: string): void;
+declare function showPlan(steps: number): void;
+
+configureSpar({
+  onFailure: e => toast(`The call failed (${e.code})`),
+  // The page shows its own notice below, so Spar's development toast is turned off.
+  backendUpdateToast: false,
+});
+
+// Debug builds only: after each C# edit Hot Reload applied, ask the backend again, so the view shows what the new code
+// returns. Returns the function that stops listening (a React effect's cleanup, for example).
+export const stopListening = onBackendUpdate((update: BackendUpdate) => {
+  toast(`Revision ${update.revision}: ${update.types.join(", ")}`);
+  void copyJobs.plan({ source: "prod", target: "test", tables: ["dbo.Orders"] }).match({
+    success: plan => showPlan(plan.steps.length),
+    errors: { connectionNotFound: () => undefined, tableMissing: () => undefined },
+  });
+});
+```
+
+- **`BackendUpdate`:** `revision` counts the updates applied to this run of the backend, from 1; `time` is when the backend applied it (ISO 8601); `types` are the full names of the types the edit changed (a method's state machine or a lambda counts as the type it belongs to).
+- **Each `configureSpar` call sets every setting,** those left out to their defaults: `backendUpdateToast` is `true` unless the call says `false`, as `onFailure` goes back to the default when a call leaves it out.
+- **Limits:** the event can arrive after the patched code already ran once (a call that started meanwhile). Edits Hot Reload cannot apply are reported only in `dotnet watch`'s terminal, which restarts the app for them.
+- **Contract edits always restart:** an edit that changes what Spar generates for the contracts (a command's name, request, result or limit, a DTO's or an error case's properties, a wire name, the page security in `Program.cs`) is never patched. A Development build's generated code makes such an edit one that Hot Reload cannot apply, so `dotnet watch` rebuilds the app, which regenerates the TypeScript client, and starts it again; in the window the page loads afresh, and on loopback the open page reloads itself (section 4). A command's body is patched as usual.
+- **In page tests,** `spar.backendUpdate({ types })` from `fakeSpar()` sends the event as a Debug host does, and `fakeSpar()` turns the toast back on, as it resets the failure hooks.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**

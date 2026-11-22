@@ -161,6 +161,22 @@ internal sealed class LoopbackHost : IAsyncDisposable
         return host;
     }
 
+    /// <summary>
+    /// A host event (such as <c>backend-updated</c>) to every open document whose page listed <c>event</c>; returns how
+    /// many documents are open. Called from any thread.
+    /// </summary>
+    public int SendEvent(string name, ReadOnlyMemory<byte> payload)
+    {
+        var open = 0;
+        foreach (var document in _documents.Values)
+        {
+            document.Session.SendEvent(name, payload);
+            open++;
+        }
+
+        return open;
+    }
+
     /// <summary>The page's address with the token in its fragment, for the browser to open.</summary>
     public Uri PageUrl(string path = "/") => new(Origin, $"{path}#token={Token}");
 

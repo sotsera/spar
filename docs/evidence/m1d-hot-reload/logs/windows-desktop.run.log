@@ -1,0 +1,780 @@
+       6,1 08:27:53.530 run: desktop spar-hot-reload-70480; dotnet watch -lp Desktop on Notebook
+      40,9 08:27:53.555 run: edit written: frontend/src/main.tsx at 08:27:53.555
+     364,5 08:27:53.879 watch: dotnet watch : Working directory: '<repo>\samples\Notebook'
+     396,1 08:27:53.910 watch: dotnet watch : Watching with Hot Reload.
+     443,1 08:27:53.957 watch: dotnet watch : Hot reload enabled. For a list of supported edits, see https://aka.ms/dotnet/hot-reload.
+     443,2 08:27:53.957 watch: dotnet watch : Press Ctrl+R to restart.
+     443,2 08:27:53.957 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+     473,2 08:27:53.987 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 71616
+    1293,8 08:27:54.808 watch:   Determining projects to restore...
+    2652,1 08:27:56.166 watch:   All projects are up-to-date for restore.
+    3701,9 08:27:57.216 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+    3919,4 08:27:57.434 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+    3951,4 08:27:57.466 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+    3951,4 08:27:57.466 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+    4138,8 08:27:57.653 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+    4384,1 08:27:57.898 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+    5038,6 08:27:58.553 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+    5038,6 08:27:58.553 watch: 
+    5038,6 08:27:58.553 watch: Build succeeded.
+    5038,6 08:27:58.553 watch:     0 Warning(s)
+    5038,6 08:27:58.553 watch:     0 Error(s)
+    5038,6 08:27:58.553 watch: 
+    5038,6 08:27:58.553 watch: Time Elapsed 00:00:04.30
+    5097,8 08:27:58.612 watch: dotnet watch : Process id 71616 ran for 4641ms and exited with exit code 0.
+    5627,2 08:27:59.141 watch: dotnet watch : Project graph loaded in 0,5s.
+    5627,3 08:27:59.142 watch: dotnet watch : Loading projects ...
+    6289,8 08:27:59.804 watch: dotnet watch : Design-time build completed in 0,7s.
+    6289,8 08:27:59.804 watch: dotnet watch : Loaded 6 project(s) in 0,7s.
+    6289,8 08:27:59.804 watch: dotnet watch : Watching 224 file(s) for changes
+    6337,5 08:27:59.852 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+    6337,5 08:27:59.852 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+    6337,5 08:27:59.852 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+    6337,5 08:27:59.852 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+    6337,6 08:27:59.852 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+    6337,6 08:27:59.852 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+    7067,8 08:28:00.582 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+    7067,9 08:28:00.582 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+    7191,5 08:28:00.706 watch: dotnet watch : Solution after project update: v1
+    7254,7 08:28:00.769 watch: dotnet watch : Hot reload session started.
+    7254,7 08:28:00.769 watch: dotnet watch : Application kind: Default.
+    7286,6 08:28:00.801 watch: dotnet watch : Found named launch profile 'Desktop'.
+    7286,6 08:28:00.801 watch: dotnet watch : launchSettings does not allow launching browsers.
+    7286,6 08:28:00.801 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '9651939500854f1fafe6b96c90118b09'.
+    7286,6 08:28:00.801 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=1 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=9651939500854f1fafe6b96c90118b09 --project <repo>\samples\Notebook -lp Desktop': process id 21684
+    7894,3 08:28:01.409 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+    8301,4 08:28:01.816 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+    8365,3 08:28:01.880 watch: dotnet watch : Waiting for changes
+    8781,5 08:28:02.296 app: 2026-11-22T08:28:02.281Z INFO  Spar.Host  [eb70d51e] Host started 640.9 ms after the process.
+    8781,5 08:28:02.296 app: 2026-11-22T08:28:02.282Z INFO  Spar.Host  [eb70d51e] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development
+    8781,5 08:28:02.296 app: 2026-11-22T08:28:02.294Z INFO  Spar.Host  [eb70d51e] single instance at 29.4 ms
+    8790,9 08:28:02.305 watch: spar info +17.9 ms: [eb70d51e] Host started 640.9 ms after the process.
+    8790,9 08:28:02.305 watch: spar info +20.8 ms: [eb70d51e] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development
+    8790,9 08:28:02.305 watch: spar info +32.8 ms: [eb70d51e] single instance at 29.4 ms
+    8828,7 08:28:02.343 app: 2026-11-22T08:28:02.327Z INFO  Spar.Host  [eb70d51e] prerequisites checked at 66.5 ms
+    8828,7 08:28:02.343 app: 2026-11-22T08:28:02.341Z INFO  Spar.Host  [eb70d51e] The development server recorded at http://127.0.0.1:50657 has ended: a new one starts.
+    8837,1 08:28:02.351 watch: spar info +66.5 ms: [eb70d51e] prerequisites checked at 66.5 ms
+    8837,1 08:28:02.351 watch: spar info +79.9 ms: [eb70d51e] The development server recorded at http://127.0.0.1:50657 has ended: a new one starts.
+    8837,1 08:28:02.351 watch: spar info +82.7 ms: [eb70d51e] UI-thread stall probe on.
+    8861,1 08:28:02.375 app: 2026-11-22T08:28:02.343Z INFO  Spar.Host  [eb70d51e] UI-thread stall probe on.
+    8861,2 08:28:02.375 app: 2026-11-22T08:28:02.352Z INFO  Spar.Host  [eb70d51e] services built at 91.7 ms
+    8861,2 08:28:02.375 app: 2026-11-22T08:28:02.365Z INFO  Spar.Host  [eb70d51e] window shown at 104.2 ms
+    8861,2 08:28:02.375 app: 2026-11-22T08:28:02.365Z INFO  Spar.Host  [eb70d51e] Theme dark (system), window #1d1f24.
+    8861,2 08:28:02.375 app: 2026-11-22T08:28:02.370Z INFO  Spar.Host  [eb70d51e] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 4380), port 53613.
+    8869,4 08:28:02.384 watch: spar info +91.7 ms: [eb70d51e] services built at 91.7 ms
+    8869,5 08:28:02.384 watch: spar info +104.2 ms: [eb70d51e] window shown at 104.2 ms
+    8869,5 08:28:02.384 watch: spar info +104.7 ms: [eb70d51e] Theme dark (system), window #1d1f24.
+    8869,5 08:28:02.384 watch: spar info +109.8 ms: [eb70d51e] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 4380), port 53613.
+    8869,5 08:28:02.384 watch: spar info +115.0 ms: [eb70d51e] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+    8869,5 08:28:02.384 watch: spar info +115.2 ms: [eb70d51e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+    8894,0 08:28:02.408 app: 2026-11-22T08:28:02.376Z INFO  Spar.Host  [eb70d51e] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+    8894,0 08:28:02.408 app: 2026-11-22T08:28:02.376Z INFO  Spar.Host  [eb70d51e] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+    8894,0 08:28:02.408 app: 2026-11-22T08:28:02.396Z INFO  Spar.Host  [eb70d51e] environment at 135.5 ms
+    8894,0 08:28:02.408 app: 2026-11-22T08:28:02.397Z INFO  Spar.Host  [eb70d51e] WebView2 Runtime 157.0.4341.60
+    8894,0 08:28:02.408 app: 2026-11-22T08:28:02.398Z INFO  Spar.Host  [eb70d51e] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development\WebView2
+    8905,4 08:28:02.420 watch: spar info +135.5 ms: [eb70d51e] environment at 135.5 ms
+    8905,9 08:28:02.420 watch: spar info +136.5 ms: [eb70d51e] WebView2 Runtime 157.0.4341.60
+    8905,9 08:28:02.420 watch: spar info +137.3 ms: [eb70d51e] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development\WebView2
+    8906,0 08:28:02.420 watch: spar info +155.9 ms: [eb70d51e] controller requested at 155.8 ms
+    8939,4 08:28:02.454 app: 2026-11-22T08:28:02.417Z INFO  Spar.Host  [eb70d51e] controller requested at 155.8 ms
+    8939,4 08:28:02.454 app: 2026-11-22T08:28:02.423Z INFO  Spar.Host  [eb70d51e] Heartbeat every 5000 ms.
+    8939,4 08:28:02.454 app: 2026-11-22T08:28:02.436Z WARN  Spar.Host  The UI thread stalled 61.7 ms outside Spar's callbacks
+    8950,7 08:28:02.465 watch: spar info +162.7 ms: [eb70d51e] Heartbeat every 5000 ms.
+    8950,7 08:28:02.465 watch: spar warn +174.6 ms: The UI thread stalled 61.7 ms outside Spar's callbacks
+    9231,7 08:28:02.746 app: 2026-11-22T08:28:02.732Z INFO  Spar.Host  [eb70d51e] controller at 471 ms
+    9231,7 08:28:02.746 app: 2026-11-22T08:28:02.740Z INFO  Spar.Host  [eb70d51e] Browser settings read back (2.00 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+    9240,7 08:28:02.755 watch: spar info +471.0 ms: [eb70d51e] controller at 471 ms
+    9240,7 08:28:02.755 watch: spar info +479.6 ms: [eb70d51e] Browser settings read back (2.00 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+    9310,3 08:28:02.824 app: 2026-11-22T08:28:02.803Z INFO  Spar.Host  [eb70d51e] Development console: the page's console errors come from the DevTools Protocol.
+    9310,3 08:28:02.825 app: 2026-11-22T08:28:02.803Z INFO  Spar.Host  [eb70d51e] Page file picker blocked in 61.9 ms (Page.enable 61.3 ms).
+    9310,3 08:28:02.825 app: 2026-11-22T08:28:02.803Z INFO  Spar.Host  [eb70d51e] page script added at 542 ms
+    9310,3 08:28:02.825 app: 2026-11-22T08:28:02.803Z INFO  Spar.Host  [eb70d51e] navigation started at 542.5 ms
+    9322,3 08:28:02.836 watch: spar info +541.8 ms: [eb70d51e] Development console: the page's console errors come from the DevTools Protocol.
+    9322,3 08:28:02.837 watch: spar info +541.9 ms: [eb70d51e] Page file picker blocked in 61.9 ms (Page.enable 61.3 ms).
+    9322,3 08:28:02.837 watch: spar info +542.0 ms: [eb70d51e] page script added at 542 ms
+    9322,3 08:28:02.837 watch: spar info +542.5 ms: [eb70d51e] navigation started at 542.5 ms
+    9618,7 08:28:03.133 app: 2026-11-22T08:28:03.110Z INFO  Spar.DevServer  > dev
+    9618,7 08:28:03.133 app: 2026-11-22T08:28:03.110Z INFO  Spar.DevServer  > vite
+    9629,4 08:28:03.144 watch: > dev
+    9629,4 08:28:03.144 watch: > vite
+    9947,6 08:28:03.462 app: 2026-11-22T08:28:03.438Z INFO  Spar.DevServer    VITE v8.3.8  ready in 206 ms
+    9947,6 08:28:03.462 app: 2026-11-22T08:28:03.438Z INFO  Spar.DevServer    ➜  Local:   http://127.0.0.1:53613/
+    9947,6 08:28:03.462 app: 2026-11-22T08:28:03.452Z INFO  Spar.Host  [eb70d51e] Development server ready at http://127.0.0.1:53613 in 1110 ms (Vite pid 55312).
+    9956,8 08:28:03.471 watch:   VITE v8.3.8  ready in 206 ms
+    9956,9 08:28:03.471 watch:   ?  Local:   http://127.0.0.1:53613/
+    9956,9 08:28:03.471 watch: spar info +1191.5 ms: [eb70d51e] Development server ready at http://127.0.0.1:53613 in 1110 ms (Vite pid 55312).
+    9978,1 08:28:03.492 app: 2026-11-22T08:28:03.478Z INFO  Spar.Host  [eb70d51e] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src https://app.localhost ws://127.0.0.1:53613; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+    9978,1 08:28:03.492 app: 2026-11-22T08:28:03.478Z DEBUG Spar.DevServer  GET / 200 760 B in 23.5 ms
+    9987,2 08:28:03.501 watch: spar info +1216.9 ms: [eb70d51e] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src https://app.localhost ws://127.0.0.1:53613; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   10039,0 08:28:03.553 app: 2026-11-22T08:28:03.535Z INFO  Spar.Host  [eb70d51e] Bridge: document 64bb239b7430c8da opened.
+   10039,0 08:28:03.553 app: 2026-11-22T08:28:03.536Z INFO  Spar.Host  [eb70d51e] Heartbeat armed for the new document.
+   10039,0 08:28:03.553 app: 2026-11-22T08:28:03.536Z INFO  Spar.Host  [eb70d51e] first document at 1275.1 ms
+   10047,4 08:28:03.562 watch: spar info +1274.6 ms: [eb70d51e] Bridge: document 64bb239b7430c8da opened.
+   10047,4 08:28:03.562 watch: spar info +1275.1 ms: [eb70d51e] Heartbeat armed for the new document.
+   10047,4 08:28:03.562 watch: spar info +1275.1 ms: [eb70d51e] first document at 1275.1 ms
+   10119,2 08:28:03.633 app: 2026-11-22T08:28:03.623Z DEBUG Spar.DevServer  GET /src/main.tsx 200 5980 B in 83.2 ms
+   10165,0 08:28:03.679 app: 2026-11-22T08:28:03.665Z DEBUG Spar.DevServer  GET /@react-refresh 200 118969 B in 120.1 ms
+   10165,0 08:28:03.679 app: 2026-11-22T08:28:03.665Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react.js?v=0d465b8b 200 755 B in 39.1 ms
+   10165,0 08:28:03.679 app: 2026-11-22T08:28:03.669Z DEBUG Spar.DevServer  GET /src/App.tsx 200 20660 B in 42.5 ms
+   10165,0 08:28:03.679 app: 2026-11-22T08:28:03.679Z DEBUG Spar.DevServer  GET /src/notebook.ts 200 30916 B in 52.4 ms
+   10197,7 08:28:03.712 app: 2026-11-22T08:28:03.679Z DEBUG Spar.DevServer  GET /src/spar.ts 200 4517 B in 52.7 ms
+   10197,7 08:28:03.712 app: 2026-11-22T08:28:03.680Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0d465b8b 200 35641 B in 52.7 ms
+   10197,7 08:28:03.712 app: 2026-11-22T08:28:03.683Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-D57lpOvP.js?v=0d465b8b 200 136642 B in 14.2 ms
+   10197,7 08:28:03.712 app: 2026-11-22T08:28:03.683Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom_client.js?v=0d465b8b 200 3132085 B in 57.0 ms
+   10197,7 08:28:03.712 app: 2026-11-22T08:28:03.687Z DEBUG Spar.DevServer  GET /src/styles.css 200 53153 B in 60.6 ms
+   10197,7 08:28:03.712 app: 2026-11-22T08:28:03.688Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/sdk.js 200 9195 B in 60.9 ms
+   10197,7 08:28:03.712 app: 2026-11-22T08:28:03.708Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/spar.js 200 648 B in 24.9 ms
+   10228,2 08:28:03.742 app: 2026-11-22T08:28:03.722Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/windows.js 200 516 B in 38.9 ms
+   10228,3 08:28:03.742 app: 2026-11-22T08:28:03.725Z DEBUG Spar.DevServer  GET /src/components/Dialogs.tsx 200 20096 B in 53.0 ms
+   10228,3 08:28:03.742 app: 2026-11-22T08:28:03.725Z DEBUG Spar.DevServer  GET /src/components/Sidebar.tsx 200 15627 B in 53.3 ms
+   10228,3 08:28:03.742 app: 2026-11-22T08:28:03.727Z DEBUG Spar.DevServer  GET /src/components/PageView.tsx 200 27354 B in 54.8 ms
+   10228,3 08:28:03.743 app: 2026-11-22T08:28:03.728Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webkit.js 200 6298 B in 21.3 ms
+   10258,2 08:28:03.772 app: 2026-11-22T08:28:03.748Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom-CAgWe78a.js?v=0d465b8b 200 50848 B in 17.0 ms
+   10258,2 08:28:03.772 app: 2026-11-22T08:28:03.749Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/lucide-react.js?v=0d465b8b 200 5620898 B in 77.9 ms
+   10258,2 08:28:03.772 app: 2026-11-22T08:28:03.751Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/backendUpdate.js 200 10147 B in 45.1 ms
+   10258,2 08:28:03.772 app: 2026-11-22T08:28:03.751Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/results.js 200 22157 B in 45.2 ms
+   10258,2 08:28:03.772 app: 2026-11-22T08:28:03.752Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webview.js 200 6966 B in 45.2 ms
+   10258,3 08:28:03.772 app: 2026-11-22T08:28:03.752Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/loopback.js 200 22742 B in 45.6 ms
+   10258,3 08:28:03.772 app: 2026-11-22T08:28:03.752Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/connection.js 200 37623 B in 46.4 ms
+   10258,3 08:28:03.772 app: 2026-11-22T08:28:03.754Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/pages.js 200 21296 B in 71.0 ms
+   10291,4 08:28:03.806 app: 2026-11-22T08:28:03.780Z DEBUG Spar.DevServer  GET /src/time.ts 200 3340 B in 49.0 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.781Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=0d465b8b 200 819494 B in 49.2 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.788Z DEBUG Spar.DevServer  GET /@vite/client 200 222970 B in 248.9 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.791Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/windows.js 200 9054 B in 66.2 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.794Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/overlay.js 200 11879 B in 0.6 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.795Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/protocol.js 200 46090 B in 0.9 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.795Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/restart.js 200 16324 B in 1.2 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.795Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/wire.js 200 32725 B in 1.4 ms
+   10291,5 08:28:03.806 app: 2026-11-22T08:28:03.798Z DEBUG Spar.DevServer  GET /node_modules/vite/dist/client/env.mjs 200 3390 B in 1.0 ms
+   10321,9 08:28:03.836 app: 2026-11-22T08:28:03.806Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/jsx-runtime-Bwa3DjwP.js?v=0d465b8b 200 37319 B in 0.9 ms
+   10401,0 08:28:03.915 app: 2026-11-22T08:28:03.894Z INFO  Spar.Host  [eb70d51e] first bridge message at 1633.1 ms
+   10401,1 08:28:03.915 app: 2026-11-22T08:28:03.897Z INFO  Spar.Host  [eb70d51e] first navigation completed at 1636.2 ms
+   10401,1 08:28:03.915 app: 2026-11-22T08:28:03.901Z INFO  Spar.Host  [eb70d51e] first bridge reply at 1640.4 ms
+   10401,1 08:28:03.915 app: 2026-11-22T08:28:03.914Z DEBUG Spar.DevServer  GET /node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2 200 48256 B in 3.2 ms
+   10409,2 08:28:03.923 watch: spar info +1633.1 ms: [eb70d51e] first bridge message at 1633.1 ms
+   10409,2 08:28:03.923 watch: spar info +1636.2 ms: [eb70d51e] first navigation completed at 1636.2 ms
+   10409,3 08:28:03.923 watch: spar info +1640.4 ms: [eb70d51e] first bridge reply at 1640.4 ms
+   10431,7 08:28:03.946 app: 2026-11-22T08:28:03.927Z DEBUG Spar.DevServer  GET /favicon.ico 404 0 B in 1.0 ms
+   10431,7 08:28:03.946 app: 2026-11-22T08:28:03.929Z INFO  Spar.Host  [eb70d51e] ui-ready at 1668 ms
+   10431,7 08:28:03.946 app: 2026-11-22T08:28:03.929Z INFO  Spar.Host  [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   10431,7 08:28:03.946 app: 2026-11-22T08:28:03.929Z INFO  Spar.Host  [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   10440,4 08:28:03.955 watch: spar info +1668.0 ms: [eb70d51e] ui-ready at 1668 ms
+   10440,5 08:28:03.955 watch: spar info +1668.1 ms: [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   10440,5 08:28:03.955 watch: spar info +1668.2 ms: [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   10440,5 08:28:03.955 run: found 'ui-ready at'
+   12452,8 08:28:05.967 run: edit written: Pages/MarkdownPageStore.cs at 08:28:05.967
+   12473,8 08:28:05.988 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   12473,8 08:28:05.988 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   12506,4 08:28:06.021 watch: dotnet watch : File updated: .\Pages\MarkdownPageStore.cs
+   12506,4 08:28:06.021 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   12537,4 08:28:06.052 watch: dotnet watch : Solution after document update: v2
+   12664,6 08:28:06.179 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   13122,0 08:28:06.636 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #0
+   13168,5 08:28:06.683 app: 2026-11-22T08:28:06.664Z INFO  Spar.Host  [eb70d51e] Hot Reload applied revision 1 (Notebook.Pages.MarkdownPageStore); sent to document 64bb239b7430c8da.
+   13179,6 08:28:06.694 watch: spar info +4403.0 ms: [eb70d51e] Hot Reload applied revision 1 (Notebook.Pages.MarkdownPageStore); sent to document 64bb239b7430c8da.
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] Writing capabilities: Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 712107f0-ea1f-41b4-b7c7-64e4289ed61f.
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+   13179,6 08:28:06.694 watch: dotnet watch : [Notebook (net11.0)] Update batch #0 completed.
+   13179,6 08:28:06.694 watch: dotnet watch : C# and Razor changes applied in 645ms.
+   13179,7 08:28:06.694 run: found 'Hot Reload applied revision 1'
+   13227,4 08:28:06.742 app: 2026-11-22T08:28:06.725Z DEBUG Spar.DevServer  GET /__spar-probe/backend-updated/1/toasts-1/1795336086719 200 760 B in 4.9 ms
+   13227,5 08:28:06.742 run: found '/__spar-probe/backend-updated/1/toasts-1'
+   14734,9 08:28:08.249 run: restored: Pages/MarkdownPageStore.cs at 08:28:08.249
+   14745,5 08:28:08.260 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   14745,5 08:28:08.260 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   14808,0 08:28:08.322 watch: dotnet watch : File updated: .\Pages\MarkdownPageStore.cs
+   14808,0 08:28:08.322 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   14808,0 08:28:08.322 watch: dotnet watch : Solution after document update: v3
+   14808,0 08:28:08.322 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   14869,2 08:28:08.383 app: 2026-11-22T08:28:08.364Z INFO  Spar.Host  [eb70d51e] Hot Reload applied revision 2 (Notebook.Pages.MarkdownPageStore); sent to document 64bb239b7430c8da.
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #1
+   14879,8 08:28:08.394 watch: spar info +6103.0 ms: [eb70d51e] Hot Reload applied revision 2 (Notebook.Pages.MarkdownPageStore); sent to document 64bb239b7430c8da.
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 712107f0-ea1f-41b4-b7c7-64e4289ed61f.
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+   14879,8 08:28:08.394 watch: dotnet watch : [Notebook (net11.0)] Update batch #1 completed.
+   14879,8 08:28:08.394 watch: dotnet watch : C# and Razor changes applied in 66ms.
+   14880,5 08:28:08.395 run: found 'Hot Reload applied revision 2'
+   14929,7 08:28:08.444 app: 2026-11-22T08:28:08.426Z DEBUG Spar.DevServer  GET /__spar-probe/backend-updated/2/toasts-2/1795336088422 200 760 B in 3.4 ms
+   14929,8 08:28:08.444 run: found '/__spar-probe/backend-updated/2/toasts-'
+   16432,6 08:28:09.947 run: edit written: frontend/src/spar.ts at 08:28:09.947
+   16472,6 08:28:09.987 app: 2026-11-22T08:28:09.966Z DEBUG Spar.DevServer  GET /src/main.tsx?t=1795336089951 200 6028 B in 1.3 ms
+   16472,6 08:28:09.987 app: 2026-11-22T08:28:09.977Z DEBUG Spar.DevServer  GET /src/spar.ts?t=1795336089951 200 4613 B in 8.6 ms
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:09.991Z DEBUG Spar.DevServer  GET /src/styles.css?t=1795336089951 200 53153 B in 26.3 ms
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.001Z WARN  Spar.Host  [eb70d51e] Bridge, document 64bb239b7430c8da: dropped call 1: an id must be higher than every earlier one in the document
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.001Z WARN  Spar.Host  [eb70d51e] Bridge, document 64bb239b7430c8da: dropped call 2: an id must be higher than every earlier one in the document
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.001Z INFO  Spar.Host  [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.001Z INFO  Spar.Host  [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.001Z ERROR Spar.Page  console.error at https://app.localhost/@vite/client:364:4: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+   16504,8 08:28:10.019 app:         at console.<computed> (https://app.localhost/@vite/client:364:4)
+   16504,8 08:28:10.019 app:         at warnIfReactDOMContainerInDEV (https://app.localhost/node_modules/.vite/deps/react-dom_client.js?v=0d465b8b:12861:238)
+   16504,8 08:28:10.019 app:         at exports.createRoot (https://app.localhost/node_modules/.vite/deps/react-dom_client.js?v=0d465b8b:15806:4)
+   16504,8 08:28:10.019 app:         at <anonymous> (https://app.localhost/src/main.tsx?t=1795336089951:33:1)
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.010Z INFO  Spar.DevServer  09:28:09 [vite] (client) hmr update /src/main.tsx, /src/styles.css
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.010Z INFO  Spar.DevServer  09:28:09 [vite] (client) [console.error] You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.010Z INFO  Spar.DevServer  09:28:10 [vite] (client) hmr invalidate /src/main.tsx No exports
+   16504,8 08:28:10.019 app: 2026-11-22T08:28:10.010Z INFO  Spar.DevServer  09:28:10 [vite] (client) page reload src/main.tsx
+   16513,4 08:28:10.028 watch: spar warn +7740.4 ms: [eb70d51e] Bridge, document 64bb239b7430c8da: dropped call 1: an id must be higher than every earlier one in the document
+   16513,4 08:28:10.028 watch: spar warn +7740.4 ms: [eb70d51e] Bridge, document 64bb239b7430c8da: dropped call 2: an id must be higher than every earlier one in the document
+   16513,4 08:28:10.028 watch: spar info +7740.5 ms: [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   16513,5 08:28:10.028 watch: spar info +7740.5 ms: [eb70d51e] Bridge: document 64bb239b7430c8da reported ui-ready.
+   16513,5 08:28:10.028 watch: 09:28:09 [vite] (client) hmr update /src/main.tsx, /src/styles.css
+   16513,5 08:28:10.028 watch: 09:28:09 [vite] (client) [console.error] You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+   16513,5 08:28:10.028 watch: 09:28:10 [vite] (client) hmr invalidate /src/main.tsx No exports
+   16513,5 08:28:10.028 watch: 09:28:10 [vite] (client) page reload src/main.tsx
+   16513,5 08:28:10.028 watch: spar info +7765.2 ms: [eb70d51e] Bridge: document 64bb239b7430c8da closed (navigation).
+   16536,0 08:28:10.050 app: 2026-11-22T08:28:10.026Z INFO  Spar.Host  [eb70d51e] Bridge: document 64bb239b7430c8da closed (navigation).
+   16536,1 08:28:10.050 app: 2026-11-22T08:28:10.030Z DEBUG Spar.DevServer  GET / 200 776 B in 2.9 ms
+   16536,1 08:28:10.050 app: 2026-11-22T08:28:10.037Z INFO  Spar.Host  [eb70d51e] Bridge: document 3e33236803ebae12 opened.
+   16536,1 08:28:10.050 app: 2026-11-22T08:28:10.037Z INFO  Spar.Host  [eb70d51e] Heartbeat armed for the new document.
+   16536,1 08:28:10.050 app: 2026-11-22T08:28:10.040Z DEBUG Spar.DevServer  GET /src/main.tsx?t=1795336089951 200 6028 B in 0.7 ms
+   16536,1 08:28:10.050 app: 2026-11-22T08:28:10.046Z DEBUG Spar.DevServer  GET /@vite/client 200 222970 B in 6.1 ms
+   16536,1 08:28:10.050 app: 2026-11-22T08:28:10.048Z DEBUG Spar.DevServer  GET /@react-refresh 200 118969 B in 6.3 ms
+   16545,4 08:28:10.060 watch: spar info +7775.8 ms: [eb70d51e] Bridge: document 3e33236803ebae12 opened.
+   16545,4 08:28:10.060 watch: spar info +7775.9 ms: [eb70d51e] Heartbeat armed for the new document.
+   16567,1 08:28:10.081 app: 2026-11-22T08:28:10.070Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react.js?v=0d465b8b 200 755 B in 26.4 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.070Z DEBUG Spar.DevServer  GET /src/App.tsx 200 20660 B in 26.6 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.071Z DEBUG Spar.DevServer  GET /src/notebook.ts 200 30916 B in 27.2 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.071Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom_client.js?v=0d465b8b 200 3132085 B in 27.8 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.072Z DEBUG Spar.DevServer  GET /src/styles.css?t=1795336089951 200 53153 B in 27.9 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.072Z DEBUG Spar.DevServer  GET /src/spar.ts?t=1795336089951 200 4613 B in 28.0 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.072Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0d465b8b 200 35641 B in 28.0 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.072Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/sdk.js 200 9195 B in 28.4 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.073Z DEBUG Spar.DevServer  GET /node_modules/vite/dist/client/env.mjs 200 3390 B in 19.9 ms
+   16567,2 08:28:10.081 app: 2026-11-22T08:28:10.075Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-D57lpOvP.js?v=0d465b8b 200 136642 B in 1.1 ms
+   16575,0 08:28:10.089 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+   16575,1 08:28:10.089 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.096Z DEBUG Spar.DevServer  GET /src/components/Dialogs.tsx 200 20096 B in 22.4 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.097Z DEBUG Spar.DevServer  GET /src/components/PageView.tsx 200 27354 B in 22.7 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.097Z DEBUG Spar.DevServer  GET /src/components/Sidebar.tsx 200 15627 B in 23.1 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.098Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/pages.js 200 21296 B in 23.4 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.098Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/windows.js 200 516 B in 23.6 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.102Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/lucide-react.js?v=0d465b8b 200 5620898 B in 27.9 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.109Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/spar.js 200 648 B in 1.1 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.109Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/backendUpdate.js 200 10147 B in 0.7 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.110Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/connection.js 200 37623 B in 1.1 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.110Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/results.js 200 22157 B in 1.4 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.111Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/loopback.js 200 22742 B in 1.8 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.111Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webview.js 200 6966 B in 1.8 ms
+   16599,9 08:28:10.114 app: 2026-11-22T08:28:10.111Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webkit.js 200 6298 B in 2.0 ms
+   16632,7 08:28:10.147 watch: dotnet watch : File updated: .\frontend\src\spar.ts
+   16632,7 08:28:10.147 watch: dotnet watch : Solution after document update: v4
+   16632,7 08:28:10.147 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   16632,7 08:28:10.147 watch: dotnet watch : No managed code changes to apply.
+   16661,2 08:28:10.175 app: 2026-11-22T08:28:10.151Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/wire.js 200 32725 B in 7.4 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.152Z DEBUG Spar.DevServer  GET /src/time.ts 200 3340 B in 8.1 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.152Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=0d465b8b 200 819494 B in 8.3 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.152Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/windows.js 200 9054 B in 8.3 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.153Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom-CAgWe78a.js?v=0d465b8b 200 50848 B in 8.6 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.165Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/overlay.js 200 11879 B in 0.8 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.165Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/protocol.js 200 46090 B in 1.1 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.166Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/restart.js 200 16324 B in 1.4 ms
+   16661,3 08:28:10.175 app: 2026-11-22T08:28:10.175Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/jsx-runtime-Bwa3DjwP.js?v=0d465b8b 200 37319 B in 0.8 ms
+   16849,5 08:28:10.364 app: 2026-11-22T08:28:10.344Z INFO  Spar.Host  [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   16849,6 08:28:10.364 app: 2026-11-22T08:28:10.345Z DEBUG Spar.DevServer  GET /node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2 200 48256 B in 2.7 ms
+   16849,6 08:28:10.364 app: 2026-11-22T08:28:10.346Z INFO  Spar.Host  [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   16860,2 08:28:10.374 watch: spar info +8083.5 ms: [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   16860,2 08:28:10.374 watch: spar info +8085.1 ms: [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   21443,5 08:28:14.958 run: edit written: Pages/MarkdownPageStore.cs at 08:28:14.958
+   21453,4 08:28:14.968 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   21453,4 08:28:14.968 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   21514,4 08:28:15.029 watch: dotnet watch : File updated: .\Pages\MarkdownPageStore.cs
+   21514,4 08:28:15.029 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   21514,4 08:28:15.029 watch: dotnet watch : Solution after document update: v5
+   21562,3 08:28:15.076 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #2
+   21562,3 08:28:15.077 watch: spar info +12811.4 ms: [eb70d51e] Hot Reload applied revision 3 (Notebook.Pages.MarkdownPageStore); sent to document 3e33236803ebae12.
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 712107f0-ea1f-41b4-b7c7-64e4289ed61f.
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+   21562,3 08:28:15.077 watch: dotnet watch : [Notebook (net11.0)] Update batch #2 completed.
+   21562,3 08:28:15.077 watch: dotnet watch : C# and Razor changes applied in 67ms.
+   21592,2 08:28:15.106 app: 2026-11-22T08:28:15.072Z INFO  Spar.Host  [eb70d51e] Hot Reload applied revision 3 (Notebook.Pages.MarkdownPageStore); sent to document 3e33236803ebae12.
+   21592,3 08:28:15.107 run: found 'Hot Reload applied revision 3'
+   21637,9 08:28:15.152 app: 2026-11-22T08:28:15.137Z DEBUG Spar.DevServer  GET /__spar-probe/backend-updated/3/toasts-0/1795336095131 200 776 B in 5.1 ms
+   21638,0 08:28:15.152 run: found '/__spar-probe/backend-updated/3/toasts-0'
+   23148,1 08:28:16.662 run: restored: Pages/MarkdownPageStore.cs at 08:28:16.662
+   23158,1 08:28:16.672 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   23158,1 08:28:16.672 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   23187,7 08:28:16.702 watch: dotnet watch : File updated: .\Pages\MarkdownPageStore.cs
+   23187,7 08:28:16.702 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+   23187,8 08:28:16.702 watch: dotnet watch : Solution after document update: v6
+   23187,8 08:28:16.702 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   23217,8 08:28:16.732 app: 2026-11-22T08:28:16.717Z INFO  Spar.Host  [eb70d51e] Hot Reload applied revision 4 (Notebook.Pages.MarkdownPageStore); sent to document 3e33236803ebae12.
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #3
+   23225,7 08:28:16.740 watch: spar info +14456.0 ms: [eb70d51e] Hot Reload applied revision 4 (Notebook.Pages.MarkdownPageStore); sent to document 3e33236803ebae12.
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 712107f0-ea1f-41b4-b7c7-64e4289ed61f.
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+   23225,7 08:28:16.740 watch: dotnet watch : [Notebook (net11.0)] Update batch #3 completed.
+   23225,7 08:28:16.740 watch: dotnet watch : C# and Razor changes applied in 22ms.
+   23225,8 08:28:16.740 run: found 'Hot Reload applied revision 4'
+   23282,0 08:28:16.796 app: 2026-11-22T08:28:16.777Z DEBUG Spar.DevServer  GET /__spar-probe/backend-updated/4/toasts-0/1795336096774 200 776 B in 2.3 ms
+   23282,1 08:28:16.796 run: found '/__spar-probe/backend-updated/4/toasts-0'
+   23282,3 08:28:16.797 run: restored: frontend/src/spar.ts at 08:28:16.797
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.800Z DEBUG Spar.DevServer  GET /src/main.tsx?t=1795336096799 200 6028 B in 0.7 ms
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.807Z DEBUG Spar.DevServer  GET /src/spar.ts?t=1795336096799 200 4517 B in 5.8 ms
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.813Z DEBUG Spar.DevServer  GET /src/styles.css?t=1795336096799 200 53153 B in 13.9 ms
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.815Z ERROR Spar.Page  console.error at https://app.localhost/@vite/client:364:4: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+   23313,6 08:28:16.828 app:         at console.<computed> (https://app.localhost/@vite/client:364:4)
+   23313,6 08:28:16.828 app:         at warnIfReactDOMContainerInDEV (https://app.localhost/node_modules/.vite/deps/react-dom_client.js?v=0d465b8b:12861:238)
+   23313,6 08:28:16.828 app:         at exports.createRoot (https://app.localhost/node_modules/.vite/deps/react-dom_client.js?v=0d465b8b:15806:4)
+   23313,6 08:28:16.828 app:         at <anonymous> (https://app.localhost/src/main.tsx?t=1795336096799:33:1)
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.819Z WARN  Spar.Host  [eb70d51e] Bridge, document 3e33236803ebae12: dropped call 1: an id must be higher than every earlier one in the document
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.819Z INFO  Spar.Host  [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.819Z WARN  Spar.Host  [eb70d51e] Bridge, document 3e33236803ebae12: dropped call 2: an id must be higher than every earlier one in the document
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.819Z INFO  Spar.Host  [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.820Z INFO  Spar.DevServer  09:28:16 [vite] (client) hmr update /src/main.tsx, /src/styles.css
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.820Z INFO  Spar.DevServer  09:28:16 [vite] (client) [console.error] You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.820Z INFO  Spar.DevServer  09:28:16 [vite] (client) hmr invalidate /src/main.tsx No exports
+   23313,6 08:28:16.828 app: 2026-11-22T08:28:16.820Z INFO  Spar.DevServer  09:28:16 [vite] (client) page reload src/main.tsx
+   23321,8 08:28:16.836 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+   23321,8 08:28:16.836 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+   23321,8 08:28:16.836 watch: spar warn +14558.5 ms: [eb70d51e] Bridge, document 3e33236803ebae12: dropped call 1: an id must be higher than every earlier one in the document
+   23321,8 08:28:16.836 watch: spar info +14558.5 ms: [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   23321,8 08:28:16.836 watch: spar warn +14558.6 ms: [eb70d51e] Bridge, document 3e33236803ebae12: dropped call 2: an id must be higher than every earlier one in the document
+   23321,8 08:28:16.836 watch: spar info +14558.6 ms: [eb70d51e] Bridge: document 3e33236803ebae12 reported ui-ready.
+   23321,8 08:28:16.836 watch: 09:28:16 [vite] (client) hmr update /src/main.tsx, /src/styles.css
+   23321,8 08:28:16.836 watch: 09:28:16 [vite] (client) [console.error] You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+   23321,8 08:28:16.836 watch: 09:28:16 [vite] (client) hmr invalidate /src/main.tsx No exports
+   23321,8 08:28:16.836 watch: 09:28:16 [vite] (client) page reload src/main.tsx
+   23321,8 08:28:16.836 watch: dotnet watch : File updated: .\frontend\src\spar.ts
+   23321,8 08:28:16.836 watch: dotnet watch : Solution after document update: v7
+   23321,8 08:28:16.836 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   23321,8 08:28:16.836 watch: dotnet watch : No managed code changes to apply.
+   23345,2 08:28:16.859 app: 2026-11-22T08:28:16.841Z INFO  Spar.Host  [eb70d51e] Bridge: document 3e33236803ebae12 closed (navigation).
+   23345,2 08:28:16.859 app: 2026-11-22T08:28:16.843Z DEBUG Spar.DevServer  GET / 200 776 B in 1.3 ms
+   23345,3 08:28:16.859 app: 2026-11-22T08:28:16.847Z INFO  Spar.Host  [eb70d51e] Bridge: document 1a380575975da292 opened.
+   23345,3 08:28:16.859 app: 2026-11-22T08:28:16.847Z INFO  Spar.Host  [eb70d51e] Heartbeat armed for the new document.
+   23345,3 08:28:16.859 app: 2026-11-22T08:28:16.851Z DEBUG Spar.DevServer  GET /@vite/client 200 222970 B in 2.6 ms
+   23345,3 08:28:16.859 app: 2026-11-22T08:28:16.852Z DEBUG Spar.DevServer  GET /src/main.tsx?t=1795336096799 200 6028 B in 2.9 ms
+   23345,3 08:28:16.859 app: 2026-11-22T08:28:16.853Z DEBUG Spar.DevServer  GET /@react-refresh 200 118969 B in 3.1 ms
+   23345,3 08:28:16.859 app: 2026-11-22T08:28:16.855Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react.js?v=0d465b8b 200 755 B in 0.4 ms
+   23353,0 08:28:16.867 watch: spar info +14580.5 ms: [eb70d51e] Bridge: document 3e33236803ebae12 closed (navigation).
+   23353,1 08:28:16.867 watch: spar info +14586.4 ms: [eb70d51e] Bridge: document 1a380575975da292 opened.
+   23353,1 08:28:16.867 watch: spar info +14586.4 ms: [eb70d51e] Heartbeat armed for the new document.
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.864Z DEBUG Spar.DevServer  GET /src/App.tsx 200 20660 B in 8.9 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.864Z DEBUG Spar.DevServer  GET /src/notebook.ts 200 30916 B in 9.2 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.865Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/sdk.js 200 9195 B in 9.5 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.865Z DEBUG Spar.DevServer  GET /src/styles.css?t=1795336096799 200 53153 B in 9.8 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.866Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom_client.js?v=0d465b8b 200 3132085 B in 10.5 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.866Z DEBUG Spar.DevServer  GET /node_modules/vite/dist/client/env.mjs 200 3390 B in 10.0 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.866Z DEBUG Spar.DevServer  GET /src/spar.ts?t=1795336096799 200 4517 B in 10.4 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.866Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0d465b8b 200 35641 B in 10.3 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.866Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-D57lpOvP.js?v=0d465b8b 200 136642 B in 9.3 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.879Z DEBUG Spar.DevServer  GET /src/components/Dialogs.tsx 200 20096 B in 11.7 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.879Z DEBUG Spar.DevServer  GET /src/components/PageView.tsx 200 27354 B in 11.9 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.879Z DEBUG Spar.DevServer  GET /src/components/Sidebar.tsx 200 15627 B in 12.0 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.879Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/pages.js 200 21296 B in 12.2 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.880Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/windows.js 200 516 B in 12.2 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.880Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/backendUpdate.js 200 10147 B in 11.6 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.880Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/connection.js 200 37623 B in 11.8 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.880Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/results.js 200 22157 B in 11.9 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.881Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webview.js 200 6966 B in 12.4 ms
+   23376,5 08:28:16.891 app: 2026-11-22T08:28:16.881Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webkit.js 200 6298 B in 12.6 ms
+   23376,7 08:28:16.891 app: 2026-11-22T08:28:16.881Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/loopback.js 200 22742 B in 12.8 ms
+   23376,7 08:28:16.891 app: 2026-11-22T08:28:16.881Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/lucide-react.js?v=0d465b8b 200 5620898 B in 14.4 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.903Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/spar.js 200 648 B in 0.5 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.903Z DEBUG Spar.DevServer  GET /src/time.ts 200 3340 B in 0.6 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.907Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/wire.js 200 32725 B in 4.2 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.907Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/windows.js 200 9054 B in 4.6 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.907Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=0d465b8b 200 819494 B in 4.6 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.907Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/protocol.js 200 46090 B in 4.7 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.907Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/restart.js 200 16324 B in 4.9 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.907Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/overlay.js 200 11879 B in 5.0 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.914Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom-CAgWe78a.js?v=0d465b8b 200 50848 B in 0.6 ms
+   23408,7 08:28:16.923 app: 2026-11-22T08:28:16.922Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/jsx-runtime-Bwa3DjwP.js?v=0d465b8b 200 37319 B in 0.5 ms
+   23502,3 08:28:17.016 app: 2026-11-22T08:28:17.009Z INFO  Spar.Host  [eb70d51e] Bridge: document 1a380575975da292 reported ui-ready.
+   23502,3 08:28:17.016 app: 2026-11-22T08:28:17.009Z DEBUG Spar.DevServer  GET /node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2 200 48256 B in 1.0 ms
+   23502,3 08:28:17.017 app: 2026-11-22T08:28:17.009Z INFO  Spar.Host  [eb70d51e] Bridge: document 1a380575975da292 reported ui-ready.
+   23509,8 08:28:17.024 watch: spar info +14747.9 ms: [eb70d51e] Bridge: document 1a380575975da292 reported ui-ready.
+   23509,8 08:28:17.024 watch: spar info +14748.5 ms: [eb70d51e] Bridge: document 1a380575975da292 reported ui-ready.
+   27286,8 08:28:20.801 run: edit written: frontend/src/notebook.test.tsx at 08:28:20.801
+   27299,6 08:28:20.814 run: edit written: frontend/src/notebook.test.tsx at 08:28:20.814
+   27299,9 08:28:20.814 run: edit written: Pages/PageTypes.cs at 08:28:20.814
+   27326,7 08:28:20.841 app: 2026-11-22T08:28:20.825Z DEBUG Spar.DevServer  GET /src/styles.css?t=1795336100803 200 53153 B in 20.6 ms
+   27335,0 08:28:20.849 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+   27335,0 08:28:20.849 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+   27335,0 08:28:20.849 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+   27335,0 08:28:20.849 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+   27335,0 08:28:20.849 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+   27335,0 08:28:20.849 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+   27390,9 08:28:20.905 watch: dotnet watch : Files updated: .\frontend\src\notebook.test.tsx, .\Pages\PageTypes.cs
+   27390,9 08:28:20.905 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+   27390,9 08:28:20.905 watch: dotnet watch : Solution after document update: v8
+   27419,4 08:28:20.934 app: 2026-11-22T08:28:20.912Z INFO  Spar.DevServer  09:28:20 [vite] (client) hmr update /src/styles.css
+   27424,5 08:28:20.939 watch: 09:28:20 [vite] (client) hmr update /src/styles.css
+   27424,5 08:28:20.939 watch: dotnet watch : Restart is needed to apply the changes.
+   27424,5 08:28:20.939 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+   27424,5 08:28:20.939 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_879f931117336b648ebaa9698f9395de' requires restarting the application.
+   27424,5 08:28:20.939 watch: dotnet watch : Terminating remaining child processes.
+   27424,5 08:28:20.939 watch: dotnet watch : [Notebook (net11.0)] Terminating process 21684 (Ctrl+C).
+   27424,5 08:28:20.939 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 21684 to exit within 5s.
+   27424,5 08:28:20.939 run: found 'Restart is needed'
+   32445,0 08:28:25.959 watch: dotnet watch : [Notebook (net11.0)] Terminating process 21684 (Kill).
+   32445,0 08:28:25.959 watch: dotnet watch : [Notebook (net11.0)] Process id 21684 ran for 25157ms and exited with exit code -1.
+   32445,0 08:28:25.959 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+   32445,0 08:28:25.959 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+   32445,0 08:28:25.959 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+   32445,0 08:28:25.959 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 38120
+   32838,9 08:28:26.353 watch:   Determining projects to restore...
+   33456,7 08:28:26.971 watch:   All projects are up-to-date for restore.
+   34011,0 08:28:27.525 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+   34168,4 08:28:27.683 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+   34168,5 08:28:27.683 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+   34198,4 08:28:27.713 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+   34293,6 08:28:27.808 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+   34452,5 08:28:27.967 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+   35442,6 08:28:28.957 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+   35914,1 08:28:29.428 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+   35914,1 08:28:29.428 watch: 
+   35914,1 08:28:29.428 watch: Build succeeded.
+   35914,1 08:28:29.428 watch:     0 Warning(s)
+   35914,1 08:28:29.428 watch:     0 Error(s)
+   35914,1 08:28:29.428 watch: 
+   35914,1 08:28:29.428 watch: Time Elapsed 00:00:03.31
+   35961,2 08:28:29.475 watch: dotnet watch : Process id 38120 ran for 3518ms and exited with exit code 0.
+   36040,2 08:28:29.554 watch: dotnet watch : Project graph loaded in 0,1s.
+   36040,2 08:28:29.554 watch: dotnet watch : Loading projects ...
+   36212,8 08:28:29.727 watch: dotnet watch : Design-time build completed in 0,2s.
+   36212,8 08:28:29.727 watch: dotnet watch : Loaded 6 project(s) in 0,2s.
+   36212,8 08:28:29.727 watch: dotnet watch : Watching 224 file(s) for changes
+   36212,8 08:28:29.727 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+   36212,8 08:28:29.727 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+   36212,8 08:28:29.727 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+   36212,8 08:28:29.727 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+   36212,8 08:28:29.727 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+   36212,8 08:28:29.727 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+   36276,8 08:28:29.791 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+   36276,8 08:28:29.791 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+   36306,5 08:28:29.821 watch: dotnet watch : Solution after project update: v1
+   36306,5 08:28:29.821 watch: dotnet watch : Hot reload session started.
+   36306,5 08:28:29.821 watch: dotnet watch : Application kind: Default.
+   36306,5 08:28:29.821 watch: dotnet watch : Found named launch profile 'Desktop'.
+   36306,5 08:28:29.821 watch: dotnet watch : launchSettings does not allow launching browsers.
+   36306,5 08:28:29.821 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe 'e40abc38086e4f009313b78f18a8bb19'.
+   36306,5 08:28:29.821 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=2 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=e40abc38086e4f009313b78f18a8bb19 --project <repo>\samples\Notebook -lp Desktop': process id 48676
+   36686,2 08:28:30.200 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+   36983,3 08:28:30.498 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+   36983,3 08:28:30.498 watch: dotnet watch : Waiting for changes
+   37015,7 08:28:30.530 app: 2026-11-22T08:28:30.507Z INFO  Spar.Host  [0d836f23] Host started 154.9 ms after the process.
+   37015,7 08:28:30.530 app: 2026-11-22T08:28:30.507Z INFO  Spar.Host  [0d836f23] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development
+   37015,7 08:28:30.530 app: 2026-11-22T08:28:30.516Z INFO  Spar.Host  [0d836f23] single instance at 19.6 ms
+   37015,7 08:28:30.530 app: 2026-11-22T08:28:30.517Z INFO  Spar.Host  [0d836f23] prerequisites checked at 23.8 ms
+   37015,7 08:28:30.530 app: 2026-11-22T08:28:30.529Z INFO  Spar.Host  [0d836f23] The development server recorded at http://127.0.0.1:53613 has ended: a new one starts.
+   37021,9 08:28:30.536 watch: spar info +11.6 ms: [0d836f23] Host started 154.9 ms after the process.
+   37021,9 08:28:30.536 watch: spar info +13.6 ms: [0d836f23] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development
+   37021,9 08:28:30.536 watch: spar info +21.8 ms: [0d836f23] single instance at 19.6 ms
+   37022,0 08:28:30.536 watch: spar info +23.8 ms: [0d836f23] prerequisites checked at 23.8 ms
+   37022,0 08:28:30.536 watch: spar info +35.1 ms: [0d836f23] The development server recorded at http://127.0.0.1:53613 has ended: a new one starts.
+   37022,0 08:28:30.536 watch: spar info +36.5 ms: [0d836f23] UI-thread stall probe on.
+   37048,5 08:28:30.563 app: 2026-11-22T08:28:30.530Z INFO  Spar.Host  [0d836f23] UI-thread stall probe on.
+   37048,5 08:28:30.563 app: 2026-11-22T08:28:30.537Z INFO  Spar.Host  [0d836f23] services built at 43.1 ms
+   37048,5 08:28:30.563 app: 2026-11-22T08:28:30.546Z INFO  Spar.Host  [0d836f23] window shown at 52.2 ms
+   37048,5 08:28:30.563 app: 2026-11-22T08:28:30.546Z INFO  Spar.Host  [0d836f23] Theme dark (system), window #1d1f24.
+   37048,5 08:28:30.563 app: 2026-11-22T08:28:30.552Z INFO  Spar.Host  [0d836f23] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 54044), port 56778.
+   37048,5 08:28:30.563 app: 2026-11-22T08:28:30.555Z INFO  Spar.Host  [0d836f23] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   37048,5 08:28:30.563 app: 2026-11-22T08:28:30.555Z INFO  Spar.Host  [0d836f23] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+   37054,8 08:28:30.569 watch: spar info +43.1 ms: [0d836f23] services built at 43.1 ms
+   37054,8 08:28:30.569 watch: spar info +52.2 ms: [0d836f23] window shown at 52.2 ms
+   37054,8 08:28:30.569 watch: spar info +52.6 ms: [0d836f23] Theme dark (system), window #1d1f24.
+   37054,8 08:28:30.569 watch: spar info +58.3 ms: [0d836f23] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 54044), port 56778.
+   37054,8 08:28:30.569 watch: spar info +61.9 ms: [0d836f23] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   37054,8 08:28:30.569 watch: spar info +61.9 ms: [0d836f23] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+   37079,6 08:28:30.594 app: 2026-11-22T08:28:30.573Z INFO  Spar.Host  [0d836f23] environment at 79 ms
+   37079,6 08:28:30.594 app: 2026-11-22T08:28:30.573Z INFO  Spar.Host  [0d836f23] WebView2 Runtime 157.0.4341.60
+   37079,6 08:28:30.594 app: 2026-11-22T08:28:30.574Z INFO  Spar.Host  [0d836f23] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development\WebView2
+   37079,6 08:28:30.594 app: 2026-11-22T08:28:30.591Z INFO  Spar.Host  [0d836f23] controller requested at 97.3 ms
+   37086,5 08:28:30.601 watch: spar info +79.0 ms: [0d836f23] environment at 79 ms
+   37086,5 08:28:30.601 watch: spar info +79.9 ms: [0d836f23] WebView2 Runtime 157.0.4341.60
+   37086,5 08:28:30.601 watch: spar info +80.5 ms: [0d836f23] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development\WebView2
+   37086,5 08:28:30.601 watch: spar info +97.3 ms: [0d836f23] controller requested at 97.3 ms
+   37086,5 08:28:30.601 watch: spar info +103.8 ms: [0d836f23] Heartbeat every 5000 ms.
+   37112,7 08:28:30.627 app: 2026-11-22T08:28:30.597Z INFO  Spar.Host  [0d836f23] Heartbeat every 5000 ms.
+   37300,2 08:28:30.814 app: 2026-11-22T08:28:30.804Z INFO  Spar.Host  [0d836f23] controller at 310 ms
+   37300,2 08:28:30.814 app: 2026-11-22T08:28:30.811Z INFO  Spar.Host  [0d836f23] Browser settings read back (1.98 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+   37308,3 08:28:30.823 watch: spar info +310.0 ms: [0d836f23] controller at 310 ms
+   37308,3 08:28:30.823 watch: spar info +317.7 ms: [0d836f23] Browser settings read back (1.98 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+   37346,2 08:28:30.860 app: 2026-11-22T08:28:30.851Z INFO  Spar.Host  [0d836f23] Development console: the page's console errors come from the DevTools Protocol.
+   37346,2 08:28:30.860 app: 2026-11-22T08:28:30.851Z INFO  Spar.Host  [0d836f23] Page file picker blocked in 39.8 ms (Page.enable 39.1 ms).
+   37346,2 08:28:30.860 app: 2026-11-22T08:28:30.851Z INFO  Spar.Host  [0d836f23] page script added at 358 ms
+   37346,2 08:28:30.860 app: 2026-11-22T08:28:30.852Z INFO  Spar.Host  [0d836f23] navigation started at 358.4 ms
+   37352,8 08:28:30.867 watch: spar info +357.9 ms: [0d836f23] Development console: the page's console errors come from the DevTools Protocol.
+   37352,8 08:28:30.867 watch: spar info +357.9 ms: [0d836f23] Page file picker blocked in 39.8 ms (Page.enable 39.1 ms).
+   37352,8 08:28:30.867 watch: spar info +358.0 ms: [0d836f23] page script added at 358 ms
+   37352,8 08:28:30.867 watch: spar info +358.4 ms: [0d836f23] navigation started at 358.4 ms
+   37597,3 08:28:31.112 app: 2026-11-22T08:28:31.089Z INFO  Spar.DevServer  > dev
+   37597,3 08:28:31.112 app: 2026-11-22T08:28:31.089Z INFO  Spar.DevServer  > vite
+   37604,4 08:28:31.119 watch: > dev
+   37604,4 08:28:31.119 watch: > vite
+   37850,6 08:28:31.365 app: 2026-11-22T08:28:31.342Z INFO  Spar.Host  [0d836f23] Development server ready at http://127.0.0.1:56778 in 813 ms (Vite pid 60236).
+   37850,6 08:28:31.365 app: 2026-11-22T08:28:31.359Z INFO  Spar.Host  [0d836f23] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src https://app.localhost ws://127.0.0.1:56778; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   37850,6 08:28:31.365 app: 2026-11-22T08:28:31.359Z DEBUG Spar.DevServer  GET / 200 760 B in 14.6 ms
+   37859,0 08:28:31.373 watch: spar info +848.9 ms: [0d836f23] Development server ready at http://127.0.0.1:56778 in 813 ms (Vite pid 60236).
+   37859,0 08:28:31.373 watch: spar info +865.3 ms: [0d836f23] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src https://app.localhost ws://127.0.0.1:56778; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   37914,2 08:28:31.428 app: 2026-11-22T08:28:31.405Z INFO  Spar.Host  [0d836f23] Bridge: document ba699ad77a28e4c0 opened.
+   37914,2 08:28:31.428 app: 2026-11-22T08:28:31.405Z INFO  Spar.Host  [0d836f23] Heartbeat armed for the new document.
+   37914,2 08:28:31.428 app: 2026-11-22T08:28:31.405Z INFO  Spar.Host  [0d836f23] first document at 911.4 ms
+   37914,2 08:28:31.428 app: 2026-11-22T08:28:31.420Z INFO  Spar.DevServer    VITE v8.3.8  ready in 171 ms
+   37914,2 08:28:31.428 app: 2026-11-22T08:28:31.420Z INFO  Spar.DevServer    ➜  Local:   http://127.0.0.1:56778/
+   37922,9 08:28:31.437 watch: spar info +911.2 ms: [0d836f23] Bridge: document ba699ad77a28e4c0 opened.
+   37922,9 08:28:31.437 watch: spar info +911.4 ms: [0d836f23] Heartbeat armed for the new document.
+   37922,9 08:28:31.437 watch: spar info +911.5 ms: [0d836f23] first document at 911.4 ms
+   37922,9 08:28:31.437 watch:   VITE v8.3.8  ready in 171 ms
+   37922,9 08:28:31.437 watch:   ?  Local:   http://127.0.0.1:56778/
+   37993,0 08:28:31.507 app: 2026-11-22T08:28:31.495Z DEBUG Spar.DevServer  GET /src/main.tsx 200 5980 B in 89.0 ms
+   37993,0 08:28:31.507 app: 2026-11-22T08:28:31.498Z DEBUG Spar.DevServer  GET /@react-refresh 200 118969 B in 88.4 ms
+   37993,0 08:28:31.507 app: 2026-11-22T08:28:31.501Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react.js?v=0d465b8b 200 755 B in 3.9 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.510Z DEBUG Spar.DevServer  GET /src/App.tsx 200 20660 B in 12.8 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.511Z DEBUG Spar.DevServer  GET /src/notebook.ts 200 30916 B in 13.1 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.511Z DEBUG Spar.DevServer  GET /src/spar.ts 200 4517 B in 13.5 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.514Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom_client.js?v=0d465b8b 200 3132085 B in 16.5 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.515Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0d465b8b 200 35641 B in 16.7 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.518Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-D57lpOvP.js?v=0d465b8b 200 136642 B in 16.0 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.519Z DEBUG Spar.DevServer  GET /src/styles.css 200 53153 B in 20.8 ms
+   38023,3 08:28:31.538 app: 2026-11-22T08:28:31.519Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/sdk.js 200 9195 B in 20.9 ms
+   38070,2 08:28:31.584 app: 2026-11-22T08:28:31.565Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/spar.js 200 648 B in 50.8 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.566Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/windows.js 200 516 B in 52.0 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.568Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/lucide-react.js?v=0d465b8b 200 5620898 B in 54.5 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.568Z DEBUG Spar.DevServer  GET /src/components/Dialogs.tsx 200 20096 B in 54.6 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.568Z DEBUG Spar.DevServer  GET /src/components/Sidebar.tsx 200 15627 B in 54.7 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.569Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/pages.js 200 21825 B in 55.5 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.570Z DEBUG Spar.DevServer  GET /src/components/PageView.tsx 200 27354 B in 56.6 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.571Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom-CAgWe78a.js?v=0d465b8b 200 50848 B in 17.1 ms
+   38070,3 08:28:31.584 app: 2026-11-22T08:28:31.571Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webkit.js 200 6298 B in 36.6 ms
+   38070,3 08:28:31.585 app: 2026-11-22T08:28:31.572Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webview.js 200 6966 B in 37.8 ms
+   38070,3 08:28:31.585 app: 2026-11-22T08:28:31.572Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/results.js 200 22157 B in 38.0 ms
+   38070,3 08:28:31.585 app: 2026-11-22T08:28:31.573Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/connection.js 200 37623 B in 38.4 ms
+   38070,3 08:28:31.585 app: 2026-11-22T08:28:31.573Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/backendUpdate.js 200 10147 B in 38.6 ms
+   38070,3 08:28:31.585 app: 2026-11-22T08:28:31.574Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/loopback.js 200 22742 B in 39.5 ms
+   38101,3 08:28:31.615 app: 2026-11-22T08:28:31.595Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/windows.js 200 9054 B in 27.2 ms
+   38101,3 08:28:31.615 app: 2026-11-22T08:28:31.595Z DEBUG Spar.DevServer  GET /@vite/client 200 222970 B in 189.0 ms
+   38101,3 08:28:31.615 app: 2026-11-22T08:28:31.605Z DEBUG Spar.DevServer  GET /src/time.ts 200 3340 B in 0.6 ms
+   38101,3 08:28:31.615 app: 2026-11-22T08:28:31.606Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/wire.js 200 32725 B in 0.4 ms
+   38101,3 08:28:31.615 app: 2026-11-22T08:28:31.609Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/overlay.js 200 11879 B in 3.9 ms
+   38101,3 08:28:31.616 app: 2026-11-22T08:28:31.609Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=0d465b8b 200 819494 B in 4.2 ms
+   38101,3 08:28:31.616 app: 2026-11-22T08:28:31.610Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/protocol.js 200 46090 B in 4.3 ms
+   38101,3 08:28:31.616 app: 2026-11-22T08:28:31.610Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/restart.js 200 16324 B in 4.2 ms
+   38101,3 08:28:31.616 app: 2026-11-22T08:28:31.610Z DEBUG Spar.DevServer  GET /node_modules/vite/dist/client/env.mjs 200 3390 B in 3.3 ms
+   38132,3 08:28:31.646 app: 2026-11-22T08:28:31.625Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/jsx-runtime-Bwa3DjwP.js?v=0d465b8b 200 37319 B in 0.7 ms
+   38179,9 08:28:31.694 app: 2026-11-22T08:28:31.678Z INFO  Spar.Host  [0d836f23] first bridge message at 1184.7 ms
+   38179,9 08:28:31.694 app: 2026-11-22T08:28:31.681Z INFO  Spar.Host  [0d836f23] first navigation completed at 1187.1 ms
+   38179,9 08:28:31.694 app: 2026-11-22T08:28:31.684Z INFO  Spar.Host  [0d836f23] first bridge reply at 1190.4 ms
+   38179,9 08:28:31.694 app: 2026-11-22T08:28:31.694Z DEBUG Spar.DevServer  GET /node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2 200 48256 B in 2.0 ms
+   38187,2 08:28:31.701 watch: spar info +1184.7 ms: [0d836f23] first bridge message at 1184.7 ms
+   38187,2 08:28:31.701 watch: spar info +1187.1 ms: [0d836f23] first navigation completed at 1187.1 ms
+   38187,2 08:28:31.701 watch: spar info +1190.4 ms: [0d836f23] first bridge reply at 1190.4 ms
+   38210,7 08:28:31.725 app: 2026-11-22T08:28:31.707Z DEBUG Spar.DevServer  GET /favicon.ico 404 0 B in 0.8 ms
+   38210,7 08:28:31.725 app: 2026-11-22T08:28:31.708Z INFO  Spar.Host  [0d836f23] ui-ready at 1214.7 ms
+   38210,7 08:28:31.725 app: 2026-11-22T08:28:31.708Z INFO  Spar.Host  [0d836f23] Bridge: document ba699ad77a28e4c0 reported ui-ready.
+   38210,7 08:28:31.725 app: 2026-11-22T08:28:31.708Z INFO  Spar.Host  [0d836f23] Bridge: document ba699ad77a28e4c0 reported ui-ready.
+   38217,0 08:28:31.731 watch: spar info +1214.7 ms: [0d836f23] ui-ready at 1214.7 ms
+   38217,0 08:28:31.731 watch: spar info +1214.8 ms: [0d836f23] Bridge: document ba699ad77a28e4c0 reported ui-ready.
+   38217,0 08:28:31.731 watch: spar info +1214.9 ms: [0d836f23] Bridge: document ba699ad77a28e4c0 reported ui-ready.
+   38217,0 08:28:31.731 run: found 'ui-ready at'
+   38218,0 08:28:31.732 run: PASS the generated pages.d.ts has 'readonly excerpt: string | null'
+   41222,7 08:28:34.737 run: restored: Pages/PageTypes.cs at 08:28:34.737
+   41222,9 08:28:34.737 run: restored: frontend/src/notebook.test.tsx at 08:28:34.737
+   41232,9 08:28:34.747 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+   41232,9 08:28:34.747 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+   41232,9 08:28:34.747 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+   41232,9 08:28:34.747 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+   41261,4 08:28:34.776 app: 2026-11-22T08:28:34.767Z DEBUG Spar.DevServer  GET /src/styles.css?t=1795336114740 200 53153 B in 15.1 ms
+   41293,5 08:28:34.808 watch: dotnet watch : Files updated: .\Pages\PageTypes.cs, .\frontend\src\notebook.test.tsx
+   41293,5 08:28:34.808 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+   41293,5 08:28:34.808 watch: dotnet watch : Solution after document update: v2
+   41293,5 08:28:34.808 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   41293,5 08:28:34.808 watch: dotnet watch : Restart is needed to apply the changes.
+   41293,5 08:28:34.808 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+   41293,5 08:28:34.808 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_cc6fcbf3ab0585156f3ee1f9bfe89acf' requires restarting the application.
+   41293,5 08:28:34.808 watch: dotnet watch : Terminating remaining child processes.
+   41293,5 08:28:34.808 watch: dotnet watch : [Notebook (net11.0)] Terminating process 48676 (Ctrl+C).
+   41293,5 08:28:34.808 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 48676 to exit within 5s.
+   41293,5 08:28:34.808 run: found 'Restart is needed'
+   41354,0 08:28:34.868 app: 2026-11-22T08:28:34.846Z INFO  Spar.DevServer  09:28:34 [vite] (client) hmr update /src/styles.css
+   41360,9 08:28:34.875 watch: 09:28:34 [vite] (client) hmr update /src/styles.css
+   46320,9 08:28:39.835 watch: dotnet watch : [Notebook (net11.0)] Terminating process 48676 (Kill).
+   46320,9 08:28:39.835 watch: dotnet watch : [Notebook (net11.0)] Process id 48676 ran for 9998ms and exited with exit code -1.
+   46320,9 08:28:39.835 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+   46320,9 08:28:39.835 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+   46320,9 08:28:39.835 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+   46320,9 08:28:39.835 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 51536
+   46730,7 08:28:40.245 watch:   Determining projects to restore...
+   47329,2 08:28:40.843 watch:   All projects are up-to-date for restore.
+   47900,0 08:28:41.414 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+   48043,8 08:28:41.558 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+   48043,8 08:28:41.558 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+   48073,8 08:28:41.588 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+   48170,1 08:28:41.684 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+   48313,6 08:28:41.828 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+   49274,6 08:28:42.789 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+   49744,3 08:28:43.259 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+   49744,3 08:28:43.259 watch: 
+   49744,3 08:28:43.259 watch: Build succeeded.
+   49744,3 08:28:43.259 watch:     0 Warning(s)
+   49744,3 08:28:43.259 watch:     0 Error(s)
+   49744,3 08:28:43.259 watch: 
+   49744,3 08:28:43.259 watch: Time Elapsed 00:00:03.26
+   49775,8 08:28:43.290 watch: dotnet watch : Process id 51536 ran for 3464ms and exited with exit code 0.
+   49856,5 08:28:43.371 watch: dotnet watch : Project graph loaded in 0,1s.
+   49856,5 08:28:43.371 watch: dotnet watch : Loading projects ...
+   50042,8 08:28:43.557 watch: dotnet watch : Design-time build completed in 0,2s.
+   50042,8 08:28:43.557 watch: dotnet watch : Loaded 6 project(s) in 0,2s.
+   50042,8 08:28:43.557 watch: dotnet watch : Watching 224 file(s) for changes
+   50042,8 08:28:43.557 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+   50042,8 08:28:43.557 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+   50042,8 08:28:43.557 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+   50042,8 08:28:43.557 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+   50042,8 08:28:43.557 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+   50042,8 08:28:43.557 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+   50106,4 08:28:43.621 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+   50106,4 08:28:43.621 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+   50138,3 08:28:43.652 watch: dotnet watch : Solution after project update: v1
+   50138,3 08:28:43.653 watch: dotnet watch : Hot reload session started.
+   50138,3 08:28:43.653 watch: dotnet watch : Application kind: Default.
+   50138,3 08:28:43.653 watch: dotnet watch : Found named launch profile 'Desktop'.
+   50138,3 08:28:43.653 watch: dotnet watch : launchSettings does not allow launching browsers.
+   50138,3 08:28:43.653 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '5548bac9868d494c8a8ded385869fef9'.
+   50138,3 08:28:43.653 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=3 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=5548bac9868d494c8a8ded385869fef9 --project <repo>\samples\Notebook -lp Desktop': process id 7292
+   50501,7 08:28:44.016 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+   50786,0 08:28:44.300 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+   50786,0 08:28:44.300 watch: dotnet watch : Waiting for changes
+   50817,9 08:28:44.332 app: 2026-11-22T08:28:44.305Z INFO  Spar.Host  [3090dc6f] Host started 144.7 ms after the process.
+   50818,0 08:28:44.332 app: 2026-11-22T08:28:44.305Z INFO  Spar.Host  [3090dc6f] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development
+   50818,0 08:28:44.332 app: 2026-11-22T08:28:44.313Z INFO  Spar.Host  [3090dc6f] single instance at 18.6 ms
+   50818,0 08:28:44.332 app: 2026-11-22T08:28:44.315Z INFO  Spar.Host  [3090dc6f] prerequisites checked at 22.8 ms
+   50818,0 08:28:44.332 app: 2026-11-22T08:28:44.327Z INFO  Spar.Host  [3090dc6f] The development server recorded at http://127.0.0.1:56778 has ended: a new one starts.
+   50818,0 08:28:44.332 app: 2026-11-22T08:28:44.327Z INFO  Spar.Host  [3090dc6f] UI-thread stall probe on.
+   50824,8 08:28:44.339 watch: spar info +11.5 ms: [3090dc6f] Host started 144.7 ms after the process.
+   50824,9 08:28:44.339 watch: spar info +13.4 ms: [3090dc6f] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development
+   50824,9 08:28:44.339 watch: spar info +20.8 ms: [3090dc6f] single instance at 18.6 ms
+   50824,9 08:28:44.339 watch: spar info +22.8 ms: [3090dc6f] prerequisites checked at 22.8 ms
+   50824,9 08:28:44.339 watch: spar info +34.8 ms: [3090dc6f] The development server recorded at http://127.0.0.1:56778 has ended: a new one starts.
+   50824,9 08:28:44.339 watch: spar info +35.0 ms: [3090dc6f] UI-thread stall probe on.
+   50824,9 08:28:44.339 watch: spar info +41.4 ms: [3090dc6f] services built at 41.4 ms
+   50849,0 08:28:44.363 app: 2026-11-22T08:28:44.333Z INFO  Spar.Host  [3090dc6f] services built at 41.4 ms
+   50849,1 08:28:44.363 app: 2026-11-22T08:28:44.350Z INFO  Spar.Host  [3090dc6f] window shown at 58.6 ms
+   50849,1 08:28:44.363 app: 2026-11-22T08:28:44.351Z INFO  Spar.Host  [3090dc6f] Theme dark (system), window #1d1f24.
+   50849,1 08:28:44.363 app: 2026-11-22T08:28:44.357Z INFO  Spar.Host  [3090dc6f] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   50849,1 08:28:44.363 app: 2026-11-22T08:28:44.357Z INFO  Spar.Host  [3090dc6f] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+   50849,1 08:28:44.363 app: 2026-11-22T08:28:44.359Z INFO  Spar.Host  [3090dc6f] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 26876), port 54218.
+   50855,1 08:28:44.369 watch: spar info +58.6 ms: [3090dc6f] window shown at 58.6 ms
+   50855,1 08:28:44.369 watch: spar info +59.0 ms: [3090dc6f] Theme dark (system), window #1d1f24.
+   50855,1 08:28:44.369 watch: spar info +65.5 ms: [3090dc6f] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src https://app.localhost; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   50855,1 08:28:44.369 watch: spar info +65.5 ms: [3090dc6f] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+   50855,1 08:28:44.369 watch: spar info +67.3 ms: [3090dc6f] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 26876), port 54218.
+   50882,0 08:28:44.396 app: 2026-11-22T08:28:44.373Z INFO  Spar.Host  [3090dc6f] environment at 81.3 ms
+   50882,0 08:28:44.396 app: 2026-11-22T08:28:44.374Z INFO  Spar.Host  [3090dc6f] WebView2 Runtime 157.0.4341.60
+   50882,0 08:28:44.396 app: 2026-11-22T08:28:44.374Z INFO  Spar.Host  [3090dc6f] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development\WebView2
+   50882,0 08:28:44.396 app: 2026-11-22T08:28:44.387Z INFO  Spar.Host  [3090dc6f] controller requested at 94.9 ms
+   50882,0 08:28:44.396 app: 2026-11-22T08:28:44.392Z INFO  Spar.Host  [3090dc6f] Heartbeat every 5000 ms.
+   50890,1 08:28:44.404 watch: spar info +81.3 ms: [3090dc6f] environment at 81.3 ms
+   50890,1 08:28:44.404 watch: spar info +81.8 ms: [3090dc6f] WebView2 Runtime 157.0.4341.60
+   50890,1 08:28:44.404 watch: spar info +82.2 ms: [3090dc6f] Browser profile folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\desktop\local\com.example.Notebook.Development\WebView2
+   50890,1 08:28:44.404 watch: spar info +94.9 ms: [3090dc6f] controller requested at 94.9 ms
+   50890,1 08:28:44.404 watch: spar info +100.6 ms: [3090dc6f] Heartbeat every 5000 ms.
+   51088,7 08:28:44.603 app: 2026-11-22T08:28:44.578Z INFO  Spar.Host  [3090dc6f] controller at 286.2 ms
+   51088,8 08:28:44.603 app: 2026-11-22T08:28:44.586Z INFO  Spar.Host  [3090dc6f] Browser settings read back (1.94 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+   51096,1 08:28:44.610 watch: spar info +286.2 ms: [3090dc6f] controller at 286.2 ms
+   51096,1 08:28:44.610 watch: spar info +294.1 ms: [3090dc6f] Browser settings read back (1.94 ms): devtools on, keys on (filtered), password autosave off, autofill off, swipe off, host objects off, reputation check off; menu cut down, downloads denied, history cancelled.
+   51118,9 08:28:44.633 app: 2026-11-22T08:28:44.625Z INFO  Spar.Host  [3090dc6f] Development console: the page's console errors come from the DevTools Protocol.
+   51118,9 08:28:44.633 app: 2026-11-22T08:28:44.625Z INFO  Spar.Host  [3090dc6f] Page file picker blocked in 39.0 ms (Page.enable 37.9 ms).
+   51118,9 08:28:44.633 app: 2026-11-22T08:28:44.625Z INFO  Spar.Host  [3090dc6f] page script added at 333.5 ms
+   51118,9 08:28:44.633 app: 2026-11-22T08:28:44.626Z INFO  Spar.Host  [3090dc6f] navigation started at 334 ms
+   51125,0 08:28:44.639 watch: spar info +332.8 ms: [3090dc6f] Development console: the page's console errors come from the DevTools Protocol.
+   51125,0 08:28:44.639 watch: spar info +333.4 ms: [3090dc6f] Page file picker blocked in 39.0 ms (Page.enable 37.9 ms).
+   51125,0 08:28:44.639 watch: spar info +333.5 ms: [3090dc6f] page script added at 333.5 ms
+   51125,0 08:28:44.639 watch: spar info +334.0 ms: [3090dc6f] navigation started at 334 ms
+   51403,7 08:28:44.918 app: 2026-11-22T08:28:44.895Z INFO  Spar.DevServer  > dev
+   51403,7 08:28:44.918 app: 2026-11-22T08:28:44.895Z INFO  Spar.DevServer  > vite
+   51411,9 08:28:44.926 watch: > dev
+   51411,9 08:28:44.926 watch: > vite
+   51623,3 08:28:45.138 app: 2026-11-22T08:28:45.114Z INFO  Spar.DevServer    VITE v8.3.8  ready in 175 ms
+   51623,3 08:28:45.138 app: 2026-11-22T08:28:45.114Z INFO  Spar.DevServer    ➜  Local:   http://127.0.0.1:54218/
+   51630,1 08:28:45.144 watch:   VITE v8.3.8  ready in 175 ms
+   51630,1 08:28:45.144 watch:   ?  Local:   http://127.0.0.1:54218/
+   51630,1 08:28:45.144 watch: spar info +851.5 ms: [3090dc6f] Development server ready at http://127.0.0.1:54218 in 815 ms (Vite pid 37580).
+   51654,9 08:28:45.169 app: 2026-11-22T08:28:45.143Z INFO  Spar.Host  [3090dc6f] Development server ready at http://127.0.0.1:54218 in 815 ms (Vite pid 37580).
+   51654,9 08:28:45.169 app: 2026-11-22T08:28:45.160Z INFO  Spar.Host  [3090dc6f] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src https://app.localhost ws://127.0.0.1:54218; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   51655,0 08:28:45.169 app: 2026-11-22T08:28:45.161Z DEBUG Spar.DevServer  GET / 200 760 B in 14.4 ms
+   51661,8 08:28:45.176 watch: spar info +868.5 ms: [3090dc6f] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src https://app.localhost ws://127.0.0.1:54218; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   51719,8 08:28:45.234 app: 2026-11-22T08:28:45.211Z INFO  Spar.Host  [3090dc6f] Bridge: document 4cbb7cfb4139efeb opened.
+   51719,8 08:28:45.234 app: 2026-11-22T08:28:45.212Z INFO  Spar.Host  [3090dc6f] Heartbeat armed for the new document.
+   51719,8 08:28:45.234 app: 2026-11-22T08:28:45.212Z INFO  Spar.Host  [3090dc6f] first document at 919.8 ms
+   51727,0 08:28:45.241 watch: spar info +919.1 ms: [3090dc6f] Bridge: document 4cbb7cfb4139efeb opened.
+   51727,0 08:28:45.241 watch: spar info +919.7 ms: [3090dc6f] Heartbeat armed for the new document.
+   51727,0 08:28:45.241 watch: spar info +919.8 ms: [3090dc6f] first document at 919.8 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.305Z DEBUG Spar.DevServer  GET /src/main.tsx 200 5980 B in 93.3 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.309Z DEBUG Spar.DevServer  GET /@react-refresh 200 118969 B in 93.2 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.312Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react.js?v=0d465b8b 200 755 B in 3.9 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.324Z DEBUG Spar.DevServer  GET /src/spar.ts 200 4517 B in 15.1 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.326Z DEBUG Spar.DevServer  GET /src/notebook.ts 200 30916 B in 17.2 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.326Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react_jsx-dev-runtime.js?v=0d465b8b 200 35641 B in 16.6 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.326Z DEBUG Spar.DevServer  GET /src/App.tsx 200 20660 B in 17.3 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.326Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-D57lpOvP.js?v=0d465b8b 200 136642 B in 12.0 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.327Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom_client.js?v=0d465b8b 200 3132085 B in 18.2 ms
+   51814,0 08:28:45.328 app: 2026-11-22T08:28:45.328Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/sdk.js 200 9195 B in 18.7 ms
+   51843,4 08:28:45.358 app: 2026-11-22T08:28:45.330Z DEBUG Spar.DevServer  GET /src/styles.css 200 53153 B in 21.0 ms
+   51843,4 08:28:45.358 app: 2026-11-22T08:28:45.350Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/spar.js 200 648 B in 20.4 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.362Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/windows.js 200 516 B in 31.1 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.364Z DEBUG Spar.DevServer  GET /src/components/Sidebar.tsx 200 15627 B in 32.5 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.364Z DEBUG Spar.DevServer  GET /src/components/Dialogs.tsx 200 20096 B in 33.3 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.365Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/pages.js 200 21296 B in 34.3 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.384Z DEBUG Spar.DevServer  GET /src/components/PageView.tsx 200 27354 B in 53.1 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.385Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/react-dom-CAgWe78a.js?v=0d465b8b 200 50848 B in 15.2 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.385Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webkit.js 200 6298 B in 35.3 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.386Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/backendUpdate.js 200 10147 B in 36.8 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.386Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/connection.js 200 37623 B in 36.9 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.386Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/loopback.js 200 22742 B in 37.0 ms
+   51874,4 08:28:45.389 app: 2026-11-22T08:28:45.387Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/results.js 200 22157 B in 37.3 ms
+   51874,5 08:28:45.389 app: 2026-11-22T08:28:45.387Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/webview.js 200 6966 B in 37.2 ms
+   51874,5 08:28:45.389 app: 2026-11-22T08:28:45.388Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/lucide-react.js?v=0d465b8b 200 5620898 B in 57.4 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.406Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/@radix-ui_react-dropdown-menu.js?v=0d465b8b 200 819494 B in 17.9 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.407Z DEBUG Spar.DevServer  GET /src/time.ts 200 3340 B in 37.4 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.413Z DEBUG Spar.DevServer  GET /@vite/client 200 222970 B in 200.5 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.413Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/windows.js 200 9054 B in 48.8 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.413Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/overlay.js 200 11879 B in 23.3 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.414Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/protocol.js 200 46090 B in 23.5 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.414Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/wire.js 200 32725 B in 44.2 ms
+   51906,3 08:28:45.421 app: 2026-11-22T08:28:45.414Z DEBUG Spar.DevServer  GET /@fs/<repo>/samples/Notebook/obj/spar/client/sdk/restart.js 200 16324 B in 24.0 ms
+   51937,1 08:28:45.451 app: 2026-11-22T08:28:45.432Z DEBUG Spar.DevServer  GET /node_modules/vite/dist/client/env.mjs 200 3390 B in 0.8 ms
+   51937,1 08:28:45.451 app: 2026-11-22T08:28:45.434Z DEBUG Spar.DevServer  GET /node_modules/.vite/deps/jsx-runtime-Bwa3DjwP.js?v=0d465b8b 200 37319 B in 0.6 ms
+   52002,0 08:28:45.516 app: 2026-11-22T08:28:45.503Z INFO  Spar.Host  [3090dc6f] first bridge message at 1210.9 ms
+   52002,0 08:28:45.516 app: 2026-11-22T08:28:45.505Z INFO  Spar.Host  [3090dc6f] first navigation completed at 1213.3 ms
+   52002,0 08:28:45.516 app: 2026-11-22T08:28:45.512Z INFO  Spar.Host  [3090dc6f] first bridge reply at 1219.7 ms
+   52008,3 08:28:45.523 watch: spar info +1211.0 ms: [3090dc6f] first bridge message at 1210.9 ms
+   52008,3 08:28:45.523 watch: spar info +1213.3 ms: [3090dc6f] first navigation completed at 1213.3 ms
+   52008,3 08:28:45.523 watch: spar info +1219.7 ms: [3090dc6f] first bridge reply at 1219.7 ms
+   52033,7 08:28:45.548 app: 2026-11-22T08:28:45.519Z DEBUG Spar.DevServer  GET /node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2 200 48256 B in 2.0 ms
+   52033,8 08:28:45.548 app: 2026-11-22T08:28:45.531Z DEBUG Spar.DevServer  GET /favicon.ico 404 0 B in 0.7 ms
+   52033,8 08:28:45.548 app: 2026-11-22T08:28:45.535Z INFO  Spar.Host  [3090dc6f] ui-ready at 1243.2 ms
+   52033,8 08:28:45.548 app: 2026-11-22T08:28:45.535Z INFO  Spar.Host  [3090dc6f] Bridge: document 4cbb7cfb4139efeb reported ui-ready.
+   52033,8 08:28:45.548 app: 2026-11-22T08:28:45.535Z INFO  Spar.Host  [3090dc6f] Bridge: document 4cbb7cfb4139efeb reported ui-ready.
+   52040,3 08:28:45.555 watch: spar info +1243.2 ms: [3090dc6f] ui-ready at 1243.2 ms
+   52040,3 08:28:45.555 watch: spar info +1243.3 ms: [3090dc6f] Bridge: document 4cbb7cfb4139efeb reported ui-ready.
+   52040,3 08:28:45.555 watch: spar info +1243.4 ms: [3090dc6f] Bridge: document 4cbb7cfb4139efeb reported ui-ready.
+   52040,4 08:28:45.555 run: found 'ui-ready at'
+   52041,1 08:28:45.555 run: PASS the generated pages.d.ts has no 'excerpt'
+   54051,8 08:28:47.566 run: restored frontend\src\main.tsx
+   54060,2 08:28:47.574 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\main.tsx'.
+   54060,2 08:28:47.574 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\main.tsx'.
+   54133,1 08:28:47.647 run: dotnet watch's tree ended
+   54137,0 08:28:47.651 run: the development server had already ended
+   61627,6 08:28:55.142 run: WebView2 processes with this run's root still running: 0

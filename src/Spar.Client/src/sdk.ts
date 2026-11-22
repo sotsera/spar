@@ -1,4 +1,5 @@
 // @spar/app/sdk: the SDK's public surface for app code, and the one entry generated modules call.
+import { addBackendUpdateHandler, listenForBackendUpdates, type BackendUpdate } from "./backendUpdate.js";
 import { Connection, type BridgeChannel, type Decoder } from "./connection.js";
 import { callOf, type Call, type CallOptions, type ErrorCases, type Outcome } from "./results.js";
 
@@ -16,7 +17,9 @@ export {
   type ErrorHandlers,
   type Execution,
   type Handlers,
+  type SparConfiguration,
 } from "./results.js";
+export type { BackendUpdate } from "./backendUpdate.js";
 export { unknownErrorCase, type BridgeChannel, type Decoder } from "./connection.js";
 export { loopbackChannel, takeToken, type LoopbackOptions, type TokenPage } from "./loopback.js";
 export { hostChannel, webViewChannel, webViewPort, type WebViewOptions, type WebViewPort } from "./webview.js";
@@ -27,7 +30,31 @@ let current: Connection | undefined;
 /** Opens the bridge for this document over the host's channel; the host's start-up code calls it once. */
 export function connectSpar(channel: BridgeChannel, contracts: string): Connection {
   current = new Connection(channel, contracts);
+  // Development only. `vite build` folds the test to false and drops what it guards; written with `?.` because a page
+  // can load the SDK without Vite (a test page served as it is), where `import.meta.env` does not exist.
+  if (import.meta.env?.DEV === true) {
+    listenForBackendUpdates(current);
+  }
+
   return current;
+}
+
+/**
+ * Debug builds only: calls `handler` after each C# edit Hot Reload applied to the running backend, for example to
+ * fetch the current view's data again. Returns the function that stops the calls. The update can arrive after the
+ * patched code already ran once; edits Hot Reload rejected stay in `dotnet watch`'s terminal, and contract edits
+ * restart the backend instead. In a production build (`vite build`) this does nothing, and the bundler removes it.
+ *
+ * ```ts
+ * useEffect(() => onBackendUpdate(() => void refresh()), [refresh]);
+ * ```
+ */
+export function onBackendUpdate(handler: (update: BackendUpdate) => void): () => void {
+  if (import.meta.env?.DEV !== true) {
+    return () => {};
+  }
+
+  return addBackendUpdateHandler(handler);
 }
 
 /**

@@ -3,7 +3,7 @@
 import type { CallOptions } from "./core.js";
 import { invoke, type Call, type Result } from "./c-call/sdk.js";
 
-export { type Call, Result, configureSpar, SparError, type CallError, type CallErrorKind, type CallOptions, type CoalescedEvents, type Subscription, type SubscriptionEvents } from "./c-call/sdk.js";
+export { type Call, Result, configureSpar, SparError, type SparConfiguration, type CallError, type CallErrorKind, type CallOptions, type CoalescedEvents, type Subscription, type SubscriptionEvents } from "./c-call/sdk.js";
 
 /** How a subscription resumes after a lost connection, as declared in C# (`SubscriptionResume`). */
 export type SubscriptionResume = "automatic" | "manual";
@@ -17,6 +17,24 @@ export interface SubscribeOptions<R extends SubscriptionResume> extends CallOpti
 }
 
 export type ColorScheme = "light" | "dark" | "system";
+
+/** One C# edit that Hot Reload applied to the running backend (Debug builds only), as in src/Spar.Client/src/backendUpdate.ts. */
+export interface BackendUpdate {
+  readonly revision: number;
+  readonly time: string;
+  readonly types: readonly string[];
+}
+
+/** Stand-in: the handlers `onBackendUpdate` registered. */
+export const backendUpdateHandlers = new Set<(update: BackendUpdate) => void>();
+
+/** Debug builds only: calls `handler` after each applied Hot Reload update; returns the function that stops the calls. */
+export function onBackendUpdate(handler: (update: BackendUpdate) => void): () => void {
+  backendUpdateHandlers.add(handler);
+  return () => {
+    backendUpdateHandlers.delete(handler);
+  };
+}
 
 /** Stand-in for the host bridge: what the page would post to the host, in order. */
 export const hostMessages: unknown[] = [];

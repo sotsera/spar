@@ -44,6 +44,11 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 - **No default deadline.** An optional C# limit, `[SparCommand(TimeoutSeconds = 30)]` (a positive integer), is folded into the call token.
 - **Identical behaviour on every transport:** WebView2, WebKitGTK, loopback, and the test host's command and browser surfaces (plan section 5, `docs/design/testing.md`), whose typed C# test clients are generated per contract.
 
+## Hot Reload: contract edits restart
+
+- **In a Development build the generator adds `Spar.ContractShape.g.cs`** (`Emit/ShapeEmitter.cs`; M1d step 3, plan section 4): an enum `SparContractShape` whose one member is named from a SHA-256 of the generated `Spar.Contracts.g.cs`. An edit that changes any generated contract code (the catalog's fingerprint, commands, limits and page security, the dispatch, the serializers) renames it, which Hot Reload refuses (`ENC0020`), so `dotnet watch` and the IDEs restart with a full build and the TypeScript client is regenerated. Never let a contract edit be patched: Hot Reload never runs the catalog's static initializer again, and the page's generated client would not change.
+- **So keep the generated contract code free of anything that changes without the contract changing** (no timestamps, paths, comments copied from the app's docs, or ordering that depends on the file set), or every such edit restarts the app; and keep everything the wire or dispatch depends on in it, or that edit is patched. `tests/Spar.Generator.Tests/ContractShapeTests.cs` classifies edits both ways; a new kind of contract input gets a row there.
+
 ## Fingerprint and snapshot
 
 - **The fingerprint hashes the full wire shape** (properties, types, nullability, error cases). A mismatch is `rejected` / `contract-mismatch` (409 on loopback) before any work.

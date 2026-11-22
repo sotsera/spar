@@ -59,6 +59,18 @@ test("the list shows the newest page first", async () => {
   expect(notebook.summaries).toEqual([newer, older]);
 });
 
+test("a backend update fetches the list again, with the new code", async () => {
+  await start();
+  expect(spar.calls(pages.list)).toHaveLength(1);
+  const renamed: PageSummary = { ...newer, title: "Welcome back" };
+  spar.on(pages.list).succeed([older, renamed]);
+
+  await act(async () => spar.backendUpdate({ types: ["Notebook.Pages.PagesService"] }));
+
+  await vi.waitFor(() => expect(notebook.summaries).toEqual([renamed, older]));
+  expect(spar.calls(pages.list)).toHaveLength(2);
+});
+
 test("a page deleted elsewhere opens as missing", async () => {
   spar.on(pages.get).fail("notFound", { id: "gone" });
   await start();

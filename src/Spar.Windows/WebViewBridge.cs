@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Threading.Channels;
 using Spar.Bridge;
 using Spar.Hosting;
+using Spar.HotReload;
 using Spar.Logging;
 using Spar.Runtime;
 using Spar.Windows.Interop;
@@ -30,6 +31,7 @@ internal sealed class WebViewBridge
     private readonly PageErrorLog _pageErrors;
     private readonly Channel<Incoming> _incoming = Channel.CreateUnbounded<Incoming>(new UnboundedChannelOptions { SingleReader = true });
     private readonly Task _reader;
+    private readonly IDisposable? _backendUpdates;
     private ICoreWebView2_22? _webView;
     private Document? _current;
 
@@ -52,6 +54,10 @@ internal sealed class WebViewBridge
         _violations = violations;
         _pageErrors = pageErrors;
         _reader = Task.Run(ReadAsync);
+        if (BackendUpdates.IsSupported)
+        {
+            _backendUpdates = BackendUpdates.Listen(update => _ui.Post(() => SendBackendUpdate(update), "backend update"));
+        }
     }
 
     /// <summary>Raised on the UI thread when the current document reports <c>ui-ready</c>.</summary>
@@ -228,6 +234,7 @@ internal sealed class WebViewBridge
     /// <summary>Ends the reader once every queued message was handled; the host calls it last.</summary>
     public async Task StopAsync()
     {
+        _backendUpdates?.Dispose();
         _incoming.Writer.TryComplete();
         await _reader;
     }
@@ -245,6 +252,18 @@ internal sealed class WebViewBridge
         document.ClosingDone.TrySetResult();
         _log.Info($"Bridge: document {document.Id} closed ({why}).");
         DocumentClosed?.Invoke();
+    }
+
+    /// <summary>
+    /// A Hot Reload update was applied (Development builds only): the current document gets <c>backend-updated</c> (UI
+    /// thread). A page between documents misses it; the next one runs the patched code anyway.
+    /// </summary>
+    private void SendBackendUpdate(BackendUpdate update)
+    {
+        var document = _current is { IsClosed: false } current ? current : null;
+        document?.Session.SendEvent(BackendUpdates.EventName, update.Payload);
+        var sent = document is null ? "no document open" : $"sent to document {document.Id}";
+        _log.Info($"Hot Reload applied revision {update.Revision} ({update.TypeList}); {sent}.");
     }
 
     private void Ponged(Document document, long seq, bool dialog)

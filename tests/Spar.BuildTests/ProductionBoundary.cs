@@ -50,6 +50,10 @@ internal static class ProductionBoundary
         // Loopback in the development loop (M1d step 2): the host Spar.Sdk adds to Development builds only, its run, its
         // dev session and the browser opener.
         "SparLoopbackHost", "LoopbackApp", "LoopbackSession", "LoopbackAddress", "BrowserOpener",
+
+        // The Hot Reload signal (M1d step 3): the handler the runtime calls after an applied update, and the generated
+        // enum whose member restarts the app for a contract edit (a Development build's generator output only).
+        "BackendUpdates", "SparContractShape",
     ];
 
     private static readonly string[] Literals =
@@ -81,6 +85,9 @@ internal static class ProductionBoundary
         // dev session's probe and header, and the Linux no-display hint of Development builds.
         "SPAR_HOST", "SPAR_LOOPBACK_PORT", "SPAR_LOOPBACK_TOKEN", "SPAR_LOOPBACK_BROWSER", "spar-loopback.json",
         "Spar.Loopback.SessionFile", "/_spar/session", "X-Spar-Run", "-lp Loopback",
+
+        // The Hot Reload signal (M1d step 3): the event's name and the hosts' line for each applied update.
+        "backend-updated", "Hot Reload applied revision",
     ];
 
     /// <summary>
@@ -95,9 +102,12 @@ internal static class ProductionBoundary
 
     /// <summary>
     /// What a Production page bundle must not carry: the fake backend of <c>@spar/app/testing</c> (its messages start
-    /// with "fakeSpar") and the generated tables and error writers only that module uses.
+    /// with "fakeSpar") and the generated tables and error writers only that module uses; and the Hot Reload signal's
+    /// page side (M1d step 3), which <c>onBackendUpdate</c> and the development overlay's toast reach only behind
+    /// <c>import.meta.env.DEV</c>: the event's name, the overlay's element and the toast's text.
     /// </summary>
-    public static readonly string[] PageMarkers = ["fakeSpar", "__sparTesting", "createFakeSpar"];
+    public static readonly string[] PageMarkers =
+        ["fakeSpar", "__sparTesting", "createFakeSpar", "backend-updated", "data-spar-dev-overlay", "Backend updated"];
 
     /// <summary>The page markers a folder's JavaScript files contain; empty for a clean Production bundle.</summary>
     public static IReadOnlyList<string> FindInPage(string directory, IEnumerable<string> markers)

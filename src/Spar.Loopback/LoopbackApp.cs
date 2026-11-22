@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Connections;
 using Spar.DevServer;
 using Spar.Hosting;
+using Spar.HotReload;
 using Spar.Logging;
 using Spar.Runtime;
 
@@ -169,6 +170,9 @@ internal sealed class LoopbackApp
         _log.Phase("loopback listening");
         Announce(host, used);
 
+        // The Hot Reload signal (plan section 4): every open document gets each applied update.
+        using var updates = BackendUpdates.IsSupported ? BackendUpdates.Listen(update => SendBackendUpdate(host, update)) : null;
+
         using var signals = ListenForStop();
         var touching = KeepHeldAsync(used);
         await _stop.Task.ConfigureAwait(false);
@@ -183,6 +187,13 @@ internal sealed class LoopbackApp
 
         _log.Step("exit 0");
         return 0;
+    }
+
+    /// <summary>A Hot Reload update to every open document, on the runtime's Hot Reload thread: the sessions only queue it.</summary>
+    private void SendBackendUpdate(LoopbackHost host, BackendUpdate update)
+    {
+        var documents = host.SendEvent(BackendUpdates.EventName, update.Payload);
+        _log.Info($"Hot Reload applied revision {update.Revision} ({update.TypeList}); sent to {documents} document(s).");
     }
 
     /// <summary>

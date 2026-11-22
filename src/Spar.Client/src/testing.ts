@@ -89,6 +89,18 @@ export interface FakeSpar {
    * session-end deadline does, and rejects with the signal's reason.
    */
   requestClose(request?: FakeCloseRequest): Promise<GuardsOutcome>;
+  /**
+   * Sends `backend-updated` as a Debug host does after Hot Reload applied a C# edit: the page's `onBackendUpdate`
+   * handlers run, then the development overlay's toast shows unless `configureSpar({ backendUpdateToast: false })`.
+   * Revisions count from 1 for each fake; `types` are the updated types' full names. Delivered asynchronously, as a
+   * host message is: await a microtask (or the page's reaction) before asserting.
+   */
+  backendUpdate(update?: FakeBackendUpdate): void;
+}
+
+/** A backend update a page test sends: the updated types' full names, none by default. */
+export interface FakeBackendUpdate {
+  readonly types?: readonly string[];
 }
 
 /** A close request a page test sends: by default a user's, not automated. */
@@ -125,6 +137,7 @@ export function createFakeSpar(commands: ReadonlyMap<unknown, CommandCodec>, fin
     on: command => scriptFor(host, codecOf(commands, command)),
     calls: command => host.calls(codecOf(commands, command)) as never,
     requestClose: request => host.requestClose(request ?? {}),
+    backendUpdate: update => host.backendUpdate(update ?? {}),
   };
 }
 
@@ -165,6 +178,7 @@ class FakeHost implements BridgeChannel {
   readonly #inFlight = new Map<number, { settled: boolean }>();
   readonly #closeAnswers = new Map<number, (outcome: GuardsOutcome) => void>();
   #closeSeq = 0;
+  #revision = 0;
   readonly #fingerprint: string;
   #received: ((message: string) => void) | undefined;
 
@@ -314,6 +328,12 @@ class FakeHost implements BridgeChannel {
   }
 
   /** Answers arrive later, never inside the page's own send, as from a real host. */
+  backendUpdate(update: FakeBackendUpdate): void {
+    this.#revision++;
+    const payload = JSON.stringify({ revision: this.#revision, time: new Date().toISOString(), types: [...(update.types ?? [])] });
+    this.#deliver({ type: "event", name: "backend-updated", payload });
+  }
+
   #deliver(message: BridgeMessage): void {
     const text = encode(message);
     queueMicrotask(() => this.#received?.(text));

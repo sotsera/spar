@@ -1,0 +1,1078 @@
+    175.7 watch: dotnet watch : Working directory: '<repo>'
+    175.8 watch: dotnet watch : Watching with Hot Reload.
+    191.8 watch: dotnet watch : Hot reload enabled. For a list of supported edits, see https://aka.ms/dotnet/hot-reload.
+    191.9 watch: dotnet watch : Press Ctrl+R to restart.
+    198.6 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+    207.8 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 70024
+    609.7 watch:   Determining projects to restore...
+   6797.1 watch:   Restored <repo>\src\Spar\Spar.csproj (in 623 ms).
+   6798.0 watch:   Restored <repo>\src\Spar.Sdk.Tasks\Spar.Sdk.Tasks.csproj (in 623 ms).
+   6798.2 watch:   Restored <repo>\src\Spar.Linux\Spar.Linux.csproj (in 623 ms).
+   6798.2 watch:   Restored <repo>\src\Spar.Generator\Spar.Generator.csproj (in 623 ms).
+   6798.3 watch:   Restored <repo>\src\Spar.Windows\Spar.Windows.csproj (in 623 ms).
+   6802.8 watch:   1 of 6 projects are up-to-date for restore.
+   7674.4 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+   8158.3 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+   8190.9 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+   8531.4 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+   8772.3 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+   9289.7 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+  12314.8 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+  12322.4 watch: 
+  12323.1 watch: Build succeeded.
+  12323.3 watch:     0 Warning(s)
+  12323.3 watch:     0 Error(s)
+  12323.4 watch: 
+  12323.4 watch: Time Elapsed 00:00:11.95
+  12354.3 watch: dotnet watch : Process id 70024 ran for 12154ms and exited with exit code 0.
+  12639.4 watch: dotnet watch : Project graph loaded in 0,3s.
+  12646.9 watch: dotnet watch : Loading projects ...
+  13074.5 watch: dotnet watch : Design-time build completed in 0,4s.
+  13075.2 watch: dotnet watch : Loaded 6 project(s) in 0,4s.
+  13077.8 watch: dotnet watch : Watching 224 file(s) for changes
+  13094.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+  13095.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+  13095.1 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+  13095.1 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+  13095.3 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+  13095.4 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+  13529.2 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  13529.4 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  13584.7 watch: dotnet watch : Solution after project update: v1
+  13618.9 watch: dotnet watch : Hot reload session started.
+  13620.3 watch: dotnet watch : Application kind: Default.
+  13632.9 watch: dotnet watch : Found named launch profile 'Loopback'.
+  13633.1 watch: dotnet watch : launchSettings does not allow launching browsers.
+  13636.0 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '91e70512d8c2424788dce46cfa9a29f2'.
+  13641.9 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=1 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=91e70512d8c2424788dce46cfa9a29f2 --project <repo>\samples\Notebook -lp Loopback': process id 61744
+  13997.8 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+  14282.8 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+  14333.7 watch: dotnet watch : Waiting for changes
+  14672.0 watch: spar info +10.8 ms: [9edd04f9] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+  14683.6 watch: spar info +23.4 ms: [9edd04f9] The development server recorded at http://127.0.0.1:57865 has ended: a new one starts.
+  14692.3 watch: spar info +32.1 ms: [9edd04f9] services built at 29.9 ms
+  14700.7 watch: spar info +40.5 ms: [9edd04f9] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 66480), port 63502.
+  14725.2 watch: spar info +65.0 ms: [9edd04f9] loopback listening at 64.9 ms
+  14727.7 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (a new dev session). Ctrl+C stops the app.
+  14728.7 watch: spar info +67.6 ms: [9edd04f9] Loopback page at http://127.0.0.1:63503/#token=… (a new dev session).
+  14728.8 watch: spar info +68.5 ms: [9edd04f9] The browser is not opened (SPAR_LOOPBACK_BROWSER=none).
+  15125.4 watch: > dev
+  15125.5 watch: > vite
+  15346.6 watch: spar info +686.4 ms: [9edd04f9] Development server ready at http://127.0.0.1:63502 in 662 ms (Vite pid 71120).
+  15346.8 watch:   VITE v8.3.8  ready in 174 ms
+  15346.8 watch:   ?  Local:   http://127.0.0.1:63502/
+  15362.2 watch: spar info +702.0 ms: [9edd04f9] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:63502; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  15604.9 run: page console debug: [vite] connecting...
+  15628.3 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+  15649.9 run: page load 1
+  15680.5 run: page console debug: [vite] connected.
+  15681.8 watch: spar info +1021.6 ms: [9edd04f9] ui-ready at 1021.6 ms
+  15712.0 run: PASS the page lists the notebook's page (http://127.0.0.1:63503/#token=…)
+  15712.1 run: --- body
+  15712.6 run: edit written: Pages/MarkdownPageStore.cs
+  15712.8 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  15713.2 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  15740.3 watch: dotnet watch : File updated: .\samples\Notebook\Pages\MarkdownPageStore.cs
+  15751.1 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  15761.8 watch: dotnet watch : Solution after document update: v2
+  17082.5 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  17427.4 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #0
+  17463.0 watch: spar info +2802.8 ms: [9edd04f9] Hot Reload applied revision 1 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  17468.7 watch: dotnet watch : [Notebook (net11.0)] Writing capabilities: Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva
+  17468.8 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 51db8a0f-83ad-4663-aba1-ec98d0dd6bfb.
+  17469.0 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  17469.1 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  17469.1 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  17469.3 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  17469.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  17469.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  17469.5 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  17469.6 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  17469.7 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  17470.1 watch: dotnet watch : [Notebook (net11.0)] Update batch #0 completed.
+  17471.2 watch: dotnet watch : C# and Razor changes applied in 1708ms.
+  17492.8 run: PASS body: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 1708ms.; 1759 ms after the write)
+  17493.0 run: PASS body: the backend sent revision 1 (Notebook.Pages.MarkdownPageStore) to 1 document, 1750 ms after the write
+  17493.1 run: PASS body: the page's onBackendUpdate handler fetched the list again, 1752 ms after the write
+  17495.2 run: PASS body: the list now shows "Welcome (edited)", from the patched code
+  17506.8 run: PASS body: the toast shows "Backend updated: MarkdownPageStore (revision 1)", 1794 ms after the write
+  17507.1 run: restored: Pages/MarkdownPageStore.cs
+  17507.3 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  17507.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  17557.0 watch: dotnet watch : File updated: .\samples\Notebook\Pages\MarkdownPageStore.cs
+  17557.2 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  17557.6 watch: dotnet watch : Solution after document update: v3
+  17571.4 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  17605.0 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #1
+  17606.3 watch: spar info +2946.1 ms: [9edd04f9] Hot Reload applied revision 2 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  17606.6 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 51db8a0f-83ad-4663-aba1-ec98d0dd6bfb.
+  17606.7 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  17606.8 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  17607.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  17607.1 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  17607.1 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  17607.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  17607.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  17607.5 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  17607.5 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  17607.6 watch: dotnet watch : [Notebook (net11.0)] Update batch #1 completed.
+  17607.6 watch: dotnet watch : C# and Razor changes applied in 49ms.
+  17620.3 run: PASS body restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 49ms.; 100 ms after the write)
+  17620.5 run: PASS body restored: the backend sent revision 2 (Notebook.Pages.MarkdownPageStore) to 1 document, 99 ms after the write
+  17620.5 run: PASS body restored: the page's onBackendUpdate handler fetched the list again, 101 ms after the write
+  17622.4 run: PASS body restored: the list now shows "Welcome", from the patched code
+  17624.0 run: PASS body restored: the toast shows "Backend updated: MarkdownPageStore (revision 2)", 117 ms after the write
+  19136.9 run: --- toastoff
+  19137.6 run: edit written: frontend/src/spar.ts
+  19170.2 run: page console error: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+  19173.9 run: page console debug: [vite] invalidate /src/main.tsx: No exports
+  19174.1 run: page console debug: [vite] hot updated: /src/main.tsx
+  19174.3 run: page console debug: [vite] hot updated: /src/styles.css
+  19214.2 watch: 09:49:03 [vite] (client) hmr update /src/main.tsx, /src/styles.css
+  19214.4 watch: 09:49:03 [vite] (client) [console.error] You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+  19214.4 watch: 09:49:03 [vite] (client) hmr invalidate /src/main.tsx No exports
+  19214.5 watch: 09:49:03 [vite] (client) page reload src/main.tsx
+  19226.9 run: page console debug: [vite] connecting...
+  19238.0 run: page console debug: [vite] connected.
+  19241.5 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+  19242.0 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+  19245.7 watch: dotnet watch : File updated: .\samples\Notebook\frontend\src\spar.ts
+  19245.9 watch: dotnet watch : Solution after document update: v4
+  19246.0 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  19246.4 watch: dotnet watch : No managed code changes to apply.
+  19292.3 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+  19305.7 run: page load 2
+  19335.7 run: the page took the setting (1 reload by Vite)
+  19336.1 run: edit written: Pages/MarkdownPageStore.cs
+  19336.2 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  19336.3 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  19372.3 watch: dotnet watch : File updated: .\samples\Notebook\Pages\MarkdownPageStore.cs
+  19372.5 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  19372.7 watch: dotnet watch : Solution after document update: v5
+  19420.2 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #2
+  19421.0 watch: spar info +4760.8 ms: [9edd04f9] Hot Reload applied revision 3 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  19421.4 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 51db8a0f-83ad-4663-aba1-ec98d0dd6bfb.
+  19421.5 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  19421.5 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  19421.6 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  19421.7 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  19421.9 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  19422.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  19422.1 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  19422.4 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  19422.5 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  19422.8 watch: dotnet watch : [Notebook (net11.0)] Update batch #2 completed.
+  19422.9 watch: dotnet watch : C# and Razor changes applied in 49ms.
+  19436.0 run: PASS toast off: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 49ms.; 87 ms after the write)
+  19436.1 run: PASS toast off: the backend sent revision 3 (Notebook.Pages.MarkdownPageStore) to 1 document, 85 ms after the write
+  19436.2 run: PASS toast off: the page's onBackendUpdate handler fetched the list again, 87 ms after the write
+  19437.8 run: PASS toast off: the list now shows "Welcome (edited)", from the patched code
+  22460.2 run: PASS toast off: no toast for revision 3 within 3 s (0 toasts in the page)
+  22460.5 run: restored: Pages/MarkdownPageStore.cs
+  22460.7 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  22460.9 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  22513.5 watch: dotnet watch : File updated: .\samples\Notebook\Pages\MarkdownPageStore.cs
+  22513.8 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+  22514.0 watch: dotnet watch : Solution after document update: v6
+  22527.3 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  22548.9 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #3
+  22570.3 watch: spar info +7910.1 ms: [9edd04f9] Hot Reload applied revision 4 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  22570.7 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module 51db8a0f-83ad-4663-aba1-ec98d0dd6bfb.
+  22571.0 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  22571.1 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  22571.3 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  22571.4 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  22571.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  22571.6 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  22571.6 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  22571.8 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  22571.8 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  22571.9 watch: dotnet watch : [Notebook (net11.0)] Update batch #3 completed.
+  22571.9 watch: dotnet watch : C# and Razor changes applied in 57ms.
+  22591.9 run: PASS toast off, restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 57ms.; 111 ms after the write)
+  22592.0 run: PASS toast off, restored: the backend sent revision 4 (Notebook.Pages.MarkdownPageStore) to 1 document, 110 ms after the write
+  22592.1 run: PASS toast off, restored: the page's onBackendUpdate handler fetched the list again, 111 ms after the write
+  22593.6 run: PASS toast off, restored: the list now shows "Welcome", from the patched code
+  25600.8 run: PASS toast off, restored: no toast for revision 4 within 3 s (0 toasts in the page)
+  25601.2 run: restored: frontend/src/spar.ts
+  25601.5 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+  25601.7 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+  25620.3 run: page console error: You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+  25620.8 run: page console debug: [vite] invalidate /src/main.tsx: No exports
+  25620.9 run: page console debug: [vite] hot updated: /src/main.tsx
+  25621.1 run: page console debug: [vite] hot updated: /src/styles.css
+  25631.0 watch: 09:49:09 [vite] (client) hmr update /src/main.tsx, /src/styles.css
+  25631.1 watch: 09:49:09 [vite] (client) [console.error] You are calling ReactDOMClient.createRoot() on a container that has already been passed to createRoot() before. Instead, call root.render() on the existing root instead if you want to update it.
+  25631.2 watch: 09:49:09 [vite] (client) hmr invalidate /src/main.tsx No exports
+  25631.3 watch: 09:49:09 [vite] (client) page reload src/main.tsx
+  25646.9 watch: dotnet watch : File updated: .\samples\Notebook\frontend\src\spar.ts
+  25647.0 watch: dotnet watch : Solution after document update: v7
+  25647.2 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  25647.3 watch: dotnet watch : No managed code changes to apply.
+  25670.6 run: page console debug: [vite] connecting...
+  25681.7 run: page console debug: [vite] connected.
+  25738.0 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+  25750.4 run: page load 3
+  29108.3 run: --- dto
+  29109.3 run: edit written: frontend/src/notebook.test.tsx
+  29109.6 run: edit written: Pages/PageTypes.cs
+  29119.9 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+  29120.1 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+  29120.3 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  29120.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  29123.8 watch: dotnet watch : Files updated: .\samples\Notebook\frontend\src\notebook.test.tsx, .\samples\Notebook\Pages\PageTypes.cs
+  29124.1 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  29124.2 watch: dotnet watch : Solution after document update: v8
+  29130.5 run: page console debug: [vite] hot updated: /src/styles.css
+  29156.2 watch: dotnet watch : Restart is needed to apply the changes.
+  29157.2 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+  29157.4 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_879f931117336b648ebaa9698f9395de' requires restarting the application.
+  29159.8 watch: dotnet watch : Terminating remaining child processes.
+  29163.6 watch: dotnet watch : [Notebook (net11.0)] Terminating process 61744 (Ctrl+C).
+  29164.9 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 61744 to exit within 5s.
+  29165.1 run: PASS dto: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 47 ms after the write)
+  29171.6 watch: 09:49:12 [vite] (client) hmr update /src/styles.css
+  34174.5 watch: dotnet watch : [Notebook (net11.0)] Terminating process 61744 (Kill).
+  34174.9 watch: dotnet watch : [Notebook (net11.0)] Process id 61744 ran for 20537ms and exited with exit code -1.
+  34175.0 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+  34177.5 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+  34178.4 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+  34183.6 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 34544
+  34186.9 run: page console log: [vite] server connection lost. Polling for restart...
+  34187.4 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+  34194.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+  34194.6 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+  34194.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  34460.8 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  34581.0 watch:   Determining projects to restore...
+  34966.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  35164.5 watch:   All projects are up-to-date for restore.
+  35720.0 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+  35868.4 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+  35875.8 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+  35891.9 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+  35974.1 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  36000.1 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+  36164.0 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+  36989.1 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  37110.5 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+  37994.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  38889.7 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+  38897.4 watch: 
+  38897.6 watch: Build succeeded.
+  38897.8 watch:     0 Warning(s)
+  38897.9 watch:     0 Error(s)
+  38898.0 watch: 
+  38898.1 watch: Time Elapsed 00:00:04.55
+  38923.4 watch: dotnet watch : Process id 34544 ran for 4744ms and exited with exit code 0.
+  39007.4 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  39024.8 watch: dotnet watch : Project graph loaded in 0,1s.
+  39025.2 watch: dotnet watch : Loading projects ...
+  39217.9 watch: dotnet watch : Design-time build completed in 0,2s.
+  39218.1 watch: dotnet watch : Loaded 6 project(s) in 0,2s.
+  39218.2 watch: dotnet watch : Watching 224 file(s) for changes
+  39218.3 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+  39218.3 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+  39218.4 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+  39218.4 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+  39218.5 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+  39218.5 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+  39271.9 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  39272.1 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  39297.8 watch: dotnet watch : Solution after project update: v1
+  39318.7 watch: dotnet watch : Hot reload session started.
+  39318.9 watch: dotnet watch : Application kind: Default.
+  39319.1 watch: dotnet watch : Found named launch profile 'Loopback'.
+  39319.2 watch: dotnet watch : launchSettings does not allow launching browsers.
+  39319.2 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '9803835faaa74d5b89f1b2d3882e38fa'.
+  39324.4 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=2 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=9803835faaa74d5b89f1b2d3882e38fa --project <repo>\samples\Notebook -lp Loopback': process id 33700
+  39679.3 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+  39959.8 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+  39967.0 watch: dotnet watch : Waiting for changes
+  39983.4 watch: spar info +11.0 ms: [ef2a6891] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+  39995.1 watch: spar info +23.7 ms: [ef2a6891] The development server recorded at http://127.0.0.1:63502 has ended: a new one starts.
+  40004.1 watch: spar info +32.7 ms: [ef2a6891] services built at 30.5 ms
+  40012.9 watch: spar info +41.5 ms: [ef2a6891] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 71416), port 51913.
+  40020.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  40036.7 watch: spar info +65.3 ms: [ef2a6891] loopback listening at 65.2 ms
+  40039.5 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+  40039.6 watch: spar info +68.1 ms: [ef2a6891] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+  40051.0 run: PASS dto: a new run listens on the same address, 10930 ms after the write
+  40056.3 run: PASS dto: the regenerated client's pages.d.ts matches /readonly excerpt: string \| null/
+  40446.4 watch: > dev
+  40446.6 watch: > vite
+  40651.5 watch: spar info +680.0 ms: [ef2a6891] Development server ready at http://127.0.0.1:51913 in 655 ms (Vite pid 53180).
+  40666.8 watch:   VITE v8.3.8  ready in 156 ms
+  40667.0 watch:   ?  Local:   http://127.0.0.1:51913/
+  41074.5 watch: spar info +1103.1 ms: [ef2a6891] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:51913; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  41298.2 run: page console debug: [vite] connecting...
+  41305.7 run: page console debug: [vite] connected.
+  41344.4 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+  41356.4 run: page load 4
+  41367.4 run: PASS dto: the page reloaded by itself once, 12258 ms after the write
+  41370.7 watch: spar info +1399.3 ms: [ef2a6891] ui-ready at 1399.3 ms
+  41412.6 run: PASS dto: the reloaded page lists the notebook's page
+  46914.1 run: restored: frontend/src/notebook.test.tsx
+  46914.4 run: restored: Pages/PageTypes.cs
+  46914.7 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+  46915.1 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+  46915.2 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  46915.3 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  46946.8 run: page console debug: [vite] hot updated: /src/styles.css
+  46977.9 watch: 09:49:30 [vite] (client) hmr update /src/styles.css
+  46978.1 watch: dotnet watch : Files updated: .\samples\Notebook\frontend\src\notebook.test.tsx, .\samples\Notebook\Pages\PageTypes.cs
+  46978.4 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  46978.5 watch: dotnet watch : Solution after document update: v2
+  46986.5 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  46993.2 watch: dotnet watch : Restart is needed to apply the changes.
+  46993.5 run: PASS dto restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 79 ms after the write)
+  46993.6 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+  46993.6 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_cc6fcbf3ab0585156f3ee1f9bfe89acf' requires restarting the application.
+  46993.7 watch: dotnet watch : Terminating remaining child processes.
+  46993.7 watch: dotnet watch : [Notebook (net11.0)] Terminating process 33700 (Ctrl+C).
+  46993.9 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 33700 to exit within 5s.
+  52006.5 watch: dotnet watch : [Notebook (net11.0)] Terminating process 33700 (Kill).
+  52006.7 watch: dotnet watch : [Notebook (net11.0)] Process id 33700 ran for 12687ms and exited with exit code -1.
+  52006.8 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+  52006.9 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+  52007.0 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+  52012.0 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 47524
+  52018.2 run: page console log: [vite] server connection lost. Polling for restart...
+  52018.7 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+  52024.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+  52025.3 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+  52025.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  52305.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  52409.0 watch:   Determining projects to restore...
+  52809.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  52997.8 watch:   All projects are up-to-date for restore.
+  53546.6 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+  53684.4 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+  53697.7 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+  53726.2 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+  53820.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  53832.4 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+  53977.0 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+  54825.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  54906.5 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+  55467.8 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+  55479.3 watch: 
+  55479.9 watch: Build succeeded.
+  55480.0 watch:     0 Warning(s)
+  55480.1 watch:     0 Error(s)
+  55480.1 watch: 
+  55480.3 watch: Time Elapsed 00:00:03.31
+  55510.5 watch: dotnet watch : Process id 47524 ran for 3503ms and exited with exit code 0.
+  55623.5 watch: dotnet watch : Project graph loaded in 0,1s.
+  55623.7 watch: dotnet watch : Loading projects ...
+  55796.4 watch: dotnet watch : Design-time build completed in 0,2s.
+  55796.6 watch: dotnet watch : Loaded 6 project(s) in 0,2s.
+  55796.7 watch: dotnet watch : Watching 224 file(s) for changes
+  55796.8 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+  55796.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+  55797.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+  55797.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+  55797.1 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+  55797.2 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+  55839.4 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  55850.2 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  55850.4 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  55875.2 watch: dotnet watch : Solution after project update: v1
+  55890.4 watch: dotnet watch : Hot reload session started.
+  55890.5 watch: dotnet watch : Application kind: Default.
+  55890.6 watch: dotnet watch : Found named launch profile 'Loopback'.
+  55890.7 watch: dotnet watch : launchSettings does not allow launching browsers.
+  55890.8 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '4ab100714ece491abb2c77fb29fc5181'.
+  55896.0 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=3 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=4ab100714ece491abb2c77fb29fc5181 --project <repo>\samples\Notebook -lp Loopback': process id 29648
+  56251.8 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+  56529.5 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+  56535.3 watch: dotnet watch : Waiting for changes
+  56552.8 watch: spar info +10.5 ms: [e403a702] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+  56563.9 watch: spar info +22.6 ms: [e403a702] The development server recorded at http://127.0.0.1:51913 has ended: a new one starts.
+  56572.9 watch: spar info +31.6 ms: [e403a702] services built at 29.5 ms
+  56581.6 watch: spar info +40.3 ms: [e403a702] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 60492), port 58625.
+  56604.6 watch: spar info +63.3 ms: [e403a702] loopback listening at 63.3 ms
+  56607.3 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+  56607.5 run: PASS dto restored: a new run listens on the same address, 9693 ms after the write
+  56608.2 run: PASS dto restored: the regenerated client's pages.d.ts matches /^(?![\s\S]*excerpt)/
+  56608.3 watch: spar info +66.1 ms: [e403a702] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+  57007.6 watch: > dev
+  57007.7 watch: > vite
+  57228.0 watch: spar info +686.7 ms: [e403a702] Development server ready at http://127.0.0.1:58625 in 663 ms (Vite pid 47544).
+  57228.7 watch:   VITE v8.3.8  ready in 158 ms
+  57228.8 watch:   ?  Local:   http://127.0.0.1:58625/
+  57242.6 watch: spar info +701.3 ms: [e403a702] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:58625; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  57461.0 run: page console debug: [vite] connecting...
+  57465.8 run: page console debug: [vite] connected.
+  57509.5 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+  57523.3 run: page load 5
+  57533.9 run: PASS dto restored: the page reloaded by itself once, 10619 ms after the write
+  57536.6 watch: spar info +995.3 ms: [e403a702] ui-ready at 995.3 ms
+  57578.5 run: PASS dto restored: the reloaded page lists the notebook's page
+  64593.7 run: --- error
+  64594.2 run: edit written: Pages/PageTypes.cs
+  64594.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  64594.5 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  64640.7 watch: dotnet watch : File updated: .\samples\Notebook\Pages\PageTypes.cs
+  64641.1 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  64641.2 watch: dotnet watch : Solution after document update: v2
+  64648.1 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  64652.3 watch: dotnet watch : Restart is needed to apply the changes.
+  64652.4 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+  64652.5 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_879f931117336b648ebaa9698f9395de' requires restarting the application.
+  64652.6 run: PASS error: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 58 ms after the write)
+  64652.6 watch: dotnet watch : Terminating remaining child processes.
+  64652.6 watch: dotnet watch : [Notebook (net11.0)] Terminating process 29648 (Ctrl+C).
+  64652.8 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 29648 to exit within 5s.
+  69658.9 watch: dotnet watch : [Notebook (net11.0)] Terminating process 29648 (Kill).
+  69659.2 watch: dotnet watch : [Notebook (net11.0)] Process id 29648 ran for 13768ms and exited with exit code -1.
+  69659.3 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+  69659.4 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+  69659.4 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+  69663.9 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 50492
+  69668.3 run: page console log: [vite] server connection lost. Polling for restart...
+  69668.7 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+  69673.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+  69673.7 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+  69673.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  69928.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  70059.2 watch:   Determining projects to restore...
+  70436.1 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  71447.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  72458.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  73467.8 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  74482.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  75494.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  75678.2 watch:   All projects are up-to-date for restore.
+  76248.9 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+  76393.3 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+  76401.0 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+  76417.3 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+  76507.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  76515.2 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+  76659.2 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+  77517.4 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  77574.1 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+  78215.5 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+  78226.9 watch: 
+  78227.2 watch: Build succeeded.
+  78227.4 watch:     0 Warning(s)
+  78227.4 watch:     0 Error(s)
+  78227.5 watch: 
+  78227.5 watch: Time Elapsed 00:00:08.40
+  78257.0 watch: dotnet watch : Process id 50492 ran for 8597ms and exited with exit code 0.
+  78312.5 watch: dotnet watch : Project graph loaded in 0,1s.
+  78312.6 watch: dotnet watch : Loading projects ...
+  78431.4 watch: dotnet watch : Design-time build completed in 0,1s.
+  78431.5 watch: dotnet watch : Loaded 6 project(s) in 0,1s.
+  78431.7 watch: dotnet watch : Watching 224 file(s) for changes
+  78431.7 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+  78431.7 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+  78431.8 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+  78431.8 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+  78431.9 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+  78432.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+  78480.1 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  78480.2 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  78502.5 watch: dotnet watch : Solution after project update: v1
+  78515.6 watch: dotnet watch : Hot reload session started.
+  78515.7 watch: dotnet watch : Application kind: Default.
+  78515.9 watch: dotnet watch : Found named launch profile 'Loopback'.
+  78516.0 watch: dotnet watch : launchSettings does not allow launching browsers.
+  78516.1 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '6a4bb9ada41d4b32b93218d83f8d8d06'.
+  78521.5 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=4 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=6a4bb9ada41d4b32b93218d83f8d8d06 --project <repo>\samples\Notebook -lp Loopback': process id 53528
+  78529.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  78884.5 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+  79155.8 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+  79161.9 watch: dotnet watch : Waiting for changes
+  79179.4 watch: spar info +10.6 ms: [bf703631] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+  79191.1 watch: spar info +23.3 ms: [bf703631] The development server recorded at http://127.0.0.1:58625 has ended: a new one starts.
+  79200.3 watch: spar info +32.6 ms: [bf703631] services built at 30.4 ms
+  79210.4 watch: spar info +42.6 ms: [bf703631] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 55808), port 49781.
+  79232.8 watch: spar info +65.1 ms: [bf703631] loopback listening at 65.1 ms
+  79235.2 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+  79235.4 run: PASS error: a new run listens on the same address, 14641 ms after the write
+  79240.9 run: PASS error: the regenerated client's pages.d.ts matches /readonly title: string \| null/
+  79241.0 watch: spar info +67.6 ms: [bf703631] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+  79638.6 watch: > dev
+  79638.7 watch: > vite
+  79859.0 watch: spar info +691.2 ms: [bf703631] Development server ready at http://127.0.0.1:49781 in 667 ms (Vite pid 47012).
+  79860.1 watch:   VITE v8.3.8  ready in 156 ms
+  79860.2 watch:   ?  Local:   http://127.0.0.1:49781/
+  79873.4 watch: spar info +705.7 ms: [bf703631] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:49781; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  80085.2 run: page console debug: [vite] connecting...
+  80091.0 run: page console debug: [vite] connected.
+  80152.6 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+  80168.0 run: page load 6
+  80173.7 run: PASS error: the page reloaded by itself once, 15579 ms after the write
+  80187.6 watch: spar info +1019.9 ms: [bf703631] ui-ready at 1019.9 ms
+  80224.4 run: PASS error: the reloaded page lists the notebook's page
+  85737.7 run: restored: Pages/PageTypes.cs
+  85737.9 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  85737.9 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  85801.4 watch: dotnet watch : File updated: .\samples\Notebook\Pages\PageTypes.cs
+  85801.7 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+  85801.8 watch: dotnet watch : Solution after document update: v2
+  85808.7 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  85829.4 watch: dotnet watch : Restart is needed to apply the changes.
+  85829.6 run: PASS error restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 92 ms after the write)
+  85829.7 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+  85829.8 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_77055a1a74ff5e5e5c907779cbd2efef' requires restarting the application.
+  85829.9 watch: dotnet watch : Terminating remaining child processes.
+  85829.9 watch: dotnet watch : [Notebook (net11.0)] Terminating process 53528 (Ctrl+C).
+  85830.0 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 53528 to exit within 5s.
+  90830.8 watch: dotnet watch : [Notebook (net11.0)] Terminating process 53528 (Kill).
+  90831.0 watch: dotnet watch : [Notebook (net11.0)] Process id 53528 ran for 12315ms and exited with exit code -1.
+  90831.2 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+  90831.2 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+  90831.4 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+  90836.7 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 47896
+  90841.4 run: page console log: [vite] server connection lost. Polling for restart...
+  90841.6 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+  90847.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+  90848.0 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+  90848.1 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  91099.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  91236.8 watch:   Determining projects to restore...
+  91609.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  91823.8 watch:   All projects are up-to-date for restore.
+  92379.4 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+  92520.9 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+  92528.6 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+  92553.7 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+  92619.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  92664.8 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+  92812.2 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+  93629.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  93738.4 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+  94188.1 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+  94199.7 watch: 
+  94200.1 watch: Build succeeded.
+  94200.2 watch:     0 Warning(s)
+  94200.3 watch:     0 Error(s)
+  94200.4 watch: 
+  94200.5 watch: Time Elapsed 00:00:03.20
+  94228.8 watch: dotnet watch : Process id 47896 ran for 3397ms and exited with exit code 0.
+  94288.7 watch: dotnet watch : Project graph loaded in 0,1s.
+  94288.9 watch: dotnet watch : Loading projects ...
+  94400.3 watch: dotnet watch : Design-time build completed in 0,1s.
+  94400.5 watch: dotnet watch : Loaded 6 project(s) in 0,1s.
+  94400.6 watch: dotnet watch : Watching 224 file(s) for changes
+  94400.6 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+  94400.7 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+  94400.7 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+  94400.8 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+  94400.8 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+  94400.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+  94450.3 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  94450.4 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+  94473.4 watch: dotnet watch : Solution after project update: v1
+  94481.3 watch: dotnet watch : Hot reload session started.
+  94481.4 watch: dotnet watch : Application kind: Default.
+  94481.5 watch: dotnet watch : Found named launch profile 'Loopback'.
+  94481.6 watch: dotnet watch : launchSettings does not allow launching browsers.
+  94481.6 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe 'e2838ce271af43f793bd8b5c9306bb59'.
+  94488.2 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=5 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=e2838ce271af43f793bd8b5c9306bb59 --project <repo>\samples\Notebook -lp Loopback': process id 10524
+  94641.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  94851.0 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+  95137.9 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+  95144.1 watch: dotnet watch : Waiting for changes
+  95163.5 watch: spar info +10.8 ms: [b9c0b429] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+  95176.7 watch: spar info +25.1 ms: [b9c0b429] The development server recorded at http://127.0.0.1:49781 has ended: a new one starts.
+  95185.6 watch: spar info +34.0 ms: [b9c0b429] services built at 31.8 ms
+  95194.8 watch: spar info +43.2 ms: [b9c0b429] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 20600), port 52278.
+  95218.3 watch: spar info +66.7 ms: [b9c0b429] loopback listening at 66.7 ms
+  95220.8 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+  95221.0 run: PASS error restored: a new run listens on the same address, 9483 ms after the write
+  95221.7 run: PASS error restored: the regenerated client's pages.d.ts matches /^(?![\s\S]*readonly title: string \| null)/
+  95221.7 watch: spar info +69.3 ms: [b9c0b429] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+  95624.1 watch: > dev
+  95624.3 watch: > vite
+  95842.9 watch: spar info +691.3 ms: [b9c0b429] Development server ready at http://127.0.0.1:52278 in 665 ms (Vite pid 70708).
+  95843.7 watch:   VITE v8.3.8  ready in 159 ms
+  95843.8 watch:   ?  Local:   http://127.0.0.1:52278/
+  95857.6 watch: spar info +706.0 ms: [b9c0b429] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:52278; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+  96070.1 run: page console debug: [vite] connecting...
+  96074.9 run: page console debug: [vite] connected.
+  96122.6 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+  96136.8 run: page load 7
+  96150.2 run: PASS error restored: the page reloaded by itself once, 10412 ms after the write
+  96153.2 watch: spar info +1001.6 ms: [b9c0b429] ui-ready at 1001.6 ms
+  96190.4 run: PASS error restored: the reloaded page lists the notebook's page
+ 103198.7 run: --- command
+ 103199.2 run: edit written: Pages/PagesService.cs
+ 103199.3 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 103199.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 103231.0 watch: dotnet watch : File updated: .\samples\Notebook\Pages\PagesService.cs
+ 103231.4 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 103231.6 watch: dotnet watch : Solution after document update: v2
+ 103242.6 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+ 103246.1 watch: dotnet watch : Restart is needed to apply the changes.
+ 103246.2 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+ 103246.3 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_879f931117336b648ebaa9698f9395de' requires restarting the application.
+ 103246.4 watch: dotnet watch : Terminating remaining child processes.
+ 103246.5 watch: dotnet watch : [Notebook (net11.0)] Terminating process 10524 (Ctrl+C).
+ 103246.6 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 10524 to exit within 5s.
+ 103262.8 run: PASS command: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 47 ms after the write)
+ 108257.5 watch: dotnet watch : [Notebook (net11.0)] Terminating process 10524 (Kill).
+ 108257.8 watch: dotnet watch : [Notebook (net11.0)] Process id 10524 ran for 13776ms and exited with exit code -1.
+ 108257.9 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+ 108258.0 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+ 108258.1 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+ 108263.0 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 17088
+ 108269.5 run: page console log: [vite] server connection lost. Polling for restart...
+ 108269.7 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+ 108275.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+ 108276.2 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+ 108276.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 108528.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 108657.0 watch:   Determining projects to restore...
+ 109033.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 109255.6 watch:   All projects are up-to-date for restore.
+ 109810.4 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+ 109956.2 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+ 109973.8 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+ 109983.2 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+ 110045.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 110093.8 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+ 110237.3 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+ 111054.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 111168.1 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+ 111647.6 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+ 111658.5 watch: 
+ 111658.9 watch: Build succeeded.
+ 111659.0 watch:     0 Warning(s)
+ 111659.1 watch:     0 Error(s)
+ 111659.2 watch: 
+ 111659.2 watch: Time Elapsed 00:00:03.24
+ 111686.1 watch: dotnet watch : Process id 17088 ran for 3428ms and exited with exit code 0.
+ 111743.0 watch: dotnet watch : Project graph loaded in 0,1s.
+ 111743.2 watch: dotnet watch : Loading projects ...
+ 111953.6 watch: dotnet watch : Design-time build completed in 0,2s.
+ 111953.8 watch: dotnet watch : Loaded 6 project(s) in 0,2s.
+ 111953.8 watch: dotnet watch : Watching 224 file(s) for changes
+ 111953.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+ 111953.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+ 111954.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+ 111954.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+ 111954.1 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+ 111954.2 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+ 112010.8 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 112011.0 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 112033.7 watch: dotnet watch : Solution after project update: v1
+ 112042.1 watch: dotnet watch : Hot reload session started.
+ 112042.2 watch: dotnet watch : Application kind: Default.
+ 112042.4 watch: dotnet watch : Found named launch profile 'Loopback'.
+ 112042.5 watch: dotnet watch : launchSettings does not allow launching browsers.
+ 112042.5 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe 'c4b9cd18626b4521965994f9ffeae44b'.
+ 112048.0 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=6 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=c4b9cd18626b4521965994f9ffeae44b --project <repo>\samples\Notebook -lp Loopback': process id 62728
+ 112065.8 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 112407.7 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+ 112691.8 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+ 112697.6 watch: dotnet watch : Waiting for changes
+ 112717.1 watch: spar info +11.0 ms: [715d3d24] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+ 112728.6 watch: spar info +23.6 ms: [715d3d24] The development server recorded at http://127.0.0.1:52278 has ended: a new one starts.
+ 112738.9 watch: spar info +33.9 ms: [715d3d24] services built at 31.8 ms
+ 112747.0 watch: spar info +42.1 ms: [715d3d24] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 26964), port 56130.
+ 112771.9 watch: spar info +67.0 ms: [715d3d24] loopback listening at 67 ms
+ 112774.6 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+ 112774.7 run: PASS command: a new run listens on the same address, 9575 ms after the write
+ 112779.7 run: PASS command: the regenerated client's pages.d.ts matches /readonly count: \(/
+ 112779.9 watch: spar info +69.7 ms: [715d3d24] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+ 113176.1 watch: > dev
+ 113176.2 watch: > vite
+ 113393.6 watch: spar info +688.7 ms: [715d3d24] Development server ready at http://127.0.0.1:56130 in 664 ms (Vite pid 11996).
+ 113394.3 watch:   VITE v8.3.8  ready in 156 ms
+ 113394.4 watch:   ?  Local:   http://127.0.0.1:56130/
+ 113408.5 watch: spar info +703.6 ms: [715d3d24] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:56130; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+ 113624.0 run: page console debug: [vite] connecting...
+ 113628.9 run: page console debug: [vite] connected.
+ 113677.6 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+ 113691.0 run: page load 8
+ 113700.3 run: PASS command: the page reloaded by itself once, 10501 ms after the write
+ 113703.0 watch: spar info +998.1 ms: [715d3d24] ui-ready at 998.1 ms
+ 113741.7 run: PASS command: the reloaded page lists the notebook's page
+ 119246.9 run: restored: Pages/PagesService.cs
+ 119247.1 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 119247.1 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 119278.7 watch: dotnet watch : File updated: .\samples\Notebook\Pages\PagesService.cs
+ 119279.1 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 119279.3 watch: dotnet watch : Solution after document update: v2
+ 119286.8 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+ 119290.2 watch: dotnet watch : Restart is needed to apply the changes.
+ 119290.4 run: PASS command restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 43 ms after the write)
+ 119290.5 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+ 119290.5 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_919c065d1a47645d9f67a71228b2c165' requires restarting the application.
+ 119290.6 watch: dotnet watch : Terminating remaining child processes.
+ 119290.7 watch: dotnet watch : [Notebook (net11.0)] Terminating process 62728 (Ctrl+C).
+ 119290.7 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 62728 to exit within 5s.
+ 124291.2 watch: dotnet watch : [Notebook (net11.0)] Terminating process 62728 (Kill).
+ 124291.5 watch: dotnet watch : [Notebook (net11.0)] Process id 62728 ran for 12248ms and exited with exit code -1.
+ 124291.6 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+ 124291.7 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+ 124291.8 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+ 124296.8 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 71416
+ 124300.7 run: page console log: [vite] server connection lost. Polling for restart...
+ 124301.2 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+ 124301.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+ 124301.9 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+ 124302.4 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 124561.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 124696.0 watch:   Determining projects to restore...
+ 125066.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 125292.5 watch:   All projects are up-to-date for restore.
+ 125827.5 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+ 125967.4 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+ 125984.9 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+ 125997.7 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+ 126079.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 126108.8 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+ 126258.2 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+ 127092.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 127192.1 watch:   Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+ 127649.6 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+ 127661.3 watch: 
+ 127661.7 watch: Build succeeded.
+ 127661.8 watch:     0 Warning(s)
+ 127661.9 watch:     0 Error(s)
+ 127661.9 watch: 
+ 127662.1 watch: Time Elapsed 00:00:03.20
+ 127685.8 watch: dotnet watch : Process id 71416 ran for 3394ms and exited with exit code 0.
+ 127741.0 watch: dotnet watch : Project graph loaded in 0,1s.
+ 127741.2 watch: dotnet watch : Loading projects ...
+ 127837.8 watch: dotnet watch : Design-time build completed in 0,1s.
+ 127838.0 watch: dotnet watch : Loaded 6 project(s) in 0,1s.
+ 127838.0 watch: dotnet watch : Watching 224 file(s) for changes
+ 127838.1 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+ 127838.1 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+ 127838.2 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+ 127838.3 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+ 127838.4 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+ 127838.4 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+ 127886.4 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 127886.6 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 127908.5 watch: dotnet watch : Solution after project update: v1
+ 127921.9 watch: dotnet watch : Hot reload session started.
+ 127922.1 watch: dotnet watch : Application kind: Default.
+ 127922.2 watch: dotnet watch : Found named launch profile 'Loopback'.
+ 127922.3 watch: dotnet watch : launchSettings does not allow launching browsers.
+ 127922.4 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '02ccad468e45496bb94d3799773dd39c'.
+ 127927.2 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=7 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=02ccad468e45496bb94d3799773dd39c --project <repo>\samples\Notebook -lp Loopback': process id 47284
+ 128103.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 128285.9 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+ 128565.5 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+ 128571.1 watch: dotnet watch : Waiting for changes
+ 128590.8 watch: spar info +10.7 ms: [35721e64] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+ 128602.3 watch: spar info +23.2 ms: [35721e64] The development server recorded at http://127.0.0.1:56130 has ended: a new one starts.
+ 128611.7 watch: spar info +32.6 ms: [35721e64] services built at 30.5 ms
+ 128619.7 watch: spar info +40.6 ms: [35721e64] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 54228), port 49338.
+ 128643.9 watch: spar info +64.8 ms: [35721e64] loopback listening at 64.8 ms
+ 128646.4 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+ 128646.5 watch: spar info +67.4 ms: [35721e64] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+ 128655.2 run: PASS command restored: a new run listens on the same address, 9399 ms after the write
+ 128655.9 run: PASS command restored: the regenerated client's pages.d.ts matches /^(?![\s\S]*readonly count: \()/
+ 129050.9 watch: > dev
+ 129051.1 watch: > vite
+ 129254.5 watch: spar info +675.3 ms: [35721e64] Development server ready at http://127.0.0.1:49338 in 651 ms (Vite pid 24348).
+ 129269.7 watch: spar info +690.6 ms: [35721e64] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:49338; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+ 129271.2 watch:   VITE v8.3.8  ready in 156 ms
+ 129271.3 watch:   ?  Local:   http://127.0.0.1:49338/
+ 129480.0 run: page console debug: [vite] connecting...
+ 129486.9 run: page console debug: [vite] connected.
+ 129530.9 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+ 129545.0 run: page load 9
+ 129555.0 run: PASS command restored: the page reloaded by itself once, 10308 ms after the write
+ 129559.0 watch: spar info +979.9 ms: [35721e64] ui-ready at 979.9 ms
+ 129589.9 run: PASS command restored: the reloaded page lists the notebook's page
+ 136596.4 run: --- instance
+ 136596.9 run: edit written: Pages/MarkdownPageStore.cs
+ 136597.0 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+ 136597.0 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+ 136612.6 watch: dotnet watch : File updated: .\samples\Notebook\Pages\MarkdownPageStore.cs
+ 136612.8 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+ 136613.0 watch: dotnet watch : Solution after document update: v2
+ 136619.2 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+ 136622.3 watch: dotnet watch : Restart is needed to apply the changes.
+ 136622.5 run: instance: dotnet watch answered "dotnet watch : Restart is needed to apply the changes.", 25 ms after the write
+ 136622.7 run: restored: Pages/MarkdownPageStore.cs
+ 136622.8 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\Pages\MarkdownPageStore.cs(147,5): error ENC0004: Updating the modifiers of method requires restarting the application.
+ 136622.8 watch: dotnet watch : Terminating remaining child processes.
+ 136622.9 watch: dotnet watch : [Notebook (net11.0)] Terminating process 47284 (Ctrl+C).
+ 136623.0 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 47284 to exit within 5s.
+ 141637.7 watch: dotnet watch : [Notebook (net11.0)] Terminating process 47284 (Kill).
+ 141638.0 watch: dotnet watch : [Notebook (net11.0)] Process id 47284 ran for 13715ms and exited with exit code -1.
+ 141638.0 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+ 141638.1 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+ 141638.2 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+ 141643.0 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 15684
+ 141648.5 run: page console log: [vite] server connection lost. Polling for restart...
+ 141648.9 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+ 141649.1 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+ 141649.6 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+ 141650.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 141906.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 142042.4 watch:   Determining projects to restore...
+ 142413.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 142644.7 watch:   All projects are up-to-date for restore.
+ 143189.9 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+ 143340.5 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+ 143352.9 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+ 143363.8 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+ 143424.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 143474.9 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+ 143622.6 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+ 144440.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 144741.9 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+ 144754.2 watch: 
+ 144754.6 watch: Build succeeded.
+ 144754.7 watch:     0 Warning(s)
+ 144754.7 watch:     0 Error(s)
+ 144754.8 watch: 
+ 144754.8 watch: Time Elapsed 00:00:02.95
+ 144785.6 watch: dotnet watch : Process id 15684 ran for 3147ms and exited with exit code 0.
+ 144857.6 watch: dotnet watch : Project graph loaded in 0,1s.
+ 144857.8 watch: dotnet watch : Loading projects ...
+ 144949.6 watch: dotnet watch : Design-time build completed in 0,1s.
+ 144949.8 watch: dotnet watch : Loaded 6 project(s) in 0,1s.
+ 144949.8 watch: dotnet watch : Watching 224 file(s) for changes
+ 144949.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+ 144949.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+ 144949.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+ 144950.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+ 144950.0 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+ 144950.2 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+ 144997.0 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 144997.1 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 145018.0 watch: dotnet watch : Solution after project update: v1
+ 145030.1 watch: dotnet watch : Hot reload session started.
+ 145030.3 watch: dotnet watch : Application kind: Default.
+ 145030.4 watch: dotnet watch : Found named launch profile 'Loopback'.
+ 145030.4 watch: dotnet watch : launchSettings does not allow launching browsers.
+ 145030.5 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '4b4fb54b21454855b945a1ec3f9e3e57'.
+ 145036.9 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=8 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=4b4fb54b21454855b945a1ec3f9e3e57 --project <repo>\samples\Notebook -lp Loopback': process id 66972
+ 145399.3 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+ 145448.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 145670.8 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+ 145676.4 watch: dotnet watch : Waiting for changes
+ 145694.8 watch: spar info +10.8 ms: [bebeb568] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+ 145706.0 watch: spar info +23.0 ms: [bebeb568] The development server recorded at http://127.0.0.1:49338 has ended: a new one starts.
+ 145715.4 watch: spar info +32.5 ms: [bebeb568] services built at 30 ms
+ 145722.6 watch: spar info +39.8 ms: [bebeb568] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 53112), port 63033.
+ 145747.4 watch: spar info +64.5 ms: [bebeb568] loopback listening at 64.5 ms
+ 145750.2 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+ 145750.3 watch: spar info +67.3 ms: [bebeb568] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+ 146159.0 watch: > dev
+ 146159.2 watch: > vite
+ 146365.0 watch: spar info +682.1 ms: [bebeb568] Development server ready at http://127.0.0.1:63033 in 658 ms (Vite pid 53084).
+ 146380.0 watch:   VITE v8.3.8  ready in 156 ms
+ 146380.1 watch:   ?  Local:   http://127.0.0.1:63033/
+ 146501.7 watch: spar info +818.9 ms: [bebeb568] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:63033; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+ 146717.6 run: page console debug: [vite] connecting...
+ 146728.3 run: page console debug: [vite] connected.
+ 146780.5 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+ 146793.6 run: page load 10
+ 146805.7 watch: spar info +1122.8 ms: [bebeb568] ui-ready at 1122.8 ms
+ 153274.7 run: --- limit
+ 153275.3 run: edit written: Pages/PagesService.cs
+ 153275.5 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 153275.5 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 153322.2 watch: dotnet watch : File updated: .\samples\Notebook\Pages\PagesService.cs
+ 153322.5 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 153322.6 watch: dotnet watch : Solution after document update: v2
+ 153329.4 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+ 153331.7 watch: dotnet watch : Restart is needed to apply the changes.
+ 153331.9 run: PASS limit: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 56 ms after the write)
+ 153332.0 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+ 153332.0 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_879f931117336b648ebaa9698f9395de' requires restarting the application.
+ 153332.1 watch: dotnet watch : Terminating remaining child processes.
+ 153332.2 watch: dotnet watch : [Notebook (net11.0)] Terminating process 66972 (Ctrl+C).
+ 153332.3 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 66972 to exit within 5s.
+ 158345.4 watch: dotnet watch : [Notebook (net11.0)] Terminating process 66972 (Kill).
+ 158345.6 watch: dotnet watch : [Notebook (net11.0)] Process id 66972 ran for 13315ms and exited with exit code -1.
+ 158345.7 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+ 158345.8 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+ 158345.9 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+ 158350.3 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 28380
+ 158357.2 run: page console log: [vite] server connection lost. Polling for restart...
+ 158357.6 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+ 158364.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+ 158364.4 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+ 158364.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 158630.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 158749.9 watch:   Determining projects to restore...
+ 159135.1 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 159336.5 watch:   All projects are up-to-date for restore.
+ 159889.0 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+ 160040.7 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+ 160046.3 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+ 160064.9 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+ 160147.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 160171.9 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+ 160317.4 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+ 161161.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 161442.3 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+ 161453.8 watch: 
+ 161454.4 watch: Build succeeded.
+ 161454.6 watch:     0 Warning(s)
+ 161454.6 watch:     0 Error(s)
+ 161454.7 watch: 
+ 161454.7 watch: Time Elapsed 00:00:02.94
+ 161481.0 watch: dotnet watch : Process id 28380 ran for 3135ms and exited with exit code 0.
+ 161539.8 watch: dotnet watch : Project graph loaded in 0,1s.
+ 161539.9 watch: dotnet watch : Loading projects ...
+ 161640.2 watch: dotnet watch : Design-time build completed in 0,1s.
+ 161640.4 watch: dotnet watch : Loaded 6 project(s) in 0,1s.
+ 161640.4 watch: dotnet watch : Watching 224 file(s) for changes
+ 161640.7 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+ 161640.7 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+ 161640.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+ 161640.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+ 161641.0 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+ 161641.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+ 161691.2 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 161691.4 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 161713.6 watch: dotnet watch : Solution after project update: v1
+ 161721.7 watch: dotnet watch : Hot reload session started.
+ 161721.8 watch: dotnet watch : Application kind: Default.
+ 161721.9 watch: dotnet watch : Found named launch profile 'Loopback'.
+ 161722.0 watch: dotnet watch : launchSettings does not allow launching browsers.
+ 161722.1 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '0a14c9e3b93f40e284b1e5320a4ac27a'.
+ 161727.2 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=9 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=0a14c9e3b93f40e284b1e5320a4ac27a --project <repo>\samples\Notebook -lp Loopback': process id 55908
+ 162079.7 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+ 162169.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 162327.3 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+ 162333.1 watch: dotnet watch : Waiting for changes
+ 162350.8 watch: spar info +10.4 ms: [a2bb00fe] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+ 162362.1 watch: spar info +22.6 ms: [a2bb00fe] The development server recorded at http://127.0.0.1:63033 has ended: a new one starts.
+ 162371.5 watch: spar info +32.1 ms: [a2bb00fe] services built at 30.1 ms
+ 162379.5 watch: spar info +40.1 ms: [a2bb00fe] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 42368), port 63443.
+ 162402.5 watch: spar info +63.1 ms: [a2bb00fe] loopback listening at 63.1 ms
+ 162405.1 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+ 162405.2 watch: spar info +65.7 ms: [a2bb00fe] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+ 162420.2 run: PASS limit: a new run listens on the same address, 9130 ms after the write
+ 162819.6 watch: > dev
+ 162819.8 watch: > vite
+ 163024.9 watch: spar info +685.5 ms: [a2bb00fe] Development server ready at http://127.0.0.1:63443 in 662 ms (Vite pid 59232).
+ 163040.8 watch:   VITE v8.3.8  ready in 157 ms
+ 163040.9 watch:   ?  Local:   http://127.0.0.1:63443/
+ 163226.4 watch: spar info +887.0 ms: [a2bb00fe] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:63443; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+ 163438.6 run: page console debug: [vite] connecting...
+ 163444.6 run: page console debug: [vite] connected.
+ 163488.0 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+ 163502.0 run: page load 11
+ 163507.8 run: PASS limit: the page reloaded by itself once, 10232 ms after the write
+ 163519.3 watch: spar info +1180.0 ms: [a2bb00fe] ui-ready at 1179.9 ms
+ 163544.1 run: PASS limit: the reloaded page lists the notebook's page
+ 169056.2 run: restored: Pages/PagesService.cs
+ 169056.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 169056.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 169119.0 watch: dotnet watch : File updated: .\samples\Notebook\Pages\PagesService.cs
+ 169119.2 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 169119.3 watch: dotnet watch : Solution after document update: v2
+ 169126.0 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+ 169128.4 watch: dotnet watch : Restart is needed to apply the changes.
+ 169128.6 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+ 169128.6 watch: dotnet watch : [Notebook (net11.0)] [auto-restart] <repo>\samples\Notebook\obj\Development\Debug\net11.0\win-x64\generated\Spar.Generator\Spar.Generator.SparGenerator\Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_d3bf54921b15323e1f20624fdc1c00e8' requires restarting the application.
+ 169128.7 watch: dotnet watch : Terminating remaining child processes.
+ 169128.8 run: PASS limit restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 72 ms after the write)
+ 169128.9 watch: dotnet watch : [Notebook (net11.0)] Terminating process 55908 (Ctrl+C).
+ 169129.0 watch: dotnet watch : [Notebook (net11.0)] Waiting for process 55908 to exit within 5s.
+ 174142.9 watch: dotnet watch : [Notebook (net11.0)] Terminating process 55908 (Kill).
+ 174143.1 watch: dotnet watch : [Notebook (net11.0)] Process id 55908 ran for 12421ms and exited with exit code -1.
+ 174143.2 watch: dotnet watch : [Notebook (net11.0)] Exited with error code -1
+ 174143.3 watch: dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+ 174143.4 watch: dotnet watch : Building <repo>\samples\Notebook\Notebook.csproj ...
+ 174148.4 watch: dotnet watch : Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'build <repo>\samples\Notebook\Notebook.csproj --property:NuGetInteractive=false': process id 4864
+ 174151.7 run: page console log: [vite] server connection lost. Polling for restart...
+ 174152.2 run: page console error: This document requires 'TrustedScriptURL' assignment. The action has been blocked.
+ 174152.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+ 174152.9 run: page console info: Spar: the backend at http://127.0.0.1:63503 stopped; the page reloads when it runs again.
+ 174153.3 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 174413.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 174549.3 watch:   Determining projects to restore...
+ 174922.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 175133.9 watch:   All projects are up-to-date for restore.
+ 175687.0 watch:   Spar -> <repo>\src\Spar\bin\Debug\net11.0\Spar.dll
+ 175844.3 watch:   Spar.Loopback -> <repo>\src\Spar.Loopback\bin\Debug\net11.0\Spar.Loopback.dll
+ 175850.7 watch:   Spar.Linux -> <repo>\src\Spar.Linux\bin\Debug\net11.0\Spar.Linux.dll
+ 175864.1 watch:   Spar.Windows -> <repo>\src\Spar.Windows\bin\Debug\net11.0\Spar.Windows.dll
+ 175935.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 175976.7 watch:   Spar.Generator -> <repo>\src\Spar.Generator\bin\Debug\netstandard2.0\Spar.Generator.dll
+ 176121.2 watch:   Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Debug\net11.0\Spar.Sdk.Tasks.dll
+ 176947.8 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 177285.3 watch:   Notebook -> <repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.dll
+ 177297.1 watch: 
+ 177297.6 watch: Build succeeded.
+ 177297.7 watch:     0 Warning(s)
+ 177297.8 watch:     0 Error(s)
+ 177297.8 watch: 
+ 177297.9 watch: Time Elapsed 00:00:02.99
+ 177323.4 watch: dotnet watch : Process id 4864 ran for 3180ms and exited with exit code 0.
+ 177381.0 watch: dotnet watch : Project graph loaded in 0,1s.
+ 177381.1 watch: dotnet watch : Loading projects ...
+ 177474.5 watch: dotnet watch : Design-time build completed in 0,1s.
+ 177474.6 watch: dotnet watch : Loaded 6 project(s) in 0,1s.
+ 177474.7 watch: dotnet watch : Watching 224 file(s) for changes
+ 177474.8 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Linux'
+ 177474.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Sdk.Tasks'
+ 177474.9 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Windows'
+ 177475.0 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\netstandard2.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar.Generator'
+ 177475.0 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development\Debug\/**;obj\Development\Debug\/**;bin\Development\Debug\net11.0\win-x64\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\samples\Notebook'
+ 177475.1 watch: dotnet watch : Exclusion glob: 'bin\Debug\/**;obj\Debug\/**;bin\/**;obj\/**;bin\Debug\net11.0\publish\/**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<repo>\src\Spar'
+ 177521.7 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Shipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 177521.9 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<repo>\src\Spar.Generator\AnalyzerReleases.Unshipped.md' in project '<repo>\src\Spar.Generator\Spar.Generator.csproj'
+ 177555.7 watch: dotnet watch : Solution after project update: v1
+ 177563.4 watch: dotnet watch : Hot reload session started.
+ 177563.5 watch: dotnet watch : Application kind: Default.
+ 177563.7 watch: dotnet watch : Found named launch profile 'Loopback'.
+ 177563.8 watch: dotnet watch : launchSettings does not allow launching browsers.
+ 177563.8 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '1c2950df52514d96b4de2ca3636da213'.
+ 177569.0 watch: dotnet watch : [Notebook (net11.0)] Launched 'C:\Program Files\dotnet\dotnet.exe' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=10 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e "DOTNET_STARTUP_HOOKS=C:\Program Files\dotnet\sdk\11.0.100\DotnetTools\dotnet-watch\11.0.100\tools\net11.0\any\hotreload\net10.0\Microsoft.Extensions.DotNetDeltaApplier.dll" -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=1c2950df52514d96b4de2ca3636da213 --project <repo>\samples\Notebook -lp Loopback': process id 51928
+ 177925.1 watch: Using launch settings from <repo>\samples\Notebook\Properties\launchSettings.json...
+ 177961.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+ 178195.0 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+ 178200.7 watch: dotnet watch : Waiting for changes
+ 178219.3 watch: spar info +11.4 ms: [9e367169] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-hot-reload\windows-loopback\local\com.example.Notebook.Development
+ 178230.6 watch: spar info +23.9 ms: [9e367169] The development server recorded at http://127.0.0.1:63443 has ended: a new one starts.
+ 178239.8 watch: spar info +33.1 ms: [9e367169] services built at 30.8 ms
+ 178249.7 watch: spar info +43.0 ms: [9e367169] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 16848), port 51869.
+ 178271.6 watch: spar info +64.9 ms: [9e367169] loopback listening at 64.9 ms
+ 178274.1 watch: Spar: the page is at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+ 178274.2 watch: spar info +67.4 ms: [9e367169] Loopback page at http://127.0.0.1:63503/#token=… (the dev session's address: an open page reloads by itself).
+ 178293.7 run: PASS limit restored: a new run listens on the same address, 9218 ms after the write
+ 178674.5 watch: > dev
+ 178674.7 watch: > vite
+ 178895.1 watch: spar info +688.4 ms: [9e367169] Development server ready at http://127.0.0.1:51869 in 663 ms (Vite pid 29200).
+ 178895.3 watch:   VITE v8.3.8  ready in 158 ms
+ 178895.4 watch:   ?  Local:   http://127.0.0.1:51869/
+ 179017.5 watch: spar info +810.9 ms: [9e367169] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:63503 ws://127.0.0.1:51869; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+ 179226.0 run: page console debug: [vite] connecting...
+ 179235.6 run: page console debug: [vite] connected.
+ 179282.8 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+ 179295.2 run: page load 12
+ 179305.5 run: PASS limit restored: the page reloaded by itself once, 10249 ms after the write
+ 179309.6 watch: spar info +1102.9 ms: [9e367169] ui-ready at 1102.9 ms
+ 179341.7 run: PASS limit restored: the reloaded page lists the notebook's page
+ 186357.7 run: PASS no CSP or Trusted Types message in the page's console (0)
+ 186358.9 run: 5 edited files restored
+ 186359.3 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+ 186359.3 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+ 186359.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+ 186359.4 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\spar.ts'.
+ 186359.5 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+ 186359.5 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\frontend\src\notebook.test.tsx'.
+ 186359.6 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+ 186359.7 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+ 186359.7 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 186359.7 watch: dotnet watch : File change: Update '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 186373.2 watch: dotnet watch : Files updated: .\samples\Notebook\Pages\MarkdownPageStore.cs, .\samples\Notebook\frontend\src\spar.ts, .\samples\Notebook\frontend\src\notebook.test.tsx, .\samples\Notebook\Pages\PageTypes.cs, .\samples\Notebook\Pages\PagesService.cs
+ 186373.4 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\MarkdownPageStore.cs'.
+ 186373.6 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PageTypes.cs'.
+ 186374.2 watch: dotnet watch : Updating document text of '<repo>\samples\Notebook\Pages\PagesService.cs'.
+ 186374.4 watch: dotnet watch : Solution after document update: v2
+ 186374.6 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+ 186374.7 watch: dotnet watch : No managed code changes to apply.
+ 186640.8 watch: 09:51:50 [vite] (client) hmr update /src/main.tsx, /src/styles.css
+ 186640.9 watch: 09:51:50 [vite] (client) hmr update /src/styles.css
+ 187866.3 run: vite 29200 ended
+ 187866.4 run: 0 failures

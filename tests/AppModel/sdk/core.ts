@@ -109,14 +109,27 @@ export type Outcome =
 let onFailure: (error: CallError) => void = error => console.error(`${error.contract}.${error.command}`, error.kind, error.code, error.execution);
 let observe: ((error: CallError) => void) | undefined;
 
+/** The page's app-wide settings, as in src/Spar.Client/src/results.ts. Each call sets all of them, those left out to their defaults. */
+export interface SparConfiguration {
+  readonly onFailure?: (error: CallError) => void;
+  readonly observe?: (error: CallError) => void;
+  /** Debug builds only: whether Spar's development overlay shows a toast per backend update (`true` by default). */
+  readonly backendUpdateToast?: boolean;
+}
+
+/** Stand-in for the toast setting. */
+export let backendUpdateToast = true;
+
 /**
- * App-wide failure hooks. `onFailure` (the interceptor) receives the failures no call handled: a `match` without a
+ * App-wide settings. `onFailure` (the interceptor) receives the failures no call handled: a `match` without a
  * handler for that failure. `unwrap` never reaches it: it throws instead. `observe` receives every failure, handled
- * or not, for logs and telemetry. Neither can retry or change a call's result.
+ * or not, for logs and telemetry. Neither can retry or change a call's result. `backendUpdateToast: false` turns the
+ * development overlay's toast off.
  */
-export function configureSpar(options: { readonly onFailure?: (error: CallError) => void; readonly observe?: (error: CallError) => void }): void {
-  if (options.onFailure) onFailure = options.onFailure;
+export function configureSpar(options: SparConfiguration): void {
+  onFailure = options.onFailure ?? (error => console.error(`${error.contract}.${error.command}`, error.kind, error.code, error.execution));
   observe = options.observe;
+  backendUpdateToast = options.backendUpdateToast !== false;
 }
 
 /** Thrown by `unwrap` for a declared error or an infrastructure failure. */

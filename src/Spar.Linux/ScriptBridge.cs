@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Channels;
 using Spar.Bridge;
 using Spar.Hosting;
+using Spar.HotReload;
 using Spar.Linux.Interop;
 
 namespace Spar.Linux;
@@ -55,6 +56,7 @@ internal sealed class ScriptBridge
     private readonly Channel<Incoming> _incoming = Channel.CreateUnbounded<Incoming>(new UnboundedChannelOptions { SingleReader = true });
     private readonly List<byte[]> _outgoing = [];
     private readonly Task _reader;
+    private readonly IDisposable? _backendUpdates;
     private nint _view;
     private Document? _current;
     private bool _flushPosted;
@@ -69,6 +71,10 @@ internal sealed class ScriptBridge
         _includeDetails = includeDetails;
         _violations = violations;
         _reader = Task.Run(ReadAsync);
+        if (BackendUpdates.IsSupported)
+        {
+            _backendUpdates = BackendUpdates.Listen(update => _ui.Post(() => SendBackendUpdate(update), "backend update"));
+        }
     }
 
     /// <summary>Raised on the loop when the current document reports <c>ui-ready</c>.</summary>
@@ -227,6 +233,7 @@ internal sealed class ScriptBridge
     /// <summary>Ends the reader once every queued message was handled; the host calls it last.</summary>
     public async Task StopAsync()
     {
+        _backendUpdates?.Dispose();
         _incoming.Writer.TryComplete();
         await _reader;
     }
@@ -335,6 +342,18 @@ internal sealed class ScriptBridge
 
         Answered?.Invoke(seq, BridgeSession.ShowsDialog(decoded.Payload.Span));
         return true;
+    }
+
+    /// <summary>
+    /// A Hot Reload update was applied (Development builds only): the current document gets <c>backend-updated</c>
+    /// (loop thread). A page that has not connected yet misses it; it runs the patched code anyway.
+    /// </summary>
+    private void SendBackendUpdate(BackendUpdate update)
+    {
+        var session = SessionOfCurrent();
+        session?.SendEvent(BackendUpdates.EventName, update.Payload);
+        var sent = session is null ? "no document connected" : $"sent to document {_current?.Id}";
+        _log.Info($"Hot Reload applied revision {update.Revision} ({update.TypeList}); {sent}.");
     }
 
     /// <summary>The current document's session, if it has connected (loop thread).</summary>

@@ -2,6 +2,7 @@
 // handled here, declared errors by name, so the components only render what this hook decides. Closing the window
 // saves a draft that is not saved yet first, and asks before losing one that cannot be saved (docs/app-model.md 6.11).
 import { pages, type Page, type PageSummary } from "@spar/app/pages";
+import { onBackendUpdate } from "@spar/app/sdk";
 import { windows, type CloseAnswer, type CloseRequest } from "@spar/app/windows";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -58,6 +59,10 @@ export function useNotebook(): Notebook {
   useEffect(() => {
     void refresh();
   }, [refresh]);
+
+  // In a Debug build, after Hot Reload changed the backend's code, the list is fetched again with the new code (for
+  // example a changed sort or title rule). A production build has no such updates; the call does nothing there.
+  useEffect(() => onBackendUpdate(() => void refresh()), [refresh]);
 
   const open = useCallback((id: string) => {
     clearTimeout(timer.current);

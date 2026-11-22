@@ -1,0 +1,320 @@
+dotnet watch : Working directory: '<copy>'
+dotnet watch : Watching with Hot Reload.
+dotnet watch : Hot reload enabled. For a list of supported edits, see https://aka.ms/dotnet/hot-reload.
+dotnet watch : Press Ctrl+R to restart.
+dotnet watch : Building <copy>/samples/Notebook/Notebook.csproj ...
+dotnet watch : Launched '/var/tmp/spar-linux/cache/dotnet/dotnet' with arguments 'build <copy>/samples/Notebook/Notebook.csproj --property:NuGetInteractive=false': process id 51615
+  Determining projects to restore...
+  Restored <copy>/src/Spar.Linux/Spar.Linux.csproj (in 224 ms).
+  Restored <copy>/src/Spar.Windows/Spar.Windows.csproj (in 224 ms).
+  Restored <copy>/samples/Notebook/Notebook.csproj (in 224 ms).
+  Restored <copy>/src/Spar/Spar.csproj (in 224 ms).
+  Restored <copy>/src/Spar.Generator/Spar.Generator.csproj (in 224 ms).
+  Restored <copy>/src/Spar.Sdk.Tasks/Spar.Sdk.Tasks.csproj (in 224 ms).
+  Spar -> <copy>/src/Spar/bin/Debug/net11.0/Spar.dll
+  Spar.Loopback -> <copy>/src/Spar.Loopback/bin/Debug/net11.0/Spar.Loopback.dll
+  Spar.Linux -> <copy>/src/Spar.Linux/bin/Debug/net11.0/Spar.Linux.dll
+  Spar.Windows -> <copy>/src/Spar.Windows/bin/Debug/net11.0/Spar.Windows.dll
+  Spar.Generator -> <copy>/src/Spar.Generator/bin/Debug/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> <copy>/src/Spar.Sdk.Tasks/bin/Debug/net11.0/Spar.Sdk.Tasks.dll
+  Notebook -> <copy>/samples/Notebook/bin/Development/Debug/net11.0/linux-x64/Notebook.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:04.11
+dotnet watch : Process id 51615 ran for 4278ms and exited with exit code 0.
+dotnet watch : Project graph loaded in 0.2s.
+dotnet watch : Loading projects ...
+dotnet watch : Design-time build completed in 0.4s.
+dotnet watch : Loaded 6 project(s) in 0.4s.
+dotnet watch : Watching 224 file(s) for changes
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Windows'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Linux'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/netstandard2.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Generator'
+dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development/Debug//**;obj\Development/Debug//**;bin\Development/Debug/net11.0/linux-x64/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/samples/Notebook'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Sdk.Tasks'
+dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Shipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Unshipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+dotnet watch : Solution after project update: v1
+dotnet watch : Hot reload session started.
+dotnet watch : Application kind: Default.
+dotnet watch : Found named launch profile 'Desktop'.
+dotnet watch : launchSettings does not allow launching browsers.
+dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '606a71eedc4c42e68bab830854f493dc'.
+dotnet watch : [Notebook (net11.0)] Launched '/var/tmp/spar-linux/cache/dotnet/dotnet' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=1 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e DOTNET_STARTUP_HOOKS=/var/tmp/spar-linux/cache/dotnet/sdk/11.0.100/DotnetTools/dotnet-watch/11.0.100/tools/net11.0/any/hotreload/net10.0/Microsoft.Extensions.DotNetDeltaApplier.dll -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=606a71eedc4c42e68bab830854f493dc --project samples/Notebook -lp Desktop': process id 52006
+Using launch settings from samples/Notebook/Properties/launchSettings.json...
+dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+spar info +10.5 ms: [8b396a9d] Host started 56 ms after the process.
+spar info +12.9 ms: [8b396a9d] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development
+spar info +27.4 ms: [8b396a9d] single instance at 25.3 ms
+dotnet watch : Waiting for changes
+spar info +44.1 ms: [8b396a9d] GTK 4.14.5, WebKitGTK 2.52.6.
+spar info +51.7 ms: [8b396a9d] Sandbox trial: bwrap exit 0 in 3.7 ms.
+spar info +52.4 ms: [8b396a9d] prerequisites checked at 52.4 ms
+spar info +54.9 ms: [8b396a9d] WebAssembly off: JSC_useWasm=false.
+spar info +59.3 ms: [8b396a9d] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.6 ms with 11 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+spar info +62.4 ms: [8b396a9d] gpu checked at 62.4 ms
+spar info +67.5 ms: [8b396a9d] theme read at 67.5 ms
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+spar info +84.7 ms: [8b396a9d] services built at 84.7 ms
+spar info +85.1 ms: [8b396a9d] npm run dev started in <copy>/samples/Notebook/frontend/ (pid 52065), port 40693.
+spar info +104.8 ms: [8b396a9d] gtk ready at 104.8 ms
+spar info +106.0 ms: [8b396a9d] UI-thread stall probe on.
+dbus-daemon[51591]: [session uid=1000 pid=51591] Activating service name='org.a11y.Bus' requested by ':1.2' (uid=1000 pid=52032 comm="<copy>/samples/Notebook/b" label="kernel")
+dbus-daemon[51591]: [session uid=1000 pid=51591] Successfully activated service 'org.a11y.Bus'
+spar info +131.8 ms: [8b396a9d] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+spar info +136.4 ms: [8b396a9d] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +137.3 ms: [8b396a9d] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+spar info +141.4 ms: [8b396a9d] Browser data folder <copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/WebKit, cache <copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/cache/WebKit
+spar info +146.2 ms: [8b396a9d] Browser settings read back (0.22 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+spar info +147.2 ms: [8b396a9d] web view created at 147.2 ms
+spar info +148.2 ms: [8b396a9d] Heartbeat every 5000 ms.
+spar info +160.4 ms: [8b396a9d] window shown at 160.4 ms
+spar warn +170.2 ms: The UI thread stalled 57.3 ms; the slowest Spar callback meanwhile was window start (57.3 ms)
+dbus-daemon[52152]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=52032 comm="<copy>/samples/Notebook/b" label="kernel")
+dbus-daemon[51591]: [session uid=1000 pid=51591] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=52169 comm="/usr/bin/xdg-dbus-proxy --args=113" label="kernel")dbus-daemon[52152]: Successfully activated service 'org.a11y.atspi.Registry'
+
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+> dev
+> vite
+dbus-daemon[51591]: [session uid=1000 pid=51591] Activating service name='org.freedesktop.portal.Documents' requested by ':1.7' (uid=1000 pid=52205 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[51591]: [session uid=1000 pid=51591] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.8' (uid=1000 pid=52214 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[51591]: [session uid=1000 pid=51591] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[51591]: [session uid=1000 pid=51591] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.518: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.519: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[51591]: [session uid=1000 pid=51591] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.7' (uid=1000 pid=52205 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[51591]: [session uid=1000 pid=51591] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.562: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.563: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.564: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.565: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.565: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.566: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.568: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.569: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.570: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.571: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00932.426794] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00932.427249] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.574: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.575: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.576: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:52205): xdg-desktop-portal-WARNING **: 10:08:29.577: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[51591]: [session uid=1000 pid=51591] Successfully activated service 'org.freedesktop.portal.Desktop'
+  VITE v8.3.8  ready in 119 ms
+  ➜  Local:   http://127.0.0.1:40693/
+spar info +307.7 ms: [8b396a9d] Development server ready at http://127.0.0.1:40693 in 234 ms (Vite pid 52154).
+spar info +322.3 ms: [8b396a9d] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src spar://app ws://127.0.0.1:40693; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +328.6 ms: [8b396a9d] page committed at 328.6 ms
+spar info +331.6 ms: [8b396a9d] Bridge: document 5ca42aff214f91a6 opened.
+spar info +332.2 ms: [8b396a9d] Heartbeat armed for the new document.
+spar info +617.2 ms: [8b396a9d] first bridge message at 617.2 ms
+spar info +625.0 ms: [8b396a9d] first bridge reply at 625 ms
+spar info +723.1 ms: [8b396a9d] ui-ready at 723.1 ms
+spar info +727.6 ms: [8b396a9d] Bridge: document 5ca42aff214f91a6 reported ui-ready.
+spar info +731.4 ms: [8b396a9d] Bridge: document 5ca42aff214f91a6 reported ui-ready.
+dotnet watch : File change: Add '<copy>/samples/Notebook/Pages/sedeA2O5e'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/sedeA2O5e'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/sedeA2O5e'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/sedeA2O5e'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/sedeA2O5e'.
+dotnet watch : File change: Delete '<copy>/samples/Notebook/Pages/sedeA2O5e'.
+dotnet watch : File change: Add '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+dotnet watch : Solution after document update: v2
+dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+dotnet watch : [Notebook (net11.0)] Sending update batch #0
+spar info +3565.0 ms: [8b396a9d] Hot Reload applied revision 1 (Notebook.Pages.MarkdownPageStore); sent to document 5ca42aff214f91a6.
+dotnet watch : [Notebook (net11.0)] Writing capabilities: Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva
+dotnet watch : [Notebook (net11.0)] Applying updates to module 4063253e-27e7-42bc-87e7-184dab11ab2b.
+dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+dotnet watch : [Notebook (net11.0)] Updates applied.
+dotnet watch : [Notebook (net11.0)] Update batch #0 completed.
+dotnet watch : C# and Razor changes applied in 496ms.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+dotnet watch : Solution after document update: v3
+dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+dotnet watch : [Notebook (net11.0)] Sending update batch #1
+spar info +3772.0 ms: [8b396a9d] Hot Reload applied revision 2 (Notebook.Pages.MarkdownPageStore); sent to document 5ca42aff214f91a6.
+dotnet watch : [Notebook (net11.0)] Applying updates to module 4063253e-27e7-42bc-87e7-184dab11ab2b.
+dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+dotnet watch : [Notebook (net11.0)] Updates applied.
+dotnet watch : [Notebook (net11.0)] Update batch #1 completed.
+dotnet watch : C# and Razor changes applied in 70ms.
+dotnet watch : File change: Add '<copy>/samples/Notebook/Pages/sedI4PdH8'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/sedI4PdH8'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/sedI4PdH8'.
+dotnet watch : File change: Delete '<copy>/samples/Notebook/Pages/sedI4PdH8'.
+dotnet watch : File change: Add '<copy>/samples/Notebook/Pages/PageTypes.cs'.
+dotnet watch : File change: Add '<copy>/samples/Notebook/frontend/src/sedCNaWNL'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/frontend/src/sedCNaWNL'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/frontend/src/sedCNaWNL'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/frontend/src/sedCNaWNL'.
+dotnet watch : File change: Delete '<copy>/samples/Notebook/frontend/src/sedCNaWNL'.
+dotnet watch : File change: Add '<copy>/samples/Notebook/frontend/src/notebook.test.tsx'.
+10:08:37 AM [vite] (client) hmr update /src/styles.css
+dotnet watch : File added: ./samples/Notebook/frontend/src/notebook.test.tsx
+dotnet watch : File updated: ./samples/Notebook/Pages/PageTypes.cs
+dotnet watch : File addition triggered re-evaluation: '<copy>/samples/Notebook/frontend/src/notebook.test.tsx'.
+dotnet watch : Project graph loaded in 0.1s.
+dotnet watch : Loading projects ...
+dotnet watch : Projects restored in 0.6s.
+dotnet watch : Design-time build completed in 0.3s.
+dotnet watch : Loaded 6 project(s) in 0.8s.
+dotnet watch : Watching 224 file(s) for changes
+dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Shipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Unshipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+dotnet watch : Solution after project update: v4
+dotnet watch : Re-evaluation completed.
+dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+dotnet watch : Restart is needed to apply the changes.
+dotnet watch : [Notebook (net11.0)] [auto-restart] <copy>/samples/Notebook/obj\Development/Debug/net11.0/linux-x64/generated/Spar.Generator/Spar.Generator.SparGenerator/Spar.Contracts.g.cs(8,9): warning ENC0118: Changing 'auto-property' might not have any effect until the application is restarted.
+dotnet watch : [Notebook (net11.0)] [auto-restart] <copy>/samples/Notebook/obj\Development/Debug/net11.0/linux-x64/generated/Spar.Generator/Spar.Generator.SparGenerator/Spar.ContractShape.g.cs(11,9): error ENC0020: Renaming enum value 'Shape_879f931117336b648ebaa9698f9395de' requires restarting the application.
+dotnet watch : Terminating remaining child processes.
+dotnet watch : [Notebook (net11.0)] Terminating process 52006 (SIGTERM).
+dotnet watch : [Notebook (net11.0)] Waiting for process 52006 to exit within 5s.
+spar info +9328.3 ms: [8b396a9d] SIGTERM: the session ends at 9328.3 ms
+spar info +9332.5 ms: [8b396a9d] session ending at 9332.5 ms
+spar info +9334.9 ms: [8b396a9d] close request 1 sent to the page (sessionEnd) at 9334.9 ms
+spar info +9339.2 ms: [8b396a9d] close request 1: the page answered Close at 9339.2 ms
+spar info +9344.5 ms: [8b396a9d] session end: the page's guard answered Close at 9344.5 ms
+spar info +9347.2 ms: Close request for window main (SessionEnd): the backend's guard answered Close
+spar info +9352.5 ms: [8b396a9d] session end: the backend's guard answered Close; closing at 9352.5 ms
+spar info +9355.1 ms: [8b396a9d] closing at 9355.1 ms
+spar info +9359.5 ms: [8b396a9d] Heartbeat: 1 ticks, 2 pings, longest tick on the UI thread 0.669 ms.
+spar info +9368.7 ms: [8b396a9d] page close work done at 9368.7 ms
+spar info +9370.0 ms: [8b396a9d] Bridge: document 5ca42aff214f91a6 closed (window closing).
+spar info +9371.6 ms: [8b396a9d] calls stopped at 9371.6 ms
+spar info +9375.3 ms: [8b396a9d] calls settled at 9375.3 ms
+spar info +9378.0 ms: [8b396a9d] window destroyed at 9378 ms
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 10:08:40.099: Error releasing name com.example.Notebook.Development.Sandboxed.WebProcess-190ae4da-be18-4d84-ab66-582ed872fa1a: The connection is closed
+spar info +9398.2 ms: [8b396a9d] web processes exited after 14 ms at 9398.2 ms
+spar info +9404.3 ms: [8b396a9d] services disposed at 9404.3 ms
+spar info +9407.8 ms: [8b396a9d] session end: window closed, last work done; SIGTERM held 79 ms at 9407.8 ms
+spar info +9408.1 ms: [8b396a9d] exit 0 at 9408.1 ms
+dotnet watch : [Notebook (net11.0)] Process id 52006 ran for 9827ms and exited with exit code 0.
+dotnet watch : [Notebook (net11.0)] Exited
+dotnet watch : [Notebook (net11.0)] Disposing agent communication pipe
+dotnet watch : Building <copy>/samples/Notebook/Notebook.csproj ...
+dotnet watch : Launched '/var/tmp/spar-linux/cache/dotnet/dotnet' with arguments 'build <copy>/samples/Notebook/Notebook.csproj --property:NuGetInteractive=false': process id 52504
+  Determining projects to restore...
+  Restored <copy>/samples/Notebook/Notebook.csproj (in 205 ms).
+  5 of 6 projects are up-to-date for restore.
+  Spar -> <copy>/src/Spar/bin/Debug/net11.0/Spar.dll
+  Spar.Loopback -> <copy>/src/Spar.Loopback/bin/Debug/net11.0/Spar.Loopback.dll
+  Spar.Linux -> <copy>/src/Spar.Linux/bin/Debug/net11.0/Spar.Linux.dll
+  Spar.Windows -> <copy>/src/Spar.Windows/bin/Debug/net11.0/Spar.Windows.dll
+  Spar.Generator -> <copy>/src/Spar.Generator/bin/Debug/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> <copy>/src/Spar.Sdk.Tasks/bin/Debug/net11.0/Spar.Sdk.Tasks.dll
+  Spar: Notebook.contracts.snapshot updated; commit it with the contract change.
+  Notebook -> <copy>/samples/Notebook/bin/Development/Debug/net11.0/linux-x64/Notebook.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.86
+dotnet watch : Process id 52504 ran for 2977ms and exited with exit code 0.
+dotnet watch : Project graph loaded in 0.1s.
+dotnet watch : Loading projects ...
+dotnet watch : Design-time build completed in 0.2s.
+dotnet watch : Loaded 6 project(s) in 0.2s.
+dotnet watch : Watching 224 file(s) for changes
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Windows'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Linux'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/netstandard2.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Generator'
+dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development/Debug//**;obj\Development/Debug//**;bin\Development/Debug/net11.0/linux-x64/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/samples/Notebook'
+dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Sdk.Tasks'
+dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Shipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Unshipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+dotnet watch : Solution after project update: v1
+dotnet watch : Hot reload session started.
+dotnet watch : Application kind: Default.
+dotnet watch : Found named launch profile 'Desktop'.
+dotnet watch : launchSettings does not allow launching browsers.
+dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe '2116b624ef744f27a81912d0eedcdc01'.
+dotnet watch : [Notebook (net11.0)] Launched '/var/tmp/spar-linux/cache/dotnet/dotnet' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=2 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e DOTNET_STARTUP_HOOKS=/var/tmp/spar-linux/cache/dotnet/sdk/11.0.100/DotnetTools/dotnet-watch/11.0.100/tools/net11.0/any/hotreload/net10.0/Microsoft.Extensions.DotNetDeltaApplier.dll -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=2116b624ef744f27a81912d0eedcdc01 --project samples/Notebook -lp Desktop': process id 52794
+Using launch settings from samples/Notebook/Properties/launchSettings.json...
+dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+dotnet watch : Waiting for changes
+spar info +10.1 ms: [d20120f7] Host started 42 ms after the process.
+spar info +12.1 ms: [d20120f7] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development
+spar info +17.5 ms: [d20120f7] single instance at 15.6 ms
+spar info +31.5 ms: [d20120f7] GTK 4.14.5, WebKitGTK 2.52.6.
+spar info +37.2 ms: [d20120f7] Sandbox trial: bwrap exit 0 in 2.9 ms.
+spar info +38.0 ms: [d20120f7] prerequisites checked at 38 ms
+spar info +41.7 ms: [d20120f7] WebAssembly off: JSC_useWasm=false.
+spar info +45.7 ms: [d20120f7] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.3 ms with 12 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+spar info +46.3 ms: [d20120f7] gpu checked at 46.2 ms
+spar info +49.2 ms: [d20120f7] theme read at 49.2 ms
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+spar info +62.5 ms: [d20120f7] services built at 62.4 ms
+spar info +73.9 ms: [d20120f7] gtk ready at 73.9 ms
+spar info +75.1 ms: [d20120f7] UI-thread stall probe on.
+spar info +76.3 ms: [d20120f7] Development server http://127.0.0.1:40693 reused (Vite pid 52154), checked in 22 ms.
+spar info +91.5 ms: [d20120f7] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop; GDBus.Error:org.freedesktop.DBus.Error.UnknownMethod: No such interface “org.freedesktop.portal.Settings” on object at path /org/freedesktop/portal/desktop); GTK's settings (prefer-dark False, theme Default).
+spar info +95.9 ms: [d20120f7] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +97.2 ms: [d20120f7] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+spar info +101.1 ms: [d20120f7] Browser data folder <copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/WebKit, cache <copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/cache/WebKit
+spar info +105.6 ms: [d20120f7] Browser settings read back (0.19 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+spar info +106.4 ms: [d20120f7] web view created at 106.4 ms
+spar info +107.4 ms: [d20120f7] Heartbeat every 5000 ms.
+spar info +117.2 ms: [d20120f7] window shown at 117.2 ms
+spar info +166.6 ms: [d20120f7] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src spar://app ws://127.0.0.1:40693; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +174.4 ms: [d20120f7] page committed at 174.4 ms
+spar info +175.5 ms: [d20120f7] Bridge: document 0d5157e4bb5ccb87 opened.
+spar info +176.1 ms: [d20120f7] Heartbeat armed for the new document.
+spar info +303.4 ms: [d20120f7] first bridge message at 303.4 ms
+spar info +310.7 ms: [d20120f7] first bridge reply at 310.7 ms
+spar info +362.0 ms: [d20120f7] ui-ready at 362 ms
+spar info +362.8 ms: [d20120f7] Bridge: document 0d5157e4bb5ccb87 reported ui-ready.
+spar info +363.4 ms: [d20120f7] Bridge: document 0d5157e4bb5ccb87 reported ui-ready.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/PageTypes.cs'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/PageTypes.cs'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/frontend/src/main.tsx'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/frontend/src/main.tsx'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/frontend/src/notebook.test.tsx'.
+dotnet watch : File change: Update '<copy>/samples/Notebook/frontend/src/notebook.test.tsx'.
+spar info +417.2 ms: [d20120f7] SIGTERM: the session ends at 417.2 ms
+spar info +417.2 ms: [d20120f7] SIGTERM again: exit 143 at once at 417.2 ms
+spar info +420.3 ms: [d20120f7] session ending at 420.3 ms
+spar info +421.0 ms: [d20120f7] SIGTERM again: exit 143 at once at 421 ms

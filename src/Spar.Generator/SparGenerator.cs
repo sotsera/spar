@@ -13,7 +13,9 @@ namespace Spar.Generator;
 /// Spar's source generator (plan section 2): every contract's dispatch, serializers and catalog, with the page security
 /// <c>Program.cs</c> declares (plan section 3b); the interceptor that hands the catalog to <c>SparApplication.Create</c>;
 /// the interceptor that hands <c>app.Run()</c> the desktop host the build references (in the Test variant too, for the
-/// test session's Window surface); and, in the Test variant, the test entry point and typed test clients.
+/// test session's Window surface); in the Development variant, the contracts' shape, so a contract edit restarts the app
+/// under Hot Reload instead of being patched (<see cref="ShapeEmitter"/>); and, in the Test variant, the test entry
+/// point and typed test clients.
 /// It reports nothing itself: the analyzer shows problems at their locations.
 /// </summary>
 [Generator]
@@ -64,6 +66,8 @@ public sealed class SparGenerator : IIncrementalGenerator
 
         var isTest = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
             options.GlobalOptions.TryGetValue("build_property.SparVariant", out var variant) && variant == "Test");
+        var isDevelopment = context.AnalyzerConfigOptionsProvider.Select(static (options, _) =>
+            options.GlobalOptions.TryGetValue("build_property.SparVariant", out var variant) && variant == "Development");
         var hosts = context.CompilationProvider.Select(static (compilation, _) =>
             new HostsModel(
                 compilation.GetTypeByMetadataName(HostEmitter.WindowsHost) is not null,
@@ -93,8 +97,8 @@ public sealed class SparGenerator : IIncrementalGenerator
             }
         });
 
-        context.RegisterSourceOutput(contracts.Combine(security).Combine(appId), static (output, input) =>
-            EmitContracts(output, input.Left.Left, input.Left.Right, input.Right));
+        context.RegisterSourceOutput(contracts.Combine(security).Combine(appId).Combine(isDevelopment), static (output, input) =>
+            EmitContracts(output, input.Left.Left.Left, input.Left.Left.Right, input.Left.Right, input.Right));
         context.RegisterSourceOutput(createCalls, static (output, calls) => EmitInterceptors(output, calls!));
         // Every variant hands Run its host: in the test variant the test session runs the app instead, and opens its
         // window through the host for the Window surface (plan section 5, level 5).
@@ -138,7 +142,13 @@ public sealed class SparGenerator : IIncrementalGenerator
             : new TestedAppModel(name, appId, executable, Read("SparAppDirectory"));
     }
 
-    private static void EmitContracts(SourceProductionContext output, ImmutableArray<ContractModel> models, PageSecurityModel? security, string appId)
+    /// <param name="development">A Development build: the contracts' shape is added too (<see cref="ShapeEmitter"/>).</param>
+    private static void EmitContracts(
+        SourceProductionContext output,
+        ImmutableArray<ContractModel> models,
+        PageSecurityModel? security,
+        string appId,
+        bool development)
     {
         var contracts = models.OrderBy(c => c.WireName, System.StringComparer.Ordinal).ToList();
         var types = contracts.SelectMany(c => c.Types).GroupBy(t => t.Key).Select(g => g.First()).OrderBy(t => t.Key, System.StringComparer.Ordinal).ToList();
@@ -155,7 +165,12 @@ public sealed class SparGenerator : IIncrementalGenerator
         code.Line();
         SerializerEmitter.Emit(code, types, records, errors, enums);
         code.Close();
-        output.AddSource("Spar.Contracts.g.cs", code.ToString());
+        var source = code.ToString();
+        output.AddSource("Spar.Contracts.g.cs", source);
+        if (development)
+        {
+            output.AddSource("Spar.ContractShape.g.cs", ShapeEmitter.Emit(source));
+        }
     }
 
     private static void EmitInterceptors(SourceProductionContext output, ImmutableArray<CreateCallModel> calls)
