@@ -195,6 +195,16 @@
   </ItemGroup>
 
   <!--
+    A test project calls into its app rather than running the app's executable, so an app published as a self-contained
+    single file (SelfContained in its own project) may be tested by a framework-dependent test project: the .NET SDK
+    skips this check for VSTest test projects for that reason, but not for Microsoft.Testing.Platform ones, which failed
+    with NETSDK1151 (decision "Runtime choices (implementation record; choices for review; 2026-11-23)").
+  -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <ValidateExecutableReferencesMatchSelfContained Condition="'$(ValidateExecutableReferencesMatchSelfContained)' == ''">false</ValidateExecutableReferencesMatchSelfContained>
+  </PropertyGroup>
+
+  <!--
     The variant and the test lane mean something only to Spar's own projects, which keep a folder per variant. Any
     other project reference, such as the app's own library, direct or transitive, builds as it would anywhere: given
     them, it would build once per variant into the same obj/ and bin/, and the builds would collide (CS2012, with a
@@ -266,8 +276,9 @@
   <!--
     The black-box level (plan section 5, level 7; decision "M1b's remaining questions without a spike"): a test project
     with <SparBlackBoxTests>true</SparBlackBoxTests> gets the generated Projects class, one SparProject per
-    SparTestedApplication, and each app's Production NativeAOT executable, published into this project's obj/ and copied
-    beside the tests (and into a publish of them) under spar-apps/<app>/. SparBlackBoxPublish=false keeps the class and
+    SparTestedApplication, and each app's Production publication (a NativeAOT executable, unless the app's own project
+    chose CoreCLR), published into this project's obj/ and copied beside the tests (and into a publish of them) under
+    spar-apps/<app>/, its debug symbols left out. SparBlackBoxPublish=false keeps the class and
     skips the publish. The publish is the app's own incremental build in-process (decision "D3: variant builds run
     in-proc"): restore as its own call, then Publish in Release with _IsPublishing, as dotnet publish does, without the
     caller's lane, runtime and target framework. Spar's own projects and the app's libraries drop _IsPublishing,
@@ -324,10 +335,17 @@
              Properties="$(_SparBlackBoxProperties);_IsPublishing=true;PublishDir=$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\"
              RemoveProperties="$(_SparBlackBoxRemoved)" />
 
+    <!--
+      Every file of the publication but its debug symbols: a NativeAOT executable alone, or with a native library it
+      loads (SqlClient's SNI DLL); a CoreCLR app's DLLs and runtime configuration, or a single file and the WebView2
+      loader beside it (decision "Runtime choices (implementation record; choices for review; 2026-11-23)").
+    -->
     <ItemGroup>
-      <None Include="$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\%(_SparBlackBoxApp.SparAppExecutable)"
-            Link="spar-apps\%(_SparBlackBoxApp.SparAppName)\%(_SparBlackBoxApp.SparAppExecutable)" Visible="false"
-            CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <_SparBlackBoxFile Include="$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\**"
+                         Exclude="$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\**\*.pdb;$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\**\*.dbg"
+                         SparAppName="%(_SparBlackBoxApp.SparAppName)" />
+      <None Include="@(_SparBlackBoxFile)" Link="spar-apps\%(_SparBlackBoxFile.SparAppName)\%(_SparBlackBoxFile.RecursiveDir)%(_SparBlackBoxFile.Filename)%(_SparBlackBoxFile.Extension)"
+            Visible="false" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
   </Target>
 
@@ -463,7 +481,12 @@
     The WebView2 loader (plan section 3, "Bindings"), from the Microsoft.Web.WebView2 package, used for its native
     files only: linked statically into a NativeAOT executable (DirectPInvoke plus the static library, so the
     publication is one file), and WebView2Loader.dll beside a CoreCLR build or publication. The version comes from
-    central package management in this repository and from the SDK in package mode, like the test framework's.
+    central package management in this repository and from the SDK in package mode, like the test framework's. In a
+    CoreCLR single-file publication the DLL follows the .NET SDK's rule for native libraries: it stays beside the
+    executable, or goes into the bundle (extracted when the app starts) when the app sets
+    IncludeNativeLibrariesForSelfExtract. Marked neither way, the SDK expected it in the bundle and its bundler left it
+    out: NETSDK1236, and a bundle without its loader (decision "Runtime choices (implementation record; choices for
+    review; 2026-11-23)").
   -->
   <PropertyGroup>
     <_SparWebView2Loader Condition="'$(SparTargetsWindows)' == 'true'">true</_SparWebView2Loader>
@@ -488,11 +511,14 @@
     <_SparWebView2Native>$(PkgMicrosoft_Web_WebView2)\build\native\$(_SparWebView2Arch)\</_SparWebView2Native>
     <_SparWebView2PublishDll Condition="'$(PublishAot)' == 'true'">Never</_SparWebView2PublishDll>
     <_SparWebView2PublishDll Condition="'$(PublishAot)' != 'true'">PreserveNewest</_SparWebView2PublishDll>
+    <_SparWebView2OutsideBundle>true</_SparWebView2OutsideBundle>
+    <_SparWebView2OutsideBundle Condition="'$(IncludeNativeLibrariesForSelfExtract)' == 'true'">false</_SparWebView2OutsideBundle>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != ''">
     <None Include="$(_SparWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" Visible="false"
-          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="$(_SparWebView2PublishDll)" />
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="$(_SparWebView2PublishDll)"
+          ExcludeFromSingleFile="$(_SparWebView2OutsideBundle)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != '' and '$(PublishAot)' == 'true'">

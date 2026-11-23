@@ -91,21 +91,38 @@ public sealed class TemplateTests(Consumer consumer) : IDisposable
         Assert.Equal(0, (await consumer.FirstAsync()).Exit);
         SkipWithoutLinuxDesktop();
 
-        var (exit, output) = await consumer.DotnetAsync("", "test", "--project", EndToEndTests, "--filter-trait", "Surface=BlackBox");
+        // With the start-time test of the runtime choices (CoreClrTests), for the NativeAOT row of the guide's table.
+        var startTimes = Path.Combine(consumer.Root, $"{App}.EndToEndTests", "BlackBox", "StartTimes.cs");
+        var times = Path.Combine(consumer.RunRoot, "start-times-nativeaot.txt");
+        File.WriteAllText(startTimes, CoreClrApp.StartTimesTest(App));
+        try
+        {
+            var (exit, output) = await Tool.RunAsync(consumer.Root, "dotnet", ["test", "--project", EndToEndTests, "--filter-trait", "Surface=BlackBox"],
+                CoreClrApp.StartTimesEnvironment(consumer, times));
 
-        Assert.True(exit == 0, output);
-        Assert.Contains("succeeded: 1", output, StringComparison.Ordinal);
-        var name = OperatingSystem.IsWindows() ? $"{App}.exe" : App;
-        var beside = Directory.GetFiles(Path.Combine(consumer.Root, $"{App}.EndToEndTests", "bin"), name, SearchOption.AllDirectories);
-        var published = Assert.Single(beside, path => path.Contains(Path.Combine("spar-apps", App), StringComparison.Ordinal));
-        var written = File.GetLastWriteTimeUtc(published);
+            Assert.True(exit == 0, output);
+            Assert.Contains("succeeded: 2", output, StringComparison.Ordinal);
+            CoreClrApp.ReportStartTimes(consumer, "nativeaot", times);
 
-        // An unchanged build publishes nothing again: the executable beside the tests is the same file.
-        var (rebuilt, again) = await consumer.DotnetAsync("", "build", EndToEndTests, "-nologo", "-v:m");
+            // The NativeAOT executable alone beside the tests: its debug symbols stay in obj/.
+            var name = OperatingSystem.IsWindows() ? $"{App}.exe" : App;
+            var folder = CoreClrApp.BesideTheTests(consumer.Root, App);
+            Assert.Equal([name], CoreClrApp.FilesIn(folder));
+            var published = Path.Combine(folder, name);
+            consumer.Measure(string.Create(System.Globalization.CultureInfo.InvariantCulture, $"nativeaot publication: 1 file, {new FileInfo(published).Length:N0} B (debug symbols aside)"));
+            var written = File.GetLastWriteTimeUtc(published);
 
-        Assert.True(rebuilt == 0, again);
-        Assert.DoesNotContain("Generating native code", again, StringComparison.Ordinal);
-        Assert.Equal(written, File.GetLastWriteTimeUtc(published));
+            // An unchanged build publishes nothing again: the executable beside the tests is the same file.
+            var (rebuilt, again) = await consumer.DotnetAsync("", "build", EndToEndTests, "-nologo", "-v:m");
+
+            Assert.True(rebuilt == 0, again);
+            Assert.DoesNotContain("Generating native code", again, StringComparison.Ordinal);
+            Assert.Equal(written, File.GetLastWriteTimeUtc(published));
+        }
+        finally
+        {
+            File.Delete(startTimes);
+        }
     }
 
     [Fact]
@@ -169,7 +186,7 @@ public sealed class TemplateTests(Consumer consumer) : IDisposable
     /// WebKitGTK 6.0, and the test host and the black box start their own Xvfb and D-Bus daemon. The hosted CI runner
     /// of the package tests has none of them; Spar's own window tests run in its Linux CI image instead.
     /// </summary>
-    private static void SkipWithoutLinuxDesktop()
+    internal static void SkipWithoutLinuxDesktop()
     {
         if (!OperatingSystem.IsLinux())
         {

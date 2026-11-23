@@ -135,7 +135,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
 - **Bindings:**
   - CsWin32 for Win32;
   - hand-declared `[GeneratedComInterface]` for WebView2 (CsWinRT 3.0 added 10–23 MB; not now), with a slot-order test;
-  - the WebView2 loader linked statically under AOT, and `WebView2Loader.dll` published on CoreCLR.
+  - the WebView2 loader linked statically under AOT, and `WebView2Loader.dll` published on CoreCLR: beside a single-file executable, or inside it (extracted at the start) when the app sets `IncludeNativeLibrariesForSelfExtract` (M1d step 7).
   - Feature-detect newer interfaces, and test on the minimum supported Runtime.
   - **The provisional minimum Runtime is 139** (decided, user, 2026-11-17; decision "M1b's remaining questions without a spike"), with no fallbacks: every interface below is stable there, find in page (`ICoreWebView2_28`, 139) and `ICoreWebView2ControllerOptions3` (137) being the newest. An older Runtime gets the start-up dialog and exit 4. M4 confirms it on a real Runtime 139.
   - **Interface slots M1 needs beyond the base set,** as the spikes declared them (0-based vtable slots, `IUnknown` included). The evidence is in the spike files named; the slot-order test should check each one against the WebView2 header:

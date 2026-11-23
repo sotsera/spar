@@ -35,6 +35,8 @@ public sealed class Consumer : IAsyncLifetime
     private int _failed;
     private Task<(int Exit, string Output)>? _first;
     private Task<(int Exit, string Output, string Executable)>? _published;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<Task<object>>> _once = new(StringComparer.Ordinal);
+    private readonly List<string> _measurements = [];
 
     /// <summary>The name the template's app gets in the main consumer (<c>dotnet new spar-app -n Notes</c>).</summary>
     public const string App = "Notes";
@@ -145,6 +147,10 @@ public sealed class Consumer : IAsyncLifetime
         var results = Path.Combine(Repository, "artifacts", "test-results", "Spar.PackageTests");
         Directory.CreateDirectory(results);
         File.WriteAllText(Path.Combine(results, "timings.txt"), Tool.Timings());
+        lock (_measurements)
+        {
+            File.WriteAllText(Path.Combine(results, "measurements.txt"), string.Join("\n", _measurements) + "\n");
+        }
 
         if (_passed > 0 && _failed == 0)
         {
@@ -178,6 +184,27 @@ public sealed class Consumer : IAsyncLifetime
     /// this OS (<c>SparPlatforms</c> the other one), so running it opens no window here. Its executable's path.
     /// </summary>
     public Task<(int Exit, string Output, string Executable)> PublishedAsync() => _published ??= PublishAsync();
+
+    /// <summary>
+    /// Work several tests of one class share, done once per run under <paramref name="key"/>: a consumer of their own,
+    /// say. A failure fails every test that awaits it.
+    /// </summary>
+    public async Task<T> OnceAsync<T>(string key, Func<Task<T>> work) where T : class =>
+        (T)await _once.GetOrAdd(key, _ => new Lazy<Task<object>>(async () => await work())).Value;
+
+    /// <summary>
+    /// A measured number (a size, a start time), kept with the run's results in <c>measurements.txt</c> beside
+    /// <c>timings.txt</c>, as "what: value".
+    /// </summary>
+    public void Measure(string line)
+    {
+        lock (_measurements)
+        {
+            _measurements.Add(line);
+        }
+
+        TestContext.Current.SendDiagnosticMessage(line);
+    }
 
     /// <summary>
     /// The environment of the spar tool's commands (<c>dotnet tool restore</c>, <c>dotnet spar</c>): the consumers', with
@@ -365,10 +392,10 @@ public static class Tool
         }
     }
 
-    public static async Task<(int Exit, string Output)> RunAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment)
+    public static async Task<(int Exit, string Output)> RunAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment, TimeSpan? limit = null)
     {
         var clock = Stopwatch.StartNew();
-        var result = await StartAsync(directory, tool, arguments, environment);
+        var result = await StartAsync(directory, tool, arguments, environment, limit ?? TimeSpan.FromMinutes(20));
         var line = string.Create(System.Globalization.CultureInfo.InvariantCulture,
             $"{clock.Elapsed.TotalSeconds,7:0.00} s  exit {result.Exit,-3} {Path.GetFileName(directory)}> {tool} {string.Join(' ', arguments)}");
         lock (Runs)
@@ -379,7 +406,7 @@ public static class Tool
         return result;
     }
 
-    private static async Task<(int Exit, string Output)> StartAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment)
+    private static async Task<(int Exit, string Output)> StartAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment, TimeSpan limit)
     {
         var start = new ProcessStartInfo(tool)
         {
@@ -406,7 +433,17 @@ public static class Tool
         process.ErrorDataReceived += (_, line) => Append(output, line.Data);
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
-        await process.WaitForExitAsync(TestContext.Current.CancellationToken).WaitAsync(TimeSpan.FromMinutes(20));
+        try
+        {
+            await process.WaitForExitAsync(TestContext.Current.CancellationToken).WaitAsync(limit);
+        }
+        catch (Exception ended) when (ended is TimeoutException or OperationCanceledException)
+        {
+            // Only this process and its children, which this run started.
+            process.Kill(entireProcessTree: true);
+            throw;
+        }
+
         process.WaitForExit();
         lock (output)
         {

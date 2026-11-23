@@ -194,6 +194,8 @@ dotnet publish Notes -c Release
 
 This builds the page with Vite, packs it into the executable, and publishes one NativeAOT executable for the OS you run it on, in `Notes/bin/Production/Release/net11.0/<runtime>/publish/`: `win-x64/publish/Notes.exe` on Windows, `linux-x64/publish/Notes` on Linux, about 4.7 MB for the new app, beside its debug symbols (`Notes.pdb`, `Notes.dbg`), which you do not ship. NativeAOT does not cross-compile between OSes: publish each OS's executable on that OS, or in a container of it. The executable needs no .NET or Node.js on the user's machine; on Windows it needs the WebView2 Runtime, on Linux GTK 4 and WebKitGTK 6.0.
 
+The app can publish differently, each a choice in its own project file: on CoreCLR (framework-dependent, or as a self-contained single file), with NativeAOT while accepting a library's AOT warnings, or with culture data. [Publishing choices](publishing-choices.md) shows each, with Microsoft.Data.SqlClient as a worked example.
+
 ## 8. Check and wire with the spar tool
 
 A new app's local tool manifest, `.config/dotnet-tools.json`, names the `spar` tool (the `Spar.Tool` package) at the app's own Spar version. Restore it once, from the solution's folder ([`dotnet tool restore`](https://learn.microsoft.com/dotnet/core/tools/dotnet-tool-restore)):
