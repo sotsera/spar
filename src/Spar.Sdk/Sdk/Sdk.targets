@@ -41,6 +41,19 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <!--
+    VS Code builds a project through a path with a lower-case drive letter, so the compiler records e:\… in the PDB,
+    while its Hot Reload looks each source up as E:\… and applies nothing (decision "The drive-letter PathMap in Debug
+    builds"). Debug builds on Windows map the project's drive to upper case, which changes nothing when it already is.
+    Builds with deterministic source paths (ContinuousIntegrationBuild) keep their own map. SparMapDriveLetter=false
+    turns it off. It follows the Microsoft.NET.Sdk import, which defaults DeterministicSourcePaths.
+  -->
+  <PropertyGroup Condition="'$(SparMapDriveLetter)' != 'false' and '$(Configuration)' == 'Debug' and '$(DeterministicSourcePaths)' != 'true' and $([MSBuild]::IsOSPlatform('Windows')) and '$(MSBuildProjectDirectory.Substring(1, 1))' == ':'">
+    <_SparDrive>$(MSBuildProjectDirectory.Substring(0, 3))</_SparDrive>
+    <PathMap>$(PathMap),$(_SparDrive.ToLowerInvariant())=$(_SparDrive.ToUpperInvariant())</PathMap>
+    <PathMap>$(PathMap.TrimStart(','))</PathMap>
+  </PropertyGroup>
+
+  <!--
     Where dotnet test writes a test project's results, so no TestResults/ folder is left in the working directory (plan
     section 5, "Template defaults"): an app's test project writes under its own obj/test-results/; SparTestResultsDirectory
     names another folder. In this repository (source mode) they go to artifacts/test-results/<project>/ (decision "M1a

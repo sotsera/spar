@@ -4976,3 +4976,19 @@ Follow-up checks to "The IDE findings after the M1d exit". The agent ran them th
 - **`DefaultStartup` works in Visual Studio.** The checklist's new app had its `.slnx` given the template's new attribute and its `.vs` folder set aside, then was restored afterwards. Visual Studio opened it with `Notes` as the startup project.
 - **VS Code restored packages into the user's NuGet folder** (`%USERPROFILE%\.nuget\packages\spar.sdk\0.1.0-dev.guide…`), because it was started without the checklist's optional variables, as the checklist warns.
 - **Still not checked:** under Visual Studio, Loopback in source mode no longer stopping on a cancelled proxy request; CA1822 hidden on `GreetAsync` in either IDE (it needs freshly packed packages); a repeat of the stalled apply (finding 1).
+
+## The drive-letter PathMap in Debug builds (user decision, 2026-11-24)
+
+Asked whether Spar should map the drive letter for VS Code's Hot Reload ("VS Code's Hot Reload with a PathMap, and the startup project"), the user said **add it**. `Spar.Sdk` now sets the map in every project that uses it, apps and their test projects alike, when all of these hold:
+- the configuration is `Debug`, so Release and Production builds are untouched;
+- the build runs on Windows, and the project's folder starts with a drive letter (not a UNC path);
+- the build has no deterministic source paths (`DeterministicSourcePaths`, on in `ContinuousIntegrationBuild` builds), whose own map from the source roots stays as it is;
+- the project has not set `SparMapDriveLetter=false`, the way to turn it off.
+
+The map is the project's drive in lower case to the same drive in upper case (`e:\=E:\`), appended to any `PathMap` the project already has. Built from an upper-case path it changes nothing, so Visual Studio and command-line builds record the same paths as before. Only the project's own drive is mapped: a source on another drive keeps the path it was given. The property follows the `Microsoft.NET.Sdk` import in `Sdk.targets`, because `DeterministicSourcePaths` gets its default there. `CallerFilePath` values in Debug builds are mapped the same way.
+
+Checked:
+- `dotnet msbuild -getProperty:PathMap` on the Notebook through `e:/…` gives `e:\=E:\`; with `-p:Configuration=Release`, or `-p:ContinuousIntegrationBuild=true`, it is empty.
+- `Spar.PackageTests` builds a new app from the packed SDK through its project path with the drive in lower case. Its PDB names `Program.cs` by the path with the upper-case drive, and no document starts with a lower-case one; on Linux the same test checks only `Program.cs`.
+
+Not checked again in VS Code: that Hot Reload applies edits in a new app made from the packed template with no map added by hand. The agent saw it with the same map added by hand ("VS Code's Hot Reload with a PathMap, and the startup project"); the plan's table "Checks that need the user at the PC" keeps the row.

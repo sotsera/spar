@@ -1,3 +1,4 @@
+using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Xml.Linq;
 
@@ -94,7 +95,7 @@ public sealed class NewAppTests(Consumer consumer) : IDisposable
     }
 
     [Fact]
-    public async Task With_one_platform_the_app_project_names_it_and_the_app_builds()
+    public async Task With_one_platform_the_app_project_names_it_and_its_Debug_build_records_an_upper_case_drive()
     {
         Assert.Equal(0, (await consumer.FirstAsync()).Exit);
         var (thisOs, otherOs) = OperatingSystem.IsWindows() ? ("windows", "linux") : ("linux", "windows");
@@ -111,10 +112,17 @@ public sealed class NewAppTests(Consumer consumer) : IDisposable
         Assert.Equal("org.example.notes.Single", Property(project, "SparAppId"));
         Assert.Equal(otherOs, Property(XDocument.Load(Path.Combine(other, App, $"{App}.csproj")), "SparPlatforms"));
 
+        // VS Code builds through a path with a lower-case drive letter; the PDB still names the sources with an upper-case
+        // one, as Hot Reload looks them up (decision "The drive-letter PathMap in Debug builds").
         ConsumerFiles.WriteNugetConfig(folder, consumer.Feed);
-        var (exit, output) = await consumer.DotnetInAsync(folder, App, "build", "-nologo", "-v:m");
+        var appProject = Path.Combine(folder, App, $"{App}.csproj");
+        var (exit, output) = await consumer.DotnetInAsync(folder, App, "build", LowerCaseDrive(appProject), "-nologo", "-v:m");
 
         Assert.True(exit == 0, output);
+        var pdb = Assert.Single(Directory.GetFiles(Path.Combine(folder, App, "bin"), $"{App}.pdb", SearchOption.AllDirectories));
+        var documents = PdbDocuments(pdb);
+        Assert.Contains(Path.Combine(folder, App, "Program.cs"), documents);
+        Assert.DoesNotContain(documents, document => document.Length > 1 && document[1] == ':' && char.IsLower(document[0]));
     }
 
     public void Dispose() => consumer.Report(TestContext.Current.TestState?.Result == TestResult.Passed);
@@ -125,6 +133,19 @@ public sealed class NewAppTests(Consumer consumer) : IDisposable
     {
         var solution = XDocument.Load(Assert.Single(Directory.GetFiles(folder, "*.slnx")));
         return solution.Descendants("Project").Select(project => (string)project.Attribute("Path")!);
+    }
+
+    /// <summary>The path with its drive letter in lower case, as VS Code passes it; unchanged without one.</summary>
+    private static string LowerCaseDrive(string path) =>
+        path.Length > 1 && path[1] == ':' ? char.ToLowerInvariant(path[0]) + path[1..] : path;
+
+    /// <summary>The source paths a portable PDB records.</summary>
+    private static List<string> PdbDocuments(string pdb)
+    {
+        using var stream = File.OpenRead(pdb);
+        using var provider = MetadataReaderProvider.FromPortablePdbStream(stream);
+        var reader = provider.GetMetadataReader();
+        return [.. reader.Documents.Select(handle => reader.GetString(reader.GetDocument(handle).Name))];
     }
 
     private static IEnumerable<string> StartupProjects(string folder)

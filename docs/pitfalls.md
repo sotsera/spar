@@ -885,7 +885,7 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
   (M1a editor diagnostics)
 - **IDE behaviour seen after the M1d exit:**
-  - VS Code's Hot Reload (C# Dev Kit 3.40.215) applies nothing on Windows, for a plain console app too: VS Code builds the project through a path with a lower-case drive letter, the PDB records `e:\…`, and Hot Reload looks for `E:\…` ("doesn't match output PDB: no document"). This rechecks the research note in "Tooling: from earlier versions" below; a `PathMap` of `e:\=E:\` makes the PDB record `E:\…`, and VS Code then applies edits, in a plain app and in a Spar app;
+  - VS Code's Hot Reload (C# Dev Kit 3.40.215) applies nothing on Windows, for a plain console app too: VS Code builds the project through a path with a lower-case drive letter, the PDB records `e:\…`, and Hot Reload looks for `E:\…` ("doesn't match output PDB: no document"). This rechecks the research note in "Tooling: from earlier versions" below; a `PathMap` of `e:\=E:\` makes the PDB record `E:\…`, and VS Code then applies edits, in a plain app and in a Spar app. `Spar.Sdk` sets that map in Debug builds on Windows (decision "The drive-letter PathMap in Debug builds"); a project that does not use `Spar.Sdk` needs it by hand;
   - `csharp.experimental.debug.hotReload` is ignored in a folder's `.vscode/settings.json`; only the user settings turn it on;
   - Visual Studio starts the first project of an `.slnx` sorted by path, so `MyApp.Tests/` and `MyApp.EndToEndTests/` come before `MyApp/` ('.' sorts before '/'); mark the app `DefaultStartup="true"`;
   - Visual Studio's Test Explorer creates an empty `TestResults/` beside the solution whatever `--results-directory` `dotnet test` gets;
