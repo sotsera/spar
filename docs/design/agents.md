@@ -13,7 +13,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   They read the host's instrumentation, so `calls` and readiness come for free. On Linux the same tools need a non-CDP implementation.
 - **`spar dev`:** builds, launches, and reloads on request. A failed reload returns compiler diagnostics at file:line in-band.
 - **`spar snap`:** a one-shot capture with named scenes and a fixed `TimeProvider`. It builds or reuses the development build, starts it offscreen, waits for UI ready, optionally replays an input script (steps addressed by accessible name or test id), writes a PNG, the accessibility tree and the bridge call log, then exits. No session, no port.
-- **`spar doctor`** (user decision): checks the machine and the project, and reports each finding with a stable id, a severity and the fix. Text by default; `--json` and distinct exit codes for agents.
+- **`spar doctor`** (user decision): checks the machine and the project, and reports each finding with a stable id, a severity and the fix. Text by default, showing only what needs attention, the project it checked and how many checks passed, with `--verbose` for every check (decision "The M1d check follow-ups"); `--json` (every finding) and distinct exit codes for agents.
   - **Machine:**
     - the .NET SDK against `global.json`, and `Spar.Sdk` resolution;
     - Node and npm versions;

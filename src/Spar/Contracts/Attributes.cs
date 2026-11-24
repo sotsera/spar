@@ -1,7 +1,11 @@
+using JetBrains.Annotations;
+
 namespace Spar;
 
 /// <summary>Marks a class or interface as a contract. Without a name, the wire name is derived from the type name.</summary>
+/// <remarks>A contract class is created from dependency injection, through any of its constructors.</remarks>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, Inherited = false)]
+[MeansImplicitUse(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
 public sealed class SparContractAttribute(string? name = null) : Attribute
 {
     public string? Name { get; } = name;
@@ -9,6 +13,7 @@ public sealed class SparContractAttribute(string? name = null) : Attribute
 
 /// <summary>Marks a command. Required on class contracts; on interface contracts it only overrides the name.</summary>
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
+[MeansImplicitUse(ImplicitUseKindFlags.Access)]
 public sealed class SparCommandAttribute(string? name = null) : Attribute
 {
     public string? Name { get; } = name;

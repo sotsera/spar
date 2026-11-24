@@ -45,6 +45,11 @@ internal sealed record DevServerSettings(string FrontendDirectory, string StateF
             return null;
         }
 
+        // VS Code builds through a lower-case drive letter, Visual Studio through an upper-case one; Vite counts its root
+        // in its configuration's hash, so a different spelling of the same folder made it re-optimize on each switch.
+        frontend = UpperCaseDrive(frontend);
+        intermediate = UpperCaseDrive(intermediate);
+
         var stateFile = Path.Combine(intermediate, "spar-dev-server.json");
         var outputFile = Path.Combine(intermediate, "spar-dev-server.log");
         if (environmentUrl is { Length: > 0 })
@@ -54,5 +59,16 @@ internal sealed record DevServerSettings(string FrontendDirectory, string StateF
 
         var built = data("Spar.DevServer.Url") as string;
         return new(frontend, stateFile, outputFile, built is { Length: > 0 } ? built : null, built is { Length: > 0 } ? "SparDevServerUrl" : null);
+    }
+
+    /// <summary>On Windows, <paramref name="path"/> with its drive letter in upper case; elsewhere, unchanged.</summary>
+    internal static string UpperCaseDrive(string path)
+    {
+        if (!OperatingSystem.IsWindows() || path.Length < 2 || path[1] != ':' || !char.IsAsciiLetterLower(path[0]))
+        {
+            return path;
+        }
+
+        return string.Concat(char.ToUpperInvariant(path[0]).ToString(), path.AsSpan(1));
     }
 }

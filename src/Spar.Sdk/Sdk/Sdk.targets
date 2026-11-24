@@ -740,7 +740,19 @@
           Condition="'$(SparHasFrontend)' == 'true' and '$(SparTypeCheck)' == 'true' and '$(DesignTimeBuild)' != 'true'"
           Inputs="@(_SparFrontendSource)"
           Outputs="$(SparTypeCheckStamp)">
-    <Exec Command="node node_modules/typescript/bin/tsc --noEmit -p . --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
+    <!--
+      A tsconfig.json with references (Vite's scaffold: "files": [] and one config each for the page and for Node) is
+      checked in build mode, which follows them; -p . would check no file of the page there (decision "The M1d check
+      follow-ups"). Any other config keeps -p ., since build mode would write a tsconfig.tsbuildinfo
+      beside it. The referenced configs' own tsBuildInfoFile says where build mode keeps its state.
+    -->
+    <PropertyGroup>
+      <_SparTsConfig>$(SparFrontendDirectory)tsconfig.json</_SparTsConfig>
+      <_SparTypeCheckArguments>--noEmit -p .</_SparTypeCheckArguments>
+      <_SparTypeCheckArguments Condition="Exists('$(_SparTsConfig)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(_SparTsConfig)')), '&quot;references&quot;\s*:\s*\[\s*\{'))">-b --noEmit</_SparTypeCheckArguments>
+    </PropertyGroup>
+
+    <Exec Command="node node_modules/typescript/bin/tsc $(_SparTypeCheckArguments) --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
     <Touch Files="$(SparTypeCheckStamp)" AlwaysCreate="true" />
   </Target>
 

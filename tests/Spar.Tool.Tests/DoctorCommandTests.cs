@@ -44,8 +44,33 @@ public sealed class DoctorCommandTests
         Assert.Equal(ExitCodes.Warnings, warned);
         Assert.Contains("  warn  frontend-node-modules", text, StringComparison.Ordinal);
         Assert.Contains("        fix: Build the app (dotnet build)", text, StringComparison.Ordinal);
-        Assert.EndsWith("0 errors, 1 warning.\n", text.ReplaceLineEndings("\n"), StringComparison.Ordinal);
+        Assert.Matches(@"\n0 errors, 1 warning; \d+ checks passed \(spar doctor --verbose lists them\)\.\n$", text.ReplaceLineEndings("\n"));
         Assert.Equal(ExitCodes.Errors, failed);
+    }
+
+    [Fact]
+    public void Text_shows_what_needs_attention_and_the_project_and_verbose_shows_every_check()
+    {
+        using var app = TemplateApp.Built();
+        Directory.Delete(Path.Combine(app.Path, "frontend", "node_modules"), recursive: true);
+
+        var (_, text) = Doctor(app, GoodMachine());
+        var (verboseExit, verbose) = Doctor(app, GoodMachine(), "--verbose");
+        var findings = DoctorCommand.Diagnose(GoodMachine(), app.Path, null, null, "0.1.0-dev.7").Findings;
+
+        var lines = text.ReplaceLineEndings("\n").Split('\n');
+        Assert.Equal("spar doctor 0.1.0-dev.7", lines[0]);
+        Assert.StartsWith("Project: MyApp, ", lines[1], StringComparison.Ordinal);
+        Assert.DoesNotContain(lines, line => line.StartsWith("  info ", StringComparison.Ordinal));
+        Assert.Single(lines, line => line.StartsWith("  warn  frontend-node-modules", StringComparison.Ordinal));
+        Assert.EndsWith($"{findings.Count(f => f.Severity == Severity.Info)} checks passed (spar doctor --verbose lists them).", lines[^2], StringComparison.Ordinal);
+
+        Assert.Equal(ExitCodes.Warnings, verboseExit);
+        string[] labels = ["  info ", "  warn ", "  error"];
+        var findingLines = verbose.ReplaceLineEndings("\n").Split('\n')
+            .Count(line => labels.Any(label => line.StartsWith(label, StringComparison.Ordinal)));
+        Assert.Equal(findings.Count, findingLines);
+        Assert.EndsWith("0 errors, 1 warning.\n", verbose.ReplaceLineEndings("\n"), StringComparison.Ordinal);
     }
 
     [Fact]

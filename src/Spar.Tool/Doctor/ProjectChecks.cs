@@ -147,8 +147,10 @@ internal static class ProjectChecks
     }
 
     /// <summary>
-    /// The build type-checks with <c>tsc --noEmit -p .</c> on the frontend's <c>tsconfig.json</c>. A config that only
-    /// references others (<c>"files": []</c> with <c>"references"</c>, Vite's scaffold) gives that command no file to check.
+    /// How the build type-checks the page: <c>tsc --noEmit -p .</c> on the frontend's <c>tsconfig.json</c>, or, when that
+    /// config has references (Vite's scaffold: <c>"files": []</c> and one config each for the page and for Node),
+    /// <c>tsc -b --noEmit</c>, which follows them (decision "The M1d check follow-ups"). Said only for
+    /// the references, since a reader of Vite's scaffold may wonder whether the page is checked at all.
     /// </summary>
     internal static Finding? TypeCheckScope(string frontend)
     {
@@ -161,15 +163,11 @@ internal static class ProjectChecks
         try
         {
             using var document = JsonDocument.Parse(File.ReadAllText(path), new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true });
-            var root = document.RootElement;
-            var emptyFiles = root.TryGetProperty("files", out var files) && files.ValueKind == JsonValueKind.Array && files.GetArrayLength() == 0;
-            var hasInclude = root.TryGetProperty("include", out _);
-            var references = root.TryGetProperty("references", out var list) && list.ValueKind == JsonValueKind.Array && list.GetArrayLength() > 0;
-            if (emptyFiles && !hasInclude && references)
+            var references = document.RootElement.TryGetProperty("references", out var list) && list.ValueKind == JsonValueKind.Array && list.GetArrayLength() > 0;
+            if (references)
             {
-                return Finding.Warning(FindingIds.TypeCheck, Area.Project,
-                    "tsconfig.json only references other configs (\"files\": [] and \"references\"), so the build's type-check (tsc --noEmit -p .) checks no file of the page.",
-                    "Put the page's compilerOptions and \"include\": [\"src\"] in tsconfig.json itself, as the page of dotnet new spar-app has them; or set SparTypeCheck=false in the project and check with npm run build (tsc -b) instead.");
+                return Finding.Info(FindingIds.TypeCheck, Area.Project,
+                    "tsconfig.json references other configs, so the build type-checks them in build mode (tsc -b --noEmit).");
             }
         }
         catch (JsonException)

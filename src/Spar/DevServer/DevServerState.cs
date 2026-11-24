@@ -21,6 +21,13 @@ internal sealed record DevServerState(string Url, string Instance, int ProcessId
     /// <summary>The file's state, or null when it is missing, being replaced, or not in this format.</summary>
     public static DevServerState? Read(string path)
     {
+        // Missing is the usual answer while Vite starts, and the run polls for it: asked first, so a debugger attached
+        // to the app sees no first-chance FileNotFoundException on each poll. The catch below still covers the races.
+        if (!File.Exists(path))
+        {
+            return null;
+        }
+
         byte[] bytes;
         try
         {

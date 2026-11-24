@@ -5,7 +5,7 @@ using Spar.Tool.Project;
 namespace Spar.Tool.Doctor;
 
 /// <summary>
-/// <c>spar doctor [--project &lt;path&gt;] [--app &lt;file&gt;] [--json]</c>: the machine, the app's project (the one in
+/// <c>spar doctor [--project &lt;path&gt;] [--app &lt;file&gt;] [--verbose] [--json]</c>: the machine, the app's project (the one in
 /// the current folder, or <c>--project</c>), and the build's identity (<c>--app</c>, or the project's newest build
 /// output), each finding with a stable id, a severity and its fix. Exit codes: <see cref="ExitCodes"/>.
 /// </summary>
@@ -19,7 +19,8 @@ internal static class DoctorCommand
         Options:
           --project <path>  The app's project file or folder (default: the current folder, or the one app in a folder in it).
           --app <file>      The executable or DLL whose build identity to read (default: the project's newest build output).
-          --json            Write the findings as JSON instead of text.
+          --verbose         List every check, not only what needs attention.
+          --json            Write every finding as JSON instead of text.
           -h, --help        Show this help.
 
         Exit codes: 0 nothing to fix, 1 warnings, 2 errors, 64 a wrong command line, 70 the doctor itself failed.
@@ -30,10 +31,14 @@ internal static class DoctorCommand
         string? projectPath = null;
         string? appFile = null;
         var json = false;
+        var verbose = false;
         for (var index = 0; index < arguments.Count; index++)
         {
             switch (arguments[index])
             {
+                case "--verbose" or "-v":
+                    verbose = true;
+                    break;
                 case "--json":
                     json = true;
                     break;
@@ -60,7 +65,7 @@ internal static class DoctorCommand
         }
         else
         {
-            DoctorReport.WriteText(output, report);
+            DoctorReport.WriteText(output, report, verbose);
         }
 
         return report.ExitCode;

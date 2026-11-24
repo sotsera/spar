@@ -132,7 +132,7 @@ public sealed class ProjectCheckTests
     }
 
     [Fact]
-    public void A_tsconfig_that_only_references_others_is_a_warning_that_the_type_check_sees_no_file()
+    public void A_tsconfig_with_references_says_the_build_checks_them_in_build_mode()
     {
         using var folder = TemplateApp.Built();
         folder.Write("frontend/tsconfig.json", """
@@ -144,7 +144,12 @@ public sealed class ProjectCheckTests
 
         var finding = Assert.Single(ProjectChecks.Check(Find(folder)), f => f.Id == FindingIds.TypeCheck);
 
-        Assert.Equal(Severity.Warning, finding.Severity);
+        Assert.Equal(Severity.Info, finding.Severity);
+        Assert.Contains("tsc -b --noEmit", finding.Message, StringComparison.Ordinal);
+
+        // The template's own tsconfig.json holds the page's options, checked with -p .: nothing to say.
+        using var plain = TemplateApp.Built();
+        Assert.DoesNotContain(ProjectChecks.Check(Find(plain)), f => f.Id == FindingIds.TypeCheck);
     }
 
     [Fact]

@@ -132,13 +132,24 @@ public sealed class ToolTests(Consumer consumer) : IDisposable
         var (built, buildOutput) = await consumer.DotnetInAsync(folder, "Pages", "build", "-nologo", "-v:m");
         Assert.True(built == 0, buildOutput);
 
-        // Wired as doctor checks it; Vite's scaffold's tsconfig.json only references others, which doctor points out.
+        // Vite's scaffold's tsconfig.json only references others: the build follows them, so a type error in the page
+        // fails it, at its file and line.
+        var probe = Path.Combine(frontend, "src", "probe.ts");
+        File.WriteAllText(probe, "export const broken: number = \"text\";\n");
+        var (broken, brokenOutput) = await consumer.DotnetInAsync(folder, "Pages", "build", "-nologo", "-v:m");
+        File.Delete(probe);
+        Assert.True(broken != 0, brokenOutput);
+        Assert.Contains("probe.ts(1,14): error TS2322", brokenOutput, StringComparison.Ordinal);
+        var (fixedBuild, fixedOutput) = await consumer.DotnetInAsync(folder, "Pages", "build", "-nologo", "-v:m");
+        Assert.True(fixedBuild == 0, fixedOutput);
+
+        // Wired as doctor checks it, which says that the build follows the references.
         var (_, doctorOutput) = await consumer.ToolInAsync(folder, "Pages", "spar", "doctor", "--json");
         var findings = Findings(Json(doctorOutput)).ToDictionary(f => f.GetProperty("id").GetString()!, f => f.GetProperty("severity").GetString(), StringComparer.Ordinal);
         Assert.Equal("info", findings["frontend-vite-plugin"]);
         Assert.Equal("info", findings["frontend-spar-dependency"]);
         Assert.Equal("info", findings["frontend-node-modules"]);
-        Assert.Equal("warning", findings["frontend-type-check"]);
+        Assert.Equal("info", findings["frontend-type-check"]);
     }
 
     public void Dispose() => consumer.Report(TestContext.Current.TestState?.Result == TestResult.Passed);

@@ -116,6 +116,32 @@ public sealed class DevServerTests
     }
 
     [Fact]
+    public void On_Windows_the_folders_get_an_upper_case_drive_letter()
+    {
+        var data = new Dictionary<string, object?>
+        {
+            ["Spar.DevServer.Frontend"] = @"c:\app\frontend\",
+            ["Spar.DevServer.Intermediate"] = @"c:\app\obj\",
+        };
+
+        var settings = DevServerSettings.Read(name => data.GetValueOrDefault(name), environmentUrl: null)!;
+
+        var drive = OperatingSystem.IsWindows() ? "C" : "c";
+        Assert.Equal($@"{drive}:\app\frontend\", settings.FrontendDirectory);
+        Assert.StartsWith($@"{drive}:\app\obj\", settings.StateFile, StringComparison.Ordinal);
+        Assert.Equal("/app/frontend", DevServerSettings.UpperCaseDrive("/app/frontend"));
+        Assert.Equal(@"\\server\share", DevServerSettings.UpperCaseDrive(@"\\server\share"));
+    }
+
+    [Fact]
+    public void A_missing_state_file_is_none()
+    {
+        var missing = Path.Combine(Path.GetTempPath(), $"spar-{Guid.NewGuid():N}", "spar-dev-server.json");
+
+        Assert.Null(DevServerState.Read(missing));
+    }
+
+    [Fact]
     public void Npm_and_Node_are_found_in_path_order()
     {
         var separator = Path.PathSeparator;
