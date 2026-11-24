@@ -4964,3 +4964,15 @@ At the user's request the agent worked through the eight findings of "The IDE ch
   - **Open:** whether the stall needs a page call to hit a breakpoint during Visual Studio's apply, and whether delaying the event would avoid it.
 - **Finding 8, the checklist,** was corrected in the exit commit.
 - **Not verified:** everything marked "not checked" above, in the IDEs; VS Code's Hot Reload with the `PathMap`; the user's checks 4 and 5.
+
+## VS Code's Hot Reload with a PathMap, and the startup project (check results; 2026-11-24)
+
+Follow-up checks to "The IDE findings after the M1d exit". The agent ran them through clicks once its screen tool answered again: the agent ended its stuck Visual Studio instance and that instance's Notebook, and the tool came back.
+- **The `PathMap` fixes VS Code's Hot Reload.**
+  - **The plain console app:** with the drive letter mapped (`<PathMap>$(PathMap),e:\=E:\</PathMap>`, written generically from `$(MSBuildProjectDirectory)`), VS Code's own build recorded `E:\…` in the PDB. A body edit saved in the editor was applied at once: the running app went from "tick 14: original" to "tick 15: edited".
+  - **A Spar app:** the same property in the checklist's new app from packages (`%TEMP%\spar-guide-m1d6b\work\Notes`, added and then removed). "C#: Notes [Desktop]" reached `ui-ready`, and the body edit of `GreetAsync` was applied on save, with the app logging "Hot Reload applied revision 1 (Notes.Greetings.GreetingService); sent to document …".
+  - **The contract edit:** adding `string? Note = null` to `Greeting` was refused ("1 project(s) require a full restart", ENC0020 on the generated code). "Rebuild and Apply Changes" rebuilt, and the build stopped on the page test `greet.test.ts`, whose `Greeting` fixture lacked `note` (TS2741). This is the expected result of a response-type edit, as in finding 8.
+  - **Not done:** Spar does not set the `PathMap` yet; that waits for the user's agreement, since it would be a default in every app's Development build on Windows. The toast itself was not seen, because the window was not visible to the agent.
+- **`DefaultStartup` works in Visual Studio.** The checklist's new app had its `.slnx` given the template's new attribute and its `.vs` folder set aside, then was restored afterwards. Visual Studio opened it with `Notes` as the startup project.
+- **VS Code restored packages into the user's NuGet folder** (`%USERPROFILE%\.nuget\packages\spar.sdk\0.1.0-dev.guide…`), because it was started without the checklist's optional variables, as the checklist warns.
+- **Still not checked:** under Visual Studio, Loopback in source mode no longer stopping on a cancelled proxy request; CA1822 hidden on `GreetAsync` in either IDE (it needs freshly packed packages); a repeat of the stalled apply (finding 1).
