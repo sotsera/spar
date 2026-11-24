@@ -2,7 +2,7 @@
 
 Five checks from the plan's table "Checks that need the user at the PC" (the M1d rows), about 30 minutes in all. Everything is prepared by [`prepare-user-checks.sh`](prepare-user-checks.sh) (run 2026-11-24; its log in `artifacts/m1d-exit/user-checks/prepare.log`), so each check starts at once. Report for each step: pass, or what you saw instead. M1d closes when the results are recorded in `docs/decisions.md`.
 
-**2026-11-24:** checks 1–3 were run by the agent at the user's request (decision "The IDE checks at the M1d exit"). What it could not see, and VS Code's Hot Reload, are rows of the plan's table; checks 4 and 5 are left.
+**2026-11-24:** checks 1–3 were run by the agent at the user's request (decision "The IDE checks at the M1d exit"). What it could not see, and VS Code's Hot Reload, are rows of the plan's table; checks 4 and 5 are left. **Later on 2026-11-24** the user ran the rest, guided by the agent, after the agent re-ran the preparation from `9107661`: results in decision "The checks at the PC at the M1d exit".
 
 Prepared folders (`%TEMP%` is your temporary folder):
 
