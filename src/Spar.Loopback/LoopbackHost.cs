@@ -206,7 +206,24 @@ internal sealed class LoopbackHost : IAsyncDisposable
         _stopping.Dispose();
     }
 
+    /// <summary>
+    /// One request. A request the browser abandons (a reload or a navigation while an answer is still being read or
+    /// written) ends here quietly: nobody is left to answer, and the cancellation would otherwise reach the server as an
+    /// unhandled exception, where a debugger with Spar's sources as user code stops on it.
+    /// </summary>
     private async Task HandleAsync(HttpContext context)
+    {
+        try
+        {
+            await RouteAsync(context);
+        }
+        catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
+        {
+            // The browser gave up on this request; its connection is already gone.
+        }
+    }
+
+    private async Task RouteAsync(HttpContext context)
     {
         var request = context.Request;
         var response = context.Response;

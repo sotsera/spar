@@ -884,6 +884,14 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
   - Visual Studio picks up a file changed on disk when its window gets focus, not before.
 
   (M1a editor diagnostics)
+- **IDE behaviour seen after the M1d exit:**
+  - VS Code's Hot Reload (C# Dev Kit 3.40.215) applies nothing on Windows, for a plain console app too: VS Code builds the project through a path with a lower-case drive letter, the PDB records `e:\…`, and Hot Reload looks for `E:\…` ("doesn't match output PDB: no document"). This rechecks the research note in "Tooling: from earlier versions" below; a `PathMap` of `e:\=E:\` makes the PDB record `E:\…`, and whether that is enough is not checked yet;
+  - `csharp.experimental.debug.hotReload` is ignored in a folder's `.vscode/settings.json`; only the user settings turn it on;
+  - Visual Studio starts the first project of an `.slnx` sorted by path, so `MyApp.Tests/` and `MyApp.EndToEndTests/` come before `MyApp/` ('.' sorts before '/'); mark the app `DefaultStartup="true"`;
+  - Visual Studio's Test Explorer creates an empty `TestResults/` beside the solution whatever `--results-directory` `dotnet test` gets;
+  - when the agent drives Visual Studio by clicks only, a click in the margin left of the breakpoint column opens ReSharper's quick-actions menu, which then takes every click and can be closed only with Escape; set breakpoints by clicking the line and using the Debug menu.
+
+  (M1d exit follow-up)
 - **Driving TypeScript 7's language server over several projects in one Node process hit the client's 5 s shutdown timeout,** and the run was lost. One process per project worked. (`ts-compiled-contracts`)
 - **`performance.memory` stays 0 in `chromium-headless-shell`.** Read heap figures through CDP. (`react`)
 - **Linux NativeAOT needs `clang` and `zlib1g-dev`.** The Playwright .NET image lacks them ("Platform linker ('clang' or 'gcc') not found"); installing them took 93 s. (`linux-loopback`)

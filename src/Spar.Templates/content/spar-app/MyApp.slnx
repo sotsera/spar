@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="MyApp/MyApp.csproj" />
+  <Project Path="MyApp/MyApp.csproj" DefaultStartup="true" />
   <Project Path="MyApp.Tests/MyApp.Tests.csproj" />
 <!--#if (!NoEndToEndTests) -->
   <Project Path="MyApp.EndToEndTests/MyApp.EndToEndTests.csproj" />

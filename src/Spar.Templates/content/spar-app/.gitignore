@@ -5,6 +5,8 @@ bin/
 obj/
 node_modules/
 
-# Editors' per-user files.
+# Editors' per-user files, and the empty results folder Visual Studio's Test Explorer creates beside the solution (the
+# tests' results go to each test project's obj/test-results/).
 .vs/
 *.user
+/TestResults/

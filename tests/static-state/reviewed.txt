@@ -243,6 +243,7 @@ Spar.Generator | Spar.Generator.ClientNames.ModuleNames | readonly | A set fille
 Spar.Generator | Spar.Generator.ClientNames.Reserved | readonly | A set filled once, read only.
 Spar.Generator | Spar.Generator.ClientNames.ReservedSubpaths | readonly | A set filled once, read only.
 Spar.Generator | Spar.Generator.ClientNames.SdkImports | readonly | An array behind IReadOnlyList, filled once, read only.
+Spar.Generator | Spar.Generator.CommandStaticSuppressor.MarkMembersAsStatic | readonly | An immutable SuppressionDescriptor.
 Spar.Generator | Spar.Generator.ContractAnalysis.CSharpFormat | readonly | An immutable SymbolDisplayFormat.
 Spar.Generator | Spar.Generator.ContractAnalysis.ReservedPayloadNames | readonly | A set filled once, read only.
 Spar.Generator | Spar.Generator.Descriptors.Referenced | readonly | A ConcurrentDictionary of restated descriptors, keyed by ID and message; a value depends only on its key, so any project may share it.

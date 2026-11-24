@@ -68,6 +68,9 @@ public sealed class NewAppTests(Consumer consumer) : IDisposable
 
         Assert.Equal([$"{App}/{App}.csproj", $"{App}.Tests/{App}.Tests.csproj", $"{App}.EndToEndTests/{App}.EndToEndTests.csproj"],
             SolutionProjects(consumer.Root));
+
+        // Visual Studio starts the first project sorted by path, a test project here, unless the solution names the app.
+        Assert.Equal([$"{App}/{App}.csproj"], StartupProjects(consumer.Root));
     }
 
     [Fact]
@@ -122,5 +125,13 @@ public sealed class NewAppTests(Consumer consumer) : IDisposable
     {
         var solution = XDocument.Load(Assert.Single(Directory.GetFiles(folder, "*.slnx")));
         return solution.Descendants("Project").Select(project => (string)project.Attribute("Path")!);
+    }
+
+    private static IEnumerable<string> StartupProjects(string folder)
+    {
+        var solution = XDocument.Load(Assert.Single(Directory.GetFiles(folder, "*.slnx")));
+        return solution.Descendants("Project")
+            .Where(project => (string?)project.Attribute("DefaultStartup") == "true")
+            .Select(project => (string)project.Attribute("Path")!);
     }
 }
