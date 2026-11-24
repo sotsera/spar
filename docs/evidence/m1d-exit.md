@@ -100,13 +100,15 @@ The numbers per command are in `m1d-exit/windows/packagetests-timings.txt` and `
 
 **Checks left to the user** (the plan's table, prepared in [`m1d-exit/user-checklist.md`](m1d-exit/user-checklist.md) by [`prepare-user-checks.sh`](m1d-exit/prepare-user-checks.sh)): the Notebook's F5 in Visual Studio and in VS Code, a new app's F5 in both, `spar init frontend`'s question in a real terminal, and the start-up splash and `setColorScheme` on an on-screen window. M1d closes when the user reports them.
 
+**The IDE checks (checks 1–3), run by the agent on 2026-11-24 at the user's request** through computer use, clicks only, with the app windows hidden from it: F5, breakpoints, Visual Studio's Hot Reload and contract restart, the Loopback profile and the fast tests in Test Explorer and VS Code's Testing view passed in both IDEs, for the Notebook and a new app from packages; VS Code's Hot Reload applied nothing; the windows' own content was not seen. The results and eight findings are in decision "The IDE checks at the M1d exit"; checks 4 and 5 stay the user's.
+
 ## Not verified
 
 - The cause of the slower Windows numbers since 2026-11-16 (the browser test, the command start, the loopback round trip, the no-op builds, process starts); the cause of the Notebook's slow first Hot Reload edit on Windows is inferred, not traced.
 - A cold start after a reboot, other machines, a real Linux desktop and GPU; M4 sets the real budgets.
 - Hot Reload of a method body in the window rather than on loopback (step 3 measured both; the time measured is `dotnet watch`'s, the same for either host), and a new app's first edit on Linux.
 - The template's workflow on GitHub.
-- Everything in the user's checklist.
+- Checks 4 and 5 of the user's checklist, and in checks 1–3 the app windows' content and VS Code's Hot Reload (decision "The IDE checks at the M1d exit").
 
 ## Files of this record
 
