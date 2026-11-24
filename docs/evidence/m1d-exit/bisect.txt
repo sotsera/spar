@@ -1,0 +1,80 @@
+== 134d50e-1-browser.txt
+Recorded 2026-11-24 09:11:11 +01:00
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.40 ms (1.00–2.70, n = 200) [Release, CoreCLR]
+Browser test, first app + context + journey: 266.72 ms (266.72–266.72, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 253.18 ms (249.06–263.52, n = 9) [Release, CoreCLR]
+== 134d50e-1-command.txt
+Recorded 2026-11-24 09:11:03 +01:00
+Command test, first start + call + stop: 357.54 ms (357.54–357.54, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 1.79 ms (1.40–6.14, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 4.83 ms (4.41–9.51, n = 19) [Release, CoreCLR]
+== 134d50e-2-browser.txt
+Recorded 2026-11-24 09:11:21 +01:00
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.20 ms (1.00–1.60, n = 200) [Release, CoreCLR]
+Browser test, first app + context + journey: 280.46 ms (280.46–280.46, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 256.29 ms (250.67–283.97, n = 9) [Release, CoreCLR]
+== 134d50e-2-command.txt
+Recorded 2026-11-24 09:11:16 +01:00
+Command test, first start + call + stop: 102.70 ms (102.70–102.70, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 1.62 ms (1.47–2.98, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 4.93 ms (4.54–8.00, n = 19) [Release, CoreCLR]
+== 9e675cc-1-browser.txt
+Recorded 2026-11-24 09:10:00 +01:00
+Browser test, first app + context + journey: 1020.26 ms (1020.26–1020.26, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 252.81 ms (247.40–262.33, n = 9) [Release, CoreCLR]
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.40 ms (1.00–9.10, n = 200) [Release, CoreCLR]
+== 9e675cc-1-command.txt
+Recorded 2026-11-24 09:09:50 +01:00
+Command test, first start + call + stop: 368.41 ms (368.41–368.41, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 1.55 ms (1.34–3.11, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 4.69 ms (4.21–6.55, n = 19) [Release, CoreCLR]
+== 9e675cc-2-browser.txt
+Recorded 2026-11-24 09:10:10 +01:00
+Browser test, first app + context + journey: 534.01 ms (534.01–534.01, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 250.60 ms (245.36–256.28, n = 9) [Release, CoreCLR]
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.40 ms (1.00–10.50, n = 200) [Release, CoreCLR]
+== 9e675cc-2-command.txt
+Recorded 2026-11-24 09:10:03 +01:00
+Command test, first start + call + stop: 102.01 ms (102.01–102.01, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 1.61 ms (1.39–2.84, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 4.49 ms (3.93–5.66, n = 19) [Release, CoreCLR]
+== d745ea5-1-browser.txt
+Recorded 2026-11-24 09:07:17 +01:00
+Browser test, first app + context + journey: 771.77 ms (771.77–771.77, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 250.06 ms (238.09–265.02, n = 9) [Release, CoreCLR]
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.30 ms (1.00–9.30, n = 200) [Release, CoreCLR]
+== d745ea5-1-command.txt
+Recorded 2026-11-24 09:07:08 +01:00
+Command test, first start + call + stop: 85.89 ms (85.89–85.89, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 0.98 ms (0.86–1.22, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 1.92 ms (1.74–4.95, n = 19) [Release, CoreCLR]
+== d745ea5-2-browser.txt
+Recorded 2026-11-24 09:07:27 +01:00
+Browser test, first app + context + journey: 503.33 ms (503.33–503.33, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 244.06 ms (234.59–268.25, n = 9) [Release, CoreCLR]
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.35 ms (0.60–10.10, n = 200) [Release, CoreCLR]
+== d745ea5-2-command.txt
+Recorded 2026-11-24 09:07:21 +01:00
+Command test, first start + call + stop: 60.24 ms (60.24–60.24, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 1.04 ms (0.93–2.50, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 2.11 ms (1.89–4.40, n = 19) [Release, CoreCLR]
+== ffca7e4-1-browser.txt
+Recorded 2026-11-24 09:08:28 +01:00
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.30 ms (1.00–2.10, n = 200) [Release, CoreCLR]
+Browser test, first app + context + journey: 252.12 ms (252.12–252.12, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 249.36 ms (242.73–260.00, n = 9) [Release, CoreCLR]
+== ffca7e4-1-command.txt
+Recorded 2026-11-24 09:08:20 +01:00
+Command test, first start + call + stop: 211.32 ms (211.32–211.32, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 1.71 ms (1.50–3.64, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 4.63 ms (4.28–7.02, n = 19) [Release, CoreCLR]
+== ffca7e4-2-browser.txt
+Recorded 2026-11-24 09:08:38 +01:00
+Small unary round trip over loopback, timed by the page (budget 2 ms): 1.30 ms (0.60–2.20, n = 200) [Release, CoreCLR]
+Browser test, first app + context + journey: 260.18 ms (260.18–260.18, n = 1) [Release, CoreCLR]
+Browser test, app + context + journey (budget 250 ms): 245.51 ms (241.43–257.90, n = 9) [Release, CoreCLR]
+== ffca7e4-2-command.txt
+Recorded 2026-11-24 09:08:33 +01:00
+Command test, first start + call + stop: 89.21 ms (89.21–89.21, n = 1) [Release, CoreCLR]
+Command test, app start (budget 2 ms): 1.79 ms (1.39–2.82, n = 19) [Release, CoreCLR]
+Command test, start + call + stop: 4.42 ms (4.11–5.60, n = 19) [Release, CoreCLR]

@@ -89,6 +89,7 @@ Notes/
   Notes.slnx                    the solution, with the projects below
   global.json                   pins the .NET SDK and Spar.Sdk, and the test runner
   .config/dotnet-tools.json     the local tool manifest: the spar tool, at the same Spar version
+  .github/workflows/ci.yml      CI on GitHub Actions: build, tests and publish on each OS the app runs on
   .gitignore
   Notes/                        the app
     Notes.csproj                <Project Sdk="Spar.Sdk">, its SparAppId and SparPlatforms
@@ -226,6 +227,17 @@ dotnet spar init frontend --framework react
 ```
 
 It adds the `@spar/app` dependency and Spar's Vite plugin, and `SparFrontendPath` in the project when the folder is not `frontend/` (`--frontend <folder>` names it), then runs `npm install --ignore-scripts` for the lockfile. It shows every change as a diff and asks before writing; `--yes` writes without asking, and without a terminal to ask in it writes nothing unless given `--yes`. When `vite.config` is too unusual to edit safely, it prints the lines to add instead. Build the app after it (`dotnet build`), and commit the new lockfile.
+
+## 9. Run it in CI
+
+A new app comes with a [GitHub Actions](https://docs.github.com/actions) workflow, `.github/workflows/ci.yml`, which runs on every push to `main` and on every pull request, once for each OS the app runs on (`--platforms`): the Windows runner and the Ubuntu runner. Each run restores and builds the solution, runs the fast tests, the page tests (`npm test`) and the fast tests published with NativeAOT, then the end-to-end tests the runner can run, and publishes the app. It keeps the test results (TRX reports from each test project's `obj/test-results/`) and the published executable, without its debug symbols, as the run's artifacts.
+
+- **The browser tests** run on both runners, after the workflow installs Playwright's headless Chromium.
+- **The window and black-box tests** run on the Windows runner. GitHub's Ubuntu runner does not let WebKitGTK start its sandbox (it refuses the unprivileged user namespaces that `bubblewrap` needs), so on Linux run them on a machine with a desktop, as section 6 shows.
+- **The contract snapshot:** the workflow builds with `ContinuousIntegrationBuild=true`, so the build fails when `Notes/Notes.contracts.snapshot` is missing or out of date. Commit it after a local build.
+- **The actions** are pinned to full commit SHAs, each with its release in a comment; update them on purpose.
+
+An app made with `--no-end-to-end-tests` gets a workflow without the end-to-end steps.
 
 ## Where things live
 

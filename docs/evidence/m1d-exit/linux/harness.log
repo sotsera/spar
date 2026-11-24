@@ -1,0 +1,18 @@
+STEP harness on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100, WebKitGTK 2.52.6, 2026-11-24T08:19:17Z
+  Determining projects to restore...
+  Restored <copy>/src/Spar.Sdk.Tasks/Spar.Sdk.Tasks.csproj (in 200 ms).
+  Restored <copy>/src/Spar.Generator/Spar.Generator.csproj (in 200 ms).
+  Restored <copy>/src/Spar.Linux/Spar.Linux.csproj (in 200 ms).
+  Restored <copy>/src/Spar.Windows/Spar.Windows.csproj (in 200 ms).
+  Restored <copy>/src/Spar/Spar.csproj (in 200 ms).
+  Restored <copy>/tests/apps/Spar.Harness/Spar.Harness.csproj (in 200 ms).
+  Spar -> <copy>/src/Spar/bin/Release/net11.0/Spar.dll
+  Spar.Linux -> <copy>/src/Spar.Linux/bin/Release/net11.0/Spar.Linux.dll
+  Spar.Windows -> <copy>/src/Spar.Windows/bin/Release/net11.0/Spar.Windows.dll
+  Spar.Generator -> <copy>/src/Spar.Generator/bin/Release/netstandard2.0/Spar.Generator.dll
+  Spar.Sdk.Tasks -> <copy>/src/Spar.Sdk.Tasks/bin/Release/net11.0/Spar.Sdk.Tasks.dll
+  Spar.Harness -> <copy>/tests/apps/Spar.Harness/bin/Production/Release/net11.0/linux-x64/Spar.Harness.dll
+  Generating native code
+  Spar.Harness -> /var/tmp/spar-m1c-blackbox/harness-m1d-exit/
+STEP exit 0 in 10396 ms: dotnet publish tests/apps/Spar.Harness -c Release -o /var/tmp/spar-m1c-blackbox/harness-m1d-exit
+/var/tmp/spar-m1c-blackbox/harness-m1d-exit/Spar.Harness 3430832 B

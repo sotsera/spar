@@ -1,0 +1,133 @@
+# CI for MyApp on GitHub Actions: on each OS the app runs on, restore, build, the fast tests, the page tests, the fast
+# tests published with NativeAOT, the end-to-end tests the runner can run, and the published executable. Test results
+# (TRX reports) and the executable are kept as the run's artifacts.
+# Every action is pinned to a full commit SHA, its release in a comment: update them on purpose, never by tag.
+# Commit MyApp/MyApp.contracts.snapshot (the first build writes it): a CI build checks it and fails when it is missing
+# or out of date.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+# One run per pull request: a new push cancels the run still in progress. Runs on main are never cancelled.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  # A CI job builds a few times and is thrown away, so the MSBuild server would only add its start-up wait.
+  DOTNET_CLI_USE_MSBUILD_SERVER: "false"
+  # Deterministic paths, and the committed contract snapshot is checked, never rewritten.
+  ContinuousIntegrationBuild: "true"
+
+jobs:
+  build-test:
+    name: build and test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+#if (platforms != 'linux')
+          - windows-latest
+#endif
+#if (platforms != 'windows')
+          - ubuntu-latest
+#endif
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: NativeAOT's build tools (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang zlib1g-dev
+
+      - name: Restore
+        run: dotnet restore MyApp.slnx
+
+      - name: Build
+        # Also installs the page's npm packages, writes the TypeScript client and type-checks the page.
+        run: dotnet build MyApp.slnx --no-restore
+
+      - name: Fast tests
+        run: dotnet test --project MyApp.Tests --no-build --report-xunit-trx
+
+      - name: Page tests
+        working-directory: MyApp/frontend
+        run: npm test
+
+      - name: Fast tests, NativeAOT
+        run: |
+          dotnet publish MyApp.Tests -c Release -p:SparTestLane=Aot -o MyApp.Tests/bin/aot-tests
+          mkdir -p MyApp.Tests/obj/test-results
+          output=$(MyApp.Tests/bin/aot-tests/MyApp.Tests -result-trx "MyApp.Tests/obj/test-results/aot-$(date -u +%Y-%m-%d_%H_%M_%S).trx") || { echo "$output"; exit 1; }
+          echo "$output"
+          # The NativeAOT runner exits 0 when it ran no test: an empty run fails here.
+          echo "$output" | grep -qE "Total: [1-9]" || { echo "No tests ran."; exit 1; }
+#if (!NoEndToEndTests)
+
+      - name: Chromium for the browser tests
+        # Playwright's headless shell; on Linux --with-deps also installs its system libraries.
+        run: |
+          script=$(find MyApp.EndToEndTests/bin -name playwright.ps1 | head -1)
+          deps=""
+          if [ "$RUNNER_OS" = "Linux" ]; then deps="--with-deps"; fi
+          pwsh "$script" install $deps --only-shell chromium
+
+      - name: Browser tests
+        run: dotnet test --project MyApp.EndToEndTests --no-build --filter-trait Surface=Browser --report-xunit-trx
+#if (platforms != 'linux')
+
+      - name: Window tests (Windows)
+        # The app's real window, in the test process. Not on Linux: GitHub's Ubuntu runner refuses the unprivileged
+        # user namespaces of WebKitGTK's sandbox (bubblewrap), so the Linux window and black-box tests run on a machine
+        # with a desktop or in a container that allows them.
+        if: runner.os == 'Windows'
+        run: dotnet test --project MyApp.EndToEndTests --no-build --filter-trait Surface=Window --report-xunit-trx
+
+      - name: Black-box tests (Windows)
+        # The Production executable the build published beside the tests, read through UI Automation.
+        if: runner.os == 'Windows'
+        run: dotnet test --project MyApp.EndToEndTests --no-build --filter-trait Surface=BlackBox --report-xunit-trx
+#endif
+#endif
+
+      - name: Publish
+        run: dotnet publish MyApp -c Release
+
+      - name: Test results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-results-${{ matrix.os }}
+          path: "*/obj/test-results/"
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: The published app
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: MyApp-${{ matrix.os }}
+          # The executable without its debug symbols, which are not shipped.
+          path: |
+            MyApp/bin/Production/Release/net11.0/*/publish/
+            !MyApp/bin/Production/Release/net11.0/*/publish/*.pdb
+            !MyApp/bin/Production/Release/net11.0/*/publish/*.dbg
+          if-no-files-found: error
+          retention-days: 14

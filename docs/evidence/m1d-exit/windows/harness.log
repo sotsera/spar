@@ -1,0 +1,13 @@
+STEP harness on MINGW64_NT-10.0-26320, dotnet 11.0.100, 2026-11-24T08:21:25Z
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Spar -> <repo>\src\Spar\bin\Release\net11.0\Spar.dll
+  Spar.Windows -> <repo>\src\Spar.Windows\bin\Release\net11.0\Spar.Windows.dll
+  Spar.Linux -> <repo>\src\Spar.Linux\bin\Release\net11.0\Spar.Linux.dll
+  Spar.Generator -> <repo>\src\Spar.Generator\bin\Release\netstandard2.0\Spar.Generator.dll
+  Spar.Sdk.Tasks -> <repo>\src\Spar.Sdk.Tasks\bin\Release\net11.0\Spar.Sdk.Tasks.dll
+  Spar.Harness -> <repo>\tests\apps\Spar.Harness\bin\Production\Release\net11.0\win-x64\Spar.Harness.dll
+  Generating native code
+  Spar.Harness -> <repo>\artifacts\m1d-exit\harness-win\
+STEP exit 0 in 7808 ms: dotnet publish tests/apps/Spar.Harness -c Release -o <repo>/artifacts/m1d-exit/harness-win
+<repo>/artifacts/m1d-exit/harness-win/Spar.Harness.exe 3259904 B
