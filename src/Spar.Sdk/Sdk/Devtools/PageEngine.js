@@ -884,7 +884,11 @@
       // A snapshot reference names one element; once it left the document, waiting does not bring it back.
       const reference = chain.find(step => step.kind === "ref");
       if (reference !== undefined) {
-        return { stale: reference.ref + " is no longer in the page; take tree again" };
+        return {
+          stale: references.has(reference.ref)
+            ? reference.ref + " is no longer in the page; take tree again"
+            : reference.ref + " is not a reference of the last tree (e1 to e" + references.size + "); take tree again",
+        };
       }
 
       return { retry: "no element matches", ...explain(chain, cache) };

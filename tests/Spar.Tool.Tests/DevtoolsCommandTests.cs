@@ -67,7 +67,7 @@ public sealed class DevtoolsCommandTests
             {"document":2,"title":"Notebook","url":"https://app.localhost/","truncated":true,"nodes":[
               {"ref":"e1","role":"main","name":"","depth":0},
               {"ref":"e2","role":"heading","name":"Ideas","depth":1,"level":2},
-              {"ref":"e3","role":"textbox","name":"Title","depth":1,"value":"Ideas","focused":true},
+              {"ref":"e3","role":"textbox","name":"Title","depth":1,"value":"Ideas\nand more","focused":true},
               {"ref":"e4","role":"checkbox","name":"Done","depth":1,"checked":false,"disabled":true}]}
             """);
 
@@ -79,7 +79,7 @@ public sealed class DevtoolsCommandTests
             Notebook — https://app.localhost/ (document 2)
             e1 main
               e2 heading "Ideas" [level 2]
-              e3 textbox "Title" = "Ideas" [focused]
+              e3 textbox "Title" = "Ideas\nand more" [focused]
               e4 checkbox "Done" [not checked, disabled]
             … more elements than the limit; spar tree --limit N shows more.
 
@@ -101,7 +101,7 @@ public sealed class DevtoolsCommandTests
         Assert.Equal(
             """
             clicked button "Create page" (the page's own events: no trusted input on this desktop)
-            calls it caused (2):
+            calls while it ran (2):
               #3 page     pages.create success 4.8 ms
               #4 page     pages.list error notFound 5.1 ms
 

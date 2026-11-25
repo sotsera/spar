@@ -4,7 +4,8 @@
 #   MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-24.04 -- bash /mnt/<repo>/docs/evidence/m1c-blackbox/wsl.sh <step>...
 # Steps, in this order: sync client appmodel build test window windowaot devprobe wasmprobe notebookexe windowdev
 # windowdevprobe notebook boundary packagetests; `windowsession` (WSLg's display, after asking the user) is left out of
-# every run. `window`, `windowsession` and `windowaot` take xUnit options after them when run alone:
+# every run, as is `devtoolssmoke` (M2a). `window`, `windowsession` and `windowaot` take xUnit options after them
+# when run alone:
 #   wsl.sh window --filter-class Spar.WindowTests.BlackBoxFixtureTests
 # The working copy is the Windows tree as it is, copied to /var/tmp/spar-m1c-blackbox/repo without bin, obj,
 # node_modules, artifacts and spikes. The Xvfb is the one ../m1c-host/wsl.sh's `tools` step unpacks into
@@ -128,6 +129,37 @@ step() {
       cat "$found" 2>/dev/null || echo "gpu: no WebKit process mapped the D3D12 driver"
       census
       return $exit ;;
+    devtoolssmoke)
+      # M2a's devtools (docs/evidence/m2a-devtools.md): the Notebook's Debug build on a private Xvfb (:171, the wrapper
+      # above, abstract socket only) with a private D-Bus session, its HOME and XDG folders under the copy's
+      # artifacts/linux-homes/m2a-devtools/ and its runtime folder in /dev/shm (WebKit's sandbox cannot bind one under
+      # /var/tmp), then ../m2a-devtools/smoke.sh with the built spar tool; SIGTERM closes the app, which removes its
+      # discovery file.
+      local stamp
+      stamp=$(date -u +%Y%m%d-%H%M%S)
+      local home=$repo/artifacts/linux-homes/m2a-devtools/$stamp runtime=/dev/shm/spar-m2a-devtools-$stamp
+      mkdir -p "$home"/{home,cache,config,data,state} "$runtime"
+      chmod 700 "$runtime"
+      Xvfb :171 -nolisten tcp -nolisten unix -screen 0 1280x800x24 & local xvfb=$!
+      local bus
+      bus=$(dbus-daemon --session --fork --print-address=1 --print-pid=1 | tr '\n' ' ')
+      sleep 1
+      (
+        export DISPLAY=:171 GDK_BACKEND=x11 DBUS_SESSION_BUS_ADDRESS=${bus%% *} HOME=$home/home XDG_CACHE_HOME=$home/cache \
+          XDG_CONFIG_HOME=$home/config XDG_DATA_HOME=$home/data XDG_STATE_HOME=$home/state XDG_RUNTIME_DIR=$runtime
+        "$repo/samples/Notebook/bin/Development/Debug/net11.0/linux-x64/Notebook" > "$home/app.out" 2>&1 & local app=$!
+        SMOKE_SHOT=$source_repo/docs/evidence/m2a-devtools/linux-notebook.png \
+          timed bash "$source_repo/docs/evidence/m2a-devtools/smoke.sh" "$repo/samples/Notebook" dotnet "$repo/src/Spar.Tool/bin/Debug/net11.0/Spar.Tool.dll"
+        kill -TERM "$app"
+        wait "$app"
+        echo "app exit $?; discovery file left: $([ -f "$repo/samples/Notebook/obj/spar-devtools.json" ] && echo yes || echo no)"
+      )
+      [ -f "$repo/samples/Notebook/obj/spar-dev-server.json" ] && kill "$(sed 's/.*"pid":\([0-9]*\).*/\1/' "$repo/samples/Notebook/obj/spar-dev-server.json")" 2>/dev/null
+      kill "${bus##* }" 2>/dev/null
+      kill "$xvfb" 2>/dev/null
+      wait "$xvfb" 2>/dev/null
+      rm -rf "$runtime"
+      census ;;
     windowaot)
       (cd "$repo" && timed dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests) || return 1
       aot_run Spar.WindowTests "${@:2}"

@@ -228,6 +228,8 @@ dotnet spar init frontend --framework react
 
 It adds the `@spar/app` dependency and Spar's Vite plugin, and `SparFrontendPath` in the project when the folder is not `frontend/` (`--frontend <folder>` names it), then runs `npm install --ignore-scripts` for the lockfile. It shows every change as a diff and asks before writing; `--yes` writes without asking, and without a terminal to ask in it writes nothing unless given `--yes`. When `vite.config` is too unusual to edit safely, it prints the lines to add instead. Build the app after it (`dotnet build`), and commit the new lockfile.
 
+While a Development build runs, the tool also looks at it and drives its page: `dotnet spar tree` lists the page's elements, `dotnet spar click`, `fill` and `wait` act on them, `dotnet spar call` runs one of the app's commands, and `dotnet spar logs` and `calls` show what happened. [Devtools for agents and scripts](devtools.md) describes them.
+
 ## 9. Run it in CI
 
 A new app comes with a [GitHub Actions](https://docs.github.com/actions) workflow, `.github/workflows/ci.yml`, which runs on every push to `main` and on every pull request, once for each OS the app runs on (`--platforms`): the Windows runner and the Ubuntu runner. Each run restores and builds the solution, runs the fast tests, the page tests (`npm test`) and the fast tests published with NativeAOT, then the end-to-end tests the runner can run, and publishes the app. It keeps the test results (TRX reports from each test project's `obj/test-results/`) and the published executable, without its debug symbols, as the run's artifacts.

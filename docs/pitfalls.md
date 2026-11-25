@@ -656,6 +656,8 @@ These entries come from other frameworks (`docs/research-review.md`) and have no
 - **NVIDIA with DMABUF gives blank or white windows, flicker, or crashes on resize** (Wayland Error 71). Try the fixes in this order: `__NV_DISABLE_EXPLICIT_SYNC=1`, then `WEBKIT_DISABLE_DMABUF_RENDERER=1` (slower), then `WEBKIT_DISABLE_COMPOSITING_MODE=1` (last resort). Production must not strip these variables.
 - **Without an explicit data manager or program name,** WebKitGTK falls back to a shared `webkitgtk` data folder.
 - **The tray needs a StatusNotifierWatcher,** which GNOME lacks, and it gets no click events (menu only). Global shortcuts work in practice only on X11.
+- **A run's `XDG_RUNTIME_DIR` under `/var/tmp` aborts the app at the first page:** WebKit's sandbox binds the runtime folder, `bwrap` stops with "Can't make symlink at /var/tmp: destination exists and is not a symlink", `xdg-dbus-proxy` does not start, and the process ends with SIGABRT (exit 134) right after the web view is created. The window tests keep it in `/dev/shm`, which works. (M2a, the devtools smoke in WSL)
+
 
 ## Bridge and loopback
 
@@ -965,3 +967,7 @@ These entries come from earlier Spar versions (`docs/research-review.md`) and ha
   - `wsb exec` relays no stdout, so read the exit code from its JSON result;
   - CDP inside the guest failed because the remote-debugging flags were dropped; use UI Automation;
   - the guest's colour mode cannot be set from `.wsb`.
+- **Redirected output on Windows is in the console's code page:** a .NET program whose standard output goes to a pipe or a file writes `Console.Out` in the OEM code page, so an em dash came out as "-" and a page's accented text would be mangled for an agent reading it. The `spar` tool writes UTF-8 (no BOM) when its output or error is redirected; a console window gets Unicode from .NET either way. Setting `Console.OutputEncoding` instead would change the user's console session. (M2a)
+- **`Utf8JsonWriter` escapes `"` as `\u0022` by default:** the JSON is the same, but a test that compares raw text fails; compare the parsed value. (M2a)
+- **Node's `String.prototype.replace` reads `$$` in the replacement as one `$`,** and template literals turn `\n` into a line break, so a script that edits C# raw strings (`$$"""…"""`) or escapes through them changes the code; split and join, or edit the file directly. (M2a)
+

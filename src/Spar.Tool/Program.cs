@@ -10,13 +10,19 @@ using Spar.Tool.Machine;
 var version = typeof(ExitCodes).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0";
 try
 {
-    return Cli.Run(args, version, Console.Out, Console.Error, Console.In, !Console.IsInputRedirected, new RealMachine(), new RealNpm(), Environment.CurrentDirectory);
+    // Redirected output (an agent's, a script's, a file) is UTF-8, not the console's code page, so a page's text arrives whole;
+    // a console window is written to in Unicode by .NET either way.
+    var output = Console.IsOutputRedirected ? Utf8(Console.OpenStandardOutput()) : Console.Out;
+    var error = Console.IsErrorRedirected ? Utf8(Console.OpenStandardError()) : Console.Error;
+    return Cli.Run(args, version, output, error, Console.In, !Console.IsInputRedirected, new RealMachine(), new RealNpm(), Environment.CurrentDirectory);
 }
 catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
 {
     Console.Error.WriteLine($"spar: {exception.Message}");
     return ExitCodes.Internal;
 }
+
+static TextWriter Utf8(Stream stream) => new StreamWriter(stream, new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false)) { AutoFlush = true };
 
 namespace Spar.Tool
 {

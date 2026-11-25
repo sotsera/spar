@@ -365,7 +365,7 @@ public sealed class CopyJobsService(IConnectionStore connections, ISparCall call
 - **Returns:** `Task`, `Task<T>`, `Task<Result<T, TError>>`, `Task<Result<TError>>`, their `ValueTask` forms, `IAsyncEnumerable<T>`, `IAsyncEnumerable<Result<T, TError>>` (a stream with declared errors; yielding an error ends it, and the page's `match` gets an `errors` object as for unary calls), or a subscription.
 - **Conversions:** `return plan;` and `return new PlanError.TableMissing(…);` both convert into the `Result` implicitly. These are union conversions, so they also work for values typed as an interface, such as `IReadOnlyList<T>`.
 - **The per-call token fires** when the page aborts the call, when the page that started it goes away, or when the app shuts down. A command that ignores the token ends as "outcome unknown" when cancelled, never as "cancelled".
-- **`ISparCall`** gives the token, the call id and the names to the contract and to any scoped service of the call. A singleton cannot depend on it (`ValidateScopes`).
+- **`ISparCall`** gives the token, the call id, the names and the caller (`SparCaller.Page`, `Test` or `Devtools`) to the contract and to any scoped service of the call. A singleton cannot depend on it (`ValidateScopes`).
 - **Wire types (decided 2026-11-14):**
   - `long` is a decimal string on the wire and `bigint` in TypeScript.
   - `TimeSpan` is a string in the constant format `[-][d.]hh:mm:ss[.fffffff]`, so `elapsed` below is a `string`.

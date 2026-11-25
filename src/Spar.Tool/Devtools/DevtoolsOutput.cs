@@ -85,7 +85,7 @@ internal static class DevtoolsOutput
         {
             var indent = new string(' ', 2 * (int)Number(node, "depth"));
             var name = Text(node, "name") is { Length: > 0 } text ? $" \"{text}\"" : "";
-            var value = Text(node, "value") is { Length: > 0 } given ? $" = \"{given}\"" : "";
+            var value = Text(node, "value") is { Length: > 0 } given ? $" = \"{OneLine(given)}\"" : "";
             var states = new List<string>();
             foreach (var state in new[] { "checked", "disabled", "expanded", "selected", "pressed", "focused" })
             {
@@ -117,7 +117,7 @@ internal static class DevtoolsOutput
             : "";
         output.WriteLine($"{(tool == "click" ? "clicked" : "filled")} {Text(result, "element")}{how}");
         var calls = Array(result, "calls").ToList();
-        output.WriteLine(calls.Count == 0 ? "no calls" : $"calls it caused ({calls.Count}):");
+        output.WriteLine(calls.Count == 0 ? "no calls while it ran" : $"calls while it ran ({calls.Count}):");
         foreach (var call in calls)
         {
             WriteCall(output, call, "  ");
@@ -161,6 +161,10 @@ internal static class DevtoolsOutput
         var code = Text(call, "code") is { Length: > 0 } given ? $" {given}" : "";
         output.WriteLine($"{indent}#{Shown(call, "sequence")} {Text(call, "caller"),-8} {Text(call, "command")} {Text(call, "outcome")}{code} {Shown(call, "milliseconds")} ms");
     }
+
+    /// <summary>A field's text on one line of the tree: its line breaks as <c>\n</c>.</summary>
+    private static string OneLine(string text) =>
+        text.Replace("\r\n", "\\n", StringComparison.Ordinal).Replace("\n", "\\n", StringComparison.Ordinal);
 
     private static IEnumerable<JsonElement> Array(JsonElement result, string name) =>
         result.TryGetProperty(name, out var array) && array.ValueKind == JsonValueKind.Array ? array.EnumerateArray() : [];

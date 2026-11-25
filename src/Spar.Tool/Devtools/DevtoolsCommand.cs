@@ -19,7 +19,7 @@ internal static class DevtoolsCommand
         Devtools of a running Development build (the app in the current folder, or --project):
           tree [--limit N]                    The page's elements, each with a reference (e12) for the commands below.
           screenshot [--out file]             The page as PNG (default: obj/spar-devtools/screenshot-<time>.png).
-          click <target>                      Click an element, then list the calls it caused.
+          click <target>                      Click an element, then list the calls made while it ran.
           fill <target> <text>                Replace a field's text.
           wait <target> [--state S]           Wait until the element is visible (or hidden, attached, detached).
           contracts                           The app's commands and its contract snapshot.

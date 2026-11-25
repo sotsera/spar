@@ -1,0 +1,19 @@
+$ spar version
+spar version: The run recorded in E:\Ghidello\Git\spar.v7\samples\Notebook\obj\spar-devtools.json (process 38224) has ended; start the app again.
+exit 2
+$ spar call pages.list
+pages.list: success
+[]
+exit 0
+$ spar tree
+spar tree: The page runs in a browser (the Loopback profile): the page tools need the app's own window. contracts, call, calls and logs work. (unavailable)
+exit 2
+$ spar calls
+#1 devtools pages.list success 7.1 ms
+exit 0
+$ spar logs --limit 4
+23:18:05.361 info  backend Spar.Host: [35d7b38f] Loopback page at http://127.0.0.1:51956/#token=<token> (a new dev session).
+23:18:05.362 info  backend Spar.Host: [35d7b38f] The browser is not opened (SPAR_LOOPBACK_BROWSER=none).
+23:18:06.045 info  backend Spar.DevServer: > dev
+23:18:06.045 info  backend Spar.DevServer: > vite
+exit 0
