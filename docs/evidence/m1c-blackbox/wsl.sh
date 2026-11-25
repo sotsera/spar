@@ -3,7 +3,8 @@
 # docs/evidence/m1c-blackbox.md. From Git Bash on Windows, at the repository's root (MSYS_NO_PATHCONV keeps the path):
 #   MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-24.04 -- bash /mnt/<repo>/docs/evidence/m1c-blackbox/wsl.sh <step>...
 # Steps, in this order: sync client appmodel build test window windowaot devprobe wasmprobe notebookexe windowdev
-# windowdevprobe notebook boundary packagetests. `window` and `windowaot` take xUnit options after them when run alone:
+# windowdevprobe notebook boundary packagetests; `windowsession` (WSLg's display, after asking the user) is left out of
+# every run. `window`, `windowsession` and `windowaot` take xUnit options after them when run alone:
 #   wsl.sh window --filter-class Spar.WindowTests.BlackBoxFixtureTests
 # The working copy is the Windows tree as it is, copied to /var/tmp/spar-m1c-blackbox/repo without bin, obj,
 # node_modules, artifacts and spikes. The Xvfb is the one ../m1c-host/wsl.sh's `tools` step unpacks into
@@ -101,6 +102,32 @@ step() {
       # The window and black-box tests on CoreCLR, as CI's window step runs them.
       (cd "$repo" && timed dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- "${@:2}")
       census ;;
+    windowsession)
+      # The window tests on WSLg's own display (its XWayland under WSLg's compositor) instead of a private Xvfb: windows
+      # open on the user's desktop, so only when the user allowed it. A watcher reports whether a WebKit process mapped
+      # Mesa's D3D12 driver, which would show the page drawn on the GPU; in WSL it does not (WebKit's sandbox blocks
+      # /dev/dxg; decision "The splash on WSLg's display; a GPU needs a real Linux machine").
+      local found=$base/windowsession-gpu.txt
+      rm -f "$found"
+      (
+        while :; do
+          for p in $(pgrep -f 'WebKit(Web|GPU)Process' || true); do
+            if grep -qE "d3d12|dxcore" "/proc/$p/maps" 2>/dev/null; then
+              echo "gpu: $(tr '\0' ' ' < "/proc/$p/cmdline" | cut -c1-60) (pid $p) maps $(grep -oE '/[^ ]*(d3d12|dxcore)[^ ]*' "/proc/$p/maps" | sort -u | tr '\n' ' ')" > "$found"
+              exit 0
+            fi
+          done
+          sleep 0.5
+        done
+      ) &
+      local watcher=$!
+      (cd "$repo" && DISPLAY=:0 SPAR_TEST_DISPLAY=session timed dotnet test --project tests/Spar.WindowTests -c Debug --no-build -- "${@:2}")
+      local exit=$?
+      kill "$watcher" 2>/dev/null
+      wait "$watcher" 2>/dev/null
+      cat "$found" 2>/dev/null || echo "gpu: no WebKit process mapped the D3D12 driver"
+      census
+      return $exit ;;
     windowaot)
       (cd "$repo" && timed dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests) || return 1
       aot_run Spar.WindowTests "${@:2}"
@@ -152,7 +179,7 @@ step() {
 }
 
 isolate
-if [ "${1:-}" = window ] || [ "${1:-}" = windowaot ] || [ "${1:-}" = windowdev ] || [ "${1:-}" = windowdevprobe ] || [ "${1:-}" = notebook ] || [ "${1:-}" = packagetests ]; then
+if [ "${1:-}" = window ] || [ "${1:-}" = windowsession ] || [ "${1:-}" = windowaot ] || [ "${1:-}" = windowdev ] || [ "${1:-}" = windowdevprobe ] || [ "${1:-}" = notebook ] || [ "${1:-}" = packagetests ]; then
   { echo "STEP $1 on $(uname -r), dotnet $(dotnet --version 2>/dev/null)"; step "$@"; } 2>&1 | tee "$logs/$1.log"
   exit "${PIPESTATUS[0]}"
 fi
