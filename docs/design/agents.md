@@ -4,15 +4,15 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 
 ## 6. Agent facilities
 
-- **Devtools:** an in-process devtools endpoint, only in Development and test builds, enabled per session. A lockfile with a bearer token. Small tools:
+- **Devtools:** an in-process devtools endpoint, only in Development and test builds, enabled per session. A lockfile with a bearer token. One core in C#, with the `spar` CLI and an MCP server as thin adapters over it until the evaluation keeps one; the endpoint is a local socket with an owner-only ACL (a named pipe on Windows, a Unix socket in the app's runtime folder on Linux), never a port. Page input on the developer's desktop is in-process CDP `Input.*` on Windows and the injected DOM script on Linux, each result marked synthetic there (decision "M2's decide-first questions"). Small tools:
   - `tree`, `screenshot`;
   - `click`/`fill`/`waitFor`;
   - `contracts`, `call`, `calls`, `logs`;
   - `version`.
 
   They read the host's instrumentation, so `calls` and readiness come for free. On Linux the same tools need a non-CDP implementation.
-- **`spar dev`:** builds, launches, and reloads on request. A failed reload returns compiler diagnostics at file:line in-band.
-- **`spar snap`:** a one-shot capture with named scenes and a fixed `TimeProvider`. It builds or reuses the development build, starts it offscreen, waits for UI ready, optionally replays an input script (steps addressed by accessible name or test id), writes a PNG, the accessibility tree and the bridge call log, then exits. No session, no port.
+- **`spar dev`:** builds, launches, and reloads on request. A failed reload returns compiler diagnostics at file:line in-band. It is Spar's own supervisor, not a wrapper of `dotnet watch`: the development server is kept across restarts, every process it starts goes in a job object (Windows) or a process group (Linux) from creation with a closed stdin, and Hot Reload stays with `dotnet watch` and the IDEs (decision "M2's decide-first questions").
+- **`spar snap`:** a one-shot capture with named scenes and a fixed `TimeProvider`. It builds or reuses the development build, starts it offscreen, waits for UI ready, optionally replays an input script (steps addressed by accessible name or test id), writes a PNG, the accessibility tree and the bridge call log, then exits. No session, no port. Scenes are C# in the app's test project, run through the test host (the app's own `Program.cs` with service overrides and the safety defaults), so the app's own builds carry no scene code.
 - **`spar doctor`** (user decision): checks the machine and the project, and reports each finding with a stable id, a severity and the fix. Text by default, showing only what needs attention, the project it checked and how many checks passed, with `--verbose` for every check (decision "The M1d check follow-ups"); `--json` (every finding) and distinct exit codes for agents.
   - **Machine:**
     - the .NET SDK against `global.json`, and `Spar.Sdk` resolution;
@@ -35,6 +35,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - Its skills get the same evaluations as the other skills.
 - **Evaluation:** uses the .NET skills `eval.yaml` format (prompts, graders, tokens, time, activation, pass rate).
   - Profiles compared: plain `dotnet` tools, then `spar` CLI, then `spar` MCP. Only one interactive surface survives. Unused tools are removed.
+  - The first run: Claude Code headless, 10 tasks on the Notebook and a new app, the 3 profiles, 3 runs each, reporting pass rate, tokens and time.
   - Spar's own skills get evaluations too, and a skill that doesn't help is removed.
 
 ## 6b. Observability: optional OpenTelemetry, backend and client (user decisions)
@@ -65,5 +66,5 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - Still to cover: trace context on streams and subscriptions.
 - **Milestones:**
   - M1: the BCL instrumentation and `traceparent` in the protocol;
-  - M2: the optional layer, client export and the Aspire dev experience.
+  - M2: the optional layer, client export and the Aspire dev experience: first a documented AppHost recipe that starts the app as an executable resource with the dashboard's OTLP variables, and a hosting package only if the recipe needs more than a few lines.
 - **Later:** a Spar-owned minimal OTLP exporter (parked).
