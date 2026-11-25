@@ -5076,3 +5076,10 @@ The user allowed WSLg windows on their desktop for the plan's row "a real Linux 
 
 - **Decided:** the plan's row for WebKitGTK's splash on a real Linux machine with a GPU stays open, and M1d merges without it. No such machine is at hand, and WSL cannot give WebKit a GPU (decision "The splash on WSLg's display; a GPU needs a real Linux machine"). Until then the SDK's rule is measured in software only, where it held on Xvfb and on WSLg's display.
 - **Not taken now:** booting Linux from a USB stick on the user's PC (Intel UHD 770, a native driver), which stays possible later.
+
+## The cold start after a reboot (check results; 2026-11-25)
+
+- **What ran:** the user restarted the PC (booted 21:28:14 UTC) and, before anything else, started the Production NativeAOT Notebook published from `e3f141f` (5,280,256 B) from Explorer, 2 min 27 s after the boot.
+- **Seen:** no splash mark and no flash. **The app's log:** the host started 41.3 ms after the process, the first document at 255.6 ms, `ui-ready` at 328.7 ms (WebView2 Runtime 158.0.4370.33). Under the splash's 350 ms entrance delay, so no mark was the expected result.
+- **So a slow cold start does not happen on this machine,** and the mark on a slow start rests on the frame tests (WebView2 and WebKitGTK, every run with the mark at most once and no wrong frame) and on the user's check of the splash around a held first render (decision "The checks at the PC at the M1d exit"). The item leaves the plan's table; the row keeps only the Linux GPU check.
+- **CI:** every job passed on `48cb706`.
