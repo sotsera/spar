@@ -84,6 +84,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     private bool _tornDown;
     private int _exitCode;
     private Spar.DevServer.DevServerSession? _devServer;
+    private Spar.Devtools.DevtoolsHost? _devtools;
 
     /// <param name="offscreen">
     /// A window of a test process (plan section 5): shown offscreen, with no taskbar button, never activated.
@@ -136,6 +137,9 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
     /// </summary>
     public void UseDevServer(Spar.DevServer.DevServerSession devServer) => _devServer = devServer;
+
+    /// <summary>The devtools of a Development build: its page automation goes into the view before the first navigation.</summary>
+    public void UseDevtools(Spar.Devtools.DevtoolsHost devtools) => _devtools = devtools;
 
     /// <summary>
     /// The window first, in the theme's colour and title bar before it is shown (plan 3d), then everything that takes
@@ -196,6 +200,13 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         var script = PageScript.Text(_listenerReports);
         _view = new BrowserView(
             ui, _log, _window, _profile, defaults, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed, _source);
+        if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
+            && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
+        {
+            var view = _view;
+            view.DevtoolsInstall = () => Devtools.DevtoolsPage.InstallAsync(ui, view, _log, devtools, engine);
+        }
+
         _ = _view.StartAsync();
         _ = ConnectAsync(ui, built);
     }

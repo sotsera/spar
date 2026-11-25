@@ -113,6 +113,8 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         Assert.True(Contains(runtime, "Attached to the parent's console", Encoding.Unicode), "The control search missed the console line.");
         Assert.True(Contains(loopback, "Hot Reload applied revision", Encoding.Unicode), "The control search missed the Hot Reload line.");
         Assert.True(Contains(loopback, "backend-updated", Encoding.Unicode), "The control search missed backend-updated.");
+        Assert.True(Contains(runtime, "DevtoolsServer", Encoding.UTF8), "The control search missed DevtoolsServer.");
+        Assert.True(Contains(runtime, "spar-devtools-", Encoding.Unicode), "The control search missed spar-devtools-.");
 
         // The DevTools Protocol in Production: exactly the two calls that keep the page's file picker closed; the
         // control is the Windows host's assembly, whose Development-only input trigger names the Input domain. A Linux

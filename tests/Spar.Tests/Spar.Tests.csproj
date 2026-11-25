@@ -14,6 +14,14 @@
   </ItemGroup>
 
   <!--
+    The devtools' tests (DevtoolsServerTests and DevtoolsPageToolsTests): the switch an app's Development build gets,
+    so the dispatcher records calls here too. Not trimmed: the tests are no app.
+  -->
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.IsSupported" Value="true" />
+  </ItemGroup>
+
+  <!--
     An app's own logging configuration, for the order of Spar's levels against it (AppConfigurationTests); Spar itself
     does not reference these (decision "Configuration stays the app's choice").
   -->

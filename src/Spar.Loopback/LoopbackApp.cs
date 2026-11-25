@@ -36,6 +36,10 @@ internal sealed class LoopbackApp
     /// <summary>The run's address record, a runtime configuration value of Development builds (Spar.Sdk).</summary>
     private const string SessionFileData = "Spar.Loopback.SessionFile";
 
+    /// <summary>Why the devtools' page tools do not work here: they need the app's own window.</summary>
+    private const string PagesInBrowser =
+        "The page runs in a browser (the Loopback profile): the page tools need the app's own window. contracts, call, calls and logs work.";
+
     /// <summary>How long a run waits for its recorded port, which the previous run may still be releasing.</summary>
     private static readonly TimeSpan PortWait = TimeSpan.FromSeconds(3);
 
@@ -47,6 +51,7 @@ internal sealed class LoopbackApp
     private readonly bool _automated = SparDevelopment.IsAutomatedFromEnvironment();
     private readonly TaskCompletionSource _stop = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly string? _sessionFile = AppContext.GetData(SessionFileData) as string is { Length: > 0 } file ? file : null;
+    private Spar.Devtools.DevtoolsHost? _devtools;
 
     public LoopbackApp(SparApp app) => _app = app;
 
@@ -323,9 +328,19 @@ internal sealed class LoopbackApp
         Func<LogFile>? file = _log.File is { } opened ? () => opened : null;
         SparLogging.Add(builder.Services, levels, file, ownsFile: false);
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, folders, builder.BridgeOptions.Freeze());
+        if (Spar.Devtools.SparDevtools.IsSupported)
+        {
+            _devtools = Spar.Devtools.DevtoolsHost.Prepare(builder.Services, "loopback", PagesInBrowser);
+        }
+
         var running = SparRunningApp.Build(builder.Services, _app.Catalog, folders);
         _log.UseAppLogging(running.Services);
         _log.Phase("services built");
+        if (Spar.Devtools.SparDevtools.IsSupported)
+        {
+            _devtools?.Start(running, _log.RunId, _log.Logger);
+        }
+
         return running;
     }
 
@@ -334,6 +349,11 @@ internal sealed class LoopbackApp
     {
         try
         {
+            if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools)
+            {
+                await devtools.StopAsync().ConfigureAwait(false);
+            }
+
             if (host is not null)
             {
                 await host.DisposeAsync().ConfigureAwait(false);

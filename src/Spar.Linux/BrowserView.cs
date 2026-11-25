@@ -38,6 +38,7 @@ internal sealed class BrowserView
     private nint _view;
     private nint _session;
     private nint _content;
+    private Testing.TestPage? _devtoolsPage;
     private nuint _messageHandler;
     private nuint _loadHandler;
     private nuint _terminatedHandler;
@@ -184,9 +185,28 @@ internal sealed class BrowserView
         WebKit.webkit_web_view_set_background_color(_view, &colour);
     }
 
+    /// <summary>
+    /// The devtools' page automation of a Development build, set up on the loop thread before the first load; null in
+    /// every other build, where the trimmer removes the call. What it returns is released with the view.
+    /// </summary>
+    public Func<nint, nint, Testing.TestPage>? DevtoolsInstall { get; set; }
+
     /// <summary>Opens the app's page (loop thread); a test window's page driver sets itself up first.</summary>
     public void Load()
     {
+        if (Spar.Devtools.SparDevtools.IsSupported && DevtoolsInstall is { } installDevtools)
+        {
+            try
+            {
+                _devtoolsPage = installDevtools(_view, _content);
+            }
+            catch (Exception exception)
+            {
+                // The page loads without its devtools; the app is not stopped for them.
+                _log.Warn($"The devtools' page automation could not be installed: {exception.Message}");
+            }
+        }
+
         if (SparTestSession.IsSupported && _source?.BeforeFirstLoad is { } setUp)
         {
             _ = LoadAfterAsync(setUp);
@@ -317,6 +337,11 @@ internal sealed class BrowserView
     /// <summary>Frees the handle the signals found this view by, once the main loop has ended and nothing can call back.</summary>
     public void Release()
     {
+        if (Spar.Devtools.SparDevtools.IsSupported)
+        {
+            _devtoolsPage?.Release();
+        }
+
         if (_self.IsAllocated)
         {
             _self.Free();

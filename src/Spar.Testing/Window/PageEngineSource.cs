@@ -1,8 +1,9 @@
 namespace Spar.Testing;
 
 /// <summary>
-/// The window-test engine's script (<c>PageEngine.js</c>), embedded in this assembly. It is host-neutral: the Windows
-/// driver installs it in an isolated world through the DevTools Protocol, and the Linux driver will run the same text.
+/// The window-test engine's script (<c>PageEngine.js</c>, from Spar.Sdk's <c>Sdk/Devtools/</c>, which Development builds
+/// of apps also embed for the devtools), embedded in this assembly. It is host-neutral: the Windows driver installs it
+/// in an isolated world through the DevTools Protocol, and the Linux driver runs the same text in a script world.
 /// Apps never reference this assembly, so their executables carry none of it.
 /// </summary>
 internal static class PageEngineSource

@@ -705,6 +705,36 @@
     <RuntimeHostConfigurationOption Include="Spar.DevServer.Url" Value="$(SparDevServerUrl)" Condition="'$(SparUsesDevServer)' == 'true' and '$(SparDevServerUrl)' != ''" />
   </ItemGroup>
 
+  <!--
+    The devtools (plan section 6; decision "M2a's decide-first questions"): a Development build of an app listens on a
+    local socket only its user can open and records it in obj/spar-devtools.json, unless SparDevtools=false. Its feature
+    switch is off, with Trim="true", in every other build, so none of that code ships; the page engine and the contract
+    snapshot are embedded in the app's own assembly in Development builds only.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparDevtools Condition="'$(SparDevtools)' == ''">true</SparDevtools>
+    <SparUsesDevtools Condition="'$(SparDevtools)' == 'true' and '$(SparVariant)' == 'Development'">true</SparUsesDevtools>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.IsSupported" Value="false" Trim="true" Condition="'$(SparUsesDevtools)' != 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.IsSupported" Value="true" Trim="true" Condition="'$(SparUsesDevtools)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.File"
+                                    Value="$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'spar-devtools.json'))"
+                                    Condition="'$(SparUsesDevtools)' == 'true'" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Devtools\PageEngine.js" LogicalName="Spar.Devtools.PageEngine.js"
+                      WithCulture="false" Type="Non-Resx" Visible="false" Condition="'$(SparUsesDevtools)' == 'true'" />
+  </ItemGroup>
+
+  <!-- The contract snapshot the client step wrote, for the devtools' contracts tool (one of SparBuildSteps). -->
+  <Target Name="SparDevtoolsContracts"
+          Condition="'$(SparUsesDevtools)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup Condition="Exists('$(SparContractSnapshotExpected)')">
+      <EmbeddedResource Include="$(SparContractSnapshotExpected)" LogicalName="Spar.Devtools.Contracts"
+                        WithCulture="false" Type="Non-Resx" Visible="false" />
+    </ItemGroup>
+  </Target>
+
   <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
@@ -815,12 +845,12 @@
 
   <!--
     Spar's build steps, in order, before MSBuild settles embedded resources: the app id's check, the client step, the
-    snapshot check, the frontend (install, type-check, Vite, pack), then the embedding. One entry target with
+    snapshot check, the devtools' copy of the snapshot, the frontend (install, type-check, Vite, pack), then the embedding. One entry target with
     DependsOnTargets fixes the order; several targets hooked on PrepareResources would run in the order they are declared.
   -->
   <Target Name="SparBuildSteps"
           BeforeTargets="PrepareResources"
-          DependsOnTargets="SparCheckAppId;SparClient;SparCheckContractSnapshot;SparFrontend;SparEmbedFrontend"
+          DependsOnTargets="SparCheckAppId;SparClient;SparCheckContractSnapshot;SparDevtoolsContracts;SparFrontend;SparEmbedFrontend"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
   <!--

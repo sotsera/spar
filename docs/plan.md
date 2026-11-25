@@ -398,6 +398,13 @@ The tools of section 6 (`tree`, `screenshot`, `click`/`fill`/`waitFor`, `contrac
 7. **The CLI's shape.** Decided: flat commands, `spar tree`, `spar screenshot [--out file]`, `spar click <target>`, `spar fill <target> <text>`, `spar wait <target>`, `spar contracts`, `spar call <contract.command> [json]`, `spar calls`, `spar logs`, `spar version`; text by default and `--json`, with the exit codes of `spar doctor`. Not taken: grouped as `spar devtools <tool>`.
 8. **What `screenshot` captures.** Decided: the page as PNG (CDP `Page.captureScreenshot` on Windows, `webkit_web_view_get_snapshot` on Linux), which includes a page-drawn title bar; no other window or desktop pixels. Not taken: the whole window from the OS, native frame included.
 
+**Build:**
+1. **The core's frame:** the `Spar.Devtools.IsSupported` switch and `SparDevtools` in Spar.Sdk (on in Development, off and trimmed elsewhere); the local socket (a named pipe on Windows, a Unix socket on Linux) with owner-only access and a peer check; `obj/spar-devtools.json`; newline-delimited JSON-RPC 2.0 with `initialize` and its token; `version`.
+2. **The backend tools:** `contracts` (the catalog's commands and the contract snapshot, embedded in Development builds), `call` (the dispatcher with the devtools as caller, which `ISparCall` gains), `calls` (the last 200 calls with their origin) and `logs` (the backend log, the page's console and errors, and CSP violations).
+3. **The page tools on both hosts:** the page engine moved into Spar, the hosts' page automation shared with the window tests; `tree` with references, `click`, `fill`, `wait` and `screenshot`; trusted input through CDP on Windows, synthetic events from the engine on Linux; each action with the calls it caused.
+4. **The CLI:** the flat `spar` commands with text and `--json`.
+5. **Tests and evidence:** unit tests of the core and the CLI, the tools against a Development app on both hosts, the production boundary, the AOT lane, the static-state list, `docs/evidence/m2a-devtools.md`, a user guide page.
+
 ### M3: communication breadth and the SQL Server tool
 
 - **Streams and subscriptions** on both hosts, on the message kinds M1a defined: credits, in-band failures, the `events` slot, coalescing and resumption (section 2c and the table below), with trace context on them (section 6b).

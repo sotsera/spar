@@ -21,6 +21,9 @@ internal sealed class TestBackend : IAsyncDisposable
 
     public SparDispatcher Dispatcher => _app.Dispatcher;
 
+    /// <summary>The running app, for the devtools' tests.</summary>
+    public SparRunningApp App => _app;
+
     /// <summary>Calls that have started, so a test knows a command is running before it cancels it.</summary>
     public ConcurrentQueue<string> Started { get; } = new();
 
@@ -57,6 +60,8 @@ internal sealed class TestBackend : IAsyncDisposable
                     var current = call.Services.GetRequiredService<ISparCall>();
                     return ValueTask.FromResult(Json($"\"{current.Contract}.{current.Command}#{current.CallId}\""));
                 }),
+                new("call", "caller", 0, call =>
+                    ValueTask.FromResult(Json($"\"{call.Services.GetRequiredService<ISparCall>().Caller}\""))),
             ],
             _ => { });
 

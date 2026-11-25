@@ -755,6 +755,8 @@
         return byAttribute(root, step, "title");
       case "css":
         return [...root.querySelectorAll(step.selector)];
+      case "ref":
+        return byReference(root, step);
       default:
         throw new Error("Unknown locator step: " + step.kind);
     }
@@ -879,6 +881,12 @@
     }
 
     if (found.length === 0) {
+      // A snapshot reference names one element; once it left the document, waiting does not bring it back.
+      const reference = chain.find(step => step.kind === "ref");
+      if (reference !== undefined) {
+        return { stale: reference.ref + " is no longer in the page; take tree again" };
+      }
+
       return { retry: "no element matches", ...explain(chain, cache) };
     }
 
@@ -1291,7 +1299,7 @@
 
       element.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
       element.dispatchEvent(new Event("change", { bubbles: true }));
-      return { ok: true, done: true };
+      return { ok: true, done: true, element: check.element };
     }
 
     if (element.localName !== "input" && element.localName !== "textarea" && !element.isContentEditable) {
@@ -1300,7 +1308,7 @@
 
     element.focus();
     selectContents(element);
-    return { ok: true, done: false };
+    return { ok: true, done: false, element: check.element };
   }
 
   /** Selects options of a `<select>` by value or label and fires input and change, as the library does. */
@@ -1356,6 +1364,129 @@
     return { ok: true, x: rect.x, y: rect.y, width: rect.width, height: rect.height };
   }
 
+  // ---- References (the devtools' snapshot) ---------------------------------------------------------------------
+
+  // The last snapshot's elements by reference ("e12"), held weakly in this world, which is the document's own: a new
+  // document starts with none, so a reference never reaches an element of another document.
+  let references = new Map();
+
+  /** The referenced element when it is still in the document and under `root`; otherwise none. */
+  function byReference(root, step) {
+    const element = references.get(step.ref)?.deref();
+    return element !== undefined && element.isConnected && (root === document || root.contains(element)) ? [element] : [];
+  }
+
+  /** A form field's value for the snapshot: a password's is never given. */
+  function fieldValue(element) {
+    if (element instanceof HTMLInputElement) {
+      if (element.type === "password") {
+        return element.value.length > 0 ? "(redacted)" : "";
+      }
+
+      return ["checkbox", "radio", "button", "submit", "reset", "file", "image", "hidden"].includes(element.type) ? undefined : element.value;
+    }
+
+    if (element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+      return element.value;
+    }
+
+    return element.isContentEditable ? textOf(element) : undefined;
+  }
+
+  /**
+   * The devtools' tree: every element exposed to assistive technology, in document order, with its depth among them,
+   * a reference for later actions, and the states a reader of the page needs. At most `limit` elements.
+   */
+  function snapshot(request) {
+    const cache = newCache();
+    const limit = request.limit ?? 2000;
+    const nodes = [];
+    const depths = new Map();
+    references = new Map();
+    let truncated = false;
+    for (const element of allElements(document)) {
+      const role = roleOf(element);
+      if (!role || role === "none" || role === "presentation" || role === "generic" || hiddenForAria(element, cache)) {
+        continue;
+      }
+
+      if (nodes.length === limit) {
+        truncated = true;
+        break;
+      }
+
+      let parent = element.parentElement;
+      while (parent !== null && !depths.has(parent)) {
+        parent = parent.parentElement;
+      }
+
+      const depth = parent === null ? 0 : depths.get(parent) + 1;
+      depths.set(element, depth);
+      const ref = "e" + (nodes.length + 1);
+      references.set(ref, new WeakRef(element));
+      const node = { ref, role, name: accessibleName(element, cache), depth };
+      const value = fieldValue(element);
+      if (value !== undefined && value !== "") {
+        node.value = value.length > 200 ? value.slice(0, 200) + " …" : value;
+      }
+
+      for (const [key, state] of Object.entries(states(element))) {
+        if (state !== undefined) {
+          node[key] = state;
+        }
+      }
+
+      nodes.push(node);
+    }
+
+    return { nodes, truncated, title: document.title, url: location.href };
+  }
+
+  /** The states a snapshot shows, each only where the element has it. */
+  function states(element) {
+    const aria = name => element.getAttribute("aria-" + name);
+    const checked = element instanceof HTMLInputElement && (element.type === "checkbox" || element.type === "radio")
+      ? element.checked
+      : aria("checked") === null ? undefined : aria("checked") === "true";
+    return {
+      checked,
+      disabled: element.matches(":disabled") || aria("disabled") === "true" ? true : undefined,
+      expanded: aria("expanded") === null ? undefined : aria("expanded") === "true",
+      selected: aria("selected") === "true" ? true : undefined,
+      pressed: aria("pressed") === null ? undefined : aria("pressed") === "true",
+      level: /^H[1-6]$/.test(element.tagName) ? Number(element.tagName[1]) : aria("level") === null ? undefined : Number(aria("level")),
+      focused: document.activeElement === element ? true : undefined,
+    };
+  }
+
+  /**
+   * A click made of the page's own events, where the host has no trusted input on the user's desktop (Linux): the
+   * element made actionable first, then the pointer and mouse events and the click at its click point. The page sees
+   * them as untrusted (`isTrusted` false), which the devtools' answer says.
+   */
+  async function syntheticClick(request) {
+    const ready = await actionable({ chain: request.chain, enabled: true, editable: false, pointer: true });
+    if (!ready.ok) {
+      return ready;
+    }
+
+    const element = single(request.chain, newCache()).element;
+    const point = { bubbles: true, cancelable: true, composed: true, clientX: ready.x, clientY: ready.y, button: 0, view: window };
+    element.dispatchEvent(new PointerEvent("pointerdown", { ...point, buttons: 1, pointerType: "mouse", isPrimary: true }));
+    element.dispatchEvent(new MouseEvent("mousedown", { ...point, buttons: 1 }));
+    if (typeof element.focus === "function") {
+      element.focus();
+    }
+
+    element.dispatchEvent(new PointerEvent("pointerup", { ...point, buttons: 0, pointerType: "mouse", isPrimary: true }));
+    element.dispatchEvent(new MouseEvent("mouseup", { ...point, buttons: 0 }));
+    element.dispatchEvent(new MouseEvent("click", { ...point, buttons: 0, detail: 1 }));
+
+    // The watcher actionable() armed waits for trusted input, which these events are not.
+    disarm();
+    return { ok: true, element: ready.element, x: ready.x, y: ready.y, synthetic: true };
+  }
+
   /** Every element exposed to assistive technology with its role and name (checks against the platform's tree). */
   function tree() {
     const cache = newCache();
@@ -1387,6 +1518,8 @@
     selectOption,
     box,
     tree,
+    snapshot,
+    syntheticClick,
     frames: () => nextFrame().then(nextFrame).then(() => ({ ok: true })),
   };
 

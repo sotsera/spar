@@ -1,10 +1,7 @@
 using System.Buffers;
 using System.Buffers.Text;
 using System.Globalization;
-using System.Runtime.Versioning;
-using System.Security.AccessControl;
 using System.Security.Cryptography;
-using System.Security.Principal;
 using System.Text.Json;
 
 namespace Spar.Loopback;
@@ -86,31 +83,13 @@ internal static class LoopbackSession
     }
 
     /// <summary>Records the run's address at <paramref name="file"/>, owner-only; false when it cannot (the run goes on).</summary>
-    public static bool Write(string file, int port, string token)
-    {
-        var temporary = $"{file}.{Environment.ProcessId}.tmp";
-        try
+    public static bool Write(string file, int port, string token) =>
+        Spar.Hosting.OwnerOnlyFile.WriteJson(file, writer =>
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(file)!);
-            using (var stream = CreateOwnerOnly(temporary))
-            using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true }))
-            {
-                writer.WriteStartObject();
-                writer.WriteNumber("version", Version);
-                writer.WriteNumber("port", port);
-                writer.WriteString("token", token);
-                writer.WriteEndObject();
-            }
-
-            File.Move(temporary, file, overwrite: true);
-            return true;
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-        {
-            TryDelete(temporary);
-            return false;
-        }
-    }
+            writer.WriteNumber("version", Version);
+            writer.WriteNumber("port", port);
+            writer.WriteString("token", token);
+        });
 
     /// <summary>Marks the record as held now: a run touches it every minute and as it ends.</summary>
     public static void Touch(string file, DateTimeOffset now)
@@ -237,47 +216,5 @@ internal static class LoopbackSession
 
         var token = tokenText is { Length: > 0 } ? tokenText : NewToken();
         return new LoopbackAddress(port, token, NewSession: false, Orchestrated: true);
-    }
-
-    /// <summary>A new file that only its owner can read or write, from its creation.</summary>
-    private static FileStream CreateOwnerOnly(string path)
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            return CreateOwnerOnlyOnWindows(path);
-        }
-
-        var options = new FileStreamOptions
-        {
-            Mode = FileMode.Create,
-            Access = FileAccess.Write,
-            Share = FileShare.None,
-            UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite,
-        };
-        return new FileStream(path, options);
-    }
-
-    /// <summary>A protected access list (nothing inherited from the folder) that grants the current user alone.</summary>
-    [SupportedOSPlatform("windows")]
-    private static FileStream CreateOwnerOnlyOnWindows(string path)
-    {
-        using var identity = WindowsIdentity.GetCurrent();
-        var security = new FileSecurity();
-        security.SetOwner(identity.User!);
-        security.SetAccessRuleProtection(isProtected: true, preserveInheritance: false);
-        security.AddAccessRule(new FileSystemAccessRule(identity.User!, FileSystemRights.FullControl, AccessControlType.Allow));
-        return new FileInfo(path).Create(FileMode.Create, FileSystemRights.Write | FileSystemRights.ReadData, FileShare.None, 4096, FileOptions.None, security);
-    }
-
-    private static void TryDelete(string path)
-    {
-        try
-        {
-            File.Delete(path);
-        }
-        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
-        {
-            // A temporary file left behind is replaced by the next run's.
-        }
     }
 }

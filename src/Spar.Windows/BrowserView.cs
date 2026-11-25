@@ -97,6 +97,12 @@ internal sealed partial class BrowserView
     /// <summary>The WebView, once its controller exists and until it closes (UI thread).</summary>
     public ICoreWebView2_22? WebView => _webView;
 
+    /// <summary>
+    /// The devtools' page automation of a Development build, installed before the first navigation as a test's page
+    /// driver is; null in every other build, where the trimmer removes the call.
+    /// </summary>
+    public Func<Task>? DevtoolsInstall { get; set; }
+
     /// <summary>Whether the controller shows the WebView: a hidden controller's page is not pinged (UI thread).</summary>
     public bool IsShown => _controller is { } controller && controller.GetIsVisible() != 0;
 
@@ -269,6 +275,24 @@ internal sealed partial class BrowserView
         if (SparTestSession.IsSupported && _source?.BeforeFirstNavigation is { } beforeNavigation)
         {
             await beforeNavigation();
+            if (Abandoned(generation, null) || _webView is null)
+            {
+                return;
+            }
+        }
+
+        if (Spar.Devtools.SparDevtools.IsSupported && DevtoolsInstall is { } installDevtools)
+        {
+            try
+            {
+                await installDevtools();
+            }
+            catch (Exception exception)
+            {
+                // The page loads without its devtools; the app is not stopped for them.
+                _log.Warn($"The devtools' page automation could not be installed: {exception.Message}");
+            }
+
             if (Abandoned(generation, null) || _webView is null)
             {
                 return;

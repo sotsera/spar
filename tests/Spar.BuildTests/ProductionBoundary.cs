@@ -58,6 +58,9 @@ internal static class ProductionBoundary
         // The parent console's Ctrl+C of a Development WinExe app (decision "Step 3's two follow-ups"): never in Production.
         // Not "ParentConsole": Production has StartupFailure.WriteToParentConsole.
         "ConsoleInterrupt",
+
+        // The devtools (M2a): the endpoint, its socket, its tools, the hosts' part and the call and log records.
+        "DevtoolsServer", "DevtoolsListener", "DevtoolsTools", "DevtoolsHost", "DevtoolsPage", "CallRecorder", "DevtoolsLog",
     ];
 
     private static readonly string[] Literals =
@@ -93,6 +96,9 @@ internal static class ProductionBoundary
         // The Hot Reload signal (M1d step 3): the event's name and the hosts' line for each applied update.
         "backend-updated", "Hot Reload applied revision",
         "Attached to the parent's console", "from the parent's console",
+
+        // The devtools (M2a): the socket's name, the resources a Development build embeds, the first request's rule.
+        "spar-devtools-", "Spar.Devtools.PageEngine.js", "Spar.Devtools.Contracts", "initialize, with the token",
     ];
 
     /// <summary>

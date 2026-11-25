@@ -96,9 +96,11 @@ internal sealed class TestPage
 
     /// <summary>
     /// The engine, the page side and the relay as document-start scripts, and the view's signals (loop thread, before
-    /// the first load). <paramref name="committed"/> is told of each committed document (true for the first).
+    /// the first load). <paramref name="committed"/> is told of each committed document (true for the first). The devtools
+    /// pass <paramref name="answerDialogs"/> false: on the developer's desktop a script dialog is the developer's to answer.
     /// </summary>
-    public static unsafe TestPage Install(nint view, nint content, SparTestAutomation automation, Action<string> phase, Action<bool> committed)
+    public static unsafe TestPage Install(
+        nint view, nint content, SparTestAutomation automation, Action<string> phase, Action<bool> committed, bool answerDialogs = true)
     {
         var page = new TestPage(view, automation, phase, committed);
         page._self = GCHandle.Alloc(page);
@@ -117,7 +119,11 @@ internal sealed class TestPage
         Connect(view, "load-changed", (delegate* unmanaged<nint, int, nint, void>)&OnLoadChanged, self);
         Connect(view, "load-failed", (delegate* unmanaged<nint, int, nint, nint, nint, int>)&OnLoadFailed, self);
         Connect(view, "notify::uri", (delegate* unmanaged<nint, nint, nint, void>)&OnUri, self);
-        Connect(view, "script-dialog", (delegate* unmanaged<nint, nint, nint, int>)&OnScriptDialog, self);
+        if (answerDialogs)
+        {
+            Connect(view, "script-dialog", (delegate* unmanaged<nint, nint, nint, int>)&OnScriptDialog, self);
+        }
+
         return page;
     }
 

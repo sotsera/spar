@@ -1,11 +1,12 @@
 using System.Reflection;
 using Spar.Tool;
+using Spar.Tool.Devtools;
 using Spar.Tool.Doctor;
 using Spar.Tool.Init;
 using Spar.Tool.Machine;
 
-// The spar command (plan, M1d step 6): dotnet spar doctor, dotnet spar init frontend, through the app's local tool
-// manifest; dnx Spar.Tool … without one.
+// The spar command (plan, M1d step 6; the devtools of M2a): dotnet spar doctor, dotnet spar init frontend, dotnet spar
+// tree and the other devtools, through the app's local tool manifest; dnx Spar.Tool … without one.
 var version = typeof(ExitCodes).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "0.0.0";
 try
 {
@@ -28,6 +29,8 @@ namespace Spar.Tool
             Commands:
               doctor          Check the machine, the Spar app's project and the build's identity.
               init frontend   Wire a Vite frontend into a Spar app, or make one first (--framework react|vue).
+              tree, screenshot, click, fill, wait, contracts, call, calls, logs, version
+                              The devtools of the app's running Development build: spar tree --help lists them.
 
             Options:
               --version       Show the tool's version.
@@ -37,7 +40,9 @@ namespace Spar.Tool
             once, then dotnet spar doctor. Without a manifest: dnx Spar.Tool doctor.
             """;
 
-        public static int Run(string[] args, string version, TextWriter output, TextWriter error, TextReader input, bool interactive, IMachine machine, INpm npm, string workingDirectory)
+        public static int Run(
+            string[] args, string version, TextWriter output, TextWriter error, TextReader input, bool interactive, IMachine machine, INpm npm,
+            string workingDirectory, IDevtoolsTransport? devtools = null)
         {
             if (args.Length == 0 || args[0] is "-h" or "--help" or "-?" or "help")
             {
@@ -55,6 +60,8 @@ namespace Spar.Tool
                     return DoctorCommand.Run(rest, machine, output, error, version, workingDirectory);
                 case "init":
                     return InitCommand.Run(rest, new InitConsole(output, error, input, interactive), npm, workingDirectory);
+                case var tool when DevtoolsCommand.Tools.Contains(tool):
+                    return DevtoolsCommand.Run(tool, rest, output, error, workingDirectory, devtools ?? new RealDevtoolsTransport());
                 default:
                     error.WriteLine($"spar: unknown command '{args[0]}'.");
                     error.WriteLine(Usage);

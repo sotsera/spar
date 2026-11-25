@@ -229,7 +229,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     public ValueTask<SparOutcome> InvokeAsync(string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken)
     {
         var callId = Interlocked.Increment(ref _nextCallId);
-        return _app.Dispatcher.InvokeAsync(contract, command, callId, request, cancellationToken);
+        return _app.Dispatcher.InvokeAsync(contract, command, callId, request, cancellationToken, SparCaller.Test);
     }
 
     /// <summary>

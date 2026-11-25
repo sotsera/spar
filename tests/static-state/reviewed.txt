@@ -21,6 +21,13 @@ Spar | Spar.Hosting.SparFrontend.<IsBrotliSupported>k__BackingField | readonly |
 Spar | Spar.DevServer.DevServerSettings.<IsSupported>k__BackingField | readonly | The development server's feature switch, read once from AppContext: on only in a Development build that serves its page from Vite, the same for the whole process by design, and trimmed away elsewhere.
 Spar | Spar.DevServer.DevServerProxy.RequestLimit | readonly | A TimeSpan constant: how long one proxied request waits for the development server.
 Spar | Spar.DevServer.DevServerProxy.<ForwardedHeaders>k__BackingField | readonly | The names of the request headers the proxy forwards, filled once, read only.
+Spar | Spar.Devtools.SparDevtools.<IsSupported>k__BackingField | readonly | The devtools' feature switch, read once from AppContext: on only in a Development build of an app, the same for the whole process by design, and trimmed away elsewhere.
+Spar | Spar.Devtools.DevtoolsTools.Names | readonly | The devtools' tool names, filled once and only read (initialize lists them, the tool table answers them).
+Spar | Spar.Devtools.DevtoolsTools.TextKinds | readonly | The locator kinds that match an element by a text, filled once and only read.
+Spar | Spar.Devtools.DevtoolsTools.CallWait | readonly | A TimeSpan constant: how long the call tool waits for its command by default.
+Spar | Spar.Devtools.DevtoolsTools.ActionWait | readonly | A TimeSpan constant: how long a page action waits for its element by default.
+Spar | Spar.Devtools.DevtoolsTools.Quiet | readonly | A TimeSpan constant: how long no call may run for an action's calls to count as settled.
+Spar | Spar.Devtools.DevtoolsTools.Settle | readonly | A TimeSpan constant: the longest an action waits for its calls to settle.
 Spar | Spar.HotReload.BackendUpdates.Gate | readonly | The lock that guards the two fields below.
 Spar | Spar.HotReload.BackendUpdates._listeners | writable | The hosts listening for Hot Reload updates (Development builds only, behind the development switch), replaced under the lock: Hot Reload patches the whole process, so every app in it, each test app included, receives every update by design; each host removes its own listener when it stops.
 Spar | Spar.HotReload.BackendUpdates._revision | writable | The count of Hot Reload updates applied to this process, written under the lock: one count per process by design, since an update patches the whole process.
@@ -211,6 +218,7 @@ Spar.Linux | Spar.Linux.Testing.TestWindowProcess.s_unavailable | writable | Why
 Spar.Linux | Spar.Linux.Testing.XInput.NamedKeysyms | readonly | A frozen dictionary of constant key names to X keysyms, filled once, never written.
 Spar.Linux | Spar.Linux.Testing.XInput.PunctuationCodes | readonly | A frozen dictionary of constant DOM codes to characters, filled once, never written.
 Spar.Linux | Spar.Linux.WindowTheme.s_fixed | writable | A counter changed only with Interlocked.Increment, so each test window's fixed theme gets a CSS class of its own; only WindowTheme.Fixed, which the test host alone calls, changes it.
+Spar.Linux | Spar.Linux.Devtools.DevtoolsPage.Again | readonly | A TimeSpan constant: how often a devtools request that found no document yet is sent again.
 
 # Spar.Loopback (test and development variants only)
 Spar.Loopback | Spar.Loopback.LoopbackApp.PortWait | readonly | A TimeSpan constant.
