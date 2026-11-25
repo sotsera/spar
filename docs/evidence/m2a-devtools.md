@@ -29,7 +29,8 @@ Recorded 2026-11-26. What it shows: plan M2a, build steps 1 to 5 (section 6, `do
 ### Tests
 
 - **Windows**, `dotnet test --solution Spar.slnx -c Debug` (window tests included): 1,475 (1,362 passed, 113 skipped, 0 failed); before M2a 1,440.
-- **WSL**, `wsl.sh sync client build test` (no window or black-box tests): 1,277 (1,236 passed, 41 skipped, 0 failed); the devtools tests ran on the Unix socket.
+- **WSL**, `wsl.sh sync client build test` (no window or black-box tests): 1,277 (1,236 passed, 41 skipped, 0 failed); the devtools tests ran on the Unix socket. `wsl.sh window`: 220 (170 passed, 50 skipped, 0 failed), no process left; the Linux view's and test page's changes kept the window tests passing.
+- **NativeAOT and the boundary (Windows):** the AOT lane of `Spar.Tests` 803 (7 skipped), its 20 devtools tests included; `Spar.BuildTests` 7 of 7, the Notebook's Production NativeAOT executable without any of the new markers.
 - **The devtools' own:** `DevtoolsServerTests` (10): the discovery file is owner-only (the access list on Windows, 0600 for the file and the socket on Linux) and goes at the end, a later run's file is left; a first request that is not `initialize`, or a wrong token, is `unauthorized` and ends the connection; a reused id is `duplicate_id` and the command ran once; another run is `stale_target`; a bad line is a parse error; `call` runs as `SparCaller.Devtools`, gives a value, a declared error and a failure, and `calls` lists them in order; a call past its wait is `timeout` and listed as `running`; `logs` merges and filters by source, level and time; `version` and `contracts`; the line reader's CRLF and its 1 MiB limit. `DevtoolsPageToolsTests` (10) against a scripted page: `no_page` and `unavailable`; a reference before any tree and after the document changed is `stale_target`; the trusted click presses at the engine's point, presses again when the press did not land, runs the frames step once, and lists the calls made during it; the synthetic click; `ambiguous` with its matches, `timeout` with the last reason, a test id's quoting; fill's insertion, its empty text and the engine's own setting; wait's states and ambiguity; the screenshot's size. `DevtoolsCommandTests` (15): no run, an ended run, eight wrong command lines (64), the requests (`initialize` with the token, `run`, `timeout`, the target object), the tree's and an action's text, `call` with its request and `--json`, a refusal's reason and matches (exit 2), and the screenshot's file.
 
 ### The smoke runs
@@ -55,5 +56,5 @@ The same sequence (`docs/evidence/m2a-devtools/smoke.sh`) on both systems: versi
 
 - The devtools under an IDE's F5 (the same build, so expected to work), and with `dotnet watch` restarts (each run writes a new file; the old run's connections end).
 - A real Linux desktop: Wayland, and a page whose code checks `event.isTrusted`.
-- A Production NativeAOT executable's absence of the devtools: the production boundary test in `Spar.BuildTests` (see the decision for its run).
+
 - Windows Sandbox and CI.
