@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 // React 19 with the real Call and Result (decision "Opaque results in TypeScript"; the checks of
-// spikes/frontend-frameworks, rebuilt on the SDK): use(call) suspends and resolves, declared errors render through
+// docs/evidence/frontend-frameworks, rebuilt on the SDK): use(call) suspends and resolves, declared errors render through
 // match with no error boundary, and unwrap hands the boundary a SparError.
 import { Component, Suspense, act, createElement as h, use, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";

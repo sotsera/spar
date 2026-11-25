@@ -50,7 +50,7 @@ What the ten tests cover: a page stored as Markdown with its front matter (exact
   - `decimal`, `DateOnly`, `TimeOnly`, `TimeSpan`, `byte[]`, `char`, enums and `ulong`;
   - the lone-surrogate rule (a lone-surrogate escape in a request is a `JsonException`, so `invalid-request`, not U+FFFD).
 - **Not built:** the contract snapshot, the manifest, the TypeScript client step and the bridge codec.
-- **Untested at run time:** `TimeoutSeconds`, cancellation, `ISparCall`, `AddExternal` in this codebase (it was tested in `spikes/test-host`), and the `response`/`serialization` path.
+- **Untested at run time:** `TimeoutSeconds`, cancellation, `ISparCall`, `AddExternal` in this codebase (it was tested in `docs/evidence/test-host`), and the `response`/`serialization` path.
 - **SPAR020's location** is the command, not its return type as the spike catalogue says.
 - **Variant folder naming:** a test project's own build folder follows its configuration (`bin/Production/` for the Release NativeAOT lane), since `IsTestProject` is not known when the variant is chosen. It is harmless but reads oddly.
 - **Not built:** the package-only consumer and `Spar.Sdk` packing.

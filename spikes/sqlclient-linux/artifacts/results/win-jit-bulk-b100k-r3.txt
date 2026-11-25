@@ -1,6 +1,0 @@
-RUN runtime=jit mode=bulk arg=b100k sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
-MEM before peakWorkingSetMB=48.6 workingSetMB=48.6 peakPrivateMB=14.4 allocatedMB=1.0 gc0=0 gc1=0 gc2=0 cpuMs=266
-MEM after-copy peakWorkingSetMB=75.0 workingSetMB=75.0 peakPrivateMB=37.2 allocatedMB=1838.1 gc0=104 gc1=1 gc2=0 cpuMs=28922
-RESULT bulk variant=b100k rows=1000000 copyMs=9633 totalMs=9633 rowsPerSec=103811 payloadMBps=20.3 progressEvents=10 maxProgressGapMs=1896 identical=True
-TARGET log usedMB=54.7
-MEM end peakWorkingSetMB=75.3 workingSetMB=75.3 peakPrivateMB=37.2 allocatedMB=1838.1 gc0=104 gc1=1 gc2=0 cpuMs=28953

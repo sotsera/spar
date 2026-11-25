@@ -89,7 +89,7 @@ public sealed class StartupFrameTests
 
     /// <summary>
     /// The same starts as a fresh window's first document, which the engine may treat differently from a later one
-    /// (WebView2 held a content-less first page's first frame for about 550 ms in <c>spikes/theme-startup</c>). The
+    /// (WebView2 held a content-less first page's first frame for about 550 ms in <c>docs/evidence/theme-startup</c>). The
     /// window's width carries the start; the times count from just before the window was asked for.
     /// </summary>
     [Theory(Explicit = true)]

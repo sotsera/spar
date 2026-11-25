@@ -156,7 +156,7 @@ internal sealed record BlackBoxQuery(
 
 /// <summary>
 /// The UI Automation control type a native element of a role has (UIAutomationClient.h). The browser gives each page
-/// element its ARIA role (<c>heading</c>, <c>button</c>, <c>navigation</c>, measured in <c>spikes/blackbox-desktop</c>); a
+/// element its ARIA role (<c>heading</c>, <c>button</c>, <c>navigation</c>, measured in <c>docs/evidence/blackbox-desktop</c>); a
 /// native element has none, so a role also matches the control type that stands for it (a dialog's buttons).
 /// </summary>
 internal static class NativeControlTypes

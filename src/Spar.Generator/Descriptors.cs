@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 namespace Spar.Generator;
 
 /// <summary>
-/// The contract diagnostics, with the IDs of the decided map (plan section 2, "Diagnostics"; spikes/contract-syntax).
+/// The contract diagnostics, with the IDs of the decided map (plan section 2, "Diagnostics"; docs/evidence/contract-syntax).
 /// Each message says how to fix the problem.
 /// </summary>
 internal static class Descriptors

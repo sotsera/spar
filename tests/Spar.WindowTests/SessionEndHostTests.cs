@@ -16,7 +16,7 @@ namespace Spar.WindowTests;
 /// They are one class so that they never run at the same time as each other: every test window of a test process
 /// shares one UI thread, and a held <c>WM_ENDSESSION</c> pumps that thread's messages inside its handler, so a second
 /// window's session end started meanwhile runs inside the first one's, and the first cannot return before it
-/// (<c>spikes/renderer-sharing</c>: a quick session end held 3.0–3.1 s under another's). The rest of the suite runs
+/// (<c>docs/evidence/renderer-sharing</c>: a quick session end held 3.0–3.1 s under another's). The rest of the suite runs
 /// beside them: nothing else nests a message loop on that thread.
 /// </para>
 /// </summary>

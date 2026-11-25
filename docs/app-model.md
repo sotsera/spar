@@ -1332,7 +1332,7 @@ export async function cancelEverything(): Promise<void> {
 }
 ```
 
-- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `tests/AppModel`.
+- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `docs/evidence/ts-results` and are checked again in `tests/AppModel`.
 - A command without declared errors has no `errors` property.
 - `execution` tells the page whether the backend ran the command: `notStarted`, `stopped`, `completed` or `unknown`. Nothing is retried automatically.
 - **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. A command that threw also has `correlation`, the id to quote to whoever reads the app's log, and in Development `detail`, which is for developers only. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
@@ -1381,7 +1381,7 @@ export function CopyProgressView({ jobId }: { readonly jobId: string }) {
 }
 ```
 
-- **Streams** (`IAsyncEnumerable<T>`) become `AsyncIterable` of results, sent in batches with credits, so a slow page slows the producer. Every item is a `Result`, so a terminal failure arrives in-band and the loop cannot skip it. **Decided** (decision "Stream failures in-band; start-up exit codes; the start-up hook"). The alternative from `spikes/wire-details`, an iterator that yields the items and then throws, was not chosen (plan 2c).
+- **Streams** (`IAsyncEnumerable<T>`) become `AsyncIterable` of results, sent in batches with credits, so a slow page slows the producer. Every item is a `Result`, so a terminal failure arrives in-band and the loop cannot skip it. **Decided** (decision "Stream failures in-band; start-up exit codes; the start-up hook"). The alternative from `docs/evidence/wire-details`, an iterator that yields the items and then throws, was not chosen (plan 2c).
 - **Subscriptions** use a bounded buffer that drops the oldest events, never blocking the producer. The page sees `gap` with the dropped count.
 - **Resume:** after a lost connection an `Automatic` subscription reconnects with backoff and reports `reconnecting`, `reset` and `resumed`. One-shot streams are never resumed.
 

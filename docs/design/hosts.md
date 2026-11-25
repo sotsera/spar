@@ -21,12 +21,12 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - Production builds contain no probe unless a C# option keeps it, logging only, for diagnosing a user's machine. It sits behind a feature switch, so without the option it is trimmed away and the production boundary test still finds none.
   - **Built on Windows** (M1b step 3; decision "Hangs: heartbeat, stall probe and shutdown prompt"): `Spar.Hosting.UiStallProbe`, one probe at a time posted through the UI thread's queue about every 20–35 ms, and every Spar callback on the thread named through `UiThread.Enter` (window messages, WebView2 events, posted work and `await` continuations); a callback during which the thread pumped (a modal dialog) is not a stall. `spar.Diagnostics(d => d.KeepStallProbe())` is the only thing that roots it in Production: the Production Notebook carries neither its type nor its message, the console harness, which calls it, carries both (32 KB), and both are checked by `Spar.BuildTests`. Window tests read `Longest` and `Recent()` (step 8).
 
-**Hung pages are detected by a heartbeat** (user, 2026-11-14; confirmed by `spikes/page-heartbeat`, with the changes listed below). An idle page stuck in a loop raises no event: `ProcessFailed(RenderProcessUnresponsive)` needs unanswered input, and an idle hung page gave nothing in 60 s (earlier research).
+**Hung pages are detected by a heartbeat** (user, 2026-11-14; confirmed by `docs/evidence/page-heartbeat`, with the changes listed below). An idle page stuck in a loop raises no event: `ProcessFailed(RenderProcessUnresponsive)` needs unanswered input, and an idle hung page gave nothing in 60 s (earlier research).
 - **Ping:** while a document is loaded and the window is visible, the host sends a small ping over the bridge every 5 s, and the injected script answers from its message handler.
 - **Unresponsive:** three missed answers (15–20 s) mark the page unresponsive. The host then logs it, calls a C# hook, and by default shows a native "Wait / Reload page" dialog.
 - **Limits:** the library never kills anything on its own. It makes at most one automatic reload, only after a document had loaded, and never replays backend commands.
 - **Hidden or minimised windows** are not pinged, so a throttled background page is not reported. On Windows such a window also hides the controller (M1b step 6, "The window's state" below), so the page itself is `hidden` and throttled; it still answers the ping a close request sends, within 1 ms.
-- **Measured by `spikes/page-heartbeat`** (WebView2 157 on the host and in Windows Sandbox, WebKitGTK 2.52 on 6.0). The design holds:
+- **Measured by `docs/evidence/page-heartbeat`** (WebView2 157 on the host and in Windows Sandbox, WebKitGTK 2.52 on 6.0). The design holds:
   - Every endless main-thread hang was caught: 163 of 163 runs with the heartbeat armed. No false alarm: 0 of 123 runs.
   - Detection takes 15–20 s, because the first missed ping can leave up to 5 s after the hang starts. Users are told "about 20 seconds".
   - Finite work of 3 s or 10 s never alarmed. A 20 s task alarmed and the page answered again about 2 s later.
@@ -63,7 +63,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - hangs in iframes;
   - sleep, lock and session switch.
 
-**Missing prerequisites get a visible error** (user requirement; `spikes/startup-prerequisites`; built in M1b for Windows and M1c for Linux). An app launched from an icon has no terminal. When something it needs is missing, too old or broken, it must show a native message saying what is missing and how to fix it, then exit with a defined code. It must never crash silently.
+**Missing prerequisites get a visible error** (user requirement; `docs/evidence/startup-prerequisites`; built in M1b for Windows and M1c for Linux). An app launched from an icon has no terminal. When something it needs is missing, too old or broken, it must show a native message saying what is missing and how to fix it, then exit with a defined code. It must never crash silently.
 - **Exit codes, the same on both OSes (decided, user, 2026-11-14):**
   - 0 OK;
   - 2 bad command line;
@@ -142,11 +142,11 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
     - `ICoreWebView2_22` (`db75dfc7-a857-4632-a398-6969dde26c0a`), declared flat: slots 3–122 are placeholders, and `AddWebResourceRequestedFilterWithRequestSourceKinds` is slot 123. It is called with context 0 (all) and source kinds `0xFFFFFFFF`. Also `ICoreWebView2WebResourceRequestedEventArgs2.GetRequestedSourceKind` (1 document, 2 shared worker, 4 service worker) and `ICoreWebView2PermissionRequestedEventArgs3.SavesInProfile` (`spikes/desktop-origin/Origin.Win/Interop/WebView2.cs`).
     - For focus and the window's state (M1b step 6): `ICoreWebView2Controller` (`4d00c0d1-…`) 12 `MoveFocus`, 13/14 `add/remove_MoveFocusRequested`, 23 `NotifyParentWindowPositionChanged`; `ICoreWebView2MoveFocusRequestedEventArgs` (`2d6aa13b-…`) 3 `get_Reason`, 5 `put_Handled`; all in the base interfaces.
     - For the theme, called through raw vtables (`spikes/theme-startup/Theme.Desktop/Interop/WebView2.cs`, class `WebView2Raw`): `ICoreWebView2Controller2` (`c979903e-…`) 26/27 get/put `DefaultBackgroundColor`, the colour struct passed by value; `ICoreWebView2_13` (`f75f09a8-…`) 105 `get_Profile`; `ICoreWebView2Profile` (`79110ad3-…`) 8/9 `PreferredColorScheme`; `ICoreWebView2Environment10` (`ee0eb9df-…`) 20 `CreateCoreWebView2ControllerOptions` and 21 `CreateCoreWebView2ControllerWithOptions`; `ICoreWebView2ControllerOptions3` (`b32b191a-…`) 10 `put_DefaultBackgroundColor`.
-- **Assets and the bridge:** `WebResourceRequested` on the app origin `https://app.localhost` (user decision; verified by `spikes/desktop-origin`), and `postMessage` for calls.
+- **Assets and the bridge:** `WebResourceRequested` on the app origin `https://app.localhost` (user decision; verified by `docs/evidence/desktop-origin`), and `postMessage` for calls.
   - The host answers every request to its origin, with a 404 for unknown paths. An unanswered request opened 2 TLS connections to `[::1]:443`; a host 404 never leaked.
   - The filter is registered with `AddWebResourceRequestedFilterWithRequestSourceKinds(…, ALL)` (`ICoreWebView2_22`, stable since Runtime 122; the provisional minimum Runtime is 139, decision "M1b's remaining questions without a spike"). The legacy filter missed shared and service workers.
   - WebSockets are never intercepted, and CSP `'self'` in `connect-src` still allows `wss://app.localhost`. So the policy names the origin with its scheme (section 3b).
-  - **Defence in depth:** `--host-resolver-rules="MAP app.localhost ~NOTFOUND"` stopped everything else, including the preconnects every navigation makes to `[::1]:443` before any request. It gave 0 loopback connections, with no load-time cost. Verified in M1b step 9 through the options object (`spikes/webview2-flags`): 0 loopback connections in 253 runs against 16 per run (3 navigations) without it, no load cost, and no change in the rate of the rare 5 s first-load stalls (5 of 400 with it, 4 of 400 without). The value must be quoted inside the argument; unquoted, the browser keeps only `MAP`. The host passes it always, before its other arguments; a window test counts connections on both loopback addresses.
+  - **Defence in depth:** `--host-resolver-rules="MAP app.localhost ~NOTFOUND"` stopped everything else, including the preconnects every navigation makes to `[::1]:443` before any request. It gave 0 loopback connections, with no load-time cost. Verified in M1b step 9 through the options object (`docs/evidence/webview2-flags`): 0 loopback connections in 253 runs against 16 per run (3 navigations) without it, no load cost, and no change in the rate of the rare 5 s first-load stalls (5 of 400 with it, 4 of 400 without). The value must be quoted inside the argument; unquoted, the browser keeps only `MAP`. The host passes it always, before its other arguments; a window test counts connections on both loopback addresses.
   - **Load times** (10 alternating runs each, median from `Navigate()` to `ui-ready`): `app.localhost` 68.5 ms, `app.spar.invalid` 67.3 ms, `app.example` 68.8 ms, `app.spar.local` 190 ms.
   - **Local network access** rules did nothing for host-served pages, for either `.localhost` or `.invalid`: loopback fetches got 200 with no prompt. CSP is the only gate protecting loopback services from the page.
   - The origin keys the page's stored data (`localStorage`, IndexedDB, cookies, remembered permissions), so it never changes between versions without a migration.
@@ -159,7 +159,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   2. Stop admitting calls, cancel, and settle pending promises.
   3. Keep pumping during bounded cleanup.
   4. Check view and document liveness before every late reply.
-  5. Close the controller explicitly on the STA. `Close` is synchronous. On Runtime 157 it does run `beforeunload`, `visibilitychange`, `unload` (29 of 29) and `pagehide` (26 of 29), and their writes persisted (`spikes/webview-profiles`; this corrects an earlier note). Required cleanup still must not depend on the page.
+  5. Close the controller explicitly on the STA. `Close` is synchronous. On Runtime 157 it does run `beforeunload`, `visibilitychange`, `unload` (29 of 29) and `pagehide` (26 of 29), and their writes persisted (`docs/evidence/webview-profiles`; this corrects an earlier note). Required cleanup still must not depend on the page.
   6. Observe `BrowserProcessExited` before deleting a profile.
 
   The earlier research's mitigation for a handle leak in a visible window's teardown (hide the controller, navigate to `about:blank`, post the final close) is not used: on Runtime 157 the leak did not reproduce in 100 cycles, with windows offscreen and on the screen, and the mitigation changed nothing measured (M1b step 6; decision "Host details (implementation record; choices for review)", `docs/evidence/m1b-host-details.md`). The only steady growth seen, about one handle of the GPU process per window opened and closed, is the same with it.
@@ -176,7 +176,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - **Not verified:** IME candidates, the page-drawn title bar's overlay, DPI other than 96, a real desktop's foreground rules.
 - **Failure recovery:** handle `ProcessFailed` per view and `BrowserProcessExited` per environment, in either order. Reset the affected RPC and stream state. Coordinate recreation across views. No recovery during app shutdown.
 - **Hardening:** `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS` is appended even in Production, so Production ignores it and the other browser environment overrides unless the app opts in (section 3c). Built in M1b step 5 (decision "Security defaults (implementation record; choices for review)"): the host removes the variables from its own process before the loader's first call (the Runtime check), which the published NativeAOT executable showed is enough; then the environment options carry Spar's arguments, the WebView's settings and events carry the browser defaults of section 3c, and the host checks the profile folder actually in use (`ICoreWebView2Environment7.UserDataFolder`). The process's explicit AppUserModelID is the app id of its channel, set before the window exists.
-- **Title bar drawn by the page** (`spikes/windows-titlebar`, real input in Windows Sandbox). **Decided (user, 2026-11-14): when an app uses a custom title bar, the page draws the caption buttons**, on Windows as on Linux:
+- **Title bar drawn by the page** (`docs/evidence/windows-titlebar`, real input in Windows Sandbox). **Decided (user, 2026-11-14): when an app uses a custom title bar, the page draws the caption buttons**, on Windows as on Linux:
   - **Controller: windowed**, as in M1. Visual hosting also passed every input check, but it needs mouse forwarding, DirectComposition and a host-drawn system menu. Drag and drop, touch, pen, the wheel and IME are untested there, so it stays a fallback.
   - **Frame:**
     - keep `WS_OVERLAPPEDWINDOW`;
@@ -199,7 +199,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - **Open:**
     - DPI other than 100 %, `WM_DPICHANGED`, mixed-DPI monitors, Windows 10 and the shadow were not tested. The Sandbox guest takes its scale from the client window on a 96 DPI monitor, and four ways to change it failed. This needs a host monitor at that scale, which is the user's setting, or a VM with a console session.
     - Narrator was not run, because its audio would play on the user's speakers.
-  - **Accessibility, solved** (`spikes/windows-sandbox-checks`, native UIA client on the host and in the guest):
+  - **Accessibility, solved** (`docs/evidence/windows-sandbox-checks`, native UIA client on the host and in the guest):
     - A UIA provider on the top-level window with `ProviderOptions_RefuseNonClientSupport` removes the empty native title bar.
     - Subclassing WebView2's drag-region windows, which run on our UI thread, and the host overlay hides the unnamed panes.
     - The control view drops from 45 to 24 elements, the page stays fully exposed, and every input check still passes.
@@ -210,7 +210,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
 **Linux:**
 - **API: `webkitgtk-6.0` (GTK4) only** (user decision, 2026-11-14). There is no GTK3 build and no compile-time switch; the 4.1 measurements below stay as evidence. The Linux choices that depended on it are decided: acceleration off plus cairo on software GPUs, and XTEST for trusted test input (below). M4 checks the oldest distribution with a usable `webkitgtk-6.0` and GTK4: another framework documents Ubuntu 24.04 or Debian 13 as the minimum for the same stack, while the package pages list `webkitgtk-6.0` for Ubuntu 22.04.
 - **Trusted input in window tests (decided, user, 2026-11-14): XTEST.**
-  - Tests force `GDK_BACKEND=x11` and send input through XTEST. Under XWayland it delivered trusted Tab and clicks (`isTrusted: true`) on GTK3 and GTK4 (`spikes/linux-wsl-desktop`).
+  - Tests force `GDK_BACKEND=x11` and send input through XTEST. Under XWayland it delivered trusted Tab and clicks (`isTrusted: true`) on GTK3 and GTK4 (`docs/evidence/linux-wsl-desktop`).
   - In CI they run on Xvfb in a container.
   - WebKitWebDriver is out: Ubuntu packages it only for 4.1, and it opens a TCP port.
   - The test framework sends input through one interface, so a Wayland route can be added later.
@@ -221,7 +221,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
 - **Origin policy:** messages and scheme requests carry no origin. Use a navigation lock, inject into the top frame only, and run the bridge in an isolated script world with a relay in the top document only (adopted from the research review, user, 2026-11-15). M1c builds it and tests foreign iframes against it. Freezing the bridge entry points and `Object.prototype` as a section 3c opt-in is still to discuss.
 - **Hardening:** ignore `WEBKIT_INSPECTOR_SERVER` and the other browser environment overrides (section 3c). GStreamer, Mesa and dconf write to `~/.cache`. `JSC_useWasm` is always set from the app's page security before GTK starts, replacing an inherited value (M1c step 5). Built in M1c step 6 (decision "Linux security defaults (implementation record; choices for review)"): before WebKit's libraries load, the host removes `WEBKIT_INSPECTOR_SERVER`, `WEBKIT_INSPECTOR_HTTP_SERVER` and `WEBKIT_DISABLE_SANDBOX_THIS_IS_DANGEROUS` with libc `unsetenv` (and from .NET's copy) unless `AllowBrowserEnvironmentOverrides()`, and, in a Production build without the opt-in, every inherited `JSC_*` option (user decision 2026-11-20; a Development build keeps them for debugging), each named in the log; the GPU workarounds pass. The view's settings, downloads, the page's picker, the context menu and history navigation follow Windows' defaults and opt-ins (section 3c).
 - **The sandbox:** always on with GTK4 (a non-root user, user namespaces). It works in WSL, costing 5–22 ms.
-- **Startup order** (`spikes/linux-wsl-desktop`): create and attach the web view, call `load_uri`, then show the window.
+- **Startup order** (`docs/evidence/linux-wsl-desktop`): create and attach the web view, call `load_uri`, then show the window.
   - Shown first, GTK3 on X11 without the sandbox stalled about 0.5 s. WebKit's draw handler waits for the web process's first frame, while the web process waits for the UI thread to set up its network connection.
   - Shown first, the page also lacks focus, and the first Tab is lost.
   - With this order: 167–185 ms warm on GTK3, 214–261 ms on GTK4 (WSLg, software GPU).
@@ -233,7 +233,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - **Recovery** follows Windows' accepted policy: one silent reload after a lost web process, given back at the next `ui-ready`, and exit 5 with a message on a second loss before it.
   - **Teardown:** the backend's guard, the page's close work, calls stopped and settled, the view's signals disconnected, the window destroyed, then the loop runs until the app's `WebKit*` descendants have exited (17–49 ms here; at most 3 s).
 - **Startup check:** see "Missing prerequisites get a visible error" above for the order, the messages and the exit codes. It covers the libraries, the WebKit helper folder (found through `/proc/self/maps`) and `bwrap`/`xdg-dbus-proxy`. An earlier prototype exited with code 3 within 7–102 ms, naming what is missing and the package to install. Before it, the app died with an unhandled `DllNotFoundException` after 253–813 ms (exit 134), or with a GLib abort (SIGTRAP, exit 133) after 1.9–4.3 s for a missing helper or `bwrap`.
-- **API differences between 4.1 (GTK3) and 6.0 (GTK4)** (`spikes/linux-desktop`). One code base with a compile-time switch covered both, with about 20 `#if` blocks in the host:
+- **API differences between 4.1 (GTK3) and 6.0 (GTK4)** (`docs/evidence/linux-desktop`). One code base with a compile-time switch covered both, with about 20 `#if` blocks in the host:
 
   | Topic | 4.1 / GTK3 | 6.0 / GTK4 |
   |---|---|---|
@@ -254,7 +254,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - On a real GPU the defaults stay as they are (not measured).
   - The host sets `GSK_RENDERER` before `gtk_init` and leaves it alone if the user already set it. The startup error dialog always uses cairo; the app uses it only on a software GPU (decision "Guidance review applied", point 3).
   - To define in M1: how the host detects a software GPU (for example the GL renderer string, or no `/dev/dri` render node), and the C# option's name. Decided and built in M1c (decisions "M1c's first questions", "M1c: the software-GPU detection method" and "Linux start-up: prerequisites, single instance, theme and the software-GPU default"): the render node first, then a surfaceless EGL context's `GL_RENDERER`; on software, `WEBKIT_DISABLE_DMABUF_RENDERER=1` and `GSK_RENDERER=cairo` through `setenv`, never overwriting; `spar.Browser(b => b.HardwareAcceleration(HardwareAcceleration.Always))` with `Auto` (default), `Always` and `Never`, Linux only. The Notebook reaches `ui-ready` in 224–226 ms with it (577–582 ms without).
-- **Memory** (`spikes/linux-memory`; WSLg with llvmpipe; total PSS of the app and its WebKit processes, Wayland / X11, in MB):
+- **Memory** (`docs/evidence/linux-memory`; WSLg with llvmpipe; total PSS of the app and its WebKit processes, Wayland / X11, in MB):
 
   | At ready, small page | Total | App process | Web process |
   |---|---|---|---|
@@ -276,7 +276,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - Resize, maximize and restore showed no white or black frames. At maximize, one capture (35 ms or less) showed the new bounds before the content had grown, with the desktop visible behind it.
   - Animation runs at 61–62 fps.
   - Not covered: a real GPU, HiDPI, IME, screen readers, GNOME, KDE, libadwaita.
-- **Desktop integrations** (`spikes/linux-integration`, WSLg plus xfce4-panel and openbox in Docker). Everything tested works on both APIs:
+- **Desktop integrations** (`docs/evidence/linux-integration`, WSLg plus xfce4-panel and openbox in Docker). Everything tested works on both APIs:
   - **Title bar drawn by the page:**
     - WebKitGTK ignores `app-region`, so the injected script asks the host to move the window. The host uses `gtk_window_begin_move_drag` on GTK3 and `gdk_toplevel_begin_move` on GTK4.
     - The move starts after a 4 px threshold, 16–30 ms after mousedown. Starting on press lost the double-click on GTK4.
@@ -296,7 +296,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
     - the launcher progress signal.
   - **Single instance:** a lock file plus a Unix socket (decided, user, 2026-11-14). The handoff takes 4–10 ms, and a hung first instance gives a clear failure after 2 s. GApplication's D-Bus uniqueness waits forever on a hung first instance.
   - **GTK4-only problems:**
-    - web processes outlive the window after a window-manager move or resize (5 of 5 runs, more than 10 s). Cause and fix found by `spikes/linux-memory`: reset the web view's event controllers (`gtk_event_controller_reset`) right after `gdk_toplevel_begin_move`/`begin_resize`, as GTK's own title bar does. The processes then exit in 24–26 ms (5 of 5 moves, 5 of 5 resizes);
+    - web processes outlive the window after a window-manager move or resize (5 of 5 runs, more than 10 s). Cause and fix found by `docs/evidence/linux-memory`: reset the web view's event controllers (`gtk_event_controller_reset`) right after `gdk_toplevel_begin_move`/`begin_resize`, as GTK's own title bar does. The processes then exit in 24–26 ms (5 of 5 moves, 5 of 5 resizes);
     - on WSLg Wayland, a hidden window keeps showing its last frame (unrealize after hiding);
     - on WSLg Wayland, a window started maximized is killed by the compositor (maximize after the first map).
 
@@ -311,7 +311,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - "clear data" through `ClearBrowsingDataAll` / `webkit_website_data_manager_clear`, never `Profile8.Delete`;
   - InPrivate or ephemeral data sets for in-process tests. The user data folder those tests still need lives under `artifacts/webview2-profiles/` (AGENTS.md), never versioned, so cleanup knows where to look. How parallel tests and test processes share or split those folders without stepping on each other is part of the test-framework topic;
   - SmartScreen (`IsReputationCheckingRequired`) is off while the navigation lock keeps the page on the app origin, and on automatically when the app allows navigation to other origins from C#. An explicit C# override exists both ways. It is a level-2 security default (section 3c; decision "SmartScreen default in WebView2"). Built in M1b step 5 as off: no app can allow navigation to other origins yet, so neither the automatic switch nor an override is reachable, and neither is built.
-- **Measured by `spikes/webview-profiles`** (WebView2 157, WebKitGTK 2.52 on 6.0 and 4.1; 330 Windows and 320 Linux shutdown runs):
+- **Measured by `docs/evidence/webview-profiles`** (WebView2 157, WebKitGTK 2.52 on 6.0 and 4.1; 330 Windows and 320 Linux shutdown runs):
   - Exiting without waiting lost no data on either OS, even with the host killed. Every browser process exited.
   - The 6.4 s exits are SmartScreen: a close within about 0.5 s of a navigation, with its reputation request still in its TLS connect. With `IsReputationCheckingRequired = false` the exit took 52–67 ms; on Linux, 3–24 ms.
   - `Close` does run `beforeunload`, `unload` and `pagehide` on this Runtime.
@@ -340,7 +340,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
     - the tray icon and its menu, and close to tray;
     - the custom title bar (decided, page-drawn buttons);
     - window placement;
-    - single instance and argument forwarding. Decided: it is enforced before the WebView environment exists, a relaunch forwards its arguments to the running instance, and an app that wants several instances says so in C# (decision "Profiles and shutdown"). Linux uses a lock file plus a Unix socket. Windows uses a lock file plus a named pipe (decided, user, 2026-11-17; decision "Windows single instance: a lock file plus a pipe"; `spikes/windows-single-instance`):
+    - single instance and argument forwarding. Decided: it is enforced before the WebView environment exists, a relaunch forwards its arguments to the running instance, and an app that wants several instances says so in C# (decision "Profiles and shutdown"). Linux uses a lock file plus a Unix socket. Windows uses a lock file plus a named pipe (decided, user, 2026-11-17; decision "Windows single instance: a lock file plus a pipe"; `docs/evidence/windows-single-instance`):
       - **Lock:** `FileShare.None` on a lock file in the app's data folder, so the lock covers exactly the folder a second instance would corrupt. The OS releases it when the process ends; a killed primary left nothing stale (10 of 10).
       - **Pipe:** named from the lock file's volume serial number and file index, so a junction or a short name reaches the same instance. One instance, reused with `DisconnectNamedPipe` after the client closes its end.
       - **Security:** a DACL with only the token's user SID, `FILE_FLAG_FIRST_PIPE_INSTANCE` and `PIPE_REJECT_REMOTE_CLIENTS`. The secondary checks the user of the server process (`GetNamedPipeServerProcessId`, then its token). Never `PipeOptions.CurrentUserOnly`, which opens an elevated user's pipe to every administrator.
@@ -405,7 +405,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
     - **zoom and find in page. Decided (2026-11-14):**
       - Zoom is on by default (Ctrl+wheel, Ctrl+plus/minus/0, handled by the host), saved per window with its placement, and limited or turned off from C# (`w.Zoom(min, max)`, `w.Zoom(false)`). The page has `zoom.get/set/onChange`.
       - Find in page is off by default. `w.FindInPage()` turns on Ctrl+F with an SDK find bar on both hosts; `find.start(text)` returns the match count, with `next`, `previous` and `stop`.
-      - The engine is WebView2's find API (`ICoreWebView2_28::get_Find`, `ICoreWebView2Environment15::CreateFindOptions`, `ICoreWebView2Find`, `ICoreWebView2FindOptions`), stable since Runtime 139.0.3405.78 by Microsoft's release notes, so Spar's minimum covers it with no fallback. `SuppressDefaultFindDialog` is always set: unsuppressed, the browser's own find bar opened as a popup window (M1b step 9, `spikes/webview2-flags`; counts, next, previous and stop checked on Runtime 157 only, as Microsoft offers no Fixed Version Runtime older than 153). The example is `docs/app-model.md` 6.8;
+      - The engine is WebView2's find API (`ICoreWebView2_28::get_Find`, `ICoreWebView2Environment15::CreateFindOptions`, `ICoreWebView2Find`, `ICoreWebView2FindOptions`), stable since Runtime 139.0.3405.78 by Microsoft's release notes, so Spar's minimum covers it with no fallback. `SuppressDefaultFindDialog` is always set: unsuppressed, the browser's own find bar opened as a popup window (M1b step 9, `docs/evidence/webview2-flags`; counts, next, previous and stop checked on Runtime 157 only, as Microsoft offers no Fixed Version Runtime older than 153). The example is `docs/app-model.md` 6.8;
     - **screen-capture protection. Decided (2026-11-14):**
       - `w.ProtectFromCapture()` per window kind, `IWindows.SetCaptureProtection(bool)` and `capture.protect(bool)` at run time, which report whether it took effect.
       - Windows uses `SetWindowDisplayAffinity(WDA_EXCLUDEFROMCAPTURE)`, on 10 2004 and later. Linux cannot block capture, so `isAvailable` is false there.
@@ -452,7 +452,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - Linux: `libsecret`, which needs a session bus and a Secret Service.
   - Page-facing secrets are write-only (`set`, `has`, `delete`).
   - Neither OS isolates apps run by the same user.
-- **Resource usage** (user request, 2026-11-14; measured by `spikes/resource-usage`, API decided). A C# service reports how much disk the WebView data uses and how much memory the backend and the web engine use, so an app can show it in its frontend, for example on a settings or "about" page.
+- **Resource usage** (user request, 2026-11-14; measured by `docs/evidence/resource-usage`, API decided). A C# service reports how much disk the WebView data uses and how much memory the backend and the web engine use, so an app can show it in its frontend, for example on a settings or "about" page.
   - **Exposure:** the app exposes it through one of its own contracts, so the page sees nothing by default. Spar ships no ready-made contract (decided below).
   - **Live values** (user, 2026-11-14): an app may show them continuously, for example in the main window's status bar.
     - So besides a one-shot read there is a subscription that samples on a timer and pushes the latest values. It keeps only the newest sample, so a slow page never builds a backlog.
@@ -463,14 +463,14 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
       - the interval is a C# option with a floor.
     - **Flexible** (user, 2026-11-14): an app chooses what it samples. For example it may subscribe to memory only and read the folder sizes only on request, such as when a settings page opens. The decided API covers this with one memory read, one memory watch and one disk read on request. Watching disk, or one measure on its own, is not in the first version.
   - **API decided (2026-11-14):** an injectable `IResourceUsage` with `GetMemoryAsync`, `WatchMemory(interval)` (minimum 250 ms) and `GetDiskAsync` (returns `Result<DiskUsage, FileAccessError>`). `MemoryUsage` holds the app total, the engine (with its GPU process), the app process and each engine process by kind; `DiskUsage` holds profile, app data and cache. The page sees it only through a contract the app writes, typically a coalesced subscription for memory and a command for disk; Spar ships no ready-made contract. The example is `docs/app-model.md` 3.9.
-    - `spikes/resource-usage` measured the sampling cost behind these numbers (below).
+    - `docs/evidence/resource-usage` measured the sampling cost behind these numbers (below).
   - **Windows, candidates listed before the spike:**
     - the browser's processes and their kinds from `ICoreWebView2Environment` (`GetProcessInfos`, and the extended form that maps renderers to frames);
     - each process's private memory through `GetProcessMemoryInfo`;
     - the backend's own memory through `Environment.WorkingSet` and GC counters;
     - disk as the size of the user data folder, or of one profile's folder.
   - **Linux, candidates listed before the spike:**
-    - WebKit's web and network processes found under the app's process tree, with PSS from `/proc/<pid>/smaps_rollup` (as `spikes/linux-memory` measured);
+    - WebKit's web and network processes found under the app's process tree, with PSS from `/proc/<pid>/smaps_rollup` (as `docs/evidence/linux-memory` measured);
     - the website data sizes from `webkit_website_data_manager_fetch`;
     - the folder sizes.
   - **Open before the spike, answered below:**
@@ -478,7 +478,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
     - cost and refresh rate;
     - whether to report the GPU process and shared memory;
     - folders locked by the running browser.
-  - **Measured by `spikes/resource-usage`** (NativeAOT hosts; WebView2 157, WebKitGTK 2.52 on 6.0). It answers most of the open points above:
+  - **Measured by `docs/evidence/resource-usage`** (NativeAOT hosts; WebView2 157, WebKitGTK 2.52 on 6.0). It answers most of the open points above:
     - **One measure on both OSes: "private memory".** It is resident memory that only the app's processes hold and that no file backs.
       - Windows: `PROCESS_MEMORY_COUNTERS_EX2.PrivateWorkingSetSize`. It matched Task Manager's "Memory" column in 25 of 25 processes.
       - Linux: `statm` resident − shared, which is within 0.4 MB of `Private_Dirty`.

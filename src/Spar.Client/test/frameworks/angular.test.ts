@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-// Angular with the real Call and Result (the checks of spikes/frontend-frameworks, rebuilt on the SDK): resource()
+// Angular with the real Call and Result (the checks of docs/evidence/frontend-frameworks, rebuilt on the SDK): resource()
 // takes a Call as its loader, passes its abort signal to the call, and aborts the previous call when its params change.
 // Angular's packages ship partially compiled; outside the Angular CLI they need the JIT compiler loaded first.
 import "@angular/compiler";

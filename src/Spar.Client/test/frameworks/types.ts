@@ -1,4 +1,4 @@
-// Type checks of the real Call and Result in the frameworks' own types (the checks of spikes/frontend-frameworks,
+// Type checks of the real Call and Result in the frameworks' own types (the checks of docs/evidence/frontend-frameworks,
 // rebuilt on the SDK). Compiled by `npm run check` with TypeScript 6 and 7; never run.
 import type { ResourceLoaderParams, ResourceRef } from "@angular/core";
 import type { UseQueryResult } from "@tanstack/react-query";

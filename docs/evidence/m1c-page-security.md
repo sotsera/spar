@@ -71,7 +71,7 @@ From the last full run (2026-11-20, 09:45–09:54 local), [`linux-page-security-
 
 ### Headers
 
-The page read them with `fetch` from the document, a module, the worker script and a missing file: each had `Content-Type` exact (`text/html; charset=utf-8`, `text/javascript; charset=utf-8`), the policy with `default-src 'none'`, `connect-src spar://app`, `require-trusted-types-for 'script'` and `report-uri /_spar/csp-report`, `X-Content-Type-Options: nosniff`, `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, COOP and CORP `same-origin`, and `Permissions-Policy` with `geolocation=(self)` and `camera=()`; the missing file was 404 with the same set. A module worker the host served: `eval` and `new Function` blocked (`EvalError`), a `fetch` to another origin refused; **no violation reached either channel from the worker** (WebKitGTK raises no event and sends no report there, as `spikes/linux-gpu-csp` found).
+The page read them with `fetch` from the document, a module, the worker script and a missing file: each had `Content-Type` exact (`text/html; charset=utf-8`, `text/javascript; charset=utf-8`), the policy with `default-src 'none'`, `connect-src spar://app`, `require-trusted-types-for 'script'` and `report-uri /_spar/csp-report`, `X-Content-Type-Options: nosniff`, `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, COOP and CORP `same-origin`, and `Permissions-Policy` with `geolocation=(self)` and `camera=()`; the missing file was 404 with the same set. A module worker the host served: `eval` and `new Function` blocked (`EvalError`), a `fetch` to another origin refused; **no violation reached either channel from the worker** (WebKitGTK raises no event and sends no report there, as `docs/evidence/linux-gpu-csp` found).
 
 ### Violations
 

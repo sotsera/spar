@@ -222,7 +222,7 @@ internal sealed class BrowserView
     /// <summary>
     /// "Reload page" in the hung-page dialog (plan section 3, "Hung pages"; loop thread): reloading alone never recovers
     /// a hung page (pitfalls), so the web process is ended first, and the page loads again once WebKit reports it gone
-    /// (<c>TERMINATED_BY_API</c>, 0–3 ms later in <c>spikes/page-heartbeat</c>). This is the user's choice, so it does
+    /// (<c>TERMINATED_BY_API</c>, 0–3 ms later in <c>docs/evidence/page-heartbeat</c>). This is the user's choice, so it does
     /// not use up the automatic reload.
     /// </summary>
     public void ReloadHungPage()

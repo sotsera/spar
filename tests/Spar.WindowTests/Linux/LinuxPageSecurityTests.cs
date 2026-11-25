@@ -161,7 +161,7 @@ public sealed class LinuxPageSecurityTests
         Assert.StartsWith("blocked", result.RootElement.GetProperty("function").GetString(), StringComparison.Ordinal);
         Assert.StartsWith("refused", result.RootElement.GetProperty("fetch").GetString(), StringComparison.Ordinal);
 
-        // WebKitGTK raises no event and sends no report for a violation in a worker (spikes/linux-gpu-csp): recorded,
+        // WebKitGTK raises no event and sends no report for a violation in a worker (docs/evidence/linux-gpu-csp): recorded,
         // so a WebKit that starts reporting them shows here.
         var reported = app.Log().Contains("blocked https://blocked.invalid/from-worker", StringComparison.Ordinal);
         Record($"{Build()}: worker {line.Groups["json"].Value}; its violation reported: {reported}");

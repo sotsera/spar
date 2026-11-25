@@ -27,7 +27,7 @@ internal sealed class SchemeServer
 
     /// <summary>
     /// The app's origin on Linux (decision "Desktop origin"); <c>connect-src</c> names it (decision "M1c's first
-    /// questions", checked in <c>spikes/linux-gpu-csp</c>).
+    /// questions", checked in <c>docs/evidence/linux-gpu-csp</c>).
     /// </summary>
     public const string Origin = "spar://app";
 

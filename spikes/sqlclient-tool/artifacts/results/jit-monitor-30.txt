@@ -1,7 +1,0 @@
-exit 0 wallMs 91418
-RUN runtime=jit mode=monitor arg=30 sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
-RESULT monitor phase=idle-persistent polls=30 spid=53 first=17.62ms median=9.62ms p95=17.92ms max=20.00ms serverCpuPerPollMs=1.43 allocKBPerPollMedian=3469.5 rows: counters=1986 requests=46 waits=126
-RESULT monitor phase=idle-open-per-poll polls=30 spid=0 first=9.03ms median=8.98ms p95=31.50ms max=33.83ms serverCpuPerPollMs=NaN allocKBPerPollMedian=3469.9 rows: counters=1986 requests=46 waits=126
-RESULT monitor phase=load-persistent polls=30 spid=53 first=12.51ms median=10.17ms p95=12.51ms max=12.63ms serverCpuPerPollMs=2.07 allocKBPerPollMedian=3467.2 rows: counters=1986 requests=50 waits=126
-MEM end peakWorkingSetMB=75.7 workingSetMB=74.3 peakPrivateMB=39.7 allocatedMB=306.0 gc0=17 gc1=2 gc2=1 cpuMs=2203
-

@@ -1,8 +1,0 @@
-<Project>
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
-
-  <ItemGroup>
-    <PackageVersion Include="xunit.v3.aot" Version="4.0.3" />
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
-  </ItemGroup>
-</Project>

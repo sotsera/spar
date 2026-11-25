@@ -3,12 +3,12 @@
 # without network, camera, microphone, clipboard or printers; mapped folders under artifacts/m1b-host-details/sandbox/
 # (in: read-only, out: results). The guest grants the foreground to every process and takes real input through
 # SendInput; nothing is sent to the host's desktop. The client window that `wsb connect` opens is minimized as soon as
-# it appears (spikes/windows-sandbox-checks/sandbox/find-client.ps1), and closed at the end.
+# it appears (docs/evidence/m1b-host-details/find-client.ps1), and closed at the end.
 #   docs/evidence/m1b-host-details/sandbox.sh start|connect|focus <exe> <label>|leak <label>|stop
 set -eu
 base=artifacts/m1b-host-details/sandbox
 here=docs/evidence/m1b-host-details/sandbox
-find=spikes/windows-sandbox-checks/sandbox/find-client.ps1
+find=docs/evidence/m1b-host-details/find-client.ps1
 win() { cygpath -aw "$1"; }
 id() { tr -d '\r\n' < "$base/id.txt"; }
 # Guest folders, kept in variables: a backslash before $ in a double-quoted string would escape the $.
@@ -67,7 +67,7 @@ case "$1" in
     ;;
   stop)
     for h in $(powershell -NoProfile -ExecutionPolicy Bypass -File $find | grep -o '^[0-9]*'); do
-      powershell -NoProfile -ExecutionPolicy Bypass -File spikes/windows-sandbox-checks/sandbox/close-client.ps1 -Hwnd "$h" || true
+      powershell -NoProfile -ExecutionPolicy Bypass -File docs/evidence/m1b-host-details/close-client.ps1 -Hwnd "$h" || true
     done
     wsb stop --id "$(id)" --raw || true
     ;;

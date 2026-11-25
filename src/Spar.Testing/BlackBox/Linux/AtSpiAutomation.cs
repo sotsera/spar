@@ -102,7 +102,7 @@ internal sealed class AtSpiAutomation : IBlackBoxAutomation, IDisposable
                 return false;
             }
 
-            // GTK answers a button's action about 250 ms later: it shows the press first (spikes/linux-blackbox-atspi).
+            // GTK answers a button's action about 250 ms later: it shows the press first (docs/evidence/linux-blackbox-atspi).
             var click = actions.IndexOf("click");
             return _bus.DoAction(target, click < 0 ? 0 : click);
         }, cancellationToken);

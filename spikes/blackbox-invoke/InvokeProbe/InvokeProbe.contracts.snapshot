@@ -1,7 +1,0 @@
-# The contracts of InvokeProbe as pages see them. Written by the build; commit it with the change.
-# CI builds fail with SPAR100 when it is out of date.
-
-fingerprint 34866bff27c95be9
-
-contract probe (InvokeProbe.ProbeService)
-  mark(string) -> void

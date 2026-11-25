@@ -29,7 +29,7 @@ internal enum HeartbeatAction
 /// </summary>
 internal sealed class PageHeartbeat
 {
-    /// <summary>The time between pings (plan section 3: 5 s × 3 misses, confirmed by <c>spikes/page-heartbeat</c>).</summary>
+    /// <summary>The time between pings (plan section 3: 5 s × 3 misses, confirmed by <c>docs/evidence/page-heartbeat</c>).</summary>
     public const int IntervalMilliseconds = 5_000;
 
     /// <summary>Unanswered ticks in a row before the page counts as unresponsive.</summary>

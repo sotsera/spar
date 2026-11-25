@@ -4,7 +4,7 @@ namespace Spar.Linux;
 
 /// <summary>
 /// A test window's view (<see cref="BrowserSource"/>): an ephemeral network session, the InPrivate analogue (decision
-/// "Step 8's shape: window tests driven by Spar's own API"; <c>spikes/window-automation-linux</c>: 0 of 10 consecutive
+/// "Step 8's shape: window tests driven by Spar's own API"; <c>docs/evidence/window-automation-linux</c>: 0 of 10 consecutive
 /// and 0 of 2 simultaneous tests saw another's storage), and a web context of its own, so the <c>spar</c> scheme it
 /// registers serves this window's app only. Loop thread; reached only behind the test-host feature switch.
 /// </summary>

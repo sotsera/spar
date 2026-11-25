@@ -8,7 +8,7 @@ using static Spar.Linux.Testing.TestNative;
 namespace Spar.Linux.Testing;
 
 /// <summary>
-/// The page driver's transport on Linux, over WebKitGTK's own API (<c>spikes/window-automation-linux</c>): the engine as
+/// The page driver's transport on Linux, over WebKitGTK's own API (<c>docs/evidence/window-automation-linux</c>): the engine as
 /// a document-start script of an isolated world of its own, each request one <c>call_async_javascript_function</c> in
 /// that world, script in the page's world the same way, the page's console messages and errors from a small
 /// document-start script of the page's world that hands them, as DOM events, to a relay in the engine's world (WebKitGTK

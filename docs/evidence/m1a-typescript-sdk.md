@@ -29,6 +29,6 @@ Node 24.21.0, TypeScript 6.0.3 and 7.0.2, Vitest 4.1.10, `@types/node` 24.19.2 (
 
 - **Not built:** the per-host transports (WebView2, WebKitGTK, loopback), the generated TypeScript modules and the client step, packaging as `@spar/app/sdk`, streams and subscriptions, the Vite plugin, and the type tests of `match` (code that must fail to compile).
 - **Rerun since (2026-11-15):** the React, Vue and Angular checks were rebuilt against this `Call` and `Result` in `test/frameworks/` (decision "The frontend-framework checks in the SDK's tests").
-- **Not rerun (at the time):** the React, Angular and Vue checks of `spikes/frontend-frameworks` against this `Call` and `Result`, which the conventions require when they change (they still run against the spike's own copy).
+- **Not rerun (at the time):** the React, Angular and Vue checks of `docs/evidence/frontend-frameworks` against this `Call` and `Result`, which the conventions require when they change (they still run against the spike's own copy).
 - **Not measured:** the 5 s confirmation timeout. It is a choice made here, not a decided number.
 - **Not run:** a real browser, so the page side runs in Node only. `String.prototype.isWellFormed` needs Chromium 111+ or Safari 16.4+; the WebKitGTK minimum (2.48) is assumed to have it, which is untested.

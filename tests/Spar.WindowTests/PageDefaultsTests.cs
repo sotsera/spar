@@ -6,7 +6,7 @@ using static Spar.Testing.SparAssertions;
 namespace Spar.WindowTests;
 
 /// <summary>
-/// Defaults of the page that only a real browser shows (plan M1b step 9, <c>spikes/webview2-flags</c>): WebAssembly
+/// Defaults of the page that only a real browser shows (plan M1b step 9, <c>docs/evidence/webview2-flags</c>): WebAssembly
 /// refused by the policy, and <c>app.localhost</c> never resolved to the loopback address.
 /// </summary>
 [Trait("Surface", "Window")]

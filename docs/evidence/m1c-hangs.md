@@ -59,7 +59,7 @@ Every number below is from the last full run (run 4 of the hang tests, 2026-11-1
 | Idle 20 s, then work of 3 s and 10 s, then idle 6 s | **no alarm** in either build; 7 ticks, 7 pings; the longest tick on the main loop 0.57–0.64 ms (CoreCLR Debug) and **0.031 ms** (NativeAOT) |
 | "Reload page" (scripted answer 1 s after the dialog) | the web process ended (`TERMINATED_BY_API`) **1.8 ms** after the choice [2.0], the reload issued 6 ms later, the new document's `ui-ready` **68 ms** after the choice [72]; "first document … (reloaded)" from the backend, so the page started again; the automatic reload untouched ("page reloaded after the web process ended" never logged); hook "Reloaded" |
 | The Wait schedule on a 500 ms heartbeat (five Waits, then Reload) | back after **1.9, 3.9, 7.9, 15.9, 15.9 s** (decided 20, 40, 80, 160, 160 s at 5 s; each up to one tick early), in two runs |
-| WebKit's own report (`notify::is-web-process-responsive`) | never changed in any run: no input reached the hung pages (as in `spikes/page-heartbeat`); the merge into one state is the shared rule that Windows' unit tests cover |
+| WebKit's own report (`notify::is-web-process-responsive`) | never changed in any run: no input reached the hung pages (as in `docs/evidence/page-heartbeat`); the merge into one state is the shared rule that Windows' unit tests cover |
 | The automated mode (`SPAR_AUTOMATED=1`) | the alarm logged, "The automated mode shows no hung-page dialog."; a close "closes a page that does not answer without asking", its web process ended first, exit 0, no dialog ever shown |
 
 ### Closing

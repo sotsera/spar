@@ -1,8 +1,0 @@
-{
-  "suite": "smartscreen", "scenario": "smart", "rounds": 3, "listener": true, "stayMs": 20000, "timeoutMs": 180000,
-  "variants": [
-    { "name": "flag-off", "args": "--disable-blink-features=FileSystemAccessLocal", "reputation": false, "netLog": true },
-    { "name": "flag-on", "args": "--disable-blink-features=FileSystemAccessLocal", "reputation": true, "netLog": true },
-    { "name": "flag-off-resolver", "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"", "reputation": false, "netLog": true }
-  ]
-}

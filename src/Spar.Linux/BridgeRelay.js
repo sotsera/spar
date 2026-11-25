@@ -66,7 +66,7 @@ const sparRelay = (() => {
   // at most one `csp` message per interval, a bounded number of groups per document, and after a bounded number of
   // violations it stops listening, since the engine dispatches an event per violation only while a listener exists.
   // It sits on the window, capturing, from document start, so it comes before any listener of the page. Violations in
-  // workers raise no event on WebKitGTK and send no report (spikes/linux-gpu-csp): nothing here can see them.
+  // workers raise no event on WebKitGTK and send no report (docs/evidence/linux-gpu-csp): nothing here can see them.
   if (__SPAR_REPORT_VIOLATIONS__) {
     const intervalMs = __SPAR_REPORT_INTERVAL_MS__;
     const firstDelayMs = __SPAR_REPORT_FIRST_DELAY_MS__;

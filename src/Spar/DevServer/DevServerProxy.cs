@@ -20,7 +20,7 @@ namespace Spar.DevServer;
 /// one), and so is an encoded body, which the WebView would not decode.</item>
 /// <item><b>What it forwards:</b> <c>Accept</c> and the <c>Sec-Fetch-*</c> headers, nothing else: no cookies, no
 /// conditional headers, so Vite never answers 304 and a cached page never keeps an old nonce
-/// (<c>spikes/csp-navigation</c>).</item>
+/// (<c>docs/evidence/csp-navigation</c>).</item>
 /// <item><b>What it answers:</b> Vite's status, body and <c>Content-Type</c>, and the host's own policy and headers in place
 /// of Vite's (<c>Cache-Control: no-store</c> included, no <c>ETag</c>), on every response, worker scripts included. An HTML
 /// response gets a fresh nonce in place of the plugin's placeholder (<see cref="NoncePlaceholder"/>, Vite's

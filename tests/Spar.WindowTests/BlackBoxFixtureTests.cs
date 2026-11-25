@@ -22,7 +22,7 @@ public sealed class BlackBoxFixtureTests
     public async Task Closing_the_job_ends_the_app_and_everything_it_started()
     {
         // Linux ends the app with the test process through KillOnParentExit, which only the test process's own death
-        // shows (spikes/linux-blackbox-atspi: 0 processes left in 25 of 25 runs); a test of it needs a holder process.
+        // shows (docs/evidence/linux-blackbox-atspi: 0 processes left in 25 of 25 runs); a test of it needs a holder process.
         WindowSupport.SkipUnlessWindows("Windows' job object; on Linux the kernel ends the app with the test process (KillOnParentExit), measured by the AT-SPI spike.");
         if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
         {

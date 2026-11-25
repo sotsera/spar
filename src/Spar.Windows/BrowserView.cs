@@ -521,7 +521,7 @@ internal sealed partial class BrowserView
             {
                 // The page went with it: its document ends now, so a close request it was asked goes on without its
                 // answer and its close work is not waited for. Before, a session end whose renderer died waited out
-                // the page's 2 s and the close work's 1 s for a page that was gone (spikes/renderer-sharing).
+                // the page's 2 s and the close work's 1 s for a page that was gone (docs/evidence/renderer-sharing).
                 bridge.OnRendererExited();
             }
 

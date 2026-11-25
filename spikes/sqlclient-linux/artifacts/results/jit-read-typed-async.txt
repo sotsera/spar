@@ -1,7 +1,0 @@
-exit 0 wallMs 6382
-RUN runtime=jit mode=read arg=typed-async sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
-RUN 0 rows=1000000 ms=2782 rowsPerSec=359509 allocatedMB=636.3 checksum=532994389691
-RUN 1 rows=1000000 ms=1694 rowsPerSec=590412 allocatedMB=636.2 checksum=532994389691
-RUN 2 rows=1000000 ms=1685 rowsPerSec=593639 allocatedMB=636.2 checksum=532994389691
-RESULT read variant=typed-async rows=1000000 medianMs=1694 rowsPerSec=590412 payloadMBps=115.4 runsMs=[2782, 1694, 1685] checksum=532994389691
-MEM end peakWorkingSetMB=100.8 workingSetMB=100.8 rssAnonMB=36.9 allocatedMB=1910.0 gc0=107 gc1=1 gc2=0 cpuMs=9995

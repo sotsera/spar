@@ -2,7 +2,7 @@
 
 Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled decisions, the open questions and the milestones, and lists every design file. Section numbers are global: "section 3d" anywhere in the plan, the design files or `docs/decisions.md` means the heading of that number, wherever it lives.
 
-## 3d. Light and dark theme without flicker (verified by `spikes/theme-startup`; choices decided 2026-11-14)
+## 3d. Light and dark theme without flicker (verified by `docs/evidence/theme-startup`; choices decided 2026-11-14)
 
 **Goal:** no white flash in light or dark mode at startup, on a theme change, or while the page loads.
 
@@ -57,7 +57,7 @@ With the layers below, both themes on all three hosts (WebView2, WebKitGTK GTK3 
 - **Built on Linux (M1c step 2;** decision "Linux start-up: prerequisites, single instance, theme and the software-GPU default"; `docs/evidence/m1c-startup.md`): the saved choice, the portal's `color-scheme` (read before GTK starts, never starting the portal, and followed live), or GTK's settings; the CSS provider, the dark preference and the opaque view background, plus one layer the list above lacks: **the X window's background pixel** in the theme's colour, set after `gtk_widget_realize`. Without it, a window on X11 with no compositor showed what was on the screen beneath it for about 6 ms before GTK's first paint. With it, ten alternating light and dark launches of the Notebook under Xvfb gave 0 samples of the other scheme.
 - **Not tested:** a real light Windows theme and a real system `WM_SETTINGCHANGE`; an on-screen window, several monitors or DPI scales; Windows 10 and WebView2 Runtimes older than 157; the cost of a transparent WebView2 background; Linux on a real desktop (Wayland, compositor, portal, libadwaita); the Vite dev path; the C# declaration of the colours.
 
-**Optional splash screen** (user decision; measured by `spikes/theme-startup`):
+**Optional splash screen** (user decision; measured by `docs/evidence/theme-startup`):
 
 - **Where it lives:** static HTML in `index.html`, inside the element with the id `spar-splash` (decided, user, 2026-11-22: the app writes the markup, the plugin adds the styles). It shows as soon as the HTML is parsed, before any JS runs.
 - **The splash is an opaque cover in the theme colour from the first frame; only its mark fades in after the delay.** The first design, a transparent element that faded in, showed app → splash → app in manual mode.

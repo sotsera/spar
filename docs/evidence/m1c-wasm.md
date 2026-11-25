@@ -1,6 +1,6 @@
 # M1c: WebAssembly off by default on the Linux host (`JSC_useWasm`, workers, web-process restarts)
 
-Recorded 2026-11-20. What it shows: the Linux host's WebAssembly setting of plan M1c, build step 5 (`spikes/webkit-wasm-off`), on the bridge probe (`tests/apps/BridgeProbe`) and on its own build with `csp.AllowWebAssembly()`, under an Xvfb of the run's own, as Development builds and as Production NativeAOT executables: `typeof WebAssembly` and a module's result in the page and in a dedicated, a shared and a service worker; an inherited `JSC_useWasm` of the other kind replaced; the setting in the web process that replaces a lost one and in the one "Reload page" starts; the Notebook. Decision "Linux WebAssembly off by default (implementation record; choices for review; 2026-11-20)".
+Recorded 2026-11-20. What it shows: the Linux host's WebAssembly setting of plan M1c, build step 5 (`docs/evidence/webkit-wasm-off`), on the bridge probe (`tests/apps/BridgeProbe`) and on its own build with `csp.AllowWebAssembly()`, under an Xvfb of the run's own, as Development builds and as Production NativeAOT executables: `typeof WebAssembly` and a module's result in the page and in a dedicated, a shared and a service worker; an inherited `JSC_useWasm` of the other kind replaced; the setting in the web process that replaces a lost one and in the one "Reload page" starts; the Notebook. Decision "Linux WebAssembly off by default (implementation record; choices for review; 2026-11-20)".
 
 ## Environment
 

@@ -50,7 +50,7 @@ dotnet_diagnostic.CA2016.severity = error
 [src/Spar.Generator/**.cs]
 dotnet_diagnostic.RSEXPERIMENTAL006.severity = none
 
-# MSBuild task sources (agreed with the user on 2026-11-14; spikes/msbuild-task-analyzer).
+# MSBuild task sources (agreed with the user on 2026-11-14; docs/evidence/msbuild-task-analyzer).
 # The task project is not created yet: keep this path in step with its folder when M1 adds it.
 # - run_mt_analyzers_on_all_tasks: a task that forgets [MSBuildMultiThreadableTask] still gets the thread-safety
 #   rules MSBuildTask0002-0005 instead of 0001 only.
