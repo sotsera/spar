@@ -5032,3 +5032,19 @@ The five follow-ups of "The checks at the PC at the M1d exit", built at the user
 - **Tests:**
   - **Windows:** the solution passed (1,440 tests: 1,327 passed, 113 skipped). The package tests passed 41 of 42 in the full run. The template's black-box test failed once: its published app did not show "Type a name first." within 10 s, with no IDE or other app running. It passed when run alone. Nothing changed here reaches a Production app's page; this is the first time this timeout has been recorded.
   - **WSL** (Ubuntu 24.04, Xvfb): the solution passed (1,242 tests: 1,201 passed, 41 skipped), and the package tests passed (40, 2 skipped as on every Linux run).
+
+## The M1d follow-ups checked without the IDEs (check results; 2026-11-25)
+
+- **CI:** every job passed on `952ec9f` (both OSes: tests, build tests, package tests, AOT; the Linux container's window and black-box tests).
+- **ReSharper's view, through JetBrains' command-line InspectCode** (`JetBrains.ReSharper.GlobalTools` 2026.3.0.2, installed under `artifacts/resharper-cli/`, solution-wide analysis on). The Notebook could not tell anything apart: its `Program.cs` and the generated dispatch reach `PagesService` with or without the annotations. So the check used a scratch project outside the repository, with only `Spar.dll` as a plain reference and no generator:
+
+  | Class in the scratch project | What InspectCode reported |
+  |---|---|
+  | `[SparContract]` class with a `[SparCommand]` method, nothing calls either | nothing |
+  | the same class shape under an attribute of its own without the annotation (the control) | `UnusedType.Global` for the class, `UnusedMember.Global` for the method |
+  | a `[SparContract]` class holding an unused field, an unused public method without `[SparCommand]` and an unused private method | all three still reported |
+  | a `[SparContract]` interface whose method has no `[SparCommand]` | `UnusedMember.Global` for the method |
+  | the alternative not taken, `WithMembers`, on an attribute of the scratch project's own | the interface's method no longer reported, and the class's three unused members not reported either |
+
+  So the annotation does what decision "The M1d check follow-ups" meant, and the template, whose one contract is a class, shows no "never used". An interface contract's methods are still reported unless each carries `[SparCommand]`; whether Spar should do more is open for the user. Not run: ReSharper inside Visual Studio, which uses the same engine.
+- **Vite's cache and the drive letter.** `npm run dev` started four times in the Notebook's frontend, Vite 8.3.8 under Node 24.21.0: `E:` then `E:` kept the dependency cache's config hash (`76e80791`) and did not re-optimize; `e:` changed it (`30bf6088`), with "Re-optimizing dependencies because vite config has changed"; `E:` again changed it back and re-optimized. Spar now always starts Vite from the upper-case spelling (`Spar.Tests`, `On_Windows_the_folders_get_an_upper_case_drive_letter`), so an app started from either IDE keeps one hash. Not run: the switch between the two IDEs itself.
