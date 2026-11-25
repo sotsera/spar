@@ -5048,3 +5048,8 @@ The five follow-ups of "The checks at the PC at the M1d exit", built at the user
 
   So the annotation does what decision "The M1d check follow-ups" meant, and the template, whose one contract is a class, shows no "never used". An interface contract's methods are still reported unless each carries `[SparCommand]`; whether Spar should do more is open for the user. Not run: ReSharper inside Visual Studio, which uses the same engine.
 - **Vite's cache and the drive letter.** `npm run dev` started four times in the Notebook's frontend, Vite 8.3.8 under Node 24.21.0: `E:` then `E:` kept the dependency cache's config hash (`76e80791`) and did not re-optimize; `e:` changed it (`30bf6088`), with "Re-optimizing dependencies because vite config has changed"; `E:` again changed it back and re-optimized. Spar now always starts Vite from the upper-case spelling (`Spar.Tests`, `On_Windows_the_folders_get_an_upper_case_drive_letter`), so an app started from either IDE keeps one hash. Not run: the switch between the two IDEs itself.
+
+## Interface contracts keep the narrow annotation (user decision, 2026-11-25)
+
+- **Decided:** `[SparContract]` keeps marking only the type as used, so ReSharper and Rider still report unused fields and helpers inside a contract class (decision "The M1d follow-ups checked without the IDEs"). An interface contract's method counts as used only with `[SparCommand]`, and that is documented instead of marking every member: `docs/app-model.md` section 3.3 and the remarks on `SparCommandAttribute`.
+- **Not taken:** `WithMembers` on `[SparContract]`, which covers interface methods but hides a contract class's unused members too.

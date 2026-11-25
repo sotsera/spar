@@ -374,6 +374,8 @@ public sealed class CopyJobsService(IConnectionStore connections, ISparCall call
 
 Every method of a `[SparContract]` interface is a command; `[SparCommand]` there only overrides a name. The implementation comes from DI and exposes only the interface's members.
 
+ReSharper and Rider count a contract class and its commands as used, since the page calls them. An interface's methods count as used only with `[SparCommand]`; without it, those tools report each method as never used until C# code calls it.
+
 File `SqlTool/Connections/IConnections.cs`:
 
 ```csharp

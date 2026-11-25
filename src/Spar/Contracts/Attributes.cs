@@ -12,6 +12,10 @@ public sealed class SparContractAttribute(string? name = null) : Attribute
 }
 
 /// <summary>Marks a command. Required on class contracts; on interface contracts it only overrides the name.</summary>
+/// <remarks>
+/// ReSharper and Rider count a method with this attribute as used. On an interface contract, add it to each method
+/// those tools would otherwise report as never used.
+/// </remarks>
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 [MeansImplicitUse(ImplicitUseKindFlags.Access)]
 public sealed class SparCommandAttribute(string? name = null) : Attribute
