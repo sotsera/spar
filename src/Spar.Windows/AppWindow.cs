@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Spar.Bridge;
 using Spar.Hosting;
 using Spar.Logging;
 using Spar.Runtime;
@@ -82,6 +83,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     private bool _sessionEnding;
     private bool _tornDown;
     private int _exitCode;
+    private Spar.DevServer.DevServerSession? _devServer;
 
     /// <param name="offscreen">
     /// A window of a test process (plan section 5): shown offscreen, with no taskbar button, never activated.
@@ -130,6 +132,12 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
     /// <summary>
+    /// A Debug build's development server, which the page comes from (before <see cref="Start"/>). Called only behind
+    /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
+    /// </summary>
+    public void UseDevServer(Spar.DevServer.DevServerSession devServer) => _devServer = devServer;
+
+    /// <summary>
     /// The window first, in the theme's colour and title bar before it is shown (plan 3d), then everything that takes
     /// time, without blocking the thread: the WebView, and the bridge once the app's services exist.
     /// </summary>
@@ -169,6 +177,19 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
 
         var pages = new PageServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
+        if (Spar.DevServer.DevServerSettings.IsSupported && _devServer is { } devServer)
+        {
+            // A development server that stops takes the page to the error page, which offers Retry.
+            pages.UseDevServer(devServer, security);
+            devServer.Stopped += () => ui.Post(() =>
+            {
+                if (_state != State.Closing)
+                {
+                    _view?.WebView?.Navigate(PageServer.StartUrl);
+                }
+            });
+        }
+
         _ = LogPolicyAsync(pages);
         var guard = new PageGuard(_log, security, _app.Builder.BrowserOptions.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, _app.Builder.BrowserOptions, development, _automated);
@@ -364,7 +385,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             _running.Catalog.Fingerprint,
             SparDevelopment.IsSupported,
             _listenerReports ? _violations : null,
-            _pageErrors);
+            _pageErrors,
+            new HostCommands(_running.Folders.DataRoot, ChooseSchemeAsync, _log.Logger));
         if (_view is { } view && _state != State.Closing)
         {
             _watch = WindowsPageHost.Watch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
@@ -459,11 +481,70 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             return;
         }
 
-        DeleteBackground();
-        _background = PInvoke.CreateSolidBrush(new COLORREF(_theme.Background.ColorRef));
-        _theme.ApplyTitleBar(window);
-        PInvoke.InvalidateRect(window, (RECT*)null, true);
+        Repaint(window, _theme);
         _log.Step($"system theme changed to {(_theme.IsDark ? "dark" : "light")}");
+    }
+
+    /// <summary>
+    /// The page's <c>setColorScheme</c> (any thread): the window takes the choice on its UI thread, as it takes a change
+    /// of the system's theme, and the task completes once it has. The bridge's host command saved it already.
+    /// </summary>
+    private Task ChooseSchemeAsync(bool? dark)
+    {
+        var applied = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (_ui is not { } ui)
+        {
+            applied.TrySetResult();
+            return applied.Task;
+        }
+
+        ui.Post(() => _ = ApplySchemeAsync(dark, applied), "colour scheme");
+        return applied.Task;
+    }
+
+    /// <summary>
+    /// The window colour, the title bar and the page's scheme (the profile's <c>PreferredColorScheme</c>, which
+    /// <c>prefers-color-scheme</c> follows), together (UI thread). A test window also emulates the scheme on the page.
+    /// </summary>
+    private async Task ApplySchemeAsync(bool? dark, TaskCompletionSource applied)
+    {
+        try
+        {
+            if (_theme is not { } theme || _state == State.Closing || _window.IsNull)
+            {
+                return;
+            }
+
+            var changed = theme.Choose(dark);
+            _view?.SetPageScheme(theme.PageScheme);
+            if (changed)
+            {
+                Repaint(_window, theme);
+            }
+
+            _log.Step($"colour scheme chosen by the page: {SavedColorScheme.NameOf(dark)}, the window {(theme.IsDark ? "dark" : "light")}");
+            if (SparTestSession.IsSupported && _source?.ColorSchemeChosen is { } chosen)
+            {
+                await chosen(theme.IsDark);
+            }
+        }
+        catch (Exception exception)
+        {
+            _log.Error("The colour scheme could not be applied", exception);
+        }
+        finally
+        {
+            applied.TrySetResult();
+        }
+    }
+
+    /// <summary>The window colour and the title bar in the theme's scheme now (UI thread).</summary>
+    private unsafe void Repaint(HWND window, WindowTheme theme)
+    {
+        DeleteBackground();
+        _background = PInvoke.CreateSolidBrush(new COLORREF(theme.Background.ColorRef));
+        theme.ApplyTitleBar(window);
+        PInvoke.InvalidateRect(window, (RECT*)null, true);
     }
 
     private void DeleteBackground()

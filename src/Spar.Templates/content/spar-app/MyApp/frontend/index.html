@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>MyApp</title>
+    <script type="module" src="/src/main.tsx"></script>
+  </head>
+  <body>
+    <!--
+      An optional splash, shown only when the start is slow. Spar's Vite plugin makes the element with this id a cover
+      in the window colour (Program.cs) from the first frame, and fades its content in 350 ms after it, so a fast start
+      never shows it; connection.ready() in src/main.tsx removes it once the first view has rendered. Style its content
+      in src/styles.css; the timing is set with spar({ splash: { … } }) in vite.config.ts. To use it, uncomment:
+
+    <div id="spar-splash" role="status" aria-label="Loading MyApp">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+      </svg>
+    </div>
+    -->
+    <div id="root"></div>
+  </body>
+</html>

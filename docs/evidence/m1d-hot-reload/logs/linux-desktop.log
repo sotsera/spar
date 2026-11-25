@@ -1,0 +1,18 @@
+STEP desktop on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+1
+body edit to the host's line: 825 ms (polled every 50 ms)
+2026-11-22T09:08:34.280Z INFO  Spar.Host  [8b396a9d] Hot Reload applied revision 1 (Notebook.Pages.MarkdownPageStore); sent to document 5ca42aff214f91a6.
+GET /__spar-probe/backend-updated/1/toasts-1 200
+DTO edit to the restarted window's ui-ready: 6814 ms (polled every 100 ms)
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : Process id 51615 ran for 4278ms and exited with exit code 0.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:spar info +723.1 ms: [8b396a9d] ui-ready at 723.1 ms
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : Restart is needed to apply the changes.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] [auto-restart] <copy>/samples/Notebook/obj\Development/Debug/net11.0/linux-x64/generated/Spar.Gener
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] Terminating process 52006 (SIGTERM).
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] Process id 52006 ran for 9827ms and exited with exit code 0.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] Exited
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : Process id 52504 ran for 2977ms and exited with exit code 0.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:spar info +362.0 ms: [d20120f7] ui-ready at 362 ms
+<copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/logs/app.log:2026-11-22T09:08:30.041Z INFO  Spar.Host  [8b396a9d] ui-ready at 723.1 ms
+<copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/logs/app.log:2026-11-22T09:08:44.192Z INFO  Spar.Host  [d20120f7] ui-ready at 362 ms
+left in the run's session: 0

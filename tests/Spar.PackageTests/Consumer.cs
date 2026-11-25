@@ -6,8 +6,10 @@ using System.Text;
 namespace Spar.PackageTests;
 
 /// <summary>
-/// Spar packed twice, at two versions no build has used, into a feed of this run's own; and a consumer that uses Spar
-/// from that feed alone (decisions "Package-only consumer" and "Packages for the package-only consumer"): a folder
+/// Spar packed twice, at two versions no build has used, into a feed of this run's own; and consumers that use Spar
+/// from that feed alone (decisions "Package-only consumer" and "Packages for the package-only consumer"), the main one a
+/// new app made by <c>dotnet new spar-app</c> from the packed template (plan, M1d step 6), installed into a template hive
+/// of this run's own, never the user's. Each is a folder
 /// outside any repository whose path has a space and non-ASCII letters, a nuget.config that maps Spar's packages to
 /// the feed, and its own MSBuild handshake and compiler server. NuGet's package folder and HTTP cache are kept apart
 /// from the user's and shared across runs, so only the first run downloads: the HTTP cache alone is not enough, since
@@ -31,6 +33,16 @@ public sealed class Consumer : IAsyncLifetime
 
     private int _passed;
     private int _failed;
+    private Task<(int Exit, string Output)>? _first;
+    private Task<(int Exit, string Output, string Executable)>? _published;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<Task<object>>> _once = new(StringComparer.Ordinal);
+    private readonly List<string> _measurements = [];
+
+    /// <summary>The name the template's app gets in the main consumer (<c>dotnet new spar-app -n Notes</c>).</summary>
+    public const string App = "Notes";
+
+    /// <summary>The collection of the test classes that build the main consumer's folders, so they run one at a time.</summary>
+    public const string MainCollection = "The main consumer";
 
     public string Repository { get; } = FindRepository();
 
@@ -38,6 +50,15 @@ public sealed class Consumer : IAsyncLifetime
 
     /// <summary>The consumer's own folder; a space and non-ASCII letters, as a user's documents folder can have.</summary>
     public string Root => Path.Combine(RunRoot, "Nötes Äpp");
+
+    /// <summary>The template engine's settings and installed templates for this run: <c>--debug:custom-hive</c>.</summary>
+    public string TemplateHive => Path.Combine(RunRoot, "template-hive");
+
+    /// <summary>The main consumer's files as <c>dotnet new</c> wrote them, before the run added its nuget.config.</summary>
+    public IReadOnlyList<string> NewAppFiles { get; private set; } = [];
+
+    /// <summary>The main consumer's global.json as <c>dotnet new</c> wrote it.</summary>
+    public string NewAppGlobalJson { get; private set; } = "";
 
     /// <summary>A second consumer of the same packages, whose solution manages package versions centrally.</summary>
     public string CentralRoot => Path.Combine(RunRoot, "Central Äpp");
@@ -92,6 +113,10 @@ public sealed class Consumer : IAsyncLifetime
             ["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1",
             ["DOTNET_NOLOGO"] = "1",
             ["SharedCompilationId"] = $"spar-package-tests-{salt}",
+
+            // The consumer's test hosts keep their data roots and browser profiles in this repository's disposable
+            // artifacts/ (AGENTS.md), never in the system's temporary or per-user folders.
+            ["SPAR_TEST_ARTIFACTS"] = Path.Combine(Repository, "artifacts"),
         };
 
         // Packing must write only under bin/ and obj/: the working tree reads the same before and after.
@@ -100,7 +125,16 @@ public sealed class Consumer : IAsyncLifetime
         await PackAsync(Second);
         Assert.Equal(before, await WorkingTreeAsync());
         var page = Path.Combine(Repository, "tests", "Spar.PackageTests", "consumer-ui");
-        ConsumerFiles.Write(Root, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Playwright"));
+        var (installed, installOutput) = await DotnetInAsync(RunRoot, "", "new", "install",
+            Path.Combine(Feed, $"Spar.Templates.{First}.nupkg"), "--debug:custom-hive", TemplateHive);
+        Assert.True(installed == 0, $"dotnet new install:\n{installOutput}");
+        var (created, createOutput) = await NewAppAsync(Root, "-n", App);
+        Assert.True(created == 0, $"dotnet new spar-app:\n{createOutput}");
+        NewAppFiles = [.. Directory.EnumerateFiles(Root, "*", SearchOption.AllDirectories)
+            .Select(file => Path.GetRelativePath(Root, file).Replace('\\', '/'))
+            .Order(StringComparer.Ordinal)];
+        NewAppGlobalJson = File.ReadAllText(Path.Combine(Root, "global.json"));
+        ConsumerFiles.WriteNugetConfig(Root, Feed);
         Directory.CreateDirectory(CentralRoot);
         ConsumerFiles.WriteCentral(CentralRoot, Feed, First, RepositorySdkVersion(), page, PackageVersion("Microsoft.Extensions.DependencyInjection"));
         LibraryConsumerFiles.WriteLibrary(LibraryRoot, Feed, First, RepositorySdkVersion());
@@ -113,6 +147,10 @@ public sealed class Consumer : IAsyncLifetime
         var results = Path.Combine(Repository, "artifacts", "test-results", "Spar.PackageTests");
         Directory.CreateDirectory(results);
         File.WriteAllText(Path.Combine(results, "timings.txt"), Tool.Timings());
+        lock (_measurements)
+        {
+            File.WriteAllText(Path.Combine(results, "measurements.txt"), string.Join("\n", _measurements) + "\n");
+        }
 
         if (_passed > 0 && _failed == 0)
         {
@@ -134,8 +172,81 @@ public sealed class Consumer : IAsyncLifetime
         }
     }
 
-    /// <summary>Points the consumer's global.json at a version of Spar.Sdk, as an update or a downgrade would.</summary>
-    public void UseSdk(string version) => ConsumerFiles.WriteGlobalJson(Root, version, RepositorySdkVersion());
+    /// <summary>
+    /// The main consumer's first build: its fast tests, restored and built from the feed, then run. Once per run: every
+    /// test of the main consumer starts by awaiting it (they share one collection, so they run one at a time).
+    /// </summary>
+    public Task<(int Exit, string Output)> FirstAsync() =>
+        _first ??= DotnetAsync("", "test", "--project", Path.Combine($"{App}.Tests", $"{App}.Tests.csproj"));
+
+    /// <summary>
+    /// The main consumer's app published with NativeAOT into the run's <c>publish/</c>, once per run: without the host of
+    /// this OS (<c>SparPlatforms</c> the other one), so running it opens no window here. Its executable's path.
+    /// </summary>
+    public Task<(int Exit, string Output, string Executable)> PublishedAsync() => _published ??= PublishAsync();
+
+    /// <summary>
+    /// Work several tests of one class share, done once per run under <paramref name="key"/>: a consumer of their own,
+    /// say. A failure fails every test that awaits it.
+    /// </summary>
+    public async Task<T> OnceAsync<T>(string key, Func<Task<T>> work) where T : class =>
+        (T)await _once.GetOrAdd(key, _ => new Lazy<Task<object>>(async () => await work())).Value;
+
+    /// <summary>
+    /// A measured number (a size, a start time), kept with the run's results in <c>measurements.txt</c> beside
+    /// <c>timings.txt</c>, as "what: value".
+    /// </summary>
+    public void Measure(string line)
+    {
+        lock (_measurements)
+        {
+            _measurements.Add(line);
+        }
+
+        TestContext.Current.SendDiagnosticMessage(line);
+    }
+
+    /// <summary>
+    /// The environment of the spar tool's commands (<c>dotnet tool restore</c>, <c>dotnet spar</c>): the consumers', with
+    /// the .NET CLI's home folder in the run's folder, where the local tools' resolver cache goes, never the user's
+    /// <c>~/.dotnet</c>.
+    /// </summary>
+    public IReadOnlyDictionary<string, string> ToolEnvironment => new Dictionary<string, string>(Environment)
+    {
+        ["DOTNET_CLI_HOME"] = Path.Combine(RunRoot, "dotnet-cli-home"),
+    };
+
+    /// <summary>Runs a tool command (<c>dotnet tool …</c> or <c>dotnet spar …</c>) under <paramref name="root"/>, in <paramref name="directory"/>.</summary>
+    public Task<(int Exit, string Output)> ToolInAsync(string root, string directory, params string[] arguments) =>
+        Tool.RunAsync(Path.Combine(root, directory), "dotnet", arguments, ToolEnvironment);
+
+    private async Task<(int Exit, string Output, string Executable)> PublishAsync()
+    {
+        var publish = Path.Combine(RunRoot, "publish");
+        var otherPlatform = OperatingSystem.IsWindows() ? "linux" : "windows";
+        var (exit, output) = await DotnetAsync(App, "publish", "-c", "Release", "-o", publish, "-nologo", $"-p:SparPlatforms={otherPlatform}");
+        return (exit, output, Path.Combine(publish, OperatingSystem.IsWindows() ? $"{App}.exe" : App));
+    }
+
+    /// <summary>
+    /// Makes a new app from the installed template into <paramref name="folder"/>, with the run's hive and no update check
+    /// (which would ask NuGet for a newer Spar.Templates), from the run's folder: <c>dotnet new spar-app -o folder …</c>.
+    /// The new folder has no nuget.config: the caller writes the one that names the run's feed.
+    /// </summary>
+    public Task<(int Exit, string Output)> NewAppAsync(string folder, params string[] options) =>
+        DotnetInAsync(RunRoot, "", ["new", "spar-app", "-o", folder, .. options, "--debug:custom-hive", TemplateHive, "--no-update-check"]);
+
+    /// <summary>
+    /// Points the consumer's global.json at a version of Spar.Sdk, as an update or a downgrade would: the template's own
+    /// file, with only that version changed.
+    /// </summary>
+    public void UseSdk(string version)
+    {
+        var path = Path.Combine(Root, "global.json");
+        var json = System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText(path))!;
+        json["msbuild-sdks"]!["Spar.Sdk"] = version;
+        File.WriteAllText(path, json.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }) + "\n");
+    }
 
     /// <summary>Runs <c>dotnet</c> in the consumer with its isolated environment, from <paramref name="directory"/> (relative to the root).</summary>
     public Task<(int Exit, string Output)> DotnetAsync(string directory, params string[] arguments) =>
@@ -150,12 +261,12 @@ public sealed class Consumer : IAsyncLifetime
         Tool.RunAsync(Path.Combine(root, directory), "dotnet", arguments, Environment);
 
     /// <summary>
-    /// Packs Spar's seven packages at <paramref name="version"/> into the feed, from this repository with its own build
+    /// Packs Spar's nine packages at <paramref name="version"/> into the feed, from this repository with its own build
     /// settings: the MSBuild server off and no node reuse, so a pack never shares a node with the consumer.
     /// </summary>
     private async Task PackAsync(string version)
     {
-        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk"];
+        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk", "Spar.Templates", "Spar.Tool"];
         var suffix = version["0.1.0-".Length..];
         foreach (var project in projects)
         {
@@ -175,14 +286,14 @@ public sealed class Consumer : IAsyncLifetime
     }
 
     /// <summary>A package's version from the repository's central package management, so the consumer uses the same.</summary>
-    private string PackageVersion(string id)
+    public string PackageVersion(string id)
     {
         var props = System.Xml.Linq.XDocument.Load(Path.Combine(Repository, "Directory.Packages.props"));
         var version = props.Descendants("PackageVersion").Single(p => (string?)p.Attribute("Include") == id).Attribute("Version");
         return version?.Value ?? throw new InvalidOperationException($"Directory.Packages.props has no version for {id}.");
     }
 
-    private string RepositorySdkVersion()
+    public string RepositorySdkVersion()
     {
         var json = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Repository, "global.json")));
         return json.RootElement.GetProperty("sdk").GetProperty("version").GetString()!;
@@ -281,10 +392,10 @@ public static class Tool
         }
     }
 
-    public static async Task<(int Exit, string Output)> RunAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment)
+    public static async Task<(int Exit, string Output)> RunAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment, TimeSpan? limit = null)
     {
         var clock = Stopwatch.StartNew();
-        var result = await StartAsync(directory, tool, arguments, environment);
+        var result = await StartAsync(directory, tool, arguments, environment, limit ?? TimeSpan.FromMinutes(20));
         var line = string.Create(System.Globalization.CultureInfo.InvariantCulture,
             $"{clock.Elapsed.TotalSeconds,7:0.00} s  exit {result.Exit,-3} {Path.GetFileName(directory)}> {tool} {string.Join(' ', arguments)}");
         lock (Runs)
@@ -295,7 +406,7 @@ public static class Tool
         return result;
     }
 
-    private static async Task<(int Exit, string Output)> StartAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment)
+    private static async Task<(int Exit, string Output)> StartAsync(string directory, string tool, string[] arguments, IReadOnlyDictionary<string, string> environment, TimeSpan limit)
     {
         var start = new ProcessStartInfo(tool)
         {
@@ -322,7 +433,17 @@ public static class Tool
         process.ErrorDataReceived += (_, line) => Append(output, line.Data);
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
-        await process.WaitForExitAsync(TestContext.Current.CancellationToken).WaitAsync(TimeSpan.FromMinutes(20));
+        try
+        {
+            await process.WaitForExitAsync(TestContext.Current.CancellationToken).WaitAsync(limit);
+        }
+        catch (Exception ended) when (ended is TimeoutException or OperationCanceledException)
+        {
+            // Only this process and its children, which this run started.
+            process.Kill(entireProcessTree: true);
+            throw;
+        }
+
         process.WaitForExit();
         lock (output)
         {

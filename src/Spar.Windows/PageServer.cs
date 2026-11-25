@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Spar.DevServer;
 using Spar.Hosting;
 using Spar.Runtime;
 using Spar.Windows.Interop;
@@ -15,7 +16,10 @@ namespace Spar.Windows;
 /// app's <see cref="PagePolicy"/> headers and an exact <c>Content-Type</c>. Violation reports posted to <c>report-uri</c>
 /// are copied out, within a size and rate limit, and handed to the <see cref="CspViolationLog"/>. It runs on the UI
 /// thread and answers from memory; a request that arrives before the page is prepared takes a deferral and is answered
-/// when it is.
+/// when it is. A Debug build that serves its page from the Vite development server (plan section 4) answers every other
+/// request through <see cref="DevServerProxy"/>: the headers it forwards are read here, the request takes a deferral,
+/// the fetch runs on the thread pool, and the response is put back on this thread, so a slow server holds the request
+/// and never the message pump.
 /// </summary>
 internal sealed class PageServer
 {
@@ -30,6 +34,7 @@ internal sealed class PageServer
     private readonly CspViolationLog? _violations;
     private readonly ReportLimiter _reports = new();
     private string? _sharedHeaders;
+    private DevServerProxy? _devServer;
 
     /// <param name="security">The app's page security, from the generated catalog.</param>
     /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
@@ -46,7 +51,9 @@ internal sealed class PageServer
         _log = log;
         _violations = violations;
         _responder = new PageResponder(frontend, security, Origin, development);
-        if (frontend is null)
+
+        // A Debug build without an embedded page serves it from the development server (UseDevServer).
+        if (frontend is null && !DevServerSettings.IsSupported)
         {
             log.Error(PageResponder.NoPage);
         }
@@ -57,6 +64,14 @@ internal sealed class PageServer
 
     /// <summary>The page's first address.</summary>
     public static string StartUrl => Origin + "/";
+
+    /// <summary>
+    /// A Debug build's development server (UI thread, before the first navigation): every request but the violation
+    /// reports goes to it. Called only behind <see cref="DevServerSettings.IsSupported"/>, so no other build has it, and
+    /// no signature a Production build keeps names its types.
+    /// </summary>
+    public void UseDevServer(DevServerSession session, SparPageSecurity security) =>
+        _devServer = new DevServerProxy(session, security, Origin, _log);
 
     /// <summary>
     /// Whether an address belongs to the app's origin. WebView2 hands the host canonical URLs (lower-case scheme and
@@ -90,9 +105,16 @@ internal sealed class PageServer
                 return;
             }
 
+            var report = method == "POST" && PathOf(uri) == PagePolicy.ReportPath;
+            if (DevServerSettings.IsSupported && _devServer is { } proxy && !report)
+            {
+                Proxy(environment, args, proxy, uri, method);
+                deferred = true;
+                return;
+            }
+
             if (_responder.IsPrepared)
             {
-                var report = method == "POST" && PathOf(uri) == PagePolicy.ReportPath;
                 Respond(environment, args, report ? Report(args) : Answer(uri, method));
                 return;
             }
@@ -127,6 +149,76 @@ internal sealed class PageServer
             Com.Release(deferral);
             Com.Release(args);
         }
+    }
+
+    /// <summary>
+    /// A Debug build's request for the development server: the forwarded headers read now, a deferral taken, the
+    /// answer fetched on the thread pool and put on the request back on this thread.
+    /// </summary>
+    private void Proxy(ICoreWebView2Environment10 environment, ICoreWebView2WebResourceRequestedEventArgs2 args, DevServerProxy proxy, string uri, string method)
+    {
+        var headers = ForwardedHeaders(args);
+        var deferral = Com.Take<ICoreWebView2Deferral>(args.GetDeferral());
+        var fragment = uri.IndexOf('#', StringComparison.Ordinal);
+        var pathAndQuery = fragment < 0 ? uri[Origin.Length..] : uri[Origin.Length..fragment];
+        _ = Task.Run(() => proxy.AnswerAsync(pathAndQuery, method, headers))
+            .ContinueWith(answer => _ui.Post(() => Proxied(environment, args, deferral, uri, answer)), TaskScheduler.Default);
+    }
+
+    private void Proxied(
+        ICoreWebView2Environment10 environment, ICoreWebView2WebResourceRequestedEventArgs2 args, ICoreWebView2Deferral deferral, string uri, Task<PageResponse> answer)
+    {
+        try
+        {
+            if (!answer.IsCompletedSuccessfully)
+            {
+                _log.Error($"The development server's answer for {Shorten(uri)} failed", answer.Exception?.GetBaseException());
+            }
+
+            Respond(environment, args, answer.IsCompletedSuccessfully ? answer.Result : Refusal(502, "Bad Gateway", "dev-server-failed"));
+            deferral.Complete();
+        }
+        catch (Exception exception)
+        {
+            // The page may have gone meanwhile, and its request with it.
+            _log.Info($"A development server response for {Shorten(uri)} was not delivered: {exception.Message}");
+        }
+        finally
+        {
+            Com.Release(deferral);
+            Com.Release(args);
+        }
+    }
+
+    /// <summary>The request's headers that the proxy forwards (<see cref="DevServerProxy.ForwardedHeaders"/>).</summary>
+    private static List<KeyValuePair<string, string>> ForwardedHeaders(ICoreWebView2WebResourceRequestedEventArgs2 args)
+    {
+        var forwarded = new List<KeyValuePair<string, string>>(DevServerProxy.ForwardedHeaders.Count);
+        var request = Com.Take<ICoreWebView2WebResourceRequest>(args.GetRequest());
+        try
+        {
+            var headers = Com.Take<ICoreWebView2HttpRequestHeaders>(request.GetHeaders());
+            try
+            {
+                foreach (var name in DevServerProxy.ForwardedHeaders)
+                {
+                    if (headers.Contains(name) != 0)
+                    {
+                        forwarded.Add(new(name, headers.GetHeader(name)));
+                    }
+                }
+            }
+            finally
+            {
+                Com.Release(headers);
+            }
+        }
+        finally
+        {
+            Com.Release(request);
+        }
+
+        return forwarded;
     }
 
     private static (string Uri, string Method) ReadRequest(ICoreWebView2WebResourceRequestedEventArgs2 args)

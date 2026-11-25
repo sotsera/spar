@@ -1,0 +1,102 @@
+STEP watch on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+STEP exit 0 in 108536 ms: /usr/bin/node <repo>/docs/evidence/m1d-hot-reload/watch-run.mjs --project samples/Notebook --root <copy>/artifacts/linux-homes/m1d-hot-reload/watch --log <repo>/artifacts/linux-runs/m1d-hot-reload/watch.run.log --playwright <copy>/samples/Notebook.EndToEndTests/bin/Development/Debug/net11.0/linux-x64/.playwright/package --edits body,toastoff,dto,error,command,limit --verbose true
+   4606.0 run: PASS the page lists the notebook's page (http://127.0.0.1:37133/#token=…)
+   7315.6 run: PASS body: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 2609ms.; 2694 ms after the write)
+   7316.9 run: PASS body: the backend sent revision 1 (Notebook.Pages.MarkdownPageStore) to 1 document, 2647 ms after the write
+   7318.1 run: PASS body: the page's onBackendUpdate handler fetched the list again, 2696 ms after the write
+   7321.2 run: PASS body: the list now shows "Welcome (edited)", from the patched code
+   7333.9 run: PASS body: the toast shows "Backend updated: MarkdownPageStore (revision 1)", 2723 ms after the write
+   7550.7 run: PASS body restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 49ms.; 192 ms after the write)
+   7565.4 run: PASS body restored: the backend sent revision 2 (Notebook.Pages.MarkdownPageStore) to 1 document, 84 ms after the write
+   7591.4 run: PASS body restored: the page's onBackendUpdate handler fetched the list again, 226 ms after the write
+   7613.9 run: PASS body restored: the list now shows "Welcome", from the patched code
+   7644.4 run: PASS body restored: the toast shows "Backend updated: MarkdownPageStore (revision 2)", 289 ms after the write
+   9708.8 run: PASS toast off: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 101ms.; 310 ms after the write)
+   9716.1 run: PASS toast off: the backend sent revision 3 (Notebook.Pages.MarkdownPageStore) to 1 document, 174 ms after the write
+   9727.9 run: PASS toast off: the page's onBackendUpdate handler fetched the list again, 335 ms after the write
+   9732.5 run: PASS toast off: the list now shows "Welcome (edited)", from the patched code
+  12746.4 run: PASS toast off: no toast for revision 3 within 3 s (0 toasts in the page)
+  12846.7 run: PASS toast off, restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 49ms.; 88 ms after the write)
+  12847.8 run: PASS toast off, restored: the backend sent revision 4 (Notebook.Pages.MarkdownPageStore) to 1 document, 67 ms after the write
+  12859.0 run: PASS toast off, restored: the page's onBackendUpdate handler fetched the list again, 93 ms after the write
+  12863.3 run: PASS toast off, restored: the list now shows "Welcome", from the patched code
+  15866.3 run: PASS toast off, restored: no toast for revision 4 within 3 s (0 toasts in the page)
+  19464.0 run: PASS dto: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 78 ms after the write)
+  24192.6 run: PASS dto: a new run listens on the same address, 4805 ms after the write
+  24193.8 run: PASS dto: the regenerated client's pages.d.ts matches /readonly excerpt: string \| null/
+  24384.9 run: PASS dto: the page reloaded by itself once, 5003 ms after the write
+  24424.2 run: PASS dto: the reloaded page lists the notebook's page
+  29993.6 run: PASS dto restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 54 ms after the write)
+  33594.8 run: PASS dto restored: a new run listens on the same address, 3661 ms after the write
+  33596.7 run: PASS dto restored: the regenerated client's pages.d.ts matches /^(?![\s\S]*excerpt)/
+  33900.0 run: PASS dto restored: the page reloaded by itself once, 3969 ms after the write
+  33944.1 run: PASS dto restored: the reloaded page lists the notebook's page
+  41051.4 run: PASS error: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 37 ms after the write)
+  44763.9 run: PASS error: a new run listens on the same address, 3765 ms after the write
+  44765.4 run: PASS error: the regenerated client's pages.d.ts matches /readonly title: string \| null/
+  45896.2 run: PASS error: the page reloaded by itself once, 4901 ms after the write
+  45938.6 run: PASS error: the reloaded page lists the notebook's page
+  51510.1 run: PASS error restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 31 ms after the write)
+  54995.9 run: PASS error restored: a new run listens on the same address, 3526 ms after the write
+  54997.9 run: PASS error restored: the regenerated client's pages.d.ts matches /^(?![\s\S]*readonly title: string \| null)/
+  55426.5 run: PASS error restored: the page reloaded by itself once, 3962 ms after the write
+  55471.3 run: PASS error restored: the reloaded page lists the notebook's page
+  62549.9 run: PASS command: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 32 ms after the write)
+  65812.8 run: PASS command: a new run listens on the same address, 3315 ms after the write
+  65814.1 run: PASS command: the regenerated client's pages.d.ts matches /readonly count: \(/
+  66435.5 run: PASS command: the page reloaded by itself once, 3943 ms after the write
+  66477.5 run: PASS command: the reloaded page lists the notebook's page
+  72065.7 run: PASS command restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 52 ms after the write)
+  75411.7 run: PASS command restored: a new run listens on the same address, 3416 ms after the write
+  75413.0 run: PASS command restored: the regenerated client's pages.d.ts matches /^(?![\s\S]*readonly count: \()/
+  75922.2 run: PASS command restored: the page reloaded by itself once, 3928 ms after the write
+  75963.7 run: PASS command restored: the reloaded page lists the notebook's page
+  83066.7 run: PASS limit: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 38 ms after the write)
+  86298.7 run: PASS limit: a new run listens on the same address, 3287 ms after the write
+  86948.5 run: PASS limit: the page reloaded by itself once, 3938 ms after the write
+  86988.5 run: PASS limit: the reloaded page lists the notebook's page
+  92638.6 run: PASS limit restored: dotnet watch restarts instead of patching (dotnet watch : Restart is needed to apply the changes.; 48 ms after the write)
+  95656.7 run: PASS limit restored: a new run listens on the same address, 3142 ms after the write
+  96448.7 run: PASS limit restored: the page reloaded by itself once, 3939 ms after the write
+  96489.2 run: PASS limit restored: the reloaded page lists the notebook's page
+ 103493.2 run: PASS no CSP or Trusted Types message in the page's console (0)
+ 104566.8 run: 0 failures
+STEP desktop on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+1
+body edit to the host's line: 825 ms (polled every 50 ms)
+2026-11-22T09:08:34.280Z INFO  Spar.Host  [8b396a9d] Hot Reload applied revision 1 (Notebook.Pages.MarkdownPageStore); sent to document 5ca42aff214f91a6.
+GET /__spar-probe/backend-updated/1/toasts-1 200
+DTO edit to the restarted window's ui-ready: 6814 ms (polled every 100 ms)
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : Process id 51615 ran for 4278ms and exited with exit code 0.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:spar info +723.1 ms: [8b396a9d] ui-ready at 723.1 ms
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : Restart is needed to apply the changes.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] [auto-restart] <copy>/samples/Notebook/obj\Development/Debug/net11.0/linux-x64/generated/Spar.Gener
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] Terminating process 52006 (SIGTERM).
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] Process id 52006 ran for 9827ms and exited with exit code 0.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : [Notebook (net11.0)] Exited
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:dotnet watch : Process id 52504 ran for 2977ms and exited with exit code 0.
+<repo>/artifacts/linux-runs/m1d-hot-reload/desktop.out.log:spar info +362.0 ms: [d20120f7] ui-ready at 362 ms
+<copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/logs/app.log:2026-11-22T09:08:30.041Z INFO  Spar.Host  [8b396a9d] ui-ready at 723.1 ms
+<copy>/artifacts/linux-homes/m1d-hot-reload/desktop/data/com.example.Notebook.Development/logs/app.log:2026-11-22T09:08:44.192Z INFO  Spar.Host  [d20120f7] ui-ready at 362 ms
+left in the run's session: 0
+STEP interactive on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+edit written at 10:08:55.826050124
+dotnet watch : File updated: ./samples/Notebook/Pages/PageTypes.cs
+dotnet watch : Restart is needed to apply the changes.
+dotnet watch : [Notebook (net11.0)] <copy>/samples/Notebook/obj\Development/Debug/net11.0/linux-x64/generated/Spar.Generator/Spar.Generator.SparGenerator/Spar.Contracts.g.cs(8,9): warning ENC0118: Chan
+dotnet watch : [Notebook (net11.0)] <copy>/samples/Notebook/obj\Development/Debug/net11.0/linux-x64/generated/Spar.Generator/Spar.Generator.SparGenerator/Spar.ContractShape.g.cs(11,9): error EN
+  ? Do you want to restart your app? Yes (y) / No (n) / Always (a) / Never (v)
+left in the run's session: 0
+
+Time Elapsed 00:00:04.85
+STEP interactivenoshape on 6.18.58.1-microsoft-standard-WSL2, dotnet 11.0.100
+1
+edit written at 10:09:43.099165465
+dotnet watch : File updated: ./samples/Notebook/Pages/PageTypes.cs
+dotnet watch : [Notebook (net11.0)] <copy>/samples/Notebook/obj\Development/Debug/net11.0/linux-x64/generated/Spar.Generator/Spar.Generator.SparGenerator/Spar.Contracts.g.cs(8,9): warning ENC01
+spar info +3962.4 ms: [1a9a983b] Hot Reload applied revision 1 (Notebook.Pages.PageError, Spar.Generated.SparSerializers, Spar.Generated.SparContracts, Notebook.Pages.PageError+TitleTaken); sent to 0 document(s).
+dotnet watch : C# and Razor changes applied in 508ms.
+left in the run's session: 0
+
+Time Elapsed 00:00:20.53
+hot reload exit 0

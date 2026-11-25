@@ -1,0 +1,112 @@
+    777.5 run1: Using launch settings from samples/Notebook/Properties/launchSettings.json...
+    921.5 run1: spar info +15.7 ms: [974eb08a] Host started on loopback (no window): app id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-loopback/loopback/data/com.example.Notebook.Development
+    934.7 run1: spar info +30.2 ms: [974eb08a] npm run dev started in <copy>/samples/Notebook/frontend/ (pid 2783), port 41449.
+    939.9 run1: spar info +35.4 ms: [974eb08a] services built at 33.4 ms
+    968.0 run1: spar info +63.5 ms: [974eb08a] loopback listening at 63.5 ms
+    970.6 run1: spar info +65.0 ms: [974eb08a] Loopback page at http://127.0.0.1:33759/#token=1UWuvEVRdmmUrgfeuHOfmGRZowX_iRuW (a new dev session).
+    973.2 run1: Spar: the page is at http://127.0.0.1:33759/#token=1UWuvEVRdmmUrgfeuHOfmGRZowX_iRuW (a new dev session). Ctrl+C stops the app.
+    975.4 run1: spar info +66.2 ms: [974eb08a] /usr/bin/node was asked to open the page.
+    990.0 run: PASS run1 is a new dev session (a new dev session)
+   1033.8 run1: > dev
+   1035.8 run1: > vite
+   1135.7 run1:   VITE v8.3.8  ready in 113 ms
+   1137.2 run1:   ➜  Local:   http://127.0.0.1:41449/
+   1168.2 run1: spar info +263.8 ms: [974eb08a] Development server ready at http://127.0.0.1:41449 in 238 ms (Vite pid 2804).
+   2193.9 run: PASS run1 asked once to open its address (1)
+   2196.4 run: PASS the record exists in obj/
+   2242.3 run1: spar info +1337.8 ms: [974eb08a] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:33759 ws://127.0.0.1:41449; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   2258.6 run: page console warning: Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+   2455.4 run: page console debug: [vite] connecting...
+   2459.3 run: page console debug: [vite] connected.
+   2486.2 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+   2508.1 run: page load 1: http://127.0.0.1:33759/
+   2527.9 run1: spar info +1623.5 ms: [974eb08a] ui-ready at 1623.5 ms
+   2681.2 run: PASS the token left the address bar
+   2683.3 run: PASS run1's page reported ui-ready
+   2691.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   2693.7 run: page console error: Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING
+   2695.2 run: page console info: Spar: the backend at http://127.0.0.1:33759 stopped; the page reloads when it runs again.
+   2699.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   2702.0 run: run1: exited 137
+   2714.5 run: run1: app process 2768 stopped (SIGKILL)
+   2943.4 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   2966.9 run: page error: Failed to fetch dynamically imported module: http://127.0.0.1:33759/src/components/Preview.tsx
+   2969.7 run: page console warning: %s
+
+%s
+ An error occurred in one of your React components. Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+   3444.5 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   4445.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   4524.8 run2: Using launch settings from samples/Notebook/Properties/launchSettings.json...
+   4661.7 run2: spar info +13.0 ms: [26d7c34b] Host started on loopback (no window): app id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-loopback/loopback/data/com.example.Notebook.Development
+   4680.9 run2: spar info +33.4 ms: [26d7c34b] services built at 31.1 ms
+   4687.9 run2: spar info +40.4 ms: [26d7c34b] Development server http://127.0.0.1:41449 reused (Vite pid 2804), checked in 21 ms.
+   4701.4 run2: spar info +53.8 ms: [26d7c34b] loopback listening at 53.8 ms
+   4704.2 run2: spar info +54.9 ms: [26d7c34b] Loopback page at http://127.0.0.1:33759/#token=1UWuvEVRdmmUrgfeuHOfmGRZowX_iRuW (the dev session's address: an open page reloads by itself).
+   4706.9 run2: Spar: the page is at http://127.0.0.1:33759/#token=1UWuvEVRdmmUrgfeuHOfmGRZowX_iRuW (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+   4720.8 run: PASS run2 kept the port and the token (33759)
+   4722.4 run: PASS run2 continues the dev session (the dev session's address: an open page reloads by itself)
+   5478.1 run2: spar info +830.6 ms: [26d7c34b] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:33759 ws://127.0.0.1:41449; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   5482.2 run: page console warning: Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+   5503.4 run: page console debug: [vite] connecting...
+   5520.4 run: page console debug: [vite] connected.
+   5578.0 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+   5592.6 run: page load 2: http://127.0.0.1:33759/
+   5605.7 run2: spar info +958.2 ms: [26d7c34b] ui-ready at 958.2 ms
+   5609.0 run: PASS the page reloaded by itself once (1 loads, 908 ms after run2 listened)
+   5645.1 run: PASS after the reload the page lists the page created before (the bridge of run2)
+   8647.0 run: PASS no further reload in 3 s (1)
+   8650.1 run: PASS nothing more was opened (1)
+   8662.7 run: PASS a wrong token is refused (401)
+   8666.5 run: PASS no token is refused (401)
+   8669.0 run: PASS another origin is refused (403)
+   8681.5 run: PASS another Host is refused (403)
+   8685.3 run: PASS Retry from another origin is refused (403)
+   8695.6 run: page console error: Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING
+   8697.7 run: page console info: Spar: the backend at http://127.0.0.1:33759 stopped; the page reloads when it runs again.
+   8701.1 run: run2: exited 137
+   8715.7 run: run2: app process 2950 stopped (SIGKILL)
+   8945.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   9015.4 run3: Using launch settings from samples/Notebook/Properties/launchSettings.json...
+   9152.8 run3: spar info +12.9 ms: [94577828] Host started on loopback (no window): app id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-loopback/loopback/data/com.example.Notebook.Development
+   9172.5 run3: spar info +33.8 ms: [94577828] services built at 31.5 ms
+   9180.3 run3: spar info +41.7 ms: [94577828] Development server http://127.0.0.1:41449 reused (Vite pid 2804), checked in 21 ms.
+   9192.9 run3: spar info +54.2 ms: [94577828] loopback listening at 54.2 ms
+   9195.1 run3: spar info +54.6 ms: [94577828] Loopback page at http://127.0.0.1:42085/#token=b3ZlcnJpZGRlbi10b2tlbi1mb3ItdGVzdHM (set by the environment).
+   9197.4 run3: Spar: the page is at http://127.0.0.1:42085/#token=b3ZlcnJpZGRlbi10b2tlbi1mb3ItdGVzdHM (set by the environment). Ctrl+C stops the app.
+   9199.8 run: PASS run3 used the environment's port and token (set by the environment)
+   9225.1 run: PASS the environment's token is accepted
+   9446.4 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  10228.6 run: PASS run3 opened nothing
+  10243.6 run: run3: exited 137
+  10258.7 run: run3: app process 2997 stopped (SIGKILL)
+  10260.3 run: PASS run3 left the record as it was
+  10447.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  10573.5 run3b: Using launch settings from samples/Notebook/Properties/launchSettings.json...
+  10711.3 run3b: spar info +12.6 ms: [57a9d11a] Host started on loopback (no window): app id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-loopback/loopback/data/com.example.Notebook.Development
+  10718.6 run3b: spar fail +18.6 ms: [57a9d11a] The app cannot start on loopback: SPAR_LOOPBACK_TOKEN is not base64url of 16 to 48 bytes (Spar's own tokens are 24 random bytes).
+  10726.4 run: run3b: exited 70
+  10769.1 run: PASS a malformed SPAR_LOOPBACK_TOKEN stops the start (exit 70)
+  11075.1 run4: Using launch settings from samples/Notebook/Properties/launchSettings.json...
+  11218.2 run4: spar info +13.0 ms: [d09df5e1] Host started on loopback (no window): app id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-loopback/loopback/data/com.example.Notebook.Development
+  11237.6 run4: spar info +33.6 ms: [d09df5e1] services built at 31.3 ms
+  11252.2 run4: spar info +40.3 ms: [d09df5e1] Development server http://127.0.0.1:41449 reused (Vite pid 2804), checked in 21 ms.
+  11268.0 run4: spar info +53.7 ms: [d09df5e1] loopback listening at 53.7 ms
+  11282.2 run4: spar info +54.7 ms: [d09df5e1] Loopback page at http://127.0.0.1:33759/#token=Y6DVlY0r7CNQXQHnXxg_ZEawrYaiD3ol (a new dev session).
+  11292.4 run4: spar info +56.7 ms: [d09df5e1] /usr/bin/node was asked to open the page.
+  11312.2 run4: Spar: the page is at http://127.0.0.1:33759/#token=Y6DVlY0r7CNQXQHnXxg_ZEawrYaiD3ol (a new dev session). Ctrl+C stops the app.
+  11316.4 run: PASS run4 kept the port with a new token (a new dev session)
+  11471.7 run: page console error: Failed to load resource: the server responded with a status of 401 (Unauthorized)
+  11473.9 run: page console warning: Spar: the backend at http://127.0.0.1:33759 runs a new dev session with a new token; open the address it printed.
+  15325.0 run: PASS run4 asked to open its address (2)
+  15326.9 run: PASS the old page did not reload into the new session
+  15328.1 run: PASS the old page says its token is refused
+  15348.3 run: run4: exited 137
+  15364.3 run: run4: app process 3074 stopped (SIGKILL)
+  15381.0 run: PASS app.log is in the run's root (/data/com.example.Notebook.Development/logs/app.log)
+  15400.1 run: PASS 0 CSP violations in the page (0)
+  15411.4 run: PASS 0 CSP violations in app.log
+  15443.1 run: app.log: 106 lines, 14077 B
+  15506.0 run: vite (pid 2804) ended
+  15509.4 run: 0 failures

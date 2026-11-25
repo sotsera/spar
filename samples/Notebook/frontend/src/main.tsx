@@ -12,7 +12,7 @@ function Root() {
   const notebook = useNotebook();
   report = notebook.showNotice;
 
-  // The page is usable once the first render is on screen: tell the host (plan section 2, "Readiness").
+  // The page is usable once the first render is on screen: tell the host, which removes the splash (index.html) first.
   useEffect(() => connection.ready(), []);
 
   return <App notebook={notebook} />;

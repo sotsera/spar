@@ -60,7 +60,7 @@ internal static class PageSecurityAnalysis
     /// The method a call binds to, or its one candidate while the code around it has an error (as the user types), so
     /// the analysis keeps reading the rest of the configuration.
     /// </summary>
-    private static IMethodSymbol? MethodOf(InvocationExpressionSyntax invocation, SemanticModel model, CancellationToken cancellationToken)
+    internal static IMethodSymbol? MethodOf(InvocationExpressionSyntax invocation, SemanticModel model, CancellationToken cancellationToken)
     {
         var info = model.GetSymbolInfo(invocation, cancellationToken);
         return info.Symbol as IMethodSymbol ?? (info.CandidateSymbols.Length == 1 ? info.CandidateSymbols[0] as IMethodSymbol : null);
@@ -151,7 +151,7 @@ internal static class PageSecurityAnalysis
     /// Whether the call sits directly in the configuration: in a chain of builder calls on the lambda's parameter, which
     /// is a statement of the lambda's block or its expression body, the lambda being <c>Create</c>'s second argument.
     /// </summary>
-    private static bool IsDirectlyInCreate(InvocationExpressionSyntax call, SemanticModel model, CancellationToken cancellationToken)
+    internal static bool IsDirectlyInCreate(InvocationExpressionSyntax call, SemanticModel model, CancellationToken cancellationToken)
     {
         ExpressionSyntax top = call;
         while (top.Parent is MemberAccessExpressionSyntax outerAccess && outerAccess.Expression == top
@@ -184,7 +184,7 @@ internal static class PageSecurityAnalysis
     private static bool IsBuilderMethod(InvocationExpressionSyntax invocation, SemanticModel model, CancellationToken cancellationToken) =>
         MethodOf(invocation, model, cancellationToken)?.ContainingType.ToDisplayString() == BuilderType;
 
-    private static ParameterSyntax? Parameter(LambdaExpressionSyntax lambda) => lambda switch
+    internal static ParameterSyntax? Parameter(LambdaExpressionSyntax lambda) => lambda switch
     {
         SimpleLambdaExpressionSyntax simple => simple.Parameter,
         ParenthesizedLambdaExpressionSyntax { ParameterList.Parameters.Count: 1 } parenthesized => parenthesized.ParameterList.Parameters[0],
@@ -192,7 +192,7 @@ internal static class PageSecurityAnalysis
     };
 
     /// <summary>The lambda's statements as expressions: its expression body, or its block's expression statements.</summary>
-    private static IEnumerable<ExpressionSyntax> TopLevel(LambdaExpressionSyntax lambda)
+    internal static IEnumerable<ExpressionSyntax> TopLevel(LambdaExpressionSyntax lambda)
     {
         if (lambda.ExpressionBody is { } body)
         {
@@ -206,7 +206,7 @@ internal static class PageSecurityAnalysis
     /// The calls of a chain on <paramref name="parameter"/>, in the order they run (<c>p.A().B()</c> gives A, then B);
     /// empty when the expression is not such a chain.
     /// </summary>
-    private static List<InvocationExpressionSyntax> Chain(ExpressionSyntax expression, ParameterSyntax parameter)
+    internal static List<InvocationExpressionSyntax> Chain(ExpressionSyntax expression, ParameterSyntax parameter)
     {
         var calls = new List<InvocationExpressionSyntax>();
         var current = expression;

@@ -1,0 +1,17 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The test app of the page start-up tests (tests/Spar.WindowTests, StartupTests and StartupFrameTests; plan section
+    3d): the theme style and a splash on its first page, whose start the window's width picks, and on a later page,
+    whose address picks it (splash.html?ready=…&work=…); window colours no engine paints by itself; and a backend that
+    keeps what the page noted. Run only by its test project, in the test process.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>StartupProbe</RootNamespace>
+    <SparAppId>com.example.tests.StartupProbe</SparAppId>
+
+    <!-- The page is plain JavaScript: there is nothing for the type-check to check. -->
+    <SparTypeCheck>false</SparTypeCheck>
+  </PropertyGroup>
+</Project>

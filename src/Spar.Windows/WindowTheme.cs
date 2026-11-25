@@ -28,7 +28,7 @@ internal sealed class WindowTheme
     }
 
     /// <summary>The app's own choice (true dark, false light), or null when the window follows the system.</summary>
-    public bool? AppChoosesDark { get; }
+    public bool? AppChoosesDark { get; private set; }
 
     /// <summary>Whether the window is dark now.</summary>
     public bool IsDark { get; private set; }
@@ -84,6 +84,23 @@ internal sealed class WindowTheme
         }
 
         IsDark = dark;
+        return true;
+    }
+
+    /// <summary>
+    /// The page's <c>setColorScheme</c> while the app runs (UI thread): the app's choice from now on, or the system's
+    /// again for null. True when the window's scheme changed; the profile's <see cref="PageScheme"/> changes either way.
+    /// </summary>
+    public bool Choose(bool? dark)
+    {
+        AppChoosesDark = dark;
+        var now = dark ?? SystemIsDark();
+        if (now == IsDark)
+        {
+            return false;
+        }
+
+        IsDark = now;
         return true;
     }
 

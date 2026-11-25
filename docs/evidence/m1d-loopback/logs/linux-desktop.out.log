@@ -1,0 +1,108 @@
+Using launch settings from samples/Notebook/Properties/launchSettings.json...
+spar info +14.8 ms: [cc4636b3] Host started 29 ms after the process.
+spar info +17.7 ms: [cc4636b3] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-loopback/desktop/data/com.example.Notebook.Development
+spar info +24.5 ms: [cc4636b3] single instance at 22.2 ms
+spar info +78.8 ms: [cc4636b3] GTK 4.14.5, WebKitGTK 2.52.6.
+spar info +85.9 ms: [cc4636b3] Sandbox trial: bwrap exit 0 in 3.4 ms.
+spar info +88.6 ms: [cc4636b3] prerequisites checked at 88.6 ms
+spar info +92.5 ms: [cc4636b3] WebAssembly off: JSC_useWasm=false.
+spar info +97.0 ms: [cc4636b3] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.7 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+spar info +107.1 ms: [cc4636b3] gpu checked at 107.1 ms
+spar info +111.4 ms: [cc4636b3] theme read at 111.3 ms
+spar info +127.4 ms: [cc4636b3] services built at 127.4 ms
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+spar info +129.7 ms: [cc4636b3] npm run dev started in <copy>/samples/Notebook/frontend/ (pid 3684), port 41437.
+spar info +156.6 ms: [cc4636b3] gtk ready at 156.6 ms
+spar info +158.5 ms: [cc4636b3] UI-thread stall probe on.
+dbus-daemon[3617]: [session uid=1000 pid=3617] Activating service name='org.a11y.Bus' requested by ':1.2' (uid=1000 pid=3657 comm="<copy>/samples/Notebook/b" label="kernel")
+dbus-daemon[3617]: [session uid=1000 pid=3617] Successfully activated service 'org.a11y.Bus'
+spar info +192.0 ms: [cc4636b3] Theme light, #ffffff, from no Settings portal (GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist; GDBus.Error:org.freedesktop.DBus.Error.NameHasNoOwner: Name "org.freedesktop.portal.Desktop" does not exist); GTK's settings (prefer-dark False, theme Default).
+spar info +197.3 ms: [cc4636b3] Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src spar://app; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +198.7 ms: [cc4636b3] Permissions-Policy: camera=(), microphone=(), geolocation=(), clipboard-read=(), accelerometer=(), gyroscope=(), magnetometer=(), local-fonts=(), midi=(), window-management=(), autoplay=(), usb=(), serial=(), hid=(), bluetooth=(), payment=(), display-capture=()
+spar info +214.6 ms: [cc4636b3] Browser data folder <copy>/artifacts/linux-homes/m1d-loopback/desktop/data/com.example.Notebook.Development/WebKit, cache <copy>/artifacts/linux-homes/m1d-loopback/desktop/data/com.example.Notebook.Development/cache/WebKit
+spar info +224.8 ms: [cc4636b3] Browser settings read back (0.24 ms): devtools on, GTK inspector keys on, script clipboard off, script windows off, file access off, universal file access off, data: navigation off; menu cut down, downloads denied, picker cancelled, history cancelled.
+spar info +231.7 ms: [cc4636b3] web view created at 231.7 ms
+> dev
+spar info +236.0 ms: [cc4636b3] Heartbeat every 5000 ms.
+> vite
+spar info +252.0 ms: [cc4636b3] window shown at 252 ms
+spar warn +259.9 ms: The UI thread stalled 94.1 ms; the slowest Spar callback meanwhile was window start (94.1 ms)
+dbus-daemon[3769]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=3657 comm="<copy>/samples/Notebook/b" label="kernel")
+dbus-daemon[3769]: Successfully activated service 'org.a11y.atspi.Registry'
+dbus-daemon[3617]: [session uid=1000 pid=3617] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.5' (uid=1000 pid=3817 comm="/usr/bin/xdg-dbus-proxy --args=104" label="kernel")SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+
+dbus-daemon[3617]: [session uid=1000 pid=3617] Activating service name='org.freedesktop.portal.Documents' requested by ':1.7' (uid=1000 pid=3883 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+dbus-daemon[3617]: [session uid=1000 pid=3617] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.8' (uid=1000 pid=3892 comm="/usr/libexec/xdg-document-portal" label="kernel")
+dbus-daemon[3617]: [session uid=1000 pid=3617] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[3617]: [session uid=1000 pid=3617] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.548: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.549: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[3617]: [session uid=1000 pid=3617] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.7' (uid=1000 pid=3883 comm="/usr/libexec/xdg-desktop-portal" label="kernel")
+  VITE v8.3.8  ready in 112 ms
+  ➜  Local:   http://127.0.0.1:41437/
+dbus-daemon[3617]: [session uid=1000 pid=3617] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.600: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.601: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.602: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.603: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.603: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+spar info +357.3 ms: [cc4636b3] Development server ready at http://127.0.0.1:41437 in 240 ms (Vite pid 3771).
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.604: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.610: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.612: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.616: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.618: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][00083.415061] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][00083.415502] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.623: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.624: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.625: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:3883): xdg-desktop-portal-WARNING **: 23:50:35.627: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[3617]: [session uid=1000 pid=3617] Successfully activated service 'org.freedesktop.portal.Desktop'
+spar info +433.7 ms: [cc4636b3] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src spar://app ws://127.0.0.1:41437; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+spar info +444.8 ms: [cc4636b3] page committed at 444.8 ms
+spar info +445.7 ms: [cc4636b3] Bridge: document 7f612a759737e893 opened.
+spar info +447.6 ms: [cc4636b3] Heartbeat armed for the new document.
+spar info +739.1 ms: [cc4636b3] first bridge message at 739.1 ms
+spar info +747.9 ms: [cc4636b3] first bridge reply at 747.9 ms
+spar info +921.5 ms: [cc4636b3] ui-ready at 921.5 ms
+spar info +923.0 ms: [cc4636b3] Bridge: document 7f612a759737e893 reported ui-ready.
+spar info +927.3 ms: [cc4636b3] Bridge: document 7f612a759737e893 reported ui-ready.
+spar info +984.4 ms: [cc4636b3] SIGTERM: the session ends at 984.4 ms
+spar info +988.9 ms: [cc4636b3] session ending at 988.9 ms
+spar info +991.3 ms: [cc4636b3] close request 1 sent to the page (sessionEnd) at 991.3 ms
+spar info +997.3 ms: [cc4636b3] close request 1: the page answered Close at 997.3 ms
+spar info +999.0 ms: [cc4636b3] session end: the page's guard answered Close at 999 ms
+spar info +1002.0 ms: Close request for window main (SessionEnd): the backend's guard answered Close
+spar info +1004.1 ms: [cc4636b3] session end: the backend's guard answered Close; closing at 1004.1 ms
+spar info +1006.3 ms: [cc4636b3] closing at 1006.3 ms
+spar info +1007.2 ms: [cc4636b3] Heartbeat: 0 ticks, 1 pings, longest tick on the UI thread 0.000 ms.
+spar info +1010.7 ms: [cc4636b3] page close work done at 1010.6 ms
+spar info +1011.6 ms: [cc4636b3] Bridge: document 7f612a759737e893 closed (window closing).
+spar info +1013.1 ms: [cc4636b3] calls stopped at 1013.1 ms
+spar info +1014.2 ms: [cc4636b3] calls settled at 1014.2 ms
+spar info +1017.5 ms: [cc4636b3] window destroyed at 1017.5 ms
+
+(WebKitWebProcess:2): GLib-GIO-WARNING **: 23:50:36.267: Error releasing name com.example.Notebook.Development.Sandboxed.WebProcess-587723d1-c0f0-49a6-8f5c-cee19ede1909: The connection is closed
+spar info +1041.7 ms: [cc4636b3] web processes exited after 22 ms at 1041.7 ms
+spar info +1046.6 ms: [cc4636b3] services disposed at 1046.5 ms
+spar info +1047.6 ms: [cc4636b3] session end: window closed, last work done; SIGTERM held 63 ms at 1047.6 ms
+spar info +1047.9 ms: [cc4636b3] exit 0 at 1047.9 ms

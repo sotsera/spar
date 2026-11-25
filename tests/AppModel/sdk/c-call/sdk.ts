@@ -1,7 +1,7 @@
 // Prototype of the @spar/sdk result model: the pending call is a Promise subclass with match/unwrap, and so is its awaited Result (decision 2026-11-14).
 import { settle, streamTransport, transport, unwrapOutcome, type CallOptions, type ErrorCases, type ErrorHandlers, type ErrorResults, type EventCases, type EventResults, type FailureResults, type Handlers, type Outcome, type SubscriptionEvents } from "../core.js";
 
-export { configureSpar, SparError, type CallError, type CallErrorKind, type CallOptions, type CoalescedEvents, type SubscriptionEvents } from "../core.js";
+export { configureSpar, SparError, type SparConfiguration, type CallError, type CallErrorKind, type CallOptions, type CoalescedEvents, type SubscriptionEvents } from "../core.js";
 
 /**
  * The outcome of one call, stream item or subscription item. Read it with `match` (exhaustive) or `unwrap` (throws).

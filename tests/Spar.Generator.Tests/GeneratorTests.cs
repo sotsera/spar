@@ -21,7 +21,7 @@ public sealed class GeneratorTests
         var run = GeneratorHarness.Generate(Program + Fixtures.Catalog);
 
         Assert.Empty(run.Errors);
-        Assert.Equal(["Spar.Contracts.g.cs", "Spar.Create.g.cs"], run.Files.Keys.Order());
+        Assert.Equal(["Spar.BuildIdentity.g.cs", "Spar.ContractShape.g.cs", "Spar.Contracts.g.cs", "Spar.Create.g.cs"], run.Files.Keys.Order(StringComparer.Ordinal));
     }
 
     [Fact]
@@ -95,6 +95,37 @@ public sealed class GeneratorTests
         Assert.Empty(linux.Errors);
         Assert.Contains("return new global::Spar.Linux.SparLinuxHost();", linux.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
         Assert.DoesNotContain("Windows", linux.Files["Spar.Run.g.cs"], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void A_development_build_with_the_loopback_host_asks_it_first()
+    {
+        const string Hosts = """
+            namespace Spar.Windows
+            {
+                public sealed class SparWindowsHost : Spar.Runtime.ISparHost
+                {
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+
+            namespace Spar.Loopback
+            {
+                public sealed class SparLoopbackHost : Spar.Runtime.ISparHost
+                {
+                    public static Spar.Runtime.ISparHost? Chosen() => null;
+
+                    public int Run(Spar.SparApp app) => 0;
+                }
+            }
+            """;
+
+        var run = GeneratorHarness.Generate(Program + Hosts);
+
+        Assert.Empty(run.Errors);
+        var code = run.Files["Spar.Run.g.cs"];
+        var loopback = code.IndexOf("if (global::Spar.Loopback.SparLoopbackHost.Chosen() is { } loopback)", StringComparison.Ordinal);
+        Assert.InRange(loopback, 0, code.IndexOf("return new global::Spar.Windows.SparWindowsHost();", StringComparison.Ordinal));
     }
 
     [Fact]

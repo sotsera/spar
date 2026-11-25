@@ -1,0 +1,14 @@
+       0,0 | run: start Notebook.exe env [PATH=C:\Windows\System32;C:\Windows SPAR_AUTOMATED=1]
+     161,7 | app: 2026-11-21T17:41:41.832Z INFO  Spar.Host  [990de5a8] Host started 123.2 ms after the process.
+     161,8 | app: 2026-11-21T17:41:41.832Z INFO  Spar.Host  [990de5a8] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-dev-server\no-node\root\com.example.Notebook.Development
+     161,8 | app: 2026-11-21T17:41:41.840Z INFO  Spar.Host  [990de5a8] single instance at 23.1 ms
+     167,3 | out: spar info +16.1 ms: [990de5a8] Host started 123.2 ms after the process.
+     167,3 | out: spar info +18.0 ms: [990de5a8] App id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-dev-server\no-node\root\com.example.Notebook.Development
+     167,4 | out: spar info +25.5 ms: [990de5a8] single instance at 23.1 ms
+     167,4 | out: spar info +31.1 ms: [990de5a8] prerequisites checked at 31.1 ms
+     188,0 | app: 2026-11-21T17:41:41.845Z INFO  Spar.Host  [990de5a8] prerequisites checked at 31.1 ms
+     188,0 | app: 2026-11-21T17:41:41.847Z ERROR Spar.Host  [990de5a8] Start-up problem Missing: Node.js. This Debug build serves its page from the frontend's Vite development server, which needs Node.js and npm on PATH, and neither was found. Install Node.js (the LTS release, with npm) and start the app again, or build with -p:SparDevServer=false to embed the page as a Release build does, without hot reload. Help: https://nodejs.org/en/download Exit code 3.
+     188,0 | app: 2026-11-21T17:41:41.848Z INFO  Spar.Host  [990de5a8] The automated mode shows no start-up message.
+     188,0 | out: spar fail +33.5 ms: [990de5a8] Start-up problem Missing: Node.js. This Debug build serves its page from the frontend's Vite development server, which needs Node.js and npm on PATH, and neither was found. Install Node.js (the LTS release, with npm) and start the app again, or build with -p:SparDevServer=false to embed the page as a Release build does, without hot reload. Help: https://nodejs.org/en/download Exit code 3.
+     188,1 | out: spar info +34.0 ms: [990de5a8] The automated mode shows no start-up message.
+     188,2 | run: 'exit' NOT found

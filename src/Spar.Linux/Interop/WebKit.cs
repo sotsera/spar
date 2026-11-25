@@ -121,6 +121,14 @@ internal static unsafe partial class WebKit
     [LibraryImport(Library)]
     public static partial nint webkit_uri_scheme_request_get_http_method(nint request);
 
+    /// <summary>The request's <c>SoupMessageHeaders</c>, borrowed (transfer none); since 2.36.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_uri_scheme_request_get_http_headers(nint request);
+
+    /// <summary>One header's value, borrowed UTF-8, or 0 when the request has none.</summary>
+    [LibraryImport(Soup, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial nint soup_message_headers_get_one(nint headers, string name);
+
     /// <summary>A response that reads <paramref name="stream"/>, which it references; owned.</summary>
     [LibraryImport(Library)]
     public static partial nint webkit_uri_scheme_response_new(nint stream, long length);

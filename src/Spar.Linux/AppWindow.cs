@@ -66,6 +66,7 @@ internal sealed partial class AppWindow
     private State _state;
     private bool _failed;
     private int _exitCode;
+    private Spar.DevServer.DevServerSession? _devServer;
 
     /// <param name="security">The page security in force, resolved before the engine started (it sets WebAssembly).</param>
     /// <param name="promptAnswers">A Development build's scripted answers to the hung-page dialogs; null otherwise.</param>
@@ -111,6 +112,12 @@ internal sealed partial class AppWindow
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
     /// <summary>
+    /// A Debug build's development server, which the page comes from (before <see cref="Start"/>). Called only behind
+    /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
+    /// </summary>
+    public void UseDevServer(Spar.DevServer.DevServerSession devServer) => _devServer = devServer;
+
+    /// <summary>
     /// The window and its view, without blocking the loop: the theme's layers, the view with its session and the
     /// relay, attached and loading, the window presented in the theme's colour, then the bridge's services once they are
     /// built (they are being built meanwhile).
@@ -146,8 +153,23 @@ internal sealed partial class AppWindow
         }
 
         _pages = new SchemeServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
+        if (Spar.DevServer.DevServerSettings.IsSupported && _devServer is { } devServer)
+        {
+            // A development server that stops takes the page to the error page, which offers Retry.
+            _pages.UseDevServer(devServer, security);
+            devServer.Stopped += () => ui.Post(
+                () =>
+                {
+                    if (_state != State.Closing && _view?.Handle is { } view and not 0)
+                    {
+                        WebKit.webkit_web_view_load_uri(view, SchemeServer.StartUrl);
+                    }
+                },
+                "dev server stopped");
+        }
+
         _ = LogPolicyAsync(_pages);
-        _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null);
+        _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null, ChooseSchemeAsync);
         var browser = _app.Builder.BrowserOptions;
         var guard = new PageGuard(_log, security, browser.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, browser, development, _automated);
@@ -288,6 +310,53 @@ internal sealed partial class AppWindow
         }
 
         await TeardownAsync(exitCode);
+    }
+
+    /// <summary>
+    /// The page's <c>setColorScheme</c> (any thread; the bridge's host command saved it already): the window takes it
+    /// on the loop, as it takes a change of the system's theme, and the task completes once it has. For the system's
+    /// scheme without a portal followed since the start, the portal is read here first, off the loop.
+    /// </summary>
+    private async Task ChooseSchemeAsync(bool? dark)
+    {
+        if (_ui is not { } ui || _theme is not { } theme)
+        {
+            return;
+        }
+
+        var portal = dark is null && !theme.HasPortal ? await Task.Run(WindowTheme.ReadPortalScheme) : default;
+        var applied = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        ui.Post(
+            () =>
+            {
+                try
+                {
+                    ApplyScheme(theme, dark, portal);
+                }
+                finally
+                {
+                    applied.TrySetResult();
+                }
+            },
+            "colour scheme");
+        await applied.Task;
+    }
+
+    /// <summary>The window's layers and the view's background in the chosen scheme (loop thread).</summary>
+    private void ApplyScheme(WindowTheme theme, bool? dark, (nint Bus, bool? Dark) portal)
+    {
+        theme.AdoptPortal(portal.Bus, portal.Dark);
+        if (_state == State.Closing || _window == 0)
+        {
+            return;
+        }
+
+        if (theme.Choose(dark))
+        {
+            _view?.SetBackground(theme.Background);
+        }
+
+        _log.Info($"Colour scheme chosen by the page: {SavedColorScheme.NameOf(dark)}, the window {(theme.IsDark ? "dark" : "light")}.");
     }
 
     /// <summary>The policy the page gets, in the log once it is composed (off the loop).</summary>

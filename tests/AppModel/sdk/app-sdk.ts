@@ -1,9 +1,9 @@
 // Stand-in for `@spar/app/sdk`. Form C of spikes/ts-results in ./core.ts and ./c-call/sdk.ts, with `Call` as a Promise subclass (2026-11-14),
-// plus what docs/app-model.md uses beyond it: SubscribeOptions, ready() and setColorScheme().
+// plus what docs/app-model.md uses beyond it: SubscribeOptions, connectSpar() and its ready(), and setColorScheme().
 import type { CallOptions } from "./core.js";
 import { invoke, type Call, type Result } from "./c-call/sdk.js";
 
-export { type Call, Result, configureSpar, SparError, type CallError, type CallErrorKind, type CallOptions, type CoalescedEvents, type Subscription, type SubscriptionEvents } from "./c-call/sdk.js";
+export { type Call, Result, configureSpar, SparError, type SparConfiguration, type CallError, type CallErrorKind, type CallOptions, type CoalescedEvents, type Subscription, type SubscriptionEvents } from "./c-call/sdk.js";
 
 /** How a subscription resumes after a lost connection, as declared in C# (`SubscriptionResume`). */
 export type SubscriptionResume = "automatic" | "manual";
@@ -18,17 +18,62 @@ export interface SubscribeOptions<R extends SubscriptionResume> extends CallOpti
 
 export type ColorScheme = "light" | "dark" | "system";
 
+/** One C# edit that Hot Reload applied to the running backend (Debug builds only), as in src/Spar.Client/src/backendUpdate.ts. */
+export interface BackendUpdate {
+  readonly revision: number;
+  readonly time: string;
+  readonly types: readonly string[];
+}
+
+/** Stand-in: the handlers `onBackendUpdate` registered. */
+export const backendUpdateHandlers = new Set<(update: BackendUpdate) => void>();
+
+/** Debug builds only: calls `handler` after each applied Hot Reload update; returns the function that stops the calls. */
+export function onBackendUpdate(handler: (update: BackendUpdate) => void): () => void {
+  backendUpdateHandlers.add(handler);
+  return () => {
+    backendUpdateHandlers.delete(handler);
+  };
+}
+
 /** Stand-in for the host bridge: what the page would post to the host, in order. */
 export const hostMessages: unknown[] = [];
 
-/** Manual splash mode only: reports ui-ready, so the host removes the splash. */
-export function ready(): void {
-  hostMessages.push({ type: "ui-ready" });
+/** The host's channel for one document, as in src/Spar.Client/src/connection.ts. */
+export interface BridgeChannel {
+  send(message: string): void;
+  listen(received: (message: string) => void, closed: () => void): void;
 }
 
-/** Stores the app's theme choice; the host applies it before the next start. */
-export function setColorScheme(scheme: ColorScheme): void {
-  hostMessages.push({ type: "color-scheme", scheme });
+/** One document's side of the bridge, as in src/Spar.Client/src/connection.ts: the part an app calls. */
+export interface Connection {
+  /**
+   * Once the first view has rendered: removes the splash (after its minimum time once it has appeared), then the host
+   * reports ui-ready. Later calls in the same document do nothing.
+   */
+  ready(): void;
+}
+
+/** The channel of the host the page runs in: the window's, or loopback's in a browser. */
+export function hostChannel(): BridgeChannel {
+  return { send: message => hostMessages.push(message), listen: () => undefined };
+}
+
+/** Opens the bridge for this document over the host's channel. */
+export function connectSpar(channel: BridgeChannel, contracts: string): Connection {
+  channel.send(JSON.stringify({ type: "hello", contracts }));
+  return { ready: () => channel.send(JSON.stringify({ type: "ready" })) };
+}
+
+/** What `setColorScheme` can end with besides success, as in src/Spar.Client/src/colorScheme.ts. */
+export interface ColorSchemeError {
+  /** The window took the choice, but it could not be saved: the next start shows the earlier one. */
+  readonly notSaved: undefined;
+}
+
+/** Sets the app's colour scheme: applied at once, and saved for the next start. */
+export function setColorScheme(scheme: ColorScheme, options?: CallOptions): Call<void, ColorSchemeError> {
+  return invoke<void, ColorSchemeError>("spar.setColorScheme", scheme, options);
 }
 
 /** The cases of a file dialog that gave no file. */

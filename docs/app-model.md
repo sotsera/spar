@@ -22,6 +22,8 @@ SqlTool/
   SqlTool.csproj            <Project Sdk="Spar.Sdk">, with <SparAppId>com.example.SqlTool</SparAppId>
                             and <SparPlatforms>windows;linux</SparPlatforms>
   Program.cs
+  Properties/
+    launchSettings.json     the launch profiles: Desktop (the default, first) and Loopback
   Connections/              one folder per feature
   CopyJobs/
   frontend/                 an ordinary Vite + React + TypeScript project
@@ -32,12 +34,33 @@ SqlTool/
   SqlTool.contracts.snapshot   committed; written by the build (decided 2026-11-14)
 SqlTool.Tests/              fast tests, run by every dotnet test
 SqlTool.EndToEndTests/      optional: browser and window tests, the black-box executable, containers
+SqlTool.slnx                the solution, with the projects above
 global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
+.config/dotnet-tools.json   the local tool manifest: the spar tool (Spar.Tool) at Spar.Sdk's version
 ```
+
+- `dotnet new spar-app -n SqlTool` writes this layout from the `Spar.Templates` package (plan, M1d step 6), with one contract and its tests as a start, `global.json` naming the template's own Spar version, a local tool manifest naming the `spar` tool at the same version (`dotnet tool restore`, then `dotnet spar doctor` and `dotnet spar init frontend`), and a `.gitignore`; `--platforms`, `--app-id` and `--no-end-to-end-tests` choose `SparPlatforms`, `SparAppId` and whether the end-to-end project is made. [The getting-started guide](guide/getting-started.md) goes from an empty machine to a published app.
 
 - The app id, `SparAppId`, is required: reverse-DNS, checked by the build. It names the app to the OS and its per-user folders: `%LOCALAPPDATA%\com.example.SqlTool` on Windows, the XDG folders on Linux, and `com.example.SqlTool.Development` for a Debug build, so Debug never shares data with an installed copy (decision "M1b's remaining questions without a spike").
 - The target hosts come from `SparPlatforms` (both by default); `Spar.Sdk` adds the host packages itself.
 - The frontend is found through `SparFrontendPath`, by default `frontend/`.
+- **A Debug build serves the page from the frontend's Vite development server,** through the app's own origin, so hot reload works with the policy, storage and secure context of a Release build (decisions "Debug serves Vite through the app's own origin" and "M1d step 1's shape"). The app starts it with the frontend's own `dev` script (`npm run dev`, which runs `vite`, with the Spar Vite plugin in `vite.config.ts`), or reuses the one it started before, and leaves it running for the next start; Vite's output goes to the app's log under `Spar.DevServer`. If it fails or stops, the window shows what happened with Vite's last output and a Retry button, and the app keeps running. Without Node.js, the app stops with a message saying how to install it.
+  - `SPAR_DEV_SERVER_URL`, in the environment, or `<SparDevServerUrl>`, in the project (read when the app is built), names a development server the app did not start, such as one an orchestrator or the developer runs: the app uses it and starts none. It must be `http://` on this machine (`127.0.0.1`, `[::1]` or `localhost`) with its port, such as `http://127.0.0.1:5173`; the variable wins over the property.
+  - `-p:SparDevServer=false` embeds the page in a Debug build through a Release build's code, without hot reload.
+- **A Debug build runs in its window, or in a browser** (decisions "M1d step 2's shape: loopback in the development loop" and "Loopback in the development loop (implementation record; choices for review)"). `dotnet run` uses the first launch profile, `Desktop`, the window; `dotnet run -lp Loopback` sets `SPAR_HOST=Loopback`, and the app serves its page on `127.0.0.1` to an ordinary browser, with the same backend, page security and development server, and no window. The app's own command-line arguments stay its own. A Release build has no loopback host and ignores `SPAR_HOST`. If the window cannot start (on Linux, no display), the app stops with a message that names `dotnet run -lp Loopback`; it never switches by itself.
+
+  ```json
+  {
+    "profiles": {
+      "Desktop": { "commandName": "Project" },
+      "Loopback": { "commandName": "Project", "environmentVariables": { "SPAR_HOST": "Loopback" } }
+    }
+  }
+  ```
+
+  - The app prints the page's address with its token, `http://127.0.0.1:<port>/#token=…`, and logs it. The first run of a dev session opens the default browser there; later runs keep the port and the token, so a restart does not open another tab: the open page waits for the backend and reloads by itself, once. A call that was running when the backend stopped ends as `transport` / `lost`, and nothing is sent again.
+  - The port and the token are recorded in the project's `obj/spar-loopback.json`, readable by its owner only. A dev session ends when no run has held that record for 4 hours; the next run then takes a new token and opens the browser again, and a page left open from before is told to open the new address.
+  - `SPAR_LOOPBACK_PORT` and `SPAR_LOOPBACK_TOKEN` (base64url of 16 to 48 bytes) set the address for an orchestrator: no record, and no browser. `SPAR_LOOPBACK_BROWSER` names the program that opens the page (`browser --profile dev {url}`), or `none`.
 - The generated client lives under `obj/spar/client/` and is never written into `node_modules`.
 - Each contract is a subpath of `@spar/app`: `@spar/app/copyJobs`, `@spar/app/connections`. The SDK is `@spar/app/sdk`.
 - A test project names the app it tests with `SparTestedApplication` (decision "SparTestedApplication: the test project names its app"), so the app builds in the Test variant, with the test host and the typed test clients. A plain `ProjectReference` to the app fails the build (SPAR121); other projects, such as a library, are referenced as usual. An end-to-end project also sets `<SparBrowserTests>true</SparBrowserTests>` for the Browser surface.
@@ -55,6 +78,8 @@ global.json                 pins the SDK and Spar.Sdk (msbuild-sdks)
     </ItemGroup>
   </Project>
   ```
+
+- **What a test project gets** (decision "M1d step 4's shape: tests in the template"; built in M1d step 4). `dotnet test` writes its results under the test project's own `obj/test-results/` (`<SparTestResultsDirectory>` names another folder), and leaves no `TestResults/` folder behind. A new app's two test projects, from the template, also have `[assembly: CaptureConsole]`, so what the code writes to the console lands in each test's own output, and treat warnings as errors, which makes xUnit's xUnit1051 (a call that could take `TestContext.Current.CancellationToken` and does not) an error. Browser, window and black-box tests carry a `Surface` trait (`Browser`, `Window`, `BlackBox`) and run as their own invocations, `dotnet test --filter-trait "Surface=Window"` and the others, apart from the fast tests; Spar checks the first two (6.12). Page tests run with `npm test` in `frontend/`; `dotnet test` runs only the C# tests.
 
 ## 2. `Program.cs`
 
@@ -348,6 +373,8 @@ public sealed class CopyJobsService(IConnectionStore connections, ISparCall call
 ### 3.3 An interface contract
 
 Every method of a `[SparContract]` interface is a command; `[SparCommand]` there only overrides a name. The implementation comes from DI and exposes only the interface's members.
+
+ReSharper and Rider count a contract class and its commands as used, since the page calls them. An interface's methods count as used only with `[SparCommand]`; without it, those tools report each method as never used until C# code calls it.
 
 File `SqlTool/Connections/IConnections.cs`:
 
@@ -1360,25 +1387,52 @@ export function CopyProgressView({ jobId }: { readonly jobId: string }) {
 
 ### 6.3 Start-up, readiness and theme
 
+**Decided** (decision "M1d step 5's shape: the page side of start-up"; built in M1d step 5). The window shows at once in the colour `spar.Window(w => w.Background(light, dark))` declares (section 2), and the page agrees with it from its first frame: the Spar Vite plugin adds `<meta name="color-scheme" content="light dark">` and a small theme style in the same colours to every page, its hash in the Content Security Policy by itself.
+
+File `frontend/index.html`, the optional splash:
+
+```html
+<body>
+  <div id="spar-splash" role="status" aria-label="Loading the SQL tool">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+    </svg>
+  </div>
+  <div id="root"></div>
+</body>
+```
+
 File `frontend/src/main.tsx`:
 
 ```tsx
+import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { ready, setColorScheme } from "@spar/app/sdk";
+import { connectSpar, hostChannel, setColorScheme } from "@spar/app/sdk";
+import { fingerprint } from "@spar/app/spar";
 import { CopyProgressView } from "./CopyProgressView";
 
-createRoot(document.getElementById("root")!).render(<CopyProgressView jobId="job-1" />);
+const connection = connectSpar(hostChannel(), fingerprint);
 
-// Manual splash mode only: by default the SDK reports ui-ready, and removes the splash, by itself.
-ready();
+function Root() {
+  // The first view has rendered: the splash goes, then the host reports ui-ready.
+  useEffect(() => connection.ready(), []);
 
-// The app's own theme choice; the host saves it and applies it before the next start.
-export const useDark = () => setColorScheme("dark");
+  return <CopyProgressView jobId="job-1" />;
+}
+
+createRoot(document.getElementById("root")!).render(<Root />);
+
+// The app's own theme choice: the window takes it at once, and the next start shows it from the first frame.
+export const useDark = () =>
+  setColorScheme("dark").match({
+    success: () => undefined,
+    errors: { notSaved: () => console.warn("Dark until the app closes: the choice could not be saved.") },
+  });
 ```
 
-- **Splash** (Decided): static HTML in `index.html`. It never shows on a fast start, and it is removed at `ui-ready`, or at `ready()` in manual mode.
-- **Theme** (Decided): the window colours come from `spar.Window(…)` in C#. The SDK's `setColorScheme("light" | "dark" | "system")` stores the app's choice.
-- **Open:** the exact SDK export names, `ready` against `spar.ready()`.
+- **Readiness:** `connection.ready()` is the page's one way to report that it is ready, called once its first view has rendered (here the root's first effect; an app that waits for its first data calls it then). The host's `ui-ready`, which window tests, the black box (6.13) and tools wait for, follows it. Later calls in the same document do nothing. A page that never calls it never reports `ui-ready`.
+- **Splash:** optional, static HTML in `index.html` inside the element with the id `spar-splash`; its content (the mark) is the app's. The Vite plugin adds its style: an opaque cover in the window colour from the first frame, whose content fades in 350 ms after the page's first frame through a CSS animation delay, so a fast start never shows it; `aria-busy="true"` on `<body>` while it is there; no fade under `prefers-reduced-motion`. `ready()` removes it, at once while the mark has not appeared, else once it has been visible 400 ms, with a 150 ms fade-out; the host hears `ready` once the removal has had a frame. The timing is the plugin's option: `spar({ splash: { delay: 350, minimumVisible: 400, fadeIn: 120, fadeOut: 150 } })`. Style the mark in the app's own stylesheet; no `style` attribute is needed or allowed.
+- **Theme:** the window colours come from `spar.Window(…)` in C#, as constants the build reads (SPAR106 otherwise). `setColorScheme("light" | "dark" | "system")` sets the app's own choice: the window's colour, its title bar, the WebView's background and the page's `prefers-color-scheme` change together, as for a change of the system's theme, and the host saves the choice in the app's data folder for the next start. Its declared error `notSaved`: the window took the choice, but the next start shows the earlier one. In a browser on loopback the choice is saved for the window, and the browser keeps its own scheme. `fakeSpar()` answers it in page tests (6.10), success unless a test scripts `spar.on(setColorScheme).fail("notSaved")`, and `spar.calls(setColorScheme)` lists the choices.
 
 ### 6.4 Actions, context menus and shortcuts
 
@@ -1757,6 +1811,7 @@ public sealed class ConnectionsWindowTests
 - **Light by default:** `o.ColorScheme` is `SparColorScheme.Light` unless a test asks for `Dark` or `System`, so the page's `prefers-color-scheme`, the window's own colours, and so every screenshot, are the same on every machine.
 - **Keys:** `PressAsync` takes a key name (`"Enter"`, `"Control+End"`) or any one character; typing goes one character at a time, never half an emoji. A character the US keyboard has no key for (`è`, `€`, `中`) still sends `keydown` and `keyup`, with `event.key` the character and an empty `event.code`. Dead keys, other layouts and input-method composition are not modelled.
 - **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=Window"`, and in the NativeAOT lane, which leaves out the browser tests. They never take the focus, so they can run while someone uses the computer.
+- **The trait is checked** (decision "M1d step 4's shape: tests in the template"). A test that starts the Window surface without `[Trait("Surface", "Window")]`, on the method, its class or the assembly, fails at once, before anything starts: `This test starts the Window surface but has no [Trait("Surface", "Window")]. Add the trait to the test, its class or its assembly, …`. A browser test needs `[Trait("Surface", "Browser")]` the same way. Without the trait, a window test would run in the fast tests' invocation, where a native engine abort takes every result of that run with it.
 
 **Closing the window** (decision "Window tests: closing, session-end budget, test theme and any-character keys"). `app.Window.CloseAsync()` closes the window as its close button does, through its close request (6.11): the page's guard, then the backend's. A window test never shows a dialog: by default the close is automated, so an ask counts as close; a test of a guard's prompt turns that off and gives the answer.
 
@@ -1888,12 +1943,47 @@ public sealed class BlackBoxTests
 - **The build:** for each `SparTestedApplication`, `Projects.<App>` carries the app's name, `AppId`, `ProjectDirectory` and `ExecutablePath`, the Production executable published incrementally into the test project's `obj/` and copied beside the tests, so the path also works from a publish of the test project (the NativeAOT lane). `<SparBlackBoxPublish>false</SparBlackBoxPublish>` keeps the class and skips the publish, for a pipeline that puts the executable there itself.
 - **Running them:** `dotnet test --project SqlTool.EndToEndTests --filter-trait "Surface=BlackBox"`, and in the NativeAOT lane.
 
+### 6.14 Backend updates while developing
+
+**Decided** (plan section 4, "Hot Reload signal"; decision "M1d step 3's shape: dotnet watch and Hot Reload"). Under `dotnet watch`, or an IDE's Hot Reload, a C# edit that Hot Reload can apply patches the running backend without a restart. In a Debug build the page is told: after each applied edit, `onBackendUpdate` handlers run, and Spar's development overlay shows a small toast, "Backend updated: CopyJobsService (revision 3)", which a click dismisses. A production build has neither: `onBackendUpdate` does nothing there, and the bundler removes it and the toast.
+
+File `frontend/src/backendUpdates.ts`:
+
+```ts
+import { configureSpar, onBackendUpdate, type BackendUpdate } from "@spar/app/sdk";
+import { copyJobs } from "@spar/app/copyJobs";
+
+declare function toast(text: string): void;
+declare function showPlan(steps: number): void;
+
+configureSpar({
+  onFailure: e => toast(`The call failed (${e.code})`),
+  // The page shows its own notice below, so Spar's development toast is turned off.
+  backendUpdateToast: false,
+});
+
+// Debug builds only: after each C# edit Hot Reload applied, ask the backend again, so the view shows what the new code
+// returns. Returns the function that stops listening (a React effect's cleanup, for example).
+export const stopListening = onBackendUpdate((update: BackendUpdate) => {
+  toast(`Revision ${update.revision}: ${update.types.join(", ")}`);
+  void copyJobs.plan({ source: "prod", target: "test", tables: ["dbo.Orders"] }).match({
+    success: plan => showPlan(plan.steps.length),
+    errors: { connectionNotFound: () => undefined, tableMissing: () => undefined },
+  });
+});
+```
+
+- **`BackendUpdate`:** `revision` counts the updates applied to this run of the backend, from 1; `time` is when the backend applied it (ISO 8601); `types` are the full names of the types the edit changed (a method's state machine or a lambda counts as the type it belongs to).
+- **Each `configureSpar` call sets every setting,** those left out to their defaults: `backendUpdateToast` is `true` unless the call says `false`, as `onFailure` goes back to the default when a call leaves it out.
+- **Limits:** the event can arrive after the patched code already ran once (a call that started meanwhile). Edits Hot Reload cannot apply are reported only in `dotnet watch`'s terminal, which restarts the app for them.
+- **Contract edits always restart:** an edit that changes what Spar generates for the contracts (a command's name, request, result or limit, a DTO's or an error case's properties, a wire name, the page security in `Program.cs`) is never patched. A Development build's generated code makes such an edit one that Hot Reload cannot apply, so `dotnet watch` rebuilds the app, which regenerates the TypeScript client, and starts it again; in the window the page loads afresh, and on loopback the open page reloads itself (section 4). A command's body is patched as usual.
+- **In page tests,** `spar.backendUpdate({ types })` from `fakeSpar()` sends the event as a Debug host does, and `fakeSpar()` turns the toast back on, as it resets the failure hooks.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**
 - **Configuration:**
   - the type names of the configuration builders behind `spar.Window(…)` and the other calls of section 2 not built yet (the check's stand-ins call them `SparBuilder` and `WindowOptions`). The calls themselves are the ones the decisions show, as marked in the `Program.cs` example. `CspBuilder`, `CspReports`, `PermissionsBuilder` and `Permission` are Spar's own since M1b.
-- **Page SDK:** the exact export names, `ready` against `spar.ready()` (6.3).
 - **Tests:** the shape of the fast test project and the in-process test factory (decision "In-process test factory", adoption open); for window tests (6.12), how scenes and a fixed clock are declared; an app's own "close this window" API (`CloseReason.App` from app code), which nothing calls yet.
 
 Decided since this list was first written, and shown above:
@@ -1902,4 +1992,5 @@ Decided since this list was first written, and shown above:
 - the committed contract snapshot (decision "The contract snapshot is committed");
 - `Call` as a `Promise` subclass (decision "TypeScript SDK: `Call` as a `Promise` subclass, `toStringTag`, Vue augmentation");
 - the `Program.cs` shape (decision "`Program.cs` shape confirmed");
-- the declaration of permissions (decision "Camera, microphone and other permissions").
+- the declaration of permissions (decision "Camera, microphone and other permissions");
+- readiness through `connection.ready()` alone, the splash and `setColorScheme` (decision "M1d step 5's shape: the page side of start-up").

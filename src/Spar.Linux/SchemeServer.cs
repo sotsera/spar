@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Spar.DevServer;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Runtime;
@@ -15,7 +16,10 @@ namespace Spar.Linux;
 /// executable is handed to WebKit in place (<c>g_bytes_new_static</c>), anything else as a copy; a request that comes
 /// before the page is prepared is held (a reference on it) and answered when it is. A violation report posted to
 /// <c>report-uri</c> is answered 204 at once; within the rate limit its body is read without blocking the loop, at most
-/// <see cref="CspViolationLog.MaxReportBytes"/>, and handed to the <see cref="CspViolationLog"/>, as on Windows.
+/// <see cref="CspViolationLog.MaxReportBytes"/>, and handed to the <see cref="CspViolationLog"/>, as on Windows. A Debug
+/// build that serves its page from the Vite development server (plan section 4) answers every other request through
+/// <see cref="DevServerProxy"/>: the headers it forwards are read on the loop, the request is held, the fetch runs on the
+/// thread pool, and the response is finished back on the loop, so a slow server holds the request and never the loop.
 /// </summary>
 internal sealed class SchemeServer
 {
@@ -33,6 +37,7 @@ internal sealed class SchemeServer
     private readonly CspViolationLog? _violations;
     private readonly ReportLimiter _reports = new();
     private GCHandle _self;
+    private DevServerProxy? _devServer;
 
     /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
     /// <param name="violations">Where reports go; null when the endpoint does not report in this build.</param>
@@ -43,7 +48,9 @@ internal sealed class SchemeServer
         _log = log;
         _violations = violations;
         _responder = new PageResponder(frontend, security, Origin, development);
-        if (frontend is null)
+
+        // A Debug build without an embedded page serves it from the development server (UseDevServer).
+        if (frontend is null && !DevServerSettings.IsSupported)
         {
             log.Error(PageResponder.NoPage);
         }
@@ -51,6 +58,14 @@ internal sealed class SchemeServer
 
     /// <summary>The page's first address.</summary>
     public static string StartUrl => Origin + "/";
+
+    /// <summary>
+    /// A Debug build's development server (loop thread, before the first load): every request but the violation
+    /// reports goes to it. Called only behind <see cref="DevServerSettings.IsSupported"/>, so no other build has it, and
+    /// no signature a Production build keeps names its types.
+    /// </summary>
+    public void UseDevServer(DevServerSession session, SparPageSecurity security) =>
+        _devServer = new DevServerProxy(session, security, Origin, _log);
 
     /// <summary>The policy every response carries, once the page is prepared; the host logs it at start.</summary>
     public Task<PagePolicy> Policy => _responder.Policy;
@@ -135,6 +150,12 @@ internal sealed class SchemeServer
             return;
         }
 
+        if (DevServerSettings.IsSupported && _devServer is { } proxy)
+        {
+            Proxy(request, proxy, uri, method);
+            return;
+        }
+
         if (_responder.IsPrepared)
         {
             Respond(request, Response(uri, method));
@@ -155,6 +176,53 @@ internal sealed class SchemeServer
         catch (Exception exception)
         {
             _log.Error($"A held response for {Shorten(uri)} failed", exception);
+        }
+        finally
+        {
+            GLib.g_object_unref(request);
+        }
+    }
+
+    /// <summary>
+    /// A Debug build's request for the development server (loop thread): the forwarded headers read now, the request
+    /// held, the answer fetched on the thread pool and the request finished back on the loop.
+    /// </summary>
+    private void Proxy(nint request, DevServerProxy proxy, string uri, string method)
+    {
+        var headers = new List<KeyValuePair<string, string>>(DevServerProxy.ForwardedHeaders.Count);
+        var soup = WebKit.webkit_uri_scheme_request_get_http_headers(request);
+        if (soup != 0)
+        {
+            foreach (var name in DevServerProxy.ForwardedHeaders)
+            {
+                if (Marshal.PtrToStringUTF8(WebKit.soup_message_headers_get_one(soup, name)) is { } value)
+                {
+                    headers.Add(new(name, value));
+                }
+            }
+        }
+
+        var fragment = uri.IndexOf('#', StringComparison.Ordinal);
+        var pathAndQuery = fragment < 0 ? uri[Origin.Length..] : uri[Origin.Length..fragment];
+        var held = GLib.g_object_ref(request);
+        _ = Task.Run(() => proxy.AnswerAsync(pathAndQuery, method, headers))
+            .ContinueWith(answer => _ui.Post(() => Proxied(held, uri, answer), "scheme request"), TaskScheduler.Default);
+    }
+
+    private void Proxied(nint request, string uri, Task<PageResponse> answer)
+    {
+        try
+        {
+            if (!answer.IsCompletedSuccessfully)
+            {
+                _log.Error($"The development server's answer for {Shorten(uri)} failed", answer.Exception?.GetBaseException());
+            }
+
+            Respond(request, answer.IsCompletedSuccessfully ? answer.Result : PageResponder.Refusal(502, "Bad Gateway", "dev-server-failed"));
+        }
+        catch (Exception exception)
+        {
+            _log.Error($"A development server response for {Shorten(uri)} failed", exception);
         }
         finally
         {

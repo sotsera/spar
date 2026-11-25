@@ -44,6 +44,12 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 - **No default deadline.** An optional C# limit, `[SparCommand(TimeoutSeconds = 30)]` (a positive integer), is folded into the call token.
 - **Identical behaviour on every transport:** WebView2, WebKitGTK, loopback, and the test host's command and browser surfaces (plan section 5, `docs/design/testing.md`), whose typed C# test clients are generated per contract.
 
+## Hot Reload: contract edits restart
+
+- **In a Development build the generator adds `Spar.ContractShape.g.cs`** (`Emit/ShapeEmitter.cs`; M1d step 3, plan section 4): an enum `SparContractShape` whose one member is named from a SHA-256 of the generated `Spar.Contracts.g.cs`. An edit that changes any generated contract code (the catalog's fingerprint, commands, limits and page security, the dispatch, the serializers) renames it, which Hot Reload refuses (`ENC0020`), so `dotnet watch` and the IDEs restart with a full build and the TypeScript client is regenerated. Never let a contract edit be patched: Hot Reload never runs the catalog's static initializer again, and the page's generated client would not change.
+- **So keep the generated contract code free of anything that changes without the contract changing** (no timestamps, paths, comments copied from the app's docs, or ordering that depends on the file set), or every such edit restarts the app; and keep everything the wire or dispatch depends on in it, or that edit is patched. `tests/Spar.Generator.Tests/ContractShapeTests.cs` classifies edits both ways; a new kind of contract input gets a row there.
+- **The build identity is not contract code:** `Spar.BuildIdentity.g.cs` (`Emit/IdentityEmitter.cs`, every variant) holds the variant, the git revision, the tree's state and the fingerprint as one UTF-8 block, and the catalog names it (`BuildIdentity = SparBuildIdentity.Block.ToArray()`) without its values, so a commit or the first edit after one changes neither `Spar.Contracts.g.cs` nor the shape. Keep it that way; `tests/Spar.Generator.Tests/BuildIdentityTests.cs` checks it.
+
 ## Fingerprint and snapshot
 
 - **The fingerprint hashes the full wire shape** (properties, types, nullability, error cases). A mismatch is `rejected` / `contract-mismatch` (409 on loopback) before any work.
@@ -64,7 +70,7 @@ The design is plan section 2 in `docs/design/contracts.md` (contracts, wire-rule
 
 ## Diagnostics
 
-- **Categories and IDs:** `Spar.Contracts` for SPAR001–040 (map in plan section 2, "Diagnostics"), `Spar.Results` for SPAR050–055, SPAR100 for the snapshot, `Spar.PageSecurity` for SPAR101–104 and the SPAR105 warning (`PageSecurityAnalyzer`; `spar-page-security`). Errors, except SPAR051–054, the `DateTime` warning (SPAR024) and the suggestion for long-running commands that cannot observe cancellation. Decided rules without an ID yet: yield after an error, `Capacity` with coalescing, that suggestion. A warning leaves its command valid, and the client step stops only on errors.
+- **Categories and IDs:** `Spar.Contracts` for SPAR001–040 (map in plan section 2, "Diagnostics"), `Spar.Results` for SPAR050–055, SPAR100 for the snapshot, `Spar.PageSecurity` for SPAR101–104, the SPAR105 warning and SPAR106, the window colours the build cannot read (`PageSecurityAnalyzer`; `spar-page-security`). `WindowColorsAnalysis` reads `spar.Window(w => w.Background(light, dark))` as `PageSecurityAnalysis` reads the page security (directly in `Create`, constant `#rgb`/`#rrggbb`, the last call winning); the client step writes it as `theme.json` beside `csp.json`, the defaults `#ffffff`/`#1f1f1f` without one. `Size` and `MinSize` are not read and may be computed. Errors, except SPAR051–054, the `DateTime` warning (SPAR024) and the suggestion for long-running commands that cannot observe cancellation. Decided rules without an ID yet: yield after an error, `Capacity` with coalescing, that suggestion. A warning leaves its command valid, and the client step stops only on errors.
 - **One diagnostic per problem and location.** Messages about a referenced assembly start with "In referenced assembly 'X': …".
 - **Skip only the invalid command,** never its contract's whole binding; the client step skips invalid contracts silently.
 - **Track IDs** in `AnalyzerReleases.Shipped.md`/`Unshipped.md` (RS2008) instead of suppressing it.

@@ -55,6 +55,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
             PrivateProfile = _profile,
             BeforeFirstNavigation = BeforeFirstNavigationAsync,
             OnPhase = OnPhase,
+            ColorSchemeChosen = EmulateSchemeAsync,
         };
         var title = app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
         var profile = new BrowserProfile(running.Folders.Profile);
@@ -221,6 +222,16 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         }
 
         _page = await TestPage.InstallAsync(CallDevToolsAsync, SubscribeAsync, _request.Automation);
+    }
+
+    /// <summary>
+    /// The page's own <c>setColorScheme</c> in a test window: the emulated scheme follows the window's scheme after
+    /// the choice (the system's for <c>system</c>), so the page's <c>prefers-color-scheme</c> agrees with the window.
+    /// </summary>
+    private async Task EmulateSchemeAsync(bool dark)
+    {
+        var scheme = dark ? "dark" : "light";
+        await CallDevToolsAsync("Emulation.setEmulatedMedia", $$"""{"features":[{"name":"prefers-color-scheme","value":"{{scheme}}"}]}""");
     }
 
     private void OnPhase(string phase)

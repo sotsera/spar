@@ -32,9 +32,14 @@ export interface Script<R, T, E extends ErrorCases> {
   answer(handler: (request: R, reply: Replies<T, E>) => Reply | Promise<Reply>): void;
 }
 
+export interface FakeBackendUpdate {
+  readonly types?: readonly string[];
+}
+
 export interface FakeSpar {
   on<F extends Command>(command: F): Script<RequestOf<F>, ValueOf<F>, ErrorsOf<F>>;
   calls<F extends Command>(command: F): readonly RequestOf<F>[];
+  backendUpdate(update?: FakeBackendUpdate): void;
 }
 
 export declare function fakeSpar(): FakeSpar;

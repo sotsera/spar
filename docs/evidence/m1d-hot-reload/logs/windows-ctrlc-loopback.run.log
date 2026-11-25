@@ -1,0 +1,38 @@
+       4,1 12:10:07.850 run: desktop spar-hot-reload-64492; "<repo>\samples\Notebook\bin\Development\Debug\net11.0\win-x64\Notebook.exe" in <repo>\samples\Notebook, with [SPAR_HOST=Loopback SPAR_LOOPBACK_BROWSER=none]
+      89,5 12:10:07.930 app: 2026-11-22T12:10:07.920Z INFO  Spar.Host  [828f0603] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\ctrlc-loopback\local\com.example.Notebook.Development
+      89,5 12:10:07.930 app: 2026-11-22T12:10:07.921Z INFO  Spar.Host  [828f0603] Attached to the parent's console (Development): its Ctrl+C closes the app as its window's close does.
+      96,1 12:10:07.936 watch: spar info +14.2 ms: [828f0603] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\webview2-profiles\m1d-hot-reload\ctrlc-loopback\local\com.example.Notebook.Development
+      96,1 12:10:07.936 watch: spar info +16.8 ms: [828f0603] Attached to the parent's console (Development): its Ctrl+C closes the app as its window's close does.
+      96,1 12:10:07.936 watch: spar info +27.8 ms: [828f0603] The development server recorded at http://127.0.0.1:56856 has ended: a new one starts.
+     121,0 12:10:07.961 app: 2026-11-22T12:10:07.932Z INFO  Spar.Host  [828f0603] The development server recorded at http://127.0.0.1:56856 has ended: a new one starts.
+     121,0 12:10:07.961 app: 2026-11-22T12:10:07.941Z INFO  Spar.Host  [828f0603] services built at 34.2 ms
+     121,0 12:10:07.961 app: 2026-11-22T12:10:07.949Z INFO  Spar.Host  [828f0603] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 6756), port 50464.
+     127,0 12:10:07.967 watch: spar info +36.4 ms: [828f0603] services built at 34.2 ms
+     127,0 12:10:07.967 watch: spar info +44.8 ms: [828f0603] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 6756), port 50464.
+     157,2 12:10:07.997 app: 2026-11-22T12:10:07.972Z INFO  Spar.Host  [828f0603] loopback listening at 67.6 ms
+     157,2 12:10:07.997 app: 2026-11-22T12:10:07.975Z INFO  Spar.Host  [828f0603] Loopback page at http://127.0.0.1:54960/#token=… (the dev session's address: an open page reloads by itself).
+     164,1 12:10:08.004 watch: spar info +67.6 ms: [828f0603] loopback listening at 67.6 ms
+     164,1 12:10:08.004 watch: Spar: the page is at http://127.0.0.1:54960/#token=… (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+     164,1 12:10:08.004 watch: spar info +71.6 ms: [828f0603] Loopback page at http://127.0.0.1:54960/#token=… (the dev session's address: an open page reloads by itself).
+     164,2 12:10:08.004 run: found 'loopback listening'
+     561,6 12:10:08.402 app: 2026-11-22T12:10:08.381Z INFO  Spar.DevServer  > dev
+     561,6 12:10:08.402 app: 2026-11-22T12:10:08.381Z INFO  Spar.DevServer  > vite
+     567,3 12:10:08.407 watch: > dev
+     567,3 12:10:08.407 watch: > vite
+     767,9 12:10:08.608 app: 2026-11-22T12:10:08.587Z INFO  Spar.Host  [828f0603] Development server ready at http://127.0.0.1:50464 in 654 ms (Vite pid 53828).
+     768,0 12:10:08.608 app: 2026-11-22T12:10:08.602Z INFO  Spar.DevServer    VITE v8.3.8  ready in 162 ms
+     768,0 12:10:08.608 app: 2026-11-22T12:10:08.602Z INFO  Spar.DevServer    ➜  Local:   http://127.0.0.1:50464/
+     773,6 12:10:08.614 watch: spar info +682.9 ms: [828f0603] Development server ready at http://127.0.0.1:50464 in 654 ms (Vite pid 53828).
+     773,6 12:10:08.614 watch:   VITE v8.3.8  ready in 162 ms
+     773,6 12:10:08.614 watch:   ?  Local:   http://127.0.0.1:50464/
+    1666,9 12:10:09.507 run: Ctrl+C sent to this run's console at 12:10:09.507
+    1681,5 12:10:09.522 app: 2026-11-22T12:10:09.508Z INFO  Spar.Host  [828f0603] SIGINT received: the app stops.
+    1681,5 12:10:09.522 app: 2026-11-22T12:10:09.508Z INFO  Spar.Host  [828f0603] teardown at 1604.4 ms
+    1681,5 12:10:09.522 app: 2026-11-22T12:10:09.514Z INFO  Spar.Host  [828f0603] services disposed at 1610 ms
+    1681,5 12:10:09.522 app: 2026-11-22T12:10:09.514Z INFO  Spar.Host  [828f0603] exit 0 at 1610.3 ms
+    1683,7 12:10:09.524 watch: spar info +1604.2 ms: [828f0603] SIGINT received: the app stops.
+    1683,7 12:10:09.524 watch: spar info +1604.5 ms: [828f0603] teardown at 1604.4 ms
+    1683,7 12:10:09.524 watch: spar info +1610.0 ms: [828f0603] services disposed at 1610 ms
+    1683,7 12:10:09.524 watch: spar info +1610.3 ms: [828f0603] exit 0 at 1610.3 ms
+    4693,9 12:10:12.534 run: development server 53828 ended
+   11814,0 12:10:19.654 run: WebView2 processes with this run's root still running: 0

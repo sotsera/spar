@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The spar tool (plan, M1d step 6; decision "M1d step 6b's shape: the spar tool"): one framework-dependent .NET tool
+    package, Spar.Tool, whose command is spar, packed with Spar's other packages at the same version. A new app's local
+    tool manifest (.config/dotnet-tools.json) names it, so it runs as dotnet spar doctor; without one, dnx Spar.Tool.
+    Its code is AOT- and trim-compatible, with the analyzers on and warnings as errors, so NativeAOT packages per
+    runtime can follow without code changes.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Spar.Tool</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- The Linux checks read GTK's and WebKitGTK's versions through function pointers (Machine/NativeLibraries.cs). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>spar</ToolCommandName>
+    <PackageId>Spar.Tool</PackageId>
+    <Title>Spar tool</Title>
+    <Description>The spar command for Spar desktop apps: spar doctor checks the machine, the project and the build's identity; spar init frontend wires a Vite frontend into an app.</Description>
+    <PackageTags>spar;desktop;dotnet-tool</PackageTags>
+  </PropertyGroup>
+
+  <!--
+    The WebView2 loader, for the WebView2 Runtime check through the loader's own API, as the Windows host checks it
+    (src/Spar.Windows/Prerequisites.cs): only its native DLLs (runtimes/win-*/native), none of the package's assemblies
+    or build files. Not PrivateAssets="all": that leaves the DLLs out of the publish the tool package is packed from.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" IncludeAssets="native" />
+  </ItemGroup>
+
+  <!-- One format and one rule each, shared with the code that writes or checks them. -->
+  <ItemGroup>
+    <Compile Include="..\Spar\Runtime\BuildIdentity.cs" Link="Identity\BuildIdentity.cs" />
+    <Compile Include="..\Spar.Sdk.Tasks\FrontendInstallState.cs" Link="Project\FrontendInstallState.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Tool.Tests" />
+    <InternalsVisibleTo Include="Spar.BuildTests" />
+  </ItemGroup>
+</Project>

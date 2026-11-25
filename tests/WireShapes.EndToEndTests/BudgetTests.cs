@@ -9,6 +9,7 @@ namespace WireShapes.EndToEndTests;
 /// one call, as a browser test starts; and small calls from the page over the loopback bridge. Release builds give the
 /// budget's numbers (<see cref="Budgets"/>); the Notebook's own journeys are the real app's view.
 /// </summary>
+[Trait("Surface", "Browser")]
 public sealed class BudgetTests(SharedBrowser shared)
 {
     private const int Journeys = 10;

@@ -1,0 +1,23 @@
+<Project Sdk="Spar.Sdk">
+  <!--
+    The fast tests, which every dotnet test runs: the app's own Program.cs inside this process, its commands through
+    the generated typed clients. The NativeAOT lane is this same project, published and run:
+      dotnet publish MyApp.Tests -c Release -p:SparTestLane=Aot -o <folder>, then <folder>/MyApp.Tests
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SparTestedApplication Include="..\MyApp\MyApp.csproj" />
+  </ItemGroup>
+</Project>

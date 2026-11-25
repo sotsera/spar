@@ -5,6 +5,7 @@ using Spar.Testing;
 namespace WireShapes.EndToEndTests;
 
 /// <summary>The page in Chromium calling the app's backend in this process, over the loopback bridge.</summary>
+[Trait("Surface", "Browser")]
 public sealed class BrowserBridgeTests(SharedBrowser shared)
 {
     [Fact]

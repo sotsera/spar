@@ -12,7 +12,7 @@ namespace Spar.Windows;
 /// <para>
 /// <c>SPAR_DEV_INPUT</c> is a list of steps separated by <c>;</c>, run in order from the first <c>ui-ready</c>:
 /// <c>wait:&lt;ms&gt;</c>; <c>click:x,y</c>, <c>right:x,y</c>, <c>back:x,y</c>, <c>forward:x,y</c> (a mouse button at
-/// the page's CSS pixel); <c>key:&lt;keys&gt;</c> such as <c>F5</c>, <c>ctrl+r</c>, <c>alt+ArrowLeft</c>, <c>F12</c>.
+/// the page's CSS pixel); <c>key:&lt;keys&gt;</c> such as <c>F5</c>, <c>ctrl+r</c>, <c>alt+ArrowLeft</c>, <c>F12</c>, <c>Enter</c>.
 /// </para>
 /// </summary>
 internal static class DevelopmentInput
@@ -110,13 +110,16 @@ internal static class DevelopmentInput
             "F12" => ("F12", "F12", 123),
             "ArrowLeft" => ("ArrowLeft", "ArrowLeft", 37),
             "ArrowRight" => ("ArrowRight", "ArrowRight", 39),
+            "Enter" => ("Enter", "Enter", 13),
             var letter when letter.Length == 1 && char.IsAsciiLetter(letter[0]) =>
                 (letter.ToLowerInvariant(), "Key" + letter.ToUpperInvariant(), (int)char.ToUpperInvariant(letter[0])),
             var other => throw new FormatException($"Unknown key '{other}'."),
         };
 
         var common = $"\"key\":\"{key}\",\"code\":\"{code}\",\"windowsVirtualKeyCode\":{virtualKey},\"modifiers\":{modifiers}";
-        await view.CallDevToolsAsync("Input.dispatchKeyEvent", $$"""{"type":"rawKeyDown",{{common}}}""");
+        // Enter acts (a focused button's click) through its character, which only a keyDown with text carries.
+        var down = key == "Enter" ? $$"""{"type":"keyDown","text":"\r",{{common}}}""" : $$"""{"type":"rawKeyDown",{{common}}}""";
+        await view.CallDevToolsAsync("Input.dispatchKeyEvent", down);
         await view.CallDevToolsAsync("Input.dispatchKeyEvent", $$"""{"type":"keyUp",{{common}}}""");
     }
 }

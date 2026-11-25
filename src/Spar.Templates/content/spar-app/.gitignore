@@ -1,0 +1,12 @@
+# Build output, generated files and caches: every project's bin/ and obj/ (the generated @spar/app client, the test
+# results), and the frontend's installed packages. The contract snapshot (MyApp/MyApp.contracts.snapshot) and the
+# frontend's package-lock.json are committed.
+bin/
+obj/
+node_modules/
+
+# Editors' per-user files, and the empty results folder Visual Studio's Test Explorer creates beside the solution (the
+# tests' results go to each test project's obj/test-results/).
+.vs/
+*.user
+/TestResults/

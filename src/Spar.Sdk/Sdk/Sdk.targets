@@ -41,11 +41,31 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <!--
-    Test results go to the repository's artifacts/test-results/<project>/ (decision "M1a names"), with a TRX report of every
-    run, so a failure that does not recur keeps its message and output (decision "Every test run keeps a TRX report").
+    VS Code builds a project through a path with a lower-case drive letter, so the compiler records e:\… in the PDB,
+    while its Hot Reload looks each source up as E:\… and applies nothing (decision "The drive-letter PathMap in Debug
+    builds"). Debug builds on Windows map the project's drive to upper case, which changes nothing when it already is.
+    Builds with deterministic source paths (ContinuousIntegrationBuild) keep their own map. SparMapDriveLetter=false
+    turns it off. It follows the Microsoft.NET.Sdk import, which defaults DeterministicSourcePaths.
   -->
-  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true' and '$(SparSourceMode)' == 'true'">
-    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)" --report-xunit-trx</TestingPlatformCommandLineArguments>
+  <PropertyGroup Condition="'$(SparMapDriveLetter)' != 'false' and '$(Configuration)' == 'Debug' and '$(DeterministicSourcePaths)' != 'true' and $([MSBuild]::IsOSPlatform('Windows')) and '$(MSBuildProjectDirectory.Substring(1, 1))' == ':'">
+    <_SparDrive>$(MSBuildProjectDirectory.Substring(0, 3))</_SparDrive>
+    <PathMap>$(PathMap),$(_SparDrive.ToLowerInvariant())=$(_SparDrive.ToUpperInvariant())</PathMap>
+    <PathMap>$(PathMap.TrimStart(','))</PathMap>
+  </PropertyGroup>
+
+  <!--
+    Where dotnet test writes a test project's results, so no TestResults/ folder is left in the working directory (plan
+    section 5, "Template defaults"): an app's test project writes under its own obj/test-results/; SparTestResultsDirectory
+    names another folder. In this repository (source mode) they go to artifacts/test-results/<project>/ (decision "M1a
+    names"), with a TRX report of every run, so a failure that does not recur keeps its message and output (decision
+    "Every test run keeps a TRX report"). No trailing separator: inside the quotes it would escape the closing one.
+  -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <SparTestResultsDirectory Condition="'$(SparTestResultsDirectory)' == '' and '$(SparSourceMode)' == 'true'">$(SparSourceRoot)..\artifacts\test-results\$(MSBuildProjectName)</SparTestResultsDirectory>
+    <SparTestResultsDirectory Condition="'$(SparTestResultsDirectory)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'test-results'))</SparTestResultsDirectory>
+    <SparTestResultsDirectory>$(SparTestResultsDirectory.TrimEnd('\').TrimEnd('/'))</SparTestResultsDirectory>
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --results-directory "$(SparTestResultsDirectory)"</TestingPlatformCommandLineArguments>
+    <TestingPlatformCommandLineArguments Condition="'$(SparSourceMode)' == 'true'">$(TestingPlatformCommandLineArguments) --report-xunit-trx</TestingPlatformCommandLineArguments>
   </PropertyGroup>
 
   <!--
@@ -85,6 +105,77 @@
   </Target>
 
   <!--
+    The build's identity (decision "M1d's decide-first questions"; plan, M1d step 6): the generator writes the variant,
+    the git revision, whether the work tree had uncommitted changes and the contracts' fingerprint into the app as one
+    marked block, which the host writes in its first log line and spar doctor reads from the file. The revision is the
+    .NET SDK's SourceRevisionId (Source Link reads it from .git, no process); the tree's state is git's status of the
+    whole work tree (tracked changes, staged or not, and untracked files that are not ignored), one git process per
+    build of an app in a git work tree, with no optional locks so it never takes the index from the developer's own git
+    commands. Outside a work tree, or with git missing or refusing the folder, the value is empty: unknown, not an error.
+    A design-time build runs no git: it reads the record the last build wrote, so the editorconfig it writes for the
+    generator is the build's own, and the next build stays incremental. SparBuildIdentity=false leaves the revision and
+    the tree's state out.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparBuildIdentityRecord>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)spar-build-identity.txt</SparBuildIdentityRecord>
+    <_SparBuildIdentityDependsOn Condition="'$(SourceControlInformationFeatureSupported)' == 'true' and '$(DesignTimeBuild)' != 'true'">InitializeSourceControlInformation</_SparBuildIdentityDependsOn>
+    <_SparNoStandardError Condition="$([MSBuild]::IsOSPlatform('Windows'))">2&gt;nul</_SparNoStandardError>
+    <_SparNoStandardError Condition="!$([MSBuild]::IsOSPlatform('Windows'))">2&gt;/dev/null</_SparNoStandardError>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <CompilerVisibleProperty Include="SparBuildRevision" />
+    <CompilerVisibleProperty Include="SparBuildDirty" />
+  </ItemGroup>
+
+  <Target Name="SparBuildIdentity"
+          BeforeTargets="GenerateMSBuildEditorConfigFileCore"
+          DependsOnTargets="$(_SparBuildIdentityDependsOn)"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparBuildIdentity)' != 'false' and '$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <SparBuildRevision>$(SourceRevisionId)</SparBuildRevision>
+      <_SparGitRoot>@(SourceRoot->WithMetadataValue('SourceControl', 'git')->WithMetadataValue('NestedRoot', ''))</_SparGitRoot>
+      <_SparGitRoot Condition="$(_SparGitRoot.Contains(';'))">$(_SparGitRoot.Substring(0, $(_SparGitRoot.IndexOf(';'))))</_SparGitRoot>
+    </PropertyGroup>
+
+    <Exec Condition="'$(_SparGitRoot)' != ''"
+          Command="git --no-optional-locks status --porcelain $(_SparNoStandardError)"
+          WorkingDirectory="$(_SparGitRoot)"
+          ConsoleToMSBuild="true" EchoOff="true" IgnoreExitCode="true" IgnoreStandardErrorWarningFormat="true"
+          StandardOutputImportance="low" StandardErrorImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_SparGitStatus" />
+      <Output TaskParameter="ExitCode" PropertyName="_SparGitExit" />
+    </Exec>
+
+    <PropertyGroup>
+      <SparBuildDirty Condition="'$(_SparGitExit)' == '0' and '$(_SparGitStatus)' == ''">false</SparBuildDirty>
+      <SparBuildDirty Condition="'$(_SparGitExit)' == '0' and '$(_SparGitStatus)' != ''">true</SparBuildDirty>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(SparBuildIdentityRecord)" Lines="revision=$(SparBuildRevision);dirty=$(SparBuildDirty)"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <ItemGroup>
+      <FileWrites Include="$(SparBuildIdentityRecord)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="SparBuildIdentityDesignTime"
+          BeforeTargets="GenerateMSBuildEditorConfigFileCore"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparBuildIdentity)' != 'false' and '$(DesignTimeBuild)' == 'true' and Exists('$(SparBuildIdentityRecord)')">
+    <ReadLinesFromFile File="$(SparBuildIdentityRecord)">
+      <Output TaskParameter="Lines" ItemName="_SparBuildIdentityLine" />
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <_SparBuildIdentityRevision Include="@(_SparBuildIdentityLine)" Condition="$([System.String]::Copy('%(Identity)').StartsWith('revision='))" />
+      <_SparBuildIdentityDirty Include="@(_SparBuildIdentityLine)" Condition="$([System.String]::Copy('%(Identity)').StartsWith('dirty='))" />
+    </ItemGroup>
+    <PropertyGroup>
+      <SparBuildRevision>@(_SparBuildIdentityRevision->Replace('revision=', ''))</SparBuildRevision>
+      <SparBuildDirty>@(_SparBuildIdentityDirty->Replace('dirty=', ''))</SparBuildDirty>
+    </PropertyGroup>
+  </Target>
+
+  <!--
     The test-host hook exists only where a test process turns it on. Apps turn it off, and the trimmer removes it
     from their publications (the production boundary test proves it).
   -->
@@ -115,6 +206,16 @@
   <ItemGroup Condition="'$(SparIsTestProject)' == 'true'">
     <ProjectReference Include="@(SparTestedApplication)" SparTestedApplication="true" AdditionalProperties="SparVariant=Test" />
   </ItemGroup>
+
+  <!--
+    A test project calls into its app rather than running the app's executable, so an app published as a self-contained
+    single file (SelfContained in its own project) may be tested by a framework-dependent test project: the .NET SDK
+    skips this check for VSTest test projects for that reason, but not for Microsoft.Testing.Platform ones, which failed
+    with NETSDK1151 (decision "Runtime choices (implementation record; choices for review; 2026-11-23)").
+  -->
+  <PropertyGroup Condition="'$(SparIsTestProject)' == 'true'">
+    <ValidateExecutableReferencesMatchSelfContained Condition="'$(ValidateExecutableReferencesMatchSelfContained)' == ''">false</ValidateExecutableReferencesMatchSelfContained>
+  </PropertyGroup>
 
   <!--
     The variant and the test lane mean something only to Spar's own projects, which keep a folder per variant. Any
@@ -188,8 +289,9 @@
   <!--
     The black-box level (plan section 5, level 7; decision "M1b's remaining questions without a spike"): a test project
     with <SparBlackBoxTests>true</SparBlackBoxTests> gets the generated Projects class, one SparProject per
-    SparTestedApplication, and each app's Production NativeAOT executable, published into this project's obj/ and copied
-    beside the tests (and into a publish of them) under spar-apps/<app>/. SparBlackBoxPublish=false keeps the class and
+    SparTestedApplication, and each app's Production publication (a NativeAOT executable, unless the app's own project
+    chose CoreCLR), published into this project's obj/ and copied beside the tests (and into a publish of them) under
+    spar-apps/<app>/, its debug symbols left out. SparBlackBoxPublish=false keeps the class and
     skips the publish. The publish is the app's own incremental build in-process (decision "D3: variant builds run
     in-proc"): restore as its own call, then Publish in Release with _IsPublishing, as dotnet publish does, without the
     caller's lane, runtime and target framework. Spar's own projects and the app's libraries drop _IsPublishing,
@@ -246,10 +348,17 @@
              Properties="$(_SparBlackBoxProperties);_IsPublishing=true;PublishDir=$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\"
              RemoveProperties="$(_SparBlackBoxRemoved)" />
 
+    <!--
+      Every file of the publication but its debug symbols: a NativeAOT executable alone, or with a native library it
+      loads (SqlClient's SNI DLL); a CoreCLR app's DLLs and runtime configuration, or a single file and the WebView2
+      loader beside it (decision "Runtime choices (implementation record; choices for review; 2026-11-23)").
+    -->
     <ItemGroup>
-      <None Include="$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\%(_SparBlackBoxApp.SparAppExecutable)"
-            Link="spar-apps\%(_SparBlackBoxApp.SparAppName)\%(_SparBlackBoxApp.SparAppExecutable)" Visible="false"
-            CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+      <_SparBlackBoxFile Include="$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\**"
+                         Exclude="$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\**\*.pdb;$(_SparBlackBoxDirectory)%(_SparBlackBoxApp.SparAppName)\**\*.dbg"
+                         SparAppName="%(_SparBlackBoxApp.SparAppName)" />
+      <None Include="@(_SparBlackBoxFile)" Link="spar-apps\%(_SparBlackBoxFile.SparAppName)\%(_SparBlackBoxFile.RecursiveDir)%(_SparBlackBoxFile.Filename)%(_SparBlackBoxFile.Extension)"
+            Visible="false" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
   </Target>
 
@@ -318,10 +427,79 @@
   </ItemGroup>
 
   <!--
+    The loopback host in an app's Development build (plan section 4, "Launch profiles"; M1d step 2): SPAR_HOST=Loopback,
+    which the Loopback launch profile sets, serves the page to a browser on 127.0.0.1 instead of the window, and the
+    generator hands Run that host when Spar.Loopback is referenced. Development only: no other variant references it,
+    or the ASP.NET Core shared framework it runs on (decision "Loopback in the development loop (implementation record;
+    choices for review)").
+
+    The reference is added at build time, after restore, so the restore output every variant shares in obj/ stays the
+    same for all of them: a reference that restore saw only in Development would make a Release build (or a black-box
+    publish) restore again and rewrite it, and leave a Development build with a Production restore. Restore never walks
+    it, so its framework comes as an explicit FrameworkReference here (the targeting pack ships with the .NET SDK). In
+    package mode the package is downloaded in every variant (PackageDownload, which adds no reference and no
+    dependency) and its assembly referenced by path in Development.
+
+    Since restore never walks the reference, in source mode the target restores Spar.Loopback itself when that project has
+    no restore output yet, as a call of its own with a property of its own (a fresh evaluation), before the reference is
+    built. Without it a clean tree's Development build of an app alone failed with NETSDK1004 for Spar.Loopback (the build
+    tests' clean copy on CI); a solution build had always restored it first.
+
+    The dev session's record, obj/spar-loopback.json, reaches the run as a runtime configuration value; it is also what
+    makes the runtime configuration's input hash change when a build first references the host, so its frameworks are
+    written again.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparUsesLoopback Condition="'$(SparVariant)' == 'Development'">true</SparUsesLoopback>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' != 'true'">
+    <PackageDownload Include="Spar.Loopback" Version="[$(SparSdkVersion)]" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparUsesLoopback)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.Loopback.SessionFile"
+                                    Value="$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'spar-loopback.json'))" />
+  </ItemGroup>
+
+  <Target Name="SparLoopbackReference"
+          BeforeTargets="AssignProjectConfiguration;ProcessFrameworkReferences"
+          Condition="'$(SparUsesLoopback)' == 'true' and '$(MSBuildIsRestoring)' != 'true'">
+    <PropertyGroup Condition="'$(SparSourceMode)' == 'true'">
+      <_SparLoopbackProject>$(SparSourceRoot)Spar.Loopback\Spar.Loopback.csproj</_SparLoopbackProject>
+      <_SparLoopbackAssets>$(SparSourceRoot)Spar.Loopback\obj\project.assets.json</_SparLoopbackAssets>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(_SparLoopbackProject)" Targets="Restore"
+             Properties="_SparLoopbackRestore=true"
+             RemoveProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing"
+             Condition="'$(SparSourceMode)' == 'true' and !Exists('$(_SparLoopbackAssets)')" />
+
+    <ItemGroup Condition="'$(SparSourceMode)' == 'true'">
+      <ProjectReference Include="$(_SparLoopbackProject)"
+                        SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+      <!-- NuGetPackageRoot has no trailing slash when NUGET_PACKAGES sets it without one. -->
+      <Reference Include="$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))spar.loopback\$(SparSdkVersion.ToLowerInvariant())\lib\$(TargetFramework)\Spar.Loopback.dll" Private="true" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'@(FrameworkReference->WithMetadataValue('Identity', 'Microsoft.AspNetCore.App'))' == ''">
+      <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+  </Target>
+
+  <!--
     The WebView2 loader (plan section 3, "Bindings"), from the Microsoft.Web.WebView2 package, used for its native
     files only: linked statically into a NativeAOT executable (DirectPInvoke plus the static library, so the
     publication is one file), and WebView2Loader.dll beside a CoreCLR build or publication. The version comes from
-    central package management in this repository and from the SDK in package mode, like the test framework's.
+    central package management in this repository and from the SDK in package mode, like the test framework's. In a
+    CoreCLR single-file publication the DLL follows the .NET SDK's rule for native libraries: it stays beside the
+    executable, or goes into the bundle (extracted when the app starts) when the app sets
+    IncludeNativeLibrariesForSelfExtract. Marked neither way, the SDK expected it in the bundle and its bundler left it
+    out: NETSDK1236, and a bundle without its loader (decision "Runtime choices (implementation record; choices for
+    review; 2026-11-23)").
   -->
   <PropertyGroup>
     <_SparWebView2Loader Condition="'$(SparTargetsWindows)' == 'true'">true</_SparWebView2Loader>
@@ -346,11 +524,14 @@
     <_SparWebView2Native>$(PkgMicrosoft_Web_WebView2)\build\native\$(_SparWebView2Arch)\</_SparWebView2Native>
     <_SparWebView2PublishDll Condition="'$(PublishAot)' == 'true'">Never</_SparWebView2PublishDll>
     <_SparWebView2PublishDll Condition="'$(PublishAot)' != 'true'">PreserveNewest</_SparWebView2PublishDll>
+    <_SparWebView2OutsideBundle>true</_SparWebView2OutsideBundle>
+    <_SparWebView2OutsideBundle Condition="'$(IncludeNativeLibrariesForSelfExtract)' == 'true'">false</_SparWebView2OutsideBundle>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != ''">
     <None Include="$(_SparWebView2Native)WebView2Loader.dll" Link="WebView2Loader.dll" Visible="false"
-          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="$(_SparWebView2PublishDll)" />
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="$(_SparWebView2PublishDll)"
+          ExcludeFromSingleFile="$(_SparWebView2OutsideBundle)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(_SparWebView2Loader)' == 'true' and '$(_SparWebView2Arch)' != '' and '$(PkgMicrosoft_Web_WebView2)' != '' and '$(PublishAot)' == 'true'">
@@ -503,6 +684,27 @@
     <SparThirdPartyNotices Condition="'$(SparThirdPartyNotices)' == ''">true</SparThirdPartyNotices>
   </PropertyGroup>
 
+  <!--
+    The development server (plan section 4; decision "M1d step 1's shape: Debug through the app's own origin"): a
+    Development build with a frontend, unless SparDevServer=false, serves its page from the frontend's Vite server through
+    the app's own origin. Its feature switch is off, with Trim="true", in every other build, so none of that code ships.
+    The frontend folder, the obj folder (where the plugin records the server, spar-dev-server.json, and its output goes,
+    spar-dev-server.log) and SparDevServerUrl, the address of a server Spar does not start, reach the run as runtime
+    configuration values, in Development builds only.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparUsesDevServer Condition="'$(SparDevServer)' == 'true' and '$(SparVariant)' == 'Development' and '$(SparHasFrontend)' == 'true'">true</SparUsesDevServer>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.IsSupported" Value="false" Trim="true" Condition="'$(SparUsesDevServer)' != 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.IsSupported" Value="true" Trim="true" Condition="'$(SparUsesDevServer)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.Frontend" Value="$(SparFrontendDirectory)" Condition="'$(SparUsesDevServer)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.Intermediate" Value="$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)'))"
+                                    Condition="'$(SparUsesDevServer)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.DevServer.Url" Value="$(SparDevServerUrl)" Condition="'$(SparUsesDevServer)' == 'true' and '$(SparDevServerUrl)' != ''" />
+  </ItemGroup>
+
   <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
@@ -538,7 +740,19 @@
           Condition="'$(SparHasFrontend)' == 'true' and '$(SparTypeCheck)' == 'true' and '$(DesignTimeBuild)' != 'true'"
           Inputs="@(_SparFrontendSource)"
           Outputs="$(SparTypeCheckStamp)">
-    <Exec Command="node node_modules/typescript/bin/tsc --noEmit -p . --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
+    <!--
+      A tsconfig.json with references (Vite's scaffold: "files": [] and one config each for the page and for Node) is
+      checked in build mode, which follows them; -p . would check no file of the page there (decision "The M1d check
+      follow-ups"). Any other config keeps -p ., since build mode would write a tsconfig.tsbuildinfo
+      beside it. The referenced configs' own tsBuildInfoFile says where build mode keeps its state.
+    -->
+    <PropertyGroup>
+      <_SparTsConfig>$(SparFrontendDirectory)tsconfig.json</_SparTsConfig>
+      <_SparTypeCheckArguments>--noEmit -p .</_SparTypeCheckArguments>
+      <_SparTypeCheckArguments Condition="Exists('$(_SparTsConfig)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(_SparTsConfig)')), '&quot;references&quot;\s*:\s*\[\s*\{'))">-b --noEmit</_SparTypeCheckArguments>
+    </PropertyGroup>
+
+    <Exec Command="node node_modules/typescript/bin/tsc $(_SparTypeCheckArguments) --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
     <Touch Files="$(SparTypeCheckStamp)" AlwaysCreate="true" />
   </Target>
 

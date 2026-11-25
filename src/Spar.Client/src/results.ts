@@ -1,5 +1,6 @@
 // Calls and results (plan section 2b; decisions "Opaque results in TypeScript", "`CallError` kinds" and
 // "Bridge messages: encoding C header fields"). Results are opaque: the value is reached only through match or unwrap.
+import { setBackendUpdateToast } from "./backendUpdate.js";
 
 /** Whether the command ran. `notStarted` only when the host is certain. */
 export type Execution = "notStarted" | "stopped" | "completed" | "unknown";
@@ -95,19 +96,39 @@ const defaultOnFailure: FailureHook = error =>
 let onFailure: FailureHook = defaultOnFailure;
 let observe: FailureHook | undefined;
 
-/**
- * App-wide failure hooks. `onFailure` receives the failures no `match` handled; `unwrap` never reaches it, it throws.
- * `observe` sees every failure, handled or not, for logs and telemetry. Neither can retry or change a result.
- */
-export function configureSpar(options: { readonly onFailure?: FailureHook; readonly observe?: FailureHook }): void {
-  onFailure = options.onFailure ?? defaultOnFailure;
-  observe = options.observe;
+/** The page's app-wide settings. Each call of `configureSpar` sets all of them, those left out to their defaults. */
+export interface SparConfiguration {
+  /** Receives the failures no `match` handled; by default they are written with `console.error`. */
+  readonly onFailure?: FailureHook;
+  /** Sees every failure, handled or not, for logs and telemetry. */
+  readonly observe?: FailureHook;
+  /**
+   * Debug builds only: whether Spar's development overlay shows a toast for each C# edit Hot Reload applied to the
+   * backend (`true` by default). Turn it off to show your own from `onBackendUpdate`. A production build has no toast.
+   */
+  readonly backendUpdateToast?: boolean;
 }
 
-/** @internal Back to the default hooks, for page tests: each test starts from what an app's start-up code sets. */
+/**
+ * App-wide settings. `onFailure` receives the failures no `match` handled; `unwrap` never reaches it, it throws.
+ * `observe` sees every failure, handled or not, for logs and telemetry. Neither can retry or change a result.
+ * `backendUpdateToast: false` turns off the development overlay's toast for backend updates.
+ */
+export function configureSpar(options: SparConfiguration): void {
+  onFailure = options.onFailure ?? defaultOnFailure;
+  observe = options.observe;
+  if (import.meta.env?.DEV === true) {
+    setBackendUpdateToast(options.backendUpdateToast !== false);
+  }
+}
+
+/** @internal Back to the default settings, for page tests: each test starts from what an app's start-up code sets. */
 export function resetConfiguration(): void {
   onFailure = defaultOnFailure;
   observe = undefined;
+  if (import.meta.env?.DEV === true) {
+    setBackendUpdateToast(true);
+  }
 }
 
 /** Thrown by `unwrap` for a declared error or an infrastructure failure. */

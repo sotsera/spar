@@ -41,6 +41,23 @@ internal static class ProductionBoundary
 
         // The black box on Linux (M1c step 7): its AT-SPI client, its launched processes and its private desktop.
         "AtSpiAutomation", "AtSpiBus", "LinuxAppProcess", "LinuxDesktop",
+
+        // A Debug build's development server (M1d step 1): the session, its launcher, the output it reads, the record it
+        // finds, the proxy and the error page, and the WebView2 request headers only the proxy reads.
+        "DevServerSession", "DevServerLauncher", "DevServerOutput", "DevServerState", "DevServerProxy", "DevErrorPage",
+        "DevServerOutcome", "ICoreWebView2HttpRequestHeaders",
+
+        // Loopback in the development loop (M1d step 2): the host Spar.Sdk adds to Development builds only, its run, its
+        // dev session and the browser opener.
+        "SparLoopbackHost", "LoopbackApp", "LoopbackSession", "LoopbackAddress", "BrowserOpener",
+
+        // The Hot Reload signal (M1d step 3): the handler the runtime calls after an applied update, and the generated
+        // enum whose member restarts the app for a contract edit (a Development build's generator output only).
+        "BackendUpdates", "SparContractShape",
+
+        // The parent console's Ctrl+C of a Development WinExe app (decision "Step 3's two follow-ups"): never in Production.
+        // Not "ParentConsole": Production has StartupFailure.WriteToParentConsole.
+        "ConsoleInterrupt",
     ];
 
     private static readonly string[] Literals =
@@ -61,6 +78,21 @@ internal static class ProductionBoundary
 
         // The black box on Linux (M1c step 7): the launch's tag and runtime folders.
         "SPAR_BLACK_BOX_LAUNCH", "spar-bb-",
+
+        // A Debug build's development server (M1d step 1): its variables, its record and output files, the build's
+        // settings, the plugin's nonce placeholder and identity path, the proxy's route and the error page's text.
+        "SPAR_DEV_SERVER_URL", "SPAR_DEV_SERVER_FILE", "spar-dev-server.json", "spar-dev-server.log",
+        "Spar.DevServer.Frontend", "spar-dev-nonce", "/__spar/dev-server", "/_spar/dev-server/",
+        "The page cannot come from the development server", "npm run dev",
+
+        // Loopback in the development loop (M1d step 2): its variables, its record and runtime configuration value, the
+        // dev session's probe and header, and the Linux no-display hint of Development builds.
+        "SPAR_HOST", "SPAR_LOOPBACK_PORT", "SPAR_LOOPBACK_TOKEN", "SPAR_LOOPBACK_BROWSER", "spar-loopback.json",
+        "Spar.Loopback.SessionFile", "/_spar/session", "X-Spar-Run", "-lp Loopback",
+
+        // The Hot Reload signal (M1d step 3): the event's name and the hosts' line for each applied update.
+        "backend-updated", "Hot Reload applied revision",
+        "Attached to the parent's console", "from the parent's console",
     ];
 
     /// <summary>
@@ -75,9 +107,12 @@ internal static class ProductionBoundary
 
     /// <summary>
     /// What a Production page bundle must not carry: the fake backend of <c>@spar/app/testing</c> (its messages start
-    /// with "fakeSpar") and the generated tables and error writers only that module uses.
+    /// with "fakeSpar") and the generated tables and error writers only that module uses; and the Hot Reload signal's
+    /// page side (M1d step 3), which <c>onBackendUpdate</c> and the development overlay's toast reach only behind
+    /// <c>import.meta.env.DEV</c>: the event's name, the overlay's element and the toast's text.
     /// </summary>
-    public static readonly string[] PageMarkers = ["fakeSpar", "__sparTesting", "createFakeSpar"];
+    public static readonly string[] PageMarkers =
+        ["fakeSpar", "__sparTesting", "createFakeSpar", "backend-updated", "data-spar-dev-overlay", "Backend updated"];
 
     /// <summary>The page markers a folder's JavaScript files contain; empty for a clean Production bundle.</summary>
     public static IReadOnlyList<string> FindInPage(string directory, IEnumerable<string> markers)

@@ -2,6 +2,7 @@
 // aborts confirmed by the backend, and a lost channel turned into the decided failures. Never retries a call.
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import type { CallError, CallErrorKind, CallName, CallOptions, Execution, Outcome } from "./results.js";
+import { finishSplash, hasSplash } from "./splash.js";
 import { runCloseGuards, type CloseRequest, type GuardsOutcome } from "./windows.js";
 
 /** The host's channel for one document: strings both ways, never structured messages. */
@@ -49,6 +50,7 @@ export class Connection {
   readonly #closingWork: Array<() => Promise<unknown>> = [];
   readonly #closeRequests = new Map<number, AbortController>();
   #state: "opening" | "open" | "closed" = "opening";
+  #readyCalled = false;
   #nextId = 1;
   #document: string | undefined;
   #hostContracts: string | undefined;
@@ -108,9 +110,24 @@ export class Connection {
     });
   }
 
-  /** Tells the host the page's handlers are registered (`ui-ready`). */
+  /**
+   * Tells the host the page is ready: call it once the app's first view has rendered, for example in the root
+   * component's first effect. The host's `ui-ready`, which tests and tools wait for, follows. When the page has a
+   * splash (`#spar-splash` in `index.html`), it is removed first, after its minimum visible time if its mark has
+   * appeared, and the host hears `ready` once the removal has had a frame. Later calls in the same document do nothing.
+   */
   ready(): void {
-    this.#send({ type: "ready", payload: "" });
+    if (this.#readyCalled) {
+      return;
+    }
+
+    this.#readyCalled = true;
+    if (!hasSplash()) {
+      this.#send({ type: "ready", payload: "" });
+      return;
+    }
+
+    void finishSplash().then(() => this.#send({ type: "ready", payload: "" }));
   }
 
   /** Listens for a host event, such as `backend-updated`; returns a function that stops listening. */

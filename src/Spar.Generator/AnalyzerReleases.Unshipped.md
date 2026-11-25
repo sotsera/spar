@@ -38,3 +38,4 @@ SPAR102 | Spar.PageSecurity | Error | PageSecurityAnalyzer
 SPAR103 | Spar.PageSecurity | Error | PageSecurityAnalyzer
 SPAR104 | Spar.PageSecurity | Error | PageSecurityAnalyzer
 SPAR105 | Spar.PageSecurity | Warning | PageSecurityAnalyzer
+SPAR106 | Spar.PageSecurity | Error | PageSecurityAnalyzer

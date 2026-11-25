@@ -211,6 +211,15 @@ public sealed class BlackBoxFixtureTests
         await window.GetByText("Late button clicked").WaitForAsync();
         Assert.Equal("", await window.GetByRole(SparRole.Textbox, new() { Name = "Notes" }).InputValueAsync());
 
+        // The host's first line names the build: its identity block, written by the generator (decision "The spar tool
+        // (implementation record; choices for review; 2026-11-22)"). The revision is there only in a git work tree.
+        using (var log = new StreamReader(new FileStream(app.LogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete)))
+        {
+            Assert.Matches(
+                @"Host started [0-9.]+ ms after the process; build Production, (revision [0-9a-f]{40} \([a-z ]+\)|no revision \(not built in a git work tree\)), contract fingerprint [0-9a-f]{16}\.",
+                await log.ReadToEndAsync(Token));
+        }
+
         clock.Restart();
         Assert.Equal(0, await app.CloseAsync(Token));
         var closed = clock.Elapsed;

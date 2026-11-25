@@ -21,6 +21,12 @@ internal static class ClientPackage
     public const string CspFile = "csp.json";
 
     /// <summary>
+    /// The window colours Program.cs declares (<c>spar.Window(w => w.Background(light, dark))</c>), for the Vite
+    /// plugin's theme and splash styles (plan section 3d), read like <see cref="CspFile"/>.
+    /// </summary>
+    public const string ThemeFile = "theme.json";
+
+    /// <summary>
     /// Every file of the package, by its path relative to the package folder, with <c>/</c> separators.
     /// <paramref name="sourcePrefix"/> is the way from the package folder to the project
     /// folder (<c>../../../</c> for <c>obj/spar/client</c>), so the declaration maps reach the C# files.
@@ -31,7 +37,8 @@ internal static class ClientPackage
         AbsolutePath sdkSourceDirectory,
         string sdkVersion,
         string sourcePrefix,
-        PageSecurityModel? security = null)
+        PageSecurityModel? security = null,
+        WindowColorsModel? colours = null)
     {
         var files = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
         void Text(string path, string text) => files[path] = Encoding.UTF8.GetBytes(text);
@@ -75,6 +82,7 @@ internal static class ClientPackage
 
         Text("package.json", PackageJson(layout, sdkVersion));
         Text(CspFile, CspJson(security));
+        Text(ThemeFile, ThemeJson(colours ?? WindowColorsModel.Default));
         return files;
     }
 
@@ -216,6 +224,21 @@ internal static class ClientPackage
             }
 
             json.WriteEndArray();
+            json.WriteEndObject();
+        }
+
+        return Encoding.UTF8.GetString(buffer.ToArray()) + "\n";
+    }
+
+    /// <summary><c>theme.json</c>: the light and the dark window colour, <c>#rrggbb</c>, the defaults when the app sets none.</summary>
+    internal static string ThemeJson(WindowColorsModel colours)
+    {
+        using var buffer = new MemoryStream();
+        using (var json = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true, NewLine = "\n" }))
+        {
+            json.WriteStartObject();
+            json.WriteString("light", colours.Light);
+            json.WriteString("dark", colours.Dark);
             json.WriteEndObject();
         }
 

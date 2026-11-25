@@ -1,0 +1,341 @@
+    183.3 watch: dotnet watch : Working directory: '<copy>'
+    185.6 watch: dotnet watch : Watching with Hot Reload.
+    201.6 watch: dotnet watch : Hot reload enabled. For a list of supported edits, see https://aka.ms/dotnet/hot-reload.
+    205.7 watch: dotnet watch : Press Ctrl+R to restart.
+    209.7 watch: dotnet watch : Building <copy>/samples/Notebook/Notebook.csproj ...
+    213.4 watch: dotnet watch : Launched '/var/tmp/spar-linux/cache/dotnet/dotnet' with arguments 'build <copy>/samples/Notebook/Notebook.csproj --property:NuGetInteractive=false': process id 15395
+    564.4 watch:   Determining projects to restore...
+   1318.6 watch:   Restored <copy>/src/Spar.Sdk.Tasks/Spar.Sdk.Tasks.csproj (in 211 ms).
+   1321.0 watch:   Restored <copy>/src/Spar.Windows/Spar.Windows.csproj (in 211 ms).
+   1323.8 watch:   Restored <copy>/src/Spar/Spar.csproj (in 211 ms).
+   1325.8 watch:   Restored <copy>/src/Spar.Linux/Spar.Linux.csproj (in 211 ms).
+   1327.2 watch:   Restored <copy>/samples/Notebook/Notebook.csproj (in 211 ms).
+   1328.8 watch:   Restored <copy>/src/Spar.Generator/Spar.Generator.csproj (in 211 ms).
+   1866.3 watch:   Spar -> <copy>/src/Spar/bin/Debug/net11.0/Spar.dll
+   1988.5 watch:   Spar.Loopback -> <copy>/src/Spar.Loopback/bin/Debug/net11.0/Spar.Loopback.dll
+   1997.4 watch:   Spar.Linux -> <copy>/src/Spar.Linux/bin/Debug/net11.0/Spar.Linux.dll
+   2028.3 watch:   Spar.Windows -> <copy>/src/Spar.Windows/bin/Debug/net11.0/Spar.Windows.dll
+   2184.2 watch:   Spar.Generator -> <copy>/src/Spar.Generator/bin/Debug/netstandard2.0/Spar.Generator.dll
+   2348.0 watch:   Spar.Sdk.Tasks -> <copy>/src/Spar.Sdk.Tasks/bin/Debug/net11.0/Spar.Sdk.Tasks.dll
+   2513.7 watch:   Notebook -> <copy>/samples/Notebook/bin/Development/Debug/net11.0/linux-x64/Notebook.dll
+   2525.9 watch: 
+   2527.6 watch: Build succeeded.
+   2528.9 watch:     0 Warning(s)
+   2530.0 watch:     0 Error(s)
+   2531.2 watch: 
+   2532.2 watch: Time Elapsed 00:00:02.18
+   2548.8 watch: dotnet watch : Process id 15395 ran for 2338ms and exited with exit code 0.
+   2794.8 watch: dotnet watch : Project graph loaded in 0.2s.
+   2802.5 watch: dotnet watch : Loading projects ...
+   3215.6 watch: dotnet watch : Design-time build completed in 0.4s.
+   3222.1 watch: dotnet watch : Loaded 6 project(s) in 0.4s.
+   3231.8 watch: dotnet watch : Watching 230 file(s) for changes
+   3235.2 watch: dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Sdk.Tasks'
+   3236.6 watch: dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar'
+   3238.0 watch: dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Windows'
+   3239.2 watch: dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/netstandard2.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Generator'
+   3240.7 watch: dotnet watch : Exclusion glob: 'bin\Debug//**;obj\Debug//**;bin\/**;obj\/**;bin\Debug/net11.0/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/src/Spar.Linux'
+   3241.9 watch: dotnet watch : Exclusion glob: 'obj/**;bin/**;**/node_modules/**;**/dist/**;bin\Development/Debug//**;obj\Development/Debug//**;bin\Development/Debug/net11.0/linux-x64/publish//**;**/*.user;**/*.*proj;**/*.sln;**/*.slnx;**/*.vssscc;**/.DS_Store' under project '<copy>/samples/Notebook'
+   3683.2 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Shipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+   3689.5 watch: dotnet watch : msbuild: [Warning] Duplicate source file '<copy>/src/Spar.Generator/AnalyzerReleases.Unshipped.md' in project '<copy>/src/Spar.Generator/Spar.Generator.csproj'
+   3732.8 watch: dotnet watch : Solution after project update: v1
+   3761.7 watch: dotnet watch : Hot reload session started.
+   3763.8 watch: dotnet watch : Application kind: Default.
+   3777.1 watch: dotnet watch : Found named launch profile 'Loopback'.
+   3779.2 watch: dotnet watch : launchSettings does not allow launching browsers.
+   3781.0 watch: dotnet watch : [Notebook (net11.0)] Waiting for application to connect to pipe 'f880ac5bd46442b7bec0bbd2bb2cb6c8'.
+   3782.2 watch: dotnet watch : [Notebook (net11.0)] Launched '/var/tmp/spar-linux/cache/dotnet/dotnet' with arguments 'run --no-build -e DOTNET_WATCH=1 -e DOTNET_WATCH_ITERATION=1 -e DOTNET_MODIFIABLE_ASSEMBLIES=debug -e DOTNET_STARTUP_HOOKS=/var/tmp/spar-linux/cache/dotnet/sdk/11.0.100/DotnetTools/dotnet-watch/11.0.100/tools/net11.0/any/hotreload/net10.0/Microsoft.Extensions.DotNetDeltaApplier.dll -e DOTNET_WATCH_HOTRELOAD_NAMEDPIPE_NAME=f880ac5bd46442b7bec0bbd2bb2cb6c8 --project <copy>/samples/Notebook -lp Loopback': process id 15660
+   4053.3 watch: Using launch settings from <copy>/samples/Notebook/Properties/launchSettings.json...
+   4197.6 watch: dotnet watch : [Notebook (net11.0)] Capabilities: 'Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva AddExplicitInterfaceImplementation'.
+   4225.2 watch: spar info +11.8 ms: [5e2d45cb] Host started on loopback (no window); build Development, revision d8290ea04a6c2a700afd955142686b943790dcfb (uncommitted changes), contract fingerprint 59cb559befd9b76b; app id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-hot-reload/watch/data/com.example.Notebook.Development
+   4235.7 watch: spar info +23.2 ms: [5e2d45cb] npm run dev started in <copy>/samples/Notebook/frontend/ (pid 15699), port 44129.
+   4242.5 watch: spar info +29.9 ms: [5e2d45cb] services built at 27.9 ms
+   4249.3 watch: dotnet watch : Waiting for changes
+   4265.9 watch: spar info +53.4 ms: [5e2d45cb] loopback listening at 53.4 ms
+   4267.5 watch: spar info +55.0 ms: [5e2d45cb] Loopback page at http://127.0.0.1:40165/#token=… (a new dev session).
+   4268.8 watch: Spar: the page is at http://127.0.0.1:40165/#token=… (a new dev session). Ctrl+C stops the app.
+   4270.8 watch: spar info +55.6 ms: [5e2d45cb] The browser is not opened (SPAR_LOOPBACK_BROWSER=none).
+   4335.6 watch: > dev
+   4337.9 watch: > vite
+   4436.1 watch:   VITE v8.3.8  ready in 126 ms
+   4437.7 watch:   ➜  Local:   http://127.0.0.1:44129/
+   4454.1 watch: spar info +241.6 ms: [5e2d45cb] Development server ready at http://127.0.0.1:44129 in 222 ms (Vite pid 15713).
+   4470.8 watch: spar info +258.4 ms: [5e2d45cb] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:40165 ws://127.0.0.1:44129; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   4486.7 run: page console warning: Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+   4724.9 run: page console debug: [vite] connecting...
+   4731.1 run: page console debug: [vite] connected.
+   4761.3 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+   4798.7 run: page load 1
+   4825.2 watch: spar info +612.8 ms: [5e2d45cb] ui-ready at 612.8 ms
+   4842.4 run: PASS the page lists the notebook's page (http://127.0.0.1:40165/#token=…)
+   4844.2 run: --- body
+   4846.0 run: edit written: Pages/MarkdownPageStore.cs
+   4848.8 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+   4851.1 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+   4869.5 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+   4880.3 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+   4892.0 watch: dotnet watch : Solution after document update: v2
+   7770.8 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   8132.7 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #0
+   8168.8 watch: spar info +3956.3 ms: [5e2d45cb] Hot Reload applied revision 1 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+   8173.1 watch: dotnet watch : [Notebook (net11.0)] Writing capabilities: Baseline AddMethodToExistingType AddStaticFieldToExistingType AddInstanceFieldToExistingType NewTypeDefinition ChangeCustomAttributes UpdateParameters GenericUpdateMethod GenericAddMethodToExistingType GenericAddFieldToExistingType AddFieldRva
+   8175.7 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+   8177.2 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+   8178.6 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+   8179.9 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+   8180.9 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+   8182.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+   8183.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+   8184.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+   8185.8 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+   8187.2 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+   8188.4 watch: dotnet watch : [Notebook (net11.0)] Update batch #0 completed.
+   8189.5 watch: dotnet watch : C# and Razor changes applied in 3281ms.
+   8198.3 run: PASS body: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 3281ms.; 3341 ms after the write)
+   8199.6 run: PASS body: the backend sent revision 1 (Notebook.Pages.MarkdownPageStore) to 1 document, 3320 ms after the write
+   8200.8 run: PASS body: the page's onBackendUpdate handler fetched the list again, 3339 ms after the write
+   8205.3 run: PASS body: the list now shows "Welcome (edited)", from the patched code
+   8220.1 run: PASS body: the toast shows "Backend updated: MarkdownPageStore (revision 1)", 3372 ms after the write
+   8264.0 run: restored: Pages/MarkdownPageStore.cs
+   8265.9 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+   8286.4 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+   8291.7 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+   8294.7 watch: dotnet watch : Solution after document update: v3
+   8305.5 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+   8347.4 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #1
+   8350.2 watch: spar info +4135.7 ms: [5e2d45cb] Hot Reload applied revision 2 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+   8354.2 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+   8355.5 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+   8356.6 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+   8359.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+   8360.5 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+   8369.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+   8370.5 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+   8371.7 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+   8373.0 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+   8374.2 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+   8375.6 watch: dotnet watch : [Notebook (net11.0)] Update batch #1 completed.
+   8377.1 watch: dotnet watch : C# and Razor changes applied in 61ms.
+   8378.7 run: PASS body restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 61ms.; 111 ms after the write)
+   8384.9 run: PASS body restored: the backend sent revision 2 (Notebook.Pages.MarkdownPageStore) to 1 document, 84 ms after the write
+   8403.0 run: PASS body restored: the page's onBackendUpdate handler fetched the list again, 127 ms after the write
+   8413.4 run: PASS body restored: the list now shows "Welcome", from the patched code
+   8423.7 run: PASS body restored: the toast shows "Backend updated: MarkdownPageStore (revision 2)", 158 ms after the write
+   9932.9 run: --- body
+   9944.5 run: edit written: Pages/MarkdownPageStore.cs
+   9946.6 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+   9991.1 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+   9992.8 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+   9993.9 watch: dotnet watch : Solution after document update: v4
+  10017.5 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  10099.6 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #2
+  10109.5 watch: spar info +5888.2 ms: [5e2d45cb] Hot Reload applied revision 3 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  10111.5 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  10113.0 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  10114.4 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  10115.6 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  10117.0 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  10124.8 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  10136.9 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  10140.5 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  10142.1 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  10143.4 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  10144.5 watch: dotnet watch : [Notebook (net11.0)] Update batch #2 completed.
+  10145.8 watch: dotnet watch : C# and Razor changes applied in 109ms.
+  10147.6 run: PASS body: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 109ms.; 199 ms after the write)
+  10149.0 run: PASS body: the backend sent revision 3 (Notebook.Pages.MarkdownPageStore) to 1 document, 163 ms after the write
+  10160.5 run: PASS body: the page's onBackendUpdate handler fetched the list again, 204 ms after the write
+  10164.4 run: PASS body: the list now shows "Welcome (edited)", from the patched code
+  10167.7 run: PASS body: the toast shows "Backend updated: MarkdownPageStore (revision 3)", 221 ms after the write
+  10197.0 run: restored: Pages/MarkdownPageStore.cs
+  10202.3 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  10210.2 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  10216.8 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+  10218.6 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  10219.8 watch: dotnet watch : Solution after document update: v5
+  10223.6 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  10261.3 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #3
+  10267.0 watch: spar info +6049.7 ms: [5e2d45cb] Hot Reload applied revision 4 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  10268.5 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  10269.7 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  10271.1 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  10272.3 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  10273.7 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  10274.9 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  10276.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  10277.6 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  10278.8 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  10280.0 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  10281.1 watch: dotnet watch : [Notebook (net11.0)] Update batch #3 completed.
+  10282.2 watch: dotnet watch : C# and Razor changes applied in 62ms.
+  10283.8 run: PASS body restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 62ms.; 80 ms after the write)
+  10285.1 run: PASS body restored: the backend sent revision 4 (Notebook.Pages.MarkdownPageStore) to 1 document, 65 ms after the write
+  10296.8 run: PASS body restored: the page's onBackendUpdate handler fetched the list again, 84 ms after the write
+  10300.6 run: PASS body restored: the list now shows "Welcome", from the patched code
+  10309.9 run: PASS body restored: the toast shows "Backend updated: MarkdownPageStore (revision 4)", 108 ms after the write
+  11813.7 run: --- body
+  11815.5 run: edit written: Pages/MarkdownPageStore.cs
+  11817.8 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  11819.3 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  11852.7 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+  11854.9 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  11856.5 watch: dotnet watch : Solution after document update: v6
+  11875.4 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  11910.8 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #4
+  11934.3 watch: spar info +7721.8 ms: [5e2d45cb] Hot Reload applied revision 5 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  11942.8 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  11953.5 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  11955.6 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  11957.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  11958.3 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  11959.3 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  11960.5 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  11961.5 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  11962.6 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  11963.6 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  11964.8 watch: dotnet watch : [Notebook (net11.0)] Update batch #4 completed.
+  11965.8 watch: dotnet watch : C# and Razor changes applied in 81ms.
+  11967.7 run: PASS body: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 81ms.; 148 ms after the write)
+  11979.0 run: PASS body: the backend sent revision 5 (Notebook.Pages.MarkdownPageStore) to 1 document, 117 ms after the write
+  11989.4 run: PASS body: the page's onBackendUpdate handler fetched the list again, 163 ms after the write
+  11993.2 run: PASS body: the list now shows "Welcome (edited)", from the patched code
+  11996.4 run: PASS body: the toast shows "Backend updated: MarkdownPageStore (revision 5)", 179 ms after the write
+  12024.8 run: restored: Pages/MarkdownPageStore.cs
+  12026.6 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  12035.4 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  12061.3 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+  12070.0 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  12076.5 watch: dotnet watch : Solution after document update: v7
+  12080.5 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  12113.3 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #5
+  12116.6 watch: spar info +7901.6 ms: [5e2d45cb] Hot Reload applied revision 6 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  12119.8 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  12121.5 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  12123.1 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  12124.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  12125.7 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  12129.5 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  12131.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  12133.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  12135.3 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  12136.6 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  12138.4 watch: dotnet watch : [Notebook (net11.0)] Update batch #5 completed.
+  12139.8 watch: dotnet watch : C# and Razor changes applied in 52ms.
+  12143.4 run: PASS body restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 52ms.; 113 ms after the write)
+  12145.2 run: PASS body restored: the backend sent revision 6 (Notebook.Pages.MarkdownPageStore) to 1 document, 90 ms after the write
+  12156.8 run: PASS body restored: the page's onBackendUpdate handler fetched the list again, 120 ms after the write
+  12162.7 run: PASS body restored: the list now shows "Welcome", from the patched code
+  12165.6 run: PASS body restored: the toast shows "Backend updated: MarkdownPageStore (revision 6)", 139 ms after the write
+  13668.8 run: --- body
+  13671.0 run: edit written: Pages/MarkdownPageStore.cs
+  13672.6 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  13674.2 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  13707.2 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+  13708.8 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  13710.3 watch: dotnet watch : Solution after document update: v8
+  13722.9 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  13751.1 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #6
+  13753.1 watch: spar info +9539.5 ms: [5e2d45cb] Hot Reload applied revision 7 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  13754.8 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  13756.3 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  13757.6 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  13759.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  13760.2 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  13761.8 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  13763.2 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  13764.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  13765.6 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  13766.9 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  13768.0 watch: dotnet watch : [Notebook (net11.0)] Update batch #6 completed.
+  13769.3 watch: dotnet watch : C# and Razor changes applied in 44ms.
+  13770.6 run: PASS body: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 44ms.; 97 ms after the write)
+  13771.8 run: PASS body: the backend sent revision 7 (Notebook.Pages.MarkdownPageStore) to 1 document, 81 ms after the write
+  13782.8 run: PASS body: the page's onBackendUpdate handler fetched the list again, 101 ms after the write
+  13787.0 run: PASS body: the list now shows "Welcome (edited)", from the patched code
+  13790.1 run: PASS body: the toast shows "Backend updated: MarkdownPageStore (revision 7)", 118 ms after the write
+  13826.1 run: restored: Pages/MarkdownPageStore.cs
+  13827.6 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  13855.9 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+  13858.1 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  13859.7 watch: dotnet watch : Solution after document update: v9
+  13868.6 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  13906.9 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #7
+  13910.8 watch: spar info +9695.4 ms: [5e2d45cb] Hot Reload applied revision 8 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  13913.3 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  13915.6 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  13918.2 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  13921.5 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  13923.4 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  13926.1 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  13927.9 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  13930.0 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  13932.4 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  13933.8 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  13935.0 watch: dotnet watch : [Notebook (net11.0)] Update batch #7 completed.
+  13936.1 watch: dotnet watch : C# and Razor changes applied in 52ms.
+  13938.0 run: PASS body restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 52ms.; 109 ms after the write)
+  13939.4 run: PASS body restored: the backend sent revision 8 (Notebook.Pages.MarkdownPageStore) to 1 document, 83 ms after the write
+  13950.8 run: PASS body restored: the page's onBackendUpdate handler fetched the list again, 113 ms after the write
+  13955.2 run: PASS body restored: the list now shows "Welcome", from the patched code
+  13958.8 run: PASS body restored: the toast shows "Backend updated: MarkdownPageStore (revision 8)", 131 ms after the write
+  15461.3 run: --- body
+  15463.4 run: edit written: Pages/MarkdownPageStore.cs
+  15464.9 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  15474.7 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+  15476.6 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  15477.9 watch: dotnet watch : Solution after document update: v10
+  15485.0 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  15505.3 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #8
+  15507.3 watch: spar info +11293.4 ms: [5e2d45cb] Hot Reload applied revision 9 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  15509.0 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  15510.6 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  15512.0 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  15513.2 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  15514.3 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  15515.6 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  15516.7 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  15518.1 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  15519.3 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  15520.5 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  15521.6 watch: dotnet watch : [Notebook (net11.0)] Update batch #8 completed.
+  15522.8 watch: dotnet watch : C# and Razor changes applied in 31ms.
+  15524.3 run: PASS body: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 31ms.; 58 ms after the write)
+  15525.6 run: PASS body: the backend sent revision 9 (Notebook.Pages.MarkdownPageStore) to 1 document, 42 ms after the write
+  15536.9 run: PASS body: the page's onBackendUpdate handler fetched the list again, 62 ms after the write
+  15540.6 run: PASS body: the list now shows "Welcome (edited)", from the patched code
+  15543.5 run: PASS body: the toast shows "Backend updated: MarkdownPageStore (revision 9)", 79 ms after the write
+  15572.8 run: restored: Pages/MarkdownPageStore.cs
+  15574.3 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  15606.9 watch: dotnet watch : File updated: ./samples/Notebook/Pages/MarkdownPageStore.cs
+  15609.1 watch: dotnet watch : Updating document text of '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  15610.5 watch: dotnet watch : Solution after document update: v11
+  15614.8 watch: dotnet watch : Hot reload capabilities: AddExplicitInterfaceImplementation AddFieldRva AddInstanceFieldToExistingType AddMethodToExistingType AddStaticFieldToExistingType Baseline ChangeCustomAttributes GenericAddFieldToExistingType GenericAddMethodToExistingType GenericUpdateMethod NewTypeDefinition UpdateParameters.
+  15645.8 watch: dotnet watch : [Notebook (net11.0)] Sending update batch #9
+  15647.6 watch: spar info +11434.2 ms: [5e2d45cb] Hot Reload applied revision 10 (Notebook.Pages.MarkdownPageStore); sent to 1 document(s).
+  15649.6 watch: dotnet watch : [Notebook (net11.0)] Applying updates to module a99efa0d-5879-47c8-bf56-813b885e222b.
+  15652.0 watch: dotnet watch : [Notebook (net11.0)] Invoking metadata update handlers.
+  15653.9 watch: dotnet watch : [Notebook (net11.0)] System.Reflection.Metadata.RuntimeTypeMetadataUpdateHandler.ClearCache
+  15655.4 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.DependencyInjection.ActivatorUtilities+ActivatorUtilitiesUpdateHandler.ClearCache
+  15656.6 watch: dotnet watch : [Notebook (net11.0)] System.Text.Json.JsonSerializerOptionsUpdateHandler.ClearCache
+  15657.8 watch: dotnet watch : [Notebook (net11.0)] Microsoft.AspNetCore.Routing.RouteValueDictionary+MetadataUpdateHandler.ClearCache
+  15658.8 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  15660.3 watch: dotnet watch : [Notebook (net11.0)] Microsoft.Extensions.Internal.PropertyHelper+MetadataUpdateHandler.ClearCache
+  15661.4 watch: dotnet watch : [Notebook (net11.0)] Spar.HotReload.BackendUpdates.UpdateApplication
+  15662.5 watch: dotnet watch : [Notebook (net11.0)] Updates applied.
+  15663.5 watch: dotnet watch : [Notebook (net11.0)] Update batch #9 completed.
+  15664.5 watch: dotnet watch : C# and Razor changes applied in 39ms.
+  15666.0 run: PASS body restored: dotnet watch applied it by Hot Reload (dotnet watch : C# and Razor changes applied in 39ms.; 90 ms after the write)
+  15667.6 run: PASS body restored: the backend sent revision 10 (Notebook.Pages.MarkdownPageStore) to 1 document, 73 ms after the write
+  15678.4 run: PASS body restored: the page's onBackendUpdate handler fetched the list again, 95 ms after the write
+  15681.6 run: PASS body restored: the list now shows "Welcome", from the patched code
+  15684.9 run: PASS body restored: the toast shows "Backend updated: MarkdownPageStore (revision 10)", 111 ms after the write
+  17187.7 run: PASS no CSP or Trusted Types message in the page's console (0)
+  17190.6 run: 1 edited files restored
+  17192.9 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  17195.0 watch: dotnet watch : File change: Update '<copy>/samples/Notebook/Pages/MarkdownPageStore.cs'.
+  17228.6 watch: spar info +13016.1 ms: [5e2d45cb] SIGTERM received: the app stops.
+  17230.4 watch: spar info +13016.3 ms: [5e2d45cb] teardown at 13016.3 ms
+  17232.5 watch: spar info +13020.0 ms: [5e2d45cb] SIGTERM received: the app stops.
+  17235.3 watch: spar info +13022.9 ms: [5e2d45cb] services disposed at 13022.9 ms
+  17236.7 watch: spar info +13023.1 ms: [5e2d45cb] exit 0 at 13023.1 ms
+  18228.0 run: 0 failures

@@ -16,4 +16,9 @@
     <PackageReference Include="xunit.v3" />
     <Using Include="Xunit" />
   </ItemGroup>
+
+  <!-- The build identity's reader, for the identity of the executables these tests publish (HarnessTests, NotebookBuildTests). -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.Tool\Spar.Tool.csproj" />
+  </ItemGroup>
 </Project>

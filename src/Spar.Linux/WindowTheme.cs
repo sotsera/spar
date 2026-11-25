@@ -29,7 +29,8 @@ internal sealed class WindowTheme
     private const int PortalMilliseconds = 250;
 
     private readonly WindowOptions _options;
-    private readonly bool _portalAnswered;
+    private bool _portalAnswered;
+    private bool? _systemDark;
     private nint _bus;
     private uint _subscription;
     private nint _provider;
@@ -48,12 +49,16 @@ internal sealed class WindowTheme
         AppChoosesDark = appChoosesDark;
         IsDark = appChoosesDark ?? portalDark ?? false;
         _portalAnswered = portalDark is not null;
+        _systemDark = portalDark;
         _bus = bus;
         Source = source;
     }
 
     /// <summary>The app's own choice (true dark, false light), or null when the window follows the system.</summary>
-    public bool? AppChoosesDark { get; }
+    public bool? AppChoosesDark { get; private set; }
+
+    /// <summary>Whether the Settings portal answered, so the system's scheme is followed through its change signal.</summary>
+    public bool HasPortal => _portalAnswered;
 
     /// <summary>Whether the window is dark now.</summary>
     public bool IsDark { get; private set; }
@@ -99,11 +104,16 @@ internal sealed class WindowTheme
     /// </summary>
     public void Apply(nint window)
     {
-        if (AppChoosesDark is null && !_portalAnswered)
+        if (!_portalAnswered)
         {
+            // Read before the host sets any, also when the app chose: a later setColorScheme("system") needs them.
             var (dark, setting) = ReadGtkSettings();
-            IsDark = dark;
-            Source = $"{Source}; GTK's settings ({setting})";
+            _systemDark = dark;
+            if (AppChoosesDark is null)
+            {
+                IsDark = dark;
+                Source = $"{Source}; GTK's settings ({setting})";
+            }
         }
 
         _window = window;
@@ -130,26 +140,66 @@ internal sealed class WindowTheme
     /// Follows the portal's changes while the window follows the system (loop thread: the signal arrives on the
     /// thread-default context of the subscriber). <paramref name="changed"/> repaints what the window holds.
     /// </summary>
-    public unsafe void Follow(Action changed)
+    public void Follow(Action changed)
     {
-        if (AppChoosesDark is not null || _bus == 0)
+        _changed = changed;
+        if (AppChoosesDark is null)
         {
+            Subscribe();
+        }
+    }
+
+    /// <summary>
+    /// The system's scheme from a portal read off the loop (<see cref="ReadPortalScheme"/>), before
+    /// <see cref="Choose"/>(null) when no portal answered at start: the bus is kept, so its changes are followed from now
+    /// on (loop thread). Takes the bus's reference.
+    /// </summary>
+    public void AdoptPortal(nint bus, bool? dark)
+    {
+        if (bus == 0 || dark is null || _bus != 0)
+        {
+            if (bus != 0)
+            {
+                GLib.g_object_unref(bus);
+            }
+
             return;
         }
 
-        _changed = changed;
-        _self = GCHandle.Alloc(this);
-        _subscription = GLib.g_dbus_connection_signal_subscribe(
-            _bus,
-            PortalService,
-            PortalSettings,
-            "SettingChanged",
-            PortalPath,
-            Appearance,
-            0,
-            &OnSettingChanged,
-            GCHandle.ToIntPtr(_self),
-            0);
+        _bus = bus;
+        _portalAnswered = true;
+        _systemDark = dark;
+    }
+
+    /// <summary>
+    /// The page's <c>setColorScheme</c> while the app runs (loop thread): the app's choice from now on, or the system's
+    /// again for null, followed through the portal when one answers. The window's layers follow at once; true when its
+    /// scheme changed, so the caller repaints what the window holds (the view's background).
+    /// </summary>
+    public bool Choose(bool? dark)
+    {
+        AppChoosesDark = dark;
+        if (dark is null)
+        {
+            Subscribe();
+        }
+
+        var now = dark ?? _systemDark ?? false;
+        if (now == IsDark)
+        {
+            return false;
+        }
+
+        IsDark = now;
+        Paint();
+        return true;
+    }
+
+    /// <summary>The bus and the portal's scheme, read off the loop: the portal call may wait up to 250 ms.</summary>
+    public static (nint Bus, bool? Dark) ReadPortalScheme()
+    {
+        var (bus, dark, _) = ReadPortal();
+        return (bus, dark);
     }
 
     /// <summary>Stops following the system (loop thread, at the teardown).</summary>
@@ -206,6 +256,32 @@ internal sealed class WindowTheme
 
     /// <summary>The CSS rule that paints the windows of one CSS class.</summary>
     internal static string Css(string cssClass, SparColor colour) => $"window.{cssClass} {{ background-color: {colour}; }}";
+
+    /// <summary>Subscribes to the portal's change signal once, when a bus and a repaint callback exist (loop thread).</summary>
+    private unsafe void Subscribe()
+    {
+        if (_bus == 0 || _subscription != 0 || _changed is null)
+        {
+            return;
+        }
+
+        if (!_self.IsAllocated)
+        {
+            _self = GCHandle.Alloc(this);
+        }
+
+        _subscription = GLib.g_dbus_connection_signal_subscribe(
+            _bus,
+            PortalService,
+            PortalSettings,
+            "SettingChanged",
+            PortalPath,
+            Appearance,
+            0,
+            &OnSettingChanged,
+            GCHandle.ToIntPtr(_self),
+            0);
+    }
 
     private unsafe void Paint()
     {
@@ -273,7 +349,14 @@ internal sealed class WindowTheme
         var key = GLib.g_variant_get_child_value(parameters, 1);
         var name = Marshal.PtrToStringUTF8(GLib.g_variant_get_string(key, null));
         GLib.g_variant_unref(key);
-        if (name != ColorSchemeKey || dark == IsDark)
+        if (name != ColorSchemeKey)
+        {
+            return;
+        }
+
+        // Kept while the app's own choice holds, for a later setColorScheme("system").
+        _systemDark = dark;
+        if (AppChoosesDark is not null || dark == IsDark)
         {
             return;
         }

@@ -52,12 +52,14 @@ public sealed class SparFrontendInstall : MSBuildTask, IMultiThreadableTask
         return RunNpm(frontend);
     }
 
-    /// <summary>npm's own record of the install is newer than the lockfile.</summary>
+    /// <summary>npm's own record of the install is newer than the lockfile (the rule spar doctor checks too).</summary>
     private static bool IsCurrent(AbsolutePath frontend)
     {
-        var lockfile = new FileInfo(new AbsolutePath("package-lock.json", frontend));
-        var installed = new FileInfo(new AbsolutePath(Path.Combine("node_modules", ".package-lock.json"), frontend));
-        return installed.Exists && lockfile.Exists && installed.LastWriteTimeUtc >= lockfile.LastWriteTimeUtc;
+        var lockfile = new FileInfo(new AbsolutePath(FrontendInstallState.Lockfile, frontend));
+        var installed = new FileInfo(new AbsolutePath(FrontendInstallState.InstallRecord, frontend));
+        return FrontendInstallState.IsCurrent(
+            lockfile.Exists ? lockfile.LastWriteTimeUtc : null,
+            installed.Exists ? installed.LastWriteTimeUtc : null);
     }
 
     private bool RunNpm(AbsolutePath frontend)

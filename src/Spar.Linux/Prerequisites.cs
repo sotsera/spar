@@ -33,6 +33,10 @@ internal static class Prerequisites
 
     private const string GtkComponent = "GTK 4";
 
+    /// <summary>What a Development build adds to the no-display message; trimmed from Production with the feature switch.</summary>
+    internal const string DevelopmentHint =
+        " In development, run the page in a browser instead: dotnet run -lp Loopback (or SPAR_HOST=Loopback).";
+
     /// <summary>How long the trial run may take; it took 3–19 ms where allowed and 1.5 ms where denied.</summary>
     private const int TrialMilliseconds = 5_000;
 
@@ -321,8 +325,12 @@ internal static class Prerequisites
         $"This app needs {component}, which is not installed on this computer. {distribution.InstallHint} ({failure})",
         null);
 
+    /// <summary>
+    /// No display: the app stops, and never falls back to another host (plan section 4, "Launch profiles"). A
+    /// Development build also says how to run without one: the page in a browser, through the Loopback launch profile.
+    /// </summary>
     private static StartupProblem NoDisplay(string details) =>
-        new(StartupProblemKind.NoGraphicalSession, "Display", null, null, details, null);
+        new(StartupProblemKind.NoGraphicalSession, "Display", null, null, details + (SparDevelopment.IsSupported ? DevelopmentHint : ""), null);
 
     private static Version RequiredWebKit()
     {

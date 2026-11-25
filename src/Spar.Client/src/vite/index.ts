@@ -4,12 +4,29 @@
 // origin; and it collects the bundled dependencies' licences for the executable's third-party notices (plan 3c).
 // It also applies Subresource Integrity to the built page (`integrity.ts`), unless Program.cs turned it off, and fails
 // on an external script or stylesheet without a hash, in every build and on the development server. The page security
-// Program.cs declares reaches it as `csp.json`, which the build writes next to this package. The development server's
-// policy header arrives with the development loop.
+// Program.cs declares reaches it as `csp.json`, which the build writes next to this package. On the development server
+// (`vite`, which a Debug build's app starts with `npm run dev`), it sets what the app's origin needs to serve the page
+// from it (`devServer.ts`); the app's host sends the policy header, on every response, worker scripts included.
+// Every page gets the theme style, from the window colours Program.cs declares (`theme.json`, written by the build like
+// `csp.json`), and a page with a splash element gets the splash style (`pageStyle.ts`, plan section 3d).
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { Plugin, ResolvedConfig, UserConfig } from "vite";
+import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig, ViteDevServer } from "vite";
+import { attachLaunch, devServerConfig, readLaunch } from "./devServer.js";
 import { addIntegrity, missingIntegrity, missingIntegrityMessage } from "./integrity.js";
+import { addPageStyle, readThemeColors, splashTiming, type SplashTiming } from "./pageStyle.js";
+
+export type { SplashTiming } from "./pageStyle.js";
+
+/** The options of Spar's Vite plugin. */
+export interface SparPluginOptions {
+  /**
+   * The splash's timing in milliseconds, for a page whose `index.html` has an element with the id `spar-splash`:
+   * `delay` from the page's first frame to the mark's appearance (350), `minimumVisible` once it appeared (400),
+   * `fadeIn` (120) and `fadeOut` (150). A page without the element gets no splash style.
+   */
+  readonly splash?: Partial<SplashTiming>;
+}
 
 /** The parts of `csp.json` this plugin reads; the build writes it from `spar.ContentSecurity(…)` in Program.cs. */
 interface PageSecurity {
@@ -17,12 +34,18 @@ interface PageSecurity {
   readonly integrity: boolean;
 }
 
-/** Spar's Vite plugin: `plugins: [react(), spar()]` in `vite.config.ts`. */
-export default function spar(): Plugin {
+/** Spar's Vite plugin: `plugins: [react(), spar()]` in `vite.config.ts`, or `spar({ splash: { delay: 500 } })`. */
+export default function spar(options: SparPluginOptions = {}): Plugin {
+  const timing = splashTiming(options.splash);
   let outDir = "";
   return {
     name: "spar",
-    config(): UserConfig {
+    config(user: UserConfig, env: ConfigEnv): UserConfig {
+      // The development server only: not a preview of a build, and not Vitest, which loads the same config.
+      if (env.command === "serve" && !env.isPreview && env.mode !== "test") {
+        return { base: "/", ...devServerConfig(user, readLaunch(process.env)) };
+      }
+
       return {
         base: "/",
         build: {
@@ -39,11 +62,19 @@ export default function spar(): Plugin {
     configResolved(config: ResolvedConfig): void {
       outDir = resolve(config.root, config.build.outDir);
     },
+    configureServer(server: ViteDevServer): void {
+      const launch = readLaunch(process.env);
+      if (launch !== undefined) {
+        attachLaunch(server, launch);
+      }
+    },
     transformIndexHtml: {
-      order: "pre",
+      // After Vite's own transforms, so it never rewrites the styles, which the host hashes as written; Vite's nonce
+      // (on the development server) comes after this.
+      order: "post",
       handler(html: string, context: { readonly path: string }): string {
         checkExternals(context.path, html);
-        return html;
+        return addPageStyle(html, readThemeColors(readPackageFile("theme.json")), timing);
       },
     },
     writeBundle(_options, bundle): void {
@@ -89,16 +120,23 @@ function checkExternals(page: string, html: string): void {
  * the file is at the package's root. Without it (the SDK's own tests) the defaults apply.
  */
 function readPageSecurity(): PageSecurity {
-  let text: string;
-  try {
-    text = readFileSync(new URL("../../csp.json", import.meta.url), "utf8");
-  } catch {
+  const text = readPackageFile("csp.json");
+  if (text === undefined) {
     return { integrity: true };
   }
 
   const parsed: unknown = JSON.parse(text);
   const integrity = typeof parsed === "object" && parsed !== null ? Reflect.get(parsed, "integrity") : undefined;
   return { integrity: integrity !== false };
+}
+
+/** A file the build writes at the generated package's root, beside `sdk/`; undefined when there is none. */
+function readPackageFile(name: string): string | undefined {
+  try {
+    return readFileSync(new URL(`../../${name}`, import.meta.url), "utf8");
+  } catch {
+    return undefined;
+  }
 }
 
 /** A file the bundle did not produce but the page loads from the app (Vite's public folder). */

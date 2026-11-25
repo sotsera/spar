@@ -156,6 +156,12 @@ internal static class Descriptors
         "Browsers ignore 'unsafe-inline' next to a nonce, so with AllowInlineStyles() Spar puts no nonce in style-src and StyleNonce() has no effect; keep one of the two",
         PageSecurity, DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
+    /// <summary>{0}: what the build cannot read, and what to write instead.</summary>
+    public static readonly DiagnosticDescriptor WindowColours = Error(
+        "SPAR106", "The window colours must be constants the build can read",
+        "{0}. The build reads the colours of spar.Window(w => w.Background(light, dark)) from Program.cs without running the app, for the page's theme style and its hash in the Content Security Policy.",
+        PageSecurity);
+
     /// <summary>
     /// The same diagnostic about a symbol in a referenced assembly, which has no place in the project: its message
     /// starts "In referenced assembly 'X': " (plan section 2, "Diagnostics"). One copy per descriptor.

@@ -7,10 +7,10 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Spar.Generator;
 
 /// <summary>
-/// Shows page security problems at their locations as you type (plan section 3b; SPAR101–SPAR105), from the analysis
+/// Shows page security problems at their locations as you type (plan section 3b; SPAR101–SPAR106), from the analysis
 /// the generator and the client step use: a <c>ContentSecurity</c> or <c>Permissions</c> call the build cannot read
 /// where it sits, and, in each <c>SparApplication.Create</c> configuration, values that are not constants, shapes the
-/// build cannot read, and sources the policy refuses.
+/// build cannot read, and sources the policy refuses; and the window colours the page's theme style needs (SPAR106).
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class PageSecurityAnalyzer : DiagnosticAnalyzer
@@ -22,6 +22,7 @@ public sealed class PageSecurityAnalyzer : DiagnosticAnalyzer
         Descriptors.UnsupportedShape,
         Descriptors.InvalidValue,
         Descriptors.NonceWithInlineStyles,
+        Descriptors.WindowColours,
     ];
 
     public override void Initialize(AnalysisContext context)
@@ -50,6 +51,18 @@ public sealed class PageSecurityAnalyzer : DiagnosticAnalyzer
                 foreach (var problem in PageSecurityAnalysis.Read(invocation, context.SemanticModel, context.CancellationToken).Problems)
                 {
                     context.ReportDiagnostic(problem);
+                }
+
+                foreach (var problem in WindowColorsAnalysis.Read(invocation, context.SemanticModel, context.CancellationToken).Problems)
+                {
+                    context.ReportDiagnostic(problem);
+                }
+
+                break;
+            case "Background" when isApp.Value:
+                if (WindowColorsAnalysis.MisplacedCall(invocation, context.SemanticModel, context.CancellationToken) is { } colours)
+                {
+                    context.ReportDiagnostic(colours);
                 }
 
                 break;

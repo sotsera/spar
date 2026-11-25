@@ -54,6 +54,13 @@ public sealed class SparCatalog
     /// </summary>
     public SparPageSecurity? PageSecurity { get; init; }
 
+    /// <summary>
+    /// The build's identity block (the variant, the git revision, whether the tree had uncommitted changes, the
+    /// contracts' fingerprint), which the host writes in its first log line; set by the generated catalog, empty
+    /// without one.
+    /// </summary>
+    public ReadOnlyMemory<byte> BuildIdentity { get; init; }
+
     /// <summary>16 hex characters of the SHA-256 of the contracts' wire shape (plan section 2c, "The messages").</summary>
     public string Fingerprint { get; }
 

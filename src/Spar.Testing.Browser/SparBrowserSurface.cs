@@ -63,9 +63,12 @@ public static class SparBrowserSurface
                 IncludeDetails = true,
                 Log = app.ReportProblem,
 
-                // The policy the app's window sends: its declared page security and its page's import-map hashes.
+                // The policy the app's window sends: its declared page security, and its page's import-map and style
+                // hashes. The data root takes the page's colour scheme choice, as the window's would.
                 Security = running.Catalog.PageSecurity ?? SparPageSecurity.Default,
                 ScriptHashes = packed is null ? [] : PageHtml.ImportMapHashes(packed),
+                StyleHashes = packed is null ? FolderStyleHashes(app.Options.PageFolders) : PageHtml.StyleHashes(packed),
+                DataRoot = running.Folders.DataRoot,
             },
             cancellationToken);
         return new Surface(host);
@@ -80,6 +83,29 @@ public static class SparBrowserSurface
         }
 
         return assets;
+    }
+
+    /// <summary>
+    /// The theme and splash style hashes of the HTML files at the top of each served folder, so a page the Spar Vite
+    /// plugin built (its <c>dist</c> folder) gets the policy its window would.
+    /// </summary>
+    private static List<string> FolderStyleHashes(IEnumerable<(string Prefix, string Folder)> folders)
+    {
+        var hashes = new List<string>();
+        foreach (var (_, folder) in folders)
+        {
+            if (!Directory.Exists(folder))
+            {
+                continue;
+            }
+
+            foreach (var file in Directory.EnumerateFiles(folder, "*.html"))
+            {
+                hashes.AddRange(PageHtml.StyleHashes(File.ReadAllBytes(file)).Where(hash => !hashes.Contains(hash)));
+            }
+        }
+
+        return hashes;
     }
 
     private static async Task<SparFrontend> PackedAsync(System.Reflection.Assembly? assembly)

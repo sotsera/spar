@@ -1,0 +1,23 @@
+coreclr-framework-dependent publication: 9 file(s), 1,574,638 B (debug symbols aside)
+coreclr-single-file publication: 1 file(s), 78,956,782 B (debug symbols aside)
+sqlclient recipe publication: 1 file, 15,239,176 B (debug symbols aside)
+coreclr-single-file start to ui-ready (the host's log, 5 launches): median 301 ms, 246-432 ms
+coreclr-single-file launch: launch 1, ready to the fixture after 821 ms: 2026-11-24T08:34:55.306Z INFO  Spar.Host  [01129a81] ui-ready at 432.1 ms
+coreclr-single-file launch: launch 2, ready to the fixture after 519 ms: 2026-11-24T08:34:56.013Z INFO  Spar.Host  [1950c007] ui-ready at 306.1 ms
+coreclr-single-file launch: launch 3, ready to the fixture after 468 ms: 2026-11-24T08:34:56.590Z INFO  Spar.Host  [8c0477a9] ui-ready at 301.4 ms
+coreclr-single-file launch: launch 4, ready to the fixture after 493 ms: 2026-11-24T08:34:57.183Z INFO  Spar.Host  [af0653a0] ui-ready at 295.1 ms
+coreclr-single-file launch: launch 5, ready to the fixture after 394 ms: 2026-11-24T08:34:57.683Z INFO  Spar.Host  [e95d2ba9] ui-ready at 245.8 ms
+coreclr-framework-dependent start to ui-ready (the host's log, 5 launches): median 290 ms, 244-381 ms
+coreclr-framework-dependent launch: launch 1, ready to the fixture after 640 ms: 2026-11-24T08:34:55.336Z INFO  Spar.Host  [f3501114] ui-ready at 381.1 ms
+coreclr-framework-dependent launch: launch 2, ready to the fixture after 538 ms: 2026-11-24T08:34:56.013Z INFO  Spar.Host  [df4845cd] ui-ready at 302.8 ms
+coreclr-framework-dependent launch: launch 3, ready to the fixture after 471 ms: 2026-11-24T08:34:56.592Z INFO  Spar.Host  [d32492e3] ui-ready at 290 ms
+coreclr-framework-dependent launch: launch 4, ready to the fixture after 465 ms: 2026-11-24T08:34:57.203Z INFO  Spar.Host  [ce23a751] ui-ready at 277.1 ms
+coreclr-framework-dependent launch: launch 5, ready to the fixture after 394 ms: 2026-11-24T08:34:57.699Z INFO  Spar.Host  [c3cc1f31] ui-ready at 244.1 ms
+nativeaot start to ui-ready (the host's log, 5 launches): median 151 ms, 148-166 ms
+nativeaot launch: launch 1, ready to the fixture after 318 ms: 2026-11-24T08:35:00.347Z INFO  Spar.Host  [8edca52f] ui-ready at 166.4 ms
+nativeaot launch: launch 2, ready to the fixture after 267 ms: 2026-11-24T08:35:00.673Z INFO  Spar.Host  [52a7dacc] ui-ready at 149.5 ms
+nativeaot launch: launch 3, ready to the fixture after 261 ms: 2026-11-24T08:35:00.983Z INFO  Spar.Host  [bc0d28a6] ui-ready at 150.6 ms
+nativeaot launch: launch 4, ready to the fixture after 264 ms: 2026-11-24T08:35:01.324Z INFO  Spar.Host  [efebfad5] ui-ready at 154.2 ms
+nativeaot launch: launch 5, ready to the fixture after 263 ms: 2026-11-24T08:35:01.655Z INFO  Spar.Host  [d31c3a86] ui-ready at 148.1 ms
+nativeaot publication: 1 file, 4,679,880 B (debug symbols aside)
+workflow steps run on Linux: Restore, Build, Fast tests, Page tests, Fast tests, NativeAOT, Browser tests, Publish

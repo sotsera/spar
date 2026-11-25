@@ -1,0 +1,7 @@
+# The contracts of StartupProbe as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint 1546ec6d082cebcc
+
+contract probe (StartupProbe.ProbeService)
+  note(string) -> void

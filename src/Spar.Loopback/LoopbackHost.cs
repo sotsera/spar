@@ -7,10 +7,13 @@ using System.Text;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spar.Bridge;
+using Spar.DevServer;
 using Spar.Hosting;
 using Spar.Runtime;
 
@@ -24,8 +27,33 @@ internal sealed class LoopbackOptions
     /// <summary>The host's contract fingerprint, sent in <c>open</c>.</summary>
     public required string Fingerprint { get; init; }
 
-    /// <summary>The page: the app's packed one, or folders a test names.</summary>
-    public required ILoopbackPage Page { get; init; }
+    /// <summary>The page: the app's packed one, or folders a test names; null when <see cref="DevServer"/> serves it.</summary>
+    public ILoopbackPage? Page { get; init; }
+
+    /// <summary>
+    /// A Debug build's development server, which serves the page through this origin instead of <see cref="Page"/>, with
+    /// the Debug policy and each document's nonce (plan section 4); <see cref="HostLog"/> is then required.
+    /// </summary>
+    public DevServerSession? DevServer { get; init; }
+
+    /// <summary>The run's host log, which the development server's proxy writes to.</summary>
+    public HostLog? HostLog { get; init; }
+
+    /// <summary>The port of 127.0.0.1 to listen on; 0, the default, takes a free one.</summary>
+    public int Port { get; init; }
+
+    /// <summary>The bearer token, base64url of 16 to 48 bytes; null makes a new one of 24 random bytes.</summary>
+    public string? Token { get; init; }
+
+    /// <summary>
+    /// A dev session's run id (<see cref="LoopbackSession"/>): each document's channel names it, and
+    /// <c>POST /_spar/session</c> answers it, so a page that loses its channel can wait for the backend's next run at
+    /// the same address and token, and reload once it is a new one. Null (the test host) offers neither.
+    /// </summary>
+    public string? RunId { get; init; }
+
+    /// <summary>Where the browser's CSP reports go, each body at most 64 KiB; null logs them through <see cref="Log"/>.</summary>
+    public Action<byte[]>? Reports { get; init; }
 
     /// <summary>Whether failures carry their detail (Development and tests only).</summary>
     public bool IncludeDetails { get; init; }
@@ -35,6 +63,15 @@ internal sealed class LoopbackOptions
 
     /// <summary>The page's import-map hashes, which <c>script-src</c> names (<see cref="PageHtml"/>).</summary>
     public IReadOnlyList<string> ScriptHashes { get; init; } = [];
+
+    /// <summary>The page's theme and splash style hashes, which <c>style-src</c> names (<see cref="PageHtml"/>).</summary>
+    public IReadOnlyList<string> StyleHashes { get; init; } = [];
+
+    /// <summary>
+    /// The app's data root, where the page's <c>setColorScheme</c> saves its choice for the window's next start; null
+    /// for a host that answers no host command. The browser keeps its own colour scheme either way.
+    /// </summary>
+    public string? DataRoot { get; init; }
 
     /// <summary>What the host refused or dropped, and the page's CSP violations. Called from any thread.</summary>
     public Action<string>? Log { get; init; }
@@ -48,8 +85,12 @@ internal sealed class LoopbackOptions
 /// </summary>
 internal sealed class LoopbackHost : IAsyncDisposable
 {
+    /// <summary>The header of a dev session's channel that names the backend's run (<see cref="LoopbackOptions.RunId"/>).</summary>
+    public const string RunHeader = "X-Spar-Run";
+
     private const string ChannelPath = "/_spar/channel";
     private const string SendPath = "/_spar/send";
+    private const string SessionPath = "/_spar/session";
     private const string DocumentHeader = "X-Spar-Doc";
     private const int MaxReportBytes = 64 * 1024;
 
@@ -59,14 +100,19 @@ internal sealed class LoopbackHost : IAsyncDisposable
     private readonly ConcurrentDictionary<string, Document> _documents = new(StringComparer.Ordinal);
     private readonly CancellationTokenSource _stopping = new();
     private readonly ConcurrentDictionary<string, PagePolicy> _policies = new(StringComparer.Ordinal);
+    private readonly ConcurrentDictionary<string, DevServerProxy> _proxies = new(StringComparer.Ordinal);
+    private readonly HostCommands? _hostCommands;
     private int _port;
 
-    private LoopbackHost(WebApplication server, LoopbackOptions options)
+    private LoopbackHost(WebApplication server, LoopbackOptions options, byte[] token)
     {
         _server = server;
         _options = options;
-        _token = RandomNumberGenerator.GetBytes(24);
+        _token = token;
         Token = Base64Url.EncodeToString(_token);
+
+        // No window here: the page's colour scheme choice is saved for the window's next start, and the browser keeps its own.
+        _hostCommands = options.DataRoot is { } dataRoot ? new HostCommands(dataRoot, apply: null, options.Dispatcher.Logger) : null;
     }
 
     /// <summary>The bearer token, which the page gets from the URL fragment only (plan section 3c).</summary>
@@ -78,14 +124,25 @@ internal sealed class LoopbackHost : IAsyncDisposable
     /// <summary>Raised when a document's page reports <c>ui-ready</c>, with the document id.</summary>
     public event Action<string>? DocumentReady;
 
-    /// <summary>Starts listening on a free port of 127.0.0.1.</summary>
+    /// <summary>
+    /// Starts listening on 127.0.0.1, on <see cref="LoopbackOptions.Port"/> or a free port. A port another process holds
+    /// is an <see cref="IOException"/> whose inner exception is an <see cref="AddressInUseException"/>.
+    /// </summary>
     public static async Task<LoopbackHost> StartAsync(LoopbackOptions options, CancellationToken cancellationToken)
     {
+        if ((options.Page is null) == (options.DevServer is null) || (options.DevServer is not null && options.HostLog is null))
+        {
+            throw new ArgumentException("A loopback host serves either a page or a development server (with its host log).", nameof(options));
+        }
+
+        var token = options.Token is null ? RandomNumberGenerator.GetBytes(24) : LoopbackSession.TokenBytes(options.Token)
+            ?? throw new ArgumentException("The token is not base64url of 16 to 48 bytes.", nameof(options));
         var builder = WebApplication.CreateEmptyBuilder(new WebApplicationOptions());
         builder.WebHost.UseKestrelCore();
         builder.WebHost.ConfigureKestrel(kestrel =>
         {
-            kestrel.Listen(IPAddress.Loopback, 0);
+            // 127.0.0.1 only, never another interface (plan section 3c): the page is for this machine's browser.
+            kestrel.Listen(IPAddress.Loopback, options.Port);
             kestrel.AddServerHeader = false;
 
             // A document's channel can be quiet for minutes; that is not a slow client.
@@ -99,12 +156,38 @@ internal sealed class LoopbackHost : IAsyncDisposable
         builder.Services.Configure<HostOptions>(host => host.ShutdownTimeout = TimeSpan.FromSeconds(5));
 
         var server = builder.Build();
-        var host = new LoopbackHost(server, options);
+        var host = new LoopbackHost(server, options, token);
         server.Run(host.HandleAsync);
 
-        await server.StartAsync(cancellationToken);
+        try
+        {
+            await server.StartAsync(cancellationToken);
+        }
+        catch
+        {
+            await server.DisposeAsync();
+            host._stopping.Dispose();
+            throw;
+        }
+
         host._port = new Uri(server.Urls.Single()).Port;
         return host;
+    }
+
+    /// <summary>
+    /// A host event (such as <c>backend-updated</c>) to every open document whose page listed <c>event</c>; returns how
+    /// many documents are open. Called from any thread.
+    /// </summary>
+    public int SendEvent(string name, ReadOnlyMemory<byte> payload)
+    {
+        var open = 0;
+        foreach (var document in _documents.Values)
+        {
+            document.Session.SendEvent(name, payload);
+            open++;
+        }
+
+        return open;
     }
 
     /// <summary>The page's address with the token in its fragment, for the browser to open.</summary>
@@ -123,7 +206,24 @@ internal sealed class LoopbackHost : IAsyncDisposable
         _stopping.Dispose();
     }
 
+    /// <summary>
+    /// One request. A request the browser abandons (a reload or a navigation while an answer is still being read or
+    /// written) ends here quietly: nobody is left to answer, and the cancellation would otherwise reach the server as an
+    /// unhandled exception, where a debugger with Spar's sources as user code stops on it.
+    /// </summary>
     private async Task HandleAsync(HttpContext context)
+    {
+        try
+        {
+            await RouteAsync(context);
+        }
+        catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
+        {
+            // The browser gave up on this request; its connection is already gone.
+        }
+    }
+
+    private async Task RouteAsync(HttpContext context)
     {
         var request = context.Request;
         var response = context.Response;
@@ -142,9 +242,21 @@ internal sealed class LoopbackHost : IAsyncDisposable
         }
 
         var path = request.Path.Value ?? "/";
+        if (_options.DevServer is not null && path.StartsWith(DevServerProxy.RoutePrefix, StringComparison.Ordinal))
+        {
+            await DevServerRouteAsync(context, origin);
+            return;
+        }
+
         if (path.StartsWith("/_spar/", StringComparison.Ordinal))
         {
             await BridgeAsync(context, path, origin);
+            return;
+        }
+
+        if (_options.DevServer is not null)
+        {
+            await ProxyAsync(context, origin);
             return;
         }
 
@@ -157,7 +269,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
     /// </summary>
     private PagePolicy PolicyFor(string origin) => _policies.GetOrAdd(
         origin,
-        static (name, options) => new PagePolicy(options.Security, name, development: true, options.ScriptHashes),
+        static (name, options) => new PagePolicy(options.Security, name, development: true, options.ScriptHashes, options.StyleHashes),
         _options);
 
     private bool IsThisHost(HostString host)
@@ -182,7 +294,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
         var relative = path == "/" ? "index.html" : path[1..];
 
         // Every request is answered, unknown paths with 404 (pitfalls, "An unanswered request to the app origin").
-        if (!LoopbackAssets.IsSafePath(relative) || !_options.Page.TryGet(relative, out var content, out var contentType))
+        if (!LoopbackAssets.IsSafePath(relative) || !_options.Page!.TryGet(relative, out var content, out var contentType))
         {
             await RefuseAsync(response, StatusCodes.Status404NotFound, "not-found");
             return;
@@ -244,6 +356,15 @@ internal sealed class LoopbackHost : IAsyncDisposable
             case SendPath:
                 await SendAsync(context);
                 break;
+            case SessionPath when _options.RunId is not null && _stopping.IsCancellationRequested:
+                // A run that is stopping is not one a page can join: it waits for the next one.
+                await RefuseAsync(response, StatusCodes.Status503ServiceUnavailable, "stopping");
+                break;
+            case SessionPath when _options.RunId is { } run:
+                // A page that lost its channel asks whether this is a new run of its backend (src/Spar.Client/src/restart.ts).
+                response.ContentType = "text/plain; charset=utf-8";
+                await response.WriteAsync(run, context.RequestAborted);
+                break;
             default:
                 await RefuseAsync(response, StatusCodes.Status404NotFound, "not-found");
                 break;
@@ -283,6 +404,11 @@ internal sealed class LoopbackHost : IAsyncDisposable
         try
         {
             response.ContentType = "text/plain; charset=utf-8";
+            if (_options.RunId is { } run)
+            {
+                response.Headers[RunHeader] = run;
+            }
+
             await response.StartAsync(ended.Token);
 
             document.Receive([hello]);
@@ -326,8 +452,22 @@ internal sealed class LoopbackHost : IAsyncDisposable
             return;
         }
 
-        var report = await ReadBodyAsync(request, context.RequestAborted);
-        _options.Log?.Invoke($"csp violation: {report}");
+        var report = await ReadReportAsync(request, context.RequestAborted);
+        if (report is null)
+        {
+            await RefuseAsync(context.Response, StatusCodes.Status413PayloadTooLarge, "too-large");
+            return;
+        }
+
+        if (_options.Reports is { } reports)
+        {
+            reports(report);
+        }
+        else
+        {
+            _options.Log?.Invoke($"csp violation: {Encoding.UTF8.GetString(report)}");
+        }
+
         context.Response.StatusCode = StatusCodes.Status204NoContent;
     }
 
@@ -340,7 +480,10 @@ internal sealed class LoopbackHost : IAsyncDisposable
             _options.Fingerprint,
             id,
             message => outbox.Writer.TryWrite(message),
-            _options.IncludeDetails);
+            _options.IncludeDetails)
+        {
+            HostCommands = _hostCommands,
+        };
 
         session.Ready += () => DocumentReady?.Invoke(id);
         session.Dropped += reason => _options.Log?.Invoke($"document {id}: dropped {reason}");
@@ -367,6 +510,92 @@ internal sealed class LoopbackHost : IAsyncDisposable
 
             await writer.FlushAsync(cancellationToken);
         }
+    }
+
+    /// <summary>
+    /// The development server's own routes under <c>/_spar/dev-server/</c>: the error page's style and script, which need
+    /// nothing, and its Retry, a POST that must come from this origin (a page on another site could otherwise post it,
+    /// since its address passes the Host check). Neither needs the token: the error page has no SDK.
+    /// </summary>
+    private async Task DevServerRouteAsync(HttpContext context, string origin)
+    {
+        if (HttpMethods.IsPost(context.Request.Method)
+            && !string.Equals(context.Request.Headers.Origin.ToString(), origin, StringComparison.Ordinal))
+        {
+            await RefuseAsync(context.Response, StatusCodes.Status403Forbidden, "forbidden-origin");
+            return;
+        }
+
+        await ProxyAsync(context, origin);
+    }
+
+    /// <summary>
+    /// A request for the page in a Debug build: answered by <see cref="DevServerProxy"/>, which fetches it from Vite on the
+    /// thread pool and puts the host's own policy on the answer, with each document's fresh nonce.
+    /// </summary>
+    private async Task ProxyAsync(HttpContext context, string origin)
+    {
+        var request = context.Request;
+        var response = context.Response;
+
+        // The address as the browser sent it, still percent-encoded, as the desktop hosts pass it.
+        var target = context.Features.Get<IHttpRequestFeature>()?.RawTarget ?? "";
+        if (!target.StartsWith('/'))
+        {
+            await RefuseAsync(response, StatusCodes.Status400BadRequest, "invalid-request");
+            return;
+        }
+
+        var headers = new List<KeyValuePair<string, string>>(DevServerProxy.ForwardedHeaders.Count);
+        foreach (var name in DevServerProxy.ForwardedHeaders)
+        {
+            if (request.Headers.TryGetValue(name, out var value) && value.Count > 0)
+            {
+                headers.Add(new(name, value.ToString()));
+            }
+        }
+
+        var proxy = _proxies.GetOrAdd(
+            origin,
+            static (name, options) => new DevServerProxy(options.DevServer!, options.Security, name, options.HostLog!),
+            _options);
+        var answer = await proxy.AnswerAsync(target, request.Method, headers);
+
+        response.StatusCode = answer.Status;
+        response.ContentType = answer.ContentType;
+        if (answer.Csp is { } csp)
+        {
+            response.Headers.ContentSecurityPolicy = csp;
+        }
+
+        if (answer.Allow is { } allow)
+        {
+            response.Headers.Allow = allow;
+        }
+
+        response.ContentLength = answer.Body.Length;
+        if (!HttpMethods.IsHead(request.Method))
+        {
+            await response.Body.WriteAsync(answer.Body, context.RequestAborted);
+        }
+    }
+
+    /// <summary>A CSP report's body, or null when it is longer than <see cref="MaxReportBytes"/>.</summary>
+    private static async Task<byte[]?> ReadReportAsync(HttpRequest request, CancellationToken cancellationToken)
+    {
+        using var buffer = new MemoryStream();
+        var chunk = new byte[16 * 1024];
+        while (await request.Body.ReadAsync(chunk, cancellationToken) is var read and > 0)
+        {
+            if (buffer.Length + read > MaxReportBytes)
+            {
+                return null;
+            }
+
+            buffer.Write(chunk, 0, read);
+        }
+
+        return buffer.ToArray();
     }
 
     private static async Task<string> ReadBodyAsync(HttpRequest request, CancellationToken cancellationToken)

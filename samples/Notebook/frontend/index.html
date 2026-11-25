@@ -8,6 +8,20 @@
     <script type="module" src="/src/main.tsx"></script>
   </head>
   <body>
+    <!--
+      The splash (docs/app-model.md 6.3): Spar's Vite plugin makes this element a cover in the window colour from the
+      first frame, and fades its content in only when the start takes longer than 350 ms; connection.ready() in
+      main.tsx removes it once the first view has rendered. Its look is in styles.css.
+    -->
+    <div id="spar-splash" role="status" aria-label="Opening the notebook">
+      <svg class="splash-mark" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="5" y="3" width="14" height="18" rx="2" />
+        <path d="M9 3v18" />
+        <path d="M12.5 8h3.5M12.5 11.5h3.5M12.5 15h2.5" />
+      </svg>
+      <p class="splash-name">Notebook</p>
+    </div>
     <div id="root"></div>
   </body>
 </html>

@@ -13,8 +13,10 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - Each platform maps to its runtime identifiers (`win-x64`/`win-arm64`, `linux-x64`/`linux-arm64`), and NativeAOT removes the other host's code from each executable.
     - Running on a platform the app does not target stops with a clear error that names the property.
     - NativeAOT does not cross-compile between operating systems, so each executable is published on its own OS or in a container of it.
+  - **Runtime choices (built in M1d step 7; decision "Runtime choices (implementation record; choices for review; 2026-11-23)"):** NativeAOT, `InvariantGlobalization=true` and no accepted warnings stay Spar's defaults; an app's own project may choose CoreCLR (framework-dependent, or a self-contained single file), accept named AOT warnings that stay warnings (`WarningsNotAsErrors`), or culture data, as `docs/guide/publishing-choices.md` shows with blocks the package tests build. Spar's machinery works in each shape: the WebView2 loader stays beside a single file unless the app sets `IncludeNativeLibrariesForSelfExtract`, and a black-box test project copies the app's whole publication.
   - Testing packages per test level.
-  - The `spar` .NET tool, versioned with the SDK.
+  - `Spar.Templates`, the `dotnet new spar-app` template, packed with the others at the same version (M1d step 6a): the new app's `global.json` names that version for `Spar.Sdk`, filled in when the package is packed.
+  - The `spar` .NET tool, versioned with the SDK: the package `Spar.Tool` (command `spar`), framework-dependent, packed with the others at the same version and named by a new app's local tool manifest (M1d step 6b).
 - **Package rules:**
   - Never reuse a version.
   - The runtime package is referenced implicitly at the SDK's version.
@@ -31,7 +33,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 
   Design-time builds run none of steps 2–4.
   - **The client refreshes on build** in the IDE (Visual Studio and VS Code build on F5), and **on save while the development loop runs:** under `dotnet watch` or `spar dev` a saved contract change restarts the app, which regenerates the client (5.4–6.1 s measured with Vite reused), so frontend editors see it without a manual build. There is no IDE-specific refresh path (decision "M1a names").
-  - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name confirmed, decision "M1a names"). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is. The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).
+  - **Debug builds on Windows map the drive letter to upper case** (`e:\=E:\` in `PathMap`; decision "The drive-letter PathMap in Debug builds"), because VS Code builds through a lower-case drive and its Hot Reload then finds no source in the PDB. Builds with deterministic source paths keep their own map, and `SparMapDriveLetter=false` turns it off.
+  - **Debug type-checks too (decided, user, 2026-11-14),** with the opt-out `SparTypeCheck=false` (name confirmed, decision "M1a names"). It runs only when the generated client or the TypeScript sources changed since the last check, and reports errors at file and line, so a contract rename breaks `dotnet build` and an agent sees it. The app's `tsconfig` decides how strict it is; one with references (Vite's scaffold) is checked with `tsc -b --noEmit`, any other with `tsc --noEmit -p .` (decision "The M1d check follow-ups"). The measured baseline (`spikes/react`, target `SparDevTypeCheck`) cost about 1 s of a contract restart and gated the build (TS6133 failed it).
 - **Frontend packing:** one `Spar.Frontend` resource holding an index plus per-file Brotli (quality 11, fitted window). Built in M1a (decision "Frontend packing built"), with the asset checks (SPAR110) and the third-party notices as `Spar.ThirdPartyNotices`.
   - Files that Brotli shrinks by less than 5% are stored as is.
   - The host decodes on a background thread at start into a cache, and serves uncompressed entries straight from the image.

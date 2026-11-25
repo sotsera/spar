@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The Spar.Templates package (plan, M1d step 6): the dotnet new template spar-app, packed with Spar's other packages at
+    the same version. It ships content/ as it is written here, except the template's template.json, whose two version
+    placeholders are filled in when the package is packed (target SparTemplateVersions): the .NET SDK from this
+    repository's global.json and Spar.Sdk at this package's own version. The template engine then writes them into the
+    new app's global.json and its local tool manifest (.config/dotnet-tools.json, the spar tool at the same version), so an
+    app builds, and runs dotnet spar, with the Spar that made it. Nothing here is compiled: the content is built
+    only from packages, by tests/Spar.PackageTests.
+  -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageType>Template</PackageType>
+    <PackageId>Spar.Templates</PackageId>
+    <Title>Spar templates</Title>
+    <Description>The dotnet new template for a Spar desktop app (spar-app): a C# backend and a React + TypeScript + Vite page in one window on Windows and Linux, with its fast tests and its end-to-end tests.</Description>
+    <PackageTags>dotnet-new;templates;spar;desktop</PackageTags>
+
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <!-- The template's .template.config/ and .gitignore start with a dot, which NuGet leaves out by default. -->
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SparTemplateJson>$(MSBuildThisFileDirectory)content\spar-app\.template.config\template.json</SparTemplateJson>
+    <SparRepositoryGlobalJson>$(MSBuildThisFileDirectory)..\..\global.json</SparRepositoryGlobalJson>
+  </PropertyGroup>
+
+  <!-- What a build of the content would leave in it is never part of the package. -->
+  <ItemGroup>
+    <None Include="content\**\*"
+          Exclude="content\**\bin\**;content\**\obj\**;content\**\node_modules\**;$(SparTemplateJson)"
+          Pack="true" PackagePath="content\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!--
+    template.json with PACKED_DOTNET_SDK_VERSION replaced by the .NET SDK this repository builds with and
+    PACKED_SPAR_SDK_VERSION by the version being packed. Written under obj/ and packed in the authored file's place, so
+    the authored file is never edited. template.json is the template engine's and never reaches the app, so the line
+    ending WriteLinesToFile puts after it does not matter; an app's global.json comes from the authored file as it is.
+  -->
+  <Target Name="SparTemplateVersions" BeforeTargets="GenerateNuspec;_GetPackageFiles">
+    <PropertyGroup>
+      <_SparRepositoryGlobalJson>$([System.IO.File]::ReadAllText('$(SparRepositoryGlobalJson)'))</_SparRepositoryGlobalJson>
+      <_SparDotnetSdkVersion>$([System.Text.RegularExpressions.Regex]::Replace('$(_SparRepositoryGlobalJson)', '(?s)^.*?"sdk"\s*:\s*\{[^}]*?"version"\s*:\s*"([^"]+)".*$', '$1'))</_SparDotnetSdkVersion>
+      <_SparTemplateJsonPacked>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)template\template.json</_SparTemplateJsonPacked>
+      <_SparTemplateJsonText>$([System.IO.File]::ReadAllText('$(SparTemplateJson)').Replace('PACKED_DOTNET_SDK_VERSION', '$(_SparDotnetSdkVersion)').Replace('PACKED_SPAR_SDK_VERSION', '$(PackageVersion)').TrimEnd())</_SparTemplateJsonText>
+      <_SparTemplateJsonEscaped>$(_SparTemplateJsonText.Replace('%', '%25').Replace(';', '%3B').Replace('*', '%2A').Replace('?', '%3F'))</_SparTemplateJsonEscaped>
+    </PropertyGroup>
+
+    <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(_SparDotnetSdkVersion)', '^\d+\.\d+\.\d+$'))"
+           Text="The .NET SDK version could not be read from the sdk.version of $(SparRepositoryGlobalJson)." />
+    <Error Condition="!$(_SparTemplateJsonText.Contains('$(PackageVersion)'))"
+           Text="$(SparTemplateJson) has no PACKED_SPAR_SDK_VERSION for the packed version." />
+    <!-- On Linux and macOS, MSBuild turns every backslash of a task's item into a slash: \" and \\ would break the JSON. -->
+    <Error Condition="$(_SparTemplateJsonText.Contains('\'))"
+           Text="$(SparTemplateJson) has a backslash, which a pack on Linux would write as a slash: use single quotes in conditions and [.] in patterns." />
+
+    <!-- Lines is an item list: the text goes in escaped, so its semicolons and wildcards stay text. -->
+    <WriteLinesToFile File="$(_SparTemplateJsonPacked)" Lines="$(_SparTemplateJsonEscaped)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+
+    <ItemGroup>
+      <FileWrites Include="$(_SparTemplateJsonPacked)" />
+      <None Include="$(_SparTemplateJsonPacked)" Pack="true" PackagePath="content\spar-app\.template.config\template.json" />
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,26 @@
+       5.2 | run: start <copy>/samples/Notebook/bin/Development/Debug/net11.0/linux-x64/Notebook env [PATH=/var/tmp/spar-m1d-dev-server/nonode-bin SPAR_AUTOMATED=1]
+      49.1 | app: 2026-11-21T18:02:51.640Z INFO  Spar.Host  [52f29397] Host started 30 ms after the process.
+      54.4 | app: 2026-11-21T18:02:51.640Z INFO  Spar.Host  [52f29397] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-dev-server/nonode/data/com.example.Notebook.Development
+      63.4 | app: 2026-11-21T18:02:51.645Z INFO  Spar.Host  [52f29397] single instance at 20.5 ms
+      65.2 | out: spar info +15.8 ms: [52f29397] Host started 30 ms after the process.
+      73.8 | out: spar info +17.6 ms: [52f29397] App id com.example.Notebook.Development, folder <copy>/artifacts/linux-homes/m1d-dev-server/nonode/data/com.example.Notebook.Development
+      76.1 | out: spar info +22.8 ms: [52f29397] single instance at 20.5 ms
+      79.7 | out: spar info +37.0 ms: [52f29397] GTK 4.14.5, WebKitGTK 2.52.6.
+      92.2 | app: 2026-11-21T18:02:51.659Z INFO  Spar.Host  [52f29397] GTK 4.14.5, WebKitGTK 2.52.6.
+     102.7 | app: 2026-11-21T18:02:51.688Z INFO  Spar.Host  [52f29397] Sandbox trial: bwrap exit 0 in 26.7 ms.
+     106.4 | app: 2026-11-21T18:02:51.689Z INFO  Spar.Host  [52f29397] prerequisites checked at 66.4 ms
+     112.4 | app: 2026-11-21T18:02:51.691Z INFO  Spar.Host  [52f29397] WebAssembly off: JSC_useWasm=false.
+     115.6 | out: spar info +66.2 ms: [52f29397] Sandbox trial: bwrap exit 0 in 26.7 ms.
+     117.5 | out: spar info +66.4 ms: [52f29397] prerequisites checked at 66.4 ms
+     119.1 | out: spar info +68.4 ms: [52f29397] WebAssembly off: JSC_useWasm=false.
+     121.2 | out: spar info +72.3 ms: [52f29397] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.8 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+     125.0 | out: spar info +72.4 ms: [52f29397] gpu checked at 72.4 ms
+     129.3 | out: spar info +75.0 ms: [52f29397] theme read at 75 ms
+     131.4 | out: spar fail +76.3 ms: [52f29397] Start-up problem Missing: Node.js. This Debug build serves its page from the frontend's Vite development server, which needs Node.js and npm on PATH, and they were not found there. Install Node.js (the LTS release, with npm) and start the app again, or build with -p:SparDevServer=false to embed the page as a Release build does, without hot reload. Help: https://nodejs.org/en/download Exit code 3.
+     133.1 | out: spar info +76.4 ms: [52f29397] The automated mode shows no start-up message.
+     146.6 | app: 2026-11-21T18:02:51.695Z INFO  Spar.Host  [52f29397] Hardware acceleration Auto: off, GPU software (renderD128 not openable), checked in 2.8 ms with 10 threads; WEBKIT_DISABLE_DMABUF_RENDERER=1, GSK_RENDERER=cairo.
+     148.7 | app: 2026-11-21T18:02:51.695Z INFO  Spar.Host  [52f29397] gpu checked at 72.4 ms
+     150.8 | app: 2026-11-21T18:02:51.697Z INFO  Spar.Host  [52f29397] theme read at 75 ms
+     152.6 | app: 2026-11-21T18:02:51.699Z ERROR Spar.Host  [52f29397] Start-up problem Missing: Node.js. This Debug build serves its page from the frontend's Vite development server, which needs Node.js and npm on PATH, and they were not found there. Install Node.js (the LTS release, with npm) and start the app again, or build with -p:SparDevServer=false to embed the page as a Release build does, without hot reload. Help: https://nodejs.org/en/download Exit code 3.
+     154.0 | app: 2026-11-21T18:02:51.699Z INFO  Spar.Host  [52f29397] The automated mode shows no start-up message.
+     155.2 | run: found 'Exit code 3'

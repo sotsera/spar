@@ -86,6 +86,10 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         var image = File.ReadAllBytes(Path.Combine(publish, name));
         Assert.True(Contains(image, "SPARFE", Encoding.ASCII), "The executable carries no packed page.");
 
+        // The build's identity, read from the file as spar doctor reads it: Production, the repository's revision and state.
+        var identity = await BuildIdentityExpectation.OfAsync(workspace, "Production");
+        identity.Check(Spar.Tool.Identity.BuildIdentityReader.Read(Path.Combine(publish, name)).Identity);
+
         var found = ProductionBoundary.Find(image);
         Assert.True(found.Count == 0, $"The Production executable contains: {string.Join(", ", found)}.");
 
@@ -99,7 +103,16 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         var runtime = File.ReadAllBytes(Assert.Single(Directory.GetFiles(testOutput, "Spar.dll", SearchOption.AllDirectories)));
         Assert.True(Contains(loopback, "LoopbackHost", Encoding.UTF8), "The control search missed LoopbackHost.");
         Assert.True(Contains(loopback, "/_spar/channel", Encoding.Unicode), "The control search missed /_spar/channel.");
+        Assert.True(Contains(loopback, "SparLoopbackHost", Encoding.UTF8), "The control search missed SparLoopbackHost.");
+        Assert.True(Contains(loopback, "spar-loopback.json", Encoding.Unicode), "The control search missed spar-loopback.json.");
         Assert.True(Contains(runtime, "SparTestSession", Encoding.UTF8), "The control search missed SparTestSession.");
+        Assert.True(Contains(runtime, "DevServerProxy", Encoding.UTF8), "The control search missed DevServerProxy.");
+        Assert.True(Contains(runtime, "spar-dev-server.json", Encoding.Unicode), "The control search missed spar-dev-server.json.");
+        Assert.True(Contains(runtime, "BackendUpdates", Encoding.UTF8), "The control search missed BackendUpdates.");
+        Assert.True(Contains(runtime, "ConsoleInterrupt", Encoding.UTF8), "The control search missed ConsoleInterrupt.");
+        Assert.True(Contains(runtime, "Attached to the parent's console", Encoding.Unicode), "The control search missed the console line.");
+        Assert.True(Contains(loopback, "Hot Reload applied revision", Encoding.Unicode), "The control search missed the Hot Reload line.");
+        Assert.True(Contains(loopback, "backend-updated", Encoding.Unicode), "The control search missed backend-updated.");
 
         // The DevTools Protocol in Production: exactly the two calls that keep the page's file picker closed; the
         // control is the Windows host's assembly, whose Development-only input trigger names the Input domain. A Linux

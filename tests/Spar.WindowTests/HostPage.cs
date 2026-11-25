@@ -51,6 +51,18 @@ internal sealed class HostPage : IAsyncDisposable
     public static List<string> NotesOf(Activity activity) =>
         [.. activity.Events.Where(e => e.StartsWith("note close ", StringComparison.Ordinal)).Select(e => e["note ".Length..])];
 
+    /// <summary>
+    /// Starts the page's 12 s hang and returns once the page has told the backend it starts: the page's thread is then
+    /// blocked, or blocks in its next task. The button is clicked from script, not with trusted input: a trusted click
+    /// returns only when the renderer acknowledges it, and on CI's Windows runner a test window's slow frames let the
+    /// hang start first, so the click itself waited out the 12 s (CloseTests' hung-page cases, about one run in three).
+    /// </summary>
+    public async Task HangAsync()
+    {
+        await Page.EvaluateAsync("document.getElementById('hang').click(), true");
+        await Waits.UntilAsync(() => Activity.Events.Contains("note hang started"), TimeSpan.FromSeconds(5), "the page's hang to start");
+    }
+
     /// <summary>Clicks a button by its name.</summary>
     public Task ClickAsync(string name) => Page.GetByRole(SparRole.Button, new() { Name = name, Exact = true }).ClickAsync();
 

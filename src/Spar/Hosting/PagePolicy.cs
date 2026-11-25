@@ -10,7 +10,9 @@ namespace Spar.Hosting;
 /// directive appears once, with every value for it grouped together (the base value first, then the opt-in keywords,
 /// the app's sources, and the nonce and hashes), duplicates removed, in a fixed directive order. Browsers keep only the
 /// first copy of a repeated directive, so a repeat would silently drop values. Composed once per host; only the nonce
-/// changes per document.
+/// changes per document. A Debug build that serves its page from the Vite development server (plan section 4) composes
+/// it with the server's HMR WebSocket, which joins <c>connect-src</c>, and every document's nonce then goes in
+/// <c>script-src</c> and <c>style-src</c>, for Vite's inline preamble and the styles its client injects.
 /// </summary>
 internal sealed class PagePolicy
 {
@@ -36,42 +38,39 @@ internal sealed class PagePolicy
     /// <summary>Powerful features the WebView has no permission request for: always denied.</summary>
     private static readonly string[] AlwaysDenied = ["usb", "serial", "hid", "bluetooth", "payment", "display-capture"];
 
+    /// <summary>Where a document's nonce goes in the marked policy; never a character of a real one.</summary>
+    private const string NonceMarker = "\0nonce\0";
+
     private readonly string _policy;
-    private readonly string _beforeNonce;
-    private readonly string _afterNonce;
+    private readonly string _marked;
 
     /// <param name="declared">The app's declaration, from the generated catalog.</param>
     /// <param name="origin">The page's origin with its scheme: <c>connect-src</c> names it, since <c>'self'</c> would also allow WebSockets.</param>
     /// <param name="development">A Development or Test build, where <see cref="CspReports.DevelopmentOnly"/> reports.</param>
     /// <param name="scriptHashes">The build's inline-script hashes, such as the SRI import map's (<c>'sha256-…'</c>).</param>
     /// <param name="styleHashes">The build's inline-style hashes.</param>
+    /// <param name="devServerSocket">
+    /// The Vite development server's HMR WebSocket (<c>ws://127.0.0.1:&lt;port&gt;</c>) when a Debug build serves the
+    /// page from it; null otherwise.
+    /// </param>
     public PagePolicy(
         SparPageSecurity declared,
         string origin,
         bool development,
         IReadOnlyList<string>? scriptHashes = null,
-        IReadOnlyList<string>? styleHashes = null)
+        IReadOnlyList<string>? styleHashes = null,
+        string? devServerSocket = null)
     {
         Declared = declared;
         ListenerReports = Reports(declared.Listener, development);
         EndpointReports = Reports(declared.Endpoint, development);
         StyleNonce = declared.StyleNonce && !declared.AllowInlineStyles;
+        DevServer = devServerSocket is not null;
         PermissionsPolicy = ComposePermissions(declared.Permissions);
 
-        var directives = Compose(declared, origin, scriptHashes ?? [], styleHashes ?? [], EndpointReports);
+        var directives = Compose(declared, origin, scriptHashes ?? [], styleHashes ?? [], EndpointReports, devServerSocket);
         _policy = Render(directives, nonce: null);
-        if (StyleNonce)
-        {
-            const string Marker = "\0nonce\0";
-            var marked = Render(directives, Marker);
-            var at = marked.IndexOf(Marker, StringComparison.Ordinal);
-            _beforeNonce = marked[..at];
-            _afterNonce = marked[(at + Marker.Length)..];
-        }
-        else
-        {
-            _beforeNonce = _afterNonce = "";
-        }
+        _marked = StyleNonce || DevServer ? Render(directives, NonceMarker) : _policy;
     }
 
     /// <summary>The app's declaration this policy was composed from.</summary>
@@ -86,6 +85,12 @@ internal sealed class PagePolicy
     /// <summary>Whether each document served gets a fresh style nonce (<c>StyleNonce()</c>, unless inline styles are allowed).</summary>
     public bool StyleNonce { get; }
 
+    /// <summary>
+    /// Whether the policy is a Debug build's for the Vite development server: every document's nonce is in
+    /// <c>script-src</c> and <c>style-src</c>, and <c>connect-src</c> names the server's HMR WebSocket.
+    /// </summary>
+    public bool DevServer { get; }
+
     /// <summary>The <c>Permissions-Policy</c> header: declared features <c>=(self)</c>, everything else <c>=()</c>.</summary>
     public string PermissionsPolicy { get; }
 
@@ -95,9 +100,12 @@ internal sealed class PagePolicy
     /// <summary>Whether the app declared <paramref name="permission"/>, so the host grants the page's request for it.</summary>
     public bool Allows(Permission permission) => PageSecurityNames.Contains(Declared.Permissions, permission);
 
-    /// <summary>The Content Security Policy for a document whose style nonce is <paramref name="nonce"/> (base64).</summary>
+    /// <summary>
+    /// The Content Security Policy for a document whose nonce is <paramref name="nonce"/> (base64): in <c>style-src</c>
+    /// with <see cref="StyleNonce"/>, and in <c>script-src</c> and <c>style-src</c> for the development server.
+    /// </summary>
     public string ContentSecurityPolicyWithNonce(string nonce) =>
-        StyleNonce ? string.Concat(_beforeNonce, "'nonce-", nonce, "'", _afterNonce) : _policy;
+        ReferenceEquals(_marked, _policy) ? _policy : _marked.Replace(NonceMarker, $"'nonce-{nonce}'", StringComparison.Ordinal);
 
     /// <summary>
     /// The headers every host puts on every response it serves (plan section 3b), in the order hosts send them; hosts
@@ -129,7 +137,8 @@ internal sealed class PagePolicy
         string origin,
         IReadOnlyList<string> scriptHashes,
         IReadOnlyList<string> styleHashes,
-        bool reportUri)
+        bool reportUri,
+        string? devServerSocket)
     {
         var script = new Directive("script-src", "'self'");
         script.AddIf(declared.AllowEval, "'unsafe-eval'");
@@ -137,13 +146,16 @@ internal sealed class PagePolicy
         script.AddAll(declared.ScriptSrc);
         script.AddAll(scriptHashes);
 
+        // Vite's development page has inline module scripts (its client's preamble), which only its nonce allows.
+        script.NonceGoesHere = devServerSocket is not null;
+
         // Browsers ignore 'unsafe-inline' next to a nonce or a hash, so with inline styles allowed neither is added.
         var style = new Directive("style-src", "'self'");
         style.AddIf(declared.AllowInlineStyles, "'unsafe-inline'");
         style.AddAll(declared.StyleSrc);
         if (!declared.AllowInlineStyles)
         {
-            style.NonceGoesHere = declared.StyleNonce;
+            style.NonceGoesHere = declared.StyleNonce || devServerSocket is not null;
             style.AddAll(styleHashes);
         }
 
@@ -154,7 +166,7 @@ internal sealed class PagePolicy
             style,
             new Directive("img-src", "'self'").AddAll(declared.ImgSrc),
             new Directive("font-src", "'self'").AddAll(declared.FontSrc),
-            new Directive("connect-src", origin).AddAll(declared.ConnectSrc),
+            new Directive("connect-src", origin).AddAll(declared.ConnectSrc).AddAll(devServerSocket is null ? [] : [devServerSocket]),
             new Directive("media-src", "'self'").AddAll(declared.MediaSrc),
         };
 

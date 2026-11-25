@@ -72,6 +72,7 @@ internal sealed class TestPage
     private GCHandle _self;
     private bool _firstLoaded;
     private string _url = "";
+    private int _documents;
 
     private TestPage(nint view, SparTestAutomation automation, Action<string> phase, Action<bool> committed)
     {
@@ -80,6 +81,12 @@ internal sealed class TestPage
         _phase = phase;
         _committed = committed;
     }
+
+    /// <summary>
+    /// How many documents have committed in the view (any thread). An engine request sent to a document that a navigation
+    /// then replaced never answers, so a silent request is the page's fault only when this did not change meanwhile.
+    /// </summary>
+    public int Documents => Volatile.Read(ref _documents);
 
     /// <summary>Raised once the first app-origin document has loaded.</summary>
     public event Action? FirstLoaded;
@@ -290,6 +297,7 @@ internal sealed class TestPage
         switch (loadEvent)
         {
             case LoadCommitted:
+                Interlocked.Increment(ref _documents);
                 _url = Marshal.PtrToStringUTF8(webkit_web_view_get_uri(_view)) ?? "";
                 _automation.Events.Navigated(_url, newDocument: true);
                 _committed(!_firstLoaded);

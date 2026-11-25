@@ -25,4 +25,9 @@
   <ItemGroup>
     <None Include="Snapshots\**" CopyToOutputDirectory="Never" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- The .NET analyzers of the SDK that builds the tests: the CA1822 suppressor is checked against the real rule. -->
+    <Reference Include="$([MSBuild]::NormalizePath('$(MSBuildExtensionsPath)', 'Sdks', 'Microsoft.NET.Sdk', 'analyzers', 'Microsoft.CodeAnalysis.NetAnalyzers.dll'))" Private="true" />
+  </ItemGroup>
 </Project>

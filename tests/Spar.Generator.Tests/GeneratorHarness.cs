@@ -51,13 +51,13 @@ internal static class GeneratorHarness
         [.. (await DiagnosticsAsync(source, libraries, listed)).Select(d => $"{d.Id}: {d.GetMessage(System.Globalization.CultureInfo.InvariantCulture)}")];
 
     /// <summary>Runs the generator (in <paramref name="variant"/>, with the project's <c>SparAppId</c>) and compiles the app with its output.</summary>
-    public static GeneratorRun Generate(string source, string variant = "Development", IEnumerable<MetadataReference>? libraries = null, string listed = "", string appId = "")
+    public static GeneratorRun Generate(string source, string variant = "Development", IEnumerable<MetadataReference>? libraries = null, string listed = "", string appId = "", string revision = "", string dirty = "")
     {
         var compilation = Compile(source, libraries: libraries);
         var driver = CSharpGeneratorDriver.Create(
             [new SparGenerator().AsSourceGenerator()],
             parseOptions: ParseOptions,
-            optionsProvider: new BuildOptions(variant, listed, appId));
+            optionsProvider: new BuildOptions(variant, listed, appId, revision, dirty));
         driver.RunGeneratorsAndUpdateCompilation(compilation, out var output, out var generatorDiagnostics, TestContext.Current.CancellationToken);
 
         var files = output.SyntaxTrees
@@ -80,7 +80,7 @@ internal static class GeneratorHarness
 
     private static async Task<IReadOnlyList<Diagnostic>> DiagnosticsAsync(string source, IEnumerable<MetadataReference>? libraries, string listed)
     {
-        var options = new AnalyzerOptions([], new BuildOptions("Development", listed, ""));
+        var options = new AnalyzerOptions([], new BuildOptions("Development", listed, "", "", ""));
         var diagnostics = await Compile(source, libraries: libraries)
             .WithAnalyzers([new ContractAnalyzer(), new PageSecurityAnalyzer()], options)
             .GetAnalyzerDiagnosticsAsync(TestContext.Current.CancellationToken);
@@ -102,16 +102,16 @@ internal static class GeneratorHarness
             .Select(path => MetadataReference.CreateFromFile(path))];
     }
 
-    /// <summary>The build properties the generator and analyzer read: the variant, the <c>SparContracts</c> list and the app id.</summary>
-    private sealed class BuildOptions(string variant, string listed, string appId) : AnalyzerConfigOptionsProvider
+    /// <summary>The build properties the generator and analyzer read: the variant, the <c>SparContracts</c> list, the app id and the identity's revision and tree state.</summary>
+    private sealed class BuildOptions(string variant, string listed, string appId, string revision, string dirty) : AnalyzerConfigOptionsProvider
     {
-        public override AnalyzerConfigOptions GlobalOptions { get; } = new Options(variant, listed, appId);
+        public override AnalyzerConfigOptions GlobalOptions { get; } = new Options(variant, listed, appId, revision, dirty);
 
         public override AnalyzerConfigOptions GetOptions(SyntaxTree tree) => GlobalOptions;
 
         public override AnalyzerConfigOptions GetOptions(AdditionalText textFile) => GlobalOptions;
 
-        private sealed class Options(string variant, string listed, string appId) : AnalyzerConfigOptions
+        private sealed class Options(string variant, string listed, string appId, string revision, string dirty) : AnalyzerConfigOptions
         {
             public override bool TryGetValue(string key, [NotNullWhen(true)] out string? value)
             {
@@ -120,6 +120,8 @@ internal static class GeneratorHarness
                     "build_property.SparVariant" => variant,
                     "build_property.SparContractAssemblies" => listed,
                     "build_property.SparAppId" when appId.Length > 0 => appId,
+                    "build_property.SparBuildRevision" when revision.Length > 0 => revision,
+                    "build_property.SparBuildDirty" when dirty.Length > 0 => dirty,
                     _ => null,
                 };
                 return value is not null;

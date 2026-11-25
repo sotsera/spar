@@ -1,0 +1,104 @@
+    691.2 run1: Using launch settings from samples\Notebook\Properties\launchSettings.json...
+   1004.0 run1: spar info +29.8 ms: [d29d92e4] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-loopback\win\local\com.example.Notebook.Development
+   1016.1 run1: spar info +43.0 ms: [d29d92e4] The development server recorded at http://127.0.0.1:57248 has ended: a new one starts.
+   1025.3 run1: spar info +52.2 ms: [d29d92e4] services built at 49.9 ms
+   1033.2 run1: spar info +60.0 ms: [d29d92e4] npm run dev started in <repo>\samples\Notebook\frontend\ (pid 33940), port 50582.
+   1058.5 run1: spar info +85.4 ms: [d29d92e4] loopback listening at 85.4 ms
+   1062.3 run1: Spar: the page is at http://127.0.0.1:50583/#token=JD7HRQoLH2UfOnSZySwgOLf6EPk1R9kB (a new dev session). Ctrl+C stops the app.
+   1062.5 run1: spar info +89.3 ms: [d29d92e4] Loopback page at http://127.0.0.1:50583/#token=JD7HRQoLH2UfOnSZySwgOLf6EPk1R9kB (a new dev session).
+   1069.3 run1: spar info +96.2 ms: [d29d92e4] <user>\AppData\Local\Author Software\nvm\.nodejs\node.exe was asked to open the page.
+   1091.4 run: PASS run1 is a new dev session (a new dev session)
+   1472.3 run1: > dev
+   1472.5 run1: > vite
+   1692.9 run1:   VITE v8.3.8  ready in 184 ms
+   1693.1 run1:   ?  Local:   http://127.0.0.1:50582/
+   1739.6 run1: spar info +766.5 ms: [d29d92e4] Development server ready at http://127.0.0.1:50582 in 722 ms (Vite pid 68424).
+   2767.4 run: PASS run1 asked once to open its address (1)
+   2767.5 run: PASS the record exists in obj/
+   2809.2 run1: spar info +1836.1 ms: [d29d92e4] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:50583 ws://127.0.0.1:50582; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   3048.8 run: page console debug: [vite] connecting...
+   3051.3 run: page console debug: [vite] connected.
+   3087.6 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+   3109.3 run: page load 1: http://127.0.0.1:50583/
+   3140.7 run1: spar info +2167.6 ms: [d29d92e4] ui-ready at 2167.6 ms
+   3290.2 run: PASS the token left the address bar
+   3290.4 run: PASS run1's page reported ui-ready
+   4091.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+   4091.3 run: page console info: Spar: the backend at http://127.0.0.1:50583 stopped; the page reloads when it runs again.
+   4112.0 run: run1: exited 1
+   4112.3 run: run1: app process 44080 stopped (taskkill /F)
+   4347.0 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   4847.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   5854.1 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+   5979.7 run2: Using launch settings from samples\Notebook\Properties\launchSettings.json...
+   6184.2 run2: spar info +14.2 ms: [3cfbac10] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-loopback\win\local\com.example.Notebook.Development
+   6205.5 run2: spar info +36.6 ms: [3cfbac10] services built at 34.5 ms
+   6220.0 run2: spar info +51.1 ms: [3cfbac10] Development server http://127.0.0.1:50582 reused (Vite pid 68424), checked in 26 ms.
+   6236.4 run2: spar info +67.5 ms: [3cfbac10] loopback listening at 67.5 ms
+   6240.1 run2: Spar: the page is at http://127.0.0.1:50583/#token=JD7HRQoLH2UfOnSZySwgOLf6EPk1R9kB (the dev session's address: an open page reloads by itself). Ctrl+C stops the app.
+   6240.2 run2: spar info +71.3 ms: [3cfbac10] Loopback page at http://127.0.0.1:50583/#token=JD7HRQoLH2UfOnSZySwgOLf6EPk1R9kB (the dev session's address: an open page reloads by itself).
+   6248.4 run: PASS run2 kept the port and the token (50583)
+   6248.6 run: PASS run2 continues the dev session (the dev session's address: an open page reloads by itself)
+   6898.5 run2: spar info +729.6 ms: [3cfbac10] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src http://127.0.0.1:50583 ws://127.0.0.1:50582; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+   6923.9 run: page console debug: [vite] connecting...
+   6938.0 run: page console debug: [vite] connected.
+   6994.3 run: page console info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+   7007.4 run: page load 2: http://127.0.0.1:50583/
+   7019.5 run2: spar info +850.7 ms: [3cfbac10] ui-ready at 850.7 ms
+   7035.0 run: PASS the page reloaded by itself once (1 loads, 799 ms after run2 listened)
+   7051.6 run: PASS after the reload the page lists the page created before (the bridge of run2)
+  10064.4 run: PASS no further reload in 3 s (1)
+  10064.8 run: PASS nothing more was opened (1)
+  10075.5 run: PASS a wrong token is refused (401)
+  10077.1 run: PASS no token is refused (401)
+  10077.9 run: PASS another origin is refused (403)
+  10120.4 run: PASS another Host is refused (403)
+  10121.7 run: PASS Retry from another origin is refused (403)
+  10797.2 run: page console error: Failed to load resource: net::ERR_CONNECTION_RESET
+  10797.4 run: page console info: Spar: the backend at http://127.0.0.1:50583 stopped; the page reloads when it runs again.
+  10814.9 run: run2: exited 1
+  10823.7 run: run2: app process 54312 stopped (taskkill /F)
+  11060.9 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  11192.3 run3: Using launch settings from samples\Notebook\Properties\launchSettings.json...
+  11394.9 run3: spar info +14.2 ms: [3728bac0] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-loopback\win\local\com.example.Notebook.Development
+  11415.9 run3: spar info +36.3 ms: [3728bac0] services built at 34.1 ms
+  11430.6 run3: spar info +51.0 ms: [3728bac0] Development server http://127.0.0.1:50582 reused (Vite pid 68424), checked in 26 ms.
+  11447.4 run3: spar info +67.7 ms: [3728bac0] loopback listening at 67.7 ms
+  11447.7 run3: Spar: the page is at http://127.0.0.1:59818/#token=b3ZlcnJpZGRlbi10b2tlbi1mb3ItdGVzdHM (set by the environment). Ctrl+C stops the app.
+  11447.8 run3: spar info +68.2 ms: [3728bac0] Loopback page at http://127.0.0.1:59818/#token=b3ZlcnJpZGRlbi10b2tlbi1mb3ItdGVzdHM (set by the environment).
+  11469.0 run: PASS run3 used the environment's port and token (set by the environment)
+  11494.2 run: PASS the environment's token is accepted
+  11565.4 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  12507.1 run: PASS run3 opened nothing
+  13176.6 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  13192.7 run: run3: exited 1
+  13200.7 run: run3: app process 47752 stopped (taskkill /F)
+  13200.9 run: PASS run3 left the record as it was
+  13560.4 run3b: Using launch settings from samples\Notebook\Properties\launchSettings.json...
+  13581.7 run: page console error: Failed to load resource: net::ERR_CONNECTION_REFUSED
+  13779.5 run3b: spar info +31.2 ms: [b4a6af79] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-loopback\win\local\com.example.Notebook.Development
+  13788.6 run3b: spar fail +41.3 ms: [b4a6af79] The app cannot start on loopback: SPAR_LOOPBACK_TOKEN is not base64url of 16 to 48 bytes (Spar's own tokens are 24 random bytes).
+  13810.3 run: run3b: exited 70
+  13832.6 run: PASS a malformed SPAR_LOOPBACK_TOKEN stops the start (exit 70)
+  14193.5 run4: Using launch settings from samples\Notebook\Properties\launchSettings.json...
+  14396.7 run4: spar info +14.1 ms: [fca6c5b6] Host started on loopback (no window): app id com.example.Notebook.Development, folder <repo>\artifacts\test-host\m1d-loopback\win\local\com.example.Notebook.Development
+  14418.1 run4: spar info +36.6 ms: [fca6c5b6] services built at 34.4 ms
+  14431.6 run4: spar info +50.1 ms: [fca6c5b6] Development server http://127.0.0.1:50582 reused (Vite pid 68424), checked in 25 ms.
+  14448.7 run4: spar info +67.2 ms: [fca6c5b6] loopback listening at 67.2 ms
+  14452.7 run4: Spar: the page is at http://127.0.0.1:50583/#token=IAgP-vMsg002jaZqlu9vHtgZMVYO8nnr (a new dev session). Ctrl+C stops the app.
+  14452.9 run4: spar info +71.3 ms: [fca6c5b6] Loopback page at http://127.0.0.1:50583/#token=IAgP-vMsg002jaZqlu9vHtgZMVYO8nnr (a new dev session).
+  14460.1 run4: spar info +78.6 ms: [fca6c5b6] <user>\AppData\Local\Author Software\nvm\.nodejs\node.exe was asked to open the page.
+  14460.3 run: PASS run4 kept the port with a new token (a new dev session)
+  14615.3 run: page console error: Failed to load resource: the server responded with a status of 401 (Unauthorized)
+  14615.7 run: page console warning: Spar: the backend at http://127.0.0.1:50583 runs a new dev session with a new token; open the address it printed.
+  14654.2 run4: 23:43:07 [vite] (client) [console.warn] Spar: the backend at http://127.0.0.1:50583 runs a new dev session with a new token; open the address it printed.
+  18467.7 run: PASS run4 asked to open its address (2)
+  18467.9 run: PASS the old page did not reload into the new session
+  18468.0 run: PASS the old page says its token is refused
+  19191.0 run: run4: exited 1
+  19205.8 run: run4: app process 61988 stopped (taskkill /F)
+  19211.6 run: PASS 0 CSP violations in the page (0)
+  19211.8 run: PASS 0 CSP violations in app.log
+  19211.9 run: app.log: 110 lines, 14639 B
+  19517.2 run: vite (pid 68424) ended
+  19517.4 run: 0 failures

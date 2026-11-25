@@ -6,27 +6,58 @@ namespace Spar.Hosting;
 /// <summary>
 /// What hosts need from the page's HTML for its policy (plan section 3b), read once at start off the UI thread: the
 /// hash of the Subresource Integrity import map the Spar Vite plugin writes, which <c>script-src</c> must name since an
-/// import map is an inline script; and where a document's style nonce goes. Only Spar's own import map is hashed, in
-/// the exact form the plugin writes (<c>&lt;script type="importmap"&gt;</c>), so no other inline script is ever allowed.
+/// import map is an inline script; the hashes of the theme style and the splash style the plugin writes (plan section
+/// 3d), which <c>style-src</c> names; and where a document's style nonce goes. Only Spar's own inline elements are
+/// hashed, each in the exact form the plugin writes (<c>&lt;script type="importmap"&gt;</c>,
+/// <c>&lt;style id="spar-theme"&gt;</c>, <c>&lt;style id="spar-splash-style"&gt;</c>), so no other inline script or
+/// style is ever allowed.
 /// </summary>
 internal static class PageHtml
 {
     private static readonly byte[] ImportMapStart = "<script type=\"importmap\">"u8.ToArray();
     private static readonly byte[] ScriptEnd = "</script>"u8.ToArray();
+    private static readonly byte[] ThemeStyleStart = "<style id=\"spar-theme\">"u8.ToArray();
+    private static readonly byte[] SplashStyleStart = "<style id=\"spar-splash-style\">"u8.ToArray();
+    private static readonly byte[] StyleEnd = "</style>"u8.ToArray();
     private static readonly byte[] Head = "<head"u8.ToArray();
 
     /// <summary>
     /// The <c>'sha256-…'</c> source of every import map in the frontend's HTML files, each once: the import map's text is
     /// hashed exactly as it sits between its tags, as the browser does.
     /// </summary>
-    public static IReadOnlyList<string> ImportMapHashes(SparFrontend frontend)
+    public static IReadOnlyList<string> ImportMapHashes(SparFrontend frontend) => HashesOf(frontend, ImportMapHashes);
+
+    /// <summary>
+    /// The <c>'sha256-…'</c> source of every theme and splash style in the frontend's HTML files, each once, for
+    /// <c>style-src</c>: hashed exactly as they sit between their tags.
+    /// </summary>
+    public static IReadOnlyList<string> StyleHashes(SparFrontend frontend) => HashesOf(frontend, StyleHashes);
+
+    /// <summary>The <c>'sha256-…'</c> source of each import map in one HTML document.</summary>
+    public static List<string> ImportMapHashes(ReadOnlySpan<byte> html)
+    {
+        var hashes = new List<string>();
+        Collect(html, ImportMapStart, ScriptEnd, hashes);
+        return hashes;
+    }
+
+    /// <summary>The <c>'sha256-…'</c> source of the theme style and the splash style in one HTML document.</summary>
+    public static List<string> StyleHashes(ReadOnlySpan<byte> html)
+    {
+        var hashes = new List<string>();
+        Collect(html, ThemeStyleStart, StyleEnd, hashes);
+        Collect(html, SplashStyleStart, StyleEnd, hashes);
+        return hashes;
+    }
+
+    private static List<string> HashesOf(SparFrontend frontend, Func<ReadOnlySpan<byte>, List<string>> read)
     {
         var hashes = new List<string>();
         foreach (var entry in frontend.Entries)
         {
             if (entry.ContentType.StartsWith("text/html", StringComparison.Ordinal) && frontend.TryGet(entry.Path, out var html, out _))
             {
-                foreach (var hash in ImportMapHashes(html.Span))
+                foreach (var hash in read(html.Span))
                 {
                     if (!hashes.Contains(hash))
                     {
@@ -39,28 +70,32 @@ internal static class PageHtml
         return hashes;
     }
 
-    /// <summary>The <c>'sha256-…'</c> source of each import map in one HTML document.</summary>
-    public static List<string> ImportMapHashes(ReadOnlySpan<byte> html)
+    /// <summary>Adds the hash of the text between each <paramref name="start"/> tag and the next <paramref name="end"/>.</summary>
+    private static void Collect(ReadOnlySpan<byte> html, ReadOnlySpan<byte> start, ReadOnlySpan<byte> end, List<string> hashes)
     {
-        var hashes = new List<string>();
         var rest = html;
         while (true)
         {
-            var start = rest.IndexOf(ImportMapStart);
-            if (start < 0)
+            var at = rest.IndexOf(start);
+            if (at < 0)
             {
-                return hashes;
+                return;
             }
 
-            rest = rest[(start + ImportMapStart.Length)..];
-            var end = rest.IndexOf(ScriptEnd);
-            if (end < 0)
+            rest = rest[(at + start.Length)..];
+            var close = rest.IndexOf(end);
+            if (close < 0)
             {
-                return hashes;
+                return;
             }
 
-            hashes.Add($"'sha256-{Convert.ToBase64String(SHA256.HashData(rest[..end]))}'");
-            rest = rest[end..];
+            var hash = $"'sha256-{Convert.ToBase64String(SHA256.HashData(rest[..close]))}'";
+            if (!hashes.Contains(hash))
+            {
+                hashes.Add(hash);
+            }
+
+            rest = rest[close..];
         }
     }
 

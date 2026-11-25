@@ -56,6 +56,23 @@ internal sealed partial class AppWindow
         return request;
     }
 
+    /// <summary>
+    /// The parent console's Ctrl+C (Development builds; <c>ConsoleInterrupt</c>), on the signal's thread: the same close as
+    /// the close button's, through <c>WM_CLOSE</c>, guards included. False when there is no window to close yet.
+    /// </summary>
+    public bool CloseFromConsole()
+    {
+        var window = _window;
+        if (window == default)
+        {
+            return false;
+        }
+
+        // PostMessage may be called from any thread; the request itself runs on the UI thread.
+        PInvoke.PostMessage(window, PInvoke.WM_CLOSE, default, default);
+        return true;
+    }
+
     /// <summary><c>WM_CLOSE</c>: the close button, Alt+F4, the taskbar; every close of the window is a close request.</summary>
     private void OnCloseMessage()
     {

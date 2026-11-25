@@ -19,5 +19,12 @@ internal sealed class BrowserSource
     /// <summary>Each phase as it is reached (UI thread).</summary>
     public Action<string>? OnPhase { get; init; }
 
+    /// <summary>
+    /// After the page's <c>setColorScheme</c> was applied (UI thread), with whether the window is now dark: a test
+    /// window emulates that scheme on its page, since its InPrivate profile's scheme did not reach
+    /// <c>prefers-color-scheme</c> (pitfalls).
+    /// </summary>
+    public Func<bool, Task>? ColorSchemeChosen { get; init; }
+
     public bool IsShared => SharedEnvironment is not null;
 }
