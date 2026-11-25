@@ -56,5 +56,4 @@ The same sequence (`docs/evidence/m2a-devtools/smoke.sh`) on both systems: versi
 
 - The devtools under an IDE's F5 (the same build, so expected to work), and with `dotnet watch` restarts (each run writes a new file; the old run's connections end).
 - A real Linux desktop: Wayland, and a page whose code checks `event.isTrusted`.
-
 - Windows Sandbox and CI.
