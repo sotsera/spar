@@ -5053,3 +5053,13 @@ The five follow-ups of "The checks at the PC at the M1d exit", built at the user
 
 - **Decided:** `[SparContract]` keeps marking only the type as used, so ReSharper and Rider still report unused fields and helpers inside a contract class (decision "The M1d follow-ups checked without the IDEs"). An interface contract's method counts as used only with `[SparCommand]`, and that is documented instead of marking every member: `docs/app-model.md` section 3.3 and the remarks on `SparCommandAttribute`.
 - **Not taken:** `WithMembers` on `[SparContract]`, which covers interface methods but hides a contract class's unused members too.
+
+## The IDE and theme checks after the M1d follow-ups (check results; 2026-11-25)
+
+The user ran these at the PC, guided, on the Notebook (`Desktop` profile); the agent read Vite's files between the runs.
+
+- **VS Code:** F5, then a breakpoint in `PagesService.ListAsync` hit by reloading the window (F5 in the page), 30 s, Continue: no hung-page dialog, the window kept working. Then, with the breakpoint removed, a method body edit (`MarkdownPageStore.ListAsync`'s title) applied by Hot Reload: the toast showed and the list showed the new titles. The second VS Code installation the user opened first had Hot Reload off (`csharp.experimental.debug.hotReload`), so the edit applied only after a restart with it on. No hang this time.
+- **The switch to Visual Studio:** Vite ended with VS Code's run (its process gone, `obj/spar-dev-server.json` removed). Visual Studio's F5 started a new one from `E:\Ghidello\Git\spar.v7\samples\Notebook\frontend`; the dependency cache's config hash stayed `4ee0c3ef`, as after VS Code's run, and Vite's log has no "Re-optimizing". So decision "The M1d check follow-ups" item 5 holds in the IDEs.
+- **Visual Studio:** the same breakpoint, 30 s, Continue: no hung-page dialog, the window kept working. The breakpoint was hit twice per reload: the Notebook's page runs under React's `StrictMode`, which in development mounts each component twice, so the effect that lists the pages runs twice; a production bundle mounts once.
+- **The other Windows theme:** with Windows in light mode, the Notebook started light from the first frame, with no flash.
+- **Left in the plan's table:** the splash mark on a slow cold start (the first start after a reboot), and WebKitGTK's animation on a real Linux desktop with a GPU.
