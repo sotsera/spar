@@ -448,6 +448,7 @@ The tools of section 6 (`tree`, `screenshot`, `click`/`fill`/`waitFor`, `contrac
 - **Runtime support:** the minimum supported WebView2 Runtime and WebKitGTK versions, confirming or replacing the provisional minimums of M1b and M1c (WebKitGTK 2.48), with fallback when newer interfaces are missing. Also whether arm64 is qualified or documented as untested.
 - **Distribution decision:** Windows (single exe, installer?) and Linux (deb, rpm, Flatpak or AppImage, with WebKitGTK as a dependency).
 - **Signing and privacy (section 3c):** a signed executable and Linux packages; privacy defaults for telemetry and log redaction.
+- **What a Production CoreCLR publication carries that is not production code** (user, 2026-11-26; decision "Review of non-production code in CoreCLR publications"): list every type, resource and dependency of Spar's that a framework-dependent or single-file Production publication contains only switched off (today the test session, the development server, Hot Reload's types and M2a's devtools in `Spar.dll`, `Spar.Windows.dll` and `Spar.Linux.dll`), and for each one decide how it leaves the publication, for example in assemblies only the Development and Test variants reference, as `Spar.Loopback` already is. Proved by a test on the publication, as the boundary test proves it for NativeAOT.
 
 ## Verification
 
