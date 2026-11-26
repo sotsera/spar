@@ -16,6 +16,7 @@ Recorded 2026-11-26. What it shows: plan M2b, build steps 1 to 4 (section 6, `do
 | `src/Spar/Devtools/DevtoolsTools.cs`, `DevtoolsServer.cs`, `DevtoolsHost.cs`, `DevtoolsListener.cs` | The `stop` tool and the host's `EndSession`; the listener's name prefix |
 | `src/Spar.Windows/AppWindow.Closing.cs`, `AppWindow.cs`, `WindowPlacement.cs`, `WindowsApp.cs` | `RequestSessionEnd` (`WM_ENDSESSION` to its own window); `SPAR_DEV_WINDOW` in Development builds |
 | `src/Spar.Linux/LinuxApp.cs`, `src/Spar.Loopback/LoopbackApp.cs` | The `SIGTERM` path and the Ctrl+C path for `stop` |
+| `src/Spar/HotReload/ConsoleInterrupt.cs` | A run `spar dev` started (`SPAR_DEV_SUPERVISOR`) leaves the console alone, so its Ctrl+C is `spar dev`'s (found at the PC) |
 | `src/Spar.Sdk/Sdk/Sdk.targets` | The type-check runs `tsc` in the project's folder, so its errors' files are the project's |
 | `tests/Spar.Tool.Tests/DevCommandTests.cs`, `tests/Spar.Tests/DevtoolsServerTests.cs` | 19 tests of the tool's parts, 2 of `stop` |
 | `tests/Spar.BuildTests/ProductionBoundary.cs`, `NotebookBuildTests.cs`; `tests/Spar.PackageTests/ToolTests.cs` | The `SPAR_DEV_WINDOW` marker and its control; the type-check's project-relative file |
@@ -45,6 +46,14 @@ The same sequence (`docs/evidence/m2b-spar-dev/smoke.sh`) on both systems: `spar
 
 `spar dev -lp Loopback` with `SPAR_LOOPBACK_BROWSER=none`: the first build 10.5 s (beside a NativeAOT publish), ready at `loopback listening` 0.3 s from the start; a reload 3.3 s, the previous run ended through its session end; `spar call pages.list` answered; `spar tree` answered `unavailable` (the page is in a browser). The first version waited for `ui-ready`, which comes only when a browser page connects, and answered `starting` after 60 s; ready is now `loopback listening` for loopback (choice 10).
 
+### At the PC (Windows, with the user)
+
+`spar dev` (not `--private`) on the user's desktop, in the app's Terminal panel; each reload 10 s after the user was ready, while they typed in Notepad (decision "M2b: the checks at the PC (implementation record; 2026-11-26)"):
+- **Place and focus:** the new window in the moved and resized window's place and size; the typing stayed in Notepad. Passed.
+- **Maximized:** back over the same area, not maximized; the typing stayed in Notepad. As designed.
+- **Visual Studio building while `spar dev` ran:** first MSB4186 (the type-check's .NET-only property function in Visual Studio's .NET Framework MSBuild), then, after the fix, built with the window open. Passed.
+- **Ctrl+C in `spar dev`'s terminal:** first the app took the Ctrl+C itself and `spar dev` killed it; after the fix (`SPAR_DEV_SUPERVISOR`), no dialog, the session end held 52 ms, exit 0, no process left. Passed.
+
 ### Found and fixed during the runs
 
 - The type-check's errors named files relative to the frontend's folder (`src/main.tsx`); `tsc` now runs in the project's folder (choice 3), and the `Exec` task's MSB3073 after them is left out.
@@ -55,7 +64,6 @@ The same sequence (`docs/evidence/m2b-spar-dev/smoke.sh`) on both systems: `spar
 
 ## Not verified
 
-- The restarted window's place and focus on the user's own desktop (the smoke runs used `--private`), a maximized window, Ctrl+C in a real terminal, an IDE building while `spar dev` runs: a row of the plan's table "Checks that need the user at the PC".
 - A real Linux desktop (the window manager's placement and focus), and Wayland.
 - `spar dev` killed outright (Windows' job ends the tree by design; on Linux the direct children only, pitfall).
 - CI: no CI job runs `spar dev`.

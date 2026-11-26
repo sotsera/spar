@@ -778,11 +778,13 @@
     -->
     <!--
       tsc runs in the project's folder, so the files of its errors are relative to the project, as MSBuild, the IDEs and
-      spar dev read a relative path (from the frontend's folder, src/main.tsx pointed beside the project file).
+      spar dev read a relative path (from the frontend's folder, src/main.tsx pointed beside the project file). The
+      folder is given as "frontend\.": a trailing separator before the closing quote would escape it, and Visual
+      Studio's MSBuild, on .NET Framework, has no Path.TrimEndingDirectorySeparator.
     -->
     <PropertyGroup>
       <_SparTsConfig>$(SparFrontendDirectory)tsconfig.json</_SparTsConfig>
-      <_SparFrontendFolder>$([System.IO.Path]::TrimEndingDirectorySeparator('$(SparFrontendDirectory)'))</_SparFrontendFolder>
+      <_SparFrontendFolder>$(SparFrontendDirectory).</_SparFrontendFolder>
       <_SparTypeCheckArguments>--noEmit -p &quot;$(_SparFrontendFolder)&quot;</_SparTypeCheckArguments>
       <_SparTypeCheckArguments Condition="Exists('$(_SparTsConfig)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(_SparTsConfig)')), '&quot;references&quot;\s*:\s*\[\s*\{'))">-b &quot;$(_SparFrontendFolder)&quot; --noEmit</_SparTypeCheckArguments>
     </PropertyGroup>

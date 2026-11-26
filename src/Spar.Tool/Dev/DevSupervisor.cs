@@ -190,7 +190,7 @@ internal sealed class DevSupervisor : IAsyncDisposable
         Print($"started {Path.GetFileName(executable)} (pid {run.ProcessId}) from {slot}");
         _ = WatchExitAsync(run);
 
-        var (state, ready, waited) = await run.WaitForStartAsync(StartLimit);
+        var (state, ready, waited) = await run.WaitForStartAsync(StartLimit, _project.Directory);
         return state switch
         {
             StartState.Ready => new ReloadResult(build, ReloadResult.Ready, run.ProcessId, run.Run, ready, waited.TotalSeconds, null, [], previous, run.ReadyPhase),
@@ -229,6 +229,10 @@ internal sealed class DevSupervisor : IAsyncDisposable
         }
 
         variables["DOTNET_LAUNCH_PROFILE"] = _profile == LaunchProfile.None ? null : _profile.Name;
+
+        // A Windows app of a Development build attaches to its parent's console for dotnet watch's Ctrl+C; under spar dev
+        // that Ctrl+C is spar dev's, which ends the run through its session end (Spar.HotReload.ConsoleInterrupt).
+        variables["SPAR_DEV_SUPERVISOR"] = System.Environment.ProcessId.ToString(System.Globalization.CultureInfo.InvariantCulture);
         variables[KeptWindowVariable] = place;
         return variables;
     }

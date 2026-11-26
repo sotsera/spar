@@ -23,6 +23,7 @@ internal sealed partial class AppRun
     private readonly Queue<string> _last = new();
     private readonly TaskCompletionSource<(string Run, string Phase, double Milliseconds)> _ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly long _started = Stopwatch.GetTimestamp();
+    private bool _hadDevtools;
 
     private AppRun(IChildProcesses children, ChildStart start, Action<string> print)
     {
@@ -61,12 +62,13 @@ internal sealed partial class AppRun
     public static AppRun Start(IChildProcesses children, ChildStart start, Action<string> print) => new(children, start, print);
 
     /// <summary>Waits for the run's <c>ui-ready</c> line, its exit, or <paramref name="limit"/>.</summary>
-    public async Task<(StartState State, double ReadyMilliseconds, TimeSpan Waited)> WaitForStartAsync(TimeSpan limit)
+    public async Task<(StartState State, double ReadyMilliseconds, TimeSpan Waited)> WaitForStartAsync(TimeSpan limit, string projectDirectory)
     {
         await Task.WhenAny(_ready.Task, _child.Exited, Task.Delay(limit, CancellationToken.None));
         var waited = Stopwatch.GetElapsedTime(_started);
         if (_ready.Task.IsCompletedSuccessfully)
         {
+            _hadDevtools = DevtoolsTarget.Find(projectDirectory, out _) is { } target && target.ProcessId == ProcessId;
             return (StartState.Ready, _ready.Task.Result.Milliseconds, waited);
         }
 
@@ -86,12 +88,15 @@ internal sealed partial class AppRun
             return "had exited";
         }
 
-        if (await AskToStopAsync(projectDirectory))
+        // A run that had devtools but whose discovery file is gone is closing already (its own close removed the file):
+        // it gets the same time to finish as a session end.
+        var asked = await AskToStopAsync(projectDirectory);
+        if (asked || _hadDevtools)
         {
             var ended = await Task.WhenAny(_child.Exited, Task.Delay(TimeSpan.FromSeconds(6), CancellationToken.None));
             if (ended == _child.Exited)
             {
-                return "ended through its session end";
+                return asked ? "ended through its session end" : "ended (it was closing already)";
             }
         }
 
