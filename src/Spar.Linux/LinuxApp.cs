@@ -55,6 +55,7 @@ internal sealed class LinuxApp : IAppWindowOwner
 
     /// <summary>The running session end, once a signal started one: its final line and the log's flush.</summary>
     private Task? _sessionEnd;
+    private int _sessionEnding;
     private int _stopped;
 
     /// <summary>Completes once <see cref="Stop"/> has run: the run's last work, which a session end waits for within its budget.</summary>
@@ -230,6 +231,7 @@ internal sealed class LinuxApp : IAppWindowOwner
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools)
         {
             _window.UseDevtools(devtools);
+            devtools.EndSession = EndSessionFromDevtools;
         }
         var started = false;
         MainLoop.Run(_window.Report, ui => started = Start(ui, theme, built));
@@ -298,6 +300,13 @@ internal sealed class LinuxApp : IAppWindowOwner
     /// </summary>
     private void OnSessionEnd(string signal)
     {
+        if (Interlocked.Exchange(ref _sessionEnding, 1) != 0)
+        {
+            // The devtools started it first: the one under way ends the run.
+            _log.Step($"{signal}: the session is already ending");
+            return;
+        }
+
         var start = Stopwatch.GetTimestamp();
         _log.Step($"{signal}: the session ends");
         var ui = _ui!;
@@ -312,6 +321,22 @@ internal sealed class LinuxApp : IAppWindowOwner
                 ExitNow(window.ExitCode);
             }
         });
+    }
+
+    /// <summary>
+    /// The devtools' <c>stop</c>, for <c>spar dev</c>'s restarts (decision "M2b's decide-first questions", item 3): the
+    /// session end <c>SIGTERM</c> starts, off the devtools' thread; false until a session end has a window to close, or
+    /// once one is under way.
+    /// </summary>
+    private bool EndSessionFromDevtools()
+    {
+        if (_signals is null || Volatile.Read(ref _sessionEnding) != 0)
+        {
+            return false;
+        }
+
+        _ = Task.Run(() => OnSessionEnd("devtools stop"));
+        return true;
     }
 
     /// <summary>Waits briefly for a session end that a signal started: everything it waits for is done by now.</summary>

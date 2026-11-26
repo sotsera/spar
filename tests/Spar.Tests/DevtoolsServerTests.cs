@@ -11,7 +11,7 @@ namespace Spar.Tests;
 
 /// <summary>
 /// The devtools' endpoint (decision "M2a's decide-first questions"): the discovery file, the owner-only socket, the
-/// JSON-RPC rules (initialize and its token first, duplicate ids, stale targets) and the backend tools.
+/// JSON-RPC rules (initialize and its token first, duplicate ids, stale targets), the backend tools, and stop (M2b).
 /// </summary>
 public sealed class DevtoolsServerTests : IAsyncLifetime
 {
@@ -226,6 +226,43 @@ public sealed class DevtoolsServerTests : IAsyncLifetime
         Assert.Equal(("{\"a\":1}", "{\"b\":2}", null), (Encoding.UTF8.GetString(first!), Encoding.UTF8.GetString(second!), end));
         await Assert.ThrowsAsync<InvalidDataException>(async () =>
             await JsonRpc.ReadLineAsync(huge, line, new byte[4096], new JsonRpc.Pending(), CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task Stop_starts_the_hosts_session_end_and_answers_before_it_runs()
+    {
+        // spar dev's restarts (decision "M2b's decide-first questions", item 3); the hosts' own session ends run in
+        // real windows and in docs/evidence/m2b-spar-dev.md.
+        var asked = 0;
+        var answer = await StopAsync(() =>
+        {
+            asked++;
+            return true;
+        });
+
+        Assert.Equal(1, asked);
+        Assert.True(Result(answer).GetProperty("stopping").GetBoolean());
+        Assert.Equal(4000, Result(answer).GetProperty("budgetMs").GetInt32());
+    }
+
+    [Fact]
+    public async Task A_run_that_cannot_end_its_session_says_why()
+    {
+        var withoutHost = await StopAsync(endSession: null);
+        var notYet = await StopAsync(() => false);
+
+        Assert.Equal(("unavailable", "unavailable"), (Reason(withoutHost), Reason(notYet)));
+        Assert.Contains("cannot end its run from the devtools", withoutHost.GetProperty("error").GetProperty("message").GetString(), StringComparison.Ordinal);
+        Assert.Contains("still starting, or already ending", notYet.GetProperty("error").GetProperty("message").GetString(), StringComparison.Ordinal);
+    }
+
+    private async Task<JsonElement> StopAsync(Func<bool>? endSession)
+    {
+        var tools = new DevtoolsTools(
+            new DevtoolsContext(_backend.App, Run, "windows", File, new DevtoolsPages(), _log) { EndSession = endSession },
+            new DevtoolsFile(1, Run, DateTimeOffset.UtcNow, "windows", "pipe", "x", "token", "app", ""));
+        var response = await tools.RunAsync(JsonDocument.Parse("1").RootElement, "stop", JsonDocument.Parse("{}").RootElement, CancellationToken.None);
+        return JsonDocument.Parse(response).RootElement;
     }
 
     private static List<(string Source, string Level, string Message)> Entries(JsonElement response) =>

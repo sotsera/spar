@@ -35,6 +35,8 @@ namespace Spar.Tool
             Commands:
               doctor          Check the machine, the Spar app's project and the build's identity.
               init frontend   Wire a Vite frontend into a Spar app, or make one first (--framework react|vue).
+              dev             Build the app's Development build, run it, and rebuild it on spar reload (spar dev --help).
+              reload          Ask the running spar dev to build again and restart the app.
               tree, screenshot, click, fill, wait, contracts, call, calls, logs, version
                               The devtools of the app's running Development build: spar tree --help lists them.
 
@@ -66,6 +68,10 @@ namespace Spar.Tool
                     return DoctorCommand.Run(rest, machine, output, error, version, workingDirectory);
                 case "init":
                     return InitCommand.Run(rest, new InitConsole(output, error, input, interactive), npm, workingDirectory);
+                case "dev":
+                    return Dev.DevCommand.RunDev(rest, output, error, workingDirectory);
+                case "reload":
+                    return Dev.DevCommand.RunReload(rest, output, error, workingDirectory);
                 case var tool when DevtoolsCommand.Tools.Contains(tool):
                     return DevtoolsCommand.Run(tool, rest, output, error, workingDirectory, devtools ?? new RealDevtoolsTransport());
                 default:

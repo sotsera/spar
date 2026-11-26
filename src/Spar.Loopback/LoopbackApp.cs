@@ -331,6 +331,14 @@ internal sealed class LoopbackApp
         if (Spar.Devtools.SparDevtools.IsSupported)
         {
             _devtools = Spar.Devtools.DevtoolsHost.Prepare(builder.Services, "loopback", PagesInBrowser);
+            if (_devtools is { } devtools)
+            {
+                devtools.EndSession = () =>
+                {
+                    _log.Info("The devtools asked the app to stop.");
+                    return _stop.TrySetResult();
+                };
+            }
         }
 
         var running = SparRunningApp.Build(builder.Services, _app.Catalog, folders);

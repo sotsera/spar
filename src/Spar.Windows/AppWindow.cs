@@ -161,6 +161,12 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
         else
         {
+            if (SparDevelopment.IsSupported && WindowPlacement.Kept() is { } kept)
+            {
+                // spar dev's restart: the previous run's place and size; its start shows it without the focus.
+                bounds = kept;
+            }
+
             _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this);
             theme.ApplyTitleBar(_window);
             PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWDEFAULT);

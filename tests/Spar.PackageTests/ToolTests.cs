@@ -139,7 +139,7 @@ public sealed class ToolTests(Consumer consumer) : IDisposable
         var (broken, brokenOutput) = await consumer.DotnetInAsync(folder, "Pages", "build", "-nologo", "-v:m");
         File.Delete(probe);
         Assert.True(broken != 0, brokenOutput);
-        Assert.Contains("probe.ts(1,14): error TS2322", brokenOutput, StringComparison.Ordinal);
+        Assert.Contains("frontend/src/probe.ts(1,14): error TS2322", brokenOutput, StringComparison.Ordinal);
         var (fixedBuild, fixedOutput) = await consumer.DotnetInAsync(folder, "Pages", "build", "-nologo", "-v:m");
         Assert.True(fixedBuild == 0, fixedOutput);
 

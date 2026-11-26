@@ -21,8 +21,12 @@ internal abstract partial class DevtoolsListener : IAsyncDisposable
     /// <summary>The pipe's name or the socket's path.</summary>
     public abstract string Address { get; }
 
-    public static DevtoolsListener Start(string run) =>
-        OperatingSystem.IsWindows() ? new PipeListener() : new UnixListener(run);
+    /// <summary>
+    /// A new socket for <paramref name="run"/>, its name starting with <paramref name="prefix"/>: the devtools', or
+    /// <c>spar-dev-</c> for <c>spar dev</c>'s own (the spar tool links this file).
+    /// </summary>
+    public static DevtoolsListener Start(string run, string prefix = "spar-devtools-") =>
+        OperatingSystem.IsWindows() ? new PipeListener(prefix) : new UnixListener(run, prefix);
 
     /// <summary>The next client's connection; throws <see cref="OperationCanceledException"/> once stopped.</summary>
     public abstract ValueTask<Stream> AcceptAsync(CancellationToken cancellationToken);
@@ -35,7 +39,7 @@ internal abstract partial class DevtoolsListener : IAsyncDisposable
     /// token's owner"). .NET creates every instance with <c>PIPE_REJECT_REMOTE_CLIENTS</c>.
     /// </summary>
     [SupportedOSPlatform("windows")]
-    private sealed class PipeListener : DevtoolsListener
+    private sealed class PipeListener(string prefix) : DevtoolsListener
     {
         private readonly PipeSecurity _security = OwnerOnly();
         private NamedPipeServerStream? _waiting;
@@ -43,7 +47,7 @@ internal abstract partial class DevtoolsListener : IAsyncDisposable
 
         public override string Transport => "pipe";
 
-        public override string Address { get; } = "spar-devtools-" + Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(16));
+        public override string Address { get; } = prefix + Convert.ToHexStringLower(RandomNumberGenerator.GetBytes(16));
 
         public override async ValueTask<Stream> AcceptAsync(CancellationToken cancellationToken)
         {
@@ -103,9 +107,9 @@ internal abstract partial class DevtoolsListener : IAsyncDisposable
         private readonly string? _ownFolder;
         private int _disposed;
 
-        public UnixListener(string run)
+        public UnixListener(string run, string prefix)
         {
-            var name = $"spar-devtools-{Environment.ProcessId}-{run}.sock";
+            var name = $"{prefix}{Environment.ProcessId}-{run}.sock";
             var runtime = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
             if (runtime is { Length: > 0 } && Path.IsPathFullyQualified(runtime) && Directory.Exists(runtime)
                 && Path.Combine(runtime, name).Length <= MaxPath)
@@ -114,8 +118,8 @@ internal abstract partial class DevtoolsListener : IAsyncDisposable
             }
             else
             {
-                _ownFolder = Directory.CreateTempSubdirectory("spar-devtools-").FullName;
-                Address = Path.Combine(_ownFolder, "devtools.sock");
+                _ownFolder = Directory.CreateTempSubdirectory(prefix).FullName;
+                Address = Path.Combine(_ownFolder, "socket");
             }
 
             File.Delete(Address);

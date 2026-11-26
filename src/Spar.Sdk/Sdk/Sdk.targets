@@ -776,13 +776,18 @@
       follow-ups"). Any other config keeps -p ., since build mode would write a tsconfig.tsbuildinfo
       beside it. The referenced configs' own tsBuildInfoFile says where build mode keeps its state.
     -->
+    <!--
+      tsc runs in the project's folder, so the files of its errors are relative to the project, as MSBuild, the IDEs and
+      spar dev read a relative path (from the frontend's folder, src/main.tsx pointed beside the project file).
+    -->
     <PropertyGroup>
       <_SparTsConfig>$(SparFrontendDirectory)tsconfig.json</_SparTsConfig>
-      <_SparTypeCheckArguments>--noEmit -p .</_SparTypeCheckArguments>
-      <_SparTypeCheckArguments Condition="Exists('$(_SparTsConfig)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(_SparTsConfig)')), '&quot;references&quot;\s*:\s*\[\s*\{'))">-b --noEmit</_SparTypeCheckArguments>
+      <_SparFrontendFolder>$([System.IO.Path]::TrimEndingDirectorySeparator('$(SparFrontendDirectory)'))</_SparFrontendFolder>
+      <_SparTypeCheckArguments>--noEmit -p &quot;$(_SparFrontendFolder)&quot;</_SparTypeCheckArguments>
+      <_SparTypeCheckArguments Condition="Exists('$(_SparTsConfig)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(_SparTsConfig)')), '&quot;references&quot;\s*:\s*\[\s*\{'))">-b &quot;$(_SparFrontendFolder)&quot; --noEmit</_SparTypeCheckArguments>
     </PropertyGroup>
 
-    <Exec Command="node node_modules/typescript/bin/tsc $(_SparTypeCheckArguments) --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
+    <Exec Command="node &quot;$(SparFrontendDirectory)node_modules/typescript/bin/tsc&quot; $(_SparTypeCheckArguments) --pretty false" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Touch Files="$(SparTypeCheckStamp)" AlwaysCreate="true" />
   </Target>
 

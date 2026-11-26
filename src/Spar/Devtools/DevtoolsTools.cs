@@ -9,16 +9,20 @@ namespace Spar.Devtools;
 /// The tools (plan section 6): <c>version</c>, <c>contracts</c>, <c>call</c>, <c>calls</c> and <c>logs</c> here, the
 /// page's <c>tree</c>, <c>click</c>, <c>fill</c>, <c>wait</c> and <c>screenshot</c> in <c>PageTools.cs</c>. Each answers
 /// a bounded result; a tool that runs out of time answers <c>timeout</c>, which means unfinished, never failed.
+/// <c>stop</c>, for <c>spar dev</c>, ends the run through the host's session end.
 /// </summary>
 internal sealed partial class DevtoolsTools
 {
-    public static readonly string[] Names = ["version", "contracts", "call", "calls", "logs", "tree", "click", "fill", "wait", "screenshot"];
+    public static readonly string[] Names = ["version", "contracts", "call", "calls", "logs", "tree", "click", "fill", "wait", "screenshot", "stop"];
 
     /// <summary>How long <c>call</c> waits for its command by default; the command keeps running after it.</summary>
     private static readonly TimeSpan CallWait = TimeSpan.FromSeconds(30);
 
     /// <summary>The largest command result <c>call</c> returns in full.</summary>
     private const int MaxValue = 256 * 1024;
+
+    /// <summary>How long a host's session end takes at most (Windows' <c>WM_ENDSESSION</c> hold, Linux's <c>SIGTERM</c>).</summary>
+    private const int SessionEndMilliseconds = 4_000;
 
     private readonly DevtoolsContext _context;
     private readonly DevtoolsFile _file;
@@ -49,6 +53,7 @@ internal sealed partial class DevtoolsTools
                 "fill" => await FillAsync(parameters, cancellationToken),
                 "wait" => await WaitAsync(parameters, cancellationToken),
                 "screenshot" => await ScreenshotAsync(),
+                "stop" => Stop(),
                 _ => throw new DevtoolsError("not_found", $"There is no tool '{name}'. The tools: {string.Join(", ", Names)}.", JsonRpc.MethodNotFound),
             };
             return JsonRpc.Result(id, result);
@@ -94,6 +99,31 @@ internal sealed partial class DevtoolsTools
     };
 
     /// <summary>The catalog's commands and the contract snapshot the build embedded (records, enums and errors included).</summary>
+    /// <summary>
+    /// <c>stop</c> (decision "M2b's decide-first questions", item 3): starts the host's own session end, as Windows'
+    /// <c>WM_ENDSESSION</c> or Linux's <c>SIGTERM</c> would, and answers before it runs; the caller watches the process.
+    /// </summary>
+    private Action<Utf8JsonWriter> Stop()
+    {
+        if (_context.EndSession is not { } end)
+        {
+            throw new DevtoolsError("unavailable", $"The {_context.Host} host cannot end its run from the devtools.");
+        }
+
+        if (!end())
+        {
+            throw new DevtoolsError("unavailable", "The run cannot end its session yet: it is still starting, or already ending.");
+        }
+
+        return writer =>
+        {
+            writer.WriteStartObject();
+            writer.WriteBoolean("stopping", true);
+            writer.WriteNumber("budgetMs", SessionEndMilliseconds);
+            writer.WriteEndObject();
+        };
+    }
+
     private Action<Utf8JsonWriter> Contracts()
     {
         var catalog = _context.Running.Catalog;

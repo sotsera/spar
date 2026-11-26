@@ -99,6 +99,9 @@ internal static class ProductionBoundary
 
         // The devtools (M2a): the socket's name, the resources a Development build embeds, the first request's rule.
         "spar-devtools-", "Spar.Devtools.PageEngine.js", "Spar.Devtools.Contracts", "initialize, with the token",
+
+        // spar dev (M2b): the variable that gives a restarted window the previous one's place, read by the Windows host.
+        "SPAR_DEV_WINDOW",
     ];
 
     /// <summary>

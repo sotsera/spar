@@ -223,6 +223,7 @@ internal sealed class WindowsApp : IAppWindowOwner
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools)
         {
             _window.UseDevtools(devtools);
+            devtools.EndSession = _window.RequestSessionEnd;
         }
 
         if (DevServer.DevServerSettings.IsSupported && _devServer is not null)

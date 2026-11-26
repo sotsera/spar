@@ -115,6 +115,12 @@ public sealed class NotebookBuildTests(Workspace workspace) : IDisposable
         Assert.True(Contains(loopback, "backend-updated", Encoding.Unicode), "The control search missed backend-updated.");
         Assert.True(Contains(runtime, "DevtoolsServer", Encoding.UTF8), "The control search missed DevtoolsServer.");
         Assert.True(Contains(runtime, "spar-devtools-", Encoding.Unicode), "The control search missed spar-devtools-.");
+        if (OperatingSystem.IsWindows())
+        {
+            var windowsOutput = Path.Combine(workspace.Root, "src", "Spar.Windows", "bin");
+            var windowsHost = File.ReadAllBytes(Directory.GetFiles(windowsOutput, "Spar.Windows.dll", SearchOption.AllDirectories)[0]);
+            Assert.True(Contains(windowsHost, "SPAR_DEV_WINDOW", Encoding.Unicode), "The control search missed SPAR_DEV_WINDOW.");
+        }
 
         // The DevTools Protocol in Production: exactly the two calls that keep the page's file picker closed; the
         // control is the Windows host's assembly, whose Development-only input trigger names the Input domain. A Linux

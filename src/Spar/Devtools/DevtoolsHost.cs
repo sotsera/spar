@@ -34,6 +34,9 @@ internal sealed class DevtoolsHost
 
     public DevtoolsLog Log { get; }
 
+    /// <summary>The host's session end, for the <c>stop</c> tool (<see cref="DevtoolsContext.EndSession"/>); set before <see cref="Start"/>.</summary>
+    public Func<bool>? EndSession { get; set; }
+
     /// <summary>
     /// The devtools of this run, or null when the build named no discovery file (a test or a library). Adds the merged
     /// log to <paramref name="services"/>. <paramref name="pagesUnavailable"/> says why a host has no page tools.
@@ -62,7 +65,7 @@ internal sealed class DevtoolsHost
     }
 
     public void Start(SparRunningApp running, string run, ILogger log) =>
-        _server = DevtoolsServer.Start(new DevtoolsContext(running, run, _host, _file, Pages, Log), log);
+        _server = DevtoolsServer.Start(new DevtoolsContext(running, run, _host, _file, Pages, Log) { EndSession = EndSession }, log);
 
     public async ValueTask StopAsync()
     {

@@ -14,7 +14,15 @@ namespace Spar.Devtools;
 /// <param name="DiscoveryFile">The project's <c>obj/spar-devtools.json</c>.</param>
 /// <param name="Pages">Where the page tools find the window's page.</param>
 /// <param name="Log">The merged log the <c>logs</c> tool reads.</param>
-internal sealed record DevtoolsContext(SparRunningApp Running, string Run, string Host, string DiscoveryFile, DevtoolsPages Pages, DevtoolsLog Log);
+internal sealed record DevtoolsContext(SparRunningApp Running, string Run, string Host, string DiscoveryFile, DevtoolsPages Pages, DevtoolsLog Log)
+{
+    /// <summary>
+    /// Starts the host's own session end (the path of Windows' <c>WM_ENDSESSION</c> and Linux's <c>SIGTERM</c>, or
+    /// loopback's Ctrl+C) without waiting for it, for <c>spar dev</c>'s restarts; false when the run cannot end that way
+    /// yet. Null when the host offers none.
+    /// </summary>
+    public Func<bool>? EndSession { get; init; }
+}
 
 /// <summary>
 /// The devtools' endpoint (plan section 6; decisions "M2's decide-first questions" and "M2a's decide-first questions"):

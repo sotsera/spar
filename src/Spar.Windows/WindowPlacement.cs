@@ -23,6 +23,9 @@ internal static unsafe class WindowPlacement
     /// </summary>
     public const WINDOW_EX_STYLE TestExtendedStyle = WINDOW_EX_STYLE.WS_EX_TOOLWINDOW | WINDOW_EX_STYLE.WS_EX_NOACTIVATE;
 
+    /// <summary>The variable <c>spar dev</c> sets on a restart, read by Development builds only (<see cref="Kept"/>).</summary>
+    public const string KeptVariable = "SPAR_DEV_WINDOW";
+
     private const uint DefaultDpi = 96;
 
     /// <summary>Where a test window is shown: far outside every monitor, still shown, so the page renders and takes input.</summary>
@@ -66,6 +69,38 @@ internal static unsafe class WindowPlacement
         var left = work.left + ((work.right - work.left - width) / 2);
         var top = work.top + ((work.bottom - work.top - height) / 2);
         return new RECT { left = left, top = top, right = left + width, bottom = top + height };
+    }
+
+    /// <summary>
+    /// The place and size <c>spar dev</c> kept from the previous run of a Development build, in
+    /// <see cref="KeptVariable"/> as <c>left,top,width,height</c> in physical pixels (decision "M2b's decide-first
+    /// questions", item 4); null when it is not set, not four numbers, too small, or on no monitor now.
+    /// </summary>
+    public static RECT? Kept()
+    {
+        var text = Environment.GetEnvironmentVariable(KeptVariable);
+        var parts = text?.Split(',');
+        if (parts is not { Length: 4 })
+        {
+            return null;
+        }
+
+        var numbers = new int[4];
+        for (var index = 0; index < 4; index++)
+        {
+            if (!int.TryParse(parts[index], System.Globalization.NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out numbers[index]))
+            {
+                return null;
+            }
+        }
+
+        if (numbers[2] < 100 || numbers[3] < 100)
+        {
+            return null;
+        }
+
+        var bounds = new RECT { left = numbers[0], top = numbers[1], right = numbers[0] + numbers[2], bottom = numbers[1] + numbers[3] };
+        return PInvoke.MonitorFromRect(&bounds, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL).IsNull ? null : bounds;
     }
 
     /// <summary><c>WM_GETMINMAXINFO</c>: the smallest window whose client area is <paramref name="minimum"/> at the window's DPI.</summary>
