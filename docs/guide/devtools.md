@@ -13,6 +13,8 @@ dotnet spar tree
 
 The `spar` tool comes with a new app's local tool manifest; run `dotnet tool restore` once first (see [Getting started](getting-started.md), section 8).
 
+To rebuild and restart the app on request, with the build's errors in the answer, run it under [`spar dev`](spar-dev.md); the devtools work against each new run.
+
 ## What they can reach, and what they cannot
 
 - **Only a Development build has them.** A Release build, and so every published app, carries none of their code: the build turns them off and the trimmer removes them. A test project's builds do not have them either.

@@ -4,8 +4,8 @@
 #   MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-24.04 -- bash /mnt/<repo>/docs/evidence/m1c-blackbox/wsl.sh <step>...
 # Steps, in this order: sync client appmodel build test window windowaot devprobe wasmprobe notebookexe windowdev
 # windowdevprobe notebook boundary packagetests; `windowsession` (WSLg's display, after asking the user) is left out of
-# every run, as is `devtoolssmoke` (M2a). `window`, `windowsession` and `windowaot` take xUnit options after them
-# when run alone:
+# every run, as are `devtoolssmoke` (M2a) and `devsmoke` (M2b). `window`, `windowsession` and `windowaot` take xUnit
+# options after them when run alone:
 #   wsl.sh window --filter-class Spar.WindowTests.BlackBoxFixtureTests
 # The working copy is the Windows tree as it is, copied to /var/tmp/spar-m1c-blackbox/repo without bin, obj,
 # node_modules, artifacts and spikes. The Xvfb is the one ../m1c-host/wsl.sh's `tools` step unpacks into
@@ -158,6 +158,27 @@ step() {
       kill "${bus##* }" 2>/dev/null
       kill "$xvfb" 2>/dev/null
       wait "$xvfb" 2>/dev/null
+      rm -rf "$runtime"
+      census ;;
+    devsmoke)
+      # M2b's spar dev (docs/evidence/m2b-spar-dev.md): ../m2b-spar-dev/smoke.sh with the built spar tool against the
+      # Notebook, spar dev --private starting its own Xvfb (the wrapper above, abstract socket only), with a private
+      # D-Bus session, HOME and XDG folders under the copy's artifacts/linux-homes/m2b-spar-dev/ and the runtime folder in
+      # /dev/shm; then the processes left that name the copy's Notebook.
+      local stamp
+      stamp=$(date -u +%Y%m%d-%H%M%S)
+      local home=$repo/artifacts/linux-homes/m2b-spar-dev/$stamp runtime=/dev/shm/spar-m2b-spar-dev-$stamp
+      mkdir -p "$home"/{home,cache,config,data,state} "$runtime"
+      chmod 700 "$runtime"
+      local bus
+      bus=$(dbus-daemon --session --fork --print-address=1 --print-pid=1 | tr '\n' ' ')
+      (
+        export DBUS_SESSION_BUS_ADDRESS=${bus%% *} HOME=$home/home XDG_CACHE_HOME=$home/cache \
+          XDG_CONFIG_HOME=$home/config XDG_DATA_HOME=$home/data XDG_STATE_HOME=$home/state XDG_RUNTIME_DIR=$runtime
+        timed bash "$source_repo/docs/evidence/m2b-spar-dev/smoke.sh" "$repo/samples/Notebook" dotnet "$repo/src/Spar.Tool/bin/Debug/net11.0/Spar.Tool.dll"
+      )
+      echo "# Processes left that name the copy's Notebook: $(pgrep -fc "$repo/samples/Notebook" || true)"
+      kill "${bus##* }" 2>/dev/null
       rm -rf "$runtime"
       census ;;
     windowaot)
