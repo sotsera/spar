@@ -39,6 +39,7 @@ namespace Spar.Tool
               reload          Ask the running spar dev to build again and restart the app.
               snap            Capture scenes of the app: a PNG, the accessibility tree and the calls (spar snap --help).
               mcp             Serve these commands as MCP tools over stdio, for an agent (spar mcp --help).
+              skills          Copy the Spar skills for agents into the app's .agents/skills/ (spar skills --help).
               tree, screenshot, click, fill, wait, contracts, call, calls, logs, version
                               The devtools of the app's running Development build: spar tree --help lists them.
 
@@ -78,6 +79,8 @@ namespace Spar.Tool
                     return Snap.SnapCommand.Run(rest, output, error, workingDirectory);
                 case "mcp":
                     return Mcp.McpCommand.Run(rest, version, output, error, workingDirectory);
+                case "skills":
+                    return Skills.SkillsCommand.Run(rest, output, error, workingDirectory);
                 case var tool when DevtoolsCommand.Tools.Contains(tool):
                     return DevtoolsCommand.Run(tool, rest, output, error, workingDirectory, devtools ?? new RealDevtoolsTransport());
                 default:
