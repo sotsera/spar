@@ -537,6 +537,18 @@ Section 6 (`docs/design/agents.md`): the agent guide in Agent Skills format, shi
 - **One-shot streams are never resumed, and unary commands are never retried.**
 - **A resume cursor** is a later, author-opt-in extension.
 
+#### M3a: streams and subscriptions
+
+Section 2c (`docs/design/bridge.md`) and the table above: `IAsyncEnumerable<T>` and `IAsyncEnumerable<Result<T, TError>>` commands as one-shot streams and `[SparSubscription]` ones as subscriptions, on both hosts and loopback, through the generated dispatch, serializers, TypeScript client and typed C# test clients; credits on every host, in-band failures, the `events` slot, coalescing, resumption at three levels, trace context. Already in place since M1a: the message types (`stream`, `credits`, `items`, `end`, `event`, `failure`, `cancel`) in the codec and the SDK's protocol, with nothing dispatching, generating or serving them. Settled since M0: the drop-oldest subscription buffer with `gap` events, the required `events.reset`, a coalesced subscription's capacity of 1, a pull stream stopping at its next `yield`, `cancelled` only on the backend's confirmation, and no replay.
+
+**Decide first** (drafted 2026-11-27, each with a recommendation; not yet asked):
+1. **The coalesced subscription's name** (left "to settle in M3"). Recommended: `[SparSubscription(LatestOnly = true)]`, which says what the page gets. Not taken: `Coalesce = true`; `Mode = SubscriptionMode.Latest`.
+2. **Flow control's numbers.** Recommended: a stream starts with 256 items of credit, which the page tops up once half is used; items travel in batches of at most 64 items or 64 KB, or what a 16 ms window collected; a subscription's buffer holds 256 items by default (`Capacity`), dropping the oldest with a `gap` that counts them. Each number is measured at the slice's exit against the plan's round-trip budgets. Not taken: one item per message; unbounded subscription buffers.
+3. **When a subscription resumes.** Recommended: when the same document's channel comes back (loopback's reconnect, and the backend's restart under `dotnet watch` or `spar reload` while the page stays), with the table's backoff (250 ms doubling to 5 s) and its 30 s limit, ending `transport` / `lost`; a new document (a reload, a renderer's recovery) starts with no subscriptions, as every call does. Not taken: resuming across documents.
+4. **The typed C# test clients** (plan section 5). Recommended: a stream is `IAsyncEnumerable<Result<T, TError>>` (or of `T`), a subscription an `IAsyncEnumerable` of an item that is a value, a declared error or an event (`Reset`, `Gap(count)`, `Reconnecting`, `Resumed`), and the test host can drop and restore the channel to test resumption. Not taken: subscriptions without events in tests.
+5. **Tracing** (section 6b). Recommended: one span per stream or subscription, from its start to its end, with its item count, drops and resumes as attributes, the page's span its parent as for a call, and no span per item. Not taken: a span per batch.
+6. **The exit's proof.** Recommended: the contracts of `docs/app-model.md` with streams and subscriptions (`copyJobs`, `status`) leave `tests/AppModel/Real`'s exclusions and build through real Spar; the Notebook gains one live feature (pages changed by another window, as a subscription) with its window test; budgets: 20,000 subscription events a second delivered whole, and 100,000 stream rows within the browser test's budget. Not taken: proof through Spar's own tests only.
+
 ### M4: release qualification
 
 - **Production run:** the Sandbox test level (Windows), and a clean-machine Linux run.
