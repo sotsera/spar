@@ -53,6 +53,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         {
             SharedEnvironment = process.EnvironmentAsync,
             PrivateProfile = _profile,
+            BrowserArguments = request.Automation.Viewport is null ? null : "--disable-gpu",
             BeforeFirstNavigation = BeforeFirstNavigationAsync,
             OnPhase = OnPhase,
             ColorSchemeChosen = EmulateSchemeAsync,
@@ -215,23 +216,71 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     /// </summary>
     private async Task BeforeFirstNavigationAsync()
     {
+        var automation = _request.Automation;
         if (_request.Dark is { } dark)
         {
-            var scheme = dark ? "dark" : "light";
-            await CallDevToolsAsync("Emulation.setEmulatedMedia", $$"""{"features":[{"name":"prefers-color-scheme","value":"{{scheme}}"}]}""");
+            await CallDevToolsAsync("Emulation.setEmulatedMedia", MediaFeatures(dark ? "dark" : "light"));
+        }
+        else if (automation.ReducedMotion)
+        {
+            await CallDevToolsAsync("Emulation.setEmulatedMedia", MediaFeatures(null));
         }
 
-        _page = await TestPage.InstallAsync(CallDevToolsAsync, SubscribeAsync, _request.Automation);
+        if (automation.Viewport is { } viewport)
+        {
+            // A scene's page: its size in CSS pixels at a device scale of 1, whatever the monitor's scale.
+            await CallDevToolsAsync(
+                "Emulation.setDeviceMetricsOverride",
+                $$"""{"width":{{viewport.Width}},"height":{{viewport.Height}},"deviceScaleFactor":1,"mobile":false}""");
+        }
+
+        if (automation.PageScript is { } script)
+        {
+            // In the page's own world (no worldName), before the page's scripts, at the start of every document.
+            await CallDevToolsAsync("Page.addScriptToEvaluateOnNewDocument", JsonSource(script));
+        }
+
+        _page = await TestPage.InstallAsync(CallDevToolsAsync, SubscribeAsync, automation);
     }
 
     /// <summary>
     /// The page's own <c>setColorScheme</c> in a test window: the emulated scheme follows the window's scheme after
     /// the choice (the system's for <c>system</c>), so the page's <c>prefers-color-scheme</c> agrees with the window.
     /// </summary>
-    private async Task EmulateSchemeAsync(bool dark)
+    private async Task EmulateSchemeAsync(bool dark) =>
+        await CallDevToolsAsync("Emulation.setEmulatedMedia", MediaFeatures(dark ? "dark" : "light"));
+
+    /// <summary>
+    /// The emulated media features, all in one call (each call replaces the last): the colour scheme when one is given,
+    /// and a scene's <c>prefers-reduced-motion: reduce</c>.
+    /// </summary>
+    private string MediaFeatures(string? scheme)
     {
-        var scheme = dark ? "dark" : "light";
-        await CallDevToolsAsync("Emulation.setEmulatedMedia", $$"""{"features":[{"name":"prefers-color-scheme","value":"{{scheme}}"}]}""");
+        var features = new List<string>(2);
+        if (scheme is not null)
+        {
+            features.Add($$"""{"name":"prefers-color-scheme","value":"{{scheme}}"}""");
+        }
+
+        if (_request.Automation.ReducedMotion)
+        {
+            features.Add("""{"name":"prefers-reduced-motion","value":"reduce"}""");
+        }
+
+        return $$"""{"features":[{{string.Join(',', features)}}]}""";
+    }
+
+    private static string JsonSource(string script)
+    {
+        var buffer = new System.Buffers.ArrayBufferWriter<byte>();
+        using (var writer = new System.Text.Json.Utf8JsonWriter(buffer))
+        {
+            writer.WriteStartObject();
+            writer.WriteString("source", script);
+            writer.WriteEndObject();
+        }
+
+        return System.Text.Encoding.UTF8.GetString(buffer.WrittenSpan);
     }
 
     private void OnPhase(string phase)

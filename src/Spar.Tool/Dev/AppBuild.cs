@@ -26,7 +26,11 @@ internal sealed class AppBuild(IChildProcesses children, string projectFile, str
 
     private readonly string _folder = Path.Combine(Path.GetDirectoryName(projectFile)!, "obj", "spar-dev");
 
-    public async Task<BuildResult> RunAsync(CancellationToken cancellationToken)
+    /// <summary>
+    /// Builds the project, or with <paramref name="build"/> false only reads where its last build put the executable
+    /// (<c>spar snap --no-build</c>), which then must exist.
+    /// </summary>
+    public async Task<BuildResult> RunAsync(CancellationToken cancellationToken, bool build = true)
     {
         Directory.CreateDirectory(_folder);
         var errorsFile = Path.Combine(_folder, "build-errors.log");
@@ -40,7 +44,7 @@ internal sealed class AppBuild(IChildProcesses children, string projectFile, str
         var start = new ChildStart(
             dotnet,
             [
-                "build", projectFile, "-c", "Debug", "-nologo", "-t:Build",
+                "build", projectFile, "-c", "Debug", "-nologo", build ? "-t:Build" : "-t:GetTargetPath", build ? "-restore" : "--no-restore",
                 "-getProperty:RunCommand", "-getProperty:RunArguments", "-getProperty:TargetDir",
                 $"-p:SharedCompilationId=spar-dev-{session}",
                 $"-flp1:LogFile={errorsFile};ErrorsOnly;NoSummary;ForceNoAlign",
@@ -86,6 +90,12 @@ internal sealed class AppBuild(IChildProcesses children, string projectFile, str
         }
 
         var (executable, directory) = exitCode == 0 ? Properties(lines) : (null, null);
+        if (!build && executable is not null && !File.Exists(executable))
+        {
+            diagnostics = [.. diagnostics, new BuildDiagnostic("error", "", $"There is no Debug build at {executable}: build the project, or leave out --no-build.", null, null, null, null)];
+            executable = null;
+        }
+
         return new BuildResult(exitCode == 0 && executable is not null, exitCode, watch.Elapsed, diagnostics, executable, directory);
     }
 

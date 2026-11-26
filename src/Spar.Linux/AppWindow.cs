@@ -107,6 +107,12 @@ internal sealed partial class AppWindow
     /// <summary>The GTK window; 0 before the start and once it is destroyed (loop thread).</summary>
     public nint Handle => _window;
 
+    /// <summary>
+    /// A test window's size from its content (a scene's fixed viewport): the default size goes, so the window is the
+    /// smallest that holds the view's size request and the title bar (loop thread, before it is shown).
+    /// </summary>
+    internal void FitToContent() => Gtk.gtk_window_set_default_size(_window, 1, 1);
+
     /// <summary>The WebKit view; 0 before the start and from the teardown on (loop thread).</summary>
     public nint ViewHandle => _view?.Handle ?? 0;
 

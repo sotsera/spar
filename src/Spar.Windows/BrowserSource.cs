@@ -13,6 +13,13 @@ internal sealed class BrowserSource
     /// <summary>The InPrivate profile's name, unique among the windows open at the same time.</summary>
     public string? PrivateProfile { get; init; }
 
+    /// <summary>
+    /// Browser arguments the test adds to the app's: a scene's <c>--disable-gpu</c>, whose software rendering gives the same
+    /// pixels every run (the GPU's anti-aliased edges differed by one level between runs). Windows with other arguments
+    /// share another environment of the test process.
+    /// </summary>
+    public string? BrowserArguments { get; init; }
+
     /// <summary>Runs before the first navigation, after the host's own calls (the page driver's set-up).</summary>
     public Func<Task>? BeforeFirstNavigation { get; init; }
 

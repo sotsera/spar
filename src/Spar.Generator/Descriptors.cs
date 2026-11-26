@@ -11,6 +11,7 @@ internal static class Descriptors
     private const string Contracts = "Spar.Contracts";
     private const string ProgramShape = "Spar.Program";
     private const string PageSecurity = "Spar.PageSecurity";
+    private const string Scenes = "Spar.Scenes";
 
     /// <summary>The restated descriptors of <see cref="InReferencedAssembly"/>, by ID and message.</summary>
     private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, DiagnosticDescriptor> Referenced = new();
@@ -161,6 +162,24 @@ internal static class Descriptors
         "SPAR106", "The window colours must be constants the build can read",
         "{0}. The build reads the colours of spar.Window(w => w.Background(light, dark)) from Program.cs without running the app, for the page's theme style and its hash in the Content Security Policy.",
         PageSecurity);
+
+    /// <summary>{0}: the method; {1}: what is wrong with it.</summary>
+    public static readonly DiagnosticDescriptor SceneShape = Error(
+        "SPAR110", "A scene is a static method that takes a SparScene and returns Task",
+        "Scene method '{0}' cannot be a scene: {1}. A scene is public static Task Name(SparScene scene), so spar snap and its test can run it.",
+        Scenes);
+
+    /// <summary>{0}: the name.</summary>
+    public static readonly DiagnosticDescriptor SceneName = Error(
+        "SPAR111", "A scene's name is lower case letters, digits and hyphens",
+        "Scene name '{0}' is not lower case letters, digits and single hyphens (such as new-page-dialog): spar snap takes it on the command line and names its folder after it",
+        Scenes);
+
+    /// <summary>{0}: the name.</summary>
+    public static readonly DiagnosticDescriptor SceneDuplicate = Error(
+        "SPAR112", "Two scenes have one name",
+        "Two scenes are named '{0}': spar snap names a scene, so each name is used once in the project",
+        Scenes);
 
     /// <summary>
     /// The same diagnostic about a symbol in a referenced assembly, which has no place in the project: its message

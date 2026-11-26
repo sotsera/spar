@@ -133,6 +133,32 @@ public sealed class SparGenerator : IIncrementalGenerator
 
             output.AddSource("Spar.TestClients.g.cs", TestEmitter.Clients(models));
         });
+
+        // The scenes (SceneEmitter): in a project that references Spar.Testing, the valid [SparScene] methods, by name.
+        var scenes = context.SyntaxProvider.ForAttributeWithMetadataName(
+                SceneAnalysis.Attribute,
+                static (node, _) => node is MethodDeclarationSyntax,
+                static (attributed, _) => SceneAnalysis.Analyze((IMethodSymbol)attributed.TargetSymbol, attributed.Attributes[0]))
+            .Where(static scene => scene is not null)
+            .Collect()
+            .Select(static (found, _) => found
+                .Select(scene => scene!)
+                .GroupBy(scene => scene.Name, System.StringComparer.Ordinal)
+                .Where(group => group.Count() == 1)
+                .Select(group => group.First())
+                .OrderBy(scene => scene.Name, System.StringComparer.Ordinal)
+                .ToEquatable());
+        var sceneHost = context.CompilationProvider.Select(static (compilation, _) =>
+            (Registry: compilation.GetTypeByMetadataName(SceneAnalysis.Registry) is not null,
+             Xunit: compilation.GetTypeByMetadataName("Xunit.FactAttribute") is not null));
+        context.RegisterSourceOutput(scenes.Combine(sceneHost), static (output, input) =>
+        {
+            var (found, host) = input;
+            if (host.Registry)
+            {
+                output.AddSource("Spar.Scenes.g.cs", SceneEmitter.Emit(found, host.Xunit));
+            }
+        });
     }
 
     /// <summary>A tested app from its item's metadata (<c>SparBlackBoxApp</c> and the rest), or null for any other additional file.</summary>

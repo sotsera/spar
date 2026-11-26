@@ -322,7 +322,10 @@ internal sealed partial class BrowserView
     /// <summary>The test process's environment for these browser arguments; the view's reference is its own.</summary>
     private async Task<ICoreWebView2Environment10> SharedEnvironmentAsync()
     {
-        var pointer = await _source!.SharedEnvironment!(_defaults.BrowserArguments);
+        var arguments = _source!.BrowserArguments is { Length: > 0 } extra
+            ? string.IsNullOrEmpty(_defaults.BrowserArguments) ? extra : _defaults.BrowserArguments + " " + extra
+            : _defaults.BrowserArguments;
+        var pointer = await _source.SharedEnvironment!(arguments);
         return Com.Take<ICoreWebView2Environment10>(pointer);
     }
 

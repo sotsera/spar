@@ -1,5 +1,5 @@
 // Stand-ins for the test host's Window surface, page API and close request that docs/app-model.md 6.12 uses, and the
-// black-box fixture of 6.13 (Spar.Testing).
+// black-box fixture of 6.13, and the scenes of 6.15 (Spar.Testing).
 namespace Spar.Testing;
 
 public enum SparTestSurface
@@ -83,6 +83,8 @@ public sealed class SparLocatorAssertions
     public Task ToHaveTextAsync(string expected) => Task.CompletedTask;
 
     public Task ToHaveValueAsync(string expected) => Task.CompletedTask;
+
+    public Task ToBeVisibleAsync() => Task.CompletedTask;
 }
 
 public enum CloseOutcome
@@ -196,4 +198,28 @@ public sealed class SparNativeDialog
     public string Text => "";
 
     public Task PressAsync(string button) => Task.CompletedTask;
+}
+
+// Scenes (6.15).
+[AttributeUsage(AttributeTargets.Method)]
+public sealed class SparSceneAttribute(string name) : Attribute
+{
+    public string Name { get; } = name;
+}
+
+public sealed class SparScene
+{
+    public string Name { get; } = "";
+
+    public DateTimeOffset Time { get; set; }
+
+    public (int Width, int Height) Size { get; set; }
+
+    public CancellationToken CancellationToken { get; }
+
+    public Task<SparTestApp> StartAsync<TApp>(Action<SparTestOptions>? configure = null)
+    {
+        configure?.Invoke(new SparTestOptions());
+        return Task.FromResult(new SparTestApp());
+    }
 }

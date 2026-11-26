@@ -1979,6 +1979,47 @@ export const stopListening = onBackendUpdate((update: BackendUpdate) => {
 - **Contract edits always restart:** an edit that changes what Spar generates for the contracts (a command's name, request, result or limit, a DTO's or an error case's properties, a wire name, the page security in `Program.cs`) is never patched. A Development build's generated code makes such an edit one that Hot Reload cannot apply, so `dotnet watch` rebuilds the app, which regenerates the TypeScript client, and starts it again; in the window the page loads afresh, and on loopback the open page reloads itself (section 4). A command's body is patched as usual.
 - **In page tests,** `spar.backendUpdate({ types })` from `fakeSpar()` sends the event as a Debug host does, and `fakeSpar()` turns the toast back on, as it resets the failure hooks.
 
+### 6.15 Scenes
+
+**Decided** (decision "M2c's decide-first questions"; built in M2c). A scene is a state of the app worth a look, written as C# in the end-to-end test project: a static method marked `[SparScene("name")]` that starts the app through the scene and brings its page to that state, as a window test does. `dotnet spar snap name` captures it into `obj/spar-snap/name/`: `page.png`, the accessibility tree (`tree.txt` and `tree.json`, as `spar tree` shows it), the bridge calls (`calls.json`) and the problems Spar, the page and its console reported (`problems.txt`). `dotnet test` runs every scene as a window test of its own, so a scene that no longer reaches its state fails like any test.
+
+File `SqlTool.EndToEndTests/Scenes.cs`:
+
+```csharp
+using Spar.Testing;
+using static Spar.Testing.SparAssertions;
+
+namespace SqlTool.EndToEndTests;
+
+public static class Scenes
+{
+    // spar snap connections: the list of saved connections.
+    [SparScene("connections")]
+    public static async Task Connections(SparScene scene)
+    {
+        var app = await scene.StartAsync<Program>();
+        await Expect(app.Page.GetByRole(SparRole.List, new() { Name = "Connections" })).ToBeVisibleAsync();
+    }
+
+    // spar snap remove-connection: the question before a connection is removed.
+    [SparScene("remove-connection")]
+    public static async Task RemoveConnection(SparScene scene)
+    {
+        var app = await scene.StartAsync<Program>();
+        await app.Page.GetByRole(SparRole.List, new() { Name = "Connections" })
+            .GetByRole(SparRole.Listitem).Filter(new() { HasText = "Production" })
+            .GetByRole(SparRole.Button, new() { Name = "Remove" }).ClickAsync();
+        await Expect(app.Page.GetByRole(SparRole.Alertdialog)).ToBeVisibleAsync();
+    }
+}
+```
+
+- **The same picture every run** on one machine and OS: the page is 1280 × 800 CSS pixels at a scale of 1 whatever the monitor's (`scene.Size` changes it), in the light theme, rendered in software, with reduced motion; the capture waits until the page has been idle for 200 ms (no bridge call, no animation, fonts loaded), finishes or stops its animations, hides the caret and moves the pointer to a corner. Across machines, or between Windows and Linux, the fonts and rendering differ.
+- **A fixed clock:** the backend's `TimeProvider` and the page's `Date` start at 15 January 2026, 09:30 UTC (`scene.Time` changes it) and run in real time from there, so timers and timeouts work and a page's "edited 5 minutes ago" reads the same every run. Text that counts seconds can still differ between runs.
+- **Options and data:** `scene.StartAsync<Program>(o => o.Services(…))` takes a window test's options, so a scene replaces services or fills data as a test does.
+- **Names:** lower case letters, digits and hyphens, once per project; a scene method is `static`, returns `Task` and takes one `SparScene`. The build reports a scene it cannot run (SPAR110 to SPAR112).
+- **The command:** `dotnet spar snap --list` lists the scenes, `dotnet spar snap name…` or `--all` captures them (`--out` for another folder, `--no-build` to use the last build, `--json`), from the app's folder or the end-to-end project's.
+
 ## 7. Still open in this model
 
 - **Contracts and wire:**

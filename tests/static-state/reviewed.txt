@@ -353,3 +353,14 @@ Spar.Testing | Spar.Testing.SparBlackBoxOptions.LinuxRemoved | readonly | An arr
 Spar.Testing | Spar.Testing.SparBlackBoxOptions.Settable | readonly | An array of constant prefixes, filled once, never written.
 Spar.Testing | Spar.Testing.TestDataRoots.LinuxBlackBoxBase | readonly | A Lazy of the Linux black box's roots folder under artifacts/linux-homes/, computed once, thread-safe; the same for every app in the run by design (each launch takes a root of its own under it).
 Spar.Testing | Spar.Testing.TestDataRoots.Created | readonly | An AsyncLocal holder: each flow (a test of the fixture) sees only the list it set itself, so tests running at once never share it; empty for every app.
+Spar.Testing | Spar.Testing.SceneCapture.IdleLimit | readonly | A TimeSpan constant: how long a scene's capture waits for the page to be idle.
+Spar.Testing | Spar.Testing.SceneCapture.Quiet | readonly | A TimeSpan constant: how long the page must be idle before a scene's capture.
+Spar.Testing | Spar.Testing.SceneCapture.Utf8 | readonly | A UTF-8 encoding without a byte order mark, immutable, for the capture's text files.
+Spar.Testing | Spar.Testing.SparScene.DefaultSize | readonly | A constant pair: a scene's page size unless the scene sets its own.
+Spar.Testing | Spar.Testing.SparScene.DefaultTime | readonly | A DateTimeOffset constant: the instant a scene's clock starts at unless the scene sets its own.
+Spar.Testing | Spar.Testing.SparScenes.Gate | readonly | The lock around the scene registry below.
+Spar.Testing | Spar.Testing.SparScenes.Scenes | readonly | The test project's scenes, filled once by the generated module initializer before any test runs and only read after; every access holds Gate.
+Spar.Generator | Spar.Generator.Descriptors.SceneDuplicate | readonly | An immutable diagnostic descriptor (SPAR112).
+Spar.Generator | Spar.Generator.Descriptors.SceneName | readonly | An immutable diagnostic descriptor (SPAR111).
+Spar.Generator | Spar.Generator.Descriptors.SceneShape | readonly | An immutable diagnostic descriptor (SPAR110).
+Spar.Generator | Spar.Generator.SceneAnalysis.Name | readonly | A compiled regular expression for scene names, immutable and safe to share.

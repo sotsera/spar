@@ -37,6 +37,7 @@ namespace Spar.Tool
               init frontend   Wire a Vite frontend into a Spar app, or make one first (--framework react|vue).
               dev             Build the app's Development build, run it, and rebuild it on spar reload (spar dev --help).
               reload          Ask the running spar dev to build again and restart the app.
+              snap            Capture scenes of the app: a PNG, the accessibility tree and the calls (spar snap --help).
               tree, screenshot, click, fill, wait, contracts, call, calls, logs, version
                               The devtools of the app's running Development build: spar tree --help lists them.
 
@@ -72,6 +73,8 @@ namespace Spar.Tool
                     return Dev.DevCommand.RunDev(rest, output, error, workingDirectory);
                 case "reload":
                     return Dev.DevCommand.RunReload(rest, output, error, workingDirectory);
+                case "snap":
+                    return Snap.SnapCommand.Run(rest, output, error, workingDirectory);
                 case var tool when DevtoolsCommand.Tools.Contains(tool):
                     return DevtoolsCommand.Run(tool, rest, output, error, workingDirectory, devtools ?? new RealDevtoolsTransport());
                 default:

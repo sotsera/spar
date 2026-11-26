@@ -46,6 +46,12 @@ public sealed class SparTestOptions
     /// <summary>Whether <c>StartAsync</c> waits for the window's first page; Spar's host tests that close it earlier do not.</summary>
     internal bool WaitForPage { get; set; } = true;
 
+    /// <summary>A scene's page settings (<see cref="SparScene"/>): its clock script and fixed viewport; null for a test.</summary>
+    internal ScenePage? Scene { get; set; }
+
+    /// <summary>Called with the built app before its window opens (a scene's call recorder).</summary>
+    internal Action<SparRunningApp>? Built { get; set; }
+
     public SparTestSurface Surface { get; set; } = SparTestSurface.None;
 
     /// <summary>
@@ -182,6 +188,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
             AllowedExternals = options.AllowedExternals,
             CreateLog = time => log = new SparTestLog(time),
             Window = window?.Request,
+            Built = options.Built,
         };
 
         var exit = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);

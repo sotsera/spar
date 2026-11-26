@@ -39,8 +39,9 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     public bool Knows(string contract, string command) => catalog.TryGet(contract, command, out _);
 
     /// <summary>
-    /// The devtools' record of recent calls, set by the devtools of a Development build; null everywhere else, and absent
-    /// from any other build (the switch is read at each use, so the trimmer folds it away).
+    /// The record of recent calls, set by the devtools of a Development build and by a scene of the test host (its
+    /// <c>calls.json</c>); null everywhere else, and absent from a Production build (both switches are read at each use,
+    /// so the trimmer folds them away).
     /// </summary>
     internal Devtools.CallRecorder? Recorder { get; set; }
 
@@ -48,9 +49,11 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
         string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken,
         SparCaller caller = SparCaller.Page)
     {
-        var record = Devtools.SparDevtools.IsSupported ? Recorder?.Begin(callId, contract, command, caller) : null;
+        var record = Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported
+            ? Recorder?.Begin(callId, contract, command, caller)
+            : null;
         var outcome = await RunAsync(contract, command, callId, request, caller, cancellationToken);
-        if (Devtools.SparDevtools.IsSupported)
+        if (Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported)
         {
             record?.End(outcome);
         }

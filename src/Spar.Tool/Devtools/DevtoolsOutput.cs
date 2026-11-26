@@ -78,7 +78,7 @@ internal static class DevtoolsOutput
         }
     }
 
-    private static void Tree(TextWriter output, JsonElement result)
+    internal static void Tree(TextWriter output, JsonElement result)
     {
         output.WriteLine($"{Text(result, "title")} — {Text(result, "url")} (document {Shown(result, "document")})");
         foreach (var node in Array(result, "nodes"))

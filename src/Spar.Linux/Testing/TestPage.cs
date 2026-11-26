@@ -111,6 +111,12 @@ internal sealed class TestPage
         }
 
         Connect(content, "script-message-received::" + Handler, (delegate* unmanaged<nint, nint, nint, void>)&OnMessage, self);
+        if (automation.PageScript is { } script)
+        {
+            // A scene's script of the page's own world (its fixed clock), before the page's scripts of every document.
+            AddScript(content, webkit_user_script_new(script, WebKit.InjectTopFrame, WebKit.InjectAtDocumentStart, null, null));
+        }
+
         AddScript(content, WebKit.webkit_user_script_new_for_world(
             automation.EngineScript, WebKit.InjectTopFrame, WebKit.InjectAtDocumentStart, automation.World, null, null));
         AddScript(content, WebKit.webkit_user_script_new_for_world(
