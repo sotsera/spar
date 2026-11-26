@@ -214,6 +214,7 @@ The entries below come from earlier Spar versions. They have not been rechecked 
 - **An inherited stdin stalled `npm install`.** Give child processes a closed, redirected stdin. (earlier version)
 - **Rolldown's optional native packages need optional dependencies installed** (`--include=optional` when they are omitted). (earlier version)
 - **Logs or profiles inside a folder that Vite or `dotnet watch` watches make the watcher react to its own output;** Vite once watched a locked browser cookie database. (earlier version)
+- **`dotnet test` does not run the TypeScript SDK's Vitest suite or the Notebook's page tests,** and some of those tests read files outside `src/Spar.Client`: moving `PageEngine.js` to `src/Spar.Sdk/Sdk/Devtools/` passed every local `dotnet test` run and failed CI's `tests` lanes on `test/pageEngine.test.ts`. After moving or renaming a file, search the TypeScript tests for its path, and run `npm run check` and `npm test` in `src/Spar.Client` and `npm test` in `samples/Notebook/frontend`. (M2a)
 
 ## Windows host (WebView2)
 
