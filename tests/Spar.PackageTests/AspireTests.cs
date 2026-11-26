@@ -11,7 +11,8 @@ namespace Spar.PackageTests;
 /// The telemetry guide's Aspire recipe, from Spar's packages (plan, M2d; decision "M2d's decide-first questions", item
 /// 5): a new app with the guide's package and <c>Program.cs</c> line, an app host with the guide's <c>AppHost.cs</c>,
 /// started headless, and the app's and the page's telemetry read back from the dashboard's own API. On Linux it runs
-/// under a private home and Xvfb; on Windows only in CI, because Aspire's orchestrator keeps its state in the user's
+/// under a private home and Xvfb, on a machine with WebKitGTK 6.0, Xvfb and D-Bus (not the hosted CI runner, which has
+/// none of them); on Windows only in CI, because Aspire's orchestrator keeps its state in the user's
 /// profile (<c>%USERPROFILE%\.dcp</c>), which a developer's run must not touch.
 /// </summary>
 public sealed class AspireTests(Consumer consumer) : IDisposable
@@ -32,6 +33,7 @@ public sealed class AspireTests(Consumer consumer) : IDisposable
         var inCi = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
         Assert.SkipUnless(OperatingSystem.IsLinux() || (OperatingSystem.IsWindows() && inCi),
             "Aspire's orchestrator writes its state to %USERPROFILE%\\.dcp: on Windows this check runs in CI only.");
+        TemplateTests.SkipWithoutLinuxDesktop();
 
         var root = await MakeAppAsync();
         var (built, buildOutput) = await consumer.DotnetInAsync(root, "", "build", $"{App}.AppHost", "-nologo");
