@@ -502,9 +502,31 @@
                         SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
     </ItemGroup>
 
+    <!--
+      The package can be in any folder NuGet restores from: the global one, or a fallback folder (an offline or CI
+      machine's read-only package cache), so the first folder of NuGetPackageFolders that has it wins, and the global
+      folder's path is the one named when none has it.
+    -->
+    <PropertyGroup Condition="'$(SparSourceMode)' != 'true'">
+      <_SparLoopbackRelative>spar.loopback/$(SparSdkVersion.ToLowerInvariant())/lib/$(TargetFramework)/Spar.Loopback.dll</_SparLoopbackRelative>
+    </PropertyGroup>
+
     <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+      <_SparPackageFolder Include="$(NuGetPackageFolders)" />
+      <!-- A plain transform: a property function around %(FullPath) runs before the metadata is substituted. -->
+      <_SparLoopbackCandidate Include="@(_SparPackageFolder->'%(FullPath)/$(_SparLoopbackRelative)')" />
+      <_SparLoopbackCandidate Remove="@(_SparLoopbackCandidate)" Condition="!Exists('%(FullPath)')" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(SparSourceMode)' != 'true'">
+      <!-- One batch per candidate, in order: the first sets it, and the condition keeps it. -->
+      <_SparLoopbackAssembly Condition="'$(_SparLoopbackAssembly)' == ''">%(_SparLoopbackCandidate.FullPath)</_SparLoopbackAssembly>
       <!-- NuGetPackageRoot has no trailing slash when NUGET_PACKAGES sets it without one. -->
-      <Reference Include="$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))spar.loopback\$(SparSdkVersion.ToLowerInvariant())\lib\$(TargetFramework)\Spar.Loopback.dll" Private="true" />
+      <_SparLoopbackAssembly Condition="'$(_SparLoopbackAssembly)' == ''">$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))$(_SparLoopbackRelative)</_SparLoopbackAssembly>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+      <Reference Include="$(_SparLoopbackAssembly)" Private="true" />
     </ItemGroup>
 
     <ItemGroup Condition="'@(FrameworkReference->WithMetadataValue('Identity', 'Microsoft.AspNetCore.App'))' == ''">
