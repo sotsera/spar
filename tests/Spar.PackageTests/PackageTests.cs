@@ -6,7 +6,7 @@ namespace Spar.PackageTests;
 /// The build machinery of an app made from the template, from Spar's packages alone (plan M1a, "the package-only
 /// consumer test"): its first build and fast tests, the packaged analyzer reporting a contract problem at its line,
 /// the SDK's checks of the tested app and the app id, a design-time build that runs no Spar step, the app's NativeAOT
-/// publication, and an update and a downgrade of Spar.Sdk while MSBuild is warm, each building with its own SDK. The
+/// publication, the refused publish of its Development variant, and an update and a downgrade of Spar.Sdk while MSBuild is warm, each building with its own SDK. The
 /// template's tests themselves are <see cref="TemplateTests"/>. Both build the main consumer's folders, so they share
 /// one collection and run one at a time.
 /// </summary>
@@ -159,6 +159,7 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         var (exit, output, executable) = await consumer.PublishedAsync();
 
         Assert.True(exit == 0, output);
+        Assert.DoesNotContain("SPAR140", output, StringComparison.Ordinal);
         var publish = Path.GetDirectoryName(executable)!;
         // The page from frontend/, built by Vite and packed by the SDK's task, is in the executable.
         Assert.True(Contains(File.ReadAllBytes(executable), "SPARFE"u8), "The published executable carries no packed page.");
@@ -178,6 +179,31 @@ public sealed class PackageTests(Consumer consumer) : IDisposable
         // No host for this OS in the build: the executable says so and exits with 3.
         Assert.Equal(3, ran);
         Assert.Contains("no desktop host", said, StringComparison.Ordinal);
+    }
+
+    /// <summary>
+    /// Plan section 3c: the template's app, which treats MSBuild warnings as errors, publishes only its Production
+    /// variant. Its Debug publish fails with SPAR140 and writes nothing; SparAllowNonProductionPublish makes it a
+    /// warning that does not fail the publish. CoreCLR keeps the allowed publish short.
+    /// </summary>
+    [Fact]
+    public async Task A_Debug_publish_fails_unless_the_app_opts_in()
+    {
+        Assert.Equal(0, (await consumer.FirstAsync()).Exit);
+
+        var refusedFolder = Path.Combine(consumer.RunRoot, "publish-debug");
+        var (refused, refusedOutput) = await consumer.DotnetAsync(App, "publish", "-c", "Debug", "-o", refusedFolder, "-nologo");
+        Assert.True(refused != 0, refusedOutput);
+        Assert.Contains("error SPAR140", refusedOutput, StringComparison.Ordinal);
+        Assert.Contains("the app's Development variant (Configuration Debug)", refusedOutput, StringComparison.Ordinal);
+        Assert.False(Directory.Exists(refusedFolder), "The refused publish wrote its folder.");
+
+        var allowedFolder = Path.Combine(consumer.RunRoot, "publish-support");
+        var (allowed, allowedOutput) = await consumer.DotnetAsync(App, "publish", "-c", "Debug", "-o", allowedFolder, "-nologo",
+            "-p:SparAllowNonProductionPublish=true", "-p:PublishAot=false");
+        Assert.True(allowed == 0, allowedOutput);
+        Assert.Contains("warning SPAR140", allowedOutput, StringComparison.Ordinal);
+        Assert.True(File.Exists(Path.Combine(allowedFolder, $"{App}.dll")), "The allowed publish wrote no app.");
     }
 
     [Fact]

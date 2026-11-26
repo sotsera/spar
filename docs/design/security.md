@@ -217,7 +217,7 @@ Built on Windows in M1b step 5 (decisions "Security defaults' public shape" and 
 - **No loopback in Production** (user decision). The desktop host is the only shipped surface.
   - The loopback host is compiled only into development and test variants, like the devtools, and the production boundary test proves it is absent.
   - No real production use was found. Remote use from another machine would be a different product: a web server with TLS and authentication. Revisit only if a real consumer needs it.
-- **Publishing a non-Production variant** is a build error. An explicit property (`SparAllowNonProductionPublish`) turns it into a prominent warning, for example for a support build.
+- **Publishing a non-Production variant** is a build error. An explicit property (`SparAllowNonProductionPublish`) turns it into a prominent warning, for example for a support build. Built after M2e (decision "The non-Production publish guard"): SPAR140, for apps, before `PrepareForPublish`; the opt-out's warning stays a warning under `MSBuildTreatWarningsAsErrors`; test projects' publishes (the NativeAOT lane) are not apps and are not checked.
 - **The devtools lockfile** is readable only by its user: `0600` in `XDG_RUNTIME_DIR` on Linux, the user's temp folder on Windows.
 - **Supply chain:**
   - The build runs `npm ci --ignore-scripts --no-audit`, with a property to allow scripts.

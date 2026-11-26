@@ -195,6 +195,8 @@ dotnet publish Notes -c Release
 
 This builds the page with Vite, packs it into the executable, and publishes one NativeAOT executable for the OS you run it on, in `Notes/bin/Production/Release/net11.0/<runtime>/publish/`: `win-x64/publish/Notes.exe` on Windows, `linux-x64/publish/Notes` on Linux, about 4.7 MB for the new app, beside its debug symbols (`Notes.pdb`, `Notes.dbg`), which you do not ship. NativeAOT does not cross-compile between OSes: publish each OS's executable on that OS, or in a container of it. The executable needs no .NET or Node.js on the user's machine; on Windows it needs the WebView2 Runtime, on Linux GTK 4 and WebKitGTK 6.0.
 
+Only a Release publish is a build you ship. A Debug build carries development code (the development server's connection, the devtools, detailed errors for the page), so `dotnet publish -c Debug` stops with error SPAR140 before it writes anything. For a support build that must never reach users as a release, `-p:SparAllowNonProductionPublish=true` publishes it anyway, with warning SPAR140 in place of the error.
+
 The app can publish differently, each a choice in its own project file: on CoreCLR (framework-dependent, or as a self-contained single file), with NativeAOT while accepting a library's AOT warnings, or with culture data. [Publishing choices](publishing-choices.md) shows each, with Microsoft.Data.SqlClient as a worked example.
 
 ## 8. Check and wire with the spar tool

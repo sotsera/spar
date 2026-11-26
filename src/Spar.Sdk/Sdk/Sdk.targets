@@ -97,6 +97,30 @@
            Text="SparAppId '$(SparAppId)' is not a valid app id: use two or more parts separated by dots, each made of ASCII letters, digits and underscores and not starting with a digit, at most 116 characters in all (with .Development it must fit the 128 characters Windows takes for an app identity), such as com.example.MyApp." />
   </Target>
 
+  <!--
+    An app ships only its Production variant (plan section 3c, "Publishing a non-Production variant"): publishing the
+    Development or Test variant fails with SPAR140, since those carry Spar's development code (the page's failure
+    details, and in Development the devtools, the loopback host and the dev server). SparAllowNonProductionPublish=true
+    turns the error into a warning, for a support build, and keeps it a warning when the app treats MSBuild warnings as
+    errors: the property is the app's explicit choice. The check runs before PrepareForPublish, the first publish step
+    of every publish path (a build first, NoBuild, the optimized NativeAOT path), so nothing reaches the publish folder.
+    Only apps: a test project publishes in its NativeAOT lane, and the app it tests enters that publish as a project
+    reference built in the Test variant, never through the app's own publish (decision "The non-Production publish
+    guard"). The black-box publish of an app is its Production variant.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparVariant)' != 'Production' and '$(SparAllowNonProductionPublish)' == 'true'">
+    <MSBuildWarningsNotAsErrors>$(MSBuildWarningsNotAsErrors);SPAR140</MSBuildWarningsNotAsErrors>
+  </PropertyGroup>
+
+  <Target Name="SparCheckPublishVariant"
+          BeforeTargets="PrepareForPublish"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparVariant)' != 'Production'">
+    <Error Code="SPAR140" File="$(MSBuildProjectFullPath)" Condition="'$(SparAllowNonProductionPublish)' != 'true'"
+           Text="This publish would ship the app's $(SparVariant) variant (Configuration $(Configuration)), which carries Spar's development code. Publish the Production variant instead: -c Release, with no SparVariant set. To publish this variant anyway, for a support build that must never reach users as a release, set SparAllowNonProductionPublish to true." />
+    <Warning Code="SPAR140" File="$(MSBuildProjectFullPath)" Condition="'$(SparAllowNonProductionPublish)' == 'true'"
+             Text="NOT A RELEASE BUILD: this publication is the app's $(SparVariant) variant (Configuration $(Configuration)), published because SparAllowNonProductionPublish is true. It carries Spar's development code; never ship it to users as a release." />
+  </Target>
+
   <!-- Items exist only after properties are evaluated, so the list becomes a property in a target, before it is read. -->
   <Target Name="SparContractAssemblies" BeforeTargets="GenerateMSBuildEditorConfigFileCore;SparWriteClientInventory">
     <PropertyGroup>

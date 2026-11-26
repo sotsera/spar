@@ -8,7 +8,8 @@ namespace Spar.BuildTests;
 /// The console harness (<c>tests/apps/Spar.Harness</c>, plan M1a): the core, meaning the codec, a bridge session,
 /// dispatch and the generated serializers, published as a Production NativeAOT executable with the bridge alive. It
 /// must write exactly what its CoreCLR build writes, stay within its size budget, and carry none of the test host,
-/// the loopback host or the test libraries even though the code around them is kept.
+/// the loopback host or the test libraries even though the code around them is kept. Its other variants must not
+/// publish unless the app opts in.
 /// </summary>
 public sealed class HarnessTests(Workspace workspace) : IDisposable
 {
@@ -89,6 +90,40 @@ public sealed class HarnessTests(Workspace workspace) : IDisposable
         Assert.Equal(native, coreClr);
     }
 
+    /// <summary>
+    /// Plan section 3c: an app publishes only its Production variant. The Development and Test variants fail with
+    /// SPAR140 before anything reaches the publish folder; SparAllowNonProductionPublish turns the error into a
+    /// warning, which stays a warning although this repository treats MSBuild warnings as errors.
+    /// </summary>
+    [Fact]
+    public async Task Publishing_a_non_Production_variant_fails_unless_the_app_opts_in()
+    {
+        var development = Path.Combine(workspace.Publish, "Spar.Harness.Development");
+        var refused = await Dotnet.RunAsync(workspace, "harness-publish-debug", "publish", Harness, "-c", "Debug", "-o", development);
+        Assert.True(refused.Exit != 0, refused.Output);
+        Assert.Contains("error SPAR140", refused.Output, StringComparison.Ordinal);
+        Assert.Contains("the app's Development variant (Configuration Debug)", refused.Output, StringComparison.Ordinal);
+        Assert.Contains("SparAllowNonProductionPublish", refused.Output, StringComparison.Ordinal);
+        Assert.False(Directory.Exists(development), "The refused publish wrote its folder.");
+
+        // An explicit variant is refused as well, in either configuration. CoreCLR keeps these publishes short.
+        var test = Path.Combine(workspace.Publish, "Spar.Harness.Test");
+        var refusedTest = await Dotnet.RunAsync(workspace, "harness-publish-test", "publish", Harness, "-c", "Release",
+            "-p:SparVariant=Test", "-p:PublishAot=false", "-o", test);
+        Assert.True(refusedTest.Exit != 0, refusedTest.Output);
+        Assert.Contains("error SPAR140", refusedTest.Output, StringComparison.Ordinal);
+        Assert.Contains("the app's Test variant (Configuration Release)", refusedTest.Output, StringComparison.Ordinal);
+        Assert.False(Directory.Exists(test), "The refused publish wrote its folder.");
+
+        var allowed = Path.Combine(workspace.Publish, "Spar.Harness.Support");
+        var published = await Dotnet.RunAsync(workspace, "harness-publish-allowed", "publish", Harness, "-c", "Debug",
+            "-p:SparAllowNonProductionPublish=true", "-p:PublishAot=false", "-o", allowed);
+        Assert.True(published.Exit == 0, published.Output);
+        Assert.Contains("warning SPAR140", published.Output, StringComparison.Ordinal);
+        Assert.Contains("NOT A RELEASE BUILD", published.Output, StringComparison.Ordinal);
+        Assert.True(File.Exists(Path.Combine(allowed, "Spar.Harness.dll")), "The allowed publish wrote no app.");
+    }
+
     public void Dispose() => workspace.Report(TestContext.Current.TestState?.Result == TestResult.Passed);
 
     private Task<Runs> RunsAsync() => s_runs ??= BuildAndRunAsync();
@@ -107,6 +142,7 @@ public sealed class HarnessTests(Workspace workspace) : IDisposable
         var publish = Path.Combine(workspace.Publish, "Spar.Harness");
         var published = await Dotnet.RunAsync(workspace, "harness-publish", "publish", Harness, "-c", "Release", "-o", publish);
         Assert.True(published.Exit == 0, published.Output);
+        Assert.DoesNotContain("SPAR140", published.Output, StringComparison.Ordinal);
         var executable = Path.Combine(publish, OperatingSystem.IsWindows() ? "Spar.Harness.exe" : "Spar.Harness");
         var native = await RunAsync(executable, vectors);
 
