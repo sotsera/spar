@@ -13,8 +13,9 @@ internal sealed record SceneCaptureResult(byte[] Png, string Tree, string Calls,
 /// is made still (each animation finished, an endless one paused at its start, the caret transparent, through the
 /// page's own Web Animations and CSSOM, which its Content Security Policy allows), then the capture waits until the
 /// page has been idle for <see cref="Quiet"/> (no bridge call running or just ended, fonts loaded, no animation
-/// running), then takes the PNG of the viewport, the accessibility tree as <c>spar tree</c> reads it, the bridge calls,
-/// and the problems: Spar's warnings and errors for the app, the page's errors and its console messages.
+/// running, no timeout of the page's due within the wait's limit), then takes the PNG of the viewport, the accessibility
+/// tree as <c>spar tree</c> reads it, the bridge calls, and the problems: a page still busy at the wait's limit, Spar's
+/// warnings and errors for the app, the page's errors and its console messages.
 /// </summary>
 internal static class SceneCapture
 {
@@ -30,8 +31,61 @@ internal static class SceneCapture
     private static readonly UTF8Encoding Utf8 = new(encoderShouldEmitUTF8Identifier: false);
 
     /// <summary>
-    /// Makes the page still and answers whether anything still moves: finishes each finite animation, pauses each
-    /// endless one at its start, makes the caret transparent, waits for fonts and two frames.
+    /// The page's half of the idle wait, run at the start of every document in the page's own world, before the page's
+    /// scripts: <c>setTimeout</c> and <c>clearTimeout</c> (and <c>clearInterval</c>, which clears a timeout too) keep
+    /// the time each pending timeout is due, and <c>__sparSceneTimer()</c> answers how many milliseconds the soonest is
+    /// away, or -1 with none. A page that changes itself from a timeout (a layer removed after 400 ms) would otherwise
+    /// be captured before or after the change, depending on when the rest of the page went quiet. Intervals are endless
+    /// and not counted. The timers are the system's; nothing is fast-forwarded.
+    /// </summary>
+    public const string TimerScript = """
+        (() => {
+          const realSet = setTimeout;
+          const realClear = clearTimeout;
+          const realClearInterval = clearInterval;
+          const now = performance.now.bind(performance);
+          const due = new Map();
+          globalThis.setTimeout = function setTimeout(handler, delay, ...args) {
+            if (typeof handler !== "function") {
+              return realSet(handler, delay, ...args);
+            }
+
+            const id = realSet(function (...values) {
+              due.delete(id);
+              return handler.apply(this, values);
+            }, delay, ...args);
+            due.set(id, now() + Math.max(0, Number(delay) || 0));
+            return id;
+          };
+          globalThis.clearTimeout = function clearTimeout(id) {
+            due.delete(id);
+            return realClear(id);
+          };
+          globalThis.clearInterval = function clearInterval(id) {
+            due.delete(id);
+            return realClearInterval(id);
+          };
+          Object.defineProperty(globalThis, "__sparSceneTimer", {
+            value: () => {
+              let soonest = -1;
+              const at = now();
+              for (const time of due.values()) {
+                const left = Math.max(0, time - at);
+                if (soonest < 0 || left < soonest) {
+                  soonest = left;
+                }
+              }
+
+              return soonest;
+            },
+          });
+        })();
+        """;
+
+    /// <summary>
+    /// Makes the page still and answers what still moves: finishes each finite animation, pauses each endless one at
+    /// its start, makes the caret transparent, waits for fonts and two frames, then counts the running animations and
+    /// reads how far away the soonest pending timeout is (-1 with none, or without <see cref="TimerScript"/>).
     /// </summary>
     private const string StillScript = """
         async () => {
@@ -52,7 +106,9 @@ internal static class SceneCapture
 
           await document.fonts.ready;
           await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-          return document.getAnimations().filter(animation => animation.playState === "running").length;
+          const moving = document.getAnimations().filter(animation => animation.playState === "running").length;
+          const timer = typeof globalThis.__sparSceneTimer === "function" ? globalThis.__sparSceneTimer() : -1;
+          return [moving, timer];
         }
         """;
 
@@ -64,12 +120,17 @@ internal static class SceneCapture
 
         // The pointer to the page's bottom-right corner, so the last click's element shows no hover style.
         await page.Mouse.MoveAsync(scene.Size.Width - 1, scene.Size.Height - 1);
-        await WaitForIdleAsync(scene, page, cancellationToken);
+        var notIdle = await WaitForIdleAsync(scene, page, cancellationToken);
 
         var png = await page.ScreenshotAsync();
         var tree = await TreeAsync(page);
         var calls = Calls(scene);
         var problems = new List<string>();
+        if (notIdle is not null)
+        {
+            problems.Add(notIdle);
+        }
+
         problems.AddRange(app.Problems.Select(problem => "app: " + problem));
         problems.AddRange(page.PageErrors.Select(error => "page error: " + error));
         problems.AddRange(page.ConsoleMessages.Select(message => $"console {message.Type}: {message.Text}"));
@@ -87,17 +148,31 @@ internal static class SceneCapture
         await File.WriteAllTextAsync(Path.Combine(folder, "problems.txt"), problems, Utf8);
     }
 
-    private static async Task WaitForIdleAsync(SparScene scene, SparPage page, CancellationToken cancellationToken)
+    /// <summary>
+    /// Waits until the page has been idle for <see cref="Quiet"/>: no animation running, no bridge call running or
+    /// ended within it, and no timeout due before <see cref="IdleLimit"/> runs out (one due later cannot fire before the
+    /// capture). Answers null once idle, or, past the limit, what was still busy, which becomes one of the problems.
+    /// </summary>
+    private static async Task<string?> WaitForIdleAsync(SparScene scene, SparPage page, CancellationToken cancellationToken)
     {
         var started = Stopwatch.GetTimestamp();
         var quietSince = 0L;
+        var busyWith = "";
         while (Stopwatch.GetElapsedTime(started) < IdleLimit)
         {
-            var moving = (await page.EvaluateAsync(StillScript)).GetInt32();
+            var still = await page.EvaluateAsync(StillScript);
+            var moving = still[0].GetInt32();
+            var timer = still[1].GetDouble();
             var calls = scene.Calls;
-            var busy = moving > 0 || (calls is not null && (calls.Running(1) || Stopwatch.GetElapsedTime(calls.LastActivity) < Quiet));
+            var left = (IdleLimit - Stopwatch.GetElapsedTime(started)).TotalMilliseconds;
+            busyWith =
+                moving > 0 ? $"{moving} animation{(moving == 1 ? "" : "s")} running"
+                : calls is not null && calls.Running(1) ? "a bridge call running"
+                : timer >= 0 && timer <= left ? "a timeout pending"
+                : calls is not null && Stopwatch.GetElapsedTime(calls.LastActivity) < Quiet ? "a bridge call just ended"
+                : "";
             var now = Stopwatch.GetTimestamp();
-            if (busy)
+            if (busyWith.Length > 0)
             {
                 quietSince = 0;
             }
@@ -107,11 +182,13 @@ internal static class SceneCapture
             }
             else if (Stopwatch.GetElapsedTime(quietSince, now) >= Quiet)
             {
-                return;
+                return null;
             }
 
             await Task.Delay(50, cancellationToken);
         }
+
+        return $"scene: the page was not idle after {IdleLimit.TotalSeconds:0} s ({(busyWith.Length > 0 ? busyWith : "quiet for less than " + Quiet.TotalMilliseconds + " ms")}); captured as it was";
     }
 
     private static async Task<string> TreeAsync(SparPage page)

@@ -25,6 +25,28 @@ public sealed class SceneTests
         await Expect(app.Page.GetByRole(SparRole.Status)).ToHaveTextAsync("Ready");
     }
 
+    /// <summary>
+    /// The test app's page with a change still to come from a timeout, a second after the scene ends: without anything
+    /// else going on, the capture's idle wait alone would be over before it.
+    /// </summary>
+    [SparScene("pending-timeout")]
+    internal static async Task PendingTimeoutScene(SparScene scene)
+    {
+        await WindowSupport.SkipUnlessSupportedAsync();
+        var app = await scene.StartAsync<Program>();
+        await Expect(app.Page.GetByRole(SparRole.Status)).ToHaveTextAsync("Ready");
+        await app.Page.EvaluateAsync("""() => { setTimeout(() => { const button = document.createElement("button"); button.textContent = "Later"; document.getElementById("late").replaceChildren(button); }, 1000); }""");
+    }
+
+    [Fact]
+    public async Task A_capture_waits_for_the_pages_pending_timeouts()
+    {
+        var capture = await SparScenes.CaptureAsync("pending-timeout", TestContext.Current.CancellationToken);
+
+        Assert.Contains("\"Later\"", capture.Tree, StringComparison.Ordinal);
+        Assert.Empty(capture.Problems);
+    }
+
     [Fact]
     public async Task Two_captures_of_a_scene_are_the_same_bytes_at_its_size()
     {
@@ -34,7 +56,15 @@ public sealed class SceneTests
         var second = await SparScenes.CaptureAsync("window-host", token);
 
         Assert.Equal((SparScene.DefaultSize.Width, SparScene.DefaultSize.Height), Size(first.Png));
-        Assert.True(first.Png.AsSpan().SequenceEqual(second.Png), "The two captures' PNGs differ.");
+        if (!first.Png.AsSpan().SequenceEqual(second.Png))
+        {
+            var folder = Results.Folder(Path.Combine("scenes", $"{DateTime.UtcNow:yyyyMMdd-HHmmss-fff}"));
+            await File.WriteAllBytesAsync(Path.Combine(folder, "first.png"), first.Png, token);
+            await File.WriteAllBytesAsync(Path.Combine(folder, "second.png"), second.Png, token);
+            await File.WriteAllTextAsync(Path.Combine(folder, "first-tree.json"), first.Tree, token);
+            await File.WriteAllTextAsync(Path.Combine(folder, "second-tree.json"), second.Tree, token);
+            Assert.Fail($"The two captures' PNGs differ; both are in {folder}.");
+        }
         Assert.Equal(first.Tree, second.Tree);
         Assert.Empty(first.Problems);
         using var calls = JsonDocument.Parse(first.Calls);

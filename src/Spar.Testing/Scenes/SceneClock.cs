@@ -57,5 +57,8 @@ internal sealed class SceneClock : TimeProvider
     }
 }
 
-/// <summary>A scene's page settings, for the Window surface: the clock script and the fixed viewport.</summary>
+/// <summary>
+/// A scene's page settings, for the Window surface: the page script (the clock's and the capture's timeout tracking)
+/// and the fixed viewport.
+/// </summary>
 internal sealed record ScenePage(string PageScript, (int Width, int Height) Viewport);

@@ -2026,7 +2026,7 @@ public static class Scenes
 }
 ```
 
-- **The same picture every run** on one machine and OS: the page is 1280 × 800 CSS pixels at a scale of 1 whatever the monitor's (`scene.Size` changes it), in the light theme, rendered in software, with reduced motion; the capture waits until the page has been idle for 200 ms (no bridge call, no animation, fonts loaded), finishes or stops its animations, hides the caret and moves the pointer to a corner. Across machines, or between Windows and Linux, the fonts and rendering differ.
+- **The same picture every run** on one machine and OS: the page is 1280 × 800 CSS pixels at a scale of 1 whatever the monitor's (`scene.Size` changes it), in the light theme, rendered in software, with reduced motion; the capture waits until the page has been idle for 200 ms (no bridge call, no animation, no `setTimeout` due within 10 s, fonts loaded), finishes or stops its animations, hides the caret and moves the pointer to a corner. Across machines, or between Windows and Linux, the fonts and rendering differ.
 - **A fixed clock:** the backend's `TimeProvider` and the page's `Date` start at 15 January 2026, 09:30 UTC (`scene.Time` changes it) and run in real time from there, so timers and timeouts work and a page's "edited 5 minutes ago" reads the same every run. Text that counts seconds can still differ between runs.
 - **Options and data:** `scene.StartAsync<Program>(o => o.Services(…))` takes a window test's options, so a scene replaces services or fills data as a test does.
 - **Names:** lower case letters, digits and hyphens, once per project; a scene method is `static`, returns `Task` and takes one `SparScene`. The build reports a scene it cannot run (SPAR110 to SPAR112).

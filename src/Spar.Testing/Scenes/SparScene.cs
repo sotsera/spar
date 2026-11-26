@@ -71,7 +71,7 @@ public sealed class SparScene : IAsyncDisposable
                 options.Surface = SparTestSurface.Window;
                 options.ColorScheme = SparColorScheme.Light;
                 options.Time(clock);
-                options.Scene = new ScenePage(clock.PageScript(), Size);
+                options.Scene = new ScenePage(clock.PageScript() + "\n" + SceneCapture.TimerScript, Size);
                 options.Built = running => running.Dispatcher.Recorder = Calls = new Devtools.CallRecorder(clock);
                 configure?.Invoke(options);
                 options.Surface = SparTestSurface.Window;

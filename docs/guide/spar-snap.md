@@ -55,7 +55,7 @@ On the same computer, a scene gives the same `page.png`, byte for byte, every ti
 
 - **The page** is 1280 × 800 CSS pixels at a scale of 1, whatever the monitor's scale (`scene.Size` changes it), in the light theme, with `prefers-reduced-motion: reduce` on Windows, and rendered without the graphics card, whose anti-aliasing varies slightly between runs.
 - **The clock:** the app's `TimeProvider` and the page's `Date` start at 15 January 2026, 09:30 UTC (`scene.Time` changes it) and then run in real time, so timers and timeouts work and "edited 5 minutes ago" reads the same every run. A label that counts seconds can still differ, since a scene's steps take a little more or less time from one run to the next.
-- **Before the capture,** the pointer moves to the page's bottom-right corner, every animation is finished (an endless one stops at its start), the caret is hidden, and the capture waits until the page has been idle for 200 ms: no command running or just finished, no animation, fonts loaded.
+- **Before the capture,** the pointer moves to the page's bottom-right corner, every animation is finished (an endless one stops at its start), the caret is hidden, and the capture waits until the page has been idle for 200 ms: no command running or just finished, no animation, no `setTimeout` still to fire within 10 s (so a layer the page removes after 400 ms is gone in every capture, and so is a message it hides after 5 s), fonts loaded. A page still busy after 10 s is captured as it is, and `problems.txt` says what was still busy.
 
 On another computer, or between Windows and Linux, the fonts and the rendering differ, so the pictures do too; compare captures made on the same machine.
 

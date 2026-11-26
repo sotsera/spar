@@ -61,3 +61,7 @@ The same sequence (`docs/evidence/m2c-spar-snap/smoke.sh`) from the Notebook's f
 - WebKitGTK with a GPU (WSL's Xvfb renders in software).
 - The generated scene tests in the NativeAOT lane (they are not discovered there, choice 2).
 - CI.
+
+## Addendum (2026-11-26): the window-host scene's intermittent mismatch
+
+`SceneTests.Two_captures_of_a_scene_are_the_same_bytes_at_its_size` differed in 7 of 40 Windows runs. Each time it was the same 2,352 pixels of the test app's "Loading…" layer, which its page removes after 400 ms; the capture's idle wait did not see the pending timeout. The capture now waits for the page's timeouts due within its limit (decision "A scene's capture waits for the page's pending timeouts"). After the change: 30 consecutive Windows runs of the test, then 30 of `SceneTests` (now 3 tests, with `A_capture_waits_for_the_pages_pending_timeouts` and its scene `pending-timeout`), and 10 of `SceneTests` in WSL, all passed. The Notebook's three scenes were the same bytes again, with 0 problems, and `--all --no-build` took 6.7 s; the smoke logs above were not re-run. The test now saves both PNGs and trees under `artifacts/test-results/Spar.WindowTests/scenes/<time>/` when they differ.
