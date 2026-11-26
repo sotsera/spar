@@ -71,9 +71,24 @@ describe("readers", () => {
   test("bytes are padded base64 with no whitespace", () => {
     expect(wire.readBytes("AQID/w==")).toEqual(new Uint8Array([1, 2, 3, 255]));
     expect(wire.readBytes("")).toEqual(new Uint8Array([]));
-    for (const bad of ["AQID/w", "AQ ID", "AQID\n", "AQ==AQ==", 1]) {
+    for (const bad of ["AQID/w", "AQ ID", "AQID\n", "AQ==AQ==", "A===", "AQI*", "AQ=D", 1]) {
       expect(() => wire.readBytes(bad)).toThrow(TypeError);
     }
+  });
+
+  test("a value of several megabytes reads whole", () => {
+    // The binary-data spike's 4 MB result failed as malformed: one regular expression over the base64 gave up.
+    const large = new Uint8Array(6 * 1024 * 1024).map((_, i) => (i * 31) % 256);
+    const read = wire.readBytes(JSON.parse(wire.writeBytes(large)));
+
+    // Compared in a loop: a deep equality over six million items is slower than the decoding it checks.
+    expect(read.length).toBe(large.length);
+    let differences = 0;
+    for (let i = 0; i < large.length; i++) {
+      differences += read[i] === large[i] ? 0 : 1;
+    }
+
+    expect(differences).toBe(0);
   });
 
   test("lists read every item, and null or missing is null", () => {

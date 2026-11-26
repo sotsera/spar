@@ -16,8 +16,28 @@ const canonicalUnsigned = /^(0|[1-9][0-9]{0,19})$/;
 const canonicalDecimal = /^-?(0|[1-9][0-9]*)(\.[0-9]+)?$/;
 const negativeZero = /^-0(\.0+)?$/;
 
-// Padded base64 with no whitespace, as the C# reader accepts it.
-const paddedBase64 = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+/**
+ * Padded base64 with no whitespace, as the C# reader accepts it. A loop rather than one regular expression: a repeated
+ * group over a value of a few megabytes made the engine give up, and every large `byte[]` failed as malformed.
+ */
+function isPaddedBase64(text: string): boolean {
+  if (text.length % 4 !== 0) {
+    return false;
+  }
+
+  const padding = text.endsWith("==") ? 2 : text.endsWith("=") ? 1 : 0;
+  const end = text.length - padding;
+  for (let i = 0; i < end; i++) {
+    const code = text.charCodeAt(i);
+    const letter = (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+    const digit = code >= 48 && code <= 57;
+    if (!letter && !digit && code !== 43 && code !== 47) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 /** A JSON object's own properties, as JSON.parse produced them. */
 export type JsonObject = Readonly<Record<string, unknown>>;
@@ -127,7 +147,7 @@ export function readChar(value: unknown): string {
 
 /** A `byte[]`: padded base64 on the wire. */
 export function readBytes(value: unknown): Uint8Array {
-  if (typeof value !== "string" || !paddedBase64.test(value)) {
+  if (typeof value !== "string" || !isPaddedBase64(value)) {
     throw new TypeError(`Expected padded base64, got ${describe(value)}.`);
   }
 
