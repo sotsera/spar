@@ -486,6 +486,13 @@ Section 6 (`docs/design/agents.md`): the agent guide in Agent Skills format, shi
 8. **How the surviving surface is chosen.** Decided: the higher pass rate wins; within one task (10 points), the one with fewer median tokens; within 10 % of those, the CLI (no client configuration). The loser's code, docs and tests are deleted in M2e, and the result recorded with every run's numbers. Not taken: keeping both.
 9. **Spar's own skills (`.claude/skills/`).** Decided: their evaluations wait for M4 (performance and Sandbox skills come then); M2e evaluates the app-author skills only, each skill on at least 5 stimuli with and without the skill loaded, as dotnet/skills does. Not taken: evaluate every skill now.
 
+**Build** (built 2026-11-26; decisions "M2e: the agent guide, the plugin, the MCP adapter and the evaluation (implementation record; choices for review; 2026-11-26)" and "Both devtools surfaces kept", `docs/evidence/m2e-evaluation.md`, user guide `docs/guide/agents.md`):
+1. **`spar mcp`:** the devtools, `reload`, `snap` and `doctor` as MCP tools over stdio, each running the CLI's own command; opt-in.
+2. **The skills and the plugin:** `spar-app`, `spar-dev-loop`, `spar-testing` and `spar-shipping` in `plugins/spar/`, their code blocks checked excerpts of built code; the marketplace at the root; `spar skills`; the template's `AGENTS.md`.
+3. **The evaluation:** `eng/eval/`, fifteen tasks in two rounds, 135 runs; both surfaces kept.
+
+**Exit:** the skills ship in the plugin and the tool at the SDK's version, with checked examples; the MCP server and the CLI give the same results; the evaluation is recorded with every run's numbers and the surfaces' outcome decided; the user guide is written. (Met 2026-11-26; the skills' own effect is not shown by the evaluation, see the evidence's "Not verified".)
+
 ### M3: communication breadth and the SQL Server tool
 
 - **Streams and subscriptions** on both hosts, on the message kinds M1a defined: credits, in-band failures, the `events` slot, coalescing and resumption (section 2c and the table below), with trace context on them (section 6b).

@@ -117,7 +117,7 @@ stimuli:
     graders:
       - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-native-publish/grade.sh } }
 
-  # Round 2 (decision "M2e's first evaluation round"): tasks whose cause shows only at run time, in the app's own data,
+  # Round 2 (decision "Both devtools surfaces kept"): tasks whose cause shows only at run time, in the app's own data,
   # its logs or its window, described as a user would report them. Run with --tasks and the five names.
   - name: notebook-blank-preview
     prompt: |
