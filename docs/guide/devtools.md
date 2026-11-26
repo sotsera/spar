@@ -84,6 +84,22 @@ The exit code is 0 when the command did what it said, 2 when the app refused it 
 | `unavailable` | The page tools need the app's own window (Loopback). |
 | `invalid` | The request is wrong, for example `spar logs --since yesterday`. |
 
+## From an MCP client
+
+An agent that works through [MCP](https://modelcontextprotocol.io/) tools rather than a shell can reach the same commands through `spar mcp`, an MCP server over standard input and output. Its tools are the commands above, plus `reload` (from [`spar dev`](spar-dev.md)), `snap` and `doctor`; each runs exactly what the `spar` command would, and `screenshot` also returns the image. It is opt-in: configure your MCP client to start it in the app's folder, for example in a project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "spar": { "command": "dotnet", "args": ["spar", "mcp"] }
+  }
+}
+```
+
+The server finds the running Development build the same way the commands do, so start the app first (`dotnet spar dev` in the background, or `dotnet run`). A tool's arguments are the command's options as JSON, for example `{"target": {"role": "button", "name": "Save"}}` for `click`, and a command that fails returns an error result with the command's message.
+
+The command line is the main way in: it needs no configuration and costs an agent nothing until it runs a command, while an MCP client loads every tool's description into each session.
+
 ## For agents and other tools: the protocol
 
 The `spar` commands are one way in. Any program can use the same socket: read `obj/spar-devtools.json` (`transport` is `pipe` or `unix`, `address` the pipe's name or the socket's path, `token` the run's token, `run` the run's id), connect, and send newline-delimited [JSON-RPC 2.0](https://www.jsonrpc.org/specification), one request per line:

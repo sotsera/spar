@@ -853,6 +853,8 @@ See also "Build, MSBuild and packages" for the C# traps found while building the
 
 ## Tooling and environment
 
+- **A folder listed a moment ago can be gone when it is read:** `spar snap`'s search for the end-to-end project read the app's sibling folders, and a parallel test deleted one between the listing and the read (DirectoryNotFoundException on CI's Windows runner). A tool that walks folders it does not own treats a vanished one as empty.
+
 - **A test that starts an app's executable writes into the developer's own profile** unless it moves the per-user folders: once the Windows host existed, the package test's consumer app opened a window and created `%LOCALAPPDATA%\NotesTool` (73 MB) on the developer's machine. Start every app executable from a test with `LOCALAPPDATA` (Windows) or `XDG_*` (Linux) inside the test's own root; the host reads its folders from them.
 
 - **`Task.WhenAny` can return the task that completed second** when both come from `TaskCompletionSource`s made with `RunContinuationsAsynchronously`: it returns the one whose continuation runs first. The test host's start reported "Program.cs returned 70 without calling Run" for an app that did call `Run` and failed to build (1 of 60 NativeAOT runs, 4 of 60 under load), because `Run` completes its start signal and then returns 70. Check the other task's `IsCompleted` before deciding. (`SparTestApp.StartAsync`; found by `sandbox-runner`)

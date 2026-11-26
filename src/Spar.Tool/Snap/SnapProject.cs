@@ -57,18 +57,38 @@ internal static partial class SnapProject
 
         return Directory.GetDirectories(parent)
             .Where(sibling => !Skipped.Contains(Path.GetFileName(sibling), StringComparer.OrdinalIgnoreCase))
-            .SelectMany(sibling => Directory.GetFiles(sibling, "*.csproj"))
+            .SelectMany(ProjectsIn)
             .Where(HasScenes);
+    }
+
+    /// <summary>A folder's project files, or none once it is gone: a sibling can be deleted while the folders are read.</summary>
+    private static string[] ProjectsIn(string folder)
+    {
+        try
+        {
+            return Directory.GetFiles(folder, "*.csproj");
+        }
+        catch (DirectoryNotFoundException)
+        {
+            return [];
+        }
     }
 
     private static bool HasScenes(string project)
     {
-        foreach (var file in SourceFiles(Path.GetDirectoryName(project)!))
+        try
         {
-            if (SceneMark().IsMatch(File.ReadAllText(file)))
+            foreach (var file in SourceFiles(Path.GetDirectoryName(project)!))
             {
-                return true;
+                if (SceneMark().IsMatch(File.ReadAllText(file)))
+                {
+                    return true;
+                }
             }
+        }
+        catch (Exception gone) when (gone is DirectoryNotFoundException or FileNotFoundException)
+        {
+            // The project was deleted while it was read: it has no scenes to capture.
         }
 
         return false;

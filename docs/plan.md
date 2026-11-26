@@ -371,7 +371,7 @@ The biggest risks, each with what retires it. Update the table when a risk is re
 
 ### M2: agent facilities
 
-- Devtools endpoint, `spar dev` with reload, `spar snap`, scenes and `TimeProvider`, the agent guide, and the evaluation. Exactly one interactive surface survives.
+- Devtools endpoint, `spar dev` with reload, `spar snap`, scenes and `TimeProvider`, the agent guide, and the evaluation. Exactly one interactive surface was to survive; after the evaluation both are kept, the CLI primary and MCP opt-in (decision "Both devtools surfaces kept").
 - The optional OpenTelemetry layer, client telemetry through the backend, and the Aspire dev experience.
 - If M1 shows agents need it sooner, a minimal `spar dev` (build plus reload) can move into M1.
 

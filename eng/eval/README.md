@@ -2,7 +2,7 @@
 
 Ten tasks on a Spar app, each run by Claude Code headless in three profiles, to compare how an agent does with plain
 `dotnet`, with the `spar` CLI, and with the `spar` MCP server (plan, M2e; decision "M2e's decide-first questions").
-The surface that loses is deleted.
+Both surfaces were kept: the evaluation could not tell them apart (decision "Both devtools surfaces kept").
 
 ## What is here
 

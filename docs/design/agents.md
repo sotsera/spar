@@ -4,7 +4,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 
 ## 6. Agent facilities
 
-- **Devtools:** an in-process devtools endpoint, only in Development and test builds, enabled per session. A lockfile with a bearer token. One core in C#, with the `spar` CLI and an MCP server as thin adapters over it until the evaluation keeps one; the endpoint is a local socket with an owner-only ACL (a named pipe on Windows, a Unix socket in the app's runtime folder on Linux), never a port. Page input on the developer's desktop is in-process CDP `Input.*` on Windows and the injected DOM script on Linux, each result marked synthetic there (decision "M2's decide-first questions"). Small tools:
+- **Devtools:** an in-process devtools endpoint, only in Development and test builds, enabled per session. A lockfile with a bearer token. One core in C#, with the `spar` CLI and an MCP server (`spar mcp`, opt-in) as thin adapters over it, both kept after the evaluation (decision "Both devtools surfaces kept"); the endpoint is a local socket with an owner-only ACL (a named pipe on Windows, a Unix socket in the app's runtime folder on Linux), never a port. Page input on the developer's desktop is in-process CDP `Input.*` on Windows and the injected DOM script on Linux, each result marked synthetic there (decision "M2's decide-first questions"). Small tools:
   - `tree`, `screenshot`;
   - `click`/`fill`/`waitFor`;
   - `contracts`, `call`, `calls`, `logs`;
@@ -36,7 +36,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - The plugin version follows the SDK version, so a skill never describes an API the installed SDK lacks.
   - Its skills get the same evaluations as the other skills.
 - **Evaluation:** uses the .NET skills `eval.yaml` format (prompts, graders, tokens, time, activation, pass rate).
-  - Profiles compared: plain `dotnet` tools, then `spar` CLI, then `spar` MCP. Only one interactive surface survives. Unused tools are removed.
+  - Profiles compared: plain `dotnet` tools, then `spar` CLI, then `spar` MCP. Only one interactive surface was to survive; the evaluation could not tell them apart, and both are kept, the CLI the one the skills teach and the MCP server opt-in (decision "Both devtools surfaces kept"). Unused tools are removed.
   - The first run: Claude Code headless, 10 tasks on the Notebook and a new app, the 3 profiles, 3 runs each, reporting pass rate, tokens and time.
   - Spar's own skills get evaluations too, and a skill that doesn't help is removed.
 
