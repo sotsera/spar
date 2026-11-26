@@ -3,6 +3,7 @@ using Spar.DevServer;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Runtime;
+using Spar.Telemetry;
 
 namespace Spar.Linux;
 
@@ -38,6 +39,7 @@ internal sealed class SchemeServer
     private readonly ReportLimiter _reports = new();
     private GCHandle _self;
     private DevServerProxy? _devServer;
+    private TelemetryRoute _telemetry = TelemetryRoute.None;
 
     /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
     /// <param name="violations">Where reports go; null when the endpoint does not report in this build.</param>
@@ -66,6 +68,9 @@ internal sealed class SchemeServer
     /// </summary>
     public void UseDevServer(DevServerSession session, SparPageSecurity security) =>
         _devServer = new DevServerProxy(session, security, Origin, _log);
+
+    /// <summary>The app's telemetry route (loop thread, before the first load): its relay when the layer is in the app.</summary>
+    public void UseTelemetry(TelemetryRoute route) => _telemetry = route;
 
     /// <summary>The policy every response carries, once the page is prepared; the host logs it at start.</summary>
     public Task<PagePolicy> Policy => _responder.Policy;
@@ -140,6 +145,13 @@ internal sealed class SchemeServer
         {
             Respond(request, PageResponder.Refusal(403, "Forbidden", "forbidden-origin"));
             _log.Warn($"403 for an address of the scheme outside the app's origin: {Shorten(uri)}");
+            return;
+        }
+
+        var path = PageResponder.PathOf(uri, Origin);
+        if (TelemetryRoute.Matches(path))
+        {
+            AnswerTelemetry(request, path, method);
             return;
         }
 
@@ -301,6 +313,86 @@ internal sealed class SchemeServer
             body, read.Buffer, Asked, GLib.PriorityDefault, 0, &OnReportRead, GCHandle.ToIntPtr(GCHandle.Alloc(read)));
     }
 
+    /// <summary>
+    /// A request to the telemetry routes (<see cref="TelemetryRoute"/>, loop thread): the checks and the configuration are
+    /// answered at once; a traces request is held, its body read asynchronously (the route's limit and one byte), the
+    /// forward run on the thread pool and the request finished back on the loop.
+    /// </summary>
+    private unsafe void AnswerTelemetry(nint request, string path, string method)
+    {
+        var soup = WebKit.webkit_uri_scheme_request_get_http_headers(request);
+        var contentType = soup == 0 ? "" : Marshal.PtrToStringUTF8(WebKit.soup_message_headers_get_one(soup, "Content-Type")) ?? "";
+        if (_telemetry.Check(path, method, contentType) is { } answer)
+        {
+            Respond(request, answer);
+            return;
+        }
+
+        var body = WebKit.webkit_uri_scheme_request_get_http_body(request);
+        if (body == 0)
+        {
+            Respond(request, PageResponder.Refusal(400, "Bad Request", "telemetry-without-body"));
+            return;
+        }
+
+        const int Asked = TelemetryRoute.MaxBody + 1;
+        var read = new TelemetryRead(this, (byte*)NativeMemory.Alloc(Asked), GLib.g_object_ref(request), contentType, _telemetry);
+        GLib.g_input_stream_read_all_async(
+            body, read.Buffer, Asked, GLib.PriorityDefault, 0, &OnTelemetryRead, GCHandle.ToIntPtr(GCHandle.Alloc(read)));
+    }
+
+    [UnmanagedCallersOnly]
+    private static unsafe void OnTelemetryRead(nint stream, nint result, nint data)
+    {
+        var handle = GCHandle.FromIntPtr(data);
+        var read = (TelemetryRead)handle.Target!;
+        handle.Free();
+        using var scope = read.Server._ui.Enter("telemetry read");
+        byte[] body = [];
+        try
+        {
+            nuint count = 0;
+            nint error = 0;
+            var ok = GLib.g_input_stream_read_all_finish(stream, result, &count, &error) != 0;
+            if (error != 0)
+            {
+                GLib.g_error_free(error);
+            }
+
+            body = ok ? new ReadOnlySpan<byte>(read.Buffer, (int)count).ToArray() : [];
+        }
+        finally
+        {
+            NativeMemory.Free(read.Buffer);
+            GLib.g_object_unref(stream);
+        }
+
+        var server = read.Server;
+        _ = Task.Run(() => read.Route.ForwardAsync(body, read.ContentType, CancellationToken.None))
+            .ContinueWith(forwarded => server._ui.Post(() => server.Forwarded(read.Request, forwarded), "telemetry forwarded"), TaskScheduler.Default);
+    }
+
+    private void Forwarded(nint request, Task<PageResponse> forwarded)
+    {
+        try
+        {
+            if (!forwarded.IsCompletedSuccessfully)
+            {
+                _log.Warn($"The page's telemetry could not be forwarded: {forwarded.Exception?.GetBaseException().Message}");
+            }
+
+            Respond(request, forwarded.IsCompletedSuccessfully ? forwarded.Result : PageResponder.Refusal(502, "Bad Gateway", "telemetry-failed"));
+        }
+        catch (Exception exception)
+        {
+            _log.Info($"A telemetry response was not delivered: {exception.Message}");
+        }
+        finally
+        {
+            GLib.g_object_unref(request);
+        }
+    }
+
     private PageResponse Response(string uri, string method) =>
         _responder.Answer(PageResponder.PathOf(uri, Origin), method, notFound => _log.Info($"404 for {Shorten(notFound)}"));
 
@@ -350,5 +442,19 @@ internal sealed class SchemeServer
         public SchemeServer Server { get; } = server;
 
         public byte* Buffer { get; } = buffer;
+    }
+
+    /// <summary>One telemetry request being read: its buffer, the held request, its type and the route that forwards it.</summary>
+    private sealed unsafe class TelemetryRead(SchemeServer server, byte* buffer, nint request, string contentType, TelemetryRoute route)
+    {
+        public SchemeServer Server { get; } = server;
+
+        public byte* Buffer { get; } = buffer;
+
+        public nint Request { get; } = request;
+
+        public string ContentType { get; } = contentType;
+
+        public TelemetryRoute Route { get; } = route;
     }
 }

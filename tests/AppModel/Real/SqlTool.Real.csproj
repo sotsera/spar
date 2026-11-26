@@ -23,4 +23,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Planned\Spar.Planned.csproj" />
   </ItemGroup>
+
+  <!-- The optional OpenTelemetry layer, for spar.Telemetry() in Program.cs (3.18). -->
+  <ItemGroup>
+    <PackageReference Include="Spar.OpenTelemetry" />
+  </ItemGroup>
 </Project>

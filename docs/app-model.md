@@ -187,6 +187,10 @@ var app = SparApplication.Create(args, spar =>
     // these on a user's machine without a new build (3.13). Decided.
     spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
+    // Traces, metrics and logs over OTLP, the page's spans with them, when OTEL_EXPORTER_OTLP_ENDPOINT is set; nothing
+    // otherwise (3.18). Built in M2d.
+    spar.Telemetry();
+
     // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17).
     // Decided. On Linux it also draws without the GPU, which rules a broken graphics driver out (3.17). Built; this use
     // of the option is for review.
@@ -1163,6 +1167,14 @@ Spar logs the exception through the app's `ILogger` (category `Spar.Bridge`), so
 
 An enum travels only when each value has one name: a `[Flags]` enum, two members with one value, and an enum with no members are build errors (SPAR025). A value that is no member, such as `(Priority)7`, fails the call that returns it.
 
+### 3.18 Telemetry
+
+**Decided** (decision "M2d's decide-first questions"; built in M2d, `docs/guide/telemetry.md`). The optional `Spar.OpenTelemetry` package, referenced without a version (it takes the SDK's), and `spar.Telemetry()` in `Program.cs` (section 2) export the app's traces, metrics and logs over OTLP, and the page's spans through the backend, when `OTEL_EXPORTER_OTLP_ENDPOINT` is set at run time; without it nothing is exported and the page loads none of its telemetry code. The build sees the reference and gives the page its module: the page needs no code.
+- **The backend:** each command call's span (`contract/command`, a child of the page's span of the same call), `spar.call.duration`, and every `ILogger` line at the log file's levels; `spar.Telemetry(otel => …)` takes OpenTelemetry's builder for the app's own instrumentation, such as SqlClient's.
+- **The page:** a span for each call it makes, the document's load, and `traced` (6.16); its errors and console messages are already in the backend's logs. Its spans go to `/_spar/otlp/v1/traces` on its own origin and the backend forwards their bytes unchanged, with the endpoint's headers, which the page never sees: protobuf or JSON only, at most 1 MiB a request and 20 requests a second, a 503 for 5 s after the endpoint could not be reached, and a 404 for every `/_spar/otlp/` path without the package or an endpoint (the page's settings request gets an empty 204, so its console shows no failed request).
+- **Settings:** OpenTelemetry's standard variables (`OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_EXPORTER_OTLP_HEADERS`, `OTEL_SERVICE_NAME`, with `-page` for the page, `OTEL_RESOURCE_ATTRIBUTES`, `OTEL_TRACES_SAMPLER`, `OTEL_BSP_SCHEDULE_DELAY`). An Aspire app host sets them for the app it starts, so its dashboard shows both services.
+- **Cost:** the OpenTelemetry SDK and .NET's HTTP client and TLS, about 6 MB of a NativeAOT executable that had no HTTPS before; the page's module, about 18 KB compressed, loads after the page's start.
+
 ## 5. The generated TypeScript
 
 **Decided:** results are opaque; `Call` is a `Promise` subclass (decision "TypeScript SDK: `Call` as a `Promise` subclass, `toStringTag`, Vue augmentation"); and the modules ship as `.js` + `.d.ts` + a `.d.ts.map` into the C# file.
@@ -2019,6 +2031,26 @@ public static class Scenes
 - **Options and data:** `scene.StartAsync<Program>(o => o.Services(…))` takes a window test's options, so a scene replaces services or fills data as a test does.
 - **Names:** lower case letters, digits and hyphens, once per project; a scene method is `static`, returns `Task` and takes one `SparScene`. The build reports a scene it cannot run (SPAR110 to SPAR112).
 - **The command:** `dotnet spar snap --list` lists the scenes, `dotnet spar snap name…` or `--all` captures them (`--out` for another folder, `--no-build` to use the last build, `--json`), from the app's folder or the end-to-end project's.
+
+### 6.16 Grouping calls in a trace
+
+**Decided** (decision "M2d's decide-first questions", item 3; built in M2d). With telemetry on (3.18), every call is a span of the page's, the parent of the backend's span of the same call. `traced(name, run)` makes one span around `run`, and the calls `run` starts before its first `await` become its children, so an interaction reads as one trace. Without telemetry it only runs `run`.
+
+File `frontend/src/planning.ts`:
+
+```ts
+import { traced } from "@spar/app/sdk";
+import { copyJobs, type CopyRecipe } from "@spar/app/copyJobs";
+
+// The "Compare plans" button: both plans in one trace, since both calls start inside `traced`, before any `await`.
+export function comparePlans(first: CopyRecipe, second: CopyRecipe) {
+  return traced("compare plans", () => Promise.all([copyJobs.plan(first), copyJobs.plan(second)]));
+}
+```
+
+- **No context across `await`:** the page has no context propagation (no `zone.js`), so a call started after `run`'s first `await` begins a trace of its own; start the calls first and await them together, as above.
+- **The span ends** when `run` returns, or when the promise it returns settles; a throw or a rejection marks it as an error.
+- **No click spans:** the page records no user interactions by itself; `traced` is how an interaction gets its name.
 
 ## 7. Still open in this model
 

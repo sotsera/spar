@@ -191,7 +191,10 @@ internal sealed partial class AppWindow
             _view.DevtoolsInstall = (view, content) => Devtools.DevtoolsPage.Install(ui, view, content, devtools, engine);
         }
 
-        _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background);
+        // The optional telemetry layer: its routes on the page's origin, and its settings as a script of the page's world.
+        var telemetry = Spar.Telemetry.TelemetryRoute.For(_app.Builder);
+        _pages.UseTelemetry(telemetry);
+        _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background, telemetry.PageScript());
 
         // The heartbeat follows the view's documents from the first one on, before the services exist.
         _watch = LinuxPageHost.Watch(

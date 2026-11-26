@@ -90,6 +90,10 @@ var app = SparApplication.Create(args, spar =>
     // these on a user's machine without a new build (3.13). Decided.
     spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
+    // Traces, metrics and logs over OTLP, the page's spans with them, when OTEL_EXPORTER_OTLP_ENDPOINT is set; nothing
+    // otherwise (3.18). Built in M2d.
+    spar.Telemetry();
+
     // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17).
     // Decided. On Linux it also draws without the GPU, which rules a broken graphics driver out (3.17). Built; this use
     // of the option is for review.

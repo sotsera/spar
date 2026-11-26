@@ -81,6 +81,10 @@ internal static unsafe partial class WebKit
     public static partial nint webkit_user_script_new_for_world(
         string source, int injectedFrames, int injectionTime, string worldName, nint* allowList, nint* blockList);
 
+    /// <summary>A script of the page's own world (the telemetry layer's settings, read by the page's SDK).</summary>
+    [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
+    public static partial nint webkit_user_script_new(string source, int injectedFrames, int injectionTime, nint* allowList, nint* blockList);
+
     /// <summary>The manager takes its own reference.</summary>
     [LibraryImport(Library)]
     public static partial void webkit_user_content_manager_add_script(nint manager, nint script);

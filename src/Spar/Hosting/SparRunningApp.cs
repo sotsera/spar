@@ -36,6 +36,13 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
         RequireImplementations(services, catalog);
         var provider = services.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
         var testLog = createLog?.Invoke(provider.GetService<TimeProvider>() ?? TimeProvider.System);
+
+        // What must run once the services exist, without a generic host to start it (the OpenTelemetry layer's providers).
+        foreach (var startup in provider.GetServices<SparStartup>())
+        {
+            startup.Start(provider);
+        }
+
         return new SparRunningApp(provider, new SparDispatcher(provider, catalog, testLog), catalog, folders);
     }
 
@@ -59,4 +66,14 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
                 $"spar.Services.AddScoped<{shortName}, MyImplementation>().");
         }
     }
+}
+
+/// <summary>
+/// Work that runs once the app's services are built, before the window or the first call (an app has no generic host
+/// to start <c>IHostedService</c>s): the optional OpenTelemetry layer registers one that resolves its providers, which
+/// start their exporters when they are created.
+/// </summary>
+internal sealed class SparStartup(Action<IServiceProvider> start)
+{
+    public void Start(IServiceProvider services) => start(services);
 }

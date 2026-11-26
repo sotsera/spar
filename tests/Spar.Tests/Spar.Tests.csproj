@@ -42,6 +42,12 @@
           CopyToOutputDirectory="PreserveNewest" Condition="'$(PkgMicrosoft_Web_WebView2)' != ''" />
   </ItemGroup>
 
+  <!-- The optional OpenTelemetry layer, for its relay's tests and the static-state test. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.OpenTelemetry\Spar.OpenTelemetry.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
+  </ItemGroup>
+
   <!-- The Linux host, for its unit tests (the relay's literals, the scheme's headers), its host tests and the static-state test. -->
   <ItemGroup>
     <ProjectReference Include="..\..\src\Spar.Linux\Spar.Linux.csproj"

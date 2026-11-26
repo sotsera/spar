@@ -23,6 +23,10 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Configuration" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.64.1" />
+    <!-- The optional OpenTelemetry layer (src/Spar.OpenTelemetry; decision "M2d's decide-first questions"). -->
+    <PackageVersion Include="OpenTelemetry" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.21.0" />
     <!--
       The Windows host (src/Spar.Windows): CsWin32 generates its Win32 declarations; the WebView2 package is used only
       for its loader (static library under NativeAOT, DLL on CoreCLR) and its header, never for its managed API.

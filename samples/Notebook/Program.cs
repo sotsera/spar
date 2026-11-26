@@ -17,6 +17,9 @@ var app = SparApplication.Create(args, spar =>
 
     spar.Services.AddSingleton(TimeProvider.System);
     spar.Services.AddSingleton<IPageStore, MarkdownPageStore>();
+
+    // Off unless OTEL_EXPORTER_OTLP_ENDPOINT is set, as when the Aspire dashboard starts the app.
+    spar.Telemetry();
 });
 
 return app.Run();

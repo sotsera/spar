@@ -100,7 +100,7 @@ internal sealed class BrowserView
     /// settings with their handlers (<see cref="BrowserDefaults"/>), before the view loads anything (loop thread). The
     /// view is not loading yet: the window attaches it first.
     /// </summary>
-    public unsafe void Create(string dataFolder, string cacheFolder, string relay, SparColor background)
+    public unsafe void Create(string dataFolder, string cacheFolder, string relay, SparColor background, string? pageScript = null)
     {
         _self = GCHandle.Alloc(this);
         var self = GCHandle.ToIntPtr(_self);
@@ -134,6 +134,10 @@ internal sealed class BrowserView
             0,
             0);
         AddRelay(relay);
+        if (pageScript is not null)
+        {
+            AddPageScript(pageScript);
+        }
 
         _view = test ? TestViews.NewView(_session, _content, _context) : NewView(_session, _content);
         var context = WebKit.webkit_web_view_get_context(_view);
@@ -422,6 +426,21 @@ internal sealed class BrowserView
             var allow = stackalloc nint[2] { (nint)pattern, 0 };
             var script = WebKit.webkit_user_script_new_for_world(
                 relay, WebKit.InjectTopFrame, WebKit.InjectAtDocumentStart, ScriptBridge.World, allow, null);
+            WebKit.webkit_user_content_manager_add_script(_content, script);
+            WebKit.webkit_user_script_unref(script);
+        }
+    }
+
+    /// <summary>
+    /// A script of the page's own world at document start, in the top frame of the app's origin only: the telemetry
+    /// layer's settings, which the page's SDK reads before it mounts.
+    /// </summary>
+    private unsafe void AddPageScript(string source)
+    {
+        fixed (byte* pattern = "spar://app/*\0"u8)
+        {
+            var allow = stackalloc nint[2] { (nint)pattern, 0 };
+            var script = WebKit.webkit_user_script_new(source, WebKit.InjectTopFrame, WebKit.InjectAtDocumentStart, allow, null);
             WebKit.webkit_user_content_manager_add_script(_content, script);
             WebKit.webkit_user_script_unref(script);
         }

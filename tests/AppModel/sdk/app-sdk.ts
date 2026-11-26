@@ -348,3 +348,9 @@ export const diagnostics: {
 } = {
   collect: options => invoke("spar.diagnostics.collect", {}, options),
 };
+
+/** Stand-in: groups the calls `run` starts under one span when telemetry is on; otherwise only runs `run` (6.16). */
+export function traced<T>(name: string, run: () => T): T {
+  void name;
+  return run();
+}

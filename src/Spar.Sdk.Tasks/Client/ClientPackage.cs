@@ -27,6 +27,12 @@ internal static class ClientPackage
     public const string ThemeFile = "theme.json";
 
     /// <summary>
+    /// Whether the page bundles its telemetry chunk (<c>{"page":true}</c> when the app references Spar.OpenTelemetry), for
+    /// the Vite plugin's <c>import.meta.env.SPAR_TELEMETRY</c>.
+    /// </summary>
+    public const string TelemetryFile = "telemetry.json";
+
+    /// <summary>
     /// Every file of the package, by its path relative to the package folder, with <c>/</c> separators.
     /// <paramref name="sourcePrefix"/> is the way from the package folder to the project
     /// folder (<c>../../../</c> for <c>obj/spar/client</c>), so the declaration maps reach the C# files.
@@ -38,7 +44,8 @@ internal static class ClientPackage
         string sdkVersion,
         string sourcePrefix,
         PageSecurityModel? security = null,
-        WindowColorsModel? colours = null)
+        WindowColorsModel? colours = null,
+        bool pageTelemetry = false)
     {
         var files = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
         void Text(string path, string text) => files[path] = Encoding.UTF8.GetBytes(text);
@@ -83,6 +90,7 @@ internal static class ClientPackage
         Text("package.json", PackageJson(layout, sdkVersion));
         Text(CspFile, CspJson(security));
         Text(ThemeFile, ThemeJson(colours ?? WindowColorsModel.Default));
+        Text(TelemetryFile, pageTelemetry ? "{\"page\":true}\n" : "{\"page\":false}\n");
         return files;
     }
 
@@ -155,7 +163,8 @@ internal static class ClientPackage
     private static string Relative(AbsolutePath directory, string file) => Path.GetRelativePath(directory, file).Replace('\\', '/');
 
     private static bool IsCompiledSdkFile(string path) =>
-        path.EndsWith(".js", StringComparison.Ordinal) || path.EndsWith(".d.ts", StringComparison.Ordinal) || path.EndsWith(".map", StringComparison.Ordinal);
+        path.EndsWith(".js", StringComparison.Ordinal) || path.EndsWith(".d.ts", StringComparison.Ordinal) || path.EndsWith(".map", StringComparison.Ordinal)
+        || path.EndsWith(".md", StringComparison.Ordinal);
 
     private static string PackageJson(ClientLayout layout, string sdkVersion)
     {

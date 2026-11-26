@@ -211,10 +211,19 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             });
         }
 
+        // The optional telemetry layer: its routes on the page's origin, and its settings in the injected script, so the
+        // page loads its telemetry code only when an endpoint is set (section 6b).
+        var telemetry = Spar.Telemetry.TelemetryRoute.For(_app.Builder);
+        pages.UseTelemetry(telemetry);
+
         _ = LogPolicyAsync(pages);
         var guard = new PageGuard(_log, security, _app.Builder.BrowserOptions.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, _app.Builder.BrowserOptions, development, _automated);
         var script = PageScript.Text(_listenerReports);
+        if (telemetry.PageScript() is { } settings)
+        {
+            script += "\n" + settings;
+        }
         _view = new BrowserView(
             ui, _log, _window, _profile, defaults, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed, _source);
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools

@@ -72,6 +72,9 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
     /// <summary>The app's project file, where a problem with no place in the source is reported.</summary>
     public string ProjectFile { get; set; } = "";
 
+    /// <summary>Whether the page bundles its telemetry chunk: <c>true</c> when the app references Spar.OpenTelemetry.</summary>
+    public bool PageTelemetry { get; set; }
+
     public override bool Execute()
     {
         var project = TaskEnvironment.GetAbsolutePath(ProjectDirectory);
@@ -111,7 +114,7 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
         var output = TaskEnvironment.GetAbsolutePath(OutputDirectory);
         Directory.CreateDirectory(output);
         var sourcePrefix = Path.GetRelativePath(output, project).Replace('\\', '/') + "/";
-        var files = ClientPackage.Files(layout, sdk, sdkSources, SdkVersion, sourcePrefix, read.PageSecurity, read.WindowColors);
+        var files = ClientPackage.Files(layout, sdk, sdkSources, SdkVersion, sourcePrefix, read.PageSecurity, read.WindowColors, PageTelemetry);
         // The app's variants build at the same time and share this folder, which the frontend's package.json names.
         var leasePath = new AbsolutePath(Path.TrimEndingDirectorySeparator(output.Value) + ".lease");
         using var lease = FileLease.Acquire(leasePath, Log, "Spar: waiting for another build to finish writing the client.");

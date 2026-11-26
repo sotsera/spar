@@ -14,8 +14,11 @@ internal static class ProductionBoundary
 {
     private static readonly string[] Types =
     [
-        "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackHost", "LoopbackChannel", "LoopbackAssets",
-        "Spar.Loopback", "Spar.Testing", "Microsoft.AspNetCore.Server.Kestrel", "DevelopmentTriggers",
+        // Not "LoopbackHost", "Spar.Loopback" or "Spar.Testing" since M2d: an app with the OpenTelemetry layer carries
+        // System.Uri's own LoopbackHost flag, and the metadata of Spar.dll's InternalsVisibleTo attributes, which name
+        // both assemblies (decision "M2d: the optional OpenTelemetry layer…", choice 15). The names below find their code.
+        "SparTestSession", "SparTestApp", "ISparEntryPoint", "LoopbackChannel", "LoopbackAssets",
+        "Microsoft.AspNetCore.Server.Kestrel", "DevelopmentTriggers",
         "UiStallProbe", "PageSecurityMismatch", "CspAdvice", "DevelopmentInput", "DevelopmentConsole",
 
         // The Window surface (M1b step 8a): the host's test-only part, the test host's interfaces to it, and the page
@@ -43,9 +46,10 @@ internal static class ProductionBoundary
         "AtSpiAutomation", "AtSpiBus", "LinuxAppProcess", "LinuxDesktop",
 
         // A Debug build's development server (M1d step 1): the session, its launcher, the output it reads, the record it
-        // finds, the proxy and the error page, and the WebView2 request headers only the proxy reads.
+        // finds, the proxy and the error page. Not the WebView2 request headers since M2d: the telemetry route reads a
+        // request's Content-Type in Production too.
         "DevServerSession", "DevServerLauncher", "DevServerOutput", "DevServerState", "DevServerProxy", "DevErrorPage",
-        "DevServerOutcome", "ICoreWebView2HttpRequestHeaders",
+        "DevServerOutcome",
 
         // Loopback in the development loop (M1d step 2): the host Spar.Sdk adds to Development builds only, its run, its
         // dev session and the browser opener.

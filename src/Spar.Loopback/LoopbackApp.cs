@@ -161,6 +161,7 @@ internal sealed class LoopbackApp
             HostLog = _log,
             IncludeDetails = development,
             Security = security,
+            Telemetry = Spar.Telemetry.TelemetryRoute.For(_app.Builder),
             ScriptHashes = frontend is null ? [] : PageHtml.ImportMapHashes(frontend),
             StyleHashes = frontend is null ? [] : PageHtml.StyleHashes(frontend),
             DataRoot = running.Folders.DataRoot,

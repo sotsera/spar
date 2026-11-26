@@ -18,11 +18,17 @@ public sealed class SparBlackBoxOptions
         "DESKTOP_STARTUP_ID", "XDG_CURRENT_DESKTOP", "XDG_SESSION_TYPE", "XDG_SESSION_DESKTOP",
     ];
 
-    /// <summary>The variable prefixes the app never gets: the browser's overrides and Spar's own switches.</summary>
-    internal static readonly string[] RemovedPrefixes = OperatingSystem.IsLinux() ? ["WEBKIT_", "JSC_", "SPAR_"] : ["WEBVIEW2_", "SPAR_"];
+    /// <summary>
+    /// The variable prefixes the app never gets: the browser's overrides, Spar's own switches, and OpenTelemetry's, so a
+    /// developer's OTLP settings never send a test's telemetry anywhere.
+    /// </summary>
+    internal static readonly string[] RemovedPrefixes = OperatingSystem.IsLinux() ? ["WEBKIT_", "JSC_", "SPAR_", "OTEL_"] : ["WEBVIEW2_", "SPAR_", "OTEL_"];
 
-    /// <summary>The removed prefixes a test may still set: on Linux the engine's, whose filtering by the host is what Spar's tests check.</summary>
-    private static readonly string[] Settable = OperatingSystem.IsLinux() ? ["WEBKIT_", "JSC_"] : [];
+    /// <summary>
+    /// The removed prefixes a test may still set: on Linux the engine's, whose filtering by the host is what Spar's tests
+    /// check, and OpenTelemetry's, for a test's own OTLP endpoint.
+    /// </summary>
+    private static readonly string[] Settable = OperatingSystem.IsLinux() ? ["WEBKIT_", "JSC_", "OTEL_"] : ["OTEL_"];
 
     /// <summary>The app's command-line arguments, each passed as one argument.</summary>
     public IList<string> Arguments { get; } = [];

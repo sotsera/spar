@@ -89,6 +89,7 @@ Spar | Spar.Hosting.PagePolicy.Declarable | readonly | Feature name to Permissio
 Spar | Spar.Hosting.PageSecurityMismatch.Differs | readonly | A log message delegate, as above.
 Spar | Spar.Hosting.PageSecuritySetup.Overrides | readonly | A log message delegate, as above.
 Spar | Spar.Runtime.SparPageSecurity.<Default>k__BackingField | readonly | The strict default declaration, an object with init-only properties: never changed.
+Spar | Spar.Telemetry.TelemetryRoute.<None>k__BackingField | readonly | The route without the layer: no relay, so it answers 404 and never reaches its rate limiter.
 
 # Spar.Windows (the Windows host, in Windows apps)
 # The COM source generator's per-interface data: each interface's IID and its vtable of stubs, built from constants.
@@ -219,6 +220,9 @@ Spar.Linux | Spar.Linux.Testing.XInput.NamedKeysyms | readonly | A frozen dictio
 Spar.Linux | Spar.Linux.Testing.XInput.PunctuationCodes | readonly | A frozen dictionary of constant DOM codes to characters, filled once, never written.
 Spar.Linux | Spar.Linux.WindowTheme.s_fixed | writable | A counter changed only with Interlocked.Increment, so each test window's fixed theme gets a CSS class of its own; only WindowTheme.Fixed, which the test host alone calls, changes it.
 Spar.Linux | Spar.Linux.Devtools.DevtoolsPage.Again | readonly | A TimeSpan constant: how often a devtools request that found no document yet is sent again.
+
+# Spar.OpenTelemetry (the optional OpenTelemetry layer, in apps that reference it)
+Spar.OpenTelemetry | Spar.OpenTelemetry.OtlpRelay.Pause | readonly | A TimeSpan constant: how long the relay answers 503 at once after a failure.
 
 # Spar.Loopback (test and development variants only)
 Spar.Loopback | Spar.Loopback.LoopbackApp.PortWait | readonly | A TimeSpan constant.

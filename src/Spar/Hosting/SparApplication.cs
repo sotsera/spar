@@ -82,6 +82,12 @@ public sealed class SparBuilder
     /// <summary>The log file's levels as <c>Program.cs</c> set them.</summary>
     internal LoggingOptions LoggingOptions { get; } = new();
 
+    /// <summary>
+    /// The optional OpenTelemetry layer's relay, set by <c>Spar.OpenTelemetry</c>'s <c>spar.Telemetry(…)</c> while
+    /// <c>Program.cs</c> configures the app, so a host knows before the first navigation whether the page's telemetry is on.
+    /// </summary>
+    internal Telemetry.ITelemetryRelay? TelemetryRelay { get; set; }
+
     /// <summary>The browser's strict defaults the app opted out of (plan section 3c).</summary>
     internal BrowserOptions BrowserOptions { get; } = new();
 
