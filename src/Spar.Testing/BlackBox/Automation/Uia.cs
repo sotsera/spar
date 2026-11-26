@@ -53,10 +53,20 @@ internal sealed class Uia
         }
     }
 
+    /// <summary>The client object, for the calls this class does not wrap (event registrations).</summary>
+    public IUIAutomation Automation => _automation;
+
     /// <summary>The desktop the thread is on: its children are the top-level windows there.</summary>
     public UiaElement Root() => Element(_automation.GetRootElement())!;
 
     public UiaElement? FromHandle(nint window) => Element(_automation.ElementFromHandle(window));
+
+    /// <summary>An element whose reference the caller keeps (it takes one of the call's own), valid until the call returns.</summary>
+    public UiaElement Borrow(nint element)
+    {
+        Marshal.AddRef(element);
+        return Element(element)!;
+    }
 
     public nint True() => Keep(_automation.CreateTrueCondition());
 

@@ -34,17 +34,8 @@ public sealed class TelemetryTests
             {
                 // The page's telemetry loads after its start: wait for its first span before the call it should trace.
                 await receiver.WaitForSpansAsync(s => s.Any(span => span.Service == PageService), TimeSpan.FromSeconds(20), Token);
-                // An invoke right after the button appears can be lost before the page's accessibility tree has caught up
-                // (pitfalls, "Windows host"): invoke again until the call is made, and say how many it took.
-                var invokes = 0;
-                do
-                {
-                    invokes++;
-                    await app.Window.GetByRole(SparRole.Button, new() { Name = "Welcome" }).InvokeAsync();
-                }
-                while (!HasLinkedGet(await receiver.WaitForSpansAsync(HasLinkedGet, TimeSpan.FromSeconds(5), Token)) && invokes < 4);
-
-                TestContext.Current.TestOutputHelper?.WriteLine($"Invokes until the call: {invokes}");
+                await app.Window.GetByRole(SparRole.Button, new() { Name = "Welcome" }).InvokeAsync();
+                await receiver.WaitForSpansAsync(HasLinkedGet, TimeSpan.FromSeconds(10), Token);
                 Assert.Equal(0, await app.CloseAsync(Token));
                 Assert.True(await app.WaitForProcessTreeExitAsync(), $"Processes left: {string.Join(", ", app.ProcessIds)}");
             }

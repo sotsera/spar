@@ -19,6 +19,8 @@ internal sealed partial class AutomationHost : IBlackBoxAutomation
     /// <summary>How long one UI Automation call may take before the fixture stops waiting for it.</summary>
     public static readonly TimeSpan CallLimit = TimeSpan.FromSeconds(10);
 
+    private static readonly ElementTarget PageDocument = new(BlackBoxQuery.ByRole(SparRole.Document, null), null);
+
     private static readonly Lock Gate = new();
     private static AutomationHost? s_hidden;
     private static AutomationHost? s_shared;
@@ -34,6 +36,13 @@ internal sealed partial class AutomationHost : IBlackBoxAutomation
     }
 
     public string? Desktop => _desktop?.Name;
+
+    /// <summary>
+    /// Invokes sent 16 to 83 ms after the page's document first appeared were lost in 5 of 30 measured launches, none
+    /// sent 150 ms or more after it (36 launches); the wait keeps several times that margin. The Invoked event still
+    /// confirms every invoke.
+    /// </summary>
+    public TimeSpan PageSettleTime { get; } = TimeSpan.FromMilliseconds(500);
 
     /// <summary>The host for <paramref name="placement"/>, created at its first use.</summary>
     public static AutomationHost For(SparBlackBoxPlacement placement)
@@ -51,6 +60,10 @@ internal sealed partial class AutomationHost : IBlackBoxAutomation
 
     public Task<string?> TitleAsync(int processId, CancellationToken cancellationToken = default) =>
         RunAsync(uia => MainWindow(uia, processId)?.Name, cancellationToken);
+
+    /// <summary>Whether the main window holds the page's document element (Chromium's, with the ARIA role <c>document</c>).</summary>
+    public Task<bool> HasPageAsync(int processId, CancellationToken cancellationToken = default) =>
+        RunAsync(uia => Resolve(uia, processId, PageDocument).Count > 0, cancellationToken);
 
     public Task<IReadOnlyList<FoundElement>> FindAsync(int processId, ElementTarget target, CancellationToken cancellationToken = default) =>
         RunAsync<IReadOnlyList<FoundElement>>(
@@ -71,8 +84,20 @@ internal sealed partial class AutomationHost : IBlackBoxAutomation
                     return new ElementOutcome(ElementStatus.Unsupported, "UI Automation's Invoke pattern");
                 }
 
-                invoke.Invoke();
-                return new ElementOutcome(ElementStatus.Done);
+                // A page element (one with an ARIA role) confirms the invoke with UI Automation's Invoked event, registered
+                // before it; a native element is not waited for.
+                var confirmation = element.AriaRole.Length > 0 ? InvokeConfirmation.Register(uia, element, this) : null;
+                try
+                {
+                    invoke.Invoke();
+                }
+                catch
+                {
+                    confirmation?.Remove(uia);
+                    throw;
+                }
+
+                return new ElementOutcome(ElementStatus.Done, Confirmation: confirmation);
             }),
             cancellationToken);
 
@@ -138,6 +163,20 @@ internal sealed partial class AutomationHost : IBlackBoxAutomation
                 return true;
             },
             cancellationToken);
+
+    /// <summary>Whether an invoke's element has left the tree, read on the UI Automation thread.</summary>
+    internal Task<bool> IsGoneAsync(InvokeConfirmation confirmation) =>
+        RunAsync(confirmation.IsGone, CancellationToken.None);
+
+    /// <summary>Removes an invoke's confirmation, on the UI Automation thread.</summary>
+    internal Task RemoveAsync(InvokeConfirmation confirmation) =>
+        RunAsync(
+            uia =>
+            {
+                confirmation.Remove(uia);
+                return true;
+            },
+            CancellationToken.None);
 
     /// <summary>The app's main window: its first visible top-level window that is neither a dialog nor owned.</summary>
     private static UiaElement? MainWindow(Uia uia, int processId)
