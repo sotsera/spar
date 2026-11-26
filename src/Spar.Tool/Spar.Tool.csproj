@@ -21,7 +21,7 @@
     <ToolCommandName>spar</ToolCommandName>
     <PackageId>Spar.Tool</PackageId>
     <Title>Spar tool</Title>
-    <Description>The spar command for Spar desktop apps: spar doctor checks the machine, the project and the build's identity; spar init frontend wires a Vite frontend into an app.</Description>
+    <Description>The spar command for Spar desktop apps: spar doctor checks the machine, the project and the build's identity; spar init frontend wires a Vite frontend into an app; spar dev and spar reload build and restart a Development build; spar tree, click, call and the other devtools look at and drive it; spar snap captures the scenes of its end-to-end tests.</Description>
     <PackageTags>spar;desktop;dotnet-tool</PackageTags>
   </PropertyGroup>
 
@@ -38,6 +38,35 @@
   <ItemGroup>
     <Compile Include="..\Spar\Runtime\BuildIdentity.cs" Link="Identity\BuildIdentity.cs" />
     <Compile Include="..\Spar.Sdk.Tasks\FrontendInstallState.cs" Link="Project\FrontendInstallState.cs" />
+    <Compile Include="..\Spar\Devtools\DevtoolsListener.cs" Link="Dev\Shared\DevtoolsListener.cs" />
+    <Compile Include="..\Spar\Devtools\JsonRpc.cs" Link="Dev\Shared\JsonRpc.cs" />
+    <Compile Include="..\Spar\Hosting\OwnerOnlyFile.cs" Link="Dev\Shared\OwnerOnlyFile.cs" />
+    <Compile Include="..\Spar.Testing\BlackBox\CommandLine.cs" Link="Dev\Shared\CommandLine.cs" />
+  </ItemGroup>
+
+  <!--
+    spar dev (plan, M2b) on Windows: the job object every process it starts joins at creation, and the private desktop
+    of the private option, through CsWin32, as the black-box fixture does.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    spar mcp (plan, M2e): the devtools, reload, snap and doctor as MCP tools over stdio, through the official SDK's
+    low-level server, the tools registered by hand.
+  -->
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol.Core" />
+  </ItemGroup>
+
+  <!--
+    spar skills (plan, M2e): the app-author skills of the plugin (plugins/spar/skills), beside the tool in its package,
+    so the skills an app copies are the tool's own version.
+  -->
+  <ItemGroup>
+    <None Include="..\..\plugins\spar\skills\**\*" Link="skills\%(RecursiveDir)%(Filename)%(Extension)"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" />
   </ItemGroup>
 
   <ItemGroup>

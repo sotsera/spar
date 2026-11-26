@@ -1,8 +1,8 @@
 <Project Sdk="Spar.Sdk">
   <!--
-    The document's window and black-box tests (docs/app-model.md 6.12, 6.13) built by real Spar: Spar.Sdk's test project,
-    the real test host, page API and black-box fixture, and the document's app (../Real) in the Test variant. Compiled
-    only: the document's app has no page.
+    The document's window and black-box tests and scenes (docs/app-model.md 6.12, 6.13, 6.15) built by real Spar:
+    Spar.Sdk's test project, the real test host, page API, scenes and black-box fixture, and the document's app (../Real)
+    in the Test variant. Compiled only: the document's app has no page.
   -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -22,5 +22,6 @@
     <Compile Include="..\SqlTool.EndToEndTests\ConnectionsWindowTests.cs" Link="ConnectionsWindowTests.cs" />
     <Compile Include="..\SqlTool.EndToEndTests\ClosingWindowTests.cs" Link="ClosingWindowTests.cs" />
     <Compile Include="..\SqlTool.EndToEndTests\BlackBoxTests.cs" Link="BlackBoxTests.cs" />
+    <Compile Include="..\SqlTool.EndToEndTests\Scenes.cs" Link="Scenes.cs" />
   </ItemGroup>
 </Project>

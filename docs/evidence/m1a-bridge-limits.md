@@ -2,7 +2,7 @@
 
 Recorded 2026-11-15. What it shows: each document's bridge refuses an oversized call by its id before reading its payload, runs a bounded number of commands with a bounded FIFO queue behind them, fails an oversized result alone, and turns an exception into a correlation id for the page and a log entry for the app. Decisions: "Bridge limits, admission and exception redaction: the behaviour" and "Bridge limits built".
 
-## Measurements (`spikes/bridge-limits`, Windows 11, .NET 11, Node 24.21.0)
+## Measurements (`docs/evidence/bridge-limits`, Windows 11, .NET 11, Node 24.21.0)
 
 | What | Result |
 |---|---|
@@ -11,7 +11,7 @@ Recorded 2026-11-15. What it shows: each document's bridge refuses an oversized 
 | The page parsing one result (split at the TAB, `JSON.parse`) | 0.42 ms at 1 MiB; 1.30 ms at 4 MiB; 5.88 ms at 16 MiB; 22 ms at 64 MiB |
 | Kestrel's default `MaxRequestBodySize` | 30,000,000 bytes (28.6 MiB) |
 
-Raw output: `spikes/bridge-limits/results/`.
+Raw output: `docs/evidence/bridge-limits/results/`.
 
 ## Results (observed)
 

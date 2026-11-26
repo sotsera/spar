@@ -1,0 +1,89 @@
+$ spar snap --list
+empty
+groceries
+new-page-dialog
+exit 0 (10.8 s)
+
+$ spar snap --all
+empty: <repo>\samples\Notebook.EndToEndTests\obj\spar-snap\empty (11 elements, 1 call, 0 problems)
+groceries: <repo>\samples\Notebook.EndToEndTests\obj\spar-snap\groceries (30 elements, 5 calls, 0 problems)
+new-page-dialog: <repo>\samples\Notebook.EndToEndTests\obj\spar-snap\new-page-dialog (17 elements, 1 call, 0 problems)
+exit 0 (11.9 s)
+
+$ spar snap --all --no-build --out <repo>/artifacts/m2c-spar-snap/second-10762
+empty: <repo>\artifacts\m2c-spar-snap\second-10762\empty (11 elements, 1 call, 0 problems)
+groceries: <repo>\artifacts\m2c-spar-snap\second-10762\groceries (30 elements, 5 calls, 0 problems)
+new-page-dialog: <repo>\artifacts\m2c-spar-snap\second-10762\new-page-dialog (17 elements, 1 call, 0 problems)
+exit 0 (6.9 s)
+
+# The two captures of each scene, byte for byte (calls.json without its times and durations):
+  empty/page.png: same
+  empty/tree.json: same
+  empty/problems.txt: same
+  empty/calls.json without times: same
+  groceries/page.png: same
+  groceries/tree.json: same
+  groceries/problems.txt: same
+  groceries/calls.json without times: same
+  new-page-dialog/page.png: same
+  new-page-dialog/tree.json: same
+  new-page-dialog/problems.txt: same
+  new-page-dialog/calls.json without times: same
+
+# groceries/tree.txt:
+  Notebook — https://app.localhost/ (document 1)
+  e1 document
+    e2 complementary
+      e3 heading "Notebook" [level 1]
+      e4 button "New page"
+      e5 searchbox "Search pages"
+      e6 navigation "Pages"
+        e7 list
+          e8 listitem
+            e9 button "Groceries now"
+    e10 main
+      e11 region "Groceries"
+        e12 heading "Groceries" [level 2]
+        e13 paragraph "Jan 15, 2026, 10:30 AM"
+        e14 status
+        e15 group "View"
+          e16 button "Write" [not pressed]
+          e17 button "Write and preview" [pressed]
+          e18 button "Preview" [not pressed]
+        e19 button "Page actions" [not expanded]
+        e20 textbox "Markdown of Groceries" = "# Groceries\n\n- [ ] oat milk\n- [x] **coffee**\n- [ ] apples\n" [focused]
+        e21 article "Preview"
+          e22 heading "Groceries" [level 1]
+          e23 list
+            e24 listitem
+              e25 checkbox [not checked, disabled]
+            e26 listitem
+              e27 checkbox [checked, disabled]
+              e28 strong
+            e29 listitem
+              e30 checkbox [not checked, disabled]
+
+# groceries/calls.json, the commands in order:
+  "command": "pages.list"
+  "command": "pages.create"
+  "command": "pages.list"
+  "command": "pages.save"
+  "command": "pages.list"
+
+$ spar snap no-such-scene --no-build
+spar snap: there is no scene 'no-such-scene' in Notebook.EndToEndTests.csproj; the scenes: empty, groceries, new-page-dialog.
+exit 64 (0.9 s)
+
+$ spar snap empty --no-build --json
+[
+  {
+    "scene": "empty",
+    "written": true,
+    "folder": "<repo>\\samples\\Notebook.EndToEndTests\\obj\\spar-snap\\empty",
+    "elements": 11,
+    "calls": 1,
+    "problems": 0
+  }
+]
+exit 0 (2.5 s)
+

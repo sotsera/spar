@@ -187,6 +187,10 @@ var app = SparApplication.Create(args, spar =>
     // these on a user's machine without a new build (3.13). Decided.
     spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
+    // Traces, metrics and logs over OTLP, the page's spans with them, when OTEL_EXPORTER_OTLP_ENDPOINT is set; nothing
+    // otherwise (3.18). Built in M2d.
+    spar.Telemetry();
+
     // The browser keeps its strict defaults; only the support build the team sends to one user adds devtools (3.17).
     // Decided. On Linux it also draws without the GPU, which rules a broken graphics driver out (3.17). Built; this use
     // of the option is for review.
@@ -365,7 +369,7 @@ public sealed class CopyJobsService(IConnectionStore connections, ISparCall call
 - **Returns:** `Task`, `Task<T>`, `Task<Result<T, TError>>`, `Task<Result<TError>>`, their `ValueTask` forms, `IAsyncEnumerable<T>`, `IAsyncEnumerable<Result<T, TError>>` (a stream with declared errors; yielding an error ends it, and the page's `match` gets an `errors` object as for unary calls), or a subscription.
 - **Conversions:** `return plan;` and `return new PlanError.TableMissing(…);` both convert into the `Result` implicitly. These are union conversions, so they also work for values typed as an interface, such as `IReadOnlyList<T>`.
 - **The per-call token fires** when the page aborts the call, when the page that started it goes away, or when the app shuts down. A command that ignores the token ends as "outcome unknown" when cancelled, never as "cancelled".
-- **`ISparCall`** gives the token, the call id and the names to the contract and to any scoped service of the call. A singleton cannot depend on it (`ValidateScopes`).
+- **`ISparCall`** gives the token, the call id, the names and the caller (`SparCaller.Page`, `Test` or `Devtools`) to the contract and to any scoped service of the call. A singleton cannot depend on it (`ValidateScopes`).
 - **Wire types (decided 2026-11-14):**
   - `long` is a decimal string on the wire and `bigint` in TypeScript.
   - `TimeSpan` is a string in the constant format `[-][d.]hh:mm:ss[.fffffff]`, so `elapsed` below is a `string`.
@@ -1163,6 +1167,14 @@ Spar logs the exception through the app's `ILogger` (category `Spar.Bridge`), so
 
 An enum travels only when each value has one name: a `[Flags]` enum, two members with one value, and an enum with no members are build errors (SPAR025). A value that is no member, such as `(Priority)7`, fails the call that returns it.
 
+### 3.18 Telemetry
+
+**Decided** (decision "M2d's decide-first questions"; built in M2d, `docs/guide/telemetry.md`). The optional `Spar.OpenTelemetry` package, referenced without a version (it takes the SDK's), and `spar.Telemetry()` in `Program.cs` (section 2) export the app's traces, metrics and logs over OTLP, and the page's spans through the backend, when `OTEL_EXPORTER_OTLP_ENDPOINT` is set at run time; without it nothing is exported and the page loads none of its telemetry code. The build sees the reference and gives the page its module: the page needs no code.
+- **The backend:** each command call's span (`contract/command`, a child of the page's span of the same call), `spar.call.duration`, and every `ILogger` line at the log file's levels; `spar.Telemetry(otel => …)` takes OpenTelemetry's builder for the app's own instrumentation, such as SqlClient's.
+- **The page:** a span for each call it makes, the document's load, and `traced` (6.16); its errors and console messages are already in the backend's logs. Its spans go to `/_spar/otlp/v1/traces` on its own origin and the backend forwards their bytes unchanged, with the endpoint's headers, which the page never sees: protobuf or JSON only, at most 1 MiB a request and 20 requests a second, a 503 for 5 s after the endpoint could not be reached, and a 404 for every `/_spar/otlp/` path without the package or an endpoint (the page's settings request gets an empty 204, so its console shows no failed request).
+- **Settings:** OpenTelemetry's standard variables (`OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_EXPORTER_OTLP_HEADERS`, `OTEL_SERVICE_NAME`, with `-page` for the page, `OTEL_RESOURCE_ATTRIBUTES`, `OTEL_TRACES_SAMPLER`, `OTEL_BSP_SCHEDULE_DELAY`). An Aspire app host sets them for the app it starts, so its dashboard shows both services.
+- **Cost:** the OpenTelemetry SDK and .NET's HTTP client and TLS, about 6 MB of a NativeAOT executable that had no HTTPS before; the page's module, about 18 KB compressed, loads after the page's start.
+
 ## 5. The generated TypeScript
 
 **Decided:** results are opaque; `Call` is a `Promise` subclass (decision "TypeScript SDK: `Call` as a `Promise` subclass, `toStringTag`, Vue augmentation"); and the modules ship as `.js` + `.d.ts` + a `.d.ts.map` into the C# file.
@@ -1332,7 +1344,7 @@ export async function cancelEverything(): Promise<void> {
 }
 ```
 
-- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `spikes/ts-results` and are checked again in `tests/AppModel`.
+- A missing case, a misspelled case, a payload field that does not exist, or a forgotten `errors` object fails `tsc`. These were checked in `docs/evidence/ts-results` and are checked again in `tests/AppModel`.
 - A command without declared errors has no `errors` property.
 - `execution` tells the page whether the backend ran the command: `notStarted`, `stopped`, `completed` or `unknown`. Nothing is retried automatically.
 - **Failures** (decided 2026-11-14, decision "`CallError` kinds") are `CallError` values with a `kind`, a `code` and an `execution`. The examples read only these three. A command that threw also has `correlation`, the id to quote to whoever reads the app's log, and in Development `detail`, which is for developers only. The kinds are `cancelled`, `unavailable`, `rejected`, `failed`, `transport`, `response` and `protocol`.
@@ -1381,7 +1393,7 @@ export function CopyProgressView({ jobId }: { readonly jobId: string }) {
 }
 ```
 
-- **Streams** (`IAsyncEnumerable<T>`) become `AsyncIterable` of results, sent in batches with credits, so a slow page slows the producer. Every item is a `Result`, so a terminal failure arrives in-band and the loop cannot skip it. **Decided** (decision "Stream failures in-band; start-up exit codes; the start-up hook"). The alternative from `spikes/wire-details`, an iterator that yields the items and then throws, was not chosen (plan 2c).
+- **Streams** (`IAsyncEnumerable<T>`) become `AsyncIterable` of results, sent in batches with credits, so a slow page slows the producer. Every item is a `Result`, so a terminal failure arrives in-band and the loop cannot skip it. **Decided** (decision "Stream failures in-band; start-up exit codes; the start-up hook"). The alternative from `docs/evidence/wire-details`, an iterator that yields the items and then throws, was not chosen (plan 2c).
 - **Subscriptions** use a bounded buffer that drops the oldest events, never blocking the producer. The page sees `gap` with the dropped count.
 - **Resume:** after a lost connection an `Automatic` subscription reconnects with backoff and reports `reconnecting`, `reset` and `resumed`. One-shot streams are never resumed.
 
@@ -1935,7 +1947,7 @@ public sealed class BlackBoxTests
 
 - **The data root:** each launch gets a disposable root of its own under `artifacts/` (beside the tests elsewhere), and the app's per-user folders go there through the environment only, since a Production app takes no switch for its folders (decision "M1b's remaining questions without a spike"): on Windows `LOCALAPPDATA`, `APPDATA`, `TEMP` and `TMP` point into it; on Linux `HOME`, `XDG_DATA_HOME` (what `app.LocalAppData` names), `XDG_CONFIG_HOME`, `XDG_CACHE_HOME`, `XDG_STATE_HOME` and `TMPDIR` do, with `XDG_RUNTIME_DIR` in `/dev/shm`, the root under `artifacts/linux-homes/black-box/`. `app.AppFolder`, `DataFolder`, `LogsFolder` and `LogFile` are the folders a Production build uses there. `o.DataRoot = first.DataRoot` starts a second instance on the same data, as a second launch by the same user would; the first launch's handle keeps the root and deletes it, unless `KeepData`. The app never gets a `SPAR_*` variable or an inherited browser override (`WEBVIEW2_*` on Windows; `WEBKIT_*` and `JSC_*` on Linux, which `o.Environment` may still set, to check the app ignores them); `o.Environment` adds the app's own.
 - **Ready** means the host's `ui-ready` line in the app's log file (the page connected its bridge and called `ready()`, 6.3) and the accessibility API finding the app's window, within `ReadyTimeout` (30 s). The line is `<time> INFO  Spar.Host  [<run id>] ui-ready at <ms> ms`, a format Spar keeps stable; an app that moves its logs folder or raises `Spar.Host` above `Information` has none: it launches with `o.WaitForReady = false` and waits for an element of its page. `WaitForReady = false` also returns at once for a launch that hands over or fails.
-- **The window** is read and driven through the platform's accessibility API, never through input: UI Automation on Windows, AT-SPI on Linux (at-spi2-core's accessibility bus, through a private D-Bus session of each launch). `app.Window.TitleAsync()`, and locators named as in the page API (`GetByRole` with `Name`, `Exact`, `NameRegex` and `Disabled`, `GetByText`, `First`, `Last`, `Nth`) with `WaitForAsync`, `CountAsync`, `IsVisibleAsync`, `NameAsync`, `AllNamesAsync`, `InputValueAsync` and `InvokeAsync`, a button's press through the Invoke pattern (on Linux AT-SPI's default action). The page's elements come with their ARIA roles and accessible names, as the browser exposes them to assistive technology (on Linux WebKit's computed ARIA role; a text element is one whose own text matches). An action needs one element: a locator that finds several fails at once.
+- **The window** is read and driven through the platform's accessibility API, never through input: UI Automation on Windows, AT-SPI on Linux (at-spi2-core's accessibility bus, through a private D-Bus session of each launch). `app.Window.TitleAsync()`, and locators named as in the page API (`GetByRole` with `Name`, `Exact`, `NameRegex` and `Disabled`, `GetByText`, `First`, `Last`, `Nth`) with `WaitForAsync`, `CountAsync`, `IsVisibleAsync`, `NameAsync`, `AllNamesAsync`, `InputValueAsync` and `InvokeAsync`, a button's press through the Invoke pattern (on Linux AT-SPI's default action), which returns once the page has taken the press: on Windows when the browser confirms it (UI Automation's Invoked event, or the element gone from the tree when the press removed it), after an app's first action has waited until its page settled in the accessibility tree; a press the browser does not confirm within the timeout fails, and is never pressed again. The page's elements come with their ARIA roles and accessible names, as the browser exposes them to assistive technology (on Linux WebKit's computed ARIA role; a text element is one whose own text matches). An action needs one element: a locator that finds several fails at once.
 - **Native messages** (a start-up failure, a failed relaunch, a close question): `WaitForDialogAsync()` reads the first one the app shows, with its `Title`, `Text` and `Buttons`, and `PressAsync(name)` answers it. On Linux the message is GTK's alert dialog, which has no title: `Title` is the app's name there too, put in by the fixture, and a press shows on the button for about 250 ms before GTK answers it.
 - **Closing and exit codes:** `CloseAsync()` closes the window as its close button does, so the guards of 6.11 run, and returns the exit code; `WaitForExitAsync()` waits for an exit the app makes on its own; both wait `ExitTimeout` (15 s). `Kill()` ends the app and everything it started. The black box's session end of the OS (Spar's own tests) is `WM_ENDSESSION` on Windows and `SIGTERM` on Linux, where the app answers `SIGTERM` and `SIGINT` with the same session-end close (6.11).
 - **Nothing is left behind:** the app runs in a job object (Windows) or is started with `KillOnParentExit` (Linux), which ends it, the browser's processes included, when the test process ends, however it ends. Disposal ends what is still running (an app asked to exit gets `ExitTimeout` first), waits until every process of the app is gone and deletes the root. A cleanup that cannot finish, or a browser process that outlives a clean exit, fails the test.
@@ -1978,6 +1990,67 @@ export const stopListening = onBackendUpdate((update: BackendUpdate) => {
 - **Limits:** the event can arrive after the patched code already ran once (a call that started meanwhile). Edits Hot Reload cannot apply are reported only in `dotnet watch`'s terminal, which restarts the app for them.
 - **Contract edits always restart:** an edit that changes what Spar generates for the contracts (a command's name, request, result or limit, a DTO's or an error case's properties, a wire name, the page security in `Program.cs`) is never patched. A Development build's generated code makes such an edit one that Hot Reload cannot apply, so `dotnet watch` rebuilds the app, which regenerates the TypeScript client, and starts it again; in the window the page loads afresh, and on loopback the open page reloads itself (section 4). A command's body is patched as usual.
 - **In page tests,** `spar.backendUpdate({ types })` from `fakeSpar()` sends the event as a Debug host does, and `fakeSpar()` turns the toast back on, as it resets the failure hooks.
+
+### 6.15 Scenes
+
+**Decided** (decision "M2c's decide-first questions"; built in M2c). A scene is a state of the app worth a look, written as C# in the end-to-end test project: a static method marked `[SparScene("name")]` that starts the app through the scene and brings its page to that state, as a window test does. `dotnet spar snap name` captures it into `obj/spar-snap/name/`: `page.png`, the accessibility tree (`tree.txt` and `tree.json`, as `spar tree` shows it), the bridge calls (`calls.json`) and the problems Spar, the page and its console reported (`problems.txt`). `dotnet test` runs every scene as a window test of its own, so a scene that no longer reaches its state fails like any test.
+
+File `SqlTool.EndToEndTests/Scenes.cs`:
+
+```csharp
+using Spar.Testing;
+using static Spar.Testing.SparAssertions;
+
+namespace SqlTool.EndToEndTests;
+
+public static class Scenes
+{
+    // spar snap connections: the list of saved connections.
+    [SparScene("connections")]
+    public static async Task Connections(SparScene scene)
+    {
+        var app = await scene.StartAsync<Program>();
+        await Expect(app.Page.GetByRole(SparRole.List, new() { Name = "Connections" })).ToBeVisibleAsync();
+    }
+
+    // spar snap remove-connection: the question before a connection is removed.
+    [SparScene("remove-connection")]
+    public static async Task RemoveConnection(SparScene scene)
+    {
+        var app = await scene.StartAsync<Program>();
+        await app.Page.GetByRole(SparRole.List, new() { Name = "Connections" })
+            .GetByRole(SparRole.Listitem).Filter(new() { HasText = "Production" })
+            .GetByRole(SparRole.Button, new() { Name = "Remove" }).ClickAsync();
+        await Expect(app.Page.GetByRole(SparRole.Alertdialog)).ToBeVisibleAsync();
+    }
+}
+```
+
+- **The same picture every run** on one machine and OS: the page is 1280 × 800 CSS pixels at a scale of 1 whatever the monitor's (`scene.Size` changes it), in the light theme, rendered in software, with reduced motion; the capture waits until the page has been idle for 200 ms (no bridge call, no animation, no `setTimeout` due within 10 s, fonts loaded), finishes or stops its animations, hides the caret and moves the pointer to a corner. Across machines, or between Windows and Linux, the fonts and rendering differ.
+- **A fixed clock:** the backend's `TimeProvider` and the page's `Date` start at 15 January 2026, 09:30 UTC (`scene.Time` changes it) and run in real time from there, so timers and timeouts work and a page's "edited 5 minutes ago" reads the same every run. Text that counts seconds can still differ between runs.
+- **Options and data:** `scene.StartAsync<Program>(o => o.Services(…))` takes a window test's options, so a scene replaces services or fills data as a test does.
+- **Names:** lower case letters, digits and hyphens, once per project; a scene method is `static`, returns `Task` and takes one `SparScene`. The build reports a scene it cannot run (SPAR110 to SPAR112).
+- **The command:** `dotnet spar snap --list` lists the scenes, `dotnet spar snap name…` or `--all` captures them (`--out` for another folder, `--no-build` to use the last build, `--json`), from the app's folder or the end-to-end project's.
+
+### 6.16 Grouping calls in a trace
+
+**Decided** (decision "M2d's decide-first questions", item 3; built in M2d). With telemetry on (3.18), every call is a span of the page's, the parent of the backend's span of the same call. `traced(name, run)` makes one span around `run`, and the calls `run` starts before its first `await` become its children, so an interaction reads as one trace. Without telemetry it only runs `run`.
+
+File `frontend/src/planning.ts`:
+
+```ts
+import { traced } from "@spar/app/sdk";
+import { copyJobs, type CopyRecipe } from "@spar/app/copyJobs";
+
+// The "Compare plans" button: both plans in one trace, since both calls start inside `traced`, before any `await`.
+export function comparePlans(first: CopyRecipe, second: CopyRecipe) {
+  return traced("compare plans", () => Promise.all([copyJobs.plan(first), copyJobs.plan(second)]));
+}
+```
+
+- **No context across `await`:** the page has no context propagation (no `zone.js`), so a call started after `run`'s first `await` begins a trace of its own; start the calls first and await them together, as above.
+- **The span ends** when `run` returns, or when the promise it returns settles; a throw or a rejection marks it as an error.
+- **No click spans:** the page records no user interactions by itself; `traced` is how an interaction gets its name.
 
 ## 7. Still open in this model
 

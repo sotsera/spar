@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Spar.Testing;
 
 /// <summary>
@@ -115,10 +117,15 @@ public sealed partial class SparBlackBoxLocator
     }
 
     /// <summary>Gives the element the keyboard focus through UI Automation, once there is exactly one and it is enabled.</summary>
-    internal Task FocusAsync(SparActionOptions? options = null)
+    internal async Task FocusAsync(SparActionOptions? options = null)
     {
         SandboxGuest.EnsureUserSession("send real input");
-        return RetryAsync(Limit(options?.Timeout), "focus", async () =>
+
+        // A focus reaches the page through the browser's accessibility tree, as an invoke does: it waits as an invoke does.
+        var limit = Limit(options?.Timeout);
+        var clock = Stopwatch.StartNew();
+        await App.WaitForSettledPageAsync(limit, $"focus {this}");
+        await RetryAsync(Remaining(limit, clock), "focus", async () =>
         {
             var outcome = await App.Automation.FocusAsync(App.ProcessId, _target);
             return outcome.Status == ElementStatus.Done || Fail<bool>(outcome);

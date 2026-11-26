@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Spar.Testing;
@@ -96,15 +97,33 @@ public sealed partial class SparBlackBoxLocator
         });
 
     /// <summary>
-    /// Invokes the element through UI Automation's Invoke pattern (a button's press), once there is exactly one and it
-    /// is enabled. It is no input: no pointer moves and no key is sent. Returns when the app has taken the request.
+    /// Invokes the element through the accessibility API's default action (UI Automation's Invoke pattern, AT-SPI's
+    /// first action: a button's press), once there is exactly one and it is enabled. It is no input: no pointer moves and
+    /// no key is sent. An app's first action waits until its page has settled in the accessibility tree. Returns when the
+    /// page has taken the press: on Windows once the browser confirms it (UI Automation's Invoked event, or the element
+    /// gone from the tree when the press removed it). A press the browser does not confirm within the timeout fails,
+    /// and is never pressed again, since it may still reach the app.
     /// </summary>
-    public Task InvokeAsync(SparActionOptions? options = null) =>
-        RetryAsync(Limit(options?.Timeout), "invoke", async () =>
+    public async Task InvokeAsync(SparActionOptions? options = null)
+    {
+        var limit = Limit(options?.Timeout);
+        var clock = Stopwatch.StartNew();
+        await App.WaitForSettledPageAsync(limit, $"invoke {this}");
+        var confirmation = await RetryAsync(Remaining(limit, clock), "invoke", async () =>
         {
             var outcome = await App.Automation.InvokeAsync(App.ProcessId, _target);
-            return outcome.Status == ElementStatus.Done || Fail<bool>(outcome);
+            return outcome.Status == ElementStatus.Done ? outcome.Confirmation : Fail<IInvokeConfirmation?>(outcome);
         });
+        if (confirmation is null)
+        {
+            return;
+        }
+
+        await using (confirmation)
+        {
+            await ConfirmAsync(confirmation, limit);
+        }
+    }
 
     /// <summary>Waits until a matching element is visible (by default), attached, hidden or detached.</summary>
     public Task WaitForAsync(SparWaitForOptions? options = null)
@@ -132,9 +151,37 @@ public sealed partial class SparBlackBoxLocator
         { } index => $"{_target.Query.Description}.Nth({index})",
     };
 
+    /// <summary>
+    /// Waits until the press is confirmed: the browser's Invoked event, or the element gone from the tree (the press
+    /// removed it: no event comes then), or the app gone (a Quit button). Fails after <paramref name="limit"/>.
+    /// </summary>
+    private async Task ConfirmAsync(IInvokeConfirmation confirmation, TimeSpan limit)
+    {
+        var clock = Stopwatch.StartNew();
+        while (!confirmation.Invoked.IsCompleted && !App.HasExited)
+        {
+            if (await confirmation.IsGoneAsync())
+            {
+                return;
+            }
+
+            if (clock.Elapsed >= limit)
+            {
+                throw new TimeoutException(
+                    $"{this} was invoked, but the browser did not confirm within {limit.TotalMilliseconds:0} ms that the page " +
+                    "took the press (no Invoked event, and the element is still there). It was not pressed again.");
+            }
+
+            await Task.WhenAny(confirmation.Invoked, App.Process.Exited, Task.Delay(50, CancellationToken.None));
+        }
+    }
+
     private Task<IReadOnlyList<FoundElement>> FindAsync() => App.Automation.FindAsync(App.ProcessId, _target);
 
     private TimeSpan Limit(float? timeout) => TimeSpan.FromMilliseconds(timeout ?? _window.DefaultTimeout);
+
+    /// <summary>What is left of <paramref name="limit"/>; with nothing left, the retry still makes its one attempt.</summary>
+    private static TimeSpan Remaining(TimeSpan limit, Stopwatch clock) => limit > clock.Elapsed ? limit - clock.Elapsed : TimeSpan.Zero;
 
     /// <summary>Not found, disabled: not yet. Several, or no such pattern: a mistake in the test, at once (strict, as the page API).</summary>
     private T Fail<T>(ElementOutcome outcome) => outcome.Status switch

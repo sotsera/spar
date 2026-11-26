@@ -10,4 +10,9 @@
     <RootNamespace>Notebook</RootNamespace>
     <SparAppId>com.example.Notebook</SparAppId>
   </PropertyGroup>
+
+  <!-- Traces, metrics and logs over OTLP when OTEL_EXPORTER_OTLP_ENDPOINT is set (docs/guide/telemetry.md). -->
+  <ItemGroup>
+    <PackageReference Include="Spar.OpenTelemetry" />
+  </ItemGroup>
 </Project>

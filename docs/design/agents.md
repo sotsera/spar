@@ -4,15 +4,17 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 
 ## 6. Agent facilities
 
-- **Devtools:** an in-process devtools endpoint, only in Development and test builds, enabled per session. A lockfile with a bearer token. Small tools:
+- **Devtools:** an in-process devtools endpoint, only in Development and test builds, enabled per session. A lockfile with a bearer token. One core in C#, with the `spar` CLI and an MCP server (`spar mcp`, opt-in) as thin adapters over it, both kept after the evaluation (decision "Both devtools surfaces kept"); the endpoint is a local socket with an owner-only ACL (a named pipe on Windows, a Unix socket in the app's runtime folder on Linux), never a port. Page input on the developer's desktop is in-process CDP `Input.*` on Windows and the injected DOM script on Linux, each result marked synthetic there (decision "M2's decide-first questions"). Small tools:
   - `tree`, `screenshot`;
   - `click`/`fill`/`waitFor`;
   - `contracts`, `call`, `calls`, `logs`;
   - `version`.
 
   They read the host's instrumentation, so `calls` and readiness come for free. On Linux the same tools need a non-CDP implementation.
-- **`spar dev`:** builds, launches, and reloads on request. A failed reload returns compiler diagnostics at file:line in-band.
-- **`spar snap`:** a one-shot capture with named scenes and a fixed `TimeProvider`. It builds or reuses the development build, starts it offscreen, waits for UI ready, optionally replays an input script (steps addressed by accessible name or test id), writes a PNG, the accessibility tree and the bridge call log, then exits. No session, no port.
+
+  **M2a's shape** (decision "M2a's decide-first questions"): on in every Development run and absent from every other variant (`SparDevtools=false` leaves it out); found through `obj/spar-devtools.json` (process, run, socket, token, build identity); newline-delimited JSON-RPC 2.0 on the socket; the window tests' page engine (`PageEngine.js`) moved into the hosts and shared, so elements are found as the tests' locators find them; elements named by a `tree` reference (`e12`, `stale_target` once the document changed) or a locator; `call` through the page's own dispatch with the devtools as caller, `calls` the last 200 with the UI action behind each, `logs` merging the backend log, the page's console and errors, and CSP violations; flat CLI commands (`spar tree`, `spar click <target>`, `spar call <contract.command> [json]`, …) with `--json` and `spar doctor`'s exit codes; `screenshot` the page alone as PNG. **Built in M2a** (decision "M2a: the devtools (implementation record; choices for review; 2026-11-26)", `docs/evidence/m2a-devtools.md`, user guide `docs/guide/devtools.md`): the run's id travels as `run`, an action lists the calls made from its start until the app is quiet, the engine and the contract snapshot are embedded in the app's assembly by Spar.Sdk, and loopback has the backend tools only.
+- **`spar dev`:** builds, launches, and reloads on request. A failed reload returns compiler diagnostics at file:line in-band. It is Spar's own supervisor, not a wrapper of `dotnet watch`: the development server is kept across restarts, every process it starts goes in a job object (Windows) or a process group (Linux) from creation with a closed stdin, and Hot Reload stays with `dotnet watch` and the IDEs (decision "M2's decide-first questions"). **Built in M2b** (decisions "M2b's decide-first questions" and "M2b: spar dev (implementation record; choices for review; 2026-11-26)", `docs/evidence/m2b-spar-dev.md`, user guide `docs/guide/spar-dev.md`): `spar dev [-lp profile] [--private]`, `spar reload [--json]` and `spar dev --stop` over the session's own owner-only socket (`obj/spar-dev.json`); the app runs from a copy of the build under `obj/spar-dev/` and is stopped through the devtools' `stop`, the host's own session end; a restarted window on Windows takes the previous one's place without the focus.
+- **`spar snap`:** a one-shot capture with named scenes and a fixed `TimeProvider`. It builds or reuses the development build, starts it offscreen, waits for UI ready, optionally replays an input script (steps addressed by accessible name or test id), writes a PNG, the accessibility tree and the bridge call log, then exits. No session, no port. Scenes are C# in the app's test project, run through the test host (the app's own `Program.cs` with service overrides and the safety defaults), so the app's own builds carry no scene code. **Built in M2c** (decisions "M2c's decide-first questions" and "M2c: spar snap and scenes (implementation record; choices for review; 2026-11-26)", `docs/evidence/m2c-spar-snap.md`, user guide `docs/guide/spar-snap.md`): `[SparScene("name")]` methods in the end-to-end test project, each also a window test; `spar snap <scene>...|--all|--list` builds that project and captures each scene through its test executable into `obj/spar-snap/<scene>/` (`page.png`, `tree.txt`, `tree.json`, `calls.json`, `problems.txt`); no input script (decided: the steps are the scene's C#); the same PNG every run on one machine.
 - **`spar doctor`** (user decision): checks the machine and the project, and reports each finding with a stable id, a severity and the fix. Text by default, showing only what needs attention, the project it checked and how many checks passed, with `--verbose` for every check (decision "The M1d check follow-ups"); `--json` (every finding) and distinct exit codes for agents.
   - **Machine:**
     - the .NET SDK against `global.json`, and `Spar.Sdk` resolution;
@@ -34,7 +36,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - The plugin version follows the SDK version, so a skill never describes an API the installed SDK lacks.
   - Its skills get the same evaluations as the other skills.
 - **Evaluation:** uses the .NET skills `eval.yaml` format (prompts, graders, tokens, time, activation, pass rate).
-  - Profiles compared: plain `dotnet` tools, then `spar` CLI, then `spar` MCP. Only one interactive surface survives. Unused tools are removed.
+  - Profiles compared: plain `dotnet` tools, then `spar` CLI, then `spar` MCP. Only one interactive surface was to survive; the evaluation could not tell them apart, and both are kept, the CLI the one the skills teach and the MCP server opt-in (decision "Both devtools surfaces kept"). Unused tools are removed.
+  - The first run: Claude Code headless, 10 tasks on the Notebook and a new app, the 3 profiles, 3 runs each, reporting pass rate, tokens and time.
   - Spar's own skills get evaluations too, and a skill that doesn't help is removed.
 
 ## 6b. Observability: optional OpenTelemetry, backend and client (user decisions)
@@ -65,5 +68,5 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - Still to cover: trace context on streams and subscriptions.
 - **Milestones:**
   - M1: the BCL instrumentation and `traceparent` in the protocol;
-  - M2: the optional layer, client export and the Aspire dev experience.
+  - M2: the optional layer, client export and the Aspire dev experience: first a documented AppHost recipe that starts the app as an executable resource with the dashboard's OTLP variables, and a hosting package only if the recipe needs more than a few lines.
 - **Later:** a Spar-owned minimal OTLP exporter (parked).

@@ -26,7 +26,9 @@ internal sealed class WindowSurface : IAsyncDisposable
         {
             ProfilesFolder = TestDataRoots.Profiles,
             HomesFolder = TestDataRoots.LinuxHomes,
-            Automation = _session.Automation,
+            Automation = options.Scene is { } scene
+                ? _session.Automation with { PageScript = scene.PageScript, Viewport = scene.Viewport, ReducedMotion = true }
+                : _session.Automation,
             OnPhase = options.WindowPhase,
             Holder = SparTestCleanup.CurrentTest() ?? (object)this,
             Dark = options.ColorScheme switch

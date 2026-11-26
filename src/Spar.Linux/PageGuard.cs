@@ -10,7 +10,7 @@ namespace Spar.Linux;
 /// at once from what is in memory:
 /// <list type="bullet">
 /// <item><c>decide-policy</c> for a navigation, which WebKit raises for the main frame and for frames alike, with no
-/// flag to tell them apart (<c>spikes/csp-navigation</c>): it goes ahead on the app's origin and to an address the app
+/// flag to tell them apart (<c>docs/evidence/csp-navigation</c>): it goes ahead on the app's origin and to an address the app
 /// declared in <c>csp.FrameSrc(…)</c>; anything else is ignored and logged, <c>about:blank</c> and <c>about:srcdoc</c>
 /// included, since one of them in the main frame would replace the app's page with nothing it could stop (a frame keeps
 /// its first, blank document; a <c>srcdoc</c> frame stays empty). A declared frame address that is the main frame's own

@@ -1,0 +1,164 @@
+# The evaluation of Spar's agent surfaces (plan, M2e; decision "M2e's decide-first questions", items 5 to 8), in the
+# eval.yaml form of the .NET skills repository: stimuli with a prompt, tags, an environment, constraints and graders.
+# Spar's additions, read by eng/eval/run.cs: environment.app (the solution the task starts from: notebook or pantry),
+# environment.commands (run in the solution's folder before the agent starts, with EVAL_SPEC this folder, EVAL_TASK the
+# task's folder and EVAL_LIB lib.sh), and the run-command graders' command,
+# run there after the agent ends. Each task's folder (tasks/<name>/) has its seed.sh, grade.sh with the checks the agent
+# never sees, and reference.sh, a solution that `run.cs validate` uses to prove the checks can pass.
+name: spar-surfaces
+description: Ten tasks on a Spar app, run by an agent with plain dotnet, with the spar CLI, or with the spar MCP server.
+type: capability
+
+defaults:
+  runs: 3
+  timeout: 20m
+  constraints:
+    max_turns: 80
+    max_tokens: 300000
+    max_duration: 20m
+
+stimuli:
+  - name: notebook-relative-time
+    prompt: |
+      In the Notebook app (this folder), the time shown under each page in the page list reads as if the pages were
+      saved in the future: a page saved three hours ago shows "in 3 hours". Find the cause and fix it.
+    tags: { capability: page, journey: notebook, skills: [spar-app, spar-dev-loop] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-relative-time/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-relative-time/grade.sh } }
+
+  - name: notebook-duplicate
+    prompt: |
+      Add a way to duplicate a page in the Notebook app (this folder). In the backend, add a command to `PagesService`:
+      `DuplicateAsync(PageRef request, CancellationToken cancellationToken)`, returning `Result<Page, PageError>`. It
+      copies the page's Markdown into a new page titled "<title> (copy)"; a missing page is `PageError.NotFound`, and a
+      copy whose title is already taken is `PageError.TitleTaken`. On the page, add a button named "Duplicate" to the
+      open page's header that duplicates the page and opens the copy.
+    tags: { capability: contract-and-page, journey: notebook, skills: [spar-app, spar-testing] }
+    environment: { app: notebook }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-duplicate/grade.sh } }
+
+  - name: notebook-damaged-page
+    prompt: |
+      On this machine the Notebook app (this folder) shows no pages at all, although its data folder holds several
+      page files. Find out why from the running app, and fix the app so that one damaged page file cannot hide the
+      others: a damaged file should simply be left out of the list.
+    tags: { capability: diagnosis, journey: notebook, skills: [spar-dev-loop, spar-app] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-damaged-page/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-damaged-page/grade.sh } }
+
+  - name: notebook-csp-logo
+    prompt: |
+      The Notebook app's logo (this folder), next to its name at the top of the sidebar, does not show. The logo is the
+      file `Notebook/frontend/assets/logo.svg`. Make it show, without loosening the app's content security policy.
+    tags: { capability: page-security, journey: notebook, skills: [spar-app, spar-dev-loop] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-csp-logo/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-csp-logo/grade.sh } }
+
+  - name: notebook-search-below
+    prompt: |
+      In the Notebook app (this folder), move the search box from above the page list to below it, at the bottom of
+      the sidebar. Then add a scene named `sidebar` to the end-to-end tests that shows the sidebar with two pages, and
+      capture it, so that its image is in `Notebook.EndToEndTests/obj/spar-snap/sidebar/`.
+    tags: { capability: layout-and-scene, journey: notebook, skills: [spar-dev-loop, spar-testing] }
+    environment: { app: notebook }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-search-below/grade.sh } }
+
+  - name: pantry-notes
+    prompt: |
+      Add notes to the Pantry app (this folder). In the backend, add a contract `NotesService` in the namespace
+      `Pantry.Notes` (folder `Pantry/Notes/`) with a command `AddAsync(AddNote request)` returning
+      `Result<Note, NoteError>`, where `AddNote(string Text)` and `Note(string Id, string Text)` are records and
+      `NoteError` has one case, `Empty`, for a text that is empty or only spaces. A note's text is kept without its
+      surrounding spaces. On the page, add a text field labelled "Note" and a button "Add note": each added note
+      appears in a list on the page, and a blank note shows "A note needs text.".
+    tags: { capability: contract-and-page, journey: new-app, skills: [spar-app] }
+    environment: { app: pantry }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-notes/grade.sh } }
+
+  - name: pantry-window-test
+    prompt: |
+      Add a window test to the Pantry app's end-to-end tests (this folder), in a new class `GreetingErrorWindowTests`,
+      that checks what the window shows when Greet is pressed without a name. Make sure it passes.
+    tags: { capability: testing, journey: new-app, skills: [spar-testing] }
+    environment: { app: pantry }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-window-test/grade.sh } }
+
+  - name: pantry-scene
+    prompt: |
+      Add a scene named `greeted` to the Pantry app's end-to-end tests (this folder) that shows the window after it
+      greeted "Ada", and capture it, so that its image is in `Pantry.EndToEndTests/obj/spar-snap/greeted/`.
+    tags: { capability: scene, journey: new-app, skills: [spar-testing, spar-dev-loop] }
+    environment: { app: pantry }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-scene/grade.sh } }
+
+  - name: pantry-telemetry
+    prompt: |
+      Make the Pantry app (this folder) export its traces, metrics and logs over OpenTelemetry (OTLP) when
+      `OTEL_EXPORTER_OTLP_ENDPOINT` is set.
+    tags: { capability: telemetry, journey: new-app, skills: [spar-shipping] }
+    environment: { app: pantry }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-telemetry/grade.sh } }
+
+  - name: pantry-native-publish
+    prompt: |
+      Publish the Pantry app (this folder) as a native (NativeAOT) executable for linux-x64, and write the
+      executable's size in bytes, digits only, to `publish-size.txt` in this folder.
+    tags: { capability: publishing, journey: new-app, skills: [spar-shipping] }
+    environment: { app: pantry }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-native-publish/grade.sh } }
+
+  # Round 2 (decision "Both devtools surfaces kept"): tasks whose cause shows only at run time, in the app's own data,
+  # its logs or its window, described as a user would report them. Run with --tasks and the five names.
+  - name: notebook-blank-preview
+    prompt: |
+      When I open some of the pages in my notebook (the Notebook app in this folder), the whole window goes blank.
+      Other pages open fine. Find out why and fix it.
+    tags: { capability: runtime-diagnosis, journey: notebook, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-blank-preview/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-blank-preview/grade.sh } }
+
+  - name: notebook-vanished-page
+    prompt: |
+      One of my pages disappeared from the Notebook app (this folder) after I edited it in another Markdown editor,
+      although its file is still in the notebook's folder. Make the Notebook show it again.
+    tags: { capability: runtime-diagnosis, journey: notebook, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-vanished-page/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-vanished-page/grade.sh } }
+
+  - name: notebook-deleted-stays
+    prompt: |
+      In the Notebook app (this folder), when I delete a page it stays in the page list until I restart the app.
+      Fix it.
+    tags: { capability: ui-state, journey: notebook, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-deleted-stays/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-deleted-stays/grade.sh } }
+
+  - name: pantry-greeting-offscreen
+    prompt: |
+      In the Pantry app (this folder), pressing Greet seems to do nothing: no greeting appears in the window. Fix it.
+    tags: { capability: layout, journey: new-app, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: pantry, commands: [bash $EVAL_SPEC/tasks/pantry-greeting-offscreen/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-greeting-offscreen/grade.sh } }
+
+  - name: pantry-unusual-name
+    prompt: |
+      A user named José says the Pantry app (this folder) tells him the app did not answer when he presses Greet.
+      It works for other people. Fix it.
+    tags: { capability: runtime-diagnosis, journey: new-app, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: pantry, commands: [bash $EVAL_SPEC/tasks/pantry-unusual-name/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-unusual-name/grade.sh } }

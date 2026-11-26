@@ -1,1 +1,0 @@
-postMessage("worker-ran");

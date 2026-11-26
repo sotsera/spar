@@ -1,0 +1,162 @@
+$ spar dev --private &
+spar dev: Notebook, launch profile Desktop, on a desktop of its own (spar-dev-18ee5361be09); spar reload builds and restarts it, spar dev --stop or Ctrl+C ends the session.
+building Notebook.csproj (Debug)…
+built in 5.1 s
+started Notebook.exe (pid 68264) from <repo>\samples\Notebook\obj\spar-dev\run-a
+built in 5.1 s (0 errors, 0 warnings)
+running: pid 68264, run 3ab0f8a5, ui-ready at 1137.5 ms (1.2 s from its start)
+
+$ spar reload
+built in 1.7 s (0 errors, 0 warnings)
+running: pid 65868, run b8a40d38, ui-ready at 549 ms (0.7 s from its start); the previous run 3ab0f8a5
+exit 0 (2.8 s)
+
+$ spar version
+app: com.example.Notebook
+run: b8a40d38
+pid: 65868
+host: windows
+started: 2026-11-26T09:22:08.9584311+00:00
+spar: 0.1.0-dev
+runtime: .NET 11.0.0
+os: Microsoft Windows 10.0.26320
+build: build Development, revision 1288b8ceb720060dce6186ff2a7ce3e1909a3f89 (uncommitted changes), contract fingerprint 59cb559befd9b76b
+variant: Development
+revision: 1288b8ceb720060dce6186ff2a7ce3e1909a3f89
+dirty: true
+fingerprint: 59cb559befd9b76b
+page: true
+trustedInput: true
+exit 0 (0.2 s)
+
+$ spar tree
+Notebook — https://app.localhost/ (document 1)
+e1 document
+  e2 complementary
+    e3 heading "Notebook" [level 1]
+    e4 button "New page"
+    e5 searchbox "Search pages"
+    e6 navigation "Pages"
+      e7 paragraph
+  e8 main
+    e9 heading "Start your notebook" [level 2]
+    e10 paragraph
+    e11 button "New page"
+exit 0 (0.2 s)
+
+# A C# error: a method that returns a string as an int, without its semicolon.
+$ spar reload
+build failed in 2.8 s (1 error, 0 warnings)
+  <repo>\samples\Notebook\Pages\PageTypes.cs(33,68): error CS1002: ; expected
+the previous run is still running (pid 65868, run b8a40d38): fix the errors and reload
+exit 2 (3.0 s)
+
+# A TypeScript error in the page.
+$ spar reload --json
+{
+  "build": {
+    "succeeded": false,
+    "exitCode": 1,
+    "seconds": 3.44,
+    "errors": [
+      {
+        "severity": "error",
+        "code": "TS2322",
+        "message": "Type 'string' is not assignable to type 'number'.",
+        "file": "<repo>\\samples\\Notebook\\frontend\\src\\main.tsx",
+        "line": 27,
+        "column": 14,
+        "project": "<repo>\\samples\\Notebook\\Notebook.csproj"
+      }
+    ],
+    "warnings": []
+  },
+  "app": {
+    "state": "kept",
+    "pid": 65868,
+    "run": "b8a40d38",
+    "output": []
+  }
+}
+exit 2 (3.7 s)
+
+# Both put back.
+$ spar reload
+built in 3.9 s (0 errors, 0 warnings)
+running: pid 18692, run 972baf8c, ui-ready at 560.5 ms (0.7 s from its start); the previous run b8a40d38
+exit 0 (5.0 s)
+
+$ spar version
+app: com.example.Notebook
+run: 972baf8c
+pid: 18692
+host: windows
+started: 2026-11-26T09:22:21.8851657+00:00
+spar: 0.1.0-dev
+runtime: .NET 11.0.0
+os: Microsoft Windows 10.0.26320
+build: build Development, revision 1288b8ceb720060dce6186ff2a7ce3e1909a3f89 (uncommitted changes), contract fingerprint 59cb559befd9b76b
+variant: Development
+revision: 1288b8ceb720060dce6186ff2a7ce3e1909a3f89
+dirty: true
+fingerprint: 59cb559befd9b76b
+page: true
+trustedInput: true
+exit 0 (0.2 s)
+
+# A second spar dev for the same project.
+$ spar dev
+spar dev: spar dev already runs for Notebook (process 660, profile Desktop, since 2026-11-26 09:22:00Z): use spar reload, or spar dev --stop to end it.
+exit 64 (0.1 s)
+
+# The app ended from outside (its window closed, a crash): a reload starts it again.
+the app (pid 18692) exited with 1; spar reload builds and starts it again
+$ spar reload
+built in 1.4 s (0 errors, 0 warnings)
+running: pid 52616, run 88062068, ui-ready at 524.5 ms (0.6 s from its start)
+exit 0 (2.1 s)
+
+$ spar dev --stop
+spar dev is ending.
+exit 0 (0.2 s)
+
+spar dev exit 0
+
+# spar dev's own output, without the app's lines:
+spar dev: Notebook, launch profile Desktop, on a desktop of its own (spar-dev-18ee5361be09); spar reload builds and restarts it, spar dev --stop or Ctrl+C ends the session.
+building Notebook.csproj (Debug)…
+built in 5.1 s
+started Notebook.exe (pid 68264) from <repo>\samples\Notebook\obj\spar-dev\run-a
+built in 5.1 s (0 errors, 0 warnings)
+running: pid 68264, run 3ab0f8a5, ui-ready at 1137.5 ms (1.2 s from its start)
+building Notebook.csproj (Debug)…
+built in 1.7 s
+ending the previous run (pid 68264)…
+the previous run ended through its session end
+started Notebook.exe (pid 65868) from <repo>\samples\Notebook\obj\spar-dev\run-b
+building Notebook.csproj (Debug)…
+build failed in 2.8 s: 1 error(s)
+spar warn +4481.7 ms: [b8a40d38] Bridge, document 9130a7a548fcfea6: dropped call 1: an id must be higher than every earlier one in the document
+spar warn +4481.8 ms: [b8a40d38] Bridge, document 9130a7a548fcfea6: dropped call 2: an id must be higher than every earlier one in the document
+building Notebook.csproj (Debug)…
+build failed in 3.4 s: 1 error(s)
+spar warn +8420.1 ms: [b8a40d38] Bridge, document 0074d9a7cb9b7847: dropped call 1: an id must be higher than every earlier one in the document
+spar warn +8420.1 ms: [b8a40d38] Bridge, document 0074d9a7cb9b7847: dropped call 2: an id must be higher than every earlier one in the document
+building Notebook.csproj (Debug)…
+built in 3.9 s
+ending the previous run (pid 65868)…
+the previous run ended through its session end
+started Notebook.exe (pid 18692) from <repo>\samples\Notebook\obj\spar-dev\run-a
+the app (pid 18692) exited with 1; spar reload builds and starts it again
+building Notebook.csproj (Debug)…
+built in 1.4 s
+started Notebook.exe (pid 52616) from <repo>\samples\Notebook\obj\spar-dev\run-a
+ending the app (pid 52616)…
+the app ended through its session end
+spar dev ended
+
+# Left behind:
+  ls: cannot access '<repo>/samples/Notebook/obj/spar-dev.json': No such file or directory
+  ls: cannot access '<repo>/samples/Notebook/obj/spar-devtools.json': No such file or directory
+# Processes whose command line names the run's folder or the Notebook's project, 2 s after spar dev --stop:
+0

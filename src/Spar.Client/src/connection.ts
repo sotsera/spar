@@ -3,6 +3,7 @@
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import type { CallError, CallErrorKind, CallName, CallOptions, Execution, Outcome } from "./results.js";
 import { finishSplash, hasSplash } from "./splash.js";
+import { traceCall } from "./tracing.js";
 import { runCloseGuards, type CloseRequest, type GuardsOutcome } from "./windows.js";
 
 /** The host's channel for one document: strings both ways, never structured messages. */
@@ -84,8 +85,14 @@ export class Connection {
       return Promise.resolve(failure(name, "unavailable", "unavailable", "notStarted"));
     }
 
-    return new Promise<Outcome>(resolve => {
+    return new Promise<Outcome>(settle => {
       const id = this.#nextId++;
+      // Started here, synchronously, so a `traced` span around the caller is its parent.
+      const span = traceCall(contract, command);
+      const resolve = span === undefined ? settle : (outcome: Outcome): void => {
+        span.end(...spanOutcome(outcome));
+        settle(outcome);
+      };
       const pending: Pending = { name, decoder, resolve, sent: false, cleanup: () => {} };
       this.#pending.set(id, pending);
       if (signal !== undefined) {
@@ -100,7 +107,10 @@ export class Connection {
         }
 
         pending.sent = true;
-        this.#send({ type: "call", id, contract, command, payload: request });
+        const call: BridgeMessage = span === undefined
+          ? { type: "call", id, contract, command, payload: request }
+          : { type: "call", id, contract, command, traceparent: span.traceparent, payload: request };
+        this.#send(call);
       };
       if (this.#state === "open") {
         send();
@@ -283,6 +293,15 @@ export class Connection {
     await Promise.allSettled(this.#closingWork.map(work => work()));
     this.#send({ type: "closing-done", payload: "" });
   }
+}
+
+/** The outcome as the call's span names it, and the failure's code. */
+function spanOutcome(outcome: Outcome): ["success" | "error" | CallErrorKind, string?] {
+  if (outcome.ok) {
+    return ["success"];
+  }
+
+  return outcome.code === undefined ? [outcome.error.kind, outcome.error.code] : ["error"];
 }
 
 function failure(name: CallName, kind: CallErrorKind, code: string, execution: Execution, notes: FailureNotes = {}): Outcome {

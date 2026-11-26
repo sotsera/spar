@@ -56,7 +56,24 @@ internal sealed class SparTestWindowRequest
 /// <param name="EngineScript">The engine (<c>Spar.Testing</c>'s <c>PageEngine.js</c>), the same file on both hosts.</param>
 /// <param name="World">The isolated world's name: the page's scripts can neither see it nor change what it uses.</param>
 /// <param name="Events">The page's events; raised on the window's UI thread, so each only copies its data out.</param>
-internal sealed record SparTestAutomation(string EngineScript, string World, ISparTestPageEvents Events);
+internal sealed record SparTestAutomation(string EngineScript, string World, ISparTestPageEvents Events)
+{
+    /// <summary>
+    /// A script of the page's own world, run at the start of every document before the page's scripts: a scene's fixed
+    /// clock (<c>Spar.Testing</c>'s <c>SparScene</c>). Null for an ordinary window test.
+    /// </summary>
+    public string? PageScript { get; init; }
+
+    /// <summary>
+    /// The page's viewport in CSS pixels at a device scale of 1, whatever the monitor's scale: a scene's fixed size. Null
+    /// keeps the window's own size and the monitor's scale.
+    /// </summary>
+    public (int Width, int Height)? Viewport { get; init; }
+
+    /// <summary>Whether the page sees <c>prefers-reduced-motion: reduce</c> (Windows; WebKitGTK cannot emulate it).</summary>
+    public bool ReducedMotion { get; init; }
+}
+
 
 /// <summary>The page's events in a test window, raised on the window's UI thread: each must only record its data.</summary>
 internal interface ISparTestPageEvents

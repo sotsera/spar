@@ -1,7 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <!-- The three candidate encodings, the payload writers and a transport-neutral bridge session. -->
-  <ItemGroup>
-    <EmbeddedResource Include="..\page\bench.html" LogicalName="page/bench.html" />
-    <EmbeddedResource Include="..\page\bench.js" LogicalName="page/bench.js" />
-  </ItemGroup>
-</Project>

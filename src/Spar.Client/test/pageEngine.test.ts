@@ -1,15 +1,16 @@
 // @vitest-environment happy-dom
-// The window-test engine (src/Spar.Testing/Window/PageEngine.js), run here against happy-dom's document: roles,
-// accessible names, the label, text and attribute queries, chains, filters, strict mode, element state and the failure
-// explanations. Layout is not here (happy-dom lays nothing out), so visibility, stability, hit tests and scrolling are
-// checked in a real window by tests/Spar.WindowTests. The engine is plain JavaScript in Spar.Testing, embedded there.
+// The page engine (src/Spar.Sdk/Sdk/Devtools/PageEngine.js, shared by the window tests and the devtools), run here
+// against happy-dom's document: roles, accessible names, the label, text and attribute queries, chains, filters, strict
+// mode, element state and the failure explanations. Layout is not here (happy-dom lays nothing out), so visibility,
+// stability, hit tests and scrolling are checked in a real window by tests/Spar.WindowTests. The engine is plain
+// JavaScript, embedded in Spar.Testing and in Development builds of apps.
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { beforeAll, beforeEach, describe, expect, test } from "vitest";
 
 // The path from this file, not a URL: happy-dom replaces the global URL.
-const source = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../Spar.Testing/Window/PageEngine.js"), "utf8");
+const source = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../Spar.Sdk/Sdk/Devtools/PageEngine.js"), "utf8");
 
 interface Engine {
   run(request: string): Promise<Record<string, unknown>>;

@@ -12,4 +12,20 @@ public interface ISparCall
     string Contract { get; }
 
     string Command { get; }
+
+    /// <summary>Who made the call: the page, a test through the test host, or the devtools of a Development build.</summary>
+    SparCaller Caller { get; }
+}
+
+/// <summary>Who made a call (<see cref="ISparCall.Caller"/>).</summary>
+public enum SparCaller
+{
+    /// <summary>The app's page, through the bridge.</summary>
+    Page,
+
+    /// <summary>A test, through the test host's typed client.</summary>
+    Test,
+
+    /// <summary>The devtools' <c>call</c> tool, in a Development build.</summary>
+    Devtools,
 }

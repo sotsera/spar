@@ -9,7 +9,7 @@ namespace Spar.Testing;
 /// <summary>
 /// A launched app's processes on Linux, the counterpart of Windows' job object: the app is started with .NET's
 /// <c>KillOnParentExit</c>, so the kernel ends it when the test process ends however it ends (WebKit's processes follow
-/// it: measured in <c>spikes/linux-blackbox-atspi</c>), and every process of the launch carries a tag in its environment
+/// it: measured in <c>docs/evidence/linux-blackbox-atspi</c>), and every process of the launch carries a tag in its environment
 /// (<see cref="LaunchVariable"/>), so the tree is found even after the app exited and the system adopted its children.
 /// The launch's private session bus (<see cref="LinuxDesktop.StartBus"/>) and the services it activated carry a tag of
 /// their own and end with the launch. Standard output and error are read as they come.

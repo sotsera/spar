@@ -1,8 +1,0 @@
-<Project>
-  <!-- Repository central versions first, then the spike's own. -->
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
-
-  <ItemGroup>
-    <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.1.2" />
-  </ItemGroup>
-</Project>

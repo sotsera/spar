@@ -7,8 +7,9 @@ namespace Spar.WindowTests;
 /// The black-box fixture's own rules, on WindowHost's Production executable (<c>Projects.WindowHost</c>), on Windows
 /// and Linux: the job object that ends the app with its owner (Windows), the deadline that ends a hung app, a cleanup
 /// that cannot finish reported as a failure, the ready timeout, the dialog API on a real failed relaunch (a suspended
-/// first instance), the window read and driven through the accessibility API (UI Automation, AT-SPI), and the options
-/// refused before anything starts.
+/// first instance), the window read and driven through the accessibility API (UI Automation, AT-SPI), an invoke that
+/// lands as the first action after the launch and one whose press removes its element, and the options refused before
+/// anything starts.
 /// The two tests of Windows-only mechanisms carry <c>OS=Windows</c>, which the Linux CI run leaves out (it takes every
 /// other black-box test with no skip).
 /// </summary>
@@ -22,7 +23,7 @@ public sealed class BlackBoxFixtureTests
     public async Task Closing_the_job_ends_the_app_and_everything_it_started()
     {
         // Linux ends the app with the test process through KillOnParentExit, which only the test process's own death
-        // shows (spikes/linux-blackbox-atspi: 0 processes left in 25 of 25 runs); a test of it needs a holder process.
+        // shows (docs/evidence/linux-blackbox-atspi: 0 processes left in 25 of 25 runs); a test of it needs a holder process.
         WindowSupport.SkipUnlessWindows("Windows' job object; on Linux the kernel ends the app with the test process (KillOnParentExit), measured by the AT-SPI spike.");
         if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763))
         {
@@ -228,6 +229,53 @@ public sealed class BlackBoxFixtureTests
     }
 
     [Fact]
+    public async Task An_invoke_as_the_first_action_after_the_launch_lands()
+    {
+        // Before the fix, a page button invoked as soon as the launch returned did nothing in 4 of this test's 24 launches
+        // on Windows while the invoke reported success (pitfalls, "A black-box Invoke right after a page button appears
+        // can do nothing"). Now a press the browser does not confirm fails the invoke itself.
+        WindowSupport.SkipUnlessBlackBox();
+        const int Launches = 8;
+        var landed = 0;
+        for (var launch = 0; launch < Launches; launch++)
+        {
+            await using var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
+            var clock = Stopwatch.StartNew();
+            await app.Window.GetByRole(SparRole.Button, new() { Name = "Covered button" }).InvokeAsync();
+            var invoked = clock.Elapsed;
+            if (await IsShownAsync(app.Window.GetByText("Covered button clicked")))
+            {
+                landed++;
+            }
+
+            Results.Append("black-box.txt", $"first invoke after the launch: {invoked.TotalMilliseconds:0} ms");
+            Assert.Equal(0, await app.CloseAsync(Token));
+        }
+
+        Assert.Equal(Launches, landed);
+    }
+
+    [Fact]
+    public async Task A_press_that_removes_its_element_or_leaves_the_page_is_taken()
+    {
+        // The browser drops the Invoked event with its node: the element gone from the tree confirms these presses.
+        WindowSupport.SkipUnlessBlackBox();
+        await using var app = await SparBlackBox.LaunchAsync(Projects.WindowHost, cancellationToken: Token);
+        var window = app.Window;
+
+        await window.GetByRole(SparRole.Button, new() { Name = "Open the dialog" }).InvokeAsync();
+        await window.GetByRole(SparRole.Button, new() { Name = "Confirm", Exact = true }).InvokeAsync();
+        await window.GetByText("Confirmed").WaitForAsync();
+
+        await window.GetByRole(SparRole.Link, new() { Name = "Second page" }).InvokeAsync();
+        await window.GetByRole(SparRole.Heading, new() { Name = "Second page" }).WaitForAsync();
+        await window.GetByRole(SparRole.Button, new() { Name = "Echo" }).InvokeAsync();
+        await window.GetByText("Echo: again").WaitForAsync();
+
+        Assert.Equal(0, await app.CloseAsync(Token));
+    }
+
+    [Fact]
     public async Task Options_the_fixture_cannot_honour_are_refused_before_anything_starts()
     {
         WindowSupport.SkipUnlessBlackBox();
@@ -307,6 +355,20 @@ public sealed class BlackBoxFixtureTests
     [InlineData(new[] { "say \"hi\"", "end\\", "dir\\ x\\" }, "\"C:\\a b\\app.exe\" \"say \\\"hi\\\"\" end\\ \"dir\\ x\\\\\"")]
     public void Arguments_reach_the_app_as_given(string[] arguments, string expected) =>
         Assert.Equal(expected, CommandLine.Build(@"C:\a b\app.exe", arguments));
+
+    /// <summary>Whether the locator's element is shown within 3 s.</summary>
+    private static async Task<bool> IsShownAsync(SparBlackBoxLocator locator)
+    {
+        try
+        {
+            await locator.WaitForAsync(new() { Timeout = 3000 });
+            return true;
+        }
+        catch (TimeoutException)
+        {
+            return false;
+        }
+    }
 
     internal static bool Exited(int processId)
     {

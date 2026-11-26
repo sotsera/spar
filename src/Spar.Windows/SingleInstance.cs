@@ -8,8 +8,9 @@ using Spar.Windows.Interop;
 namespace Spar.Windows;
 
 /// <summary>
-/// Single instance on Windows (decision "Windows single instance: a lock file plus a pipe"; <c>spikes/windows-single-
-/// instance</c>), claimed before the WebView environment exists. The first process holds <c>instance.lock</c> in the
+/// Single instance on Windows (decision "Windows single instance: a lock file plus a pipe";
+/// <c>docs/evidence/windows-single-instance</c>), claimed before the WebView environment exists. The first process holds
+/// <c>instance.lock</c> in the
 /// app's data root with no sharing, which covers exactly the folder a second instance would corrupt and which Windows
 /// releases when the process ends. It serves one named pipe, named from that file's identity (volume serial number and
 /// file index, so a junction or a short name reaches the same instance), with a DACL for the token's user only,

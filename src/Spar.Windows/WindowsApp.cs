@@ -42,6 +42,7 @@ internal sealed class WindowsApp : IAppWindowOwner
     private AppWindow? _window;
     private ShutdownWatch? _shutdown;
     private DevServer.DevServerSession? _devServer;
+    private Spar.Devtools.DevtoolsHost? _devtools;
     private int _stopped;
 
     /// <summary>What a start-up report needs from this run.</summary>
@@ -211,8 +212,20 @@ internal sealed class WindowsApp : IAppWindowOwner
         }
 
         var theme = WindowTheme.Read(builder.MainWindow, _folders.DataRoot);
+        if (Spar.Devtools.SparDevtools.IsSupported)
+        {
+            // Before the services are built on the pool: the merged log is one of the app's logger providers.
+            _devtools = Spar.Devtools.DevtoolsHost.Prepare(builder.Services, "windows");
+        }
+
         var built = Task.Run(() => Build(_folders));
         _window = new AppWindow(_app, _log, _automated, _title, _profile, _hangHook, this);
+        if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools)
+        {
+            _window.UseDevtools(devtools);
+            devtools.EndSession = _window.RequestSessionEnd;
+        }
+
         if (DevServer.DevServerSettings.IsSupported && _devServer is not null)
         {
             _window.UseDevServer(_devServer);
@@ -284,6 +297,7 @@ internal sealed class WindowsApp : IAppWindowOwner
             DevelopmentTriggers.AddSlowDisposal(builder.Services, _log);
         }
 
+        var devtools = Spar.Devtools.SparDevtools.IsSupported ? _devtools : null;
         var running = SparRunningApp.Build(builder.Services, _app.Catalog, folders);
         if (SparDevelopment.IsSupported)
         {
@@ -293,6 +307,11 @@ internal sealed class WindowsApp : IAppWindowOwner
         _log.UseAppLogging(running.Services);
         _log.Phase("services built");
         _running = running;
+        if (Spar.Devtools.SparDevtools.IsSupported)
+        {
+            devtools?.Start(running, _log.RunId, _log.Logger);
+        }
+
         _relaunches.Start(running.Services);
         return running;
     }
@@ -362,6 +381,11 @@ internal sealed class WindowsApp : IAppWindowOwner
             }
 
             _window?.StopAsync().GetAwaiter().GetResult();
+            if (Spar.Devtools.SparDevtools.IsSupported)
+            {
+                _devtools?.StopAsync().AsTask().GetAwaiter().GetResult();
+            }
+
             // The development server's output stops before the services, whose logging it writes through.
             if (DevServer.DevServerSettings.IsSupported)
             {

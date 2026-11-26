@@ -9,7 +9,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - **Read by the build, so constants only:** the CSP additions and other header opt-ins (section 3b), the permissions (section 3b), the window kinds, whose names become the `@spar/app/windows` union, and the window colours (section 3d).
   - **Run at start-up, so ordinary values are fine:** everything else in the configuration, such as services, folders, the tray and its menu handlers.
 - **Commands:**
-  - Zero or one request (a positional record or a scalar), then an optional `CancellationToken`. The scalars accepted in `spikes/contract-syntax` were `string`, `int`, `long`, `double`, `bool` and `Guid`, nullable allowed.
+  - Zero or one request (a positional record or a scalar), then an optional `CancellationToken`. The scalars accepted in `docs/evidence/contract-syntax` were `string`, `int`, `long`, `double`, `bool` and `Guid`, nullable allowed.
   - Returns: `Task`, `Task<T>`, `Task<Result<T, TError>>`, `Task<Result<TError>>`, their `ValueTask` forms, `IAsyncEnumerable<T>`, `IAsyncEnumerable<Result<T, TError>>` (a stream that declares errors: yielding an error item ends it, Spar disposes the iterator, and a diagnostic flags code that yields after the error; decided 2026-11-14), or a `[SparSubscription(Capacity, Resume)]` subscription.
   - The scoped `ISparCall` (token, call id, names) is injectable.
 - **Names:**
@@ -22,8 +22,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Errors:** C# 15 `closed record` hierarchies with nested sealed cases. Union conversions into `Result` (`return new PlanError.X(…)`). On the wire a declared error is a `result` (or `end`) message with `"ok":false` in its header and `{"code":"x",…}` as its payload (section 2c, "The messages"; this replaced the `{"ok":false,"error":…}` envelope on 2026-11-15), with reserved payload names (`kind`, `code`, `message`, `execution`). Roslyn's experimental closed-type API is allowed in the generator (RSEXPERIMENTAL006, agreed).
   - A case without a payload (`sealed record Forbidden : PlanError;`) is `{"code":"forbidden"}`. `[SparName("…")]` on a case renames its code. Its TypeScript interface-map entry is `undefined`: the handler takes no parameter (`forbidden: () => …`), and in the error union the case is just `{ code: "forbidden" }` (decision "M1a names"; checked in `spikes/app-model-check`, mistake 21).
   - **The C# `Result<T, TError>` API is decided:** the union struct below (decision "The C# `Result` container is a union struct"). Earlier state, the first spike's (`spikes/contract-syntax/Spar.Runtime/Result.cs`): a `readonly struct` with `where TError : class`, implicit conversions from `T` and `TError`, `IsError`, `Value` (throws on an error), `Error`, `Success`, `Failure` and `Match`. There `default(Result<T, TError>)` is a success holding `default(T)`, so a forgotten assignment reads as success.
-  - **Decided (user, 2026-11-14): the union struct**, from `spikes/result-api`. The user prefers allocating as little as possible, and the class form had no other advantage worth an allocation per result. `docs/app-model.md` and its check use it.
-  - **Analyzer rules for default results** (`spikes/spar050`; category `Spar.Results`; SPAR050–SPAR054 adopted and SPAR055 added, decisions "Analyzer rules SPAR050–SPAR054 adopted" and "CS8509 stays the app's setting; a Spar rule for `Result` switches"):
+  - **Decided (user, 2026-11-14): the union struct**, from `docs/evidence/result-api`. The user prefers allocating as little as possible, and the class form had no other advantage worth an allocation per result. `docs/app-model.md` and its check use it.
+  - **Analyzer rules for default results** (`docs/evidence/spar050`; category `Spar.Results`; SPAR050–SPAR054 adopted and SPAR055 added, decisions "Analyzer rules SPAR050–SPAR054 adopted" and "CS8509 stays the app's setting; a Spar rule for `Result` switches"):
 
     | ID | Severity | Catches |
     |---|---|---|
@@ -54,16 +54,16 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
       If it reaches the writer anyway, the writer reports the `response` / `serialization` failure (decision "`CallError` kinds"; reasoned through, not run).
     - **Costs (NativeAOT, 20 commands):** struct +102,400 bytes and no allocation for a synchronous error; class +83,456 bytes and 32–40 B per result. Dispatch is 120–180 ns for every form.
     - **The generator** emits one small async method per command. A single shared one doubled async allocations (about 600 B per call).
-- **Diagnostics:** the spike catalogue is in `spikes/contract-syntax/RESULTS.md`, "Diagnostics", with each message and location rule. All are errors in category `Spar.Contracts`. Later decisions add a `DateTime` warning (decision "Wire format choices") and a suggestion for long-running commands that cannot observe cancellation (decision "Cancellation token delivery"). Messages about a referenced assembly start with "In referenced assembly 'X': …". It is the starting ID map for M1:
+- **Diagnostics:** the spike catalogue is in `docs/evidence/contract-syntax/RESULTS.md`, "Diagnostics", with each message and location rule. All are errors in category `Spar.Contracts`. Later decisions add a `DateTime` warning (decision "Wire format choices") and a suggestion for long-running commands that cannot observe cancellation (decision "Cancellation token delivery"). Messages about a referenced assembly start with "In referenced assembly 'X': …". It is the starting ID map for M1:
   - SPAR001–005: contract shape and names (sealed class or interface, not generic, valid and non-reserved names, wire-name clashes across assemblies);
   - SPAR010–016: command shape (return type, request parameters, token position, `ref`/`out`, generic commands, request types, command-name clashes including overloads). SPAR010 there rejected `ValueTask` and plain `Task`, which are now allowed;
   - SPAR020–025: wire types and record shapes, SPAR024 being the `DateTime` warning and SPAR025 an enum that cannot travel as one member name;
   - SPAR030–035: error types and cases (shape, nesting, reserved payload names, code clashes, no cases);
   - SPAR040: two types with one TypeScript name in a contract.
 
-  Already taken elsewhere: SPAR100 (the snapshot check) and SPAR101–SPAR104 (the CSP analyzer in `spikes/csp-navigation`).
+  Already taken elsewhere: SPAR100 (the snapshot check) and SPAR101–SPAR104 (the CSP analyzer in `docs/evidence/csp-navigation`).
 - **Wire types:** positional records, the primitives of the table below and enums (all built, decisions "The rest of the wire-rules table" and "Enums on the wire"), nullable values (optional on the wire), arrays and `IReadOnlyList<T>`, nested records, and `closed record` errors.
-- **Wire rules** (from `spikes/wire-details`; the choices once marked * were decided by the user on 2026-11-14, each on grounds that hold beyond SQL Server):
+- **Wire rules** (from `docs/evidence/wire-details`; the choices once marked * were decided by the user on 2026-11-14, each on grounds that hold beyond SQL Server):
 
   | C# | JSON | TypeScript |
   |---|---|---|
@@ -80,8 +80,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   | enum | member name, exact match; `[Flags]` is a contract diagnostic for now (decided; SPAR025, which also refuses two members with one value and an enum with no members) | a union of string literals |
   | `string` | a lone surrogate becomes U+FFFD in both directions, never an error (decided: .NET writers, WebView2 and `fetch` already replace or reject them, so only replacement behaves the same on every transport); invalid UTF-8 in a value that is read is a `JsonException` | `string` |
 
-  - **Skipped unknown properties are not decoded.** Inside them, invalid UTF-8 and lone-surrogate escapes were accepted by every reader in `spikes/serializer-fuzz`, System.Text.Json included. Decided: the rule stays limited to values that are read. Skipped values never reach the app, and System.Text.Json does not validate them either.
-  - **Canonical `long` strings:** `Utf8Parser.TryParse` and `long.TryParse` accept `+1`, `007` and `-0`, and `Utf8Parser` stops early on `1 ` and `1e3` without failing. The reader needs its own check: `-?(0|[1-9][0-9]*)`, at most 19 digits, then a parse that must consume every byte (`spikes/wire-details`, about 15 lines).
+  - **Skipped unknown properties are not decoded.** Inside them, invalid UTF-8 and lone-surrogate escapes were accepted by every reader in `docs/evidence/serializer-fuzz`, System.Text.Json included. Decided: the rule stays limited to values that are read. Skipped values never reach the app, and System.Text.Json does not validate them either.
+  - **Canonical `long` strings:** `Utf8Parser.TryParse` and `long.TryParse` accept `+1`, `007` and `-0`, and `Utf8Parser` stops early on `1 ` and `1e3` without failing. The reader needs its own check: `-?(0|[1-9][0-9]*)`, at most 19 digits, then a parse that must consume every byte (`docs/evidence/wire-details`, about 15 lines).
   - **`null` and void:** a void result has no `value` key; a `T?` result writes `"value":null`. Responses write nullable properties explicitly; requests accept missing or `null`.
   - **Duplicate properties:** a repeated declared property is a `JsonException` with its name and byte offset; unknown properties are skipped. No measurable cost.
   - **Writer failures:** every unary response is buffered, and each stream item has its own buffer. A failure resets the pooled writer and sends a `failure` message with `"kind":"response","code":"serialization","execution":"completed"` in its header (section 2c). A stream sends `"execution":"stopped","itemsSent":N` (decided). Unbuffered writing had already sent 278,560 bytes of invalid JSON when it failed.
@@ -101,7 +101,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - the `.js` matches the `.d.ts`: both are compared with what `tsc` writes from a typed twin generated from the same model (below);
     - a differential test also generates `.ts` and compares it against `tsc --declaration` (built in M1a: `tests/Spar.Sdk.Tasks.Tests/DifferentialTests.cs`, TypeScript 6 and 7).
   - Renames are done in C#.
-  - **The generated client builds every object field by field, never by copying a parsed object** (`Object.assign`, spread). `JSON.parse('{"__proto__":{"x":1}}')` creates an own `__proto__` key, and `Object.assign({}, it)` then changes the copy's prototype (`spikes/wire-details`).
+  - **The generated client builds every object field by field, never by copying a parsed object** (`Object.assign`, spread). `JSON.parse('{"__proto__":{"x":1}}')` creates an own `__proto__` key, and `Object.assign({}, it)` then changes the copy's prototype (`docs/evidence/wire-details`).
 - **Contract snapshot (decided, user, 2026-11-14):** `<Project>.contracts.snapshot`, written by the build next to the project and committed, with LF endings through `.gitattributes`. `Update` is the local default and `Verify` (SPAR100) the default in CI. It is the one stated exception to the rule that generated files live under `obj/`. M1 also fixes the fingerprint so it covers full wire shapes, not only type names.
 - **Readiness:** the SPA sends `ui-ready` once its handlers are registered. The host reports it separately from navigation completed.
 - **Generated code is readable:** formatted like hand-written code, with documentation carried over.
@@ -117,10 +117,10 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - optional browser telemetry.
 - **Ships compiled:** ES modules, `.d.ts`, `.d.ts.map`, source maps and the `.ts` sources, so go-to-definition reaches TypeScript. It is compiled with its own strict settings, separately for the browser (DOM) and the Vite plugin (Node).
 - **Tree-shakable:** ES modules, `"sideEffects": false`, no top-level side effects; optional parts (telemetry) live in separate modules, not as methods.
-- **Frameworks** (`spikes/frontend-frameworks`; React 19.3, Vue 3.5, Angular 22.2, run in headless Chromium against a scripted transport):
+- **Frameworks** (`docs/evidence/frontend-frameworks`; React 19.3, Vue 3.5, Angular 22.2, run in headless Chromium against a scripted transport):
   - **React and Angular work.** React works with `use()`, TanStack Query and StrictMode. Angular works with `resource()`, the `async` pipe and strict templates, with zone.js and zoneless.
   - **Vue breaks by default:** `ref`, `reactive`, Pinia and templates wrap `Result` and `Call` in Proxies, and `#private` fields throw through them. App code can work around it with `shallowRef`, `markRaw` or `toRaw`.
-  - **SDK changes, decided (user, 2026-11-14, conditional on the cost, which `spikes/call-promise-cost` measured as negligible):**
+  - **SDK changes, decided (user, 2026-11-14, conditional on the cost, which `docs/evidence/call-promise-cost` measured as negligible):**
     1. `Call` becomes a real `Promise` subclass with `match`/`unwrap` (`Symbol.species` = `Promise`). That fixes TanStack's `data` type, and `no-floating-promises` then flags a forgotten call by default. It worked with `use()`, TanStack, Angular in both zone modes, and Vue. Cost: at most +91 ns per call over a native promise on WebView2 (0.15 % of a 59 µs round trip), +261 ns on WebKitGTK. It allocates less than the thenable and keeps 75 instead of 163 bytes per pending call. `await call` continues one microtask after a native promise, never later than the thenable. The client constructs it directly (the wrapping `of` form costs twice as much), keeps the `Symbol.species` override, and exports `Call` as a type only, so the inherited `Call.resolve` is never reachable.
     2. A `Symbol.toStringTag` getter on `Result` and `Call`, so Vue never proxies them. Checked with `ref`, `reactive` arrays, Pinia and `use()`.
     3. An optional `@vue/reactivity` `RefUnwrapBailTypes` augmentation, so `ref(result).value` keeps its type.

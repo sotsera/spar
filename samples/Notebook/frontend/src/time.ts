@@ -15,6 +15,12 @@ const steps: ReadonlyArray<readonly [Intl.RelativeTimeFormatUnit, number]> = [
 
 export function ago(iso: string, now: Date = new Date()): string {
   let amount = (new Date(iso).getTime() - now.getTime()) / 1000;
+
+  // Under a minute it is just "now": a label that counted the seconds would change every second while nothing does.
+  if (Math.abs(amount) < 60) {
+    return relative.format(0, "second");
+  }
+
   for (const [unit, size] of steps) {
     if (Math.abs(amount) < size) {
       return relative.format(Math.round(amount), unit);

@@ -1,7 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <!-- Development and test only: the app references this project in Debug builds and never in Release publications. -->
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="../../d1-pipeline/Spike.Runtime/Spike.Runtime.csproj" />
-  </ItemGroup>
-</Project>

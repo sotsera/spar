@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Spar.Bridge;
 using Spar.DevServer;
 using Spar.Hosting;
+using Spar.Telemetry;
 using Spar.Runtime;
 
 namespace Spar.Loopback;
@@ -75,6 +76,9 @@ internal sealed class LoopbackOptions
 
     /// <summary>What the host refused or dropped, and the page's CSP violations. Called from any thread.</summary>
     public Action<string>? Log { get; init; }
+
+    /// <summary>The app's telemetry route: its relay when <c>Program.cs</c> called <c>spar.Telemetry(…)</c>, else every request a 404.</summary>
+    public TelemetryRoute Telemetry { get; init; } = TelemetryRoute.None;
 }
 
 /// <summary>
@@ -356,6 +360,9 @@ internal sealed class LoopbackHost : IAsyncDisposable
             case SendPath:
                 await SendAsync(context);
                 break;
+            case var telemetry when TelemetryRoute.Matches(telemetry):
+                await TelemetryAsync(context, telemetry);
+                break;
             case SessionPath when _options.RunId is not null && _stopping.IsCancellationRequested:
                 // A run that is stopping is not one a page can join: it waits for the next one.
                 await RefuseAsync(response, StatusCodes.Status503ServiceUnavailable, "stopping");
@@ -441,6 +448,34 @@ internal sealed class LoopbackHost : IAsyncDisposable
         // Split on LF only: a message never contains one, but its JSON may contain U+2028, which EnumerateLines splits on.
         document.Receive(body.Split('\n'));
         context.Response.StatusCode = StatusCodes.Status204NoContent;
+    }
+
+    /// <summary>
+    /// <c>/_spar/otlp/*</c> (<see cref="TelemetryRoute"/>), behind the origin and token checks: the checks and the
+    /// configuration answered at once, a traces request's body read (at most the route's limit) and forwarded.
+    /// </summary>
+    private async Task TelemetryAsync(HttpContext context, string path)
+    {
+        var request = context.Request;
+        var contentType = request.ContentType ?? "";
+        var route = _options.Telemetry;
+        PageResponse answer;
+        if (route.Check(path, request.Method, contentType) is { } immediate)
+        {
+            answer = immediate;
+        }
+        else
+        {
+            var body = await ReadReportAsync(request, context.RequestAborted, TelemetryRoute.MaxBody);
+            answer = body is null
+                ? await route.ForwardAsync(new byte[TelemetryRoute.MaxBody + 1], contentType, context.RequestAborted)
+                : await route.ForwardAsync(body, contentType, context.RequestAborted);
+        }
+
+        context.Response.StatusCode = answer.Status;
+        context.Response.ContentType = answer.ContentType;
+        context.Response.ContentLength = answer.Body.Length;
+        await context.Response.Body.WriteAsync(answer.Body, context.RequestAborted);
     }
 
     private async Task ReportAsync(HttpContext context)
@@ -580,14 +615,14 @@ internal sealed class LoopbackHost : IAsyncDisposable
         }
     }
 
-    /// <summary>A CSP report's body, or null when it is longer than <see cref="MaxReportBytes"/>.</summary>
-    private static async Task<byte[]?> ReadReportAsync(HttpRequest request, CancellationToken cancellationToken)
+    /// <summary>A request's body, or null when it is longer than <paramref name="limit"/> (a CSP report's by default).</summary>
+    private static async Task<byte[]?> ReadReportAsync(HttpRequest request, CancellationToken cancellationToken, int limit = MaxReportBytes)
     {
         using var buffer = new MemoryStream();
         var chunk = new byte[16 * 1024];
         while (await request.Body.ReadAsync(chunk, cancellationToken) is var read and > 0)
         {
-            if (buffer.Length + read > MaxReportBytes)
+            if (buffer.Length + read > limit)
             {
                 return null;
             }

@@ -42,7 +42,7 @@ internal static class FrontendPack
 
     /// <summary>
     /// What Brotli must save, page and notices together, before the app carries its decoder: the decoder costs a
-    /// NativeAOT executable about 168.5 KB (spikes/asset-packing), and this leaves a margin over it.
+    /// NativeAOT executable about 168.5 KB (docs/evidence/asset-packing), and this leaves a margin over it.
     /// </summary>
     public const long BrotliWorthBytes = 192 * 1024;
 

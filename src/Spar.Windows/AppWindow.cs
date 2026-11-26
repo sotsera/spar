@@ -84,6 +84,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     private bool _tornDown;
     private int _exitCode;
     private Spar.DevServer.DevServerSession? _devServer;
+    private Spar.Devtools.DevtoolsHost? _devtools;
 
     /// <param name="offscreen">
     /// A window of a test process (plan section 5): shown offscreen, with no taskbar button, never activated.
@@ -137,6 +138,9 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     /// </summary>
     public void UseDevServer(Spar.DevServer.DevServerSession devServer) => _devServer = devServer;
 
+    /// <summary>The devtools of a Development build: its page automation goes into the view before the first navigation.</summary>
+    public void UseDevtools(Spar.Devtools.DevtoolsHost devtools) => _devtools = devtools;
+
     /// <summary>
     /// The window first, in the theme's colour and title bar before it is shown (plan 3d), then everything that takes
     /// time, without blocking the thread: the WebView, and the bridge once the app's services exist.
@@ -157,9 +161,26 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
         else
         {
+            var maximized = false;
+            if (SparDevelopment.IsSupported && WindowPlacement.Kept() is { } kept)
+            {
+                // spar dev's restart: the previous run's place and size; its start shows it without the focus.
+                bounds = kept.Bounds;
+                maximized = kept.Maximized;
+            }
+
             _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this);
             theme.ApplyTitleBar(_window);
-            PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWDEFAULT);
+            if (SparDevelopment.IsSupported && maximized)
+            {
+                // Maximized again without activation (SW_SHOWMAXIMIZED would take the focus): hidden, then SW_SHOWNA.
+                WindowPlacement.MaximizeHidden(_window, bounds);
+                PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWNA);
+            }
+            else
+            {
+                PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWDEFAULT);
+            }
         }
 
         _log.Phase("window shown");
@@ -190,12 +211,28 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             });
         }
 
+        // The optional telemetry layer: its routes on the page's origin, and its settings in the injected script, so the
+        // page loads its telemetry code only when an endpoint is set (section 6b).
+        var telemetry = Spar.Telemetry.TelemetryRoute.For(_app.Builder);
+        pages.UseTelemetry(telemetry);
+
         _ = LogPolicyAsync(pages);
         var guard = new PageGuard(_log, security, _app.Builder.BrowserOptions.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, _app.Builder.BrowserOptions, development, _automated);
         var script = PageScript.Text(_listenerReports);
+        if (telemetry.PageScript() is { } settings)
+        {
+            script += "\n" + settings;
+        }
         _view = new BrowserView(
             ui, _log, _window, _profile, defaults, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed, _source);
+        if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
+            && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
+        {
+            var view = _view;
+            view.DevtoolsInstall = () => Devtools.DevtoolsPage.InstallAsync(ui, view, _log, devtools, engine);
+        }
+
         _ = _view.StartAsync();
         _ = ConnectAsync(ui, built);
     }

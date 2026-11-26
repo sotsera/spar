@@ -6,11 +6,12 @@ namespace Spar.Testing.BlackBox.Interop;
 // UI Automation's client interfaces, hand-declared from the Windows SDK's UIAutomationClient.h (10.0.26100.0) with
 // source-generated COM interop, so the black-box fixture runs under NativeAOT (skill "spar-native-interop"). Every slot
 // of each vtable up to the last one called is declared in header order, unused ones as [PreserveSig] SlotNNN_Name
-// placeholders; Spar.Tests checks each slot against the header. The fixture only calls these interfaces, so each has
-// the COM-object wrapper only. A method that hands out an interface returns a raw pointer with one reference the caller
+// placeholders; Spar.Tests checks each slot against the header. The fixture calls these interfaces, so each has the
+// COM-object wrapper only, but for the one event handler it implements (IUIAutomationEventHandler), which has the
+// managed-object wrapper only. A method that hands out an interface returns a raw pointer with one reference the caller
 // owns (Uia.Take wraps it); conditions stay raw pointers, released by the caller.
 
-/// <summary><c>IUIAutomation</c> (slots 3–28).</summary>
+/// <summary><c>IUIAutomation</c> (slots 3–33).</summary>
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
 [Guid("30cbe57d-d9d0-452a-ab13-7ac5ac4825ee")]
 internal partial interface IUIAutomation
@@ -52,6 +53,17 @@ internal partial interface IUIAutomation
     [PreserveSig] int Slot027_CreateAndConditionFromNativeArray();
 
     nint CreateOrCondition(nint condition1, nint condition2);
+
+    [PreserveSig] int Slot029_CreateOrConditionFromArray();
+    [PreserveSig] int Slot030_CreateOrConditionFromNativeArray();
+    [PreserveSig] int Slot031_CreateNotCondition();
+
+    /// <summary>Registers <paramref name="handler"/> (borrowed: UI Automation takes a reference of its own) for <paramref name="eventId"/> on <paramref name="element"/>.</summary>
+    void AddAutomationEventHandler(int eventId, nint element, int scope, nint cacheRequest, nint handler);
+
+    /// <summary>Unregisters <paramref name="handler"/>; returns once no call of it is in progress. A failure (the element's provider gone with its app) is the caller's to ignore.</summary>
+    [PreserveSig]
+    int RemoveAutomationEventHandler(int eventId, nint element, nint handler);
 }
 
 /// <summary>
@@ -224,6 +236,17 @@ internal partial interface IUIAutomationElementArray
 internal partial interface IUIAutomationInvokePattern
 {
     void Invoke();
+}
+
+/// <summary>
+/// <c>IUIAutomationEventHandler</c> (slot 3), the one interface the fixture implements: UI Automation calls it on a thread
+/// of its own, with the sender borrowed for the call.
+/// </summary>
+[GeneratedComInterface(Options = ComInterfaceOptions.ManagedObjectWrapper)]
+[Guid("146c3c17-f12e-4e22-8c27-f894b9b79c69")]
+internal partial interface IUIAutomationEventHandler
+{
+    void HandleAutomationEvent(nint sender, int eventId);
 }
 
 /// <summary><c>IUIAutomationValuePattern</c> (slots 3–4).</summary>

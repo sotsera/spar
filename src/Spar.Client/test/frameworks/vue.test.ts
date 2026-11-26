@@ -1,4 +1,4 @@
-// Vue 3 and Pinia with the real Call and Result (the checks of spikes/frontend-frameworks, rebuilt on the SDK).
+// Vue 3 and Pinia with the real Call and Result (the checks of docs/evidence/frontend-frameworks, rebuilt on the SDK).
 // Vue proxies objects in ref() and reactive(), and a proxy cannot read #private fields; Result and Call carry a
 // Symbol.toStringTag, which Vue's reactive() takes as "not mine to proxy", so they stay raw and keep working.
 import { createPinia, defineStore, setActivePinia } from "pinia";

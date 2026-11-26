@@ -11,7 +11,7 @@ namespace Spar.Linux.Testing;
 /// and one set of held keys, so every event of every window of the process goes through one lock: before it, a key's
 /// window gets the input focus and a pointer's window is raised, so parallel tests never type or click into each
 /// other's windows. A character the keymap has no key for is bound to a spare keycode first, and GTK is given two turns
-/// of its loop to read the new mapping before the key is pressed (<c>spikes/window-automation-linux</c>: binding and
+/// of its loop to read the new mapping before the key is pressed (<c>docs/evidence/window-automation-linux</c>: binding and
 /// typing at once typed the wrong character).
 /// </summary>
 internal sealed class XInput

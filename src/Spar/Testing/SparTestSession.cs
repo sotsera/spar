@@ -45,6 +45,9 @@ internal sealed class SparTestSession
     /// <summary>The Window surface: the app's real window, opened by the host <c>Run</c> is given (null for None and Browser).</summary>
     public SparTestWindowRequest? Window { get; init; }
 
+    /// <summary>Called with the built app before its window opens: a scene sets its call recorder here (Spar.Testing).</summary>
+    public Action<SparRunningApp>? Built { get; init; }
+
     public Task<SparRunningApp> Started => _started.Task;
 
     /// <summary>The app's window, once the host opened it (the Window surface only).</summary>
@@ -82,6 +85,7 @@ internal sealed class SparTestSession
             ConfigureServices?.Invoke(services);
             SparExternalGuard.Apply(services, AllowedExternals);
             app = SparRunningApp.Build(services, catalog, folders, CreateLog);
+            Built?.Invoke(app);
         }
         catch (Exception exception)
         {

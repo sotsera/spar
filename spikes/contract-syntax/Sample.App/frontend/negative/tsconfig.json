@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "paths": {
-      "@spar/*": ["../../obj/spar/client/packages/@spar/*/index.ts"]
-    }
-  },
-  "include": ["negative.ts"]
-}

@@ -25,9 +25,11 @@
     <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- The window tests' page engine (Window/PageEngine.js), host-neutral, run in the page's isolated world. -->
+  <!-- The page engine, host-neutral, run in the page's isolated world: one source, in Spar.Sdk's Sdk/Devtools/, which
+       Development builds of apps embed for the devtools and this assembly embeds for the window tests. -->
   <ItemGroup>
-    <EmbeddedResource Include="Window\PageEngine.js" LogicalName="Spar.Testing.PageEngine.js" WithCulture="false" Type="Non-Resx" />
+    <EmbeddedResource Include="..\Spar.Sdk\Sdk\Devtools\PageEngine.js" Link="Window\PageEngine.js"
+                      LogicalName="Spar.Testing.PageEngine.js" WithCulture="false" Type="Non-Resx" />
   </ItemGroup>
 
   <ItemGroup>

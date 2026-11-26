@@ -67,6 +67,7 @@ internal sealed partial class AppWindow
     private bool _failed;
     private int _exitCode;
     private Spar.DevServer.DevServerSession? _devServer;
+    private Spar.Devtools.DevtoolsHost? _devtools;
 
     /// <param name="security">The page security in force, resolved before the engine started (it sets WebAssembly).</param>
     /// <param name="promptAnswers">A Development build's scripted answers to the hung-page dialogs; null otherwise.</param>
@@ -106,6 +107,12 @@ internal sealed partial class AppWindow
     /// <summary>The GTK window; 0 before the start and once it is destroyed (loop thread).</summary>
     public nint Handle => _window;
 
+    /// <summary>
+    /// A test window's size from its content (a scene's fixed viewport): the default size goes, so the window is the
+    /// smallest that holds the view's size request and the title bar (loop thread, before it is shown).
+    /// </summary>
+    internal void FitToContent() => Gtk.gtk_window_set_default_size(_window, 1, 1);
+
     /// <summary>The WebKit view; 0 before the start and from the teardown on (loop thread).</summary>
     public nint ViewHandle => _view?.Handle ?? 0;
 
@@ -116,6 +123,9 @@ internal sealed partial class AppWindow
     /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
     /// </summary>
     public void UseDevServer(Spar.DevServer.DevServerSession devServer) => _devServer = devServer;
+
+    /// <summary>The devtools of a Development build: its page automation goes into the view before the first load.</summary>
+    public void UseDevtools(Spar.Devtools.DevtoolsHost devtools) => _devtools = devtools;
 
     /// <summary>
     /// The window and its view, without blocking the loop: the theme's layers, the view with its session and the
@@ -175,7 +185,16 @@ internal sealed partial class AppWindow
         var defaults = new BrowserDefaults(_log, browser, development, _automated);
         defaults.KeepGtkInspectorClosed(_window);
         _view = new BrowserView(ui, _log, _pages, _bridge, guard, defaults, _profile, Fail, _source);
-        _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background);
+        if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
+            && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
+        {
+            _view.DevtoolsInstall = (view, content) => Devtools.DevtoolsPage.Install(ui, view, content, devtools, engine);
+        }
+
+        // The optional telemetry layer: its routes on the page's origin, and its settings as a script of the page's world.
+        var telemetry = Spar.Telemetry.TelemetryRoute.For(_app.Builder);
+        _pages.UseTelemetry(telemetry);
+        _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background, telemetry.PageScript());
 
         // The heartbeat follows the view's documents from the first one on, before the services exist.
         _watch = LinuxPageHost.Watch(

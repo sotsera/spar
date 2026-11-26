@@ -38,8 +38,31 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     /// <summary>Whether the app has this command: only names it has go into telemetry tags, which the page cannot inflate.</summary>
     public bool Knows(string contract, string command) => catalog.TryGet(contract, command, out _);
 
+    /// <summary>
+    /// The record of recent calls, set by the devtools of a Development build and by a scene of the test host (its
+    /// <c>calls.json</c>); null everywhere else, and absent from a Production build (both switches are read at each use,
+    /// so the trimmer folds them away).
+    /// </summary>
+    internal Devtools.CallRecorder? Recorder { get; set; }
+
     public async ValueTask<SparOutcome> InvokeAsync(
-        string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken)
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken,
+        SparCaller caller = SparCaller.Page)
+    {
+        var record = Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported
+            ? Recorder?.Begin(callId, contract, command, caller)
+            : null;
+        var outcome = await RunAsync(contract, command, callId, request, caller, cancellationToken);
+        if (Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported)
+        {
+            record?.End(outcome);
+        }
+
+        return outcome;
+    }
+
+    private async ValueTask<SparOutcome> RunAsync(
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparCaller caller, CancellationToken cancellationToken)
     {
         if (!catalog.TryGet(contract, command, out var entry))
         {
@@ -51,7 +74,7 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
         var callToken = limit?.Token ?? cancellationToken;
 
         await using var scope = services.CreateAsyncScope();
-        scope.ServiceProvider.GetRequiredService<SparCall>().Start(callId, contract, command, callToken);
+        scope.ServiceProvider.GetRequiredService<SparCall>().Start(callId, contract, command, caller, callToken);
 
         try
         {
@@ -80,11 +103,14 @@ internal sealed class SparCall : ISparCall
 
     public string Command { get; private set; } = "";
 
-    public void Start(long callId, string contract, string command, CancellationToken cancellationToken)
+    public SparCaller Caller { get; private set; }
+
+    public void Start(long callId, string contract, string command, SparCaller caller, CancellationToken cancellationToken)
     {
         CallId = callId;
         Contract = contract;
         Command = command;
+        Caller = caller;
         CancellationToken = cancellationToken;
     }
 }

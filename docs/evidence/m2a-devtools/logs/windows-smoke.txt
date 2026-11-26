@@ -1,0 +1,217 @@
+$ spar version
+app: com.example.Notebook
+run: 1d4c9320
+pid: 19480
+host: windows
+started: 2026-11-25T23:20:39.5494434+00:00
+spar: 0.1.0-dev
+runtime: .NET 11.0.0
+os: Microsoft Windows 10.0.26320
+build: build Development, revision 1c5281206c423011fdbf89bc4b4b4c821fc7ca39 (uncommitted changes), contract fingerprint 59cb559befd9b76b
+variant: Development
+revision: 1c5281206c423011fdbf89bc4b4b4c821fc7ca39
+dirty: true
+fingerprint: 59cb559befd9b76b
+page: true
+trustedInput: true
+exit 0
+
+$ spar tree
+Notebook — https://app.localhost/ (document 0)
+e1 document
+  e2 status "Opening the notebook"
+    e3 paragraph
+exit 0
+
+$ spar click --role button --name New page --nth 0
+clicked button <button> "New page"
+calls while it ran (2):
+  #1 page     pages.list success 5.5 ms
+  #2 page     pages.list success 5.5 ms
+exit 0
+
+$ spar wait --role dialog --name New page
+dialog <dialog> "New page" is visible (2 ms)
+exit 0
+
+$ spar fill --label Title Devtools smoke 232039
+filled textbox <input> "Title"
+no calls while it ran
+exit 0
+
+$ spar click --role button --name Create page
+clicked button <button> "Create page"
+calls while it ran (2):
+  #3 page     pages.create success 5.6 ms
+  #4 page     pages.list success 5.2 ms
+exit 0
+
+$ spar wait --role heading --name Devtools smoke 232039 --nth 0
+heading <h2> "Devtools smoke 232039" is visible (1 ms)
+exit 0
+
+$ spar tree
+Notebook — https://app.localhost/ (document 1)
+e1 document
+  e2 complementary
+    e3 heading "Notebook" [level 1]
+    e4 button "New page" [focused]
+    e5 searchbox "Search pages"
+    e6 navigation "Pages"
+      e7 list
+        e8 listitem
+          e9 button "Devtools smoke 232039 now"
+  e10 main
+    e11 region "Devtools smoke 232039"
+      e12 heading "Devtools smoke 232039" [level 2]
+      e13 paragraph "Nov 26, 2026, 12:20 AM"
+      e14 status
+      e15 group "View"
+        e16 button "Write" [not pressed]
+        e17 button "Write and preview" [pressed]
+        e18 button "Preview" [not pressed]
+      e19 button "Page actions" [not expanded]
+      e20 textbox "Markdown of Devtools smoke 232039" = "# Devtools smoke 232039\n"
+      e21 article "Preview"
+        e22 heading "Devtools smoke 232039" [level 1]
+exit 0
+
+$ spar calls
+#1 page     pages.list success 5.5 ms
+#2 page     pages.list success 5.5 ms
+#3 page     pages.create success 5.6 ms
+#4 page     pages.list success 5.2 ms
+exit 0
+
+$ spar call pages.list
+pages.list: success
+[
+  {
+    "id": "devtools-smoke-232039",
+    "title": "Devtools smoke 232039",
+    "updatedAt": "2026-11-25T23:20:41.2707621+00:00"
+  }
+]
+exit 0
+
+$ spar call pages.get {"id":"no-such-page"}
+pages.get: error
+{
+  "code": "notFound",
+  "id": "no-such-page"
+}
+exit 0
+
+$ spar contracts
+fingerprint 59cb559befd9b76b
+  pages.create
+  pages.delete
+  pages.get
+  pages.list
+  pages.save
+
+# The contracts of Notebook as pages see them. Written by the build; commit it with the change.
+# CI builds fail with SPAR100 when it is out of date.
+
+fingerprint 59cb559befd9b76b
+
+contract pages (Notebook.Pages.PagesService)
+  create(Notebook.Pages.CreatePage) -> Notebook.Pages.Page | Notebook.Pages.PageError
+  delete(Notebook.Pages.PageRef) -> void | Notebook.Pages.PageError
+  get(Notebook.Pages.PageRef) -> Notebook.Pages.Page | Notebook.Pages.PageError
+  list() -> IReadOnlyList<Notebook.Pages.PageSummary>
+  save(Notebook.Pages.SavePage) -> Notebook.Pages.Page | Notebook.Pages.PageError
+
+record Notebook.Pages.CreatePage
+  title: string
+  markdown: string?
+
+record Notebook.Pages.Page
+  id: string
+  title: string
+  markdown: string
+  updatedAt: DateTimeOffset
+  revision: long
+
+record Notebook.Pages.PageRef
+  id: string
+
+record Notebook.Pages.PageSummary
+  id: string
+  title: string
+  updatedAt: DateTimeOffset
+
+record Notebook.Pages.SavePage
+  id: string
+  markdown: string
+  baseRevision: long
+
+error Notebook.Pages.PageError
+  titleTaken(title: string)
+  invalidTitle(reason: string)
+  notFound(id: string)
+  changedElsewhere(currentRevision: long)
+exit 0
+
+$ spar logs --limit 15
+23:20:39.994 info  backend Spar.DevServer: > dev
+23:20:39.994 info  backend Spar.DevServer: > vite
+23:20:40.198 info  backend Spar.Host: [1d4c9320] Development server ready at http://127.0.0.1:51283 in 658 ms (Vite pid 42312).
+23:20:40.210 info  backend Spar.DevServer:   VITE v8.3.8  ready in 161 ms
+23:20:40.211 info  backend Spar.DevServer:   ➜  Local:   http://127.0.0.1:51283/
+23:20:40.214 info  backend Spar.Host: [1d4c9320] Content-Security-Policy (development server): default-src 'none'; script-src 'self' 'nonce-<nonce>'; style-src 'self' 'nonce-<nonce>'; img-src 'self'; font-src 'self'; connect-src https://app.localhost ws://127.0.0.1:51283; media-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; require-trusted-types-for 'script'; report-uri /_spar/csp-report
+23:20:40.256 info  backend Spar.Host: [1d4c9320] Bridge: document 0c3888c45b78da81 opened.
+23:20:40.256 info  backend Spar.Host: [1d4c9320] Heartbeat armed for the new document.
+23:20:40.256 info  backend Spar.Host: [1d4c9320] first document at 766.1 ms
+23:20:40.505 info  page    console.info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+23:20:40.525 info  backend Spar.Host: [1d4c9320] first bridge message at 1035.1 ms
+23:20:40.530 info  backend Spar.Host: [1d4c9320] first bridge reply at 1039.5 ms
+23:20:40.564 info  backend Spar.Host: [1d4c9320] first navigation completed at 1073.5 ms
+23:20:40.566 info  backend Spar.Host: [1d4c9320] ui-ready at 1075.5 ms
+23:20:40.566 info  backend Spar.Host: [1d4c9320] Bridge: document 0c3888c45b78da81 reported ui-ready.
+exit 0
+
+$ spar logs --source page
+23:20:40.505 info  page    console.info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+exit 0
+
+$ spar screenshot --out <repo>/docs/evidence/m2a-devtools/windows-notebook.png
+<repo>\docs\evidence\m2a-devtools\windows-notebook.png (1100x720, 34703 bytes)
+exit 0
+
+$ spar wait --role heading --name Devtools smoke 232039
+spar wait: The target matches 2 elements; name one (a tree reference, nth, or a closer locator). (ambiguous)
+  heading <h2> "Devtools smoke 232039"
+  heading <h1> "Devtools smoke 232039"
+exit 2
+
+$ spar click --role button --name No such button --timeout 500
+spar click: click did not finish within 500 ms: no element matches. (timeout)
+exit 2
+
+$ spar click e9999
+spar click: e9999 is not a reference of the last tree (e1 to e22); take tree again (stale_target)
+exit 2
+
+$ spar fill e1
+spar fill: give the element (e12, or a locator) and the text: spar fill e12 "new text".
+Devtools of a running Development build (the app in the current folder, or --project):
+  tree [--limit N]                    The page's elements, each with a reference (e12) for the commands below.
+  screenshot [--out file]             The page as PNG (default: obj/spar-devtools/screenshot-<time>.png).
+  click <target>                      Click an element, then list the calls made while it ran.
+  fill <target> <text>                Replace a field's text.
+  wait <target> [--state S]           Wait until the element is visible (or hidden, attached, detached).
+  contracts                           The app's commands and its contract snapshot.
+  call <contract.command> [json]      Run a command, as the page would, and show its outcome.
+  calls [--limit N] [--since seq]     The last calls, from the page, tests and these tools.
+  logs [--since 30s] [--source S] [--level L] [--limit N]
+                                      The backend log, the page's console and errors, CSP violations.
+  version                             The run, the build and the host.
+
+A target is a reference from tree (e12), or a locator: --role R [--name N], --text T, --label L,
+--placeholder P, --alt A, --title T, --testid ID or --css SELECTOR, with --exact and --nth N.
+
+Options: --project <path>, --json (the result as JSON), --timeout <ms> (how long to wait; unfinished is
+not failed). Exit codes: 0 done, 2 the app refused or no run is listening, 64 a wrong command line.
+exit 64
+

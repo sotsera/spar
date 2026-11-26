@@ -142,7 +142,7 @@ public sealed class SecurityDefaultsTests
     [Fact]
     public void The_resolver_rule_is_always_passed_and_the_page_pickers_opt_in_drops_only_the_pickers_argument()
     {
-        // Quoted inside the argument: unquoted, the browser keeps only "MAP" (spikes/webview2-flags).
+        // Quoted inside the argument: unquoted, the browser keeps only "MAP" (docs/evidence/webview2-flags).
         const string Rule = "--host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"";
 
         Assert.Equal(Rule + " --disable-blink-features=FileSystemAccessLocal", BrowserEnvironment.Arguments(pagePicker: false));

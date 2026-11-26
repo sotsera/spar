@@ -261,12 +261,12 @@ public sealed class Consumer : IAsyncLifetime
         Tool.RunAsync(Path.Combine(root, directory), "dotnet", arguments, Environment);
 
     /// <summary>
-    /// Packs Spar's nine packages at <paramref name="version"/> into the feed, from this repository with its own build
+    /// Packs Spar's ten packages at <paramref name="version"/> into the feed, from this repository with its own build
     /// settings: the MSBuild server off and no node reuse, so a pack never shares a node with the consumer.
     /// </summary>
     private async Task PackAsync(string version)
     {
-        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk", "Spar.Templates", "Spar.Tool"];
+        string[] projects = ["Spar", "Spar.Windows", "Spar.Linux", "Spar.Loopback", "Spar.OpenTelemetry", "Spar.Testing", "Spar.Testing.Browser", "Spar.Sdk", "Spar.Templates", "Spar.Tool"];
         var suffix = version["0.1.0-".Length..];
         foreach (var project in projects)
         {

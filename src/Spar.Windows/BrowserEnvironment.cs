@@ -31,7 +31,7 @@ internal static class BrowserEnvironment
     /// leaves unanswered opens a TLS connection there (defence in depth behind the source-kinds filter; plan section 3b).
     /// The value must be quoted inside the argument: unquoted, the browser keeps only <c>MAP</c>. Measured through the
     /// options object: 0 loopback connections in 253 runs against 16 per run without it, no load cost, and no change in
-    /// the rate of first-load stalls in 400 + 400 runs (<c>spikes/webview2-flags</c>).
+    /// the rate of first-load stalls in 400 + 400 runs (<c>docs/evidence/webview2-flags</c>).
     /// </summary>
     public const string NoAppHostResolution = "--host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"";
 
@@ -90,7 +90,7 @@ internal static class BrowserEnvironment
 /// The environment options Spar passes to <c>CreateCoreWebView2EnvironmentWithOptions</c>: its browser arguments, and
 /// Spar's minimum Runtime as the oldest compatible one. WebView2 appends <c>WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS</c> to
 /// these arguments when the app allows the variable, so Spar's own stay in force unless the variable repeats one: the
-/// browser keeps the last value of a repeated switch (<c>spikes/webview2-flags</c>, <c>--js-flags</c>).
+/// browser keeps the last value of a repeated switch (<c>docs/evidence/webview2-flags</c>, <c>--js-flags</c>).
 /// </summary>
 [GeneratedComClass]
 internal sealed partial class EnvironmentOptions(string? arguments, string targetVersion) : ICoreWebView2EnvironmentOptions

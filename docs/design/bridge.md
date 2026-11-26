@@ -13,7 +13,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
 - **Transports:**
   - Windows: `postMessage` (0.2 ms unary).
   - Linux: the script message handler, plus `evaluate_javascript` (0.2–0.3 ms). Built in M1c step 1 through a relay in an isolated script world (section 3, "Linux"): a mean of 0.23–0.26 ms per small call on the bridge probe's Production NativeAOT executable.
-  - Loopback (built in M1a; decided, user, 2026-11-15; decisions "Loopback transport: one ordered send path" and "Loopback transport accepted; Browser surface in its own package"): one streamed channel per document for every host message, call replies included (`POST /_spar/channel`, opened by the `hello`), and the page's messages posted in order to `POST /_spar/send`, one request at a time, with what queues up meanwhile sent together, one message per line. A `fetch` per call, as `spikes/loopback` did, can deliver ids out of order (they are then dropped) and lets long calls use up the browser's six connections. Requests: `Host` checked on every one; the bearer token and, when sent, the `Origin` on bridge requests; `X-Spar-Doc` names the document on sends.
+  - Loopback (built in M1a; decided, user, 2026-11-15; decisions "Loopback transport: one ordered send path" and "Loopback transport accepted; Browser surface in its own package"): one streamed channel per document for every host message, call replies included (`POST /_spar/channel`, opened by the `hello`), and the page's messages posted in order to `POST /_spar/send`, one request at a time, with what queues up meanwhile sent together, one message per line. A `fetch` per call, as `docs/evidence/loopback` did, can deliver ids out of order (they are then dropped) and lets long calls use up the browser's six connections. Requests: `Host` checked on every one; the bearer token and, when sent, the `Origin` on bridge requests; `X-Spar-Doc` names the document on sends.
   - Neither WebView streams intercepted responses usefully, so streams always use credits.
 - **Which window may call what (decided, user, 2026-11-14):**
   - **Default:** every window of the app may call every command, because every window runs the app's own code from its one origin.
@@ -24,7 +24,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - In C#, an optional backend limit (`[SparCommand(TimeoutSeconds = 30)]`, a positive integer; decision "M1a names") is folded into the command's cancellation token.
   - Both end like any cancellation: `cancelled` only when the backend confirms, otherwise outcome unknown. Never retried.
 - **Cancellation:** the page is told "cancelled" only when the backend confirms the command ended on its token (for a stream, after its iterator was disposed). Otherwise it gets the real result, or outcome unknown (`unconfirmed` after the confirmation timeout, `lost` when the connection drops). Never retried. The page sees these as `CallError` with `execution` (decision "Contract syntax"), which replaced the spike's `CancelledError`, `NotExecutedError` and `OutcomeUnknownError`; a confirmed cancel is `kind: "cancelled"`, with `execution` `notStarted` or `stopped` (decision "`CallError` kinds").
-  Details from `spikes/react` ("Cancellation"):
+  Details from `docs/evidence/react` ("Cancellation"):
   - **A cancel that overtakes its call** (it arrived first, on another connection) is remembered by the host for 30 s. The call never runs, and the page gets not-executed `cancelled-before-start`. Implemented, but no test provoked it.
   - **An `OperationCanceledException` from another token** (an internal timeout, say) is not a confirmation. It is reported as `failed`, which is outcome unknown.
   - **Leaving a `for await` loop with `break`** cancels and waits for the confirmation. If none comes, the `break` itself throws outcome unknown.
@@ -36,7 +36,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - `events.reset` is required, because ignoring it leaves stale state; `gap`, `reconnecting` and `resumed` are optional.
     - Each subscription offers only the events it can emit: a coalesced one has no `gap`.
     - The generated type is `Subscription<T>`, an `AsyncIterable` of `Result<T, E, SubscriptionEvents>`.
-    - Checked in `tests/AppModel` (from `spikes/app-model-check`): a missing `reset` fails `tsc` (TS2322, naming `reset`), and so do a misspelled event and a missing `events` object.
+    - Checked in `tests/AppModel` (from `docs/evidence/app-model-check`): a missing `reset` fails `tsc` (TS2322, naming `reset`), and so do a misspelled event and a missing `events` object.
   - **Coalesced subscriptions** (decided, user, 2026-11-14): `[SparSubscription(Coalesce = true)]`, name to settle in M3. The subscription keeps only the newest value and replaces older ones silently, with no `gap` events. It suits state that only matters as its latest value: resource usage, progress, connection status.
     - The page sees each value at most once and always ends on the newest. A resumed subscription starts with the current value.
     - The capacity is 1 by definition, so `Capacity` is not allowed with it (a contract diagnostic).
@@ -135,8 +135,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   - **The page side** (decision "SDK abort confirmation and calls before open accepted"): an aborted call sends `cancel` and waits 5 s for the backend to confirm, then ends as `transport` / `unconfirmed` / `unknown`; a call made before `open` waits for it, and fails `unavailable` / `notStarted` if the channel closes first.
   - **Conformance vectors:** one shared file, `tests/conformance/bridge-messages.json`, read by the C# and the TypeScript tests: every message type in both directions with its canonical bytes, other valid forms (key order, unknown fields, whitespace, an unknown type, the dropped trace values), and the malformed cases above with the id a refusal may use. The C# side runs it in `tests/Spar.Tests`.
 - **Decided before the shared conformance vectors (section 2b); the comparisons are kept as evidence:**
-  - **The encoding (decided, C; the comparison is kept as evidence):** the letter-prefixed lines above, or the JSON envelopes `spikes/wire-details` used (`{"id":7,"ok":…}`, stream items `{"type":"item","value":…}`, the end message `{"type":"end","ok":false,…}`, and an `"arg"` key only when the command takes one). Section 2's envelope examples carry no `id`.
-    - **Measured by `spikes/bridge-encoding`** (WebView2, loopback Chromium, WebKitGTK codec only), comparing (A) letter lines, (B) JSON envelopes and (C) a JSON header, a TAB, then the payload's own JSON:
+  - **The encoding (decided, C; the comparison is kept as evidence):** the letter-prefixed lines above, or the JSON envelopes `docs/evidence/wire-details` used (`{"id":7,"ok":…}`, stream items `{"type":"item","value":…}`, the end message `{"type":"end","ok":false,…}`, and an `"arg"` key only when the command takes one). Section 2's envelope examples carry no `id`.
+    - **Measured by `docs/evidence/bridge-encoding`** (WebView2, loopback Chromium, WebKitGTK codec only), comparing (A) letter lines, (B) JSON envelopes and (C) a JSON header, a TAB, then the payload's own JSON:
       - **Speed and size do not decide.** End to end the three are equal within noise: WebView2 unary 59–79 µs, 100k rows in 163–164 ms, push p99 1.2–1.4 ms. B and C add 20–90 bytes per message, +0.02% on batched streams.
       - **Recommendation: C.**
         - A cannot grow: an older decoder rejected a new header field, and a stray space shifted fields silently.
@@ -149,8 +149,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
         - rejection of duplicate header keys (`"id":7,"id":8` cancelled call 8);
         - a tolerant read of trace values;
         - string messages only, never `PostWebMessageAsJson`, which halved stream speed, cost +50% host CPU and threw on `\ud800`.
-  - **Stream failure delivery (decided, user, 2026-11-14: in-band).** Every item is a `Result`, so a terminal failure arrives in-band and a `for await` loop cannot skip it (`spikes/ts-results`, `docs/app-model.md` 6.2; decision "Stream failures in-band; start-up exit codes; the start-up hook"). The alternative, not chosen: the iterator yields the N items and then throws (`spikes/wire-details`).
-    - **Measured by `spikes/stream-result-cost`** (WebView2 157, Node 24, WebKitGTK 2.52; 1M rows in batches of 1,000, credit window 8):
+  - **Stream failure delivery (decided, user, 2026-11-14: in-band).** Every item is a `Result`, so a terminal failure arrives in-band and a `for await` loop cannot skip it (`docs/evidence/ts-results`, `docs/app-model.md` 6.2; decision "Stream failures in-band; start-up exit codes; the start-up hook"). The alternative, not chosen: the iterator yields the N items and then throws (`docs/evidence/wire-details`).
+    - **Measured by `docs/evidence/stream-result-cost`** (WebView2 157, Node 24, WebKitGTK 2.52; 1M rows in batches of 1,000, credit window 8):
       - **Cost does not decide.**
         - One `Result` per item adds 3–10 ns per row on WebView2 (+8–16 on WebKitGTK) over plain items.
         - That is 0.4–0.6 % of the bridge's 1.63 µs per row.

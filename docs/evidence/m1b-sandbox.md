@@ -1,6 +1,6 @@
 # M1b: the Windows Sandbox runner (step 8c)
 
-Recorded 2026-11-19. What it shows: Spar's Windows Sandbox runner (`src/Spar.Testing/Sandbox/`), its suite `tests/Spar.SandboxTests`, and the Sandbox checks of `Spar.WindowTests` and `Notebook.EndToEndTests`, run end to end. Decisions "Step 8c's shape: the Windows Sandbox runner (user decisions)" and "The Windows Sandbox runner (implementation record; choices for review)". Spike: [`spikes/sandbox-signout`](../../spikes/sandbox-signout/RESULTS.md).
+Recorded 2026-11-19. What it shows: Spar's Windows Sandbox runner (`src/Spar.Testing/Sandbox/`), its suite `tests/Spar.SandboxTests`, and the Sandbox checks of `Spar.WindowTests` and `Notebook.EndToEndTests`, run end to end. Decisions "Step 8c's shape: the Windows Sandbox runner (user decisions)" and "The Windows Sandbox runner (implementation record; choices for review)". Spike: [`docs/evidence/sandbox-signout`](../../docs/evidence/sandbox-signout/RESULTS.md).
 
 ## Environment
 
@@ -74,7 +74,7 @@ Two SYSTEM tests were added after the five runs, in answer to the user-session l
 | Run | Wall | Result | What failed, and the fix before the next run |
 |---|---|---|---|
 | 1 (`115933`) | 327 s | 18 passed, 10 failed | Every app in the user session: "Missing: WebView2 Runtime". The guest's registration named 157.0.4341.46 while its files were 157.0.4341.60. The runner then set `Clients\…\pv` |
-| 2 (`120755`) | 334 s | 20 passed, 10 failed | The same. The loader follows `ClientState\…\EBWebView`, not `pv` (already in the pitfalls, from `spikes/startup-prerequisites`). The runner now sets both. Two SYSTEM tests check it without a user session: the registration names a Runtime on disk, and a Production app as SYSTEM logs "WebView2 Runtime 157.0.4341.60" |
+| 2 (`120755`) | 334 s | 20 passed, 10 failed | The same. The loader follows `ClientState\…\EBWebView`, not `pv` (already in the pitfalls, from `docs/evidence/startup-prerequisites`). The runner now sets both. Two SYSTEM tests check it without a user session: the registration names a Runtime on disk, and a Production app as SYSTEM logs "WebView2 Runtime 157.0.4341.60" |
 | 3 (`121741`) | 171 s | 25 passed, 7 failed | Passed: the offline page, the 25 keys and 2 mouse buttons, the clean first run. Failed: (a) the guard's list was not found, because it sat below the window's fold and a click needs it on screen; it is now focused through UI Automation. (b) The second window was shown over the app's, stayed behind it, and the click hit the app; it now goes beside the app's window. (c) The menu check read the app's own system menu ("System"); it now reads the browser's windows only. (d) The sign-out test stopped at (a) |
 | 4 (`122244`) | 146 s | **30 passed, 2 failed** | (a) "Wait / Close anyway": after six arrow keys sent at once, the list did not read "Never answer" within 5 s; the keys now go one at a time, each read back. (b) The sign-out's session end: the app was ended with the test process (below) |
 
@@ -90,7 +90,7 @@ Two SYSTEM tests were added after the five runs, in answer to the user-session l
 | 25 browser and devtools keys and the mouse's back and forward buttons, with the "New page" dialog open and "Draft" typed: no new window in the app's process tree, the dialog's heading not moved, the field still "Draft", no browser UI in the dump; then "x" typed gives "Draftx" | passed: "nothing happened" for each of the 27 | 28.25 s |
 | The text field's menu (a real right-click on "Search pages"): exactly Cut, Copy, Paste, Select all, all disabled on the empty field; Escape closes it; a right-click on the heading "Start your notebook" opens none | passed | 3.57 s |
 | The clean, offline first run in a fresh sandbox: ready after 3,519 ms, title "Notebook", the page's heading, close with exit 0, every process gone, the log and the browser profile written; the `data` folder not created (the Notebook creates it at its first page) | passed | 4.01 s |
-| The sign-out | see [`spikes/sandbox-signout`](../../spikes/sandbox-signout/RESULTS.md): the sandbox stays and the logs come back, but the app was ended with the test process, about 130 ms after `shutdown /l`, before its session end. The app is now launched outside the fixture's kill-on-close job (`OutlivesTest`); not run again | |
+| The sign-out | see [`docs/evidence/sandbox-signout`](../../docs/evidence/sandbox-signout/RESULTS.md): the sandbox stays and the logs come back, but the app was ended with the test process, about 130 ms after `shutdown /l`, before its session end. The app is now launched outside the fixture's kill-on-close job (`OutlivesTest`); not run again | |
 
 The Production input checks were also all "nothing happened" in run 3. The F5 and Ctrl+R pair of a Development build was not checked: the payload carries only the Production executable.
 

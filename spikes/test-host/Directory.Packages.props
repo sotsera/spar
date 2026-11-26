@@ -1,9 +1,0 @@
-<Project>
-  <!-- Repository versions first (xunit.v3, Microsoft.Playwright, DI), then the spike's additions. -->
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
-
-  <ItemGroup>
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
-    <PackageVersion Include="xunit.v3.aot" Version="4.0.3" />
-  </ItemGroup>
-</Project>

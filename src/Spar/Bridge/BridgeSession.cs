@@ -20,7 +20,7 @@ internal sealed class BridgeSession : IDisposable
     /// <summary>How far into an oversized message its header is looked for, to answer it by its id.</summary>
     private const int HeaderSearchChars = 16 * 1024;
 
-    /// <summary>How long a cancel for a call that has not arrived yet is remembered (spikes/react, "Cancellation").</summary>
+    /// <summary>How long a cancel for a call that has not arrived yet is remembered (docs/evidence/react, "Cancellation").</summary>
     private static readonly TimeSpan EarlyCancelMemory = TimeSpan.FromSeconds(30);
 
     private static readonly Action<ILogger, string, string, long, string, Exception?> CommandFailed = LoggerMessage.Define<string, string, long, string>(

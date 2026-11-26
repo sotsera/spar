@@ -21,6 +21,13 @@ Spar | Spar.Hosting.SparFrontend.<IsBrotliSupported>k__BackingField | readonly |
 Spar | Spar.DevServer.DevServerSettings.<IsSupported>k__BackingField | readonly | The development server's feature switch, read once from AppContext: on only in a Development build that serves its page from Vite, the same for the whole process by design, and trimmed away elsewhere.
 Spar | Spar.DevServer.DevServerProxy.RequestLimit | readonly | A TimeSpan constant: how long one proxied request waits for the development server.
 Spar | Spar.DevServer.DevServerProxy.<ForwardedHeaders>k__BackingField | readonly | The names of the request headers the proxy forwards, filled once, read only.
+Spar | Spar.Devtools.SparDevtools.<IsSupported>k__BackingField | readonly | The devtools' feature switch, read once from AppContext: on only in a Development build of an app, the same for the whole process by design, and trimmed away elsewhere.
+Spar | Spar.Devtools.DevtoolsTools.Names | readonly | The devtools' tool names, filled once and only read (initialize lists them, the tool table answers them).
+Spar | Spar.Devtools.DevtoolsTools.TextKinds | readonly | The locator kinds that match an element by a text, filled once and only read.
+Spar | Spar.Devtools.DevtoolsTools.CallWait | readonly | A TimeSpan constant: how long the call tool waits for its command by default.
+Spar | Spar.Devtools.DevtoolsTools.ActionWait | readonly | A TimeSpan constant: how long a page action waits for its element by default.
+Spar | Spar.Devtools.DevtoolsTools.Quiet | readonly | A TimeSpan constant: how long no call may run for an action's calls to count as settled.
+Spar | Spar.Devtools.DevtoolsTools.Settle | readonly | A TimeSpan constant: the longest an action waits for its calls to settle.
 Spar | Spar.HotReload.BackendUpdates.Gate | readonly | The lock that guards the two fields below.
 Spar | Spar.HotReload.BackendUpdates._listeners | writable | The hosts listening for Hot Reload updates (Development builds only, behind the development switch), replaced under the lock: Hot Reload patches the whole process, so every app in it, each test app included, receives every update by design; each host removes its own listener when it stops.
 Spar | Spar.HotReload.BackendUpdates._revision | writable | The count of Hot Reload updates applied to this process, written under the lock: one count per process by design, since an update patches the whole process.
@@ -82,6 +89,7 @@ Spar | Spar.Hosting.PagePolicy.Declarable | readonly | Feature name to Permissio
 Spar | Spar.Hosting.PageSecurityMismatch.Differs | readonly | A log message delegate, as above.
 Spar | Spar.Hosting.PageSecuritySetup.Overrides | readonly | A log message delegate, as above.
 Spar | Spar.Runtime.SparPageSecurity.<Default>k__BackingField | readonly | The strict default declaration, an object with init-only properties: never changed.
+Spar | Spar.Telemetry.TelemetryRoute.<None>k__BackingField | readonly | The route without the layer: no relay, so it answers 404 and never reaches its rate limiter.
 
 # Spar.Windows (the Windows host, in Windows apps)
 # The COM source generator's per-interface data: each interface's IID and its vtable of stubs, built from constants.
@@ -211,6 +219,10 @@ Spar.Linux | Spar.Linux.Testing.TestWindowProcess.s_unavailable | writable | Why
 Spar.Linux | Spar.Linux.Testing.XInput.NamedKeysyms | readonly | A frozen dictionary of constant key names to X keysyms, filled once, never written.
 Spar.Linux | Spar.Linux.Testing.XInput.PunctuationCodes | readonly | A frozen dictionary of constant DOM codes to characters, filled once, never written.
 Spar.Linux | Spar.Linux.WindowTheme.s_fixed | writable | A counter changed only with Interlocked.Increment, so each test window's fixed theme gets a CSS class of its own; only WindowTheme.Fixed, which the test host alone calls, changes it.
+Spar.Linux | Spar.Linux.Devtools.DevtoolsPage.Again | readonly | A TimeSpan constant: how often a devtools request that found no document yet is sent again.
+
+# Spar.OpenTelemetry (the optional OpenTelemetry layer, in apps that reference it)
+Spar.OpenTelemetry | Spar.OpenTelemetry.OtlpRelay.Pause | readonly | A TimeSpan constant: how long the relay answers 503 at once after a failure.
 
 # Spar.Loopback (test and development variants only)
 Spar.Loopback | Spar.Loopback.LoopbackApp.PortWait | readonly | A TimeSpan constant.
@@ -345,3 +357,18 @@ Spar.Testing | Spar.Testing.SparBlackBoxOptions.LinuxRemoved | readonly | An arr
 Spar.Testing | Spar.Testing.SparBlackBoxOptions.Settable | readonly | An array of constant prefixes, filled once, never written.
 Spar.Testing | Spar.Testing.TestDataRoots.LinuxBlackBoxBase | readonly | A Lazy of the Linux black box's roots folder under artifacts/linux-homes/, computed once, thread-safe; the same for every app in the run by design (each launch takes a root of its own under it).
 Spar.Testing | Spar.Testing.TestDataRoots.Created | readonly | An AsyncLocal holder: each flow (a test of the fixture) sees only the list it set itself, so tests running at once never share it; empty for every app.
+Spar.Testing | Spar.Testing.SceneCapture.IdleLimit | readonly | A TimeSpan constant: how long a scene's capture waits for the page to be idle.
+Spar.Testing | Spar.Testing.SceneCapture.Quiet | readonly | A TimeSpan constant: how long the page must be idle before a scene's capture.
+Spar.Testing | Spar.Testing.SceneCapture.Utf8 | readonly | A UTF-8 encoding without a byte order mark, immutable, for the capture's text files.
+Spar.Testing | Spar.Testing.SparScene.DefaultSize | readonly | A constant pair: a scene's page size unless the scene sets its own.
+Spar.Testing | Spar.Testing.SparScene.DefaultTime | readonly | A DateTimeOffset constant: the instant a scene's clock starts at unless the scene sets its own.
+Spar.Testing | Spar.Testing.SparScenes.Gate | readonly | The lock around the scene registry below.
+Spar.Testing | Spar.Testing.SparScenes.Scenes | readonly | The test project's scenes, filled once by the generated module initializer before any test runs and only read after; every access holds Gate.
+Spar.Generator | Spar.Generator.Descriptors.SceneDuplicate | readonly | An immutable diagnostic descriptor (SPAR112).
+Spar.Generator | Spar.Generator.Descriptors.SceneName | readonly | An immutable diagnostic descriptor (SPAR111).
+Spar.Generator | Spar.Generator.Descriptors.SceneShape | readonly | An immutable diagnostic descriptor (SPAR110).
+Spar.Generator | Spar.Generator.SceneAnalysis.Name | readonly | A compiled regular expression for scene names, immutable and safe to share.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomationEventHandler>F{file}__InterfaceImplementation.Vtable | readonly | Generated by the COM source generator from the declaration: an IID or a vtable of stubs, constant for the process.
+Spar.Testing | <Spar_Testing_BlackBox_Interop_IUIAutomationEventHandler>F{file}__InterfaceInformation.<Iid>k__BackingField | readonly | As above.
+Spar.Testing | <Spar_Testing_InvokedHandler>F{file}__ComClassInformation.s_vtables | writable | The COM generator's vtable cache for the invoke confirmation's event handler: filled on first use from constants; a racing writer stores an equivalent table, never test data.
+Spar.Testing | Spar.Testing.AutomationHost.PageDocument | readonly | An immutable record of a constant query (the page's document role), built once, never written.

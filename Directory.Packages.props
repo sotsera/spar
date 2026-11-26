@@ -23,12 +23,20 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Configuration" Version="11.0.0" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.64.1" />
+    <!-- The spar tool's MCP server (src/Spar.Tool/Mcp; decision "M2e's decide-first questions", item 1). -->
+    <PackageVersion Include="ModelContextProtocol.Core" Version="2.4.0" />
+    <!-- The optional OpenTelemetry layer (src/Spar.OpenTelemetry; decision "M2d's decide-first questions"). -->
+    <PackageVersion Include="OpenTelemetry" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.21.0" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.21.0" />
     <!--
       The Windows host (src/Spar.Windows): CsWin32 generates its Win32 declarations; the WebView2 package is used only
       for its loader (static library under NativeAOT, DLL on CoreCLR) and its header, never for its managed API.
     -->
     <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.369" />
+    <!-- The evaluation's runner (eng/eval/run.cs) reads eval.yaml. -->
+    <PackageVersion Include="YamlDotNet" Version="18.1.0" />
     <PackageVersion Include="xunit.v3" Version="4.0.3" />
     <!-- The NativeAOT test lane (plan section 5): the same tests against xUnit's source-generated flavour. -->
     <PackageVersion Include="xunit.v3.aot" Version="4.0.3" />

@@ -3,6 +3,7 @@ import { addBackendUpdateHandler, listenForBackendUpdates, type BackendUpdate } 
 import { Connection, type BridgeChannel, type Decoder } from "./connection.js";
 import { callOf, type Call, type CallOptions, type ErrorCases, type Outcome } from "./results.js";
 import { watchFrames } from "./splash.js";
+import { startPageTelemetry } from "./telemetryBoot.js";
 
 export {
   configureSpar,
@@ -26,6 +27,7 @@ export { loopbackChannel, takeToken, type LoopbackOptions, type TokenPage } from
 export { hostChannel, webViewChannel, webViewPort, type WebViewOptions, type WebViewPort } from "./webview.js";
 export { isWebKitHost, webKitChannel, type RelayTarget, type WebKitOptions } from "./webkit.js";
 export { setColorScheme, type ColorScheme, type ColorSchemeError } from "./colorScheme.js";
+export { traced } from "./tracing.js";
 
 let current: Connection | undefined;
 
@@ -38,6 +40,12 @@ export function connectSpar(channel: BridgeChannel, contracts: string): Connecti
   // can load the SDK without Vite (a test page served as it is), where `import.meta.env` does not exist.
   if (import.meta.env?.DEV === true) {
     listenForBackendUpdates(current);
+  }
+
+  // Only when `Program.cs` turned telemetry on: the Vite plugin defines the flag, and `vite build` drops the start and
+  // its lazy chunk otherwise. It runs alongside the app's start and never delays it.
+  if (import.meta.env?.SPAR_TELEMETRY === true) {
+    void startPageTelemetry(current, channel);
   }
 
   return current;

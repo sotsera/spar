@@ -195,6 +195,8 @@ dotnet publish Notes -c Release
 
 This builds the page with Vite, packs it into the executable, and publishes one NativeAOT executable for the OS you run it on, in `Notes/bin/Production/Release/net11.0/<runtime>/publish/`: `win-x64/publish/Notes.exe` on Windows, `linux-x64/publish/Notes` on Linux, about 4.7 MB for the new app, beside its debug symbols (`Notes.pdb`, `Notes.dbg`), which you do not ship. NativeAOT does not cross-compile between OSes: publish each OS's executable on that OS, or in a container of it. The executable needs no .NET or Node.js on the user's machine; on Windows it needs the WebView2 Runtime, on Linux GTK 4 and WebKitGTK 6.0.
 
+Only a Release publish is a build you ship. A Debug build carries development code (the development server's connection, the devtools, detailed errors for the page), so `dotnet publish -c Debug` stops with error SPAR140 before it writes anything. For a support build that must never reach users as a release, `-p:SparAllowNonProductionPublish=true` publishes it anyway, with warning SPAR140 in place of the error.
+
 The app can publish differently, each a choice in its own project file: on CoreCLR (framework-dependent, or as a self-contained single file), with NativeAOT while accepting a library's AOT warnings, or with culture data. [Publishing choices](publishing-choices.md) shows each, with Microsoft.Data.SqlClient as a worked example.
 
 ## 8. Check and wire with the spar tool
@@ -227,6 +229,12 @@ dotnet spar init frontend --framework react
 ```
 
 It adds the `@spar/app` dependency and Spar's Vite plugin, and `SparFrontendPath` in the project when the folder is not `frontend/` (`--frontend <folder>` names it), then runs `npm install --ignore-scripts` for the lockfile. It shows every change as a diff and asks before writing; `--yes` writes without asking, and without a terminal to ask in it writes nothing unless given `--yes`. When `vite.config` is too unusual to edit safely, it prints the lines to add instead. Build the app after it (`dotnet build`), and commit the new lockfile.
+
+While a Development build runs, the tool also looks at it and drives its page: `dotnet spar tree` lists the page's elements, `dotnet spar click`, `fill` and `wait` act on them, `dotnet spar call` runs one of the app's commands, and `dotnet spar logs` and `calls` show what happened. [Devtools for agents and scripts](devtools.md) describes them.
+
+`dotnet spar dev` keeps a Development build running and, on `dotnet spar reload`, builds it again: a failed build answers with its errors at file and line and keeps the app running, a good one restarts the app in its window's place and answers once the page is ready. [Build and restart with spar dev](spar-dev.md) describes it.
+
+`dotnet spar snap <scene>` captures a scene of the app, a state written as C# in its end-to-end test project: a picture of the page, its accessibility tree and the commands it called, the same every run on one machine. [Capture scenes with spar snap](spar-snap.md) describes it.
 
 ## 9. Run it in CI
 

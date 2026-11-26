@@ -16,7 +16,20 @@ internal interface IBlackBoxAutomation
     /// <summary>The elements <paramref name="target"/> finds in the main window; empty when the app has no window.</summary>
     Task<IReadOnlyList<FoundElement>> FindAsync(int processId, ElementTarget target, CancellationToken cancellationToken = default);
 
-    /// <summary>Invokes the one element <paramref name="target"/> finds, or says why it could not.</summary>
+    /// <summary>
+    /// How long after the page first appears in the accessibility tree an action through it (an invoke, a focus) waits
+    /// before it is sent: on Windows an invoke that soon can be taken and never reach the page (pitfalls, "A black-box
+    /// Invoke right after a page button appears can do nothing"); zero on Linux, where none was lost.
+    /// </summary>
+    TimeSpan PageSettleTime { get; }
+
+    /// <summary>Whether the main window's accessibility tree holds the page now: its document element (Windows), always on Linux.</summary>
+    Task<bool> HasPageAsync(int processId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Invokes the one element <paramref name="target"/> finds, or says why it could not. A done outcome carries the
+    /// browser's confirmation to wait for, where the platform gives one (<see cref="ElementOutcome.Confirmation"/>).
+    /// </summary>
     Task<ElementOutcome> InvokeAsync(int processId, ElementTarget target, CancellationToken cancellationToken = default);
 
     /// <summary>Reads the value of the one element <paramref name="target"/> finds, or says why it could not.</summary>
@@ -97,10 +110,28 @@ internal enum ElementStatus
 }
 
 /// <summary>
-/// An operation's outcome: its status, the value it read, the names of the elements found when they were several, and
-/// the element's rectangle when the operation read it.
+/// An operation's outcome: its status, the value it read, the names of the elements found when they were several, the
+/// element's rectangle when the operation read it, and an invoke's confirmation to wait for.
 /// </summary>
-internal sealed record ElementOutcome(ElementStatus Status, string? Value = null, IReadOnlyList<string>? Names = null, ScreenRect? Bounds = null);
+internal sealed record ElementOutcome(
+    ElementStatus Status,
+    string? Value = null,
+    IReadOnlyList<string>? Names = null,
+    ScreenRect? Bounds = null,
+    IInvokeConfirmation? Confirmation = null);
+
+/// <summary>
+/// That an invoke reached the page (Windows: UI Automation's Invoked event on the element, or the element gone from the
+/// tree). Disposal removes what waiting for it needed; it never repeats the invoke.
+/// </summary>
+internal interface IInvokeConfirmation : IAsyncDisposable
+{
+    /// <summary>Completes when the page has taken the invoke.</summary>
+    Task Invoked { get; }
+
+    /// <summary>Whether the invoked element has left the accessibility tree: a press that removed it gets no confirmation.</summary>
+    Task<bool> IsGoneAsync();
+}
 
 /// <summary>A native dialog as it was read: its window, title, text parts and own buttons.</summary>
 /// <param name="Native">The accessibility client's own reference to the dialog (Linux: its AT-SPI node), when it has no window handle.</param>
@@ -156,7 +187,7 @@ internal sealed record BlackBoxQuery(
 
 /// <summary>
 /// The UI Automation control type a native element of a role has (UIAutomationClient.h). The browser gives each page
-/// element its ARIA role (<c>heading</c>, <c>button</c>, <c>navigation</c>, measured in <c>spikes/blackbox-desktop</c>); a
+/// element its ARIA role (<c>heading</c>, <c>button</c>, <c>navigation</c>, measured in <c>docs/evidence/blackbox-desktop</c>); a
 /// native element has none, so a role also matches the control type that stands for it (a dialog's buttons).
 /// </summary>
 internal static class NativeControlTypes

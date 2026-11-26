@@ -69,7 +69,7 @@ The Notebook as a NativeAOT executable (Production and Development variants) and
 | Dark, CoreCLR Debug (services built by JIT before navigation), transparent / opaque, 3 + 3 runs | 65–69 | 0 / 0 | 0 / 0 | — | dark |
 
 - The first captured frame was already the window colour, 34–72 ms after `Process.Start` ([`first-frame-dark.png`](m1b-startup/first-frame-dark.png), [`first-frame-light.png`](m1b-startup/first-frame-light.png)); the page in light renders light ([`ready-light.png`](m1b-startup/ready-light.png)) and in dark, dark ([`ready-dark.png`](m1b-startup/ready-dark.png)).
-- The opaque WebView background showed no `#121212` either: in a normal start the page paints before Chromium's dark canvas would (as `spikes/theme-startup` found), so transparency did not change what was seen here.
+- The opaque WebView background showed no `#121212` either: in a normal start the page paints before Chromium's dark canvas would (as `docs/evidence/theme-startup` found), so transparency did not change what was seen here.
 
 **The cost of the transparent background** (NativeAOT Development, `SPAR_DEV_WEBVIEW_BACKGROUND=default` for the opaque runs, alternating, 7 pairs; memory is the private working set 2 s after `ui-ready`):
 
@@ -108,7 +108,7 @@ Captured with `PrintWindow` from the probe's process, without input; the dialogs
 
 ## Not done or not verified
 
-- **Focus on the user's desktop:** the probe saw "foreground taken" and the primary as the foreground window, but the probe itself was not the foreground process and no click started the second launch, so this does not show Windows' foreground rules; `spikes/windows-single-instance` checked them with real clicks. Not re-run.
+- **Focus on the user's desktop:** the probe saw "foreground taken" and the primary as the foreground window, but the probe itself was not the foreground process and no click started the second launch, so this does not show Windows' foreground rules; `docs/evidence/windows-single-instance` checked them with real clicks. Not re-run.
 - **A live system theme change** (`WM_SETTINGCHANGE`, `ImmersiveColorSet`): built, not run, since it needs the user's setting changed; added to the plan's "Checks that need the user at the PC".
 - **Exit 9 (another user):** unit-tested only as far as the mapping; no second account was used. **Windows below 22H2 or below 1809, a real Runtime 139 or older, Common Controls 5 (`MessageBoxW` fallback), the download page opening, Narrator, DPI above 100 %, several monitors.**
 - **The splash and the page's theme style:** the build does not yet read the colours from `Program.cs` as constants to write the theme style and its CSP hash into `index.html` (plan 3d, "The page style"); the window's first frame does not need it.

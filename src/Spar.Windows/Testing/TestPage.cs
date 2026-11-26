@@ -47,14 +47,21 @@ internal sealed class TestPage : IDisposable
 
     /// <summary>
     /// Runs before the window's first navigation, on its UI thread: the events, <c>Runtime.enable</c>, the main frame's
-    /// id, and the engine as a script of every new document's isolated world.
+    /// id, and the engine as a script of every new document's isolated world. The devtools pass
+    /// <paramref name="answerDialogs"/> false: on the developer's desktop a script dialog is the developer's to answer.
     /// </summary>
     public static async Task<TestPage> InstallAsync(
-        Func<string, string, Task<string>> call, Func<string, Action<string>, Task<IDisposable>> subscribe, SparTestAutomation automation)
+        Func<string, string, Task<string>> call, Func<string, Action<string>, Task<IDisposable>> subscribe, SparTestAutomation automation,
+        bool answerDialogs = true)
     {
         var page = new TestPage(call, automation);
         foreach (var name in Events)
         {
+            if (!answerDialogs && name == "Page.javascriptDialogOpening")
+            {
+                continue;
+            }
+
             page._subscriptions.Add(await subscribe(name, json => page._events.Writer.TryWrite((name, json))));
         }
 

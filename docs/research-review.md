@@ -42,7 +42,7 @@ Each item ends with a proposal:
 | **Per-call deadlines**, plus idle timeouts for streams. | AF: 15 s by default. The friction there: calls that wait on a person (pickers) needed `timeoutMs: 0`. | **Decided (2026-11-14):** no default deadline. The page passes `AbortSignal.timeout(ms)` as the call's `signal`; C# may set an optional backend limit (`[SparCommand(Timeout = …)]`) folded into the command's token. Streams get no default idle timeout. Earlier note: a deadline needs a rule for calls that wait on the user. |
 | **Serial groups:** commands in a named group never overlap, for example recipe saves. | v4 | **Discuss (M3).** |
 | **Exception redaction in Release:** unhandled exceptions reach the page as a correlation id, with details only in development. An oversized result fails only its own call. | — | **Adopt (M1).** |
-| **A bytes wire type** for blobs and exports, without base64 in JSON. | T (raw `Response`/`ArrayBuffer`); alternatively opaque resource handles | **Discuss (M3).** `spikes/wire-details` covers `byte[]` for now. |
+| **A bytes wire type** for blobs and exports, without base64 in JSON. | T (raw `Response`/`ArrayBuffer`); alternatively opaque resource handles | **Discuss (M3).** `docs/evidence/wire-details` covers `byte[]` for now. |
 | **Per-command or per-window permissions:** an allow-list of the commands a window may call. | v1, v2, v4, T (app commands are open to every window by default) | **Decided (2026-11-14):** every window may call every command by default; a window can declare an allow-list in C# (for example `w.Commands(c => c.Allow<IConnections>())`), and other calls are refused before running with `rejected` / `forbidden-command` / `notStarted`. Earlier note: it has little value with one origin and the navigation lock; it matters with multi-window. |
 | **Protecting the bridge from the page:** an isolated script world on WebKitGTK with a relay in the top document only, frozen bridge entry points, and an optional `Object.prototype` freeze. | T (`freezePrototype` opt-in) | **Adopt** the Linux design (M1). **Discuss** the freeze as a 3c opt-in. |
 
@@ -74,13 +74,13 @@ Small items, each found as a real bug or verified behaviour:
   - script dialogs off (`alert`/`confirm`/`prompt`, v2);
   - history navigation off (mouse back, Alt+Left, Runtime 115+);
   - a policy for `<input type=file>`.
-- **Navigation lock detail:** WebView2 sends a navigation's request before the host cancels it, which uses up one-time links. Answer it with an empty response. Plan 3b instead filters every document request (`AddWebResourceRequestedFilter("*", DOCUMENT)`) and answers foreign documents with 403. With that filter, `spikes/csp-navigation` saw no foreign request reach the network, and the handler was never called for the cancelled navigations, so neither response was exercised.
+- **Navigation lock detail:** WebView2 sends a navigation's request before the host cancels it, which uses up one-time links. Answer it with an empty response. Plan 3b instead filters every document request (`AddWebResourceRequestedFilter("*", DOCUMENT)`) and answers foreign documents with 403. With that filter, `docs/evidence/csp-navigation` saw no foreign request reach the network, and the handler was never called for the cancelled navigations, so neither response was exercised.
 - **Check the profile folder actually in use** (`ICoreWebView2Environment7.UserDataFolder`), because policy can redirect it (v2).
 - **Profiles:**
   - environments sharing a profile must use identical options (v1, v5, T);
   - WebKitGTK without an explicit data manager falls back to a shared `webkitgtk` folder;
   - no file grant or helper may ever reach the profile folder (T).
-- **Background colour:** set it through `ICoreWebView2ControllerOptions3.DefaultBackgroundColor`, feature-detected (T). Tauri also uses the environment variable as a fallback; v7 does not: `spikes/theme-startup` did not need it, and `WEBVIEW2_DEFAULT_BACKGROUND_COLOR` overrides the creation options (plan 3d).
+- **Background colour:** set it through `ICoreWebView2ControllerOptions3.DefaultBackgroundColor`, feature-detected (T). Tauri also uses the environment variable as a fallback; v7 does not: `docs/evidence/theme-startup` did not need it, and `WEBVIEW2_DEFAULT_BACKGROUND_COLOR` overrides the creation options (plan 3d).
 - **Linux GPU workarounds must keep working in Production:** `__NV_DISABLE_EXPLICIT_SYNC`, `WEBKIT_DISABLE_DMABUF_RENDERER` and `WEBKIT_DISABLE_COMPOSITING_MODE` fix blank or white windows and crashes with NVIDIA. The 3c environment filter must block only the variables it names, and `spar doctor` should suggest these (T).
 - **Teardown in a visible window:** a handle leak in WebView2's network service appeared only with visible windows. The mitigation was to hide the controller before `Close`, navigate to a blank page, and post the final close outside the callback. Recheck it in M1 (v1).
 - **Long paths:** lengthening the data root from 114 to 169 characters broke PDF staging and `localStorage` persistence. Add a long-install-path test (v6).
@@ -132,7 +132,7 @@ Small items, each found as a real bug or verified behaviour:
 | **Generality fixtures for the package-only consumer test:** a folder name with a space, an assembly name different from the project, a custom app id, a non-default frontend folder, paths containing `caffè`. | AF Measure, v4 | **Adopt (M1).** |
 | **A UI Automation smoke test of the Release executable,** which has no devtools. | v4, v6 Sandbox | **Adopt (M1 or M4).** |
 | **Fixture rules:** assertion, capture and teardown failures reported together; unresolved cleanup is not a pass; an empty test selection fails; explicit SKIP lines. | v4 | **Adopt (M1).** |
-| **Native pixel checks:** a CDP capture does not prove the native window painted. | v2 | Covered by `spikes/theme-startup`. |
+| **Native pixel checks:** a CDP capture does not prove the native window painted. | v2 | Covered by `docs/evidence/theme-startup`. |
 | **Sandbox lessons, recorded now:** the elevated runner makes WebView2 ignore environment overrides, so the profile has to be set by policy in the guest; the guest's WebView2 registration disagreed with the files on disk; no CDP in the guest (use UI Automation or winapp); give the guest an ID first; read results from the `wsb exec` JSON exit code; the colour mode cannot be set from `.wsb`. | v5, v6 | **Pitfalls now.** Write a Sandbox skill in M4. |
 | **Antivirus delays:** Defender trust checks made up 99% of loader waits (1.28 s to 13.7 s), because randomized fixture paths defeated its caching. A Release-only `PathMap` fixed it. | v2 | **Pitfall now.** |
 
@@ -178,7 +178,7 @@ Small items, each found as a real bug or verified behaviour:
 - **Updates:** a signature is mandatory and independent of Authenticode, plus `relaunch` (T).
 - **SBOM, `SHA256SUMS`, and whether symbols ship** (v4 put a 16.5 MB `.pdb` next to a 3.8 MB exe).
 - **AppImage:** 2–6 MB becomes 70 MB or more; it must be built on the oldest supported glibc (T).
-- **Asset codec control:** on a 1.4 MB synthetic corpus, the whole exe was 1.60 MB with Deflate, 2.27 MB with Brotli and 2.56 MB raw (v1). v7 measured Brotli as 44% smaller than raw on a 2.8 MB bundle. **Adopt** a Deflate control on the real bundle before M1 packing. Status: `spikes/asset-packing` measured Deflate only inside the zip container, where its payloads were about 15% larger than Brotli's and the zip reader cost 0.5–1.0 MB. Per-file Deflate inside Spar's own index was measured on 2026-11-15 on the real bundle: Brotli kept the smaller executable (46 KB and 155 KB smaller) and Deflate decoded faster; packing stays Brotli (decision "Frontend packing: the Deflate control keeps Brotli").
+- **Asset codec control:** on a 1.4 MB synthetic corpus, the whole exe was 1.60 MB with Deflate, 2.27 MB with Brotli and 2.56 MB raw (v1). v7 measured Brotli as 44% smaller than raw on a 2.8 MB bundle. **Adopt** a Deflate control on the real bundle before M1 packing. Status: `docs/evidence/asset-packing` measured Deflate only inside the zip container, where its payloads were about 15% larger than Brotli's and the zip reader cost 0.5–1.0 MB. Per-file Deflate inside Spar's own index was measured on 2026-11-15 on the real bundle: Brotli kept the smaller executable (46 KB and 155 KB smaller) and Deflate decoded faster; packing stays Brotli (decision "Frontend packing: the Deflate control keeps Brotli").
 
 ## 11. Measurement (M4, method from now)
 
@@ -203,7 +203,7 @@ Small items, each found as a real bug or verified behaviour:
 ## 12. Smaller decisions to revisit
 
 - **`InvariantGlobalization=true` by default** has unwritten localisation consequences, and SqlClient already needs it off (v1). Decide it together with localisation.
-- **Null against missing on the wire:** v1 kept them distinct. Decide with the wire details (`spikes/wire-details`).
+- **Null against missing on the wire:** v1 kept them distinct. Decide with the wire details (`docs/evidence/wire-details`).
 - **A short threat model section** naming what the controls defend. Frontend content is untrusted, even a compromised bundled SPA; a nonce proves freshness, not trust; same-user native code is not sandboxed (v1). **Adopt** in the plan.
 - **A CSP diagnostic:** once Spar adds a hash or nonce to a directive (for example the 3d theme style), browsers ignore that directive's `'unsafe-inline'`, which silently breaks CSS-in-JS. Warn at build time (T). **Adopt** in 3b.
 - **Static checks on the generated client:** a contract hash in the generated TypeScript, plus a gzip budget and licence checks in the frontend's `check` script. **Decided (2026-11-14):** the contract fingerprint (already planned) yes; an optional bundle budget (`SparBundleBudget`, off by default); no built-in licence check, the docs point to existing tools.

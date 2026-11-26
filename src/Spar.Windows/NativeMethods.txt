@@ -28,7 +28,9 @@ GetModuleHandle
 GetMonitorInfo
 GetProcessTimes
 GetStdHandle
+GetSystemMetricsForDpi
 GetSystemTimePreciseAsFileTime
+GetWindowLong
 IDC_ARROW
 InvalidateRect
 IsIconic
@@ -39,6 +41,8 @@ LoadCursor
 MessageBox
 MINMAXINFO
 MonitorFromPoint
+MonitorFromRect
+MonitorFromWindow
 MsgWaitForMultipleObjectsEx
 OpenProcess
 PeekMessage
@@ -49,6 +53,8 @@ SendMessage
 SetCurrentProcessExplicitAppUserModelID
 SetEnvironmentVariable
 SetForegroundWindow
+SetWindowLong
+SetWindowPlacement
 SetWindowPos
 ShellExecute
 ShowWindow

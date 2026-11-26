@@ -1,6 +1,0 @@
-RUN runtime=jit mode=read arg=typed-sync sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
-RUN 0 rows=1000000 ms=1258 rowsPerSec=795092 allocatedMB=326.6 checksum=532994389691
-RUN 1 rows=1000000 ms=897 rowsPerSec=1114345 allocatedMB=326.6 checksum=532994389691
-RUN 2 rows=1000000 ms=845 rowsPerSec=1183925 allocatedMB=326.6 checksum=532994389691
-RESULT read variant=typed-sync rows=1000000 medianMs=897 rowsPerSec=1114345 payloadMBps=217.8 runsMs=[1258, 897, 845] checksum=532994389691
-MEM end peakWorkingSetMB=77.1 workingSetMB=77.1 peakPrivateMB=40.5 allocatedMB=980.7 gc0=54 gc1=2 gc2=1 cpuMs=3031

@@ -1,8 +1,0 @@
-exit 0 wallMs 1270
-RUN runtime=jit mode=query-cancel arg=waitfor-sync sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
-SERVER before cancel: request=WAITFOR/suspended/WAITFOR/cpu=0 session=running/opentran=0 locks=0
-SERVER after: request gone 7.4 ms after cancel (last seen: ); now request=none session=sleeping/opentran=0 locks=0
-OUTCOME SqlException(Number=0, Class=11): A severe error occurred on the current command.  The results, if any, should be discarded.
-RESULT query-cancel case=waitfor-sync cancelToExceptionMs=4.5 requestGoneAfterCancelMs=7.4 connectionState=Open reusable=yes (1.9 ms, SELECT 1 -> 1)
-MEM end peakWorkingSetMB=50.0 workingSetMB=50.0 peakPrivateMB=15.3 allocatedMB=1.0 gc0=0 gc1=0 gc2=0 cpuMs=219
-

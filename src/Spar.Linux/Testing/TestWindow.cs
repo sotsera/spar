@@ -397,6 +397,14 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     private async Task SetUpAsync(nint view, nint content)
     {
         _request.OnPhase?.Invoke("controller");
+        if (_request.Automation.Viewport is { } viewport && _window is { } window)
+        {
+            // A scene's page: the view exactly its size (the private Xvfb's scale is 1), the window as small as that
+            // allows, so the title bar adds to it rather than taking from it.
+            Gtk.gtk_widget_set_size_request(view, viewport.Width, viewport.Height);
+            window.FitToContent();
+        }
+
         var page = TestPage.Install(view, content, _request.Automation, phase => _request.OnPhase?.Invoke(phase), OnCommitted);
         page.FirstLoaded += () =>
         {

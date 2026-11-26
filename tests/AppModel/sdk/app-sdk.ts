@@ -1,4 +1,4 @@
-// Stand-in for `@spar/app/sdk`. Form C of spikes/ts-results in ./core.ts and ./c-call/sdk.ts, with `Call` as a Promise subclass (2026-11-14),
+// Stand-in for `@spar/app/sdk`. Form C of docs/evidence/ts-results in ./core.ts and ./c-call/sdk.ts, with `Call` as a Promise subclass (2026-11-14),
 // plus what docs/app-model.md uses beyond it: SubscribeOptions, connectSpar() and its ready(), and setColorScheme().
 import type { CallOptions } from "./core.js";
 import { invoke, type Call, type Result } from "./c-call/sdk.js";
@@ -348,3 +348,9 @@ export const diagnostics: {
 } = {
   collect: options => invoke("spar.diagnostics.collect", {}, options),
 };
+
+/** Stand-in: groups the calls `run` starts under one span when telemetry is on; otherwise only runs `run` (6.16). */
+export function traced<T>(name: string, run: () => T): T {
+  void name;
+  return run();
+}

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    The optional OpenTelemetry layer (section 6b; decisions "M2d's decide-first questions" and "Optional OpenTelemetry
+    layer"): the OpenTelemetry SDK and its OTLP exporter for the app's traces, metrics and logs, and the relay that sends
+    the page's spans to the same endpoint. An app opts in with a package reference and spar.Telemetry(…) in Program.cs;
+    nothing is exported until OTEL_EXPORTER_OTLP_ENDPOINT is set. Spar.Sdk sees the reference and gives the page its
+    telemetry module; in Spar's own source mode it turns the reference into a reference to this project.
+  -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Description>The optional OpenTelemetry layer for Spar desktop apps: the backend's traces, metrics and logs over OTLP, and the page's spans relayed to the same endpoint.</Description>
+    <PackageTags>spar;desktop;opentelemetry;otlp</PackageTags>
+    <RootNamespace>Spar.OpenTelemetry</RootNamespace>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spar\Spar.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spar.Tests" />
+  </ItemGroup>
+</Project>

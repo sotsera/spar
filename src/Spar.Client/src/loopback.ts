@@ -3,6 +3,7 @@
 // out in order, one request at a time, and whatever queues up meanwhile travels together in the next request: ids
 // then reach the host in the order they were given, and a long call never holds one of the browser's six connections.
 import type { BridgeChannel } from "./connection.js";
+import type { RelayAddress } from "./tracing.js";
 import { decode } from "./protocol.js";
 import { awaitRestart, backendOpened, runHeader, type RestartPage } from "./restart.js";
 
@@ -88,6 +89,11 @@ class LoopbackChannel implements BridgeChannel {
   listen(received: (message: string) => void, closed: () => void): void {
     this.#received = received;
     this.#closedListener = closed;
+  }
+
+  /** @internal Where the page's telemetry reaches the host's relay: the host's origin, with the session's token. */
+  telemetryRelay(): RelayAddress {
+    return { origin: this.#origin, headers: { Authorization: `Bearer ${this.#token}` } };
   }
 
   send(message: string): void {

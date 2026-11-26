@@ -122,7 +122,7 @@ The devtools window's own display of a console error (its link now comes from th
 
 ## Configuration (2026-11-18): `logging.json` over the app's own configuration, `spar.ResolveFolders()`
 
-Decision "Configuration stays the app's choice (user decision)", after [`spikes/configuration-cost/`](../../spikes/configuration-cost/RESULTS.md); record "Configuration stays the app's choice (implementation record; choices for review)". `logging.json`'s levels are now a post-configuration of `LoggerFilterOptions` (`LogLevels.ApplyFile`): its level the minimum and a rule for every category, its categories rules, all after anything the app configured. `spar.ResolveFolders()` gives `Program.cs` the folders the services get.
+Decision "Configuration stays the app's choice (user decision)", after [`docs/evidence/configuration-cost/`](../../docs/evidence/configuration-cost/RESULTS.md); record "Configuration stays the app's choice (implementation record; choices for review)". `logging.json`'s levels are now a post-configuration of `LoggerFilterOptions` (`LogLevels.ApplyFile`): its level the minimum and a rule for every category, its categories rules, all after anything the app configured. `spar.ResolveFolders()` gives `Program.cs` the folders the services get.
 
 ### How it was run
 

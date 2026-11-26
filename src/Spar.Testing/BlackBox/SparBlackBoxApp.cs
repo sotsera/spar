@@ -27,6 +27,11 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
     private bool _exitRequested;
     private int _disposed;
 
+    // When the page's document was first seen in the accessibility tree (a Stopwatch time stamp; 0 until then), and
+    // whether an action has waited out the settle time since.
+    private long _pageSeen;
+    private bool _pageSettled;
+
     public SparProject Project { get; }
 
     public int ProcessId => _process.ProcessId;
@@ -221,6 +226,10 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
             if (log.Poll(ReadyLine.IsReady) && await HasWindowAsync(cancellationToken))
             {
                 StartedAfter = _clock.Elapsed;
+
+                // The first look into the page makes the browser build its accessibility tree, so the settle time of the
+                // first action starts now rather than at that action.
+                await NotePageAsync(cancellationToken);
                 return;
             }
 
@@ -237,6 +246,54 @@ public sealed class SparBlackBoxApp : IAsyncDisposable
 
             await Task.Delay(25, cancellationToken);
         }
+    }
+
+    /// <summary>
+    /// Waits, before the app's first action through the accessibility API (an invoke, a focus), until the page has been
+    /// in the window's accessibility tree for the automation's <see cref="IBlackBoxAutomation.PageSettleTime"/>; later
+    /// actions do not wait. Counts against the action's <paramref name="limit"/>.
+    /// </summary>
+    internal async Task WaitForSettledPageAsync(TimeSpan limit, string action)
+    {
+        if (_pageSettled)
+        {
+            return;
+        }
+
+        var clock = Stopwatch.StartNew();
+        while (!await NotePageAsync(CancellationToken.None))
+        {
+            if (HasExited)
+            {
+                throw new InvalidOperationException($"Could not {action}: the app exited with {ExitCode}.");
+            }
+
+            if (clock.Elapsed >= limit)
+            {
+                throw new TimeoutException($"Could not {action} within {limit.TotalMilliseconds:0} ms: the page never appeared in the window's accessibility tree.");
+            }
+
+            await Task.Delay(25, CancellationToken.None);
+        }
+
+        var wait = _automation.PageSettleTime - Stopwatch.GetElapsedTime(_pageSeen);
+        if (wait > TimeSpan.Zero)
+        {
+            await Task.Delay(wait, CancellationToken.None);
+        }
+
+        _pageSettled = true;
+    }
+
+    /// <summary>Whether the page has been seen in the accessibility tree; looks once more until it has.</summary>
+    private async Task<bool> NotePageAsync(CancellationToken cancellationToken)
+    {
+        if (_pageSeen == 0 && await _automation.HasPageAsync(ProcessId, cancellationToken))
+        {
+            _pageSeen = Stopwatch.GetTimestamp();
+        }
+
+        return _pageSeen != 0;
     }
 
     private async Task<bool> HasWindowAsync(CancellationToken cancellationToken) =>

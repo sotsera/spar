@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Spar.DevServer;
 using Spar.Hosting;
 using Spar.Runtime;
+using Spar.Telemetry;
 using Spar.Windows.Interop;
 
 namespace Spar.Windows;
@@ -35,6 +36,7 @@ internal sealed class PageServer
     private readonly ReportLimiter _reports = new();
     private string? _sharedHeaders;
     private DevServerProxy? _devServer;
+    private TelemetryRoute _telemetry = TelemetryRoute.None;
 
     /// <param name="security">The app's page security, from the generated catalog.</param>
     /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
@@ -61,6 +63,9 @@ internal sealed class PageServer
 
     /// <summary>The policy every response carries, once the page is decoded; the host logs it at start.</summary>
     public Task<PagePolicy> Policy => _responder.Policy;
+
+    /// <summary>The app's telemetry route (UI thread, once its services are built): its relay when the layer is in the app.</summary>
+    public void UseTelemetry(TelemetryRoute route) => _telemetry = route;
 
     /// <summary>The page's first address.</summary>
     public static string StartUrl => Origin + "/";
@@ -102,6 +107,13 @@ internal sealed class PageServer
             {
                 Respond(environment, args, Refusal(403, "Forbidden", "forbidden-origin"));
                 _log.Warn($"403 for a document outside the app's origin: {Shorten(uri)}");
+                return;
+            }
+
+            var path = PathOf(uri);
+            if (TelemetryRoute.Matches(path))
+            {
+                deferred = AnswerTelemetry(environment, args, path, method);
                 return;
             }
 
@@ -219,6 +231,72 @@ internal sealed class PageServer
         }
 
         return forwarded;
+    }
+
+    /// <summary>
+    /// A request to the telemetry routes (<see cref="TelemetryRoute"/>): the checks and the configuration are
+    /// answered at once; a traces request's body is copied out (a memory read, at most the route's limit and one byte),
+    /// a deferral taken, the forward run on the thread pool and its answer put back on this thread. True when deferred.
+    /// </summary>
+    private bool AnswerTelemetry(ICoreWebView2Environment10 environment, ICoreWebView2WebResourceRequestedEventArgs2 args, string path, string method)
+    {
+        var request = Com.Take<ICoreWebView2WebResourceRequest>(args.GetRequest());
+        string contentType;
+        ReadOnlyMemory<byte> body;
+        try
+        {
+            var headers = Com.Take<ICoreWebView2HttpRequestHeaders>(request.GetHeaders());
+            try
+            {
+                contentType = headers.Contains("Content-Type") != 0 ? headers.GetHeader("Content-Type") : "";
+            }
+            finally
+            {
+                Com.Release(headers);
+            }
+
+            if (_telemetry.Check(path, method, contentType) is { } answer)
+            {
+                Respond(environment, args, answer);
+                return false;
+            }
+
+            body = RequestBody.Read(request.GetContent(), TelemetryRoute.MaxBody + 1) ?? [];
+        }
+        finally
+        {
+            Com.Release(request);
+        }
+
+        var deferral = Com.Take<ICoreWebView2Deferral>(args.GetDeferral());
+        var route = _telemetry;
+        _ = Task.Run(() => route.ForwardAsync(body, contentType, CancellationToken.None))
+            .ContinueWith(forwarded => _ui.Post(() => Forwarded(environment, args, deferral, forwarded)), TaskScheduler.Default);
+        return true;
+    }
+
+    private void Forwarded(ICoreWebView2Environment10 environment, ICoreWebView2WebResourceRequestedEventArgs2 args, ICoreWebView2Deferral deferral, Task<PageResponse> forwarded)
+    {
+        try
+        {
+            if (!forwarded.IsCompletedSuccessfully)
+            {
+                _log.Warn($"The page's telemetry could not be forwarded: {forwarded.Exception?.GetBaseException().Message}");
+            }
+
+            Respond(environment, args, forwarded.IsCompletedSuccessfully ? forwarded.Result : Refusal(502, "Bad Gateway", "telemetry-failed"));
+            deferral.Complete();
+        }
+        catch (Exception exception)
+        {
+            // The page may have gone meanwhile, and its request with it.
+            _log.Info($"A telemetry response was not delivered: {exception.Message}");
+        }
+        finally
+        {
+            Com.Release(deferral);
+            Com.Release(args);
+        }
     }
 
     private static (string Uri, string Method) ReadRequest(ICoreWebView2WebResourceRequestedEventArgs2 args)

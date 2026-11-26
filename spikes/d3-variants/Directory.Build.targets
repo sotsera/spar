@@ -1,4 +1,0 @@
-<Project>
-  <!-- Test projects opt in to building the app's other variant. -->
-  <Import Project="Variant.targets" Condition="'$(D3BuildsAppVariant)' == 'true'" />
-</Project>

@@ -14,6 +14,14 @@
   </ItemGroup>
 
   <!--
+    The devtools' tests (DevtoolsServerTests and DevtoolsPageToolsTests): the switch an app's Development build gets,
+    so the dispatcher records calls here too. Not trimmed: the tests are no app.
+  -->
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.IsSupported" Value="true" />
+  </ItemGroup>
+
+  <!--
     An app's own logging configuration, for the order of Spar's levels against it (AppConfigurationTests); Spar itself
     does not reference these (decision "Configuration stays the app's choice").
   -->
@@ -32,6 +40,12 @@
                       UndefineProperties="SparVariant;SparTestLane" />
     <None Include="$(PkgMicrosoft_Web_WebView2)\build\native\include\WebView2.h" Link="WebView2.h" Visible="false"
           CopyToOutputDirectory="PreserveNewest" Condition="'$(PkgMicrosoft_Web_WebView2)' != ''" />
+  </ItemGroup>
+
+  <!-- The optional OpenTelemetry layer, for its relay's tests and the static-state test. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spar.OpenTelemetry\Spar.OpenTelemetry.csproj"
+                      UndefineProperties="SparVariant;SparTestLane" />
   </ItemGroup>
 
   <!-- The Linux host, for its unit tests (the relay's literals, the scheme's headers), its host tests and the static-state test. -->

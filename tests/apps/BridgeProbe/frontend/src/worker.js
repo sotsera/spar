@@ -1,6 +1,6 @@
 // A module worker the host serves (M1c step 4): its own response carries the policy, so eval and new Function are
 // blocked here as in the page, and a fetch to another origin is refused by connect-src. On WebKitGTK the refusal in a
-// worker raises no violation event and sends no report (spikes/linux-gpu-csp).
+// worker raises no violation event and sends no report (docs/evidence/linux-gpu-csp).
 const results = {};
 try {
   results.eval = String(eval("1 + 1"));

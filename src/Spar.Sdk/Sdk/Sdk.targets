@@ -97,6 +97,30 @@
            Text="SparAppId '$(SparAppId)' is not a valid app id: use two or more parts separated by dots, each made of ASCII letters, digits and underscores and not starting with a digit, at most 116 characters in all (with .Development it must fit the 128 characters Windows takes for an app identity), such as com.example.MyApp." />
   </Target>
 
+  <!--
+    An app ships only its Production variant (plan section 3c, "Publishing a non-Production variant"): publishing the
+    Development or Test variant fails with SPAR140, since those carry Spar's development code (the page's failure
+    details, and in Development the devtools, the loopback host and the dev server). SparAllowNonProductionPublish=true
+    turns the error into a warning, for a support build, and keeps it a warning when the app treats MSBuild warnings as
+    errors: the property is the app's explicit choice. The check runs before PrepareForPublish, the first publish step
+    of every publish path (a build first, NoBuild, the optimized NativeAOT path), so nothing reaches the publish folder.
+    Only apps: a test project publishes in its NativeAOT lane, and the app it tests enters that publish as a project
+    reference built in the Test variant, never through the app's own publish (decision "The non-Production publish
+    guard"). The black-box publish of an app is its Production variant.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true' and '$(SparVariant)' != 'Production' and '$(SparAllowNonProductionPublish)' == 'true'">
+    <MSBuildWarningsNotAsErrors>$(MSBuildWarningsNotAsErrors);SPAR140</MSBuildWarningsNotAsErrors>
+  </PropertyGroup>
+
+  <Target Name="SparCheckPublishVariant"
+          BeforeTargets="PrepareForPublish"
+          Condition="'$(SparIsApp)' == 'true' and '$(SparVariant)' != 'Production'">
+    <Error Code="SPAR140" File="$(MSBuildProjectFullPath)" Condition="'$(SparAllowNonProductionPublish)' != 'true'"
+           Text="This publish would ship the app's $(SparVariant) variant (Configuration $(Configuration)), which carries Spar's development code. Publish the Production variant instead: -c Release, with no SparVariant set. To publish this variant anyway, for a support build that must never reach users as a release, set SparAllowNonProductionPublish to true." />
+    <Warning Code="SPAR140" File="$(MSBuildProjectFullPath)" Condition="'$(SparAllowNonProductionPublish)' == 'true'"
+             Text="NOT A RELEASE BUILD: this publication is the app's $(SparVariant) variant (Configuration $(Configuration)), published because SparAllowNonProductionPublish is true. It carries Spar's development code; never ship it to users as a release." />
+  </Target>
+
   <!-- Items exist only after properties are evaluated, so the list becomes a property in a target, before it is read. -->
   <Target Name="SparContractAssemblies" BeforeTargets="GenerateMSBuildEditorConfigFileCore;SparWriteClientInventory">
     <PropertyGroup>
@@ -427,6 +451,28 @@
   </ItemGroup>
 
   <!--
+    The optional OpenTelemetry layer (decision "M2d's decide-first questions", item 1): the app writes
+    <PackageReference Include="Spar.OpenTelemetry" /> with no version, and gets the SDK's own version, so the layer
+    never drifts from the core it extends. With central package management the SDK adds the PackageVersion unless the
+    app has one. From source, the reference becomes one to the project.
+  -->
+  <ItemGroup Condition="'$(SparSourceMode)' == 'true' and '@(PackageReference->WithMetadataValue('Identity', 'Spar.OpenTelemetry'))' != ''">
+    <PackageReference Remove="Spar.OpenTelemetry" />
+    <ProjectReference Include="$(SparSourceRoot)Spar.OpenTelemetry\Spar.OpenTelemetry.csproj"
+                      SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparSourceMode)' != 'true' and '$(ManagePackageVersionsCentrally)' != 'true'">
+    <PackageReference Update="Spar.OpenTelemetry">
+      <Version Condition="'%(PackageReference.Version)' == ''">$(SparSdkVersion)</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SparSourceMode)' != 'true' and '$(ManagePackageVersionsCentrally)' == 'true' and '@(PackageVersion->WithMetadataValue('Identity', 'Spar.OpenTelemetry'))' == ''">
+    <PackageVersion Include="Spar.OpenTelemetry" Version="$(SparSdkVersion)" />
+  </ItemGroup>
+
+  <!--
     The loopback host in an app's Development build (plan section 4, "Launch profiles"; M1d step 2): SPAR_HOST=Loopback,
     which the Loopback launch profile sets, serves the page to a browser on 127.0.0.1 instead of the window, and the
     generator hands Run that host when Spar.Loopback is referenced. Development only: no other variant references it,
@@ -480,9 +526,31 @@
                         SparFramework="true" UndefineProperties="SparVariant;SparTestLane;SparBlackBoxBuild;PublishDir;_IsPublishing" />
     </ItemGroup>
 
+    <!--
+      The package can be in any folder NuGet restores from: the global one, or a fallback folder (an offline or CI
+      machine's read-only package cache), so the first folder of NuGetPackageFolders that has it wins, and the global
+      folder's path is the one named when none has it.
+    -->
+    <PropertyGroup Condition="'$(SparSourceMode)' != 'true'">
+      <_SparLoopbackRelative>spar.loopback/$(SparSdkVersion.ToLowerInvariant())/lib/$(TargetFramework)/Spar.Loopback.dll</_SparLoopbackRelative>
+    </PropertyGroup>
+
     <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+      <_SparPackageFolder Include="$(NuGetPackageFolders)" />
+      <!-- A plain transform: a property function around %(FullPath) runs before the metadata is substituted. -->
+      <_SparLoopbackCandidate Include="@(_SparPackageFolder->'%(FullPath)/$(_SparLoopbackRelative)')" />
+      <_SparLoopbackCandidate Remove="@(_SparLoopbackCandidate)" Condition="!Exists('%(FullPath)')" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(SparSourceMode)' != 'true'">
+      <!-- One batch per candidate, in order: the first sets it, and the condition keeps it. -->
+      <_SparLoopbackAssembly Condition="'$(_SparLoopbackAssembly)' == ''">%(_SparLoopbackCandidate.FullPath)</_SparLoopbackAssembly>
       <!-- NuGetPackageRoot has no trailing slash when NUGET_PACKAGES sets it without one. -->
-      <Reference Include="$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))spar.loopback\$(SparSdkVersion.ToLowerInvariant())\lib\$(TargetFramework)\Spar.Loopback.dll" Private="true" />
+      <_SparLoopbackAssembly Condition="'$(_SparLoopbackAssembly)' == ''">$([MSBuild]::EnsureTrailingSlash('$(NuGetPackageRoot)'))$(_SparLoopbackRelative)</_SparLoopbackAssembly>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(SparSourceMode)' != 'true'">
+      <Reference Include="$(_SparLoopbackAssembly)" Private="true" />
     </ItemGroup>
 
     <ItemGroup Condition="'@(FrameworkReference->WithMetadataValue('Identity', 'Microsoft.AspNetCore.App'))' == ''">
@@ -589,8 +657,17 @@
   <Target Name="SparWriteClientInventory"
           DependsOnTargets="ResolveReferences;GenerateGlobalUsings"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <!--
+      The page bundles its telemetry chunk when the app references the OpenTelemetry layer; SparPageTelemetry=false
+      keeps it out. Read from the resolved references, so a reference through another project counts too.
+    -->
+    <PropertyGroup>
+      <SparPageTelemetry Condition="'$(SparPageTelemetry)' == '' and '@(ReferencePath->WithMetadataValue('Filename', 'Spar.OpenTelemetry'))' != ''">true</SparPageTelemetry>
+      <SparPageTelemetry Condition="'$(SparPageTelemetry)' != 'true'">false</SparPageTelemetry>
+    </PropertyGroup>
+
     <ItemGroup>
-      <_SparClientSdkFile Include="$(SparClientSdkDirectory)**\*.js;$(SparClientSdkDirectory)**\*.d.ts;$(SparClientSdkDirectory)**\*.map" />
+      <_SparClientSdkFile Include="$(SparClientSdkDirectory)**\*.js;$(SparClientSdkDirectory)**\*.d.ts;$(SparClientSdkDirectory)**\*.map;$(SparClientSdkDirectory)**\*.md" />
       <_SparClientSdkFile Include="$(SparClientSdkSourceDirectory)**\*.ts" />
       <_SparClientInventoryLine Include="@(Compile->'%(FullPath)')" />
       <_SparClientInventoryLine Include="@(ReferencePath->'%(FullPath)')" />
@@ -599,6 +676,7 @@
       <_SparClientInventoryLine Include="nullable=$(Nullable)" />
       <_SparClientInventoryLine Include="contracts=$(SparContractAssemblies)" />
       <_SparClientInventoryLine Include="sdk=$(SparClientVersion)" />
+      <_SparClientInventoryLine Include="telemetry=$(SparPageTelemetry)" />
       <FileWrites Include="$(SparClientInventory);$(SparClientStamp)" />
     </ItemGroup>
 
@@ -626,7 +704,8 @@
                 SnapshotFile="$(SparContractSnapshotExpected)"
                 ContractAssemblies="$(SparContractAssemblies)"
                 SdkVersion="$(SparClientVersion)"
-                ProjectFile="$(MSBuildProjectFullPath)" />
+                ProjectFile="$(MSBuildProjectFullPath)"
+                PageTelemetry="$(SparPageTelemetry)" />
 
     <Touch Files="$(SparClientStamp)" AlwaysCreate="true" />
   </Target>
@@ -705,6 +784,36 @@
     <RuntimeHostConfigurationOption Include="Spar.DevServer.Url" Value="$(SparDevServerUrl)" Condition="'$(SparUsesDevServer)' == 'true' and '$(SparDevServerUrl)' != ''" />
   </ItemGroup>
 
+  <!--
+    The devtools (plan section 6; decision "M2a's decide-first questions"): a Development build of an app listens on a
+    local socket only its user can open and records it in obj/spar-devtools.json, unless SparDevtools=false. Its feature
+    switch is off, with Trim="true", in every other build, so none of that code ships; the page engine and the contract
+    snapshot are embedded in the app's own assembly in Development builds only.
+  -->
+  <PropertyGroup Condition="'$(SparIsApp)' == 'true'">
+    <SparDevtools Condition="'$(SparDevtools)' == ''">true</SparDevtools>
+    <SparUsesDevtools Condition="'$(SparDevtools)' == 'true' and '$(SparVariant)' == 'Development'">true</SparUsesDevtools>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(SparIsApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.IsSupported" Value="false" Trim="true" Condition="'$(SparUsesDevtools)' != 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.IsSupported" Value="true" Trim="true" Condition="'$(SparUsesDevtools)' == 'true'" />
+    <RuntimeHostConfigurationOption Include="Spar.Devtools.File"
+                                    Value="$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(BaseIntermediateOutputPath)', 'spar-devtools.json'))"
+                                    Condition="'$(SparUsesDevtools)' == 'true'" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Devtools\PageEngine.js" LogicalName="Spar.Devtools.PageEngine.js"
+                      WithCulture="false" Type="Non-Resx" Visible="false" Condition="'$(SparUsesDevtools)' == 'true'" />
+  </ItemGroup>
+
+  <!-- The contract snapshot the client step wrote, for the devtools' contracts tool (one of SparBuildSteps). -->
+  <Target Name="SparDevtoolsContracts"
+          Condition="'$(SparUsesDevtools)' == 'true' and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup Condition="Exists('$(SparContractSnapshotExpected)')">
+      <EmbeddedResource Include="$(SparContractSnapshotExpected)" LogicalName="Spar.Devtools.Contracts"
+                        WithCulture="false" Type="Non-Resx" Visible="false" />
+    </ItemGroup>
+  </Target>
+
   <UsingTask TaskName="Spar.Sdk.Tasks.SparFrontendInstall" AssemblyFile="$(SparTasksAssembly)"
              Runtime="NET" TaskFactory="TaskHostFactory"
              Condition="'$(SparIsApp)' == 'true' and '$(SparSourceMode)' == 'true'" />
@@ -746,13 +855,20 @@
       follow-ups"). Any other config keeps -p ., since build mode would write a tsconfig.tsbuildinfo
       beside it. The referenced configs' own tsBuildInfoFile says where build mode keeps its state.
     -->
+    <!--
+      tsc runs in the project's folder, so the files of its errors are relative to the project, as MSBuild, the IDEs and
+      spar dev read a relative path (from the frontend's folder, src/main.tsx pointed beside the project file). The
+      folder is given as "frontend\.": a trailing separator before the closing quote would escape it, and Visual
+      Studio's MSBuild, on .NET Framework, has no Path.TrimEndingDirectorySeparator.
+    -->
     <PropertyGroup>
       <_SparTsConfig>$(SparFrontendDirectory)tsconfig.json</_SparTsConfig>
-      <_SparTypeCheckArguments>--noEmit -p .</_SparTypeCheckArguments>
-      <_SparTypeCheckArguments Condition="Exists('$(_SparTsConfig)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(_SparTsConfig)')), '&quot;references&quot;\s*:\s*\[\s*\{'))">-b --noEmit</_SparTypeCheckArguments>
+      <_SparFrontendFolder>$(SparFrontendDirectory).</_SparFrontendFolder>
+      <_SparTypeCheckArguments>--noEmit -p &quot;$(_SparFrontendFolder)&quot;</_SparTypeCheckArguments>
+      <_SparTypeCheckArguments Condition="Exists('$(_SparTsConfig)') and $([System.Text.RegularExpressions.Regex]::IsMatch($([System.IO.File]::ReadAllText('$(_SparTsConfig)')), '&quot;references&quot;\s*:\s*\[\s*\{'))">-b &quot;$(_SparFrontendFolder)&quot; --noEmit</_SparTypeCheckArguments>
     </PropertyGroup>
 
-    <Exec Command="node node_modules/typescript/bin/tsc $(_SparTypeCheckArguments) --pretty false" WorkingDirectory="$(SparFrontendDirectory)" />
+    <Exec Command="node &quot;$(SparFrontendDirectory)node_modules/typescript/bin/tsc&quot; $(_SparTypeCheckArguments) --pretty false" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Touch Files="$(SparTypeCheckStamp)" AlwaysCreate="true" />
   </Target>
 
@@ -815,12 +931,12 @@
 
   <!--
     Spar's build steps, in order, before MSBuild settles embedded resources: the app id's check, the client step, the
-    snapshot check, the frontend (install, type-check, Vite, pack), then the embedding. One entry target with
+    snapshot check, the devtools' copy of the snapshot, the frontend (install, type-check, Vite, pack), then the embedding. One entry target with
     DependsOnTargets fixes the order; several targets hooked on PrepareResources would run in the order they are declared.
   -->
   <Target Name="SparBuildSteps"
           BeforeTargets="PrepareResources"
-          DependsOnTargets="SparCheckAppId;SparClient;SparCheckContractSnapshot;SparFrontend;SparEmbedFrontend"
+          DependsOnTargets="SparCheckAppId;SparClient;SparCheckContractSnapshot;SparDevtoolsContracts;SparFrontend;SparEmbedFrontend"
           Condition="'$(SparIsApp)' == 'true' and '$(DesignTimeBuild)' != 'true'" />
 
   <!--

@@ -1,6 +1,0 @@
-exit 0 wallMs 91089
-RUN runtime=aot mode=monitor arg=30 sqlclient=7.0.0.0 sqlclientInfo=7.1.2+b1dd9db72cd9e6eb9fc83ca308558e73b57dd449 framework=.NET 11.0.0
-RESULT monitor phase=idle-persistent polls=30 spid=58 first=8.45ms median=5.09ms p95=7.48ms max=8.45ms serverCpuPerPollMs=1.80 allocKBPerPollMedian=3528.8 rows: counters=1986 requests=44 waits=127
-RESULT monitor phase=idle-open-per-poll polls=30 spid=0 first=5.38ms median=5.20ms p95=5.88ms max=6.00ms serverCpuPerPollMs=NaN allocKBPerPollMedian=3529.5 rows: counters=1986 requests=44 waits=127
-RESULT monitor phase=load-persistent polls=30 spid=58 first=5.05ms median=6.44ms p95=9.11ms max=9.61ms serverCpuPerPollMs=1.10 allocKBPerPollMedian=3528.7 rows: counters=1986 requests=48 waits=127
-MEM end peakWorkingSetMB=52.7 workingSetMB=52.7 rssAnonMB=27.3 allocatedMB=312.2 gc0=17 gc1=2 gc2=1 cpuMs=1484

@@ -3,10 +3,12 @@ using System.Text;
 namespace Spar.PackageTests;
 
 /// <summary>
-/// The project-file blocks of the publishing-choices guide (<c>docs/guide/publishing-choices.md</c>), read from the page
-/// itself, so a block that stops working fails a test: each is the fenced <c>xml</c> block right after its marker
-/// <c>&lt;!-- project-snippet: name --&gt;</c>, a comment the documentation site does not show. The tests add them to new
-/// apps' project files as the guide tells an author to, before <c>&lt;/Project&gt;</c>.
+/// The blocks of the guides the package tests build, read from the pages themselves, so a block that stops working fails
+/// a test: each is the fenced <c>xml</c> block right after its marker <c>&lt;!-- project-snippet: name --&gt;</c>, or the
+/// <c>csharp</c> block after <c>&lt;!-- code-snippet: name --&gt;</c>, comments the documentation site does not show. The
+/// tests add the project blocks to new apps' project files as a guide tells an author to, before <c>&lt;/Project&gt;</c>.
+/// The publishing-choices guide (<c>docs/guide/publishing-choices.md</c>) has project blocks; the telemetry guide
+/// (<c>docs/guide/telemetry.md</c>) has both.
 /// </summary>
 internal static class GuideSnippets
 {
@@ -16,27 +18,34 @@ internal static class GuideSnippets
     public const string Globalization = "globalization";
     public const string SqlClientPackage = "sqlclient-package";
     public const string SqlClientSingleFile = "sqlclient-single-file";
+    public const string TelemetryPackage = "telemetry-package";
+    public const string TelemetryProgram = "telemetry-program";
+    public const string AspireAppHost = "aspire-apphost";
 
     /// <summary>The guide's path in the repository.</summary>
     public static string Page(string repository) => Path.Combine(repository, "docs", "guide", "publishing-choices.md");
 
-    /// <summary>Every block on the page, by name.</summary>
-    public static IReadOnlyDictionary<string, string> Read(string repository)
+    /// <summary>The telemetry guide's path in the repository.</summary>
+    public static string TelemetryPage(string repository) => Path.Combine(repository, "docs", "guide", "telemetry.md");
+
+    /// <summary>Every block of the publishing-choices guide, by name.</summary>
+    public static IReadOnlyDictionary<string, string> Read(string repository) => ReadPage(Page(repository));
+
+    /// <summary>Every block on a page, by name.</summary>
+    public static IReadOnlyDictionary<string, string> ReadPage(string page)
     {
-        const string Marker = "<!-- project-snippet: ";
-        var lines = File.ReadAllLines(Page(repository));
+        var lines = File.ReadAllLines(page);
         var snippets = new Dictionary<string, string>(StringComparer.Ordinal);
         for (var i = 0; i < lines.Length; i++)
         {
-            if (!lines[i].StartsWith(Marker, StringComparison.Ordinal) || !lines[i].EndsWith(" -->", StringComparison.Ordinal))
+            if (Marked(lines[i]) is not ({ } name, { } fence))
             {
                 continue;
             }
 
-            var name = lines[i][Marker.Length..^" -->".Length];
-            if (i + 1 >= lines.Length || lines[i + 1] != "```xml")
+            if (i + 1 >= lines.Length || lines[i + 1] != fence)
             {
-                throw new InvalidOperationException($"The marker of '{name}' is not right above an ```xml block.");
+                throw new InvalidOperationException($"The marker of '{name}' is not right above a {fence} block.");
             }
 
             var block = new StringBuilder();
@@ -60,6 +69,20 @@ internal static class GuideSnippets
         }
 
         return snippets;
+    }
+
+    /// <summary>A marker's block name and the fence its block opens with, or nulls for any other line.</summary>
+    private static (string? Name, string? Fence) Marked(string line)
+    {
+        foreach (var (marker, fence) in new[] { ("<!-- project-snippet: ", "```xml"), ("<!-- code-snippet: ", "```csharp") })
+        {
+            if (line.StartsWith(marker, StringComparison.Ordinal) && line.EndsWith(" -->", StringComparison.Ordinal))
+            {
+                return (line[marker.Length..^" -->".Length], fence);
+            }
+        }
+
+        return (null, null);
     }
 
     /// <summary>
@@ -98,6 +121,14 @@ public sealed class GuideSnippetTests(Consumer consumer) : IDisposable
         ];
 
         Assert.Equal(tested.Order(StringComparer.Ordinal), GuideSnippets.Read(consumer.Repository).Keys.Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void Every_block_of_the_telemetry_guide_is_built_by_a_test()
+    {
+        string[] tested = [GuideSnippets.TelemetryPackage, GuideSnippets.TelemetryProgram, GuideSnippets.AspireAppHost];
+
+        Assert.Equal(tested.Order(StringComparer.Ordinal), GuideSnippets.ReadPage(GuideSnippets.TelemetryPage(consumer.Repository)).Keys.Order(StringComparer.Ordinal));
     }
 
     public void Dispose() => consumer.Report(TestContext.Current.TestState?.Result == TestResult.Passed);

@@ -97,6 +97,12 @@ internal sealed partial class BrowserView
     /// <summary>The WebView, once its controller exists and until it closes (UI thread).</summary>
     public ICoreWebView2_22? WebView => _webView;
 
+    /// <summary>
+    /// The devtools' page automation of a Development build, installed before the first navigation as a test's page
+    /// driver is; null in every other build, where the trimmer removes the call.
+    /// </summary>
+    public Func<Task>? DevtoolsInstall { get; set; }
+
     /// <summary>Whether the controller shows the WebView: a hidden controller's page is not pinged (UI thread).</summary>
     public bool IsShown => _controller is { } controller && controller.GetIsVisible() != 0;
 
@@ -275,6 +281,24 @@ internal sealed partial class BrowserView
             }
         }
 
+        if (Spar.Devtools.SparDevtools.IsSupported && DevtoolsInstall is { } installDevtools)
+        {
+            try
+            {
+                await installDevtools();
+            }
+            catch (Exception exception)
+            {
+                // The page loads without its devtools; the app is not stopped for them.
+                _log.Warn($"The devtools' page automation could not be installed: {exception.Message}");
+            }
+
+            if (Abandoned(generation, null) || _webView is null)
+            {
+                return;
+            }
+        }
+
         _log.Phase("page script added");
         _webView.Navigate(PageServer.StartUrl);
         Phase("navigation started");
@@ -298,7 +322,10 @@ internal sealed partial class BrowserView
     /// <summary>The test process's environment for these browser arguments; the view's reference is its own.</summary>
     private async Task<ICoreWebView2Environment10> SharedEnvironmentAsync()
     {
-        var pointer = await _source!.SharedEnvironment!(_defaults.BrowserArguments);
+        var arguments = _source!.BrowserArguments is { Length: > 0 } extra
+            ? string.IsNullOrEmpty(_defaults.BrowserArguments) ? extra : _defaults.BrowserArguments + " " + extra
+            : _defaults.BrowserArguments;
+        var pointer = await _source.SharedEnvironment!(arguments);
         return Com.Take<ICoreWebView2Environment10>(pointer);
     }
 
@@ -521,7 +548,7 @@ internal sealed partial class BrowserView
             {
                 // The page went with it: its document ends now, so a close request it was asked goes on without its
                 // answer and its close work is not waited for. Before, a session end whose renderer died waited out
-                // the page's 2 s and the close work's 1 s for a page that was gone (spikes/renderer-sharing).
+                // the page's 2 s and the close work's 1 s for a page that was gone (docs/evidence/renderer-sharing).
                 bridge.OnRendererExited();
             }
 

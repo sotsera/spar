@@ -1,6 +1,6 @@
 # M1b: the black-box fixture on the Production executable
 
-Recorded 2026-11-19. What it shows: M1b build step 8b (decisions "Step 8b's shape: the black-box fixture (user decisions)" and "The black-box fixture (implementation record; choices for review)"): the app's exact Production NativeAOT executable launched by `SparBlackBox.LaunchAsync`, on a desktop of the test process's own, read and driven through UI Automation; the build that publishes it beside the tests; and that none of it reaches a Production executable. The question of the desktop was answered first by [`spikes/blackbox-desktop`](../../spikes/blackbox-desktop/RESULTS.md).
+Recorded 2026-11-19. What it shows: M1b build step 8b (decisions "Step 8b's shape: the black-box fixture (user decisions)" and "The black-box fixture (implementation record; choices for review)"): the app's exact Production NativeAOT executable launched by `SparBlackBox.LaunchAsync`, on a desktop of the test process's own, read and driven through UI Automation; the build that publishes it beside the tests; and that none of it reaches a Production executable. The question of the desktop was answered first by [`docs/evidence/blackbox-desktop`](../../docs/evidence/blackbox-desktop/RESULTS.md).
 
 ## Environment
 
@@ -32,7 +32,7 @@ Windows 11 Pro 10.0.26320, WebView2 Runtime 157, SDK 11.0.100, xUnit v3, the Win
 - `dotnet test --project tests/Spar.BuildTests`: 6 of 6 (1 min 55 s). `dotnet test --project tests/Spar.PackageTests`: 12 of 12 (1 min 36 s), the black-box consumer included; its first run failed that case because the consumer's page never calls `ready()` (implementation record, Found).
 - `dotnet run eng/check-size.cs`: 429 source files, 0 errors, 0 warnings.
 
-### The spike (observed; `spikes/blackbox-desktop`)
+### The spike (observed; `docs/evidence/blackbox-desktop`)
 
 50 of 50 launches of the Production Notebook on a desktop of their own: `ui-ready` after 385 ms (median; 377–541), the window found after 391 ms, a page heading found by name after 497 ms, Invoke until its dialog was found 2,062 ms (2,040–2,082), close to exit 34 ms (31–38), every process gone 126 ms after the close request (97–133). No sample with an app process in the foreground and no visible app window on the input desktop; the desktop gone after close; the real `%LOCALAPPDATA%\com.example.Notebook` never created. The fallback on the user's desktop (`SW_SHOWNOACTIVATE`) took the foreground in 2 of 2 launches.
 
@@ -69,7 +69,7 @@ The Production Notebook (`dotnet publish samples/Notebook -c Release`) is **5,23
 
 ## After 8c: Invoke's 2 s explained and removed (2026-11-19)
 
-[`spikes/blackbox-invoke`](../../spikes/blackbox-invoke/RESULTS.md); decision "Invoke on the hidden desktop and the Notebook's size steps".
+[`docs/evidence/blackbox-invoke`](../../docs/evidence/blackbox-invoke/RESULTS.md); decision "Invoke on the hidden desktop and the Notebook's size steps".
 
 - **Cause:** UI Automation's `AutoSetFocus`, true by default on a client object, makes Invoke first give the element the focus, which brings its window to the foreground. On the hidden desktop the page had the focus within about 20 ms and lost it again; the click came when the call returned, 2,019–2,068 ms later. `SetFocus` alone took the same 2.0 s; other connection and transaction timeouts and an STA thread that pumps messages did not change it. From a thread on that desktop `GetForegroundWindow` is null and `SetForegroundWindow` fails. The page renders normally there (60 frames per second, `visible`).
 - **Fix:** the fixture's client object has `AutoSetFocus` off (`IUIAutomation2::put_AutoSetFocus`, declared with the other interfaces and checked by the slot-order test). Invoke then takes 10–29 ms (median 15), the page still gets `focusin` on the button before its `click`, and a dialog it opens is found after about 60 ms.

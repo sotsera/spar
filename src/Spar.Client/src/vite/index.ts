@@ -11,7 +11,7 @@
 // `csp.json`), and a page with a splash element gets the splash style (`pageStyle.ts`, plan section 3d).
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { ConfigEnv, Plugin, ResolvedConfig, UserConfig, ViteDevServer } from "vite";
+import type { ConfigEnv, Plugin, ResolvedConfig, Rolldown, UserConfig, ViteDevServer } from "vite";
 import { attachLaunch, devServerConfig, readLaunch } from "./devServer.js";
 import { addIntegrity, missingIntegrity, missingIntegrityMessage } from "./integrity.js";
 import { addPageStyle, readThemeColors, splashTiming, type SplashTiming } from "./pageStyle.js";
@@ -43,11 +43,12 @@ export default function spar(options: SparPluginOptions = {}): Plugin {
     config(user: UserConfig, env: ConfigEnv): UserConfig {
       // The development server only: not a preview of a build, and not Vitest, which loads the same config.
       if (env.command === "serve" && !env.isPreview && env.mode !== "test") {
-        return { base: "/", ...devServerConfig(user, readLaunch(process.env)) };
+        return { base: "/", define: telemetryDefine(), ...devServerConfig(user, readLaunch(process.env)) };
       }
 
       return {
         base: "/",
+        define: telemetryDefine(),
         build: {
           // A small asset would otherwise become a data: URL, which img-src 'self' and font-src 'self' block.
           assetsInlineLimit: 0,
@@ -78,6 +79,7 @@ export default function spar(options: SparPluginOptions = {}): Plugin {
       },
     },
     writeBundle(_options, bundle): void {
+      addTelemetryLicenses(outDir, bundle);
       if (!readPageSecurity().integrity) {
         return;
       }
@@ -128,6 +130,40 @@ function readPageSecurity(): PageSecurity {
   const parsed: unknown = JSON.parse(text);
   const integrity = typeof parsed === "object" && parsed !== null ? Reflect.get(parsed, "integrity") : undefined;
   return { integrity: integrity !== false };
+}
+
+/**
+ * `import.meta.env.SPAR_TELEMETRY`, from `telemetry.json`: true when the app references Spar.OpenTelemetry. The SDK
+ * starts the page's telemetry only then, and `vite build` drops that code, with the lazy chunk it imports, when false.
+ */
+function telemetryDefine(): Record<string, string> {
+  const text = readPackageFile("telemetry.json");
+  const parsed: unknown = text === undefined ? undefined : JSON.parse(text);
+  const page = typeof parsed === "object" && parsed !== null && Reflect.get(parsed, "page") === true;
+  return { "import.meta.env.SPAR_TELEMETRY": JSON.stringify(page) };
+}
+
+/**
+ * The telemetry chunk comes prebundled, so Vite's licence file (`build.license`) does not see the OpenTelemetry
+ * packages inside it: when the bundle has the chunk, their sections, which the SDK's build wrote beside it, are added.
+ */
+function addTelemetryLicenses(outDir: string, bundle: Rolldown.OutputBundle): void {
+  const outputs = Object.values(bundle);
+  const hasTelemetry = outputs.some(output =>
+    output.type === "chunk" && output.moduleIds.some(id => id.replaceAll("\\", "/").endsWith("/sdk/telemetry/index.js")));
+  const licenseFile = outputs.find(output => output.type === "asset" && output.fileName.endsWith("license.md"));
+  if (!hasTelemetry || licenseFile === undefined) {
+    return;
+  }
+
+  const sections = readPackageFile("sdk/telemetry/licenses.md");
+  if (sections === undefined) {
+    throw new Error("The page bundles Spar's telemetry chunk, but its licenses.md is missing from @spar/app.");
+  }
+
+  const path = join(outDir, licenseFile.fileName);
+  const text = readFileSync(path, "utf8");
+  writeFileSync(path, `${text.trimEnd()}\n\n${sections.trimEnd()}\n`);
 }
 
 /** A file the build writes at the generated package's root, beside `sdk/`; undefined when there is none. */

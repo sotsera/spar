@@ -1,6 +1,0 @@
-{
-  "suite": "resolver-stall-netlog", "scenario": "load", "rounds": 50, "warmup": 1, "navigations": 1, "listener": true, "netLogMode": "Default",
-  "variants": [
-    { "name": "resolver", "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"", "netLog": true }
-  ]
-}

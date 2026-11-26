@@ -227,13 +227,18 @@ internal sealed class ProbeApp : IAsyncDisposable
     /// <summary>The app's own folder under <c>XDG_DATA_HOME</c> (its data root), once it exists.</summary>
     public string? AppFolder() => Directory.Exists(_app.AppFolder) ? _app.AppFolder : null;
 
+    /// <summary>
+    /// The app's log up to its last complete line. A line the app is still writing is left out: a pattern ending in
+    /// <c>$</c> would otherwise match the part written so far (a long JSON line was once read cut at 3,631 bytes).
+    /// </summary>
     public string Log()
     {
         try
         {
             using var stream = new FileStream(_app.LogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
             using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
+            var text = reader.ReadToEnd();
+            return text[..(text.LastIndexOf('\n') + 1)];
         }
         catch (IOException)
         {

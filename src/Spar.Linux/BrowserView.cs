@@ -38,6 +38,7 @@ internal sealed class BrowserView
     private nint _view;
     private nint _session;
     private nint _content;
+    private Testing.TestPage? _devtoolsPage;
     private nuint _messageHandler;
     private nuint _loadHandler;
     private nuint _terminatedHandler;
@@ -99,7 +100,7 @@ internal sealed class BrowserView
     /// settings with their handlers (<see cref="BrowserDefaults"/>), before the view loads anything (loop thread). The
     /// view is not loading yet: the window attaches it first.
     /// </summary>
-    public unsafe void Create(string dataFolder, string cacheFolder, string relay, SparColor background)
+    public unsafe void Create(string dataFolder, string cacheFolder, string relay, SparColor background, string? pageScript = null)
     {
         _self = GCHandle.Alloc(this);
         var self = GCHandle.ToIntPtr(_self);
@@ -133,6 +134,10 @@ internal sealed class BrowserView
             0,
             0);
         AddRelay(relay);
+        if (pageScript is not null)
+        {
+            AddPageScript(pageScript);
+        }
 
         _view = test ? TestViews.NewView(_session, _content, _context) : NewView(_session, _content);
         var context = WebKit.webkit_web_view_get_context(_view);
@@ -184,9 +189,28 @@ internal sealed class BrowserView
         WebKit.webkit_web_view_set_background_color(_view, &colour);
     }
 
+    /// <summary>
+    /// The devtools' page automation of a Development build, set up on the loop thread before the first load; null in
+    /// every other build, where the trimmer removes the call. What it returns is released with the view.
+    /// </summary>
+    public Func<nint, nint, Testing.TestPage>? DevtoolsInstall { get; set; }
+
     /// <summary>Opens the app's page (loop thread); a test window's page driver sets itself up first.</summary>
     public void Load()
     {
+        if (Spar.Devtools.SparDevtools.IsSupported && DevtoolsInstall is { } installDevtools)
+        {
+            try
+            {
+                _devtoolsPage = installDevtools(_view, _content);
+            }
+            catch (Exception exception)
+            {
+                // The page loads without its devtools; the app is not stopped for them.
+                _log.Warn($"The devtools' page automation could not be installed: {exception.Message}");
+            }
+        }
+
         if (SparTestSession.IsSupported && _source?.BeforeFirstLoad is { } setUp)
         {
             _ = LoadAfterAsync(setUp);
@@ -222,7 +246,7 @@ internal sealed class BrowserView
     /// <summary>
     /// "Reload page" in the hung-page dialog (plan section 3, "Hung pages"; loop thread): reloading alone never recovers
     /// a hung page (pitfalls), so the web process is ended first, and the page loads again once WebKit reports it gone
-    /// (<c>TERMINATED_BY_API</c>, 0–3 ms later in <c>spikes/page-heartbeat</c>). This is the user's choice, so it does
+    /// (<c>TERMINATED_BY_API</c>, 0–3 ms later in <c>docs/evidence/page-heartbeat</c>). This is the user's choice, so it does
     /// not use up the automatic reload.
     /// </summary>
     public void ReloadHungPage()
@@ -317,6 +341,11 @@ internal sealed class BrowserView
     /// <summary>Frees the handle the signals found this view by, once the main loop has ended and nothing can call back.</summary>
     public void Release()
     {
+        if (Spar.Devtools.SparDevtools.IsSupported)
+        {
+            _devtoolsPage?.Release();
+        }
+
         if (_self.IsAllocated)
         {
             _self.Free();
@@ -397,6 +426,21 @@ internal sealed class BrowserView
             var allow = stackalloc nint[2] { (nint)pattern, 0 };
             var script = WebKit.webkit_user_script_new_for_world(
                 relay, WebKit.InjectTopFrame, WebKit.InjectAtDocumentStart, ScriptBridge.World, allow, null);
+            WebKit.webkit_user_content_manager_add_script(_content, script);
+            WebKit.webkit_user_script_unref(script);
+        }
+    }
+
+    /// <summary>
+    /// A script of the page's own world at document start, in the top frame of the app's origin only: the telemetry
+    /// layer's settings, which the page's SDK reads before it mounts.
+    /// </summary>
+    private unsafe void AddPageScript(string source)
+    {
+        fixed (byte* pattern = "spar://app/*\0"u8)
+        {
+            var allow = stackalloc nint[2] { (nint)pattern, 0 };
+            var script = WebKit.webkit_user_script_new(source, WebKit.InjectTopFrame, WebKit.InjectAtDocumentStart, allow, null);
             WebKit.webkit_user_content_manager_add_script(_content, script);
             WebKit.webkit_user_script_unref(script);
         }

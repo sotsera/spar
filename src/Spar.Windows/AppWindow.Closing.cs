@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Spar.Hosting;
 using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace Spar.Windows;
 
@@ -164,6 +165,25 @@ internal sealed partial class AppWindow
     /// <summary>"Close anyway" or "Keep open": the native confirmation owned by the window, or a window test's answer.</summary>
     private Task<bool> ConfirmAsync(string question, ICloseQuestions? questions) =>
         questions?.ConfirmAsync(question) ?? Task.FromResult(NativeDialog.ConfirmClose(_window, _title, question));
+
+    /// <summary>
+    /// The devtools' <c>stop</c>, for <c>spar dev</c>'s restarts (decision "M2b's decide-first questions", item 3): the
+    /// session end through the same <c>WM_ENDSESSION</c> Windows sends, from a pool thread so the devtools wait on
+    /// nothing; false before the window exists or once it is ending.
+    /// </summary>
+    public bool RequestSessionEnd()
+    {
+        var window = _window;
+        if (window.IsNull || _sessionEnding || _destroyed)
+        {
+            return false;
+        }
+
+        // ENDSESSION_LOGOFF, as a sign-out sends it; SendMessage returns once the session end is done (4 s at most).
+        var logoff = new LPARAM(unchecked((nint)0x80000000));
+        _ = Task.Run(() => PInvoke.SendMessage(window, PInvoke.WM_ENDSESSION, new WPARAM(1), logoff));
+        return true;
+    }
 
     /// <summary>
     /// Windows ends the session (<c>WM_ENDSESSION</c> with <c>TRUE</c>): the session-end close, while the message is

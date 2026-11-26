@@ -23,6 +23,9 @@ namespace Spar.HotReload;
 /// </summary>
 internal static partial class ConsoleInterrupt
 {
+    /// <summary>Set by <c>spar dev</c> to its process id for the runs it starts: they leave its console alone.</summary>
+    public const string SupervisorVariable = "SPAR_DEV_SUPERVISOR";
+
     private const uint AttachParentProcess = unchecked((uint)-1);
 
     /// <summary>
@@ -60,6 +63,14 @@ internal static partial class ConsoleInterrupt
     [SupportedOSPlatform("windows")]
     private static bool Attach(HostLog log)
     {
+        if (Environment.GetEnvironmentVariable(SupervisorVariable) is { Length: > 0 } supervisor)
+        {
+            // spar dev answers its console's Ctrl+C itself, ending this run through the session end, which never asks
+            // (decision "M2b's decide-first questions", item 3); an ordinary close of its own could ask first.
+            log.Info($"Started by spar dev (process {supervisor}): its console's Ctrl+C is spar dev's, not this app's.");
+            return false;
+        }
+
         if (!AttachConsole(AttachParentProcess))
         {
             // ERROR_ACCESS_DENIED: this process has a console already; ERROR_INVALID_HANDLE: the parent has none.

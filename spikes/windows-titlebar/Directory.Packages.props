@@ -1,8 +1,0 @@
-<Project>
-  <!-- Repository versions, then the WebView2 SDK package (spike-local; already in the NuGet cache). -->
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)..'))" />
-
-  <ItemGroup>
-    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
-  </ItemGroup>
-</Project>

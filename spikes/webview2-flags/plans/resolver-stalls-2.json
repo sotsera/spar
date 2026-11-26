@@ -1,7 +1,0 @@
-{
-  "suite": "resolver-stalls-2", "scenario": "load", "rounds": 61, "warmup": 1, "navigations": 1, "listener": true,
-  "variants": [
-    { "name": "base", "args": "--disable-blink-features=FileSystemAccessLocal" },
-    { "name": "resolver", "args": "--disable-blink-features=FileSystemAccessLocal --host-resolver-rules=\"MAP app.localhost ~NOTFOUND\"" }
-  ]
-}

@@ -151,7 +151,7 @@ export const securitySteps = connection => ({
   },
 
   // A module worker the host serves: its own response carries the policy. A violation in it raises nothing the page
-  // or the host can see on WebKitGTK (spikes/linux-gpu-csp).
+  // or the host can see on WebKitGTK (docs/evidence/linux-gpu-csp).
   async worker() {
     const worker = new Worker(workerUrl(), { type: "module" });
     const result = await new Promise(resolve => {

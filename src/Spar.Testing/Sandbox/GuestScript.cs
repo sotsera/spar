@@ -26,7 +26,7 @@ internal static class GuestScript
     /// <summary>
     /// A SYSTEM command that points the guest's WebView2 registration at the Runtime whose files are in the guest: the
     /// version (<c>Clients\…\pv</c>) and, what the loader actually follows, the folder (<c>ClientState\…\EBWebView</c>;
-    /// <c>spikes/startup-prerequisites</c>). Windows Sandbox takes the files from the host and the registration from its
+    /// <c>docs/evidence/startup-prerequisites</c>). Windows Sandbox takes the files from the host and the registration from its
     /// base image, so after the host's Runtime updated the registration named a version that was not there and every app
     /// found no Runtime (2026-11-19: 157.0.4341.46 registered, 157.0.4341.60 on disk). It changes the disposable guest only.
     /// </summary>
