@@ -155,7 +155,7 @@ public sealed class DevtoolsCommandTests
         Assert.Equal($"{file} (3x2, 7 bytes)\n", output);
     }
 
-    private static TestFolder Listening(out string token)
+    internal static TestFolder Listening(out string token)
     {
         var app = TemplateApp.New();
         token = "5ecret";
@@ -178,7 +178,7 @@ public sealed class DevtoolsCommandTests
     }
 
     /// <summary>An app's devtools that answer <c>initialize</c>, then each tool from a script.</summary>
-    private sealed class ScriptedApp : IDevtoolsTransport
+    internal sealed class ScriptedApp : IDevtoolsTransport
     {
         private readonly Dictionary<string, string> _replies = new(StringComparer.Ordinal);
 
