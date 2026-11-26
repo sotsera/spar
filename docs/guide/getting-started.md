@@ -232,6 +232,8 @@ While a Development build runs, the tool also looks at it and drives its page: `
 
 `dotnet spar dev` keeps a Development build running and, on `dotnet spar reload`, builds it again: a failed build answers with its errors at file and line and keeps the app running, a good one restarts the app in its window's place and answers once the page is ready. [Build and restart with spar dev](spar-dev.md) describes it.
 
+`dotnet spar snap <scene>` captures a scene of the app, a state written as C# in its end-to-end test project: a picture of the page, its accessibility tree and the commands it called, the same every run on one machine. [Capture scenes with spar snap](spar-snap.md) describes it.
+
 ## 9. Run it in CI
 
 A new app comes with a [GitHub Actions](https://docs.github.com/actions) workflow, `.github/workflows/ci.yml`, which runs on every push to `main` and on every pull request, once for each OS the app runs on (`--platforms`): the Windows runner and the Ubuntu runner. Each run restores and builds the solution, runs the fast tests, the page tests (`npm test`) and the fast tests published with NativeAOT, then the end-to-end tests the runner can run, and publishes the app. It keeps the test results (TRX reports from each test project's `obj/test-results/`) and the published executable, without its debug symbols, as the run's artifacts.

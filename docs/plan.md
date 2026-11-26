@@ -442,6 +442,14 @@ A one-shot capture (section 6, `docs/design/agents.md`): `spar snap` runs a name
 6. **What it writes, and where.** Decided: `obj/spar-snap/<scene>/` in the end-to-end project (or `--out <folder>`): `page.png`, `tree.txt` (the devtools' tree format) and `tree.json`, `calls.json` (every bridge call with its timing and outcome), `problems.txt` (`app.Problems`, the page's errors and console messages); the command prints the folder and a one-line summary per scene. No comparison with a stored image in M2c. Not taken: write next to the test project as committed baselines and compare (`--check`); or print the files' contents.
 7. **The command line.** Decided: `spar snap --list`, `spar snap <scene>...`, `spar snap --all`, with `--project` (the app or its end-to-end project; from the app, the end-to-end project is the one beside it whose `SparTestedApplication` names it and that has scenes), `--out` and `--json`; exit codes 0 written, 2 a scene failed (its exception and the last lines of its log), 64 a wrong command line. Not taken: grouped as `spar scene list` and `spar scene snap`.
 
+**Build** (all four built 2026-11-26; decision "M2c: spar snap and scenes (implementation record; choices for review; 2026-11-26)", `docs/evidence/m2c-spar-snap.md`, user guide `docs/guide/spar-snap.md`, `docs/app-model.md` 6.15):
+1. **The scene API** in Spar.Testing: `[SparScene]`, `SparScene` with its clock (the backend's `TimeProvider` and a script of the page's world), the fixed viewport at scale 1, reduced motion and software rendering for its window, the call recorder from the app's first call, and the capture (still, idle, PNG, tree, calls, problems).
+2. **The generator:** the scenes' registration in a module initializer, the `--spar-scene-list` answer, one window test per scene, and SPAR110 to SPAR112.
+3. **`spar snap`:** the end-to-end project found from the app or its own folder, its Debug build (or `--no-build`), the list, one capture per scene through the test executable's xUnit runner, `tree.txt`, the summary and `--json`.
+4. **Tests and evidence:** the generator's and the tool's tests, `Spar.WindowTests`' scene tests (two captures the same bytes, both clocks), the Notebook's scenes, the smoke runs on both hosts.
+
+**Exit:** `spar snap` captures the Notebook's scenes on Windows and Linux, two captures of each are the same bytes on the same machine, every scene runs as a test, a broken scene is a build error, Production builds carry none of it, and the evidence and the user guide are written.
+
 ### M3: communication breadth and the SQL Server tool
 
 - **Streams and subscriptions** on both hosts, on the message kinds M1a defined: credits, in-band failures, the `events` slot, coalescing and resumption (section 2c and the table below), with trace context on them (section 6b).

@@ -4,7 +4,7 @@
 #   MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-24.04 -- bash /mnt/<repo>/docs/evidence/m1c-blackbox/wsl.sh <step>...
 # Steps, in this order: sync client appmodel build test window windowaot devprobe wasmprobe notebookexe windowdev
 # windowdevprobe notebook boundary packagetests; `windowsession` (WSLg's display, after asking the user) is left out of
-# every run, as are `devtoolssmoke` (M2a) and `devsmoke` (M2b). `window`, `windowsession` and `windowaot` take xUnit
+# every run, as are `devtoolssmoke` (M2a), `devsmoke` (M2b) and `snapsmoke` (M2c). `window`, `windowsession` and `windowaot` take xUnit
 # options after them when run alone:
 #   wsl.sh window --filter-class Spar.WindowTests.BlackBoxFixtureTests
 # The working copy is the Windows tree as it is, copied to /var/tmp/spar-m1c-blackbox/repo without bin, obj,
@@ -180,6 +180,12 @@ step() {
       echo "# Processes left that name the copy's Notebook: $(pgrep -fc "$repo/samples/Notebook" || true)"
       kill "${bus##* }" 2>/dev/null
       rm -rf "$runtime"
+      census ;;
+    snapsmoke)
+      # M2c's spar snap (docs/evidence/m2c-spar-snap.md): ../m2c-spar-snap/smoke.sh with the built spar tool against the
+      # Notebook in the copy; each scene's test process starts its own Xvfb (the wrapper above), as window tests do.
+      timed bash "$source_repo/docs/evidence/m2c-spar-snap/smoke.sh" "$repo/samples/Notebook" dotnet "$repo/src/Spar.Tool/bin/Debug/net11.0/Spar.Tool.dll"
+      cp "$repo/samples/Notebook.EndToEndTests/obj/spar-snap/groceries/page.png" "$source_repo/docs/evidence/m2c-spar-snap/linux-groceries.png"
       census ;;
     windowaot)
       (cd "$repo" && timed dotnet publish tests/Spar.WindowTests -c Release -p:SparTestLane=Aot -o artifacts/aot/Spar.WindowTests) || return 1
