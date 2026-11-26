@@ -19,7 +19,8 @@ public sealed class EvalNotesWindowTests
         await add.ClickAsync();
         await Expect(page.GetByText("A note needs text.")).ToBeVisibleAsync();
 
-        await page.GetByLabel("Note").FillAsync("oat milk");
+        // The field by its exact name: the prompt names it, and a list labelled "Notes" is a fair choice beside it.
+        await page.GetByRole(SparRole.Textbox, new() { Name = "Note", Exact = true }).FillAsync("oat milk");
         await add.ClickAsync();
         await Expect(page.GetByRole(SparRole.Listitem).GetByText("oat milk")).ToBeVisibleAsync();
     }

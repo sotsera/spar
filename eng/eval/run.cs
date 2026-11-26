@@ -46,6 +46,8 @@ switch (args[0])
         return await ValidateAsync();
     case "run":
         return await RunAsync();
+    case "regrade":
+        return await RegradeAsync(options.Positional.FirstOrDefault() ?? throw new ArgumentException("regrade needs the run folder."));
     case "report":
         return Report.Write(options.Positional.FirstOrDefault() ?? throw new ArgumentException("report needs the run folder."), tasks);
     default:
@@ -172,6 +174,54 @@ async Task<int> RunAsync()
     return Report.Write(folder, tasks);
 }
 
+// A task's runs checked again with its current checks, after a check was found wrong: each run's diff applied to a fresh
+// copy of the app, offline. The run keeps its first result as checks.original.txt and grade.original.log, and
+// regraded.txt says why (--reason).
+async Task<int> RegradeAsync(string folder)
+{
+    var reason = options.Reason ?? throw new ArgumentException("regrade needs --reason, recorded with each run.");
+    folder = Path.GetFullPath(folder);
+    foreach (var task in tasks)
+    {
+        var taskFolder = Path.Combine(folder, task.Name);
+        if (!Directory.Exists(taskFolder))
+        {
+            continue;
+        }
+
+        foreach (var run in Directory.GetDirectories(taskFolder))
+        {
+            var scratch = Path.Combine(folder + "-regrade", task.Name, Path.GetFileName(run));
+            Directory.CreateDirectory(scratch);
+            File.Copy(Path.Combine(run, "diff.patch"), Path.Combine(scratch, "diff.patch"), overwrite: true);
+            var profile = Path.GetFileName(run).Split('-')[0];
+            var checks = await RunContainerAsync(task, "patch", profile, scratch, model: "", network: "none");
+            if (!File.Exists(Path.Combine(scratch, "checks.txt")) || checks.Count == 0)
+            {
+                Console.Error.WriteLine($"{task.Name} {Path.GetFileName(run)}: the regrade gave no checks; see {scratch}. The run keeps its result.");
+                return 1;
+            }
+
+            foreach (var name in new[] { "checks", "grade" })
+            {
+                var extension = name == "checks" ? ".txt" : ".log";
+                var original = Path.Combine(run, name + ".original" + extension);
+                if (!File.Exists(original))
+                {
+                    File.Move(Path.Combine(run, name + extension), original);
+                }
+
+                File.Copy(Path.Combine(scratch, name + extension), Path.Combine(run, name + extension), overwrite: true);
+            }
+
+            File.WriteAllText(Path.Combine(run, "regraded.txt"), reason + "\n");
+            Console.WriteLine($"{task.Name,-24} {Path.GetFileName(run),-9} {string.Join(", ", checks.Select(c => $"{c.Name} {(c.Passed ? "pass" : "fail")}"))}");
+        }
+    }
+
+    return Report.Write(folder, EvalTask.ReadAll(Path.Combine(spec, "eval.yaml")));
+}
+
 async Task StartProxyAsync()
 {
     await Docker.RunAsync(["rm", "-f", Proxy]);
@@ -244,6 +294,8 @@ sealed class Options
 
     public string? Model { get; private set; }
 
+    public string? Reason { get; private set; }
+
     public List<string> Positional { get; } = [];
 
     public static Options Parse(string[] args)
@@ -259,6 +311,7 @@ sealed class Options
                 case "--runs": options.Runs = int.Parse(Next(), CultureInfo.InvariantCulture); break;
                 case "--parallel": options.Parallel = int.Parse(Next(), CultureInfo.InvariantCulture); break;
                 case "--model": options.Model = Next(); break;
+                case "--reason": options.Reason = Next(); break;
                 default: options.Positional.Add(args[index]); break;
             }
         }
@@ -404,6 +457,20 @@ static class Report
                 return list.Count == 0 ? "–" : $"{Rate(list):P0} ({list.Count(r => r.Passed)}/{list.Count})";
             });
             text.Append($"| {skill} ({tagged.Count} tasks) | {string.Join(" | ", cells)} |\n");
+        }
+
+        var regraded = tasks.SelectMany(task => Directory.Exists(Path.Combine(folder, task.Name)) ? Directory.GetDirectories(Path.Combine(folder, task.Name)) : [])
+            .Where(run => File.Exists(Path.Combine(run, "regraded.txt")))
+            .ToList();
+        if (regraded.Count > 0)
+        {
+            text.Append("\n## Regraded runs\n\n");
+            foreach (var run in regraded)
+            {
+                var before = File.ReadAllText(Path.Combine(run, "checks.original.txt")).ReplaceLineEndings(", ").TrimEnd(',', ' ');
+                var after = File.ReadAllText(Path.Combine(run, "checks.txt")).ReplaceLineEndings(", ").TrimEnd(',', ' ');
+                text.Append($"- {Path.GetFileName(Path.GetDirectoryName(run))}/{Path.GetFileName(run)}: {before} → {after}. {File.ReadAllText(Path.Combine(run, "regraded.txt")).Trim()}\n");
+            }
         }
 
         text.Append("\n## The surviving surface (decision \"M2e's decide-first questions\", item 8)\n\n");

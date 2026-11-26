@@ -116,3 +116,49 @@ stimuli:
     environment: { app: pantry }
     graders:
       - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-native-publish/grade.sh } }
+
+  # Round 2 (decision "M2e's first evaluation round"): tasks whose cause shows only at run time, in the app's own data,
+  # its logs or its window, described as a user would report them. Run with --tasks and the five names.
+  - name: notebook-blank-preview
+    prompt: |
+      When I open some of the pages in my notebook (the Notebook app in this folder), the whole window goes blank.
+      Other pages open fine. Find out why and fix it.
+    tags: { capability: runtime-diagnosis, journey: notebook, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-blank-preview/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-blank-preview/grade.sh } }
+
+  - name: notebook-vanished-page
+    prompt: |
+      One of my pages disappeared from the Notebook app (this folder) after I edited it in another Markdown editor,
+      although its file is still in the notebook's folder. Make the Notebook show it again.
+    tags: { capability: runtime-diagnosis, journey: notebook, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-vanished-page/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-vanished-page/grade.sh } }
+
+  - name: notebook-deleted-stays
+    prompt: |
+      In the Notebook app (this folder), when I delete a page it stays in the page list until I restart the app.
+      Fix it.
+    tags: { capability: ui-state, journey: notebook, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: notebook, commands: [bash $EVAL_SPEC/tasks/notebook-deleted-stays/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/notebook-deleted-stays/grade.sh } }
+
+  - name: pantry-greeting-offscreen
+    prompt: |
+      In the Pantry app (this folder), pressing Greet seems to do nothing: no greeting appears in the window. Fix it.
+    tags: { capability: layout, journey: new-app, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: pantry, commands: [bash $EVAL_SPEC/tasks/pantry-greeting-offscreen/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-greeting-offscreen/grade.sh } }
+
+  - name: pantry-unusual-name
+    prompt: |
+      A user named José says the Pantry app (this folder) tells him the app did not answer when he presses Greet.
+      It works for other people. Fix it.
+    tags: { capability: runtime-diagnosis, journey: new-app, round: 2, skills: [spar-dev-loop, spar-app] }
+    environment: { app: pantry, commands: [bash $EVAL_SPEC/tasks/pantry-unusual-name/seed.sh] }
+    graders:
+      - { type: run-command, config: { command: bash $EVAL_SPEC/tasks/pantry-unusual-name/grade.sh } }

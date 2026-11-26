@@ -21,13 +21,21 @@ work=/home/spar/work/$app
 mkdir -p /home/spar/work
 cp -a "/eval/prep/apps/$app" "$work" && cd "$work" || { echo "The app could not be copied."; exit 3; }
 
-# Offline: Spar's packages from the feed, everything else from the preparation's packages, read-only.
+# Offline: Spar's packages from the feed, everything else from the preparation's packages, read-only. The dotnet
+# profile's feed has no Spar.Tool, so its agent cannot install the spar tool (the first round's could, and did).
+feed=/eval/prep/feed
+if [ "$profile" = dotnet ]; then
+    feed=/home/spar/feed
+    mkdir -p "$feed"
+    find /eval/prep/feed -name '*.nupkg' ! -name 'Spar.Tool.*' -exec cp {} "$feed/" \;
+fi
+
 cat > nuget.config <<XML
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
     <clear />
-    <add key="spar" value="/eval/prep/feed" />
+    <add key="spar" value="$feed" />
   </packageSources>
   <fallbackPackageFolders>
     <add key="prepared" value="/eval/prep/nuget" />
@@ -93,6 +101,11 @@ case "$mode" in
         ;;
     reference)
         bash "$EVAL_TASK/reference.sh" > "$out/reference.log" 2>&1
+        echo $? > "$out/agent-exit"
+        ;;
+    patch)
+        # A regrade: an earlier run's changes, from its diff, checked again by the task's current checks.
+        git apply --whitespace=nowarn "$out/diff.patch" > "$out/patch.log" 2>&1
         echo $? > "$out/agent-exit"
         ;;
     none)

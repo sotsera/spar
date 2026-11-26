@@ -48,3 +48,24 @@ and logs go to `artifacts/eval/run-<time>/<task>/<profile>-<n>/`, and the run fo
 `report.md`. A run passes when every check passes and it stayed within the task's constraints: 80 turns, 20 minutes,
 and 300,000 tokens counted as input, output and cache writes (cache reads, which every turn repeats, are reported
 apart). `report <folder>` writes the report again.
+
+## Regrading
+
+When a check turns out wrong after a run, fix it, validate the task again, and regrade the run folder: each run's diff is
+applied to a fresh copy of the app and checked again offline. Each run keeps its first result as
+`checks.original.txt`, and the report lists every regraded run with the reason given:
+
+```sh
+dotnet run eng/eval/run.cs -- regrade artifacts/eval/run-<time> --tasks pantry-notes --reason "why the check was wrong"
+```
+
+## The rounds
+
+Round 1 is the first ten stimuli: specified features and fixes, which every profile solved, mostly without the
+devtools (`docs/evidence/m2e-evaluation/`). Round 2 is the five stimuli tagged `round: 2`: bug reports whose cause shows
+only at run time, in the app's data, its logs or its window. From round 2 the `dotnet` profile's feed has no
+`Spar.Tool`, so its agent cannot install the `spar` tool.
+
+```sh
+dotnet run eng/eval/run.cs -- run --tasks notebook-blank-preview,notebook-vanished-page,notebook-deleted-stays,pantry-greeting-offscreen,pantry-unusual-name --runs 3 --parallel 3
+```
