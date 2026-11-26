@@ -490,6 +490,7 @@ The entries below come from earlier Spar versions and other frameworks (`docs/re
 - **Returning directly from `WM_NCCREATE` broke the window title.**
 - **The CI runner ignored the WebView2 runtime-folder environment variable;** only the API parameter worked. In an elevated process (the Windows Sandbox runner), WebView2 ignores environment overrides altogether.
 - **Unpackaged Windows apps get balloon notifications only;** in development, notifications show PowerShell's name and icon.
+- **Every show command that maximizes a window also activates it** (`SW_SHOWMAXIMIZED`, `SW_MAXIMIZE`, `SetWindowPlacement` with either), and `WS_MAXIMIZE` at creation is ignored when a place is given. To show a window maximized without the focus: give the hidden window its normal place (`SetWindowPlacement` with `SW_HIDE`, workspace coordinates), set `WS_MAXIMIZE`, size it to the work area plus the sizing frame (`SM_CXSIZEFRAME` + `SM_CXPADDEDBORDER` at its DPI), then `SW_SHOWNA`; Restore then returns to the normal place (`spikes/maximized-noactivate`). (M2b)
 
 ## Linux host (WebKitGTK)
 

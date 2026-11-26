@@ -50,9 +50,10 @@ The same sequence (`docs/evidence/m2b-spar-dev/smoke.sh`) on both systems: `spar
 
 `spar dev` (not `--private`) on the user's desktop, in the app's Terminal panel; each reload 10 s after the user was ready, while they typed in Notepad (decision "M2b: the checks at the PC (implementation record; 2026-11-26)"):
 - **Place and focus:** the new window in the moved and resized window's place and size; the typing stayed in Notepad. Passed.
-- **Maximized:** back over the same area, not maximized; the typing stayed in Notepad. As designed.
+- **Maximized:** first back over the same area, not maximized, as built; then, after the spike `spikes/maximized-noactivate` (decision "A restarted maximized window comes back maximized, without the focus"), maximized again with the Restore button, the typing still in Notepad, and Restore back to the normal place. Passed.
 - **Visual Studio building while `spar dev` ran:** first MSB4186 (the type-check's .NET-only property function in Visual Studio's .NET Framework MSBuild), then, after the fix, built with the window open. Passed.
 - **Ctrl+C in `spar dev`'s terminal:** first the app took the Ctrl+C itself and `spar dev` killed it; after the fix (`SPAR_DEV_SUPERVISOR`), no dialog, the session end held 52 ms, exit 0, no process left. Passed.
+- **Once, a slow restart:** one reload on the desktop was ready 3.4 s from the start instead of about 0.7 s: the kept Vite server did not answer its identity check within 2 s, so the run ended it and started another (the same session's first Vite had taken 3.7 s to be ready, and the UI thread logged stalls of 83 to 115 ms outside Spar's callbacks). Not reproduced: on a private desktop, a reload after 4.5 minutes, and another, reused the server (0.7 and 0.6 s).
 
 ### Found and fixed during the runs
 

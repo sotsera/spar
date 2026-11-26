@@ -22,7 +22,7 @@ dotnet spar reload
 `spar reload` builds the app again and answers when the result is known:
 
 - **When the build fails,** it lists each error and warning at its file, line and column: the C# compiler's, Spar's own checks of your contracts, and the TypeScript type-check of the page. The app that was running keeps running, so you can still look at it.
-- **When the build succeeds,** the running app is closed the way the system closes it when you sign out (its close handlers get their short budget, it cannot ask anything), the new build starts in the same place and size on screen without taking the keyboard focus, and the answer comes once its page is ready: the new run, how long it took, and the build's warnings.
+- **When the build succeeds,** the running app is closed the way the system closes it when you sign out (its close handlers get their short budget, it cannot ask anything), the new build starts in the same place and size on screen, maximized again if it was, without taking the keyboard focus, and the answer comes once its page is ready: the new run, how long it took, and the build's warnings.
 - **When the new build fails to start,** the answer has its exit code and its last lines of output.
 
 ```text

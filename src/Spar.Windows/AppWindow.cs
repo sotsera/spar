@@ -161,15 +161,26 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
         else
         {
+            var maximized = false;
             if (SparDevelopment.IsSupported && WindowPlacement.Kept() is { } kept)
             {
                 // spar dev's restart: the previous run's place and size; its start shows it without the focus.
-                bounds = kept;
+                bounds = kept.Bounds;
+                maximized = kept.Maximized;
             }
 
             _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this);
             theme.ApplyTitleBar(_window);
-            PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWDEFAULT);
+            if (SparDevelopment.IsSupported && maximized)
+            {
+                // Maximized again without activation (SW_SHOWMAXIMIZED would take the focus): hidden, then SW_SHOWNA.
+                WindowPlacement.MaximizeHidden(_window, bounds);
+                PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWNA);
+            }
+            else
+            {
+                PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWDEFAULT);
+            }
         }
 
         _log.Phase("window shown");

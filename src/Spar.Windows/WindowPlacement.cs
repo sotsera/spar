@@ -73,17 +73,19 @@ internal static unsafe class WindowPlacement
 
     /// <summary>
     /// The place and size <c>spar dev</c> kept from the previous run of a Development build, in
-    /// <see cref="KeptVariable"/> as <c>left,top,width,height</c> in physical pixels (decision "M2b's decide-first
-    /// questions", item 4); null when it is not set, not four numbers, too small, or on no monitor now.
+    /// <see cref="KeptVariable"/> as <c>left,top,width,height</c> in physical pixels, then <c>,maximized</c> for a maximized
+    /// window, whose normal place the four numbers are (decision "M2b's decide-first questions", item 4); null when it
+    /// is not set, not four numbers, too small, or on no monitor now.
     /// </summary>
-    public static RECT? Kept()
+    public static (RECT Bounds, bool Maximized)? Kept()
     {
         var text = Environment.GetEnvironmentVariable(KeptVariable);
-        var parts = text?.Split(',');
-        if (parts is not { Length: 4 })
+        if (text?.Split(',') is not { Length: 4 or 5 } parts || (parts.Length == 5 && parts[4] != "maximized"))
         {
             return null;
         }
+
+        var maximized = parts.Length == 5;
 
         var numbers = new int[4];
         for (var index = 0; index < 4; index++)
@@ -100,7 +102,45 @@ internal static unsafe class WindowPlacement
         }
 
         var bounds = new RECT { left = numbers[0], top = numbers[1], right = numbers[0] + numbers[2], bottom = numbers[1] + numbers[3] };
-        return PInvoke.MonitorFromRect(&bounds, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL).IsNull ? null : bounds;
+        return PInvoke.MonitorFromRect(&bounds, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL).IsNull ? null : (bounds, maximized);
+    }
+
+    /// <summary>
+    /// Makes the hidden <paramref name="window"/> maximized without activating it, for <c>spar dev</c>'s restart of a
+    /// maximized window (spike <c>spikes/maximized-noactivate</c>): every show command that maximizes also activates, so
+    /// the normal place is recorded first (<c>SetWindowPlacement</c> with <c>SW_HIDE</c>, in workspace coordinates),
+    /// then the window is marked <c>WS_MAXIMIZE</c> and sized as Windows maximizes it (its monitor's work area plus the
+    /// sizing frame at its DPI). The caller shows it with <c>SW_SHOWNA</c>; Restore returns to <paramref name="normal"/>.
+    /// </summary>
+    public static void MaximizeHidden(HWND window, RECT normal)
+    {
+        var monitor = PInvoke.MonitorFromWindow(window, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
+        var info = new MONITORINFO { cbSize = (uint)sizeof(MONITORINFO) };
+        if (!PInvoke.GetMonitorInfo(monitor, &info))
+        {
+            return;
+        }
+
+        // The placement's rectangle is in workspace coordinates, which start at the work area's corner.
+        var offsetX = info.rcWork.left - info.rcMonitor.left;
+        var offsetY = info.rcWork.top - info.rcMonitor.top;
+        var placement = new WINDOWPLACEMENT
+        {
+            length = (uint)sizeof(WINDOWPLACEMENT),
+            showCmd = SHOW_WINDOW_CMD.SW_HIDE,
+            rcNormalPosition = new RECT { left = normal.left - offsetX, top = normal.top - offsetY, right = normal.right - offsetX, bottom = normal.bottom - offsetY },
+        };
+        PInvoke.SetWindowPlacement(window, &placement);
+
+        var style = PInvoke.GetWindowLong(window, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
+        PInvoke.SetWindowLong(window, WINDOW_LONG_PTR_INDEX.GWL_STYLE, style | (int)WINDOW_STYLE.WS_MAXIMIZE);
+
+        var dpi = PInvoke.GetDpiForWindow(window);
+        var frame = PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXSIZEFRAME, dpi) + PInvoke.GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER, dpi);
+        var work = info.rcWork;
+        PInvoke.SetWindowPos(
+            window, default, work.left - frame, work.top - frame, work.right - work.left + (2 * frame), work.bottom - work.top + (2 * frame),
+            SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED);
     }
 
     /// <summary><c>WM_GETMINMAXINFO</c>: the smallest window whose client area is <paramref name="minimum"/> at the window's DPI.</summary>

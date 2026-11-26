@@ -1,0 +1,8 @@
+control-showmaximized: maximized=True activated=True (WM_ACTIVATE 1, GetActiveWindow True) window=(-8,-8)-(1928,1040) work=(0,0)-(1920,1032)
+control-noactivate: maximized=False activated=False (WM_ACTIVATE 0, GetActiveWindow False) window=(200,150)-(1000,750) work=(0,0)-(1920,1032)
+created-maximized-noactivate: maximized=False activated=False (WM_ACTIVATE 0, GetActiveWindow False) window=(200,150)-(1000,750) work=(0,0)-(1920,1032)
+placement-maximized: maximized=True activated=True (WM_ACTIVATE 1, GetActiveWindow True) window=(-8,-8)-(1928,1040) work=(0,0)-(1920,1032)
+noactivate-then-maximize: maximized=True activated=True (WM_ACTIVATE 1, GetActiveWindow True) window=(-8,-8)-(1928,1040) work=(0,0)-(1920,1032)
+noactivate-then-setwindowpos: maximized=False activated=False (WM_ACTIVATE 0, GetActiveWindow False) window=(0,0)-(1920,1032) work=(0,0)-(1920,1032)
+style-maximized-showna: maximized=True activated=False (WM_ACTIVATE 0, GetActiveWindow False) window=(-8,-8)-(1928,1040) work=(0,0)-(1920,1032) restore: maximized=False window=(-8,-8)-(1928,1040)
+placement-then-style-showna: maximized=True activated=False (WM_ACTIVATE 0, GetActiveWindow False) window=(-8,-8)-(1928,1040) work=(0,0)-(1920,1032) restore: maximized=False window=(200,150)-(1000,750)
