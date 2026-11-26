@@ -60,7 +60,7 @@ public sealed class DevtoolsCommandTests
     }
 
     [Fact]
-    public void Tree_prints_each_element_with_its_reference_depth_and_states()
+    public void Tree_prints_each_element_with_its_reference_depth_text_and_states()
     {
         using var app = Listening(out _);
         var scripted = new ScriptedApp().Reply("tree", """
@@ -68,7 +68,9 @@ public sealed class DevtoolsCommandTests
               {"ref":"e1","role":"main","name":"","depth":0},
               {"ref":"e2","role":"heading","name":"Ideas","depth":1,"level":2},
               {"ref":"e3","role":"textbox","name":"Title","depth":1,"value":"Ideas\nand more","focused":true},
-              {"ref":"e4","role":"checkbox","name":"Done","depth":1,"checked":false,"disabled":true}]}
+              {"ref":"e4","role":"checkbox","name":"Done","depth":1,"checked":false,"disabled":true},
+              {"ref":"e5","role":"status","name":"","text":"Saved.","depth":1},
+              {"ref":"e6","role":"region","name":"Tips","text":"Press Ctrl+K to search.","depth":1}]}
             """);
 
         var (exit, output, _) = Spar(app, scripted, "tree");
@@ -81,6 +83,8 @@ public sealed class DevtoolsCommandTests
               e2 heading "Ideas" [level 2]
               e3 textbox "Title" = "Ideas\nand more" [focused]
               e4 checkbox "Done" [not checked, disabled]
+              e5 status: "Saved."
+              e6 region "Tips": "Press Ctrl+K to search."
             … more elements than the limit; spar tree --limit N shows more.
 
             """.ReplaceLineEndings("\n"), output);

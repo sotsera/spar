@@ -28,7 +28,7 @@ Every command talks to the running Development build of the app in the current f
 
 | Command | What it does |
 |---|---|
-| `spar tree [--limit N]` | The page's elements as assistive technology sees them: role, accessible name, value and state, indented by nesting, each with a reference (`e12`) for the commands below. A password field's value is never shown. |
+| `spar tree [--limit N]` | The page's elements as assistive technology sees them: role, accessible name, text, value and state, indented by nesting, each with a reference (`e12`) for the commands below. A password field's value is never shown. |
 | `spar click <target>` | Waits until the element is visible, enabled and not covered, clicks it, then lists the app's commands that ran from the click until the app was quiet again (300 ms with no call running, 3 s at most). A command the page was already running for something else can appear there too. |
 | `spar fill <target> <text>` | Replaces the text of a text field, text area or editable element. |
 | `spar wait <target> [--state S]` | Waits until the element is visible, or `hidden`, `attached` or `detached`. |
@@ -38,6 +38,23 @@ Every command talks to the running Development build of the app in the current f
 | `spar calls [--limit N]` | The last 200 calls the app ran: from the page, from tests, and from `spar call`, each with its time and outcome. |
 | `spar logs [--since 30s] [--source S] [--level L]` | The backend's log, the page's console messages and errors, and Content Security Policy violations, merged in time order. `--source` is `backend`, `page` or `csp`; `--level` is `debug`, `info` (the default), `warn` or `error`. |
 | `spar version` | The run, the build (variant, git revision, uncommitted changes, contracts' fingerprint) and the host. |
+
+### Reading the tree
+
+Each line of `spar tree` is one element: its reference, its role, its accessible name in quotes where it has one, then after a colon the text it shows where its name does not already say it, then a field's value after `=` and its states in brackets. A form that has just greeted someone reads:
+
+```text
+MyApp — https://app.localhost/ (document 1)
+e1 document
+  e2 main
+    e3 heading "MyApp" [level 1]
+    e4 form
+      e5 textbox "Name" = "Ada"
+      e6 button "Greet" [focused]
+    e7 status: "Hello, Ada!"
+```
+
+An element's text is what it shows outside the elements listed under it: a status line's message, a paragraph, a list item, the loose text of a section. A link or an emphasis inside a sentence is listed under the sentence, and its words stay in the sentence's text. Text that labels another element, such as a field's label or a group's legend, appears only as that element's name, and the content of a button, a checkbox or an image is its name. Hidden text is never shown, and neither is a field's value as text. A text or a value longer than 200 characters is cut and ends with ` …`. With `--json`, each element has `text` beside `name` when it has one.
 
 A **target** is a reference from the last `spar tree` of the page, such as `e12`, or a locator:
 

@@ -84,7 +84,8 @@ internal static class DevtoolsOutput
         foreach (var node in Array(result, "nodes"))
         {
             var indent = new string(' ', 2 * (int)Number(node, "depth"));
-            var name = Text(node, "name") is { Length: > 0 } text ? $" \"{text}\"" : "";
+            var name = Text(node, "name") is { Length: > 0 } named ? $" \"{named}\"" : "";
+            var text = Text(node, "text") is { Length: > 0 } shown ? $": \"{shown}\"" : "";
             var value = Text(node, "value") is { Length: > 0 } given ? $" = \"{OneLine(given)}\"" : "";
             var states = new List<string>();
             foreach (var state in new[] { "checked", "disabled", "expanded", "selected", "pressed", "focused" })
@@ -101,7 +102,7 @@ internal static class DevtoolsOutput
             }
 
             var suffix = states.Count > 0 ? $" [{string.Join(", ", states)}]" : "";
-            output.WriteLine($"{indent}{Text(node, "ref")} {Text(node, "role")}{name}{value}{suffix}");
+            output.WriteLine($"{indent}{Text(node, "ref")} {Text(node, "role")}{name}{text}{value}{suffix}");
         }
 
         if (result.TryGetProperty("truncated", out var truncated) && truncated.ValueKind == JsonValueKind.True)

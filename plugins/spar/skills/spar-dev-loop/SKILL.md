@@ -97,7 +97,7 @@ A Development build (`dotnet run`, `dotnet watch`, F5, or `spar dev`) carries de
 
 | Command | What it does |
 |---|---|
-| `dotnet spar tree [--limit N]` | The page's elements as assistive technology sees them (role, name, value, state), each with a reference such as `e12`. Password values are never shown. |
+| `dotnet spar tree [--limit N]` | The page's elements as assistive technology sees them (role, name, text, value, state), each with a reference such as `e12`. A line such as `e7 status: "Hello, Ada!"` gives, after the colon, the text an element shows where its name does not say it (a message, a paragraph, a list item; cut at 200 characters). Password values are never shown. |
 | `dotnet spar screenshot [--out file]` | The page as PNG, title bar included; by default in `obj/spar-devtools/`. |
 | `dotnet spar click <target>` | Waits until the element is visible, enabled and not covered, clicks it, then lists the commands that ran until the app was quiet again. |
 | `dotnet spar fill <target> <text>` | Replaces the text of a field, text area or editable element. |

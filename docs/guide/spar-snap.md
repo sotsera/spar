@@ -16,7 +16,7 @@ Each capture is a folder, `obj/spar-snap/new-page-dialog/` in the end-to-end tes
 | File | What it holds |
 |---|---|
 | `page.png` | The page, 1280 × 800 pixels. |
-| `tree.txt`, `tree.json` | The page's elements as assistive technology sees them: role, accessible name, value and state, as `spar tree` shows them. |
+| `tree.txt`, `tree.json` | The page's elements as assistive technology sees them: role, accessible name, text, value and state, as `spar tree` shows them ([Reading the tree](devtools.md#reading-the-tree)). |
 | `calls.json` | Every command the page called, in order, with its time and outcome. |
 | `problems.txt` | What went wrong while the scene ran: Spar's warnings and errors, the page's errors and its console messages. Empty when nothing did. |
 

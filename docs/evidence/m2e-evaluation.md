@@ -32,7 +32,7 @@ Medians, round 1: tokens (input, output and cache writes) 13,880 / 19,014 / 19,7
 
 - **Spar.Sdk referenced Spar.Loopback from the global packages folder only,** so a Development build failed (MSB3106) when NuGet resolved Spar's packages from a fallback folder. Fixed; pitfall in "Build, MSBuild and packages".
 - **`spar snap`'s search for the end-to-end project failed when a sibling folder vanished** while it read the folders (CI's Windows tests). Fixed; pitfall in "Tooling and environment".
-- **`spar tree` lists names and values, not text content:** a status line's text ("Hello, Ada!") is not in the tree, so an agent cannot read a message from it.
+- **`spar tree` lists names and values, not text content:** a status line's text ("Hello, Ada!") is not in the tree, so an agent cannot read a message from it. Fixed after M2e: decision "The devtools' tree shows text".
 - **Publishing a non-Production variant is not refused,** although the design decides it (`docs/design/security.md`, `SparAllowNonProductionPublish`): nothing in `src/` enforces it. Older than M2e.
 
 ## Not verified

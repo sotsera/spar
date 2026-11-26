@@ -36,6 +36,21 @@
     "menuitemradio", "option", "radio", "row", "rowheader", "switch", "tab", "tooltip", "treeitem",
   ]);
 
+  // Roles whose children are presentational (WAI-ARIA 1.2): their content belongs to them, so it is no text of theirs.
+  const childrenPresentational = new Set([
+    "button", "checkbox", "img", "math", "menuitemcheckbox", "menuitemradio", "meter", "option", "progressbar", "radio",
+    "scrollbar", "separator", "slider", "switch", "tab",
+  ]);
+
+  // Text-level roles: shown inline, they are part of a sentence, so their text stays in the text of the element
+  // around them.
+  const textLevel = new Set([
+    "code", "deletion", "emphasis", "insertion", "link", "mark", "strong", "subscript", "superscript", "term", "time",
+  ]);
+
+  // Content that is never text a person reads (the SVG `title` and `desc` are a name and a description).
+  const notText = new Set(["script", "style", "template", "noscript", "head", "title", "desc"]);
+
   const labelable = "button, input:not([type=hidden]), meter, output, progress, select, textarea";
   const skippedContent = new Set(["SCRIPT", "STYLE", "TEMPLATE", "NOSCRIPT", "HEAD"]);
   const sectioning = "article, aside, main, nav, section";
@@ -289,13 +304,25 @@
     return visibility === "hidden" || visibility === "collapse";
   }
 
+  /** An element the devtools' tree lists: one with a role that is not presentational or generic, and not hidden. */
+  function isTreeNode(element, cache) {
+    const role = roleOf(element);
+    return Boolean(role) && role !== "none" && role !== "presentation" && role !== "generic"
+      && !hiddenForAria(element, cache);
+  }
+
   // ---- Accessible name (Accessible Name 1.2, section 4.3.2) ---------------------------------------------------------
 
   // A hidden element's own name is computed as if it were shown (its hidden content too), as Chromium names the nodes
-  // it leaves out of the tree, so a query that includes hidden elements can still match them by name.
-  function accessibleName(element, cache) {
+  // it leaves out of the tree, so a query that includes hidden elements can still match them by name. With `borrowed`
+  // (a set), it collects the text nodes the name takes from other elements (labels, legends, captions, aria-labelledby),
+  // which the snapshot then leaves out of those elements' own text.
+  function accessibleName(element, cache, borrowed) {
     const hiddenAllowed = hiddenForAria(element, cache);
-    const context = { cache, root: element, visited: new Set(), recursing: false, inLabelledBy: false, hiddenAllowed };
+    const context = {
+      cache, root: element, visited: new Set(), recursing: false, inLabelledBy: false, hiddenAllowed,
+      borrowed: borrowed ?? null, borrowing: false,
+    };
     return normalize(textAlternative(element, context));
   }
 
@@ -327,13 +354,14 @@
           visited: new Set(),
           recursing: true,
           inLabelledBy: true,
+          borrowing: !isTreeNode(reference, context.cache),
           hiddenAllowed: hiddenForAria(reference, context.cache),
         })).join(" ");
       }
     }
 
     // 2C/2E: a control embedded in another element's label contributes its value.
-    const embedded = context.recursing && element !== context.root ? embeddedValue(element, role) : null;
+    const embedded = context.recursing && element !== context.root ? embeddedValue(element, role, context) : null;
     const label = normalize(element.getAttribute("aria-label"));
     if (label.length > 0 && embedded === null) {
       return label;
@@ -363,10 +391,16 @@
     return element.getAttribute("title") ?? "";
   }
 
-  function embeddedValue(element, role) {
+  // In the devtools' snapshot (`borrowed` given), a password field named into another element's name is redacted, as
+  // its own value is.
+  function embeddedValue(element, role, context) {
     switch (role) {
       case "textbox":
       case "searchbox":
+        if (context.borrowed !== null && element instanceof HTMLInputElement && element.type === "password") {
+          return element.value.length > 0 ? "(redacted)" : "";
+        }
+
         return "value" in element ? String(element.value) : element.textContent ?? "";
       case "combobox":
       case "listbox":
@@ -405,7 +439,12 @@
 
     if (element.matches(labelable) && element.labels && element.labels.length > 0) {
       const text = [...element.labels]
-        .map(label => textAlternative(label, { ...context, visited: new Set([element]), recursing: true }))
+        .map(label => textAlternative(label, {
+          ...context,
+          visited: new Set([element]),
+          recursing: true,
+          borrowing: !isTreeNode(label, context.cache),
+        }))
         .join(" ");
       if (normalize(text).length > 0) {
         return text;
@@ -434,7 +473,8 @@
 
   function childName(element, selector, context) {
     const child = element.querySelector(selector);
-    return child ? textAlternative(child, { ...context, recursing: true }) : "";
+    const borrowing = child !== null && !isTreeNode(child, context.cache);
+    return child ? textAlternative(child, { ...context, recursing: true, borrowing }) : "";
   }
 
   function pseudoContent(element, which, context) {
@@ -463,6 +503,10 @@
     for (const child of children) {
       if (child.nodeType === Node.TEXT_NODE) {
         text += child.textContent;
+        if (context.borrowing && context.borrowed !== null) {
+          context.borrowed.add(child);
+        }
+
         continue;
       }
 
@@ -1397,24 +1441,28 @@
     return element.isContentEditable ? textOf(element) : undefined;
   }
 
+  /** A value or a text as the snapshot gives it: at most 200 characters, then " …". */
+  const cut = text => text.length > 200 ? text.slice(0, 200) + " …" : text;
+
   /**
    * The devtools' tree: every element exposed to assistive technology, in document order, with its depth among them,
-   * a reference for later actions, and the states a reader of the page needs. At most `limit` elements.
+   * a reference for later actions, its text where its name does not show it, and the states a reader of the page
+   * needs. At most `limit` elements.
    */
   function snapshot(request) {
     const cache = newCache();
     const limit = request.limit ?? 2000;
-    const nodes = [];
+    const listed = [];
     const depths = new Map();
+    const borrowed = new Set();
     references = new Map();
     let truncated = false;
     for (const element of allElements(document)) {
-      const role = roleOf(element);
-      if (!role || role === "none" || role === "presentation" || role === "generic" || hiddenForAria(element, cache)) {
+      if (!isTreeNode(element, cache)) {
         continue;
       }
 
-      if (nodes.length === limit) {
+      if (listed.length === limit) {
         truncated = true;
         break;
       }
@@ -1426,12 +1474,28 @@
 
       const depth = parent === null ? 0 : depths.get(parent) + 1;
       depths.set(element, depth);
-      const ref = "e" + (nodes.length + 1);
+      const ref = "e" + (listed.length + 1);
       references.set(ref, new WeakRef(element));
-      const node = { ref, role, name: accessibleName(element, cache), depth };
+      listed.push({ element, ref, role: roleOf(element), name: accessibleName(element, cache, borrowed), depth });
+    }
+
+    // Every name first, so the text a later element's label borrows is known before the text around it is read.
+    const nodes = [];
+    const inline = new Set();
+    for (const { element, ref, role, name, depth } of listed) {
+      const node = { ref, role, name };
       const value = fieldValue(element);
+      if (!inline.has(element)) {
+        // Read even where it is not shown, so a text-level element inside a button or a field shows no text either.
+        const text = ownText(element, cache, borrowed, inline);
+        if (text !== "" && text !== name && value === undefined && !childrenPresentational.has(role)) {
+          node.text = cut(text);
+        }
+      }
+
+      node.depth = depth;
       if (value !== undefined && value !== "") {
-        node.value = value.length > 200 ? value.slice(0, 200) + " …" : value;
+        node.value = cut(value);
       }
 
       for (const [key, state] of Object.entries(states(element))) {
@@ -1444,6 +1508,60 @@
     }
 
     return { nodes, truncated, title: document.title, url: location.href };
+  }
+
+  /**
+   * The text an element shows that no other line of the tree does: its rendered text content, in order, without the
+   * content of the elements listed under it (the text-level ones shown inline excepted: a link or an emphasis is part
+   * of its sentence, so its text stays here and `inline` collects it) and without the text that names another element
+   * (`borrowed`: a label's, a legend's). Hidden content is left out; a field's value never is text. Read only until
+   * there is more than the snapshot gives.
+   */
+  function ownText(element, cache, borrowed, inline) {
+    let text = "";
+    const visit = node => {
+      const children = node.localName === "slot"
+        ? node.assignedNodes({ flatten: true })
+        : [...(node.shadowRoot ?? node).childNodes];
+      for (const child of children) {
+        if (text.length > 1000) {
+          return;
+        }
+
+        if (child.nodeType === Node.TEXT_NODE) {
+          if (!borrowed.has(child) && !hiddenForAria(child.parentElement ?? node, cache)) {
+            text += child.data;
+          }
+
+          continue;
+        }
+
+        if (child.nodeType !== Node.ELEMENT_NODE || notText.has(child.localName) || excluded(child, cache)) {
+          continue;
+        }
+
+        if (child.localName === "br") {
+          text += " ";
+          continue;
+        }
+
+        const shownInline = isInline(child, { cache });
+        if (isTreeNode(child, cache)) {
+          if (!shownInline || !textLevel.has(roleOf(child))) {
+            continue;
+          }
+
+          inline.add(child);
+        }
+
+        text += shownInline ? "" : " ";
+        visit(child);
+        text += shownInline ? "" : " ";
+      }
+    };
+
+    visit(element);
+    return normalize(text);
   }
 
   /** The states a snapshot shows, each only where the element has it. */
@@ -1496,12 +1614,9 @@
     const cache = newCache();
     const nodes = [];
     for (const element of allElements(document)) {
-      const role = roleOf(element);
-      if (!role || role === "none" || role === "presentation" || role === "generic" || hiddenForAria(element, cache)) {
-        continue;
+      if (isTreeNode(element, cache)) {
+        nodes.push({ role: roleOf(element), name: accessibleName(element, cache), tag: element.localName });
       }
-
-      nodes.push({ role, name: accessibleName(element, cache), tag: element.localName });
     }
 
     return { nodes };
