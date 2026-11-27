@@ -15,7 +15,7 @@ namespace Spar.Bridge;
 /// in the payload. Every call that names a command is counted, and an admitted one traced, by <see cref="BridgeTelemetry"/>.
 /// Transport-neutral: hosts pass in messages and a send function, which must be safe on any thread.
 /// </summary>
-internal sealed class BridgeSession : IDisposable
+internal sealed partial class BridgeSession : IDisposable
 {
     /// <summary>How far into an oversized message its header is looked for, to answer it by its id.</summary>
     private const int HeaderSearchChars = 16 * 1024;
@@ -40,6 +40,7 @@ internal sealed class BridgeSession : IDisposable
     private readonly Lock _gate = new();
     private readonly CancellationTokenSource _closing = new();
     private readonly Dictionary<long, CancellationTokenSource> _pending = [];
+    private readonly Dictionary<long, BridgeStream> _streams = [];
     private readonly LinkedList<Waiting> _queue = [];
     private readonly BridgeTelemetry _telemetry;
     private readonly Dictionary<long, DateTimeOffset> _earlyCancels = [];
@@ -144,7 +145,10 @@ internal sealed class BridgeSession : IDisposable
                 Cancel(decoded.Id!.Value);
                 break;
             case BridgeMessageType.Stream:
-                Refuse(decoded, "Streams and subscriptions arrive in M3.", received);
+                OpenStream(decoded, received);
+                break;
+            case BridgeMessageType.Credits:
+                Credit(decoded.Id!.Value, decoded.Credits!.Value);
                 break;
             case BridgeMessageType.Ready:
                 Ready?.Invoke();
@@ -241,6 +245,7 @@ internal sealed class BridgeSession : IDisposable
     /// <summary>The document is gone: cancel every call, drop the waiting ones, and send nothing more.</summary>
     public void Close()
     {
+        BridgeStream[] streams;
         lock (_gate)
         {
             if (_closed)
@@ -257,6 +262,14 @@ internal sealed class BridgeSession : IDisposable
             _pending.Clear();
             _queue.Clear();
             _queuedBytes = 0;
+            streams = [.. _streams.Values];
+            _streams.Clear();
+        }
+
+        // Outside the gate: a stream sends under its own lock, and its send takes the gate.
+        foreach (var stream in streams)
+        {
+            stream.Dispose();
         }
 
         _closing.Cancel();
@@ -584,11 +597,13 @@ internal sealed class BridgeSession : IDisposable
     private bool FailPending(long id, SparFailure failure)
     {
         Waiting? waiting = null;
+        BridgeStream? stream = null;
         lock (_gate)
         {
             if (_pending.Remove(id, out var token))
             {
                 token.Cancel();
+                _streams.Remove(id, out stream);
             }
             else if (RemoveQueued(id) is { } queued)
             {
@@ -603,6 +618,13 @@ internal sealed class BridgeSession : IDisposable
         if (waiting is { } ended)
         {
             _telemetry.Ended(ended.Call, id, failure, ended.Received, atTheDoor: false);
+        }
+
+        if (stream is not null)
+        {
+            // After the items it already batched, and with their count.
+            stream.End(sent => FailureMessage(id, failure, null) with { ItemsSent = sent });
+            return true;
         }
 
         Send(FailureMessage(id, failure, waiting?.Call));

@@ -41,8 +41,21 @@ internal static class Descriptors
 
     public static readonly DiagnosticDescriptor UnsupportedReturn = Error(
         "SPAR010", "Unsupported command return type",
-        "Command '{0}' returns '{1}'. A command returns Task, Task<T>, Task<Result<T, TError>>, Task<Result<TError>> or their ValueTask forms",
+        "Command '{0}' returns '{1}'. A command returns Task, Task<T>, Task<Result<T, TError>>, Task<Result<TError>>, their ValueTask forms, IAsyncEnumerable<T> or IAsyncEnumerable<Result<T, TError>>",
         Contracts);
+
+    public static readonly DiagnosticDescriptor SubscriptionNotStream = Error(
+        "SPAR017", "A subscription is a stream",
+        "Command '{0}' has [SparSubscription] but returns '{1}'. A subscription returns IAsyncEnumerable<T> or IAsyncEnumerable<Result<T, TError>>",
+        Contracts);
+
+    public static readonly DiagnosticDescriptor InvalidSubscription = Error(
+        "SPAR018", "Invalid subscription settings", "The [SparSubscription] of command '{0}' {1}", Contracts);
+
+    public const string CapacityWithLatestOnly =
+        "sets Capacity with LatestOnly. A subscription that keeps only the newest value holds one; remove Capacity";
+
+    public const string CapacityNotPositive = "sets Capacity to {0}. Capacity is a positive number of values, or left out for 256";
 
     public static readonly DiagnosticDescriptor TooManyRequests = Error(
         "SPAR011", "Too many request parameters",

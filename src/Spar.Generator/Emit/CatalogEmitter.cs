@@ -23,7 +23,7 @@ internal static class CatalogEmitter
         {
             foreach (var command in contract.Commands)
             {
-                code.Line($"        new(\"{contract.WireName}\", \"{command.WireName}\", {command.TimeoutSeconds}, {HandlerName(contract, command)}),");
+                code.Line("        " + Entry(contract, command));
             }
         }
 
@@ -158,9 +158,29 @@ internal static class CatalogEmitter
         }
     }
 
+    /// <summary>One catalog entry: a unary handler, or a stream handler with a subscription's buffer.</summary>
+    private static string Entry(ContractModel contract, CommandModel command)
+    {
+        var name = $"\"{contract.WireName}\", \"{command.WireName}\", {command.TimeoutSeconds}";
+        if (!command.IsStream)
+        {
+            return $"new({name}, {HandlerName(contract, command)}),";
+        }
+
+        var settings = $"StreamHandler = {HandlerName(contract, command)}";
+        if (command.Subscription is { } subscription)
+        {
+            settings += $", Capacity = {subscription.Capacity}";
+            settings += subscription.LatestOnly ? ", LatestOnly = true" : "";
+        }
+
+        return $"new({name}, null) {{ {settings} }},";
+    }
+
     private static void EmitHandler(CodeWriter code, ContractModel contract, CommandModel command)
     {
-        code.Open($"private static async global::System.Threading.Tasks.ValueTask<{Runtime}.SparOutcome> {HandlerName(contract, command)}({Runtime}.SparCallContext call)");
+        var parameters = command.IsStream ? $"{Runtime}.SparCallContext call, {Runtime}.SparItemSink sink" : $"{Runtime}.SparCallContext call";
+        code.Open($"private static async global::System.Threading.Tasks.ValueTask<{Runtime}.SparOutcome> {HandlerName(contract, command)}({parameters})");
         var arguments = new List<string>();
         if (command.Request is { } request)
         {
@@ -181,6 +201,12 @@ internal static class CatalogEmitter
         }
 
         code.Line($"var contract = global::Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService<{contract.CSharp}>(call.Services);");
+        if (command.IsStream)
+        {
+            EmitStreamLoop(code, command, $"contract.{command.MethodName}({string.Join(", ", arguments)})");
+            return;
+        }
+
         var invocation = $"await contract.{command.MethodName}({string.Join(", ", arguments)})";
         if (command.Return == ReturnShape.None)
         {
@@ -223,6 +249,33 @@ internal static class CatalogEmitter
         code.Close();
     }
 
+    /// <summary>
+    /// A stream's loop: each item to the sink, which stops a cancelled call at its next item; the first declared error
+    /// ends the stream in-band. Leaving the loop, by its end, a return or an exception, disposes the iterator.
+    /// </summary>
+    private static void EmitStreamLoop(CodeWriter code, CommandModel command, string invocation)
+    {
+        var items = $"global::System.Threading.Tasks.TaskAsyncEnumerableExtensions.WithCancellation({invocation}, call.CancellationToken)";
+        code.Open($"await foreach (var item in {items})");
+        if (command.Return == ReturnShape.ResultItems)
+        {
+            code.Open($"if (!{Runtime}.SparItemSink.TryGetValue(item, out var value, out var error))");
+            code.Line($"return sink.End(error, SparSerializers.Write{command.ErrorKey});");
+            code.Close();
+            code.Line();
+            code.Line($"await sink.WriteAsync(value, SparSerializers.Write{command.Value!.Key}, call.CancellationToken);");
+        }
+        else
+        {
+            code.Line($"await sink.WriteAsync(item, SparSerializers.Write{command.Value!.Key}, call.CancellationToken);");
+        }
+
+        code.Close();
+        code.Line();
+        code.Line($"return {Runtime}.SparOutcome.FromValue(global::System.ReadOnlyMemory<byte>.Empty);");
+        code.Close();
+    }
+
     public static string HandlerName(ContractModel contract, CommandModel command) => $"Handle{contract.PascalName}{Naming.Pascal(command.WireName)}";
 
     /// <summary>
@@ -238,7 +291,15 @@ internal static class CatalogEmitter
             foreach (var command in contract.Commands.OrderBy(c => c.WireName, System.StringComparer.Ordinal))
             {
                 shape.Append("  command ").Append(command.WireName).Append(' ').Append(command.Request?.Key ?? "-").Append(' ')
-                    .Append(command.Return).Append(' ').Append(command.Value?.Key ?? "-").Append(' ').Append(command.ErrorKey ?? "-").Append('\n');
+                    .Append(command.Return).Append(' ').Append(command.Value?.Key ?? "-").Append(' ').Append(command.ErrorKey ?? "-");
+
+                // What the page's code depends on: its events and its resume. The buffer's size is the backend's own.
+                if (command.Subscription is { } subscription)
+                {
+                    shape.Append(" subscription").Append(subscription.LatestOnly ? " latest" : "").Append(subscription.Automatic ? " automatic" : " manual");
+                }
+
+                shape.Append('\n');
             }
 
             foreach (var record in contract.Records)

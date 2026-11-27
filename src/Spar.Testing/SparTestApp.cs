@@ -100,6 +100,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     private readonly SparTestOptions _options;
     private readonly ConcurrentQueue<string> _problems = new();
     private readonly SparTestLog _log;
+    private readonly SparStreamClient _streams;
     private SparPage? _page;
     private SparWindow? _window;
     private long _nextCallId;
@@ -111,6 +112,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         _app = app;
         _options = options;
         _log = log;
+        _streams = new SparStreamClient(app.Dispatcher, () => Interlocked.Increment(ref _nextCallId));
     }
 
     /// <summary>The app's own service provider: a test can inspect backend state directly.</summary>
@@ -238,6 +240,19 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         var callId = Interlocked.Increment(ref _nextCallId);
         return _app.Dispatcher.InvokeAsync(contract, command, callId, request, cancellationToken, SparCaller.Test);
     }
+
+    SparStreamClient ISparInvoker.Streams => _streams;
+
+    /// <summary>
+    /// Drops the typed test clients' channel, as a lost connection would: their open streams and subscriptions end, and
+    /// none opens until <see cref="RestoreChannel"/>. An automatic subscription reports <c>Reconnecting</c> and waits, up
+    /// to 30 s, then subscribes again and reports <c>Reset</c> and <c>Resumed</c>; a stream and a manual subscription
+    /// end with <c>transport</c> / <c>lost</c>.
+    /// </summary>
+    public void DropChannel() => _streams.Drop();
+
+    /// <summary>Brings the channel back after <see cref="DropChannel"/>.</summary>
+    public void RestoreChannel() => _streams.Restore();
 
     /// <summary>
     /// Stops the surface and the app, and deletes the data root. Every step runs even when an earlier one fails. A

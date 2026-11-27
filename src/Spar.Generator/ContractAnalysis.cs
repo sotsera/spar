@@ -252,13 +252,23 @@ internal sealed partial class ContractAnalysis
         }
 
         var shape = Return(method);
-        if (shape is null)
+        if (shape is null || !Subscription(method, shape.Value.Shape, out var subscription))
         {
             return null;
         }
 
         return new CommandModel(
-            method.Name, wireName, request, requests.Count == 1 ? requests[0].Name : null, takesToken, shape.Value.Shape, shape.Value.Value, shape.Value.ErrorKey, shape.Value.ErrorCSharp, TimeoutSeconds(method));
+            method.Name,
+            wireName,
+            request,
+            requests.Count == 1 ? requests[0].Name : null,
+            takesToken,
+            shape.Value.Shape,
+            shape.Value.Value,
+            shape.Value.ErrorKey,
+            shape.Value.ErrorCSharp,
+            TimeoutSeconds(method),
+            subscription);
     }
 
     /// <summary>A request is one record or one scalar, nullable or not (SPAR015 for a list); <c>byte[]</c> is a scalar.</summary>
@@ -281,6 +291,11 @@ internal sealed partial class ContractAnalysis
 
     private (ReturnShape Shape, TypeRef? Value, string? ErrorKey, string? ErrorCSharp)? Return(IMethodSymbol method)
     {
+        if (method.ReturnType is INamedTypeSymbol stream && IsAsyncEnumerable(stream))
+        {
+            return StreamReturn(method, stream.TypeArguments[0]);
+        }
+
         if (method.ReturnType is not INamedTypeSymbol returned || !IsTaskLike(returned, out var inner))
         {
             Report(Descriptors.UnsupportedReturn, method, method.Name, method.ReturnType.ToDisplayString());

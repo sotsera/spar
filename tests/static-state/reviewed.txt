@@ -9,6 +9,7 @@ Spar | Spar.Bridge.HostCommands.NotSaved | readonly | The bytes of a fixed error
 Spar | Spar.Bridge.BridgeSession.CommandFailed | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.
 Spar | Spar.Bridge.BridgeSession.EarlyCancelMemory | readonly | A TimeSpan constant.
 Spar | Spar.Bridge.BridgeSession.ResultTooLarge | readonly | A log message delegate, as above.
+Spar | Spar.Bridge.BridgeStream.Window | readonly | A TimeSpan constant: the batching window.
 Spar | Spar.Bridge.BridgeTelemetry.CallRefused | readonly | A log message delegate, as above.
 Spar | Spar.Bridge.BridgeTelemetry.CallRefusedWarning | readonly | A log message delegate, as above.
 Spar | Spar.Bridge.BridgeTelemetry.RefusalsSuppressed | readonly | A log message delegate, as above.

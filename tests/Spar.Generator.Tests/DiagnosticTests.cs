@@ -55,6 +55,10 @@ public sealed class DiagnosticTests
     [InlineData("public enum Twice { One = 1, Uno = 1 } [SparContract] public sealed class Items { [SparCommand] public Task<Twice> GetAsync() => null!; }", "SPAR025: Twice")]
     [InlineData("public enum Nothing { } [SparContract] public sealed class Items { [SparCommand] public Task GoAsync(Nothing request) => null!; }", "SPAR025: Nothing")]
     [InlineData("public enum any { A } [SparContract] public sealed class Items { [SparCommand] public Task<any> GetAsync() => null!; }", "SPAR004: any")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand, SparSubscription] public Task<Item> GetAsync() => null!; }", "SPAR017: SparSubscription")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand, SparSubscription(LatestOnly = true, Capacity = 4)] public System.Collections.Generic.IAsyncEnumerable<Item> WatchAsync() => null!; }", "SPAR018: SparSubscription(LatestOnly = true, Capacity = 4)")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand, SparSubscription(Capacity = 0)] public System.Collections.Generic.IAsyncEnumerable<Item> WatchAsync() => null!; }", "SPAR018: SparSubscription(Capacity = 0)")]
+    [InlineData("public closed record Err { public sealed record Gone : Err; } [SparContract] public sealed class Items { [SparCommand] public System.Collections.Generic.IAsyncEnumerable<Result<Err>> WatchAsync() => null!; }", "SPAR010: WatchAsync")]
     public async Task A_contract_problem_is_reported_once_at_its_location(string contract, string expected)
     {
         var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + contract);

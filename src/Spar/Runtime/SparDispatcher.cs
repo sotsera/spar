@@ -45,14 +45,33 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     /// </summary>
     internal Devtools.CallRecorder? Recorder { get; set; }
 
-    public async ValueTask<SparOutcome> InvokeAsync(
+    /// <summary>The command of that name, or null; the bridge reads a stream's kind from it before it opens the stream.</summary>
+    public SparCommandEntry? Find(string contract, string command) => catalog.Find(contract, command);
+
+    public ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken,
-        SparCaller caller = SparCaller.Page)
+        SparCaller caller = SparCaller.Page) =>
+        InvokeAsync(contract, command, callId, request, null, cancellationToken, caller);
+
+    /// <summary>
+    /// Runs a stream or a subscription to its end: its items go to <paramref name="sink"/>, and the outcome is how it ended
+    /// (a value for a stream that finished, its declared error, or a failure). A unary command named here, or a stream
+    /// named through <see cref="InvokeAsync(string, string, long, ReadOnlyMemory{byte}, CancellationToken, SparCaller)"/>,
+    /// is refused before it runs.
+    /// </summary>
+    public ValueTask<SparOutcome> InvokeStreamAsync(
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink sink, CancellationToken cancellationToken,
+        SparCaller caller = SparCaller.Page) =>
+        InvokeAsync(contract, command, callId, request, sink, cancellationToken, caller);
+
+    private async ValueTask<SparOutcome> InvokeAsync(
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, CancellationToken cancellationToken,
+        SparCaller caller)
     {
         var record = Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported
             ? Recorder?.Begin(callId, contract, command, caller)
             : null;
-        var outcome = await RunAsync(contract, command, callId, request, caller, cancellationToken);
+        var outcome = await RunAsync(contract, command, callId, request, sink, caller, cancellationToken);
         if (Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported)
         {
             record?.End(outcome);
@@ -62,11 +81,18 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     }
 
     private async ValueTask<SparOutcome> RunAsync(
-        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparCaller caller, CancellationToken cancellationToken)
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, SparCaller caller,
+        CancellationToken cancellationToken)
     {
         if (!catalog.TryGet(contract, command, out var entry))
         {
             return SparOutcome.FromFailure(SparFailure.UnknownCommand(contract, command));
+        }
+
+        if (entry.IsStream != sink is not null)
+        {
+            var expected = entry.IsStream ? "a stream, opened with a stream message" : "a unary command, called with a call message";
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest($"{contract}.{command} is {expected}."));
         }
 
         using var limit = entry.TimeoutSeconds > 0 ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : null;
@@ -78,12 +104,19 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
 
         try
         {
-            return await entry.Handler(new SparCallContext(scope.ServiceProvider, request, callToken));
+            var context = new SparCallContext(scope.ServiceProvider, request, callToken);
+
+            // A stream's handler has disposed its iterator by the time it returns or throws: `await foreach` does.
+            return sink is null ? await entry.Handler!(context) : await entry.StreamHandler!(context, sink);
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == callToken && callToken.IsCancellationRequested)
         {
             // Confirmed: the command ended on its own call token. Another token's cancellation is not a confirmation.
             return SparOutcome.FromFailure(SparFailure.Cancelled());
+        }
+        catch (SparStreamStopped stopped)
+        {
+            return SparOutcome.FromFailure(stopped.Failure);
         }
         catch (Exception exception)
         {

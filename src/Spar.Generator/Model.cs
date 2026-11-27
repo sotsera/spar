@@ -70,10 +70,36 @@ internal enum ReturnShape
 
     /// <summary><c>Task&lt;Result&lt;TError&gt;&gt;</c>.</summary>
     ResultWithoutValue,
+
+    /// <summary><c>IAsyncEnumerable&lt;T&gt;</c>: a stream of values (plan section 2c).</summary>
+    Items,
+
+    /// <summary><c>IAsyncEnumerable&lt;Result&lt;T, TError&gt;&gt;</c>: a stream whose first error ends it, in-band.</summary>
+    ResultItems,
 }
 
+/// <summary>
+/// A stream command's <c>[SparSubscription]</c>: the buffer's size (256 when the attribute leaves it at 0, 1 when it keeps
+/// only the newest value), whether it keeps only the newest value, and whether the page may subscribe again by itself.
+/// </summary>
+internal sealed record SubscriptionModel(int Capacity, bool LatestOnly, bool Automatic);
+
 internal sealed record CommandModel(
-    string MethodName, string WireName, TypeRef? Request, string? RequestName, bool TakesToken, ReturnShape Return, TypeRef? Value, string? ErrorKey, string? ErrorCSharp, int TimeoutSeconds);
+    string MethodName,
+    string WireName,
+    TypeRef? Request,
+    string? RequestName,
+    bool TakesToken,
+    ReturnShape Return,
+    TypeRef? Value,
+    string? ErrorKey,
+    string? ErrorCSharp,
+    int TimeoutSeconds,
+    SubscriptionModel? Subscription = null)
+{
+    /// <summary>Whether the command is a stream or a subscription: its items travel in batches, with credits.</summary>
+    public bool IsStream => Return is ReturnShape.Items or ReturnShape.ResultItems;
+}
 
 internal sealed record ContractModel(
     string CSharp,

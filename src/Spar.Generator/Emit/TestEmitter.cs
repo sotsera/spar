@@ -44,6 +44,12 @@ internal static class TestEmitter
 
     private static void EmitMethod(CodeWriter code, ContractModel contract, CommandModel command)
     {
+        if (command.IsStream)
+        {
+            EmitStreamMethod(code, contract, command);
+            return;
+        }
+
         var returnType = command.Return switch
         {
             ReturnShape.None => "global::System.Threading.Tasks.Task",
@@ -89,6 +95,37 @@ internal static class TestEmitter
         }
 
         code.Close();
+    }
+
+    /// <summary>
+    /// A stream as an <c>IAsyncEnumerable</c> of its values (of results, when it declares errors), and a subscription as
+    /// one of its items, values and status events, through the bridge's own batching, credits and buffer.
+    /// </summary>
+    private static void EmitStreamMethod(CodeWriter code, ContractModel contract, CommandModel command)
+    {
+        var value = command.Value!.CSharp;
+        var item = command.Subscription is null
+            ? command.ErrorCSharp is null ? value : $"global::Spar.Result<{value}, {command.ErrorCSharp}>"
+            : command.ErrorCSharp is null ? $"global::Spar.SparSubscriptionItem<{value}>" : $"global::Spar.SparSubscriptionItem<{value}, {command.ErrorCSharp}>";
+        var parameters = command.Request is { } request
+            ? $"{request.CSharp} request, global::System.Threading.CancellationToken cancellationToken = default"
+            : "global::System.Threading.CancellationToken cancellationToken = default";
+        var payload = command.Request is { } r
+            ? $"{Runtime}.SparJson.Write(request, SparSerializers.Write{r.Key})"
+            : "global::System.ReadOnlyMemory<byte>.Empty";
+        var readers = command.ErrorKey is null
+            ? $"SparSerializers.Read{command.Value.Key}"
+            : $"SparSerializers.Read{command.Value.Key}, SparSerializers.Read{command.ErrorKey}";
+        var name = $"\"{contract.WireName}\", \"{command.WireName}\"";
+        var types = command.ErrorCSharp is null ? value : $"{value}, {command.ErrorCSharp}";
+        var open = command.Subscription is { } subscription
+            ? $"invoker.Streams.Subscribe<{types}>({name}, {payload}, {readers}, automatic: {(subscription.Automatic ? "true" : "false")}, cancellationToken)"
+            : $"invoker.Streams.Stream<{types}>({name}, {payload}, {readers}, cancellationToken)";
+        var kind = command.Subscription is null ? "Streams" : "Subscribes to";
+
+        code.Line($"/// <summary>{kind} <c>{contract.WireName}.{command.WireName}</c>; an infrastructure failure throws <c>SparCallFailedException</c>.</summary>");
+        code.Line($"public global::System.Collections.Generic.IAsyncEnumerable<{item}> {Naming.Pascal(command.WireName)}Async({parameters}) =>");
+        code.Line($"    {open};");
     }
 
     public static string Clients(System.Collections.Generic.IReadOnlyList<ContractModel> contracts)

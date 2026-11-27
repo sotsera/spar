@@ -6,6 +6,7 @@ using WireShapes.Library;
 var app = SparApplication.Create(args, spar =>
 {
     spar.Services.AddSingleton<Ledger>();
+    spar.Services.AddSingleton<StreamMarks>();
     spar.Services.AddScoped<IRatesService, FixedRates>();
 
     // For runs of the executable (docs/evidence/m1b-startup.md): later launches' arguments on standard error, and,

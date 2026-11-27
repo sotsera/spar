@@ -8,9 +8,29 @@ namespace Spar.Runtime;
 [EditorBrowsable(EditorBrowsableState.Never)]
 public delegate ValueTask<SparOutcome> SparCommandHandler(SparCallContext call);
 
-/// <summary>A command as the generator registers it.</summary>
+/// <summary>One generated stream or subscription: it writes its items to the sink and returns how the stream ended.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public sealed record SparCommandEntry(string Contract, string Command, int TimeoutSeconds, SparCommandHandler Handler);
+public delegate ValueTask<SparOutcome> SparStreamHandler(SparCallContext call, SparItemSink sink);
+
+/// <summary>
+/// A command as the generator registers it: a unary <see cref="Handler"/>, or a <see cref="StreamHandler"/> with, for a
+/// subscription, its buffer's <see cref="Capacity"/> (0 for a one-shot stream, whose producer waits for the page's credits).
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public sealed record SparCommandEntry(string Contract, string Command, int TimeoutSeconds, SparCommandHandler? Handler)
+{
+    public SparStreamHandler? StreamHandler { get; init; }
+
+    /// <summary>A subscription's buffer, in items; 0 for a one-shot stream and a unary command.</summary>
+    public int Capacity { get; init; }
+
+    /// <summary>A subscription that keeps only its newest value: no <c>gap</c>, a capacity of 1.</summary>
+    public bool LatestOnly { get; init; }
+
+    public bool IsStream => StreamHandler is not null;
+
+    public bool IsSubscription => Capacity > 0;
+}
 
 /// <summary>
 /// An interface contract: the app registers its implementation itself, so the start checks that it did.
@@ -65,6 +85,9 @@ public sealed class SparCatalog
     public string Fingerprint { get; }
 
     public IEnumerable<SparCommandEntry> Commands => _commands.Values;
+
+    /// <summary>The command, or null when the app has none of that name.</summary>
+    public SparCommandEntry? Find(string contract, string command) => TryGet(contract, command, out var entry) ? entry : null;
 
     public bool TryGet(string contract, string command, out SparCommandEntry entry) =>
         _commands.TryGetValue(Key(contract, command), out entry!);

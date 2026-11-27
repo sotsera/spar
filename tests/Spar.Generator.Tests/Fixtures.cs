@@ -51,6 +51,20 @@ internal static class Fixtures
             [SparCommand("rename")]
             public ValueTask<Result<Item, CatalogError>> ChangeNameAsync(string request) => default;
 
+            [SparCommand]
+            public System.Collections.Generic.IAsyncEnumerable<Item> RowsAsync(int request, CancellationToken cancellationToken) => null!;
+
+            [SparCommand]
+            public System.Collections.Generic.IAsyncEnumerable<Result<Detail, CatalogError>> ScanAsync(Item request) => null!;
+
+            [SparCommand]
+            [SparSubscription(Capacity = 32)]
+            public System.Collections.Generic.IAsyncEnumerable<Item> WatchAsync(CancellationToken cancellationToken) => null!;
+
+            [SparCommand]
+            [SparSubscription(LatestOnly = true, Resume = SubscriptionResume.Manual)]
+            public System.Collections.Generic.IAsyncEnumerable<Result<int, CatalogError>> LevelAsync() => null!;
+
             public Task NotACommandAsync() => Task.CompletedTask;
         }
 

@@ -31,20 +31,28 @@ public sealed class BridgeOptions
     /// <summary>How many bytes of payload the waiting calls may hold together; past it a call is refused as busy.</summary>
     public int QueuedBytes { get; set; } = 16 * 1024 * 1024;
 
+    /// <summary>
+    /// How many streams and subscriptions of one document may be open at once; one more is refused with <c>rejected</c> /
+    /// <c>busy</c>. They do not take the slots of <see cref="CallsInFlight"/>, since a subscription stays open for as long
+    /// as its view, and each holds at most its credits and its buffer of serialized items.
+    /// </summary>
+    public int StreamsOpen { get; set; } = 64;
+
     /// <summary>The values as the bridge uses them; each must be at least 1.</summary>
     internal BridgeLimits Freeze() => new(
         Positive(MaxMessageBytes, nameof(MaxMessageBytes)),
         Positive(MaxResultBytes, nameof(MaxResultBytes)),
         Positive(CallsInFlight, nameof(CallsInFlight)),
         Positive(QueuedCalls, nameof(QueuedCalls)),
-        Positive(QueuedBytes, nameof(QueuedBytes)));
+        Positive(QueuedBytes, nameof(QueuedBytes)),
+        Positive(StreamsOpen, nameof(StreamsOpen)));
 
     private static int Positive(int value, string name) =>
         value >= 1 ? value : throw new ArgumentOutOfRangeException(name, value, $"BridgeOptions.{name} must be at least 1.");
 }
 
 /// <summary>The limits one app's bridge applies, fixed when the app is built.</summary>
-internal sealed record BridgeLimits(int MaxMessageBytes, int MaxResultBytes, int CallsInFlight, int QueuedCalls, int QueuedBytes)
+internal sealed record BridgeLimits(int MaxMessageBytes, int MaxResultBytes, int CallsInFlight, int QueuedCalls, int QueuedBytes, int StreamsOpen)
 {
     public static BridgeLimits Default { get; } = new BridgeOptions().Freeze();
 }

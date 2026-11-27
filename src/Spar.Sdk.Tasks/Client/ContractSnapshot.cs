@@ -62,8 +62,23 @@ internal static class ContractSnapshot
     {
         var value = command.Value is null ? "void" : Name(command.Value.CSharp);
         var error = command.ErrorCSharp is null ? "" : $" | {Name(command.ErrorCSharp)}";
-        return value + error;
+        if (command.Subscription is { } subscription)
+        {
+            return $"subscription of {value}{error}{Settings(subscription)}";
+        }
+
+        return command.IsStream ? $"stream of {value}{error}" : value + error;
     }
+
+    /// <summary>What the page depends on: its events (latest only has no gap) and whether it resumes by itself.</summary>
+    private static string Settings(SubscriptionModel subscription) =>
+        (subscription.LatestOnly, subscription.Automatic) switch
+        {
+            (true, true) => " (latest only)",
+            (true, false) => " (latest only, manual resume)",
+            (false, false) => " (manual resume)",
+            _ => "",
+        };
 
     /// <summary>C# spellings without <c>global::</c> and without the namespaces of the BCL types wire values use.</summary>
     private static string Name(string csharp) => csharp

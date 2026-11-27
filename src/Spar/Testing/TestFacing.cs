@@ -31,5 +31,8 @@ namespace Spar.Runtime
     public interface ISparInvoker
     {
         ValueTask<SparOutcome> InvokeAsync(string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken);
+
+        /// <summary>Runs the app's streams and subscriptions, for their typed test clients.</summary>
+        SparStreamClient Streams { get; }
     }
 }

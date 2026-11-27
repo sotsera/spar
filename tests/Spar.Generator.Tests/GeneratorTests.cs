@@ -169,6 +169,10 @@ public sealed class GeneratorTests
             "new(\"catalog\", \"count\", 0, HandleCatalogCount),",
             "new(\"catalog\", \"clear\", 0, HandleCatalogClear),",
             "new(\"catalog\", \"rename\", 0, HandleCatalogRename),",
+            "new(\"catalog\", \"rows\", 0, null) { StreamHandler = HandleCatalogRows },",
+            "new(\"catalog\", \"scan\", 0, null) { StreamHandler = HandleCatalogScan },",
+            "new(\"catalog\", \"watch\", 0, null) { StreamHandler = HandleCatalogWatch, Capacity = 32 },",
+            "new(\"catalog\", \"level\", 0, null) { StreamHandler = HandleCatalogLevel, Capacity = 1, LatestOnly = true },",
             "new(\"ioStats\", \"read\", 0, HandleIoStatsRead),",
         ];
         Assert.All(expected, entry => Assert.Contains(entry, contracts, StringComparison.Ordinal));
@@ -246,9 +250,15 @@ public sealed class GeneratorTests
         var original = Fingerprint(Program + Fixtures.Catalog);
         var reformatted = Fingerprint(Program + Fixtures.Catalog.Replace("public Task ClearAsync() => Task.CompletedTask;", "public Task ClearAsync()\n{\n    return Task.CompletedTask;\n}", StringComparison.Ordinal));
         var changed = Fingerprint(Program + Fixtures.Catalog.Replace("int Count,", "long Count,", StringComparison.Ordinal));
+        var resumes = Fingerprint(Program + Fixtures.Catalog.Replace("LatestOnly = true, Resume = SubscriptionResume.Manual", "LatestOnly = true", StringComparison.Ordinal));
+        var bigger = Fingerprint(Program + Fixtures.Catalog.Replace("Capacity = 32", "Capacity = 64", StringComparison.Ordinal));
 
         Assert.Equal(original, reformatted);
         Assert.NotEqual(original, changed);
+
+        // The page depends on a subscription's resume and events, not on the size of the backend's buffer.
+        Assert.NotEqual(original, resumes);
+        Assert.Equal(original, bigger);
     }
 
     private static string Fingerprint(string source)

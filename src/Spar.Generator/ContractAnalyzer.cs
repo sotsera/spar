@@ -31,6 +31,8 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
         Descriptors.GenericCommand,
         Descriptors.UnsupportedRequest,
         Descriptors.DuplicateCommand,
+        Descriptors.SubscriptionNotStream,
+        Descriptors.InvalidSubscription,
         Descriptors.UnsupportedWireType,
         Descriptors.NotPositionalRecord,
         Descriptors.MissingProperty,

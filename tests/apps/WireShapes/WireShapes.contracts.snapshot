@@ -1,7 +1,7 @@
 # The contracts of WireShapes as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint c0c1eb02e71778d8
+fingerprint f7959a53173c16ae
 
 contract echo (WireShapes.EchoService)
   big(WireShapes.Item) -> long
@@ -22,6 +22,14 @@ contract ledger (WireShapes.Library.LedgerService)
 
 contract rates (WireShapes.Library.IRatesService)
   rate(string) -> long | WireShapes.Library.RateError
+
+contract streams (WireShapes.StreamsService)
+  burst(int) -> subscription of WireShapes.Tick
+  drain() -> subscription of WireShapes.Tick (manual resume)
+  level(int) -> subscription of WireShapes.Tick (latest only)
+  read(int) -> stream of WireShapes.Row | WireShapes.RowsError
+  rows(int) -> stream of WireShapes.Row
+  ticks(int) -> subscription of WireShapes.Tick
 
 record WireShapes.Item
   name: string
@@ -49,6 +57,10 @@ record WireShapes.Library.Entry
   account: string
   cents: long
 
+record WireShapes.Row
+  n: int
+  text: string
+
 record WireShapes.Shapes
   text: string
   note: string?
@@ -64,6 +76,9 @@ record WireShapes.Shapes
   items: WireShapes.Item[]
   parent: WireShapes.Shapes?
 
+record WireShapes.Tick
+  n: long
+
 error WireShapes.EchoError
   refused(reason: string)
   empty
@@ -73,6 +88,9 @@ error WireShapes.Library.LedgerError
 
 error WireShapes.Library.RateError
   unknown(currency: string)
+
+error WireShapes.RowsError
+  unreadable(at: int)
 
 enum WireShapes.Priority
   Low, Normal, High
