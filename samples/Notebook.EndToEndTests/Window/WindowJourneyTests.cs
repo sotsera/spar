@@ -82,12 +82,13 @@ public sealed class WindowJourneyTests
         await notebook.CreateAsync("Plans");
         await notebook.ExpectStatusAsync("Saved");
 
-        // Another window saves first, through the app's own commands.
+        // This window has unsaved typing when another window saves, through the app's own commands: the live changes
+        // show the conflict at once, before this window's autosave would have found it.
+        await notebook.TypeAtEndAsync("\nFrom this window\n");
         var pages = new PagesClient(notebook.App);
         var page = Value(await pages.GetAsync(new PageRef("plans"), Token));
         Value(await pages.SaveAsync(new SavePage("plans", "# Plans\n\nFrom the other window\n", page.Revision), Token));
 
-        await notebook.TypeAtEndAsync("\nFrom this window\n");
         var banner = notebook.Page.GetByRole(SparRole.Alert).Filter(new() { HasText = "changed in another window" });
         await Expect(banner).ToBeVisibleAsync(new() { Timeout = 5_000 });
         await notebook.ExpectStatusAsync("Not saved: changed elsewhere");
@@ -97,6 +98,27 @@ public sealed class WindowJourneyTests
 
         await notebook.ExpectStatusAsync("Saved");
         Assert.Equal("# Plans\n\nFrom this window\n", Value(await pages.GetAsync(new PageRef("plans"), Token)).Markdown);
+        notebook.AssertClean();
+    }
+
+    [Fact]
+    public async Task A_page_saved_in_another_window_shows_its_new_text_and_a_new_page_joins_the_list()
+    {
+        await using var notebook = await NotebookWindow.OpenAsync();
+        await notebook.CreateAsync("Plans");
+        await notebook.ExpectStatusAsync("Saved");
+
+        // Nothing is unsaved here, so the open page follows the other window's save, through the subscription.
+        var pages = new PagesClient(notebook.App);
+        var page = Value(await pages.GetAsync(new PageRef("plans"), Token));
+        Value(await pages.SaveAsync(new SavePage("plans", "# Plans\n\nFrom the other window\n", page.Revision), Token));
+        await Expect(notebook.Editor).ToHaveValueAsync("# Plans\n\nFrom the other window\n", new() { Timeout = 5_000 });
+        await notebook.ExpectStatusAsync("Saved");
+
+        Value(await pages.CreateAsync(new CreatePage("Ideas", Markdown: null), Token));
+        var list = notebook.Page.GetByRole(SparRole.Navigation, new() { Name = "Pages" });
+        await Expect(list.GetByRole(SparRole.Button).Filter(new() { HasText = "Ideas" })).ToBeVisibleAsync(new() { Timeout = 5_000 });
+        await notebook.ScreenshotAsync("live-changes");
         notebook.AssertClean();
     }
 

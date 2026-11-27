@@ -1,7 +1,7 @@
 // The notebook's state: the list of pages, the open page with its draft, and saving. Every outcome of every call is
 // handled here, declared errors by name, so the components only render what this hook decides. Closing the window
 // saves a draft that is not saved yet first, and asks before losing one that cannot be saved (docs/app-model.md 6.11).
-import { pages, type Page, type PageSummary } from "@spar/app/pages";
+import { pages, type Page, type PageChange, type PageSummary } from "@spar/app/pages";
 import { onBackendUpdate } from "@spar/app/sdk";
 import { windows, type CloseAnswer, type CloseRequest } from "@spar/app/windows";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -63,6 +63,67 @@ export function useNotebook(): Notebook {
   // In a Debug build, after Hot Reload changed the backend's code, the list is fetched again with the new code (for
   // example a changed sort or title rule). A production build has no such updates; the call does nothing there.
   useEffect(() => onBackendUpdate(() => void refresh()), [refresh]);
+
+  // A page saved in another window: an open page with nothing unsaved shows the new text; one with unsaved typing is
+  // never overwritten, it shows the conflict at once. Changes this window made come back too, and are already here.
+  const follow = useCallback(async (change: PageChange) => {
+    const state = currentRef.current;
+    if (state.kind !== "open" || state.page.id !== change.id || state.save.kind === "saving") {
+      return;
+    }
+
+    if (change.kind === "Deleted") {
+      setCurrent(latest => (latest.kind === "open" && latest.page.id === change.id
+        ? { ...latest, save: { kind: "failed", message: "This page was deleted elsewhere." } }
+        : latest));
+      return;
+    }
+
+    if (change.revision <= state.page.revision) {
+      return;
+    }
+
+    if (state.save.kind !== "saved") {
+      setCurrent(latest => (latest.kind === "open" && latest.page.id === change.id && latest.save.kind !== "saving"
+        ? { ...latest, save: { kind: "conflict", currentRevision: change.revision } }
+        : latest));
+      return;
+    }
+
+    await pages.get({ id: change.id }).match({
+      success: page => setCurrent(latest => {
+        // Typing that began while the new text was on its way keeps the page as it is: the next save finds the conflict.
+        if (latest.kind !== "open" || latest.page.id !== page.id || latest.save.kind !== "saved") {
+          return latest;
+        }
+
+        newestDraft.current = page.markdown;
+        return { kind: "open", page, draft: page.markdown, save: { kind: "saved" } };
+      }),
+      errors: { notFound: () => undefined, titleTaken: () => undefined, invalidTitle: () => undefined, changedElsewhere: () => undefined },
+      failure: () => undefined,
+    });
+  }, []);
+
+  // Live changes, as a subscription for as long as the notebook is shown: the list follows every one. After a lost
+  // connection, Spar subscribes again by itself and resets: the list is read again, since changes may have been missed.
+  useEffect(() => {
+    const live = new AbortController();
+    void (async () => {
+      for await (const item of pages.changes({ signal: live.signal })) {
+        item.match({
+          success: change => {
+            void refresh();
+            void follow(change);
+          },
+          events: { reset: () => void refresh() },
+          // Our own abort when the notebook goes away; any other end leaves the list as it is until the next action.
+          failure: () => undefined,
+        });
+      }
+    })();
+    return () => live.abort();
+  }, [refresh, follow]);
 
   const open = useCallback((id: string) => {
     clearTimeout(timer.current);

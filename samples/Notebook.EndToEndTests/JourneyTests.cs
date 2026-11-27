@@ -73,12 +73,12 @@ public sealed class JourneyTests(SharedBrowser shared) : IClassFixture<SharedBro
         await notebook.CreateAsync("Plans");
         await Expect(notebook.Status).ToHaveTextAsync("Saved");
 
-        // Another window saves first, through the app's own commands.
+        // This page has unsaved typing when another window saves, through the app's own commands: the live changes show
+        // the conflict at once, before this page's autosave would have found it.
+        await notebook.TypeAtEndAsync("\nFrom this window\n");
         var pages = new PagesClient(notebook.App);
         var page = Value(await pages.GetAsync(new PageRef("plans"), Token));
         Value(await pages.SaveAsync(new SavePage("plans", "# Plans\n\nFrom the other window\n", page.Revision), Token));
-
-        await notebook.TypeAtEndAsync("\nFrom this window\n");
         var banner = notebook.Page.GetByRole(AriaRole.Alert).Filter(new() { HasText = "changed in another window" });
         await Expect(banner).ToBeVisibleAsync(new() { Timeout = 5_000 });
         await Expect(notebook.Status).ToHaveTextAsync("Not saved: changed elsewhere");

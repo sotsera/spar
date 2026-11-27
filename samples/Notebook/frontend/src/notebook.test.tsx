@@ -232,3 +232,35 @@ test("with nothing to save, closing closes at once", async () => {
   expect(await spar.requestClose()).toBe("close");
   expect(spar.calls(pages.save)).toEqual([]);
 });
+
+test("a page saved in another window shows its new text when nothing here is unsaved", async () => {
+  await start();
+  await openWelcome();
+  const changed: Page = { ...welcome, markdown: "# Welcome\n\nFrom the other window", revision: 4n };
+  spar.on(pages.get).succeed(changed);
+
+  await act(async () => spar.stream(pages.changes).push({ id: "welcome", kind: "Saved", revision: 4n }));
+
+  await vi.waitFor(() => expect(notebook.current).toMatchObject({ kind: "open", draft: changed.markdown, save: { kind: "saved" } }));
+});
+
+test("a page saved in another window while this one has unsaved typing shows the conflict at once", async () => {
+  await start();
+  await openWelcome();
+  act(() => notebook.edit("# Welcome\n\nmine"));
+
+  await act(async () => spar.stream(pages.changes).push({ id: "welcome", kind: "Saved", revision: 4n }));
+
+  await vi.waitFor(() => expect(saveState()).toEqual({ kind: "conflict", currentRevision: 4n }));
+  expect(notebook.current).toMatchObject({ draft: "# Welcome\n\nmine" });
+});
+
+test("the list is read again after a change made elsewhere", async () => {
+  await start();
+  const added: PageSummary = { id: "new", title: "New", updatedAt: "2026-11-27T09:00:00Z" };
+  spar.on(pages.list).succeed([older, newer, added]);
+
+  await act(async () => spar.stream(pages.changes).push({ id: "new", kind: "Created", revision: 1n }));
+
+  await vi.waitFor(() => expect(notebook.summaries).toEqual([added, newer, older]));
+});

@@ -4,7 +4,7 @@
 // commands with their wire functions; app code imports only `fakeSpar` from there.
 import type { BridgeChannel } from "./connection.js";
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
-import { resetConfiguration, type Call, type CallError, type ErrorCases } from "./results.js";
+import { resetConfiguration, type Call, type CallError, type ErrorCases, type Result } from "./results.js";
 import { setColorScheme } from "./colorScheme.js";
 import { connectSpar } from "./sdk.js";
 import type { CloseRequest, GuardsOutcome } from "./windows.js";
@@ -17,11 +17,13 @@ export interface CommandCodec {
   readonly request?: ((json: string) => unknown) | undefined;
   /** Writes the result's JSON; absent for a command without a value. */
   readonly value?: ((value: unknown) => string) | undefined;
+  /** Whether the command is a stream or a subscription, whose `value` writes one item. */
+  readonly stream?: "stream" | "subscription" | undefined;
   /** Writes a declared error's JSON, its code included; absent when the command declares none. */
   readonly error?: ((code: string, payload: unknown) => string) | undefined;
 }
 
-/** A generated command function, such as `pages.get`. Streams and subscriptions are not scripted here. */
+/** A generated command function, such as `pages.get`; streams and subscriptions are scripted with `stream`. */
 export type Command = (...args: never[]) => PromiseLike<unknown>;
 
 /** The request a command takes, or `undefined` for one without a request. */
@@ -41,6 +43,35 @@ export type PayloadArgs<P> = [P] extends [undefined] ? [] : [payload: P];
 
 /** An infrastructure failure to script: the fields a host sends. The SDK adds the call's names itself. */
 export type ScriptedFailure = Pick<CallError, "kind" | "code" | "execution">;
+
+/** A generated stream or subscription function, such as `pages.changes`. */
+export type StreamCommand = (...args: never[]) => AsyncIterable<unknown>;
+
+/** The values a stream or subscription carries. */
+export type ItemOf<F> = F extends (...args: never[]) => AsyncIterable<Result<infer T, infer _E, infer _V>> ? T : never;
+
+/** The declared errors that can end a stream or subscription. */
+export type StreamErrorsOf<F> = F extends (...args: never[]) => AsyncIterable<Result<infer _T, infer E, infer _V>> ? E : never;
+
+/**
+ * What a page test does with the streams and subscriptions the page opens of one command. Values pushed before the page
+ * opens one wait for it; afterwards they go to every one that is open. A stream nobody scripted stays open with nothing,
+ * as a subscription with no change does.
+ */
+export interface StreamScript<R, T, E extends ErrorCases> {
+  /** Sends values, in order, as one batch. */
+  push(...values: T[]): void;
+  /** Tells a subscription the backend dropped `dropped` values for a page that fell behind: the page sees a gap. */
+  gap(dropped: number): void;
+  /** Ends the open ones: a stream finished, or a subscription whose backend stopped it. */
+  end(): void;
+  /** Ends the open ones with a declared error, their last item. */
+  fail<K extends keyof E & string>(code: K, ...payload: PayloadArgs<E[K]>): void;
+  /** Ends the open ones with an infrastructure failure, as a host would report it. */
+  failWith(error: ScriptedFailure): void;
+  /** The requests of the ones the page opened, in order. */
+  readonly opened: readonly R[];
+}
 
 declare const replyBrand: unique symbol;
 
@@ -86,6 +117,11 @@ export interface FakeSpar {
   on<F extends Command>(command: F): Script<RequestOf<F>, ValueOf<F>, ErrorsOf<F>>;
   /** The requests the page sent to one command, in order, read back from the wire: `spar.calls(setColorScheme)` gives the schemes. */
   calls<F extends Command>(command: F): readonly RequestOf<F>[];
+  /**
+   * Scripts the streams or subscriptions the page opens of one command, such as `spar.stream(pages.changes)`: push
+   * values, report a gap, end them. Cancelling one, as leaving its loop does, is confirmed: `cancelled` / `stopped`.
+   */
+  stream<F extends StreamCommand>(command: F): StreamScript<RequestOf<F>, ItemOf<F>, StreamErrorsOf<F>>;
   /**
    * Asks the page's close guards (`windows.onCloseRequested`) as the host does when its window is asked to close, and
    * resolves with their answer: `"close"`, `"keep"`, `{ ask }`, or `"failed"` when a guard threw. A user's close that
@@ -143,6 +179,7 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
   return {
     on: command => scriptFor(host, codecOf(commands, command)),
     calls: command => host.calls(codecOf(commands, command)) as never,
+    stream: command => streamScriptFor(host, codecOf(commands, command)) as never,
     requestClose: request => host.requestClose(request ?? {}),
     backendUpdate: update => host.backendUpdate(update ?? {}),
   };
@@ -165,6 +202,23 @@ function scriptFor<R, T, E extends ErrorCases>(host: FakeHost, codec: CommandCod
     hang: () => always({ kind: "hang" }),
     answer: handler => host.script(codec, async request => answerOf(await handler(request as R, replies as never))),
   } as Script<R, T, E>;
+}
+
+function streamScriptFor(host: FakeHost, codec: CommandCodec): StreamScript<unknown, unknown, Record<string, unknown>> {
+  if (codec.stream === undefined) {
+    throw new TypeError(`fakeSpar: ${codec.contract}.${codec.command} is a call; script it with spar.on.`);
+  }
+
+  return {
+    push: (...values: unknown[]) => host.streamItems(codec, values),
+    gap: dropped => host.streamGap(codec, dropped),
+    end: () => host.streamEnd(codec, { kind: "value", value: undefined }),
+    fail: (code: string, ...payload: unknown[]) => host.streamEnd(codec, { kind: "error", code, payload: payload[0] }),
+    failWith: error => host.streamEnd(codec, { kind: "failure", error }),
+    get opened() {
+      return host.calls(codec);
+    },
+  };
 }
 
 function codecOf(commands: ReadonlyMap<unknown, CommandCodec>, command: unknown): CommandCodec {
@@ -191,6 +245,8 @@ class FakeHost implements BridgeChannel {
   readonly #scripts = new Map<CommandCodec, Behaviour>();
   readonly #calls = new Map<CommandCodec, unknown[]>();
   readonly #inFlight = new Map<number, { settled: boolean }>();
+  readonly #openStreams = new Map<number, { readonly codec: CommandCodec; sent: number }>();
+  readonly #waitingItems = new Map<CommandCodec, unknown[][]>();
   readonly #closeAnswers = new Map<number, (outcome: GuardsOutcome) => void>();
   #closeSeq = 0;
   #revision = 0;
@@ -222,6 +278,9 @@ class FakeHost implements BridgeChannel {
         break;
       case "call":
         this.#call(message);
+        break;
+      case "stream":
+        this.#stream(message);
         break;
       case "cancel":
         this.#cancel(message.id!);
@@ -320,8 +379,82 @@ class FakeHost implements BridgeChannel {
     }
   }
 
+  /** Values for the open streams of a command, or, before the page opens one, for the next one it opens. */
+  streamItems(codec: CommandCodec, values: readonly unknown[]): void {
+    const open = this.#openOf(codec);
+    if (open.length === 0) {
+      const waiting = this.#waitingItems.get(codec) ?? [];
+      waiting.push([...values]);
+      this.#waitingItems.set(codec, waiting);
+      return;
+    }
+
+    for (const [id, stream] of open) {
+      this.#deliverItems(id, stream, values);
+    }
+  }
+
+  streamGap(codec: CommandCodec, dropped: number): void {
+    for (const [id] of this.#openOf(codec)) {
+      this.#deliver({ type: "items", id, dropped, payload: "[]" });
+    }
+  }
+
+  /** Ends the open streams of a command: normally, with a declared error, or with a failure. */
+  streamEnd(codec: CommandCodec, answer: Exclude<Answer, { kind: "hang" }>): void {
+    for (const [id, stream] of this.#openOf(codec)) {
+      this.#openStreams.delete(id);
+      switch (answer.kind) {
+        case "value":
+          this.#deliver({ type: "end", id, ok: true, payload: "" });
+          break;
+        case "error":
+          this.#deliver({ type: "end", id, ok: false, payload: codec.error!(answer.code, answer.payload) });
+          break;
+        case "failure":
+          this.#deliver({ type: "failure", id, ...answer.error, itemsSent: stream.sent, payload: "" });
+          break;
+      }
+    }
+  }
+
+  /** The page opened a stream: its request is recorded, and values pushed before it opened go to it. */
+  #stream(message: BridgeMessage): void {
+    const id = message.id!;
+    const codec = this.#byName.get(`${message.contract}.${message.command}`);
+    if (codec === undefined) {
+      console.error(`fakeSpar: the page opened ${message.contract}.${message.command}, which the app does not have.`);
+      this.#deliver({ type: "failure", id, kind: "rejected", code: "unknown-command", execution: "notStarted", itemsSent: 0, payload: "" });
+      return;
+    }
+
+    this.#record(codec, codec.request === undefined ? undefined : codec.request(message.payload));
+    const stream = { codec, sent: 0 };
+    this.#openStreams.set(id, stream);
+    for (const values of this.#waitingItems.get(codec)?.splice(0) ?? []) {
+      this.#deliverItems(id, stream, values);
+    }
+  }
+
+  #deliverItems(id: number, stream: { sent: number }, values: readonly unknown[]): void {
+    const codec = this.#openStreams.get(id)!.codec;
+    stream.sent += values.length;
+    this.#deliver({ type: "items", id, payload: `[${values.map(value => codec.value!(value)).join(",")}]` });
+  }
+
+  #openOf(codec: CommandCodec): Array<[number, { readonly codec: CommandCodec; sent: number }]> {
+    return [...this.#openStreams].filter(([, stream]) => stream.codec === codec);
+  }
+
   /** The page gave up waiting: a call still running is stopped, and the backend confirms it. */
   #cancel(id: number): void {
+    const stream = this.#openStreams.get(id);
+    if (stream !== undefined) {
+      this.#openStreams.delete(id);
+      this.#deliver({ type: "failure", id, kind: "cancelled", code: "cancelled", execution: "stopped", itemsSent: stream.sent, payload: "" });
+      return;
+    }
+
     const flight = this.#inFlight.get(id);
     if (flight !== undefined) {
       this.#settle(id, flight, () => this.#fail(id, { kind: "cancelled", code: "cancelled", execution: "stopped" }));

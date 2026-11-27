@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { unknownErrorCase } from "../src/connection.js";
-import { configureSpar, invoke, type Call, type CallError, type CallOptions } from "../src/sdk.js";
+import { configureSpar, invoke, subscribe, type Call, type CallError, type CallOptions, type Result, type SubscribeOptions, type SubscriptionEvents } from "../src/sdk.js";
 import { createFakeSpar, type CommandCodec } from "../src/testing.js";
 import * as wire from "../src/wire.js";
 
@@ -57,6 +57,8 @@ const notes = {
     invoke("notes", "get", () => wire.writeObject([wire.member("id", wire.writeString(request.id))]), { value: json => readNote(JSON.parse(json)), error: readNoteError }, options),
   count: (options?: CallOptions): Call<number> =>
     invoke("notes", "count", () => "", { value: json => wire.readDouble(JSON.parse(json)), error: () => unknownErrorCase }, options),
+  changes: (options?: SubscribeOptions<"automatic">): AsyncIterable<Result<Note, NoteError, SubscriptionEvents>> =>
+    subscribe("notes", "changes", () => "", { item: readNote, error: readNoteError }, false, true, options),
   remove: (request: { readonly id: string }, options?: CallOptions): Call<void, NoteError> =>
     invoke("notes", "remove", () => wire.writeObject([wire.member("id", wire.writeString(request.id))]), { value: () => undefined, error: readNoteError }, options),
 };
@@ -65,6 +67,7 @@ const commands = new Map<unknown, CommandCodec>([
   [notes.get, { contract: "notes", command: "get", request: json => readNoteRef(JSON.parse(json)), value: value => writeNote(value as Note), error: writeNoteError }],
   [notes.count, { contract: "notes", command: "count", value: value => wire.writeDouble(value as number) }],
   [notes.remove, { contract: "notes", command: "remove", request: json => readNoteRef(JSON.parse(json)), error: writeNoteError }],
+  [notes.changes, { contract: "notes", command: "changes", stream: "subscription", value: value => writeNote(value as Note), error: writeNoteError }],
 ]);
 
 const fakeSpar = () => createFakeSpar(commands, "0123456789abcdef");
@@ -231,3 +234,48 @@ export function scriptsAreTyped(): void {
   const ids: readonly string[] = spar.calls(notes.get).map(request => request.id);
   void ids;
 }
+
+describe("fakeSpar streams", () => {
+  /** What a loop over the subscription sees, as text. */
+  const seen = (item: Result<Note, NoteError, SubscriptionEvents>): string =>
+    item.match({
+      success: note => `${note.id} ${note.words}`,
+      errors: { notFound: e => `notFound ${e.id}`, locked: () => "locked" },
+      events: { reset: () => "reset", gap: e => `gap ${e.dropped}` },
+      failure: e => `${e.kind} ${e.code}`,
+    }) ?? "?";
+
+  test("values pushed before the page subscribes wait for it, and a gap and the end follow", async () => {
+    const spar = fakeSpar();
+    const script = spar.stream(notes.changes);
+    script.push({ id: "a", words: 1n }, { id: "b", words: 2n });
+
+    const iterator = notes.changes()[Symbol.asyncIterator]();
+    const first = [seen((await iterator.next()).value!), seen((await iterator.next()).value!)];
+    script.gap(5);
+    script.push({ id: "c", words: 3n });
+    const second = [seen((await iterator.next()).value!), seen((await iterator.next()).value!)];
+    script.fail("locked");
+    const last = seen((await iterator.next()).value!);
+
+    expect([...first, ...second, last]).toEqual(["a 1", "b 2", "gap 5", "c 3", "locked"]);
+    expect((await iterator.next()).done).toBe(true);
+    expect(script.opened).toEqual([undefined]);
+  });
+
+  test("leaving the loop is confirmed by the fake backend", async () => {
+    const spar = fakeSpar();
+    const script = spar.stream(notes.changes);
+    const iterator = notes.changes()[Symbol.asyncIterator]();
+    script.push({ id: "a", words: 1n });
+    await iterator.next();
+
+    await expect(iterator.return!()).resolves.toEqual({ done: true, value: undefined });
+  });
+
+  test("a call is not a stream", () => {
+    const spar = fakeSpar();
+
+    expect(() => spar.stream(notes.get as never)).toThrow(TypeError);
+  });
+});

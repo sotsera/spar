@@ -2,9 +2,9 @@ using Spar;
 
 namespace Notebook.Pages;
 
-/// <summary>The notebook's pages: create, read, list, save and delete.</summary>
+/// <summary>The notebook's pages: create, read, list, save and delete, and the changes every window follows.</summary>
 [SparContract]
-public sealed class PagesService(IPageStore store, TimeProvider time)
+public sealed class PagesService(IPageStore store, PageChanges changes, TimeProvider time)
 {
     private const int MaxTitleLength = 120;
 
@@ -25,6 +25,7 @@ public sealed class PagesService(IPageStore store, TimeProvider time)
 
         var page = new Page(id, title, request.Markdown ?? $"# {title}\n", time.GetUtcNow(), Revision: 1);
         await store.WriteAsync(page, cancellationToken);
+        changes.Publish(new PageChange(id, PageChangeKind.Created, page.Revision));
         return page;
     }
 
@@ -54,6 +55,7 @@ public sealed class PagesService(IPageStore store, TimeProvider time)
 
         var saved = current with { Markdown = request.Markdown, UpdatedAt = time.GetUtcNow(), Revision = current.Revision + 1 };
         await store.WriteAsync(saved, cancellationToken);
+        changes.Publish(new PageChange(saved.Id, PageChangeKind.Saved, saved.Revision));
         return saved;
     }
 
@@ -61,8 +63,21 @@ public sealed class PagesService(IPageStore store, TimeProvider time)
     public async Task<Result<PageError>> DeleteAsync(PageRef request, CancellationToken cancellationToken)
     {
         var deleted = await store.DeleteAsync(request.Id, cancellationToken);
+        if (deleted)
+        {
+            changes.Publish(new PageChange(request.Id, PageChangeKind.Deleted, Revision: 0));
+        }
+
         return deleted ? Result.Success : new PageError.NotFound(request.Id);
     }
+
+    /// <summary>
+    /// Every page created, saved or deleted from now on, by any window: the list and the open page follow it. Observation
+    /// only, so it resumes by itself after a lost connection, with a reset that has the page read the list again.
+    /// </summary>
+    [SparCommand]
+    [SparSubscription]
+    public IAsyncEnumerable<PageChange> ChangesAsync(CancellationToken cancellationToken) => changes.WatchAsync(cancellationToken);
 
     private static string DescribeInvalid(string title) => title.Length switch
     {

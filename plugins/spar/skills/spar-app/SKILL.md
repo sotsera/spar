@@ -141,9 +141,9 @@ A contract is a `[SparContract]` **sealed class** whose `[SparCommand]` methods 
 
 <!-- source: samples/Notebook/Pages/PagesService.cs -->
 ```csharp
-/// <summary>The notebook's pages: create, read, list, save and delete.</summary>
+/// <summary>The notebook's pages: create, read, list, save and delete, and the changes every window follows.</summary>
 [SparContract]
-public sealed class PagesService(IPageStore store, TimeProvider time)
+public sealed class PagesService(IPageStore store, PageChanges changes, TimeProvider time)
 {
     // …
     [SparCommand]
@@ -160,15 +160,61 @@ public sealed class PagesService(IPageStore store, TimeProvider time)
     public async Task<Result<PageError>> DeleteAsync(PageRef request, CancellationToken cancellationToken)
     {
         var deleted = await store.DeleteAsync(request.Id, cancellationToken);
+        if (deleted)
+        {
+            changes.Publish(new PageChange(request.Id, PageChangeKind.Deleted, Revision: 0));
+        }
+
         return deleted ? Result.Success : new PageError.NotFound(request.Id);
     }
 ```
 
 - **Shape:** a command takes zero or one request, then an optional `CancellationToken`. The request is a positional record or a scalar such as `string name`. A list or an array goes inside a record.
-- **Returns:** `Task`, `Task<T>`, `Task<Result<T, TError>>`, `Task<Result<TError>>`, or their `ValueTask` forms. A command is never synchronous. If it has nothing to await, return `Task.FromResult(…)`.
+- **Returns:** `Task`, `Task<T>`, `Task<Result<T, TError>>`, `Task<Result<TError>>`, or their `ValueTask` forms; or a stream (see "Streams and subscriptions" below). A command is never synchronous. If it has nothing to await, return `Task.FromResult(…)`.
 - **Conversions:** `return page;` and `return new PageError.NotFound(id);` both convert to the `Result` implicitly. A command with errors but no value returns `Result.Success`.
 - **Class methods without `[SparCommand]`** stay C#-only. On an interface contract, `[SparCommand("name")]` only overrides a command's name.
 - **`ISparCall`** can be injected into the contract or into any scoped service of the call. It gives the call's token, id, names and `Caller` (`Page`, `Test` or `Devtools`). A singleton cannot depend on it.
+
+### Streams and subscriptions
+
+A command that returns `IAsyncEnumerable<T>` is a **stream**: the page reads its items as they come, and a slow page slows the producer. `IAsyncEnumerable<Result<T, TError>>` ends with its first declared error. With `[SparSubscription]` it is a **subscription**: the producer never waits, and a page that falls behind loses the oldest values (`Capacity`, 256 by default) and sees a `gap`; `LatestOnly = true` keeps only the newest value. A subscription subscribes again by itself after a lost connection unless it is `Resume = SubscriptionResume.Manual`, which one with side effects must be:
+
+<!-- source: samples/Notebook/Pages/PagesService.cs -->
+```csharp
+    /// <summary>
+    /// Every page created, saved or deleted from now on, by any window: the list and the open page follow it. Observation
+    /// only, so it resumes by itself after a lost connection, with a reset that has the page read the list again.
+    /// </summary>
+    [SparCommand]
+    [SparSubscription]
+    public IAsyncEnumerable<PageChange> ChangesAsync(CancellationToken cancellationToken) => changes.WatchAsync(cancellationToken);
+```
+
+In the page, every item is a `Result`, read with `match`; a subscription's `events.reset` is required, and the abort of the signal stops it:
+
+<!-- source: samples/Notebook/frontend/src/notebook.ts -->
+```ts
+  useEffect(() => {
+    const live = new AbortController();
+    void (async () => {
+      for await (const item of pages.changes({ signal: live.signal })) {
+        item.match({
+          success: change => {
+            void refresh();
+            void follow(change);
+          },
+          events: { reset: () => void refresh() },
+          // Our own abort when the notebook goes away; any other end leaves the list as it is until the next action.
+          failure: () => undefined,
+        });
+      }
+    })();
+    return () => live.abort();
+  }, [refresh, follow]);
+```
+
+- **Failures are in-band:** the last item of a stream that failed is its failure, so a `for await` loop cannot miss it. Leaving the loop early (`break`) cancels the stream and waits for the backend to confirm.
+- **Tests:** the typed test client returns an `IAsyncEnumerable` of the values, of `Result`s, or of `SparSubscriptionItem`s (a value, an error or a `SparSubscriptionEvent`); `app.DropChannel()` and `app.RestoreChannel()` test a resume. Page tests script one with `spar.stream(pages.changes).push(…)`.
 
 ### Requests, results and errors
 
