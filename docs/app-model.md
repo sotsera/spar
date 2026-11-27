@@ -1825,9 +1825,10 @@ public sealed class QueryEditorWindows(IWindows windows)
 
 ### 6.8 Zoom and find in page
 
-**Decided** (2026-11-14).
+**Decided** (2026-11-14). Zoom is built in M3d: the limits, the factor remembered with the window's placement, and `zoom.get`, `zoom.set` and `zoom.onChange`; find in page comes with M3d's later steps.
 - **Zoom** is on by default: Ctrl+wheel and Ctrl+plus, minus and 0, because people with low vision rely on them.
-  - It is saved with each window's placement.
+  - It is saved with each window's placement, and a window of the kind opens at the zoom its last one had.
+  - `zoom.get()` is 1 until the host has told a zoomed page its factor, just after the page connects; `zoom.onChange` hears each change, and `zoom.set(factor)` changes it within the window's limits.
   - C# limits it per window (`Zoom(min: 0.5, max: 3)`, as the query editor in `Program.cs` does) or turns it off.
 - **Find in page** is off by default, so an app's own Ctrl+F can be a scoped action.
   - `FindInPage()` turns on Ctrl+F with the SDK's find bar, the same on both hosts.
