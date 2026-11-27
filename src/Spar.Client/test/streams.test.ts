@@ -32,9 +32,9 @@ afterEach(() => {
 });
 
 /** One `items` message with rows `from` to `to`, exclusive. */
-function items(id: number, from: number, to: number, dropped?: number): void {
+function items(id: number, from: number, to: number, dropped?: number, target: FakeHost = host): void {
   const payload = JSON.stringify(Array.from({ length: to - from }, (_, i) => ({ n: from + i })));
-  host.deliver(dropped === undefined ? { type: "items", id, payload } : { type: "items", id, dropped, payload });
+  target.deliver(dropped === undefined ? { type: "items", id, payload } : { type: "items", id, dropped, payload });
 }
 
 type Seen = number | string;
@@ -229,5 +229,68 @@ describe("aborting", () => {
     expect(host.last("cancel")).toMatchObject({ id: 1 });
     expect(seen((await iterator.next()).value as never)).toEqual("cancelled cancelled");
     expect((await iterator.next()).done).toBe(true);
+  });
+});
+
+/** A host whose channel can open again for the same page, as loopback's can. */
+class ReconnectingHost extends FakeHost {
+  reconnects = 0;
+
+  reconnect(): boolean {
+    this.reconnects++;
+    return true;
+  }
+}
+
+describe("resuming", () => {
+  test("an automatic subscription reports reconnecting, then reset and resumed on a new channel", async () => {
+    vi.useFakeTimers();
+    const reconnecting = new ReconnectingHost();
+    const page = new Connection(reconnecting, "0123456789abcdef");
+    reconnecting.open();
+    const iterator = openSubscription(page, name, "7", rows, undefined, { latestOnly: false, resumes: true })[Symbol.asyncIterator]();
+    items(1, 0, 1, undefined, reconnecting);
+    const seenItems: Seen[] = [seen((await iterator.next()).value as never)];
+
+    reconnecting.close();
+    seenItems.push(seen((await iterator.next()).value as never));
+    await vi.advanceTimersByTimeAsync(250);
+    expect(reconnecting.sent.filter(m => m.type === "hello")).toHaveLength(2);
+    reconnecting.open();
+    for (let i = 0; i < 2; i++) {
+      seenItems.push(seen((await iterator.next()).value as never));
+    }
+
+    expect(reconnecting.last("stream")).toMatchObject({ id: 2, payload: "7" });
+    items(2, 5, 6, undefined, reconnecting);
+    seenItems.push(seen((await iterator.next()).value as never));
+
+    expect(seenItems).toEqual([0, "reconnecting", "reset", "resumed", 5]);
+    expect(reconnecting.reconnects).toBe(1);
+  });
+
+  test("a one-shot stream and a manual subscription end lost, and the page does not reconnect for them", async () => {
+    const reconnecting = new ReconnectingHost();
+    const page = new Connection(reconnecting, "0123456789abcdef");
+    reconnecting.open();
+    const oneShot = readAll(openStream(page, name, "", rows, undefined), seen);
+    const manual = readAll(openSubscription(page, { contract: "rows", command: "drain" }, "", rows, undefined, { latestOnly: false, resumes: false }), seen);
+
+    reconnecting.close();
+
+    expect(await oneShot).toEqual(["transport lost"]);
+    expect(await manual).toEqual(["transport lost"]);
+    expect(reconnecting.reconnects).toBe(0);
+  });
+
+  test("a call made while the channel is lost is unavailable, never queued for a later channel", async () => {
+    const reconnecting = new ReconnectingHost();
+    const page = new Connection(reconnecting, "0123456789abcdef");
+    reconnecting.open();
+    reconnecting.close();
+
+    const outcome = await page.invoke("pages", "get", "{}", { value: json => json, error: () => unknownErrorCase });
+
+    expect(outcome).toMatchObject({ ok: false, error: { kind: "unavailable", code: "unavailable", execution: "notStarted" } });
   });
 });

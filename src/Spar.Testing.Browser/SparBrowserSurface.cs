@@ -121,10 +121,14 @@ public static class SparBrowserSurface
     }
 
     /// <summary>The running loopback host; disposing the app stops it before the backend.</summary>
-    private sealed class Surface(LoopbackHost host) : IAsyncDisposable
+    private sealed class Surface(LoopbackHost host) : IAsyncDisposable, IChannelSurface
     {
         public LoopbackHost Host { get; } = host;
 
         public ValueTask DisposeAsync() => Host.DisposeAsync();
+
+        public void DropChannel() => Host.Drop();
+
+        public void RestoreChannel() => Host.Restore();
     }
 }

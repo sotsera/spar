@@ -12,6 +12,12 @@ export interface BridgeChannel {
   send(message: string): void;
   /** Registers the listeners. `closed` runs when the channel can deliver nothing more (the host went away). */
   listen(received: (message: string) => void, closed: () => void): void;
+  /**
+   * Prepares a new channel for the same page after `closed` ran, so its next `send` is a new `hello`; false when there
+   * is none to open. Only a channel that can end while its page stays has it (loopback); the desktop hosts' channels
+   * end with their document. Never called while the channel is open.
+   */
+  reconnect?(): boolean;
 }
 
 /** Returned by a decoder for a declared error code this client does not know (a newer backend). */
@@ -59,7 +65,11 @@ export class Connection implements StreamHost {
   readonly #eventListeners = new Map<string, Set<(payload: string) => void>>();
   readonly #closingWork: Array<() => Promise<unknown>> = [];
   readonly #closeRequests = new Map<number, AbortController>();
-  #state: "opening" | "open" | "closed" = "opening";
+  readonly #contracts: string;
+  readonly #reopenWaiters = new Set<(open: boolean) => void>();
+
+  /** `lost`: the channel ended but can open again (loopback), when a subscription asks for it to resume. */
+  #state: "opening" | "open" | "lost" | "closed" = "opening";
   #readyCalled = false;
   #nextId = 1;
   #document: string | undefined;
@@ -67,8 +77,9 @@ export class Connection implements StreamHost {
 
   constructor(channel: BridgeChannel, contracts: string) {
     this.#channel = channel;
+    this.#contracts = contracts;
     channel.listen(message => this.#receive(message), () => this.#closed());
-    this.#send({ type: "hello", protocol: protocolVersion, types: understoodTypes, contracts, payload: "" });
+    this.#hello();
   }
 
   /** The document id the host assigned in open; undefined until then. */
@@ -90,7 +101,7 @@ export class Connection implements StreamHost {
       return Promise.resolve(failure(name, "cancelled", "cancelled-before-start", "notStarted"));
     }
 
-    if (this.#state === "closed") {
+    if (this.#state === "closed" || this.#state === "lost") {
       return Promise.resolve(failure(name, "unavailable", "unavailable", "notStarted"));
     }
 
@@ -134,7 +145,7 @@ export class Connection implements StreamHost {
    * once the channel is open; undefined when the channel is gone.
    */
   open(name: CallName, request: string, credits: number, receiver: StreamReceiver, span: CallSpan | undefined): StreamHandle | undefined {
-    if (this.#state === "closed") {
+    if (this.#state === "closed" || this.#state === "lost") {
       return undefined;
     }
 
@@ -176,9 +187,38 @@ export class Connection implements StreamHost {
     };
   }
 
-  /** @internal Whether streams can open again after a lost channel; this document's channel never comes back. */
-  reconnected(_deadline: number, _signal: AbortSignal | undefined): Promise<boolean> {
-    return Promise.resolve(this.#state === "open");
+  /**
+   * @internal After a lost channel, opens a new one for this page and resolves true once the host answers its `hello`
+   * with `open`; false when the attempt failed, `deadline` (a `Date.now()` value) passed or `signal` aborted, and always
+   * false for a channel that cannot open again. The new channel is a new document for the host: nothing of the old one
+   * is replayed, and the calls that were running already ended lost.
+   */
+  reconnected(deadline: number, signal: AbortSignal | undefined): Promise<boolean> {
+    if (this.#state === "open" || this.#state === "closed") {
+      return Promise.resolve(this.#state === "open");
+    }
+
+    if (this.#state === "lost") {
+      if (!this.#channel.reconnect!()) {
+        return Promise.resolve(false);
+      }
+
+      this.#state = "opening";
+      this.#hello();
+    }
+
+    return new Promise(resolve => {
+      const done = (open: boolean): void => {
+        clearTimeout(timer);
+        signal?.removeEventListener("abort", aborted);
+        this.#reopenWaiters.delete(done);
+        resolve(open);
+      };
+      const aborted = (): void => done(false);
+      const timer = setTimeout(() => done(false), Math.max(0, deadline - Date.now()));
+      signal?.addEventListener("abort", aborted, { once: true });
+      this.#reopenWaiters.add(done);
+    });
   }
 
   /** @internal A stream's span, when the page's telemetry is on. */
@@ -220,9 +260,14 @@ export class Connection implements StreamHost {
   }
 
   #send(message: BridgeMessage): void {
-    if (this.#state !== "closed") {
+    if (this.#state !== "closed" && this.#state !== "lost") {
       this.#channel.send(encode(message));
     }
+  }
+
+  /** The hello that opens the document's channel, again after a reconnect: the same fingerprint and types. */
+  #hello(): void {
+    this.#channel.send(encode({ type: "hello", protocol: protocolVersion, types: understoodTypes, contracts: this.#contracts, payload: "" }));
   }
 
   #receive(text: string): void {
@@ -279,6 +324,12 @@ export class Connection implements StreamHost {
     for (const send of this.#waitingForOpen.splice(0)) {
       send();
     }
+
+    for (const waiter of this.#reopenWaiters) {
+      waiter(true);
+    }
+
+    this.#reopenWaiters.clear();
   }
 
   #result(message: BridgeMessage): void {
@@ -361,7 +412,13 @@ export class Connection implements StreamHost {
 
   /** The host went away: a call it received may have run (`lost`); one it never received did not (`unavailable`). */
   #closed(): void {
-    this.#state = "closed";
+    // A channel that can open again leaves the page waiting for a reconnect; only a subscription asks for one.
+    this.#state = this.#channel.reconnect === undefined ? "closed" : "lost";
+    for (const waiter of this.#reopenWaiters) {
+      waiter(false);
+    }
+
+    this.#reopenWaiters.clear();
     for (const request of this.#closeRequests.values()) {
       request.abort();
     }

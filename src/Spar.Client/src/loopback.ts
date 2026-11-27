@@ -67,7 +67,7 @@ class LoopbackChannel implements BridgeChannel {
   readonly #origin: string;
   readonly #token: string;
   readonly #fetch: typeof fetch;
-  readonly #stop = new AbortController();
+  #stop = new AbortController();
   readonly #queue: string[] = [];
   #received: ((message: string) => void) | undefined;
   #closedListener: (() => void) | undefined;
@@ -78,6 +78,7 @@ class LoopbackChannel implements BridgeChannel {
   #doc: string | undefined;
   #run: string | undefined;
   #opened = false;
+  #awaitingRestart = false;
 
   constructor(origin: string, token: string, fetchFunction: typeof fetch, restart: RestartPage | false | undefined) {
     this.#origin = origin;
@@ -89,6 +90,23 @@ class LoopbackChannel implements BridgeChannel {
   listen(received: (message: string) => void, closed: () => void): void {
     this.#received = received;
     this.#closedListener = closed;
+  }
+
+  /**
+   * A new channel for the same page after this one ended: the next message is a new `hello`, which opens it. The host
+   * treats it as a new document; when the backend is a new run of a dev session, the page reloads instead (restart.ts).
+   */
+  reconnect(): boolean {
+    if (!this.#closed) {
+      return false;
+    }
+
+    this.#closed = false;
+    this.#opening = false;
+    this.#doc = undefined;
+    this.#queue.length = 0;
+    this.#stop = new AbortController();
+    return true;
   }
 
   /** @internal Where the page's telemetry reaches the host's relay: the host's origin, with the session's token. */
@@ -234,9 +252,12 @@ class LoopbackChannel implements BridgeChannel {
     // A dev session's backend went away: wait for its next run and reload. restart.ts decides: a document that got its
     // backend always waits; one that never did waits only when an automatic reload made it, and that reload counts
     // against the loop guard; a channel that names no run (the test host) never waits.
-    if (this.#restart !== false) {
+    // A page that reconnects can lose its channel again: one wait at a time.
+    if (this.#restart !== false && !this.#awaitingRestart) {
+      this.#awaitingRestart = true;
       const lost = { origin: this.#origin, token: this.#token, run: this.#run, opened: this.#opened };
-      void (this.#restart === undefined ? awaitRestart(lost) : awaitRestart(lost, this.#restart));
+      const waiting = this.#restart === undefined ? awaitRestart(lost) : awaitRestart(lost, this.#restart);
+      void waiting.finally(() => (this.#awaitingRestart = false));
     }
   }
 }

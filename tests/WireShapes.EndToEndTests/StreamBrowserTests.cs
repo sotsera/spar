@@ -67,4 +67,27 @@ public sealed class StreamBrowserTests(SharedBrowser shared)
         await wire.AssertCleanAsync();
         Budgets.Record("20,000 subscription events in one second over loopback, all delivered, timed by the page", $"{outcome.RootElement.GetProperty("ms").GetDouble():0.0} ms");
     }
+
+    [Fact]
+    public async Task A_subscription_resumes_on_a_new_channel_after_the_old_one_dropped()
+    {
+        await using var wire = await WirePage.OpenAsync(shared);
+        var firstDocument = await wire.CallAsync("() => window.wire.document()", null);
+        await wire.Page.EvaluateAsync("() => window.startTicks()");
+        await wire.Page.WaitForFunctionAsync("() => window.ticksSeen.length >= 2");
+
+        wire.App.DropChannel();
+        await wire.Page.WaitForFunctionAsync("() => window.ticksSeen.includes('reconnecting 2')");
+        wire.App.RestoreChannel();
+        await wire.Page.WaitForFunctionAsync("() => window.ticksSeen.includes('resumed') && typeof window.ticksSeen.at(-1) === 'number'");
+        await wire.Page.EvaluateAsync("() => window.stopTicks()");
+
+        using var seen = JsonDocument.Parse(await wire.Page.EvaluateAsync<string>("() => JSON.stringify(window.ticksSeen)"));
+        var events = seen.RootElement.EnumerateArray().Where(item => item.ValueKind == JsonValueKind.String).Select(item => item.GetString()).ToList();
+        var reset = events.IndexOf("reset");
+        Assert.True(reset > 0, string.Join(", ", events));
+        Assert.Equal("reconnecting 1", events[0]);
+        Assert.Equal("resumed", events[reset + 1]);
+        Assert.NotEqual(firstDocument, await wire.CallAsync("() => window.wire.document()", null));
+    }
 }

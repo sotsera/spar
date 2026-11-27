@@ -216,3 +216,19 @@ window.wire = {
 
 connection.ready();
 document.getElementById("status").textContent = "ready";
+
+/**
+ * Subscribes to live ticks for a test that drops the channel and restores it: `window.ticksSeen` collects what the
+ * page sees (values, events, the last failure) until `stopTicks()`.
+ */
+window.ticksSeen = [];
+let ticksControl;
+window.startTicks = () => {
+  ticksControl = new AbortController();
+  void (async () => {
+    for await (const item of streams.ticks(0, { signal: ticksControl.signal })) {
+      window.ticksSeen.push(itemOf(item));
+    }
+  })();
+};
+window.stopTicks = () => ticksControl?.abort();

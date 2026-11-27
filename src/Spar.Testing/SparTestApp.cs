@@ -244,15 +244,23 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     SparStreamClient ISparInvoker.Streams => _streams;
 
     /// <summary>
-    /// Drops the typed test clients' channel, as a lost connection would: their open streams and subscriptions end, and
-    /// none opens until <see cref="RestoreChannel"/>. An automatic subscription reports <c>Reconnecting</c> and waits, up
-    /// to 30 s, then subscribes again and reports <c>Reset</c> and <c>Resumed</c>; a stream and a manual subscription
-    /// end with <c>transport</c> / <c>lost</c>.
+    /// Drops the channel, as a lost connection would: the typed test clients' open streams and subscriptions end, and, on
+    /// the Browser surface, every page's loopback channel; none opens until <see cref="RestoreChannel"/>. An automatic
+    /// subscription reports <c>Reconnecting</c>, subscribes again once the channel is back, within 30 s, and reports
+    /// <c>Reset</c> and <c>Resumed</c>; a stream, a manual subscription and a call that was running end lost.
     /// </summary>
-    public void DropChannel() => _streams.Drop();
+    public void DropChannel()
+    {
+        _streams.Drop();
+        (Surface as IChannelSurface)?.DropChannel();
+    }
 
     /// <summary>Brings the channel back after <see cref="DropChannel"/>.</summary>
-    public void RestoreChannel() => _streams.Restore();
+    public void RestoreChannel()
+    {
+        _streams.Restore();
+        (Surface as IChannelSurface)?.RestoreChannel();
+    }
 
     /// <summary>
     /// Stops the surface and the app, and deletes the data root. Every step runs even when an earlier one fails. A

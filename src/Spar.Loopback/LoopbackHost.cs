@@ -107,6 +107,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
     private readonly ConcurrentDictionary<string, DevServerProxy> _proxies = new(StringComparer.Ordinal);
     private readonly HostCommands? _hostCommands;
     private int _port;
+    private volatile bool _dropped;
 
     private LoopbackHost(WebApplication server, LoopbackOptions options, byte[] token)
     {
@@ -193,6 +194,23 @@ internal sealed class LoopbackHost : IAsyncDisposable
 
         return open;
     }
+
+    /// <summary>
+    /// For tests of resumption: ends every document's channel, as a lost connection would, and refuses new ones until
+    /// <see cref="Restore"/>. The pages stay; their SDK reports their calls and streams lost and resumes automatic
+    /// subscriptions on a new channel once one is accepted again.
+    /// </summary>
+    public void Drop()
+    {
+        _dropped = true;
+        foreach (var document in _documents.Values)
+        {
+            document.End();
+        }
+    }
+
+    /// <summary>Accepts channels again after <see cref="Drop"/>.</summary>
+    public void Restore() => _dropped = false;
 
     /// <summary>The page's address with the token in its fragment, for the browser to open.</summary>
     public Uri PageUrl(string path = "/") => new(Origin, $"{path}#token={Token}");
@@ -406,8 +424,15 @@ internal sealed class LoopbackHost : IAsyncDisposable
             return;
         }
 
-        using var ended = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, _stopping.Token);
+        if (_dropped)
+        {
+            // A test dropped the channels: the page finds no host until it restores them.
+            await RefuseAsync(response, StatusCodes.Status503ServiceUnavailable, "unavailable");
+            return;
+        }
+
         var document = OpenDocument();
+        using var ended = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, _stopping.Token, document.Ending);
         try
         {
             response.ContentType = "text/plain; charset=utf-8";
@@ -423,13 +448,14 @@ internal sealed class LoopbackHost : IAsyncDisposable
         }
         catch (OperationCanceledException) when (ended.IsCancellationRequested)
         {
-            // The page went away (navigation, reload, closed tab) or the host is stopping.
+            // The page went away (navigation, reload, closed tab), the host is stopping, or a test dropped the channel.
         }
         finally
         {
             _documents.TryRemove(document.Id, out _);
             document.Session.Close();
             document.Session.Dispose();
+            document.Dispose();
         }
     }
 
@@ -647,16 +673,34 @@ internal sealed class LoopbackHost : IAsyncDisposable
         await response.WriteAsync(code);
     }
 
-    /// <summary>One document: its bridge session and the queue its channel writes from.</summary>
-    private sealed class Document(string id, BridgeSession session, Channel<string> outbox)
+    /// <summary>One document: its bridge session, the queue its channel writes from, and what ends its channel early.</summary>
+    private sealed class Document(string id, BridgeSession session, Channel<string> outbox) : IDisposable
     {
         private readonly Lock _receiving = new();
+        private readonly CancellationTokenSource _ending = new();
 
         public string Id { get; } = id;
 
         public BridgeSession Session { get; } = session;
 
         public Channel<string> Outbox { get; } = outbox;
+
+        /// <summary>Cancelled when a test drops the channel (<see cref="LoopbackHost.Drop"/>).</summary>
+        public CancellationToken Ending => _ending.Token;
+
+        public void End()
+        {
+            try
+            {
+                _ending.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+                // The channel ended on its own meanwhile.
+            }
+        }
+
+        public void Dispose() => _ending.Dispose();
 
         /// <summary>Hands a batch to the session in order; two requests for one document never interleave.</summary>
         public void Receive(string[] messages)
