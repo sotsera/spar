@@ -53,6 +53,10 @@ internal static unsafe partial class WebKit
     [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
     public static partial nint webkit_network_session_new(string dataDirectory, string cacheDirectory);
 
+    /// <summary>A session that keeps its data and cache in memory only (<c>EphemeralBrowserData</c>); owned.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_network_session_new_ephemeral();
+
     [LibraryImport(Library)]
     public static partial nuint webkit_network_session_get_type();
 

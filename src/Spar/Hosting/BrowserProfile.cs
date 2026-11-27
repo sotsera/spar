@@ -13,6 +13,9 @@ internal sealed class BrowserProfile(string requested)
     /// <summary>The folder Spar asked the browser to use (<see cref="SparFolders.Profile"/>).</summary>
     public string Requested { get; } = requested;
 
+    /// <summary>The browser keeps its data in memory only (<c>spar.Folders(f => f.EphemeralBrowserData())</c>).</summary>
+    public bool InMemory { get; init; }
+
     /// <summary>The folder the browser reported once its environment existed; null until then.</summary>
     public string? InUse => _inUse;
 

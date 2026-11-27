@@ -9,6 +9,12 @@ namespace Spar;
 /// </summary>
 public sealed partial record SparFolders(string DataRoot, string Data, string Logs, string Cache, string Profile)
 {
+    /// <summary>Whether the browser keeps its data in memory only (<see cref="FolderOptions.EphemeralBrowserData"/>).</summary>
+    public bool BrowserDataInMemory { get; init; }
+
+    /// <summary>The folders removed when the app exits (<see cref="FolderOptions.RemoveOnExit"/>).</summary>
+    public IReadOnlyList<SparFolder> RemovedOnExit { get; init; } = [];
+
     /// <summary>What a Development build appends to the app id, for its folders and its identity to the OS.</summary>
     internal const string DevelopmentSuffix = ".Development";
 
@@ -30,7 +36,11 @@ public sealed partial record SparFolders(string DataRoot, string Data, string Lo
             options.DataFolder ?? Path.Combine(dataRoot, "data"),
             options.LogsFolder ?? Path.Combine(dataRoot, "logs"),
             Path.Combine(dataRoot, "cache"),
-            options.ProfileFolder ?? Path.Combine(dataRoot, ProfileFolderName));
+            options.ProfileFolder ?? Path.Combine(dataRoot, ProfileFolderName))
+        {
+            BrowserDataInMemory = options.BrowserDataInMemory,
+            RemovedOnExit = options.RemovedOnExit,
+        };
     }
 
     /// <summary>
@@ -190,6 +200,37 @@ public sealed class FolderOptions
         return this;
     }
 
+    /// <summary>Whether the browser keeps its data in memory only (<see cref="EphemeralBrowserData"/>).</summary>
+    public bool BrowserDataInMemory { get; private set; }
+
+    /// <summary>The folders removed when the app exits (<see cref="RemoveOnExit"/>).</summary>
+    public IReadOnlyList<SparFolder> RemovedOnExit { get; private set; } = [];
+
+    /// <summary>
+    /// Keeps the browser's data (cookies, the page's storage, its cache) in memory only: WebView2's InPrivate mode and an
+    /// ephemeral WebKitGTK session, so nothing of it is written and the page's own storage starts empty each run. For an
+    /// app that keeps its state in its settings and its data, run where it must leave nothing behind.
+    /// </summary>
+    public FolderOptions EphemeralBrowserData()
+    {
+        ThrowIfFrozen();
+        BrowserDataInMemory = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Removes these folders when the app exits, once the browser's processes have, and at the next start what a crash or
+    /// a killed session left. Skipped while another instance of the app runs for the same user on the machine. A
+    /// settings file kept elsewhere stays; the data folder takes its local copy with it. Logs removed are gone for
+    /// diagnosing a problem afterwards.
+    /// </summary>
+    public FolderOptions RemoveOnExit(params SparFolder[] folders)
+    {
+        ThrowIfFrozen();
+        RemovedOnExit = [.. folders.Distinct()];
+        return this;
+    }
+
     /// <summary>Refuses further choices: the folders are decided.</summary>
     internal void Freeze() => _frozen = true;
 
@@ -200,4 +241,20 @@ public sealed class FolderOptions
             throw new InvalidOperationException(ResolvedMessage);
         }
     }
+}
+
+/// <summary>One of the app's own folders, as <see cref="FolderOptions.RemoveOnExit"/> names it.</summary>
+public enum SparFolder
+{
+    /// <summary>The browser profile.</summary>
+    Profile,
+
+    /// <summary>The cache.</summary>
+    Cache,
+
+    /// <summary>The data folder, settings files in it included.</summary>
+    Data,
+
+    /// <summary>The logs.</summary>
+    Logs,
 }

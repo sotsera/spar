@@ -113,6 +113,12 @@ internal sealed class BrowserView
             _context = TestViews.NewContext();
             _log.Info("Browser data: an ephemeral network session and a web context of the test window's own.");
         }
+        else if (_profile.InMemory)
+        {
+            // The app keeps its browser data in memory only: cookies, storage and cache, nothing written.
+            _session = WebKit.webkit_network_session_new_ephemeral();
+            _log.Info("Browser data: an ephemeral network session (the app keeps its browser data in memory).");
+        }
         else
         {
             _session = WebKit.webkit_network_session_new(dataFolder, cacheFolder);

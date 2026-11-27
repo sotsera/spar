@@ -7,6 +7,9 @@ var app = SparApplication.Create(args, spar =>
 {
     spar.Window(w => w.Size(1000, 700));
 
+    // The installation file beside the executable, when a test puts one there (decision "M3b's decide-first questions", item 6).
+    spar.InstallationFile();
+
     // Every close request is recorded, so a test can see which reason reached the backend's guard; the test picks the
     // answer, and how long it takes, through Activity.
     spar.OnCloseRequested(async (request, services, _) =>

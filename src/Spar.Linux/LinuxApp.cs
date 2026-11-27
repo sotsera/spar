@@ -75,12 +75,20 @@ internal sealed class LinuxApp : IAppWindowOwner
         _folders = app.Builder.ResolveFolders();
         _relaunches = new RelaunchQueue(app.Builder.RelaunchHandler, _log.Logger);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
-        _profile = new BrowserProfile(_folders.Profile);
+        _profile = new BrowserProfile(_folders.Profile) { InMemory = _folders.BrowserDataInMemory };
         _promptAnswers = SparDevelopment.IsSupported ? DevelopmentTriggers.PromptAnswers() : null;
     }
 
     public int Run()
     {
+        // An installation file that cannot be used stops the start before anything else, with its key named.
+        if (_app.Builder.InstallationProblem is { } installation)
+        {
+            var refused = StartupFailure.ReportConfiguration(installation, AppWindow.StartFailedExitCode, Startup);
+            _log.Close();
+            return refused;
+        }
+
         // The levels first, so the host's first line is filtered as the app asked; logging.json is a small local file.
         var logging = _app.Builder.LoggingOptions;
         _levels = SparLogging.Levels(logging, _folders.DataRoot, SparDevelopment.IsSupported, out var problem);
@@ -98,6 +106,11 @@ internal sealed class LinuxApp : IAppWindowOwner
         try
         {
             _log.Info($"App id {_identity}, folder {_folders.DataRoot}");
+            if (_app.Builder.Installation is { } installed)
+            {
+                _log.Info($"Installation file {installed.Path} sets {string.Join(", ", installed.Keys)}.");
+            }
+
             if (_app.Builder.BrowserOptions.Active() is { Length: > 0 } active)
             {
                 _log.Warn($"Browser opt-ins in force: {active}");
@@ -111,11 +124,24 @@ internal sealed class LinuxApp : IAppWindowOwner
             // (measured in the CI container: the services were disposed and the exit logged before the line).
             WaitForSessionEnd();
 
+            // The folders the app removes at exit go while this instance still holds the lock (the window's teardown
+            // waited for the web processes), the logs after the log closes.
+            var removing = _instance is not null && _folders.RemovedOnExit.Count > 0;
+            if (removing)
+            {
+                FolderRemoval.Remove(_folders, includeLogs: false, _log.Warn);
+            }
+
+            _log.Close();
+            if (removing && FolderRemoval.RemovesLogs(_folders))
+            {
+                FolderRemoval.Remove(_folders with { RemovedOnExit = [SparFolder.Logs] }, includeLogs: true, _ => { });
+            }
+
             // The socket closes before the lock is released, so no launch is acknowledged by a closing app.
             _signals?.Dispose();
             _instance?.Dispose();
             _shutdown?.Complete();
-            _log.Close();
         }
     }
 
@@ -172,6 +198,12 @@ internal sealed class LinuxApp : IAppWindowOwner
 
         _instance = claim.Instance;
         _log.Phase("single instance");
+
+        // What a crash or a killed session left of the folders the app removes at exit (this run's log stays).
+        if (_folders.RemovedOnExit.Count > 0)
+        {
+            FolderRemoval.Remove(_folders, includeLogs: false, _log.Warn);
+        }
 
         if (CreateProfileFolder() is { } unusable)
         {

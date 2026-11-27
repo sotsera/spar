@@ -54,7 +54,7 @@ internal sealed class WindowsApp : IAppWindowOwner
         _title = app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
         _identity = SparFolders.ChannelId(app.AppId, SparDevelopment.IsSupported);
         _folders = app.Builder.ResolveFolders();
-        _profile = new BrowserProfile(_folders.Profile);
+        _profile = new BrowserProfile(_folders.Profile) { InMemory = _folders.BrowserDataInMemory };
         _relaunches = new RelaunchQueue(app.Builder.RelaunchHandler, _log.Logger);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
     }
@@ -63,6 +63,14 @@ internal sealed class WindowsApp : IAppWindowOwner
     {
         // The levels first, so the host's first line is filtered as the app asked; logging.json is a small local file.
         // Without a file (spar.Logging(l => l.WithoutFile())), the host's early lines go to standard error only.
+        // An installation file that cannot be used stops the start before anything else, with its key named.
+        if (_app.Builder.InstallationProblem is { } installation)
+        {
+            var refused = StartupFailure.ReportConfiguration(installation, AppWindow.StartFailedExitCode, Startup);
+            _log.Close();
+            return refused;
+        }
+
         // A data root on a network drive is refused before the log file or logging.json is touched there.
         if (SparFolders.DataRootProblem(_folders.DataRoot) is { } networkRoot)
         {
@@ -79,6 +87,11 @@ internal sealed class WindowsApp : IAppWindowOwner
         }
 
         _log.Info($"Host started {ProcessAgeMilliseconds():0.0} ms after the process; {BuildIdentity.Describe(_app.Catalog.BuildIdentity.Span)}.");
+        if (_app.Builder.Installation is { } installed)
+        {
+            _log.Info($"Installation file {installed.Path} sets {string.Join(", ", installed.Keys)}.");
+        }
+
         if (problem is not null)
         {
             _log.Warn(problem);
@@ -95,11 +108,56 @@ internal sealed class WindowsApp : IAppWindowOwner
         }
         finally
         {
+            // The folders the app removes at exit go while this instance still holds the lock, the logs after the log closes.
+            var removing = _instance is not null && _folders.RemovedOnExit.Count > 0;
+            if (removing)
+            {
+                WaitForBrowserToLetGo();
+                FolderRemoval.Remove(_folders, includeLogs: false, _log.Warn);
+            }
+
+            _log.Close();
+            if (removing && FolderRemoval.RemovesLogs(_folders))
+            {
+                FolderRemoval.Remove(_folders with { RemovedOnExit = [SparFolder.Logs] }, includeLogs: true, _ => { });
+            }
+
             // The pipe closes before the lock is released, so no launch is acknowledged by a closing app.
             _instance?.Dispose();
             _shutdown?.Complete();
-            _log.Close();
         }
+    }
+
+    /// <summary>
+    /// Waits, at most 3 s, for the browser's processes to let go of the profile before it is removed: they hold its lock
+    /// file until they exit, about 160 ms after the environment is released (decision "Profiles and shutdown").
+    /// </summary>
+    private void WaitForBrowserToLetGo()
+    {
+        var lockFile = Path.Combine(_folders.Profile, "EBWebView", "lockfile");
+        var deadline = Environment.TickCount64 + 3_000;
+        while (Environment.TickCount64 < deadline)
+        {
+            try
+            {
+                if (!File.Exists(lockFile))
+                {
+                    return;
+                }
+
+                // Opening it alone succeeds only once no browser process holds it.
+                using (new FileStream(lockFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    return;
+                }
+            }
+            catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+            {
+                Thread.Sleep(20);
+            }
+        }
+
+        _log.Warn("The browser's processes still held the profile 3 s after the window closed.");
     }
 
     /// <summary>The teardown started: no more relaunches, and the shutdown is watched until the process returns.</summary>
@@ -194,6 +252,12 @@ internal sealed class WindowsApp : IAppWindowOwner
 
         _instance = claim.Instance;
         _log.Phase("single instance");
+
+        // What a crash or a killed session left of the folders the app removes at exit (this run's log stays).
+        if (_folders.RemovedOnExit.Count > 0)
+        {
+            FolderRemoval.Remove(_folders, includeLogs: false, _log.Warn);
+        }
 
         if (CreateProfileFolder() is { } unusableProfile)
         {

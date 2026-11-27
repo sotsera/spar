@@ -360,6 +360,11 @@ internal sealed partial class BrowserView
             {
                 MakePrivate(options, profile);
             }
+            else if (_profile.InMemory)
+            {
+                // InPrivate: cookies, storage and cache stay in memory, and the page's own storage starts empty each run.
+                MakePrivate(options, "spar");
+            }
 
             environment.CreateCoreWebView2ControllerWithOptions((nint)_window, options, completed);
         }

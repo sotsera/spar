@@ -38,6 +38,9 @@ Spar | Spar.Runtime.SparJson.StrictUtf8 | readonly | A UTF8Encoding that throws 
 Spar | Spar.Runtime.SparJson.Base64Alphabet | readonly | SearchValues of the base64 alphabet: immutable after creation, and its lookups are thread-safe.
 Spar | Spar.Runtime.SparStreamClient.ItemsOptions | readonly | Reader options, a value type copied on use; never written.
 Spar | Spar.Runtime.SparStreamClient.ResumeLimit | readonly | A TimeSpan constant.
+Spar | Spar.InstallationFile.DocumentOptions | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.InstallationFile.FolderKeys | readonly | A string array of the folder keys, never written after initialization.
+Spar | Spar.InstallationFile.SettingsKeys | readonly | A string array of the settings keys, never written after initialization.
 Spar | Spar.Settings.SettingsFile.DocumentOptions | readonly | Reader options, a value type copied on use; never written.
 Spar | Spar.Settings.SettingsFile.Indented | readonly | Writer options, a value type copied on use; never written.
 Spar | Spar.Settings.SettingsFile.SetAsideMessage | readonly | A log message delegate from LoggerMessage.Define: stateless, writes to the logger it is given.

@@ -77,17 +77,18 @@ public sealed class BridgeTelemetryTests : IDisposable
     {
         await using var bridge = await TestBridge.OpenAsync();
 
-        bridge.Session.Receive(Streams.StreamSessionTests.Stream(1, "rows", "count", credits: 256, "100"));
+        // The page's trace on both, so only this test's spans are read: activity listeners are process-wide.
+        bridge.Session.Receive(Traced(Streams.StreamSessionTests.Stream(1, "rows", "count", credits: 256, "100")));
         while ((await bridge.Sent.NextAsync()).Type != Spar.Bridge.BridgeMessageType.End)
         {
         }
 
-        bridge.Session.Receive(Streams.StreamSessionTests.Stream(2, "feed", "ticks", credits: 1, "10"));
+        bridge.Session.Receive(Traced(Streams.StreamSessionTests.Stream(2, "feed", "ticks", credits: 1, "10")));
         await bridge.Sent.NextAsync();
         bridge.Session.Receive("{\"type\":\"cancel\",\"id\":2}\t");
         await bridge.Session.WhenIdleAsync();
 
-        var activities = _activities.ToList();
+        var activities = _activities.Where(a => a.TraceId.ToHexString() == TraceId).ToList();
         Assert.Equal(2, activities.Count);
         var stream = activities.Single(a => a.DisplayName == "rows/count");
         var subscription = activities.Single(a => a.DisplayName == "feed/ticks");
@@ -243,4 +244,7 @@ public sealed class BridgeTelemetryTests : IDisposable
             await Task.Delay(5, TestContext.Current.CancellationToken);
         }
     }
+
+    /// <summary>A stream message carrying this class's trace, so a test reads only its own spans.</summary>
+    private static string Traced(string stream) => stream.Replace("\"credits\"", $"\"traceparent\":\"{TraceParent}\",\"credits\"", StringComparison.Ordinal);
 }

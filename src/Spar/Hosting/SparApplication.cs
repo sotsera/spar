@@ -146,6 +146,7 @@ public sealed class SparBuilder
     {
         if (_folders is null)
         {
+            Installation?.ApplyTo(FolderOptions);
             _folders = _testDataRoot is not null
                 ? SparFolders.ForTest(_testDataRoot)
                 : SparFolders.ForApp(AppId, Hosting.SparDevelopment.IsSupported, FolderOptions);
@@ -154,6 +155,49 @@ public sealed class SparBuilder
 
         return _folders;
     }
+
+    /// <summary>
+    /// Reads the installation file, <c>&lt;executable name&gt;.spar.json</c> beside the executable, when there is one
+    /// (decision "M3b's decide-first questions", item 6): deployment choices an installation's owner sets without
+    /// rebuilding the app, which win over the code's: the folders (<c>data</c>, <c>logs</c>, <c>profile</c>,
+    /// <c>ephemeralBrowserData</c>, <c>removeOnExit</c>) and each settings record's place (<c>settings</c>,
+    /// <c>settings.&lt;name&gt;</c>: <c>file</c>, <c>allowNetworkFile</c>). Never security. Without this call Spar reads no
+    /// such file. Lock what the installation may not change with <c>i => i.Locked("settings.file")</c>. A test reads none.
+    /// Call it before <see cref="ResolveFolders"/>.
+    /// </summary>
+    public SparBuilder InstallationFile(Action<InstallationOptions>? configure = null)
+    {
+        if (_folders is not null)
+        {
+            throw new InvalidOperationException("Call spar.InstallationFile() before spar.ResolveFolders(): the file may choose the folders.");
+        }
+
+        var options = new InstallationOptions();
+        configure?.Invoke(options);
+        if (_testDataRoot is not null)
+        {
+            return this;
+        }
+
+        try
+        {
+            Installation = Spar.InstallationFile.Read(Spar.InstallationFile.BesideExecutable(), options);
+        }
+        catch (InvalidOperationException problem)
+        {
+            // Reported by the host when it starts, with its message and exit code 70, like any configuration problem.
+            InstallationProblem = problem.Message;
+        }
+
+
+        return this;
+    }
+
+    /// <summary>What the installation file set, or null without one (or without <see cref="InstallationFile"/>).</summary>
+    internal InstallationFile? Installation { get; set; }
+
+    /// <summary>Why the installation file cannot be used, which stops the start; null when it can, or there is none.</summary>
+    internal string? InstallationProblem { get; private set; }
 
     /// <summary>
     /// Declares a settings record with its defaults (decision "M3b's decide-first questions", item 4): its file is
@@ -182,7 +226,24 @@ public sealed class SparBuilder
 
         var test = _testDataRoot is not null;
         var development = Hosting.SparDevelopment.IsSupported;
-        Services.AddSingleton<ISparSettings<T>>(provider => Spar.Settings.SparSettings<T>.Load(defaults, options, provider, test, development));
+        Services.AddSingleton<ISparSettings<T>>(provider =>
+        {
+            // The installation file, read whenever Program.cs called it, wins over the code's choices.
+            if (Installation?.Settings.GetValueOrDefault(options.SettingsName) is { } placed)
+            {
+                if (placed.File is { } file)
+                {
+                    options.File(file);
+                }
+
+                if (placed.AllowNetworkFile == true)
+                {
+                    options.AllowNetworkFile();
+                }
+            }
+
+            return Spar.Settings.SparSettings<T>.Load(defaults, options, provider, test, development);
+        });
 
         // Read at start, so a bad file is set aside and logged before the first window opens.
         Services.AddSingleton(new SparStartup(provider => provider.GetRequiredService<ISparSettings<T>>()));
