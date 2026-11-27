@@ -29,6 +29,7 @@ public static class SparApplication
         var testDataRoot = SparTestSession.IsSupported ? session?.DataRoot : null;
         var builder = new SparBuilder(args, SparApp.AppIdOf(catalog), testDataRoot);
         configure(builder);
+        builder.ResolveWindows(catalog);
         return new SparApp(builder, catalog, session);
     }
 }
@@ -44,6 +45,8 @@ public sealed class SparBuilder
 
     /// <summary>The folders, once <see cref="ResolveFolders"/> decided them.</summary>
     private SparFolders? _folders;
+
+    private readonly Dictionary<string, WindowOptions> _windowKinds = new(StringComparer.Ordinal);
 
     internal SparBuilder(string[] args, string appId = "Spar", string? testDataRoot = null)
     {
@@ -66,6 +69,9 @@ public sealed class SparBuilder
 
     /// <summary>The main window's options.</summary>
     internal WindowOptions MainWindow { get; } = new();
+
+    /// <summary>The window kinds the page opens by name, in the order <c>Program.cs</c> declared them.</summary>
+    internal IReadOnlyDictionary<string, WindowOptions> WindowKinds => _windowKinds;
 
     /// <summary>The backend's close guard, or null when the app declared none.</summary>
     internal Func<CloseRequest, IServiceProvider, CancellationToken, ValueTask<CloseDecision>>? CloseGuard { get; private set; }
@@ -118,6 +124,50 @@ public sealed class SparBuilder
         ArgumentNullException.ThrowIfNull(configure);
         configure(MainWindow);
         return this;
+    }
+
+    /// <summary>
+    /// A window kind the page opens by name (<c>windows.open("settings", params)</c>, <c>docs/app-model.md</c> 6.7): its
+    /// route of the app's frontend, size, whether one window at most is open, and which contracts it may call. The
+    /// build reads the names, so the page's <c>WindowKind</c> union rejects a misspelled one; give the name as a
+    /// constant. A kind takes the main window's colours. A name declared twice fails the start.
+    /// </summary>
+    public SparBuilder Window(string kind, Action<WindowOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        AppWindows.WindowRoutes.CheckKind(kind);
+        if (_windowKinds.ContainsKey(kind))
+        {
+            throw new InvalidOperationException($"Window kind '{kind}' is declared twice; each kind is declared once, in one spar.Window(\"{kind}\", …) call.");
+        }
+
+        var options = new WindowOptions(kind);
+        configure(options);
+        _windowKinds.Add(kind, options);
+        return this;
+    }
+
+    /// <summary>
+    /// Checks the window kinds once <c>Program.cs</c> configured the app: each has a route, and each allow-list names
+    /// the app's own contracts and commands.
+    /// </summary>
+    internal void ResolveWindows(SparCatalog catalog)
+    {
+        foreach (var (kind, options) in _windowKinds)
+        {
+            if (!options.HasRoute)
+            {
+                throw new InvalidOperationException($"Window kind '{kind}' has no route; give it the path of the frontend it shows, as in spar.Window(\"{kind}\", w => w.Route(\"/{kind}\")).");
+            }
+        }
+
+        foreach (var options in _windowKinds.Values.Prepend(MainWindow))
+        {
+            if (options.AllowList is { } list)
+            {
+                options.Access = AppWindows.WindowAccess.Resolve(options.Kind ?? AppWindows.WindowRoutes.Main, list, catalog);
+            }
+        }
     }
 
     /// <summary>

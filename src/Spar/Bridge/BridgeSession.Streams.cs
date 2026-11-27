@@ -34,6 +34,7 @@ internal sealed partial class BridgeSession
             refusal = !_open ? SparFailure.InvalidRequest("The page must send hello first.")
                 : _mismatch ? new SparFailure("rejected", "contract-mismatch", "notStarted", _fingerprint)
                 : entry is null ? SparFailure.UnknownCommand(message.Contract!, message.Command!)
+                : Forbidden(message) is { } forbidden ? forbidden
                 : !entry.IsStream ? SparFailure.InvalidRequest($"{message.Contract}.{message.Command} is a unary command, called with a call message.")
                 : TakeEarlyCancel(id) ? new SparFailure("cancelled", "cancelled-before-start", "notStarted")
                 : _streams.Count >= _limits.StreamsOpen ? SparFailure.Busy()

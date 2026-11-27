@@ -70,6 +70,10 @@ public sealed record SparFailure(string Kind, string Code, string Execution, str
     /// <summary>A refusal by the bridge limits: the command never ran.</summary>
     internal static SparFailure Busy() => new("rejected", "busy", "notStarted");
 
+    /// <summary>A command outside the calling window's allow-list (decision "Per-window command allow-lists").</summary>
+    internal static SparFailure ForbiddenCommand(string window, string contract, string command) =>
+        new("rejected", "forbidden-command", "notStarted", $"window '{window}' may not call {contract}.{command}");
+
     internal static SparFailure TooLarge(int bytes, int limit) =>
         new("rejected", "too-large", "notStarted", $"the message is {bytes} bytes; the limit is {limit}");
 

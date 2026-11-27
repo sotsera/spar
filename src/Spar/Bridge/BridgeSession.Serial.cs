@@ -14,7 +14,17 @@ internal sealed partial class BridgeSession
 
     private bool IsSerial(BridgeMessage call) =>
         !(HostCommands is not null && HostCommands.IsHostContract(call.Contract!))
+        && Forbidden(call) is null
         && _dispatcher.Find(call.Contract!, call.Command!)?.SerialGroup is not null;
+
+    /// <summary>
+    /// The refusal of a call or stream outside the window's allow-list (decision "Per-window command allow-lists"), or
+    /// null; Spar's own page commands are never limited. A refused serial call never takes a place in its group.
+    /// </summary>
+    private SparFailure? Forbidden(BridgeMessage message) =>
+        !HostCommands.IsHostContract(message.Contract!) && Window?.Access is { } access && !access.Allows(message.Contract!, message.Command!)
+            ? SparFailure.ForbiddenCommand(access.Window, message.Contract!, message.Command!)
+            : null;
 
     /// <summary>Admits a serial call when the document's queue has room for it; false when it is full.</summary>
     private bool TryStartSerialLocked(Waiting waiting)

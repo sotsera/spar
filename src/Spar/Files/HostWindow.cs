@@ -46,6 +46,21 @@ internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs,
 
     public void EndDialog() => Volatile.Write(ref _dialogOpen, 0);
 
+    /// <summary>The window's name in hooks and logs: <c>main</c>, or its kind's.</summary>
+    public string Name { get; init; } = AppWindows.WindowRoutes.Main;
+
+    /// <summary>The window's own id, unique in the app: <c>main</c>, or the kind's name with a number (<c>settings-1</c>).</summary>
+    public string Id { get; init; } = AppWindows.WindowRoutes.Main;
+
+    /// <summary>The JSON its opener gave (<c>windows.open(kind, params)</c>), which the page reads with <c>windows.params()</c>; empty for none.</summary>
+    public ReadOnlyMemory<byte> Params { get; init; }
+
+    /// <summary>The window's allow-list; null when it may call every command.</summary>
+    public AppWindows.WindowAccess? Access { get; init; }
+
+    /// <summary>The app's windows, which this one's page may open more of; null for a host without windows of its own (loopback).</summary>
+    public AppWindows.AppWindowSet? Windows { get; init; }
+
     /// <summary>The window closed: its grants are revoked and a drop it held is dropped.</summary>
     public void Close()
     {

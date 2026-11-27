@@ -45,6 +45,9 @@ public sealed record SparCommandEntry(string Contract, string Command, int Timeo
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed record SparInterfaceContract(string Contract, string Name, Type Service);
 
+/// <summary>A contract's C# type and its name on the wire, for configuration that names contracts by type (a window's allow-list).</summary>
+public sealed record SparContractType(Type Service, string Contract);
+
 /// <summary>
 /// The app's contracts, built by generated code and passed to <see cref="SparApplication"/> by the generated
 /// interceptor of <c>SparApplication.Create</c>. Immutable once built.
@@ -77,6 +80,9 @@ public sealed class SparCatalog
     /// <summary>The interface contracts, whose implementations come from the app's own registrations.</summary>
     public IReadOnlyList<SparInterfaceContract> Interfaces { get; init; } = [];
 
+    /// <summary>Every contract's C# type with its wire name, written by the generator.</summary>
+    public IReadOnlyList<SparContractType> ContractTypes { get; init; } = [];
+
     /// <summary>
     /// The page security the build read from <c>Program.cs</c> (<c>spar.ContentSecurity</c>, <c>spar.Permissions</c>);
     /// null when no generator set it, and the run's own declaration is used.
@@ -100,6 +106,9 @@ public sealed class SparCatalog
 
     public bool TryGet(string contract, string command, out SparCommandEntry entry) =>
         _commands.TryGetValue(Key(contract, command), out entry!);
+
+    /// <summary>The wire name of the contract whose C# type is <paramref name="type"/>, or null when it is none of the app's.</summary>
+    public string? ContractNameOf(Type type) => ContractTypes.FirstOrDefault(entry => entry.Service == type)?.Contract;
 
     /// <summary>Registers the class contracts (one instance per call scope).</summary>
     public void AddServices(IServiceCollection services) => _addServices(services);

@@ -1,10 +1,12 @@
 using System.Globalization;
+using Spar.AppWindows;
 
 namespace Spar;
 
 /// <summary>
-/// The main window's options, from <c>spar.Window(w => …)</c> in <c>Program.cs</c> (<c>docs/app-model.md</c> section
-/// 2). The colours are among the values the build reads, so they are constants there (plan section 2, "Program.cs").
+/// A window's options, from <c>spar.Window(w => …)</c> for the main window and <c>spar.Window("kind", w => …)</c> for a
+/// window kind the page opens by name (<c>docs/app-model.md</c> sections 2 and 6.7). The main window's colours are
+/// among the values the build reads, so they are constants there (plan section 2, "Program.cs"); every kind takes them.
 /// </summary>
 public sealed class WindowOptions
 {
@@ -23,17 +25,42 @@ public sealed class WindowOptions
     /// <summary>The smallest client area the user can resize the window to; zero for none.</summary>
     internal (int Width, int Height) Minimum { get; private set; }
 
-    internal WindowOptions()
+    /// <summary>The kind's name; null for the main window.</summary>
+    internal string? Kind { get; }
+
+    /// <summary>The path of the frontend the window shows: <c>/</c> for the main window, the kind's route otherwise.</summary>
+    internal string PageRoute { get; private set; } = "/";
+
+    /// <summary>Whether a kind has at most one window open, which opening it again focuses.</summary>
+    internal bool IsSingleInstance { get; private set; }
+
+    /// <summary>The contracts and commands the window may call; null when it may call every one.</summary>
+    internal CommandAllowList? AllowList { get; private set; }
+
+    /// <summary>Whether the kind named its route (a kind needs one).</summary>
+    internal bool HasRoute { get; private set; }
+
+    /// <summary>The allow-list resolved against the app's contracts when the app starts; null when the window may call every one.</summary>
+    internal WindowAccess? Access { get; set; }
+
+    internal WindowOptions(string? kind = null)
     {
+        Kind = kind;
     }
 
     /// <summary>
     /// The window colour before the page paints, for each theme (plan section 3d), as <c>#rrggbb</c> or <c>#rgb</c>.
     /// The host paints it from the window's first frame, and the WebView stays transparent over it until the page
-    /// draws, so neither theme flashes white. Use the page's own background colours.
+    /// draws, so neither theme flashes white. Use the page's own background colours. The main window's only: every
+    /// window kind takes them.
     /// </summary>
     public WindowOptions Background(string light, string dark)
     {
+        if (Kind is not null)
+        {
+            throw new InvalidOperationException($"Window kind '{Kind}': the colours are the main window's, which every kind takes; set them in spar.Window(w => w.Background(…)).");
+        }
+
         LightBackground = SparColor.Parse(light, nameof(light));
         DarkBackground = SparColor.Parse(dark, nameof(dark));
         return this;
@@ -57,6 +84,49 @@ public sealed class WindowOptions
         ArgumentOutOfRangeException.ThrowIfNegative(width);
         ArgumentOutOfRangeException.ThrowIfNegative(height);
         Minimum = (width, height);
+        return this;
+    }
+
+    /// <summary>
+    /// The path of the app's own frontend a window of this kind shows, such as <c>/settings</c>: the host serves the
+    /// frontend's page there, and the page's router picks its view. A window kind needs one; the main window shows
+    /// <c>/</c>.
+    /// </summary>
+    public WindowOptions Route(string route)
+    {
+        if (Kind is null)
+        {
+            throw new InvalidOperationException("The main window shows the frontend's root, '/'; a route is for a window kind.");
+        }
+
+        PageRoute = WindowRoutes.Check(route, Kind);
+        HasRoute = true;
+        return this;
+    }
+
+    /// <summary>At most one window of this kind is open: opening it again focuses the open one.</summary>
+    public WindowOptions SingleInstance()
+    {
+        if (Kind is null)
+        {
+            throw new InvalidOperationException("The main window is always one; SingleInstance is for a window kind.");
+        }
+
+        IsSingleInstance = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Limits the app's contracts the window may call (decision "Per-window command allow-lists"); a call to any other
+    /// is refused before it runs (<c>rejected</c> / <c>forbidden-command</c>). Every window may call every command by
+    /// default. Recommended for a window that shows content the app does not fully control. Spar's own page commands
+    /// (dialogs, grants, the colour scheme, windows) stay allowed.
+    /// </summary>
+    public WindowOptions Commands(Action<CommandAllowList> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        AllowList ??= new CommandAllowList();
+        configure(AllowList);
         return this;
     }
 }

@@ -41,6 +41,7 @@ internal static class CatalogEmitter
         }
 
         EmitInterfaces(code, contracts);
+        EmitContractTypes(code, contracts);
         EmitSettings(code, settings ?? []);
         EmitPageSecurity(code, security);
         code.Line("};");
@@ -79,6 +80,24 @@ internal static class CatalogEmitter
         foreach (var model in settings)
         {
             code.Line($"        new {Runtime}.SparSettingsSerializer<{model.CSharp}>(SparSerializers.Read{model.Key}, SparSerializers.Write{model.Key}),");
+        }
+
+        code.Line("    ],");
+    }
+
+    /// <summary>Every contract's type with its wire name, for configuration that names contracts by type; nothing when there are none.</summary>
+    private static void EmitContractTypes(CodeWriter code, IReadOnlyList<ContractModel> contracts)
+    {
+        if (contracts.Count == 0)
+        {
+            return;
+        }
+
+        code.Line("    ContractTypes =");
+        code.Line("    [");
+        foreach (var contract in contracts)
+        {
+            code.Line($"        new(typeof({contract.CSharp}), \"{contract.WireName}\"),");
         }
 
         code.Line("    ],");

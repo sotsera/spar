@@ -44,13 +44,15 @@ internal sealed class SchemeServer
 
     /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
     /// <param name="violations">Where reports go; null when the endpoint does not report in this build.</param>
+    /// <param name="routes">The window kinds' routes, answered with the frontend's page.</param>
     public SchemeServer(
-        SparFrontend? frontend, MainLoop ui, HostLog log, SparPageSecurity security, bool development, CspViolationLog? violations)
+        SparFrontend? frontend, MainLoop ui, HostLog log, SparPageSecurity security, bool development, CspViolationLog? violations,
+        IReadOnlyList<string>? routes = null)
     {
         _ui = ui;
         _log = log;
         _violations = violations;
-        _responder = new PageResponder(frontend, security, Origin, development);
+        _responder = new PageResponder(frontend, security, Origin, development) { Routes = routes ?? [] };
 
         // A Debug build without an embedded page serves it from the development server (UseDevServer).
         if (frontend is null && !DevServerSettings.IsSupported)

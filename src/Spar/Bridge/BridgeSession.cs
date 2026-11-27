@@ -454,8 +454,12 @@ internal sealed partial class BridgeSession : IDisposable
                 ? ReleaseBlob(call.Payload)
                 : hostContract && _files is { } files && Files.FileCommands.Handles(call.Command!)
                     ? await files.InvokeAsync(id, call.Command!, call.Payload, call.Files, token.Token)
+                : hostContract && AppWindows.WindowCommands.Handles(call.Command!)
+                    ? await AppWindows.WindowCommands.InvokeAsync(Window, call.Command!, call.Payload, token.Token)
                 : HostCommands is { } host && hostContract
                     ? await host.InvokeAsync(call.Command!, call.Payload, token.Token)
+                : Forbidden(call) is { } forbidden
+                    ? SparOutcome.FromFailure(forbidden)
                     : await _dispatcher.InvokeAsync(call.Contract!, call.Command!, id, call.Payload, _blobs, token.Token);
         }
         finally

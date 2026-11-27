@@ -49,6 +49,12 @@ internal sealed class PageResponder
     /// <summary>The origin this responder answers for.</summary>
     public string Origin { get; }
 
+    /// <summary>
+    /// The window kinds' routes (<c>/settings</c>): a path at or below one, whose last segment has no extension, is
+    /// answered with the frontend's <c>index.html</c>, so the page's router shows the window's view.
+    /// </summary>
+    public IReadOnlyList<string> Routes { get; init; } = [];
+
     /// <summary>Whether the build embeds a page at all.</summary>
     public bool HasPage => _frontend is not null;
 
@@ -98,7 +104,7 @@ internal sealed class PageResponder
             return new PageResponse(404, "Not Found", "text/plain; charset=utf-8", Encoding.UTF8.GetBytes(NoPage));
         }
 
-        var relative = path == "/" ? "index.html" : path.TrimStart('/');
+        var relative = path == "/" || IsRoute(path) ? "index.html" : path.TrimStart('/');
         if (!_frontend.TryGet(relative, out var content, out var contentType))
         {
             notFound(path);
@@ -112,6 +118,11 @@ internal sealed class PageResponder
 
         return new PageResponse(200, "OK", contentType, method == "HEAD" ? ReadOnlyMemory<byte>.Empty : content);
     }
+
+    /// <summary>Whether <paramref name="path"/> is a window kind's route or a view below it (no extension in its last segment).</summary>
+    internal bool IsRoute(string path) =>
+        !path[(path.LastIndexOf('/') + 1)..].Contains('.')
+        && Routes.Any(route => AppWindows.WindowRoutes.IsUnder(path, route));
 
     /// <summary>
     /// What the page and its decoded files need, prepared once off the UI thread: every compressed file decoded, and the
