@@ -6,7 +6,7 @@ public closed record ClipboardError
     /// <summary>Another program holds the clipboard; the host retried briefly first.</summary>
     public sealed record Busy : ClipboardError;
 
-    public sealed record TooLarge(long Limit) : ClipboardError;
+    public sealed record TooLarge(int Limit) : ClipboardError;
 
     /// <summary>No clipboard is reachable, for example without a display.</summary>
     public sealed record Unavailable(string Reason) : ClipboardError;

@@ -30,6 +30,8 @@ export function App({ notebook }: { readonly notebook: Notebook }) {
           onQuery={setQuery}
           onSelect={notebook.open}
           onNew={() => setCreating(true)}
+          onImport={dropped => void notebook.importFiles(dropped)}
+          onNotice={notebook.showNotice}
         />
         <main className="flex min-w-0 flex-1 bg-sheet dark:bg-sheet-dark">
           {current.kind === "open" ? (
@@ -45,6 +47,10 @@ export function App({ notebook }: { readonly notebook: Notebook }) {
               mode={notebook.viewMode}
               onMode={notebook.setViewMode}
               onAddImage={notebook.addImage}
+              onAddImageFile={notebook.addImageFile}
+              onExport={() => void notebook.exportPage()}
+              onCopy={() => void notebook.copyPage()}
+              onNotice={notebook.showNotice}
             />
           ) : current.kind === "missing" ? (
             <Empty

@@ -5,6 +5,9 @@ namespace Notebook.Pages;
 /// <summary>An image pasted or dropped into a page: its page, its type and its bytes.</summary>
 public sealed record AddImage(string PageId, string ContentType, byte[] Bytes);
 
+/// <summary>An image file dropped on a page's editor: its page, and the file as a grant the backend reads.</summary>
+public sealed record AddImageFile(string PageId, FileGrant File);
+
 /// <summary>An image of a page, as the page's Markdown names it: <c>![name](image:&lt;ImageId&gt;)</c>.</summary>
 public sealed record ImageRef(string PageId, string ImageId);
 
@@ -54,6 +57,39 @@ public sealed class ImagesService(IPageStore store, PageImageFiles files)
         return new ImageRef(request.PageId, id);
     }
 
+    /// <summary>The largest image file a drop adds: read by the backend from its grant, so not bound by the bridge's message.</summary>
+    public const int MaxFileBytes = 20 * 1024 * 1024;
+
+    /// <summary>An image file dropped on the editor, read from its grant; its type comes from its extension.</summary>
+    [SparCommand]
+    public async Task<Result<ImageRef, ImageError>> AddFileAsync(AddImageFile request, CancellationToken cancellationToken)
+    {
+        var type = PageImageFiles.TypeOf(request.File.Name);
+        if (type is null)
+        {
+            return new ImageError.NotAnImage(Path.GetExtension(request.File.Name));
+        }
+
+        if (request.File.Size > MaxFileBytes)
+        {
+            return new ImageError.TooLarge(MaxFileBytes);
+        }
+
+        if (await store.FindAsync(request.PageId, cancellationToken) is null)
+        {
+            return new ImageError.PageNotFound(request.PageId);
+        }
+
+        var read = await request.File.ReadBytesAsync(cancellationToken);
+        if (!read.TryGetValue(out var bytes))
+        {
+            return new ImageError.NotAnImage(request.File.Name);
+        }
+
+        var id = await files.AddAsync(request.PageId, type, bytes, cancellationToken);
+        return new ImageRef(request.PageId, id);
+    }
+
     /// <summary>The image itself, for the preview's <c>&lt;img&gt;</c>; none when the page or the image is gone.</summary>
     [SparCommand]
     [SparResource]
@@ -71,6 +107,13 @@ public sealed class PageImageFiles(SparFolders folders)
     /// <summary>The file extension of an image type a page takes, or null for any other type.</summary>
     public static string? ExtensionOf(string contentType) =>
         Types.FirstOrDefault(t => string.Equals(t.Type, contentType, StringComparison.OrdinalIgnoreCase)).Extension;
+
+    /// <summary>The image type of a file name a page takes (<c>photo.JPEG</c> is <c>image/jpeg</c>), or null for any other.</summary>
+    public static string? TypeOf(string fileName)
+    {
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+        return extension == ".jpeg" ? "image/jpeg" : Types.FirstOrDefault(t => t.Extension == extension).Type;
+    }
 
     public async Task<string> AddAsync(string pageId, string contentType, byte[] bytes, CancellationToken cancellationToken)
     {

@@ -39,7 +39,7 @@ export { readBlob, resourceUrl, type SparBlob } from "./blobs.js";
 export {
   files,
   type DropError,
-  type DroppedFiles,
+  type DroppedItems,
   type DropTargetOptions,
   type FileAccess,
   type FileAccessError,

@@ -1,7 +1,7 @@
 # The contracts of SqlTool.Real as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint 851475bf99e90288
+fingerprint e2108e74156633cf
 
 contract connections (SqlTool.Connections.IConnections)
   forget(string) -> void
@@ -18,13 +18,24 @@ contract copyJobs (SqlTool.CopyJobs.CopyJobsService)
 contract crashReport (SqlTool.Status.CrashReport)
   lastCrash() -> SqlTool.Status.CrashInfo?
 
+contract csvExport (SqlTool.Recipes.CsvExportService)
+  export(SqlTool.Recipes.ExportRequest) -> int | SqlTool.Recipes.ExportError
+
 contract preferences (SqlTool.Settings.PreferencesService)
   get() -> SqlTool.Settings.ToolSettings
   setBatchSize(int) -> SqlTool.Settings.ToolSettings
 
+contract recipes (SqlTool.Recipes.RecipesService)
+  import() -> SqlTool.Recipes.RecipeInfo | SqlTool.Recipes.ImportError
+
 contract reports (SqlTool.Reports.ReportsService)
   activityChart(SqlTool.Reports.ChartKey) -> resource of Spar.SparBlob?
   exportCopy(string) -> Spar.SparBlob
+
+contract savedConnections (SqlTool.Connections.SavedConnectionsService)
+  forget(string) -> void | SqlTool.Connections.SavedConnectionError
+  hasPassword(string) -> bool
+  save(SqlTool.Connections.SaveConnection) -> void | SqlTool.Connections.SavedConnectionError
 
 contract script (SqlTool.Scripts.ScriptService)
   copyCreateScript(string) -> void | SqlTool.Scripts.CopyScriptError
@@ -53,6 +64,12 @@ record SqlTool.Connections.ConnectionInfo
   server: string
   database: string
   integratedSecurity: bool
+
+record SqlTool.Connections.SaveConnection
+  name: string
+  server: string
+  user: string
+  password: string
 
 record SqlTool.CopyJobs.CopyPlan
   planId: Guid
@@ -83,6 +100,13 @@ record SqlTool.CopyJobs.RunCopy
   planId: Guid
   truncateTarget: bool
 
+record SqlTool.Recipes.ExportRequest
+  tables: IReadOnlyList<string>
+
+record SqlTool.Recipes.RecipeInfo
+  name: string
+  tables: int
+
 record SqlTool.Reports.ChartKey
   server: string
   minutes: int
@@ -100,14 +124,20 @@ error Spar.FileAccessError
   notFound
   accessDenied
   inUse
-  tooLarge(limit: long)
+  tooLarge(limit: int)
   grantExpired
   outsideFolder(path: string)
   readOnlyGrant
+  failed(reason: string)
 
 error SqlTool.Connections.ConnectionError
   notFound(connectionId: string)
   loginFailed(server: string, sqlNumber: int)
+
+error SqlTool.Connections.SavedConnectionError
+  noPasswordStore(reason: string)
+  passwordTooLong(limit: int)
+  notSaved
 
 error SqlTool.CopyJobs.PlanError
   connectionNotFound(connectionId: string)
@@ -117,6 +147,18 @@ error SqlTool.CopyJobs.RunError
   planOutdated(reason: string)
   targetNotEmpty(table: string, rows: long)
   partiallyCopied(rowsCommitted: long, reason: string)
+
+error SqlTool.Recipes.ExportError
+  dismissed
+  noFolder(reason: string)
+  writeFailed(file: string)
+
+error SqlTool.Recipes.ImportError
+  dismissed
+  notAllowed(path: string)
+  noFileDialog(reason: string)
+  tryAgain
+  unreadable(file: string)
 
 error SqlTool.Scripts.CopyScriptError
   clipboardBusy

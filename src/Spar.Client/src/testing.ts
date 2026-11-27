@@ -7,6 +7,8 @@ import type { BridgeChannel } from "./connection.js";
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import { resetConfiguration, type Call, type CallError, type ErrorCases, type Result } from "./results.js";
 import { setColorScheme } from "./colorScheme.js";
+import type { FileAccess, PickedFile } from "./files.js";
+import { contentsOf, dropOn, fakeFile, fileCommands, fileStore } from "./testingFiles.js";
 import { connectSpar } from "./sdk.js";
 import type { CloseRequest, GuardsOutcome } from "./windows.js";
 
@@ -143,6 +145,18 @@ export interface FakeSpar {
    * in a page test.
    */
   blob(bytes: Uint8Array, contentType: string, name?: string): SparBlob;
+  /**
+   * A file for a scripted dialog or a drop, such as `spar.on(files.open).succeed(spar.file("notes.md", "# Notes"))`:
+   * the fake keeps its contents, so the page's `readText()` reads them and its `writeText()` replaces them.
+   */
+  file(name: string, contents?: string | Uint8Array, access?: FileAccess): PickedFile;
+  /** What the fake holds for a file now: the test's contents, or what the page wrote since. */
+  contents(file: PickedFile): Uint8Array | undefined;
+  /**
+   * Drops files on an element as a person would, from the OS: the page's drop area (`files.dropTarget`) gets the drag
+   * events, and its claim of the drop is answered with these files.
+   */
+  drop(area: Element, dropped: readonly PickedFile[]): void;
 }
 
 /** A backend update a page test sends: the updated types' full names, none by default. */
@@ -181,8 +195,21 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
   fakeBlobs.clear();
   const commands = new Map(appCommands);
   commands.set(setColorScheme, colorSchemeCodec);
+  for (const [dialog, codec] of fileCommands()) {
+    commands.set(dialog, codec);
+  }
+
+  const { store, codecs: fileCodecs } = fileStore();
+  for (const [codec] of fileCodecs) {
+    commands.set(codec, codec);
+  }
+
   const host = new FakeHost(commands, fingerprint);
   host.script(colorSchemeCodec, () => ({ kind: "value", value: undefined }));
+  for (const [codec, answer] of fileCodecs) {
+    host.script(codec, request => answer(request) as Answer);
+  }
+
   connectSpar(host, fingerprint);
   return {
     on: command => scriptFor(host, codecOf(commands, command)),
@@ -191,6 +218,9 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
     requestClose: request => host.requestClose(request ?? {}),
     backendUpdate: update => host.backendUpdate(update ?? {}),
     blob: (bytes, contentType, name) => fakeBlob(bytes, contentType, name ?? null),
+    file: (name, contents, access) => fakeFile(store, name, contents ?? "", access ?? "read"),
+    contents: file => contentsOf(store, file),
+    drop: (area, dropped) => dropOn(store, area, dropped),
   };
 }
 

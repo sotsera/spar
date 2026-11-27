@@ -656,16 +656,17 @@ export function acceptCsvDrops(area: Element, importFiles: (dropped: readonly Pi
 }
 ```
 
-- **Drag and drop** (decided 2026-11-14):
-  - Off by default, and the navigation lock stops the browser from opening a dropped file.
-  - While a valid drag hovers, the SDK sets `data-spar-drop="over"` on the area, so CSS can highlight it.
+- **Drag and drop** (decided 2026-11-14; the host side from the spike, decision "The drop design, from the file-drop spike"; built in M3c):
+  - Off by default: only an area the page declares takes files, and a drop anywhere else stays refused by the navigation lock.
+  - While a drag of files hovers the area, the SDK sets `data-spar-drop="over"` on it, so CSS can highlight it.
   - Page-internal drag and drop, such as sortable lists, is unaffected.
-  - How each host gets the dropped files (WebView2's `postMessageWithAdditionalObjects`, a GTK drop target on WebKitGTK) is checked in M3.
-- **The dialog's cases:** `dismissed` (not `cancelled`, which is the `CallError` of an aborted call), `accessDenied`, `unavailable` and `busy`. The app's own error types above follow the same rule: their case for a closed dialog is `Dismissed`.
-- **Read and write cases:** `notFound`, `accessDenied`, `inUse`, `tooLarge`, `grantExpired`, and for folders `outsideFolder` and `readOnlyGrant`.
-- **Folder grants** declare `Read` (the default) or `ReadWrite`. They offer list, read, safe write, create folder and delete (write access only). The host checks the final resolved path, so links leaving the folder are refused. Remembering a folder across restarts is not in the first version.
-- **Grants** are opaque on the wire, tied to the window that asked, revoked when it closes, and limited in number, with an optional expiry.
-- **Saves** follow the same pattern. They write to a temporary file next to the target, then replace it.
+  - The handler gets the dropped files as grants, never `File` objects or paths. On Windows the SDK hands the drop's files to the host with the drop message, and the browser vouches that each is a file the user gave the page; on Linux the host reads the drag's files itself and grants them only after a real (trusted) drop. WebKitGTK gives the page no `File`s for a drop at all, so grants are the one way on both hosts.
+- **The dialog's cases:** `dismissed` (not `cancelled`, which is the `CallError` of an aborted call), `accessDenied`, `unavailable` and `busy`. The app's own error types above follow the same rule: their case for a closed dialog is `Dismissed`. On Linux the dialog goes through the desktop's file-chooser portal; without one it is `unavailable`, with the reason, and no fallback dialog is shown.
+- **Read and write cases:** `notFound`, `accessDenied`, `inUse`, `tooLarge`, `grantExpired`, `failed` (any other file-system failure, such as a full disk), and for folders `outsideFolder` and `readOnlyGrant`.
+- **Folder grants** declare `Read` (the default) or `ReadWrite`. They offer list, read, safe write, create folder and delete (write access only). The host checks the final resolved path at each use, so links leaving the folder are refused. Remembering a folder across restarts is not in the first version.
+- **Grants** are `{"id","name","size","access"}` on the wire (no `size` for a folder), ids of 128 random bits. A command's `FileGrant` or `FolderGrant` parameter is resolved to the window's own grant before the command runs; an id the window does not hold is refused as `rejected` / `invalid-request`. A grant belongs to the window: it outlives a reload of the page, is revoked when the window closes, and a window holds at most 1,000, past which a new pick is `busy`; `Expiry` in the options gives a shorter life. C# reads `grant.Path`; no grant reaches the browser's profile folder.
+- **The page reads and writes** a grant within the bridge's 4 MiB message (`readText`, `readBytes`, `writeText`, `writeBytes`, `tooLarge` above); `blob()` gives the file as a handle on the app's own origin for any size (3.21); a larger write goes through a command that takes the grant.
+- **Saves** follow the same pattern. `files.save({ suggestedName })` and `IFileDialogs.SaveAsync` give a grant that can write; every write goes to a temporary file next to the target, then replaces it.
 
 ### 3.7 Native services: the clipboard
 
@@ -711,8 +712,9 @@ public sealed class ScriptService(IClipboard clipboard)
 }
 ```
 
-- **The cases:** `Busy` (another program holds the clipboard, after a short retry), `TooLarge`, `Unavailable`. `GetTextAsync` reads in C#, as a deliberate call.
-- **Focus:** clipboard calls fail without a focused window, so the real copy and paste is checked in Windows Sandbox or a Linux VM.
+- **The cases:** `Busy` (another program holds the clipboard, after about 100 ms of retries), `TooLarge` (above 4 MiB of text), `Unavailable`. `GetTextAsync` reads in C#, as a deliberate call; a clipboard with no text reads as empty.
+- **Threads** (built in M3c): on Windows the clipboard has a thread of its own with a message-only window, never the window's UI thread, since another program can keep a read waiting; on Linux it is the display's clipboard, through its asynchronous calls on the main loop.
+- **Tests:** under the test host `IClipboard` is a fake that holds text (`app.Clipboard.Text`), so a test never touches the machine's clipboard; the real one is checked in Windows Sandbox and on a private X display.
 
 ### 3.8 Native services: printing
 
@@ -1275,6 +1277,79 @@ public sealed class ReportsService(ICopyHistory history, IActivityCharts charts,
     }
 }
 ```
+
+### 3.22 Native services: credentials
+
+**Decided** (decision "M3c's decide-first questions", item 6; built in M3c). Secrets the app keeps for the user, such as a database password, go to the OS's own store through `ICredentialStore`: Credential Manager on Windows (target `<app id>/<name>`, kept for this machine), the Secret Service on Linux (the user's default keyring). Never plain text. C# only: the page sends a secret to the app's own command, which stores it after its own checks, and never gets it back.
+
+File `SqlTool/Connections/SavedConnectionsService.cs`:
+
+```csharp
+using Spar;
+
+namespace SqlTool.Connections;
+
+/// <summary>A connection the user saves: the password goes to the OS's store, the rest to the tool's own settings.</summary>
+public sealed record SaveConnection(string Name, string Server, string User, string Password);
+
+/// <summary>Why a connection could not be saved or used.</summary>
+public closed record SavedConnectionError
+{
+    public sealed record NoPasswordStore(string Reason) : SavedConnectionError;
+
+    public sealed record PasswordTooLong(int Limit) : SavedConnectionError;
+
+    public sealed record NotSaved : SavedConnectionError;
+}
+
+/// <summary>Saved connections. Wire name: savedConnections.</summary>
+[SparContract]
+public sealed class SavedConnectionsService(ICredentialStore credentials)
+{
+    /// <summary>Saves the password under the connection's name; the page never reads it back.</summary>
+    [SparCommand]
+    public async Task<Result<SavedConnectionError>> SaveAsync(SaveConnection request, CancellationToken cancellationToken)
+    {
+        var stored = await credentials.SetAsync($"connection/{request.Name}", request.Password, cancellationToken);
+        return stored switch
+        {
+            Success => Result.Success,
+            CredentialError.TooLarge e => new SavedConnectionError.PasswordTooLong(e.Limit),
+            CredentialError.Unavailable e => new SavedConnectionError.NoPasswordStore(e.Reason),
+            CredentialError.NotFound => new SavedConnectionError.NotSaved(),
+        };
+    }
+
+    /// <summary>Whether a password is saved for the connection, so the page can offer to connect without asking.</summary>
+    [SparCommand]
+    public async Task<bool> HasPasswordAsync(string name, CancellationToken cancellationToken)
+    {
+        var exists = await credentials.ExistsAsync($"connection/{name}", cancellationToken);
+        return exists switch
+        {
+            bool saved => saved,
+            CredentialError => false,
+        };
+    }
+
+    /// <summary>Forgets the password; one that was never saved is no error.</summary>
+    [SparCommand]
+    public async Task<Result<SavedConnectionError>> ForgetAsync(string name, CancellationToken cancellationToken)
+    {
+        var deleted = await credentials.DeleteAsync($"connection/{name}", cancellationToken);
+        return deleted switch
+        {
+            Success => Result.Success,
+            CredentialError.Unavailable e => new SavedConnectionError.NoPasswordStore(e.Reason),
+            CredentialError.TooLarge or CredentialError.NotFound => Result.Success,
+        };
+    }
+}
+```
+
+- **The cases:** `NotFound`, `TooLarge` (above 2,560 bytes of UTF-8, Credential Manager's limit, applied on every OS so an app behaves the same) and `Unavailable` (on Linux no Secret Service, or a locked keyring that cannot ask to be unlocked). Deleting a secret that is not there succeeds.
+- **Roaming** (Windows): `spar.Credentials(c => c.Roaming())` in `Program.cs` keeps each credential with the user's roaming profile, for a terminal-server farm whose users move between servers; without it a credential stays on the machine that saved it.
+- **Tests:** under the test host the store keeps secrets in memory (`app.Credentials.Stored`), so a test never writes to the machine's Credential Manager or keyring; the real stores are checked in Windows Sandbox and in Spar's Linux CI image.
 
 ## 5. The generated TypeScript
 

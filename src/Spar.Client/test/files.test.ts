@@ -4,9 +4,9 @@
 // through the host, the grant in a generated request, and drop areas.
 import { describe, expect, test, vi } from "vitest";
 import type { BridgeMessage } from "../src/protocol.js";
-import { files, readFile, readFolder, writeFile, type DroppedFiles, type PickedFile } from "../src/files.js";
+import { files, readFile, readFolder, writeFile, type DroppedItems, type PickedFile } from "../src/files.js";
 import { connectSpar } from "../src/sdk.js";
-import type { Call } from "../src/results.js";
+import type { Result } from "../src/results.js";
 import { FakeHost } from "./fakeHost.js";
 
 const fileId = `fg_${"0123456789abcdef".repeat(2)}`;
@@ -175,10 +175,10 @@ describe("reads and writes", () => {
 });
 
 describe("grants on the wire", () => {
-  test("a request's grant is its id alone", () => {
+  test("a request's grant carries its id, which the backend resolves", () => {
     const file = readFile(JSON.parse(grant()));
 
-    expect(writeFile(file)).toBe(`{"id":"${fileId}"}`);
+    expect(JSON.parse(writeFile(file))).toEqual({ id: fileId, name: "notes.md", size: 7, access: "read" });
   });
 
   test("only a grant the host gave can be sent", () => {
@@ -238,7 +238,7 @@ describe("drop areas", () => {
   test("a drop sends the area's options with the event's files, and gives the grants", async () => {
     const host = connected(new FilesHost());
     const area = document.createElement("div");
-    const results: Call<DroppedFiles, { notAccepted: { name: string }; tooMany: { limit: number } }>[] = [];
+    const results: Result<DroppedItems, { notAccepted: { name: string }; tooMany: { limit: number } }>[] = [];
     files.dropTarget(area, { accept: [".csv"], limit: 10 }, result => results.push(result));
     const dropped = [new File(["1,2"], "a.csv")];
 
@@ -246,7 +246,8 @@ describe("drop areas", () => {
     area.dispatchEvent(event);
     const call = await lastCall(host);
     answer(host, call, true, `{"files":[${grant("a.csv", 3)}],"folders":[]}`);
-    const result = (await results[0]!).unwrap();
+    await vi.waitFor(() => expect(results).toHaveLength(1));
+    const result = results[0]!.unwrap();
 
     expect(event.defaultPrevented).toBe(true);
     expect([call.command, JSON.parse(call.payload)]).toEqual(["dropped", { accept: [".csv"], limit: 10 }]);
@@ -258,12 +259,13 @@ describe("drop areas", () => {
   test("a drop the area does not take says why", async () => {
     const host = connected(new FilesHost());
     const area = document.createElement("div");
-    const results: Call<DroppedFiles, { notAccepted: { name: string }; tooMany: { limit: number } }>[] = [];
+    const results: Result<DroppedItems, { notAccepted: { name: string }; tooMany: { limit: number } }>[] = [];
     files.dropTarget(area, { limit: 1 }, result => results.push(result));
 
     area.dispatchEvent(drag("drop", [new File([""], "a"), new File([""], "b")]));
     answer(host, await lastCall(host), false, '{"code":"tooMany","limit":1}');
-    const why = await results[0]!.match({ success: () => 0, errors: { notAccepted: () => -1, tooMany: e => e.limit } });
+    await vi.waitFor(() => expect(results).toHaveLength(1));
+    const why = results[0]!.match({ success: () => 0, errors: { notAccepted: () => -1, tooMany: e => e.limit } });
 
     expect(why).toBe(1);
   });

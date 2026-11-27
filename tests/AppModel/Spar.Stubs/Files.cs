@@ -38,7 +38,7 @@ public closed record FileAccessError
     /// <summary>Another program holds the file.</summary>
     public sealed record InUse : FileAccessError;
 
-    public sealed record TooLarge(long Limit) : FileAccessError;
+    public sealed record TooLarge(int Limit) : FileAccessError;
 
     /// <summary>The window that asked has closed, or the grant's expiry passed.</summary>
     public sealed record GrantExpired : FileAccessError;
@@ -48,6 +48,9 @@ public closed record FileAccessError
 
     /// <summary>The grant is read-only.</summary>
     public sealed record ReadOnlyGrant : FileAccessError;
+
+    /// <summary>Any other failure of the file system, such as a full disk.</summary>
+    public sealed record Failed(string Reason) : FileAccessError;
 }
 
 /// <summary>What a folder grant allows.</summary>

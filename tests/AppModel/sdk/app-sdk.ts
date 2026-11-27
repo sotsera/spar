@@ -97,6 +97,8 @@ export interface FileAccessError {
   /** The path leaves the granted folder. */
   readonly outsideFolder: { readonly path: string };
   readonly readOnlyGrant: {};
+  /** Any other failure of the file system, such as a full disk. */
+  readonly failed: { readonly reason: string };
 }
 
 /** An entry of a granted folder: a relative name, never a full path. */

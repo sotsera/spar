@@ -213,9 +213,16 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     /// <summary>An XDND drop from a source of the test's own, on a thread of its own: the loop answers the target's side.</summary>
     public async Task DropFilesAsync(float x, float y, IReadOnlyList<string> paths)
     {
-        var (window, left, top) = await GeometryAsync();
-        var at = (X: left + (int)MathF.Round(x), Y: top + (int)MathF.Round(y));
-        await Task.Run(() => XDrop.Drop(_process.Input.DisplayName, window, at.X, at.Y, paths));
+        var (window, _, _) = await GeometryAsync();
+
+        // The drag reads the window's place again as it hovers, from its own thread, waiting on the loop.
+        (int X, int Y) Where()
+        {
+            var (_, left, top) = GeometryAsync().GetAwaiter().GetResult();
+            return (left + (int)MathF.Round(x), top + (int)MathF.Round(y));
+        }
+
+        await Task.Run(() => XDrop.Drop(_process.Input.DisplayName, window, Where, paths));
     }
 
     public Task<IReadOnlyList<int>> RendererProcessesAsync()

@@ -5,8 +5,9 @@
 // origin, and hands it to a command, whose C# reads its path.
 import { readBlob, type SparBlob } from "./blobs.js";
 import { unknownErrorCase, type Decoder } from "./connection.js";
-import type { Call, CallOptions, ErrorCases } from "./results.js";
+import type { Call, CallOptions, ErrorCases, Result } from "./results.js";
 import { invoke, invokeWithFiles } from "./sdk.js";
+import { isWebKitHost } from "./webkit.js";
 import { field, member, readBoolean, readBytes, readDouble, readList, readObject, readString, writeBytes, writeObject, writeString } from "./wire.js";
 
 /** What a grant allows: reading, or reading and writing. */
@@ -116,7 +117,7 @@ export interface PickedFolder {
 }
 
 /** What one drop on an area gave. */
-export interface DroppedFiles {
+export interface DroppedItems {
   readonly files: readonly PickedFile[];
   /** Folders, when the area takes them. */
   readonly folders: readonly PickedFolder[];
@@ -195,22 +196,29 @@ export function readFolder(value: unknown): PickedFolder {
   return new GrantedFolder(id, readString(field(object, "name")), readAccess(field(object, "access")));
 }
 
-/** @internal Called by generated contract modules: a file grant in a request, by its id. */
+/**
+ * @internal Called by generated contract modules: a file grant in a request, or in a page test's scripted reply. The
+ * backend reads only its id, which it resolves to the window's own grant; the other fields are what a result carries.
+ */
 export function writeFile(file: PickedFile): string {
   if (!(file instanceof GrantedFile)) {
     throw new TypeError("A FileGrant parameter takes a PickedFile from a dialog, a drop or a command's result.");
   }
 
-  return `{"id":${JSON.stringify(GrantedFile.idOf(file))}}`;
+  const members = [member("id", writeString(GrantedFile.idOf(file))), member("name", writeString(file.name))];
+  members.push(member("size", String(file.size)), member("access", writeString(file.access)));
+  return writeObject(members);
 }
 
-/** @internal Called by generated contract modules: a folder grant in a request, by its id. */
+/** @internal Called by generated contract modules: a folder grant in a request, or in a scripted reply, as for a file. */
 export function writeFolder(folder: PickedFolder): string {
   if (!(folder instanceof GrantedFolder)) {
     throw new TypeError("A FolderGrant parameter takes a PickedFolder from a dialog, a drop or a command's result.");
   }
 
-  return `{"id":${JSON.stringify(GrantedFolder.idOf(folder))}}`;
+  const members = [member("id", writeString(GrantedFolder.idOf(folder))), member("name", writeString(folder.name))];
+  members.push(member("access", writeString(folder.access)));
+  return writeObject(members);
 }
 
 function readGrantId(value: unknown, prefix: string): string {
@@ -374,7 +382,7 @@ class GrantedFolder implements PickedFolder {
   }
 }
 
-const droppedValue = (json: string): DroppedFiles => {
+const droppedValue = (json: string): DroppedItems => {
   const object = readObject(JSON.parse(json));
   return {
     files: readList(field(object, "files"), readFile),
@@ -382,18 +390,28 @@ const droppedValue = (json: string): DroppedFiles => {
   };
 };
 
-/** Whether a drag carries files from the OS (and not text or an element of the page). */
+/**
+ * Whether a drag may carry files from the OS (and not text or an element of the page). WebKitGTK lists a drag of files
+ * as `text/uri-list` only, without `Files` (WebKit bugs 320301 and 323277), so there a URI list counts too: the Linux
+ * host reads the drag's files itself and grants only local files, so a drag of a web link gives nothing.
+ */
 function carriesFiles(event: DragEvent): boolean {
-  return event.dataTransfer?.types.includes("Files") === true;
+  const types = event.dataTransfer?.types;
+  if (types === undefined) {
+    return false;
+  }
+
+  return types.includes("Files") || (isWebKitHost() && types.includes("text/uri-list"));
 }
 
 /**
  * Makes `area` take files dropped from the OS; returns the function that stops it, for example in a React effect's
  * cleanup. While a drag of files hovers the area, it has `data-spar-drop="over"`, for CSS. Each drop gives `handler`
- * one result: the dropped files and folders as grants, or why the area did not take them. Drags of the page's own
+ * one settled result: the dropped files and folders as grants, or why the area did not take them; a failure of the
+ * call (the host went away) goes to its `failure` handler or to `configureSpar`'s `onFailure`, as for any call. Drags of the page's own
  * elements are left alone, and a drop anywhere else stays refused.
  */
-function dropTarget(area: Element, options: DropTargetOptions, handler: (result: Call<DroppedFiles, DropError>) => void): () => void {
+function dropTarget(area: Element, options: DropTargetOptions, handler: (result: Result<DroppedItems, DropError>) => void): () => void {
   const request = requestOf({ accept: options.accept, folders: options.folders, limit: options.limit });
   let depth = 0;
 
@@ -439,7 +457,7 @@ function dropTarget(area: Element, options: DropTargetOptions, handler: (result:
     // The files must be taken now: the DataTransfer is empty once the event ends. WebView2 hands them to the host with
     // the message; the Linux host read them itself as the drag entered, and ignores these.
     const dropped = Array.from(drag.dataTransfer?.files ?? []);
-    handler(invokeWithFiles<DroppedFiles, DropError>(contract, "dropped", request, decoderOf(droppedValue, dropCodes), dropped));
+    void invokeWithFiles<DroppedItems, DropError>(contract, "dropped", request, decoderOf(droppedValue, dropCodes), dropped).then(handler);
   };
 
   area.addEventListener("dragenter", over);

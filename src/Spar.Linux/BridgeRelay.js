@@ -27,15 +27,36 @@ const sparRelay = (() => {
   const Detail = CustomEvent;
   const dispatch = page.dispatchEvent.bind(page);
 
-  // A drop of files the user made (decision "The drop design, from the file-drop spike"): only the engine makes a
-  // trusted drop event, and this listener sits on the window, capturing, from document start, so it runs before any of
-  // the page's and before the page's SDK claims the drop. It posts to a handler only this world has; the host then
-  // pairs it with the files it read from the drag itself. A drop the page dispatches is not trusted and posts nothing.
+  // Drags and drops of files the user made (decision "The drop design, from the file-drop spike"): only the engine makes
+  // trusted drag events, and these listeners sit on the window, capturing, from document start, so they run before any
+  // of the page's and before the page's SDK claims a drop. They post to a handler only this world has: "enter" at a
+  // drag's first trusted dragenter, by when WebKit has read the drag's data, so the host reads the files then without
+  // racing WebKit's own read (two at once left WebKit's drag stuck, in Spar's CI image); "drop" at the trusted drop,
+  // which the host pairs with those files. Events the page dispatches are not trusted and post nothing. WebKitGTK lists
+  // a drag of files as text/uri-list only (WebKit bugs 320301 and 323277); the host grants local files only.
   const dropHandler = page.webkit?.messageHandlers?.sparDrop;
   if (dropHandler !== undefined) {
     const postDrop = dropHandler.postMessage.bind(dropHandler);
+    const carriesFiles = event => {
+      const types = event.dataTransfer === null ? [] : event.dataTransfer.types;
+      return event.isTrusted && (types.includes("Files") || types.includes("text/uri-list"));
+    };
+    let dragging = false;
+    page.addEventListener("dragenter", event => {
+      if (!dragging && carriesFiles(event)) {
+        dragging = true;
+        postDrop("enter");
+      }
+    }, true);
+    page.addEventListener("dragleave", event => {
+      // The drag left the page itself, not one element for another.
+      if (event.isTrusted && event.relatedTarget === null) {
+        dragging = false;
+      }
+    }, true);
     page.addEventListener("drop", event => {
-      if (event.isTrusted && event.dataTransfer !== null && event.dataTransfer.types.includes("Files")) {
+      dragging = false;
+      if (carriesFiles(event)) {
         postDrop("drop");
       }
     }, true);

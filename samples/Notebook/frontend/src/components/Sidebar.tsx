@@ -1,6 +1,8 @@
 import type { PageSummary } from "@spar/app/pages";
-import { FilePlus2, NotebookPen, Search } from "lucide-react";
-import { forwardRef, useMemo } from "react";
+import { files, type PickedFile } from "@spar/app/sdk";
+import { FileDown, FilePlus2, NotebookPen, Search } from "lucide-react";
+import { forwardRef, useEffect, useMemo, useRef } from "react";
+import { markdownExtensions } from "../transfer.js";
 import { ago, when } from "../time.js";
 
 interface SidebarProps {
@@ -10,11 +12,16 @@ interface SidebarProps {
   readonly onQuery: (query: string) => void;
   readonly onSelect: (id: string) => void;
   readonly onNew: () => void;
+  /** Imports Markdown files: the ones dropped on the list, or, called without any, the ones the person chooses. */
+  readonly onImport: (dropped?: readonly PickedFile[]) => void;
+  /** Shows why a drop was not taken. */
+  readonly onNotice: (text: string) => void;
 }
 
-/** The notebook's pages, newest first, filtered by the search box. */
+/** The notebook's pages, newest first, filtered by the search box; Markdown files dropped on the list become pages. */
 export const Sidebar = forwardRef<HTMLInputElement, SidebarProps>(function Sidebar(props, searchRef) {
-  const { summaries, selected, query, onQuery, onSelect, onNew } = props;
+  const { summaries, selected, query, onQuery, onSelect, onNew, onImport, onNotice } = props;
+  const list = useDropOfMarkdown(onImport, onNotice);
   const visible = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase();
     return (summaries ?? []).filter(s => needle === "" || s.title.toLocaleLowerCase().includes(needle));
@@ -27,9 +34,18 @@ export const Sidebar = forwardRef<HTMLInputElement, SidebarProps>(function Sideb
         <h1 className="text-[15px] font-semibold tracking-tight">Notebook</h1>
         <button
           type="button"
+          onClick={() => onImport()}
+          title="Import Markdown files"
+          aria-label="Import Markdown files"
+          className="ml-auto rounded-md p-1.5 text-muted hover:bg-line/60 hover:text-ink dark:text-muted-dark dark:hover:bg-line-dark/60 dark:hover:text-ink-dark"
+        >
+          <FileDown aria-hidden className="size-4" />
+        </button>
+        <button
+          type="button"
           onClick={onNew}
           title="New page (Ctrl+N)"
-          className="ml-auto inline-flex items-center gap-1.5 rounded-md bg-accent px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-accent/90 dark:bg-accent-dark dark:text-paper-dark"
+          className="inline-flex items-center gap-1.5 rounded-md bg-accent px-2.5 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-accent/90 dark:bg-accent-dark dark:text-paper-dark"
         >
           <FilePlus2 aria-hidden className="size-3.5" />
           New page
@@ -51,7 +67,11 @@ export const Sidebar = forwardRef<HTMLInputElement, SidebarProps>(function Sideb
         </label>
       </div>
 
-      <nav aria-label="Pages" className="min-h-0 flex-1 overflow-y-auto px-2 pb-4">
+      <nav
+        ref={list}
+        aria-label="Pages"
+        className="min-h-0 flex-1 overflow-y-auto px-2 pb-4 data-[spar-drop=over]:bg-accent/5 data-[spar-drop=over]:ring-2 data-[spar-drop=over]:ring-accent/40 data-[spar-drop=over]:ring-inset dark:data-[spar-drop=over]:ring-accent-dark/40"
+      >
         {summaries === undefined ? (
           <p className="px-2 py-3 text-sm text-muted dark:text-muted-dark">Loading pages…</p>
         ) : visible.length === 0 ? (
@@ -83,3 +103,24 @@ export const Sidebar = forwardRef<HTMLInputElement, SidebarProps>(function Sideb
     </aside>
   );
 });
+
+/** The list of pages as a drop area for Markdown files from the OS: each one dropped becomes a page. */
+function useDropOfMarkdown(onImport: (dropped: readonly PickedFile[]) => void, onNotice: (text: string) => void) {
+  const list = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (list.current === null) {
+      return undefined;
+    }
+
+    const accept = markdownExtensions.map(extension => `.${extension}`);
+    return files.dropTarget(list.current, { accept, limit: 50 }, result => result.match({
+      success: dropped => onImport(dropped.files),
+      errors: {
+        notAccepted: e => onNotice(`${e.name} is not a Markdown file.`),
+        tooMany: e => onNotice(`At most ${e.limit} files at a time.`),
+      },
+    }));
+  }, [onImport, onNotice]);
+
+  return list;
+}

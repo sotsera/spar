@@ -1,10 +1,11 @@
 # The contracts of Notebook as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint aeccc8efeda54c88
+fingerprint 8348cfb9dd82e4d5
 
 contract images (Notebook.Pages.ImagesService)
   add(Notebook.Pages.AddImage) -> Notebook.Pages.ImageRef | Notebook.Pages.ImageError
+  addFile(Notebook.Pages.AddImageFile) -> Notebook.Pages.ImageRef | Notebook.Pages.ImageError
   image(Notebook.Pages.ImageRef) -> resource of Spar.SparBlob?
 
 contract pages (Notebook.Pages.PagesService)
@@ -20,10 +21,19 @@ contract preferences (Notebook.Pages.PreferencesService)
   setLastPage(string?) -> void
   setViewMode(Notebook.Pages.ViewMode) -> void
 
+contract transfer (Notebook.Pages.TransferService)
+  copy(Notebook.Pages.PageRef) -> void | Notebook.Pages.CopyError
+  export(Notebook.Pages.PageRef) -> string | Notebook.Pages.ExportError
+  import(Notebook.Pages.ImportFiles) -> IReadOnlyList<Notebook.Pages.Imported>
+
 record Notebook.Pages.AddImage
   pageId: string
   contentType: string
   bytes: byte[]
+
+record Notebook.Pages.AddImageFile
+  pageId: string
+  file: Spar.FileGrant
 
 record Notebook.Pages.CreatePage
   title: string
@@ -32,6 +42,14 @@ record Notebook.Pages.CreatePage
 record Notebook.Pages.ImageRef
   pageId: string
   imageId: string
+
+record Notebook.Pages.ImportFiles
+  files: IReadOnlyList<Spar.FileGrant>
+
+record Notebook.Pages.Imported
+  fileName: string
+  pageId: string?
+  problem: string?
 
 record Notebook.Pages.NotebookSettings
   viewMode: Notebook.Pages.ViewMode
@@ -61,6 +79,16 @@ record Notebook.Pages.SavePage
   id: string
   markdown: string
   baseRevision: long
+
+error Notebook.Pages.CopyError
+  busy
+  notCopied(reason: string)
+  notFound(id: string)
+
+error Notebook.Pages.ExportError
+  dismissed
+  notSaved(reason: string)
+  notFound(id: string)
 
 error Notebook.Pages.ImageError
   pageNotFound(id: string)

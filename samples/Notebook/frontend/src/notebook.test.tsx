@@ -3,7 +3,9 @@
 import { images } from "@spar/app/images";
 import { pages, type Page, type PageSummary } from "@spar/app/pages";
 import { preferences } from "@spar/app/preferences";
+import { files } from "@spar/app/sdk";
 import { fakeSpar, type FakeSpar } from "@spar/app/testing";
+import { transfer } from "@spar/app/transfer";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
@@ -305,4 +307,69 @@ test("an image added to the open page gives the Markdown that shows it, and a re
   expect(spar.calls(images.add)[0]).toEqual({ pageId: "welcome", contentType: "image/png", bytes: new Uint8Array([0x89, 0x50, 0x4e, 0x47]) });
   expect(refused).toBeUndefined();
   expect(notebook.notice).toBe("Only PNG, JPEG, GIF and WebP images can go in a page.");
+});
+
+test("files chosen in the open dialog are imported, and the first new page opens", async () => {
+  spar.on(files.openMany).succeed([spar.file("Ideas.md", "# Ideas"), spar.file("empty.md", "")]);
+  spar.on(transfer.import).answer((request, reply) => reply.succeed(request.files.map(file => (
+    file.name === "Ideas.md"
+      ? { fileName: file.name, pageId: "ideas", problem: null }
+      : { fileName: file.name, pageId: null, problem: "Its name has no letter or digit to title a page with." }
+  ))));
+  spar.on(pages.get).succeed({ ...welcome, id: "ideas", title: "Ideas", markdown: "# Ideas" });
+  await start();
+
+  await act(async () => notebook.importFiles());
+
+  await vi.waitFor(() => expect(notebook.current.kind === "open" && notebook.current.page.id).toBe("ideas"));
+  expect(spar.calls(files.openMany)).toEqual([{ title: "Import Markdown", filters: [{ name: "Markdown", extensions: ["md", "markdown", "txt"] }] }]);
+  expect(spar.calls(transfer.import)[0]!.files.map(file => file.name)).toEqual(["Ideas.md", "empty.md"]);
+  expect(notebook.notice).toBe("Imported 1; not empty.md: Its name has no letter or digit to title a page with.");
+});
+
+test("a closed import dialog imports nothing and says nothing", async () => {
+  spar.on(files.openMany).fail("dismissed");
+  await start();
+
+  await act(async () => notebook.importFiles());
+
+  expect(spar.calls(transfer.import)).toEqual([]);
+  expect(notebook.notice).toBeUndefined();
+});
+
+test("files dropped on the list are imported as they are", async () => {
+  spar.on(transfer.import).succeed([{ fileName: "Dropped.md", pageId: "dropped", problem: null }]);
+  spar.on(pages.get).succeed({ ...welcome, id: "dropped", title: "Dropped" });
+  await start();
+
+  await act(async () => notebook.importFiles([spar.file("Dropped.md", "# Dropped")]));
+
+  await vi.waitFor(() => expect(notebook.current.kind === "open" && notebook.current.page.id).toBe("dropped"));
+  expect(spar.calls(files.openMany)).toEqual([]);
+});
+
+test("the open page exports through the save dialog, and copies to the clipboard", async () => {
+  spar.on(transfer.export).succeed("welcome.md");
+  spar.on(transfer.copy).fail("busy");
+  await start();
+  await openWelcome();
+
+  await act(async () => notebook.exportPage());
+  const exported = notebook.notice;
+  await act(async () => notebook.copyPage());
+
+  expect(spar.calls(transfer.export)).toEqual([{ id: "welcome" }]);
+  expect(exported).toBe("Exported to welcome.md.");
+  expect(notebook.notice).toBe("Another program is using the clipboard. Try again.");
+});
+
+test("an image file dropped on the editor is added from its grant", async () => {
+  spar.on(images.addFile).succeed({ pageId: "welcome", imageId: "0123456789abcdef0123456789abcdef" });
+  await start();
+  await openWelcome();
+
+  const markdown = await notebook.addImageFile(spar.file("Sunset.png", new Uint8Array([0x89, 0x50])));
+
+  expect(markdown).toBe("![Sunset](image:0123456789abcdef0123456789abcdef)");
+  expect(spar.calls(images.addFile)[0]!.file.name).toBe("Sunset.png");
 });

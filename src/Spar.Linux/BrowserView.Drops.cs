@@ -7,18 +7,23 @@ namespace Spar.Linux;
 /// Files dropped from the OS (decision "The drop design, from the file-drop spike", item 3). WebKitGTK gives the page
 /// no <c>File</c>s for them (WebKit bugs 320301 and 323277), and a drop target of the host's own would take the drop
 /// from WebKit and leave its drag state stuck, so the host only watches: a <c>GtkDropControllerMotion</c> on the view
-/// reads each drag's file list as it enters, while WebKit keeps the drag and the page's events; the bridge relay's
-/// world reports each trusted <c>drop</c> on its own handler, which neither the page's world nor a frame can reach. The
-/// window's <c>DropInbox</c> pairs the two, so only a drop the user made becomes grants.
+/// keeps each drag's drop while WebKit keeps the drag and the page's events; the bridge relay's world reports the
+/// page's first trusted <c>dragenter</c>, when the host reads the drag's file list, and each trusted <c>drop</c>, on a
+/// handler of its own, which neither the page's world nor a frame can reach. The window's <c>DropInbox</c> pairs the
+/// files with the drop, so only a drop the user made becomes grants.
 /// </summary>
 internal sealed partial class BrowserView
 {
     /// <summary>The relay's handler for trusted drops, in the bridge's world only.</summary>
     public const string DropHandler = "sparDrop";
 
+    /// <summary>How long after the page's first trusted <c>dragenter</c> the host reads the drag's files.</summary>
+    private static readonly TimeSpan ReadDelay = TimeSpan.FromMilliseconds(150);
+
     private nuint _dropMessageHandler;
     private nuint _dragEnterHandler;
     private nint _dragMotion;
+    private nint _enteredDrop;
     private nint _lastDrop;
 
     /// <summary>The relay's drop handler, on the content manager, before the view loads anything (loop thread).</summary>
@@ -50,6 +55,12 @@ internal sealed partial class BrowserView
             _dragMotion = 0;
         }
 
+        if (_enteredDrop != 0)
+        {
+            GLib.g_object_unref(_enteredDrop);
+            _enteredDrop = 0;
+        }
+
         if (_content != 0)
         {
             GLib.g_signal_handler_disconnect(_content, _dropMessageHandler);
@@ -57,22 +68,43 @@ internal sealed partial class BrowserView
         }
     }
 
-    /// <summary>A drag entered the view: its files are read now, asynchronously, so a drop has them at hand.</summary>
+    /// <summary>
+    /// A drag entered the view: its drop is kept, and read only when the relay reports the page's first trusted
+    /// <c>dragenter</c>. WebKit reads the drag's data as it enters; a read of the host's own at the same moment made
+    /// WebKit's drag hang, unanswered, one drag in three in Spar's CI image, and every drag after it in that process.
+    /// </summary>
     [UnmanagedCallersOnly]
-    private static unsafe void OnDragEnter(nint controller, double x, double y, nint data) => Dispatch(data, "drag entered", browser =>
+    private static void OnDragEnter(nint controller, double x, double y, nint data) => Dispatch(data, "drag entered", browser =>
     {
         var drop = Gtk.gtk_drop_controller_motion_get_drop(controller);
-        if (drop == 0 || drop == browser._lastDrop)
+        if (drop == 0 || drop == browser._enteredDrop)
         {
             return;
         }
 
-        browser._lastDrop = drop;
+        if (browser._enteredDrop != 0)
+        {
+            GLib.g_object_unref(browser._enteredDrop);
+        }
+
+        browser._enteredDrop = GLib.g_object_ref(drop);
+    });
+
+    /// <summary>The page saw the drag enter, so WebKit has its data: the host reads the drag's files now, once.</summary>
+    private unsafe void ReadEnteredDrop()
+    {
+        var drop = _enteredDrop;
+        if (drop == 0 || drop == _lastDrop)
+        {
+            return;
+        }
+
+        _lastDrop = drop;
         var read = new TaskCompletionSource<IReadOnlyList<string>>(TaskCreationOptions.RunContinuationsAsynchronously);
         GLib.g_object_ref(drop);
         Gtk.gdk_drop_read_value_async(drop, Gtk.gdk_file_list_get_type(), GLib.PriorityDefault, 0, &OnFilesRead, GCHandle.ToIntPtr(GCHandle.Alloc(read)));
-        browser._bridge.Window?.Drops.DragEntered(read.Task);
-    });
+        _bridge.Window?.Drops.DragEntered(read.Task);
+    }
 
     /// <summary>The drag's files, on the loop; a drag without any (text, or an element of the page) fails the read.</summary>
     [UnmanagedCallersOnly]
@@ -127,8 +159,23 @@ internal sealed partial class BrowserView
         return paths;
     }
 
-    /// <summary>The relay saw a trusted drop of files: the drag that entered last is now a drop the page may claim.</summary>
+    /// <summary>
+    /// The relay saw a trusted drag of files enter the page (<c>enter</c>), or drop on it (<c>drop</c>): the drag's files
+    /// are read, or the drag that entered last becomes a drop the page may claim.
+    /// </summary>
     [UnmanagedCallersOnly]
-    private static void OnDropMessage(nint manager, nint value, nint data) =>
-        Dispatch(data, "trusted drop", browser => browser._bridge.Window?.Drops.Dropped());
+    private static void OnDropMessage(nint manager, nint value, nint data) => Dispatch(data, "trusted drag", browser =>
+    {
+        switch (GLib.TakeString(WebKit.jsc_value_to_string(value)))
+        {
+            case "enter":
+                // A moment after the page saw it, so WebKit is done with its own read of the drag's data: in Spar's CI image,
+                // a read at the page's dragenter still hung WebKit's drag once in 15 drags, and none in 21 at 150 ms.
+                _ = Task.Delay(ReadDelay).ContinueWith(_ => browser._ui.Post(browser.ReadEnteredDrop, "drag read"), TaskScheduler.Default);
+                break;
+            case "drop":
+                browser._bridge.Window?.Drops.Dropped();
+                break;
+        }
+    });
 }

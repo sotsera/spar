@@ -46,18 +46,19 @@ public sealed class JourneyTests(SharedBrowser shared) : IClassFixture<SharedBro
     }
 
     [Fact]
-    public async Task An_image_dropped_into_a_page_shows_in_its_preview_and_the_view_is_remembered()
+    public async Task An_image_pasted_into_a_page_shows_in_its_preview_and_the_view_is_remembered()
     {
         await using var notebook = await NotebookPage.OpenAsync(shared);
         await notebook.CreateAsync("Groceries");
 
-        // A drop of a 1×1 PNG, as the file manager would make it.
+        // A paste of a 1×1 PNG, as an image editor's copy makes it. A drop from the OS is the window journeys': it gives
+        // the page grants, which a page in a browser has no host to make.
         await notebook.Editor.EvaluateAsync("""
             (editor) => {
               const bytes = Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="), c => c.charCodeAt(0));
               const data = new DataTransfer();
               data.items.add(new File([bytes], "shelf.png", { type: "image/png" }));
-              editor.dispatchEvent(new DragEvent("drop", { dataTransfer: data, bubbles: true, cancelable: true }));
+              editor.dispatchEvent(new ClipboardEvent("paste", { clipboardData: data, bubbles: true, cancelable: true }));
             }
             """);
 

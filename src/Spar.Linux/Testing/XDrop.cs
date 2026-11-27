@@ -7,8 +7,9 @@ namespace Spar.Linux.Testing;
 /// <summary>
 /// Files dropped on a test window (decision "The drop design, from the file-drop spike"): a drag source of the test's
 /// own, on a second connection to its private display, speaking XDND version 5 as a file manager does: Enter, a
-/// Position every 16 ms for 400 ms (WebKit reads the drag's data as it enters and took a drop made at once only one
-/// time in two, in the spike), Drop, and the answers to the target's requests for <c>text/uri-list</c>. No pointer
+/// Position every 16 ms for at least 400 ms and until the window accepts (WebKit reads the drag's data as it enters,
+/// and took a drop made at once only one time in two, in the spike), Drop, and the answers to the target's requests
+/// for <c>text/uri-list</c>. No pointer
 /// moves: XDND carries the position in its messages. Runs on a thread of its own, never the main loop, which answers
 /// the target's side.
 /// </summary>
@@ -20,11 +21,12 @@ internal static unsafe partial class XDrop
     private const int SelectionNotify = 31;
     private const int XdndVersion = 5;
     private const int HoverMilliseconds = 400;
+    private const int AcceptMilliseconds = 3000;
     private const int PositionMilliseconds = 16;
     private const int FinishMilliseconds = 8000;
 
     /// <summary>Drops <paramref name="paths"/> on <paramref name="target"/> at the root position (<paramref name="x"/>, <paramref name="y"/>).</summary>
-    public static void Drop(string displayName, nuint target, int x, int y, IReadOnlyList<string> paths)
+    public static void Drop(string displayName, nuint target, Func<(int X, int Y)> where, IReadOnlyList<string> paths)
     {
         var display = XOpenDisplay(displayName);
         if (display == 0)
@@ -34,7 +36,7 @@ internal static unsafe partial class XDrop
 
         try
         {
-            new Source(display, paths).Drop(target, x, y);
+            new Source(display, paths).Drop(target, where);
         }
         finally
         {
@@ -50,6 +52,8 @@ internal static unsafe partial class XDrop
         private readonly nuint _enter, _position, _status, _drop, _finished, _leave, _selection, _copy, _uriListAtom, _targets;
         private readonly Stopwatch _clock = Stopwatch.StartNew();
         private bool _accepted;
+        private int _statuses;
+        private int _requests;
 
         public Source(nint display, IReadOnlyList<string> paths)
         {
@@ -74,33 +78,104 @@ internal static unsafe partial class XDrop
             _targets = Atom("TARGETS");
         }
 
-        public void Drop(nuint target, int x, int y)
+        /// <summary>
+        /// One drop; a drag the window did not accept is left and made once more, as a hand that saw no copy cursor tries
+        /// again (a drag through the display server is lost now and then, as a press is: about one in twenty here).
+        /// </summary>
+        public void Drop(nuint target, Func<(int X, int Y)> where)
         {
-            XSetSelectionOwner(_display, _selection, _window, 0);
-            Send(target, _enter, (long)_window, (long)XdndVersion << 24, (long)_uriListAtom, 0, 0);
-            var hoverEnd = _clock.ElapsedMilliseconds + HoverMilliseconds;
-            for (var step = 0; _clock.ElapsedMilliseconds < hoverEnd; step++)
+            try
             {
-                // A pixel of movement each time, as a hand holding the files gives.
+                DropOnce(target, where);
+            }
+            catch (DragRefusedException)
+            {
+                Thread.Sleep(200);
+                DropOnce(target, where);
+            }
+        }
+
+        private void DropOnce(nuint target, Func<(int X, int Y)> where)
+        {
+            _accepted = false;
+            _statuses = 0;
+            _requests = 0;
+            var (x, y) = where();
+            // The X server's time, as a file manager's drag carries it from the press that started it; GTK orders a drag's
+            // events by it, and CurrentTime (0) is older than any event it has seen.
+            var time = ServerTime();
+            var started = _clock.ElapsedMilliseconds;
+            nuint Now() => time + (nuint)(_clock.ElapsedMilliseconds - started);
+            XSetSelectionOwner(_display, _selection, _window, time);
+            Send(target, _enter, (long)_window, (long)XdndVersion << 24, (long)_uriListAtom, 0, 0);
+            // At least the hover a hand gives, and on until the window accepts, as a person waits for the copy cursor: a
+            // page answers the first drag later than the next ones (the Notebook's, in the CI image, after more than 400 ms).
+            var hoverEnd = _clock.ElapsedMilliseconds + HoverMilliseconds;
+            var acceptEnd = _clock.ElapsedMilliseconds + AcceptMilliseconds;
+            for (var step = 0; _clock.ElapsedMilliseconds < hoverEnd || (!_accepted && _clock.ElapsedMilliseconds < acceptEnd); step++)
+            {
+                // A pixel of movement each time, as a hand holding the files gives. As XDND asks of a source, the next
+                // position waits for the target's status to this one (GTK answers once the page has decided).
+                // Where the point is now: a test window can still be settling into its place as the drag starts.
+                if (step > 0 && step % 6 == 0)
+                {
+                    (x, y) = where();
+                }
+
                 var packed = ((long)x << 16) | (uint)((y + (step % 2)) & 0xffff);
-                Send(target, _position, (long)_window, 0, packed, 0, (long)_copy);
-                Pump(0, PositionMilliseconds);
+                var sent = _clock.ElapsedMilliseconds;
+                Send(target, _position, (long)_window, 0, packed, (long)Now(), (long)_copy);
+                Pump(_status, (int)Math.Max(1, acceptEnd - sent));
+                Pump(0, (int)Math.Max(0, PositionMilliseconds - (_clock.ElapsedMilliseconds - sent)));
             }
 
             if (!_accepted)
             {
                 Send(target, _leave, (long)_window, 0, 0, 0, 0);
-                throw new InvalidOperationException("The window did not accept the drag of files: is the point over the page?");
+                throw new DragRefusedException(
+                    $"The window did not accept the drag of files within {AcceptMilliseconds} ms ({_statuses} answers, {_requests} reads of the files): is the point over a drop area?");
             }
 
-            Send(target, _drop, (long)_window, 0, 0, 0, 0);
+            Send(target, _drop, (long)_window, 0, (long)Now(), 0, 0);
             if (!Pump(_finished, FinishMilliseconds))
             {
                 throw new TimeoutException($"The window did not finish the drop within {FinishMilliseconds} ms.");
             }
+
+            // A reader that asks after the drop finished still gets the files, as from a file manager, which keeps them.
+            Pump(0, 300);
         }
 
         private nuint Atom(string name) => XInternAtom(_display, name, 0);
+
+        /// <summary>The server's time now: a property change on the source's window, and the time of the event it raises.</summary>
+        private nuint ServerTime()
+        {
+            const int PropertyNotify = 28;
+            XSelectInput(_display, _window, 1 << 22);
+            var stamp = Atom("SPAR_DROP_TIME");
+            byte none = 0;
+            XChangeProperty(_display, _window, stamp, 31, 8, 2, &none, 0);
+            XFlush(_display);
+            var e = stackalloc long[24];
+            var deadline = _clock.ElapsedMilliseconds + 2000;
+            while (_clock.ElapsedMilliseconds < deadline)
+            {
+                if (XPending(_display) == 0)
+                {
+                    Thread.Sleep(1);
+                    continue;
+                }
+
+                XNextEvent(_display, e);
+                if (e[0] == PropertyNotify)
+                {
+                    return (nuint)e[6];
+                }
+            }
+
+            throw new TimeoutException("The X server did not report the time of a property change.");
+        }
 
         private void Send(nuint target, nuint type, long l0, long l1, long l2, long l3, long l4)
         {
@@ -136,11 +211,17 @@ internal static unsafe partial class XDrop
                 XNextEvent(_display, e);
                 if (e[0] == SelectionRequest)
                 {
+                    _requests++;
                     Answer(e);
                 }
                 else if (e[0] == ClientMessage && (nuint)e[5] == _status)
                 {
                     _accepted = (e[8] & 1) != 0;
+                    _statuses++;
+                    if (awaited == _status)
+                    {
+                        return true;
+                    }
                 }
                 else if (e[0] == ClientMessage && awaited != 0 && (nuint)e[5] == awaited)
                 {
@@ -219,5 +300,11 @@ internal static unsafe partial class XDrop
     private static partial int XNextEvent(nint display, long* xevent);
 
     [LibraryImport(Xlib)]
+    private static partial int XSelectInput(nint display, nuint window, nint mask);
+
+    [LibraryImport(Xlib)]
     private static partial int XChangeProperty(nint display, nuint window, nuint property, nuint type, int format, int mode, byte* data, int elements);
 }
+
+/// <summary>A drag of files the test window did not accept.</summary>
+internal sealed class DragRefusedException(string message) : InvalidOperationException(message);

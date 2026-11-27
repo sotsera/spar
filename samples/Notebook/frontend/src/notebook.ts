@@ -5,7 +5,9 @@ import { pages, type Page, type PageChange, type PageSummary } from "@spar/app/p
 import { onBackendUpdate } from "@spar/app/sdk";
 import { windows, type CloseAnswer, type CloseRequest } from "@spar/app/windows";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { addImage as addPageImage, useRemembered, type ViewMode } from "./remembered.js";
+import type { PickedFile } from "@spar/app/sdk";
+import { addImage as addPageImage, imageScheme, useRemembered, type ViewMode } from "./remembered.js";
+import { addImageFile as addPageImageFile, chooseAndImport, copyPage as copyPageText, exportPage as exportPageFile, importFiles as importPageFiles, type TransferOutcome } from "./transfer.js";
 
 /** How long the editor waits after the last keystroke before it saves. */
 const autosaveDelayMs = 800;
@@ -43,6 +45,14 @@ export interface Notebook {
   setViewMode(mode: ViewMode): void;
   /** Adds an image to the open page and resolves with the Markdown that shows it; a refusal becomes the notice. */
   addImage(file: File): Promise<string | undefined>;
+  /** Adds an image file dropped on the editor, as a grant, as `addImage` does. */
+  addImageFile(file: PickedFile): Promise<string | undefined>;
+  /** Imports Markdown files: the ones dropped on the list, or, without any, the ones the person chooses. */
+  importFiles(dropped?: readonly PickedFile[]): Promise<void>;
+  /** Exports the open page through the save dialog. */
+  exportPage(): Promise<void>;
+  /** Copies the open page to the clipboard as Markdown. */
+  copyPage(): Promise<void>;
 }
 
 export function useNotebook(): Notebook {
@@ -168,6 +178,50 @@ export function useNotebook(): Notebook {
 
     return added.markdown;
   }, []);
+
+  const addImageFile = useCallback(async (file: PickedFile): Promise<string | undefined> => {
+    const state = currentRef.current;
+    if (state.kind !== "open") {
+      return undefined;
+    }
+
+    const added = await addPageImageFile(state.page.id, file, imageScheme);
+    if ("notice" in added) {
+      setNotice(added.notice);
+      return undefined;
+    }
+
+    return added.markdown;
+  }, []);
+
+  /** Shows an import's, an export's or a copy's line, and opens the page it made. */
+  const settleTransfer = useCallback((outcome: TransferOutcome) => {
+    if (outcome.notice !== undefined) {
+      setNotice(outcome.notice);
+    }
+
+    if (outcome.open !== undefined) {
+      open(outcome.open);
+    }
+  }, [open]);
+
+  const importFiles = useCallback(async (dropped?: readonly PickedFile[]) => {
+    settleTransfer(dropped === undefined ? await chooseAndImport() : await importPageFiles(dropped));
+  }, [settleTransfer]);
+
+  const exportPage = useCallback(async () => {
+    const state = currentRef.current;
+    if (state.kind === "open") {
+      settleTransfer(await exportPageFile(state.page.id));
+    }
+  }, [settleTransfer]);
+
+  const copyPage = useCallback(async () => {
+    const state = currentRef.current;
+    if (state.kind === "open") {
+      settleTransfer(await copyPageText(state.page.id));
+    }
+  }, [settleTransfer]);
 
   /**
    * Saves the draft over `baseRevision`; a draft typed while the save was on its way stays unsaved. Resolves with how
@@ -357,6 +411,10 @@ export function useNotebook(): Notebook {
     viewMode: remembered.viewMode,
     setViewMode: remembered.setViewMode,
     addImage,
+    addImageFile,
+    importFiles,
+    exportPage,
+    copyPage,
   };
 }
 

@@ -72,6 +72,14 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends python3-gi libglib2.0-bin \
  && rm -rf /var/lib/apt/lists/*
 
+# The credential store's Linux test (tests/Spar.WindowTests/Linux/LinuxNativeServicesTests.cs): a Secret Service, GNOME
+# Keyring's daemon started on the test's private bus with a keyring in the test's private home, which libsecret talks
+# to as on a desktop (gnome-keyring and what it pulls, 16 packages, 6.1 MB to download), per apt-get -s on 2026-11-27.
+# A layer of its own, so the layers above stay cached.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends gnome-keyring \
+ && rm -rf /var/lib/apt/lists/*
+
 # uid 1000 is Ubuntu's own `ubuntu` user in this base image; Spar's user takes its place.
 RUN userdel --remove ubuntu \
  && useradd --create-home --uid 1000 --user-group --shell /bin/bash spar

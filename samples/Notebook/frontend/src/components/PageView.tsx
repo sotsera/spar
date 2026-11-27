@@ -1,12 +1,13 @@
 import * as Menu from "@radix-ui/react-dropdown-menu";
-import { AlertTriangle, Check, CircleDot, Columns2, Eye, LoaderCircle, MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
-import { lazy, Suspense, useRef, useState, type ClipboardEvent, type DragEvent } from "react";
+import { files, type PickedFile } from "@spar/app/sdk";
+import { AlertTriangle, Check, CircleDot, ClipboardCopy, Columns2, Eye, FileUp, LoaderCircle, MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
+import { lazy, Suspense, useEffect, useRef, useState, type ClipboardEvent } from "react";
 import type { SaveState } from "../notebook.js";
 import type { ViewMode } from "../remembered.js";
 import { ago, when } from "../time.js";
 import type { Page } from "@spar/app/pages";
+import { imageExtensions } from "../transfer.js";
 import { DeletePageDialog } from "./Dialogs.js";
-
 
 // The Markdown renderer is most of the bundle; it loads with the first preview, in a chunk of its own.
 const Preview = lazy(() => import("./Preview.js").then(module => ({ default: module.Preview })));
@@ -24,11 +25,17 @@ interface PageViewProps {
   readonly onMode: (mode: ViewMode) => void;
   /** Adds a pasted or dropped image to the page and resolves with the Markdown that shows it, or undefined. */
   readonly onAddImage: (file: File) => Promise<string | undefined>;
+  /** Adds an image file dropped on the editor, as a grant, and resolves with the Markdown that shows it, or undefined. */
+  readonly onAddImageFile: (file: PickedFile) => Promise<string | undefined>;
+  readonly onExport: () => void;
+  readonly onCopy: () => void;
+  readonly onNotice: (text: string) => void;
 }
 
-export function PageView({ page, draft, save, onEdit, onReload, onKeepMine, onDelete, mode, onMode, onAddImage }: PageViewProps) {
+export function PageView(props: PageViewProps) {
+  const { page, draft, save, onEdit, onReload, onKeepMine, onDelete, mode, onMode, onAddImage, onAddImageFile, onExport, onCopy, onNotice } = props;
   const editor = useRef<HTMLTextAreaElement>(null);
-  const insertImages = useImageInsert(editor, draft, onEdit, onAddImage);
+  const insertImages = useImageInsert(editor, draft, onEdit, onAddImage, onAddImageFile, onNotice, mode !== "Read");
   const [deleting, setDeleting] = useState(false);
 
   return (
@@ -53,6 +60,21 @@ export function PageView({ page, draft, save, onEdit, onReload, onKeepMine, onDe
               className="min-w-44 rounded-lg border border-line bg-sheet p-1 shadow-lg dark:border-line-dark dark:bg-sheet-dark"
             >
               <Menu.Item
+                onSelect={onExport}
+                className="flex cursor-default items-center gap-2 rounded-md px-2.5 py-1.5 text-sm outline-none data-highlighted:bg-line/60 dark:data-highlighted:bg-line-dark/60"
+              >
+                <FileUp aria-hidden className="size-4" />
+                Export…
+              </Menu.Item>
+              <Menu.Item
+                onSelect={onCopy}
+                className="flex cursor-default items-center gap-2 rounded-md px-2.5 py-1.5 text-sm outline-none data-highlighted:bg-line/60 dark:data-highlighted:bg-line-dark/60"
+              >
+                <ClipboardCopy aria-hidden className="size-4" />
+                Copy as Markdown
+              </Menu.Item>
+              <Menu.Separator className="my-1 h-px bg-line dark:bg-line-dark" />
+              <Menu.Item
                 onSelect={() => setDeleting(true)}
                 className="flex cursor-default items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-red-600 outline-none data-highlighted:bg-red-50 dark:text-red-400 dark:data-highlighted:bg-red-950/40"
               >
@@ -75,7 +97,6 @@ export function PageView({ page, draft, save, onEdit, onReload, onKeepMine, onDe
               value={draft}
               onChange={event => onEdit(event.target.value)}
               onPaste={insertImages.paste}
-              onDrop={insertImages.drop}
               spellCheck
               className="min-h-0 flex-1 resize-none bg-transparent px-6 py-5 font-mono text-[13.5px] leading-relaxed [font-variant-ligatures:none] outline-none"
             />
@@ -166,48 +187,64 @@ function ConflictBanner({ onReload, onKeepMine }: { readonly onReload: () => voi
 }
 
 /**
- * Image files pasted or dropped into the editor: each is added to the page, and its Markdown goes where the caret was,
- * in the order the files came. Text pastes and drops keep the browser's own behaviour.
+ * Images pasted or dropped into the editor: each is added to the page, and its Markdown goes where the caret was, in
+ * the order the images came. A paste carries the image's bytes; a drop from the OS arrives as grants, since WebKitGTK
+ * gives the page no files for a drop (the editor is a drop area that takes images only). Text pastes and drops, and
+ * drags of the page's own text, keep the browser's own behaviour.
  */
 function useImageInsert(
   editor: React.RefObject<HTMLTextAreaElement | null>,
   draft: string,
   onEdit: (markdown: string) => void,
   onAddImage: (file: File) => Promise<string | undefined>,
+  onAddImageFile: (file: PickedFile) => Promise<string | undefined>,
+  onNotice: (text: string) => void,
+  editing: boolean,
 ) {
-  const insert = async (files: readonly File[]) => {
+  const insert = async (added: Promise<string | undefined>[]) => {
     const area = editor.current;
     const start = area?.selectionStart ?? draft.length;
     const end = area?.selectionEnd ?? draft.length;
-    const added: string[] = [];
-    for (const file of files) {
-      const markdown = await onAddImage(file);
-      if (markdown !== undefined) {
-        added.push(markdown);
+    const markdown: string[] = [];
+    for (const image of added) {
+      const text = await image;
+      if (text !== undefined) {
+        markdown.push(text);
       }
     }
 
-    if (added.length > 0) {
+    if (markdown.length > 0) {
       const text = editor.current?.value ?? draft;
-      onEdit(text.slice(0, start) + added.join("\n") + text.slice(end));
+      onEdit(text.slice(0, start) + markdown.join("\n") + text.slice(end));
     }
   };
+
+  // The newest callbacks, read when a drop comes: the drop area itself is made once, for the editor's element.
+  const latest = useRef({ insert, onAddImageFile, onNotice });
+  latest.current = { insert, onAddImageFile, onNotice };
+  useEffect(() => {
+    if (editor.current === null) {
+      return undefined;
+    }
+
+    const accept = imageExtensions.map(extension => `.${extension}`);
+    return files.dropTarget(editor.current, { accept, limit: 10 }, result => result.match({
+      success: dropped => void latest.current.insert(dropped.files.map(file => latest.current.onAddImageFile(file))),
+      errors: {
+        notAccepted: e => latest.current.onNotice(`${e.name} is not an image a page takes.`),
+        tooMany: e => latest.current.onNotice(`At most ${e.limit} images at a time.`),
+      },
+    }));
+  }, [editor, editing]);
 
   const imagesOf = (list: FileList | null): File[] => Array.from(list ?? []).filter(file => file.type.startsWith("image/"));
 
   return {
     paste: (event: ClipboardEvent<HTMLTextAreaElement>) => {
-      const files = imagesOf(event.clipboardData.files);
-      if (files.length > 0) {
+      const pasted = imagesOf(event.clipboardData.files);
+      if (pasted.length > 0) {
         event.preventDefault();
-        void insert(files);
-      }
-    },
-    drop: (event: DragEvent<HTMLTextAreaElement>) => {
-      const files = imagesOf(event.dataTransfer.files);
-      if (files.length > 0) {
-        event.preventDefault();
-        void insert(files);
+        void insert(pasted.map(file => onAddImage(file)));
       }
     },
   };
