@@ -1,9 +1,0 @@
-# The contracts of BinaryData as pages see them. Written by the build; commit it with the change.
-# CI builds fail with SPAR100 when it is out of date.
-
-fingerprint da160a45a08b03a5
-
-contract blobs (BinaryData.BlobsService)
-  get(int) -> byte[]
-  put(byte[]) -> int
-  report(string) -> void

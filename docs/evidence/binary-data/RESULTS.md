@@ -1,6 +1,6 @@
 # Binary data: `byte[]` on the bridge against the app's own origin
 
-Spike for decision "M3's decide-first questions", item 5: how fast a page receives and sends binary data as a `byte[]` in a bridge message (padded base64 inside the message's JSON), against the same bytes fetched from the app's own origin, which is the path an opaque handle (`/_spar/blob/<id>`) would take. Run 2026-11-27.
+Spike for decision "M3's decide-first questions", item 5: how fast a page receives and sends binary data as a `byte[]` in a bridge message (padded base64 inside the message's JSON), against the same bytes fetched from the app's own origin, which is the path an opaque handle (`/_spar/blob/<id>`) would take. Run 2026-11-27. The spike's code (`BinaryData/`, `BinaryData.Tests/`) was removed once M3b built binary data; it is in git history at commit `091e701`, under `spikes/binary-data/`.
 
 ## Method
 

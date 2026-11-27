@@ -4,7 +4,7 @@ Recorded 2026-11-27. What it shows: the six decisions of "M3b's decide-first que
 
 Code, on branch `m3`: `d9ffabe` (serial groups), `a4980c3` (settings files), `0ce746a` (browser data in memory, removal at exit, the installation file), `6368cd2` and `b0ea761` (the folder files' own folder, and the tool's link to it), `6a5db06` (binary data, the Notebook, the app model, the installation file's logging section and `spar doctor`).
 
-Machine: the development PC, Windows 11 Pro 10.0.26320, 32 logical CPUs, SDK 11.0.100, Node 24, WebView2 Runtime 158 as installed, Playwright 1.64.1 with its Chromium; Spar's Linux CI image (`spar-linux-ci:eval`, Ubuntu 24.04, WebKitGTK 2.52) in Docker Desktop for the Linux window, NativeAOT and black-box tests. Windows test windows were offscreen; Linux windows on a private Xvfb, the core limit at 1 byte. No window reached the monitor.
+Machine: the development PC, Windows 11 Pro 10.0.26320, 32 logical CPUs, SDK 11.0.100, Node 24, WebView2 Runtime 158 as installed, Playwright 1.64.1 with its Chromium; Spar's Linux CI image (`spar-linux-ci:eval`, Ubuntu 24.04, WebKitGTK 2.52) in Docker Desktop for the Linux window, NativeAOT and black-box tests; WSL 2 Ubuntu 24.04 for the CI lane (`eng/wsl/`, a fresh clone of `6a5db06`). Windows test windows were offscreen; Linux windows on a private Xvfb, the core limit at 1 byte. No window reached the monitor.
 
 ## Commands
 
@@ -42,7 +42,9 @@ docker exec … bash /src/eng/linux-ci/run.sh copy client build window windowaot
 
 ## Results on Linux
 
-To be filled in from the window lane in Spar's CI image at `6a5db06`.
+- **The window lane in Spar's CI image** (`spar-linux-ci:eval`, the working tree at `6a5db06` copied by `run.sh`): window tests on CoreCLR `Spar.WindowTests` 106 (80 passed, 26 skipped: the Windows-only start-up frame tests and the four M1c left), the blob route and 100 resources in `<img>` elements included, and the Notebook 14 of 14; on NativeAOT `Spar.WindowTests` 103 (77 passed, 4 skipped, 22 not run, as on CoreCLR), the budget included, and the Notebook 11 of 11; the Development probe 4 of 4. The black box: 85 run, 2 failed: the installation file's log assertion, which that copy still had in its old form (fixed in `091e701`), and `WebAssembly_follows_the_declaration_after_Reload_page_ends_the_web_process(allowed: True)` ("no answer" after the reload). A second run on a fresh copy of the tree at `091e701`: the black box 85 of 85 (the three installation tests and both WebAssembly tests included) and the Notebook's 7 of 7. The WebAssembly test's one failure is not explained; it passed in the two other runs of this slice.
+- **The CI lane in WSL** (`eng/wsl/`, a fresh clone of `6a5db06`): the size check, the SDK's tests and both TypeScript versions' checks, the app model's install, the Debug build, the Notebook's page tests passed. The solution's tests: 1,707, 21 failed, 228 skipped; the 21 are the Notebook's window, scene and black-box tests, each refused with "Xvfb was not found on PATH", as at M3a, since this lane has no Xvfb. Every other test passed, the blob, settings and installation-file tests on Linux included.
+- **The package tests** (`Spar.PackageTests`, Windows, at `091e701`): 45, 44 passed, 1 skipped.
 
 ## The binary data budget
 
@@ -65,5 +67,5 @@ The same bytes as a `byte[]` in the message took 305 ms and 330 ms in the spike.
 ## Not verified
 
 - A network settings file on a real share and an unreachable one (the tests use a folder and a file held open without sharing); a Citrix server.
-- The removal at exit after a killed session on Linux (to be read from the Linux black-box run), and at a Windows session end (left to the next start, as decided).
+- The removal at a Windows session end (left to the next start). The removal after a close and after a kill passed on both OSes.
 - CI on `m3` (no pull request).

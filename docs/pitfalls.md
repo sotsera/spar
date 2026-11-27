@@ -811,7 +811,7 @@ This entry comes from other frameworks (`docs/research-review.md`) and has not b
 
 ## Wire format and serialization
 
-- **A regular expression with a repeated group can give up on a long value:** the page's base64 check, `^(?:[A-Za-z0-9+/]{4})*…$`, passed 1 MB of `byte[]` and failed 4 MB (5.6 million characters) on WebView2, so the call ended `protocol` / `malformed` with nothing in the backend's log. Validate long wire values with a loop, and test at the sizes the limits allow, not only 100 KB. (`spikes/binary-data`)
+- **A regular expression with a repeated group can give up on a long value:** the page's base64 check, `^(?:[A-Za-z0-9+/]{4})*…$`, passed 1 MB of `byte[]` and failed 4 MB (5.6 million characters) on WebView2, so the call ended `protocol` / `malformed` with nothing in the backend's log. Validate long wire values with a loop, and test at the sizes the limits allow, not only 100 KB. (`binary-data`, `docs/evidence/binary-data/`)
 
 See also "Build, MSBuild and packages" for the C# traps found while building the `Result` type and its analyzer (conversion operators, `Interlocked`, `ArrayPool`, Roslyn operation blocks), and "Bridge and loopback" for the bridge's message and id limits.
 

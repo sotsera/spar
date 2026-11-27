@@ -5479,3 +5479,7 @@ Built after decision "M3b's decide-first questions" (`docs/evidence/m3b-binary-d
 - **Tests:** see the evidence file; every new layer has tests on Windows, and the window, NativeAOT and black-box lanes ran in Spar's Linux CI image.
 - **Found and fixed while building:** a bridge session's `Dispose` could dispose its token source while another thread's `Close` was still cancelling it (a test app's teardown racing a loopback channel's end; older than M3b, made likelier by the handles' close); the folder move left `Spar.Tool`'s linked file at its old path for one commit (`6368cd2`, fixed in `b0ea761`).
 - **Not verified:** a network settings file on a real share; a Citrix server; a PDF handle in each host's viewer; CI on `m3` (no pull request).
+
+## M3b's choices accepted (user decision, 2026-11-27)
+
+The user accepted the seventeen choices of decision "M3b: serial groups, binary data and settings files (implementation record; choices for review; 2026-11-27)" as built, the four that depart from or add to the decided wording included: a handle's `size` as a JSON number (item 6), `FromStreamAsync` on the `SparBlobs` service (item 8), the loopback key made by the page rather than per document (item 12), and `bytes()` and `blob()` as plain promises (item 13).
