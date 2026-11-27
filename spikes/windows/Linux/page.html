@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>windows spike</title>
+  <style>
+    body { font: 14px sans-serif; margin: 24px; background: #fff; }
+    .row { padding: 4px 0; border-bottom: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <h1>Window <span id="name"></span></h1>
+  <p>Some text to find: apple banana apple cherry apple.</p>
+  <div id="rows"></div>
+  <script>
+    // A page of an ordinary size: a few hundred elements, so the first frame is not an empty document's.
+    const name = new URLSearchParams(location.search).get("w") ?? "?";
+    document.getElementById("name").textContent = name;
+    const rows = document.getElementById("rows");
+    for (let i = 0; i < 300; i++) {
+      const row = document.createElement("div");
+      row.className = "row";
+      row.textContent = `Row ${i} of window ${name}`;
+      rows.appendChild(row);
+    }
+
+    const post = (message) => window.webkit.messageHandlers.probe.postMessage(JSON.stringify(message));
+    addEventListener("mousedown", (e) => post({ type: "click", x: e.clientX, y: e.clientY, trusted: e.isTrusted }), true);
+    addEventListener("wheel", (e) => post({ type: "wheel", ctrl: e.ctrlKey, prevented: e.defaultPrevented }), true);
+
+    // The first frame after the content: two animation frames, as Spar's readiness waits.
+    requestAnimationFrame(() => requestAnimationFrame(() => post({ type: "frame" })));
+  </script>
+</body>
+</html>

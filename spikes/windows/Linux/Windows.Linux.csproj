@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Spike (M3d, decision "M3d's decide-first questions", item 1): what a second window costs on WebKitGTK 6.0 with an
+    app's persistent network session, how many web processes several views on one origin get, what ending one view's
+    web process does to the others, a modal GTK 4 window with and without a window manager, and zoom and find. Run in
+    Spar's Linux CI image on a private Xvfb; see ../RESULTS.md.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="page.html" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

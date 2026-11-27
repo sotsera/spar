@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Spike (M3d, decision "M3d's decide-first questions", item 1): what a second window costs on WebView2, how many
+    renderers an app's windows on one origin and one profile get, what ending one window's renderer does to the others,
+    and whether zoom is per window. A throwaway probe over the WebView2 SDK's own managed layer in WinForms windows,
+    all offscreen and never activated; see ../RESULTS.md.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net11.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" />
+    <None Include="page\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

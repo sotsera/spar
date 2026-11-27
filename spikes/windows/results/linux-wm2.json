@@ -1,0 +1,323 @@
+{
+  "windowManager": "openbox",
+  "opened": [
+    {
+      "window": "0",
+      "createdMs": 28.332100000000004,
+      "frameMs": 673.7596
+    },
+    {
+      "window": "1",
+      "createdMs": 0.6422999999999774,
+      "frameMs": 143.80970000000002
+    },
+    {
+      "window": "2",
+      "createdMs": 0.8393999999998414,
+      "frameMs": 130.35690000000022
+    },
+    {
+      "window": "3",
+      "createdMs": 0.6612999999997555,
+      "frameMs": 142.47509999999966
+    },
+    {
+      "window": "4",
+      "createdMs": 0.8742999999999483,
+      "frameMs": 154.27029999999968
+    },
+    {
+      "window": "5",
+      "createdMs": 0.9360000000006039,
+      "frameMs": 170.17160000000058
+    },
+    {
+      "window": "6",
+      "createdMs": 0.7896999999993568,
+      "frameMs": 165.98279999999977
+    },
+    {
+      "window": "7",
+      "createdMs": 10.01299999999992,
+      "frameMs": 168.26260000000002
+    }
+  ],
+  "processes": {
+    "0": {
+      "WebKitNetworkPr": 1,
+      "memoryBytes": 34631680
+    },
+    "1": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 4,
+      "xdg-dbus-proxy": 1,
+      "WebKitWebProces": 1,
+      "memoryBytes": 309231616
+    },
+    "2": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 8,
+      "xdg-dbus-proxy": 2,
+      "WebKitWebProces": 2,
+      "memoryBytes": 452177920
+    },
+    "3": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 12,
+      "xdg-dbus-proxy": 3,
+      "WebKitWebProces": 3,
+      "memoryBytes": 596852736
+    },
+    "4": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 16,
+      "xdg-dbus-proxy": 4,
+      "WebKitWebProces": 4,
+      "memoryBytes": 739840000
+    },
+    "5": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 20,
+      "xdg-dbus-proxy": 5,
+      "WebKitWebProces": 5,
+      "memoryBytes": 891486208
+    },
+    "6": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 24,
+      "xdg-dbus-proxy": 6,
+      "WebKitWebProces": 6,
+      "memoryBytes": 1045463040
+    },
+    "7": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 28,
+      "xdg-dbus-proxy": 7,
+      "WebKitWebProces": 7,
+      "memoryBytes": 1207967744
+    },
+    "8": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 32,
+      "xdg-dbus-proxy": 8,
+      "WebKitWebProces": 8,
+      "memoryBytes": 1348956160
+    }
+  },
+  "find": {
+    "steps": [
+      {
+        "step": "count apple",
+        "events": [
+          {
+            "type": "counted-matches",
+            "count": 3,
+            "at": 7431.2935,
+            "ms": 6.043999999999869
+          }
+        ]
+      },
+      {
+        "step": "search apple",
+        "events": [
+          {
+            "type": "found-text",
+            "count": 3,
+            "at": 7936.9194,
+            "ms": 8.102399999999761
+          }
+        ]
+      },
+      {
+        "step": "next",
+        "events": [
+          {
+            "type": "found-text",
+            "count": 1,
+            "at": 8433.2768,
+            "ms": 1.2089999999989232
+          }
+        ]
+      },
+      {
+        "step": "search Row 1",
+        "events": [
+          {
+            "type": "found-text",
+            "count": 111,
+            "at": 8941.5265,
+            "ms": 8.902000000000044
+          }
+        ]
+      },
+      {
+        "step": "search zzz",
+        "events": [
+          {
+            "type": "failed-to-find-text",
+            "at": 9437.084,
+            "ms": 3.9464000000007218
+          }
+        ]
+      },
+      {
+        "step": "finish",
+        "events": []
+      }
+    ]
+  },
+  "zoom": {
+    "afterSet": {
+      "0": 1,
+      "1": 1.5,
+      "2": 1,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "7": 1
+    },
+    "afterReload": 1.5,
+    "newWindowOpen": {
+      "window": "zoom-new",
+      "createdMs": 0.5967999999993481,
+      "frameMs": 135.132599999999
+    },
+    "newWindow": 1,
+    "wheelPoint": "1419,320",
+    "afterCtrlWheel": 1,
+    "afterCtrlPlus": 1,
+    "zoomNewEvents": [
+      {
+        "type": "wheel",
+        "ctrl": true,
+        "prevented": false,
+        "at": 11901.8562
+      }
+    ],
+    "oneEvents": [
+      {
+        "type": "zoom",
+        "level": 1.5,
+        "at": 10436.6899
+      }
+    ]
+  },
+  "terminate": {
+    "before": {
+      "WebKitNetworkPr": 1,
+      "bwrap": 36,
+      "xdg-dbus-proxy": 9,
+      "WebKitWebProces": 9,
+      "memoryBytes": 1503719424
+    },
+    "views": {
+      "0": {
+        "answer": "0",
+        "ms": 1.8348000000005413,
+        "terminated": []
+      },
+      "1": {
+        "answer": "1",
+        "ms": 1.4133999999994558,
+        "terminated": []
+      },
+      "2": {
+        "answer": "2",
+        "ms": 0.6123999999999796,
+        "terminated": []
+      },
+      "3": {
+        "answer": "error",
+        "ms": 0.3290999999990163,
+        "terminated": [
+          {
+            "type": "terminated",
+            "reason": 2,
+            "at": 1.5388999999995576
+          }
+        ]
+      },
+      "4": {
+        "answer": "4",
+        "ms": 0.5996999999988475,
+        "terminated": []
+      },
+      "5": {
+        "answer": "5",
+        "ms": 0.6529000000009546,
+        "terminated": []
+      },
+      "6": {
+        "answer": "6",
+        "ms": 0.4544000000005326,
+        "terminated": []
+      },
+      "7": {
+        "answer": "7",
+        "ms": 0.5394999999989523,
+        "terminated": []
+      },
+      "zoom-new": {
+        "answer": "zoom-new",
+        "ms": 2.6952000000001135,
+        "terminated": []
+      }
+    }
+  },
+  "afterTerminate": {
+    "WebKitNetworkPr": 1,
+    "bwrap": 34,
+    "xdg-dbus-proxy": 9,
+    "WebKitWebProces": 8,
+    "memoryBytes": 1384808448
+  },
+  "modal": {
+    "ownerOpen": {
+      "window": "owner",
+      "createdMs": 1.326100000000224,
+      "frameMs": 175.26620000000003
+    },
+    "dialogOpen": {
+      "window": "dialog",
+      "createdMs": 0.7150000000001455,
+      "frameMs": 166.65109999999913
+    },
+    "ownerPoint": "1719,925",
+    "dialogPoint": "151,120",
+    "steps": [
+      {
+        "step": "owner, dialog transient, not modal",
+        "at": "1719,925",
+        "clicks": {
+          "owner": 1,
+          "dialog": 0
+        }
+      },
+      {
+        "step": "owner, dialog modal",
+        "at": "1719,925",
+        "clicks": {
+          "owner": 0,
+          "dialog": 0
+        }
+      },
+      {
+        "step": "dialog, modal",
+        "at": "151,120",
+        "clicks": {
+          "owner": 0,
+          "dialog": 1
+        }
+      },
+      {
+        "step": "owner, dialog no longer modal",
+        "at": "1719,925",
+        "clicks": {
+          "owner": 1,
+          "dialog": 0
+        }
+      }
+    ]
+  }
+}

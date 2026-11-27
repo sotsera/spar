@@ -624,7 +624,7 @@ Not measured:
 - modality on Linux;
 - zoom and find on WebKitGTK.
 
-**Decide first** (drafted 2026-11-27, for the user):
+**Decide first** (settled 2026-11-27: the user accepted all nine recommendations; decision "M3d's decide-first questions"):
 1. **A spike first, for what is not measured.** Recommended: one spike, `spikes/windows`, on both hosts, using the app's own profile rather than test windows. It measures:
    - the time from `windows.open` to the second window's first frame and to `ui-ready`, and its memory;
    - how many renderers 1, 2, 4 and 8 windows on one origin get, and what ending one window's renderer does to the others;
