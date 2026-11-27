@@ -5,8 +5,9 @@ using Spar.Linux.Interop;
 namespace Spar.Linux;
 
 /// <summary>
-/// The two-stage close of the main window on Linux (decision "Two-stage close"; <c>docs/app-model.md</c> 6.11): the
-/// page's guards (<c>close-request</c>, through the heartbeat's <see cref="PageWatch"/>), then the backend's, each
+/// The two-stage close of each of the app's windows on Linux (decision "Two-stage close"; <c>docs/app-model.md</c>
+/// 6.11): first the windows that close before it (the main window's others, a window's own modals;
+/// <c>AppWindow.Family.cs</c>), each through its own request, then the page's guards (<c>close-request</c>, through the heartbeat's <see cref="PageWatch"/>), then the backend's, each
 /// closing, keeping or asking, one native confirmation per ask (or a window test's answer), and the teardown only for an
 /// approved request. A page that does not answer gets "Wait / Close anyway". A second request joins the open one. A
 /// close with <see cref="CloseReason.SessionEnd"/> runs the session end's rules and budgets (the guards' 3 s, the page's
@@ -101,6 +102,9 @@ internal sealed partial class AppWindow
         _state = State.Closing;
         _view?.EndRecovery();
         _owner.TeardownStarted();
+
+        // The main window's others, or a window's own modals, close with it, before it.
+        var othersClosed = Family?.TearDownFirst(this) ?? Task.CompletedTask;
         if (!_failed)
         {
             _exitCode = exitCode;
@@ -141,11 +145,19 @@ internal sealed partial class AppWindow
             _log.Warn($"A dialog of the window had not answered {DialogCloseMilliseconds} ms after it was taken down.");
         }
 
+        if (!othersClosed.IsCompleted)
+        {
+            // Its modals are destroyed before it, through their own teardown, as the main window's others are.
+            var others = await Task.WhenAny(othersClosed, Task.Delay(Within(deadline, OthersCloseMilliseconds)));
+            _log.Step(others == othersClosed ? "the windows closing first are closed" : "the windows closing first are still closing at the limit");
+        }
+
         _theme?.Close();
         _view?.Close();
         GLib.g_signal_handler_disconnect(_window, _closeHandler);
         Gtk.gtk_window_destroy(_window);
         _window = 0;
+        ReleaseModalOwner();
         _log.Step("window destroyed");
         _bridge?.Window?.Close();
 
@@ -202,6 +214,17 @@ internal sealed partial class AppWindow
         {
             var request = new CloseRequest(Name, reason, automated);
             _log.Step($"close requested ({reason}{(automated ? ", automated" : "")})");
+
+            // The main window's others, or this window's own modals, first, each through its own guards.
+            if (await CloseOthersFirstAsync(reason, automated, questions) is { } kept)
+            {
+                return kept;
+            }
+
+            if (_state == State.Closing)
+            {
+                return new CloseReport(closed: true, question, unanswered);
+            }
 
             var page = _watch is null ? PageCloseResult.NoPage : await _watch.AskPageAsync(reason, automated, questions, TimeSpan.Zero);
             unanswered = page.Unanswered;

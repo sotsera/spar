@@ -133,6 +133,12 @@ export interface FakeSpar {
    */
   requestClose(request?: FakeCloseRequest): Promise<GuardsOutcome>;
   /**
+   * The values the page gave `windows.closeWith`, in order (`null` for none), read back from the wire. A page test of a
+   * modal asserts its result with it; `windows.showModal` gives `dismissed` until a test scripts it, such as
+   * `spar.on(windows.showModal).succeed({ changed: true })`.
+   */
+  closedWith(): readonly unknown[];
+  /**
    * Sends `backend-updated` as a Debug host does after Hot Reload applied a C# edit: the page's `onBackendUpdate`
    * handlers run, then the development overlay's toast shows unless `configureSpar({ backendUpdateToast: false })`.
    * Revisions count from 1 for each fake; `types` are the updated types' full names. Delivered asynchronously, as a
@@ -205,10 +211,14 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
   }
 
   commands.set(windows.open, openWindowCodec);
+  commands.set(windows.showModal, showModalCodec);
+  commands.set(windows.closeWith, closeWindowCodec);
   commands.set(windows.params, windowParamsCodec);
   const host = new FakeHost(commands, fingerprint);
   host.script(colorSchemeCodec, () => ({ kind: "value", value: undefined }));
   host.script(openWindowCodec, () => ({ kind: "value", value: undefined }));
+  host.script(showModalCodec, () => ({ kind: "error", code: "dismissed", payload: undefined }));
+  host.script(closeWindowCodec, () => ({ kind: "value", value: undefined }));
   host.script(windowParamsCodec, () => ({ kind: "value", value: null }));
   for (const [codec, answer] of fileCodecs) {
     host.script(codec, request => answer(request) as Answer);
@@ -220,6 +230,7 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
     calls: command => host.calls(codecOf(commands, command)) as never,
     stream: command => streamScriptFor(host, codecOf(commands, command)) as never,
     requestClose: request => host.requestClose(request ?? {}),
+    closedWith: () => host.calls(closeWindowCodec).map(request => (request as { readonly value: unknown }).value),
     backendUpdate: update => host.backendUpdate(update ?? {}),
     blob: (bytes, contentType, name) => fakeBlob(bytes, contentType, name ?? null),
     file: (name, contents, access) => fakeFile(store, name, contents ?? "", access ?? "read"),
@@ -237,6 +248,29 @@ const openWindowCodec: CommandCodec = {
   command: "openWindow",
   request: json => JSON.parse(json) as unknown,
   error: (code, payload) => JSON.stringify({ code, reason: (payload as { readonly reason?: string } | undefined)?.reason ?? "" }),
+};
+
+/**
+ * The host's own `spar.showModal`, as a host answers it: `{ kind, params }`, the modal's value, `dismissed` without a
+ * payload or `notOpened` with its reason. It gives `dismissed`, as a modal closed by its close button does, until a
+ * test scripts otherwise.
+ */
+const showModalCodec: CommandCodec = {
+  contract: "spar",
+  command: "showModal",
+  request: json => JSON.parse(json) as unknown,
+  value: value => JSON.stringify(value ?? null),
+  error: (code, payload) =>
+    code === "dismissed"
+      ? JSON.stringify({ code })
+      : JSON.stringify({ code, reason: (payload as { readonly reason?: string } | undefined)?.reason ?? "" }),
+};
+
+/** The host's own `spar.closeWindow`: `{ value }`, no value; `spar.closedWith()` reads the values back. */
+const closeWindowCodec: CommandCodec = {
+  contract: "spar",
+  command: "closeWindow",
+  request: json => JSON.parse(json) as unknown,
 };
 
 /** The host's own `spar.windowParams`: the params object, null until a test scripts `spar.on(windows.params).succeed(…)`. */

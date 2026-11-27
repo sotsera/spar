@@ -6,63 +6,112 @@ using Spar.Runtime;
 namespace Spar.AppWindows;
 
 /// <summary>
-/// The page's own window commands, under the host contract <c>spar</c> (decision "M3d's decide-first questions", item
-/// 3):
+/// The page's own window commands, under the host contract <c>spar</c> (decision "M3d's decide-first questions",
+/// items 3 and 4):
 /// <list type="bullet">
 /// <item><c>openWindow</c>, <c>{"kind":"…","params":…}</c>: opens a window of a declared kind, or focuses the open one
 /// of a single-instance kind; the declared error <c>notOpened</c> carries the reason (a host without windows of its
 /// own, the app closing, the host failing). <c>params</c> is any JSON value, at most <see cref="MaxParamsBytes"/>.</item>
+/// <item><c>showModal</c>, the same request for a modal kind: it answers once the modal closes, with the value its page
+/// gave <c>closeWindow</c>, or the declared error <c>dismissed</c>; <c>notOpened</c> as for <c>openWindow</c>.</item>
+/// <item><c>closeWindow</c>, <c>{"value":…}</c>: the calling window's page closes it, without its guards, and a modal's
+/// opener gets the value (<c>windows.closeWith</c>); at most <see cref="MaxParamsBytes"/> too.</item>
 /// <item><c>windowParams</c>: the JSON the window's opener gave, or <c>null</c>.</item>
 /// </list>
-/// An unknown kind, or a request that is not this shape, is refused as <c>rejected</c> / <c>invalid-request</c>: the
-/// generated <c>WindowKind</c> union keeps a misspelled kind from compiling.
+/// An unknown kind, a modal kind given to <c>openWindow</c> or another to <c>showModal</c>, or a request that is not
+/// this shape, is refused as <c>rejected</c> / <c>invalid-request</c>: the generated <c>WindowKind</c> and
+/// <c>ModalKind</c> unions keep those from compiling.
 /// </summary>
 internal static class WindowCommands
 {
     public const string Open = "openWindow";
+    public const string ShowModal = "showModal";
+    public const string Close = "closeWindow";
     public const string Params = "windowParams";
 
-    /// <summary>The most JSON a window's params may be.</summary>
+    /// <summary>The most JSON a window's params, or a modal's result, may be.</summary>
     public const int MaxParamsBytes = 64 * 1024;
+
+    private const string NoWindows = "This page's host opens no windows of the app: windows open in the app's own desktop windows, not in a browser.";
 
     private static readonly byte[] Null = "null"u8.ToArray();
 
-    public static bool Handles(string command) => command is Open or Params;
+    public static bool Handles(string command) => command is Open or ShowModal or Close or Params;
 
     public static async ValueTask<SparOutcome> InvokeAsync(HostWindow? window, string command, ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
     {
-        if (command == Params)
+        switch (command)
         {
-            return SparOutcome.FromValue(window is null || window.Params.IsEmpty ? Null : window.Params);
+            case Params:
+                return SparOutcome.FromValue(window is null || window.Params.IsEmpty ? Null : window.Params);
+            case Close:
+                return CloseWith(window, payload);
         }
 
         if (!TryRead(payload, out var kind, out var parameters, out var problem))
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(problem.Replace(Open, command, StringComparison.Ordinal)));
+        }
+
+        if (window?.Windows is not { } windows)
+        {
+            return Declared("notOpened", NoWindows);
+        }
+
+        if (command == ShowModal)
+        {
+            var (opened, result) = await windows.ShowModalAsync(kind, parameters, window.Id, cancellationToken);
+            return result is null ? OpenFailed(opened, kind) : ModalAnswer(result);
+        }
+
+        var outcome = await windows.OpenAsync(kind, parameters, window.Id, cancellationToken);
+        return outcome.Outcome is OpenOutcome.Opened or OpenOutcome.Focused
+            ? SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty)
+            : OpenFailed(outcome, kind);
+    }
+
+    private static SparOutcome OpenFailed(OpenResult result, string kind) => result.Outcome switch
+    {
+        OpenOutcome.UnknownKind => SparOutcome.FromFailure(SparFailure.InvalidRequest($"The app declares no window kind '{kind}'.")),
+        OpenOutcome.WrongKind => SparOutcome.FromFailure(SparFailure.InvalidRequest(result.Reason!)),
+        _ => Declared("notOpened", result.Reason ?? "The window could not be opened."),
+    };
+
+    private static SparOutcome ModalAnswer(ModalResult result) => result.Outcome == ModalOutcome.Value
+        ? SparOutcome.FromValue(result.Value.IsEmpty ? Null : result.Value)
+        : Declared("dismissed", reason: null);
+
+    private static SparOutcome CloseWith(HostWindow? window, ReadOnlyMemory<byte> payload)
+    {
+        if (!TryReadValue(payload, out var value, out var problem))
         {
             return SparOutcome.FromFailure(SparFailure.InvalidRequest(problem));
         }
 
         if (window?.Windows is not { } windows)
         {
-            return NotOpened("This page's host opens no windows of the app: windows open in the app's own desktop windows, not in a browser.");
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(NoWindows));
         }
 
-        var result = await windows.OpenAsync(kind, parameters, window.Id, cancellationToken);
-        return result.Outcome switch
-        {
-            OpenOutcome.Opened or OpenOutcome.Focused => SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty),
-            OpenOutcome.UnknownKind => SparOutcome.FromFailure(SparFailure.InvalidRequest($"The app declares no window kind '{kind}'.")),
-            _ => NotOpened(result.Reason ?? "The window could not be opened."),
-        };
+        return windows.CloseWith(window.Id, value)
+            ? SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty)
+            : SparOutcome.FromFailure(SparFailure.InvalidRequest(
+                "windows.closeWith closes a window of the app's kinds; the main window closes through its close request, which asks its guards."));
     }
 
-    private static SparOutcome NotOpened(string reason)
+    /// <summary>A declared error: <c>{"code":…}</c>, with the reason when there is one.</summary>
+    private static SparOutcome Declared(string code, string? reason)
     {
         var buffer = new System.Buffers.ArrayBufferWriter<byte>();
         using (var writer = new Utf8JsonWriter(buffer))
         {
             writer.WriteStartObject();
-            writer.WriteString("code"u8, "notOpened"u8);
-            writer.WriteString("reason"u8, reason);
+            writer.WriteString("code"u8, code);
+            if (reason is not null)
+            {
+                writer.WriteString("reason"u8, reason);
+            }
+
             writer.WriteEndObject();
         }
 
@@ -73,8 +122,49 @@ internal static class WindowCommands
     internal static bool TryRead(ReadOnlyMemory<byte> payload, out string kind, out ReadOnlyMemory<byte> parameters, out string problem)
     {
         kind = "";
-        parameters = ReadOnlyMemory<byte>.Empty;
-        problem = "openWindow takes {\"kind\":\"…\",\"params\":…}.";
+        problem = Open + " takes {\"kind\":\"…\",\"params\":…}.";
+        if (!TryReadObject(payload, "kind", "params", out var found, out parameters, ref problem) || found is null)
+        {
+            return false;
+        }
+
+        if (parameters.Length > MaxParamsBytes)
+        {
+            problem = $"A window's params are at most {MaxParamsBytes / 1024} KB of JSON; these are {parameters.Length} bytes. Keep larger data in the backend and pass its id.";
+            return false;
+        }
+
+        kind = found;
+        return true;
+    }
+
+    /// <summary><c>closeWindow</c>'s value as the page sent it (empty for <c>null</c> or none), or why it is not one.</summary>
+    internal static bool TryReadValue(ReadOnlyMemory<byte> payload, out ReadOnlyMemory<byte> value, out string problem)
+    {
+        problem = Close + " takes {\"value\":…}.";
+        if (!TryReadObject(payload, kindName: null, "value", out _, out value, ref problem))
+        {
+            return false;
+        }
+
+        if (value.Length > MaxParamsBytes)
+        {
+            problem = $"A modal's result is at most {MaxParamsBytes / 1024} KB of JSON; this is {value.Length} bytes. Keep larger data in the backend and return its id.";
+            return false;
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// One JSON object: its string <paramref name="kindName"/> (when asked for), and the raw bytes of
+    /// <paramref name="valueName"/> (empty for <c>null</c> or none); other properties are skipped.
+    /// </summary>
+    private static bool TryReadObject(
+        ReadOnlyMemory<byte> payload, string? kindName, string valueName, out string? kind, out ReadOnlyMemory<byte> value, ref string problem)
+    {
+        kind = null;
+        value = ReadOnlyMemory<byte>.Empty;
         try
         {
             var reader = new Utf8JsonReader(payload.Span, new JsonReaderOptions { MaxDepth = 64 });
@@ -83,21 +173,22 @@ internal static class WindowCommands
                 return false;
             }
 
-            string? found = null;
+            var seenValue = false;
             while (reader.Read() && reader.TokenType == JsonTokenType.PropertyName)
             {
                 var name = reader.GetString();
                 reader.Read();
-                if (name == "kind" && reader.TokenType == JsonTokenType.String && found is null)
+                if (kindName is not null && name == kindName && reader.TokenType == JsonTokenType.String && kind is null)
                 {
-                    found = reader.GetString();
+                    kind = reader.GetString();
                 }
-                else if (name == "params" && parameters.IsEmpty)
+                else if (name == valueName && !seenValue)
                 {
+                    seenValue = true;
                     var start = (int)reader.TokenStartIndex;
                     reader.Skip();
                     var slice = payload[start..(int)reader.BytesConsumed];
-                    parameters = slice.Span.SequenceEqual("null"u8) ? ReadOnlyMemory<byte>.Empty : slice;
+                    value = slice.Span.SequenceEqual("null"u8) ? ReadOnlyMemory<byte>.Empty : slice;
                 }
                 else
                 {
@@ -105,23 +196,11 @@ internal static class WindowCommands
                 }
             }
 
-            if (reader.TokenType != JsonTokenType.EndObject || reader.Read() || found is null)
-            {
-                return false;
-            }
-
-            if (parameters.Length > MaxParamsBytes)
-            {
-                problem = $"A window's params are at most {MaxParamsBytes / 1024} KB of JSON; these are {parameters.Length} bytes. Keep larger data in the backend and pass its id.";
-                return false;
-            }
-
-            kind = found;
-            return true;
+            return reader.TokenType == JsonTokenType.EndObject && !reader.Read();
         }
         catch (JsonException error)
         {
-            problem = $"openWindow's request is not JSON: {error.Message}";
+            problem = $"The request is not JSON: {error.Message}";
             return false;
         }
     }

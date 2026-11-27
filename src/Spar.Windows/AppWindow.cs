@@ -174,14 +174,25 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         _ui = ui;
         _theme = theme;
         _background = PInvoke.CreateSolidBrush(new COLORREF(theme.Background.ColorRef));
-        var bounds = WindowPlacement.Initial(Options.InitialSize);
+        var modalOwner = FindModalOwner();
+        var bounds = modalOwner is null
+            ? WindowPlacement.Initial(Options.InitialSize)
+            : WindowPlacement.CentredOn(modalOwner.Handle, Options.InitialSize);
         if (SparTestSession.IsSupported && _offscreen)
         {
-            // Offscreen and never activated: no taskbar button, no focus taken from the person at the desktop.
-            bounds = WindowPlacement.Offscreen(bounds);
-            _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this, WindowPlacement.TestExtendedStyle);
+            // Offscreen and never activated: no taskbar button, no focus taken from the person at the desktop. A modal
+            // centred on its offscreen owner is offscreen too.
+            bounds = modalOwner is null ? WindowPlacement.Offscreen(bounds) : bounds;
+            _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this, WindowPlacement.TestExtendedStyle, modalOwner?.Handle ?? default);
             theme.ApplyTitleBar(_window);
             PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
+        }
+        else if (modalOwner is not null)
+        {
+            // Owned by its opener: above it, minimized with it, no taskbar button of its own.
+            _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this, owner: modalOwner.Handle);
+            theme.ApplyTitleBar(_window);
+            PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWNORMAL);
         }
         else
         {
@@ -205,6 +216,12 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             {
                 PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWDEFAULT);
             }
+        }
+
+        if (modalOwner is not null)
+        {
+            _modalOwner = modalOwner;
+            modalOwner.ModalOpened();
         }
 
         _log.Phase("window shown");
@@ -363,6 +380,9 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         _state = State.Closing;
         _view?.EndRecovery();
         _owner.TeardownStarted();
+
+        // The main window's others, or a window's own modals, close with it, before it.
+        var othersClosed = Family?.TearDownFirst(this) ?? Task.CompletedTask;
         if (!_failed)
         {
             _exitCode = exitCode;
@@ -393,9 +413,17 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             _ = _view?.TerminateRenderers();
         }
 
+        if (!othersClosed.IsCompleted)
+        {
+            // Windows destroys a window's owned windows with it: its modals go first, through their own teardown.
+            var others = await Task.WhenAny(othersClosed, Task.Delay(Bounded(OthersCloseMilliseconds, deadline)));
+            _log.Step(others == othersClosed ? "the windows closing first are closed" : "the windows closing first are still closing at the limit");
+        }
+
         _view?.Close();
         _log.Step("controller closed");
         _files?.Close();
+        ReleaseModalOwner();
         if (_sessionEnding)
         {
             // Windows ended the process as soon as the window holding WM_ENDSESSION was gone, before the services' last

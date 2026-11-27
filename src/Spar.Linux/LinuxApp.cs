@@ -266,9 +266,13 @@ internal sealed partial class LinuxApp : IAppWindowOwner, IAppWindowHost
         var built = Task.Run(Build);
         _built = built;
         _security = security;
-        _windowSet = new AppWindowSet(builder, this);
+        _windowSet = new AppWindowSet(builder, this, message => _log.Warn(message));
         _window = new AppWindow(
-            _app, security, _log, _automated, _title, _folders, _profile, _hangHook, _promptAnswers, this, windows: _windowSet);
+            _app, security, _log, _automated, _title, _folders, _profile, _hangHook, _promptAnswers, this, windows: _windowSet)
+        {
+            Family = _family,
+        };
+        _family.Add(_window);
         if (DevServer.DevServerSettings.IsSupported && _devServer is not null)
         {
             _window.UseDevServer(_devServer);

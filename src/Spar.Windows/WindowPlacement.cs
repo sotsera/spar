@@ -72,6 +72,44 @@ internal static unsafe class WindowPlacement
     }
 
     /// <summary>
+    /// A modal's bounds: a client area of <paramref name="size"/> at its owner's DPI, centred on <paramref name="owner"/>,
+    /// and kept within the work area of the owner's monitor. An owner on no monitor (an offscreen test window) keeps
+    /// the modal centred on it, offscreen too.
+    /// </summary>
+    public static RECT CentredOn(HWND owner, (int Width, int Height) size)
+    {
+        var dpi = PInvoke.GetDpiForWindow(owner);
+        if (dpi == 0)
+        {
+            dpi = DefaultDpi;
+        }
+
+        var outer = new RECT { right = Scale(size.Width, dpi), bottom = Scale(size.Height, dpi) };
+        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        var width = outer.right - outer.left;
+        var height = outer.bottom - outer.top;
+        if (!PInvoke.GetWindowRect(owner, out var around))
+        {
+            return Initial(size);
+        }
+
+        var left = around.left + ((around.right - around.left - width) / 2);
+        var top = around.top + ((around.bottom - around.top - height) / 2);
+        var monitor = PInvoke.MonitorFromWindow(owner, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL);
+        var info = new MONITORINFO { cbSize = (uint)sizeof(MONITORINFO) };
+        if (!monitor.IsNull && PInvoke.GetMonitorInfo(monitor, &info))
+        {
+            var work = info.rcWork;
+            width = Math.Min(width, work.right - work.left);
+            height = Math.Min(height, work.bottom - work.top);
+            left = Math.Clamp(left, work.left, work.right - width);
+            top = Math.Clamp(top, work.top, work.bottom - height);
+        }
+
+        return new RECT { left = left, top = top, right = left + width, bottom = top + height };
+    }
+
+    /// <summary>
     /// The place and size <c>spar dev</c> kept from the previous run of a Development build, in
     /// <see cref="KeptVariable"/> as <c>left,top,width,height</c> in physical pixels, then <c>,maximized</c> for a maximized
     /// window, whose normal place the four numbers are (decision "M2b's decide-first questions", item 4); null when it

@@ -29,7 +29,7 @@ internal sealed record ContractRead(
     IReadOnlyList<Diagnostic> Problems,
     PageSecurityModel? PageSecurity = null,
     WindowColorsModel? WindowColors = null,
-    IReadOnlyList<string>? WindowKinds = null);
+    IReadOnlyList<WindowKindName>? WindowKinds = null);
 
 /// <summary>
 /// Reads the project's contracts with the generator's own analysis (decision "D1: Compilation pipeline"), so the page's

@@ -4,6 +4,7 @@
 # "Filled once" means a collection the static initializer fills and nothing writes again.
 
 # Spar (the runtime, in every app's process)
+Spar | Spar.AppWindows.ModalResult.<Dismissed>k__BackingField | readonly | An immutable record of no value, made once, shared by every dismissed modal.
 Spar | Spar.AppWindows.WindowCommands.Null | readonly | The bytes of the JSON null, filled once, never written.
 Spar | Spar.Bridge.BridgeCodec.HeaderOptions | readonly | Reader options, a value type copied on use; never written.
 Spar | Spar.Bridge.HostCommands.NotSaved | readonly | The bytes of a fixed error payload, filled once, never written.

@@ -1,9 +1,10 @@
 // The engine of @spar/app/windows: the page's side of its window. It opens windows of the kinds Program.cs declares
-// (decision "Secondary and modal windows"; docs/app-model.md 6.7) through the host's own commands under `spar`, and reads
-// the params its opener gave. Its close guard (decision "Two-stage close"; docs/app-model.md 6.11) is asked before the
-// backend's when the window is asked to close, and answers close, keep, or ask, which Spar shows as one native
-// confirmation owned by the window. The connection runs the guards when the host sends `close-request` and answers
-// `close-answer`. The generated module types the kinds as the app's `WindowKind` union.
+// (decision "Secondary and modal windows"; docs/app-model.md 6.7) through the host's own commands under `spar`, shows
+// modals and waits for their result, closes its own window with a value for its opener, and reads the params its opener
+// gave. Its close guard (decision "Two-stage close"; docs/app-model.md 6.11) is asked before the backend's when the
+// window is asked to close, and answers close, keep, or ask, which Spar shows as one native confirmation owned by the
+// window. The connection runs the guards when the host sends `close-request` and answers `close-answer`. The generated
+// module types the kinds as the app's `WindowKind` and `ModalKind` unions.
 import { unknownErrorCase, type Decoder } from "./connection.js";
 import type { Call, CallOptions } from "./results.js";
 import { invoke } from "./sdk.js";
@@ -42,16 +43,41 @@ export interface OpenError {
   readonly notOpened: { readonly reason: string };
 }
 
+/** How a modal ended without a value, or why it never opened. */
+export interface ModalError extends OpenError {
+  /**
+   * The modal closed without `closeWith`: its close button, Alt+F4, or the app closing. Not `cancelled`, which is the
+   * `CallError` of an aborted call.
+   */
+  readonly dismissed: undefined;
+}
+
 /** What a window's opener hands it: JSON, at most 64 KB. Keep larger data in the backend and pass its id. */
 export type WindowParams = Readonly<Record<string, unknown>>;
 
-/** This window and the app's other windows, as the page sees them; `K` is the app's `WindowKind` union. */
-export interface WindowsApi<K extends string> {
+/**
+ * This window and the app's other windows, as the page sees them; `K` is the app's `WindowKind` union, and `M` its
+ * `ModalKind` union.
+ */
+export interface WindowsApi<K extends string, M extends string = never> {
   /**
    * Opens a window of a kind `Program.cs` declares, showing its route with `params`; a single-instance kind that is open
    * is focused instead. Succeeds once the window is shown.
    */
   open(kind: K, params?: WindowParams, options?: CallOptions): Call<void, OpenError>;
+  /**
+   * Shows a modal of a kind `Program.cs` declares with `Modal()`, owned by this window, which takes no input until it
+   * closes, and waits until it does: the value its page gave `closeWith`, typed by this page, or `dismissed`. A
+   * single-instance modal that is open already is brought to the front and gives `notOpened`. Aborting the call ends
+   * only the wait: the modal stays open, and its result is dropped.
+   */
+  showModal<T = unknown>(kind: M, params?: WindowParams, options?: CallOptions): Call<T, ModalError>;
+  /**
+   * Closes this window at once, without asking its close guards, and hands `value` (JSON, at most 64 KB) to the page
+   * that showed it, when it is a modal. A failure, such as a value too large or the main window, goes to
+   * `configureSpar`'s `onFailure`, and the window stays open.
+   */
+  closeWith(value?: unknown): void;
   /** The params this window's opener gave, typed by the page; null for the main window or a window opened without any. */
   params<T extends WindowParams = WindowParams>(options?: CallOptions): Call<T | null>;
   /**
@@ -65,6 +91,22 @@ const openDecoder: Decoder<void> = {
   value: () => undefined,
   error: (code, payload) =>
     code === "notOpened" && typeof payload["reason"] === "string" ? { reason: payload["reason"] } : unknownErrorCase,
+};
+
+const modalDecoder: Decoder<unknown> = {
+  value: json => (json === "" ? null : JSON.parse(json)),
+  error: (code, payload) => {
+    if (code === "dismissed") {
+      return undefined;
+    }
+
+    return openDecoder.error(code, payload);
+  },
+};
+
+const closeDecoder: Decoder<void> = {
+  value: () => undefined,
+  error: () => unknownErrorCase,
 };
 
 const paramsDecoder: Decoder<WindowParams | null> = {
@@ -89,7 +131,7 @@ function readParams(json: string): WindowParams | null {
 /** The request of `open`: the kind and its params; a value JSON cannot carry fails here, before anything is sent. */
 function openRequest(kind: string, params: WindowParams | undefined): string {
   if (typeof kind !== "string" || kind.length === 0) {
-    throw new TypeError("windows.open takes the name of a window kind that Program.cs declares.");
+    throw new TypeError("windows.open and windows.showModal take the name of a window kind that Program.cs declares.");
   }
 
   if (params !== undefined && (params === null || typeof params !== "object" || Array.isArray(params))) {
@@ -99,10 +141,31 @@ function openRequest(kind: string, params: WindowParams | undefined): string {
   return JSON.stringify({ kind, params: params ?? null });
 }
 
+/** The request of `closeWith`: the value, which must be JSON; one JSON cannot carry fails here, before anything is sent. */
+function closeRequest(value: unknown): string {
+  const json = JSON.stringify(value === undefined ? null : value);
+  if (json === undefined) {
+    throw new TypeError("windows.closeWith takes a value JSON can carry, such as { changed: true }.");
+  }
+
+  return `{"value":${json}}`;
+}
+
 /** This window, as the page sees it. */
-export const windows: WindowsApi<string> = {
+export const windows: WindowsApi<string, string> = {
   open(kind: string, params?: WindowParams, options?: CallOptions): Call<void, OpenError> {
     return invoke<void, OpenError>("spar", "openWindow", () => openRequest(kind, params), openDecoder, options);
+  },
+
+  showModal<T = unknown>(kind: string, params?: WindowParams, options?: CallOptions): Call<T, ModalError> {
+    return invoke<unknown, ModalError>("spar", "showModal", () => openRequest(kind, params), modalDecoder, options) as Call<T, ModalError>;
+  },
+
+  closeWith(value?: unknown): void {
+    // No handler for failures: they reach configureSpar's onFailure, as an unhandled call's do.
+    void invoke<void, Record<never, never>>("spar", "closeWindow", () => closeRequest(value), closeDecoder).match({
+      success: () => undefined,
+    });
   },
 
   params<T extends WindowParams = WindowParams>(options?: CallOptions): Call<T | null> {

@@ -42,6 +42,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     private readonly AppWindowSet _windowSet;
     private readonly TestWindow? _main;
     private readonly List<TestWindow> _others = [];
+    private readonly WindowFamily<AppWindow> _family;
     private TestPage? _page;
 
     /// <param name="opened">A window the app's page opened, of one of its kinds; null for the app's main window.</param>
@@ -62,7 +63,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         _runningApp = running;
         _kindWindow = opened;
         _main = main;
-        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this));
+        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this), message => _log.Warn(message));
+        _family = main?._family ?? new WindowFamily<AppWindow>();
         _running = Task.FromResult(running);
 
         // An app's windows share its profile: the test app's other windows take the main window's, which only it returns.
@@ -84,7 +86,10 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         };
         var title = app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
         var profile = new BrowserProfile(running.Folders.Profile);
-        _window = new AppWindow(app, _log, automated: true, title, profile, _hangHook, this, offscreen: true, source, opened, _windowSet);
+        _window = new AppWindow(app, _log, automated: true, title, profile, _hangHook, this, offscreen: true, source, opened, _windowSet)
+        {
+            Family = _family,
+        };
         Origin = new Uri(PageServer.Origin);
     }
 
@@ -168,6 +173,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return _closed.Task;
     }
 
+    public Task<bool> TakesInputAsync() => OnUiAsync(() => Task.FromResult(_window.TakesInput));
+
     public unsafe Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => OnUiAsync(() =>
     {
         BOOL dark = false;
@@ -193,23 +200,20 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return allowed != 0;
     }
 
-    /// <summary>The renderers are noted; the main window's teardown also tears down the app's other windows, as an app's does.</summary>
+    /// <summary>The renderers are noted; the main window's teardown takes the app's other windows (its family), as an app's does.</summary>
     void IAppWindowOwner.TeardownStarted()
     {
         _ = NoteRenderersAsync();
         if (_main is null)
         {
             _windowSet.Closing();
-            foreach (var other in _others.ToList())
-            {
-                _ = other._window.TeardownAsync(0);
-            }
         }
     }
 
     /// <summary>The window is gone: the rest of its stop and the leftover-process check run off the UI thread.</summary>
     void IAppWindowOwner.WindowDestroyed()
     {
+        _family.Remove(_window);
         if (_main is not null && _kindWindow is not null)
         {
             _main._others.Remove(this);
@@ -241,12 +245,19 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     private void Start()
     {
+        _family.Add(_window);
         try
         {
             _window.Start(_process.Ui, _theme, _running);
         }
         catch (Exception exception)
         {
+            _family.Remove(_window);
+            if (_kindWindow is not null)
+            {
+                _window.AbandonStart();
+            }
+
             _opened.TrySetException(exception);
             _closed.TrySetException(exception);
             ReturnProfile();
@@ -507,6 +518,10 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         public void Focus(OpenWindow window) => main._process.Ui.Post(
             () => main._others.FirstOrDefault(other => other._kindWindow?.Id == window.Id)?._window.Focus(),
             "test window focus");
+
+        public void Close(OpenWindow window) => main._process.Ui.Post(
+            () => _ = main._family.Find(window.Id)?.TeardownAsync(0),
+            "test window closeWith");
     }
 
     private sealed class TestAnswers(bool closeAnyway) : ICloseQuestions

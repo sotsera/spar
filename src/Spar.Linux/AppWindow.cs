@@ -170,6 +170,7 @@ internal sealed partial class AppWindow
         _self = GCHandle.Alloc(this);
         var options = Options;
         _window = Gtk.gtk_window_new();
+        var modalOwner = JoinGroup();
         theme.Apply(_window);
         _log.Info($"Theme {(theme.IsDark ? "dark" : "light")}, {theme.Background}, from {theme.Source}.");
         Gtk.gtk_window_set_title(_window, _title);
@@ -251,7 +252,7 @@ internal sealed partial class AppWindow
         }
 
         Gtk.gtk_window_present(_window);
-        _log.Phase("window shown");
+        _log.Phase(modalOwner is null ? "window shown" : $"window shown, modal to {modalOwner.Id}");
         theme.Follow(() =>
         {
             _view?.SetBackground(theme.Background);

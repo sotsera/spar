@@ -72,8 +72,8 @@ public sealed class AppWindowTests
     {
         await using var host = await HostPage.OpenAsync();
         await host.ClickAsync("Open a note");
-        await host.ClickAsync("Open the panel");
         var note = await host.App.WindowAsync("note", cancellationToken: Token);
+        await host.ClickAsync("Open the panel");
         var panel = await host.App.WindowAsync("panel", cancellationToken: Token);
 
         var closed = await note.Window.CloseAsync();

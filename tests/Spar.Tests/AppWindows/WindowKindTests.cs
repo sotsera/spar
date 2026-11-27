@@ -242,5 +242,9 @@ public sealed class WindowKindTests
         }
 
         public void Focus(OpenWindow window) => Focused.Add(window);
+
+        public void Close(OpenWindow window)
+        {
+        }
     }
 }

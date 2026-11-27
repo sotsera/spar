@@ -221,6 +221,12 @@ internal interface ISparTestWindow
     /// preference on Linux) and the colour it paints behind the page, as <c>0x00BBGGRR</c>.
     /// </summary>
     Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync();
+
+    /// <summary>
+    /// Whether the window takes the user's input: false while a modal of its own is open (Windows' <c>IsWindowEnabled</c>;
+    /// on Linux, whether a modal window is transient for it, which GTK keeps its input from).
+    /// </summary>
+    Task<bool> TakesInputAsync();
 }
 
 /// <summary>

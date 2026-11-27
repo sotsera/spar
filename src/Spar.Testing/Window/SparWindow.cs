@@ -156,6 +156,9 @@ public sealed class SparWindow
     /// <summary>The window's title bar scheme and its own colour, as Windows has them, for Spar's own host tests.</summary>
     internal Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => _window.NativeThemeAsync();
 
+    /// <summary>Whether the window takes the user's input: false while a modal of its own is open, for Spar's own host tests.</summary>
+    internal Task<bool> TakesInputAsync() => _window.TakesInputAsync();
+
     /// <summary>The ids of the renderer processes that render the page now.</summary>
     internal Task<IReadOnlyList<int>> RendererProcessesAsync() => _window.RendererProcessesAsync();
 

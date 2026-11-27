@@ -6,14 +6,15 @@ namespace Spar.Linux;
 /// <summary>
 /// The app's windows of its kinds (decision "M3d's decide-first questions", items 3 and 4): opened on the main loop
 /// when a page asks, each an <see cref="AppWindow"/> of its own with its route, params and allow-list, on the app's
-/// network session with a web context of its own (its <c>spar</c> scheme serves that window). When the main window's
-/// teardown starts, the others are torn down with it, and the shutdown runs once every window is gone. Their close
-/// requests, the close order through each window's guard and the session end come with M3d's later steps.
+/// network session with a web context of its own (its <c>spar</c> scheme serves that window); a modal in its opener's
+/// window group, transient for it. The app's <see cref="WindowFamily{TWindow}"/> holds them with the main window:
+/// closing the main window asks the others first, and its teardown takes those still open. The shutdown runs once every
+/// window is gone. The session end with several windows comes with M3d's later steps.
 /// </summary>
 internal sealed partial class LinuxApp
 {
-    /// <summary>The windows of the app's kinds that are open (loop thread only).</summary>
-    private readonly List<AppWindow> _secondaries = [];
+    /// <summary>The app's open windows, the main one first (loop thread only).</summary>
+    private readonly WindowFamily<AppWindow> _family = new();
 
     /// <summary>Every window of the app's kinds the run made, whose handles go once the loop has ended.</summary>
     private readonly List<AppWindow> _madeSecondaries = [];
@@ -44,24 +45,28 @@ internal sealed partial class LinuxApp
                 var owner = new SecondaryOwner(this, window);
                 var opened = new AppWindow(
                     _app, security, _log, _automated, _title, _folders, _profile, _hangHook, _promptAnswers, owner,
-                    opened: window, windows: _windowSet, sharedSession: _window.Session);
+                    opened: window, windows: _windowSet, sharedSession: _window.Session)
+                {
+                    Family = _family,
+                };
                 owner.Window = opened;
                 if (DevServer.DevServerSettings.IsSupported && _devServer is not null)
                 {
                     opened.UseDevServer(_devServer);
                 }
 
-                _secondaries.Add(opened);
+                _family.Add(opened);
                 _madeSecondaries.Add(opened);
                 try
                 {
                     opened.Start(ui, theme, built);
-                    _log.Step($"window {window.Id} opened at {window.Options.PageRoute}");
+                    _log.Step($"window {window.Id} opened at {window.Options.PageRoute}{(window.IsModal ? $", modal to {window.OpenerId}" : "")}");
                     shown.TrySetResult();
                 }
                 catch (Exception error)
                 {
-                    _secondaries.Remove(opened);
+                    _family.Remove(opened);
+                    opened.AbandonStart();
                     _log.Error($"Window {window.Id} could not be opened", error);
                     shown.TrySetException(error);
                 }
@@ -73,23 +78,21 @@ internal sealed partial class LinuxApp
 
     /// <summary>Presents an open window of a single-instance kind.</summary>
     void IAppWindowHost.Focus(OpenWindow window) => _ui?.Post(
-        () => _secondaries.FirstOrDefault(open => open.Id == window.Id)?.Focus(),
+        () => _family.Find(window.Id)?.Focus(),
         "focus window");
 
-    /// <summary>The main window's teardown started: nothing opens any more, and every other window is torn down.</summary>
-    private void CloseSecondaries()
-    {
-        _windowSet?.Closing();
-        foreach (var window in _secondaries.ToList())
-        {
-            _ = window.TeardownAsync(0);
-        }
-    }
+    /// <summary>The window's own page closed it (<c>windows.closeWith</c>): its teardown, without its guards.</summary>
+    void IAppWindowHost.Close(OpenWindow window) => _ui?.Post(
+        () => _ = _family.Find(window.Id)?.TeardownAsync(0),
+        "close window");
+
+    /// <summary>The main window's teardown started: nothing opens any more; its teardown takes the others.</summary>
+    private void CloseSecondaries() => _windowSet?.Closing();
 
     /// <summary>The shutdown runs once the main window and every other window are gone (loop thread).</summary>
     private void FinishWhenDone()
     {
-        if (_mainClosed && _secondaries.Count == 0)
+        if (_mainClosed && _family.Others.Count == 0)
         {
             _ = FinishAsync(_ui!);
         }
@@ -98,7 +101,7 @@ internal sealed partial class LinuxApp
     /// <summary>A window of the app's kinds is gone: its bridge stops off the loop.</summary>
     private void SecondaryClosed(AppWindow window, OpenWindow opened)
     {
-        _secondaries.Remove(window);
+        _family.Remove(window);
         _windowSet?.Closed(opened.Id);
         _log.Step($"window {opened.Id} closed");
         _ = Task.Run(window.StopAsync);

@@ -110,6 +110,35 @@ internal static unsafe partial class Gtk
     [LibraryImport(Library)]
     public static partial void gtk_window_destroy(nint window);
 
+    /// <summary>Keeps the window above <paramref name="parent"/> (0 for none); the window manager may centre it on it.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_set_transient_for(nint window, nint parent);
+
+    /// <summary>The window <see cref="gtk_window_set_transient_for"/> set, borrowed; 0 for none.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_window_get_transient_for(nint window);
+
+    /// <summary>A <c>gboolean</c>: while the window is shown, the other windows of its window group take no input.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_set_modal(nint window, int modal);
+
+    [LibraryImport(Library)]
+    public static partial int gtk_window_get_modal(nint window);
+
+    /// <summary>
+    /// A window group, owned: grabs and modality reach only the windows of one group, so a modal blocks its own group
+    /// and no other. Every window takes a reference of its own on its group.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_window_group_new();
+
+    [LibraryImport(Library)]
+    public static partial void gtk_window_group_add_window(nint group, nint window);
+
+    /// <summary>The window's group, borrowed: the default group of the app when none was set.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_window_get_group(nint window);
+
     /// <summary>The smallest size the widget accepts; on a window, its minimum size.</summary>
     [LibraryImport(Library)]
     public static partial void gtk_widget_set_size_request(nint widget, int width, int height);

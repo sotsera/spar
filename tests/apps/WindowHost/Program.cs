@@ -8,9 +8,10 @@ var app = SparApplication.Create(args, spar =>
     spar.Window(w => w.Size(1000, 700));
 
     // Window kinds the page opens (decision "M3d's decide-first questions", item 3): notes, any number; one panel, which
-    // may call only host.echo of the app's commands.
+    // may call only host.echo of the app's commands; a confirm modal, whose page answers with closeWith.
     spar.Window("note", w => w.Route("/note").Size(600, 400));
     spar.Window("panel", w => w.Route("/panel").Size(500, 360).SingleInstance().Commands(c => c.Allow<HostService>("echo")));
+    spar.Window("confirm", w => w.Route("/confirm").Size(420, 320).Modal());
 
     // The installation file beside the executable, when a test puts one there (decision "M3b's decide-first questions", item 6).
     spar.InstallationFile();

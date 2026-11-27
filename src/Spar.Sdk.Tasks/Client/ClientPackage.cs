@@ -46,7 +46,7 @@ internal static class ClientPackage
         PageSecurityModel? security = null,
         WindowColorsModel? colours = null,
         bool pageTelemetry = false,
-        IReadOnlyList<string>? windowKinds = null)
+        IReadOnlyList<WindowKindName>? windowKinds = null)
     {
         var files = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
         void Text(string path, string text) => files[path] = Encoding.UTF8.GetBytes(text);

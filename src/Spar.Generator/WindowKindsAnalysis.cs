@@ -7,15 +7,18 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Spar.Generator;
 
+/// <summary>A window kind's name, and whether it is a modal: null when the build cannot tell from its options.</summary>
+internal sealed record WindowKindName(string Name, bool? Modal);
+
 /// <summary>What one <c>Create</c> call declares as window kinds, in order, and the located problems found reading it.</summary>
-internal sealed record WindowKindsRead(IReadOnlyList<string> Kinds, IReadOnlyList<Diagnostic> Problems);
+internal sealed record WindowKindsRead(IReadOnlyList<WindowKindName> Kinds, IReadOnlyList<Diagnostic> Problems);
 
 /// <summary>
 /// Reads the window kinds <c>Program.cs</c> declares (<c>spar.Window("settings", w => …)</c>, decision "Secondary and
 /// modal windows") without running code, for the client step's <c>WindowKind</c> union and the analyzer (SPAR107): each
 /// call a statement of its own directly in the <c>SparApplication.Create</c> configuration, as page security is, and its
-/// name a constant string the runtime takes (camelCase ASCII, not <c>main</c>). The options are not read. The runtime's
-/// own checks (a duplicate, a missing route) stay the start's.
+/// name a constant string the runtime takes (camelCase ASCII, not <c>main</c>). Of the options only <c>Modal()</c> is
+/// read, for the <c>ModalKind</c> union. The runtime's own checks (a duplicate, a missing route) stay the start's.
 /// </summary>
 internal static class WindowKindsAnalysis
 {
@@ -44,7 +47,7 @@ internal static class WindowKindsAnalysis
     /// <summary>The kinds one <c>Create</c> call's configuration declares; a name that breaks a rule is reported.</summary>
     public static WindowKindsRead Read(InvocationExpressionSyntax create, SemanticModel model, CancellationToken cancellationToken)
     {
-        var kinds = new List<string>();
+        var kinds = new List<WindowKindName>();
         var problems = new List<Diagnostic>();
         if (create.ArgumentList.Arguments.Count != 2
             || create.ArgumentList.Arguments[1].Expression is not LambdaExpressionSyntax lambda
@@ -57,14 +60,53 @@ internal static class WindowKindsAnalysis
         {
             foreach (var call in PageSecurityAnalysis.Chain(statement, spar))
             {
-                if (IsKindCall(call, model, cancellationToken) && NameOf(call, model, cancellationToken, problems) is { } name && !kinds.Contains(name))
+                if (IsKindCall(call, model, cancellationToken)
+                    && NameOf(call, model, cancellationToken, problems) is { } name
+                    && !kinds.Any(kind => kind.Name == name))
                 {
-                    kinds.Add(name);
+                    kinds.Add(new WindowKindName(name, IsModal(call, model, cancellationToken)));
                 }
             }
         }
 
         return new WindowKindsRead(kinds, problems);
+    }
+
+    /// <summary>
+    /// Whether a kind's options call <c>Modal()</c>: read from a lambda whose body is a chain of the options' methods on
+    /// its parameter (<c>w =&gt; w.Route(…).Modal()</c>), or its statements of such chains; null for options in any
+    /// other shape, which the page's unions then take as either.
+    /// </summary>
+    private static bool? IsModal(InvocationExpressionSyntax kindCall, SemanticModel model, CancellationToken cancellationToken)
+    {
+        if (kindCall.ArgumentList.Arguments[1].Expression is not LambdaExpressionSyntax lambda
+            || PageSecurityAnalysis.Parameter(lambda) is not { } options)
+        {
+            return null;
+        }
+
+        var modal = false;
+        foreach (var statement in PageSecurityAnalysis.TopLevel(lambda))
+        {
+            var calls = PageSecurityAnalysis.Chain(statement, options);
+            if (calls.Count == 0)
+            {
+                return null;
+            }
+
+            foreach (var call in calls)
+            {
+                if (PageSecurityAnalysis.MethodOf(call, model, cancellationToken) is not { } method
+                    || method.ContainingType.ToDisplayString() != "Spar.WindowOptions")
+                {
+                    return null;
+                }
+
+                modal |= method.Name == "Modal";
+            }
+        }
+
+        return modal;
     }
 
     /// <summary>Every <c>spar.Window(kind, …)</c> call of an app that sits where the build cannot read it (SPAR107).</summary>

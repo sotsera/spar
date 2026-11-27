@@ -7,14 +7,14 @@ namespace Spar.Windows;
 /// <summary>
 /// The app's windows of its kinds (decision "M3d's decide-first questions", items 3 and 4): opened on the UI thread
 /// when a page asks, each an <see cref="AppWindow"/> of its own with its route, params and allow-list, in the app's
-/// browser profile. When the main window's teardown starts, the others are torn down with it, and the message loop ends
-/// once every window is gone. Their close requests, the close order through each window's guard and the session end
-/// come with M3d's later steps.
+/// browser profile; a modal owned by its opener. The app's <see cref="WindowFamily{TWindow}"/> holds them with the main
+/// window: closing the main window asks the others first, and its teardown takes those still open. The message loop
+/// ends once every window is gone. The session end with several windows comes with M3d's later steps.
 /// </summary>
 internal sealed partial class WindowsApp
 {
-    /// <summary>The windows of the app's kinds that are open (UI thread only).</summary>
-    private readonly List<AppWindow> _secondaries = [];
+    /// <summary>The app's open windows, the main one first (UI thread only).</summary>
+    private readonly WindowFamily<AppWindow> _family = new();
 
     /// <summary>Whether the main window is gone (UI thread only).</summary>
     private bool _mainDestroyed;
@@ -39,23 +39,27 @@ internal sealed partial class WindowsApp
             }
 
             var owner = new SecondaryOwner(this, window);
-            var opened = new AppWindow(_app, _log, _automated, _title, _profile, _hangHook, owner, opened: window, windows: _windowSet);
+            var opened = new AppWindow(_app, _log, _automated, _title, _profile, _hangHook, owner, opened: window, windows: _windowSet)
+            {
+                Family = _family,
+            };
             owner.Window = opened;
             if (DevServer.DevServerSettings.IsSupported && _devServer is not null)
             {
                 opened.UseDevServer(_devServer);
             }
 
-            _secondaries.Add(opened);
+            _family.Add(opened);
             try
             {
                 opened.Start(ui, theme, built);
-                _log.Step($"window {window.Id} opened at {window.Options.PageRoute}");
+                _log.Step($"window {window.Id} opened at {window.Options.PageRoute}{(window.IsModal ? $", modal to {window.OpenerId}" : "")}");
                 shown.TrySetResult();
             }
             catch (Exception error)
             {
-                _secondaries.Remove(opened);
+                _family.Remove(opened);
+                opened.AbandonStart();
                 _log.Error($"Window {window.Id} could not be opened", error);
                 shown.TrySetException(error);
             }
@@ -67,26 +71,28 @@ internal sealed partial class WindowsApp
     /// <summary>Brings an open window of a single-instance kind to the front.</summary>
     void IAppWindowHost.Focus(OpenWindow window) => _ui?.Post(() =>
     {
-        if (_secondaries.FirstOrDefault(open => open.Id == window.Id) is { IsClosing: false } open)
+        if (_family.Find(window.Id) is { IsClosing: false } open)
         {
             open.Focus();
         }
     });
 
-    /// <summary>The main window's teardown started: nothing opens any more, and every other window is torn down.</summary>
-    private void CloseSecondaries()
+    /// <summary>The window's own page closed it (<c>windows.closeWith</c>): its teardown, without its guards.</summary>
+    void IAppWindowHost.Close(OpenWindow window) => _ui?.Post(() =>
     {
-        _windowSet?.Closing();
-        foreach (var window in _secondaries.ToList())
+        if (_family.Find(window.Id) is { } open)
         {
-            _ = window.TeardownAsync(0);
+            _ = open.TeardownAsync(0);
         }
-    }
+    });
+
+    /// <summary>The main window's teardown started: nothing opens any more; its teardown takes the others.</summary>
+    private void CloseSecondaries() => _windowSet?.Closing();
 
     /// <summary>The loop ends once the main window and every other window are gone (UI thread).</summary>
     private void QuitWhenDone()
     {
-        if (_mainDestroyed && _secondaries.Count == 0)
+        if (_mainDestroyed && _family.Others.Count == 0)
         {
             PInvoke.PostQuitMessage(0);
         }
@@ -95,7 +101,7 @@ internal sealed partial class WindowsApp
     /// <summary>A window of the app's kinds is gone: its bridge and logs stop off the UI thread.</summary>
     private void SecondaryDestroyed(AppWindow window, OpenWindow opened)
     {
-        _secondaries.Remove(window);
+        _family.Remove(window);
         _windowSet?.Closed(opened.Id);
         _log.Step($"window {opened.Id} closed");
         _ = Task.Run(window.StopAsync);

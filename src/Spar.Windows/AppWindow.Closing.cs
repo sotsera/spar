@@ -6,9 +6,11 @@ using Windows.Win32.Foundation;
 namespace Spar.Windows;
 
 /// <summary>
-/// The two-stage close of the main window (decision "Two-stage close"; <c>docs/app-model.md</c> 6.11): the page's
-/// guards, then the backend's, each closing, keeping or asking, one native confirmation per ask, and the teardown only
-/// for an approved request. A second request joins the open one. When Windows ends the session (<c>WM_ENDSESSION</c>
+/// The two-stage close of each of the app's windows (decision "Two-stage close"; <c>docs/app-model.md</c> 6.11): first
+/// the windows that close before it (the main window's others, a window's own modals; <c>AppWindow.Family.cs</c>), each
+/// through its own request, then the page's guards, then the backend's with the window's kind in the request, each
+/// closing, keeping or asking, one native confirmation per ask, and the teardown only for an approved request. A
+/// second request joins the open one. When Windows ends the session (<c>WM_ENDSESSION</c>
 /// with <c>TRUE</c>) the close is a non-cancellable, best-effort phase within 4 s of the message's start (decision
 /// "Window tests: closing, session-end budget, test theme and any-character keys"): the page's guard gets at most 2 s
 /// and shares 3 s with the backend's, nothing asks or keeps, then the teardown and the owner's last work (an app
@@ -95,6 +97,17 @@ internal sealed partial class AppWindow
         {
             var request = new CloseRequest(Name, reason, automated);
             _log.Step($"close requested ({reason}{(automated ? ", automated" : "")})");
+
+            // The main window's others, or this window's own modals, first, each through its own guards.
+            if (await CloseOthersFirstAsync(reason, automated, questions) is { } kept)
+            {
+                return kept;
+            }
+
+            if (_state == State.Closing)
+            {
+                return new CloseReport(closed: true, question, unanswered);
+            }
 
             var page = _watch is null ? PageCloseResult.NoPage : await _watch.AskPageAsync(reason, automated, questions, TimeSpan.Zero);
             unanswered = page.Unanswered;

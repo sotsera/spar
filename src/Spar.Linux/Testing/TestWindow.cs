@@ -52,6 +52,7 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     private readonly AppWindowSet _windowSet;
     private readonly TestWindow? _main;
     private readonly List<TestWindow> _others = [];
+    private readonly WindowFamily<AppWindow> _family;
     private AppWindow? _window;
     private TestPage? _page;
     private int _holdsFirstLoad;
@@ -79,7 +80,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         _request = request;
         _kindWindow = opened;
         _main = main;
-        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this));
+        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this), message => _log.Warn(message));
+        _family = main?._family ?? new WindowFamily<AppWindow>();
         _log.UseAppLogging(running.Services);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
         _security = PageSecuritySetup.Resolve(app, _log.Logger);
@@ -265,6 +267,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return new SparTestCloseReport(report.Closed, report.Question, report.Unanswered);
     });
 
+    public Task<bool> TakesInputAsync() => OnLoopAsync(() => Task.FromResult(_window?.TakesInput ?? false));
+
     public Task<int> CloseAsync()
     {
         _process.Ui.Post(() =>
@@ -330,23 +334,24 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return Task.FromResult((dark, ((uint)colour.Blue << 16) | ((uint)colour.Green << 8) | colour.Red));
     });
 
-    /// <summary>The main window's teardown also tears down the app's other windows, as an app's does.</summary>
+    /// <summary>The main window's teardown takes the app's other windows (its family), as an app's does.</summary>
     void IAppWindowOwner.TeardownStarted()
     {
         _request.OnPhase?.Invoke("closing");
         if (_main is null)
         {
             _windowSet.Closing();
-            foreach (var other in _others.ToList())
-            {
-                _ = other._window?.TeardownAsync(0);
-            }
         }
     }
 
     /// <summary>The window is gone and its web processes have exited (loop thread): the rest of the stop runs off the loop.</summary>
     void IAppWindowOwner.WindowClosed()
     {
+        if (_window is not null)
+        {
+            _family.Remove(_window);
+        }
+
         if (_main is not null && _kindWindow is not null)
         {
             _main._others.Remove(this);
@@ -401,12 +406,25 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
             var profile = new BrowserProfile(_running.Folders.Profile);
             _window = new AppWindow(
                 _app, _security, _log, automated: true, title, _running.Folders, profile, _hangHook, promptAnswers: null, this, source,
-                opened: _kindWindow, windows: _windowSet, sharedSession: _main?._window?.Session ?? 0);
+                opened: _kindWindow, windows: _windowSet, sharedSession: _main?._window?.Session ?? 0)
+            {
+                Family = _family,
+            };
             _request.OnPhase?.Invoke("controller requested");
+            _family.Add(_window);
             _window.Start(_process.Ui, _theme, Task.FromResult(_running));
         }
         catch (Exception exception)
         {
+            if (_window is not null)
+            {
+                _family.Remove(_window);
+                if (_kindWindow is not null)
+                {
+                    _window.AbandonStart();
+                }
+            }
+
             ReleaseFirstLoad();
             LeaveScheme();
             _opened.TrySetException(exception);
@@ -688,6 +706,10 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         public void Focus(OpenWindow window) => main._process.Ui.Post(
             () => main._others.FirstOrDefault(other => other._kindWindow?.Id == window.Id)?._window?.Focus(),
             "test window focus");
+
+        public void Close(OpenWindow window) => main._process.Ui.Post(
+            () => _ = main._family.Find(window.Id)?.TeardownAsync(0),
+            "test window closeWith");
     }
 
     private enum EngineWait

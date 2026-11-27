@@ -132,9 +132,10 @@ internal sealed unsafe class UiThread : SynchronizationContext
 
     /// <summary>
     /// Creates a top-level window of this thread's class at <paramref name="bounds"/> (physical pixels; null lets Windows
-    /// place it); <paramref name="messages"/> receives its messages. The window is not shown yet.
+    /// place it); <paramref name="messages"/> receives its messages. An <paramref name="owner"/> makes it an owned window,
+    /// which stays above its owner and has no taskbar button of its own. The window is not shown yet.
     /// </summary>
-    public HWND CreateWindow(string title, WINDOW_STYLE style, RECT? bounds, IWindowMessages messages, WINDOW_EX_STYLE extendedStyle = 0)
+    public HWND CreateWindow(string title, WINDOW_STYLE style, RECT? bounds, IWindowMessages messages, WINDOW_EX_STYLE extendedStyle = 0, HWND owner = default)
     {
         var handle = GCHandle.Alloc(messages);
         fixed (char* className = ClassName)
@@ -146,7 +147,7 @@ internal sealed unsafe class UiThread : SynchronizationContext
                 bounds?.top ?? PInvoke.CW_USEDEFAULT,
                 bounds is { } width ? width.right - width.left : PInvoke.CW_USEDEFAULT,
                 bounds is { } height ? height.bottom - height.top : PInvoke.CW_USEDEFAULT,
-                HWND.Null, HMENU.Null, Instance(), (void*)GCHandle.ToIntPtr(handle));
+                owner, HMENU.Null, Instance(), (void*)GCHandle.ToIntPtr(handle));
             if (window.IsNull)
             {
                 var error = Marshal.GetLastPInvokeError();

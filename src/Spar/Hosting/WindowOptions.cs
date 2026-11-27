@@ -34,6 +34,9 @@ public sealed class WindowOptions
     /// <summary>Whether a kind has at most one window open, which opening it again focuses.</summary>
     internal bool IsSingleInstance { get; private set; }
 
+    /// <summary>Whether the kind is a modal, which the page shows with <c>windows.showModal</c> and ends with <c>closeWith</c>.</summary>
+    internal bool IsModal { get; private set; }
+
     /// <summary>The contracts and commands the window may call; null when it may call every one.</summary>
     internal CommandAllowList? AllowList { get; private set; }
 
@@ -113,6 +116,24 @@ public sealed class WindowOptions
         }
 
         IsSingleInstance = true;
+        return this;
+    }
+
+    /// <summary>
+    /// The kind is a modal (decision "M3d's decide-first questions", item 4): the page shows it with
+    /// <c>windows.showModal(kind, params)</c>, which waits until it closes, and the modal's own page ends it with
+    /// <c>windows.closeWith(value)</c>, which hands the value to the opener; closed any other way, the opener gets
+    /// <c>dismissed</c>. While it is open, the window that opened it takes no input and the modal stays above it; the
+    /// app's other windows stay usable. A modal kind is never opened with <c>windows.open</c>.
+    /// </summary>
+    public WindowOptions Modal()
+    {
+        if (Kind is null)
+        {
+            throw new InvalidOperationException("The main window is never a modal; Modal is for a window kind.");
+        }
+
+        IsModal = true;
         return this;
     }
 

@@ -353,3 +353,16 @@ const opened = (label, call) => call.match({
 });
 on("open-note", () => { notes += 1; opened(`Note ${notes}`, windows.open("note", { text: "hello", n: notes })); });
 on("open-panel", () => opened("Panel", windows.open("panel")));
+
+// A modal (decision "M3d's decide-first questions", item 4): the opener waits for its answer, which the modal's own
+// page gives with closeWith; closed any other way, it is dismissed. Each opener counts its modals' answers.
+let answers = 0;
+on("show-confirm", () => windows.showModal("confirm", { question: "Sure?" }).match({
+  success: value => { answers += 1; windowStatus.textContent = `Confirm ${answers}: ${JSON.stringify(value)}`; },
+  errors: {
+    dismissed: () => { answers += 1; windowStatus.textContent = `Confirm ${answers}: dismissed`; },
+    notOpened: error => { windowStatus.textContent = `Confirm: not opened, ${error.reason}`; },
+  },
+  failure: error => { windowStatus.textContent = `Confirm: ${error.kind} ${error.code}`; },
+}));
+on("answer-yes", () => windows.closeWith({ answer: "yes" }));
