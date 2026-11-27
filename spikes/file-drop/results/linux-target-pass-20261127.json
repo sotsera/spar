@@ -1,0 +1,215 @@
+{
+  "mode": "target-pass",
+  "sessionBus": "present",
+  "scenarios": [
+    {
+      "name": "one file, handled area",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "2.5 ms after enter: text/uri-list",
+          "405.81 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 40,
+        "statuses": 26,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 2.22
+      },
+      "pageReport": null,
+      "hostFiles": {
+        "atMs": 603.78,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-target-pass/a.txt"
+        ],
+        "x": 150,
+        "y": 251,
+        "taken": true
+      },
+      "dropToHostMs": 1.55,
+      "navigations": [],
+      "hostEvents": [
+        "page dragenter at 200.7 ms"
+      ]
+    },
+    {
+      "name": "unicode name",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "1.47 ms after enter: text/uri-list",
+          "407.07 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 87,
+        "statuses": 27,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 2.21
+      },
+      "pageReport": null,
+      "hostFiles": {
+        "atMs": 4514.8,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-target-pass/\u00FCn\u00EFc\u00F6d\u00E9 \u6587\u4EF6.txt"
+        ],
+        "x": 150,
+        "y": 251,
+        "taken": true
+      },
+      "dropToHostMs": 1.32,
+      "navigations": [],
+      "hostEvents": []
+    },
+    {
+      "name": "a file and a folder",
+      "paths": 2,
+      "xdnd": {
+        "selectionRequests": [
+          "1.23 ms after enter: text/uri-list",
+          "402.4 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 81,
+        "statuses": 27,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 2.13
+      },
+      "pageReport": null,
+      "hostFiles": {
+        "atMs": 8419.37,
+        "count": 2,
+        "first": [
+          "/home/spar/fx-target-pass/a.txt",
+          "/home/spar/fx-target-pass/folder"
+        ],
+        "x": 150,
+        "y": 251,
+        "taken": true
+      },
+      "dropToHostMs": 1.21,
+      "navigations": [],
+      "hostEvents": []
+    },
+    {
+      "name": "a 50 MB file",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "1.16 ms after enter: text/uri-list",
+          "403.1 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 42,
+        "statuses": 27,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 2.15
+      },
+      "pageReport": null,
+      "hostFiles": {
+        "atMs": 12324.72,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-target-pass/big.bin"
+        ],
+        "x": 150,
+        "y": 251,
+        "taken": true
+      },
+      "dropToHostMs": 1.21,
+      "navigations": [],
+      "hostEvents": []
+    },
+    {
+      "name": "1,000 files",
+      "paths": 1000,
+      "xdnd": {
+        "selectionRequests": [
+          "1.7 ms after enter: text/uri-list",
+          "410.82 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 49000,
+        "statuses": 28,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 2.22
+      },
+      "pageReport": null,
+      "hostFiles": {
+        "atMs": 16244.81,
+        "count": 1000,
+        "first": [
+          "/home/spar/fx-target-pass/many/f0000.txt",
+          "/home/spar/fx-target-pass/many/f0001.txt",
+          "/home/spar/fx-target-pass/many/f0002.txt"
+        ],
+        "x": 150,
+        "y": 250,
+        "taken": true
+      },
+      "dropToHostMs": 1.69,
+      "navigations": [],
+      "hostEvents": []
+    },
+    {
+      "name": "one file, area without a handler",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "1.16 ms after enter: text/uri-list",
+          "402.8 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 40,
+        "statuses": 27,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=0 action=none",
+        "finishedAfterMs": 2.12
+      },
+      "pageReport": null,
+      "hostFiles": {
+        "atMs": 20153.55,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-target-pass/a.txt"
+        ],
+        "x": 550,
+        "y": 251,
+        "taken": false
+      },
+      "dropToHostMs": 1.25,
+      "navigations": [],
+      "hostEvents": []
+    }
+  ],
+  "oneFileDropToPageMs": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "oneFileDropToHostMs": [
+    1.3,
+    1.2,
+    1.16,
+    1.17,
+    1.19,
+    1.28,
+    1.23,
+    1.27,
+    1.21,
+    1.22
+  ]
+}

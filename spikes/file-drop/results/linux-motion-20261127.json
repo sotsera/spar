@@ -1,0 +1,608 @@
+{
+  "mode": "motion",
+  "sessionBus": "present",
+  "relay": [
+    {
+      "isTrusted": false,
+      "x": 10,
+      "y": 20,
+      "area": "handled",
+      "files": -1,
+      "atMs": 183.63,
+      "scenario": null
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 251,
+      "area": "handled",
+      "files": 0,
+      "atMs": 622.64,
+      "scenario": "one file, handled area"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 251,
+      "area": "handled",
+      "files": 0,
+      "atMs": 1527.42,
+      "scenario": "unicode name"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 251,
+      "area": "handled",
+      "files": 0,
+      "atMs": 2431.14,
+      "scenario": "a file and a folder"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 251,
+      "area": "handled",
+      "files": 0,
+      "atMs": 3335.63,
+      "scenario": "a 50 MB file"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 251,
+      "area": "handled",
+      "files": 0,
+      "atMs": 4241.63,
+      "scenario": "1,000 files"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 251,
+      "area": "handled",
+      "files": 0,
+      "atMs": 9050.79,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 9968.24,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 10885.63,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 11804.16,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 12721.15,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 251,
+      "area": "handled",
+      "files": 0,
+      "atMs": 13624.98,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 14543.75,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 15458.05,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 16375.37,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 17291.66,
+      "scenario": "timed"
+    },
+    {
+      "isTrusted": true,
+      "x": 150,
+      "y": 250,
+      "area": "handled",
+      "files": 0,
+      "atMs": 18205.92,
+      "scenario": "timed"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "one file, handled area",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "8.93 ms after enter: text/uri-list",
+          "8.99 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 35,
+        "statuses": 26,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 1.12
+      },
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 251,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "text/uri-list",
+          "text/html"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 0,
+        "files": [],
+        "entries": [
+          null,
+          null
+        ],
+        "hasFileSystemHandle": false,
+        "reportAfter": 0,
+        "receivedAtMs": 623.12
+      },
+      "dropToPageMs": 1.22,
+      "hostFiles": {
+        "atMs": 228.36,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-motion/a.txt"
+        ]
+      },
+      "dropToHostMs": -393.54,
+      "navigations": [],
+      "hostEvents": [
+        "motion enter at 220.37 ms, drop present",
+        "page dragenter at 241.3 ms"
+      ]
+    },
+    {
+      "name": "unicode name",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "1.42 ms after enter: text/uri-list",
+          "1.43 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 82,
+        "statuses": 25,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 1.06
+      },
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 251,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "text/uri-list",
+          "text/html"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 0,
+        "files": [],
+        "entries": [
+          null,
+          null
+        ],
+        "hasFileSystemHandle": false,
+        "reportAfter": 0,
+        "receivedAtMs": 1527.55
+      },
+      "dropToPageMs": 0.76,
+      "hostFiles": {
+        "atMs": 1126.97,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-motion/\u00FCn\u00EFc\u00F6d\u00E9 \u6587\u4EF6.txt"
+        ]
+      },
+      "dropToHostMs": -399.82,
+      "navigations": [],
+      "hostEvents": [
+        "motion enter at 1126.02 ms, drop present",
+        "page dragenter at 1127.44 ms"
+      ]
+    },
+    {
+      "name": "a file and a folder",
+      "paths": 2,
+      "xdnd": {
+        "selectionRequests": [
+          "1.2 ms after enter: text/uri-list",
+          "1.21 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 71,
+        "statuses": 25,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 1.04
+      },
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 251,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "text/uri-list",
+          "text/html"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 0,
+        "files": [],
+        "entries": [
+          null,
+          null
+        ],
+        "hasFileSystemHandle": false,
+        "reportAfter": 0,
+        "receivedAtMs": 2431.23
+      },
+      "dropToPageMs": 0.57,
+      "hostFiles": {
+        "atMs": 2030.66,
+        "count": 2,
+        "first": [
+          "/home/spar/fx-motion/a.txt",
+          "/home/spar/fx-motion/folder"
+        ]
+      },
+      "dropToHostMs": -400,
+      "navigations": [],
+      "hostEvents": [
+        "motion enter at 2029.67 ms, drop present",
+        "page dragenter at 2030.98 ms"
+      ]
+    },
+    {
+      "name": "a 50 MB file",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "1.2 ms after enter: text/uri-list",
+          "1.21 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 37,
+        "statuses": 25,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 1.09
+      },
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 251,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "text/uri-list",
+          "text/html"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 0,
+        "files": [],
+        "entries": [
+          null,
+          null
+        ],
+        "hasFileSystemHandle": false,
+        "reportAfter": 0,
+        "receivedAtMs": 3335.78
+      },
+      "dropToPageMs": 0.68,
+      "hostFiles": {
+        "atMs": 2934.52,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-motion/big.bin"
+        ]
+      },
+      "dropToHostMs": -400.58,
+      "navigations": [],
+      "hostEvents": [
+        "motion enter at 2933.48 ms, drop present",
+        "page dragenter at 2935.26 ms"
+      ]
+    },
+    {
+      "name": "1,000 files",
+      "paths": 1000,
+      "xdnd": {
+        "selectionRequests": [
+          "1.69 ms after enter: text/uri-list",
+          "1.7 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 44000,
+        "statuses": 25,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 1.17
+      },
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 251,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "text/uri-list",
+          "text/html"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 0,
+        "files": [],
+        "entries": [
+          null,
+          null
+        ],
+        "hasFileSystemHandle": false,
+        "reportAfter": 0,
+        "receivedAtMs": 4242.41
+      },
+      "dropToPageMs": 2.08,
+      "hostFiles": {
+        "atMs": 3841.89,
+        "count": 1000,
+        "first": [
+          "/home/spar/fx-motion/many/f0000.txt",
+          "/home/spar/fx-motion/many/f0001.txt",
+          "/home/spar/fx-motion/many/f0002.txt"
+        ]
+      },
+      "dropToHostMs": -398.44,
+      "navigations": [],
+      "hostEvents": [
+        "motion enter at 3839.77 ms, drop present",
+        "page dragenter at 3842.71 ms"
+      ]
+    },
+    {
+      "name": "one file, area without a handler",
+      "paths": 1,
+      "xdnd": {
+        "selectionRequests": [
+          "1.16 ms after enter: text/uri-list",
+          "1.17 ms after enter: text/uri-list"
+        ],
+        "uriListBytes": 35,
+        "statuses": 25,
+        "status": "accept=1 action=copy",
+        "dropped": true,
+        "finished": "success=1 action=copy",
+        "finishedAfterMs": 1.09
+      },
+      "pageReport": null,
+      "hostFiles": {
+        "atMs": 4743.45,
+        "count": 1,
+        "first": [
+          "/home/spar/fx-motion/a.txt"
+        ]
+      },
+      "dropToHostMs": -401.59,
+      "navigations": [
+        {
+          "uri": "file:///home/spar/fx-motion/a.txt",
+          "newWindow": false
+        }
+      ],
+      "hostEvents": [
+        "motion enter at 4742.55 ms, drop present",
+        "page dragenter at 4743.8 ms"
+      ]
+    }
+  ],
+  "oneFileDropToPageMs": [
+    0.67,
+    0.81,
+    1.71,
+    0.79,
+    1.03,
+    0.77,
+    1.26,
+    0.86,
+    1.25,
+    0.87
+  ],
+  "oneFileDropToHostMs": [
+    -414.6,
+    -413.97,
+    -414.84,
+    -413.99,
+    -399.67,
+    -415.23,
+    -410.56,
+    -414.42,
+    -412.15,
+    -410.23
+  ]
+}

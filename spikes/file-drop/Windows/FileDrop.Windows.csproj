@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Spike (M3c, decision "M3c's decide-first questions", item 1): how files dropped from the OS reach a WebView2 host
+    with their paths. A throwaway probe over the WebView2 SDK's own managed layer in a WinForms window, driven through
+    the in-process DevTools protocol; see ../RESULTS.md.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net11.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" />
+    <None Include="page\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

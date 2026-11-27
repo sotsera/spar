@@ -1,0 +1,1058 @@
+{
+  "runtime": "158.0.4370.45",
+  "scenarios": [
+    {
+      "name": "one file, handled area",
+      "paths": 1,
+      "dropReturnedMs": 5.91,
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 250,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "Files"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 1,
+        "files": [
+          {
+            "name": "a.txt",
+            "size": 6,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          }
+        ],
+        "items": [
+          {
+            "kind": "file",
+            "type": "text/plain"
+          }
+        ],
+        "entries": [
+          {
+            "name": "a.txt",
+            "isDirectory": false,
+            "fullPath": "/a.txt"
+          }
+        ],
+        "postError": null,
+        "postedAfter": 0.9000000059604645,
+        "handles": [
+          {
+            "kind": "file",
+            "name": "a.txt"
+          }
+        ],
+        "handlesAfter": 1.5
+      },
+      "dropToFilesMs": 2.76,
+      "hostMessages": [
+        {
+          "message": "files",
+          "atMs": 566.73,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\a.txt"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        },
+        {
+          "message": "handles",
+          "atMs": 570.1,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "null"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        }
+      ],
+      "navigations": [],
+      "newWindows": []
+    },
+    {
+      "name": "unicode name",
+      "paths": 1,
+      "dropReturnedMs": 1.34,
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 250,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "Files"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 1,
+        "files": [
+          {
+            "name": "\u00FCn\u00EFc\u00F6d\u00E9 \u6587\u4EF6.txt",
+            "size": 8,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          }
+        ],
+        "items": [
+          {
+            "kind": "file",
+            "type": "text/plain"
+          }
+        ],
+        "entries": [
+          {
+            "name": "\u00FCn\u00EFc\u00F6d\u00E9 \u6587\u4EF6.txt",
+            "isDirectory": false,
+            "fullPath": "/\u00FCn\u00EFc\u00F6d\u00E9 \u6587\u4EF6.txt"
+          }
+        ],
+        "postError": null,
+        "postedAfter": 0.30000001192092896,
+        "handles": [
+          {
+            "kind": "file",
+            "name": "\u00FCn\u00EFc\u00F6d\u00E9 \u6587\u4EF6.txt"
+          }
+        ],
+        "handlesAfter": 0.5999999940395355
+      },
+      "dropToFilesMs": 1.12,
+      "hostMessages": [
+        {
+          "message": "files",
+          "atMs": 573.36,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\\u00FCn\u00EFc\u00F6d\u00E9 \u6587\u4EF6.txt"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        },
+        {
+          "message": "handles",
+          "atMs": 573.62,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "null"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        }
+      ],
+      "navigations": [],
+      "newWindows": []
+    },
+    {
+      "name": "a file and a folder",
+      "paths": 2,
+      "dropReturnedMs": 1.57,
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 250,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "Files"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 2,
+        "files": [
+          {
+            "name": "a.txt",
+            "size": 6,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "folder",
+            "size": 0,
+            "type": "",
+            "relativePath": "",
+            "path": null
+          }
+        ],
+        "items": [
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": ""
+          }
+        ],
+        "entries": [
+          {
+            "name": "a.txt",
+            "isDirectory": false,
+            "fullPath": "/a.txt"
+          },
+          {
+            "name": "folder",
+            "isDirectory": true,
+            "fullPath": "/folder"
+          }
+        ],
+        "postError": null,
+        "postedAfter": 0.5999999940395355,
+        "handles": [
+          {
+            "kind": "file",
+            "name": "a.txt"
+          },
+          {
+            "kind": "directory",
+            "name": "folder"
+          }
+        ],
+        "folderChildren": 3,
+        "handlesAfter": 7.5
+      },
+      "dropToFilesMs": 1.24,
+      "hostMessages": [
+        {
+          "message": "files",
+          "atMs": 575.9,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 2,
+          "first": [
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\a.txt"
+            },
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\folder"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        },
+        {
+          "message": "handles",
+          "atMs": 582.31,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 2,
+          "first": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        }
+      ],
+      "navigations": [],
+      "newWindows": []
+    },
+    {
+      "name": "a folder alone",
+      "paths": 1,
+      "dropReturnedMs": 1.28,
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 250,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "Files"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 1,
+        "files": [
+          {
+            "name": "folder",
+            "size": 0,
+            "type": "",
+            "relativePath": "",
+            "path": null
+          }
+        ],
+        "items": [
+          {
+            "kind": "file",
+            "type": ""
+          }
+        ],
+        "entries": [
+          {
+            "name": "folder",
+            "isDirectory": true,
+            "fullPath": "/folder"
+          }
+        ],
+        "postError": null,
+        "postedAfter": 0.30000001192092896,
+        "handles": [
+          {
+            "kind": "directory",
+            "name": "folder"
+          }
+        ],
+        "folderChildren": 3,
+        "handlesAfter": 1.7000000178813934
+      },
+      "dropToFilesMs": 1,
+      "hostMessages": [
+        {
+          "message": "files",
+          "atMs": 585.12,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\folder"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        },
+        {
+          "message": "handles",
+          "atMs": 585.94,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "null"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        }
+      ],
+      "navigations": [],
+      "newWindows": []
+    },
+    {
+      "name": "a 50 MB file",
+      "paths": 1,
+      "dropReturnedMs": 1.26,
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 250,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "Files"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 1,
+        "files": [
+          {
+            "name": "big.bin",
+            "size": 52428800,
+            "type": "application/octet-stream",
+            "relativePath": "",
+            "path": null
+          }
+        ],
+        "items": [
+          {
+            "kind": "file",
+            "type": "application/octet-stream"
+          }
+        ],
+        "entries": [
+          {
+            "name": "big.bin",
+            "isDirectory": false,
+            "fullPath": "/big.bin"
+          }
+        ],
+        "postError": null,
+        "postedAfter": 0.30000001192092896,
+        "handles": [
+          {
+            "kind": "file",
+            "name": "big.bin"
+          }
+        ],
+        "handlesAfter": 0.5
+      },
+      "dropToFilesMs": 1.04,
+      "hostMessages": [
+        {
+          "message": "files",
+          "atMs": 588.57,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\big.bin"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        },
+        {
+          "message": "handles",
+          "atMs": 588.84,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "null"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        }
+      ],
+      "navigations": [],
+      "newWindows": []
+    },
+    {
+      "name": "1,000 files",
+      "paths": 1000,
+      "dropReturnedMs": 210.68,
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 250,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "Files"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 1000,
+        "files": [
+          {
+            "name": "f0000.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0001.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0002.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0003.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0004.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0005.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0006.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0007.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0008.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0009.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0010.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0011.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0012.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0013.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0014.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0015.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0016.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0017.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0018.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          },
+          {
+            "name": "f0019.txt",
+            "size": 1,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          }
+        ],
+        "items": [
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          },
+          {
+            "kind": "file",
+            "type": "text/plain"
+          }
+        ],
+        "entries": [
+          {
+            "name": "f0000.txt",
+            "isDirectory": false,
+            "fullPath": "/f0000.txt"
+          },
+          {
+            "name": "f0001.txt",
+            "isDirectory": false,
+            "fullPath": "/f0001.txt"
+          },
+          {
+            "name": "f0002.txt",
+            "isDirectory": false,
+            "fullPath": "/f0002.txt"
+          },
+          {
+            "name": "f0003.txt",
+            "isDirectory": false,
+            "fullPath": "/f0003.txt"
+          },
+          {
+            "name": "f0004.txt",
+            "isDirectory": false,
+            "fullPath": "/f0004.txt"
+          },
+          {
+            "name": "f0005.txt",
+            "isDirectory": false,
+            "fullPath": "/f0005.txt"
+          },
+          {
+            "name": "f0006.txt",
+            "isDirectory": false,
+            "fullPath": "/f0006.txt"
+          },
+          {
+            "name": "f0007.txt",
+            "isDirectory": false,
+            "fullPath": "/f0007.txt"
+          },
+          {
+            "name": "f0008.txt",
+            "isDirectory": false,
+            "fullPath": "/f0008.txt"
+          },
+          {
+            "name": "f0009.txt",
+            "isDirectory": false,
+            "fullPath": "/f0009.txt"
+          },
+          {
+            "name": "f0010.txt",
+            "isDirectory": false,
+            "fullPath": "/f0010.txt"
+          },
+          {
+            "name": "f0011.txt",
+            "isDirectory": false,
+            "fullPath": "/f0011.txt"
+          },
+          {
+            "name": "f0012.txt",
+            "isDirectory": false,
+            "fullPath": "/f0012.txt"
+          },
+          {
+            "name": "f0013.txt",
+            "isDirectory": false,
+            "fullPath": "/f0013.txt"
+          },
+          {
+            "name": "f0014.txt",
+            "isDirectory": false,
+            "fullPath": "/f0014.txt"
+          },
+          {
+            "name": "f0015.txt",
+            "isDirectory": false,
+            "fullPath": "/f0015.txt"
+          },
+          {
+            "name": "f0016.txt",
+            "isDirectory": false,
+            "fullPath": "/f0016.txt"
+          },
+          {
+            "name": "f0017.txt",
+            "isDirectory": false,
+            "fullPath": "/f0017.txt"
+          },
+          {
+            "name": "f0018.txt",
+            "isDirectory": false,
+            "fullPath": "/f0018.txt"
+          },
+          {
+            "name": "f0019.txt",
+            "isDirectory": false,
+            "fullPath": "/f0019.txt"
+          }
+        ],
+        "postError": null,
+        "postedAfter": 68.69999998807907,
+        "handles": [
+          {
+            "kind": "file",
+            "name": "f0000.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0001.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0002.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0003.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0004.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0005.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0006.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0007.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0008.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0009.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0010.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0011.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0012.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0013.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0014.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0015.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0016.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0017.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0018.txt"
+          },
+          {
+            "kind": "file",
+            "name": "f0019.txt"
+          }
+        ],
+        "handlesAfter": 110.5
+      },
+      "dropToFilesMs": 205.61,
+      "hostMessages": [
+        {
+          "message": "files",
+          "atMs": 909.95,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1000,
+          "first": [
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\many\\f0000.txt"
+            },
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\many\\f0001.txt"
+            },
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\many\\f0002.txt"
+            },
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\many\\f0003.txt"
+            },
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\many\\f0004.txt"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        },
+        {
+          "message": "handles",
+          "atMs": 943.85,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1000,
+          "first": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "null"
+            },
+            {
+              "type": "null"
+            },
+            {
+              "type": "null"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        }
+      ],
+      "navigations": [],
+      "newWindows": []
+    },
+    {
+      "name": "one file, area without a handler",
+      "paths": 1,
+      "dropReturnedMs": 2.11,
+      "pageReport": null,
+      "hostMessages": [],
+      "navigations": [],
+      "newWindows": [
+        {
+          "uri": "file:///E:/Ghidello/Git/spar.v7/artifacts/file-drop-spike/fixtures/a.txt",
+          "userInitiated": true
+        }
+      ]
+    },
+    {
+      "name": "a File made by the page",
+      "pageReport": {
+        "kind": "forge",
+        "error": "TypeError: Failed to execute \u0027postMessageWithAdditionalObjects\u0027 on \u0027EmbeddedBrowserWebView\u0027: Failed to post a message: additional File object is not a file on the disk."
+      },
+      "hostMessages": []
+    },
+    {
+      "name": "AllowExternalDrop false, handled area",
+      "paths": 1,
+      "dropReturnedMs": 0.7,
+      "pageReport": {
+        "kind": "drop",
+        "x": 150,
+        "y": 250,
+        "area": "handled",
+        "dragEvents": [
+          "dragenter",
+          "dragover",
+          "dragover"
+        ],
+        "types": [
+          "Files"
+        ],
+        "uriList": "",
+        "text": "",
+        "fileCount": 1,
+        "files": [
+          {
+            "name": "a.txt",
+            "size": 6,
+            "type": "text/plain",
+            "relativePath": "",
+            "path": null
+          }
+        ],
+        "items": [
+          {
+            "kind": "file",
+            "type": "text/plain"
+          }
+        ],
+        "entries": [
+          {
+            "name": "a.txt",
+            "isDirectory": false,
+            "fullPath": "/a.txt"
+          }
+        ],
+        "postError": null,
+        "postedAfter": 0.19999998807907104,
+        "handles": [
+          {
+            "kind": "file",
+            "name": "a.txt"
+          }
+        ],
+        "handlesAfter": 0.29999998211860657
+      },
+      "dropToFilesMs": 0.58,
+      "hostMessages": [
+        {
+          "message": "files",
+          "atMs": 3792.6,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "CoreWebView2File",
+              "path": "E:\\Ghidello\\Git\\spar.v7\\artifacts\\file-drop-spike\\fixtures\\a.txt"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        },
+        {
+          "message": "handles",
+          "atMs": 3792.77,
+          "type": "System.Collections.ObjectModel.ReadOnlyCollection\u00601[[System.Object, System.Private.CoreLib, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+          "count": 1,
+          "first": [
+            {
+              "type": "null"
+            }
+          ],
+          "pathsMissingOnDisk": 0
+        }
+      ],
+      "navigations": [],
+      "newWindows": []
+    }
+  ],
+  "oneFileDropToHostMs": [
+    0.48,
+    0.54,
+    0.59,
+    0.52,
+    0.56,
+    0.54,
+    0.53,
+    0.6,
+    0.57,
+    0.56
+  ],
+  "os": "Microsoft Windows NT 10.0.26320.0"
+}

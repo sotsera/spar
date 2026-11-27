@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Spike (M3c, decision "M3c's decide-first questions", item 1): how files dropped from the OS reach a WebKitGTK 6.0
+    host with their paths, and what GTK's file dialog does without a portal. Run in Spar's Linux CI image on a private
+    Xvfb; see ../RESULTS.md.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="page.html" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
