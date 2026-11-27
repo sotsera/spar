@@ -1,5 +1,7 @@
 # Spike: files dropped from the OS, and the Linux file dialog
 
+> A spike. Its code was deleted when M3c's choices were accepted; it is in git history at [`spikes/file-drop/`](https://github.com/sotsera/spar/tree/1aa99dca19ce298ba23005f346e1b7056336d1ce/spikes/file-drop) (commit `1aa99dc`), and this record and its `results/` moved here. Paths under `spikes/file-drop/` below name that commit's files.
+
 Run 2026-11-27 (decision "M3c's decide-first questions", item 1). Questions: how do files dropped on the page reach each host with their paths, how does the host learn which area of the page they were dropped on, and what does GTK's file dialog do when no file-chooser portal answers?
 
 Machines:

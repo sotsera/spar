@@ -9,7 +9,7 @@ Recorded 2026-11-27. What it shows: the eight decisions of "M3c's decide-first q
 - the Notebook's import, export, copy as Markdown and dropped images;
 - the app model's 3.6, 3.7 and 3.22 through real Spar.
 
-No budget was set: dialogs and drops are paced by the user. The spike's drop numbers are in `spikes/file-drop/RESULTS.md` and in decision "The drop design, from the file-drop spike".
+No budget was set: dialogs and drops are paced by the user. The spike's drop numbers are in `docs/evidence/file-drop/RESULTS.md` and in decision "The drop design, from the file-drop spike".
 
 Code, on branch `m3`:
 - `6d10622`: the spike;

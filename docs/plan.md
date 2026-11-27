@@ -597,7 +597,106 @@ Plan section 3, "Native services" (`docs/design/hosts.md`): file and folder dial
 7. **Tests.** Recommended: under the test host every one of these services is a fake the test drives (decided in plan section 5): `app.FileDialogs` answers the next dialog with a path or `Dismissed`, `app.Clipboard` holds text, `app.Credentials` keeps secrets in memory, and the Window surface drops files on an area (`page.DropFilesAsync(area, paths)`). The real services run in black-box tests: dialogs driven in-process through their events (the M0 spike's way, no window on screen), the Credential Manager only in Windows Sandbox (an entry is a per-user registration), libsecret in Spar's Linux CI image with a keyring on its private session bus. Not taken: real stores on the developer's machine.
 8. **The exit's proof.** Recommended: `docs/app-model.md` 3.6 and 3.7 through real Spar (`recipes`, `csvExport` and the scripts' clipboard leave `tests/AppModel/Real`'s exclusions), a credentials example for the SQL Server tool's saved connections; the Notebook imports Markdown files (the open dialog and a drop on its list), exports a page (the save dialog), and copies a page as Markdown (the backend's clipboard); the spike's drop numbers as the evidence. No budget: dialogs and drops are paced by the user. Not taken: proof through Spar's own tests only.
 
-**Built** (2026-11-27, on `m3`; decisions "The drop design, from the file-drop spike" and "M3c: files, drag and drop, the clipboard, credentials (implementation record; choices for review; 2026-11-27)", `docs/evidence/m3c-files-clipboard-credentials.md`, the spike's `spikes/file-drop/RESULTS.md`): grants per window (`FileGrant`, `FolderGrant`, at most 1,000, an optional expiry, none inside the browser profile) on the wire (SPAR028 for one in settings), `IFileDialogs` (`OpenAsync`, `OpenManyAsync`, `SaveAsync`, `OpenFolderAsync`) on the Windows STA and through `GtkFileDialog` after the portal check, the page's `files` API (dialogs, reads and safe writes within 4 MiB, `blob()`, folders, drop areas) under the host contract `spar`, drops on WebView2 (`postMessageWithAdditionalObjects`) and WebKitGTK (the motion controller and the relay's trusted drop), `IClipboard` on both hosts, `ICredentialStore` over Credential Manager and libsecret with `spar.Credentials(c => c.Roaming())`, the test host's fakes, drops in window tests, page-test files; the Notebook's import (dialog and drop), export, copy as Markdown and dropped images; `docs/app-model.md` 3.6, 3.7 and 3.22 through real Spar. Credential Manager passed in Windows Sandbox's SYSTEM lane. Left: the OS's own drag (Windows Sandbox's user-session lane), a portal-present dialog, Wayland and WSLg, the user-session lane's clipboard and dialog tests.
+**Built** (2026-11-27, on `m3`; decisions "The drop design, from the file-drop spike" and "M3c: files, drag and drop, the clipboard, credentials (implementation record; choices for review; 2026-11-27)", `docs/evidence/m3c-files-clipboard-credentials.md`, the spike's `docs/evidence/file-drop/RESULTS.md`; its sixteen choices accepted by the user, decision "M3c's choices accepted"): grants per window (`FileGrant`, `FolderGrant`, at most 1,000, an optional expiry, none inside the browser profile) on the wire (SPAR028 for one in settings), `IFileDialogs` (`OpenAsync`, `OpenManyAsync`, `SaveAsync`, `OpenFolderAsync`) on the Windows STA and through `GtkFileDialog` after the portal check, the page's `files` API (dialogs, reads and safe writes within 4 MiB, `blob()`, folders, drop areas) under the host contract `spar`, drops on WebView2 (`postMessageWithAdditionalObjects`) and WebKitGTK (the motion controller and the relay's trusted drop), `IClipboard` on both hosts, `ICredentialStore` over Credential Manager and libsecret with `spar.Credentials(c => c.Roaming())`, the test host's fakes, drops in window tests, page-test files; the Notebook's import (dialog and drop), export, copy as Markdown and dropped images; `docs/app-model.md` 3.6, 3.7 and 3.22 through real Spar. Credential Manager passed in Windows Sandbox's SYSTEM lane. Left: the OS's own drag (Windows Sandbox's user-session lane), a portal-present dialog, Wayland and WSLg, the user-session lane's clipboard and dialog tests.
+
+#### M3d: windows
+
+Plan section 3, "Native services" (`docs/design/hosts.md`), and `docs/app-model.md` 2, 6.7, 6.8 and 6.9 as decided on 2026-11-14:
+- window kinds the page opens by name (`spar.Window("settings", w => w.Route(…).Modal().SingleInstance().Commands(…))`, `windows.open`, `windows.showModal`, `windows.closeWith`);
+- the page-drawn title bar;
+- remembered placement;
+- zoom and find in page;
+- screen-capture protection;
+- `IWindows`;
+- with several windows on one UI thread: the session end held once per thread, and a hung page's renderer ended without ending another window's page (M3's list).
+
+Known:
+- **The Windows title bar,** from M0 (`docs/evidence/windows-titlebar`): a windowed controller, the page's layout cached for `WM_NCHITTEST`, a transparent child window for the caption codes, Snap Layouts, and UI Automation cleaned up; 4 KB, no start-up cost.
+- **The Linux title bar:** a 4 px threshold, then `gdk_toplevel_begin_move`.
+- **WebView2's find API** on the minimum Runtime, with its own dialog suppressed (M1b step 9).
+- **Test windows** each have a renderer of their own (decision "Renderer sharing between test windows and the long-path failure").
+
+None of it is built: Spar opens one window, and `WindowOptions` has only `Background`, `Size` and `MinSize`.
+
+Not measured:
+- what a second window costs on each host;
+- whether an app's windows on one profile share a renderer: they are one site, and "Reload page" now ends every renderer of the app's environment;
+- modality on Linux;
+- zoom and find on WebKitGTK.
+
+**Decide first** (drafted 2026-11-27, for the user):
+1. **A spike first, for what is not measured.** Recommended: one spike, `spikes/windows`, on both hosts, using the app's own profile rather than test windows. It measures:
+   - the time from `windows.open` to the second window's first frame and to `ui-ready`, and its memory;
+   - how many renderers 1, 2, 4 and 8 windows on one origin get, and what ending one window's renderer does to the others;
+   - a modal on GTK 4 (`gtk_window_set_modal` and `gtk_window_set_transient_for`), with and without a window manager;
+   - zoom (`webkit_web_view_set_zoom_level`, and WebView2's `ZoomFactor` with Ctrl+wheel) and find (`WebKitFindController`) on WebKitGTK.
+
+   The renderer rule (item 7) and a budget for opening a window are then decided from its numbers. Not taken: designing the window path unmeasured.
+2. **One slice, built in steps, with one exit.** Recommended, in this order:
+   1. window kinds and several windows (the bridge, grants and allow-lists are already per window);
+   2. modals and closing;
+   3. `IWindows`;
+   4. placement and zoom remembered;
+   5. the page-drawn title bar on both hosts;
+   6. find in page;
+   7. capture protection;
+   8. the session end and the renderer rule.
+
+   Each step lands with its tests on both hosts. Not taken: splitting M3d into two slices. The title bar does not depend on the rest, but every other step needs the window kinds first.
+3. **Opening a window.** Recommended:
+   - **Route:** a kind's `Route` is a path of the same frontend.
+   - **Params:** `windows.open(kind, params)` and `showModal(kind, params)` send `params` as JSON, at most 64 KB. The host keeps them for that window, and the page reads them with `windows.params<T>()`. They are not in the address, so a reload keeps them and history never shows them.
+   - **Instances:** a kind may have several instances by default; with `SingleInstance()` the call focuses the open one and answers with that window.
+   - **Kinds:** an unknown kind does not compile (the generated union), and a duplicate kind fails at start, as decided.
+   - **A modal's result** is the JSON of `closeWith(value)`, typed by the page as in 6.7. Closed any other way, it is `dismissed`. If the opener's document went away meanwhile, the result is dropped and logged.
+
+   Not taken: params in the query string; parameter and result types declared per kind in C# (more generator work, no consumer yet).
+4. **Modals and closing.** Recommended:
+   - **Modal to its opener only:** the opener is disabled (`EnableWindow` on Windows, GTK's transient modal window on Linux), and the modal stays above it, centred on it. A modal may open another modal. Other windows stay usable.
+   - **Each window's close** runs its own two-stage close: its page's guard, then `OnCloseRequested` with the window's kind in the request.
+   - **Closing the main window** closes the others first, each through its own guard. A window that refuses keeps the app open.
+   - **A window with a modal open** closes the modal first.
+   - **The session end** is handled once per UI thread: every window's page hears it within the one deadline, and no window's hold nests inside another's.
+
+   Not taken: app-modal windows; closing the main window without asking the others.
+5. **Placement and zoom, remembered.** Recommended:
+   - **One file,** `windows.json` in the app's data folder, keyed by kind. It is written on a background thread once a move, resize or zoom settles (500 ms).
+   - **The main window and every single-instance kind** remember size, position, maximized state and zoom.
+   - **A kind with several instances** remembers its last size and zoom, and opens each new window offset from the last.
+   - **A modal** remembers its size and zoom, and always opens centred on its opener.
+   - **A remembered place on no visible screen** opens centred on the primary screen, or on the opener. Wayland restores size and maximized state only.
+   - **Opting out:** `RememberPlacement(false)` per kind.
+   - **Test runs** start from the declared size, since each has a fresh data root.
+
+   Not taken: placement in the app's settings record; one file per window.
+6. **What the SDK draws under the strict policy** (the standard caption buttons and the find bar). Recommended:
+   - **Built and styled:** elements the SDK builds with DOM calls, styled by one stylesheet that the Spar Vite plugin adds to the bundle as a file of the app's own origin. There is no inline style and no `style` attribute, so the CSP needs no new source.
+   - **Theme:** CSS variables (`--spar-caption-*`, `--spar-find-*`), and the page's `prefers-color-scheme`.
+   - **The caption buttons** look like the OS's own (Windows 11, or GNOME's Adwaita) and have accessible names.
+   - **The find bar** has a field, the match count, next, previous and close; Escape closes it.
+   - **An app can replace either:** with its own markup (`data-spar-caption="close"`), or with `find.onRequest(handler)` instead of the SDK's bar.
+
+   Not taken: a native find bar drawn by the host; styles set from script (`element.style`), which the CSP allows but the SDK's conventions forbid.
+7. **A hung page among several windows.** Recommended, to be confirmed by the spike:
+   - "Reload page" ends only the hung window's renderer, never the environment's. That renderer is found by the window's main frame (`GetProcessExtendedInfos` on Windows), or is the view's own web process on Linux.
+   - Where the spike shows windows sharing a renderer, Spar asks the engine for a renderer per window where it can, and the dialog names every window it will reload.
+
+   Not taken: keeping "every renderer of the environment" with several windows open.
+8. **`IWindows` in C#.** Recommended:
+   - **For the app:** an injectable service with `Main`, `All`, `OpenAsync(kind, params)` and `Opened`/`Closed` events.
+   - **Per window:** `Kind`, `Focus`, `Minimize`, `Maximize`, `Restore`, `SetSize`, `SetTitle`, `CloseAsync` (through its guard), and `SetCaptureProtection`, which reports whether it took effect.
+   - **A command** reaches its caller's window as `ISparCall.Window`.
+   - **The page's `windows` module** offers the same for its own window.
+
+   Not taken: window handles in the API; opening windows from C# only.
+9. **Tests and the exit's proof.** Recommended:
+   - **Window tests with several windows on both hosts:** a modal's result, its owner disabled, single instance, the close order, the allow-list, placement and zoom restored, find, and capture protection's report.
+   - **The title bar with real input:** drag, double-click, edges and caption buttons, with XTEST on Linux and in Windows Sandbox's user-session lane (with the user's permission). DPI and Narrator go in "Checks that need the user at the PC".
+   - **The Notebook** gets the page-drawn title bar, a page opened in its own window, a settings modal (the theme and the view mode), find in its pages, and its zoom remembered.
+   - **The app model:** `docs/app-model.md` 6.7, 6.8 and 6.9 through real Spar, with the `PlannedWindow` stand-ins removed.
+   - **A budget** for opening a window, from the spike.
+
+   Not taken: proof through Spar's own tests only.
 
 ### M4: release qualification
 
