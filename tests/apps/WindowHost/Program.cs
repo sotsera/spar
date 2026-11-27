@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
 using Spar;
 using WindowHost;
@@ -114,6 +115,8 @@ namespace WindowHost
         }
     }
 
+    public sealed record HostRow(int N, string Text);
+
     /// <summary>The calls the host tests start from the page.</summary>
     [SparContract]
     public sealed class HostService(Activity activity)
@@ -144,6 +147,45 @@ namespace WindowHost
                 activity.Ended("cancelled", name);
                 throw;
             }
+        }
+
+        /// <summary>The first <paramref name="count"/> rows, as fast as the page takes them: the desktop bridge's stream budget.</summary>
+        [SparCommand]
+        public async IAsyncEnumerable<HostRow> RowsAsync(int count, [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            for (var n = 0; n < count; n++)
+            {
+                if (n % 1024 == 0)
+                {
+                    // A real reader awaits between pages of rows; the rest come synchronously.
+                    await Task.Yield();
+                }
+
+                yield return new HostRow(n, $"row {n}");
+            }
+        }
+
+        /// <summary>
+        /// <paramref name="perSecond"/> ticks offered evenly over one second by a producer that never waits, then it waits:
+        /// the desktop bridge's push budget. The buffer holds a whole second, so a page that keeps up loses none.
+        /// </summary>
+        [SparCommand]
+        [SparSubscription(Capacity = 32768)]
+        public async IAsyncEnumerable<long> BurstAsync(int perSecond, [EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            var started = System.Diagnostics.Stopwatch.StartNew();
+            for (long n = 0; n < perSecond; n++)
+            {
+                var due = TimeSpan.FromSeconds((double)n / perSecond);
+                if (due > started.Elapsed + TimeSpan.FromMilliseconds(20))
+                {
+                    await Task.Delay(due - started.Elapsed, cancellationToken);
+                }
+
+                yield return n;
+            }
+
+            await Task.Delay(Timeout.Infinite, cancellationToken);
         }
 
         /// <summary>Takes <paramref name="milliseconds"/> whatever happens: a call that ignores its cancellation.</summary>

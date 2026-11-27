@@ -46,7 +46,18 @@ The other browser lines of those runs, for comparison: the small unary round tri
 
 ## Not verified
 
-- **The desktop bridges' stream throughput** (WebView2, WebKitGTK): measured only over loopback here; the window journeys run subscriptions on both desktop hosts, but nothing times them.
+- **The desktop bridges' stream throughput:** measured afterwards, below.
 - **A resume after a backend restart under `dotnet watch` or `spar reload`:** the page reloads on a new run, as decided in M1d, so it never resumes there (decision "M3a: streams and subscriptions", item 11).
 - **The "yield after an error" diagnostic:** not built.
 - **CI on `m3`:** the workflow runs on pull requests and `main`; no pull request is open.
+
+## The desktop bridges (added after the review)
+
+The same two measures in WindowHost's window (`tests/Spar.WindowTests/BudgetTests.Streams.cs`), Release, timed by the page; Windows offscreen, Linux in Spar's CI image on a private Xvfb. Run with `dotnet test --project tests/Spar.WindowTests -c Release -- --filter-method "*cross_the_desktop_bridge*"`, and the NativeAOT lane published with `-p:SparTestLane=Aot` and run with `-method "*cross_the_desktop_bridge*"`.
+
+| Measure | WebView2, CoreCLR | WebView2, NativeAOT | WebKitGTK, CoreCLR | WebKitGTK, NativeAOT |
+|---|---|---|---|---|
+| 100,000 stream rows, median of 5 after a first run | 66.80 ms (65.70–80.70) | 64.70 ms (64.00–94.90) | 184.00 ms (169.00–187.00) | 136.00 ms (131.00–139.00) |
+| 20,000 subscription events offered over one second: all delivered, no gap; time to the last, n = 3 | 1,021.90 ms (1,019.10–1,041.10) | 1,021.80 ms (1,011.90–1,029.70) | 1,010.00 ms (1,006.00–1,013.00) | 1,008.00 ms (1,002.00–1,025.00) |
+
+WebKitGTK's page timer counts whole milliseconds. The small unary round trip measured beside them: WebView2 0.10 ms (mean 0.114), WebKitGTK mean 0.290 ms. The spike's 100,000 rows in about 160 ms on WebView2 (plan section 2c) is now 65–67 ms. The whole `Spar.WindowTests` project passed on Windows afterwards (236: 134 passed, 102 skipped, 0 failed).

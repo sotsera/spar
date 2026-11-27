@@ -1,10 +1,16 @@
 # The contracts of WindowHost as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint b5ad3f650e9abdb3
+fingerprint 0a4efe0591b7200a
 
 contract host (WindowHost.HostService)
+  burst(int) -> subscription of long
   echo(string) -> string
   hold(string) -> string
   note(string) -> void
+  rows(int) -> stream of WindowHost.HostRow
   slow(int) -> string
+
+record WindowHost.HostRow
+  n: int
+  text: string

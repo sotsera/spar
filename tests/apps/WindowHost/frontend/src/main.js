@@ -221,3 +221,48 @@ on("wasm", async () => {
 
 connection.ready();
 show("Ready");
+
+// The desktop bridge's stream budgets, timed by the page and run from a test: `window.hostStreams.rows(count)` and
+// `window.hostStreams.burst(perSecond)` leave their outcome as JSON in `window.hostStreamResult`.
+window.hostStreamResult = "";
+window.hostStreams = {
+  rows: count => {
+    window.hostStreamResult = "";
+    void (async () => {
+      const started = performance.now();
+      let next = 0;
+      let ordered = true;
+      for await (const item of host.rows(count)) {
+        ordered &&= item.match({ success: row => row.n === next, failure: () => false });
+        next++;
+      }
+
+      window.hostStreamResult = JSON.stringify({ received: next, ordered, ms: performance.now() - started });
+    })();
+  },
+  burst: perSecond => {
+    window.hostStreamResult = "";
+    const controller = new AbortController();
+    void (async () => {
+      const started = performance.now();
+      let received = 0;
+      let gaps = 0;
+      let ms = 0;
+      for await (const item of host.burst(perSecond, { signal: controller.signal })) {
+        item.match({
+          success: () => {
+            received++;
+            if (received === perSecond) {
+              ms = performance.now() - started;
+              controller.abort();
+            }
+          },
+          events: { reset: () => {}, gap: () => gaps++ },
+          failure: () => {},
+        });
+      }
+
+      window.hostStreamResult = JSON.stringify({ received, gaps, ms });
+    })();
+  },
+};
