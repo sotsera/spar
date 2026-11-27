@@ -108,7 +108,7 @@ internal sealed class LinuxApp : IAppWindowOwner
             _log.Info($"App id {_identity}, folder {_folders.DataRoot}");
             if (_app.Builder.Installation is { } installed)
             {
-                _log.Info($"Installation file {installed.Path} sets {string.Join(", ", installed.Keys)}.");
+                _log.Info($"Installation file {installed.Path} sets {installed.Describe()}.");
             }
 
             if (_app.Builder.BrowserOptions.Active() is { Length: > 0 } active)

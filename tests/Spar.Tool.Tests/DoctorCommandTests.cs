@@ -128,6 +128,25 @@ public sealed class DoctorCommandTests
         return (exit, output.ToString().ReplaceLineEndings("\n"));
     }
 
+    [Fact]
+    public void The_installation_file_beside_the_app_is_listed_with_its_values_and_one_the_app_would_refuse_is_an_error()
+    {
+        using var app = TemplateApp.Built();
+        WriteBuild(app, new BuildIdentity("Development", null, null, "0123456789abcdef"));
+        var installation = Path.Combine(app.Path, "bin", "Development", "Debug", "net11.0", "MyApp.spar.json");
+
+        File.WriteAllText(installation, """{ "folders": { "ephemeralBrowserData": true, "removeOnExit": ["profile", "cache"] } }""");
+        var (listed, text) = Doctor(app, GoodMachine(), "--verbose");
+        File.WriteAllText(installation, """{ "browser": { "devtools": true } }""");
+        var (refused, error) = Doctor(app, GoodMachine());
+
+        Assert.Equal(ExitCodes.Success, listed);
+        Assert.Contains("sets folders.ephemeralBrowserData = true; folders.removeOnExit = profile, cache.", text, StringComparison.Ordinal);
+        Assert.Equal(ExitCodes.Errors, refused);
+        Assert.Contains("installation-file", error, StringComparison.Ordinal);
+        Assert.Contains("'browser' is not a key", error, StringComparison.Ordinal);
+    }
+
     private static (int Exit, string Output) Doctor(TestFolder app, FakeMachine machine, params string[] arguments)
     {
         var output = new StringWriter();

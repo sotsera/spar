@@ -58,6 +58,20 @@ internal static class Descriptors
     public static readonly DiagnosticDescriptor InvalidSerialGroup = Error(
         "SPAR019", "Invalid serial group", "Command '{0}' {1}", Contracts);
 
+    public static readonly DiagnosticDescriptor BlobOutOfPlace = Error(
+        "SPAR026", "SparBlob out of place",
+        "{0} holds a SparBlob {1}. A SparBlob goes from the backend to the page only, in a unary command's result: send bytes to the backend as a byte[] request, and give a stream byte[] items or a resource's address",
+        Contracts);
+
+    public static readonly DiagnosticDescriptor InvalidResource = Error(
+        "SPAR027", "Invalid resource", "Resource '{0}' {1}", Contracts);
+
+    public const string ResourceReturn =
+        "must return Task<SparBlob> or Task<SparBlob?> (or the ValueTask forms): each load of its address serves the blob it returns";
+
+    public const string ResourceRequest =
+        "takes a request that is not a scalar or a record of scalars; the request travels in the resource's address";
+
     public const string SerialGroupEmpty = "is in a serial group without a name. Name the group, as in [SparSerial(\"recipes\")]";
 
     public const string SerialGroupStream =

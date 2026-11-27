@@ -62,8 +62,10 @@ public sealed record SparFailure(string Kind, string Code, string Execution, str
     public static SparFailure Failed(Exception exception) =>
         new("failed", "failed", "unknown", $"{exception.GetType().Name}: {exception.Message}", exception);
 
-    public static SparFailure ResponseSerialization(Exception exception) =>
-        new("response", "serialization", "completed", $"{exception.GetType().Name}: {exception.Message}", exception);
+    /// <summary>A result that could not be written; one whose blobs pass the document's limits is <c>too-large</c>.</summary>
+    public static SparFailure ResponseSerialization(Exception exception) => exception is BlobLimitException
+        ? new("response", "too-large", "completed", exception.Message)
+        : new("response", "serialization", "completed", $"{exception.GetType().Name}: {exception.Message}", exception);
 
     /// <summary>A refusal by the bridge limits: the command never ran.</summary>
     internal static SparFailure Busy() => new("rejected", "busy", "notStarted");

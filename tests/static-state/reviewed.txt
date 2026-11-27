@@ -38,7 +38,13 @@ Spar | Spar.Runtime.SparJson.StrictUtf8 | readonly | A UTF8Encoding that throws 
 Spar | Spar.Runtime.SparJson.Base64Alphabet | readonly | SearchValues of the base64 alphabet: immutable after creation, and its lookups are thread-safe.
 Spar | Spar.Runtime.SparStreamClient.ItemsOptions | readonly | Reader options, a value type copied on use; never written.
 Spar | Spar.Runtime.SparStreamClient.ResumeLimit | readonly | A TimeSpan constant.
+Spar | Spar.BlobContentTypes.InlineFamilies | readonly | A constant list of media type families served inline; never written.
+Spar | Spar.BlobContentTypes.InlineTypes | readonly | A constant list of media types served inline; never written.
+Spar | Spar.BlobStore.TestStores | readonly | The test host's app stores in this process, where typed test clients find the handles they read; a concurrent dictionary each SparTestApp adds itself to and removes itself from. Production code never adds to it, and handle ids are 128-bit random, so two apps' handles never collide.
+Spar | Spar.Runtime.SparBlobWrite.t_added | writable | Thread-static: the handles one result's write made, set and cleared around that synchronous write on its own thread; no other call sees it.
+Spar | Spar.Runtime.SparBlobWrite.t_owner | writable | Thread-static: the document one result's write adds its blobs to, set and cleared as t_added is.
 Spar | Spar.InstallationFile.DocumentOptions | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.InstallationFile.LevelNames | readonly | A constant list of the log level names; never written.
 Spar | Spar.InstallationFile.FolderKeys | readonly | A string array of the folder keys, never written after initialization.
 Spar | Spar.InstallationFile.SettingsKeys | readonly | A string array of the settings keys, never written after initialization.
 Spar | Spar.Settings.SettingsFile.DocumentOptions | readonly | Reader options, a value type copied on use; never written.
@@ -286,6 +292,8 @@ Spar.Generator | Spar.Generator.Descriptors.GenericContract | readonly | An immu
 Spar.Generator | Spar.Generator.Descriptors.InvalidName | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.InvalidSubscription | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.InvalidSerialGroup | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.BlobOutOfPlace | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.InvalidResource | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.SubscriptionNotStream | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.ListedLibrary | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.MissingProperty | readonly | An immutable DiagnosticDescriptor.

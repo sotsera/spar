@@ -89,7 +89,7 @@ internal sealed class WindowsApp : IAppWindowOwner
         _log.Info($"Host started {ProcessAgeMilliseconds():0.0} ms after the process; {BuildIdentity.Describe(_app.Catalog.BuildIdentity.Span)}.");
         if (_app.Builder.Installation is { } installed)
         {
-            _log.Info($"Installation file {installed.Path} sets {string.Join(", ", installed.Keys)}.");
+            _log.Info($"Installation file {installed.Path} sets {installed.Describe()}.");
         }
 
         if (problem is not null)

@@ -1,7 +1,8 @@
 import * as Menu from "@radix-ui/react-dropdown-menu";
 import { AlertTriangle, Check, CircleDot, Columns2, Eye, LoaderCircle, MoreHorizontal, PencilLine, Trash2 } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useRef, useState, type ClipboardEvent, type DragEvent } from "react";
 import type { SaveState } from "../notebook.js";
+import type { ViewMode } from "../remembered.js";
 import { ago, when } from "../time.js";
 import type { Page } from "@spar/app/pages";
 import { DeletePageDialog } from "./Dialogs.js";
@@ -9,8 +10,6 @@ import { DeletePageDialog } from "./Dialogs.js";
 
 // The Markdown renderer is most of the bundle; it loads with the first preview, in a chunk of its own.
 const Preview = lazy(() => import("./Preview.js").then(module => ({ default: module.Preview })));
-
-type Mode = "write" | "split" | "read";
 
 interface PageViewProps {
   readonly page: Page;
@@ -20,10 +19,16 @@ interface PageViewProps {
   readonly onReload: () => void;
   readonly onKeepMine: () => void;
   readonly onDelete: () => void;
+  /** The view mode, remembered between runs. */
+  readonly mode: ViewMode;
+  readonly onMode: (mode: ViewMode) => void;
+  /** Adds a pasted or dropped image to the page and resolves with the Markdown that shows it, or undefined. */
+  readonly onAddImage: (file: File) => Promise<string | undefined>;
 }
 
-export function PageView({ page, draft, save, onEdit, onReload, onKeepMine, onDelete }: PageViewProps) {
-  const [mode, setMode] = useState<Mode>("split");
+export function PageView({ page, draft, save, onEdit, onReload, onKeepMine, onDelete, mode, onMode, onAddImage }: PageViewProps) {
+  const editor = useRef<HTMLTextAreaElement>(null);
+  const insertImages = useImageInsert(editor, draft, onEdit, onAddImage);
   const [deleting, setDeleting] = useState(false);
 
   return (
@@ -36,7 +41,7 @@ export function PageView({ page, draft, save, onEdit, onReload, onKeepMine, onDe
           </p>
         </div>
         <SaveIndicator save={save} />
-        <ModeSwitch mode={mode} onMode={setMode} />
+        <ModeSwitch mode={mode} onMode={onMode} />
         <Menu.Root modal={false}>
           <Menu.Trigger aria-label="Page actions" className="rounded-md p-1.5 hover:bg-line/60 dark:hover:bg-line-dark/60">
             <MoreHorizontal aria-hidden className="size-4" />
@@ -61,22 +66,25 @@ export function PageView({ page, draft, save, onEdit, onReload, onKeepMine, onDe
 
       {save.kind === "conflict" && <ConflictBanner onReload={onReload} onKeepMine={onKeepMine} />}
 
-      <div className={`grid min-h-0 flex-1 ${mode === "split" ? "grid-cols-2" : "grid-cols-1"}`}>
-        {mode !== "read" && (
+      <div className={`grid min-h-0 flex-1 ${mode === "Split" ? "grid-cols-2" : "grid-cols-1"}`}>
+        {mode !== "Read" && (
           <label className="flex min-h-0 flex-col border-line dark:border-line-dark [&:not(:last-child)]:border-r">
             <span className="sr-only">Markdown of {page.title}</span>
             <textarea
+              ref={editor}
               value={draft}
               onChange={event => onEdit(event.target.value)}
+              onPaste={insertImages.paste}
+              onDrop={insertImages.drop}
               spellCheck
               className="min-h-0 flex-1 resize-none bg-transparent px-6 py-5 font-mono text-[13.5px] leading-relaxed [font-variant-ligatures:none] outline-none"
             />
           </label>
         )}
-        {mode !== "write" && (
+        {mode !== "Write" && (
           <div className="min-h-0 overflow-y-auto px-8 py-6">
             <Suspense fallback={<p className="text-sm text-muted dark:text-muted-dark">Rendering…</p>}>
-              <Preview markdown={draft} />
+              <Preview pageId={page.id} markdown={draft} />
             </Suspense>
           </div>
         )}
@@ -116,11 +124,11 @@ function SaveIndicator({ save }: { readonly save: SaveState }) {
   );
 }
 
-function ModeSwitch({ mode, onMode }: { readonly mode: Mode; readonly onMode: (mode: Mode) => void }) {
-  const options: ReadonlyArray<readonly [Mode, string, typeof PencilLine]> = [
-    ["write", "Write", PencilLine],
-    ["split", "Write and preview", Columns2],
-    ["read", "Preview", Eye],
+function ModeSwitch({ mode, onMode }: { readonly mode: ViewMode; readonly onMode: (mode: ViewMode) => void }) {
+  const options: ReadonlyArray<readonly [ViewMode, string, typeof PencilLine]> = [
+    ["Write", "Write", PencilLine],
+    ["Split", "Write and preview", Columns2],
+    ["Read", "Preview", Eye],
   ];
 
   return (
@@ -155,4 +163,52 @@ function ConflictBanner({ onReload, onKeepMine }: { readonly onReload: () => voi
       </button>
     </div>
   );
+}
+
+/**
+ * Image files pasted or dropped into the editor: each is added to the page, and its Markdown goes where the caret was,
+ * in the order the files came. Text pastes and drops keep the browser's own behaviour.
+ */
+function useImageInsert(
+  editor: React.RefObject<HTMLTextAreaElement | null>,
+  draft: string,
+  onEdit: (markdown: string) => void,
+  onAddImage: (file: File) => Promise<string | undefined>,
+) {
+  const insert = async (files: readonly File[]) => {
+    const area = editor.current;
+    const start = area?.selectionStart ?? draft.length;
+    const end = area?.selectionEnd ?? draft.length;
+    const added: string[] = [];
+    for (const file of files) {
+      const markdown = await onAddImage(file);
+      if (markdown !== undefined) {
+        added.push(markdown);
+      }
+    }
+
+    if (added.length > 0) {
+      const text = editor.current?.value ?? draft;
+      onEdit(text.slice(0, start) + added.join("\n") + text.slice(end));
+    }
+  };
+
+  const imagesOf = (list: FileList | null): File[] => Array.from(list ?? []).filter(file => file.type.startsWith("image/"));
+
+  return {
+    paste: (event: ClipboardEvent<HTMLTextAreaElement>) => {
+      const files = imagesOf(event.clipboardData.files);
+      if (files.length > 0) {
+        event.preventDefault();
+        void insert(files);
+      }
+    },
+    drop: (event: DragEvent<HTMLTextAreaElement>) => {
+      const files = imagesOf(event.dataTransfer.files);
+      if (files.length > 0) {
+        event.preventDefault();
+        void insert(files);
+      }
+    },
+  };
 }

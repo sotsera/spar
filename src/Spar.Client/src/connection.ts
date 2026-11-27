@@ -18,6 +18,11 @@ export interface BridgeChannel {
    * end with their document. Never called while the channel is open.
    */
   reconnect?(): boolean;
+  /**
+   * The key a blob or resource address carries on this channel (`k=`), or none. Only a loopback channel has
+   * one: any local program can reach its port, and an `<img>` cannot send the page's token.
+   */
+  addressKey?(): string;
 }
 
 /** Returned by a decoder for a declared error code this client does not know (a newer backend). */
@@ -80,6 +85,11 @@ export class Connection implements StreamHost {
     this.#contracts = contracts;
     channel.listen(message => this.#receive(message), () => this.#closed());
     this.#hello();
+  }
+
+  /** The key blob and resource addresses carry on this channel; undefined on the desktop hosts. */
+  get addressKey(): string | undefined {
+    return this.#channel.addressKey?.();
   }
 
   /** The document id the host assigned in open; undefined until then. */

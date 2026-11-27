@@ -78,11 +78,17 @@ internal sealed class HostPage : IAsyncDisposable
     }
 
     /// <summary>Nothing refused or dropped by the bridge, no CSP violation, no page error, no console error.</summary>
-    public void AssertClean()
+    /// <summary>
+    /// No problem, page error, console error or warning; with <paramref name="allowed404s"/>, up to that many lines of
+    /// the browser's own report of a 404 the test caused on purpose (WebKitGTK writes one, WebView2's page session none).
+    /// </summary>
+    public void AssertClean(int allowed404s = 0)
     {
         Assert.True(App.Problems.Count == 0, string.Join(Environment.NewLine, App.Problems));
         Assert.Empty(Page.PageErrors);
-        Assert.DoesNotContain(Page.ConsoleMessages, message => message.Type is "error" or "warning");
+        var reported = Page.ConsoleMessages.Where(message => message.Type is "error" or "warning").ToList();
+        Assert.InRange(reported.Count(message => message.Text.Contains("404", StringComparison.Ordinal)), 0, allowed404s);
+        Assert.All(reported, message => Assert.Contains("404", message.Text, StringComparison.Ordinal));
     }
 
     public ValueTask DisposeAsync() => App.DisposeAsync();

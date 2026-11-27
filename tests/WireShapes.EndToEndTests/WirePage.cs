@@ -90,13 +90,18 @@ internal sealed class WirePage : IAsyncDisposable
         return result.GetString()!;
     }
 
-    /// <summary>Nothing dropped or refused by the bridge, no CSP violation, and nothing on the page's console.</summary>
-    public Task AssertCleanAsync()
+    /// <summary>
+    /// Nothing dropped or refused by the bridge, no CSP violation, and nothing on the page's console; with
+    /// <paramref name="expected404s"/>, that many lines of the browser's own report of a 404 the test caused on purpose.
+    /// </summary>
+    public Task AssertCleanAsync(int expected404s = 0)
     {
         Assert.Empty(App.Problems);
         lock (_consoleErrors)
         {
-            Assert.Empty(_consoleErrors);
+            var notFound = _consoleErrors.Count(line => line.Contains("status of 404", StringComparison.Ordinal));
+            Assert.Equal(expected404s, notFound);
+            Assert.All(_consoleErrors, line => Assert.Contains("status of 404", line, StringComparison.Ordinal));
         }
 
         return Task.CompletedTask;

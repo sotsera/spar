@@ -253,7 +253,9 @@ internal sealed partial class ContractAnalysis
 
         var shape = Return(method);
         if (shape is null || !Subscription(method, shape.Value.Shape, out var subscription)
-            || !SerialGroup(method, shape.Value.Shape, out var serialGroup))
+            || !SerialGroup(method, shape.Value.Shape, out var serialGroup)
+            || !Resource(method, request, shape.Value.Shape, shape.Value.Value, out var isResource)
+            || !BlobsInPlace(method, request, shape.Value.Shape, shape.Value.Value, shape.Value.ErrorKey))
         {
             return null;
         }
@@ -270,7 +272,9 @@ internal sealed partial class ContractAnalysis
             shape.Value.ErrorCSharp,
             TimeoutSeconds(method),
             subscription,
-            serialGroup);
+            serialGroup,
+            isResource,
+            !isResource && HoldsBlob(shape.Value.Value));
     }
 
     /// <summary>A request is one record or one scalar, nullable or not (SPAR015 for a list); <c>byte[]</c> is a scalar.</summary>
@@ -372,6 +376,11 @@ internal sealed partial class ContractAnalysis
         if (IsByteArray(type))
         {
             return new TypeRef(WireKind.Bytes, csharp, nameof(WireKind.Bytes), null, false);
+        }
+
+        if (IsSparBlob(type))
+        {
+            return new TypeRef(WireKind.Blob, csharp, nameof(WireKind.Blob), null, false);
         }
 
         var primitive = Primitive(type);

@@ -184,10 +184,19 @@ internal static class CatalogEmitter
         var name = $"\"{contract.WireName}\", \"{command.WireName}\", {command.TimeoutSeconds}";
         if (!command.IsStream)
         {
-            var serial = command.SerialGroup is { } group
-                ? $" {{ SerialGroup = {Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(group, quote: true)} }}"
-                : "";
-            return $"new({name}, {HandlerName(contract, command)}){serial},";
+            var extras = new List<string>();
+            if (command.SerialGroup is { } group)
+            {
+                extras.Add($"SerialGroup = {Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(group, quote: true)}");
+            }
+
+            if (command.IsResource)
+            {
+                extras.Add("IsResource = true");
+            }
+
+            var initializer = extras.Count == 0 ? "" : $" {{ {string.Join(", ", extras)} }}";
+            return $"new({name}, {HandlerName(contract, command)}){initializer},";
         }
 
         var settings = $"StreamHandler = {HandlerName(contract, command)}";
@@ -242,16 +251,25 @@ internal static class CatalogEmitter
         code.Line($"var result = {invocation};");
         code.Line();
 
+        // A resource's blob is served for the load that ran it, never written into a message.
+        if (command.IsResource)
+        {
+            code.Line("call.Resource = result;");
+            code.Line($"return {Runtime}.SparOutcome.FromValue(global::System.ReadOnlyMemory<byte>.Empty);");
+            code.Close();
+            return;
+        }
+
         // A value that cannot be written (default(Result), a non-finite double) is a response failure: the command ran.
         code.Open("try");
         switch (command.Return)
         {
             case ReturnShape.Value:
-                code.Line($"return {Runtime}.SparOutcome.FromValue({Runtime}.SparJson.Write(result, SparSerializers.Write{command.Value!.Key}));");
+                EmitValue(code, command, "result");
                 break;
             case ReturnShape.ResultWithValue:
                 code.Open("if (result.TryGetValue(out var value))");
-                code.Line($"return {Runtime}.SparOutcome.FromValue({Runtime}.SparJson.Write(value, SparSerializers.Write{command.Value!.Key}));");
+                EmitValue(code, command, "value");
                 code.Close();
                 code.Line();
                 code.Line($"return {Runtime}.SparOutcome.FromError({Runtime}.SparJson.Write(result.Error, SparSerializers.Write{command.ErrorKey}));");
@@ -270,6 +288,25 @@ internal static class CatalogEmitter
         code.Line($"return {Runtime}.SparOutcome.FromFailure({Runtime}.SparFailure.ResponseSerialization(exception));");
         code.Close();
         code.Close();
+    }
+
+    /// <summary>
+    /// Returns a written value. One that can hold a <c>SparBlob</c> is written in a blob scope: each blob becomes a handle
+    /// of the call's document, and a failed write, or one past the document's limits, releases the handles it made.
+    /// </summary>
+    private static void EmitValue(CodeWriter code, CommandModel command, string value)
+    {
+        var write = $"{Runtime}.SparJson.Write({value}, SparSerializers.Write{command.Value!.Key})";
+        if (!command.ValueHoldsBlob)
+        {
+            code.Line($"return {Runtime}.SparOutcome.FromValue({write});");
+            return;
+        }
+
+        code.Line($"using var blobs = {Runtime}.SparBlobWrite.Begin(call);");
+        code.Line($"var json = {write};");
+        code.Line("blobs.Commit();");
+        code.Line($"return {Runtime}.SparOutcome.FromValue(json);");
     }
 
     /// <summary>
@@ -320,6 +357,11 @@ internal static class CatalogEmitter
                 if (command.Subscription is { } subscription)
                 {
                     shape.Append(" subscription").Append(subscription.LatestOnly ? " latest" : "").Append(subscription.Automatic ? " automatic" : " manual");
+                }
+
+                if (command.IsResource)
+                {
+                    shape.Append(" resource");
                 }
 
                 shape.Append('\n');

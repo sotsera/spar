@@ -32,8 +32,12 @@ public sealed class CopyJobsService(IConnectionStore connections, ISparCall call
         return new CopyPlan(Guid.CreateVersion7(), steps);
     }
 
-    /// <summary>Copies the planned tables. Cancelling stops between batches.</summary>
+    /// <summary>
+    /// Copies the planned tables. Cancelling stops between batches. Copies run one at a time, whichever window starts
+    /// them: a second waits its turn without holding a call slot (3.20).
+    /// </summary>
     [SparCommand]
+    [SparSerial("copies")]
     public async Task<Result<CopyReport, RunError>> RunAsync(RunCopy request, CancellationToken cancellationToken)
     {
         await Task.Delay(10, cancellationToken);

@@ -35,6 +35,7 @@ export { hostChannel, webViewChannel, webViewPort, type WebViewOptions, type Web
 export { isWebKitHost, webKitChannel, type RelayTarget, type WebKitOptions } from "./webkit.js";
 export { setColorScheme, type ColorScheme, type ColorSchemeError } from "./colorScheme.js";
 export { traced } from "./tracing.js";
+export { readBlob, resourceUrl, type SparBlob } from "./blobs.js";
 
 let current: Connection | undefined;
 
@@ -146,6 +147,11 @@ export function subscribe<T, E extends ErrorCases, V extends EventCases>(
 
   const kind = { latestOnly, resumes: resumes(automatic, options) };
   return openSubscription<T, E, V>(connected(), { contract, command }, request, decoder, options?.signal, kind);
+}
+
+/** @internal The key blob and resource addresses carry on this document's channel; undefined on the desktop hosts. */
+export function pageAddressKey(): string | undefined {
+  return current?.addressKey;
 }
 
 function connected(): Connection {

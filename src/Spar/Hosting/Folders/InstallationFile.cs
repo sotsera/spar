@@ -34,12 +34,21 @@ public sealed class InstallationOptions
     }
 }
 
-/// <summary>What an installation file set, parsed and checked.</summary>
-internal sealed class InstallationFile
+/// <summary>
+/// What an installation file set, parsed and checked. This part reads the file only, so <c>spar doctor</c> compiles it
+/// too; applying it to the app's folders is in <c>InstallationFile.Apply.cs</c>.
+/// </summary>
+internal sealed partial class InstallationFile
 {
+    /// <summary>The first settings record's name, as <c>SettingsOptions.DefaultName</c> has it.</summary>
+    private const string DefaultSettingsName = "settings";
+
     private static readonly string[] FolderKeys = ["data", "logs", "profile", "ephemeralBrowserData", "removeOnExit"];
 
     private static readonly string[] SettingsKeys = ["file", "allowNetworkFile"];
+
+    /// <summary>The level names <c>Microsoft.Extensions.Logging.LogLevel</c> has, as <c>logging.json</c> takes them (any case).</summary>
+    private static readonly string[] LevelNames = ["Trace", "Debug", "Information", "Warning", "Error", "Critical", "None"];
 
     private static readonly JsonDocumentOptions DocumentOptions = new() { MaxDepth = 8 };
 
@@ -59,7 +68,14 @@ internal sealed class InstallationFile
 
     public bool? EphemeralBrowserData { get; private set; }
 
-    public IReadOnlyList<SparFolder>? RemoveOnExit { get; private set; }
+    /// <summary>The folders to remove at exit, by their names in the file: profile, cache, data, logs.</summary>
+    public IReadOnlyList<string>? RemoveOnExit { get; private set; }
+
+    /// <summary>The log file's default level the file sets, by its name; null for none.</summary>
+    public string? LogLevelName { get; private set; }
+
+    /// <summary>The category levels the file sets, in its order, by their level names.</summary>
+    public List<KeyValuePair<string, string>> LogCategories { get; } = [];
 
     /// <summary>Each settings record's place, by the record's name (<c>settings</c> for the first).</summary>
     public Dictionary<string, (string? File, bool? AllowNetworkFile)> Settings { get; } = new(StringComparer.Ordinal);
@@ -67,34 +83,11 @@ internal sealed class InstallationFile
     /// <summary>Every key the file set, as a dotted path, for the start-up log and the locked keys.</summary>
     public List<string> Keys { get; } = [];
 
-    /// <summary>Sets the folder choices the file made, over the code's.</summary>
-    public void ApplyTo(FolderOptions folders)
-    {
-        if (DataFolder is not null)
-        {
-            folders.Data(DataFolder);
-        }
+    /// <summary>Each key with the value used, environment variables expanded, as the start-up log and <c>spar doctor</c> show it.</summary>
+    public List<KeyValuePair<string, string>> Values { get; } = [];
 
-        if (LogsFolder is not null)
-        {
-            folders.Logs(LogsFolder);
-        }
-
-        if (ProfileFolder is not null)
-        {
-            folders.Profile(ProfileFolder);
-        }
-
-        if (EphemeralBrowserData == true)
-        {
-            folders.EphemeralBrowserData();
-        }
-
-        if (RemoveOnExit is not null)
-        {
-            folders.RemoveOnExit([.. RemoveOnExit]);
-        }
-    }
+    /// <summary>What it sets, as the start-up log and <c>spar doctor</c> show it: <c>key = value</c>, one after another.</summary>
+    public string Describe() => string.Join("; ", Values.Select(value => $"{value.Key} = {value.Value}"));
 
     /// <summary>The installation file beside the running executable: <c>&lt;executable name&gt;.spar.json</c>.</summary>
     public static string BesideExecutable()
@@ -110,6 +103,7 @@ internal sealed class InstallationFile
         return parts switch
         {
             ["folders", var name] => FolderKeys.Contains(name),
+            ["logging", "level" or "categories"] => true,
             ["settings", var name] => SettingsKeys.Contains(name),
             ["settings", _, var name] => SettingsKeys.Contains(name),
             _ => false,
@@ -160,9 +154,13 @@ internal sealed class InstallationFile
             {
                 ReadFolders(section.Value);
             }
+            else if (section.Name == "logging")
+            {
+                ReadLogging(section.Value);
+            }
             else if (section.Name == "settings")
             {
-                ReadSettings(section.Value, "settings", SettingsOptions.DefaultName);
+                ReadSettings(section.Value, "settings", DefaultSettingsName);
             }
             else if (section.Name.StartsWith("settings.", StringComparison.Ordinal) && section.Name.Length > "settings.".Length)
             {
@@ -170,7 +168,7 @@ internal sealed class InstallationFile
             }
             else
             {
-                throw Problem($"'{section.Name}' is not a key of the installation file (it may hold folders, settings and settings.<name>)");
+                throw Problem($"'{section.Name}' is not a key of the installation file (it may hold folders, logging, settings and settings.<name>)");
             }
         }
     }
@@ -181,29 +179,61 @@ internal sealed class InstallationFile
         foreach (var entry in folders.EnumerateObject())
         {
             var key = "folders." + entry.Name;
-            switch (entry.Name)
+            var shown = entry.Name switch
             {
-                case "data":
-                    DataFolder = AbsolutePath(entry.Value, key);
-                    break;
-                case "logs":
-                    LogsFolder = AbsolutePath(entry.Value, key);
-                    break;
-                case "profile":
-                    ProfileFolder = AbsolutePath(entry.Value, key);
-                    break;
-                case "ephemeralBrowserData":
-                    EphemeralBrowserData = Boolean(entry.Value, key);
-                    break;
-                case "removeOnExit":
-                    RemoveOnExit = Folders(entry.Value, key);
-                    break;
-                default:
-                    throw Problem($"'{key}' is not a key of the installation file (folders may hold {string.Join(", ", FolderKeys)})");
+                "data" => DataFolder = AbsolutePath(entry.Value, key),
+                "logs" => LogsFolder = AbsolutePath(entry.Value, key),
+                "profile" => ProfileFolder = AbsolutePath(entry.Value, key),
+                "ephemeralBrowserData" => Shown(EphemeralBrowserData = Boolean(entry.Value, key)),
+                "removeOnExit" => string.Join(", ", RemoveOnExit = Folders(entry.Value, key)),
+                _ => throw Problem($"'{key}' is not a key of the installation file (folders may hold {string.Join(", ", FolderKeys)})"),
+            };
+
+            Keys.Add(key);
+            Values.Add(new(key, shown));
+        }
+    }
+
+    /// <summary>
+    /// <c>logging</c>: the shape of <c>logging.json</c>, <c>{"level":"Warning","categories":{"SqlTool.Copy":"Debug"}}</c>,
+    /// over the code's levels; a user's <c>logging.json</c> still wins over it.
+    /// </summary>
+    private void ReadLogging(JsonElement logging)
+    {
+        Expect(logging, JsonValueKind.Object, "logging");
+        foreach (var entry in logging.EnumerateObject())
+        {
+            var key = "logging." + entry.Name;
+            if (entry.Name == "level")
+            {
+                LogLevelName = Level(entry.Value, key);
+                Values.Add(new(key, LogLevelName));
+            }
+            else if (entry.Name == "categories")
+            {
+                Expect(entry.Value, JsonValueKind.Object, key);
+                foreach (var category in entry.Value.EnumerateObject())
+                {
+                    var level = Level(category.Value, $"{key}.{category.Name}");
+                    LogCategories.Add(new(category.Name, level));
+                    Values.Add(new($"{key}.{category.Name}", level));
+                }
+            }
+            else
+            {
+                throw Problem($"'{key}' is not a key of the installation file (logging may hold level and categories)");
             }
 
             Keys.Add(key);
         }
+    }
+
+    private string Level(JsonElement value, string key)
+    {
+        Expect(value, JsonValueKind.String, key);
+        var name = value.GetString()!;
+        return LevelNames.FirstOrDefault(level => string.Equals(level, name, StringComparison.OrdinalIgnoreCase))
+            ?? throw Problem($"'{key}' must be one of {string.Join(", ", LevelNames)}, not '{name}'");
     }
 
     private void ReadSettings(JsonElement settings, string section, string name)
@@ -214,23 +244,21 @@ internal sealed class InstallationFile
         foreach (var entry in settings.EnumerateObject())
         {
             var key = $"{section}.{entry.Name}";
-            switch (entry.Name)
+            var shown = entry.Name switch
             {
-                case "file":
-                    file = AbsolutePath(entry.Value, key);
-                    break;
-                case "allowNetworkFile":
-                    network = Boolean(entry.Value, key);
-                    break;
-                default:
-                    throw Problem($"'{key}' is not a key of the installation file ({section} may hold {string.Join(", ", SettingsKeys)})");
-            }
+                "file" => file = AbsolutePath(entry.Value, key),
+                "allowNetworkFile" => Shown(network = Boolean(entry.Value, key)),
+                _ => throw Problem($"'{key}' is not a key of the installation file ({section} may hold {string.Join(", ", SettingsKeys)})"),
+            };
 
             Keys.Add(key);
+            Values.Add(new(key, shown));
         }
 
         Settings[name] = (file, network);
     }
+
+    private static string Shown(bool? value) => value == true ? "true" : "false";
 
     private string AbsolutePath(JsonElement value, string key)
     {
@@ -254,20 +282,19 @@ internal sealed class InstallationFile
         return value.GetBoolean();
     }
 
-    private List<SparFolder> Folders(JsonElement value, string key)
+    private List<string> Folders(JsonElement value, string key)
     {
         Expect(value, JsonValueKind.Array, key);
-        var folders = new List<SparFolder>();
+        var folders = new List<string>();
         foreach (var item in value.EnumerateArray())
         {
-            folders.Add(item.ValueKind == JsonValueKind.String ? item.GetString() switch
+            var name = item.ValueKind == JsonValueKind.String ? item.GetString()! : throw Problem($"'{key}' must list folder names");
+            if (name is not ("profile" or "cache" or "data" or "logs"))
             {
-                "profile" => SparFolder.Profile,
-                "cache" => SparFolder.Cache,
-                "data" => SparFolder.Data,
-                "logs" => SparFolder.Logs,
-                _ => throw Problem($"'{key}' lists '{item.GetString()}'; it may list profile, cache, data and logs"),
-            } : throw Problem($"'{key}' must list folder names"));
+                throw Problem($"'{key}' lists '{name}'; it may list profile, cache, data and logs");
+            }
+
+            folders.Add(name);
         }
 
         return folders;

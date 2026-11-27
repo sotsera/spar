@@ -215,6 +215,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         // page loads its telemetry code only when an endpoint is set (section 6b).
         var telemetry = Spar.Telemetry.TelemetryRoute.For(_app.Builder);
         pages.UseTelemetry(telemetry);
+        pages.UseBlobs(built);
 
         _ = LogPolicyAsync(pages);
         var guard = new PageGuard(_log, security, _app.Builder.BrowserOptions.HistoryNavigation);

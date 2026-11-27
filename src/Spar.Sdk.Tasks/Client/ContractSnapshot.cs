@@ -67,6 +67,11 @@ internal static class ContractSnapshot
             return $"subscription of {value}{error}{Settings(subscription)}";
         }
 
+        if (command.IsResource)
+        {
+            return $"resource of {value}";
+        }
+
         return command.IsStream ? $"stream of {value}{error}" : value + error;
     }
 

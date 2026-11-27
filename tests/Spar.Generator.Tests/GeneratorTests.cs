@@ -269,6 +269,46 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void A_blob_result_is_written_in_a_blob_scope_and_a_resource_hands_its_blob_to_the_host()
+    {
+        const string source = """
+            using System.Threading.Tasks;
+            using Spar;
+
+            var app = SparApplication.Create(args, _ => { });
+            return app.Run();
+
+            public sealed record Export(string Title, SparBlob File, SparBlob? Preview);
+
+            public sealed record PhotoKey(int Album, int Number);
+
+            [SparContract]
+            public sealed class FilesService
+            {
+                [SparCommand]
+                public Task<Export> ExportAsync(string title) => null!;
+
+                [SparCommand]
+                public Task<string> NameAsync() => null!;
+
+                [SparCommand, SparResource]
+                public Task<SparBlob?> PhotoAsync(PhotoKey request) => null!;
+            }
+
+            """;
+
+        var run = GeneratorHarness.Generate(source);
+
+        Assert.Empty(run.Errors);
+        var contracts = run.Files["Spar.Contracts.g.cs"];
+        Assert.Contains("new(\"files\", \"photo\", 0, HandleFilesPhoto) { IsResource = true },", contracts, StringComparison.Ordinal);
+        Assert.Contains("using var blobs = global::Spar.Runtime.SparBlobWrite.Begin(call);", Handler(contracts, "HandleFilesExport"), StringComparison.Ordinal);
+        Assert.DoesNotContain("SparBlobWrite", Handler(contracts, "HandleFilesName"), StringComparison.Ordinal);
+        Assert.Contains("call.Resource = result;", Handler(contracts, "HandleFilesPhoto"), StringComparison.Ordinal);
+        Assert.Contains("global::Spar.Runtime.SparBlobWrite.Write(writer, value);", contracts, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void The_fingerprint_changes_with_the_wire_shape_and_only_with_it()
     {
         var original = Fingerprint(Program + Fixtures.Catalog);
@@ -283,6 +323,15 @@ public sealed class GeneratorTests
         // The page depends on a subscription's resume and events, not on the size of the backend's buffer.
         Assert.NotEqual(original, resumes);
         Assert.Equal(original, bigger);
+    }
+
+    /// <summary>One generated handler's text, from its signature to the next handler or the end.</summary>
+    private static string Handler(string contracts, string name)
+    {
+        var start = contracts.IndexOf($" {name}(global::Spar.Runtime.SparCallContext", StringComparison.Ordinal);
+        Assert.True(start >= 0, name);
+        var end = contracts.IndexOf("private static async", start + 1, StringComparison.Ordinal);
+        return end < 0 ? contracts[start..] : contracts[start..end];
     }
 
     private static string Fingerprint(string source)

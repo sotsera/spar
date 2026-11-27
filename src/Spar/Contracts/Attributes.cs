@@ -83,3 +83,15 @@ public sealed class SparSerialAttribute(string group) : Attribute
 {
     public string Group { get; } = group;
 }
+
+/// <summary>
+/// Makes a command a resource (decision "M3b's decide-first questions", item 2): binary data the backend can fetch again
+/// by a small key, as an image in a database by its id. The page does not call it; it gets its address,
+/// <c>photos.photo.url(42)</c> on the app's own origin, for an <c>&lt;img&gt;</c>, a link or <c>fetch</c>. Each load
+/// runs the command in its own scope, like a call, and serves the <see cref="SparBlob"/> it returns once; nothing is
+/// kept between loads, so a page may show any number, and the browser may load one again at will. The request is a
+/// scalar or a record of scalars, which travels in the address; a null result is a 404. The command returns
+/// <c>Task&lt;SparBlob&gt;</c> or <c>Task&lt;SparBlob?&gt;</c> (or the <c>ValueTask</c> forms).
+/// </summary>
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public sealed class SparResourceAttribute : Attribute;

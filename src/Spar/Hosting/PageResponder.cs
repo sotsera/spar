@@ -6,13 +6,15 @@ namespace Spar.Hosting;
 /// <summary>One answer of the app's origin: what a host puts on the request, with the shared headers added.</summary>
 /// <param name="Csp">The response's own policy (a document with a style nonce); null for the shared one.</param>
 /// <param name="Allow">The <c>Allow</c> header's value, for a refused method; null otherwise.</param>
+/// <param name="Disposition">The <c>Content-Disposition</c> header's value, for a blob served as a download; null otherwise.</param>
 internal readonly record struct PageResponse(
     int Status,
     string Reason,
     string ContentType,
     ReadOnlyMemory<byte> Body,
     string? Csp = null,
-    string? Allow = null);
+    string? Allow = null,
+    string? Disposition = null);
 
 /// <summary>
 /// What every desktop host's origin answers (plan section 3b), host-neutral: the app's packed page from memory, 404 for

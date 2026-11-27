@@ -64,6 +64,7 @@ internal sealed class TestBackend : IAsyncDisposable
                     ValueTask.FromResult(Json($"\"{call.Services.GetRequiredService<ISparCall>().Caller}\""))),
                 .. Streams.TestStreams.Entries,
                 .. Serial.TestSerial.Entries,
+                .. Blobs.TestBlobs.Entries,
             ],
             _ => { });
 

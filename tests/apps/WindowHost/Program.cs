@@ -191,6 +191,29 @@ namespace WindowHost
             await Task.Delay(Timeout.Infinite, cancellationToken);
         }
 
+        /// <summary>
+        /// <paramref name="size"/> bytes, each its index modulo 251, as a <c>byte[]</c> handle the page reads on the
+        /// origin: the desktop host's blob route and its budget.
+        /// </summary>
+        [SparCommand]
+        public Task<SparBlob> MakeAsync(int size)
+        {
+            var bytes = new byte[size];
+            for (var i = 0; i < size; i++)
+            {
+                bytes[i] = (byte)(i % 251);
+            }
+
+            return Task.FromResult(SparBlob.FromBytes(bytes, "application/octet-stream", "made.bin"));
+        }
+
+        /// <summary>A 1×1 PNG for any number, so an <c>&lt;img&gt;</c> shows a resource under the default policy.</summary>
+        [SparCommand]
+        [SparResource]
+        public Task<SparBlob> PixelAsync(int n) => Task.FromResult(SparBlob.FromBytes(
+            Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="),
+            "image/png"));
+
         /// <summary>Takes <paramref name="milliseconds"/> whatever happens: a call that ignores its cancellation.</summary>
         [SparCommand]
         public async Task<string> SlowAsync(int milliseconds)

@@ -61,6 +61,12 @@ public sealed class DiagnosticTests
     [InlineData("public closed record Err { public sealed record Gone : Err; } [SparContract] public sealed class Items { [SparCommand] public System.Collections.Generic.IAsyncEnumerable<Result<Err>> WatchAsync() => null!; }", "SPAR010: WatchAsync")]
     [InlineData("[SparContract] public sealed class Items { [SparCommand, SparSerial(\"\")] public Task GoAsync() => null!; }", "SPAR019: SparSerial(\"\")")]
     [InlineData("[SparContract, SparSerial(\"items\")] public sealed class Items { [SparCommand] public System.Collections.Generic.IAsyncEnumerable<Item> WatchAsync() => null!; }", "SPAR019: SparSerial(\"items\")")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand] public Task GoAsync(SparBlob request) => null!; }", "SPAR026: GoAsync")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand] public System.Collections.Generic.IAsyncEnumerable<SparBlob> WatchAsync() => null!; }", "SPAR026: WatchAsync")]
+    [InlineData("public closed record Err { public sealed record Broken(SparBlob Log) : Err; } [SparContract] public sealed class Items { [SparCommand] public Task<Result<Err>> GoAsync() => null!; }", "SPAR026: GoAsync")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand, SparResource] public Task<Item> GetAsync(int id) => null!; }", "SPAR027: GetAsync")]
+    [InlineData("public sealed record Query(string[] Ids); [SparContract] public sealed class Items { [SparCommand, SparResource] public Task<SparBlob> GetAsync(Query request) => null!; }", "SPAR027: GetAsync")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand, SparResource] public System.Collections.Generic.IAsyncEnumerable<SparBlob> GetAsync() => null!; }", "SPAR027: GetAsync")]
     public async Task A_contract_problem_is_reported_once_at_its_location(string contract, string expected)
     {
         var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + contract);

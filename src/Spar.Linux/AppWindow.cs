@@ -194,6 +194,7 @@ internal sealed partial class AppWindow
         // The optional telemetry layer: its routes on the page's origin, and its settings as a script of the page's world.
         var telemetry = Spar.Telemetry.TelemetryRoute.For(_app.Builder);
         _pages.UseTelemetry(telemetry);
+        _pages.UseBlobs(built);
         _view.Create(_folders.Profile, CacheFolder(_folders), ScriptBridge.RelayScript(listenerReports), theme.Background, telemetry.PageScript());
 
         // The heartbeat follows the view's documents from the first one on, before the services exist.

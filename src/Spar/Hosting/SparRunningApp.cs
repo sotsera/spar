@@ -29,6 +29,7 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
         services.TryAddScoped<SparCall>();
         services.TryAddScoped<ISparCall>(provider => provider.GetRequiredService<SparCall>());
         services.TryAddSingleton(new Settings.SparSettingsSerializers(catalog.Settings));
+        services.TryAddSingleton(provider => new SparBlobs(provider.GetRequiredService<SparFolders>()));
         catalog.AddServices(services);
     }
 

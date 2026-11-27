@@ -15,7 +15,7 @@ public sealed partial class AppModelTests
     private static readonly string Check = FindCheck();
 
     [Theory]
-    [InlineData("verbatim", "39 blocks, 0 differ")]
+    [InlineData("verbatim", "41 blocks, 0 differ")]
     [InlineData("contracts", "no rule broken")]
     [InlineData("check:ts7", null)]
     [InlineData("check:ts6", null)]
@@ -59,7 +59,7 @@ public sealed partial class AppModelTests
         Assert.True(exit == 0, output);
         var snapshot = File.ReadAllText(Path.Combine(Check, "Real", "SqlTool.Real.contracts.snapshot"));
         var contracts = snapshot.Split('\n').Where(line => line.StartsWith("contract ", StringComparison.Ordinal)).Select(line => line.Split(' ')[1]);
-        Assert.Equal(["connections", "copyJobs", "crashReport", "script", "status"], contracts);
+        Assert.Equal(["connections", "copyJobs", "crashReport", "preferences", "reports", "script", "status"], contracts);
     }
 
     /// <summary>

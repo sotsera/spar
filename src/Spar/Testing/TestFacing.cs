@@ -32,6 +32,12 @@ namespace Spar.Runtime
     {
         ValueTask<SparOutcome> InvokeAsync(string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Loads a resource as its address would (<see cref="SparResourceAttribute"/>): the command runs in its own scope
+        /// and its blob comes back, or null for none; an infrastructure failure throws <c>SparCallFailedException</c>.
+        /// </summary>
+        ValueTask<SparBlob?> LoadResourceAsync(string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken);
+
         /// <summary>Runs the app's streams and subscriptions, for their typed test clients.</summary>
         SparStreamClient Streams { get; }
     }

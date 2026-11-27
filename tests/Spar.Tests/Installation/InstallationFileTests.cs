@@ -42,7 +42,23 @@ public sealed class InstallationFileTests : IDisposable
         Assert.Contains("settings.file", file.Keys);
     }
 
+    [Fact]
+    public void A_file_sets_the_log_levels_over_the_codes()
+    {
+        Write("""{ "logging": { "level": "warning", "categories": { "SqlTool.Copy": "Debug" } } }""");
+        var logging = new LoggingOptions().Level(Microsoft.Extensions.Logging.LogLevel.Information);
+
+        var file = InstallationFile.Read(FilePath, new InstallationOptions())!;
+        file.ApplyTo(logging);
+
+        Assert.Equal(Microsoft.Extensions.Logging.LogLevel.Warning, logging.DefaultLevel);
+        Assert.Contains(logging.Categories, rule => rule.Category == "SqlTool.Copy" && rule.Level == Microsoft.Extensions.Logging.LogLevel.Debug);
+        Assert.Equal("logging.level = Warning; logging.categories.SqlTool.Copy = Debug", file.Describe());
+    }
+
     [Theory]
+    [InlineData("""{ "logging": { "level": "loud" } }""", "'logging.level' must be one of")]
+    [InlineData("""{ "logging": { "file": false } }""", "'logging.file' is not a key")]
     [InlineData("""{ "browser": { "devtools": true } }""", "'browser' is not a key")]
     [InlineData("""{ "folders": { "temp": "/tmp/x" } }""", "'folders.temp' is not a key")]
     [InlineData("""{ "folders": { "ephemeralBrowserData": "yes" } }""", "'folders.ephemeralBrowserData' must be true or false")]

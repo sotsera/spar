@@ -143,7 +143,7 @@ A contract is a `[SparContract]` **sealed class** whose `[SparCommand]` methods 
 ```csharp
 /// <summary>The notebook's pages: create, read, list, save and delete, and the changes every window follows.</summary>
 [SparContract]
-public sealed class PagesService(IPageStore store, PageChanges changes, TimeProvider time)
+public sealed class PagesService(IPageStore store, PageImageFiles images, PageChanges changes, TimeProvider time)
 {
     // …
     [SparCommand]
@@ -162,6 +162,7 @@ public sealed class PagesService(IPageStore store, PageChanges changes, TimeProv
         var deleted = await store.DeleteAsync(request.Id, cancellationToken);
         if (deleted)
         {
+            images.DeleteAll(request.Id);
             changes.Publish(new PageChange(request.Id, PageChangeKind.Deleted, Revision: 0));
         }
 

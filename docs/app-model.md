@@ -101,6 +101,8 @@ using Spar;
 using SqlTool.Connections;
 using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
+using SqlTool.Reports;
+using SqlTool.Settings;
 using SqlTool.Support;
 
 var app = SparApplication.Create(args, spar =>
@@ -143,6 +145,10 @@ var app = SparApplication.Create(args, spar =>
     // Where data, logs and crash records go; each has a per-user default (3.13). Decided.
     // Here logs sit next to the executable, as in a portable install.
     spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")));
+
+    // Deployment choices beside the executable, in SqlTool.spar.json: an installation may move the folders and the
+    // settings file, or keep the browser's data in memory, without a new build; never security (3.19). Built in M3b.
+    spar.InstallationFile();
 
     // The folders the services will get, resolved now for what Program.cs builds itself: the hang record goes in the
     // logs folder chosen above without repeating its path (3.13). spar.Folders(…) throws after this call. Built; the
@@ -187,6 +193,9 @@ var app = SparApplication.Create(args, spar =>
     // these on a user's machine without a new build (3.13). Decided.
     spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
+    // What the tool remembers between runs, in settings.json in the data folder (3.19). Built in M3b.
+    spar.Settings(new ToolSettings(BatchSize: 50_000, PreviewRows: 200, LastRecipe: null));
+
     // Traces, metrics and logs over OTLP, the page's spans with them, when OTEL_EXPORTER_OTLP_ENDPOINT is set; nothing
     // otherwise (3.18). Built in M2d.
     spar.Telemetry();
@@ -208,6 +217,8 @@ var app = SparApplication.Create(args, spar =>
     spar.Services.AddSingleton<RunningCopies>();
     spar.Services.AddSingleton<RecipeQueue>();
     spar.Services.AddSingleton(new HangLog(folders.Logs));
+    spar.Services.AddSingleton<ICopyHistory, CopyHistory>();
+    spar.Services.AddSingleton<IActivityCharts, ActivityCharts>();
 });
 
 return app.Run();
@@ -323,8 +334,12 @@ public sealed class CopyJobsService(IConnectionStore connections, ISparCall call
         return new CopyPlan(Guid.CreateVersion7(), steps);
     }
 
-    /// <summary>Copies the planned tables. Cancelling stops between batches.</summary>
+    /// <summary>
+    /// Copies the planned tables. Cancelling stops between batches. Copies run one at a time, whichever window starts
+    /// them: a second waits its turn without holding a call slot (3.20).
+    /// </summary>
     [SparCommand]
+    [SparSerial("copies")]
     public async Task<Result<CopyReport, RunError>> RunAsync(RunCopy request, CancellationToken cancellationToken)
     {
         await Task.Delay(10, cancellationToken);
@@ -1174,6 +1189,92 @@ An enum travels only when each value has one name: a `[Flags]` enum, two members
 - **The page:** a span for each call it makes, the document's load, and `traced` (6.16); its errors and console messages are already in the backend's logs. Its spans go to `/_spar/otlp/v1/traces` on its own origin and the backend forwards their bytes unchanged, with the endpoint's headers, which the page never sees: protobuf or JSON only, at most 1 MiB a request and 20 requests a second, a 503 for 5 s after the endpoint could not be reached, and a 404 for every `/_spar/otlp/` path without the package or an endpoint (the page's settings request gets an empty 204, so its console shows no failed request).
 - **Settings:** OpenTelemetry's standard variables (`OTEL_EXPORTER_OTLP_PROTOCOL`, `OTEL_EXPORTER_OTLP_HEADERS`, `OTEL_SERVICE_NAME`, with `-page` for the page, `OTEL_RESOURCE_ATTRIBUTES`, `OTEL_TRACES_SAMPLER`, `OTEL_BSP_SCHEDULE_DELAY`). An Aspire app host sets them for the app it starts, so its dashboard shows both services.
 - **Cost:** the OpenTelemetry SDK and .NET's HTTP client and TLS, about 6 MB of a NativeAOT executable that had no HTTPS before; the page's module, about 18 KB compressed, loads after the page's start.
+
+### 3.19 Settings and the installation file
+
+**Decided** (decision "M3b's decide-first questions", items 4 and 6; built in M3b). `spar.Settings(defaults)` in `Program.cs` (section 2) declares a settings record, a positional record under the wire rules; the generator writes its serializer and Spar registers `ISparSettings<T>`. The file is `{"version":1,"settings":{…}}`, `settings.json` in the data folder (`%LOCALAPPDATA%\<app id>\data` on Windows, `~/.local/share/<app id>/data` on Linux, `.Development` before the extension in a Development build); a property the file lacks takes the default's value, and one the record no longer has is dropped with a log line.
+- **Updates** run one at a time, each written at once: staged beside the file, then moved over it. A file that cannot be read is kept as `settings.json.bad-<time>` with a log line, and the app starts on the defaults; one written by a newer version is left alone, and updates fail.
+- **Options:** `s => s.Name("layout")` for a second record in its own file; `s.File(path)` for this file alone, an absolute path; `s.Version(2).Migrate(from: 1, json => …)` rewrites an older file's `JsonObject` before it is read. A file on a network share needs `s.AllowNetworkFile()`: Spar keeps a local copy, starts on it when the share cannot be reached (an update then fails with `SparSettingsUnavailableException`), and runs an update's change again on the newer file when another machine wrote it meanwhile.
+- **No secrets:** settings files are plain JSON. Passwords go to the credential store (M3c).
+- **The installation file**, read only because `Program.cs` calls `spar.InstallationFile()`: `SqlTool.spar.json` beside the executable sets deployment choices without a new build: the folders, `folders.ephemeralBrowserData` (cookies, storage and cache in memory), `folders.removeOnExit` (any of profile, cache, data and logs, removed after the browser's processes exit and again at the next start after a crash), each record's `settings.file` and `allowNetworkFile`, and the log levels in `logging.json`'s shape. Environment variables are expanded; an unknown key, a bad value or a key the code locked (`i => i.Locked("settings.file")`) stops the start with a message that names it. What it set is in the log's first lines and in `spar doctor`. It never sets the page's policy, permissions or the browser's defaults.
+
+File `SqlTool/Settings/ToolSettings.cs`:
+
+```csharp
+using Spar;
+
+namespace SqlTool.Settings;
+
+/// <summary>What the tool remembers between runs. Connections live in their own store; passwords never here.</summary>
+public sealed record ToolSettings(int BatchSize, int PreviewRows, string? LastRecipe);
+
+/// <summary>The settings the page shows and changes. Wire name: preferences.</summary>
+[SparContract("preferences")]
+public sealed class PreferencesService(ISparSettings<ToolSettings> settings)
+{
+    [SparCommand]
+    public Task<ToolSettings> GetAsync() => Task.FromResult(settings.Current);
+
+    /// <summary>A batch size between 1,000 and 1,000,000 rows; another one is kept as it was.</summary>
+    [SparCommand]
+    public Task<ToolSettings> SetBatchSizeAsync(int rows, CancellationToken cancellationToken) =>
+        settings.UpdateAsync(current => rows is >= 1_000 and <= 1_000_000 ? current with { BatchSize = rows } : current, cancellationToken);
+}
+```
+
+A deployment on a Citrix server, where the executable runs from a share and each user's settings stay on it, writes `SqlTool.spar.json`:
+
+```json
+{
+  "folders": { "ephemeralBrowserData": true, "removeOnExit": ["profile", "cache"] },
+  "settings": { "file": "\\\\fileserver\\tools\\settings\\%USERNAME%.json", "allowNetworkFile": true }
+}
+```
+
+### 3.20 Serial groups
+
+**Decided** (decision "M3b's decide-first questions", item 1; built in M3b). `[SparSerial("copies")]` on a command, or on a contract for all its commands, runs the group's calls one at a time, app-wide, in arrival order, whichever window, test or devtools session makes them (`CopyJobsService.RunAsync`, section 3.2). A waiting call holds no call slot: it counts in the bridge's `QueuedCalls` and `QueuedBytes`. Its `TimeoutSeconds` starts when it runs, one cancelled while it waits never runs (`cancelled` / `cancelled-before-start`), and its span records the wait (`spar.serial.wait`). Streams and subscriptions cannot join a group (SPAR019).
+
+### 3.21 Binary data
+
+**Decided** (decision "M3b's decide-first questions", items 2 and 3; built in M3b). A `byte[]` crosses the bridge as base64, about 30 ms a megabyte; above about 64 KB the page reads binary data from the app's own origin instead, several times faster, and an `<img>` or a download link needs no widened policy.
+- **Handles** for data that exists once: a `SparBlob` in a result, or in a result's record, from `SparBlob.FromBytes`, `SparBlob.FromFile` or the `SparBlobs` service's `FromStreamAsync`, which copies the stream to a temporary file. The page gets `url`, `contentType`, `size`, `name`, `bytes()`, `blob()` and `release()`; the handle is valid until it is released or the page's document goes. A document holds at most 10,000 handles and 512 MB of `byte[]` handles (`spar.Bridge(b => b.MaxBlobs = …)`, `MaxBlobBytes`); a result that would pass a limit fails its own call with `response` / `too-large`, and nothing is released to make room. A blob is never in a request, a stream's items or a declared error (SPAR026).
+- **Resources** for data the backend can fetch again by a key: a `[SparResource]` command takes a scalar or a record of scalars and returns `SparBlob?`. The page does not call it; it puts its address, `reports.activityChart.url({ server, minutes })`, in an `<img>`, and each load runs the command in its own scope, so a page may show any number and the backend keeps nothing; a null result is a 404 (SPAR027 for any other shape).
+- Images, audio, video, plain text, CSV, JSON and PDF are served with their type; any other type, HTML and SVG included, as a download. On loopback (development and browser tests) every address carries the page's key.
+- **To the backend** binary data stays a `byte[]` request, within the bridge's 4 MiB message; a file the user picks arrives as a grant (M3c).
+
+File `SqlTool/Reports/ReportsService.cs`:
+
+```csharp
+using Spar;
+
+namespace SqlTool.Reports;
+
+/// <summary>A server's activity chart for the last minutes, by its key: what the page's address carries.</summary>
+public sealed record ChartKey(string Server, int Minutes);
+
+/// <summary>Reports the page shows or saves. Wire name: reports.</summary>
+[SparContract]
+public sealed class ReportsService(ICopyHistory history, IActivityCharts charts, SparBlobs blobs)
+{
+    /// <summary>A finished copy's rows as CSV, for a download link: a handle the page releases when it is done.</summary>
+    [SparCommand]
+    public async Task<SparBlob> ExportCopyAsync(string jobId, CancellationToken cancellationToken)
+    {
+        await using var csv = history.OpenCsv(jobId);
+        return await blobs.FromStreamAsync(csv, "text/csv", $"copy-{jobId}.csv", cancellationToken);
+    }
+
+    /// <summary>The chart as PNG, drawn at each load of its address; none for a server the tool does not monitor.</summary>
+    [SparCommand]
+    [SparResource]
+    public async Task<SparBlob?> ActivityChartAsync(ChartKey key, CancellationToken cancellationToken)
+    {
+        var png = await charts.DrawAsync(key.Server, TimeSpan.FromMinutes(key.Minutes), cancellationToken);
+        return png is null ? null : SparBlob.FromBytes(png, "image/png");
+    }
+}
+```
 
 ## 5. The generated TypeScript
 

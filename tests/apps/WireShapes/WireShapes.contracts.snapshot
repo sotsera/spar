@@ -1,7 +1,7 @@
 # The contracts of WireShapes as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint f7959a53173c16ae
+fingerprint 161f489a190960bb
 
 contract echo (WireShapes.EchoService)
   big(WireShapes.Item) -> long
@@ -9,6 +9,13 @@ contract echo (WireShapes.EchoService)
   ratio(WireShapes.Item) -> double
   shapes(WireShapes.Shapes) -> WireShapes.Shapes
   wait(WireShapes.Item) -> WireShapes.Item
+
+contract files (WireShapes.FilesService)
+  copy(int) -> Spar.SparBlob
+  export(string) -> WireShapes.Export
+  label(int) -> resource of Spar.SparBlob
+  make(int) -> Spar.SparBlob
+  photo(WireShapes.PhotoKey) -> resource of Spar.SparBlob?
 
 contract kinds (WireShapes.KindsService)
   echo(WireShapes.Kinds) -> WireShapes.Kinds
@@ -30,6 +37,10 @@ contract streams (WireShapes.StreamsService)
   read(int) -> stream of WireShapes.Row | WireShapes.RowsError
   rows(int) -> stream of WireShapes.Row
   ticks(int) -> subscription of WireShapes.Tick
+
+record WireShapes.Export
+  title: string
+  file: Spar.SparBlob
 
 record WireShapes.Item
   name: string
@@ -56,6 +67,10 @@ record WireShapes.Kinds
 record WireShapes.Library.Entry
   account: string
   cents: long
+
+record WireShapes.PhotoKey
+  album: int
+  number: int
 
 record WireShapes.Row
   n: int

@@ -101,6 +101,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     private readonly ConcurrentQueue<string> _problems = new();
     private readonly SparTestLog _log;
     private readonly SparStreamClient _streams;
+    private readonly BlobOwner _blobs;
     private SparPage? _page;
     private SparWindow? _window;
     private long _nextCallId;
@@ -113,6 +114,10 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         _options = options;
         _log = log;
         _streams = new SparStreamClient(app.Dispatcher, () => Interlocked.Increment(ref _nextCallId));
+
+        // The typed clients read the handles a result gives them from the app's store, held as a page would hold them.
+        _blobs = app.Dispatcher.Blobs.Open(app.Dispatcher.Limits.MaxBlobBytes, app.Dispatcher.Limits.MaxBlobs);
+        app.Dispatcher.Blobs.StartTest();
     }
 
     /// <summary>The app's own service provider: a test can inspect backend state directly.</summary>
@@ -238,7 +243,14 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     public ValueTask<SparOutcome> InvokeAsync(string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken)
     {
         var callId = Interlocked.Increment(ref _nextCallId);
-        return _app.Dispatcher.InvokeAsync(contract, command, callId, request, cancellationToken, SparCaller.Test);
+        return _app.Dispatcher.InvokeAsync(contract, command, callId, request, _blobs, cancellationToken, SparCaller.Test);
+    }
+
+    /// <summary>Loads a resource through the app's real dispatch, as one load of its address would.</summary>
+    public async ValueTask<SparBlob?> LoadResourceAsync(string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken)
+    {
+        var (outcome, blob) = await _app.Dispatcher.InvokeResourceAsync(contract, command, request, cancellationToken, SparCaller.Test);
+        return outcome.Failure is { } failure ? throw new SparCallFailedException(contract, command, failure) : blob;
     }
 
     SparStreamClient ISparInvoker.Streams => _streams;
@@ -275,6 +287,8 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
             await Step(failures, async () => await Surface.DisposeAsync());
         }
 
+        _blobs.Close();
+        _app.Dispatcher.Blobs.EndTest();
         _session.Stop();
         await Step(failures, async () =>
         {

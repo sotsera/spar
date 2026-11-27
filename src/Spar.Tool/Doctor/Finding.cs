@@ -69,4 +69,7 @@ internal static class FindingIds
     public const string Identity = "build-identity";
     public const string IdentityContracts = "build-identity-contracts";
     public const string IdentityDirty = "build-identity-dirty";
+
+    // The installation file beside the app (decision "M3b's decide-first questions", item 6).
+    public const string InstallationFile = "installation-file";
 }

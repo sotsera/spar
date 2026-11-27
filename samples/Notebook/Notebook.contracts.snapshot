@@ -1,7 +1,11 @@
 # The contracts of Notebook as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint ca09fc10573dfa74
+fingerprint aeccc8efeda54c88
+
+contract images (Notebook.Pages.ImagesService)
+  add(Notebook.Pages.AddImage) -> Notebook.Pages.ImageRef | Notebook.Pages.ImageError
+  image(Notebook.Pages.ImageRef) -> resource of Spar.SparBlob?
 
 contract pages (Notebook.Pages.PagesService)
   changes() -> subscription of Notebook.Pages.PageChange
@@ -11,9 +15,27 @@ contract pages (Notebook.Pages.PagesService)
   list() -> IReadOnlyList<Notebook.Pages.PageSummary>
   save(Notebook.Pages.SavePage) -> Notebook.Pages.Page | Notebook.Pages.PageError
 
+contract preferences (Notebook.Pages.PreferencesService)
+  get() -> Notebook.Pages.NotebookSettings
+  setLastPage(string?) -> void
+  setViewMode(Notebook.Pages.ViewMode) -> void
+
+record Notebook.Pages.AddImage
+  pageId: string
+  contentType: string
+  bytes: byte[]
+
 record Notebook.Pages.CreatePage
   title: string
   markdown: string?
+
+record Notebook.Pages.ImageRef
+  pageId: string
+  imageId: string
+
+record Notebook.Pages.NotebookSettings
+  viewMode: Notebook.Pages.ViewMode
+  lastPage: string?
 
 record Notebook.Pages.Page
   id: string
@@ -40,6 +62,11 @@ record Notebook.Pages.SavePage
   markdown: string
   baseRevision: long
 
+error Notebook.Pages.ImageError
+  pageNotFound(id: string)
+  notAnImage(contentType: string)
+  tooLarge(maxBytes: int)
+
 error Notebook.Pages.PageError
   titleTaken(title: string)
   invalidTitle(reason: string)
@@ -48,3 +75,6 @@ error Notebook.Pages.PageError
 
 enum Notebook.Pages.PageChangeKind
   Created, Saved, Deleted
+
+enum Notebook.Pages.ViewMode
+  Write, Split, Read

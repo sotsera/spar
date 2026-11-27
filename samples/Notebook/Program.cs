@@ -18,6 +18,10 @@ var app = SparApplication.Create(args, spar =>
     spar.Services.AddSingleton(TimeProvider.System);
     spar.Services.AddSingleton<IPageStore, MarkdownPageStore>();
     spar.Services.AddSingleton<PageChanges>();
+    spar.Services.AddSingleton<PageImageFiles>();
+
+    // The view mode and the last open page, remembered between runs in settings.json (docs/app-model.md).
+    spar.Settings(new NotebookSettings(ViewMode.Split, LastPage: null));
 
     // Off unless OTEL_EXPORTER_OTLP_ENDPOINT is set, as when the Aspire dashboard starts the app.
     spar.Telemetry();

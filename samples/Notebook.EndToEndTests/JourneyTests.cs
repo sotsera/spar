@@ -46,6 +46,39 @@ public sealed class JourneyTests(SharedBrowser shared) : IClassFixture<SharedBro
     }
 
     [Fact]
+    public async Task An_image_dropped_into_a_page_shows_in_its_preview_and_the_view_is_remembered()
+    {
+        await using var notebook = await NotebookPage.OpenAsync(shared);
+        await notebook.CreateAsync("Groceries");
+
+        // A drop of a 1×1 PNG, as the file manager would make it.
+        await notebook.Editor.EvaluateAsync("""
+            (editor) => {
+              const bytes = Uint8Array.from(atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="), c => c.charCodeAt(0));
+              const data = new DataTransfer();
+              data.items.add(new File([bytes], "shelf.png", { type: "image/png" }));
+              editor.dispatchEvent(new DragEvent("drop", { dataTransfer: data, bubbles: true, cancelable: true }));
+            }
+            """);
+
+        var image = notebook.Page.GetByRole(AriaRole.Article, new() { Name = "Preview" }).GetByRole(AriaRole.Img, new() { Name = "shelf" });
+        await Expect(image).ToBeVisibleAsync();
+        await Expect(image).ToHaveJSPropertyAsync("naturalWidth", 1);
+        await Expect(notebook.Status).ToHaveTextAsync("Saved", new() { Timeout = 5_000 });
+        Assert.Single(Directory.GetFiles(Path.Combine(notebook.App.Folders.Data, "pages", "groceries.images"), "*.png"));
+
+        await notebook.Page.GetByRole(AriaRole.Button, new() { Name = "Preview", Exact = true }).ClickAsync();
+        await notebook.Page.ReloadAsync();
+
+        // The page reloaded as at the next start: the same page, in the view chosen last.
+        await Expect(notebook.Page.GetByRole(AriaRole.Heading, new() { Name = "Groceries", Level = 2 })).ToBeVisibleAsync();
+        await Expect(notebook.Page.GetByRole(AriaRole.Button, new() { Name = "Preview", Exact = true })).ToHaveAttributeAsync("aria-pressed", "true");
+        await Expect(notebook.Editor).ToHaveCountAsync(0);
+        await Expect(image).ToBeVisibleAsync();
+        notebook.AssertClean();
+    }
+
+    [Fact]
     public async Task A_taken_or_invalid_title_is_explained_in_the_form()
     {
         await using var notebook = await NotebookPage.OpenAsync(shared);

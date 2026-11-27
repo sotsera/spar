@@ -1,6 +1,8 @@
 // The notebook's state against a fake backend: every outcome the page handles, from the declared errors to a lost
 // connection, with the values crossing the generated encoders and decoders as they would from the real host.
+import { images } from "@spar/app/images";
 import { pages, type Page, type PageSummary } from "@spar/app/pages";
+import { preferences } from "@spar/app/preferences";
 import { fakeSpar, type FakeSpar } from "@spar/app/testing";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
@@ -263,4 +265,44 @@ test("the list is read again after a change made elsewhere", async () => {
   await act(async () => spar.stream(pages.changes).push({ id: "new", kind: "Created", revision: 1n }));
 
   await vi.waitFor(() => expect(notebook.summaries).toEqual([added, newer, older]));
+});
+
+test("the view mode and the last page come back from the last run, and a change is remembered", async () => {
+  spar.on(preferences.get).succeed({ viewMode: "Read", lastPage: "welcome" });
+  spar.on(preferences.setViewMode).succeed();
+  spar.on(preferences.setLastPage).succeed();
+  await start();
+
+  await vi.waitFor(() => expect(notebook.current.kind).toBe("open"));
+  expect(notebook.viewMode).toBe("Read");
+  await act(async () => notebook.setViewMode("Write"));
+  await act(async () => notebook.close());
+
+  await vi.waitFor(() => expect(spar.calls(preferences.setLastPage)).toEqual([null]));
+  expect(spar.calls(preferences.setViewMode)).toEqual(["Write"]);
+});
+
+test("a remembered page that is gone opens nothing", async () => {
+  spar.on(preferences.get).succeed({ viewMode: "Split", lastPage: "gone" });
+  spar.on(pages.get).fail("notFound", { id: "gone" });
+  await start();
+
+  await vi.waitFor(() => expect(spar.calls(pages.get)).toEqual([{ id: "gone" }]));
+  await vi.waitFor(() => expect(notebook.current.kind).toBe("none"));
+});
+
+test("an image added to the open page gives the Markdown that shows it, and a refusal becomes the notice", async () => {
+  spar.on(images.add).succeed({ pageId: "welcome", imageId: "0123456789abcdef0123456789abcdef" });
+  await start();
+  await openWelcome();
+  const png = new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47])], "diagram.png", { type: "image/png" });
+
+  const markdown = await notebook.addImage(png);
+  spar.on(images.add).fail("notAnImage", { contentType: "image/svg+xml" });
+  const refused = await act(async () => notebook.addImage(png));
+
+  expect(markdown).toBe("![diagram](image:0123456789abcdef0123456789abcdef)");
+  expect(spar.calls(images.add)[0]).toEqual({ pageId: "welcome", contentType: "image/png", bytes: new Uint8Array([0x89, 0x50, 0x4e, 0x47]) });
+  expect(refused).toBeUndefined();
+  expect(notebook.notice).toBe("Only PNG, JPEG, GIF and WebP images can go in a page.");
 });

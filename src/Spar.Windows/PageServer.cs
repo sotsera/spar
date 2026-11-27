@@ -37,6 +37,7 @@ internal sealed class PageServer
     private string? _sharedHeaders;
     private DevServerProxy? _devServer;
     private TelemetryRoute _telemetry = TelemetryRoute.None;
+    private Task<SparRunningApp>? _app;
 
     /// <param name="security">The app's page security, from the generated catalog.</param>
     /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
@@ -66,6 +67,12 @@ internal sealed class PageServer
 
     /// <summary>The app's telemetry route (UI thread, once its services are built): its relay when the layer is in the app.</summary>
     public void UseTelemetry(TelemetryRoute route) => _telemetry = route;
+
+    /// <summary>
+    /// The app whose blob handles and resources the origin serves (<c>/_spar/blob/</c>, <c>/_spar/resource/</c>), set
+    /// at start; its loads wait for the app's services, off the UI thread.
+    /// </summary>
+    public void UseBlobs(Task<SparRunningApp> app) => _app = app;
 
     /// <summary>The page's first address.</summary>
     public static string StartUrl => Origin + "/";
@@ -114,6 +121,13 @@ internal sealed class PageServer
             if (TelemetryRoute.Matches(path))
             {
                 deferred = AnswerTelemetry(environment, args, path, method);
+                return;
+            }
+
+            // Before the development server: a blob is the backend's, never Vite's.
+            if (BlobRoutes.Matches(path))
+            {
+                deferred = AnswerBlob(environment, args, path, QueryOf(uri), method);
                 return;
             }
 
@@ -275,6 +289,63 @@ internal sealed class PageServer
         return true;
     }
 
+    /// <summary>
+    /// A blob handle or a resource: deferred, since a resource runs its command and a file is read, and both happen on
+    /// the thread pool; the response goes on the request back on the UI thread. False when it was answered at once.
+    /// </summary>
+    private bool AnswerBlob(ICoreWebView2Environment10 environment, ICoreWebView2WebResourceRequestedEventArgs2 args, string path, string query, string method)
+    {
+        if (_app is not { } app)
+        {
+            Respond(environment, args, Refusal(404, "Not Found", "not-found"));
+            return false;
+        }
+
+        var deferral = Com.Take<ICoreWebView2Deferral>(args.GetDeferral());
+        _ = Task.Run(async () => await BlobRoutes.AnswerAsync((await app).Dispatcher, method, path, query, null, CancellationToken.None))
+            .ContinueWith(answered => _ui.Post(() => BlobAnswered(environment, args, deferral, answered, path)), TaskScheduler.Default);
+        return true;
+    }
+
+    private void BlobAnswered(
+        ICoreWebView2Environment10 environment, ICoreWebView2WebResourceRequestedEventArgs2 args, ICoreWebView2Deferral deferral,
+        Task<PageResponse> answered, string path)
+    {
+        try
+        {
+            if (!answered.IsCompletedSuccessfully)
+            {
+                _log.Warn($"{Shorten(path)} could not be served: {answered.Exception?.GetBaseException().Message}");
+            }
+
+            Respond(environment, args, answered.IsCompletedSuccessfully ? answered.Result : Refusal(500, "Internal Server Error", "failed"));
+            deferral.Complete();
+        }
+        catch (Exception exception)
+        {
+            // The page may have gone meanwhile, and its request with it.
+            _log.Info($"A blob response was not delivered: {exception.Message}");
+        }
+        finally
+        {
+            Com.Release(deferral);
+            Com.Release(args);
+        }
+    }
+
+    /// <summary>The query of an address, without its <c>?</c> and fragment; empty when it has none.</summary>
+    private static string QueryOf(string address)
+    {
+        var start = address.IndexOf('?');
+        if (start < 0)
+        {
+            return "";
+        }
+
+        var end = address.IndexOf('#', start);
+        return end < 0 ? address[(start + 1)..] : address[(start + 1)..end];
+    }
+
     private void Forwarded(ICoreWebView2Environment10 environment, ICoreWebView2WebResourceRequestedEventArgs2 args, ICoreWebView2Deferral deferral, Task<PageResponse> forwarded)
     {
         try
@@ -380,7 +451,8 @@ internal sealed class PageServer
         {
             var csp = response.Csp ?? _responder.CurrentPolicy.ContentSecurityPolicy;
             var allow = response.Allow is null ? "" : $"\r\nAllow: {response.Allow}";
-            var headers = $"Content-Type: {response.ContentType}\r\nContent-Security-Policy: {csp}\r\n{SharedHeaders()}{allow}";
+            var disposition = response.Disposition is null ? "" : $"\r\nContent-Disposition: {response.Disposition}";
+            var headers = $"Content-Type: {response.ContentType}\r\nContent-Security-Policy: {csp}\r\n{SharedHeaders()}{allow}{disposition}";
             var created = environment.CreateWebResourceResponse(stream, response.Status, response.Reason, headers);
             try
             {

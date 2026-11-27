@@ -38,6 +38,16 @@ public sealed class BridgeOptions
     /// </summary>
     public int StreamsOpen { get; set; } = 64;
 
+    /// <summary>
+    /// How many bytes the <c>byte[]</c> handles (<see cref="SparBlob.FromBytes"/>) a document holds may total; a result
+    /// that would pass it fails its own call with <c>response</c> / <c>too-large</c>, and no handle is released to make
+    /// room. File and stream handles hold no memory and do not count.
+    /// </summary>
+    public int MaxBlobBytes { get; set; } = 512 * 1024 * 1024;
+
+    /// <summary>How many handles one document may hold at once; past it a result fails as for <see cref="MaxBlobBytes"/>.</summary>
+    public int MaxBlobs { get; set; } = 10_000;
+
     /// <summary>The values as the bridge uses them; each must be at least 1.</summary>
     internal BridgeLimits Freeze() => new(
         Positive(MaxMessageBytes, nameof(MaxMessageBytes)),
@@ -45,14 +55,17 @@ public sealed class BridgeOptions
         Positive(CallsInFlight, nameof(CallsInFlight)),
         Positive(QueuedCalls, nameof(QueuedCalls)),
         Positive(QueuedBytes, nameof(QueuedBytes)),
-        Positive(StreamsOpen, nameof(StreamsOpen)));
+        Positive(StreamsOpen, nameof(StreamsOpen)),
+        Positive(MaxBlobBytes, nameof(MaxBlobBytes)),
+        Positive(MaxBlobs, nameof(MaxBlobs)));
 
     private static int Positive(int value, string name) =>
         value >= 1 ? value : throw new ArgumentOutOfRangeException(name, value, $"BridgeOptions.{name} must be at least 1.");
 }
 
 /// <summary>The limits one app's bridge applies, fixed when the app is built.</summary>
-internal sealed record BridgeLimits(int MaxMessageBytes, int MaxResultBytes, int CallsInFlight, int QueuedCalls, int QueuedBytes, int StreamsOpen)
+internal sealed record BridgeLimits(int MaxMessageBytes, int MaxResultBytes, int CallsInFlight, int QueuedCalls, int QueuedBytes, int StreamsOpen,
+    int MaxBlobBytes, int MaxBlobs)
 {
     public static BridgeLimits Default { get; } = new BridgeOptions().Freeze();
 }

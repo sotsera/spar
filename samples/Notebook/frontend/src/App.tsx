@@ -42,6 +42,9 @@ export function App({ notebook }: { readonly notebook: Notebook }) {
               onReload={notebook.reload}
               onKeepMine={notebook.keepMine}
               onDelete={() => void notebook.remove()}
+              mode={notebook.viewMode}
+              onMode={notebook.setViewMode}
+              onAddImage={notebook.addImage}
             />
           ) : current.kind === "missing" ? (
             <Empty

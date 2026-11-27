@@ -53,7 +53,7 @@ internal sealed partial class BridgeSession
         SparOutcome outcome;
         try
         {
-            outcome = await _dispatcher.InvokeAsync(call.Contract!, call.Command!, call.Id!.Value, call.Payload, Running, token.Token);
+            outcome = await _dispatcher.InvokeAsync(call.Contract!, call.Command!, call.Id!.Value, call.Payload, Running, _blobs, token.Token);
         }
         finally
         {

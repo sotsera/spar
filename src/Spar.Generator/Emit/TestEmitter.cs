@@ -50,6 +50,12 @@ internal static class TestEmitter
             return;
         }
 
+        if (command.IsResource)
+        {
+            EmitResourceMethod(code, contract, command);
+            return;
+        }
+
         var returnType = command.Return switch
         {
             ReturnShape.None => "global::System.Threading.Tasks.Task",
@@ -95,6 +101,21 @@ internal static class TestEmitter
         }
 
         code.Close();
+    }
+
+    /// <summary>A resource as one load of its address would run it: its blob, or null when it returned none (a 404).</summary>
+    private static void EmitResourceMethod(CodeWriter code, ContractModel contract, CommandModel command)
+    {
+        var parameters = command.Request is { } request
+            ? $"{request.CSharp} request, global::System.Threading.CancellationToken cancellationToken = default"
+            : "global::System.Threading.CancellationToken cancellationToken = default";
+        var payload = command.Request is { } r
+            ? $"{Runtime}.SparJson.Write(request, SparSerializers.Write{r.Key})"
+            : "global::System.ReadOnlyMemory<byte>.Empty";
+
+        code.Line($"/// <summary>Loads the resource <c>{contract.WireName}.{command.WireName}</c>; an infrastructure failure throws <c>SparCallFailedException</c>.</summary>");
+        code.Line($"public global::System.Threading.Tasks.ValueTask<global::Spar.SparBlob?> {Naming.Pascal(command.WireName)}Async({parameters}) =>");
+        code.Line($"    invoker.LoadResourceAsync(\"{contract.WireName}\", \"{command.WireName}\", {payload}, cancellationToken);");
     }
 
     /// <summary>

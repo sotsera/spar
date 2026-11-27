@@ -9,6 +9,9 @@ import { awaitRestart, backendOpened, runHeader, type RestartPage } from "./rest
 
 const tokenKey = "spar.token";
 
+/** The header that registers the page's address key with its document, when the channel opens. */
+const keyHeader = "X-Spar-Key";
+
 /** Where the loopback host is and how to prove the page came from it. */
 export interface LoopbackOptions {
   /** The host's origin; the page's own origin by default. */
@@ -67,6 +70,8 @@ class LoopbackChannel implements BridgeChannel {
   readonly #origin: string;
   readonly #token: string;
   readonly #fetch: typeof fetch;
+  /** The key blob and resource addresses carry (`k=`): this page's, sent again by each new channel it opens. */
+  readonly #key = randomKey();
   #stop = new AbortController();
   readonly #queue: string[] = [];
   #received: ((message: string) => void) | undefined;
@@ -109,6 +114,10 @@ class LoopbackChannel implements BridgeChannel {
     return true;
   }
 
+  addressKey(): string {
+    return this.#key;
+  }
+
   /** @internal Where the page's telemetry reaches the host's relay: the host's origin, with the session's token. */
   telemetryRelay(): RelayAddress {
     return { origin: this.#origin, headers: { Authorization: `Bearer ${this.#token}` } };
@@ -133,7 +142,7 @@ class LoopbackChannel implements BridgeChannel {
   async #open(hello: string): Promise<void> {
     let response: Response;
     try {
-      response = await this.#fetch(`${this.#origin}/_spar/channel`, this.#request(hello, {}));
+      response = await this.#fetch(`${this.#origin}/_spar/channel`, this.#request(hello, { [keyHeader]: this.#key }));
     } catch {
       this.#close();
       return;
@@ -278,4 +287,10 @@ export function takeBatch(queue: string[]): string[] {
   }
 
   return queue.splice(0, count);
+}
+
+/** 128 random bits as hex: the page's address key. */
+function randomKey(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
 }

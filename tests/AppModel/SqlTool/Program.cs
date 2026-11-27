@@ -4,6 +4,8 @@ using Spar;
 using SqlTool.Connections;
 using SqlTool.CopyJobs;
 using SqlTool.Monitoring;
+using SqlTool.Reports;
+using SqlTool.Settings;
 using SqlTool.Support;
 
 var app = SparApplication.Create(args, spar =>
@@ -46,6 +48,10 @@ var app = SparApplication.Create(args, spar =>
     // Where data, logs and crash records go; each has a per-user default (3.13). Decided.
     // Here logs sit next to the executable, as in a portable install.
     spar.Folders(f => f.Logs(Path.Combine(AppContext.BaseDirectory, "logs")));
+
+    // Deployment choices beside the executable, in SqlTool.spar.json: an installation may move the folders and the
+    // settings file, or keep the browser's data in memory, without a new build; never security (3.19). Built in M3b.
+    spar.InstallationFile();
 
     // The folders the services will get, resolved now for what Program.cs builds itself: the hang record goes in the
     // logs folder chosen above without repeating its path (3.13). spar.Folders(…) throws after this call. Built; the
@@ -90,6 +96,9 @@ var app = SparApplication.Create(args, spar =>
     // these on a user's machine without a new build (3.13). Decided.
     spar.Logging(l => l.Level(LogLevel.Information).Level("SqlTool.CopyJobs", LogLevel.Debug));
 
+    // What the tool remembers between runs, in settings.json in the data folder (3.19). Built in M3b.
+    spar.Settings(new ToolSettings(BatchSize: 50_000, PreviewRows: 200, LastRecipe: null));
+
     // Traces, metrics and logs over OTLP, the page's spans with them, when OTEL_EXPORTER_OTLP_ENDPOINT is set; nothing
     // otherwise (3.18). Built in M2d.
     spar.Telemetry();
@@ -111,6 +120,8 @@ var app = SparApplication.Create(args, spar =>
     spar.Services.AddSingleton<RunningCopies>();
     spar.Services.AddSingleton<RecipeQueue>();
     spar.Services.AddSingleton(new HangLog(folders.Logs));
+    spar.Services.AddSingleton<ICopyHistory, CopyHistory>();
+    spar.Services.AddSingleton<IActivityCharts, ActivityCharts>();
 });
 
 return app.Run();

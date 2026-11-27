@@ -40,6 +40,7 @@ internal sealed class SchemeServer
     private GCHandle _self;
     private DevServerProxy? _devServer;
     private TelemetryRoute _telemetry = TelemetryRoute.None;
+    private Task<SparRunningApp>? _app;
 
     /// <param name="development">A Development or Test build, where <c>CspReports.DevelopmentOnly</c> reports.</param>
     /// <param name="violations">Where reports go; null when the endpoint does not report in this build.</param>
@@ -71,6 +72,12 @@ internal sealed class SchemeServer
 
     /// <summary>The app's telemetry route (loop thread, before the first load): its relay when the layer is in the app.</summary>
     public void UseTelemetry(TelemetryRoute route) => _telemetry = route;
+
+    /// <summary>
+    /// The app whose blob handles and resources the origin serves (<c>/_spar/blob/</c>, <c>/_spar/resource/</c>), set on
+    /// the loop thread before the first load; its loads wait for the app's services, on the thread pool.
+    /// </summary>
+    public void UseBlobs(Task<SparRunningApp> app) => _app = app;
 
     /// <summary>The policy every response carries, once the page is prepared; the host logs it at start.</summary>
     public Task<PagePolicy> Policy => _responder.Policy;
@@ -115,6 +122,11 @@ internal sealed class SchemeServer
         {
             yield return new("Allow", allow);
         }
+
+        if (response.Disposition is { } disposition)
+        {
+            yield return new("Content-Disposition", disposition);
+        }
     }
 
     [UnmanagedCallersOnly]
@@ -152,6 +164,13 @@ internal sealed class SchemeServer
         if (TelemetryRoute.Matches(path))
         {
             AnswerTelemetry(request, path, method);
+            return;
+        }
+
+        // Before the development server: a blob is the backend's, never Vite's.
+        if (BlobRoutes.Matches(path))
+        {
+            AnswerBlob(request, path, QueryOf(uri), method);
             return;
         }
 
@@ -370,6 +389,57 @@ internal sealed class SchemeServer
         var server = read.Server;
         _ = Task.Run(() => read.Route.ForwardAsync(body, read.ContentType, CancellationToken.None))
             .ContinueWith(forwarded => server._ui.Post(() => server.Forwarded(read.Request, forwarded), "telemetry forwarded"), TaskScheduler.Default);
+    }
+
+    /// <summary>
+    /// A blob handle or a resource: the request held, the answer made on the thread pool (a resource runs its command, a
+    /// file is read), and the request finished back on the loop.
+    /// </summary>
+    private void AnswerBlob(nint request, string path, string query, string method)
+    {
+        if (_app is not { } app)
+        {
+            Respond(request, PageResponder.Refusal(404, "Not Found", "not-found"));
+            return;
+        }
+
+        var held = GLib.g_object_ref(request);
+        _ = Task.Run(async () => await BlobRoutes.AnswerAsync((await app).Dispatcher, method, path, query, null, CancellationToken.None))
+            .ContinueWith(answered => _ui.Post(() => BlobAnswered(held, answered, path), "blob answered"), TaskScheduler.Default);
+    }
+
+    private void BlobAnswered(nint request, Task<PageResponse> answered, string path)
+    {
+        try
+        {
+            if (!answered.IsCompletedSuccessfully)
+            {
+                _log.Warn($"{Shorten(path)} could not be served: {answered.Exception?.GetBaseException().Message}");
+            }
+
+            Respond(request, answered.IsCompletedSuccessfully ? answered.Result : PageResponder.Refusal(500, "Internal Server Error", "failed"));
+        }
+        catch (Exception exception)
+        {
+            _log.Info($"A blob response was not delivered: {exception.Message}");
+        }
+        finally
+        {
+            GLib.g_object_unref(request);
+        }
+    }
+
+    /// <summary>The query of an address, without its <c>?</c> and fragment; empty when it has none.</summary>
+    private static string QueryOf(string address)
+    {
+        var start = address.IndexOf('?');
+        if (start < 0)
+        {
+            return "";
+        }
+
+        var end = address.IndexOf('#', start);
+        return end < 0 ? address[(start + 1)..] : address[(start + 1)..end];
     }
 
     private void Forwarded(nint request, Task<PageResponse> forwarded)

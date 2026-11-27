@@ -2,6 +2,7 @@
 // protocol to the page's own connection, so every scripted value crosses the generated encoders and decoders exactly as
 // a real host's would: a bigint, bytes, an enum member, a null. The generated testing module passes it the app's
 // commands with their wire functions; app code imports only `fakeSpar` from there.
+import { fakeBlob, fakeBlobs, type SparBlob } from "./blobs.js";
 import type { BridgeChannel } from "./connection.js";
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import { resetConfiguration, type Call, type CallError, type ErrorCases, type Result } from "./results.js";
@@ -136,6 +137,12 @@ export interface FakeSpar {
    * host message is: await a microtask (or the page's reaction) before asserting.
    */
   backendUpdate(update?: FakeBackendUpdate): void;
+  /**
+   * A blob for a scripted reply, such as `spar.on(reports.export).succeed(spar.blob(bytes, "text/csv", "report.csv"))`:
+   * the page reads its bytes from the fake, and its `url` is the address a real handle would have, which nothing serves
+   * in a page test.
+   */
+  blob(bytes: Uint8Array, contentType: string, name?: string): SparBlob;
 }
 
 /** A backend update a page test sends: the updated types' full names, none by default. */
@@ -171,6 +178,7 @@ const replies: Replies<unknown, Record<string, unknown>> = {
  */
 export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, fingerprint: string): FakeSpar {
   resetConfiguration();
+  fakeBlobs.clear();
   const commands = new Map(appCommands);
   commands.set(setColorScheme, colorSchemeCodec);
   const host = new FakeHost(commands, fingerprint);
@@ -182,6 +190,7 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
     stream: command => streamScriptFor(host, codecOf(commands, command)) as never,
     requestClose: request => host.requestClose(request ?? {}),
     backendUpdate: update => host.backendUpdate(update ?? {}),
+    blob: (bytes, contentType, name) => fakeBlob(bytes, contentType, name ?? null),
   };
 }
 

@@ -1,7 +1,7 @@
 # The contracts of SqlTool.Real as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint 9a3eee5a18563dd6
+fingerprint 851475bf99e90288
 
 contract connections (SqlTool.Connections.IConnections)
   forget(string) -> void
@@ -17,6 +17,14 @@ contract copyJobs (SqlTool.CopyJobs.CopyJobsService)
 
 contract crashReport (SqlTool.Status.CrashReport)
   lastCrash() -> SqlTool.Status.CrashInfo?
+
+contract preferences (SqlTool.Settings.PreferencesService)
+  get() -> SqlTool.Settings.ToolSettings
+  setBatchSize(int) -> SqlTool.Settings.ToolSettings
+
+contract reports (SqlTool.Reports.ReportsService)
+  activityChart(SqlTool.Reports.ChartKey) -> resource of Spar.SparBlob?
+  exportCopy(string) -> Spar.SparBlob
 
 contract script (SqlTool.Scripts.ScriptService)
   copyCreateScript(string) -> void | SqlTool.Scripts.CopyScriptError
@@ -74,6 +82,15 @@ record SqlTool.CopyJobs.PreviewRow
 record SqlTool.CopyJobs.RunCopy
   planId: Guid
   truncateTarget: bool
+
+record SqlTool.Reports.ChartKey
+  server: string
+  minutes: int
+
+record SqlTool.Settings.ToolSettings
+  batchSize: int
+  previewRows: int
+  lastRecipe: string?
 
 record SqlTool.Status.CrashInfo
   at: DateTimeOffset

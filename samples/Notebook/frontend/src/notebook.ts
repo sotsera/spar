@@ -5,6 +5,7 @@ import { pages, type Page, type PageChange, type PageSummary } from "@spar/app/p
 import { onBackendUpdate } from "@spar/app/sdk";
 import { windows, type CloseAnswer, type CloseRequest } from "@spar/app/windows";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { addImage as addPageImage, useRemembered, type ViewMode } from "./remembered.js";
 
 /** How long the editor waits after the last keystroke before it saves. */
 const autosaveDelayMs = 800;
@@ -37,6 +38,11 @@ export interface Notebook {
   remove(): Promise<void>;
   dismissNotice(): void;
   showNotice(message: string): void;
+  /** How the open page is shown, remembered between runs. */
+  readonly viewMode: ViewMode;
+  setViewMode(mode: ViewMode): void;
+  /** Adds an image to the open page and resolves with the Markdown that shows it; a refusal becomes the notice. */
+  addImage(file: File): Promise<string | undefined>;
 }
 
 export function useNotebook(): Notebook {
@@ -125,7 +131,8 @@ export function useNotebook(): Notebook {
     return () => live.abort();
   }, [refresh, follow]);
 
-  const open = useCallback((id: string) => {
+  /** Opens a page; one that is gone shows as missing, or, for the page remembered from the last run, as no page. */
+  const load = useCallback((id: string, gone: OpenPage) => {
     clearTimeout(timer.current);
     setCurrent({ kind: "loading", id });
     void pages.get({ id }).match({
@@ -134,12 +141,32 @@ export function useNotebook(): Notebook {
         setCurrent({ kind: "open", page, draft: page.markdown, save: { kind: "saved" } });
       },
       errors: {
-        notFound: () => setCurrent({ kind: "missing", id }),
-        titleTaken: () => setCurrent({ kind: "missing", id }),
-        invalidTitle: () => setCurrent({ kind: "missing", id }),
-        changedElsewhere: () => setCurrent({ kind: "missing", id }),
+        notFound: () => setCurrent(gone),
+        titleTaken: () => setCurrent(gone),
+        invalidTitle: () => setCurrent(gone),
+        changedElsewhere: () => setCurrent(gone),
       },
     });
+  }, []);
+
+  const open = useCallback((id: string) => load(id, { kind: "missing", id }), [load]);
+  const openLast = useCallback((id: string) => load(id, { kind: "none" }), [load]);
+  const shown = current.kind === "open" ? current.page.id : current.kind === "none" ? undefined : current.id;
+  const remembered = useRemembered(shown, openLast);
+
+  const addImage = useCallback(async (file: File): Promise<string | undefined> => {
+    const state = currentRef.current;
+    if (state.kind !== "open") {
+      return undefined;
+    }
+
+    const added = await addPageImage(state.page.id, file);
+    if ("notice" in added) {
+      setNotice(added.notice);
+      return undefined;
+    }
+
+    return added.markdown;
   }, []);
 
   /**
@@ -327,6 +354,9 @@ export function useNotebook(): Notebook {
     remove,
     dismissNotice: () => setNotice(undefined),
     showNotice: setNotice,
+    viewMode: remembered.viewMode,
+    setViewMode: remembered.setViewMode,
+    addImage,
   };
 }
 

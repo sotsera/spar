@@ -106,6 +106,7 @@ internal static class DoctorCommand
 
         var (identityFindings, identity, file) = IdentityChecks.Check(appFile is null ? null : Path.Combine(workingDirectory, appFile), project);
         findings.AddRange(identityFindings);
+        findings.AddRange(InstallationChecks.Check(file));
         return new Report(toolVersion, project?.File, findings, identity, file);
     }
 

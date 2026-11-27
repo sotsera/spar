@@ -30,6 +30,9 @@ public sealed record SparCommandEntry(string Contract, string Command, int Timeo
     /// <summary>The serial group its calls wait for (<c>[SparSerial]</c>), or null: they run one at a time, app-wide.</summary>
     public string? SerialGroup { get; init; }
 
+    /// <summary>A <see cref="SparResourceAttribute"/> command: loaded by its address on the app's origin, never called.</summary>
+    public bool IsResource { get; init; }
+
     public bool IsStream => StreamHandler is not null;
 
     public bool IsSubscription => Capacity > 0;

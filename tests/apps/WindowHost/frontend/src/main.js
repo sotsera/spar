@@ -266,3 +266,49 @@ window.hostStreams = {
     })();
   },
 };
+
+// The desktop host's blob route, run from a test: `window.hostBlobs.read(size, runs)` makes and reads a handle of `size`
+// bytes `runs` times, timed by the page from the address to the last byte; `window.hostBlobs.images(count)` shows that
+// many resources in `<img>` elements. Each leaves its outcome as JSON in `window.hostBlobResult`.
+window.hostBlobResult = "";
+window.hostBlobs = {
+  read: (size, runs) => {
+    window.hostBlobResult = "";
+    void (async () => {
+      const times = [];
+      let intact = true;
+      let afterRelease = 0;
+      for (let run = 0; run < runs; run++) {
+        const blob = (await host.make(size)).unwrap();
+        const started = performance.now();
+        const bytes = await blob.bytes();
+        times.push(performance.now() - started);
+        intact &&= bytes.length === size && bytes[size - 1] === (size - 1) % 251;
+        await blob.release();
+        if (run === runs - 1) {
+          afterRelease = (await fetch(blob.url)).status;
+        }
+      }
+
+      window.hostBlobResult = JSON.stringify({ times, intact, afterRelease });
+    })();
+  },
+  images: count => {
+    window.hostBlobResult = "";
+    void (async () => {
+      const loads = [];
+      for (let n = 0; n < count; n++) {
+        const image = new Image();
+        loads.push(new Promise(resolve => {
+          image.onload = () => resolve(image.naturalWidth === 1);
+          image.onerror = () => resolve(false);
+        }));
+        image.src = host.pixel.url(n);
+        document.body.append(image);
+      }
+
+      const loaded = (await Promise.all(loads)).filter(Boolean).length;
+      window.hostBlobResult = JSON.stringify({ loaded });
+    })();
+  },
+};

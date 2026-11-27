@@ -147,6 +147,7 @@ public sealed class SparBuilder
         if (_folders is null)
         {
             Installation?.ApplyTo(FolderOptions);
+            Installation?.ApplyTo(LoggingOptions);
             _folders = _testDataRoot is not null
                 ? SparFolders.ForTest(_testDataRoot)
                 : SparFolders.ForApp(AppId, Hosting.SparDevelopment.IsSupported, FolderOptions);

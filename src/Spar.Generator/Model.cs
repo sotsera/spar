@@ -33,6 +33,12 @@ internal enum WireKind
     /// <summary><c>byte[]</c>: padded base64, <c>Uint8Array</c> in TypeScript; never a list of numbers.</summary>
     Bytes,
 
+    /// <summary>
+    /// <c>Spar.SparBlob</c>: a handle, <c>{"id","contentType","size","name"}</c>, written as the result goes out; results
+    /// only (SPAR026).
+    /// </summary>
+    Blob,
+
     /// <summary>An enum: one member name, exactly; a union of string literals in TypeScript.</summary>
     Enum,
 
@@ -96,7 +102,9 @@ internal sealed record CommandModel(
     string? ErrorCSharp,
     int TimeoutSeconds,
     SubscriptionModel? Subscription = null,
-    string? SerialGroup = null)
+    string? SerialGroup = null,
+    bool IsResource = false,
+    bool ValueHoldsBlob = false)
 {
     /// <summary>Whether the command is a stream or a subscription: its items travel in batches, with credits.</summary>
     public bool IsStream => Return is ReturnShape.Items or ReturnShape.ResultItems;

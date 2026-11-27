@@ -7,6 +7,7 @@ import { kinds } from "/spar/app/kinds.js";
 import { ledger } from "/spar/app/ledger.js";
 import { streams } from "/spar/app/streams.js";
 import { fingerprint } from "/spar/app/spar.js";
+import { blobRoundTrip, exportCsv, readTimes, resources, showPhotos } from "./files.js";
 
 // A test may pretend the page was built against other contracts.
 const contracts = new URLSearchParams(location.search).get("contracts") ?? fingerprint;
@@ -211,6 +212,7 @@ async function burst(perSecond) {
 window.wire = {
   check, echoShapes, big, ratio, abortWait, many, post, who, echoKinds, sendBadByte, sendBadLevel, roundTrips,
   rows, readUntil, breakEarly, ticksThenAbort, burst,
+  blobRoundTrip, exportCsv, resources, showPhotos, readTimes,
   document: () => connection.document,
 };
 

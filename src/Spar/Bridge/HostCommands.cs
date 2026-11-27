@@ -25,6 +25,12 @@ internal sealed class HostCommands
     /// <summary>The command that sets the app's colour scheme.</summary>
     public const string SetColorScheme = "setColorScheme";
 
+    /// <summary>
+    /// The command that releases a blob handle of the document (<see cref="SparBlob"/>); the bridge session answers it,
+    /// since the handles are the document's. The request is the handle's id; an unknown one is already released.
+    /// </summary>
+    public const string ReleaseBlob = "releaseBlob";
+
     private static readonly byte[] NotSaved = """{"code":"notSaved"}"""u8.ToArray();
 
     private readonly string _dataRoot;

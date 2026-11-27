@@ -45,12 +45,14 @@ internal sealed partial class BridgeSession : IDisposable
     private readonly BridgeTelemetry _telemetry;
     private readonly Dictionary<long, DateTimeOffset> _earlyCancels = [];
     private readonly List<Task> _running = [];
+    private readonly BlobOwner _blobs;
     private HashSet<string> _pageTypes = new(StringComparer.Ordinal);
     private int _inFlight;
     private long _queuedBytes;
     private bool _open;
     private bool _mismatch;
     private bool _closed;
+    private volatile bool _closeFinished;
     private long _lastId;
 
     public BridgeSession(SparDispatcher dispatcher, string fingerprint, string doc, Action<string> send, bool includeDetails, TimeProvider? time = null)
@@ -64,7 +66,11 @@ internal sealed partial class BridgeSession : IDisposable
         _includeDetails = includeDetails;
         _time = time ?? dispatcher.Time;
         _telemetry = new BridgeTelemetry(dispatcher, _time, doc);
+        _blobs = dispatcher.Blobs.Open(_limits.MaxBlobBytes, _limits.MaxBlobs);
     }
+
+    /// <summary>The document's blob handles (<see cref="SparBlob"/>), released when it closes.</summary>
+    public BlobOwner Blobs => _blobs;
 
     /// <summary>Raised when the page reports <c>ui-ready</c>.</summary>
     public event Action? Ready;
@@ -273,7 +279,9 @@ internal sealed partial class BridgeSession : IDisposable
         }
 
         _closing.Cancel();
+        _blobs.Close();
         _telemetry.Flush();
+        _closeFinished = true;
     }
 
     /// <summary>Completes when every dispatched command has finished (tests use it; hosts do not need it).</summary>
@@ -285,10 +293,18 @@ internal sealed partial class BridgeSession : IDisposable
         }
     }
 
+    /// <summary>
+    /// Closes the document, and disposes its token source unless another thread's <see cref="Close"/> is still running
+    /// (a host's shutdown racing a channel's own end), which would cancel it after this; a source with no timer holds
+    /// nothing the collector does not reclaim.
+    /// </summary>
     public void Dispose()
     {
         Close();
-        _closing.Dispose();
+        if (_closeFinished)
+        {
+            _closing.Dispose();
+        }
     }
 
     /// <summary>
@@ -423,9 +439,11 @@ internal sealed partial class BridgeSession : IDisposable
         SparOutcome outcome;
         try
         {
-            outcome = HostCommands is { } host && HostCommands.IsHostContract(call.Contract!)
-                ? await host.InvokeAsync(call.Command!, call.Payload, token.Token)
-                : await _dispatcher.InvokeAsync(call.Contract!, call.Command!, id, call.Payload, token.Token);
+            outcome = HostCommands.IsHostContract(call.Contract!) && call.Command == HostCommands.ReleaseBlob
+                ? ReleaseBlob(call.Payload)
+                : HostCommands is { } host && HostCommands.IsHostContract(call.Contract!)
+                    ? await host.InvokeAsync(call.Command!, call.Payload, token.Token)
+                    : await _dispatcher.InvokeAsync(call.Contract!, call.Command!, id, call.Payload, _blobs, token.Token);
         }
         finally
         {

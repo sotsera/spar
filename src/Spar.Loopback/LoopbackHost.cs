@@ -96,12 +96,14 @@ internal sealed class LoopbackHost : IAsyncDisposable
     private const string SendPath = "/_spar/send";
     private const string SessionPath = "/_spar/session";
     private const string DocumentHeader = "X-Spar-Doc";
+    private const string KeyHeader = "X-Spar-Key";
     private const int MaxReportBytes = 64 * 1024;
 
     private readonly WebApplication _server;
     private readonly LoopbackOptions _options;
     private readonly byte[] _token;
     private readonly ConcurrentDictionary<string, Document> _documents = new(StringComparer.Ordinal);
+    private readonly ConcurrentDictionary<string, Document> _keys = new(StringComparer.Ordinal);
     private readonly CancellationTokenSource _stopping = new();
     private readonly ConcurrentDictionary<string, PagePolicy> _policies = new(StringComparer.Ordinal);
     private readonly ConcurrentDictionary<string, DevServerProxy> _proxies = new(StringComparer.Ordinal);
@@ -270,6 +272,12 @@ internal sealed class LoopbackHost : IAsyncDisposable
             return;
         }
 
+        if (BlobRoutes.Matches(path))
+        {
+            await BlobAsync(context, path);
+            return;
+        }
+
         if (path.StartsWith("/_spar/", StringComparison.Ordinal))
         {
             await BridgeAsync(context, path, origin);
@@ -432,6 +440,12 @@ internal sealed class LoopbackHost : IAsyncDisposable
         }
 
         var document = OpenDocument();
+        var key = context.Request.Headers[KeyHeader].ToString();
+        if (IsKey(key))
+        {
+            _keys[key] = document;
+        }
+
         using var ended = CancellationTokenSource.CreateLinkedTokenSource(context.RequestAborted, _stopping.Token, document.Ending);
         try
         {
@@ -453,11 +467,59 @@ internal sealed class LoopbackHost : IAsyncDisposable
         finally
         {
             _documents.TryRemove(document.Id, out _);
+            _keys.TryRemove(new KeyValuePair<string, Document>(key, document));
             document.Session.Close();
             document.Session.Dispose();
             document.Dispose();
         }
     }
+
+    /// <summary>
+    /// <c>GET /_spar/blob/&lt;id&gt;</c> and <c>/_spar/resource/…</c>: only with the key the page's open channel registered
+    /// (<c>k=</c>), since any local program can reach this port and an <c>&lt;img&gt;</c> cannot send the token. A page
+    /// may build an address before its channel is open, so an unknown key waits a few seconds for one.
+    /// </summary>
+    private async Task BlobAsync(HttpContext context, string path)
+    {
+        var request = context.Request;
+        var response = context.Response;
+        var query = request.QueryString.HasValue ? request.QueryString.Value![1..] : "";
+        await WaitForKeyAsync(request.Query["k"].ToString(), context.RequestAborted);
+
+        var answer = await BlobRoutes.AnswerAsync(
+            _options.Dispatcher, request.Method, path, query, key => _keys.TryGetValue(key, out var document) ? document.Session.Blobs : null,
+            context.RequestAborted);
+        response.StatusCode = answer.Status;
+        response.ContentType = answer.ContentType;
+        if (answer.Csp is { } csp)
+        {
+            response.Headers.ContentSecurityPolicy = csp;
+        }
+
+        if (answer.Allow is { } allow)
+        {
+            response.Headers.Allow = allow;
+        }
+
+        if (answer.Disposition is { } disposition)
+        {
+            response.Headers.ContentDisposition = disposition;
+        }
+
+        response.ContentLength = answer.Body.Length;
+        await response.Body.WriteAsync(answer.Body, context.RequestAborted);
+    }
+
+    private async Task WaitForKeyAsync(string key, CancellationToken cancellationToken)
+    {
+        for (var tries = 0; IsKey(key) && !_keys.ContainsKey(key) && tries < 50; tries++)
+        {
+            await Task.Delay(100, cancellationToken);
+        }
+    }
+
+    /// <summary>A page's address key: 32 lower-case hex digits, as the SDK makes it.</summary>
+    private static bool IsKey(string key) => key.Length == 32 && key.All(char.IsAsciiHexDigitLower);
 
     /// <summary><c>POST /_spar/send</c>: one or more page messages, one per line, for the document in <c>X-Spar-Doc</c>.</summary>
     private async Task SendAsync(HttpContext context)

@@ -29,6 +29,12 @@ internal sealed partial class ContractAnalysis
             return null;
         }
 
+        if (HoldsBlob(reference))
+        {
+            Report(Descriptors.BlobOutOfPlace, location, $"Settings record '{type.ToDisplayString()}'", "in its properties");
+            return null;
+        }
+
         return new SettingsModel(
             reference.CSharp,
             reference.Key,

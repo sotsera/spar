@@ -16,6 +16,15 @@ public sealed class SparCallContext(IServiceProvider services, ReadOnlyMemory<by
     public ReadOnlyMemory<byte> Request { get; } = request;
 
     public CancellationToken CancellationToken { get; } = cancellationToken;
+
+    /// <summary>
+    /// The blob a <see cref="SparResourceAttribute"/> command returned, which the host serves for the load that ran it;
+    /// null for none (a 404).
+    /// </summary>
+    public SparBlob? Resource { get; set; }
+
+    /// <summary>The handles of the call's document, where a result's blobs go; null when nothing can hold them.</summary>
+    internal BlobOwner? BlobOwner { get; init; }
 }
 
 /// <summary>
@@ -25,6 +34,9 @@ public sealed class SparCallContext(IServiceProvider services, ReadOnlyMemory<by
 internal sealed class SparDispatcher(IServiceProvider services, SparCatalog catalog, ILogger? testLog = null)
 {
     private readonly SerialGroups _serial = new();
+
+    /// <summary>Every blob handle of the app's documents (<see cref="SparBlob"/>).</summary>
+    public BlobStore Blobs { get; } = new();
 
     /// <summary>The app's bridge limits (<see cref="SparBuilder.Bridge"/>), or the defaults.</summary>
     public BridgeLimits Limits { get; } = services.GetService<BridgeLimits>() ?? BridgeLimits.Default;
@@ -54,7 +66,25 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     public ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken,
         SparCaller caller = SparCaller.Page) =>
-        InvokeAsync(contract, command, callId, request, null, null, cancellationToken, caller);
+        InvokeAsync(contract, command, callId, request, null, null, cancellationToken, caller, null);
+
+    /// <summary>A call whose result's blobs become handles of <paramref name="blobs"/>, a document's or the test host's.</summary>
+    internal ValueTask<SparOutcome> InvokeAsync(
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, BlobOwner? blobs, CancellationToken cancellationToken,
+        SparCaller caller = SparCaller.Page) =>
+        InvokeAsync(contract, command, callId, request, null, null, cancellationToken, caller, new BlobCall(blobs, IsResource: false));
+
+    /// <summary>
+    /// One load of a <see cref="SparResourceAttribute"/> command's address: run like a call, in its own scope, and its
+    /// blob given back to serve once; nothing is kept. Only a resource command runs this way, and never as a call.
+    /// </summary>
+    internal async ValueTask<(SparOutcome Outcome, SparBlob? Blob)> InvokeResourceAsync(
+        string contract, string command, ReadOnlyMemory<byte> request, CancellationToken cancellationToken, SparCaller caller = SparCaller.Page)
+    {
+        var call = new BlobCall(null, IsResource: true);
+        var outcome = await InvokeAsync(contract, command, 0, request, null, null, cancellationToken, caller, call);
+        return (outcome, call.Resource);
+    }
 
     /// <summary>
     /// Runs a stream or a subscription to its end: its items go to <paramref name="sink"/>, and the outcome is how it ended
@@ -65,25 +95,27 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     public ValueTask<SparOutcome> InvokeStreamAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink sink, CancellationToken cancellationToken,
         SparCaller caller = SparCaller.Page) =>
-        InvokeAsync(contract, command, callId, request, sink, null, cancellationToken, caller);
+        InvokeAsync(contract, command, callId, request, sink, null, cancellationToken, caller, null);
 
     /// <summary>
     /// A page's call, as the bridge runs it: <paramref name="running"/> is told when the command starts, after a serial
     /// call's wait for its group, so the bridge counts the wait in its queue and nothing after it.
     /// </summary>
     internal ValueTask<SparOutcome> InvokeAsync(
-        string contract, string command, long callId, ReadOnlyMemory<byte> request, Action running, CancellationToken cancellationToken) =>
-        InvokeAsync(contract, command, callId, request, null, running, cancellationToken, SparCaller.Page);
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, Action running, BlobOwner? blobs,
+        CancellationToken cancellationToken) =>
+        InvokeAsync(contract, command, callId, request, null, running, cancellationToken, SparCaller.Page, new BlobCall(blobs, IsResource: false));
 
     private async ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, Action? running,
         CancellationToken cancellationToken,
-        SparCaller caller)
+        SparCaller caller,
+        BlobCall? blobs)
     {
         var record = Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported
             ? Recorder?.Begin(callId, contract, command, caller)
             : null;
-        var outcome = await RunAsync(contract, command, callId, request, sink, running, caller, cancellationToken);
+        var outcome = await RunAsync(contract, command, callId, request, sink, running, caller, blobs, cancellationToken);
         if (Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported)
         {
             record?.End(outcome);
@@ -94,11 +126,18 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
 
     private async ValueTask<SparOutcome> RunAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, Action? running, SparCaller caller,
-        CancellationToken cancellationToken)
+        BlobCall? blobs, CancellationToken cancellationToken)
     {
         if (!catalog.TryGet(contract, command, out var entry))
         {
             return SparOutcome.FromFailure(SparFailure.UnknownCommand(contract, command));
+        }
+
+        // A resource is loaded by its address, never called; and only a resource has an address.
+        if (entry.IsResource != (blobs?.IsResource == true))
+        {
+            var expected = entry.IsResource ? "a resource, loaded by its address" : "a command, not a resource";
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest($"{contract}.{command} is {expected}."));
         }
 
         if (entry.IsStream != sink is not null)
@@ -138,10 +177,21 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
 
         try
         {
-            var context = new SparCallContext(scope.ServiceProvider, request, callToken);
+            var context = new SparCallContext(scope.ServiceProvider, request, callToken) { BlobOwner = blobs?.Owner };
 
             // A stream's handler has disposed its iterator by the time it returns or throws: `await foreach` does.
-            return sink is null ? await entry.Handler!(context) : await entry.StreamHandler!(context, sink);
+            if (sink is not null)
+            {
+                return await entry.StreamHandler!(context, sink);
+            }
+
+            var outcome = await entry.Handler!(context);
+            if (blobs is not null)
+            {
+                blobs.Resource = context.Resource;
+            }
+
+            return outcome;
         }
         catch (OperationCanceledException exception) when (exception.CancellationToken == callToken && callToken.IsCancellationRequested)
         {
@@ -203,4 +253,10 @@ internal sealed class BothLoggers(ILogger first, ILogger second) : ILogger
         first.Log(logLevel, eventId, state, exception, formatter);
         second.Log(logLevel, eventId, state, exception, formatter);
     }
+}
+
+/// <summary>Where a call's blobs go: the handles of its document, or, for a resource's load, the one blob it serves.</summary>
+internal sealed record BlobCall(BlobOwner? Owner, bool IsResource)
+{
+    public SparBlob? Resource { get; set; }
 }
