@@ -7,6 +7,10 @@ var app = SparApplication.Create(args, spar =>
 {
     spar.Services.AddSingleton<Ledger>();
     spar.Services.AddSingleton<StreamMarks>();
+
+    // Settings records (decision "M3b's decide-first questions", item 4), for the tests of the generated serializer.
+    spar.Settings(new WireSettings("System", 50_000, Recent: [], Window: null));
+    spar.Settings(new WireLayout(Width: 1000, Height: 700), s => s.Name("layout"));
     spar.Services.AddScoped<IRatesService, FixedRates>();
 
     // For runs of the executable (docs/evidence/m1b-startup.md): later launches' arguments on standard error, and,

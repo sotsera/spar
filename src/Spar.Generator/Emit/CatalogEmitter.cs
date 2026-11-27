@@ -13,7 +13,8 @@ internal static class CatalogEmitter
 {
     private const string Runtime = "global::Spar.Runtime";
 
-    public static void Emit(CodeWriter code, IReadOnlyList<ContractModel> contracts, PageSecurityModel? security = null, string appId = "")
+    public static void Emit(
+        CodeWriter code, IReadOnlyList<ContractModel> contracts, PageSecurityModel? security = null, string appId = "", IReadOnlyList<SettingsModel>? settings = null)
     {
         code.Open("internal static class SparContracts");
         code.Line($"public static {Runtime}.SparCatalog Catalog {{ get; }} = new(");
@@ -40,6 +41,7 @@ internal static class CatalogEmitter
         }
 
         EmitInterfaces(code, contracts);
+        EmitSettings(code, settings ?? []);
         EmitPageSecurity(code, security);
         code.Line("};");
         code.Line();
@@ -62,6 +64,24 @@ internal static class CatalogEmitter
         }
 
         code.Close();
+    }
+
+    /// <summary>The settings records' serializers, by record, for <c>ISparSettings&lt;T&gt;</c>; nothing when there are none.</summary>
+    private static void EmitSettings(CodeWriter code, IReadOnlyList<SettingsModel> settings)
+    {
+        if (settings.Count == 0)
+        {
+            return;
+        }
+
+        code.Line("    Settings =");
+        code.Line("    [");
+        foreach (var model in settings)
+        {
+            code.Line($"        new {Runtime}.SparSettingsSerializer<{model.CSharp}>(SparSerializers.Read{model.Key}, SparSerializers.Write{model.Key}),");
+        }
+
+        code.Line("    ],");
     }
 
     /// <summary>The interface contracts, whose registration the app's start checks; nothing when there are none.</summary>

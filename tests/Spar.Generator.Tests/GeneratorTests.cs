@@ -244,6 +244,30 @@ public sealed class GeneratorTests
         Assert.All(run.Files.Values, text => Assert.DoesNotContain('\r', text));
     }
 
+
+    [Fact]
+    public void A_settings_record_gets_its_serializer_and_a_catalog_line()
+    {
+        const string source = """
+            using Spar;
+
+            var app = SparApplication.Create(args, spar => spar.Settings(new Prefs("System", 50000, null)));
+            return app.Run();
+
+            public sealed record Prefs(string Theme, int BatchSize, Layout? Layout);
+
+            public sealed record Layout(int Width, int Height);
+
+            """;
+
+        var run = GeneratorHarness.Generate(source);
+
+        Assert.Empty(run.Errors);
+        var contracts = run.Files["Spar.Contracts.g.cs"];
+        Assert.Contains("new global::Spar.Runtime.SparSettingsSerializer<global::Prefs>(SparSerializers.ReadRecord_Prefs, SparSerializers.WriteRecord_Prefs),", contracts, StringComparison.Ordinal);
+        Assert.Contains("public static global::Layout ReadRecord_Layout(", contracts, StringComparison.Ordinal);
+    }
+
     [Fact]
     public void The_fingerprint_changes_with_the_wire_shape_and_only_with_it()
     {

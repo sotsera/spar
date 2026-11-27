@@ -39,6 +39,9 @@ public sealed class SparBuilder
     /// <summary>The test host's data root when <c>Program.cs</c> runs under it, else null.</summary>
     private readonly string? _testDataRoot;
 
+    /// <summary>The names of the settings records declared so far: each names its own file.</summary>
+    private readonly HashSet<string> _settingsNames = new(StringComparer.Ordinal);
+
     /// <summary>The folders, once <see cref="ResolveFolders"/> decided them.</summary>
     private SparFolders? _folders;
 
@@ -150,6 +153,40 @@ public sealed class SparBuilder
         }
 
         return _folders;
+    }
+
+    /// <summary>
+    /// Declares a settings record with its defaults (decision "M3b's decide-first questions", item 4): its file is
+    /// <c>settings.json</c> in the app's data folder, or another name or path from <paramref name="configure"/>, and app
+    /// code reads and updates it through <see cref="ISparSettings{T}"/>. The record follows the wire rules; the build
+    /// writes its serializer, so call this in the app's own project. The file is read at start: a property missing from
+    /// it takes the default's value, an unknown one is dropped, and an unreadable file is set aside with a log line.
+    /// Every record after the first takes a name (<c>s => s.Name("layout")</c>).
+    /// </summary>
+    public SparBuilder Settings<T>(T defaults, Action<SettingsOptions>? configure = null)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(defaults);
+        var options = new SettingsOptions();
+        configure?.Invoke(options);
+        if (!_settingsNames.Add(options.SettingsName))
+        {
+            throw new InvalidOperationException(
+                $"Two settings records are named '{options.SettingsName}'. Give the second one its own name, as in s => s.Name(\"layout\").");
+        }
+
+        if (Services.Any(descriptor => descriptor.ServiceType == typeof(ISparSettings<T>)))
+        {
+            throw new InvalidOperationException($"The settings record {typeof(T).Name} is declared twice.");
+        }
+
+        var test = _testDataRoot is not null;
+        var development = Hosting.SparDevelopment.IsSupported;
+        Services.AddSingleton<ISparSettings<T>>(provider => Spar.Settings.SparSettings<T>.Load(defaults, options, provider, test, development));
+
+        // Read at start, so a bad file is set aside and logged before the first window opens.
+        Services.AddSingleton(new SparStartup(provider => provider.GetRequiredService<ISparSettings<T>>()));
+        return this;
     }
 
     /// <summary>

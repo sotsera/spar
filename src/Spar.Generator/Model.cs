@@ -159,3 +159,7 @@ internal static class EquatableArray
     public static EquatableArray<T> ToEquatable<T>(this IEnumerable<T> items)
         where T : IEquatable<T> => new(items.ToImmutableArray());
 }
+
+/// <summary>A settings record that <c>spar.Settings(…)</c> names: its key, and the types its serializer needs.</summary>
+internal sealed record SettingsModel(
+    string CSharp, string Key, EquatableArray<TypeRef> Types, EquatableArray<RecordModel> Records, EquatableArray<EnumModel> Enums);

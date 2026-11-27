@@ -117,6 +117,9 @@ public sealed partial record SparFolders(string DataRoot, string Data, string Lo
         return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData, Environment.SpecialFolderOption.Create);
     }
 
+    /// <summary>Whether <paramref name="path"/> is on a network share: a UNC path, or a drive letter mapped to one.</summary>
+    internal static bool IsNetworkPath(string path) => IsNetwork(path);
+
     /// <summary>A UNC path (<c>\\server\share</c>, <c>\\?\UNC\…</c>) or, on Windows, a drive letter mapped to a share.</summary>
     private static bool IsNetwork(string path)
     {

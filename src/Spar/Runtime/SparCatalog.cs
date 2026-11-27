@@ -68,6 +68,9 @@ public sealed class SparCatalog
     /// </summary>
     public string? AppId { get; init; }
 
+    /// <summary>The settings records' serializers, which the build wrote for the app's <c>spar.Settings(…)</c> calls.</summary>
+    public IReadOnlyList<SparSettingsSerializer> Settings { get; init; } = [];
+
     /// <summary>The interface contracts, whose implementations come from the app's own registrations.</summary>
     public IReadOnlyList<SparInterfaceContract> Interfaces { get; init; } = [];
 

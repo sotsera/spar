@@ -80,6 +80,33 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
             });
         });
         context.RegisterCompilationAction(AnalyzeEntryPoint);
+        context.RegisterSyntaxNodeAction(AnalyzeSettingsCall, Microsoft.CodeAnalysis.CSharp.SyntaxKind.InvocationExpression);
+    }
+
+    /// <summary>
+    /// A <c>spar.Settings(…)</c> call's record follows the wire rules (decision "M3b's decide-first questions", item 4):
+    /// each problem is reported where the record is declared, or at the call for a record from another assembly.
+    /// </summary>
+    private static void AnalyzeSettingsCall(SyntaxNodeAnalysisContext context)
+    {
+        if (context.SemanticModel.GetSymbolInfo(context.Node, context.CancellationToken).Symbol is not IMethodSymbol { Name: "Settings", IsGenericMethod: true } method
+            || method.ContainingType.ToDisplayString() != "Spar.SparBuilder")
+        {
+            return;
+        }
+
+        var reported = new HashSet<string>(StringComparer.Ordinal);
+        ContractAnalysis.AnalyzeSettings(method.TypeArguments[0], method.TypeArguments[0], (_, diagnostic) =>
+        {
+            var assembly = method.TypeArguments[0].ContainingAssembly?.Name ?? "?";
+            var located = diagnostic.Location.IsInSource
+                ? diagnostic
+                : Diagnostic.Create(Descriptors.InReferencedAssembly(diagnostic.Descriptor), context.Node.GetLocation(), assembly, diagnostic.GetMessage());
+            if (reported.Add(located.Id + located.Location))
+            {
+                context.ReportDiagnostic(located);
+            }
+        });
     }
 
     /// <summary>An app's Program.cs is top-level statements ending with <c>return app.Run();</c> (plan section 2).</summary>
