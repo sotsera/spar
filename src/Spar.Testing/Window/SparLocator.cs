@@ -76,6 +76,24 @@ public sealed class SparLocator
 
     public Task DblClickAsync(SparActionOptions? options = null) => ClickAsync("DblClickAsync", 2, options);
 
+    /// <summary>
+    /// Drops files from the OS on the element's middle, as a person dragging them from a file manager would: the drag
+    /// enters, hovers and drops through the engine's own drag and drop (the DevTools Protocol's drag events on WebView2,
+    /// an XDND drag on the test's X display on Linux), so the page's drop area and the host's grants see a real drop.
+    /// Pass full paths, or paths relative to the working folder.
+    /// </summary>
+    public async Task DropFilesAsync(IEnumerable<string> paths, SparActionOptions? options = null)
+    {
+        var files = paths.Select(Path.GetFullPath).ToArray();
+        if (files.Length == 0)
+        {
+            throw new ArgumentException("Drop at least one file.", nameof(paths));
+        }
+
+        var (x, y) = await PointAsync("DropFilesAsync", enabled: false, options);
+        await Session.Window.DropFilesAsync(x, y, files);
+    }
+
     /// <summary>Moves the pointer over the element's middle.</summary>
     public async Task HoverAsync(SparActionOptions? options = null)
     {

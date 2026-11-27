@@ -208,6 +208,37 @@ internal sealed class TestPage : IDisposable
         });
     }
 
+    /// <summary>
+    /// Files dropped on the page: the DevTools Protocol's drag events with the files, as the spike made them
+    /// (<c>docs/evidence/file-drop</c>). The page's drop listener posts them with <c>postMessageWithAdditionalObjects</c>,
+    /// and the host reads their paths, as for a drop from Explorer. These events skip the window's OLE drop target, so a
+    /// drag from Explorer itself is checked in Windows Sandbox.
+    /// </summary>
+    public async Task DropFilesAsync(float x, float y, IReadOnlyList<string> paths)
+    {
+        foreach (var type in new[] { "dragEnter", "dragOver", "drop" })
+        {
+            using var _ = await CallAsync("Input.dispatchDragEvent", writer =>
+            {
+                writer.WriteString("type", type);
+                writer.WriteNumber("x", x);
+                writer.WriteNumber("y", y);
+                writer.WriteStartObject("data");
+                writer.WriteStartArray("items");
+                writer.WriteEndArray();
+                writer.WriteStartArray("files");
+                foreach (var path in paths)
+                {
+                    writer.WriteStringValue(path);
+                }
+
+                writer.WriteEndArray();
+                writer.WriteNumber("dragOperationsMask", 1);
+                writer.WriteEndObject();
+            });
+        }
+    }
+
     public void Dispose()
     {
         foreach (var subscription in _subscriptions)

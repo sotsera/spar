@@ -122,6 +122,11 @@ internal sealed class FileDialogs(SparCall call) : IFileDialogs
                 return shown.Error;
             }
 
+            if (paths.FirstOrDefault(window.Grants.Forbids) is { } forbidden)
+            {
+                return new FileDialogError.AccessDenied(forbidden);
+            }
+
             return paths.Count == 0 ? new FileDialogError.Dismissed() : new Chosen(window, paths);
         }
         finally

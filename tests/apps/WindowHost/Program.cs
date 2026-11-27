@@ -214,6 +214,10 @@ namespace WindowHost
             Convert.FromBase64String("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="),
             "image/png"));
 
+        /// <summary>The size of a file the page was given, read in C# from its grant's path.</summary>
+        [SparCommand]
+        public Task<long> SizeAsync(FileGrant file) => Task.FromResult(new FileInfo(file.Path).Length);
+
         /// <summary>Takes <paramref name="milliseconds"/> whatever happens: a call that ignores its cancellation.</summary>
         [SparCommand]
         public async Task<string> SlowAsync(int milliseconds)

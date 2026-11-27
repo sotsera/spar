@@ -94,6 +94,9 @@ public sealed class SparBuilder
     /// <summary>The browser's strict defaults the app opted out of (plan section 3c).</summary>
     internal BrowserOptions BrowserOptions { get; } = new();
 
+    /// <summary>How the app's credentials are kept (<see cref="Credentials"/>).</summary>
+    internal CredentialOptions CredentialOptions { get; } = new();
+
     /// <summary>The page's Content Security Policy as this run's configuration declared it.</summary>
     internal CspBuilder ContentSecurityOptions { get; } = new();
 
@@ -261,6 +264,17 @@ public sealed class SparBuilder
     {
         ArgumentNullException.ThrowIfNull(configure);
         configure(BrowserOptions);
+        return this;
+    }
+
+    /// <summary>
+    /// How <see cref="ICredentialStore"/> keeps the app's secrets, for example <c>spar.Credentials(c => c.Roaming())</c> for a
+    /// Windows terminal-server farm whose users move between servers. Without this call a credential stays on this machine.
+    /// </summary>
+    public SparBuilder Credentials(Action<CredentialOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(configure);
+        configure(CredentialOptions);
         return this;
     }
 

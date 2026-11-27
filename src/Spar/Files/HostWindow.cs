@@ -28,11 +28,12 @@ internal interface INativeFileDialogs
 /// files of a drop the host has seen but the page has not yet claimed. A document belongs to its window, so the grants
 /// outlive a reload; the host closes it with the window, which revokes them.
 /// </summary>
-internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs)
+internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs, Func<string, bool>? forbidden = null)
 {
     private int _dialogOpen;
 
-    public GrantTable Grants { get; } = new(time);
+    /// <summary>The window's grants, none of which reaches a path <paramref name="forbidden"/> names (the browser profile).</summary>
+    public GrantTable Grants { get; } = new(time, forbidden);
 
     /// <summary>The window's dialogs; null for a host that has none (loopback outside the test host).</summary>
     public INativeFileDialogs? Dialogs { get; } = dialogs;

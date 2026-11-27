@@ -125,7 +125,9 @@ internal sealed class LoopbackHost : IAsyncDisposable
 
         // The pages of this host share one window: its grants, and the test host's fake dialogs when there is one (a page in
         // a browser has no window to own a native dialog, so outside the test host a dialog is unavailable).
-        _window = new HostWindow(options.Dispatcher.Time, options.Dispatcher.Services.GetService<INativeFileDialogs>());
+        var profile = options.Dispatcher.Services.GetService<BrowserProfile>();
+        _window = new HostWindow(
+            options.Dispatcher.Time, options.Dispatcher.Services.GetService<INativeFileDialogs>(), profile is null ? null : profile.Contains);
     }
 
     /// <summary>The bearer token, which the page gets from the URL fragment only (plan section 3c).</summary>

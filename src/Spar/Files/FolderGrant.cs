@@ -44,8 +44,18 @@ public sealed class FolderGrant
     internal string Id { get; }
 
     /// <summary>The full path of <paramref name="relativePath"/> inside the folder, checked as every other call checks it.</summary>
-    public Result<string, FileAccessError> ResolvePath(string relativePath) =>
-        IsValid ? GrantPaths.Resolve(Path, relativePath) : new FileAccessError.GrantExpired();
+    public Result<string, FileAccessError> ResolvePath(string relativePath)
+    {
+        if (!IsValid)
+        {
+            return new FileAccessError.GrantExpired();
+        }
+
+        var resolved = GrantPaths.Resolve(Path, relativePath);
+
+        // A folder the user chose can hold the browser's profile; no grant reaches inside it.
+        return resolved.TryGetValue(out var full) && _table.Forbids(full) ? new FileAccessError.AccessDenied() : resolved;
+    }
 
     /// <summary>The entries of the folder, or of one of its folders, sorted by name; not recursive.</summary>
     public Task<Result<IReadOnlyList<FolderEntry>, FileAccessError>> ListAsync(string relativePath, CancellationToken cancellationToken)

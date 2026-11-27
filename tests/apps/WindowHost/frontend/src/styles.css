@@ -20,3 +20,13 @@ label { display: block; margin-top: 6px; }
   .dialog, .overlay { background: #2a2a30; }
 }
 .jumped { transform: translateY(60px); }
+
+.drop {
+  padding: 24px;
+  border: 2px dashed #888;
+  text-align: center;
+}
+
+.drop[data-spar-drop="over"] {
+  border-color: #2a7;
+}

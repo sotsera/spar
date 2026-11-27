@@ -9,7 +9,7 @@ namespace Spar.Files;
 /// old one revoked; all revoked together when the window closes. The page holds only ids: a request's id is resolved
 /// here, so an unknown one, or another window's, is refused before the command runs.
 /// </summary>
-internal sealed class GrantTable(TimeProvider time, int capacity = GrantTable.DefaultCapacity)
+internal sealed class GrantTable(TimeProvider time, Func<string, bool>? forbidden = null, int capacity = GrantTable.DefaultCapacity)
 {
     public const int DefaultCapacity = 1000;
 
@@ -32,6 +32,12 @@ internal sealed class GrantTable(TimeProvider time, int capacity = GrantTable.De
             }
         }
     }
+
+    /// <summary>
+    /// Whether no grant may reach <paramref name="path"/>: the browser profile folders (plan section 3c), whatever the user
+    /// chose or dropped, and wherever a folder grant's path leads.
+    /// </summary>
+    public bool Forbids(string path) => forbidden?.Invoke(path) == true;
 
     /// <summary>Whether <paramref name="count"/> more grants fit.</summary>
     public bool HasRoom(int count)
@@ -104,7 +110,7 @@ internal sealed class GrantTable(TimeProvider time, int capacity = GrantTable.De
     {
         lock (_gate)
         {
-            if (_closed || _grants.Count >= Capacity)
+            if (_closed || _grants.Count >= Capacity || Forbids(PathOf(grant)))
             {
                 return false;
             }
@@ -119,6 +125,13 @@ internal sealed class GrantTable(TimeProvider time, int capacity = GrantTable.De
 
         return true;
     }
+
+    private static string PathOf(object grant) => grant switch
+    {
+        FileGrant file => file.Path,
+        FolderGrant folder => folder.Path,
+        _ => "",
+    };
 
     private DateTimeOffset? ExpiresAt(TimeSpan? expiry) => expiry is { } span ? time.GetUtcNow() + span : null;
 

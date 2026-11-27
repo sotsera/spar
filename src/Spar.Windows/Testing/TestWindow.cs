@@ -89,6 +89,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public Task KeyAsync(SparTestKey key) => Page.KeyAsync(key);
 
+    public Task DropFilesAsync(float x, float y, IReadOnlyList<string> paths) => Page.DropFilesAsync(x, y, paths);
+
     public Task InsertTextAsync(string text) => Page.InsertTextAsync(text);
 
     public Task PointerAsync(SparTestPointer pointer) => Page.PointerAsync(pointer);

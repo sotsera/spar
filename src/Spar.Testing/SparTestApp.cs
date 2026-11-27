@@ -121,7 +121,8 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         _blobs = app.Dispatcher.Blobs.Open(app.Dispatcher.Limits.MaxBlobBytes, app.Dispatcher.Limits.MaxBlobs);
 
         // The test's own calls come from a window of their own: its grants, and the test's answers to its dialogs.
-        _blobs.Window = new HostWindow(app.Dispatcher.Time, dialogs);
+        var profile = app.Services.GetService<BrowserProfile>();
+        _blobs.Window = new HostWindow(app.Dispatcher.Time, dialogs, profile is null ? null : profile.Contains);
         app.Dispatcher.Blobs.StartTest();
     }
 
@@ -139,6 +140,12 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     /// <c>app.FileDialogs.Choose(path)</c> or <c>Dismiss()</c>.
     /// </summary>
     public SparTestFileDialogs FileDialogs { get; }
+
+    /// <summary>The app's clipboard: text in memory, never the machine's clipboard.</summary>
+    public SparTestClipboard Clipboard { get; private init; } = null!;
+
+    /// <summary>The app's credential store: secrets in memory, never Credential Manager or a keyring.</summary>
+    public SparTestCredentials Credentials { get; private init; } = null!;
 
     public TimeSpan StartedAfter { get; private set; }
 
@@ -200,6 +207,8 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         SparTestLog? log = null;
         SparTestApp? started = null;
         var dialogs = new SparTestFileDialogs(problem => started?.ReportProblem(problem));
+        var clipboard = new SparTestClipboard();
+        var credentials = new SparTestCredentials();
         var window = options.Surface == SparTestSurface.Window ? new WindowSurface(options) : null;
         var session = new SparTestSession
         {
@@ -208,6 +217,8 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
             {
                 // Spar's fakes first, so a test's own replacement wins.
                 services.AddSingleton<INativeFileDialogs>(dialogs);
+                services.Replace(ServiceDescriptor.Singleton<IClipboard>(clipboard));
+                services.Replace(ServiceDescriptor.Singleton<ICredentialStore>(credentials));
                 options.ServiceActions.ForEach(action => action(services));
             },
             AllowedExternals = options.AllowedExternals,
@@ -233,7 +244,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         }
 
         var running = await session.Started;
-        var testApp = new SparTestApp(session, exit.Task, running, options, log!, dialogs);
+        var testApp = new SparTestApp(session, exit.Task, running, options, log!, dialogs) { Clipboard = clipboard, Credentials = credentials };
         started = testApp;
         try
         {

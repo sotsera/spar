@@ -32,7 +32,7 @@ public closed record FileAccessError
     public sealed record InUse : FileAccessError;
 
     /// <summary>The file is larger than this way of reading or writing takes; the limit is in bytes.</summary>
-    public sealed record TooLarge(long Limit) : FileAccessError;
+    public sealed record TooLarge(int Limit) : FileAccessError;
 
     /// <summary>The window that asked has closed, or the grant's expiry passed.</summary>
     public sealed record GrantExpired : FileAccessError;

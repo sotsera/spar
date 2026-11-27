@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spar.Hosting;
 using Spar.HotReload;
 using Spar.Logging;
@@ -354,6 +355,9 @@ internal sealed class WindowsApp : IAppWindowOwner
 
         // The app's loggers write to the file the host opened at its start; the host closes it at process exit.
         Func<LogFile>? file = _log.File is { } opened ? () => opened : null;
+        // The OS services the app may inject, before Spar's own fallbacks; an app's own registration wins over both.
+        builder.Services.TryAddSingleton<IClipboard>(new WindowsClipboard());
+        builder.Services.TryAddSingleton<ICredentialStore>(new WindowsCredentials(builder.AppId, builder.CredentialOptions.IsRoaming));
         SparLogging.Add(builder.Services, _levels!, file, ownsFile: false);
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, folders, builder.BridgeOptions.Freeze());
         if (SparDevelopment.IsSupported)

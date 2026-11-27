@@ -172,7 +172,7 @@ internal sealed partial class FileCommands
         {
             var isFolder = Directory.Exists(path);
             var name = Path.GetFileName(Path.TrimEndingDirectorySeparator(path));
-            if (isFolder ? !folders : !Accepts(accept, name))
+            if ((isFolder ? !folders : !Accepts(accept, name)) || window.Grants.Forbids(path))
             {
                 return DropError("notAccepted", writer => writer.WriteString("name", name));
             }

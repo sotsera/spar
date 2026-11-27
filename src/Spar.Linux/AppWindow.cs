@@ -326,7 +326,8 @@ internal sealed partial class AppWindow
             _fileDialogs = new FileDialogHost(ui, () => _window, _log);
         }
 
-        return new HostWindow(app.Dispatcher.Time, fake ?? _fileDialogs);
+        var profile = app.Services.GetService<BrowserProfile>();
+        return new HostWindow(app.Dispatcher.Time, fake ?? _fileDialogs, profile is null ? null : profile.Contains);
     }
 
     private void Fail(int exitCode, string message) => _ui?.Post(() => _ = FailAsync(exitCode, message), "failure");

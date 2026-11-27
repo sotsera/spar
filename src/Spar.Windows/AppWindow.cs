@@ -466,7 +466,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             _dialogs = new FileDialogHost(_ui!, () => (nint)_window, _log);
         }
 
-        _files = new HostWindow(running.Dispatcher.Time, fake ?? _dialogs);
+        var profile = running.Services.GetService<BrowserProfile>();
+        _files = new HostWindow(running.Dispatcher.Time, fake ?? _dialogs, profile is null ? null : profile.Contains);
         return _files;
     }
 

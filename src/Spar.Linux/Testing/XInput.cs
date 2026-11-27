@@ -60,11 +60,15 @@ internal sealed class XInput
     private (int X, int Y) _pointer = (-1, -1);
     private nuint _pointerWindow;
 
-    private XInput(nint display, Func<Task> gtkTurn)
+    private XInput(nint display, string displayName, Func<Task> gtkTurn)
     {
         _display = display;
+        DisplayName = displayName;
         _gtkTurn = gtkTurn;
     }
+
+    /// <summary>The test's private display, which a drop opens a connection of its own to.</summary>
+    public string DisplayName { get; }
 
     /// <summary>
     /// A connection of the test process's own to <paramref name="displayName"/>, with XTEST; a problem when either is
@@ -85,7 +89,7 @@ internal sealed class XInput
             throw new SparTestWindowUnavailableException($"Window tests cannot run here: the display {displayName} has no XTEST extension, which trusted input needs.");
         }
 
-        var input = new XInput(display, gtkTurn);
+        var input = new XInput(display, displayName, gtkTurn);
         input.FindSpareKeycodes();
         return input;
     }

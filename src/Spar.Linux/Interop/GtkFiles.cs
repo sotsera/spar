@@ -104,6 +104,10 @@ internal static unsafe partial class Gtk
     [LibraryImport(Library)]
     public static partial nint gdk_file_list_get_files(nint fileList);
 
+    /// <summary>The display's clipboard, borrowed.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gdk_display_get_clipboard(nint display);
+
     /// <summary>The widget's display's clipboard, borrowed.</summary>
     [LibraryImport(Library)]
     public static partial nint gtk_widget_get_clipboard(nint widget);

@@ -174,6 +174,12 @@ internal interface ISparTestWindow
     /// <summary>A trusted pointer event; completes once the page received it.</summary>
     Task PointerAsync(SparTestPointer pointer);
 
+    /// <summary>
+    /// Files dropped from the OS at (<paramref name="x"/>, <paramref name="y"/>) in CSS pixels: a drag that enters, hovers
+    /// and drops through the engine's own drag and drop; completes once the drop was made.
+    /// </summary>
+    Task DropFilesAsync(float x, float y, IReadOnlyList<string> paths);
+
     /// <summary>The ids of the renderer (web) processes that render the page now.</summary>
     Task<IReadOnlyList<int>> RendererProcessesAsync();
 

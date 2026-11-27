@@ -2,7 +2,7 @@
 // fields of every kind, an element that loads late, a dialog that animates in, a button covered for a moment, one far
 // down a scroll container) and the calls of the required host tests.
 import "./styles.css";
-import { connectSpar, hostChannel } from "@spar/app/sdk";
+import { connectSpar, files, hostChannel } from "@spar/app/sdk";
 import { fingerprint } from "@spar/app/spar";
 import { host } from "@spar/app/host";
 import { windows } from "@spar/app/windows";
@@ -312,3 +312,27 @@ window.hostBlobs = {
     })();
   },
 };
+
+// Files: a drop area that takes Markdown and text, and an open dialog. Each dropped file's size is read in C# from its
+// grant, so the test sees that the grant reached the backend and resolved to the file; the opened file is read here.
+const dropped = document.getElementById("dropped");
+files.dropTarget(document.getElementById("drop-area"), { accept: [".md", ".txt"], limit: 5 }, result => void result.match({
+  success: async drop => {
+    const sizes = await Promise.all(drop.files.map(async file => `${file.name} ${(await host.size(file)).unwrap()}`));
+    dropped.textContent = sizes.length === 0 ? "Nothing dropped" : `Dropped ${sizes.join(", ")}`;
+  },
+  errors: {
+    notAccepted: e => { dropped.textContent = `Not taken: ${e.name}`; },
+    tooMany: e => { dropped.textContent = `At most ${e.limit}`; },
+  },
+  failure: error => { dropped.textContent = `Drop failed: ${error.kind} ${error.code}`; },
+}));
+on("open-file", () => void files.open({ title: "Open notes", filters: [{ name: "Markdown", extensions: ["md"] }] }).match({
+  success: async file => { dropped.textContent = `Opened ${file.name}: ${(await file.readText()).unwrap()}`; },
+  errors: {
+    dismissed: () => { dropped.textContent = "Dismissed"; },
+    accessDenied: e => { dropped.textContent = `Denied ${e.path}`; },
+    unavailable: e => { dropped.textContent = `Unavailable ${e.reason}`; },
+    busy: () => { dropped.textContent = "Busy"; },
+  },
+}));

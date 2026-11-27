@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Logging;
@@ -462,6 +463,9 @@ internal sealed class LinuxApp : IAppWindowOwner
 
         // The app's loggers write to the file the host opened at its start; the host closes it at process exit.
         Func<LogFile>? file = _log.File is { } opened ? () => opened : null;
+        // The OS services the app may inject, before Spar's own fallbacks; an app's own registration wins over both.
+        builder.Services.TryAddSingleton<IClipboard>(new LinuxClipboard(() => _ui));
+        builder.Services.TryAddSingleton<ICredentialStore>(new LinuxCredentials(builder.AppId));
         SparLogging.Add(builder.Services, _levels!, file, ownsFile: false);
         SparRunningApp.AddSparServices(builder.Services, _app.Catalog, _folders, builder.BridgeOptions.Freeze());
         if (SparDevelopment.IsSupported)

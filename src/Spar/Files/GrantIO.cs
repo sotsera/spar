@@ -14,7 +14,7 @@ internal static class GrantIO
     private const int SharingViolation = unchecked((int)0x80070020);
     private const int LockViolation = unchecked((int)0x80070021);
 
-    public static async Task<Result<byte[], FileAccessError>> ReadBytesAsync(string path, long limit, CancellationToken cancellationToken)
+    public static async Task<Result<byte[], FileAccessError>> ReadBytesAsync(string path, int limit, CancellationToken cancellationToken)
     {
         try
         {
@@ -34,7 +34,7 @@ internal static class GrantIO
         }
     }
 
-    public static async Task<Result<string, FileAccessError>> ReadTextAsync(string path, long limit, CancellationToken cancellationToken)
+    public static async Task<Result<string, FileAccessError>> ReadTextAsync(string path, int limit, CancellationToken cancellationToken)
     {
         var read = await ReadBytesAsync(path, limit, cancellationToken);
         if (!read.TryGetValue(out var bytes))

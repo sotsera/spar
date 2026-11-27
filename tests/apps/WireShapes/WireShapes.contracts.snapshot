@@ -1,7 +1,7 @@
 # The contracts of WireShapes as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint 161f489a190960bb
+fingerprint 106fdb781eaf55f0
 
 contract echo (WireShapes.EchoService)
   big(WireShapes.Item) -> long
@@ -16,6 +16,18 @@ contract files (WireShapes.FilesService)
   label(int) -> resource of Spar.SparBlob
   make(int) -> Spar.SparBlob
   photo(WireShapes.PhotoKey) -> resource of Spar.SparBlob?
+
+contract grants (WireShapes.GrantsService)
+  append(WireShapes.AppendRequest) -> void | Spar.FileAccessError
+  copy(string) -> void | Spar.ClipboardError
+  count(Spar.FolderGrant) -> int | Spar.FileAccessError
+  knows(string) -> bool | Spar.CredentialError
+  length(Spar.FileGrant) -> long
+  paste() -> string | Spar.ClipboardError
+  pick(string) -> Spar.FileGrant | Spar.FileDialogError
+  pickBoth() -> WireShapes.Picked | Spar.FileDialogError
+  remember(WireShapes.SecretRequest) -> void | Spar.CredentialError
+  save(string) -> Spar.FileGrant | Spar.FileDialogError
 
 contract kinds (WireShapes.KindsService)
   echo(WireShapes.Kinds) -> WireShapes.Kinds
@@ -37,6 +49,10 @@ contract streams (WireShapes.StreamsService)
   read(int) -> stream of WireShapes.Row | WireShapes.RowsError
   rows(int) -> stream of WireShapes.Row
   ticks(int) -> subscription of WireShapes.Tick
+
+record WireShapes.AppendRequest
+  file: Spar.FileGrant
+  text: string
 
 record WireShapes.Export
   title: string
@@ -72,9 +88,17 @@ record WireShapes.PhotoKey
   album: int
   number: int
 
+record WireShapes.Picked
+  file: Spar.FileGrant
+  folder: Spar.FolderGrant?
+
 record WireShapes.Row
   n: int
   text: string
+
+record WireShapes.SecretRequest
+  name: string
+  secret: string
 
 record WireShapes.Shapes
   text: string
@@ -93,6 +117,32 @@ record WireShapes.Shapes
 
 record WireShapes.Tick
   n: long
+
+error Spar.ClipboardError
+  busy
+  tooLarge(limit: int)
+  unavailable(reason: string)
+
+error Spar.CredentialError
+  notFound
+  tooLarge(limit: int)
+  unavailable(reason: string)
+
+error Spar.FileAccessError
+  notFound
+  accessDenied
+  inUse
+  tooLarge(limit: int)
+  grantExpired
+  outsideFolder(path: string)
+  readOnlyGrant
+  failed(reason: string)
+
+error Spar.FileDialogError
+  dismissed
+  accessDenied(path: string)
+  unavailable(reason: string)
+  busy
 
 error WireShapes.EchoError
   refused(reason: string)
