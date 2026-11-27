@@ -70,7 +70,8 @@ internal sealed class BridgeStream : SparItemSink, IDisposable
     /// <summary>The values a subscription dropped for a page that fell behind, for its span.</summary>
     public long Dropped { get; private set; }
 
-    private bool IsSubscription => _capacity > 0;
+    /// <summary>Whether this is a subscription, whose producer never waits, rather than a one-shot stream.</summary>
+    public bool IsSubscription => _capacity > 0;
 
     /// <summary>Nothing was sent for a whole window: an item now goes at once instead of waiting for others.</summary>
     private bool Quiet => !_sentAny || _time.GetElapsedTime(_lastSend) >= Window;

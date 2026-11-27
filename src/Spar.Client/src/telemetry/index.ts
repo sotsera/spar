@@ -56,6 +56,7 @@ class PageTracer implements Tracer {
     return {
       traceparent: traceparentOf(span),
       end: (outcome, code) => endCall(span, outcome, code),
+      set: (name, value) => span.setAttribute(name, value),
     };
   }
 

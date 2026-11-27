@@ -73,6 +73,30 @@ public sealed class BridgeTelemetryTests : IDisposable
     }
 
     [Fact]
+    public async Task A_stream_has_one_activity_with_its_item_count_and_a_subscription_its_drops()
+    {
+        await using var bridge = await TestBridge.OpenAsync();
+
+        bridge.Session.Receive(Streams.StreamSessionTests.Stream(1, "rows", "count", credits: 256, "100"));
+        while ((await bridge.Sent.NextAsync()).Type != Spar.Bridge.BridgeMessageType.End)
+        {
+        }
+
+        bridge.Session.Receive(Streams.StreamSessionTests.Stream(2, "feed", "ticks", credits: 1, "10"));
+        await bridge.Sent.NextAsync();
+        bridge.Session.Receive("{\"type\":\"cancel\",\"id\":2}\t");
+        await bridge.Session.WhenIdleAsync();
+
+        var activities = _activities.ToList();
+        Assert.Equal(2, activities.Count);
+        var stream = activities.Single(a => a.DisplayName == "rows/count");
+        var subscription = activities.Single(a => a.DisplayName == "feed/ticks");
+        Assert.Equal(("stream", 100L), (stream.GetTagItem("spar.stream.kind"), stream.GetTagItem("spar.stream.items")));
+        Assert.Equal("subscription", subscription.GetTagItem("spar.stream.kind"));
+        Assert.Equal(5L, subscription.GetTagItem("spar.stream.dropped"));
+    }
+
+    [Fact]
     public async Task A_command_that_throws_marks_its_activity_and_the_page_gets_its_trace_id()
     {
         await using var bridge = await TestBridge.OpenAsync();

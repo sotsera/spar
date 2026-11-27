@@ -138,6 +138,12 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
   #leaving: { resolve: () => void; reject: (error: unknown) => void } | undefined;
   #onAbort: (() => void) | undefined;
 
+  /** One span for the whole stream or subscription, its resumed runs included, with its counts as attributes. */
+  #span: CallSpan | undefined;
+  #received = 0;
+  #dropped = 0;
+  #resumes = 0;
+
   constructor(
     host: StreamHost,
     name: CallName,
@@ -167,6 +173,7 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
       signal.addEventListener("abort", this.#onAbort, { once: true });
     }
 
+    this.#span = host.span(name);
     this.#start();
   }
 
@@ -218,6 +225,7 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
     }
 
     if (dropped !== undefined && this.#kind !== undefined && !this.#kind.latestOnly) {
+      this.#dropped += dropped;
       this.#push({ kind: "outcome", outcome: { ok: true, event: "gap", payload: { dropped } } });
     }
 
@@ -225,6 +233,7 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
       this.#dropUnreadValues(run);
     }
 
+    this.#received += values.length;
     for (const raw of values) {
       this.#push({ kind: "value", raw });
     }
@@ -247,7 +256,7 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
   #start(): void {
     const run = new StreamRun(this, this.#name, this.#decoder);
     this.#run = run;
-    run.open(this.#host, this.#request);
+    run.open(this.#host, this.#request, this.#span);
   }
 
   /**
@@ -271,6 +280,7 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
       }
 
       if (back) {
+        this.#resumes++;
         this.#push({ kind: "outcome", outcome: { ok: true, event: "reset", payload: undefined } });
         this.#push({ kind: "outcome", outcome: { ok: true, event: "resumed", payload: undefined } });
         this.#start();
@@ -287,13 +297,15 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
   #handOut(raw: unknown): Result<T, E, V> {
     this.#run?.consumed(1);
     try {
-      return new Result<T, E, V>({ ok: true, value: this.#decoder.item(raw) });
+      const value = this.#decoder.item(raw);
+      return new Result<T, E, V>({ ok: true, value });
     } catch {
       // An item this client cannot read: the stream stops, this failure is its last item, and nothing after it is read.
+      const malformed = failureOf(this.#name, "protocol", "malformed", "unknown");
       this.#run?.cancel();
       this.#buffer.length = 0;
-      this.#terminal(undefined);
-      return new Result<T, E, V>(failureOf(this.#name, "protocol", "malformed", "unknown"));
+      this.#terminal(undefined, malformed);
+      return new Result<T, E, V>(malformed);
     }
   }
 
@@ -334,14 +346,18 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
     }, confirmationTimeoutMs);
   }
 
-  /** The last item, if the outcome is one (a declared error or a failure), then the end of the iteration. */
-  #terminal(outcome: Outcome | undefined): void {
+  /**
+   * The last item, if the outcome is one (a declared error or a failure), then the end of the iteration and of the
+   * span, which `spanOutcome` describes when the last item was already handed out.
+   */
+  #terminal(outcome: Outcome | undefined, spanOutcome: Outcome | undefined = outcome): void {
     if (this.#finished) {
       return;
     }
 
     this.#finished = true;
     this.#run = undefined;
+    this.#endSpan(spanOutcome);
     if (this.#onAbort !== undefined) {
       this.#signal?.removeEventListener("abort", this.#onAbort);
     }
@@ -367,6 +383,29 @@ class StreamIterator<T, E extends ErrorCases, V extends EventCases> implements A
     this.#push({ kind: "done" });
   }
 
+  /** The stream's one span: its counts, then its outcome, named as on the backend's span. */
+  #endSpan(outcome: Outcome | undefined): void {
+    const span = this.#span;
+    if (span === undefined) {
+      return;
+    }
+
+    span.set("spar.stream.kind", this.#kind === undefined ? "stream" : "subscription");
+    span.set("spar.stream.items", this.#received);
+    if (this.#kind !== undefined) {
+      span.set("spar.stream.dropped", this.#dropped);
+      span.set("spar.stream.resumes", this.#resumes);
+    }
+
+    if (outcome === undefined || outcome.ok) {
+      span.end("success");
+    } else if (outcome.code !== undefined) {
+      span.end("error");
+    } else {
+      span.end(outcome.error.kind, outcome.error.code);
+    }
+  }
+
   #push(entry: Entry): void {
     this.#buffer.push(entry);
     const waiter = this.#waiter;
@@ -381,7 +420,6 @@ class StreamRun implements StreamReceiver {
   readonly #name: CallName;
   readonly #decoder: StreamDecoder<unknown>;
   #handle: StreamHandle | undefined;
-  #span: CallSpan | undefined;
   #consumed = 0;
 
   constructor(owner: RunOwner, name: CallName, decoder: StreamDecoder<unknown>) {
@@ -390,9 +428,9 @@ class StreamRun implements StreamReceiver {
     this.#decoder = decoder;
   }
 
-  open(host: StreamHost, request: string): void {
-    this.#span = host.span(this.#name);
-    this.#handle = host.open(this.#name, request, streamCredits, this, this.#span);
+  /** Sends the stream message, with the stream's span as the parent of the backend's. */
+  open(host: StreamHost, request: string, span: CallSpan | undefined): void {
+    this.#handle = host.open(this.#name, request, streamCredits, this, span);
     if (this.#handle === undefined) {
       this.lost(false);
     }
@@ -416,12 +454,10 @@ class StreamRun implements StreamReceiver {
   }
 
   end(ok: boolean, payload: string): void {
-    this.#span?.end(ok ? "success" : "error");
     this.#owner.ended(this, ok ? undefined : this.#errorOutcome(payload), false);
   }
 
   failure(error: CallError): void {
-    this.#span?.end(error.kind, error.code);
     this.#owner.ended(this, { ok: false, error }, false);
   }
 
@@ -429,7 +465,6 @@ class StreamRun implements StreamReceiver {
     const error = sent
       ? failureOf(this.#name, "transport", "lost", "unknown")
       : failureOf(this.#name, "unavailable", "unavailable", "notStarted");
-    this.#span?.end(error.error.kind, error.error.code);
     this.#owner.ended(this, error, true);
   }
 

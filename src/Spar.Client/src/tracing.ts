@@ -10,6 +10,8 @@ import type { CallErrorKind } from "./results.js";
 export interface CallSpan {
   readonly traceparent: string;
   end(outcome: "success" | "error" | CallErrorKind, code?: string): void;
+  /** Sets one attribute before the span ends, such as a stream's item count. */
+  set(name: string, value: number | string): void;
 }
 
 /** What the telemetry chunk provides. */

@@ -86,6 +86,14 @@ internal sealed partial class BridgeSession
         }
 
         stream.Dispose();
+
+        // One span per stream, never one per item (decision "M3a's decide-first questions", item 5).
+        activity?.SetTag("spar.stream.kind", stream.IsSubscription ? "subscription" : "stream");
+        activity?.SetTag("spar.stream.items", stream.ItemsSent);
+        if (stream.IsSubscription)
+        {
+            activity?.SetTag("spar.stream.dropped", stream.Dropped);
+        }
     }
 
     /// <summary>The page took items and grants more; credits for a stream that has ended are dropped.</summary>
