@@ -32,7 +32,7 @@ public sealed class SparSubscriptionAttribute : Attribute
     public SubscriptionResume Resume { get; set; }
 
     /// <summary>Keeps only the newest value, replacing older ones silently, with no gap events. Not combined with <see cref="Capacity"/>.</summary>
-    public bool Coalesce { get; set; }
+    public bool LatestOnly { get; set; }
 }
 
 /// <summary>Whether a subscription reconnects by itself after a lost connection.</summary>

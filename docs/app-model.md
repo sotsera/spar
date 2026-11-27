@@ -753,7 +753,7 @@ public sealed class StatusService(IResourceUsage usage)
 {
     /// <summary>Memory for the status bar: only the newest value, no gap events.</summary>
     [SparCommand]
-    [SparSubscription(Coalesce = true)]
+    [SparSubscription(LatestOnly = true)]
     public IAsyncEnumerable<MemoryUsage> Memory(CancellationToken cancellationToken) =>
         usage.WatchMemory(TimeSpan.FromSeconds(1), cancellationToken);
 
