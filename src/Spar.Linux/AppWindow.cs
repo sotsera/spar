@@ -166,6 +166,7 @@ internal sealed partial class AppWindow
     public unsafe void Start(MainLoop ui, WindowTheme theme, Task<SparRunningApp> built)
     {
         _ui = ui;
+        AttachHandle();
         _theme = theme;
         _self = GCHandle.Alloc(this);
         var options = Options;
@@ -340,6 +341,12 @@ internal sealed partial class AppWindow
         try
         {
             var running = await built;
+            if (_opened is null && _windows is not null)
+            {
+                // The app's C# code reaches its windows through IWindows from here on.
+                running.Services.GetService<SparWindows>()?.Use(_windows);
+            }
+
             _guard = new CloseGuard(_app.Builder.CloseGuard, running.Services, _log.Logger);
             _hangHook.Start(running.Services);
         }
@@ -380,6 +387,7 @@ internal sealed partial class AppWindow
             Params = _opened?.Params ?? ReadOnlyMemory<byte>.Empty,
             Access = Options.Access,
             Windows = _windows,
+            Handle = (IAppWindow?)_opened?.Handle ?? _windows?.Main,
         };
     }
 

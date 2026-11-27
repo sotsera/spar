@@ -128,10 +128,14 @@ namespace WindowHost
 
     /// <summary>The calls the host tests start from the page.</summary>
     [SparContract]
-    public sealed class HostService(Activity activity)
+    public sealed class HostService(Activity activity, ISparCall call)
     {
         [SparCommand]
         public Task<string> EchoAsync(string text) => Task.FromResult(text);
+
+        /// <summary>The id of the window whose page called (<c>ISparCall.Window</c>), or <c>none</c>.</summary>
+        [SparCommand]
+        public Task<string> CallerWindowAsync() => Task.FromResult(call.Window?.Id ?? "none");
 
         /// <summary>Records what the page says, such as its close guard's request, so a test reads it after the window closed.</summary>
         [SparCommand]

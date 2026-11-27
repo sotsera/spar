@@ -71,6 +71,54 @@ internal static unsafe class WindowPlacement
         return new RECT { left = left, top = top, right = left + width, bottom = top + height };
     }
 
+    /// <summary>The window's outer size for a page of <paramref name="size"/> CSS pixels at the window's own DPI.</summary>
+    public static (int Width, int Height) OuterSize(HWND window, (int Width, int Height) size)
+    {
+        var dpi = PInvoke.GetDpiForWindow(window);
+        if (dpi == 0)
+        {
+            dpi = DefaultDpi;
+        }
+
+        var outer = new RECT { right = Scale(size.Width, dpi), bottom = Scale(size.Height, dpi) };
+        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        return (outer.right - outer.left, outer.bottom - outer.top);
+    }
+
+    /// <summary>The size of the window's client area, which the page fills, in CSS pixels at the window's DPI.</summary>
+    public static (int Width, int Height) ClientSize(HWND window)
+    {
+        var dpi = PInvoke.GetDpiForWindow(window);
+        if (dpi == 0)
+        {
+            dpi = DefaultDpi;
+        }
+
+        if (!PInvoke.GetClientRect(window, out var client))
+        {
+            return (0, 0);
+        }
+
+        return ((int)Math.Round((client.right - client.left) * (double)DefaultDpi / dpi), (int)Math.Round((client.bottom - client.top) * (double)DefaultDpi / dpi));
+    }
+
+    /// <summary>The window's title.</summary>
+    public static string Title(HWND window)
+    {
+        var length = PInvoke.GetWindowTextLength(window);
+        if (length <= 0)
+        {
+            return "";
+        }
+
+        var text = new char[length + 1];
+        fixed (char* buffer = text)
+        {
+            var copied = PInvoke.GetWindowText(window, buffer, text.Length);
+            return new string(buffer, 0, copied);
+        }
+    }
+
     /// <summary>
     /// A modal's bounds: a client area of <paramref name="size"/> at its owner's DPI, centred on <paramref name="owner"/>,
     /// and kept within the work area of the owner's monitor. An owner on no monitor (an offscreen test window) keeps

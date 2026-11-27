@@ -264,7 +264,10 @@ internal sealed class SparCall : ISparCall
     public SparCaller Caller { get; private set; }
 
     /// <summary>The window the call came from (its grants and dialogs), or null for a call without one.</summary>
-    public Files.HostWindow? Window { get; private set; }
+    public Files.HostWindow? HostWindow { get; private set; }
+
+    /// <summary>The caller's window as the app's C# code sees it.</summary>
+    public IAppWindow? Window => HostWindow?.Handle;
 
     public void Start(long callId, string contract, string command, SparCaller caller, CancellationToken cancellationToken, Files.HostWindow? window)
     {
@@ -273,7 +276,7 @@ internal sealed class SparCall : ISparCall
         Command = command;
         Caller = caller;
         CancellationToken = cancellationToken;
-        Window = window;
+        HostWindow = window;
     }
 }
 

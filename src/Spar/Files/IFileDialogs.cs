@@ -99,7 +99,7 @@ internal sealed class FileDialogs(SparCall call) : IFileDialogs
 
     private async Task<Result<Chosen, FileDialogError>> ShowAsync(FileDialogRequest request, CancellationToken cancellationToken)
     {
-        if (call.Window is not { } window)
+        if (call.HostWindow is not { } window)
         {
             return new FileDialogError.Unavailable("This call has no window: a file dialog can be shown only during a page's call.");
         }

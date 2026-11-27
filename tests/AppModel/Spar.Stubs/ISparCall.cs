@@ -12,6 +12,9 @@ public interface ISparCall
     string Command { get; }
 
     SparCaller Caller { get; }
+
+    /// <summary>The window whose page made the call; null for a call without one.</summary>
+    IAppWindow? Window { get; }
 }
 
 /// <summary>Who made a call: the page, a test through the test host, or the devtools of a Development build.</summary>

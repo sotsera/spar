@@ -159,6 +159,9 @@ public sealed class SparWindow
     /// <summary>Whether the window takes the user's input: false while a modal of its own is open, for Spar's own host tests.</summary>
     internal Task<bool> TakesInputAsync() => _window.TakesInputAsync();
 
+    /// <summary>The window's title, its page's size, and whether it is minimized or maximized, as the OS has them, for Spar's own host tests.</summary>
+    internal Task<SparTestWindowState> NativeStateAsync() => _window.NativeStateAsync();
+
     /// <summary>The ids of the renderer processes that render the page now.</summary>
     internal Task<IReadOnlyList<int>> RendererProcessesAsync() => _window.RendererProcessesAsync();
 

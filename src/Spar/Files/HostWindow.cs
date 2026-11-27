@@ -58,6 +58,9 @@ internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs,
     /// <summary>The window's allow-list; null when it may call every command.</summary>
     public AppWindows.WindowAccess? Access { get; init; }
 
+    /// <summary>The window as the app's C# code sees it (<see cref="ISparCall.Window"/>); null for a host without windows of its own.</summary>
+    public IAppWindow? Handle { get; init; }
+
     /// <summary>The app's windows, which this one's page may open more of; null for a host without windows of its own (loopback).</summary>
     public AppWindows.AppWindowSet? Windows { get; init; }
 

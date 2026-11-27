@@ -175,6 +175,12 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public Task<bool> TakesInputAsync() => OnUiAsync(() => Task.FromResult(_window.TakesInput));
 
+    public Task<SparTestWindowState> NativeStateAsync() => OnUiAsync(() =>
+    {
+        var (title, width, height, minimized, maximized) = _window.NativeState();
+        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized));
+    });
+
     public unsafe Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => OnUiAsync(() =>
     {
         BOOL dark = false;

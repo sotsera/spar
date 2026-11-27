@@ -214,12 +214,17 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
   commands.set(windows.showModal, showModalCodec);
   commands.set(windows.closeWith, closeWindowCodec);
   commands.set(windows.params, windowParamsCodec);
+  for (const action of [windows.focus, windows.minimize, windows.maximize, windows.restore, windows.setSize, windows.setTitle]) {
+    commands.set(action, windowActionCodec);
+  }
+
   const host = new FakeHost(commands, fingerprint);
   host.script(colorSchemeCodec, () => ({ kind: "value", value: undefined }));
   host.script(openWindowCodec, () => ({ kind: "value", value: undefined }));
   host.script(showModalCodec, () => ({ kind: "error", code: "dismissed", payload: undefined }));
   host.script(closeWindowCodec, () => ({ kind: "value", value: undefined }));
   host.script(windowParamsCodec, () => ({ kind: "value", value: null }));
+  host.script(windowActionCodec, () => ({ kind: "value", value: undefined }));
   for (const [codec, answer] of fileCodecs) {
     host.script(codec, request => answer(request) as Answer);
   }
@@ -270,6 +275,17 @@ const showModalCodec: CommandCodec = {
 const closeWindowCodec: CommandCodec = {
   contract: "spar",
   command: "closeWindow",
+  request: json => JSON.parse(json) as unknown,
+};
+
+/**
+ * The host's own `spar.windowAction`, `{ action, … }`, no value: it succeeds. `spar.calls(windows.minimize)`, or of any
+ * of the window's operations, lists every one the page asked for, in order, such as `{ action: "setSize", width, height }`;
+ * `windows.close()` among them.
+ */
+const windowActionCodec: CommandCodec = {
+  contract: "spar",
+  command: "windowAction",
   request: json => JSON.parse(json) as unknown,
 };
 

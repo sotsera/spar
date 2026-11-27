@@ -172,6 +172,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     public void Start(UiThread ui, WindowTheme theme, Task<SparRunningApp> built)
     {
         _ui = ui;
+        AttachHandle();
         _theme = theme;
         _background = PInvoke.CreateSolidBrush(new COLORREF(theme.Background.ColorRef));
         var modalOwner = FindModalOwner();
@@ -482,6 +483,12 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             return;
         }
 
+        if (_opened is null && _windows is not null)
+        {
+            // The app's C# code reaches its windows through IWindows from here on.
+            _running.Services.GetService<SparWindows>()?.Use(_windows);
+        }
+
         _guard = new CloseGuard(_app.Builder.CloseGuard, _running.Services, _log.Logger);
         _hangHook.Start(_running.Services);
         var pageLogger = _running.Services.GetService<ILoggerFactory>()?.CreateLogger(PageErrorLog.Category);
@@ -539,6 +546,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             Params = _opened?.Params ?? ReadOnlyMemory<byte>.Empty,
             Access = Options.Access,
             Windows = _windows,
+            Handle = (IAppWindow?)_opened?.Handle ?? _windows?.Main,
         };
         return _files;
     }

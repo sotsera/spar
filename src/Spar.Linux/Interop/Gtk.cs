@@ -110,6 +110,35 @@ internal static unsafe partial class Gtk
     [LibraryImport(Library)]
     public static partial void gtk_window_destroy(nint window);
 
+    /// <summary>Asks the window manager to minimize the window; one that cannot (none running) leaves it as it is.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_minimize(nint window);
+
+    [LibraryImport(Library)]
+    public static partial void gtk_window_unminimize(nint window);
+
+    /// <summary>Asks the window manager to maximize the window; one that cannot (none running) leaves it as it is.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_maximize(nint window);
+
+    [LibraryImport(Library)]
+    public static partial void gtk_window_unmaximize(nint window);
+
+    /// <summary>A <c>gboolean</c>: whether the window manager reports the window maximized.</summary>
+    [LibraryImport(Library)]
+    public static partial int gtk_window_is_maximized(nint window);
+
+    /// <summary>The window's title, borrowed UTF-8 (never freed by the caller); 0 for none.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_window_get_title(nint window);
+
+    /// <summary>The widget's allocated width, in its own units (CSS pixels for the view).</summary>
+    [LibraryImport(Library)]
+    public static partial int gtk_widget_get_width(nint widget);
+
+    [LibraryImport(Library)]
+    public static partial int gtk_widget_get_height(nint widget);
+
     /// <summary>Keeps the window above <paramref name="parent"/> (0 for none); the window manager may centre it on it.</summary>
     [LibraryImport(Library)]
     public static partial void gtk_window_set_transient_for(nint window, nint parent);

@@ -269,6 +269,12 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public Task<bool> TakesInputAsync() => OnLoopAsync(() => Task.FromResult(_window?.TakesInput ?? false));
 
+    public Task<SparTestWindowState> NativeStateAsync() => OnLoopAsync(() =>
+    {
+        var (title, width, height, minimized, maximized) = _window?.NativeState() ?? ("", 0, 0, false, false);
+        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized));
+    });
+
     public Task<int> CloseAsync()
     {
         _process.Ui.Post(() =>

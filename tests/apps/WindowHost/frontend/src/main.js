@@ -366,3 +366,13 @@ on("show-confirm", () => windows.showModal("confirm", { question: "Sure?" }).mat
   failure: error => { windowStatus.textContent = `Confirm: ${error.kind} ${error.code}`; },
 }));
 on("answer-yes", () => windows.closeWith({ answer: "yes" }));
+
+// The page's own window (decision "M3d's decide-first questions", item 8), and which window a command's call came from.
+on("which-window", () => host.callerWindow().match({
+  success: id => { windowStatus.textContent = `Window: ${id}`; },
+  failure: error => { windowStatus.textContent = `Window: ${error.kind} ${error.code}`; },
+}));
+on("retitle", () => windows.setTitle("Retitled").unwrap());
+on("resize", () => windows.setSize(640, 480).unwrap());
+on("minimize", () => windows.minimize().unwrap());
+on("close-window", () => windows.close());

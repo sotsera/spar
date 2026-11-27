@@ -100,18 +100,3 @@ public interface ITray
 
     void SetEnabled(string itemId, bool isEnabled);
 }
-
-/// <summary>Changes the app's windows at run time; injectable. The page reaches it only through the app's own contracts.</summary>
-public interface IWindows
-{
-    void Maximize();
-
-    void Restore();
-
-    void SetSize(int width, int height);
-
-    void Focus();
-
-    /// <summary>Turns capture protection on or off at run time; returns whether it took effect.</summary>
-    bool SetCaptureProtection(bool enabled);
-}

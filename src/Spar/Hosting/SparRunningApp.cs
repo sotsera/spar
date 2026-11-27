@@ -28,6 +28,8 @@ internal sealed class SparRunningApp(ServiceProvider services, SparDispatcher di
         services.AddLogging();
         services.TryAddScoped<SparCall>();
         services.TryAddScoped<ISparCall>(provider => provider.GetRequiredService<SparCall>());
+        services.TryAddSingleton<AppWindows.SparWindows>();
+        services.TryAddSingleton<IWindows>(provider => provider.GetRequiredService<AppWindows.SparWindows>());
         services.TryAddSingleton(new Settings.SparSettingsSerializers(catalog.Settings));
         services.TryAddSingleton(provider => new SparBlobs(provider.GetRequiredService<SparFolders>()));
         services.TryAddScoped<IFileDialogs, FileDialogs>();

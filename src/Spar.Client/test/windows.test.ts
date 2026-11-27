@@ -175,3 +175,45 @@ describe("windows.showModal and closeWith", () => {
     expect(spar.closedWith()).toEqual([{ saved: 1 }, null]);
   });
 });
+
+describe("this window's own operations", () => {
+  test("each sends its action to spar.windowAction, and a size or title the host would refuse never leaves", async () => {
+    const host = connected();
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const sent: unknown[] = [];
+    const answer = async (call: Promise<unknown>): Promise<void> => {
+      await vi.waitFor(() => expect(host.last("call")).toBeDefined());
+      const last = host.last("call")!;
+      sent.push([last.command, JSON.parse(last.payload)]);
+      host.deliver({ type: "result", id: last.id!, ok: true, payload: "" });
+      await call;
+    };
+
+    await answer(windows.minimize().unwrap());
+    await answer(windows.setSize(800, 600).unwrap());
+    await answer(windows.setTitle("Report — 2026").unwrap());
+    const refused = await windows.setSize(0, 600).match({ success: () => undefined, failure: (error: CallError) => error });
+
+    expect(sent).toEqual([
+      ["windowAction", { action: "minimize" }],
+      ["windowAction", { action: "setSize", width: 800, height: 600 }],
+      ["windowAction", { action: "setTitle", title: "Report — 2026" }],
+    ]);
+    expect(refused).toMatchObject({ kind: "rejected", code: "invalid-request", execution: "notStarted" });
+  });
+
+  test("fakeSpar answers them and lists what the page asked, close among them", async () => {
+    const spar = createFakeSpar(new Map(), "0123456789abcdef");
+
+    await windows.maximize().unwrap();
+    await windows.setSize(640, 480).unwrap();
+    windows.close();
+    await vi.waitFor(() => expect(spar.calls(windows.minimize)).toHaveLength(3));
+
+    expect(spar.calls(windows.focus)).toEqual([
+      { action: "maximize" },
+      { action: "setSize", width: 640, height: 480 },
+      { action: "close" },
+    ]);
+  });
+});

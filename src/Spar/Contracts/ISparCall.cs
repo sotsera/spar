@@ -15,6 +15,12 @@ public interface ISparCall
 
     /// <summary>Who made the call: the page, a test through the test host, or the devtools of a Development build.</summary>
     SparCaller Caller { get; }
+
+    /// <summary>
+    /// The window whose page made the call; null for a call without one (a test through the test host's client, the
+    /// devtools, a browser on loopback).
+    /// </summary>
+    IAppWindow? Window { get; }
 }
 
 /// <summary>Who made a call (<see cref="ISparCall.Caller"/>).</summary>

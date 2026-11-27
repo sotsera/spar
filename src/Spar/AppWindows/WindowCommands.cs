@@ -17,6 +17,9 @@ namespace Spar.AppWindows;
 /// <item><c>closeWindow</c>, <c>{"value":…}</c>: the calling window's page closes it, without its guards, and a modal's
 /// opener gets the value (<c>windows.closeWith</c>); at most <see cref="MaxParamsBytes"/> too.</item>
 /// <item><c>windowParams</c>: the JSON the window's opener gave, or <c>null</c>.</item>
+/// <item><c>windowAction</c>, <c>{"action":"…"}</c>: the calling window's own <see cref="IAppWindow"/> operations (item 8):
+/// <c>focus</c>, <c>minimize</c>, <c>maximize</c>, <c>restore</c>, <c>close</c> (its close request, answered at once),
+/// <c>setSize</c> with <c>width</c> and <c>height</c>, <c>setTitle</c> with <c>title</c>.</item>
 /// </list>
 /// An unknown kind, a modal kind given to <c>openWindow</c> or another to <c>showModal</c>, or a request that is not
 /// this shape, is refused as <c>rejected</c> / <c>invalid-request</c>: the generated <c>WindowKind</c> and
@@ -28,6 +31,7 @@ internal static class WindowCommands
     public const string ShowModal = "showModal";
     public const string Close = "closeWindow";
     public const string Params = "windowParams";
+    public const string Action = "windowAction";
 
     /// <summary>The most JSON a window's params, or a modal's result, may be.</summary>
     public const int MaxParamsBytes = 64 * 1024;
@@ -36,7 +40,7 @@ internal static class WindowCommands
 
     private static readonly byte[] Null = "null"u8.ToArray();
 
-    public static bool Handles(string command) => command is Open or ShowModal or Close or Params;
+    public static bool Handles(string command) => command is Open or ShowModal or Close or Params or Action;
 
     public static async ValueTask<SparOutcome> InvokeAsync(HostWindow? window, string command, ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
     {
@@ -44,6 +48,8 @@ internal static class WindowCommands
         {
             case Params:
                 return SparOutcome.FromValue(window is null || window.Params.IsEmpty ? Null : window.Params);
+            case Action:
+                return WindowAction(window, payload);
             case Close:
                 return CloseWith(window, payload);
         }
@@ -97,6 +103,117 @@ internal static class WindowCommands
             ? SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty)
             : SparOutcome.FromFailure(SparFailure.InvalidRequest(
                 "windows.closeWith closes a window of the app's kinds; the main window closes through its close request, which asks its guards."));
+    }
+
+    /// <summary>The page's own window does what it asked; a window without a handle (loopback) is refused.</summary>
+    private static SparOutcome WindowAction(HostWindow? window, ReadOnlyMemory<byte> payload)
+    {
+        if (!TryReadAction(payload, out var action, out var problem))
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(problem));
+        }
+
+        if (window?.Handle is not { } handle)
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(NoWindows));
+        }
+
+        switch (action.Name)
+        {
+            case "focus":
+                handle.Focus();
+                break;
+            case "minimize":
+                handle.Minimize();
+                break;
+            case "maximize":
+                handle.Maximize();
+                break;
+            case "restore":
+                handle.Restore();
+                break;
+            case "setSize":
+                handle.SetSize(action.Width, action.Height);
+                break;
+            case "setTitle":
+                handle.SetTitle(action.Title!);
+                break;
+            case "close":
+                // The page's own guard is asked too; a window that closes takes its page with it, so it is answered now.
+                _ = handle.CloseAsync();
+                break;
+        }
+
+        return SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty);
+    }
+
+    internal readonly record struct WindowActionRequest(string Name, int Width, int Height, string? Title);
+
+    /// <summary><c>windowAction</c>'s request: a known action, with a size of 1 to 100,000 or a title of at most 1,024 characters.</summary>
+    internal static bool TryReadAction(ReadOnlyMemory<byte> payload, out WindowActionRequest action, out string problem)
+    {
+        action = default;
+        problem = Action + " takes {\"action\":\"focus\"|\"minimize\"|\"maximize\"|\"restore\"|\"close\"|\"setSize\"|\"setTitle\"}, with width and height, or title.";
+        string? name = null;
+        string? title = null;
+        int? width = null;
+        int? height = null;
+        try
+        {
+            var reader = new Utf8JsonReader(payload.Span, new JsonReaderOptions { MaxDepth = 4 });
+            if (!reader.Read() || reader.TokenType != JsonTokenType.StartObject)
+            {
+                return false;
+            }
+
+            while (reader.Read() && reader.TokenType == JsonTokenType.PropertyName)
+            {
+                var property = reader.GetString();
+                reader.Read();
+                switch (property)
+                {
+                    case "action" when reader.TokenType == JsonTokenType.String:
+                        name = reader.GetString();
+                        break;
+                    case "title" when reader.TokenType == JsonTokenType.String:
+                        title = reader.GetString();
+                        break;
+                    case "width" when reader.TokenType == JsonTokenType.Number && reader.TryGetInt32(out var w):
+                        width = w;
+                        break;
+                    case "height" when reader.TokenType == JsonTokenType.Number && reader.TryGetInt32(out var h):
+                        height = h;
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+
+            if (reader.TokenType != JsonTokenType.EndObject || reader.Read())
+            {
+                return false;
+            }
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+
+        var valid = name switch
+        {
+            "focus" or "minimize" or "maximize" or "restore" or "close" => true,
+            "setSize" => width is >= 1 and <= 100_000 && height is >= 1 and <= 100_000,
+            "setTitle" => title is { Length: <= 1_024 },
+            _ => false,
+        };
+        if (!valid)
+        {
+            return false;
+        }
+
+        action = new WindowActionRequest(name!, width ?? 0, height ?? 0, title);
+        return true;
     }
 
     /// <summary>A declared error: <c>{"code":…}</c>, with the reason when there is one.</summary>

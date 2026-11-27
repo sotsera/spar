@@ -21,8 +21,14 @@ internal sealed class OpenWindow
 
     public bool IsModal => Options.IsModal;
 
+    /// <summary>The window as the app's C# code sees it; the host attaches its control when it makes the window.</summary>
+    public AppWindowHandle Handle => field ??= new AppWindowHandle(Id, Kind);
+
     /// <summary>A modal's result: <c>closeWith</c>'s value, or dismissed once it closed without one.</summary>
     public Task<ModalResult> Result => _result.Task;
+
+    /// <summary>Whether its opening was reported (<see cref="AppWindowSet.Opened"/>), so its close is too.</summary>
+    public bool Announced { get; set; }
 
     /// <summary>Whether a page still waits for the modal's result; false once its call ended (the opener's document went away).</summary>
     public bool Awaited { get; set; }
@@ -91,6 +97,15 @@ internal sealed class AppWindowSet(SparBuilder builder, IAppWindowHost host, Act
     private readonly Dictionary<string, int> _counts = new(StringComparer.Ordinal);
     private bool _closing;
 
+    /// <summary>The main window as the app's C# code sees it, once the host gave it its control; null before.</summary>
+    public AppWindowHandle? Main { get; private set; }
+
+    /// <summary>A window of the app's kinds was shown (the thread that opened it).</summary>
+    public event Action<AppWindowHandle>? Opened;
+
+    /// <summary>A window of the app's kinds that was shown closed (the host's thread).</summary>
+    public event Action<AppWindowHandle>? WindowClosed;
+
     /// <summary>The windows open now, in the order they opened.</summary>
     public IReadOnlyList<OpenWindow> Open
     {
@@ -120,6 +135,22 @@ internal sealed class AppWindowSet(SparBuilder builder, IAppWindowHost host, Act
     {
         var (result, _) = await StartAsync(kind, parameters, openerId, modal: false, cancellationToken);
         return result;
+    }
+
+    /// <summary>
+    /// <see cref="OpenAsync"/> for the app's C# code (<see cref="IWindows.OpenAsync"/>): the main window is the opener,
+    /// and the window opened or focused comes back with the outcome.
+    /// </summary>
+    public Task<(OpenResult Result, OpenWindow? Window)> OpenFromAppAsync(string kind, ReadOnlyMemory<byte> parameters, CancellationToken cancellationToken) =>
+        StartAsync(kind, parameters, WindowRoutes.Main, modal: false, cancellationToken);
+
+    /// <summary>The host made the main window: the app's C# code reaches it through <paramref name="control"/>.</summary>
+    public AppWindowHandle AttachMain(IWindowControl control)
+    {
+        var main = Main ?? new AppWindowHandle(WindowRoutes.Main, WindowRoutes.Main);
+        main.Attach(control);
+        Main = main;
+        return main;
     }
 
     /// <summary>
@@ -185,6 +216,12 @@ internal sealed class AppWindowSet(SparBuilder builder, IAppWindowHost host, Act
             }
         }
 
+        window.Handle.MarkClosed();
+        if (window.Announced)
+        {
+            WindowClosed?.Invoke(window.Handle);
+        }
+
         if (!window.IsModal)
         {
             return;
@@ -199,13 +236,15 @@ internal sealed class AppWindowSet(SparBuilder builder, IAppWindowHost host, Act
         }
     }
 
-    /// <summary>The app is closing: no window opens after this.</summary>
+    /// <summary>The app is closing (the main window's teardown started): no window opens after this.</summary>
     public void Closing()
     {
         lock (_gate)
         {
             _closing = true;
         }
+
+        Main?.MarkClosed();
     }
 
     private async Task<(OpenResult Result, OpenWindow? Window)> StartAsync(
@@ -264,6 +303,8 @@ internal sealed class AppWindowSet(SparBuilder builder, IAppWindowHost host, Act
         try
         {
             await host.OpenAsync(window, cancellationToken);
+            window.Announced = true;
+            Opened?.Invoke(window.Handle);
             return (new OpenResult(OpenOutcome.Opened), window);
         }
         catch (Exception error) when (error is not OperationCanceledException)

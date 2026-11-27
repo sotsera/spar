@@ -113,6 +113,9 @@ internal sealed record SparTestClose(CloseReason Reason, bool Automated, bool? C
 /// <param name="Unanswered">The page did not answer, and "Wait / Close anyway" was asked.</param>
 internal sealed record SparTestCloseReport(bool Closed, string? Question, bool Unanswered);
 
+/// <summary>A window as the OS has it (<see cref="ISparTestWindow.NativeStateAsync"/>).</summary>
+internal sealed record SparTestWindowState(string Title, int Width, int Height, bool Minimized, bool Maximized);
+
 /// <summary>One trusted key event: the key's DOM name and code, its Windows virtual key, the modifiers held, and its text.</summary>
 /// <param name="Down">A press; false for the release.</param>
 /// <param name="Key">The DOM <c>key</c>: <c>"a"</c>, <c>"A"</c>, <c>"Enter"</c>, <c>"Shift"</c>, or any one character.</param>
@@ -227,6 +230,9 @@ internal interface ISparTestWindow
     /// on Linux, whether a modal window is transient for it, which GTK keeps its input from).
     /// </summary>
     Task<bool> TakesInputAsync();
+
+    /// <summary>The window as the OS has it: its title, its page's size in CSS pixels, minimized, maximized.</summary>
+    Task<SparTestWindowState> NativeStateAsync();
 }
 
 /// <summary>

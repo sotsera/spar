@@ -78,6 +78,21 @@ export interface WindowsApi<K extends string, M extends string = never> {
    * `configureSpar`'s `onFailure`, and the window stays open.
    */
   closeWith(value?: unknown): void;
+  /** Brings this window to the front, restoring it when it is minimized; the OS may only flash it. */
+  focus(options?: CallOptions): Call<void>;
+  minimize(options?: CallOptions): Call<void>;
+  maximize(options?: CallOptions): Call<void>;
+  /** A minimized window back to its place, or a maximized one to its normal size. */
+  restore(options?: CallOptions): Call<void>;
+  /** The size of this page, in CSS pixels at a zoom of 1 (whole numbers from 1 to 100,000), kept within the window's minimum. */
+  setSize(width: number, height: number, options?: CallOptions): Call<void>;
+  /** This window's title, as the taskbar and the window switcher show it; at most 1,024 characters. */
+  setTitle(title: string, options?: CallOptions): Call<void>;
+  /**
+   * Asks this window to close, as the close button does but as the app's own code: its own modals first, then its
+   * close guards, then the backend's. A failure goes to `configureSpar`'s `onFailure`.
+   */
+  close(): void;
   /** The params this window's opener gave, typed by the page; null for the main window or a window opened without any. */
   params<T extends WindowParams = WindowParams>(options?: CallOptions): Call<T | null>;
   /**
@@ -151,6 +166,29 @@ function closeRequest(value: unknown): string {
   return `{"value":${json}}`;
 }
 
+/** One of this window's own operations, through the host's `spar.windowAction`; a request the page refuses never leaves. */
+function windowAction(request: () => Readonly<Record<string, string | number>>, options?: CallOptions): Call<void> {
+  return invoke<void, Record<never, never>>("spar", "windowAction", () => JSON.stringify(request()), closeDecoder, options);
+}
+
+/** A size the host takes: a whole number of CSS pixels from 1 to 100,000. */
+function wholeSize(value: number, name: string): number {
+  if (!Number.isInteger(value) || value < 1 || value > 100_000) {
+    throw new TypeError(`windows.setSize takes a ${name} that is a whole number from 1 to 100,000.`);
+  }
+
+  return value;
+}
+
+/** A title the host takes: a string of at most 1,024 characters. */
+function titleOf(title: string): string {
+  if (typeof title !== "string" || title.length > 1_024) {
+    throw new TypeError("windows.setTitle takes a string of at most 1,024 characters.");
+  }
+
+  return title;
+}
+
 /** This window, as the page sees it. */
 export const windows: WindowsApi<string, string> = {
   open(kind: string, params?: WindowParams, options?: CallOptions): Call<void, OpenError> {
@@ -166,6 +204,24 @@ export const windows: WindowsApi<string, string> = {
     void invoke<void, Record<never, never>>("spar", "closeWindow", () => closeRequest(value), closeDecoder).match({
       success: () => undefined,
     });
+  },
+
+  focus: options => windowAction(() => ({ action: "focus" }), options),
+  minimize: options => windowAction(() => ({ action: "minimize" }), options),
+  maximize: options => windowAction(() => ({ action: "maximize" }), options),
+  restore: options => windowAction(() => ({ action: "restore" }), options),
+
+  setSize(width: number, height: number, options?: CallOptions): Call<void> {
+    const size = () => ({ action: "setSize", width: wholeSize(width, "width"), height: wholeSize(height, "height") });
+    return windowAction(size, options);
+  },
+
+  setTitle(title: string, options?: CallOptions): Call<void> {
+    return windowAction(() => ({ action: "setTitle", title: titleOf(title) }), options);
+  },
+
+  close(): void {
+    void windowAction(() => ({ action: "close" })).match({ success: () => undefined });
   },
 
   params<T extends WindowParams = WindowParams>(options?: CallOptions): Call<T | null> {
