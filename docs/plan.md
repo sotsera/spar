@@ -159,6 +159,7 @@ Checked at each M1 slice exit from the first slice on, instead of first in M4 (u
 | 100,000 stream rows on the desktop bridge, Release, median, Windows / Linux | ≤ 200 ms / ≤ 400 ms | the spike's 100k rows in about 160 ms on WebView2 (plan section 2c); measured at M3a in WindowHost's window: WebView2 66.80 ms (65.70–80.70) CoreCLR, 64.70 ms (64.00–94.90) NativeAOT / WebKitGTK 184.00 ms (169.00–187.00) CoreCLR, 136.00 ms (131.00–139.00) NativeAOT, n = 5 (decisions "Stream budgets on the desktop bridges" and "Desktop stream budgets added") | M3a |
 | 20,000 subscription events a second on the desktop bridge, Release, Windows / Linux | all delivered | measured at M3a: all delivered on both hosts and both lanes, the last 1,008–1,022 ms after an offer spread over one second, n = 3 (same decisions) | M3a |
 | A 12 MB `SparBlob` handle read by the page on the desktop bridge, Release, median, Windows / Linux | ≤ 150 ms | the binary-data spike's origin read: 70.7 ms / 31 ms; measured at M3b in WindowHost's window: WebView2 70.90 ms (67.40–80.70) CoreCLR, 67.60 ms (66.40–69.00) NativeAOT / WebKitGTK 34.00 ms (29.00–35.00) NativeAOT, n = 5 (decision "M3b's decide-first questions", item 5) | M3b |
+| A second window's first frame after `windows.open`, Release, median, Windows / Linux | ≤ 150 ms / ≤ 300 ms | the windows spike's probe (CoreCLR): 59.2 ms (54–68) / 158.5 ms (128–195) under Xvfb (`spikes/windows/RESULTS.md`; decision "The window design, from the windows spike") | M3d |
 
 ### Risks
 

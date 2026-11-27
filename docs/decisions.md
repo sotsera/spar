@@ -5550,3 +5550,18 @@ Asked at the start of M3d (plan, "M3d: windows"); the user accepted all nine rec
 7. **A hung page among several windows:** "Reload page" ends only that window's renderer; where windows share one, Spar asks the engine for one per window where it can and the dialog names every window it reloads (confirmed by the spike).
 8. **`IWindows`** in C#: `Main`, `All`, `OpenAsync`, `Opened`/`Closed`; per window `Kind`, `Focus`, `Minimize`, `Maximize`, `Restore`, `SetSize`, `SetTitle`, `CloseAsync`, `SetCaptureProtection`; `ISparCall.Window` for a command's caller; the page's `windows` module the same for its own window.
 9. **Tests and the exit's proof:** window tests with several windows on both hosts; the title bar with real input (XTEST on Linux, the Sandbox's user-session lane with the user's permission); DPI and Narrator for the user; the Notebook's title bar, a page in its own window, a settings modal, find and remembered zoom; `docs/app-model.md` 6.7–6.9 through real Spar; a budget for opening a window from the spike.
+
+## The window design, from the windows spike (user decision, 2026-11-27)
+
+The spike `spikes/windows` (its `RESULTS.md`) ran on WebView2 158 and in Spar's Linux CI image (GTK 4.14.5, WebKitGTK 2.52, Xvfb with software rendering, with and without openbox), with an app's own profile and network session. What it measured:
+- **Opening a window:** a later window's first frame 54–68 ms after the request on WebView2 (median 59.2, 21 windows; the controller 17.3 ms of it), 128–195 ms on WebKitGTK (median 158.5, 42 windows); the first window, which starts the browser, 392–416 ms and 661–684 ms. Each later window adds about 26 MB of private memory on Windows, and about 141 MB on Linux under software rendering.
+- **Renderers:** one per window on both engines with 1, 2, 4 and 8 windows of one origin (up to the 9 opened); ending one window's renderer (`Process.Kill`, `webkit_web_view_terminate_web_process`) failed only that window, and every other page answered.
+- **Zoom:** per window on both; kept across a reload (a new document in the same view on Linux); a new window opens at 1.0. A Ctrl+wheel through the DevTools protocol did not zoom WebView2; WebKitGTK does not zoom on a real (XTEST) Ctrl+wheel or Ctrl+plus, and the page receives them.
+- **Find on WebKitGTK:** `WebKitFindController` counted and found the right matches, each signal 1–21 ms after the call (median 6.7).
+- **A modal on GTK 4:** `gtk_window_set_modal` kept every click from the owner and let the modal's own through, with and without a window manager; openbox placed the modal at the screen's top left, not over its owner.
+
+Decided (the user accepted all four recommendations):
+1. **"Reload page" ends only the hung window's renderer:** on Windows the renderer that holds the window's main frame (`GetProcessExtendedInfos`), on Linux the view's own web process, never every renderer of the environment. If that renderer also holds another window's main frame (past Chromium's process limit, never seen here), the dialog names those windows.
+2. **A budget for opening a window:** a later window's first frame within 150 ms of `windows.open` on WebView2 and 300 ms on WebKitGTK, Release, median, measured on Spar's own hosts, NativeAOT included (plan, "Provisional budgets").
+3. **Zoom:** the Linux host handles Ctrl+wheel and Ctrl+plus, minus and 0 itself; on Windows the browser zooms, and the host applies the window's limits and saves the zoom from `ZoomFactorChanged`. Window tests set the zoom through the host, since a synthetic Ctrl+wheel does not zoom.
+4. **Modal placement:** on X11 the host centres a modal on its owner itself; on Wayland the compositor places it.
