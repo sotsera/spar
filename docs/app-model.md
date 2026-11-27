@@ -1732,7 +1732,7 @@ export async function openExport(file: PickedFile, folder: PickedFolder): Promis
 
 ### 6.7 Secondary and modal windows
 
-**Decided** (2026-11-14; decision "M3d's decide-first questions", items 3 and 4). Window kinds are declared in `Program.cs` with a route of the same frontend. The generator turns their names into two TypeScript unions, `WindowKind` for `windows.open` and `ModalKind` for the kinds declared `Modal()`, so a misspelled kind, or a modal opened as a plain window, fails `tsc`. Built in M3d: opening a window, its params, single instance, the allow-list, modals and the close order; placement and capture protection come with M3d's later steps.
+**Decided** (2026-11-14; decision "M3d's decide-first questions", items 3 and 4). Window kinds are declared in `Program.cs` with a route of the same frontend. The generator turns their names into two TypeScript unions, `WindowKind` for `windows.open` and `ModalKind` for the kinds declared `Modal()`, so a misspelled kind, or a modal opened as a plain window, fails `tsc`. Built in M3d: opening a window, its params, single instance, the allow-list, modals, the close order and `IWindows`; placement and capture protection come with M3d's later steps.
 
 File `frontend/src/openWindows.ts`:
 
@@ -1775,10 +1775,51 @@ export const saveAndClose = (): void => windows.closeWith({ changed: true });
 - **Closing a window** runs its own two-stage close: its page's guard, then `OnCloseRequested`, whose request names the window's kind.
   - Closing the main window closes the others first, the latest opened first, each through its own close. One that stays open keeps the app open.
   - A window with a modal open closes the modal first.
+- **From C#,** the injectable `IWindows` holds the main window and every open window of the app's kinds (`Main`, `All`, `Opened`, `Closed`), and opens one by kind with the same params; a modal kind is shown only by a page. Each `IAppWindow` focuses, minimizes, maximizes, restores, sizes (in CSS pixels), titles and closes its window, through its guards. A command reaches the window of the page that called it as `ISparCall.Window`. The page has the same for its own window: `windows.focus()`, `minimize()`, `maximize()`, `restore()`, `setSize(width, height)`, `setTitle(title)` and `close()`.
+
+File `SqlTool/Connections/QueryEditorWindows.cs`:
+
+```csharp
+using System.Text.Json.Nodes;
+using Spar;
+
+namespace SqlTool.Connections;
+
+/// <summary>Opens a connection's query editor from C#, as the tray's menu does, and names it after the connection.</summary>
+public sealed class QueryEditorWindows(IWindows windows)
+{
+    public async Task<bool> OpenAsync(string connectionId, string connectionName, CancellationToken cancellationToken)
+    {
+        // The same params a page passes to windows.open: a JSON object the editor's page reads with windows.params().
+        var parameters = new JsonObject { ["connectionId"] = connectionId }.ToJsonString();
+        var opened = await windows.OpenAsync("queryEditor", parameters, cancellationToken);
+        return opened switch
+        {
+            IAppWindow editor => Named(editor, connectionName),
+            WindowOpenError.NotOpened => false,
+        };
+    }
+
+    // Closing every editor before a restore: each through its own guards, which may keep one open.
+    public async Task<bool> CloseAllAsync()
+    {
+        var editors = windows.All.Where(window => window.Kind == "queryEditor").ToList();
+        var results = await Task.WhenAll(editors.Select(editor => editor.CloseAsync()));
+        return results.All(closed => closed);
+    }
+
+    private static bool Named(IAppWindow editor, string connectionName)
+    {
+        editor.SetTitle($"Query — {connectionName}");
+        return true;
+    }
+}
+```
+
 - **A window's allow-list** (`Commands`) limits the contracts it may call, whole (`Allow<IConnections>()`) or by command (`Allow<IConnections>("list", "test")`), checked against the app's contracts when it starts; any other call is `rejected` / `forbidden-command` before it runs (decision "Per-window command allow-lists"). Spar's own page commands stay allowed.
 - **Capture protection** (decided 2026-11-14): `ProtectFromCapture()` hides the settings window, which shows connection strings, from screenshots, recordings and screen sharing.
   - It needs Windows 10 2004 or later (`WDA_EXCLUDEFROMCAPTURE`).
-  - At run time it is `IWindows.SetCaptureProtection` in C# and `capture.protect(true)` on the page; both report whether it took effect.
+  - At run time it is `IAppWindow.SetCaptureProtection` in C# (a window from `IWindows`) and `capture.protect(true)` on the page; both report whether it took effect.
   - Linux allows no app to block capture, so there `isAvailable` is false.
   - It reduces casual leaks and is not a security boundary.
 
