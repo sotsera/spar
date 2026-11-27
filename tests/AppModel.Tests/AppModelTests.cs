@@ -15,7 +15,7 @@ public sealed partial class AppModelTests
     private static readonly string Check = FindCheck();
 
     [Theory]
-    [InlineData("verbatim", "41 blocks, 0 differ")]
+    [InlineData("verbatim", "42 blocks, 0 differ")]
     [InlineData("contracts", "no rule broken")]
     [InlineData("check:ts7", null)]
     [InlineData("check:ts6", null)]

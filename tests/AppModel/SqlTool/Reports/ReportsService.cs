@@ -9,7 +9,7 @@ public sealed record ChartKey(string Server, int Minutes);
 [SparContract]
 public sealed class ReportsService(ICopyHistory history, IActivityCharts charts, SparBlobs blobs)
 {
-    /// <summary>A finished copy's rows as CSV, for a download link: a handle the page releases when it is done.</summary>
+    /// <summary>A finished copy's rows as CSV, for the page to show or save: a handle it releases when it is done.</summary>
     [SparCommand]
     public async Task<SparBlob> ExportCopyAsync(string jobId, CancellationToken cancellationToken)
     {

@@ -1240,7 +1240,7 @@ A deployment on a Citrix server, where the executable runs from a share and each
 **Decided** (decision "M3b's decide-first questions", items 2 and 3; built in M3b). A `byte[]` crosses the bridge as base64, about 30 ms a megabyte; above about 64 KB the page reads binary data from the app's own origin instead, several times faster, and an `<img>` or a download link needs no widened policy.
 - **Handles** for data that exists once: a `SparBlob` in a result, or in a result's record, from `SparBlob.FromBytes`, `SparBlob.FromFile` or the `SparBlobs` service's `FromStreamAsync`, which copies the stream to a temporary file. The page gets `url`, `contentType`, `size`, `name`, `bytes()`, `blob()` and `release()`; the handle is valid until it is released or the page's document goes. A document holds at most 10,000 handles and 512 MB of `byte[]` handles (`spar.Bridge(b => b.MaxBlobs = …)`, `MaxBlobBytes`); a result that would pass a limit fails its own call with `response` / `too-large`, and nothing is released to make room. A blob is never in a request, a stream's items or a declared error (SPAR026).
 - **Resources** for data the backend can fetch again by a key: a `[SparResource]` command takes a scalar or a record of scalars and returns `SparBlob?`. The page does not call it; it puts its address, `reports.activityChart.url({ server, minutes })`, in an `<img>`, and each load runs the command in its own scope, so a page may show any number and the backend keeps nothing; a null result is a 404 (SPAR027 for any other shape).
-- Images, audio, video, plain text, CSV, JSON and PDF are served with their type; any other type, HTML and SVG included, as a download. On loopback (development and browser tests) every address carries the page's key.
+- Images, audio, video, plain text, CSV, JSON and PDF are served with their type; any other type, HTML and SVG included, as an attachment, which the page reads with `bytes()` and the browser never shows in place (downloads stay denied by the browser's defaults, 3.17; a file is saved through a dialog, M3c). On loopback (development and browser tests) every address carries the page's key.
 - **To the backend** binary data stays a `byte[]` request, within the bridge's 4 MiB message; a file the user picks arrives as a grant (M3c).
 
 File `SqlTool/Reports/ReportsService.cs`:
@@ -1257,7 +1257,7 @@ public sealed record ChartKey(string Server, int Minutes);
 [SparContract]
 public sealed class ReportsService(ICopyHistory history, IActivityCharts charts, SparBlobs blobs)
 {
-    /// <summary>A finished copy's rows as CSV, for a download link: a handle the page releases when it is done.</summary>
+    /// <summary>A finished copy's rows as CSV, for the page to show or save: a handle it releases when it is done.</summary>
     [SparCommand]
     public async Task<SparBlob> ExportCopyAsync(string jobId, CancellationToken cancellationToken)
     {
@@ -2152,6 +2152,38 @@ export function comparePlans(first: CopyRecipe, second: CopyRecipe) {
 - **No context across `await`:** the page has no context propagation (no `zone.js`), so a call started after `run`'s first `await` begins a trace of its own; start the calls first and await them together, as above.
 - **The span ends** when `run` returns, or when the promise it returns settles; a throw or a rejection marks it as an error.
 - **No click spans:** the page records no user interactions by itself; `traced` is how an interaction gets its name.
+
+### 6.17 Binary data in the page
+
+**Decided** (decision "M3b's decide-first questions", item 2; built in M3b). A `SparBlob` in a result arrives as an object whose `url` is its address on the app's origin; `bytes()` and `blob()` read it and reject when it was released or its document went; `release()` lets the backend drop it. A resource is an object with `url(request)` alone (3.21): its address goes in an `<img>`, and the browser loads it as often as it likes.
+
+File `frontend/src/reports.ts`:
+
+```ts
+import { reports } from "@spar/app/reports";
+
+/** The server's activity over the last hour, drawn by the backend at each load of the image. */
+export function activityChart(server: string): HTMLImageElement {
+  const image = new Image();
+  image.alt = `Activity of ${server} over the last hour`;
+  image.src = reports.activityChart.url({ server, minutes: 60 });
+  return image;
+}
+
+/** A finished copy's rows as text, for the preview pane; the handle goes as soon as they are read. */
+export async function copyRows(jobId: string): Promise<string> {
+  const file = (await reports.exportCopy(jobId)).unwrap();
+  try {
+    return await (await file.blob()).text();
+  } finally {
+    await file.release();
+  }
+}
+```
+
+- **Release what the page no longer shows:** a handle holds its data on the backend until then, or until the document goes; an image that renders again reads the same address.
+- **Below about 64 KB** a `byte[]` in the result is as fast and needs no release.
+- **Page tests** reply with `spar.blob(bytes, "text/csv", "rows.csv")`, whose bytes the fake keeps; a resource's address is built as on the host, and nothing serves it in a page test.
 
 ## 7. Still open in this model
 

@@ -31,7 +31,7 @@ public sealed class InstallationTests : IDisposable
         Assert.False(Directory.Exists(Path.Combine(app.AppFolder, "cache")), "the cache stayed");
         Assert.False(Directory.Exists(app.DataFolder), "the data folder stayed");
         var log = await File.ReadAllTextAsync(app.LogFile, Token);
-        Assert.Contains("sets folders.ephemeralBrowserData, folders.removeOnExit", log, StringComparison.Ordinal);
+        Assert.Contains("sets folders.ephemeralBrowserData = true; folders.removeOnExit = profile, cache, data.", log, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -115,6 +115,17 @@ export interface OpenFolderOptions extends CallOptions {
   readonly access?: "read" | "readWrite";
 }
 
+/** Binary data from the backend, read on the app's own origin (docs/app-model.md 3.21 and 6.17). */
+export interface SparBlob {
+  readonly url: string;
+  readonly contentType: string;
+  readonly size: number;
+  readonly name: string | null;
+  bytes(signal?: AbortSignal): Promise<Uint8Array>;
+  blob(signal?: AbortSignal): Promise<Blob>;
+  release(): Promise<void>;
+}
+
 /** A file the user picked: its name and a grant; never its path. */
 export interface PickedFile {
   readonly name: string;
