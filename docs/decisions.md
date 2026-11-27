@@ -5440,3 +5440,7 @@ The user accepted the seventeen choices of decision "M3a: streams and subscripti
 ## Stream budgets on the desktop bridges (implementation record; choices for review; 2026-11-27)
 
 Asked by the user with decision "M3a's choices accepted". WindowHost gains `host.rows` (a stream) and `host.burst` (a subscription of 32,768), and `Spar.WindowTests`' `BudgetTests` measures the two loopback measures in its window, Release, on both lanes (`docs/evidence/m3a-streams.md`, "The desktop bridges"): 100,000 rows in 66.80 / 64.70 ms on WebView2 (CoreCLR / NativeAOT) and 184.00 / 136.00 ms on WebKitGTK; 20,000 events a second all delivered on both. Proposed for the plan's table, not added without the user: "100,000 stream rows on the desktop bridge, Release, median, Windows / Linux: ≤ 200 ms / ≤ 400 ms" and "20,000 subscription events a second on the desktop bridge: all delivered", measured from M3a on with the other window budgets.
+
+## Desktop stream budgets added (user decision, 2026-11-27)
+
+The user added the two lines proposed by decision "Stream budgets on the desktop bridges" to the plan's table as proposed: 100,000 stream rows on the desktop bridge, Release, median, at most 200 ms on Windows and 400 ms on Linux; 20,000 subscription events a second on the desktop bridge, all delivered.
