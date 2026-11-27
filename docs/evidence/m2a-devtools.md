@@ -12,7 +12,7 @@ Recorded 2026-11-26. What it shows: plan M2a, build steps 1 to 5 (section 6, `do
 | Path | Contents |
 |---|---|
 | `src/Spar/Devtools/` | The switch (`SparDevtools`), the discovery file (`DevtoolsFile`), the socket (`DevtoolsListener`: a named pipe with a protected access list for the current user, or a 0600 Unix socket in `XDG_RUNTIME_DIR` with an `SO_PEERCRED` check), JSON-RPC framing (`JsonRpc`), the server (`DevtoolsServer`: `initialize` and its token first, duplicate ids, the `run` check), the tools (`DevtoolsTools`, `PageTools`), the call record (`CallRecorder`, 200 calls), the merged log (`DevtoolsLog`, a logger provider, 1,000 entries), the page interface (`IDevtoolsPage`) and the hosts' part (`DevtoolsHost`) |
-| `src/Spar/Hosting/OwnerOnlyFile.cs` | The owner-only file the loopback session's record used, now shared with the discovery file |
+| `src/Spar/Hosting/Folders/OwnerOnlyFile.cs` | The owner-only file the loopback session's record used, now shared with the discovery file |
 | `src/Spar/Contracts/ISparCall.cs`, `src/Spar/Runtime/SparDispatcher.cs` | `ISparCall.Caller` (`SparCaller.Page`, `Test`, `Devtools`); the dispatcher records each call when the devtools are in the build |
 | `src/Spar.Windows/Devtools/DevtoolsPage.cs`, `BrowserView.cs`, `AppWindow.cs`, `WindowsApp.cs` | The window tests' `TestPage` installed before the first navigation, CDP `Input.*` for clicks and `Input.insertText` for typing; dialogs left to the user |
 | `src/Spar.Linux/Devtools/DevtoolsPage.cs`, `BrowserView.cs`, `AppWindow.cs`, `LinuxApp.cs` | The same before the first load, with the engine's synthetic click and `insertText` |

@@ -13,7 +13,7 @@ Windows 11 Pro 10.0.26320 (system theme dark), SDK 11.0.100, WebView2 Runtime 15
 | Path | Contents |
 |---|---|
 | `src/Spar/Hosting/BrowserOptions.cs`, `SparApplication.cs` | `spar.Browser(b => …)` with its eight opt-ins, each documenting its risk, when it is reasonable and the safer alternative; `Active()` for the start-up log |
-| `src/Spar/Hosting/SparFolders.cs`, `BrowserProfile.cs`, `SparRunningApp.cs`, `src/Spar/Runtime/SparCatalog.cs` | Folders named from the app id per channel, `FolderOptions.Profile`, the profile checks, `SparFolders.Profile`; the profile folders no grant may reach (requested and in use); `SparCatalog.AppId` |
+| `src/Spar/Hosting/Folders/SparFolders.cs`, `BrowserProfile.cs`, `SparRunningApp.cs`, `src/Spar/Runtime/SparCatalog.cs` | Folders named from the app id per channel, `FolderOptions.Profile`, the profile checks, `SparFolders.Profile`; the profile folders no grant may reach (requested and in use); `SparCatalog.AppId` |
 | `src/Spar.Generator/SparGenerator.cs`, `Emit/CatalogEmitter.cs`, `src/Spar.Sdk/Sdk/Sdk.targets` | `SparAppId` read by the generator into the catalog; SPAR130 for a missing or invalid id |
 | `src/Spar.Windows/BrowserDefaults.cs`, `BrowserEnvironment.cs`, `PagePicker.cs`, `PageGuard.cs`, `BrowserView.cs`, `WindowsApp.cs`, `StartupFailure.cs` | The settings, downloads, context menu and keys; the variables removed and the environment options; the picker interception; history cancelled; the folder in use; the identity, the opt-ins logged, the profile refused with exit 70 |
 | `src/Spar.Windows/DevelopmentInput.cs` | `SPAR_DEV_INPUT`, trusted input through `Input.dispatchMouseEvent` and `Input.dispatchKeyEvent`, Development only |
