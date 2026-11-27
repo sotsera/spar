@@ -103,6 +103,9 @@ internal sealed partial class BrowserView
     /// </summary>
     public Func<Task>? DevtoolsInstall { get; set; }
 
+    /// <summary>Where the first navigation goes: the app's origin at the window's route (its kind's, or the root).</summary>
+    public string StartAddress { get; init; } = PageServer.StartUrl;
+
     /// <summary>Whether the controller shows the WebView: a hidden controller's page is not pinged (UI thread).</summary>
     public bool IsShown => _controller is { } controller && controller.GetIsVisible() != 0;
 
@@ -300,7 +303,7 @@ internal sealed partial class BrowserView
         }
 
         _log.Phase("page script added");
-        _webView.Navigate(PageServer.StartUrl);
+        _webView.Navigate(StartAddress);
         Phase("navigation started");
     }
 

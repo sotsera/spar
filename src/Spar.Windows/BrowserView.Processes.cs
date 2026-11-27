@@ -22,40 +22,20 @@ internal sealed partial class BrowserView
     }
 
     /// <summary>
-    /// Ends the environment's renderer processes, the only way a hung page recovers (pitfall "A hung page"). WebView2
-    /// has no API for it, so the process ids come from <c>GetProcessInfos</c>, which works only on the UI thread. The
-    /// environment is the app's alone (one data folder per app, single instance), so its renderers are this window's.
-    /// Returns how many were ended.
+    /// Ends this window's renderer, the only way a hung page recovers (pitfall "A hung page"): the renderer that holds
+    /// the view's main frame, from <c>GetProcessExtendedInfos</c>, never every renderer of the environment, since the
+    /// app's other windows, and a test process's other tests, share its browser (decision "The window design, from the
+    /// windows spike", item 1). Returns 0 when the view has no page yet; the renderers are ended asynchronously.
     /// </summary>
     public int TerminateRenderers()
     {
-        if (_environment is null)
+        if (_environment is null || _webView is null)
         {
             return 0;
         }
 
-        // A test process's environment serves other tests' windows too: only this view's renderers are ended.
-        if (SparTestSession.IsSupported && _source is { IsShared: true })
-        {
-            _ = TerminateOwnRenderersAsync();
-            return 1;
-        }
-
-        var ended = 0;
-        foreach (var process in RendererProcessIds(_environment))
-        {
-            if (ProcessControl.Terminate(process))
-            {
-                ended++;
-            }
-            else
-            {
-                _log.Warn($"Renderer process {process} could not be ended.");
-            }
-        }
-
-        _log.Step($"renderer processes ended: {ended}");
-        return ended;
+        _ = TerminateOwnRenderersAsync();
+        return 1;
     }
 
     /// <summary>
@@ -74,7 +54,7 @@ internal sealed partial class BrowserView
         environment.GetProcessExtendedInfos(completed);
         return completed.Task;
     }
-    /// <summary>Ends this view's renderers only: a test process's environment serves other tests' windows too.</summary>
+    /// <summary>Ends this view's renderers only; with none found, a user's "Reload page" reloads the page as it is.</summary>
     private async Task TerminateOwnRenderersAsync()
     {
         var ended = 0;
@@ -89,36 +69,5 @@ internal sealed partial class BrowserView
             _userReload = false;
             _webView?.Reload();
         }
-    }
-    /// <summary>The ids of the environment's renderer processes, from <c>GetProcessInfos</c> (UI thread only).</summary>
-    private static List<int> RendererProcessIds(ICoreWebView2Environment10 environment)
-    {
-        var ids = new List<int>();
-        var processes = Com.Take<ICoreWebView2ProcessInfoCollection>(environment.GetProcessInfos());
-        try
-        {
-            var count = processes.GetCount();
-            for (uint index = 0; index < count; index++)
-            {
-                var process = Com.Take<ICoreWebView2ProcessInfo>(processes.GetValueAtIndex(index));
-                try
-                {
-                    if (process.GetKind() == WebView2Values.RendererProcess)
-                    {
-                        ids.Add(process.GetProcessId());
-                    }
-                }
-                finally
-                {
-                    Com.Release(process);
-                }
-            }
-        }
-        finally
-        {
-            Com.Release(processes);
-        }
-
-        return ids;
     }
 }

@@ -172,6 +172,26 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     public SparPage Page => _page ?? throw new InvalidOperationException(
         "The app has no window: start it with o.Surface = SparTestSurface.Window to drive its page.");
 
+    /// <summary>
+    /// The windows the app's page has opened so far, of its kinds, open or closed, in the order they were made; empty
+    /// without the Window surface.
+    /// </summary>
+    public IReadOnlyList<SparAppWindow> Windows => Surface is WindowSurface window ? window.AppWindows : [];
+
+    /// <summary>
+    /// A window the app's page opened, of one of its kinds (<c>windows.open(kind, params)</c>), for the Window surface:
+    /// the <paramref name="index"/>th of <paramref name="kind"/> (0 for the first), once its first page has loaded. Waits
+    /// for the app to open it, up to 30 s.
+    /// </summary>
+    public Task<SparAppWindow> WindowAsync(string kind, int index = 0, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(kind);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        return Surface is WindowSurface window
+            ? window.AppWindowAsync(kind, index, cancellationToken)
+            : throw new InvalidOperationException("The app has no windows: start it with o.Surface = SparTestSurface.Window to reach the windows its page opens.");
+    }
+
     /// <summary>The surface in front of the backend, when it is not <see cref="SparTestSurface.None"/>.</summary>
     internal IAsyncDisposable? Surface { get; private set; }
 

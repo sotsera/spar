@@ -47,6 +47,13 @@ internal sealed class SparTestWindowRequest
     /// match on every machine), null the system's or the app's saved choice, as an app's window does.
     /// </summary>
     public bool? Dark { get; init; }
+
+    /// <summary>
+    /// For a window the app's page opens, of one of its kinds (kind, id): the new window's request, with a page driver of
+    /// its own, and what the test host does once the window exists (it attaches its page). Null where a test cannot reach
+    /// such windows: opening one then fails with <c>notOpened</c>.
+    /// </summary>
+    public Func<string, string, (SparTestWindowRequest Request, Action<ISparTestWindow> Opened)>? ForAppWindow { get; init; }
 }
 
 /// <summary>

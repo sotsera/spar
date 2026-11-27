@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spar.AppWindows;
 using Spar.Hosting;
 using Spar.HotReload;
 using Spar.Logging;
@@ -16,7 +17,7 @@ namespace Spar.Windows;
 /// (<see cref="AppWindow"/>) shows and starts its WebView on the UI thread. From the teardown on,
 /// <see cref="ShutdownWatch"/> watches for a shutdown that does not finish.
 /// </summary>
-internal sealed class WindowsApp : IAppWindowOwner
+internal sealed partial class WindowsApp : IAppWindowOwner, IAppWindowHost
 {
     /// <summary>The longest AppUserModelID Windows takes.</summary>
     private const int MaxAppUserModelId = 128;
@@ -41,6 +42,8 @@ internal sealed class WindowsApp : IAppWindowOwner
     private SparRunningApp? _running;
     private UiThread? _ui;
     private AppWindow? _window;
+    private AppWindowSet? _windowSet;
+    private Task<SparRunningApp>? _built;
     private ShutdownWatch? _shutdown;
     private DevServer.DevServerSession? _devServer;
     private Spar.Devtools.DevtoolsHost? _devtools;
@@ -173,9 +176,15 @@ internal sealed class WindowsApp : IAppWindowOwner
             request => WindowsPageHost.ShowShutdownPrompt(_title, _log, request),
             ProcessControl.ExitNow);
         _instance?.StopListening();
+        CloseSecondaries();
     }
 
-    void IAppWindowOwner.WindowDestroyed() => PInvoke.PostQuitMessage(0);
+    /// <summary>The main window is gone: the loop ends once the app's other windows are gone too.</summary>
+    void IAppWindowOwner.WindowDestroyed()
+    {
+        _mainDestroyed = true;
+        QuitWhenDone();
+    }
 
     /// <summary>At session end, the services are disposed while the window still holds <c>WM_ENDSESSION</c>.</summary>
     Task? IAppWindowOwner.SessionEnded() => Task.Run(Stop);
@@ -284,7 +293,9 @@ internal sealed class WindowsApp : IAppWindowOwner
         }
 
         var built = Task.Run(() => Build(_folders));
-        _window = new AppWindow(_app, _log, _automated, _title, _profile, _hangHook, this);
+        _built = built;
+        _windowSet = new AppWindowSet(builder, this);
+        _window = new AppWindow(_app, _log, _automated, _title, _profile, _hangHook, this, windows: _windowSet);
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools)
         {
             _window.UseDevtools(devtools);

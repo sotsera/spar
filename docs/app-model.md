@@ -1732,7 +1732,7 @@ export async function openExport(file: PickedFile, folder: PickedFolder): Promis
 
 ### 6.7 Secondary and modal windows
 
-**Decided** (2026-11-14). Window kinds are declared in `Program.cs` with a route of the same frontend. The generator turns their names into a TypeScript union, so a misspelled kind fails `tsc`.
+**Decided** (2026-11-14; decision "M3d's decide-first questions", item 3). Window kinds are declared in `Program.cs` with a route of the same frontend. The generator turns their names into a TypeScript union, so a misspelled kind fails `tsc`. Built in M3d: opening a window, its params, single instance and the allow-list; modals, placement and capture protection come with M3d's later steps.
 
 File `frontend/src/openWindows.ts`:
 
@@ -1753,15 +1753,23 @@ export function openQueryEditor(connectionId: string): void {
   void windows.open("queryEditor", { connectionId }).unwrap();
 }
 
+// Inside the query editor: the params its opener gave, null in a window opened without any.
+export async function editorConnection(): Promise<string | undefined> {
+  const params = await windows.params<{ readonly connectionId: string }>().unwrap();
+  return params?.connectionId;
+}
+
 // Inside the settings window, when the user saves:
 export const saveAndClose = (): void => windows.closeWith({ changed: true });
 ```
 
+- **Opening a window** answers once it is shown. A browser on loopback (development, browser tests) opens none of the app's windows: the call ends `notOpened`, with the reason, as it does while the app closes.
+- **Params** are JSON the host keeps for the window, at most 64 KB, never in its address: a reload keeps them, and `windows.params()` reads them. Keep larger data in the backend and pass its id.
 - **Modals** disable their owner while open and stay above it.
 - **Single-instance kinds** focus the open window instead of opening another.
 - **Sharing data:** windows share the backend, so they share data through services and subscriptions. A modal also returns its result to the opener.
 - **Closing the main window** closes its secondary windows first, through the two-stage close.
-- **A window's allow-list** (`Commands`) limits the contracts it may call (decision "Per-window command allow-lists").
+- **A window's allow-list** (`Commands`) limits the contracts it may call, whole (`Allow<IConnections>()`) or by command (`Allow<IConnections>("list", "test")`), checked against the app's contracts when it starts; any other call is `rejected` / `forbidden-command` before it runs (decision "Per-window command allow-lists"). Spar's own page commands stay allowed.
 - **Capture protection** (decided 2026-11-14): `ProtectFromCapture()` hides the settings window, which shows connection strings, from screenshots, recordings and screen sharing.
   - It needs Windows 10 2004 or later (`WDA_EXCLUDEFROMCAPTURE`).
   - At run time it is `IWindows.SetCaptureProtection` in C# and `capture.protect(true)` on the page; both report whether it took effect.

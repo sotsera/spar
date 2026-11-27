@@ -7,6 +7,8 @@ export type WindowKind = "settings" | "queryEditor";
 export declare const windows: {
   /** Opens a window of a kind; a single-instance kind focuses the open one. */
   open(kind: WindowKind, params?: Readonly<Record<string, unknown>>, options?: CallOptions): Call<void, { readonly notOpened: { readonly reason: string } }>;
+  /** The params this window's opener gave, typed by the page; null for the main window or a window opened without any. */
+  params<T extends Readonly<Record<string, unknown>> = Readonly<Record<string, unknown>>>(options?: CallOptions): Call<T | null>;
   /** Opens a modal window and waits until it closes. Its close button gives dismissed. */
   showModal<T = unknown>(kind: WindowKind, params?: Readonly<Record<string, unknown>>): Call<T, { readonly dismissed: undefined }>;
   /** Inside a modal: closes it and hands the value to the opener. */

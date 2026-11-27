@@ -336,3 +336,20 @@ on("open-file", () => void files.open({ title: "Open notes", filters: [{ name: "
     busy: () => { dropped.textContent = "Busy"; },
   },
 }));
+
+// Windows of the app's kinds (decision "M3d's decide-first questions", item 3): each window shows its route and the
+// params its opener gave; a note carries a number, so each one is told apart.
+const windowInfo = document.getElementById("window-info");
+const windowStatus = document.getElementById("window-status");
+let notes = 0;
+windows.params().match({
+  success: params => { windowInfo.textContent = `This window: ${location.pathname} ${JSON.stringify(params)}`; },
+  failure: error => { windowInfo.textContent = `This window: ${error.kind} ${error.code}`; },
+});
+const opened = (label, call) => call.match({
+  success: () => { windowStatus.textContent = `${label}: opened`; },
+  errors: { notOpened: error => { windowStatus.textContent = `${label}: not opened, ${error.reason}`; } },
+  failure: error => { windowStatus.textContent = `${label}: ${error.kind} ${error.code}`; },
+});
+on("open-note", () => { notes += 1; opened(`Note ${notes}`, windows.open("note", { text: "hello", n: notes })); });
+on("open-panel", () => opened("Panel", windows.open("panel")));

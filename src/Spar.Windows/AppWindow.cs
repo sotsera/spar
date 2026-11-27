@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Spar.AppWindows;
 using Spar.Bridge;
 using Spar.Files;
 using Spar.Hosting;
@@ -65,6 +66,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     private readonly IAppWindowOwner _owner;
     private readonly bool _offscreen;
     private readonly BrowserSource? _source;
+    private readonly OpenWindow? _opened;
+    private readonly AppWindowSet? _windows;
     private readonly CancellationTokenSource _stopping = new();
     private readonly TaskCompletionSource<WebViewBridge> _bridge = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private CspViolationLog? _violations;
@@ -93,6 +96,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     /// A window of a test process (plan section 5): shown offscreen, with no taskbar button, never activated.
     /// </param>
     /// <param name="source">Where the WebView's browser comes from: null for the app's own environment.</param>
+    /// <param name="opened">A window of one of the app's kinds (decision "Secondary and modal windows"); null for the main window.</param>
+    /// <param name="windows">The app's windows, which the page may open more of; null where it opens none.</param>
     public AppWindow(
         SparApp app,
         HostLog log,
@@ -102,7 +107,9 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         PageHangHook hangHook,
         IAppWindowOwner owner,
         bool offscreen = false,
-        BrowserSource? source = null)
+        BrowserSource? source = null,
+        OpenWindow? opened = null,
+        AppWindowSet? windows = null)
     {
         _app = app;
         _log = log;
@@ -113,7 +120,12 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         _owner = owner;
         _offscreen = offscreen;
         _source = source;
+        _opened = opened;
+        _windows = windows;
     }
+
+    /// <summary>The window's id in the app: <c>main</c>, or its kind's name with a number.</summary>
+    public string Id => _opened?.Id ?? WindowRoutes.Main;
 
     /// <summary>The window's handle, once <see cref="Start"/> created it.</summary>
     public HWND Handle => _window;
@@ -135,6 +147,15 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
 
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
+    /// <summary>The window's options: its kind's, or the main window's.</summary>
+    private WindowOptions Options => _opened?.Options ?? _app.Builder.MainWindow;
+
+    /// <summary>The window's name in hooks and logs: <c>main</c>, or its kind.</summary>
+    private string Name => _opened?.Kind ?? WindowRoutes.Main;
+
+    /// <summary>Where the window's page starts: the app's origin at the kind's route, or its root.</summary>
+    private string StartAddress => PageServer.Origin + Options.PageRoute;
+
     /// <summary>
     /// A Debug build's development server, which the page comes from (before <see cref="Start"/>). Called only behind
     /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
@@ -153,7 +174,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         _ui = ui;
         _theme = theme;
         _background = PInvoke.CreateSolidBrush(new COLORREF(theme.Background.ColorRef));
-        var bounds = WindowPlacement.Initial(_app.Builder.MainWindow.InitialSize);
+        var bounds = WindowPlacement.Initial(Options.InitialSize);
         if (SparTestSession.IsSupported && _offscreen)
         {
             // Offscreen and never activated: no taskbar button, no focus taken from the person at the desktop.
@@ -165,7 +186,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         else
         {
             var maximized = false;
-            if (SparDevelopment.IsSupported && WindowPlacement.Kept() is { } kept)
+            if (SparDevelopment.IsSupported && _opened is null && WindowPlacement.Kept() is { } kept)
             {
                 // spar dev's restart: the previous run's place and size; its start shows it without the focus.
                 bounds = kept.Bounds;
@@ -200,7 +221,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             _violations = new CspViolationLog(_log.Logger, TimeProvider.System, SparDevelopment.IsSupported ? CspAdvice.For : null);
         }
 
-        var pages = new PageServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
+        var routes = _app.Builder.WindowKinds.Values.Select(kind => kind.PageRoute).Distinct().ToList();
+        var pages = new PageServer(frontend, ui, _log, security, development, endpointReports ? _violations : null, routes);
         if (Spar.DevServer.DevServerSettings.IsSupported && _devServer is { } devServer)
         {
             // A development server that stops takes the page to the error page, which offers Retry.
@@ -209,7 +231,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             {
                 if (_state != State.Closing)
                 {
-                    _view?.WebView?.Navigate(PageServer.StartUrl);
+                    _view?.WebView?.Navigate(StartAddress);
                 }
             });
         }
@@ -229,7 +251,10 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             script += "\n" + settings;
         }
         _view = new BrowserView(
-            ui, _log, _window, _profile, defaults, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed, _source);
+            ui, _log, _window, _profile, defaults, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed, _source)
+        {
+            StartAddress = StartAddress,
+        };
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
             && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
         {
@@ -259,7 +284,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
                 _view?.WindowState.OnSetFocus();
                 return default(LRESULT);
             case PInvoke.WM_GETMINMAXINFO:
-                WindowPlacement.ApplyMinimum(window, _app.Builder.MainWindow.Minimum, lParam);
+                WindowPlacement.ApplyMinimum(window, Options.Minimum, lParam);
                 return default(LRESULT);
             case PInvoke.WM_DPICHANGED:
                 WindowPlacement.OnDpiChanged(window, lParam);
@@ -297,6 +322,19 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     /// <summary>Shows and restores the window and asks for the foreground, which the relaunching process allowed.</summary>
     public void BringForward(int arguments)
     {
+        var foreground = ShowInFront();
+        _log.Step($"relaunch with {arguments} arguments: window shown, foreground {(foreground ? "taken" : "refused")}");
+    }
+
+    /// <summary>A single-instance kind opened again: its window is restored and brought to the front (UI thread).</summary>
+    public void Focus()
+    {
+        var foreground = ShowInFront();
+        _log.Step($"window {Id} focused, foreground {(foreground ? "taken" : "refused")}");
+    }
+
+    private bool ShowInFront()
+    {
         if (PInvoke.IsIconic(_window))
         {
             PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_RESTORE);
@@ -306,8 +344,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOW);
         }
 
-        var foreground = PInvoke.SetForegroundWindow(_window);
-        _log.Step($"relaunch with {arguments} arguments: window shown, foreground {(foreground ? "taken" : "refused")}");
+        return PInvoke.SetForegroundWindow(_window);
     }
 
     /// <summary>
@@ -467,7 +504,14 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
 
         var profile = running.Services.GetService<BrowserProfile>();
-        _files = new HostWindow(running.Dispatcher.Time, fake ?? _dialogs, profile is null ? null : profile.Contains);
+        _files = new HostWindow(running.Dispatcher.Time, fake ?? _dialogs, profile is null ? null : profile.Contains)
+        {
+            Name = Name,
+            Id = Id,
+            Params = _opened?.Params ?? ReadOnlyMemory<byte>.Empty,
+            Access = Options.Access,
+            Windows = _windows,
+        };
         return _files;
     }
 

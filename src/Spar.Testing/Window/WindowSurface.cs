@@ -17,6 +17,9 @@ internal sealed class WindowSurface : IAsyncDisposable
     private readonly SparTestOptions _options;
     private readonly ProblemLog _problems = new();
     private readonly PageSession _session = new();
+    private readonly Lock _gate = new();
+    private readonly List<SparAppWindow> _appWindows = [];
+    private TaskCompletionSource _appWindowAdded = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     public WindowSurface(SparTestOptions options)
     {
@@ -37,6 +40,7 @@ internal sealed class WindowSurface : IAsyncDisposable
                 SparColorScheme.System => null,
                 _ => false,
             },
+            ForAppWindow = ForAppWindow,
         };
     }
 
@@ -60,5 +64,78 @@ internal sealed class WindowSurface : IAsyncDisposable
         return new SparPage(_session);
     }
 
+    /// <summary>The windows the app's page has opened so far, open or closed, in the order they were made.</summary>
+    public IReadOnlyList<SparAppWindow> AppWindows
+    {
+        get
+        {
+            lock (_gate)
+            {
+                return [.. _appWindows];
+            }
+        }
+    }
+
+    /// <summary>
+    /// The <paramref name="index"/>th window of <paramref name="kind"/> the app opened (0 for the first), once its first
+    /// page has loaded; waits for the app to open it.
+    /// </summary>
+    public async Task<SparAppWindow> AppWindowAsync(string kind, int index, CancellationToken cancellationToken)
+    {
+        using var limit = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        limit.CancelAfter(OpenLimit);
+        while (true)
+        {
+            Task added;
+            SparAppWindow? found;
+            lock (_gate)
+            {
+                found = _appWindows.Where(window => window.Kind == kind).ElementAtOrDefault(index);
+                added = _appWindowAdded.Task;
+            }
+
+            if (found is not null)
+            {
+                await found.Window.Opened.WaitAsync(OpenLimit, cancellationToken);
+                return found;
+            }
+
+            try
+            {
+                await added.WaitAsync(limit.Token);
+            }
+            catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+            {
+                throw new TimeoutException($"The app opened no window '{kind}' number {index + 1} within {OpenLimit.TotalSeconds:0} s: does its page call windows.open(\"{kind}\")?");
+            }
+        }
+    }
+
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+    /// <summary>A window the app's page opens: a page driver of its own, attached once the host made the window.</summary>
+    private (SparTestWindowRequest Request, Action<ISparTestWindow> Opened) ForAppWindow(string kind, string id)
+    {
+        var session = new PageSession();
+        var request = new SparTestWindowRequest
+        {
+            ProfilesFolder = Request.ProfilesFolder,
+            HomesFolder = Request.HomesFolder,
+            Automation = session.Automation,
+            Holder = Request.Holder,
+            Dark = Request.Dark,
+            ForAppWindow = ForAppWindow,
+        };
+        return (request, window =>
+        {
+            session.Attach(window);
+            lock (_gate)
+            {
+                _appWindows.Add(new SparAppWindow(kind, id, new SparPage(session), new SparWindow(window)));
+                var added = _appWindowAdded;
+                _appWindowAdded = new(TaskCreationOptions.RunContinuationsAsynchronously);
+                added.TrySetResult();
+            }
+        });
+    }
 }
