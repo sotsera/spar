@@ -63,7 +63,10 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         _runningApp = running;
         _kindWindow = opened;
         _main = main;
-        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this), message => _log.Warn(message));
+        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this), message => _log.Warn(message))
+        {
+            Placements = PlacementStore.Open(running.Folders.DataRoot, message => _log.Warn(message)),
+        };
         _family = main?._family ?? new WindowFamily<AppWindow>();
         _running = Task.FromResult(running);
 
@@ -96,6 +99,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     public Task Opened => _opened.Task;
 
     public Task<int> Closed => _closed.Task;
+
+    public bool IsClosing => _closed.Task.IsCompleted || _window.IsClosing;
 
     public Uri Origin { get; }
 
@@ -177,8 +182,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public Task<SparTestWindowState> NativeStateAsync() => OnUiAsync(() =>
     {
-        var (title, width, height, minimized, maximized) = _window.NativeState();
-        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized));
+        var (title, width, height, minimized, maximized, zoom) = _window.NativeState();
+        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized, zoom));
     });
 
     public unsafe Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => OnUiAsync(() =>

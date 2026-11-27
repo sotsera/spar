@@ -32,6 +32,10 @@ internal static class WindowCommands
     public const string Close = "closeWindow";
     public const string Params = "windowParams";
     public const string Action = "windowAction";
+    public const string SetZoom = "setZoom";
+
+    /// <summary>The host event a page hears its zoom from: <c>{"factor":…}</c>, at its start when it is not 1, and at each change.</summary>
+    public const string ZoomEvent = "zoom";
 
     /// <summary>The most JSON a window's params, or a modal's result, may be.</summary>
     public const int MaxParamsBytes = 64 * 1024;
@@ -40,7 +44,7 @@ internal static class WindowCommands
 
     private static readonly byte[] Null = "null"u8.ToArray();
 
-    public static bool Handles(string command) => command is Open or ShowModal or Close or Params or Action;
+    public static bool Handles(string command) => command is Open or ShowModal or Close or Params or Action or SetZoom;
 
     public static async ValueTask<SparOutcome> InvokeAsync(HostWindow? window, string command, ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
     {
@@ -48,6 +52,8 @@ internal static class WindowCommands
         {
             case Params:
                 return SparOutcome.FromValue(window is null || window.Params.IsEmpty ? Null : window.Params);
+            case SetZoom:
+                return Zoom(window, payload);
             case Action:
                 return WindowAction(window, payload);
             case Close:
@@ -145,6 +151,63 @@ internal static class WindowCommands
         }
 
         return SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty);
+    }
+
+    /// <summary><c>{"factor":…}</c>, as the page hears its zoom.</summary>
+    public static ReadOnlyMemory<byte> ZoomPayload(double factor)
+    {
+        var buffer = new System.Buffers.ArrayBufferWriter<byte>();
+        using (var writer = new Utf8JsonWriter(buffer))
+        {
+            writer.WriteStartObject();
+            writer.WriteNumber("factor"u8, Math.Round(factor, 4));
+            writer.WriteEndObject();
+        }
+
+        return buffer.WrittenMemory;
+    }
+
+    /// <summary>
+    /// <c>setZoom</c>, <c>{"factor":…}</c>: the page's own zoom, a finite factor the host keeps within the window's
+    /// limits; refused where the window does not zoom.
+    /// </summary>
+    private static SparOutcome Zoom(HostWindow? window, ReadOnlyMemory<byte> payload)
+    {
+        if (!TryReadFactor(payload, out var factor))
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(SetZoom + " takes {\"factor\":…}, a number such as 1.25."));
+        }
+
+        if (window?.Handle is not AppWindowHandle handle)
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(NoWindows));
+        }
+
+        if (!window.ZoomEnabled)
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest("This window does not zoom: Program.cs turns its zoom off with Zoom(false)."));
+        }
+
+        handle.SetZoom(factor);
+        return SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty);
+    }
+
+    internal static bool TryReadFactor(ReadOnlyMemory<byte> payload, out double factor)
+    {
+        factor = 0;
+        try
+        {
+            using var document = JsonDocument.Parse(payload, new JsonDocumentOptions { MaxDepth = 4 });
+            return document.RootElement.ValueKind == JsonValueKind.Object
+                && document.RootElement.TryGetProperty("factor"u8, out var value)
+                && value.TryGetDouble(out factor)
+                && double.IsFinite(factor)
+                && factor > 0;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
     }
 
     internal readonly record struct WindowActionRequest(string Name, int Width, int Height, string? Title);

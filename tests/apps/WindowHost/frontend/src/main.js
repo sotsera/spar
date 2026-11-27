@@ -2,7 +2,7 @@
 // fields of every kind, an element that loads late, a dialog that animates in, a button covered for a moment, one far
 // down a scroll container) and the calls of the required host tests.
 import "./styles.css";
-import { connectSpar, files, hostChannel } from "@spar/app/sdk";
+import { connectSpar, files, hostChannel, zoom } from "@spar/app/sdk";
 import { fingerprint } from "@spar/app/spar";
 import { host } from "@spar/app/host";
 import { windows } from "@spar/app/windows";
@@ -376,3 +376,11 @@ on("retitle", () => windows.setTitle("Retitled").unwrap());
 on("resize", () => windows.setSize(640, 480).unwrap());
 on("minimize", () => windows.minimize().unwrap());
 on("close-window", () => windows.close());
+
+// The page's zoom (docs/app-model.md 6.8): its factor as the host reports it, and two to set.
+const zoomLevel = document.getElementById("zoom-level");
+const showZoom = factor => { zoomLevel.textContent = `Zoom: ${Math.round(factor * 100)} %`; };
+showZoom(zoom.get());
+zoom.onChange(showZoom);
+on("zoom-150", () => zoom.set(1.5).unwrap());
+on("zoom-400", () => zoom.set(4).unwrap());

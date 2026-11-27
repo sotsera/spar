@@ -20,6 +20,9 @@ internal interface IWindowControl
 
     void SetTitle(string title);
 
+    /// <summary>The page's zoom, kept within the window's limits; nothing while its zoom is off.</summary>
+    void SetZoom(double factor);
+
     /// <summary>The window's own close request with <see cref="CloseReason.App"/>; true once it closed.</summary>
     Task<bool> CloseAsync();
 }
@@ -65,6 +68,9 @@ internal sealed class AppWindowHandle(string id, string kind) : IAppWindow
     }
 
     public Task<bool> CloseAsync() => Live()?.CloseAsync() ?? Task.FromResult(true);
+
+    /// <summary>The page's zoom, for its own <c>zoom.set</c> (<see cref="WindowCommands"/>).</summary>
+    internal void SetZoom(double factor) => Live()?.SetZoom(factor);
 
     public override string ToString() => Id;
 

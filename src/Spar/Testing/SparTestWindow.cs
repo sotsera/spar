@@ -114,7 +114,7 @@ internal sealed record SparTestClose(CloseReason Reason, bool Automated, bool? C
 internal sealed record SparTestCloseReport(bool Closed, string? Question, bool Unanswered);
 
 /// <summary>A window as the OS has it (<see cref="ISparTestWindow.NativeStateAsync"/>).</summary>
-internal sealed record SparTestWindowState(string Title, int Width, int Height, bool Minimized, bool Maximized);
+internal sealed record SparTestWindowState(string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom);
 
 /// <summary>One trusted key event: the key's DOM name and code, its Windows virtual key, the modifiers held, and its text.</summary>
 /// <param name="Down">A press; false for the release.</param>
@@ -152,6 +152,9 @@ internal interface ISparTestWindow
 
     /// <summary>Completes with the window's exit code once its teardown has finished and the window is gone.</summary>
     Task<int> Closed { get; }
+
+    /// <summary>Whether the window's teardown has started: its page can no longer be driven.</summary>
+    bool IsClosing { get; }
 
     /// <summary>The page's origin: <c>https://app.localhost</c> on Windows, <c>spar://app</c> on Linux.</summary>
     Uri Origin { get; }
@@ -231,7 +234,7 @@ internal interface ISparTestWindow
     /// </summary>
     Task<bool> TakesInputAsync();
 
-    /// <summary>The window as the OS has it: its title, its page's size in CSS pixels, minimized, maximized.</summary>
+    /// <summary>The window as the OS has it: its title, its page's size in CSS pixels, minimized, maximized, and its page's zoom.</summary>
     Task<SparTestWindowState> NativeStateAsync();
 }
 

@@ -58,6 +58,8 @@ internal sealed partial class AppWindow : IWindowControl
 
     void IWindowControl.SetTitle(string title) => OnUi("set title", () => PInvoke.SetWindowText(_window, title));
 
+    void IWindowControl.SetZoom(double factor) => OnUi("set zoom", () => _view?.SetZoom(factor));
+
     Task<bool> IWindowControl.CloseAsync()
     {
         var closed = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -86,11 +88,11 @@ internal sealed partial class AppWindow : IWindowControl
     }
 
     /// <summary>The window's title and the size of its page in CSS pixels, and whether it is minimized or maximized (UI thread).</summary>
-    public (string Title, int Width, int Height, bool Minimized, bool Maximized) NativeState()
+    public (string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom) NativeState()
     {
         var title = WindowPlacement.Title(_window);
         var (width, height) = WindowPlacement.ClientSize(_window);
-        return (title, width, height, PInvoke.IsIconic(_window), PInvoke.IsZoomed(_window));
+        return (title, width, height, PInvoke.IsIconic(_window), PInvoke.IsZoomed(_window), CurrentZoom());
     }
 
     private void OnUi(string what, Action work) => _ui?.Post(

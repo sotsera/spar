@@ -363,7 +363,17 @@ public sealed class SparLocator
 
             var value = answer.Value;
             await Page.Mouse.ClickAsync((float)PageJson.Double(value, "x"), (float)PageJson.Double(value, "y"), clickCount);
-            var landed = await Session.EngineAsync("landed", _ => { }, left);
+            JsonElement? landed;
+            try
+            {
+                landed = await Session.EngineAsync("landed", _ => { }, left);
+            }
+            catch (InvalidOperationException) when (Session.Window.IsClosing)
+            {
+                // The click closed its own window (a modal's closeWith, a close button): it reached the page.
+                return Attempt<bool>.Success(true);
+            }
+
             if (landed is { } result && PageJson.Bool(result, "seen") && !PageJson.Bool(result, "onTarget"))
             {
                 // The page put something over the element between the check and the press; the press was stopped.

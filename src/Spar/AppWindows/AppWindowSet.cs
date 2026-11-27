@@ -97,6 +97,9 @@ internal sealed class AppWindowSet(SparBuilder builder, IAppWindowHost host, Act
     private readonly Dictionary<string, int> _counts = new(StringComparer.Ordinal);
     private bool _closing;
 
+    /// <summary>The windows' remembered places (<c>windows.json</c>); null where nothing is remembered.</summary>
+    public PlacementStore? Placements { get; init; }
+
     /// <summary>The main window as the app's C# code sees it, once the host gave it its control; null before.</summary>
     public AppWindowHandle? Main { get; private set; }
 

@@ -30,8 +30,8 @@ internal partial interface ICoreWebView2Settings8
     void PutAreDefaultContextMenusEnabled(int value);
     int GetAreHostObjectsAllowed();
     void PutAreHostObjectsAllowed(int value);
-    [PreserveSig] int Slot017_GetIsZoomControlEnabled();
-    [PreserveSig] int Slot018_PutIsZoomControlEnabled();
+    int GetIsZoomControlEnabled();
+    void PutIsZoomControlEnabled(int value);
     [PreserveSig] int Slot019_GetIsBuiltInErrorPageEnabled();
     [PreserveSig] int Slot020_PutIsBuiltInErrorPageEnabled();
     // ICoreWebView2Settings2

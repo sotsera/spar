@@ -9,7 +9,7 @@ var app = SparApplication.Create(args, spar =>
 
     // Window kinds the page opens (decision "M3d's decide-first questions", item 3): notes, any number; one panel, which
     // may call only host.echo of the app's commands; a confirm modal, whose page answers with closeWith.
-    spar.Window("note", w => w.Route("/note").Size(600, 400));
+    spar.Window("note", w => w.Route("/note").Size(600, 400).Zoom(min: 0.5, max: 2));
     spar.Window("panel", w => w.Route("/panel").Size(500, 360).SingleInstance().Commands(c => c.Allow<HostService>("echo")));
     spar.Window("confirm", w => w.Route("/confirm").Size(420, 320).Modal());
 

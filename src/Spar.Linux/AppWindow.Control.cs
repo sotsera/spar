@@ -50,6 +50,8 @@ internal sealed partial class AppWindow : IWindowControl
 
     void IWindowControl.SetTitle(string title) => OnLoop("set title", () => Gtk.gtk_window_set_title(_window, title));
 
+    void IWindowControl.SetZoom(double factor) => OnLoop("set zoom", () => _view?.SetZoom(factor));
+
     Task<bool> IWindowControl.CloseAsync()
     {
         var closed = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -64,17 +66,17 @@ internal sealed partial class AppWindow : IWindowControl
     }
 
     /// <summary>The window's title and its page's size in CSS pixels, and whether it is minimized or maximized (loop thread).</summary>
-    public (string Title, int Width, int Height, bool Minimized, bool Maximized) NativeState()
+    public (string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom) NativeState()
     {
         if (_window == 0)
         {
-            return ("", 0, 0, false, false);
+            return ("", 0, 0, false, false, 1);
         }
 
         var title = Marshal.PtrToStringUTF8(Gtk.gtk_window_get_title(_window)) ?? "";
         var view = ViewHandle;
         var (width, height) = view == 0 ? (0, 0) : (Gtk.gtk_widget_get_width(view), Gtk.gtk_widget_get_height(view));
-        return (title, width, height, Minimized, Gtk.gtk_window_is_maximized(_window) != 0);
+        return (title, width, height, Minimized, Gtk.gtk_window_is_maximized(_window) != 0, _view?.ZoomFactor ?? 1);
     }
 
     /// <summary>Whether the window's surface is minimized, as the window manager reported it (loop thread).</summary>

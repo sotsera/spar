@@ -106,6 +106,13 @@ internal partial interface ICoreWebView2MoveFocusRequestedEventHandler
 }
 
 [GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
+[Guid("b52d71d6-c4df-4543-a90c-64a3e60f38cb")]
+internal partial interface ICoreWebView2ZoomFactorChangedEventHandler
+{
+    void Invoke(nint sender, nint args);
+}
+
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16)]
 [Guid("e2fda4be-5456-406c-a261-3d452138362c")]
 internal partial interface ICoreWebView2DevToolsProtocolEventReceivedEventHandler
 {
@@ -171,7 +178,8 @@ internal sealed partial class WebView2EventHandler(Action<nint> handle, Action<E
     ICoreWebView2DownloadStartingEventHandler,
     ICoreWebView2ContextMenuRequestedEventHandler,
     ICoreWebView2AcceleratorKeyPressedEventHandler,
-    ICoreWebView2MoveFocusRequestedEventHandler
+    ICoreWebView2MoveFocusRequestedEventHandler,
+    ICoreWebView2ZoomFactorChangedEventHandler
 {
     public void Invoke(nint sender, nint args)
     {

@@ -110,6 +110,15 @@ internal sealed class WebViewBridge
     /// <summary>The WebView whose messages this bridge carries; replaced when the browser is recreated.</summary>
     public void Attach(ICoreWebView2_22 webView) => _webView = webView;
 
+    /// <summary>The page's zoom changed: the current document hears it (UI thread); one between documents gets it as it opens.</summary>
+    public void SendZoom(double factor)
+    {
+        if (_current is { IsClosed: false } document)
+        {
+            document.Session.SendEvent(AppWindows.WindowCommands.ZoomEvent, AppWindows.WindowCommands.ZoomPayload(factor));
+        }
+    }
+
     /// <summary>The WebView is going away (recovery or shutdown): its document ends with it.</summary>
     public void Detach(string why)
     {

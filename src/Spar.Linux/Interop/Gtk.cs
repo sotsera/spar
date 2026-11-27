@@ -100,6 +100,10 @@ internal static unsafe partial class Gtk
     [LibraryImport(Library)]
     public static partial void gtk_window_set_default_size(nint window, int width, int height);
 
+    /// <summary>The size the window has, or will have when shown: GTK 4 keeps it as the user resizes, for saving the window's state.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_get_default_size(nint window, out int width, out int height);
+
     /// <summary>Sinks the child's floating reference: the window owns it from now on.</summary>
     [LibraryImport(Library)]
     public static partial void gtk_window_set_child(nint window, nint child);
@@ -233,6 +237,21 @@ internal static unsafe partial class Gtk
     /// <summary><c>GTK_PHASE_CAPTURE</c> (1): the controller sees the event on its way down, before the widget's own.</summary>
     [LibraryImport(Library)]
     public static partial void gtk_event_controller_set_propagation_phase(nint controller, int phase);
+
+    /// <summary>
+    /// A controller for scrolling (<c>scroll</c>: the controller, dx, dy, the user data; TRUE stops it), with
+    /// <c>GtkEventControllerScrollFlags</c> (1 vertical, 4 discrete); owned until <see cref="gtk_widget_add_controller"/>.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_event_controller_scroll_new(int flags);
+
+    /// <summary>The <c>GdkModifierType</c> of the event the controller is handling (4: Control).</summary>
+    [LibraryImport(Library)]
+    public static partial uint gtk_event_controller_get_current_event_state(nint controller);
+
+    /// <summary>The timestamp of the event the controller is handling: the same for an event WebKit hands back to GTK.</summary>
+    [LibraryImport(Library)]
+    public static partial uint gtk_event_controller_get_current_event_time(nint controller);
 
     /// <summary>The widget takes the controller (transfer full) and keeps it while it lives.</summary>
     [LibraryImport(Library)]

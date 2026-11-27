@@ -80,7 +80,10 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         _request = request;
         _kindWindow = opened;
         _main = main;
-        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this), message => _log.Warn(message));
+        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this), message => _log.Warn(message))
+        {
+            Placements = PlacementStore.Open(running.Folders.DataRoot, message => _log.Warn(message)),
+        };
         _family = main?._family ?? new WindowFamily<AppWindow>();
         _log.UseAppLogging(running.Services);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
@@ -96,6 +99,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     public Task Opened => _opened.Task;
 
     public Task<int> Closed => _closed.Task;
+
+    public bool IsClosing => _closed.Task.IsCompleted || _window?.IsClosing == true;
 
     public Uri Origin { get; } = new(SchemeServer.Origin);
 
@@ -271,8 +276,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public Task<SparTestWindowState> NativeStateAsync() => OnLoopAsync(() =>
     {
-        var (title, width, height, minimized, maximized) = _window?.NativeState() ?? ("", 0, 0, false, false);
-        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized));
+        var (title, width, height, minimized, maximized, zoom) = _window?.NativeState() ?? ("", 0, 0, false, false, 1d);
+        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized, zoom));
     });
 
     public Task<int> CloseAsync()

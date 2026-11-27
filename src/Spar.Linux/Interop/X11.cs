@@ -46,4 +46,18 @@ internal static unsafe partial class X11
     /// <summary><c>XWindowAttributes</c>, 136 bytes on LP64: <c>depth</c> is the int at offset 20.</summary>
     [LibraryImport(Xlib)]
     public static partial int XGetWindowAttributes(nint display, nuint window, byte* attributes);
+
+    /// <summary>Moves the window's top-left corner to (<paramref name="x"/>, <paramref name="y"/>) of its parent (the root, for a toplevel).</summary>
+    [LibraryImport(Xlib)]
+    public static partial int XMoveWindow(nint display, nuint window, int x, int y);
+
+    /// <summary>Where (<paramref name="x"/>, <paramref name="y"/>) of <paramref name="source"/> is in <paramref name="destination"/>; 0 when they are on different screens.</summary>
+    [LibraryImport(Xlib)]
+    public static partial int XTranslateCoordinates(nint display, nuint source, nuint destination, int x, int y, out int destinationX, out int destinationY, out nuint child);
+
+    [LibraryImport(Xlib)]
+    public static partial nuint XDefaultRootWindow(nint display);
+
+    [LibraryImport(Xlib)]
+    public static partial int XFlush(nint display);
 }

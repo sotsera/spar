@@ -75,10 +75,10 @@ internal partial interface ICoreWebView2Controller
     void PutIsVisible(int isVisible);
     [PreserveSig] int Slot005_GetBounds();
     void PutBounds(Rect bounds);
-    [PreserveSig] int Slot007_GetZoomFactor();
-    [PreserveSig] int Slot008_PutZoomFactor();
-    [PreserveSig] int Slot009_AddZoomFactorChanged();
-    [PreserveSig] int Slot010_RemoveZoomFactorChanged();
+    double GetZoomFactor();
+    void PutZoomFactor(double zoomFactor);
+    EventRegistrationToken AddZoomFactorChanged(ICoreWebView2ZoomFactorChangedEventHandler eventHandler);
+    void RemoveZoomFactorChanged(EventRegistrationToken token);
     [PreserveSig] int Slot011_SetBoundsAndZoomFactor();
     void MoveFocus(int reason);
     EventRegistrationToken AddMoveFocusRequested(ICoreWebView2MoveFocusRequestedEventHandler eventHandler);

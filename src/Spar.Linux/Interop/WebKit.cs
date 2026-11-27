@@ -191,6 +191,13 @@ internal static unsafe partial class WebKit
     [LibraryImport(Library)]
     public static partial void webkit_web_view_terminate_web_process(nint view);
 
+    /// <summary>The page's zoom: its content scaled, text and images (<c>zoom-text-only</c> is off by default); notifies <c>zoom-level</c>.</summary>
+    [LibraryImport(Library)]
+    public static partial void webkit_web_view_set_zoom_level(nint view, double level);
+
+    [LibraryImport(Library)]
+    public static partial double webkit_web_view_get_zoom_level(nint view);
+
     /// <summary>
     /// Whether WebKit thinks the view's web process answers (a <c>gboolean</c>); its change is the
     /// <c>notify::is-web-process-responsive</c> signal.

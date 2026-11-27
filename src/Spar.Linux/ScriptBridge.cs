@@ -369,6 +369,9 @@ internal sealed class ScriptBridge
         _log.Info($"Hot Reload applied revision {update.Revision} ({update.TypeList}); {sent}.");
     }
 
+    /// <summary>The page's zoom changed: the current document hears it (loop thread); one not connected yet gets it as it opens.</summary>
+    public void SendZoom(double factor) => SessionOfCurrent()?.SendEvent(AppWindows.WindowCommands.ZoomEvent, AppWindows.WindowCommands.ZoomPayload(factor));
+
     /// <summary>The current document's session, if it has connected (loop thread).</summary>
     private BridgeSession? SessionOfCurrent()
     {

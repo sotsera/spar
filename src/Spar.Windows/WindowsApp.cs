@@ -294,7 +294,10 @@ internal sealed partial class WindowsApp : IAppWindowOwner, IAppWindowHost
 
         var built = Task.Run(() => Build(_folders));
         _built = built;
-        _windowSet = new AppWindowSet(builder, this, message => _log.Warn(message));
+        _windowSet = new AppWindowSet(builder, this, message => _log.Warn(message))
+        {
+            Placements = PlacementStore.Open(_folders.DataRoot, message => _log.Warn(message)),
+        };
         _window = new AppWindow(_app, _log, _automated, _title, _profile, _hangHook, this, windows: _windowSet) { Family = _family };
         _family.Add(_window);
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools)

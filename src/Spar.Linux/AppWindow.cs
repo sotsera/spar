@@ -175,7 +175,7 @@ internal sealed partial class AppWindow
         theme.Apply(_window);
         _log.Info($"Theme {(theme.IsDark ? "dark" : "light")}, {theme.Background}, from {theme.Source}.");
         Gtk.gtk_window_set_title(_window, _title);
-        Gtk.gtk_window_set_default_size(_window, options.InitialSize.Width, options.InitialSize.Height);
+        var saved = ApplySavedSize();
         if (options.Minimum is { Width: > 0 } or { Height: > 0 })
         {
             Gtk.gtk_widget_set_size_request(_window, options.Minimum.Width, options.Minimum.Height);
@@ -222,6 +222,8 @@ internal sealed partial class AppWindow
         {
             StartAddress = StartAddress,
             SharedSession = _sharedSession,
+            Zoom = (Options.ZoomLimits.Enabled, Options.ZoomLimits.Min, Options.ZoomLimits.Max, Placements?.Get(Options)?.Zoom ?? 1),
+            ZoomChanged = OnZoomChanged,
         };
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
             && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
@@ -247,6 +249,7 @@ internal sealed partial class AppWindow
         Gtk.gtk_window_set_child(_window, _view.Handle);
         _view.Load();
         theme.Realize();
+        PlaceOnScreen(modalOwner, saved);
         if (SparTestSession.IsSupported && _source?.Realized is { } realized)
         {
             realized(_window);
@@ -254,6 +257,7 @@ internal sealed partial class AppWindow
 
         Gtk.gtk_window_present(_window);
         _log.Phase(modalOwner is null ? "window shown" : $"window shown, modal to {modalOwner.Id}");
+        FollowPlacement();
         theme.Follow(() =>
         {
             _view?.SetBackground(theme.Background);
@@ -300,6 +304,9 @@ internal sealed partial class AppWindow
     /// </summary>
     public async Task StopAsync()
     {
+        // Off the main loop: the windows' places still pending go to windows.json now.
+        Placements?.Flush();
+
         if (_bridge is { } bridge)
         {
             await bridge.StopAsync();
@@ -388,6 +395,8 @@ internal sealed partial class AppWindow
             Access = Options.Access,
             Windows = _windows,
             Handle = (IAppWindow?)_opened?.Handle ?? _windows?.Main,
+            ZoomEnabled = Options.ZoomLimits.Enabled,
+            Zoom = ZoomNow,
         };
     }
 

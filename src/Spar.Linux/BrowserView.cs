@@ -171,6 +171,7 @@ internal sealed partial class BrowserView
         }
 
         _view = test ? TestViews.NewView(_session, _content, _context) : NewView(_session, _content, _context);
+        StartZoom(self);
         var context = WebKit.webkit_web_view_get_context(_view);
         _pages.Register(context);
         SetBackground(background);

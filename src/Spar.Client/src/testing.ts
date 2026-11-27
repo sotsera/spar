@@ -11,6 +11,7 @@ import type { FileAccess, PickedFile } from "./files.js";
 import { contentsOf, dropOn, fakeFile, fileCommands, fileStore } from "./testingFiles.js";
 import { connectSpar } from "./sdk.js";
 import { windows, type CloseRequest, type GuardsOutcome } from "./windows.js";
+import { zoom } from "./zoom.js";
 
 /** @internal One command as the generated testing module describes it: its names and its wire functions. */
 export interface CommandCodec {
@@ -146,6 +147,11 @@ export interface FakeSpar {
    */
   backendUpdate(update?: FakeBackendUpdate): void;
   /**
+   * The window's zoom changes to `factor`, as Ctrl+wheel would: `zoom.get()` and the `zoom.onChange` handlers see it
+   * once delivered (await a microtask). `zoom.set(factor)` succeeds and does the same, until a test scripts it.
+   */
+  zoom(factor: number): void;
+  /**
    * A blob for a scripted reply, such as `spar.on(reports.export).succeed(spar.blob(bytes, "text/csv", "report.csv"))`:
    * the page reads its bytes from the fake, and its `url` is the address a real handle would have, which nothing serves
    * in a page test.
@@ -214,6 +220,7 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
   commands.set(windows.showModal, showModalCodec);
   commands.set(windows.closeWith, closeWindowCodec);
   commands.set(windows.params, windowParamsCodec);
+  commands.set(zoom.set, setZoomCodec);
   for (const action of [windows.focus, windows.minimize, windows.maximize, windows.restore, windows.setSize, windows.setTitle]) {
     commands.set(action, windowActionCodec);
   }
@@ -225,6 +232,10 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
   host.script(closeWindowCodec, () => ({ kind: "value", value: undefined }));
   host.script(windowParamsCodec, () => ({ kind: "value", value: null }));
   host.script(windowActionCodec, () => ({ kind: "value", value: undefined }));
+  host.script(setZoomCodec, request => {
+    host.zoomTo(Math.min(5, Math.max(0.25, (request as { readonly factor: number }).factor)));
+    return { kind: "value", value: undefined };
+  });
   for (const [codec, answer] of fileCodecs) {
     host.script(codec, request => answer(request) as Answer);
   }
@@ -237,6 +248,7 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
     requestClose: request => host.requestClose(request ?? {}),
     closedWith: () => host.calls(closeWindowCodec).map(request => (request as { readonly value: unknown }).value),
     backendUpdate: update => host.backendUpdate(update ?? {}),
+    zoom: factor => host.zoomTo(factor),
     blob: (bytes, contentType, name) => fakeBlob(bytes, contentType, name ?? null),
     file: (name, contents, access) => fakeFile(store, name, contents ?? "", access ?? "read"),
     contents: file => contentsOf(store, file),
@@ -283,6 +295,13 @@ const closeWindowCodec: CommandCodec = {
  * of the window's operations, lists every one the page asked for, in order, such as `{ action: "setSize", width, height }`;
  * `windows.close()` among them.
  */
+/** The host's own `spar.setZoom`, `{ factor }`, no value: it succeeds and reports the factor, kept within 0.25 to 5. */
+const setZoomCodec: CommandCodec = {
+  contract: "spar",
+  command: "setZoom",
+  request: json => JSON.parse(json) as unknown,
+};
+
 const windowActionCodec: CommandCodec = {
   contract: "spar",
   command: "windowAction",
@@ -591,6 +610,11 @@ class FakeHost implements BridgeChannel {
     this.#revision++;
     const payload = JSON.stringify({ revision: this.#revision, time: new Date().toISOString(), types: [...(update.types ?? [])] });
     this.#deliver({ type: "event", name: "backend-updated", payload });
+  }
+
+  /** The window's zoom changed, as the host reports it. */
+  zoomTo(factor: number): void {
+    this.#deliver({ type: "event", name: "zoom", payload: JSON.stringify({ factor }) });
   }
 
   #deliver(message: BridgeMessage): void {

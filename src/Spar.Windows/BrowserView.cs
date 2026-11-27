@@ -245,6 +245,7 @@ internal sealed partial class BrowserView
         Phase("controller");
         WindowState.Attach(controller);
         _defaults.Apply(_webView);
+        StartZoom(generation, controller, _webView);
         var picker = _defaults.BlocksPagePicker ? PagePicker.Block(_webView, _log) : Task.CompletedTask;
         SetPageScheme(_theme.PageScheme);
         Resize();
@@ -716,7 +717,6 @@ internal sealed partial class BrowserView
                 handle(args);
             }
         }, Report);
-
 
     private void Subscribe(object handler, EventRegistrationToken token, Action<EventRegistrationToken> remove) =>
         _subscriptions.Add(new Subscription(handler, token, remove));

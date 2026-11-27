@@ -37,6 +37,12 @@ public sealed class WindowOptions
     /// <summary>Whether the kind is a modal, which the page shows with <c>windows.showModal</c> and ends with <c>closeWith</c>.</summary>
     internal bool IsModal { get; private set; }
 
+    /// <summary>Whether the window's placement and zoom are kept in <c>windows.json</c> between runs.</summary>
+    internal bool RemembersPlacement { get; private set; } = true;
+
+    /// <summary>Whether the page zooms, and between which factors.</summary>
+    internal (bool Enabled, double Min, double Max) ZoomLimits { get; private set; } = (true, 0.25, 5);
+
     /// <summary>The contracts and commands the window may call; null when it may call every one.</summary>
     internal CommandAllowList? AllowList { get; private set; }
 
@@ -134,6 +140,37 @@ public sealed class WindowOptions
         }
 
         IsModal = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Whether the window's placement is remembered between runs, in <c>windows.json</c> in the app's data folder (on by
+    /// default; decision "M3d's decide-first questions", item 5). The main window and a single-instance kind keep their
+    /// size, position, maximized state and zoom; a kind with several windows its last size and zoom, each new window
+    /// opening offset from the last; a modal its size and zoom, always centred on its opener. A place on no visible
+    /// screen opens centred instead. On Wayland only the size and maximized state are kept.
+    /// </summary>
+    public WindowOptions RememberPlacement(bool remember = true)
+    {
+        RemembersPlacement = remember;
+        return this;
+    }
+
+    /// <summary>
+    /// The page's zoom (<c>docs/app-model.md</c> 6.8): on by default, with Ctrl+wheel and Ctrl+plus, minus and 0, because
+    /// people with low vision rely on them, between <paramref name="min"/> and <paramref name="max"/> (0.25 to 5, with 1
+    /// between them); <c>Zoom(false)</c> turns it off. The factor is remembered with the window's placement, and the page
+    /// reads and sets it with <c>zoom</c> from <c>@spar/app/sdk</c>.
+    /// </summary>
+    public WindowOptions Zoom(bool enabled = true, double min = 0.25, double max = 5)
+    {
+        if (!double.IsFinite(min) || !double.IsFinite(max) || min < 0.25 || max > 5 || min > 1 || max < 1)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(min), $"A window's zoom goes from at least 0.25 to at most 5, with 1 between: Zoom(min: {min}, max: {max}).");
+        }
+
+        ZoomLimits = (enabled, min, max);
         return this;
     }
 

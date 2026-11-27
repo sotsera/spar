@@ -71,6 +71,66 @@ internal static unsafe class WindowPlacement
         return new RECT { left = left, top = top, right = left + width, bottom = top + height };
     }
 
+    /// <summary>
+    /// A remembered place: the frame's corner at (<paramref name="left"/>, <paramref name="top"/>) in physical pixels and a
+    /// page of <paramref name="size"/> CSS pixels at that monitor's DPI; null when the corner is on no monitor now.
+    /// </summary>
+    public static RECT? Restored(int left, int top, (int Width, int Height) size)
+    {
+        var monitor = PInvoke.MonitorFromPoint(new System.Drawing.Point(left, top), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL);
+        if (monitor.IsNull)
+        {
+            return null;
+        }
+
+        uint dpi;
+        uint unused;
+        if (PInvoke.GetDpiForMonitor(monitor, MONITOR_DPI_TYPE.MDT_EFFECTIVE_DPI, &dpi, &unused).Failed)
+        {
+            dpi = DefaultDpi;
+        }
+
+        var outer = new RECT { right = Scale(size.Width, dpi), bottom = Scale(size.Height, dpi) };
+        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        return new RECT { left = left, top = top, right = left + outer.right - outer.left, bottom = top + outer.bottom - outer.top };
+    }
+
+    /// <summary>
+    /// A window of <paramref name="size"/> CSS pixels offset by <paramref name="offset"/> CSS pixels down and right from
+    /// <paramref name="previous"/>, back to the top left of its monitor's work area where it would leave it.
+    /// </summary>
+    public static RECT Cascaded(HWND previous, (int Width, int Height) size, int offset)
+    {
+        if (!PInvoke.GetWindowRect(previous, out var before))
+        {
+            return Initial(size);
+        }
+
+        var dpi = PInvoke.GetDpiForWindow(previous);
+        if (dpi == 0)
+        {
+            dpi = DefaultDpi;
+        }
+
+        var (width, height) = OuterSize(previous, size);
+        var step = Scale(offset, dpi);
+        var left = before.left + step;
+        var top = before.top + step;
+        var info = new MONITORINFO { cbSize = (uint)sizeof(MONITORINFO) };
+        var monitor = PInvoke.MonitorFromWindow(previous, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL);
+        if (!monitor.IsNull && PInvoke.GetMonitorInfo(monitor, &info))
+        {
+            var work = info.rcWork;
+            if (left + width > work.right || top + height > work.bottom)
+            {
+                left = work.left;
+                top = work.top;
+            }
+        }
+
+        return new RECT { left = left, top = top, right = left + width, bottom = top + height };
+    }
+
     /// <summary>The window's outer size for a page of <paramref name="size"/> CSS pixels at the window's own DPI.</summary>
     public static (int Width, int Height) OuterSize(HWND window, (int Width, int Height) size)
     {

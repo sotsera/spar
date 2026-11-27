@@ -31,6 +31,7 @@ internal interface INativeFileDialogs
 internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs, Func<string, bool>? forbidden = null)
 {
     private int _dialogOpen;
+    private double _zoom = 1;
 
     /// <summary>The window's grants, none of which reaches a path <paramref name="forbidden"/> names (the browser profile).</summary>
     public GrantTable Grants { get; } = new(time, forbidden);
@@ -57,6 +58,12 @@ internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs,
 
     /// <summary>The window's allow-list; null when it may call every command.</summary>
     public AppWindows.WindowAccess? Access { get; init; }
+
+    /// <summary>The page's zoom now, which the host updates as it changes (<c>windows.zoom</c>); 1 for a host without one.</summary>
+    public double Zoom { get => Volatile.Read(ref _zoom); set => Volatile.Write(ref _zoom, value); }
+
+    /// <summary>Whether the window zooms (<c>Zoom(false)</c> turns it off), which <c>zoom.set</c> needs.</summary>
+    public bool ZoomEnabled { get; init; } = true;
 
     /// <summary>The window as the app's C# code sees it (<see cref="ISparCall.Window"/>); null for a host without windows of its own.</summary>
     public IAppWindow? Handle { get; init; }

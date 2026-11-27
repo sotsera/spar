@@ -176,9 +176,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         _theme = theme;
         _background = PInvoke.CreateSolidBrush(new COLORREF(theme.Background.ColorRef));
         var modalOwner = FindModalOwner();
-        var bounds = modalOwner is null
-            ? WindowPlacement.Initial(Options.InitialSize)
-            : WindowPlacement.CentredOn(modalOwner.Handle, Options.InitialSize);
+        var (bounds, maximizedAtStart) = StartBounds(modalOwner);
         if (SparTestSession.IsSupported && _offscreen)
         {
             // Offscreen and never activated: no taskbar button, no focus taken from the person at the desktop. A modal
@@ -197,21 +195,28 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
         }
         else
         {
-            var maximized = false;
+            var maximized = maximizedAtStart;
+            var restart = false;
             if (SparDevelopment.IsSupported && _opened is null && WindowPlacement.Kept() is { } kept)
             {
                 // spar dev's restart: the previous run's place and size; its start shows it without the focus.
                 bounds = kept.Bounds;
                 maximized = kept.Maximized;
+                restart = true;
             }
 
             _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this);
             theme.ApplyTitleBar(_window);
-            if (SparDevelopment.IsSupported && maximized)
+            if (SparDevelopment.IsSupported && restart && maximized)
             {
                 // Maximized again without activation (SW_SHOWMAXIMIZED would take the focus): hidden, then SW_SHOWNA.
                 WindowPlacement.MaximizeHidden(_window, bounds);
                 PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWNA);
+            }
+            else if (maximized)
+            {
+                // Remembered maximized: shown so, over the normal place it keeps for a restore.
+                PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED);
             }
             else
             {
@@ -272,6 +277,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             ui, _log, _window, _profile, defaults, pages, guard, script, _bridge.Task, theme, TransparentWebView(), Fail, StartupFailed, _source)
         {
             StartAddress = StartAddress,
+            Zoom = (Options.ZoomLimits.Enabled, Options.ZoomLimits.Min, Options.ZoomLimits.Max, Placements?.Get(Options)?.Zoom ?? 1),
+            ZoomChanged = OnZoomChanged,
         };
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
             && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
@@ -297,6 +304,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             case PInvoke.WM_WINDOWPOSCHANGED:
                 // Shown, hidden, minimized or moved; DefWindowProc then sends WM_SIZE and WM_MOVE.
                 _view?.WindowState.OnPositionChanged(lParam);
+                PlacementChanged();
                 return null;
             case PInvoke.WM_SETFOCUS:
                 _view?.WindowState.OnSetFocus();
@@ -445,6 +453,9 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     /// </summary>
     public async Task StopAsync()
     {
+        // Off the UI thread: the windows' places still pending go to windows.json now.
+        Placements?.Flush();
+
         try
         {
             if (_bridge.Task.IsCompletedSuccessfully)
@@ -547,6 +558,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             Access = Options.Access,
             Windows = _windows,
             Handle = (IAppWindow?)_opened?.Handle ?? _windows?.Main,
+            ZoomEnabled = Options.ZoomLimits.Enabled,
+            Zoom = _view?.ZoomFactor ?? 1,
         };
         return _files;
     }

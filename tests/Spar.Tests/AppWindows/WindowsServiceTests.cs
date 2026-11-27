@@ -164,6 +164,8 @@ public sealed class WindowsServiceTests
 
         public void SetTitle(string title) => Calls.Add($"title {title}");
 
+        public void SetZoom(double factor) => Calls.Add($"zoom {factor}");
+
         public Task<bool> CloseAsync()
         {
             Calls.Add("close");
