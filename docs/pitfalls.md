@@ -707,6 +707,11 @@ Entries tied to one host's API stay in that host's section. See also, in "Window
 - **A heartbeat armed at `NavigationCompleted` misses hangs during load,** and one armed on a page without the injected script reports a healthy page after 20 s. Arm at document creation and only with the script. (`page-heartbeat`)
 
 - **A page that navigates right after `ready()` with a splash can lose its `ui-ready`:** `ready` reaches the host two frames after the splash left, so a test that saw the page's own sign of readiness and navigated at once ended that document first, and the host never logged its `ui-ready`. Wait for the host's `ui-ready` (the log line) before navigating. (M1d step 5)
+- **A subscription that keeps only its newest value must coalesce on both sides:** buffering the newest value and then batching it like any other item sent up to 64 stale values in one burst. The host keeps one slot and sends at most one value per window; the page keeps one unread value, and gives back the credits of the values it replaced, or the backend runs out of credits and the subscription stalls. (M3a)
+- **A stream must not take a call slot:** a subscription stays open as long as its view, so 16 of them would stop every call of the document. Streams have their own limit. (M3a)
+- **A stream that sends under its own lock deadlocks with a session that closes under its gate:** the stream's send takes the session's gate to check it is open, so the session must dispose its streams after leaving the gate. (M3a)
+- **A view's abort must drop what the loop has not read yet:** an item already on its way reached a React effect after its cleanup. Only the confirmed end follows an abort. (M3a, browser test)
+- **A stream's span ends when its end arrives, before the loop has read its items:** count the items as they arrive, not as they are handed out. (M3a)
 
 
 ## Page security (CSP, headers, permissions)

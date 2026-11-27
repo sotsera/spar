@@ -6,7 +6,7 @@ namespace WireShapes.EndToEndTests;
 /// <summary>
 /// Streams and subscriptions from the page over the loopback bridge, through the generated module and the SDK's
 /// iterator (decision "M3a's decide-first questions"): every row in order, the in-band end, a confirmed break and abort,
-/// and the push budget of 20,000 events a second.
+/// and a resume after the channel dropped. The stream budgets are in <see cref="BudgetTests"/>.
 /// </summary>
 [Trait("Surface", "Browser")]
 public sealed class StreamBrowserTests(SharedBrowser shared)
@@ -16,12 +16,11 @@ public sealed class StreamBrowserTests(SharedBrowser shared)
     {
         await using var wire = await WirePage.OpenAsync(shared);
 
-        using var outcome = JsonDocument.Parse(await wire.CallAsync("count => window.wire.rows(count)", 100_000));
+        using var outcome = JsonDocument.Parse(await wire.CallAsync("count => window.wire.rows(count)", 10_000));
 
-        Assert.Equal(100_000, outcome.RootElement.GetProperty("received").GetInt32());
+        Assert.Equal(10_000, outcome.RootElement.GetProperty("received").GetInt32());
         Assert.True(outcome.RootElement.GetProperty("ordered").GetBoolean());
         await wire.AssertCleanAsync();
-        Budgets.Record("100,000 stream rows over loopback, timed by the page", $"{outcome.RootElement.GetProperty("ms").GetDouble():0.0} ms");
     }
 
     [Fact]
@@ -53,19 +52,6 @@ public sealed class StreamBrowserTests(SharedBrowser shared)
 
         Assert.Equal("[0,1,2,\"cancelled cancelled\"]", seen);
         await wire.AssertCleanAsync();
-    }
-
-    [Fact]
-    public async Task Twenty_thousand_events_a_second_arrive_whole()
-    {
-        await using var wire = await WirePage.OpenAsync(shared);
-
-        using var outcome = JsonDocument.Parse(await wire.CallAsync("perSecond => window.wire.burst(perSecond)", 20_000));
-
-        Assert.Equal(20_000, outcome.RootElement.GetProperty("received").GetInt32());
-        Assert.Equal(0, outcome.RootElement.GetProperty("gaps").GetInt32());
-        await wire.AssertCleanAsync();
-        Budgets.Record("20,000 subscription events in one second over loopback, all delivered, timed by the page", $"{outcome.RootElement.GetProperty("ms").GetDouble():0.0} ms");
     }
 
     [Fact]

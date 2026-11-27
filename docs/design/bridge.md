@@ -37,6 +37,7 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
     - Each subscription offers only the events it can emit: a coalesced one has no `gap`.
     - The generated type is `Subscription<T>`, an `AsyncIterable` of `Result<T, E, SubscriptionEvents>`.
     - Checked in `tests/AppModel` (from `docs/evidence/app-model-check`): a missing `reset` fails `tsc` (TS2322, naming `reset`), and so do a misspelled event and a missing `events` object.
+  - **Built in M3a** (decisions "M3a's decide-first questions" and "M3a: streams and subscriptions"): credits in items, 256 granted and topped up at half; batches of at most 64 items or 64 KB or a 16 ms window, an item after a quiet window sent at once; a subscription buffer of `Capacity` (256 by default) dropping the oldest, the count on the next batch; one terminal message after the last items; `StreamsOpen` (64 per document) instead of the call slots; resumption on a new channel for the same page (loopback), with backoff from 250 ms to 5 s and a 30 s limit.
   - **Coalesced subscriptions** (decided, user, 2026-11-14): `[SparSubscription(LatestOnly = true)]` (the name settled 2026-11-27, decision "M3a's decide-first questions"). The subscription keeps only the newest value and replaces older ones silently, with no `gap` events. It suits state that only matters as its latest value: resource usage, progress, connection status.
     - The page sees each value at most once and always ends on the newest. A resumed subscription starts with the current value.
     - The capacity is 1 by definition, so `Capacity` is not allowed with it (a contract diagnostic).
@@ -91,8 +92,8 @@ Part of the Spar design. [`docs/plan.md`](../plan.md) has the goal, the settled 
   |---|---|---|
   | `hello` | `protocol` (the highest version the page speaks), `types` (the host-to-page types it understands), `contracts` (its contract fingerprint, 16 hex characters of the manifest's SHA-256) | empty |
   | `call` | `id`, `contract`, `command`, optional `traceparent` and `tracestate` | the request's JSON, or empty for a command without one |
-  | `stream` | the same as `call`, plus `credits` (batches the page will accept) | as `call` |
-  | `credits` | `id`, `credits` (more batches) | empty |
+  | `stream` | the same as `call`, plus `credits` (the items the page will accept; batches until M3a, decision "M3a: streams and subscriptions") | as `call` |
+  | `credits` | `id`, `credits` (more items) | empty |
   | `cancel` | `id` | empty |
   | `ready` | none: the page's `ui-ready` | empty |
   | `closing-done` | none: the page's close work finished | empty |
