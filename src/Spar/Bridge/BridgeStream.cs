@@ -251,11 +251,33 @@ internal sealed class BridgeStream : SparItemSink, IDisposable
             return;
         }
 
+        // The buffer's values are all here at once, so they go together: added one by one, the first after a quiet
+        // window went alone and the rest waited for the next window (a test saw [16], then [17, 18, 19]).
+        var drained = false;
         while (_credits > 0 && _buffer.TryDequeue(out var item))
         {
             _credits--;
-            AddLocked(item);
+            drained = true;
+            _batch.Add(item);
+            _batchBytes += item.Length;
+            if (_batch.Count >= BatchItems || _batchBytes >= BatchBytes)
+            {
+                FlushLocked();
+            }
         }
+
+        if (!drained || _batch.Count == 0)
+        {
+            return;
+        }
+
+        if (Quiet)
+        {
+            FlushLocked();
+            return;
+        }
+
+        ScheduleLocked();
     }
 
     /// <summary>

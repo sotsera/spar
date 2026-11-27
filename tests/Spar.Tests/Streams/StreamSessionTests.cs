@@ -109,6 +109,8 @@ public sealed class StreamSessionTests
         var first = await ReadItemsAsync(bridge.Sent, 2);
         await WaitForAsync(() => TestStreams.Reached.TryDequeue(out _));
 
+        // Past the batching window, so the credit comes after a quiet moment: the drained buffer still goes as one batch.
+        await Task.Delay(BridgeStream.Window * 3, TestContext.Current.CancellationToken);
         bridge.Session.Receive(Credits(1, 10));
         var after = await bridge.Sent.NextAsync();
 

@@ -83,8 +83,19 @@ public sealed class BridgeTelemetryTests : IDisposable
         {
         }
 
+        // Cancelled only once the producer wrote all ten (one sent, four kept, five dropped): a cancel right after the
+        // first item raced the producer, and once dropped none (M3c's full Windows run). The collection runs alone, so the
+        // queue holds only this test's mark.
+        Streams.TestStreams.Reached.Clear();
         bridge.Session.Receive(Traced(Streams.StreamSessionTests.Stream(2, "feed", "ticks", credits: 1, "10")));
         await bridge.Sent.NextAsync();
+        var until = DateTime.UtcNow.AddSeconds(10);
+        while (!Streams.TestStreams.Reached.TryDequeue(out _))
+        {
+            Assert.True(DateTime.UtcNow < until, "The subscription's producer did not write its ten values within 10 s.");
+            await Task.Delay(5, TestContext.Current.CancellationToken);
+        }
+
         bridge.Session.Receive("{\"type\":\"cancel\",\"id\":2}\t");
         await bridge.Session.WhenIdleAsync();
 

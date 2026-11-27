@@ -146,6 +146,12 @@ internal static unsafe partial class XDrop
             Pump(0, 300);
         }
 
+        /// <summary>
+        /// An event's type: <c>XEvent</c>'s first field is an <c>int</c>, and the four bytes after it are padding Xlib never
+        /// clears, so reading the first <c>long</c> whole compares whatever the heap left there.
+        /// </summary>
+        private static int TypeOf(long* xevent) => *(int*)xevent;
+
         private nuint Atom(string name) => XInternAtom(_display, name, 0);
 
         /// <summary>The server's time now: a property change on the source's window, and the time of the event it raises.</summary>
@@ -168,7 +174,7 @@ internal static unsafe partial class XDrop
                 }
 
                 XNextEvent(_display, e);
-                if (e[0] == PropertyNotify)
+                if (TypeOf(e) == PropertyNotify)
                 {
                     return (nuint)e[6];
                 }
@@ -209,12 +215,12 @@ internal static unsafe partial class XDrop
                 }
 
                 XNextEvent(_display, e);
-                if (e[0] == SelectionRequest)
+                if (TypeOf(e) == SelectionRequest)
                 {
                     _requests++;
                     Answer(e);
                 }
-                else if (e[0] == ClientMessage && (nuint)e[5] == _status)
+                else if (TypeOf(e) == ClientMessage && (nuint)e[5] == _status)
                 {
                     _accepted = (e[8] & 1) != 0;
                     _statuses++;
@@ -223,7 +229,7 @@ internal static unsafe partial class XDrop
                         return true;
                     }
                 }
-                else if (e[0] == ClientMessage && awaited != 0 && (nuint)e[5] == awaited)
+                else if (TypeOf(e) == ClientMessage && awaited != 0 && (nuint)e[5] == awaited)
                 {
                     return true;
                 }

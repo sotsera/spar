@@ -217,9 +217,11 @@ In the page, every item is a `Result`, read with `match`; a subscription's `even
 - **Failures are in-band:** the last item of a stream that failed is its failure, so a `for await` loop cannot miss it. Leaving the loop early (`break`) cancels the stream and waits for the backend to confirm.
 - **Tests:** the typed test client returns an `IAsyncEnumerable` of the values, of `Result`s, or of `SparSubscriptionItem`s (a value, an error or a `SparSubscriptionEvent`); `app.DropChannel()` and `app.RestoreChannel()` test a resume. Page tests script one with `spar.stream(pages.changes).push(…)`.
 
-### Settings and binary data
+### Settings, binary data, files and secrets
 
 Settings records (`spar.Settings(defaults)`, `ISparSettings<T>`), the installation file beside the executable, and binary data from the backend (`SparBlob` handles and `[SparResource]` addresses) are in [references/settings-and-binary-data.md](references/settings-and-binary-data.md). Above about 64 KB, never return a `byte[]`.
+
+Files the user chooses or drops (grants, dialogs, drop areas), the backend's clipboard and credentials are in [references/files-clipboard-credentials.md](references/files-clipboard-credentials.md). The page never sees a path, and a secret never goes in settings.
 
 ### Requests, results and errors
 

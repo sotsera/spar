@@ -335,7 +335,8 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
       - `onDrop` gets `Result<DroppedItems, DropError>`: file grants, plus read-only folder grants with `folders: true`. The error cases are `notAccepted` and `tooMany`.
       - While a valid drag hovers, the SDK sets `data-spar-drop="over"` on the area.
       - Drag and drop inside the page keeps working.
-      - How each host receives the files (WebView2 `postMessageWithAdditionalObjects`, a GTK drop target) is checked in M3. The example is `docs/app-model.md` 3.6;
+      - How each host receives the files (WebView2 `postMessageWithAdditionalObjects`, a GTK drop target) is checked in M3. The example is `docs/app-model.md` 3.6.
+      - **Built in M3c** (decisions "The drop design, from the file-drop spike" and "M3c: files, drag and drop, the clipboard, credentials"; `docs/evidence/m3c-files-clipboard-credentials.md`). WebView2: the SDK's `drop` listener posts the event's files with `postMessageWithAdditionalObjects`, and the host reads each `ICoreWebView2File.Path` (`ICoreWebView2WebMessageReceivedEventArgs2`); a `File` the page made is refused by the browser. WebKitGTK: the page gets no `File`s (WebKit bugs 320301 and 323277), so a `GtkDropControllerMotion` on the view keeps the drag's `GdkDrop`, the bridge relay's world reports the page's first trusted `dragenter` and each trusted `drop` on a handler of its own, and the host reads the drag's `GdkFileList` 150 ms after that `dragenter` (a read as WebKit reads it hung WebKit's drag); the window's drop inbox pairs those files with the trusted drop, once. On both hosts no grant reaches the browser profile, and a drop outside every area stays refused by the navigation lock;
   - **Measured, API to design:**
     - the tray icon and its menu, and close to tray;
     - the custom title bar (decided, page-drawn buttons);
@@ -359,7 +360,7 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
       - Every path is relative to the folder. Absolute paths, `..` and links leaving it give `FileAccessError.OutsideFolder`, checked on the final resolved path. A write through a read grant gives `ReadOnlyGrant`.
       - The page sees names, never full paths. Grants are tied to the window.
       - Remembering a folder across restarts is left out of the first version.
-      - The Linux portal path is measured in M3. The example is `docs/app-model.md` 3.6;
+      - The Linux portal path is measured in M3. The example is `docs/app-model.md` 3.6. Built in M3c: without a file-chooser portal on the session bus the Linux dialog is `Unavailable` with the reason, since `GtkFileDialog` otherwise opens GTK's own chooser without saying so;
     - resource usage.
   - **Later:** notifications (after the installer decision), deep links and file associations.
   - **To discuss with the user** (2026-11-14): menus and accelerators (window, context and tray menus), notifications (balloon or toast, and what an unpackaged app can do), deep links and file associations. They stay listed even where they ship later.
@@ -447,11 +448,13 @@ The core (contracts, dispatch, protocol, SDK) is host-neutral. Each host provide
   - A command can take a `FileGrant` parameter. Grants are opaque on the wire, tied to the window, limited in number, with an optional expiry.
   - Saves write to a temporary file, then replace the target.
   - The example is `docs/app-model.md` 3.6. A forgotten `Dismissed` fails C# (CS8509) and TypeScript (TS2741).
+  - **Built in M3c** (decision "M3c: files, drag and drop, the clipboard, credentials"): `OpenManyAsync` and `SaveAsync` beside `OpenAsync` and `OpenFolderAsync`, `Expiry` on each options record, `Failed(Reason)` for any other I/O failure, and no grant inside the browser profile. A cancelled call or the window's close ends a Windows dialog as `Dismissed`; on Linux the host asks the bus for the file-chooser portal before `GtkFileDialog` and is `Unavailable` without one.
 - **Credentials:**
   - Windows: Credential Manager (target `<AppId>/<id>`, 2,560-byte limit), or DPAPI for larger blobs.
   - Linux: `libsecret`, which needs a session bus and a Secret Service.
-  - Page-facing secrets are write-only (`set`, `has`, `delete`).
+  - Page-facing secrets are write-only (`set`, `has`, `delete`). Superseded by decision "M3c's decide-first questions", item 6: credentials are C# only, and the page reaches them through the app's own commands.
   - Neither OS isolates apps run by the same user.
+  - **Built in M3c:** `ICredentialStore` (`SetAsync`, `GetAsync`, `ExistsAsync`, `DeleteAsync`; `NotFound`, `TooLarge`, `Unavailable`), 2,560 bytes on both OSes. Windows: generic credentials, target `<app id>/<name>`, this machine unless `spar.Credentials(c => c.Roaming())`. Linux: libsecret's Secret Service, a schema named by the app id, `Unavailable` with the reason and never a plain-text file. No DPAPI fallback.
 - **Resource usage** (user request, 2026-11-14; measured by `docs/evidence/resource-usage`, API decided). A C# service reports how much disk the WebView data uses and how much memory the backend and the web engine use, so an app can show it in its frontend, for example on a settings or "about" page.
   - **Exposure:** the app exposes it through one of its own contracts, so the page sees nothing by default. Spar ships no ready-made contract (decided below).
   - **Live values** (user, 2026-11-14): an app may show them continuously, for example in the main window's status bar.

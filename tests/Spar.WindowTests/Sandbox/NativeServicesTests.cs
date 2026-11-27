@@ -73,3 +73,29 @@ public sealed class ClipboardTests
         SandboxLane.Note("Clipboard: set and read back through the clipboard thread in the user session");
     }
 }
+
+[Trait(SandboxLane.Trait, "UserSession")]
+public sealed class FileDialogTests
+{
+    private static CancellationToken Token => TestContext.Current.CancellationToken;
+
+    [Fact(Explicit = true)]
+    [SupportedOSPlatform("windows")]
+    public async Task The_common_item_dialog_opens_on_its_STA_and_a_cancelled_call_closes_it_as_dismissed()
+    {
+        SandboxLane.SkipUnlessUserSession();
+        var ui = UiThread.StartShared(0x00ffffff, exception => SandboxLane.Note("UI thread: " + exception));
+        var dialogs = new FileDialogHost(ui, () => 0, new Spar.Hosting.HostLog(standardError: false));
+        using var cancel = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+
+        var started = DateTime.UtcNow;
+        var shown = await dialogs.ShowAsync(
+            new Spar.Files.FileDialogRequest(Spar.Files.FileDialogKind.Open, "Spar's dialog test", [new FileFilter("Markdown", "*.md")], null),
+            cancel.Token);
+        var after = DateTime.UtcNow - started;
+
+        Assert.IsType<FileDialogError.Dismissed>(shown.Error);
+        Assert.InRange(after, TimeSpan.FromSeconds(1.5), TimeSpan.FromSeconds(10));
+        SandboxLane.Note($"File dialog: shown, then closed by the cancelled call after {after.TotalMilliseconds:0} ms");
+    }
+}

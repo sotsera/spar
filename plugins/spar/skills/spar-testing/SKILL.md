@@ -65,6 +65,7 @@ Both test projects use xUnit v3 on Microsoft.Testing.Platform (`global.json` nam
 - **A data root per app:** each app gets a fresh, disposable root of its own. It lives under the system's temporary folder, or under an `artifacts/` folder beside `global.json` when the repository has one. `app.Folders` names its folders (`Data`, `DataRoot`). Disposal deletes the root unless you set `o.KeepData = true`. The real per-user folders are never touched, so two apps in one test stay apart.
 - **Service overrides** are ordinary DI. `o.Services(s => …)` runs after the app's registrations and Spar's defaults, so `Replace` wins. `o.Time(timeProvider)` replaces the app's clock and Spar's own.
 - **External dependencies are blocked by default.** A service the app registers with `services.AddExternal<TService, TImplementation>()` (a database, a remote API, a file share) throws `SparExternalDependencyException` when a test resolves it without replacing it. Replace it with a fake in `o.Services`, or opt in to the real one with `o.AllowExternal<TService>()`.
+- **The OS's services are fakes:** `app.FileDialogs` answers the next dialog (`Choose(paths)`, `Dismiss()`, `Fail(error)`; `Shown` lists the dialogs asked for), `app.Clipboard` holds `Text` (`FailNext(error)`), and `app.Credentials` keeps secrets in memory (`Stored`, `Store(name, secret)`, `Unavailable(reason)`). The real clipboard, dialogs and credential store are never touched. A window test drops real files on an area with its locator's `DropFilesAsync(paths)`.
 - **What to inspect:**
   - `app.Services`: the app's own provider, for checking backend state directly.
   - `app.Log`: what Spar logged, such as a command that threw or a refused call.
@@ -157,6 +158,7 @@ test("a lost connection says the app did not answer", async () => {
 - **Real wire:** scripted values and `spar.calls(command)` go through the generated encoders and decoders, so `bigint`, bytes, enums and `null` behave as they do in the app.
 - **A command nobody scripted** is refused (`rejected` / `unknown-command`), with a console error that names it.
 - **Also there:** `spar.requestClose({ automated, reason })` asks the page's close guards, and `spar.backendUpdate({ types })` sends a Hot Reload notice.
+- **Files:** `spar.file(name, contents)` makes a picked file for a scripted `files.open`, `openMany` or `save`, `spar.contents(file)` reads what the page wrote to it, and `spar.drop(area, files)` drops files on a drop area.
 - `fakeSpar()` resets `configureSpar`'s hooks. Production bundles never contain `@spar/app/testing`.
 
 React hooks need a DOM. The Notebook's `vitest.config.ts` adds the React plugin, `environment: "happy-dom"` and `.tsx` files to the template's config, and tests its hooks inside `act`:

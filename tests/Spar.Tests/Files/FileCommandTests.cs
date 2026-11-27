@@ -227,6 +227,28 @@ public sealed class FileCommandTests
     }
 
     [Fact]
+    public async Task No_dialog_or_drop_grants_a_file_in_the_browser_profile_the_requested_one_or_the_one_in_use()
+    {
+        using var folder = new TestFolder();
+        var profile = new Spar.Hosting.BrowserProfile(Path.Combine(folder.Path, "WebView2"));
+        profile.RecordInUse(Path.Combine(folder.Path, "Moved"));
+        var cookies = folder.File(Path.Combine("WebView2", "Default", "Cookies"), "secret");
+        var moved = folder.File(Path.Combine("Moved", "Local State"), "{}");
+        var notes = folder.File("notes.csv", "1,2");
+        var dialogs = new QueuedDialogs().Choose(cookies).Choose(moved);
+        await using var bridge = await TestBridge.OpenAsync(window: new HostWindow(TimeProvider.System, dialogs, profile.Contains));
+
+        var requested = await CallAsync(bridge, 1, "openFile", "{}");
+        var inUse = await CallAsync(bridge, 2, "openFile", "{}");
+        bridge.Session.Receive(TestBridge.Call(3, "spar", "dropped", """{"accept":[],"limit":10}"""), [notes, cookies]);
+        var dropped = await bridge.Sent.NextAsync().WaitAsync(TimeSpan.FromSeconds(10), Token);
+
+        Assert.Equal(("accessDenied", cookies), (ErrorCode(requested), Payload(requested).GetProperty("path").GetString()));
+        Assert.Equal(("accessDenied", moved), (ErrorCode(inUse), Payload(inUse).GetProperty("path").GetString()));
+        Assert.Equal(("notAccepted", "Cookies"), (ErrorCode(dropped), Payload(dropped).GetProperty("name").GetString()));
+    }
+
+    [Fact]
     public async Task A_claim_without_a_drop_gets_nothing()
     {
         await using var bridge = await OpenAsync(new QueuedDialogs());
