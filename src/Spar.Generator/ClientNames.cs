@@ -12,10 +12,10 @@ namespace Spar.Generator;
 internal static class ClientNames
 {
     /// <summary>
-    /// The SDK types every declaration file imports, in that order. The import line is written from this list, so a
-    /// contract type can never shadow an import the list does not know about.
+    /// The SDK types the declaration files may import: each imports those its commands use. A contract type may take
+    /// none of these names (SPAR004), so it can never shadow an import.
     /// </summary>
-    public static readonly IReadOnlyList<string> SdkImports = ["Call", "CallOptions"];
+    public static readonly IReadOnlyList<string> SdkImports = ["Call", "CallOptions", "LatestOnlyEvents", "Result", "SubscribeOptions", "Subscription"];
 
     /// <summary>Subpaths the package uses itself; contract names become subpaths and folders, so case is ignored.</summary>
     public static readonly HashSet<string> ReservedSubpaths = new(StringComparer.OrdinalIgnoreCase)

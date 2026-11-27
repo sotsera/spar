@@ -1,7 +1,8 @@
 // @spar/app/sdk: the SDK's public surface for app code, and the one entry generated modules call.
 import { addBackendUpdateHandler, listenForBackendUpdates, type BackendUpdate } from "./backendUpdate.js";
 import { Connection, type BridgeChannel, type Decoder } from "./connection.js";
-import { callOf, type Call, type CallOptions, type ErrorCases, type Outcome } from "./results.js";
+import { callOf, resumes, Result, type Call, type CallOptions, type ErrorCases, type EventCases, type Outcome, type SubscribeOptions } from "./results.js";
+import { openStream, openSubscription, type StreamDecoder } from "./streams.js";
 import { watchFrames } from "./splash.js";
 import { startPageTelemetry } from "./telemetryBoot.js";
 
@@ -19,10 +20,16 @@ export {
   type ErrorHandlers,
   type Execution,
   type Handlers,
+  type EventCases,
+  type LatestOnlyEvents,
+  type SubscribeOptions,
+  type Subscription,
+  type SubscriptionEvents,
   type SparConfiguration,
 } from "./results.js";
 export type { BackendUpdate } from "./backendUpdate.js";
 export { unknownErrorCase, type BridgeChannel, type Decoder } from "./connection.js";
+export type { StreamDecoder } from "./streams.js";
 export { loopbackChannel, takeToken, type LoopbackOptions, type TokenPage } from "./loopback.js";
 export { hostChannel, webViewChannel, webViewPort, type WebViewOptions, type WebViewPort } from "./webview.js";
 export { isWebKitHost, webKitChannel, type RelayTarget, type WebKitOptions } from "./webkit.js";
@@ -98,4 +105,81 @@ export function invoke<T, E extends ErrorCases>(
   }
 
   return callOf<T, E>(current.invoke(contract, command, request, decoder as Decoder<unknown>, options));
+}
+
+/**
+ * @internal Called by generated contract modules for a stream command. A request the encoder refuses never leaves: the
+ * stream's one item is the failure `rejected` / `invalid-request`.
+ */
+export function stream<T, E extends ErrorCases>(
+  contract: string,
+  command: string,
+  encode: () => string,
+  decoder: StreamDecoder<T>,
+  options?: CallOptions,
+): AsyncIterable<Result<T, E>> {
+  const request = encodeStreamRequest(contract, command, encode);
+  if (request === undefined) {
+    return refusedStream<T, E, {}>(contract, command);
+  }
+
+  return openStream<T, E>(connected(), { contract, command }, request, decoder, options?.signal);
+}
+
+/**
+ * @internal Called by generated contract modules for a subscription: `latestOnly` and `automatic` come from its
+ * `[SparSubscription]`, and the page's options and configuration may only make it more cautious.
+ */
+export function subscribe<T, E extends ErrorCases, V extends EventCases>(
+  contract: string,
+  command: string,
+  encode: () => string,
+  decoder: StreamDecoder<T>,
+  latestOnly: boolean,
+  automatic: boolean,
+  options?: SubscribeOptions<"automatic" | "manual">,
+): AsyncIterable<Result<T, E, V>> {
+  const request = encodeStreamRequest(contract, command, encode);
+  if (request === undefined) {
+    return refusedStream<T, E, V>(contract, command);
+  }
+
+  const kind = { latestOnly, resumes: resumes(automatic, options) };
+  return openSubscription<T, E, V>(connected(), { contract, command }, request, decoder, options?.signal, kind);
+}
+
+function connected(): Connection {
+  if (current === undefined) {
+    throw new Error("Spar is not connected: the host's start-up script has not run in this document.");
+  }
+
+  return current;
+}
+
+function encodeStreamRequest(contract: string, command: string, encode: () => string): string | undefined {
+  connected();
+  try {
+    return encode();
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    console.error(`Spar: ${contract}.${command} was not sent: ${reason}`);
+    return undefined;
+  }
+}
+
+/** A stream whose request never left: its one item is the refusal. */
+function refusedStream<T, E extends ErrorCases, V extends EventCases>(contract: string, command: string): AsyncIterable<Result<T, E, V>> {
+  const refused: Outcome = {
+    ok: false,
+    error: { kind: "rejected", code: "invalid-request", execution: "notStarted", contract, command },
+  };
+  const items = [new Result<T, E, V>(refused)];
+  return {
+    [Symbol.asyncIterator]: () => {
+      let next = 0;
+      return {
+        next: () => Promise.resolve(next < items.length ? { done: false, value: items[next++]! } : { done: true, value: undefined }),
+      };
+    },
+  };
 }

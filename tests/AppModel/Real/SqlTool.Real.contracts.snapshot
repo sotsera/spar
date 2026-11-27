@@ -1,12 +1,19 @@
 # The contracts of SqlTool.Real as pages see them. Written by the build; commit it with the change.
 # CI builds fail with SPAR100 when it is out of date.
 
-fingerprint 304fa63e424be195
+fingerprint 9a3eee5a18563dd6
 
 contract connections (SqlTool.Connections.IConnections)
   forget(string) -> void
   list() -> IReadOnlyList<SqlTool.Connections.ConnectionInfo>
   test(string) -> SqlTool.Connections.ConnectionInfo | SqlTool.Connections.ConnectionError
+
+contract copyJobs (SqlTool.CopyJobs.CopyJobsService)
+  cancelAll() -> void
+  plan(SqlTool.CopyJobs.CopyRecipe) -> SqlTool.CopyJobs.CopyPlan | SqlTool.CopyJobs.PlanError
+  preview(SqlTool.CopyJobs.CopyRecipe) -> stream of SqlTool.CopyJobs.PreviewRow
+  progress(string) -> subscription of SqlTool.CopyJobs.CopyProgress
+  run(SqlTool.CopyJobs.RunCopy) -> SqlTool.CopyJobs.CopyReport | SqlTool.CopyJobs.RunError
 
 contract crashReport (SqlTool.Status.CrashReport)
   lastCrash() -> SqlTool.Status.CrashInfo?
@@ -14,19 +21,85 @@ contract crashReport (SqlTool.Status.CrashReport)
 contract script (SqlTool.Scripts.ScriptService)
   copyCreateScript(string) -> void | SqlTool.Scripts.CopyScriptError
 
+contract status (SqlTool.Status.StatusService)
+  disk() -> Spar.DiskUsage | Spar.FileAccessError
+  memory() -> subscription of Spar.MemoryUsage (latest only)
+
+record Spar.DiskUsage
+  profileBytes: long
+  appDataBytes: long
+  cacheBytes: long
+
+record Spar.MemoryUsage
+  totalBytes: long
+  engineBytes: long
+  appBytes: long
+  engine: IReadOnlyList<Spar.ProcessMemory>
+
+record Spar.ProcessMemory
+  kind: string
+  bytes: long
+
 record SqlTool.Connections.ConnectionInfo
   id: string
   server: string
   database: string
   integratedSecurity: bool
 
+record SqlTool.CopyJobs.CopyPlan
+  planId: Guid
+  steps: IReadOnlyList<SqlTool.CopyJobs.PlanStep>
+
+record SqlTool.CopyJobs.CopyProgress
+  jobId: string
+  rows: long
+
+record SqlTool.CopyJobs.CopyRecipe
+  source: string
+  target: string
+  tables: IReadOnlyList<string>
+
+record SqlTool.CopyJobs.CopyReport
+  tables: int
+  rows: long
+  elapsed: TimeSpan
+
+record SqlTool.CopyJobs.PlanStep
+  table: string
+  estimatedRows: long
+
+record SqlTool.CopyJobs.PreviewRow
+  cells: IReadOnlyList<string?>
+
+record SqlTool.CopyJobs.RunCopy
+  planId: Guid
+  truncateTarget: bool
+
 record SqlTool.Status.CrashInfo
   at: DateTimeOffset
   summary: string
 
+error Spar.FileAccessError
+  notFound
+  accessDenied
+  inUse
+  tooLarge(limit: long)
+  grantExpired
+  outsideFolder(path: string)
+  readOnlyGrant
+
 error SqlTool.Connections.ConnectionError
   notFound(connectionId: string)
   loginFailed(server: string, sqlNumber: int)
+
+error SqlTool.CopyJobs.PlanError
+  connectionNotFound(connectionId: string)
+  tableMissing(connection: string, table: string)
+
+error SqlTool.CopyJobs.RunError
+  planOutdated(reason: string)
+  targetNotEmpty(table: string, rows: long)
+  partiallyCopied(rowsCommitted: long, reason: string)
 
 error SqlTool.Scripts.CopyScriptError
   clipboardBusy

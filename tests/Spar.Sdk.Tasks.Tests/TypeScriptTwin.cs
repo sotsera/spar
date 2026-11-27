@@ -36,10 +36,10 @@ internal static class TypeScriptTwin
     {
         var model = contract.Model;
         var ts = new StringBuilder()
-            .Append("import { invoke, unknownErrorCase } from \"./sdk/sdk.js\";\n")
+            .Append($"import {{ {string.Join(", ", Functions(model))} }} from \"./sdk/sdk.js\";\n")
             .Append("import * as wire from \"./sdk/wire.js\";\n")
-            .Append("import type { Decoder } from \"./sdk/sdk.js\";\n")
-            .Append($"import type {{ {string.Join(", ", TypeScriptNames.SdkImports)} }} from \"@spar/app/sdk\";\n");
+            .Append("import type { Decoder, StreamDecoder } from \"./sdk/sdk.js\";\n")
+            .Append("import type { Call, CallOptions, LatestOnlyEvents, Result, SubscribeOptions, Subscription, SubscriptionEvents } from \"@spar/app/sdk\";\n");
 
         var imported = layout.Imported(contract).ToList();
         if (imported.Count > 0)
@@ -61,8 +61,15 @@ internal static class TypeScriptTwin
         foreach (var command in model.Commands)
         {
             var value = command.Value is null ? "void" : TypeOf(layout, command.Value);
-            var read = command.Value is null ? "noValue" : $"json => {Read(layout, command.Value, "JSON.parse(json)", 0)}";
             var error = command.ErrorKey is null ? "noErrors" : ClientNames.Reader(layout.Type(command.ErrorKey).Name);
+            if (IsStream(command))
+            {
+                // A stream's decoder reads each item's parsed JSON.
+                ts.Append($"const {ClientNames.Decoder(command.WireName)}: StreamDecoder<{value}> = {{ item: item => {Read(layout, command.Value!, "item", 1)}, error: {error} }};\n");
+                continue;
+            }
+
+            var read = command.Value is null ? "noValue" : $"json => {Read(layout, command.Value, "JSON.parse(json)", 0)}";
             ts.Append($"const {ClientNames.Decoder(command.WireName)}: Decoder<{value}> = {{ value: {read}, error: {error} }};\n");
         }
 
@@ -78,6 +85,11 @@ internal static class TypeScriptTwin
         foreach (var command in contract.Model.Commands)
         {
             ts.Append($"  {LiteralKey(command.WireName)}: {{ contract: {TypeScriptNames.Literal(contract.Model.WireName)}, command: {TypeScriptNames.Literal(command.WireName)}, ");
+            if (IsStream(command))
+            {
+                ts.Append(command.Subscription is null ? "stream: \"stream\", " : "stream: \"subscription\", ");
+            }
+
             if (command.Request is not null)
             {
                 ts.Append($"request: (json: string): {TypeOf(layout, command.Request)} => {Read(layout, command.Request, "JSON.parse(json)", 0)}, ");
@@ -195,27 +207,67 @@ internal static class TypeScriptTwin
         {
             var value = command.Value is null ? "void" : TypeOf(layout, command.Value);
             var error = command.ErrorKey is null ? null : layout.Type(command.ErrorKey).Name;
-            var call = error is null ? $"Call<{value}>" : $"Call<{value}, {error}>";
-            var typeArguments = $"<{value}, {error ?? "{}"}>";
+            var (call, options, sdk, typeArguments, extra) = Shape(command, value, error);
             var contractName = TypeScriptNames.Literal(model.WireName);
             var commandName = TypeScriptNames.Literal(command.WireName);
             var decoder = ClientNames.Decoder(command.WireName);
 
             if (command.Request is null)
             {
-                signatures.Append($"  readonly {Key(command.WireName)}: (options?: CallOptions) => {call};\n");
-                functions.Append($"  {LiteralKey(command.WireName)}: (options?: CallOptions): {call} => invoke{typeArguments}({contractName}, {commandName}, () => \"\", {decoder}, options),\n");
+                signatures.Append($"  readonly {Key(command.WireName)}: (options?: {options}) => {call};\n");
+                functions.Append($"  {LiteralKey(command.WireName)}: (options?: {options}): {call} => {sdk}{typeArguments}({contractName}, {commandName}, () => \"\", {decoder}, {extra}options),\n");
                 continue;
             }
 
             var request = command.Request.Kind == WireKind.Record ? "request" : TypeScriptNames.Parameter(command.RequestName ?? "request");
             var requestType = TypeOf(layout, command.Request);
             var encode = Write(layout, command.Request, request, 0);
-            signatures.Append($"  readonly {Key(command.WireName)}: ({request}: {requestType}, options?: CallOptions) => {call};\n");
-            functions.Append($"  {LiteralKey(command.WireName)}: ({request}: {requestType}, options?: CallOptions): {call} => invoke{typeArguments}({contractName}, {commandName}, () => {encode}, {decoder}, options),\n");
+            signatures.Append($"  readonly {Key(command.WireName)}: ({request}: {requestType}, options?: {options}) => {call};\n");
+            functions.Append($"  {LiteralKey(command.WireName)}: ({request}: {requestType}, options?: {options}): {call} => {sdk}{typeArguments}({contractName}, {commandName}, () => {encode}, {decoder}, {extra}options),\n");
         }
 
         ts.Append($"export const {model.WireName}: {{\n{signatures}}} = Object.freeze({{\n{functions}}});\n");
+    }
+
+    private static bool IsStream(CommandModel command) => command.Return is ReturnShape.Items or ReturnShape.ResultItems;
+
+    /// <summary>The SDK functions a module calls, in the order the client step imports them.</summary>
+    private static IEnumerable<string> Functions(ContractModel model)
+    {
+        var all = model.Commands.ToList();
+        return new[]
+        {
+            all.Any(c => !IsStream(c)) ? "invoke" : null,
+            all.Any(c => IsStream(c) && c.Subscription is null) ? "stream" : null,
+            all.Any(c => c.Subscription is not null) ? "subscribe" : null,
+            "unknownErrorCase",
+        }.OfType<string>();
+    }
+
+    /// <summary>
+    /// A command's type, its options' type, the SDK function it calls with its type arguments, and the arguments that
+    /// function takes before the options: a subscription's latest-only and automatic flags.
+    /// </summary>
+    private static (string Call, string Options, string Sdk, string TypeArguments, string Extra) Shape(CommandModel command, string value, string? error)
+    {
+        // Spelled as the app model writes them (docs/app-model.md section 5): type arguments left at their defaults are left out.
+        var errors = error ?? "{}";
+        var withError = error is null ? value : $"{value}, {error}";
+        if (command.Subscription is { } subscription)
+        {
+            var events = subscription.LatestOnly ? "LatestOnlyEvents" : "SubscriptionEvents";
+            var type = subscription.LatestOnly ? $"Subscription<{value}, {errors}, LatestOnlyEvents>" : $"Subscription<{withError}>";
+            var resume = subscription.Automatic ? "automatic" : "manual";
+            var flags = $"{(subscription.LatestOnly ? "true" : "false")}, {(subscription.Automatic ? "true" : "false")}, ";
+            return (type, $"SubscribeOptions<\"{resume}\">", "subscribe", $"<{value}, {errors}, {events}>", flags);
+        }
+
+        if (IsStream(command))
+        {
+            return ($"AsyncIterable<Result<{withError}>>", "CallOptions", "stream", $"<{value}, {errors}>", "");
+        }
+
+        return (error is null ? $"Call<{value}>" : $"Call<{value}, {error}>", "CallOptions", "invoke", $"<{value}, {errors}>", "");
     }
 
     /// <summary>The TypeScript type of a wire type: the wire-rules table of plan section 2.</summary>

@@ -43,7 +43,7 @@ describe("opening", () => {
     expect(host.sent[0]).toEqual({
       type: "hello",
       protocol: 1,
-      types: ["open", "result", "failure", "event", "closing", "close-request", "close-ended"],
+      types: ["open", "result", "items", "end", "failure", "event", "closing", "close-request", "close-ended"],
       contracts: "0123456789abcdef",
       payload: "",
     });

@@ -55,6 +55,36 @@ internal static class Fixtures
 
             Task<IReadOnlyList<Item>> ListAsync();
         }
+
+        public sealed record Quote(string Sku, double Price);
+
+        public closed record TickerError
+        {
+            public sealed record Unknown(string Sku) : TickerError;
+
+            public sealed record Closed : TickerError;
+        }
+
+        /// <summary>Live stock.</summary>
+        [SparContract]
+        public sealed class TickerService
+        {
+            /// <summary>Every item, as it is read.</summary>
+            [SparCommand]
+            public IAsyncEnumerable<Item> ItemsAsync(CancellationToken token) => throw new NotImplementedException();
+
+            [SparCommand]
+            public IAsyncEnumerable<Result<Quote, TickerError>> QuotesAsync(string since) => throw new NotImplementedException();
+
+            /// <summary>Stock changes; observation only.</summary>
+            [SparCommand]
+            [SparSubscription(Capacity = 64)]
+            public IAsyncEnumerable<Item> ChangesAsync(CancellationToken token) => throw new NotImplementedException();
+
+            [SparCommand]
+            [SparSubscription(LatestOnly = true, Resume = SubscriptionResume.Manual)]
+            public IAsyncEnumerable<Result<long, TickerError>> LevelAsync(string sku) => throw new NotImplementedException();
+        }
         """;
 
     /// <summary>

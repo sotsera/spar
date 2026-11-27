@@ -3,7 +3,8 @@
 import { decode, encode, protocolVersion, type BridgeMessage } from "./protocol.js";
 import type { CallError, CallErrorKind, CallName, CallOptions, Execution, Outcome } from "./results.js";
 import { finishSplash, hasSplash } from "./splash.js";
-import { traceCall } from "./tracing.js";
+import type { StreamHandle, StreamHost, StreamReceiver } from "./streams.js";
+import { traceCall, type CallSpan } from "./tracing.js";
 import { runCloseGuards, type CloseRequest, type GuardsOutcome } from "./windows.js";
 
 /** The host's channel for one document: strings both ways, never structured messages. */
@@ -33,7 +34,7 @@ const confirmationTimeoutMs = 5_000;
  * pages"), and this connection ignores it. `close-request` and `close-ended` run the page's close guards (decision
  * "Two-stage close"); a host sends them only to a page that lists them.
  */
-const understoodTypes = ["open", "result", "failure", "event", "closing", "close-request", "close-ended"] as const;
+const understoodTypes = ["open", "result", "items", "end", "failure", "event", "closing", "close-request", "close-ended"] as const;
 
 interface Pending {
   readonly name: CallName;
@@ -43,9 +44,17 @@ interface Pending {
   cleanup: () => void;
 }
 
-export class Connection {
+/** An open stream: where its messages go, and whether the host has its stream message. */
+interface OpenStream {
+  readonly name: CallName;
+  readonly receiver: StreamReceiver;
+  sent: boolean;
+}
+
+export class Connection implements StreamHost {
   readonly #channel: BridgeChannel;
   readonly #pending = new Map<number, Pending>();
+  readonly #streams = new Map<number, OpenStream>();
   readonly #waitingForOpen: Array<() => void> = [];
   readonly #eventListeners = new Map<string, Set<(payload: string) => void>>();
   readonly #closingWork: Array<() => Promise<unknown>> = [];
@@ -121,6 +130,63 @@ export class Connection {
   }
 
   /**
+   * @internal Opens a stream or a subscription (streams.ts): its `items`, `end` and `failure` go to `receiver`. Sent
+   * once the channel is open; undefined when the channel is gone.
+   */
+  open(name: CallName, request: string, credits: number, receiver: StreamReceiver, span: CallSpan | undefined): StreamHandle | undefined {
+    if (this.#state === "closed") {
+      return undefined;
+    }
+
+    const id = this.#nextId++;
+    const stream: OpenStream = { name, receiver, sent: false };
+    this.#streams.set(id, stream);
+    const send = (): void => {
+      if (!this.#streams.has(id)) {
+        return;
+      }
+
+      stream.sent = true;
+      const { contract, command } = name;
+      this.#send(span === undefined
+        ? { type: "stream", id, contract, command, credits, payload: request }
+        : { type: "stream", id, contract, command, credits, traceparent: span.traceparent, payload: request });
+    };
+    if (this.#state === "open") {
+      send();
+    } else {
+      this.#waitingForOpen.push(send);
+    }
+
+    return {
+      credits: count => {
+        if (stream.sent && this.#streams.has(id)) {
+          this.#send({ type: "credits", id, credits: count, payload: "" });
+        }
+      },
+      cancel: () => {
+        if (!stream.sent) {
+          this.#streams.delete(id);
+          return false;
+        }
+
+        this.#send({ type: "cancel", id, payload: "" });
+        return true;
+      },
+    };
+  }
+
+  /** @internal Whether streams can open again after a lost channel; this document's channel never comes back. */
+  reconnected(_deadline: number, _signal: AbortSignal | undefined): Promise<boolean> {
+    return Promise.resolve(this.#state === "open");
+  }
+
+  /** @internal A stream's span, when the page's telemetry is on. */
+  span(name: CallName): CallSpan | undefined {
+    return traceCall(name.contract, name.command);
+  }
+
+  /**
    * Tells the host the page is ready: call it once the app's first view has rendered, for example in the root
    * component's first effect. The host's `ui-ready`, which tests and tools wait for, follows. When the page has a
    * splash (`#spar-splash` in `index.html`), it is removed first, after its minimum visible time if its mark has
@@ -177,6 +243,12 @@ export class Connection {
       case "result":
         this.#result(message);
         break;
+      case "items":
+        this.#items(message);
+        break;
+      case "end":
+        this.#end(message);
+        break;
       case "failure":
         this.#failure(message);
         break;
@@ -219,8 +291,31 @@ export class Connection {
   }
 
   #failure(message: BridgeMessage): void {
+    const stream = this.#takeStream(message.id!);
+    if (stream !== undefined) {
+      const { contract, command } = stream.name;
+      const kind = message.kind as CallErrorKind;
+      const execution = message.execution as Execution;
+      stream.receiver.failure({ kind, code: message.code!, execution, contract, command, ...failureNotes(message.payload) });
+      return;
+    }
+
     const pending = this.#take(message.id!);
     pending?.resolve(failure(pending.name, message.kind as CallErrorKind, message.code!, message.execution as Execution, failureNotes(message.payload)));
+  }
+
+  #items(message: BridgeMessage): void {
+    this.#streams.get(message.id!)?.receiver.items(message.payload, message.dropped);
+  }
+
+  #end(message: BridgeMessage): void {
+    this.#takeStream(message.id!)?.receiver.end(message.ok === true, message.payload);
+  }
+
+  #takeStream(id: number): OpenStream | undefined {
+    const stream = this.#streams.get(id);
+    this.#streams.delete(id);
+    return stream;
   }
 
   /** The page gave up waiting: ask the backend to stop, and report what it confirms, or an unknown outcome. */
@@ -241,6 +336,14 @@ export class Connection {
   }
 
   #fail(id: number, kind: CallErrorKind, code: string, execution: Execution): void {
+    const stream = this.#takeStream(id);
+    if (stream !== undefined) {
+      // A malformed message for a stream fails it, and the backend is asked to stop it.
+      this.#send({ type: "cancel", id, payload: "" });
+      stream.receiver.failure({ kind, code, execution, contract: stream.name.contract, command: stream.name.command });
+      return;
+    }
+
     const pending = this.#take(id);
     pending?.resolve(failure(pending.name, kind, code, execution));
   }
@@ -269,6 +372,11 @@ export class Connection {
       pending.resolve(pending.sent
         ? failure(pending.name, "transport", "lost", "unknown")
         : failure(pending.name, "unavailable", "unavailable", "notStarted"));
+    }
+
+    for (const id of [...this.#streams.keys()]) {
+      const stream = this.#takeStream(id)!;
+      stream.receiver.lost(stream.sent);
     }
   }
 

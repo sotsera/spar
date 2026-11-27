@@ -25,6 +25,12 @@ public sealed class SnapshotTests
               find(string) -> Shop.Item
               list() -> IReadOnlyList<Shop.Item>
 
+            contract ticker (Shop.TickerService)
+              changes() -> subscription of Shop.Item
+              items() -> stream of Shop.Item
+              level(string) -> subscription of long | Shop.TickerError (latest only, manual resume)
+              quotes(string) -> stream of Shop.Quote | Shop.TickerError
+
             record Shop.Basket
               items: Shop.Item[]
               coupon: int?
@@ -37,6 +43,10 @@ public sealed class SnapshotTests
               tags: IReadOnlyList<string>
               replacement: Shop.Item?
 
+            record Shop.Quote
+              sku: string
+              price: double
+
             record Shop.Receipt
               id: Guid
               at: DateTimeOffset
@@ -44,6 +54,10 @@ public sealed class SnapshotTests
 
             error Shop.OrderError
               outOfStock(sku: string, left: long)
+              closed
+
+            error Shop.TickerError
+              unknown(sku: string)
               closed
 
             """.Replace("\r\n", "\n", StringComparison.Ordinal);

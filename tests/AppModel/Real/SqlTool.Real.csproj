@@ -2,8 +2,9 @@
   <!--
     The document's app built by real Spar (decision "The documentation check under tests/"): its C# blocks, as the
     stand-in check copied them, through Spar's SDK, analyzer and generator, with stand-ins (../Planned) only for the
-    APIs Spar does not have yet. Left out until Spar can build them: the contracts with streams and subscriptions
-    (copyJobs, status, M3), those with file grants (recipes, csvExport), and the deliberately failing files.
+    APIs Spar does not have yet. Left out until Spar can build them: the contracts with file grants (recipes,
+    csvExport, M3c), and the deliberately failing files. The contracts with streams and subscriptions (copyJobs,
+    status) build since M3a.
   -->
 
   <PropertyGroup>
@@ -17,7 +18,7 @@
 
   <ItemGroup>
     <Compile Include="..\SqlTool\**\*.cs" LinkBase="SqlTool"
-             Exclude="..\SqlTool\bin\**;..\SqlTool\obj\**;..\SqlTool\Failing\**;..\SqlTool\CopyJobs\CopyJobsService.cs;..\SqlTool\Status\StatusService.cs;..\SqlTool\Recipes\**" />
+             Exclude="..\SqlTool\bin\**;..\SqlTool\obj\**;..\SqlTool\Failing\**;..\SqlTool\Recipes\**" />
   </ItemGroup>
 
   <ItemGroup>

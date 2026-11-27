@@ -3,6 +3,7 @@ import { orders, type Basket, type Item, type OrderError } from "@spar/app/order
 import { configureSpar, type CallError } from "@spar/app/sdk";
 import { fingerprint } from "@spar/app/spar";
 import { stock, type Item as StockItem } from "@spar/app/stock";
+import { ticker } from "@spar/app/ticker";
 
 configureSpar({ onFailure: (error: CallError) => console.warn(error.kind, error.code, error.execution) });
 
@@ -41,3 +42,44 @@ export const find = async (): Promise<number> => (await stock.find("A-100").unwr
 export const handled: OrderError["outOfStock"] = { sku: "A-100", left: 0n };
 
 export const built: string = fingerprint;
+
+// Streams and subscriptions: every item is a Result, and a subscription's match takes its status events.
+export async function readItems(signal: AbortSignal): Promise<number> {
+  let total = 0;
+  for await (const result of ticker.items({ signal })) {
+    total += result.match({ success: value => value.price, failure: () => 0 });
+  }
+
+  return total;
+}
+
+export async function readQuotes(): Promise<string[]> {
+  const seen: string[] = [];
+  for await (const result of ticker.quotes("2026-11-27")) {
+    seen.push(result.match({ success: quote => `${quote.sku} ${quote.price}`, errors: { unknown: e => e.sku, closed: () => "closed" } }) ?? "failed");
+  }
+
+  return seen;
+}
+
+export async function watchChanges(): Promise<void> {
+  for await (const change of ticker.changes({ resume: "manual" })) {
+    change.match({
+      success: value => console.log(value.sku),
+      events: { reset: () => console.log("reset"), gap: e => console.log(e.dropped), reconnecting: e => console.log(e.attempt) },
+    });
+  }
+}
+
+export async function watchLevel(): Promise<bigint | undefined> {
+  let last: bigint | undefined;
+  for await (const level of ticker.level("A-100")) {
+    level.match({
+      success: value => (last = value),
+      errors: { unknown: () => undefined, closed: () => undefined },
+      events: { reset: () => (last = undefined), resumed: () => undefined },
+    });
+  }
+
+  return last;
+}

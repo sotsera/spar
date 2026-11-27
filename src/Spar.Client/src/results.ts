@@ -41,6 +41,39 @@ export interface CallOptions {
   readonly signal?: AbortSignal;
 }
 
+/**
+ * A subscription's options. `resume` may only be more cautious than the contract: an automatic subscription accepts
+ * `"manual"` too, a manual one only `"manual"` (plan, "Subscription resumption").
+ */
+export interface SubscribeOptions<R extends "automatic" | "manual" = "automatic"> extends CallOptions {
+  readonly resume?: R | "manual";
+}
+
+/**
+ * The `events` handlers of a subscription (plan section 2c, "The `events` slot"). `reset` is required: ignoring it
+ * leaves stale state. The others are informational.
+ */
+export interface SubscriptionEvents {
+  /** Drop what you have: the values start again from the current state. */
+  readonly reset: () => unknown;
+  /** The page fell behind and the backend dropped `dropped` values before the next one. */
+  readonly gap?: (event: { readonly dropped: number }) => unknown;
+  /** The connection was lost; the subscription subscribes again, this being its `attempt`-th try. */
+  readonly reconnecting?: (event: { readonly attempt: number }) => unknown;
+  /** The subscription runs again after a lost connection. */
+  readonly resumed?: () => unknown;
+}
+
+/** A subscription that keeps only its newest value never reports a gap. */
+export interface LatestOnlyEvents {
+  readonly reset: () => unknown;
+  readonly reconnecting?: (event: { readonly attempt: number }) => unknown;
+  readonly resumed?: () => unknown;
+}
+
+/** The `events` handlers an item accepts: one of the interfaces above, or `{}` for calls and one-shot streams. */
+export type EventCases = object;
+
 /** One handler per declared case; a case without a payload takes a handler with no parameter. */
 export type ErrorHandlers<E extends ErrorCases> = {
   readonly [K in keyof E]: E[K] extends undefined ? () => unknown : (error: E[K]) => unknown;
@@ -74,17 +107,29 @@ export type FailureResults<F, K> =
   : K extends (...args: never[]) => unknown ? F
   : Returns<Exclude<K[keyof K], undefined>> | ([CallErrorKind] extends [keyof K] ? never : undefined);
 
+/** Keys of an `events` object that the subscription does not emit (typos). */
+type NoExtraEvents<G, V extends EventCases> = NoInfer<
+  [Exclude<keyof G, keyof V>] extends [never] ? unknown : { readonly [K in Exclude<keyof G, keyof V>]: never }
+>;
+
+/** What the `events` handlers add to `match`'s result, and undefined for the events left unhandled. */
+export type EventResults<G, V extends EventCases> =
+  [keyof V] extends [never] ? never : Returns<Exclude<G[keyof G], undefined>> | ([keyof V] extends [keyof G] ? never : undefined);
+
 /**
  * The handlers of `match`. `errors` is required, with every case, when the command declares errors, and not allowed
- * otherwise. Example: `call.match({ success: page => show(page), errors: { notFound: () => back() } })`.
+ * otherwise; `events` likewise for a subscription's status events, with `reset` required. Example:
+ * `call.match({ success: page => show(page), errors: { notFound: () => back() } })`.
  */
-export type Handlers<T, E extends ErrorCases, S, H, F, K> =
+export type Handlers<T, E extends ErrorCases, S, H, F, K, V extends EventCases = {}, G = unknown> =
   & { readonly success: (value: T) => S; readonly failure?: ((error: CallError) => F) | (K & FailureByKind & NoExtraKinds<K>) }
-  & ([keyof E] extends [never] ? unknown : { readonly errors: ErrorHandlers<E> & H & NoExtraCases<H, E> });
+  & ([keyof E] extends [never] ? unknown : { readonly errors: ErrorHandlers<E> & H & NoExtraCases<H, E> })
+  & ([keyof V] extends [never] ? unknown : { readonly events: V & G & NoExtraEvents<G, V> });
 
-/** The wire outcome of one call, internal to the SDK: a value, a declared error, or a failure. */
+/** The wire outcome of one call or item, internal to the SDK: a value, a status event, a declared error, or a failure. */
 export type Outcome =
   | { readonly ok: true; readonly value: unknown }
+  | { readonly ok: true; readonly event: string; readonly payload: unknown }
   | { readonly ok: false; readonly code: string; readonly payload: unknown; readonly call: CallName }
   | { readonly ok: false; readonly code?: undefined; readonly error: CallError };
 
@@ -95,6 +140,7 @@ const defaultOnFailure: FailureHook = error =>
 
 let onFailure: FailureHook = defaultOnFailure;
 let observe: FailureHook | undefined;
+let resumeDefault: "automatic" | "manual" = "automatic";
 
 /** The page's app-wide settings. Each call of `configureSpar` sets all of them, those left out to their defaults. */
 export interface SparConfiguration {
@@ -107,16 +153,23 @@ export interface SparConfiguration {
    * backend (`true` by default). Turn it off to show your own from `onBackendUpdate`. A production build has no toast.
    */
   readonly backendUpdateToast?: boolean;
+  /**
+   * Whether subscriptions subscribe again by themselves after a lost connection: `"manual"` turns that off for every
+   * subscription of the page. It never turns it on for one whose contract says `Manual`.
+   */
+  readonly resume?: "automatic" | "manual";
 }
 
 /**
  * App-wide settings. `onFailure` receives the failures no `match` handled; `unwrap` never reaches it, it throws.
  * `observe` sees every failure, handled or not, for logs and telemetry. Neither can retry or change a result.
- * `backendUpdateToast: false` turns off the development overlay's toast for backend updates.
+ * `backendUpdateToast: false` turns off the development overlay's toast for backend updates. `resume: "manual"` stops
+ * subscriptions from subscribing again by themselves.
  */
 export function configureSpar(options: SparConfiguration): void {
   onFailure = options.onFailure ?? defaultOnFailure;
   observe = options.observe;
+  resumeDefault = options.resume ?? "automatic";
   if (import.meta.env?.DEV === true) {
     setBackendUpdateToast(options.backendUpdateToast !== false);
   }
@@ -126,9 +179,18 @@ export function configureSpar(options: SparConfiguration): void {
 export function resetConfiguration(): void {
   onFailure = defaultOnFailure;
   observe = undefined;
+  resumeDefault = "automatic";
   if (import.meta.env?.DEV === true) {
     setBackendUpdateToast(true);
   }
+}
+
+/**
+ * @internal Whether a subscription resumes by itself: only when its contract, the app's configuration and its own
+ * options all allow it (plan, "Subscription resumption").
+ */
+export function resumes(contractAutomatic: boolean, options?: SubscribeOptions<"automatic" | "manual">): boolean {
+  return contractAutomatic && resumeDefault === "automatic" && options?.resume !== "manual";
 }
 
 /** Thrown by `unwrap` for a declared error or an infrastructure failure. */
@@ -147,6 +209,7 @@ type AnyHandler = (value?: unknown) => unknown;
 interface AnyHandlers {
   readonly success: AnyHandler;
   readonly errors?: Readonly<Record<string, AnyHandler>>;
+  readonly events?: Readonly<Record<string, AnyHandler | undefined>>;
   readonly failure?: AnyHandler | Readonly<Partial<Record<CallErrorKind, AnyHandler>>>;
 }
 
@@ -157,7 +220,8 @@ function unknownCase(outcome: { readonly call: CallName }): CallError {
 
 function settle(outcome: Outcome, handlers: AnyHandlers): unknown {
   if (outcome.ok) {
-    return handlers.success(outcome.value);
+    // A status event never reaches the failure hooks; an optional one left unhandled is simply skipped.
+    return "event" in outcome ? handlers.events?.[outcome.event]?.(outcome.payload) : handlers.success(outcome.value);
   }
 
   let error: CallError;
@@ -185,7 +249,7 @@ function settle(outcome: Outcome, handlers: AnyHandlers): unknown {
 
 function unwrapOutcome(outcome: Outcome): unknown {
   if (outcome.ok) {
-    return outcome.value;
+    return "event" in outcome ? undefined : outcome.value;
   }
 
   if (outcome.code === undefined) {
@@ -199,8 +263,12 @@ function unwrapOutcome(outcome: Outcome): unknown {
   throw new SparError({ code: outcome.code, ...payload } as never);
 }
 
-/** The outcome of one call. Read it with `match` (exhaustive over the declared errors) or `unwrap` (throws). */
-export class Result<T, E extends ErrorCases = {}> {
+/**
+ * The outcome of one call, stream item or subscription item. Read it with `match` (exhaustive over the declared errors
+ * and, for a subscription, its status events) or `unwrap` (throws). `V` lists the events a subscription item can carry,
+ * `{}` for calls and one-shot streams.
+ */
+export class Result<T, E extends ErrorCases = {}, V extends EventCases = {}> {
   readonly #outcome: Outcome;
 
   /** @internal Created by the SDK and by test helpers. */
@@ -214,17 +282,23 @@ export class Result<T, E extends ErrorCases = {}> {
   }
 
   /** Runs the handler for this outcome and returns its value. */
-  match<S, H extends ErrorHandlers<E> = ErrorHandlers<E>, F = never, K = never>(
-    handlers: Handlers<T, E, S, H, F, K>,
-  ): S | ErrorResults<H> | FailureResults<F, K> {
-    return settle(this.#outcome, handlers as unknown as AnyHandlers) as S | ErrorResults<H> | FailureResults<F, K>;
+  match<S, H extends ErrorHandlers<E> = ErrorHandlers<E>, F = never, K = never, G = unknown>(
+    handlers: Handlers<T, E, S, H, F, K, V, G>,
+  ): S | ErrorResults<H> | FailureResults<F, K> | EventResults<G, V> {
+    return settle(this.#outcome, handlers as unknown as AnyHandlers) as S | ErrorResults<H> | FailureResults<F, K> | EventResults<G, V>;
   }
 
-  /** The success value, or throws `SparError`. */
-  unwrap(): T {
-    return unwrapOutcome(this.#outcome) as T;
+  /** The success value, or throws `SparError`; a subscription's status event unwraps to `undefined`. */
+  unwrap(): [keyof V] extends [never] ? T : T | undefined {
+    return unwrapOutcome(this.#outcome) as [keyof V] extends [never] ? T : T | undefined;
   }
 }
+
+/**
+ * A subscription (plan section 2c): an `AsyncIterable` of `Result` items, the app's values, its status events (`reset`
+ * must be handled), and the declared error or failure that ended it, as its last item.
+ */
+export type Subscription<T, E extends ErrorCases = {}, V extends EventCases = SubscriptionEvents> = AsyncIterable<Result<T, E, V>>;
 
 /**
  * A call in flight: a `Promise` of its `Result`, with `match` and `unwrap`. It never rejects except through `unwrap`.

@@ -2,6 +2,7 @@
 // on that line, and no other line may fail.
 import { orders, type Basket, type Item } from "@spar/app/orders";
 import { stock } from "@spar/app/stock";
+import { ticker } from "@spar/app/ticker";
 
 const item: Item = { sku: "A-100", stock: 3n, price: 9.5, tags: [], replacement: null };
 const basket: Basket = { items: [item], coupon: null, notes: [] };
@@ -40,3 +41,20 @@ export const extraErrors = stock.list().match({
   success: () => 1,
   errors: {}, // expect TS2353
 });
+
+// A subscription's match must handle reset.
+export async function noReset(): Promise<void> {
+  for await (const change of ticker.changes()) {
+    change.match({ success: () => 1, events: { gap: () => 2 } }); // expect TS2322
+  }
+}
+
+// A latest-only subscription has no gap event.
+export async function latestGap(): Promise<void> {
+  for await (const level of ticker.level("A-100")) {
+    level.match({ success: () => 1, errors: { unknown: () => 2, closed: () => 3 }, events: { reset: () => 4, gap: () => 5 } }); // expect TS2322
+  }
+}
+
+// A manual subscription cannot be asked to resume by itself.
+export const resumeManual = ticker.level("A-100", { resume: "automatic" }); // expect TS2322

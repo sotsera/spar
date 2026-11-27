@@ -5,6 +5,7 @@ import { connectSpar, loopbackChannel } from "/spar/app/sdk/sdk.js";
 import { echo } from "/spar/app/echo.js";
 import { kinds } from "/spar/app/kinds.js";
 import { ledger } from "/spar/app/ledger.js";
+import { streams } from "/spar/app/streams.js";
 import { fingerprint } from "/spar/app/spar.js";
 
 // A test may pretend the page was built against other contracts.
@@ -121,7 +122,97 @@ async function roundTrips(count, warmUp) {
   return durations;
 }
 
-window.wire = { check, echoShapes, big, ratio, abortWait, many, post, who, echoKinds, sendBadByte, sendBadLevel, roundTrips, document: () => connection.document };
+/** What a stream or subscription item is, as plain JSON: a row or tick number, an event, the error or the failure. */
+const itemOf = item => item.match({
+  success: value => (typeof value.n === "bigint" ? Number(value.n) : value.n),
+  errors: { unreadable: error => `unreadable ${error.at}` },
+  events: { reset: () => "reset", gap: event => `gap ${event.dropped}`, reconnecting: event => `reconnecting ${event.attempt}`, resumed: () => "resumed" },
+  failure: error => `${error.kind} ${error.code}`,
+});
+
+const itemOfRows = item => item.match({ success: row => row.n, failure: error => `${error.kind} ${error.code}` });
+
+/** All `count` rows of a stream, timed by the page from the call to its last row: whether they came whole and in order. */
+async function rows(count) {
+  const started = performance.now();
+  let next = 0;
+  let ordered = true;
+  for await (const item of streams.rows(count)) {
+    const n = itemOfRows(item);
+    ordered &&= n === next;
+    next++;
+  }
+
+  return { received: next, ordered, ms: performance.now() - started };
+}
+
+/** Rows until the declared error that ends the stream. */
+async function readUntil(failAt) {
+  const seen = [];
+  for await (const item of streams.read(failAt)) {
+    seen.push(itemOf(item));
+  }
+
+  return seen;
+}
+
+/** Leaves the loop after `take` rows: the break waits for the backend to confirm it stopped. */
+async function breakEarly(take) {
+  let taken = 0;
+  for await (const _ of streams.rows(1_000_000_000)) {
+    if (++taken === take) {
+      break;
+    }
+  }
+
+  return taken;
+}
+
+/** Three live ticks, then an abort: the subscription ends with the backend's confirmed cancel as its last item. */
+async function ticksThenAbort() {
+  const controller = new AbortController();
+  const seen = [];
+  for await (const item of streams.ticks(0, { signal: controller.signal })) {
+    seen.push(itemOf(item));
+    if (seen.length === 3) {
+      controller.abort();
+    }
+  }
+
+  return seen;
+}
+
+/**
+ * `perSecond` ticks offered over one second: how many the page took, whether any were dropped, and how long from the
+ * subscription to its last tick, timed by the page.
+ */
+async function burst(perSecond) {
+  const controller = new AbortController();
+  const started = performance.now();
+  let received = 0;
+  let gaps = 0;
+  let ms = 0;
+  for await (const item of streams.burst(perSecond, { signal: controller.signal })) {
+    const seen = itemOf(item);
+    if (typeof seen === "number") {
+      received++;
+      if (received === perSecond) {
+        ms = performance.now() - started;
+        controller.abort();
+      }
+    } else if (seen.startsWith("gap")) {
+      gaps++;
+    }
+  }
+
+  return { received, gaps, ms };
+}
+
+window.wire = {
+  check, echoShapes, big, ratio, abortWait, many, post, who, echoKinds, sendBadByte, sendBadLevel, roundTrips,
+  rows, readUntil, breakEarly, ticksThenAbort, burst,
+  document: () => connection.document,
+};
 
 connection.ready();
 document.getElementById("status").textContent = "ready";

@@ -229,7 +229,10 @@ public sealed class NameTests
         var orders = ClientHarness.Emit(Fixtures.Shop)["orders.d.ts"];
 
         var imported = orders.Split('\n')[1];
+        var names = imported["import type { ".Length..imported.IndexOf(" }", StringComparison.Ordinal)].Split(", ");
 
-        Assert.Equal($"import type {{ {string.Join(", ", Client.TypeScriptNames.SdkImports)} }} from \"@spar/app/sdk\";", imported);
+        // Each module imports the SDK types its commands use, all from the reserved list.
+        Assert.StartsWith("import type { Call, CallOptions", imported, StringComparison.Ordinal);
+        Assert.All(names, name => Assert.Contains(name, Client.TypeScriptNames.SdkImports));
     }
 }

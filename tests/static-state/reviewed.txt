@@ -36,6 +36,8 @@ Spar | Spar.Runtime.SparJson.ReaderOptions | readonly | Reader options, a value 
 Spar | Spar.Runtime.SparJson.WriterOptions | readonly | Writer options, a value type copied on use; never written.
 Spar | Spar.Runtime.SparJson.StrictUtf8 | readonly | A UTF8Encoding that throws on invalid bytes: immutable, and GetString is thread-safe.
 Spar | Spar.Runtime.SparJson.Base64Alphabet | readonly | SearchValues of the base64 alphabet: immutable after creation, and its lookups are thread-safe.
+Spar | Spar.Runtime.SparStreamClient.ItemsOptions | readonly | Reader options, a value type copied on use; never written.
+Spar | Spar.Runtime.SparStreamClient.ResumeLimit | readonly | A TimeSpan constant.
 Spar | Spar.SparTestSession.<IsSupported>k__BackingField | readonly | The test-host feature switch, read once from AppContext; the same for the whole process by design, and false in apps (trimmed away).
 Spar | Spar.SparTestSession.CurrentSession | readonly | An AsyncLocal: each test's own flow sees its own session, so two apps in one process never share one.
 Spar | Spar.SparTestSession.WindowCloseLimit | readonly | A TimeSpan constant: how long a test's end waits for its window's teardown.
@@ -272,6 +274,8 @@ Spar.Generator | Spar.Generator.Descriptors.DuplicateTypeName | readonly | An im
 Spar.Generator | Spar.Generator.Descriptors.GenericCommand | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.GenericContract | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.InvalidName | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.InvalidSubscription | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.SubscriptionNotStream | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.ListedLibrary | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.MissingProperty | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.NoErrorCases | readonly | An immutable DiagnosticDescriptor.
