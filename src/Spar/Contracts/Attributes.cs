@@ -71,3 +71,15 @@ public enum SubscriptionResume
     /// <summary>The subscription ends with the connection; the page decides whether to subscribe again.</summary>
     Manual,
 }
+
+/// <summary>
+/// Puts a command, or every command of a contract, in a serial group: the group's calls run one at a time, app-wide, in
+/// the order they arrive, whichever window or test makes them. A call waiting for its turn holds no call slot, its time
+/// limit starts when it runs, and one cancelled while it waits never runs (<c>cancelled-before-start</c>). Streams and
+/// subscriptions cannot join a group.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Interface, Inherited = false)]
+public sealed class SparSerialAttribute(string group) : Attribute
+{
+    public string Group { get; } = group;
+}

@@ -95,7 +95,8 @@ internal sealed record CommandModel(
     string? ErrorKey,
     string? ErrorCSharp,
     int TimeoutSeconds,
-    SubscriptionModel? Subscription = null)
+    SubscriptionModel? Subscription = null,
+    string? SerialGroup = null)
 {
     /// <summary>Whether the command is a stream or a subscription: its items travel in batches, with credits.</summary>
     public bool IsStream => Return is ReturnShape.Items or ReturnShape.ResultItems;

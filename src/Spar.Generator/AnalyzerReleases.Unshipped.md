@@ -20,6 +20,7 @@ SPAR015 | Spar.Contracts | Error | ContractAnalyzer
 SPAR016 | Spar.Contracts | Error | ContractAnalyzer
 SPAR017 | Spar.Contracts | Error | ContractAnalyzer
 SPAR018 | Spar.Contracts | Error | ContractAnalyzer
+SPAR019 | Spar.Contracts | Error | ContractAnalyzer
 SPAR020 | Spar.Contracts | Error | ContractAnalyzer
 SPAR021 | Spar.Contracts | Error | ContractAnalyzer
 SPAR022 | Spar.Contracts | Error | ContractAnalyzer

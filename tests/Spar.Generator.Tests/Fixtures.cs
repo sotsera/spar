@@ -37,6 +37,7 @@ internal static class Fixtures
             public Task<Result<Detail, CatalogError>> FindAsync(Item request, CancellationToken cancellationToken) => null!;
 
             [SparCommand(TimeoutSeconds = 30)]
+            [SparSerial("catalog-writes")]
             public Task<Result<CatalogError>> RemoveAsync(Item request) => null!;
 
             [SparCommand]

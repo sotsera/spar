@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,8 @@ public sealed class SparCallContext(IServiceProvider services, ReadOnlyMemory<by
 /// </summary>
 internal sealed class SparDispatcher(IServiceProvider services, SparCatalog catalog, ILogger? testLog = null)
 {
+    private readonly SerialGroups _serial = new();
+
     /// <summary>The app's bridge limits (<see cref="SparBuilder.Bridge"/>), or the defaults.</summary>
     public BridgeLimits Limits { get; } = services.GetService<BridgeLimits>() ?? BridgeLimits.Default;
 
@@ -51,7 +54,7 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     public ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, CancellationToken cancellationToken,
         SparCaller caller = SparCaller.Page) =>
-        InvokeAsync(contract, command, callId, request, null, cancellationToken, caller);
+        InvokeAsync(contract, command, callId, request, null, null, cancellationToken, caller);
 
     /// <summary>
     /// Runs a stream or a subscription to its end: its items go to <paramref name="sink"/>, and the outcome is how it ended
@@ -62,16 +65,25 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     public ValueTask<SparOutcome> InvokeStreamAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink sink, CancellationToken cancellationToken,
         SparCaller caller = SparCaller.Page) =>
-        InvokeAsync(contract, command, callId, request, sink, cancellationToken, caller);
+        InvokeAsync(contract, command, callId, request, sink, null, cancellationToken, caller);
+
+    /// <summary>
+    /// A page's call, as the bridge runs it: <paramref name="running"/> is told when the command starts, after a serial
+    /// call's wait for its group, so the bridge counts the wait in its queue and nothing after it.
+    /// </summary>
+    internal ValueTask<SparOutcome> InvokeAsync(
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, Action running, CancellationToken cancellationToken) =>
+        InvokeAsync(contract, command, callId, request, null, running, cancellationToken, SparCaller.Page);
 
     private async ValueTask<SparOutcome> InvokeAsync(
-        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, CancellationToken cancellationToken,
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, Action? running,
+        CancellationToken cancellationToken,
         SparCaller caller)
     {
         var record = Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported
             ? Recorder?.Begin(callId, contract, command, caller)
             : null;
-        var outcome = await RunAsync(contract, command, callId, request, sink, caller, cancellationToken);
+        var outcome = await RunAsync(contract, command, callId, request, sink, running, caller, cancellationToken);
         if (Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported)
         {
             record?.End(outcome);
@@ -81,7 +93,7 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     }
 
     private async ValueTask<SparOutcome> RunAsync(
-        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, SparCaller caller,
+        string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, Action? running, SparCaller caller,
         CancellationToken cancellationToken)
     {
         if (!catalog.TryGet(contract, command, out var entry))
@@ -95,6 +107,28 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
             return SparOutcome.FromFailure(SparFailure.InvalidRequest($"{contract}.{command} is {expected}."));
         }
 
+        // A serial call waits for its group's turn first; cancelled meanwhile, it never ran.
+        SerialGroups.Turn? turn = null;
+        if (entry.SerialGroup is { } group)
+        {
+            var waiting = Time.GetTimestamp();
+            try
+            {
+                turn = await _serial.EnterAsync(group, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                return SparOutcome.FromFailure(new SparFailure("cancelled", "cancelled-before-start", "notStarted"));
+            }
+
+            Activity.Current?.SetTag("spar.serial.group", group);
+            Activity.Current?.SetTag("spar.serial.wait", Time.GetElapsedTime(waiting).TotalSeconds);
+        }
+
+        using var _ = turn;
+        running?.Invoke();
+
+        // The time limit counts from here: a call's wait for its group is not its own time.
         using var limit = entry.TimeoutSeconds > 0 ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : null;
         limit?.CancelAfter(TimeSpan.FromSeconds(entry.TimeoutSeconds));
         var callToken = limit?.Token ?? cancellationToken;

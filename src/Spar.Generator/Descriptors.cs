@@ -55,6 +55,14 @@ internal static class Descriptors
     public const string CapacityWithLatestOnly =
         "sets Capacity with LatestOnly. A subscription that keeps only the newest value holds one; remove Capacity";
 
+    public static readonly DiagnosticDescriptor InvalidSerialGroup = Error(
+        "SPAR019", "Invalid serial group", "Command '{0}' {1}", Contracts);
+
+    public const string SerialGroupEmpty = "is in a serial group without a name. Name the group, as in [SparSerial(\"recipes\")]";
+
+    public const string SerialGroupStream =
+        "is a stream or a subscription in a serial group. A stream would hold its group for as long as it runs; take [SparSerial] off it, or off its contract and onto its other commands";
+
     public const string CapacityNotPositive = "sets Capacity to {0}. Capacity is a positive number of values, or left out for 256";
 
     public static readonly DiagnosticDescriptor TooManyRequests = Error(

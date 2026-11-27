@@ -375,6 +375,10 @@ internal sealed partial class BridgeSession : IDisposable
             {
                 refusal = new SparFailure("cancelled", "cancelled-before-start", "notStarted");
             }
+            else if (IsSerial(call))
+            {
+                refusal = TryStartSerialLocked(new Waiting(call, received)) ? null : SparFailure.Busy();
+            }
             else if (_inFlight < _limits.CallsInFlight)
             {
                 StartLocked(new Waiting(call, received));
@@ -438,12 +442,17 @@ internal sealed partial class BridgeSession : IDisposable
             }
         }
 
+        Deliver(call, outcome, received, activity);
+    }
+
+    /// <summary>A command ended: its outcome to the page, unless the call was failed meanwhile or the document went away.</summary>
+    private void Deliver(BridgeMessage call, SparOutcome outcome, Received received, Activity? activity)
+    {
         outcome = Deliverable(call, outcome);
         _telemetry.Completed(activity, call, outcome, received);
         lock (_gate)
         {
-            // A call that was failed, or a document that went away, gets no late reply.
-            if (!_pending.Remove(id) || _closed)
+            if (!_pending.Remove(call.Id!.Value) || _closed)
             {
                 return;
             }

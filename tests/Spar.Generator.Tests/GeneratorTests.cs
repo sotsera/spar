@@ -164,7 +164,7 @@ public sealed class GeneratorTests
         string[] expected =
         [
             "new(\"catalog\", \"find\", 0, HandleCatalogFind),",
-            "new(\"catalog\", \"remove\", 30, HandleCatalogRemove),",
+            "new(\"catalog\", \"remove\", 30, HandleCatalogRemove) { SerialGroup = \"catalog-writes\" },",
             "new(\"catalog\", \"list\", 0, HandleCatalogList),",
             "new(\"catalog\", \"count\", 0, HandleCatalogCount),",
             "new(\"catalog\", \"clear\", 0, HandleCatalogClear),",

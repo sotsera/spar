@@ -27,6 +27,9 @@ public sealed record SparCommandEntry(string Contract, string Command, int Timeo
     /// <summary>A subscription that keeps only its newest value: no <c>gap</c>, a capacity of 1.</summary>
     public bool LatestOnly { get; init; }
 
+    /// <summary>The serial group its calls wait for (<c>[SparSerial]</c>), or null: they run one at a time, app-wide.</summary>
+    public string? SerialGroup { get; init; }
+
     public bool IsStream => StreamHandler is not null;
 
     public bool IsSubscription => Capacity > 0;

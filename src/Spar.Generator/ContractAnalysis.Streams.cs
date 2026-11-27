@@ -83,6 +83,41 @@ internal sealed partial class ContractAnalysis
         return true;
     }
 
+    /// <summary>
+    /// The command's serial group (<c>[SparSerial]</c> on the method, else on its contract), or null without one. False
+    /// for a stream or subscription in a group, or an empty group name (SPAR019); the command is then left out.
+    /// </summary>
+    private bool SerialGroup(IMethodSymbol method, ReturnShape shape, out string? group)
+    {
+        group = null;
+        var data = SerialAttribute(method) ?? SerialAttribute(method.ContainingType);
+        if (data is null)
+        {
+            return true;
+        }
+
+        var location = data.ApplicationSyntaxReference?.GetSyntax().GetLocation();
+        var name = data.ConstructorArguments.Length > 0 ? data.ConstructorArguments[0].Value as string : null;
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            ReportAt(Descriptors.InvalidSerialGroup, method, location, method.Name, Descriptors.SerialGroupEmpty);
+            return false;
+        }
+
+        if (shape is ReturnShape.Items or ReturnShape.ResultItems)
+        {
+            ReportAt(Descriptors.InvalidSerialGroup, method, location, method.Name, Descriptors.SerialGroupStream);
+            return false;
+        }
+
+        group = name;
+        return true;
+    }
+
+    private static AttributeData? SerialAttribute(ISymbol symbol) =>
+        symbol.GetAttributes().FirstOrDefault(a =>
+            a.AttributeClass?.Name == "SparSerialAttribute" && a.AttributeClass.ContainingNamespace.ToDisplayString() == "Spar");
+
     private static T? Named<T>(AttributeData data, string name)
         where T : struct
     {

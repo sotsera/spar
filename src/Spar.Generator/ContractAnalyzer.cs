@@ -33,6 +33,7 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
         Descriptors.DuplicateCommand,
         Descriptors.SubscriptionNotStream,
         Descriptors.InvalidSubscription,
+        Descriptors.InvalidSerialGroup,
         Descriptors.UnsupportedWireType,
         Descriptors.NotPositionalRecord,
         Descriptors.MissingProperty,

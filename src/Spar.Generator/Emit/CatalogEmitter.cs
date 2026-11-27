@@ -164,7 +164,10 @@ internal static class CatalogEmitter
         var name = $"\"{contract.WireName}\", \"{command.WireName}\", {command.TimeoutSeconds}";
         if (!command.IsStream)
         {
-            return $"new({name}, {HandlerName(contract, command)}),";
+            var serial = command.SerialGroup is { } group
+                ? $" {{ SerialGroup = {Microsoft.CodeAnalysis.CSharp.SymbolDisplay.FormatLiteral(group, quote: true)} }}"
+                : "";
+            return $"new({name}, {HandlerName(contract, command)}){serial},";
         }
 
         var settings = $"StreamHandler = {HandlerName(contract, command)}";

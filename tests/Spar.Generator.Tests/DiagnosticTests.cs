@@ -59,6 +59,8 @@ public sealed class DiagnosticTests
     [InlineData("[SparContract] public sealed class Items { [SparCommand, SparSubscription(LatestOnly = true, Capacity = 4)] public System.Collections.Generic.IAsyncEnumerable<Item> WatchAsync() => null!; }", "SPAR018: SparSubscription(LatestOnly = true, Capacity = 4)")]
     [InlineData("[SparContract] public sealed class Items { [SparCommand, SparSubscription(Capacity = 0)] public System.Collections.Generic.IAsyncEnumerable<Item> WatchAsync() => null!; }", "SPAR018: SparSubscription(Capacity = 0)")]
     [InlineData("public closed record Err { public sealed record Gone : Err; } [SparContract] public sealed class Items { [SparCommand] public System.Collections.Generic.IAsyncEnumerable<Result<Err>> WatchAsync() => null!; }", "SPAR010: WatchAsync")]
+    [InlineData("[SparContract] public sealed class Items { [SparCommand, SparSerial(\"\")] public Task GoAsync() => null!; }", "SPAR019: SparSerial(\"\")")]
+    [InlineData("[SparContract, SparSerial(\"items\")] public sealed class Items { [SparCommand] public System.Collections.Generic.IAsyncEnumerable<Item> WatchAsync() => null!; }", "SPAR019: SparSerial(\"items\")")]
     public async Task A_contract_problem_is_reported_once_at_its_location(string contract, string expected)
     {
         var diagnostics = await GeneratorHarness.AnalyzeAsync(Program + contract);

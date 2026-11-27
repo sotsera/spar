@@ -252,7 +252,8 @@ internal sealed partial class ContractAnalysis
         }
 
         var shape = Return(method);
-        if (shape is null || !Subscription(method, shape.Value.Shape, out var subscription))
+        if (shape is null || !Subscription(method, shape.Value.Shape, out var subscription)
+            || !SerialGroup(method, shape.Value.Shape, out var serialGroup))
         {
             return null;
         }
@@ -268,7 +269,8 @@ internal sealed partial class ContractAnalysis
             shape.Value.ErrorKey,
             shape.Value.ErrorCSharp,
             TimeoutSeconds(method),
-            subscription);
+            subscription,
+            serialGroup);
     }
 
     /// <summary>A request is one record or one scalar, nullable or not (SPAR015 for a list); <c>byte[]</c> is a scalar.</summary>
