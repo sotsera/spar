@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Channels;
 using Spar.Bridge;
+using Spar.Files;
 using Spar.Hosting;
 using Spar.HotReload;
 using Spar.Linux.Interop;
@@ -59,6 +60,8 @@ internal sealed class ScriptBridge
     private readonly IDisposable? _backendUpdates;
     private readonly Func<bool?, Task> _chooseScheme;
     private HostCommands? _hostCommands;
+    private readonly Func<SparRunningApp, HostWindow> _makeWindow;
+    private HostWindow? _window;
     private nint _view;
     private Document? _current;
     private bool _flushPosted;
@@ -67,8 +70,10 @@ internal sealed class ScriptBridge
     /// <param name="violations">Where the relay's violation batches go; null when the listener does not report in this build.</param>
     /// <param name="chooseScheme">The window taking the page's <c>setColorScheme</c>, completing once it has (any thread).</param>
     public ScriptBridge(
-        MainLoop ui, HostLog log, Task<SparRunningApp> app, bool includeDetails, CspViolationLog? violations, Func<bool?, Task> chooseScheme)
+        MainLoop ui, HostLog log, Task<SparRunningApp> app, bool includeDetails, CspViolationLog? violations, Func<bool?, Task> chooseScheme,
+        Func<SparRunningApp, HostWindow> window)
     {
+        _makeWindow = window;
         _chooseScheme = chooseScheme;
         _ui = ui;
         _log = log;
@@ -83,6 +88,9 @@ internal sealed class ScriptBridge
     }
 
     /// <summary>Raised on the loop when the current document reports <c>ui-ready</c>.</summary>
+    /// <summary>The window's grants, dialogs and drops, made with its first document's session; null before it.</summary>
+    public HostWindow? Window => Volatile.Read(ref _window);
+
     public event Action? DocumentReady;
 
     /// <summary>
@@ -400,10 +408,12 @@ internal sealed class ScriptBridge
 
             // One for the window, so the page's colour scheme choices are taken in the order sent, across documents.
             _hostCommands ??= new HostCommands(app.Folders.DataRoot, _chooseScheme, _log.Logger);
+            _window ??= _makeWindow(app);
             var session = new BridgeSession(
                 app.Dispatcher, app.Catalog.Fingerprint, document.Id, message => Send(document, message), _includeDetails)
             {
                 HostCommands = _hostCommands,
+                Window = _window,
             };
             session.Dropped += reason => _log.Warn($"Bridge, document {document.Id}: dropped {reason}");
             session.Ready += () => _ui.Post(() => Ready(document), "bridge ui-ready");

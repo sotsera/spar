@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spar.Bridge;
+using Spar.Files;
 using Spar.Hosting;
 using Spar.Logging;
 using Spar.Runtime;
@@ -76,6 +77,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     private BrowserView? _view;
     private PageWatch? _watch;
     private HWND _window;
+    private HostWindow? _files;
+    private FileDialogHost? _dialogs;
     private HBRUSH _background;
     private State _state;
     private bool _failed;
@@ -340,6 +343,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
                 await bridge.RunPageCloseWorkAsync(Bounded(PageCloseWorkMilliseconds, deadline));
             }
 
+            _dialogs?.CloseOpen();
             var settled = bridge.CloseAsync("window closing");
             _log.Step("calls stopped");
             var first = await Task.WhenAny(settled, Task.Delay(Bounded(CommandSettleMilliseconds, deadline)));
@@ -354,6 +358,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
 
         _view?.Close();
         _log.Step("controller closed");
+        _files?.Close();
         if (_sessionEnding)
         {
             // Windows ended the process as soon as the window holding WM_ENDSESSION was gone, before the services' last
@@ -424,7 +429,8 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             SparDevelopment.IsSupported,
             _listenerReports ? _violations : null,
             _pageErrors,
-            new HostCommands(_running.Folders.DataRoot, ChooseSchemeAsync, _log.Logger));
+            new HostCommands(_running.Folders.DataRoot, ChooseSchemeAsync, _log.Logger),
+            HostWindow());
         if (_view is { } view && _state != State.Closing)
         {
             _watch = WindowsPageHost.Watch(ui, _log, _window, _title, bridge, view, _hangHook, _automated, HeartbeatInterval());
@@ -447,6 +453,23 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     /// An unrecoverable failure: a message owned by the window, then the teardown with its exit code. In the automated
     /// mode nobody can answer, so the message goes to the log only.
     /// </summary>
+    /// <summary>
+    /// The window's grants and dialogs: the common item dialogs owned by this window, or the test host's fake when the
+    /// app runs under it (it registers one as a service). Revoked when the window closes.
+    /// </summary>
+    private HostWindow HostWindow()
+    {
+        var running = _running!;
+        var fake = running.Services.GetService<INativeFileDialogs>();
+        if (fake is null)
+        {
+            _dialogs = new FileDialogHost(_ui!, () => (nint)_window, _log);
+        }
+
+        _files = new HostWindow(running.Dispatcher.Time, fake ?? _dialogs);
+        return _files;
+    }
+
     private void Fail(int exitCode, string message) => _ui?.Post(() =>
     {
         if (_state == State.Closing || _failed)

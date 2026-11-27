@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spar.Files;
 using Spar.Hosting;
 using Spar.Runtime;
 
@@ -106,8 +107,9 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
     private SparWindow? _window;
     private long _nextCallId;
 
-    private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options, SparTestLog log)
+    private SparTestApp(SparTestSession session, Task<int> exit, SparRunningApp app, SparTestOptions options, SparTestLog log, SparTestFileDialogs dialogs)
     {
+        FileDialogs = dialogs;
         _session = session;
         _exit = exit;
         _app = app;
@@ -117,6 +119,9 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
 
         // The typed clients read the handles a result gives them from the app's store, held as a page would hold them.
         _blobs = app.Dispatcher.Blobs.Open(app.Dispatcher.Limits.MaxBlobBytes, app.Dispatcher.Limits.MaxBlobs);
+
+        // The test's own calls come from a window of their own: its grants, and the test's answers to its dialogs.
+        _blobs.Window = new HostWindow(app.Dispatcher.Time, dialogs);
         app.Dispatcher.Blobs.StartTest();
     }
 
@@ -128,6 +133,12 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
 
     /// <summary>The contracts' fingerprint, as a page would see it in <c>open</c>.</summary>
     public string Fingerprint => _app.Catalog.Fingerprint;
+
+    /// <summary>
+    /// The app's file dialogs, every window's: none reaches the screen, and each takes the next answer queued here, as
+    /// <c>app.FileDialogs.Choose(path)</c> or <c>Dismiss()</c>.
+    /// </summary>
+    public SparTestFileDialogs FileDialogs { get; }
 
     public TimeSpan StartedAfter { get; private set; }
 
@@ -187,11 +198,18 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         RequireSurfaceTrait(options.Surface);
 
         SparTestLog? log = null;
+        SparTestApp? started = null;
+        var dialogs = new SparTestFileDialogs(problem => started?.ReportProblem(problem));
         var window = options.Surface == SparTestSurface.Window ? new WindowSurface(options) : null;
         var session = new SparTestSession
         {
             DataRoot = TestDataRoots.Next(),
-            ConfigureServices = services => options.ServiceActions.ForEach(action => action(services)),
+            ConfigureServices = services =>
+            {
+                // Spar's fakes first, so a test's own replacement wins.
+                services.AddSingleton<INativeFileDialogs>(dialogs);
+                options.ServiceActions.ForEach(action => action(services));
+            },
             AllowedExternals = options.AllowedExternals,
             CreateLog = time => log = new SparTestLog(time),
             Window = window?.Request,
@@ -215,7 +233,8 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         }
 
         var running = await session.Started;
-        var testApp = new SparTestApp(session, exit.Task, running, options, log!);
+        var testApp = new SparTestApp(session, exit.Task, running, options, log!, dialogs);
+        started = testApp;
         try
         {
             if (options.Surface == SparTestSurface.Browser)
@@ -288,6 +307,7 @@ public sealed class SparTestApp : ISparInvoker, IAsyncDisposable
         }
 
         _blobs.Close();
+        _blobs.Window?.Close();
         _app.Dispatcher.Blobs.EndTest();
         _session.Stop();
         await Step(failures, async () =>

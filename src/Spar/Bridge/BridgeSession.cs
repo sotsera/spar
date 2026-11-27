@@ -121,7 +121,9 @@ internal sealed partial class BridgeSession : IDisposable
     /// </summary>
     public HostCommands? HostCommands { get; init; }
 
-    public void Receive(string message)
+    public void Receive(string message) => ReceiveCore(message, null);
+
+    private void ReceiveCore(string message, IReadOnlyList<string>? files)
     {
         var received = _telemetry.Now();
 
@@ -145,7 +147,8 @@ internal sealed partial class BridgeSession : IDisposable
                 Hello(decoded);
                 break;
             case BridgeMessageType.Call:
-                Call(decoded, received);
+                var attached = files is not null && HostCommands.IsHostContract(decoded.Contract!) && decoded.Command == Files.FileCommands.Dropped;
+                Call(attached ? decoded with { Files = files } : decoded, received);
                 break;
             case BridgeMessageType.Cancel:
                 Cancel(decoded.Id!.Value);
@@ -262,7 +265,14 @@ internal sealed partial class BridgeSession : IDisposable
             _closed = true;
             foreach (var pending in _pending.Values)
             {
-                pending.Cancel();
+                try
+                {
+                    pending.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // The command has ended: its dispatch disposes the source before its reply removes it from here.
+                }
             }
 
             _pending.Clear();
@@ -439,9 +449,12 @@ internal sealed partial class BridgeSession : IDisposable
         SparOutcome outcome;
         try
         {
-            outcome = HostCommands.IsHostContract(call.Contract!) && call.Command == HostCommands.ReleaseBlob
+            var hostContract = HostCommands.IsHostContract(call.Contract!);
+            outcome = hostContract && call.Command == HostCommands.ReleaseBlob
                 ? ReleaseBlob(call.Payload)
-                : HostCommands is { } host && HostCommands.IsHostContract(call.Contract!)
+                : hostContract && _files is { } files && Files.FileCommands.Handles(call.Command!)
+                    ? await files.InvokeAsync(id, call.Command!, call.Payload, call.Files, token.Token)
+                : HostCommands is { } host && hostContract
                     ? await host.InvokeAsync(call.Command!, call.Payload, token.Token)
                     : await _dispatcher.InvokeAsync(call.Contract!, call.Command!, id, call.Payload, _blobs, token.Token);
         }

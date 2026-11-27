@@ -107,6 +107,24 @@ public sealed class DiagnosticTests
     }
 
     [Fact]
+    public async Task A_settings_record_holding_a_grant_is_reported_where_it_is_declared()
+    {
+        const string source = """
+            using Spar;
+
+            var app = SparApplication.Create(args, spar => spar.Settings(new Prefs("notes", null)));
+            return app.Run();
+
+            public sealed record Prefs(string Name, FolderGrant? LastFolder);
+
+            """;
+
+        var diagnostics = await GeneratorHarness.AnalyzeAsync(source);
+
+        Assert.Equal(["SPAR028: Prefs"], diagnostics);
+    }
+
+    [Fact]
     public async Task DateTime_is_a_warning_at_each_place_that_uses_it_and_the_command_stays()
     {
         const string Contracts = """

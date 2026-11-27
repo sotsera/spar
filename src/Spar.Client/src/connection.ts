@@ -10,6 +10,12 @@ import { runCloseGuards, type CloseRequest, type GuardsOutcome } from "./windows
 /** The host's channel for one document: strings both ways, never structured messages. */
 export interface BridgeChannel {
   send(message: string): void;
+  /**
+   * Sends a message with the files of a drop, which the host reads from the message itself (WebView2's
+   * `postMessageWithAdditionalObjects`). Only a channel whose host takes files that way has it; the others send the
+   * message alone, their host knowing the drop's files by itself.
+   */
+  sendWithFiles?(message: string, files: readonly File[]): void;
   /** Registers the listeners. `closed` runs when the channel can deliver nothing more (the host went away). */
   listen(received: (message: string) => void, closed: () => void): void;
   /**
@@ -103,7 +109,9 @@ export class Connection implements StreamHost {
   }
 
   /** Sends one call and resolves with its outcome; the promise never rejects. */
-  invoke(contract: string, command: string, request: string, decoder: Decoder<unknown>, options?: CallOptions): Promise<Outcome> {
+  invoke(
+    contract: string, command: string, request: string, decoder: Decoder<unknown>, options?: CallOptions, files?: readonly File[],
+  ): Promise<Outcome> {
     const name: CallName = { contract, command };
     const signal = options?.signal;
     if (signal?.aborted === true) {
@@ -140,7 +148,7 @@ export class Connection implements StreamHost {
         const call: BridgeMessage = span === undefined
           ? { type: "call", id, contract, command, payload: request }
           : { type: "call", id, contract, command, traceparent: span.traceparent, payload: request };
-        this.#send(call);
+        this.#send(call, files);
       };
       if (this.#state === "open") {
         send();
@@ -269,10 +277,18 @@ export class Connection implements StreamHost {
     this.#closingWork.push(work);
   }
 
-  #send(message: BridgeMessage): void {
-    if (this.#state !== "closed" && this.#state !== "lost") {
-      this.#channel.send(encode(message));
+  #send(message: BridgeMessage, files?: readonly File[]): void {
+    if (this.#state === "closed" || this.#state === "lost") {
+      return;
     }
+
+    const text = encode(message);
+    if (files !== undefined && files.length > 0 && this.#channel.sendWithFiles !== undefined) {
+      this.#channel.sendWithFiles(text, files);
+      return;
+    }
+
+    this.#channel.send(text);
   }
 
   /** The hello that opens the document's channel, again after a reconnect: the same fingerprint and types. */

@@ -128,6 +128,13 @@ internal sealed partial class AppWindow
             _view?.TerminateHungWebProcess();
         }
 
+        // A file dialog is cancelled and its answer awaited too: it holds the window as its parent.
+        _fileDialogs?.CloseOpen();
+        if (_fileDialogs is { } files && await Task.WhenAny(files.Closed, Task.Delay(DialogCloseMilliseconds)) != files.Closed)
+        {
+            _log.Warn($"The file dialog had not answered {DialogCloseMilliseconds} ms after it was cancelled.");
+        }
+
         // Its dialogs go first, their answers read, so none is destroyed with the window (WindowDialogs).
         if (!await _dialogs.CloseAllAsync(DialogCloseMilliseconds))
         {
@@ -140,6 +147,7 @@ internal sealed partial class AppWindow
         Gtk.gtk_window_destroy(_window);
         _window = 0;
         _log.Step("window destroyed");
+        _bridge?.Window?.Close();
 
         await WaitForWebProcessesAsync();
         _owner.WindowClosed();

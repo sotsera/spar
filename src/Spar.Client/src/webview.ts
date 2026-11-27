@@ -9,6 +9,8 @@ import { isWebKitHost, webKitChannel } from "./webkit.js";
 /** The part of WebView2's `window.chrome.webview` the transport uses. */
 export interface WebViewPort {
   postMessage(message: string): void;
+  /** Posts a message with objects the host reads from it, such as the `File`s of a drop (WebView2 1.0.1418 and later). */
+  postMessageWithAdditionalObjects?(message: string, objects: readonly unknown[]): void;
   addEventListener(type: "message", listener: (event: { readonly data: unknown }) => void): void;
 }
 
@@ -56,6 +58,16 @@ class WebViewChannel implements BridgeChannel {
 
   send(message: string): void {
     this.#port.postMessage(message);
+  }
+
+  /** The host reads each file's path from the message; the browser posts only files the user gave the page. */
+  sendWithFiles(message: string, files: readonly File[]): void {
+    if (this.#port.postMessageWithAdditionalObjects === undefined) {
+      this.#port.postMessage(message);
+      return;
+    }
+
+    this.#port.postMessageWithAdditionalObjects(message, files);
   }
 
   /**

@@ -42,13 +42,38 @@ public sealed class WebView2SlotTests
         ("ICoreWebView2MoveFocusRequestedEventArgs", 5, "PutHandled"),
     ];
 
+    /// <summary>The file dialogs' interfaces (Interop/Shell.cs), from the Windows SDK's header rather than WebView2's.</summary>
+    private static readonly string[] ShellInterfaces = ["IFileDialog", "IFileOpenDialog", "IShellItem", "IShellItemArray"];
+
     [Fact]
     public void Every_declared_method_sits_in_its_header_slot()
     {
-        var problems = ComSlots.Problems(Path.Combine(AppContext.BaseDirectory, "WebView2.h"), "Spar.Windows", out var declared);
+        // The Shell interfaces are checked where the Windows SDK is installed (the development PC, GitHub's Windows
+        // runners); elsewhere only WebView2's, whose header comes with the package.
+        var shell = ShellHeader();
+        var headers = shell is null
+            ? new[] { Path.Combine(AppContext.BaseDirectory, "WebView2.h") }
+            : [Path.Combine(AppContext.BaseDirectory, "WebView2.h"), shell];
+        var problems = ComSlots.Problems(headers, "Spar.Windows", name => shell is null && ShellInterfaces.Contains(name), out var declared);
 
         Assert.True(declared > 0);
         Assert.True(problems.Count == 0, string.Join("\n", problems));
+    }
+
+    /// <summary>The newest Windows SDK's <c>um/ShObjIdl_core.h</c>, or null where there is none.</summary>
+    private static string? ShellHeader()
+    {
+        var kits = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Windows Kits", "10", "Include");
+        if (!OperatingSystem.IsWindows() || !Directory.Exists(kits))
+        {
+            return null;
+        }
+
+        return Directory.GetDirectories(kits)
+            .Select(version => Path.Combine(version, "um", "ShObjIdl_core.h"))
+            .Where(File.Exists)
+            .Order(StringComparer.Ordinal)
+            .LastOrDefault();
     }
 
     [Fact]

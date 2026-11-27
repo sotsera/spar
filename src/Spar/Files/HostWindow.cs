@@ -1,0 +1,54 @@
+namespace Spar.Files;
+
+/// <summary>What a file dialog is asked for; the host shows it owned by its window.</summary>
+internal enum FileDialogKind
+{
+    Open,
+    OpenMany,
+    Save,
+    Folder,
+}
+
+/// <summary>One dialog request, as the host's native dialog takes it.</summary>
+internal sealed record FileDialogRequest(FileDialogKind Kind, string? Title, IReadOnlyList<FileFilter> Filters, string? SuggestedName);
+
+/// <summary>
+/// A host's file dialogs for one window: shown owned by it, on its UI thread or its main loop, never blocking it. The
+/// paths chosen (one for <see cref="FileDialogKind.Open"/>, <see cref="FileDialogKind.Save"/> and
+/// <see cref="FileDialogKind.Folder"/>), or why there are none. The test host registers a fake of its own as a service,
+/// which every window then uses instead.
+/// </summary>
+internal interface INativeFileDialogs
+{
+    Task<Result<IReadOnlyList<string>, FileDialogError>> ShowAsync(FileDialogRequest request, CancellationToken cancellationToken);
+}
+
+/// <summary>
+/// The window a call came from, as Spar's services see it: its grants, its file dialogs (one open at a time), and the
+/// files of a drop the host has seen but the page has not yet claimed. A document belongs to its window, so the grants
+/// outlive a reload; the host closes it with the window, which revokes them.
+/// </summary>
+internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs)
+{
+    private int _dialogOpen;
+
+    public GrantTable Grants { get; } = new(time);
+
+    /// <summary>The window's dialogs; null for a host that has none (loopback outside the test host).</summary>
+    public INativeFileDialogs? Dialogs { get; } = dialogs;
+
+    /// <summary>The drops the host saw on this window (Linux: the drag's files, read by the host itself).</summary>
+    public DropInbox Drops { get; } = new();
+
+    /// <summary>Claims the window's one dialog; false while another is open.</summary>
+    public bool TryBeginDialog() => Interlocked.CompareExchange(ref _dialogOpen, 1, 0) == 0;
+
+    public void EndDialog() => Volatile.Write(ref _dialogOpen, 0);
+
+    /// <summary>The window closed: its grants are revoked and a drop it held is dropped.</summary>
+    public void Close()
+    {
+        Grants.Close();
+        Drops.Clear();
+    }
+}

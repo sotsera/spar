@@ -101,7 +101,7 @@ internal sealed partial class ContractAnalysis
     private static bool IsAddressValue(TypeRef type) => type.Kind switch
     {
         WireKind.Nullable => IsAddressValue(type.Element!),
-        WireKind.List or WireKind.Record or WireKind.Blob or WireKind.Bytes => false,
+        WireKind.List or WireKind.Record or WireKind.Blob or WireKind.Bytes or WireKind.FileGrant or WireKind.FolderGrant => false,
         _ => true,
     };
 

@@ -13,7 +13,7 @@ namespace Spar.Linux;
 /// Nothing is recovered once the teardown has begun, nor a process the host ended itself: that is "Reload page" for a
 /// hung page (plan section 3, "Hung pages"), which reloads once the process is gone, or the teardown of a hung page.
 /// </summary>
-internal sealed class BrowserView
+internal sealed partial class BrowserView
 {
     /// <summary><c>WEBKIT_LOAD_STARTED</c>.</summary>
     private const int LoadStarted = 0;
@@ -139,6 +139,7 @@ internal sealed class BrowserView
             self,
             0,
             0);
+        ListenForDrops(self);
         AddRelay(relay);
         if (pageScript is not null)
         {
@@ -170,6 +171,7 @@ internal sealed class BrowserView
         Gtk.gtk_event_controller_set_propagation_phase(_input, 1);
         _inputHandler = GLib.g_signal_connect_data(_input, "event", (delegate* unmanaged<nint, nint, nint, int>)&OnInputEvent, self, 0, 0);
         Gtk.gtk_widget_add_controller(_view, _input);
+        WatchDrags(self);
         _bridge.Attach(_view);
         _log.Phase("web view created");
     }
@@ -317,6 +319,7 @@ internal sealed class BrowserView
             GLib.g_signal_handler_disconnect(_view, _menuHandler);
             GLib.g_signal_handler_disconnect(_view, _chooserHandler);
             GLib.g_signal_handler_disconnect(_input, _inputHandler);
+            StopWatchingDrops();
             _bridge.Detach("window closing");
             _view = 0;
         }

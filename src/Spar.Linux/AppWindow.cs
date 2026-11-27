@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Microsoft.Extensions.DependencyInjection;
+using Spar.Files;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Runtime;
@@ -62,6 +64,7 @@ internal sealed partial class AppWindow
     private WindowTheme? _theme;
     private GCHandle _self;
     private nint _window;
+    private FileDialogHost? _fileDialogs;
     private nuint _closeHandler;
     private State _state;
     private bool _failed;
@@ -179,7 +182,7 @@ internal sealed partial class AppWindow
         }
 
         _ = LogPolicyAsync(_pages);
-        _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null, ChooseSchemeAsync);
+        _bridge = new ScriptBridge(ui, _log, built, development, listenerReports ? _violations : null, ChooseSchemeAsync, app => HostWindow(ui, app));
         var browser = _app.Builder.BrowserOptions;
         var guard = new PageGuard(_log, security, browser.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, browser, development, _automated);
@@ -311,6 +314,21 @@ internal sealed partial class AppWindow
     /// An unrecoverable failure: a message owned by the window, then the teardown with its exit code. In the automated
     /// mode nobody can answer, so the message goes to the log only. Safe from any thread.
     /// </summary>
+    /// <summary>
+    /// The window's grants and dialogs (made on the bridge's reader once the services exist): GTK's file dialog owned
+    /// by this window, or the test host's fake when the app runs under it (it registers one as a service).
+    /// </summary>
+    private HostWindow HostWindow(MainLoop ui, SparRunningApp app)
+    {
+        var fake = app.Services.GetService<INativeFileDialogs>();
+        if (fake is null)
+        {
+            _fileDialogs = new FileDialogHost(ui, () => _window, _log);
+        }
+
+        return new HostWindow(app.Dispatcher.Time, fake ?? _fileDialogs);
+    }
+
     private void Fail(int exitCode, string message) => _ui?.Post(() => _ = FailAsync(exitCode, message), "failure");
 
     private async Task FailAsync(int exitCode, string message)

@@ -23,6 +23,11 @@ internal static partial class ModuleEmitter
             js.Line("import * as blobs from \"./sdk/blobs.js\";");
         }
 
+        if (model.Types.Any(IsGrant))
+        {
+            js.Line("import * as grants from \"./sdk/files.js\";");
+        }
+
         var imported = layout.Imported(contract).SelectMany(Functions).ToList();
         if (imported.Count > 0)
         {
@@ -62,6 +67,14 @@ internal static partial class ModuleEmitter
         if (blobs)
         {
             js.Line("import * as blobs from \"./sdk/blobs.js\";");
+        }
+
+        var grants = layout.Shared.Any(t =>
+            t.Record?.Properties.Any(p => HoldsGrant(p.Type)) == true
+            || t.Error?.Cases.Any(c => c.Properties.Any(p => HoldsGrant(p.Type))) == true);
+        if (grants)
+        {
+            js.Line("import * as grants from \"./sdk/files.js\";");
         }
 
         foreach (var type in layout.Shared)
@@ -422,6 +435,8 @@ internal static partial class ModuleEmitter
             or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
             or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.read{type.Kind}",
         WireKind.Blob => "blobs.readBlob",
+        WireKind.FileGrant => "grants.readFile",
+        WireKind.FolderGrant => "grants.readFolder",
         WireKind.Record or WireKind.Enum => ClientNames.Reader(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Read(layout, type, Item(depth), depth)}",
     };
@@ -443,6 +458,8 @@ internal static partial class ModuleEmitter
             or WireKind.UInt32 or WireKind.Int64 or WireKind.UInt64 or WireKind.Single or WireKind.Double
             or WireKind.Decimal or WireKind.Char or WireKind.Bytes => $"wire.write{type.Kind}",
         WireKind.Blob => "blobs.writeBlob",
+        WireKind.FileGrant => "grants.writeFile",
+        WireKind.FolderGrant => "grants.writeFolder",
         WireKind.Record or WireKind.Enum => ClientNames.Writer(layout.Type(type.Key).Name),
         _ => $"{Item(depth)} => {Write(layout, type, Item(depth), depth)}",
     };
@@ -450,6 +467,16 @@ internal static partial class ModuleEmitter
     /// <summary>Whether a module reads or writes blobs, or builds resource addresses, and so imports the SDK's blob module.</summary>
     private static bool UsesBlobs(ContractModel model) =>
         model.Types.Any(t => t.Kind == WireKind.Blob) || model.Commands.Any(c => c.IsResource);
+
+    private static bool IsGrant(TypeRef type) => type.Kind is WireKind.FileGrant or WireKind.FolderGrant;
+
+    /// <summary>Whether this value is a grant itself, or a list or nullable of one; a record has its own reader.</summary>
+    private static bool HoldsGrant(TypeRef type) => type.Kind switch
+    {
+        WireKind.FileGrant or WireKind.FolderGrant => true,
+        WireKind.List or WireKind.Nullable => HoldsGrant(type.Element!),
+        _ => false,
+    };
 
     /// <summary>Whether this value is a blob itself, or a list or nullable of one; a record has its own reader.</summary>
     private static bool HoldsBlob(TypeRef type) => type.Kind switch

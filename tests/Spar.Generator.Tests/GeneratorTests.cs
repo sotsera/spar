@@ -309,6 +309,48 @@ public sealed class GeneratorTests
     }
 
     [Fact]
+    public void A_request_with_grants_is_read_in_a_grant_scope_and_grants_are_written_both_ways()
+    {
+        const string source = """
+            using System.Collections.Generic;
+            using System.Threading.Tasks;
+            using Spar;
+
+            var app = SparApplication.Create(args, _ => { });
+            return app.Run();
+
+            public sealed record ImportRequest(FileGrant File, IReadOnlyList<FolderGrant> Folders, string Note);
+
+            public sealed record Picked(FileGrant File, FolderGrant? Folder);
+
+            [SparContract]
+            public sealed class ImportsService
+            {
+                [SparCommand]
+                public Task<int> ImportAsync(ImportRequest request) => null!;
+
+                [SparCommand]
+                public Task<long> SizeAsync(FileGrant file) => null!;
+
+                [SparCommand]
+                public Task<Picked> PickAsync(string title) => null!;
+            }
+
+            """;
+
+        var run = GeneratorHarness.Generate(source);
+
+        Assert.Empty(run.Errors);
+        var contracts = run.Files["Spar.Contracts.g.cs"];
+        Assert.Contains("using var grants = global::Spar.Runtime.SparGrants.Begin(call);", Handler(contracts, "HandleImportsImport"), StringComparison.Ordinal);
+        Assert.Contains("using var grants = global::Spar.Runtime.SparGrants.Begin(call);", Handler(contracts, "HandleImportsSize"), StringComparison.Ordinal);
+        Assert.DoesNotContain("SparGrants.Begin", Handler(contracts, "HandleImportsPick"), StringComparison.Ordinal);
+        Assert.Contains("global::Spar.Runtime.SparGrants.ReadFile(ref reader)", contracts, StringComparison.Ordinal);
+        Assert.Contains("global::Spar.Runtime.SparGrants.ReadFolder(ref reader)", contracts, StringComparison.Ordinal);
+        Assert.Contains("global::Spar.Runtime.SparGrants.Write(writer, value);", contracts, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void The_fingerprint_changes_with_the_wire_shape_and_only_with_it()
     {
         var original = Fingerprint(Program + Fixtures.Catalog);

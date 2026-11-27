@@ -125,6 +125,12 @@ public sealed record BridgeMessage(BridgeMessageType Type)
     /// <summary>The JSON after the TAB, as UTF-8; empty when there is none.</summary>
     public ReadOnlyMemory<byte> Payload { get; init; }
 
+    /// <summary>
+    /// The paths of the files a host read from the message itself, never from its text: WebView2's drop message. Only
+    /// a call of the page's drop command carries them.
+    /// </summary>
+    internal IReadOnlyList<string>? Files { get; init; }
+
     public static string TypeNameOf(BridgeMessageType type) => type switch
     {
         BridgeMessageType.Hello => "hello",

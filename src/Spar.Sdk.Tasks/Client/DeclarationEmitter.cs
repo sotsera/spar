@@ -47,6 +47,17 @@ internal static class DeclarationEmitter
             ts.Line("import type { SparBlob } from \"@spar/app/sdk\";");
         }
 
+        var grants = new[] { (WireKind.FileGrant, "PickedFile"), (WireKind.FolderGrant, "PickedFolder") }
+            .Where(grant => layout.Shared.Any(t =>
+                t.Record?.Properties.Any(p => Names(p.Type, grant.Item1)) == true
+                || t.Error?.Cases.Any(c => c.Properties.Any(p => Names(p.Type, grant.Item1))) == true))
+            .Select(grant => grant.Item2)
+            .ToList();
+        if (grants.Count > 0)
+        {
+            ts.Line($"import type {{ {string.Join(", ", grants)} }} from \"@spar/app/sdk\";");
+        }
+
         foreach (var type in layout.Shared)
         {
             var docs = layout.Contracts.First(c => ClientLayout.Keys(c.Model).Contains(type.Key)).Docs;
@@ -217,6 +228,16 @@ internal static class DeclarationEmitter
             yield return "SparBlob";
         }
 
+        if (model.Types.Any(t => t.Kind == WireKind.FileGrant))
+        {
+            yield return "PickedFile";
+        }
+
+        if (model.Types.Any(t => t.Kind == WireKind.FolderGrant))
+        {
+            yield return "PickedFolder";
+        }
+
         if (subscriptions)
         {
             yield return "SubscribeOptions";
@@ -231,6 +252,10 @@ internal static class DeclarationEmitter
         WireKind.List or WireKind.Nullable => NamesBlob(type.Element!),
         _ => false,
     };
+
+    /// <summary>Whether a property's TypeScript spelling names the type of <paramref name="kind"/>, itself or in a list or nullable.</summary>
+    private static bool Names(TypeRef type, WireKind kind) =>
+        type.Kind == kind || (type.Kind is WireKind.List or WireKind.Nullable && Names(type.Element!, kind));
 
     private static string Options(CommandModel command) => command.Subscription is { } subscription
         ? $"options?: SubscribeOptions<\"{(subscription.Automatic ? "automatic" : "manual")}\">"
@@ -271,6 +296,8 @@ internal static class DeclarationEmitter
         WireKind.Int64 or WireKind.UInt64 => "bigint",
         WireKind.Bytes => "Uint8Array",
         WireKind.Blob => "SparBlob",
+        WireKind.FileGrant => "PickedFile",
+        WireKind.FolderGrant => "PickedFolder",
         WireKind.List => $"readonly {Parenthesized(TypeOf(layout, type.Element!))}[]",
         WireKind.Nullable => $"{TypeOf(layout, type.Element!)} | null",
         WireKind.Enum => layout.Type(type.Key).Name,

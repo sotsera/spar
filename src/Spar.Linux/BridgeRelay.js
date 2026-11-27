@@ -27,6 +27,20 @@ const sparRelay = (() => {
   const Detail = CustomEvent;
   const dispatch = page.dispatchEvent.bind(page);
 
+  // A drop of files the user made (decision "The drop design, from the file-drop spike"): only the engine makes a
+  // trusted drop event, and this listener sits on the window, capturing, from document start, so it runs before any of
+  // the page's and before the page's SDK claims the drop. It posts to a handler only this world has; the host then
+  // pairs it with the files it read from the drag itself. A drop the page dispatches is not trusted and posts nothing.
+  const dropHandler = page.webkit?.messageHandlers?.sparDrop;
+  if (dropHandler !== undefined) {
+    const postDrop = dropHandler.postMessage.bind(dropHandler);
+    page.addEventListener("drop", event => {
+      if (event.isTrusted && event.dataTransfer !== null && event.dataTransfer.types.includes("Files")) {
+        postDrop("drop");
+      }
+    }, true);
+  }
+
   // The host writes `{"type":"ping","seq":N}` and a TAB; nothing else from the host starts like that.
   const pingStart = "{\"type\":\"ping\",\"seq\":";
   const pingEnd = "}\t";

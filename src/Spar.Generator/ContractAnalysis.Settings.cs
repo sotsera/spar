@@ -35,6 +35,12 @@ internal sealed partial class ContractAnalysis
             return null;
         }
 
+        if (HoldsGrant(reference))
+        {
+            Report(Descriptors.GrantInSettings, location, type.ToDisplayString());
+            return null;
+        }
+
         return new SettingsModel(
             reference.CSharp,
             reference.Key,

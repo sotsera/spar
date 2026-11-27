@@ -7,11 +7,11 @@ internal sealed class TestBridge : IAsyncDisposable
 {
     public const string Hello = "{\"type\":\"hello\",\"protocol\":1,\"types\":[\"open\",\"result\",\"failure\",\"event\",\"closing\"],\"contracts\":\"0123456789abcdef\"}\t";
 
-    private TestBridge(TestBackend backend, CapturedLog log, bool includeDetails, TimeProvider? time)
+    private TestBridge(TestBackend backend, CapturedLog log, bool includeDetails, TimeProvider? time, Spar.Files.HostWindow? window)
     {
         Backend = backend;
         Log = log;
-        Session = new BridgeSession(backend.Dispatcher, TestBackend.Fingerprint, "doc-1", Sent.Add, includeDetails, time);
+        Session = new BridgeSession(backend.Dispatcher, TestBackend.Fingerprint, "doc-1", Sent.Add, includeDetails, time) { Window = window };
         Session.Dropped += reason => { lock (Dropped) { Dropped.Add(reason); } };
     }
 
@@ -25,10 +25,11 @@ internal sealed class TestBridge : IAsyncDisposable
 
     public List<string> Dropped { get; } = [];
 
-    public static async Task<TestBridge> OpenAsync(BridgeOptions? limits = null, bool includeDetails = false, TimeProvider? time = null, string hello = Hello)
+    public static async Task<TestBridge> OpenAsync(
+        BridgeOptions? limits = null, bool includeDetails = false, TimeProvider? time = null, string hello = Hello, Spar.Files.HostWindow? window = null)
     {
         var log = new CapturedLog();
-        var bridge = new TestBridge(TestBackend.Create(limits, log), log, includeDetails, time);
+        var bridge = new TestBridge(TestBackend.Create(limits, log), log, includeDetails, time, window);
         bridge.Session.Receive(hello);
         Assert.Equal(BridgeMessageType.Open, (await bridge.Sent.NextAsync()).Type);
         return bridge;

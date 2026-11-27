@@ -63,6 +63,11 @@ internal static class Descriptors
         "{0} holds a SparBlob {1}. A SparBlob goes from the backend to the page only, in a unary command's result: send bytes to the backend as a byte[] request, and give a stream byte[] items or a resource's address",
         Contracts);
 
+    public static readonly DiagnosticDescriptor GrantInSettings = Error(
+        "SPAR028", "Grant in a settings record",
+        "Settings record '{0}' holds a FileGrant or a FolderGrant. A grant ends when its window closes, and a settings file outlives it: keep what the app needs, such as the file's name, instead",
+        Contracts);
+
     public static readonly DiagnosticDescriptor InvalidResource = Error(
         "SPAR027", "Invalid resource", "Resource '{0}' {1}", Contracts);
 

@@ -35,6 +35,7 @@ public sealed class ContractAnalyzer : DiagnosticAnalyzer
         Descriptors.InvalidSubscription,
         Descriptors.InvalidSerialGroup,
         Descriptors.BlobOutOfPlace,
+        Descriptors.GrantInSettings,
         Descriptors.InvalidResource,
         Descriptors.UnsupportedWireType,
         Descriptors.NotPositionalRecord,

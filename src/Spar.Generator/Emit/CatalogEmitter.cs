@@ -217,6 +217,12 @@ internal static class CatalogEmitter
         if (command.Request is { } request)
         {
             code.Line($"{request.CSharp} request;");
+            if (command.RequestHoldsGrant)
+            {
+                // The page's grant ids are resolved to the call's window while the request is read.
+                code.Line("using var grants = global::Spar.Runtime.SparGrants.Begin(call);");
+            }
+
             code.Open("try");
             code.Line($"request = {Runtime}.SparJson.Read(call.Request, SparSerializers.Read{request.Key});");
             code.Close();

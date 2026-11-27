@@ -15,23 +15,39 @@ namespace Spar.Tests;
 internal static partial class ComSlots
 {
     /// <summary>What differs between <paramref name="assembly"/>'s declarations and <paramref name="headerPath"/>; empty when nothing does.</summary>
-    public static List<string> Problems(string headerPath, string assembly, out int declaredCount)
+    public static List<string> Problems(string headerPath, string assembly, out int declaredCount) =>
+        Problems([headerPath], assembly, _ => false, out declaredCount);
+
+    /// <summary>
+    /// The same against several headers: each interface is looked up in all of them, and one <paramref name="skipped"/> names
+    /// (its header is not on this machine) is left out.
+    /// </summary>
+    public static List<string> Problems(IReadOnlyList<string> headerPaths, string assembly, Func<string, bool> skipped, out int declaredCount)
     {
-        var header = Header(headerPath);
-        var declared = Declared(assembly);
+        var header = new Dictionary<Guid, (string Name, List<string> Slots)>();
+        foreach (var path in headerPaths)
+        {
+            foreach (var (iid, vtable) in Header(path))
+            {
+                header[iid] = vtable;
+            }
+        }
+
+        var headerNames = string.Join(" or ", headerPaths.Select(Path.GetFileName));
+        var declared = Declared(assembly).Where(com => !skipped(com.Name)).ToList();
         declaredCount = declared.Count;
         var problems = new List<string>();
         foreach (var com in declared)
         {
             if (!header.TryGetValue(com.Iid, out var vtable))
             {
-                problems.Add($"{com.Name}: IID {com.Iid} is not an interface of {Path.GetFileName(headerPath)}");
+                problems.Add($"{com.Name}: IID {com.Iid} is not an interface of {headerNames}");
                 continue;
             }
 
             if (com.Name != vtable.Name)
             {
-                problems.Add($"{com.Name}: IID {com.Iid} is {vtable.Name} in {Path.GetFileName(headerPath)}");
+                problems.Add($"{com.Name}: IID {com.Iid} is {vtable.Name} in {headerNames}");
             }
 
             for (var index = 0; index < com.Methods.Count; index++)

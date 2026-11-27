@@ -29,11 +29,16 @@ internal sealed partial class BridgeSession
         _queuedBytes += bytes;
         var token = CancellationTokenSource.CreateLinkedTokenSource(_closing.Token);
         _pending[waiting.Call.Id!.Value] = token;
-        _running.Add(Task.Run(() => DispatchSerialAsync(waiting.Call, waiting.Received, token)));
+
+        // The call takes its place in its group now, on the reader, so the group runs its calls in arrival order; the
+        // task that waits for the turn may start in any order.
+        var group = _dispatcher.Find(waiting.Call.Contract!, waiting.Call.Command!)!.SerialGroup!;
+        var place = _dispatcher.Serial.EnterAsync(group, token.Token);
+        _running.Add(Task.Run(() => DispatchSerialAsync(waiting.Call, waiting.Received, token, place)));
         return true;
     }
 
-    private async Task DispatchSerialAsync(BridgeMessage call, Received received, CancellationTokenSource token)
+    private async Task DispatchSerialAsync(BridgeMessage call, Received received, CancellationTokenSource token, ValueTask<SerialGroups.Turn> place)
     {
         using var activity = _telemetry.Started(call, received);
         var waiting = true;
@@ -53,7 +58,7 @@ internal sealed partial class BridgeSession
         SparOutcome outcome;
         try
         {
-            outcome = await _dispatcher.InvokeAsync(call.Contract!, call.Command!, call.Id!.Value, call.Payload, Running, _blobs, token.Token);
+            outcome = await _dispatcher.InvokeAsync(call.Contract!, call.Command!, call.Id!.Value, call.Payload, Running, _blobs, token.Token, place);
         }
         finally
         {

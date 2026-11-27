@@ -95,6 +95,45 @@ internal partial interface ICoreWebView2WebMessageReceivedEventArgs
 }
 
 /// <summary>
+/// <c>ICoreWebView2WebMessageReceivedEventArgs2</c>, flat: the base 3–5, _2 6, the objects a page posted with
+/// <c>chrome.webview.postMessageWithAdditionalObjects</c> (a drop's <c>File</c>s). Feature-detected: queried from the
+/// args, and a message without it carries no files.
+/// </summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("06fc7ab7-c90c-4297-9389-33ca01cf6d5e")]
+internal partial interface ICoreWebView2WebMessageReceivedEventArgs2
+{
+    [PreserveSig] int Slot003_GetSource();
+    [PreserveSig] int Slot004_GetWebMessageAsJson();
+    [PreserveSig] int Slot005_TryGetWebMessageAsString();
+
+    /// <summary>The objects, as an <c>ICoreWebView2ObjectCollectionView</c> the caller owns; 0 for none.</summary>
+    [PreserveSig]
+    int GetAdditionalObjects(out nint value);
+}
+
+/// <summary><c>ICoreWebView2ObjectCollectionView</c> (slots 3–4).</summary>
+[GeneratedComInterface(Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("0f36fd87-4f69-4415-98da-888f89fb9a33")]
+internal partial interface ICoreWebView2ObjectCollectionView
+{
+    [PreserveSig]
+    int GetCount(out uint value);
+
+    /// <summary>The object at <paramref name="index"/>, an <c>IUnknown</c> the caller owns.</summary>
+    [PreserveSig]
+    int GetValueAtIndex(uint index, out nint value);
+}
+
+/// <summary><c>ICoreWebView2File</c> (slot 3): a file the user gave the page, which only the browser can make.</summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("f2c19559-6bc1-4583-a757-90021be9afec")]
+internal partial interface ICoreWebView2File
+{
+    string GetPath();
+}
+
+/// <summary>
 /// <c>ICoreWebView2NavigationStartingEventArgs3</c>, flat: the base 3–9, _2 10–11, _3 12 (the navigation's kind, Runtime
 /// 115). Declared once at _3, which every Runtime Spar supports has, for top-level and frame navigations alike.
 /// </summary>

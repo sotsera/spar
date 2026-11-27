@@ -25,6 +25,9 @@ public sealed class SparCallContext(IServiceProvider services, ReadOnlyMemory<by
 
     /// <summary>The handles of the call's document, where a result's blobs go; null when nothing can hold them.</summary>
     internal BlobOwner? BlobOwner { get; init; }
+
+    /// <summary>The window the call came from, whose grants a request's ids name; null for none.</summary>
+    internal Files.HostWindow? Window => BlobOwner?.Window;
 }
 
 /// <summary>
@@ -34,6 +37,12 @@ public sealed class SparCallContext(IServiceProvider services, ReadOnlyMemory<by
 internal sealed class SparDispatcher(IServiceProvider services, SparCatalog catalog, ILogger? testLog = null)
 {
     private readonly SerialGroups _serial = new();
+
+    /// <summary>The app's serial groups; a bridge session takes a call's place in its group as it admits the call.</summary>
+    internal SerialGroups Serial => _serial;
+
+    /// <summary>The app's services, for the host's own commands that use them (the file dialogs).</summary>
+    public IServiceProvider Services => services;
 
     /// <summary>Every blob handle of the app's documents (<see cref="SparBlob"/>).</summary>
     public BlobStore Blobs { get; } = new();
@@ -103,19 +112,20 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
     /// </summary>
     internal ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, Action running, BlobOwner? blobs,
-        CancellationToken cancellationToken) =>
-        InvokeAsync(contract, command, callId, request, null, running, cancellationToken, SparCaller.Page, new BlobCall(blobs, IsResource: false));
+        CancellationToken cancellationToken, ValueTask<SerialGroups.Turn>? place = null) =>
+        InvokeAsync(contract, command, callId, request, null, running, cancellationToken, SparCaller.Page, new BlobCall(blobs, IsResource: false), place);
 
     private async ValueTask<SparOutcome> InvokeAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, Action? running,
         CancellationToken cancellationToken,
         SparCaller caller,
-        BlobCall? blobs)
+        BlobCall? blobs,
+        ValueTask<SerialGroups.Turn>? place = null)
     {
         var record = Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported
             ? Recorder?.Begin(callId, contract, command, caller)
             : null;
-        var outcome = await RunAsync(contract, command, callId, request, sink, running, caller, blobs, cancellationToken);
+        var outcome = await RunAsync(contract, command, callId, request, sink, running, caller, blobs, place, cancellationToken);
         if (Devtools.SparDevtools.IsSupported || SparTestSession.IsSupported)
         {
             record?.End(outcome);
@@ -126,24 +136,17 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
 
     private async ValueTask<SparOutcome> RunAsync(
         string contract, string command, long callId, ReadOnlyMemory<byte> request, SparItemSink? sink, Action? running, SparCaller caller,
-        BlobCall? blobs, CancellationToken cancellationToken)
+        BlobCall? blobs, ValueTask<SerialGroups.Turn>? place, CancellationToken cancellationToken)
     {
-        if (!catalog.TryGet(contract, command, out var entry))
+        if (Refusal(contract, command, sink, blobs, out var entry) is { } refused)
         {
-            return SparOutcome.FromFailure(SparFailure.UnknownCommand(contract, command));
-        }
+            // A place the bridge reserved is given back when its turn comes, so the calls behind it still run.
+            if (place is { } reserved)
+            {
+                await GiveBackAsync(reserved);
+            }
 
-        // A resource is loaded by its address, never called; and only a resource has an address.
-        if (entry.IsResource != (blobs?.IsResource == true))
-        {
-            var expected = entry.IsResource ? "a resource, loaded by its address" : "a command, not a resource";
-            return SparOutcome.FromFailure(SparFailure.InvalidRequest($"{contract}.{command} is {expected}."));
-        }
-
-        if (entry.IsStream != sink is not null)
-        {
-            var expected = entry.IsStream ? "a stream, opened with a stream message" : "a unary command, called with a call message";
-            return SparOutcome.FromFailure(SparFailure.InvalidRequest($"{contract}.{command} is {expected}."));
+            return refused;
         }
 
         // A serial call waits for its group's turn first; cancelled meanwhile, it never ran.
@@ -153,7 +156,8 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
             var waiting = Time.GetTimestamp();
             try
             {
-                turn = await _serial.EnterAsync(group, cancellationToken);
+                // A page's call took its place as the bridge admitted it, in arrival order; any other caller takes it now.
+                turn = await (place ?? _serial.EnterAsync(group, cancellationToken));
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -173,7 +177,7 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
         var callToken = limit?.Token ?? cancellationToken;
 
         await using var scope = services.CreateAsyncScope();
-        scope.ServiceProvider.GetRequiredService<SparCall>().Start(callId, contract, command, caller, callToken);
+        scope.ServiceProvider.GetRequiredService<SparCall>().Start(callId, contract, command, caller, callToken, blobs?.Owner?.Window);
 
         try
         {
@@ -207,6 +211,43 @@ internal sealed class SparDispatcher(IServiceProvider services, SparCatalog cata
             return SparOutcome.FromFailure(SparFailure.Failed(exception));
         }
     }
+
+    /// <summary>Why the call cannot run as it was made, or null; <paramref name="entry"/> is the command when there is one.</summary>
+    private SparOutcome? Refusal(string contract, string command, SparItemSink? sink, BlobCall? blobs, out SparCommandEntry entry)
+    {
+        if (!catalog.TryGet(contract, command, out entry))
+        {
+            return SparOutcome.FromFailure(SparFailure.UnknownCommand(contract, command));
+        }
+
+        // A resource is loaded by its address, never called; and only a resource has an address.
+        if (entry.IsResource != (blobs?.IsResource == true))
+        {
+            var expected = entry.IsResource ? "a resource, loaded by its address" : "a command, not a resource";
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest($"{contract}.{command} is {expected}."));
+        }
+
+        if (entry.IsStream != sink is not null)
+        {
+            var expected = entry.IsStream ? "a stream, opened with a stream message" : "a unary command, called with a call message";
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest($"{contract}.{command} is {expected}."));
+        }
+
+        return null;
+    }
+
+    /// <summary>Waits for a reserved place's turn and gives it back at once; one cancelled while it waits is already gone.</summary>
+    private static async Task GiveBackAsync(ValueTask<SerialGroups.Turn> reserved)
+    {
+        try
+        {
+            (await reserved).Dispose();
+        }
+        catch (OperationCanceledException)
+        {
+            // It left the queue when its call was cancelled.
+        }
+    }
 }
 
 /// <summary>The scoped <see cref="ISparCall"/> of one command, filled by the dispatcher before the contract is resolved.</summary>
@@ -222,13 +263,17 @@ internal sealed class SparCall : ISparCall
 
     public SparCaller Caller { get; private set; }
 
-    public void Start(long callId, string contract, string command, SparCaller caller, CancellationToken cancellationToken)
+    /// <summary>The window the call came from (its grants and dialogs), or null for a call without one.</summary>
+    public Files.HostWindow? Window { get; private set; }
+
+    public void Start(long callId, string contract, string command, SparCaller caller, CancellationToken cancellationToken, Files.HostWindow? window)
     {
         CallId = callId;
         Contract = contract;
         Command = command;
         Caller = caller;
         CancellationToken = cancellationToken;
+        Window = window;
     }
 }
 

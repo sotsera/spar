@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spar.Bridge;
 using Spar.DevServer;
+using Spar.Files;
 using Spar.Hosting;
 using Spar.Telemetry;
 using Spar.Runtime;
@@ -108,6 +109,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
     private readonly ConcurrentDictionary<string, PagePolicy> _policies = new(StringComparer.Ordinal);
     private readonly ConcurrentDictionary<string, DevServerProxy> _proxies = new(StringComparer.Ordinal);
     private readonly HostCommands? _hostCommands;
+    private readonly HostWindow _window;
     private int _port;
     private volatile bool _dropped;
 
@@ -120,6 +122,10 @@ internal sealed class LoopbackHost : IAsyncDisposable
 
         // No window here: the page's colour scheme choice is saved for the window's next start, and the browser keeps its own.
         _hostCommands = options.DataRoot is { } dataRoot ? new HostCommands(dataRoot, apply: null, options.Dispatcher.Logger) : null;
+
+        // The pages of this host share one window: its grants, and the test host's fake dialogs when there is one (a page in
+        // a browser has no window to own a native dialog, so outside the test host a dialog is unavailable).
+        _window = new HostWindow(options.Dispatcher.Time, options.Dispatcher.Services.GetService<INativeFileDialogs>());
     }
 
     /// <summary>The bearer token, which the page gets from the URL fragment only (plan section 3c).</summary>
@@ -220,6 +226,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         _stopping.Cancel();
+        _window.Close();
         foreach (var document in _documents.Values)
         {
             document.Session.Close();
@@ -606,6 +613,7 @@ internal sealed class LoopbackHost : IAsyncDisposable
             _options.IncludeDetails)
         {
             HostCommands = _hostCommands,
+            Window = _window,
         };
 
         session.Ready += () => DocumentReady?.Invoke(id);

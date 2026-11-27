@@ -65,6 +65,7 @@ internal sealed class TestBackend : IAsyncDisposable
                 .. Streams.TestStreams.Entries,
                 .. Serial.TestSerial.Entries,
                 .. Blobs.TestBlobs.Entries,
+                .. Files.TestGrants.Entries,
             ],
             _ => { });
 

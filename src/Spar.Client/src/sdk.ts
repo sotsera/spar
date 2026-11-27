@@ -36,6 +36,22 @@ export { isWebKitHost, webKitChannel, type RelayTarget, type WebKitOptions } fro
 export { setColorScheme, type ColorScheme, type ColorSchemeError } from "./colorScheme.js";
 export { traced } from "./tracing.js";
 export { readBlob, resourceUrl, type SparBlob } from "./blobs.js";
+export {
+  files,
+  type DropError,
+  type DroppedFiles,
+  type DropTargetOptions,
+  type FileAccess,
+  type FileAccessError,
+  type FileDialogError,
+  type FileFilter,
+  type FolderEntry,
+  type OpenFileOptions,
+  type OpenFolderOptions,
+  type PickedFile,
+  type PickedFolder,
+  type SaveFileOptions,
+} from "./files.js";
 
 let current: Connection | undefined;
 
@@ -87,6 +103,7 @@ export function invoke<T, E extends ErrorCases>(
   encode: () => string,
   decoder: Decoder<T>,
   options?: CallOptions,
+  files?: readonly File[],
 ): Call<T, E> {
   if (current === undefined) {
     throw new Error("Spar is not connected: the host's start-up script has not run in this document.");
@@ -105,7 +122,21 @@ export function invoke<T, E extends ErrorCases>(
     return callOf<T, E>(Promise.resolve(refused));
   }
 
-  return callOf<T, E>(current.invoke(contract, command, request, decoder as Decoder<unknown>, options));
+  return callOf<T, E>(current.invoke(contract, command, request, decoder as Decoder<unknown>, options, files));
+}
+
+/**
+ * @internal The page's drop areas (files.ts): a call that carries the files of a drop to a channel that takes them
+ * (WebView2), and goes as an ordinary call elsewhere.
+ */
+export function invokeWithFiles<T, E extends ErrorCases>(
+  contract: string,
+  command: string,
+  encode: () => string,
+  decoder: Decoder<T>,
+  files: readonly File[],
+): Call<T, E> {
+  return invoke<T, E>(contract, command, encode, decoder, undefined, files);
 }
 
 /**

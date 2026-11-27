@@ -274,7 +274,8 @@ internal sealed partial class ContractAnalysis
             subscription,
             serialGroup,
             isResource,
-            !isResource && HoldsBlob(shape.Value.Value));
+            !isResource && HoldsBlob(shape.Value.Value),
+            HoldsGrant(request));
     }
 
     /// <summary>A request is one record or one scalar, nullable or not (SPAR015 for a list); <c>byte[]</c> is a scalar.</summary>
@@ -381,6 +382,11 @@ internal sealed partial class ContractAnalysis
         if (IsSparBlob(type))
         {
             return new TypeRef(WireKind.Blob, csharp, nameof(WireKind.Blob), null, false);
+        }
+
+        if (GrantKind(type) is { } grant)
+        {
+            return new TypeRef(grant, csharp, grant.ToString(), null, false);
         }
 
         var primitive = Primitive(type);

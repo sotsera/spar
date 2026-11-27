@@ -39,6 +39,15 @@ internal enum WireKind
     /// </summary>
     Blob,
 
+    /// <summary>
+    /// <c>Spar.FileGrant</c>: <c>{"id","name","size","access"}</c> to the page; read back by its id, resolved to the
+    /// call's window's own grant. Not in settings records (SPAR028).
+    /// </summary>
+    FileGrant,
+
+    /// <summary><c>Spar.FolderGrant</c>: <c>{"id","name","access"}</c>, otherwise as <see cref="FileGrant"/>.</summary>
+    FolderGrant,
+
     /// <summary>An enum: one member name, exactly; a union of string literals in TypeScript.</summary>
     Enum,
 
@@ -104,7 +113,8 @@ internal sealed record CommandModel(
     SubscriptionModel? Subscription = null,
     string? SerialGroup = null,
     bool IsResource = false,
-    bool ValueHoldsBlob = false)
+    bool ValueHoldsBlob = false,
+    bool RequestHoldsGrant = false)
 {
     /// <summary>Whether the command is a stream or a subscription: its items travel in batches, with credits.</summary>
     public bool IsStream => Return is ReturnShape.Items or ReturnShape.ResultItems;

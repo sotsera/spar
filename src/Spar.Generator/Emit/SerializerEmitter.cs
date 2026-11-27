@@ -67,6 +67,8 @@ internal static class SerializerEmitter
             or WireKind.Guid or WireKind.DateTime or WireKind.DateTimeOffset or WireKind.DateOnly or WireKind.TimeOnly
             or WireKind.TimeSpan or WireKind.Bytes => $"{Json}.Read{type.Kind}(ref reader)",
         WireKind.Blob => "global::Spar.Runtime.SparBlobWrite.Read(ref reader)",
+        WireKind.FileGrant => "global::Spar.Runtime.SparGrants.ReadFile(ref reader)",
+        WireKind.FolderGrant => "global::Spar.Runtime.SparGrants.ReadFolder(ref reader)",
         WireKind.List when type.Key.StartsWith("ArrayOf", System.StringComparison.Ordinal) => $"[.. {Json}.ReadList(ref reader, Read{type.Element!.Key})]",
         WireKind.List => $"{Json}.ReadList(ref reader, Read{type.Element!.Key})",
         WireKind.Nullable => $"reader.TokenType == {TokenType}.Null ? null : Read{type.Element!.Key}(ref reader)",
@@ -109,6 +111,10 @@ internal static class SerializerEmitter
                 break;
             case WireKind.Blob:
                 yield return "global::Spar.Runtime.SparBlobWrite.Write(writer, value);";
+                break;
+            case WireKind.FileGrant:
+            case WireKind.FolderGrant:
+                yield return "global::Spar.Runtime.SparGrants.Write(writer, value);";
                 break;
             case WireKind.Int64:
             case WireKind.UInt64:

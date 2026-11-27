@@ -1,6 +1,8 @@
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading.Channels;
 using Spar.Bridge;
+using Spar.Files;
 using Spar.Hosting;
 using Spar.HotReload;
 using Spar.Logging;
@@ -22,6 +24,10 @@ namespace Spar.Windows;
 /// </summary>
 internal sealed class WebViewBridge
 {
+    // The IIDs of the [Guid] attributes, written out so nothing looks a type's GUID up at run time.
+    private static readonly Guid MessageArgs2Iid = new("06fc7ab7-c90c-4297-9389-33ca01cf6d5e");
+    private static readonly Guid FileIid = new("f2c19559-6bc1-4583-a757-90021be9afec");
+
     private readonly UiThread _ui;
     private readonly HostLog _log;
     private readonly SparDispatcher _dispatcher;
@@ -30,6 +36,7 @@ internal sealed class WebViewBridge
     private readonly CspViolationLog? _violations;
     private readonly PageErrorLog _pageErrors;
     private readonly HostCommands _hostCommands;
+    private readonly HostWindow _window;
     private readonly Channel<Incoming> _incoming = Channel.CreateUnbounded<Incoming>(new UnboundedChannelOptions { SingleReader = true });
     private readonly Task _reader;
     private readonly IDisposable? _backendUpdates;
@@ -39,6 +46,7 @@ internal sealed class WebViewBridge
     /// <param name="violations">Where the listener's batches go; null when the listener does not report in this build.</param>
     /// <param name="pageErrors">Where the page's error batches go.</param>
     /// <param name="hostCommands">The window's own commands every document may call, such as <c>setColorScheme</c>.</param>
+    /// <param name="window">The window's grants and file dialogs, which every document of the window shares.</param>
     public WebViewBridge(
         UiThread ui,
         HostLog log,
@@ -47,9 +55,11 @@ internal sealed class WebViewBridge
         bool includeDetails,
         CspViolationLog? violations,
         PageErrorLog pageErrors,
-        HostCommands hostCommands)
+        HostCommands hostCommands,
+        HostWindow window)
     {
         _hostCommands = hostCommands;
+        _window = window;
         _ui = ui;
         _log = log;
         _dispatcher = dispatcher;
@@ -126,6 +136,7 @@ internal sealed class WebViewBridge
         {
             HostAnswersPing = !isErrorPage,
             HostCommands = _hostCommands,
+            Window = _window,
         };
         session.Dropped += reason => _log.Warn($"Bridge, document {id}: dropped {reason}");
         session.Ready += () => _ui.Post(() => Ready(document), "bridge ui-ready");
@@ -182,7 +193,7 @@ internal sealed class WebViewBridge
             }
 
             _log.Phase("first bridge message");
-            _incoming.Writer.TryWrite(new Incoming(document, text));
+            _incoming.Writer.TryWrite(new Incoming(document, text, AttachedFiles(argsPointer)));
         }
         finally
         {
@@ -325,7 +336,7 @@ internal sealed class WebViewBridge
     /// <summary>The reader: decodes and admits each message off the UI thread, in arrival order.</summary>
     private async Task ReadAsync()
     {
-        await foreach (var (document, text) in _incoming.Reader.ReadAllAsync())
+        await foreach (var (document, text, files) in _incoming.Reader.ReadAllAsync())
         {
             if (document.IsClosed)
             {
@@ -334,7 +345,14 @@ internal sealed class WebViewBridge
 
             try
             {
-                document.Session.Receive(text);
+                if (files is null)
+                {
+                    document.Session.Receive(text);
+                }
+                else
+                {
+                    document.Session.Receive(text, files);
+                }
             }
             catch (Exception exception)
             {
@@ -343,7 +361,77 @@ internal sealed class WebViewBridge
         }
     }
 
-    private readonly record struct Incoming(Document Document, string Text);
+    /// <summary>
+    /// The paths of the files a message carries (UI thread): only <c>postMessageWithAdditionalObjects</c> gives a
+    /// message objects, and the browser accepts only files on disk that the user gave the page (a drop, a picker), never
+    /// one the page made (the spike: "additional File object is not a file on the disk"). Null for a message without
+    /// any; other objects, such as a directory handle, are skipped, since a folder's <c>File</c> carries its path.
+    /// </summary>
+    private static IReadOnlyList<string>? AttachedFiles(nint argsPointer)
+    {
+        var argsIid = MessageArgs2Iid;
+        if (Marshal.QueryInterface(argsPointer, in argsIid, out var argsPointer2) < 0)
+        {
+            return null;
+        }
+
+        var args = Com.Take<ICoreWebView2WebMessageReceivedEventArgs2>(argsPointer2);
+        try
+        {
+            if (args.GetAdditionalObjects(out var objectsPointer) < 0 || objectsPointer == 0)
+            {
+                return null;
+            }
+
+            var objects = Com.Take<ICoreWebView2ObjectCollectionView>(objectsPointer);
+            try
+            {
+                return objects.GetCount(out var count) < 0 || count == 0 ? null : Paths(objects, count);
+            }
+            finally
+            {
+                Com.Release(objects);
+            }
+        }
+        finally
+        {
+            Com.Release(args);
+        }
+    }
+
+    private static List<string> Paths(ICoreWebView2ObjectCollectionView objects, uint count)
+    {
+        var fileIid = FileIid;
+        var paths = new List<string>((int)count);
+        for (var i = 0u; i < count; i++)
+        {
+            if (objects.GetValueAtIndex(i, out var value) < 0 || value == 0)
+            {
+                continue;
+            }
+
+            var isFile = Marshal.QueryInterface(value, in fileIid, out var filePointer) >= 0;
+            Marshal.Release(value);
+            if (!isFile)
+            {
+                continue;
+            }
+
+            var file = Com.Take<ICoreWebView2File>(filePointer);
+            try
+            {
+                paths.Add(file.GetPath());
+            }
+            finally
+            {
+                Com.Release(file);
+            }
+        }
+
+        return paths;
+    }
+
+    private readonly record struct Incoming(Document Document, string Text, IReadOnlyList<string>? Files);
 
     /// <summary>One document's epoch: its session, and whether it is still the page's.</summary>
     private sealed class Document(string id)

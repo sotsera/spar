@@ -84,6 +84,9 @@ internal sealed class BlobOwner
     private long _bytes;
     private bool _closed;
 
+    /// <summary>The window the document belongs to, whose grants and dialogs its calls use; null for none.</summary>
+    public Files.HostWindow? Window { get; set; }
+
     internal BlobOwner(BlobStore store, long maxBytes, int maxHandles)
     {
         _store = store;
