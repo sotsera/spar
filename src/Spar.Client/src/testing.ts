@@ -10,7 +10,7 @@ import { setColorScheme } from "./colorScheme.js";
 import type { FileAccess, PickedFile } from "./files.js";
 import { contentsOf, dropOn, fakeFile, fileCommands, fileStore } from "./testingFiles.js";
 import { connectSpar } from "./sdk.js";
-import type { CloseRequest, GuardsOutcome } from "./windows.js";
+import { windows, type CloseRequest, type GuardsOutcome } from "./windows.js";
 
 /** @internal One command as the generated testing module describes it: its names and its wire functions. */
 export interface CommandCodec {
@@ -204,8 +204,12 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
     commands.set(codec, codec);
   }
 
+  commands.set(windows.open, openWindowCodec);
+  commands.set(windows.params, windowParamsCodec);
   const host = new FakeHost(commands, fingerprint);
   host.script(colorSchemeCodec, () => ({ kind: "value", value: undefined }));
+  host.script(openWindowCodec, () => ({ kind: "value", value: undefined }));
+  host.script(windowParamsCodec, () => ({ kind: "value", value: null }));
   for (const [codec, answer] of fileCodecs) {
     host.script(codec, request => answer(request) as Answer);
   }
@@ -223,6 +227,24 @@ export function createFakeSpar(appCommands: ReadonlyMap<unknown, CommandCodec>, 
     drop: (area, dropped) => dropOn(store, area, dropped),
   };
 }
+
+/**
+ * The host's own `spar.openWindow`, as a host answers it: `{ kind, params }`, no value, `notOpened` with its reason. A
+ * page test reads what the page opened with `spar.calls(windows.open)`; it succeeds until a test scripts otherwise.
+ */
+const openWindowCodec: CommandCodec = {
+  contract: "spar",
+  command: "openWindow",
+  request: json => JSON.parse(json) as unknown,
+  error: (code, payload) => JSON.stringify({ code, reason: (payload as { readonly reason?: string } | undefined)?.reason ?? "" }),
+};
+
+/** The host's own `spar.windowParams`: the params object, null until a test scripts `spar.on(windows.params).succeed(…)`. */
+const windowParamsCodec: CommandCodec = {
+  contract: "spar",
+  command: "windowParams",
+  value: value => JSON.stringify(value ?? null),
+};
 
 /** The host's own `spar.setColorScheme`, as a host answers it: the scheme's name, no value, `notSaved` without a payload. */
 const colorSchemeCodec: CommandCodec = {

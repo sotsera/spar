@@ -21,7 +21,9 @@ public sealed class EmitterTests
         Assert.Matches("export const fingerprint = \"[0-9a-f]{16}\";", files["spar.js"]);
         Assert.Contains("\"./windows\": {\n      \"types\": \"./windows.d.ts\",\n      \"default\": \"./windows.js\"\n    }", files["package.json"], StringComparison.Ordinal);
         Assert.EndsWith("export { windows } from \"./sdk/windows.js\";\n", files["windows.js"], StringComparison.Ordinal);
-        Assert.Contains("export { windows, type CloseAnswer, type CloseGuard, type CloseRequest } from \"./sdk/windows.js\";", files["windows.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("export type { CloseAnswer, CloseGuard, CloseRequest, OpenError, WindowParams, WindowsApi } from \"./sdk/windows.js\";", files["windows.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("export type WindowKind = never;", files["windows.d.ts"], StringComparison.Ordinal);
+        Assert.Contains("export declare const windows: WindowsApi<WindowKind>;", files["windows.d.ts"], StringComparison.Ordinal);
     }
 
     [Fact]

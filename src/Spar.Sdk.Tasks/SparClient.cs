@@ -114,7 +114,7 @@ public sealed class SparClient : MSBuildTask, IMultiThreadableTask
         var output = TaskEnvironment.GetAbsolutePath(OutputDirectory);
         Directory.CreateDirectory(output);
         var sourcePrefix = Path.GetRelativePath(output, project).Replace('\\', '/') + "/";
-        var files = ClientPackage.Files(layout, sdk, sdkSources, SdkVersion, sourcePrefix, read.PageSecurity, read.WindowColors, PageTelemetry);
+        var files = ClientPackage.Files(layout, sdk, sdkSources, SdkVersion, sourcePrefix, read.PageSecurity, read.WindowColors, PageTelemetry, read.WindowKinds);
         // The app's variants build at the same time and share this folder, which the frontend's package.json names.
         var leasePath = new AbsolutePath(Path.TrimEndingDirectorySeparator(output.Value) + ".lease");
         using var lease = FileLease.Acquire(leasePath, Log, "Spar: waiting for another build to finish writing the client.");

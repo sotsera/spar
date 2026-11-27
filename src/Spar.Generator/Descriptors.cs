@@ -203,6 +203,12 @@ internal static class Descriptors
         "{0}. The build reads the colours of spar.Window(w => w.Background(light, dark)) from Program.cs without running the app, for the page's theme style and its hash in the Content Security Policy.",
         PageSecurity);
 
+    /// <summary>{0}: what the build cannot read, and what to write instead.</summary>
+    public static readonly DiagnosticDescriptor WindowKinds = Error(
+        "SPAR107", "Window kind names must be constants the build can read",
+        "{0}. The build reads the window kinds of spar.Window(kind, w => …) from Program.cs without running the app, for the page's WindowKind union in @spar/app/windows.",
+        PageSecurity);
+
     /// <summary>{0}: the method; {1}: what is wrong with it.</summary>
     public static readonly DiagnosticDescriptor SceneShape = Error(
         "SPAR110", "A scene is a static method that takes a SparScene and returns Task",

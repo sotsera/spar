@@ -23,6 +23,7 @@ public sealed class PageSecurityAnalyzer : DiagnosticAnalyzer
         Descriptors.InvalidValue,
         Descriptors.NonceWithInlineStyles,
         Descriptors.WindowColours,
+        Descriptors.WindowKinds,
     ];
 
     public override void Initialize(AnalysisContext context)
@@ -58,11 +59,23 @@ public sealed class PageSecurityAnalyzer : DiagnosticAnalyzer
                     context.ReportDiagnostic(problem);
                 }
 
+                foreach (var problem in WindowKindsAnalysis.Read(invocation, context.SemanticModel, context.CancellationToken).Problems)
+                {
+                    context.ReportDiagnostic(problem);
+                }
+
                 break;
             case "Background" when isApp.Value:
                 if (WindowColorsAnalysis.MisplacedCall(invocation, context.SemanticModel, context.CancellationToken) is { } colours)
                 {
                     context.ReportDiagnostic(colours);
+                }
+
+                break;
+            case "Window" when isApp.Value:
+                if (WindowKindsAnalysis.MisplacedCall(invocation, context.SemanticModel, context.CancellationToken) is { } kind)
+                {
+                    context.ReportDiagnostic(kind);
                 }
 
                 break;

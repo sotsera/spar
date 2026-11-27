@@ -344,8 +344,10 @@ Spar.Generator | Spar.Generator.Descriptors.UnsupportedShape | readonly | An imm
 Spar.Generator | Spar.Generator.Descriptors.InvalidValue | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.NonceWithInlineStyles | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.Descriptors.WindowColours | readonly | An immutable DiagnosticDescriptor.
+Spar.Generator | Spar.Generator.Descriptors.WindowKinds | readonly | An immutable DiagnosticDescriptor.
 Spar.Generator | Spar.Generator.PageSecurityAnalysis.ReportNames | readonly | The CspReports member names by value, filled once, read only.
 Spar.Generator | Spar.Generator.WindowColorsAnalysis.Colour | readonly | A compiled Regex: thread-safe, keeps no state between matches.
+Spar.Generator | Spar.Generator.WindowKindsAnalysis.Name | readonly | A compiled Regex: thread-safe, keeps no state between matches.
 Spar.Generator | Spar.Generator.WindowColorsModel.<Default>k__BackingField | readonly | An immutable record of two strings, made once.
 
 # Spar.Sdk.Tasks (MSBuild tasks: one node runs several projects' builds)

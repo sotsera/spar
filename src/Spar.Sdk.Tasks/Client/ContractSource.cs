@@ -21,14 +21,15 @@ internal sealed record ClientInputs(
 internal sealed record ClientContract(ContractModel Model, string SourceFile, ClientDocs Docs);
 
 /// <summary>
-/// The valid contracts, the page security and the window colours Program.cs declares (null without a Create call), and
-/// every problem the analysis found: the same diagnostics the analyzers report.
+/// The valid contracts, the page security, the window colours and the window kinds Program.cs declares (null without a
+/// Create call), and every problem the analysis found: the same diagnostics the analyzers report.
 /// </summary>
 internal sealed record ContractRead(
     IReadOnlyList<ClientContract> Contracts,
     IReadOnlyList<Diagnostic> Problems,
     PageSecurityModel? PageSecurity = null,
-    WindowColorsModel? WindowColors = null);
+    WindowColorsModel? WindowColors = null,
+    IReadOnlyList<string>? WindowKinds = null);
 
 /// <summary>
 /// Reads the project's contracts with the generator's own analysis (decision "D1: Compilation pipeline"), so the page's
@@ -67,14 +68,18 @@ internal static class ContractSource
         // The window colours, for the page's theme style (plan section 3d).
         var colours = WindowColorsAnalysis.Find(compilation, cancellationToken);
 
+        // The window kinds, for the page's WindowKind union.
+        var kinds = WindowKindsAnalysis.Find(compilation, cancellationToken);
+
         // Warnings, such as DateTime on the wire, leave the contract valid; the compiler's analyzer reports them.
         var errors = found.All
             .Concat(security?.Problems ?? [])
             .Concat(colours?.Problems ?? [])
+            .Concat(kinds?.Problems ?? [])
             .Where(d => d.Severity == DiagnosticSeverity.Error)
             .ToList();
         var ordered = contracts.OrderBy(c => c.Model.WireName, StringComparer.Ordinal).ToList();
-        return new ContractRead(ordered, errors, security?.Model, colours?.Model);
+        return new ContractRead(ordered, errors, security?.Model, colours?.Model, kinds?.Kinds);
     }
 
     private static CSharpCompilation Compile(ClientInputs inputs, CancellationToken cancellationToken)

@@ -8,16 +8,6 @@ public static class PlannedBuilder
 {
     extension(SparBuilder builder)
     {
-        /// <summary>
-        /// Window kinds (6.7) are not built yet. The real options type has no public constructor, so the kind's
-        /// configuration runs against the main window's options, which this compile-only check never shows.
-        /// </summary>
-        public SparBuilder Window(string kind, Action<WindowOptions> configure)
-        {
-            ArgumentException.ThrowIfNullOrEmpty(kind);
-            return builder.Window(configure);
-        }
-
         public SparBuilder Tray(Action<TrayOptions> configure) => Configure(builder, new TrayOptions(), configure);
 
         public SparBuilder Shell(Action<ShellOptions> configure) => Configure(builder, new ShellOptions(), configure);

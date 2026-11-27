@@ -45,7 +45,8 @@ internal static class ClientPackage
         string sourcePrefix,
         PageSecurityModel? security = null,
         WindowColorsModel? colours = null,
-        bool pageTelemetry = false)
+        bool pageTelemetry = false,
+        IReadOnlyList<string>? windowKinds = null)
     {
         var files = new SortedDictionary<string, byte[]>(StringComparer.Ordinal);
         void Text(string path, string text) => files[path] = Encoding.UTF8.GetBytes(text);
@@ -56,7 +57,7 @@ internal static class ClientPackage
         Text("testing.js", ModuleEmitter.Testing(layout));
         Text("testing.d.ts", DeclarationEmitter.Testing());
         Text("windows.js", ModuleEmitter.Windows());
-        Text("windows.d.ts", DeclarationEmitter.Windows());
+        Text("windows.d.ts", DeclarationEmitter.Windows(windowKinds));
 
         if (layout.Shared.Any())
         {

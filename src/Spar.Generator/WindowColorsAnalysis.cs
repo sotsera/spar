@@ -113,9 +113,20 @@ internal static class WindowColorsAnalysis
             return null;
         }
 
+        if (InKind(invocation))
+        {
+            return Diagnostic.Create(Descriptors.WindowColours, access.Name.GetLocation(),
+                "A window kind takes the main window's colours, and this Background(…) call fails the start: set the colours once, in spar.Window(w => w.Background(light, dark))");
+        }
+
         return Diagnostic.Create(Descriptors.WindowColours, access.Name.GetLocation(),
             "This Background(…) call is not where the build reads it: write it in a chain on the parameter of spar.Window(w => …), as a statement of its own directly in the SparApplication.Create configuration, such as spar.Window(w => w.Background(light: \"#ffffff\", dark: \"#1f1f1f\"))");
     }
+
+    /// <summary>Whether the call is inside the lambda of a two-argument Window(kind, …) call.</summary>
+    private static bool InKind(InvocationExpressionSyntax call) =>
+        call.Ancestors().OfType<InvocationExpressionSyntax>().Any(outer =>
+            outer.Expression is MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Window" } && outer.ArgumentList.Arguments.Count == 2);
 
     private static bool IsWindowCall(InvocationExpressionSyntax call, SemanticModel model, CancellationToken cancellationToken) =>
         call.Expression is MemberAccessExpressionSyntax { Name.Identifier.ValueText: "Window" }
@@ -224,7 +235,9 @@ internal static class WindowColorsAnalysis
             return false;
         }
 
+        // The main window's call only: a kind takes the main window's colours, and its Background fails the start.
         return lambda.Parent is ArgumentSyntax { Parent: ArgumentListSyntax { Parent: InvocationExpressionSyntax window } }
+            && window.ArgumentList.Arguments.Count == 1
             && IsWindowCall(window, model, cancellationToken)
             && PageSecurityAnalysis.IsDirectlyInCreate(window, model, cancellationToken);
     }

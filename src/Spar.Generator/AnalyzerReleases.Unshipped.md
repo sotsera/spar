@@ -45,6 +45,7 @@ SPAR103 | Spar.PageSecurity | Error | PageSecurityAnalyzer
 SPAR104 | Spar.PageSecurity | Error | PageSecurityAnalyzer
 SPAR105 | Spar.PageSecurity | Warning | PageSecurityAnalyzer
 SPAR106 | Spar.PageSecurity | Error | PageSecurityAnalyzer
+SPAR107 | Spar.PageSecurity | Error | PageSecurityAnalyzer
 SPAR110 | Spar.Scenes | Error | SceneAnalyzer
 SPAR111 | Spar.Scenes | Error | SceneAnalyzer
 SPAR112 | Spar.Scenes | Error | SceneAnalyzer
