@@ -491,6 +491,8 @@ See also "Bridge and loopback" for WebView2 web messages, the loopback transport
 - **`FileSystemHandle`s posted with `postMessageWithAdditionalObjects` arrived as `null`** in the WebView2 SDK's managed layer (Runtime 158); a folder's `File` carries its path anyway. (M3c spike)
 - **A window class is the process's:** a second `UiThread` in one process fails `RegisterClassEx` with the same class name, so the clipboard has a thread and a class of its own, one per process. (M3c)
 - **The slot-order test reads each interface's own methods:** a `[GeneratedComInterface]` that derives from another lists only its own in metadata, so it reads as starting at slot 3. Declare COM interfaces flat, every slot from 3, as `Interop/Shell.cs` does for the file dialogs. (M3c)
+- **`GetProcessInfos` lists the renderers of every window of the browser:** each window's environment on the app's profile joins one browser process, so ending "the environment's renderers" for one hung page ended every window's page. End only the renderer that holds the window's main frame (`GetProcessExtendedInfos`). With the app's own profile, every window on `https://app.localhost` had a renderer of its own up to the 9 the spike opened. (M3d, `spikes/windows`)
+- **A Ctrl+wheel through the DevTools protocol does not zoom WebView2:** `Input.dispatchMouseEvent` with Ctrl changed no `ZoomFactor` and raised no `ZoomFactorChanged`, so a window test sets the zoom through the host. (M3d spike)
 
 ### Windows host: from earlier versions and other frameworks, not rechecked
 
@@ -680,6 +682,10 @@ See also "Bridge and loopback" for the heartbeat, and "Page security (CSP, heade
 - **An XDND source a test drives must hover and follow the protocol:** a drop sent 2 ms after `XdndEnter` was taken one time in two; the test's source sends a position every 16 ms for at least 400 ms and until the window accepts, waits for each `XdndStatus`, stamps its messages with the server's time, and tries a refused drag once more. (M3c)
 - **With GNOME Keyring installed, a session bus starts the Secret Service on demand:** the first libsecret call on the tests' private bus found a service (D-Bus activation), so "no Secret Service" cannot be shown there; a daemon started with `--replace` meanwhile broke the call in flight ("Message recipient disconnected"). The test starts its daemon, unlocked, before the first call. (M3c)
 - **An `XEvent`'s type is an `int` followed by padding Xlib never clears:** reading the event as `long`s and comparing the first one matched only while the heap left zeros there, so the test's XDND source missed its own `PropertyNotify` in a full lane of window tests (Debug and NativeAOT) and never in the drop tests alone. Read the type as the first `int`. (M3c)
+- **One web context per window of the app:** the `spar` scheme is registered on a view's web context, and once per context; a second window on the default context would register it twice, or send its requests to the first window's server. Each window of the app's kinds gets a web context of its own and shares the main window's network session, so their cookies and storage stay one. (M3d)
+- **WebKitGTK does not zoom on Ctrl+wheel or Ctrl+plus:** the page receives both (the wheel event with `ctrlKey` true) and the zoom level stays 1.0, so the host turns them into zoom levels itself. (M3d, `spikes/windows`)
+- **Openbox did not place a transient window over its owner:** a modal (`gtk_window_set_transient_for` and `gtk_window_set_modal`) opened at the screen's top left; GTK 4 still kept input from the owner, with or without a window manager. The host centres a modal on its owner on X11. (M3d spike)
+- **Reloading a `load_html` page refetches its base address:** with no server behind it, the reload never reaches a first frame. (M3d spike)
 
 ### Linux host: from other frameworks, not rechecked
 

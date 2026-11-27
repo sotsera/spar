@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Spar.AppWindows;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Runtime;
@@ -47,6 +48,10 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     private readonly TaskCompletionSource _opened = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly TaskCompletionSource<int> _closed = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly HashSet<int> _renderers = [];
+    private readonly OpenWindow? _kindWindow;
+    private readonly AppWindowSet _windowSet;
+    private readonly TestWindow? _main;
+    private readonly List<TestWindow> _others = [];
     private AppWindow? _window;
     private TestPage? _page;
     private int _holdsFirstLoad;
@@ -56,12 +61,25 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     private bool _closedBeforeStart;
     private (int Slot, int X, int Y)? _place;
 
-    private TestWindow(TestWindowProcess process, SparApp app, SparRunningApp running, SparTestWindowRequest request)
+    /// <param name="opened">A window the app's page opened, of one of its kinds; null for the app's main window.</param>
+    /// <param name="windowSet">The app's windows, shared by every window of one test app; null for the main window, which makes it.</param>
+    /// <param name="main">The test app's main window, for one of its other windows.</param>
+    private TestWindow(
+        TestWindowProcess process,
+        SparApp app,
+        SparRunningApp running,
+        SparTestWindowRequest request,
+        OpenWindow? opened = null,
+        AppWindowSet? windowSet = null,
+        TestWindow? main = null)
     {
         _process = process;
         _app = app;
         _running = running;
         _request = request;
+        _kindWindow = opened;
+        _main = main;
+        _windowSet = windowSet ?? new AppWindowSet(app.Builder, new AppWindowsOfTest(this));
         _log.UseAppLogging(running.Services);
         _hangHook = new PageHangHook(app.Builder.PageHangHandler, _log.Logger);
         _security = PageSecuritySetup.Resolve(app, _log.Logger);
@@ -312,11 +330,29 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
         return Task.FromResult((dark, ((uint)colour.Blue << 16) | ((uint)colour.Green << 8) | colour.Red));
     });
 
-    void IAppWindowOwner.TeardownStarted() => _request.OnPhase?.Invoke("closing");
+    /// <summary>The main window's teardown also tears down the app's other windows, as an app's does.</summary>
+    void IAppWindowOwner.TeardownStarted()
+    {
+        _request.OnPhase?.Invoke("closing");
+        if (_main is null)
+        {
+            _windowSet.Closing();
+            foreach (var other in _others.ToList())
+            {
+                _ = other._window?.TeardownAsync(0);
+            }
+        }
+    }
 
     /// <summary>The window is gone and its web processes have exited (loop thread): the rest of the stop runs off the loop.</summary>
     void IAppWindowOwner.WindowClosed()
     {
+        if (_main is not null && _kindWindow is not null)
+        {
+            _main._others.Remove(this);
+            _windowSet.Closed(_kindWindow.Id);
+        }
+
         Volatile.Write(ref _gone, 1);
         ReleaseFirstLoad();
         LeaveScheme();
@@ -364,7 +400,8 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
             var title = _app.Catalog.AppAssembly?.GetName().Name ?? "Spar";
             var profile = new BrowserProfile(_running.Folders.Profile);
             _window = new AppWindow(
-                _app, _security, _log, automated: true, title, _running.Folders, profile, _hangHook, promptAnswers: null, this, source);
+                _app, _security, _log, automated: true, title, _running.Folders, profile, _hangHook, promptAnswers: null, this, source,
+                opened: _kindWindow, windows: _windowSet, sharedSession: _main?._window?.Session ?? 0);
             _request.OnPhase?.Invoke("controller requested");
             _window.Start(_process.Ui, _theme, Task.FromResult(_running));
         }
@@ -621,6 +658,38 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
     }
 
     /// <summary>How one engine call ended (<see cref="AwaitEngineAsync"/>).</summary>
+    /// <summary>
+    /// The app's other windows in a test (decision "M3d's decide-first questions", item 9): each a test window of its own,
+    /// on the test display, on the main window's ephemeral session (an app's windows share theirs) with a web context of
+    /// its own, and the page driver the testing layer made for it through <see cref="SparTestWindowRequest.ForAppWindow"/>.
+    /// </summary>
+    private sealed class AppWindowsOfTest(TestWindow main) : IAppWindowHost
+    {
+        public async Task OpenAsync(OpenWindow window, CancellationToken cancellationToken)
+        {
+            if (main._request.ForAppWindow is not { } forAppWindow)
+            {
+                throw new InvalidOperationException("This test reaches only the app's main window.");
+            }
+
+            var (request, attach) = forAppWindow(window.Kind, window.Id);
+            var other = new TestWindow(main._process, main._app, main._running, request, window, main._windowSet, main);
+            attach(other);
+            main._process.Ui.Post(
+                () =>
+                {
+                    main._others.Add(other);
+                    _ = other.StartAsync();
+                },
+                "test window " + window.Id);
+            await other.Opened.WaitAsync(cancellationToken);
+        }
+
+        public void Focus(OpenWindow window) => main._process.Ui.Post(
+            () => main._others.FirstOrDefault(other => other._kindWindow?.Id == window.Id)?._window?.Focus(),
+            "test window focus");
+    }
+
     private enum EngineWait
     {
         Answered,

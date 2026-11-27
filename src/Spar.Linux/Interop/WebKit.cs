@@ -115,6 +115,13 @@ internal static unsafe partial class WebKit
     [LibraryImport(Library)]
     public static partial nint webkit_web_context_get_security_manager(nint context);
 
+    /// <summary>A web context of its own (its own scheme handlers and web processes), owned: one per window of the app.</summary>
+    [LibraryImport(Library)]
+    public static partial nint webkit_web_context_new();
+
+    [LibraryImport(Library)]
+    public static partial nuint webkit_web_context_get_type();
+
     [LibraryImport(Library, StringMarshalling = StringMarshalling.Utf8)]
     public static partial void webkit_security_manager_register_uri_scheme_as_secure(nint manager, string scheme);
 

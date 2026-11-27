@@ -93,6 +93,19 @@ internal sealed partial class BrowserView
     /// </summary>
     public nint Handle => _view;
 
+    /// <summary>Where the first load goes: the app's origin at the window's route (its kind's, or the root).</summary>
+    public string StartAddress { get; init; } = SchemeServer.StartUrl;
+
+    /// <summary>
+    /// The app's network session, from its main window's view, for a window of one of its kinds: the app's windows share
+    /// their cookies and storage, each with a web context of its own, so its <c>spar</c> scheme serves that window. 0 for
+    /// the main window, which makes the session.
+    /// </summary>
+    public nint SharedSession { get; init; }
+
+    /// <summary>The view's network session, for the app's other windows (loop thread); 0 before <see cref="Create"/>.</summary>
+    public nint Session => _session;
+
     /// <summary>
     /// Creates the network session over the app's own data and cache folders, passed explicitly (plan section 3,
     /// "Data folders"), the content manager with the relay, and the view over both; registers the scheme on the view's
@@ -109,9 +122,16 @@ internal sealed partial class BrowserView
         {
             // A test window: nothing kept on disk or shared with another test's window, the InPrivate analogue, and a web
             // context of its own, so the spar scheme of this context is this window's app only.
-            _session = TestViews.EphemeralSession();
+            _session = SharedSession != 0 ? GLib.g_object_ref(SharedSession) : TestViews.EphemeralSession();
             _context = TestViews.NewContext();
             _log.Info("Browser data: an ephemeral network session and a web context of the test window's own.");
+        }
+        else if (SharedSession != 0)
+        {
+            // A window of one of the app's kinds: the app's session, and a web context of its own for its scheme.
+            _session = GLib.g_object_ref(SharedSession);
+            _context = WebKit.webkit_web_context_new();
+            _log.Info("Browser data: the app's network session, and a web context of the window's own.");
         }
         else if (_profile.InMemory)
         {
@@ -125,7 +145,11 @@ internal sealed partial class BrowserView
             CheckFolders(dataFolder, cacheFolder);
         }
 
-        _downloadHandler = Connect(_session, "download-started", (delegate* unmanaged<nint, nint, nint, void>)&OnDownloadStarted, self);
+        // The session's downloads are refused once, by the window that made the session (the main one).
+        if (SharedSession == 0)
+        {
+            _downloadHandler = Connect(_session, "download-started", (delegate* unmanaged<nint, nint, nint, void>)&OnDownloadStarted, self);
+        }
         _content = WebKit.webkit_user_content_manager_new();
         if (WebKit.webkit_user_content_manager_register_script_message_handler(_content, ScriptBridge.Handler, ScriptBridge.World) == 0)
         {
@@ -146,7 +170,7 @@ internal sealed partial class BrowserView
             AddPageScript(pageScript);
         }
 
-        _view = test ? TestViews.NewView(_session, _content, _context) : NewView(_session, _content);
+        _view = test ? TestViews.NewView(_session, _content, _context) : NewView(_session, _content, _context);
         var context = WebKit.webkit_web_view_get_context(_view);
         _pages.Register(context);
         SetBackground(background);
@@ -225,7 +249,7 @@ internal sealed partial class BrowserView
             return;
         }
 
-        WebKit.webkit_web_view_load_uri(_view, SchemeServer.StartUrl);
+        WebKit.webkit_web_view_load_uri(_view, StartAddress);
     }
 
     /// <summary>A test window's first load, once its page driver is set up (loop thread), unless the window closed meanwhile.</summary>
@@ -244,7 +268,7 @@ internal sealed partial class BrowserView
 
         if (_view != 0 && !_ending)
         {
-            WebKit.webkit_web_view_load_uri(_view, SchemeServer.StartUrl);
+            WebKit.webkit_web_view_load_uri(_view, StartAddress);
         }
     }
 
@@ -334,14 +358,18 @@ internal sealed partial class BrowserView
 
         if (_session != 0)
         {
-            GLib.g_signal_handler_disconnect(_session, _downloadHandler);
+            if (_downloadHandler != 0)
+            {
+                GLib.g_signal_handler_disconnect(_session, _downloadHandler);
+            }
+
             GLib.g_object_unref(_session);
             _session = 0;
         }
 
         if (_context != 0)
         {
-            // A test window's own web context; the view holds its own reference until the window is destroyed.
+            // The window's own web context (a test window's, or a kind's); the view holds its own reference until the window is destroyed.
             GLib.g_object_unref(_context);
             _context = 0;
         }
@@ -372,30 +400,42 @@ internal sealed partial class BrowserView
     }
 
     /// <summary>
-    /// The view, with its session and content manager as construct-only properties: <c>g_object_new</c> is variadic, so
-    /// its <c>g_object_new_with_properties</c> form. The values hold their own references while the view is built.
+    /// The view, with its session, content manager and, for a window of the app's kinds, its own web context as
+    /// construct-only properties: <c>g_object_new</c> is variadic, so its <c>g_object_new_with_properties</c> form. The
+    /// values hold their own references while the view is built. The main window's view takes the default context.
     /// </summary>
-    private static unsafe nint NewView(nint session, nint content)
+    private static unsafe nint NewView(nint session, nint content, nint context)
     {
-        var values = stackalloc GValue[2];
+        var count = context == 0 ? 2u : 3u;
+        var values = stackalloc GValue[3];
         values[0] = default;
         values[1] = default;
+        values[2] = default;
         fixed (byte* sessionName = "network-session\0"u8)
         fixed (byte* contentName = "user-content-manager\0"u8)
+        fixed (byte* contextName = "web-context\0"u8)
         {
-            var names = stackalloc nint[2] { (nint)sessionName, (nint)contentName };
+            var names = stackalloc nint[3] { (nint)sessionName, (nint)contentName, (nint)contextName };
             GLib.g_value_init(&values[0], WebKit.webkit_network_session_get_type());
             GLib.g_value_set_object(&values[0], session);
             GLib.g_value_init(&values[1], WebKit.webkit_user_content_manager_get_type());
             GLib.g_value_set_object(&values[1], content);
+            if (context != 0)
+            {
+                GLib.g_value_init(&values[2], WebKit.webkit_web_context_get_type());
+                GLib.g_value_set_object(&values[2], context);
+            }
+
             try
             {
-                return GLib.g_object_new_with_properties(WebKit.webkit_web_view_get_type(), 2, names, values);
+                return GLib.g_object_new_with_properties(WebKit.webkit_web_view_get_type(), count, names, values);
             }
             finally
             {
-                GLib.g_value_unset(&values[0]);
-                GLib.g_value_unset(&values[1]);
+                for (var index = 0; index < count; index++)
+                {
+                    GLib.g_value_unset(&values[index]);
+                }
             }
         }
     }
@@ -483,7 +523,7 @@ internal sealed partial class BrowserView
                     // Nothing the lock lets through should commit here; if a document of another origin does, the
                     // window does not stay on it.
                     _guard.ForeignDocument(address);
-                    WebKit.webkit_web_view_load_uri(_view, SchemeServer.StartUrl);
+                    WebKit.webkit_web_view_load_uri(_view, StartAddress);
                 }
 
                 break;

@@ -200,7 +200,7 @@ internal sealed partial class AppWindow
         var unanswered = false;
         try
         {
-            var request = new CloseRequest("main", reason, automated);
+            var request = new CloseRequest(Name, reason, automated);
             _log.Step($"close requested ({reason}{(automated ? ", automated" : "")})");
 
             var page = _watch is null ? PageCloseResult.NoPage : await _watch.AskPageAsync(reason, automated, questions, TimeSpan.Zero);
@@ -272,7 +272,7 @@ internal sealed partial class AppWindow
         _view?.EndRecovery();
         try
         {
-            var request = new CloseRequest("main", CloseReason.SessionEnd, automated);
+            var request = new CloseRequest(Name, CloseReason.SessionEnd, automated);
             var page = _watch is null
                 ? PageCloseResult.NoPage
                 : await _watch.AskPageAsync(CloseReason.SessionEnd, automated, questions: null, Remaining(start, SessionEndPageMilliseconds));

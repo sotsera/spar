@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spar.AppWindows;
 using Spar.Hosting;
 using Spar.Linux.Interop;
 using Spar.Logging;
@@ -19,7 +20,7 @@ namespace Spar.Linux;
 /// services' disposal, with the main loop still running so the shutdown hang policy's prompt can show
 /// (<see cref="ShutdownWatch"/>), and the exit code.
 /// </summary>
-internal sealed class LinuxApp : IAppWindowOwner
+internal sealed partial class LinuxApp : IAppWindowOwner, IAppWindowHost
 {
     /// <summary>How long the process waits at exit for a relaunch handler that is still running.</summary>
     private const int RelaunchSettleMilliseconds = 3_000;
@@ -49,6 +50,9 @@ internal sealed class LinuxApp : IAppWindowOwner
     private SparRunningApp? _running;
     private MainLoop? _ui;
     private AppWindow? _window;
+    private AppWindowSet? _windowSet;
+    private Task<SparRunningApp>? _built;
+    private SparPageSecurity? _security;
     private ShutdownWatch? _shutdown;
     private SessionEndSignals? _signals;
     private DevServer.DevServerSession? _devServer;
@@ -159,13 +163,19 @@ internal sealed class LinuxApp : IAppWindowOwner
             request => LinuxPageHost.ShowShutdownPrompt(ui, _log, _promptAnswers, request),
             ExitNow);
         _instance?.StopListening();
+        CloseSecondaries();
     }
 
     /// <summary>
     /// The window is gone and its web processes have exited (loop thread): the rest of the shutdown runs off the loop,
-    /// which keeps running meanwhile so the shutdown prompt can show, and ends once the shutdown is done.
+    /// which keeps running meanwhile so the shutdown prompt can show, and ends once the shutdown is done, after the
+    /// app's other windows are gone too.
     /// </summary>
-    void IAppWindowOwner.WindowClosed() => _ = FinishAsync(_ui!);
+    void IAppWindowOwner.WindowClosed()
+    {
+        _mainClosed = true;
+        FinishWhenDone();
+    }
 
     /// <summary>Every WebKit process below this one: an app has one window.</summary>
     List<(int Id, string Name)> IAppWindowOwner.WebKitProcesses() => WebProcesses.Below(Environment.ProcessId);
@@ -254,8 +264,11 @@ internal sealed class LinuxApp : IAppWindowOwner
         }
 
         var built = Task.Run(Build);
+        _built = built;
+        _security = security;
+        _windowSet = new AppWindowSet(builder, this);
         _window = new AppWindow(
-            _app, security, _log, _automated, _title, _folders, _profile, _hangHook, _promptAnswers, this);
+            _app, security, _log, _automated, _title, _folders, _profile, _hangHook, _promptAnswers, this, windows: _windowSet);
         if (DevServer.DevServerSettings.IsSupported && _devServer is not null)
         {
             _window.UseDevServer(_devServer);
@@ -272,6 +285,7 @@ internal sealed class LinuxApp : IAppWindowOwner
         // Done already when the window ran; the handles native callbacks found it by go once nothing can call back.
         Stop();
         _window.Release();
+        ReleaseSecondaries();
         if (_noDisplay is { } closed)
         {
             return StartupFailure.Report(closed, Startup, gtkUsable: false);

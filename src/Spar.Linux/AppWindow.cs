@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
+using Spar.AppWindows;
 using Spar.Files;
 using Spar.Hosting;
 using Spar.Linux.Interop;
@@ -52,6 +53,9 @@ internal sealed partial class AppWindow
     private readonly ConcurrentQueue<string>? _promptAnswers;
     private readonly IAppWindowOwner _owner;
     private readonly BrowserSource? _source;
+    private readonly OpenWindow? _opened;
+    private readonly AppWindowSet? _windows;
+    private readonly nint _sharedSession;
     private readonly CancellationTokenSource _stopping = new();
     private readonly WindowDialogs _dialogs = new();
     private CloseGuard? _guard;
@@ -75,6 +79,9 @@ internal sealed partial class AppWindow
     /// <param name="security">The page security in force, resolved before the engine started (it sets WebAssembly).</param>
     /// <param name="promptAnswers">A Development build's scripted answers to the hung-page dialogs; null otherwise.</param>
     /// <param name="source">A test window's display and page driver (the Window surface); null for an app's window.</param>
+    /// <param name="opened">A window of one of the app's kinds (decision "Secondary and modal windows"); null for the main window.</param>
+    /// <param name="windows">The app's windows, which the page may open more of; null where it opens none.</param>
+    /// <param name="sharedSession">The main window's network session, for a window of the app's kinds; 0 for the main window.</param>
     public AppWindow(
         SparApp app,
         SparPageSecurity security,
@@ -86,7 +93,10 @@ internal sealed partial class AppWindow
         PageHangHook hangHook,
         ConcurrentQueue<string>? promptAnswers,
         IAppWindowOwner owner,
-        BrowserSource? source = null)
+        BrowserSource? source = null,
+        OpenWindow? opened = null,
+        AppWindowSet? windows = null,
+        nint sharedSession = 0)
     {
         _app = app;
         _security = security;
@@ -99,7 +109,16 @@ internal sealed partial class AppWindow
         _promptAnswers = promptAnswers;
         _owner = owner;
         _source = source;
+        _opened = opened;
+        _windows = windows;
+        _sharedSession = sharedSession;
     }
+
+    /// <summary>The window's id in the app: <c>main</c>, or its kind's name with a number.</summary>
+    public string Id => _opened?.Id ?? WindowRoutes.Main;
+
+    /// <summary>The view's network session, which the app's other windows share (loop thread); 0 before the start.</summary>
+    public nint Session => _view?.Session ?? 0;
 
     /// <summary>The run's exit code: 0, or the code of the failure that ended it.</summary>
     public int ExitCode => _exitCode;
@@ -121,6 +140,15 @@ internal sealed partial class AppWindow
 
     public void Report(Exception exception) => _log.Error("The window's thread failed", exception);
 
+    /// <summary>The window's options: its kind's, or the main window's.</summary>
+    private WindowOptions Options => _opened?.Options ?? _app.Builder.MainWindow;
+
+    /// <summary>The window's name in hooks and logs: <c>main</c>, or its kind.</summary>
+    private string Name => _opened?.Kind ?? WindowRoutes.Main;
+
+    /// <summary>Where the window's page starts: the app's origin at the kind's route, or its root.</summary>
+    private string StartAddress => SchemeServer.Origin + Options.PageRoute;
+
     /// <summary>
     /// A Debug build's development server, which the page comes from (before <see cref="Start"/>). Called only behind
     /// <see cref="Spar.DevServer.DevServerSettings.IsSupported"/>, so no other build has it.
@@ -140,7 +168,7 @@ internal sealed partial class AppWindow
         _ui = ui;
         _theme = theme;
         _self = GCHandle.Alloc(this);
-        var options = _app.Builder.MainWindow;
+        var options = Options;
         _window = Gtk.gtk_window_new();
         theme.Apply(_window);
         _log.Info($"Theme {(theme.IsDark ? "dark" : "light")}, {theme.Background}, from {theme.Source}.");
@@ -165,7 +193,8 @@ internal sealed partial class AppWindow
             _violations = new CspViolationLog(_log.Logger, TimeProvider.System, SparDevelopment.IsSupported ? CspAdvice.For : null);
         }
 
-        _pages = new SchemeServer(frontend, ui, _log, security, development, endpointReports ? _violations : null);
+        var routes = _app.Builder.WindowKinds.Values.Select(kind => kind.PageRoute).Distinct().ToList();
+        _pages = new SchemeServer(frontend, ui, _log, security, development, endpointReports ? _violations : null, routes);
         if (Spar.DevServer.DevServerSettings.IsSupported && _devServer is { } devServer)
         {
             // A development server that stops takes the page to the error page, which offers Retry.
@@ -175,7 +204,7 @@ internal sealed partial class AppWindow
                 {
                     if (_state != State.Closing && _view?.Handle is { } view and not 0)
                     {
-                        WebKit.webkit_web_view_load_uri(view, SchemeServer.StartUrl);
+                        WebKit.webkit_web_view_load_uri(view, StartAddress);
                     }
                 },
                 "dev server stopped");
@@ -187,7 +216,11 @@ internal sealed partial class AppWindow
         var guard = new PageGuard(_log, security, browser.HistoryNavigation);
         var defaults = new BrowserDefaults(_log, browser, development, _automated);
         defaults.KeepGtkInspectorClosed(_window);
-        _view = new BrowserView(ui, _log, _pages, _bridge, guard, defaults, _profile, Fail, _source);
+        _view = new BrowserView(ui, _log, _pages, _bridge, guard, defaults, _profile, Fail, _source)
+        {
+            StartAddress = StartAddress,
+            SharedSession = _sharedSession,
+        };
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
             && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
         {
@@ -245,6 +278,18 @@ internal sealed partial class AppWindow
 
         Gtk.gtk_window_present(_window);
         _log.Info($"Relaunch with {argumentCount} arguments: the window was presented{(activationToken is null ? "" : " with its activation token")}.");
+    }
+
+    /// <summary>A single-instance kind opened again: its window is presented (loop thread).</summary>
+    public void Focus()
+    {
+        if (_window == 0 || _state == State.Closing)
+        {
+            return;
+        }
+
+        Gtk.gtk_window_present(_window);
+        _log.Step($"window {Id} presented");
     }
 
     /// <summary>
@@ -327,7 +372,14 @@ internal sealed partial class AppWindow
         }
 
         var profile = app.Services.GetService<BrowserProfile>();
-        return new HostWindow(app.Dispatcher.Time, fake ?? _fileDialogs, profile is null ? null : profile.Contains);
+        return new HostWindow(app.Dispatcher.Time, fake ?? _fileDialogs, profile is null ? null : profile.Contains)
+        {
+            Name = Name,
+            Id = Id,
+            Params = _opened?.Params ?? ReadOnlyMemory<byte>.Empty,
+            Access = Options.Access,
+            Windows = _windows,
+        };
     }
 
     private void Fail(int exitCode, string message) => _ui?.Post(() => _ = FailAsync(exitCode, message), "failure");
