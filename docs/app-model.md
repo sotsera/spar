@@ -2066,4 +2066,5 @@ Decided since this list was first written, and shown above:
 - `Call` as a `Promise` subclass (decision "TypeScript SDK: `Call` as a `Promise` subclass, `toStringTag`, Vue augmentation");
 - the `Program.cs` shape (decision "`Program.cs` shape confirmed");
 - the declaration of permissions (decision "Camera, microphone and other permissions");
-- readiness through `connection.ready()` alone, the splash and `setColorScheme` (decision "M1d step 5's shape: the page side of start-up").
+- readiness through `connection.ready()` alone, the splash and `setColorScheme` (decision "M1d step 5's shape: the page side of start-up");
+- the name of a subscription that keeps only its newest value, `LatestOnly = true`, and streams and subscriptions built through real Spar (decisions "M3a's decide-first questions" and "M3a: streams and subscriptions").
