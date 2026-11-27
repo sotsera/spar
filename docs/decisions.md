@@ -5483,3 +5483,15 @@ Built after decision "M3b's decide-first questions" (`docs/evidence/m3b-binary-d
 ## M3b's choices accepted (user decision, 2026-11-27)
 
 The user accepted the seventeen choices of decision "M3b: serial groups, binary data and settings files (implementation record; choices for review; 2026-11-27)" as built, the four that depart from or add to the decided wording included: a handle's `size` as a JSON number (item 6), `FromStreamAsync` on the `SparBlobs` service (item 8), the loopback key made by the page rather than per document (item 12), and `bytes()` and `blob()` as plain promises (item 13).
+
+## M3c's decide-first questions (user decision, 2026-11-27)
+
+Asked at the start of M3c (plan, "M3c: files, drag and drop, the clipboard, credentials"); the user accepted all eight recommendations as the plan states them:
+1. **A spike first,** `spikes/file-drop`, on both hosts: how dropped files reach the host with their paths, and the Linux file dialog through the portal; the drop design is settled from its numbers.
+2. **Grants:** `{"id":"fg_…","name","size","access"}` (`fd_…` for folders), in results, requests and their records; resolved to the window's own grant before a command runs; tied to the window (they outlive a reload, revoked at its close), at most 1,000 per window, an optional expiry; C# reads the path, the page never.
+3. **The page reads and writes a grant** within the bridge's 4 MiB message; `file.blob()` for any size on the origin; writes are safe writes; larger writes go through a command.
+4. **The Linux file dialog** is `GtkFileDialog` through the portal; `unavailable` when no portal answers, no fallback dialog.
+5. **The backend's clipboard,** text only: a clipboard thread with a message-only window on Windows, `Busy` after about 100 ms; `GdkClipboard`'s asynchronous calls on Linux.
+6. **Credentials** in C# only (`ICredentialStore`: `Set`, `Get`, `Exists`, `Delete`; `NotFound`, `TooLarge`, `Unavailable`): Credential Manager on Windows (`<app id>/<name>`, 2,560 bytes, this machine, `Roaming()` opt-in), libsecret on Linux, never plain text; the page reaches them only through the app's own commands.
+7. **Tests:** fakes under the test host (dialogs, clipboard, credentials, dropped files); real dialogs in black-box tests driven through their events; the Credential Manager only in Windows Sandbox; libsecret in Spar's Linux CI image.
+8. **The exit's proof:** `docs/app-model.md` 3.6 and 3.7 and a credentials example through real Spar; the Notebook's import (dialog and drop), export (save dialog) and copy as Markdown (clipboard); the spike's drop numbers; no budget.
