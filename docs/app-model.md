@@ -1732,7 +1732,7 @@ export async function openExport(file: PickedFile, folder: PickedFolder): Promis
 
 ### 6.7 Secondary and modal windows
 
-**Decided** (2026-11-14; decision "M3d's decide-first questions", item 3). Window kinds are declared in `Program.cs` with a route of the same frontend. The generator turns their names into a TypeScript union, so a misspelled kind fails `tsc`. Built in M3d: opening a window, its params, single instance and the allow-list; modals, placement and capture protection come with M3d's later steps.
+**Decided** (2026-11-14; decision "M3d's decide-first questions", items 3 and 4). Window kinds are declared in `Program.cs` with a route of the same frontend. The generator turns their names into two TypeScript unions, `WindowKind` for `windows.open` and `ModalKind` for the kinds declared `Modal()`, so a misspelled kind, or a modal opened as a plain window, fails `tsc`. Built in M3d: opening a window, its params, single instance, the allow-list, modals and the close order; placement and capture protection come with M3d's later steps.
 
 File `frontend/src/openWindows.ts`:
 
@@ -1740,12 +1740,13 @@ File `frontend/src/openWindows.ts`:
 import { windows } from "@spar/app/windows";
 
 declare function refresh(): void;
+declare function toast(text: string): void;
 
 export async function editSettings(): Promise<void> {
   // Waits until the modal closes; its own close button gives dismissed.
   await windows.showModal<{ readonly changed: boolean }>("settings", { tab: "connections" }).match({
     success: result => { if (result.changed) refresh(); },
-    errors: { dismissed: () => {} },
+    errors: { dismissed: () => {}, notOpened: e => toast(e.reason) },
   });
 }
 
@@ -1759,16 +1760,21 @@ export async function editorConnection(): Promise<string | undefined> {
   return params?.connectionId;
 }
 
-// Inside the settings window, when the user saves:
+// Inside the settings window, when the user saves: it closes, and the opener's showModal gets the value.
 export const saveAndClose = (): void => windows.closeWith({ changed: true });
 ```
 
 - **Opening a window** answers once it is shown. A browser on loopback (development, browser tests) opens none of the app's windows: the call ends `notOpened`, with the reason, as it does while the app closes.
 - **Params** are JSON the host keeps for the window, at most 64 KB, never in its address: a reload keeps them, and `windows.params()` reads them. Keep larger data in the backend and pass its id.
-- **Modals** disable their owner while open and stay above it.
+- **Modals** belong to the window that shows them: it takes no input while one is open, and the modal stays above it. The app's other windows stay usable, and a modal may show another.
+  - `showModal` answers once the modal closes: with the value its page gave `closeWith` (JSON, at most 64 KB), or `dismissed` when it closed any other way. A single-instance modal that is already open is brought to the front and gives `notOpened`.
+  - `closeWith` closes its own window at once, without asking its close guards, since its page decided. In a window that is not a modal it closes the window, and the value goes nowhere.
+  - Aborting `showModal` ends only the wait: the modal stays open, and its result is dropped and logged, as it is when the opener's page reloads meanwhile.
 - **Single-instance kinds** focus the open window instead of opening another.
 - **Sharing data:** windows share the backend, so they share data through services and subscriptions. A modal also returns its result to the opener.
-- **Closing the main window** closes its secondary windows first, through the two-stage close.
+- **Closing a window** runs its own two-stage close: its page's guard, then `OnCloseRequested`, whose request names the window's kind.
+  - Closing the main window closes the others first, the latest opened first, each through its own close. One that stays open keeps the app open.
+  - A window with a modal open closes the modal first.
 - **A window's allow-list** (`Commands`) limits the contracts it may call, whole (`Allow<IConnections>()`) or by command (`Allow<IConnections>("list", "test")`), checked against the app's contracts when it starts; any other call is `rejected` / `forbidden-command` before it runs (decision "Per-window command allow-lists"). Spar's own page commands stay allowed.
 - **Capture protection** (decided 2026-11-14): `ProtectFromCapture()` hides the settings window, which shows connection strings, from screenshots, recordings and screen sharing.
   - It needs Windows 10 2004 or later (`WDA_EXCLUDEFROMCAPTURE`).
