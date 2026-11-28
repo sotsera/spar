@@ -1857,7 +1857,7 @@ export async function highlight(text: string, status: (message: string) => void)
 
 ### 6.9 A custom title bar
 
-**Decided** (2026-11-14). With `.TitleBar(TitleBar.Custom)` in `Program.cs`, the page draws the title bar with plain markup and no layout code. It is the same on Windows and Linux and in any framework.
+**Decided** (2026-11-14) and built (M3d step 5). With `.TitleBar(TitleBar.Custom)` in `Program.cs`, the page draws the title bar with plain markup and no layout code. It is the same on Windows and Linux and in any framework.
 
 File `frontend/src/AppTitleBar.tsx`:
 
@@ -1875,14 +1875,17 @@ export function AppTitleBar({ onSearch }: { readonly onSearch: (text: string) =>
 }
 ```
 
-- **The drag area:** the SDK gives `[data-spar-titlebar]` `app-region: drag` and its interactive children `no-drag`. `data-spar-no-drag` covers any other element.
+- **The drag area:** the SDK's stylesheet gives `[data-spar-titlebar]` `app-region: drag` and its controls (buttons, links, inputs, labels, anything with a `tabindex` or a control's role) `no-drag`. `data-spar-no-drag` covers any other element.
   - Double-click to maximise comes from the host.
-  - Right-click for the system menu comes from the host on Windows. On Linux, no window manager tested offered a window menu (plan 3, "Desktop integrations").
-  - On Linux the injected script asks the host to start the move.
+  - Right-click for the system menu comes from the host on Windows. On Linux the host asks the window manager for its menu; none tested offered one (plan 3, "Desktop integrations").
+  - On Linux the host moves the window itself, from the layout below, once the pointer has moved 4 pixels with the button down.
+  - Scroll the content below the bar, not the whole document: the document's scrollbar runs down the window's right edge, over the bar's Close button, and takes its clicks on Linux.
 - **The buttons:**
-  - An empty `data-spar-caption` gets the standard buttons, with accessible names and translatable labels.
+  - An empty `data-spar-caption` gets the standard buttons, with accessible names. Their labels are English unless the element gives its own: `data-spar-label-minimize`, `-maximize`, `-restore` and `-close`.
   - An app that wants its own writes `<button data-spar-caption="close">`, and the same for `minimize` and `maximize`.
-- **The layout** is posted to the host by the SDK whenever it changes. The host hit-tests from that cache (plan 3, "Title bar drawn by the page").
+  - Screen readers find them in the page; like the system's buttons they are out of the Tab order, and the keyboard keeps Alt+Space, Alt+F4 and the Windows key with the arrows. On Windows the mouse over them is the host's, so Snap Layouts opens on Maximize; the SDK shows the hover and the press with `data-spar-hover` and `data-spar-pressed`.
+- **The look** comes from `/spar.css`, which Spar's Vite plugin adds to every page before the app's own stylesheets. Its rules have no specificity, so any rule of the app's wins. Its variables: `--spar-caption-color`, `--spar-caption-hover`, `--spar-caption-pressed`, `--spar-caption-close-hover`, `--spar-caption-close-hover-color` and `--spar-caption-width`. The buttons are flat and as tall as the bar on Windows, and round on Linux.
+- **The layout** is posted to the host by the SDK whenever it changes, at most once a frame. The host hit-tests from that cache (plan 3, "Title bar drawn by the page").
 - **Window state:** the SDK sets `data-spar-window="maximized"` or `"normal"` on `<html>`, so CSS can swap the maximise and restore icon.
 
 ### 6.10 Page tests
