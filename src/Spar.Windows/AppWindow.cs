@@ -184,6 +184,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             bounds = modalOwner is null ? WindowPlacement.Offscreen(bounds) : bounds;
             _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this, WindowPlacement.TestExtendedStyle, modalOwner?.Handle ?? default);
             theme.ApplyTitleBar(_window);
+            StartTitleBar(ui);
             PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
         }
         else if (modalOwner is not null)
@@ -191,6 +192,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             // Owned by its opener: above it, minimized with it, no taskbar button of its own.
             _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this, owner: modalOwner.Handle);
             theme.ApplyTitleBar(_window);
+            StartTitleBar(ui);
             PInvoke.ShowWindow(_window, SHOW_WINDOW_CMD.SW_SHOWNORMAL);
         }
         else
@@ -207,6 +209,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
 
             _window = ui.CreateWindow(_title, WindowPlacement.Style, bounds, this);
             theme.ApplyTitleBar(_window);
+            StartTitleBar(ui);
             if (SparDevelopment.IsSupported && restart && maximized)
             {
                 // Maximized again without activation (SW_SHOWMAXIMIZED would take the focus): hidden, then SW_SHOWNA.
@@ -279,6 +282,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             StartAddress = StartAddress,
             Zoom = (Options.ZoomLimits.Enabled, Options.ZoomLimits.Min, Options.ZoomLimits.Max, Placements?.Get(Options)?.Zoom ?? 1),
             ZoomChanged = OnZoomChanged,
+            DragRegions = CustomFrame,
         };
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
             && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
@@ -294,12 +298,18 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
     public LRESULT? OnMessage(HWND window, uint message, WPARAM wParam, LPARAM lParam)
     {
         using var scope = MessageName(message) is { } name && _ui is { } ui ? ui.Enter(name) : default;
+        if (OnTitleBarMessage(window, message, wParam, lParam) is { } titleBar)
+        {
+            return titleBar;
+        }
+
         switch (message)
         {
             case PInvoke.WM_ERASEBKGND:
                 return PaintBackground(window, wParam);
             case PInvoke.WM_SIZE:
                 _view?.Resize();
+                TitleBarResized();
                 return default(LRESULT);
             case PInvoke.WM_WINDOWPOSCHANGED:
                 // Shown, hidden, minimized or moved; DefWindowProc then sends WM_SIZE and WM_MOVE.
@@ -310,7 +320,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
                 _view?.WindowState.OnSetFocus();
                 return default(LRESULT);
             case PInvoke.WM_GETMINMAXINFO:
-                WindowPlacement.ApplyMinimum(window, Options.Minimum, lParam);
+                WindowPlacement.ApplyMinimum(window, Options.Minimum, lParam, CustomFrame);
                 return default(LRESULT);
             case PInvoke.WM_DPICHANGED:
                 WindowPlacement.OnDpiChanged(window, lParam);
@@ -337,6 +347,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
                 return default(LRESULT);
             case PInvoke.WM_DESTROY:
                 _destroyed = true;
+                EndTitleBar(window);
                 DeleteBackground();
                 _owner.WindowDestroyed();
                 return default(LRESULT);
@@ -559,6 +570,7 @@ internal sealed partial class AppWindow : IWindowMessages, IReportsErrors
             Windows = _windows,
             Handle = (IAppWindow?)_opened?.Handle ?? _windows?.Main,
             ZoomEnabled = Options.ZoomLimits.Enabled,
+            TitleBar = TitleBarShared,
             Zoom = _view?.ZoomFactor ?? 1,
         };
         return _files;

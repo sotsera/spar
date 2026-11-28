@@ -114,7 +114,9 @@ internal sealed record SparTestClose(CloseReason Reason, bool Automated, bool? C
 internal sealed record SparTestCloseReport(bool Closed, string? Question, bool Unanswered);
 
 /// <summary>A window as the OS has it (<see cref="ISparTestWindow.NativeStateAsync"/>).</summary>
-internal sealed record SparTestWindowState(string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom);
+/// <param name="Left">The frame's left edge on the screen, in the OS's pixels; null where the OS gives no position (Wayland).</param>
+/// <param name="Top">The frame's top edge, likewise.</param>
+internal sealed record SparTestWindowState(string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom, int? Left = null, int? Top = null);
 
 /// <summary>One trusted key event: the key's DOM name and code, its Windows virtual key, the modifiers held, and its text.</summary>
 /// <param name="Down">A press; false for the release.</param>
@@ -236,6 +238,13 @@ internal interface ISparTestWindow
 
     /// <summary>The window as the OS has it: its title, its page's size in CSS pixels, minimized, maximized, and its page's zoom.</summary>
     Task<SparTestWindowState> NativeStateAsync();
+
+    /// <summary>
+    /// What the host answers for its page-drawn title bar at a point of the page, in CSS pixels of its viewport: on
+    /// Windows the hit code of the window that gets the point (<c>sink:close</c>, <c>sink:top</c>, <c>window:caption</c>,
+    /// <c>window:client</c>), on Linux the part the view finds there (<c>view:drag</c>, <c>view:client</c>, <c>view:close</c>).
+    /// </summary>
+    Task<string> TitleBarHitAsync(float x, float y);
 }
 
 /// <summary>

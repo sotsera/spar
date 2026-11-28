@@ -40,40 +40,42 @@ public sealed class WebView2SlotTests
         ("ICoreWebView2Controller", 13, "AddMoveFocusRequested"),
         ("ICoreWebView2Controller", 23, "NotifyParentWindowPositionChanged"),
         ("ICoreWebView2MoveFocusRequestedEventArgs", 5, "PutHandled"),
+        ("ICoreWebView2Settings9", 38, "PutIsNonClientRegionSupportEnabled"),
     ];
 
-    /// <summary>The file dialogs' interfaces (Interop/Shell.cs), from the Windows SDK's header rather than WebView2's.</summary>
-    private static readonly string[] ShellInterfaces = ["IFileDialog", "IFileOpenDialog", "IShellItem", "IShellItemArray"];
+    /// <summary>
+    /// The interfaces from the Windows SDK's headers rather than WebView2's: the file dialogs' (Interop/Shell.cs) and UI
+    /// Automation's provider (Interop/Automation.cs).
+    /// </summary>
+    private static readonly string[] SdkInterfaces = ["IFileDialog", "IFileOpenDialog", "IShellItem", "IShellItemArray", "IRawElementProviderSimple"];
 
     [Fact]
     public void Every_declared_method_sits_in_its_header_slot()
     {
-        // The Shell interfaces are checked where the Windows SDK is installed (the development PC, GitHub's Windows
+        // The SDK's interfaces are checked where the Windows SDK is installed (the development PC, GitHub's Windows
         // runners); elsewhere only WebView2's, whose header comes with the package.
-        var shell = ShellHeader();
-        var headers = shell is null
-            ? new[] { Path.Combine(AppContext.BaseDirectory, "WebView2.h") }
-            : [Path.Combine(AppContext.BaseDirectory, "WebView2.h"), shell];
-        var problems = ComSlots.Problems(headers, "Spar.Windows", name => shell is null && ShellInterfaces.Contains(name), out var declared);
+        var sdk = SdkHeaders();
+        var headers = new[] { Path.Combine(AppContext.BaseDirectory, "WebView2.h") }.Concat(sdk).ToList();
+        var problems = ComSlots.Problems(headers, "Spar.Windows", name => sdk.Count == 0 && SdkInterfaces.Contains(name), out var declared);
 
         Assert.True(declared > 0);
         Assert.True(problems.Count == 0, string.Join("\n", problems));
     }
 
-    /// <summary>The newest Windows SDK's <c>um/ShObjIdl_core.h</c>, or null where there is none.</summary>
-    private static string? ShellHeader()
+    /// <summary>The newest Windows SDK's <c>um/ShObjIdl_core.h</c> and <c>um/UIAutomationCore.h</c>, or none where there is no SDK.</summary>
+    private static List<string> SdkHeaders()
     {
         var kits = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Windows Kits", "10", "Include");
         if (!OperatingSystem.IsWindows() || !Directory.Exists(kits))
         {
-            return null;
+            return [];
         }
 
-        return Directory.GetDirectories(kits)
-            .Select(version => Path.Combine(version, "um", "ShObjIdl_core.h"))
-            .Where(File.Exists)
+        var newest = Directory.GetDirectories(kits)
+            .Where(version => File.Exists(Path.Combine(version, "um", "ShObjIdl_core.h")) && File.Exists(Path.Combine(version, "um", "UIAutomationCore.h")))
             .Order(StringComparer.Ordinal)
             .LastOrDefault();
+        return newest is null ? [] : [Path.Combine(newest, "um", "ShObjIdl_core.h"), Path.Combine(newest, "um", "UIAutomationCore.h")];
     }
 
     [Fact]

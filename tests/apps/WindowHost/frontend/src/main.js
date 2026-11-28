@@ -384,3 +384,15 @@ showZoom(zoom.get());
 zoom.onChange(showZoom);
 on("zoom-150", () => zoom.set(1.5).unwrap());
 on("zoom-400", () => zoom.set(4).unwrap());
+
+// A page-drawn title bar (docs/app-model.md 6.9): the kind "titled" sets TitleBar(TitleBar.Custom), as the main window
+// does with --custom-titlebar. The page shows the bar once the SDK marks the window's state, which it does only for such a
+// window: a name, a search box that stays clickable, the empty space that moves the window, and the SDK's buttons.
+on("open-titled", () => opened("Titled", windows.open("titled")));
+const showTitleBar = () => {
+  if (document.documentElement.hasAttribute("data-spar-window")) {
+    document.getElementById("titlebar").hidden = false;
+    document.documentElement.classList.add("titled");
+  }
+};
+new MutationObserver(showTitleBar).observe(document.documentElement, { attributes: true, attributeFilter: ["data-spar-window"] });

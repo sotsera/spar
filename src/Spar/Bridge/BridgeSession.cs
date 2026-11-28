@@ -368,10 +368,15 @@ internal sealed partial class BridgeSession : IDisposable
         var protocol = Math.Min(hello.Protocol!.Value, BridgeCodec.ProtocolVersion);
         Send(new BridgeMessage(BridgeMessageType.Open) { Protocol = protocol, Doc = _doc, Contracts = _fingerprint });
 
-        // A zoomed window tells its new document at once, so the page's zoom.get() is right from its start.
+        // A zoomed window, and one whose page draws the title bar, tell the new document their state at once.
         if (Window is { Zoom: var zoom } && zoom != 1)
         {
             SendEvent(AppWindows.WindowCommands.ZoomEvent, AppWindows.WindowCommands.ZoomPayload(zoom));
+        }
+
+        if (Window?.TitleBar is { } titleBar)
+        {
+            SendEvent(AppWindows.WindowCommands.TitleBarEvent, AppWindows.TitleBarState.StatePayload(titleBar.Maximized));
         }
 
         Opened?.Invoke();

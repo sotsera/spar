@@ -30,3 +30,14 @@ label { display: block; margin-top: 6px; }
 .drop[data-spar-drop="over"] {
   border-color: #2a7;
 }
+
+/* The page-drawn title bar of the kind "titled": the SDK's stylesheet makes it the drag area and draws its buttons. */
+.titlebar { display: flex; align-items: center; gap: 12px; height: 32px; padding-left: 12px; border-bottom: 1px solid #ccd; }
+.titlebar[hidden] { display: none; }
+.titlebar input { width: 160px; }
+.titlebar-space { flex: 1; align-self: stretch; }
+/* The titled window scrolls its content below the bar, not the document: the document's scrollbar would lie over the
+   bar's right end, where the close button is, and take its presses (WebKitGTK's overlay scrollbar). */
+html.titled, html.titled body { height: 100%; overflow: hidden; }
+html.titled body { display: flex; flex-direction: column; }
+html.titled main { flex: 1; overflow: auto; }

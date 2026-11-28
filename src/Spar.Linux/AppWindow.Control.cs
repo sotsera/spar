@@ -66,17 +66,18 @@ internal sealed partial class AppWindow : IWindowControl
     }
 
     /// <summary>The window's title and its page's size in CSS pixels, and whether it is minimized or maximized (loop thread).</summary>
-    public (string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom) NativeState()
+    public (string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom, int? Left, int? Top) NativeState()
     {
         if (_window == 0)
         {
-            return ("", 0, 0, false, false, 1);
+            return ("", 0, 0, false, false, 1, null, null);
         }
 
         var title = Marshal.PtrToStringUTF8(Gtk.gtk_window_get_title(_window)) ?? "";
         var view = ViewHandle;
         var (width, height) = view == 0 ? (0, 0) : (Gtk.gtk_widget_get_width(view), Gtk.gtk_widget_get_height(view));
-        return (title, width, height, Minimized, Gtk.gtk_window_is_maximized(_window) != 0, _view?.ZoomFactor ?? 1);
+        var frame = Frame();
+        return (title, width, height, Minimized, Gtk.gtk_window_is_maximized(_window) != 0, _view?.ZoomFactor ?? 1, frame?.X, frame?.Y);
     }
 
     /// <summary>Whether the window's surface is minimized, as the window manager reported it (loop thread).</summary>

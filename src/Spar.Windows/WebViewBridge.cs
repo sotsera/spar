@@ -119,6 +119,15 @@ internal sealed class WebViewBridge
         }
     }
 
+    /// <summary>A host event for the current document (UI thread); between documents there is none to hear it, and the next one starts from the window's state.</summary>
+    public void SendEvent(string name, ReadOnlyMemory<byte> payload)
+    {
+        if (_current is { IsClosed: false } document)
+        {
+            document.Session.SendEvent(name, payload);
+        }
+    }
+
     /// <summary>The WebView is going away (recovery or shutdown): its document ends with it.</summary>
     public void Detach(string why)
     {

@@ -162,6 +162,9 @@ public sealed class SparWindow
     /// <summary>The window's title, its page's size, and whether it is minimized or maximized, as the OS has them, for Spar's own host tests.</summary>
     internal Task<SparTestWindowState> NativeStateAsync() => _window.NativeStateAsync();
 
+    /// <summary>What the host answers for its page-drawn title bar at a point of the page (<see cref="ISparTestWindow.TitleBarHitAsync"/>).</summary>
+    internal Task<string> TitleBarHitAsync(float x, float y) => _window.TitleBarHitAsync(x, y);
+
     /// <summary>The ids of the renderer processes that render the page now.</summary>
     internal Task<IReadOnlyList<int>> RendererProcessesAsync() => _window.RendererProcessesAsync();
 

@@ -175,6 +175,7 @@ internal sealed partial class AppWindow
         theme.Apply(_window);
         _log.Info($"Theme {(theme.IsDark ? "dark" : "light")}, {theme.Background}, from {theme.Source}.");
         Gtk.gtk_window_set_title(_window, _title);
+        StartTitleBar();
         var saved = ApplySavedSize();
         if (options.Minimum is { Width: > 0 } or { Height: > 0 })
         {
@@ -224,6 +225,9 @@ internal sealed partial class AppWindow
             SharedSession = _sharedSession,
             Zoom = (Options.ZoomLimits.Enabled, Options.ZoomLimits.Min, Options.ZoomLimits.Max, Placements?.Get(Options)?.Zoom ?? 1),
             ZoomChanged = OnZoomChanged,
+            TitleBar = TitleBarShared,
+            HostEdges = _hostEdges,
+            FrameAction = what => _log.Step("title bar: " + what),
         };
         if (Spar.Devtools.SparDevtools.IsSupported && _devtools is { } devtools
             && Spar.Devtools.DevtoolsHost.EngineScript(_app.Catalog.AppAssembly) is { } engine)
@@ -396,6 +400,7 @@ internal sealed partial class AppWindow
             Windows = _windows,
             Handle = (IAppWindow?)_opened?.Handle ?? _windows?.Main,
             ZoomEnabled = Options.ZoomLimits.Enabled,
+            TitleBar = TitleBarShared,
             Zoom = ZoomNow,
         };
     }

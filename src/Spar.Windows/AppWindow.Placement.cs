@@ -25,20 +25,20 @@ internal sealed partial class AppWindow
         var size = saved is { } placement ? (placement.Width, placement.Height) : Options.InitialSize;
         if (modalOwner is not null)
         {
-            return (WindowPlacement.CentredOn(modalOwner.Handle, size), false);
+            return (WindowPlacement.CentredOn(modalOwner.Handle, size, CustomFrame), false);
         }
 
-        if (saved is { HasPosition: true } && WindowPlacement.Restored(saved.Left!.Value, saved.Top!.Value, size) is { } restored)
+        if (saved is { HasPosition: true } && WindowPlacement.Restored(saved.Left!.Value, saved.Top!.Value, size, CustomFrame) is { } restored)
         {
             return (restored, saved.Maximized);
         }
 
         if (_opened is { } opened && LastOfKind(opened.Kind) is { } last)
         {
-            return (WindowPlacement.Cascaded(last.Handle, size, CascadeOffset), false);
+            return (WindowPlacement.Cascaded(last.Handle, size, CascadeOffset, CustomFrame), false);
         }
 
-        return (WindowPlacement.Initial(size), saved?.Maximized ?? false);
+        return (WindowPlacement.Initial(size, CustomFrame), saved?.Maximized ?? false);
     }
 
     /// <summary>The window of <paramref name="kind"/> opened last that is still open, other than this one.</summary>
@@ -93,6 +93,9 @@ internal sealed partial class AppWindow
         }
 
         PlacementChanged();
+
+        // The caption window over a page-drawn title bar scales with the zoom, even when the page's layout stays the same.
+        UpdateCaption();
         if (_bridge.Task.IsCompletedSuccessfully)
         {
             _bridge.Task.Result.SendZoom(factor);

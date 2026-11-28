@@ -60,6 +60,52 @@ internal partial interface ICoreWebView2Settings8
 }
 
 /// <summary>
+/// <c>ICoreWebView2Settings9</c>, flat: <see cref="ICoreWebView2Settings8"/>'s slots 3–36, then 37–38, whether CSS
+/// <c>app-region</c> marks drag areas (Runtime 123, before Spar's minimum; set for a page-drawn title bar only).
+/// </summary>
+[GeneratedComInterface(StringMarshalling = StringMarshalling.Utf16, Options = ComInterfaceOptions.ComObjectWrapper)]
+[Guid("0528a73b-e92d-49f4-927a-e547dddaa37d")]
+internal partial interface ICoreWebView2Settings9
+{
+    [PreserveSig] int Slot003_GetIsScriptEnabled();
+    [PreserveSig] int Slot004_PutIsScriptEnabled();
+    [PreserveSig] int Slot005_GetIsWebMessageEnabled();
+    [PreserveSig] int Slot006_PutIsWebMessageEnabled();
+    [PreserveSig] int Slot007_GetAreDefaultScriptDialogsEnabled();
+    [PreserveSig] int Slot008_PutAreDefaultScriptDialogsEnabled();
+    [PreserveSig] int Slot009_GetIsStatusBarEnabled();
+    [PreserveSig] int Slot010_PutIsStatusBarEnabled();
+    [PreserveSig] int Slot011_GetAreDevToolsEnabled();
+    [PreserveSig] int Slot012_PutAreDevToolsEnabled();
+    [PreserveSig] int Slot013_GetAreDefaultContextMenusEnabled();
+    [PreserveSig] int Slot014_PutAreDefaultContextMenusEnabled();
+    [PreserveSig] int Slot015_GetAreHostObjectsAllowed();
+    [PreserveSig] int Slot016_PutAreHostObjectsAllowed();
+    [PreserveSig] int Slot017_GetIsZoomControlEnabled();
+    [PreserveSig] int Slot018_PutIsZoomControlEnabled();
+    [PreserveSig] int Slot019_GetIsBuiltInErrorPageEnabled();
+    [PreserveSig] int Slot020_PutIsBuiltInErrorPageEnabled();
+    [PreserveSig] int Slot021_GetUserAgent();
+    [PreserveSig] int Slot022_PutUserAgent();
+    [PreserveSig] int Slot023_GetAreBrowserAcceleratorKeysEnabled();
+    [PreserveSig] int Slot024_PutAreBrowserAcceleratorKeysEnabled();
+    [PreserveSig] int Slot025_GetIsPasswordAutosaveEnabled();
+    [PreserveSig] int Slot026_PutIsPasswordAutosaveEnabled();
+    [PreserveSig] int Slot027_GetIsGeneralAutofillEnabled();
+    [PreserveSig] int Slot028_PutIsGeneralAutofillEnabled();
+    [PreserveSig] int Slot029_GetIsPinchZoomEnabled();
+    [PreserveSig] int Slot030_PutIsPinchZoomEnabled();
+    [PreserveSig] int Slot031_GetIsSwipeNavigationEnabled();
+    [PreserveSig] int Slot032_PutIsSwipeNavigationEnabled();
+    [PreserveSig] int Slot033_GetHiddenPdfToolbarItems();
+    [PreserveSig] int Slot034_PutHiddenPdfToolbarItems();
+    [PreserveSig] int Slot035_GetIsReputationCheckingRequired();
+    [PreserveSig] int Slot036_PutIsReputationCheckingRequired();
+    int GetIsNonClientRegionSupportEnabled();
+    void PutIsNonClientRegionSupportEnabled(int value);
+}
+
+/// <summary>
 /// <c>ICoreWebView2EnvironmentOptions</c> (slots 3–10), which the host implements: WebView2 reads it during
 /// <c>CreateCoreWebView2EnvironmentWithOptions</c>. A string it returns is a <c>CoTaskMemAlloc</c> copy WebView2 frees.
 /// </summary>

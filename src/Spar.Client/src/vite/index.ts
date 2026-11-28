@@ -9,12 +9,15 @@
 // from it (`devServer.ts`); the app's host sends the policy header, on every response, worker scripts included.
 // Every page gets the theme style, from the window colours Program.cs declares (`theme.json`, written by the build like
 // `csp.json`), and a page with a splash element gets the splash style (`pageStyle.ts`, plan section 3d).
+// Every page also links the stylesheet of what the SDK draws, the page-drawn title bar's buttons (`sdkStyle.ts`), which
+// a build emits as `spar.css` and the development server serves at the same path.
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { ConfigEnv, Plugin, ResolvedConfig, Rolldown, UserConfig, ViteDevServer } from "vite";
 import { attachLaunch, devServerConfig, readLaunch } from "./devServer.js";
 import { addIntegrity, missingIntegrity, missingIntegrityMessage } from "./integrity.js";
 import { addPageStyle, readThemeColors, splashTiming, type SplashTiming } from "./pageStyle.js";
+import { addSdkStyle, sdkStyleFile, sdkStyleSheet } from "./sdkStyle.js";
 
 export type { SplashTiming } from "./pageStyle.js";
 
@@ -65,6 +68,16 @@ export default function spar(options: SparPluginOptions = {}): Plugin {
     },
     configureServer(server: ViteDevServer): void {
       const launch = readLaunch(process.env);
+      // The SDK's stylesheet, at the path the page links it from.
+      server.middlewares.use((request, response, next) => {
+        if (request.url?.split("?")[0] !== `/${sdkStyleFile}`) {
+          next();
+          return;
+        }
+
+        response.setHeader("Content-Type", "text/css; charset=utf-8");
+        response.end(sdkStyleSheet);
+      });
       if (launch !== undefined) {
         attachLaunch(server, launch);
       }
@@ -75,8 +88,11 @@ export default function spar(options: SparPluginOptions = {}): Plugin {
       order: "post",
       handler(html: string, context: { readonly path: string }): string {
         checkExternals(context.path, html);
-        return addPageStyle(html, readThemeColors(readPackageFile("theme.json")), timing);
+        return addSdkStyle(addPageStyle(html, readThemeColors(readPackageFile("theme.json")), timing));
       },
+    },
+    generateBundle(): void {
+      this.emitFile({ type: "asset", fileName: sdkStyleFile, source: sdkStyleSheet });
     },
     writeBundle(_options, bundle): void {
       addTelemetryLicenses(outDir, bundle);

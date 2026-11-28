@@ -20,6 +20,9 @@ namespace Spar.AppWindows;
 /// <item><c>windowAction</c>, <c>{"action":"…"}</c>: the calling window's own <see cref="IAppWindow"/> operations (item 8):
 /// <c>focus</c>, <c>minimize</c>, <c>maximize</c>, <c>restore</c>, <c>close</c> (its close request, answered at once),
 /// <c>setSize</c> with <c>width</c> and <c>height</c>, <c>setTitle</c> with <c>title</c>.</item>
+/// <item><c>setZoom</c>, <c>{"factor":…}</c>: the page's own zoom, within its window's limits.</item>
+/// <item><c>titleBar</c>: the layout of a page-drawn title bar (<see cref="TitleBarLayout"/>), which the host hit-tests
+/// from.</item>
 /// </list>
 /// An unknown kind, a modal kind given to <c>openWindow</c> or another to <c>showModal</c>, or a request that is not
 /// this shape, is refused as <c>rejected</c> / <c>invalid-request</c>: the generated <c>WindowKind</c> and
@@ -33,9 +36,16 @@ internal static class WindowCommands
     public const string Params = "windowParams";
     public const string Action = "windowAction";
     public const string SetZoom = "setZoom";
+    public const string TitleBarLayoutCommand = "titleBar";
 
     /// <summary>The host event a page hears its zoom from: <c>{"factor":…}</c>, at its start when it is not 1, and at each change.</summary>
     public const string ZoomEvent = "zoom";
+
+    /// <summary>The host event a page-drawn title bar hears its window's state from: <c>{"maximized":…}</c>, at its start and at each change.</summary>
+    public const string TitleBarEvent = "titleBar";
+
+    /// <summary>The host event a caption button hears the pointer from where the host gets it (Windows): <c>{"hover":…,"pressed":…}</c>.</summary>
+    public const string CaptionEvent = "caption";
 
     /// <summary>The most JSON a window's params, or a modal's result, may be.</summary>
     public const int MaxParamsBytes = 64 * 1024;
@@ -44,7 +54,7 @@ internal static class WindowCommands
 
     private static readonly byte[] Null = "null"u8.ToArray();
 
-    public static bool Handles(string command) => command is Open or ShowModal or Close or Params or Action or SetZoom;
+    public static bool Handles(string command) => command is Open or ShowModal or Close or Params or Action or SetZoom or TitleBarLayoutCommand;
 
     public static async ValueTask<SparOutcome> InvokeAsync(HostWindow? window, string command, ReadOnlyMemory<byte> payload, CancellationToken cancellationToken)
     {
@@ -54,6 +64,8 @@ internal static class WindowCommands
                 return SparOutcome.FromValue(window is null || window.Params.IsEmpty ? Null : window.Params);
             case SetZoom:
                 return Zoom(window, payload);
+            case TitleBarLayoutCommand:
+                return TitleBarLayoutPosted(window, payload);
             case Action:
                 return WindowAction(window, payload);
             case Close:
@@ -189,6 +201,27 @@ internal static class WindowCommands
         }
 
         handle.SetZoom(factor);
+        return SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty);
+    }
+
+    /// <summary>
+    /// <c>titleBar</c>: the layout of the page-drawn title bar (<see cref="TitleBarLayout"/>), which the SDK posts
+    /// whenever it changes; refused for a window whose title bar is the system's.
+    /// </summary>
+    private static SparOutcome TitleBarLayoutPosted(HostWindow? window, ReadOnlyMemory<byte> payload)
+    {
+        if (window?.TitleBar is not { } titleBar)
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(
+                "This window has the system's title bar: Program.cs gives it TitleBar(TitleBar.Custom) for the page to draw one."));
+        }
+
+        if (!TitleBarLayout.TryRead(payload, out var layout, out var problem))
+        {
+            return SparOutcome.FromFailure(SparFailure.InvalidRequest(problem));
+        }
+
+        titleBar.Update(layout);
         return SparOutcome.FromValue(ReadOnlyMemory<byte>.Empty);
     }
 

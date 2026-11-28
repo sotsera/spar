@@ -1,5 +1,6 @@
 // @spar/app/sdk: the SDK's public surface for app code, and the one entry generated modules call.
 import { addBackendUpdateHandler, listenForBackendUpdates, type BackendUpdate } from "./backendUpdate.js";
+import { listenForTitleBar } from "./titleBar.js";
 import { listenForZoom } from "./zoom.js";
 import { Connection, type BridgeChannel, type Decoder } from "./connection.js";
 import { callOf, resumes, Result, type Call, type CallOptions, type ErrorCases, type EventCases, type Outcome, type SubscribeOptions } from "./results.js";
@@ -63,6 +64,7 @@ export function connectSpar(channel: BridgeChannel, contracts: string): Connecti
   watchFrames();
   current = new Connection(channel, contracts);
   listenForZoom(current);
+  listenForTitleBar(current);
   // Development only. `vite build` folds the test to false and drops what it guards; written with `?.` because a page
   // can load the SDK without Vite (a test page served as it is), where `import.meta.env` does not exist.
   if (import.meta.env?.DEV === true) {

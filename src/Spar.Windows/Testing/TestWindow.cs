@@ -182,9 +182,11 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public Task<SparTestWindowState> NativeStateAsync() => OnUiAsync(() =>
     {
-        var (title, width, height, minimized, maximized, zoom) = _window.NativeState();
-        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized, zoom));
+        var (title, width, height, minimized, maximized, zoom, left, top) = _window.NativeState();
+        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized, zoom, left, top));
     });
+
+    public Task<string> TitleBarHitAsync(float x, float y) => OnUiAsync(() => Task.FromResult(_window.TitleBarProbe(x, y)));
 
     public unsafe Task<(bool DarkTitleBar, uint WindowColour)> NativeThemeAsync() => OnUiAsync(() =>
     {

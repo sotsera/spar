@@ -50,7 +50,7 @@ internal sealed partial class AppWindow : IWindowControl
 
     void IWindowControl.SetSize(int width, int height) => OnUi("set size", () =>
     {
-        var bounds = WindowPlacement.OuterSize(_window, (width, height));
+        var bounds = WindowPlacement.OuterSize(_window, (width, height), CustomFrame);
         PInvoke.SetWindowPos(
             _window, HWND.Null, 0, 0, bounds.Width, bounds.Height,
             SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
@@ -88,11 +88,13 @@ internal sealed partial class AppWindow : IWindowControl
     }
 
     /// <summary>The window's title and the size of its page in CSS pixels, and whether it is minimized or maximized (UI thread).</summary>
-    public (string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom) NativeState()
+    public (string Title, int Width, int Height, bool Minimized, bool Maximized, double Zoom, int? Left, int? Top) NativeState()
     {
         var title = WindowPlacement.Title(_window);
         var (width, height) = WindowPlacement.ClientSize(_window);
-        return (title, width, height, PInvoke.IsIconic(_window), PInvoke.IsZoomed(_window), CurrentZoom());
+        int? left = PInvoke.GetWindowRect(_window, out var frame) ? frame.left : null;
+        int? top = left is null ? null : frame.top;
+        return (title, width, height, PInvoke.IsIconic(_window), PInvoke.IsZoomed(_window), CurrentZoom(), left, top);
     }
 
     private void OnUi(string what, Action work) => _ui?.Post(

@@ -130,6 +130,14 @@ internal static unsafe partial class GLib
     [LibraryImport(Gio)]
     public static partial nint g_bus_get_sync(int busType, nint cancellable, nint* error);
 
+    /// <summary>The number of items of a <c>GListModel</c>.</summary>
+    [LibraryImport(Gio)]
+    public static partial uint g_list_model_get_n_items(nint list);
+
+    /// <summary>The item at <paramref name="position"/>, with a reference the caller owns.</summary>
+    [LibraryImport(Gio)]
+    public static partial nint g_list_model_get_item(nint list, uint position);
+
     /// <summary>
     /// A method call that waits for its answer, at most <paramref name="timeoutMilliseconds"/>; consumes a floating
     /// <paramref name="parameters"/>. Returns an owned tuple, or 0 with an owned <c>GError</c>.

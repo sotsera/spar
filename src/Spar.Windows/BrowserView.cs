@@ -246,6 +246,7 @@ internal sealed partial class BrowserView
         WindowState.Attach(controller);
         _defaults.Apply(_webView);
         StartZoom(generation, controller, _webView);
+        StartDragRegions(_webView);
         var picker = _defaults.BlocksPagePicker ? PagePicker.Block(_webView, _log) : Task.CompletedTask;
         SetPageScheme(_theme.PageScheme);
         Resize();

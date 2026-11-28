@@ -276,9 +276,11 @@ internal sealed class TestWindow : ISparTestWindow, IAppWindowOwner
 
     public Task<SparTestWindowState> NativeStateAsync() => OnLoopAsync(() =>
     {
-        var (title, width, height, minimized, maximized, zoom) = _window?.NativeState() ?? ("", 0, 0, false, false, 1d);
-        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized, zoom));
+        var (title, width, height, minimized, maximized, zoom, left, top) = _window?.NativeState() ?? ("", 0, 0, false, false, 1d, null, null);
+        return Task.FromResult(new SparTestWindowState(title, width, height, minimized, maximized, zoom, left, top));
     });
+
+    public Task<string> TitleBarHitAsync(float x, float y) => OnLoopAsync(() => Task.FromResult(_window?.TitleBarProbe(x, y) ?? "view:client"));
 
     public Task<int> CloseAsync()
     {

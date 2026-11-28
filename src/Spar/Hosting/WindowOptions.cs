@@ -43,6 +43,9 @@ public sealed class WindowOptions
     /// <summary>Whether the page zooms, and between which factors.</summary>
     internal (bool Enabled, double Min, double Max) ZoomLimits { get; private set; } = (true, 0.25, 5);
 
+    /// <summary>Who draws the title bar: the operating system, or the page (<see cref="Spar.TitleBar.Custom"/>).</summary>
+    internal TitleBar TitleBarKind { get; private set; }
+
     /// <summary>The contracts and commands the window may call; null when it may call every one.</summary>
     internal CommandAllowList? AllowList { get; private set; }
 
@@ -140,6 +143,24 @@ public sealed class WindowOptions
         }
 
         IsModal = true;
+        return this;
+    }
+
+    /// <summary>
+    /// <summary>
+    /// Who draws the title bar (<c>docs/app-model.md</c> 6.9): the operating system, by default, or the page with
+    /// <see cref="Spar.TitleBar.Custom"/>. The page marks its drag area with <c>data-spar-titlebar</c> and its caption
+    /// buttons with <c>data-spar-caption</c>, the same on Windows and Linux; the host moves, maximizes and resizes the
+    /// window from it, and keeps Snap Layouts, the system menu and the screen reader's view of the window.
+    /// </summary>
+    public WindowOptions TitleBar(TitleBar kind)
+    {
+        if (!Enum.IsDefined(kind))
+        {
+            throw new ArgumentOutOfRangeException(nameof(kind), $"TitleBar takes TitleBar.System or TitleBar.Custom, not {(int)kind}.");
+        }
+
+        TitleBarKind = kind;
         return this;
     }
 

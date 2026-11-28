@@ -41,7 +41,7 @@ internal static unsafe class WindowPlacement
     };
 
     /// <summary>The first start's bounds: a client area of <paramref name="size"/>, centred in the primary monitor's work area.</summary>
-    public static RECT Initial((int Width, int Height) size)
+    public static RECT Initial((int Width, int Height) size, bool customFrame)
     {
         var monitor = PInvoke.MonitorFromPoint(default, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTOPRIMARY);
         uint dpi;
@@ -52,7 +52,7 @@ internal static unsafe class WindowPlacement
         }
 
         var outer = new RECT { right = Scale(size.Width, dpi), bottom = Scale(size.Height, dpi) };
-        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        Adjust(&outer, dpi, customFrame);
         var width = outer.right - outer.left;
         var height = outer.bottom - outer.top;
 
@@ -75,7 +75,7 @@ internal static unsafe class WindowPlacement
     /// A remembered place: the frame's corner at (<paramref name="left"/>, <paramref name="top"/>) in physical pixels and a
     /// page of <paramref name="size"/> CSS pixels at that monitor's DPI; null when the corner is on no monitor now.
     /// </summary>
-    public static RECT? Restored(int left, int top, (int Width, int Height) size)
+    public static RECT? Restored(int left, int top, (int Width, int Height) size, bool customFrame)
     {
         var monitor = PInvoke.MonitorFromPoint(new System.Drawing.Point(left, top), MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONULL);
         if (monitor.IsNull)
@@ -91,7 +91,7 @@ internal static unsafe class WindowPlacement
         }
 
         var outer = new RECT { right = Scale(size.Width, dpi), bottom = Scale(size.Height, dpi) };
-        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        Adjust(&outer, dpi, customFrame);
         return new RECT { left = left, top = top, right = left + outer.right - outer.left, bottom = top + outer.bottom - outer.top };
     }
 
@@ -99,11 +99,11 @@ internal static unsafe class WindowPlacement
     /// A window of <paramref name="size"/> CSS pixels offset by <paramref name="offset"/> CSS pixels down and right from
     /// <paramref name="previous"/>, back to the top left of its monitor's work area where it would leave it.
     /// </summary>
-    public static RECT Cascaded(HWND previous, (int Width, int Height) size, int offset)
+    public static RECT Cascaded(HWND previous, (int Width, int Height) size, int offset, bool customFrame)
     {
         if (!PInvoke.GetWindowRect(previous, out var before))
         {
-            return Initial(size);
+            return Initial(size, customFrame);
         }
 
         var dpi = PInvoke.GetDpiForWindow(previous);
@@ -112,7 +112,7 @@ internal static unsafe class WindowPlacement
             dpi = DefaultDpi;
         }
 
-        var (width, height) = OuterSize(previous, size);
+        var (width, height) = OuterSize(previous, size, customFrame);
         var step = Scale(offset, dpi);
         var left = before.left + step;
         var top = before.top + step;
@@ -132,7 +132,7 @@ internal static unsafe class WindowPlacement
     }
 
     /// <summary>The window's outer size for a page of <paramref name="size"/> CSS pixels at the window's own DPI.</summary>
-    public static (int Width, int Height) OuterSize(HWND window, (int Width, int Height) size)
+    public static (int Width, int Height) OuterSize(HWND window, (int Width, int Height) size, bool customFrame)
     {
         var dpi = PInvoke.GetDpiForWindow(window);
         if (dpi == 0)
@@ -141,7 +141,7 @@ internal static unsafe class WindowPlacement
         }
 
         var outer = new RECT { right = Scale(size.Width, dpi), bottom = Scale(size.Height, dpi) };
-        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        Adjust(&outer, dpi, customFrame);
         return (outer.right - outer.left, outer.bottom - outer.top);
     }
 
@@ -184,7 +184,7 @@ internal static unsafe class WindowPlacement
     /// and kept within the work area of the owner's monitor. An owner on no monitor (an offscreen test window) keeps
     /// the modal centred on it, offscreen too.
     /// </summary>
-    public static RECT CentredOn(HWND owner, (int Width, int Height) size)
+    public static RECT CentredOn(HWND owner, (int Width, int Height) size, bool customFrame)
     {
         var dpi = PInvoke.GetDpiForWindow(owner);
         if (dpi == 0)
@@ -193,12 +193,12 @@ internal static unsafe class WindowPlacement
         }
 
         var outer = new RECT { right = Scale(size.Width, dpi), bottom = Scale(size.Height, dpi) };
-        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        Adjust(&outer, dpi, customFrame);
         var width = outer.right - outer.left;
         var height = outer.bottom - outer.top;
         if (!PInvoke.GetWindowRect(owner, out var around))
         {
-            return Initial(size);
+            return Initial(size, customFrame);
         }
 
         var left = around.left + ((around.right - around.left - width) / 2);
@@ -290,7 +290,7 @@ internal static unsafe class WindowPlacement
     }
 
     /// <summary><c>WM_GETMINMAXINFO</c>: the smallest window whose client area is <paramref name="minimum"/> at the window's DPI.</summary>
-    public static void ApplyMinimum(HWND window, (int Width, int Height) minimum, LPARAM lParam)
+    public static void ApplyMinimum(HWND window, (int Width, int Height) minimum, LPARAM lParam, bool customFrame)
     {
         if (minimum.Width <= 0 && minimum.Height <= 0)
         {
@@ -304,7 +304,7 @@ internal static unsafe class WindowPlacement
         }
 
         var outer = new RECT { right = Scale(minimum.Width, dpi), bottom = Scale(minimum.Height, dpi) };
-        PInvoke.AdjustWindowRectExForDpi(&outer, Style, false, 0, dpi);
+        Adjust(&outer, dpi, customFrame);
         var info = (MINMAXINFO*)lParam.Value;
         info->ptMinTrackSize.X = Math.Max(info->ptMinTrackSize.X, outer.right - outer.left);
         info->ptMinTrackSize.Y = Math.Max(info->ptMinTrackSize.Y, outer.bottom - outer.top);
@@ -322,6 +322,21 @@ internal static unsafe class WindowPlacement
             suggested->right - suggested->left,
             suggested->bottom - suggested->top,
             SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
+    }
+
+    /// <summary>
+    /// <paramref name="outer"/>, a client area at <paramref name="dpi"/>, grown to the window around it: the system frame,
+    /// or for a page-drawn title bar (<paramref name="customFrame"/>) the frame without its caption and top border, which
+    /// the custom frame keeps inside the client area (<see cref="PageFrame"/>).
+    /// </summary>
+    private static void Adjust(RECT* outer, uint dpi, bool customFrame)
+    {
+        var top = outer->top;
+        PInvoke.AdjustWindowRectExForDpi(outer, Style, false, 0, dpi);
+        if (customFrame)
+        {
+            outer->top = top;
+        }
     }
 
     private static int Scale(int value, uint dpi) => (int)Math.Round(value * (double)dpi / DefaultDpi);

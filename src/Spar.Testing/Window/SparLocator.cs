@@ -339,6 +339,27 @@ public sealed class SparLocator
         return answer is { } value && PageJson.Int(value, "count") == 1 && PageJson.Bool(value, property);
     }
 
+    /// <summary>
+    /// The page's answer to whether the last click landed, or that the window was minimized meanwhile: a minimized page
+    /// draws no frame, which the answer waits for, so it would come only once the window is restored. The minimized
+    /// state is read every 200 ms while the answer is pending; an answer left pending is observed, never thrown.
+    /// </summary>
+    private async Task<(bool Minimized, JsonElement? Landed)> LandedAsync(TimeSpan left)
+    {
+        var answer = Session.EngineAsync("landed", _ => { }, left);
+        while (!answer.IsCompleted)
+        {
+            await Task.WhenAny(answer, Task.Delay(200));
+            if (!answer.IsCompleted && !Session.Window.IsClosing && (await Session.Window.NativeStateAsync()).Minimized)
+            {
+                _ = answer.ContinueWith(pending => pending.Exception, TaskScheduler.Default);
+                return (true, null);
+            }
+        }
+
+        return (false, await answer);
+    }
+
     private async Task ClickAsync(string what, int clickCount, SparActionOptions? options)
     {
         var timeout = Page.Timeout(options?.Timeout);
@@ -366,7 +387,15 @@ public sealed class SparLocator
             JsonElement? landed;
             try
             {
-                landed = await Session.EngineAsync("landed", _ => { }, left);
+                var (minimized, reply) = await LandedAsync(left);
+                if (minimized)
+                {
+                    // The click minimized its own window (a Minimize button): it reached the page, which draws no frame
+                    // now, so the page's answer would wait until the window is restored.
+                    return Attempt<bool>.Success(true);
+                }
+
+                landed = reply;
             }
             catch (InvalidOperationException) when (Session.Window.IsClosing)
             {

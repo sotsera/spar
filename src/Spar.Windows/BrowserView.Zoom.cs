@@ -3,10 +3,11 @@ using Spar.Windows.Interop;
 namespace Spar.Windows;
 
 /// <summary>
-/// The page's zoom (decision "The window design, from the windows spike", item 3): WebView2 zooms on Ctrl+wheel and
-/// Ctrl+plus, minus and 0 itself, and the host keeps every factor within the window's limits, starts at the remembered
-/// one, and reports each change (<see cref="ZoomChanged"/>), from which the window saves it and tells its page. A window
-/// whose zoom is off has the browser's zoom control turned off. UI thread.
+/// The page's zoom (decision "The window design, from the windows spike", item 3), and the drag areas of a page-drawn
+/// title bar (<see cref="DragRegions"/>). WebView2 zooms on Ctrl+wheel and Ctrl+plus, minus and 0 itself, and the host
+/// keeps every factor within the window's limits, starts at the remembered one, and reports each change
+/// (<see cref="ZoomChanged"/>), from which the window saves it and tells its page. A window whose zoom is off has the
+/// browser's zoom control turned off. UI thread.
 /// </summary>
 internal sealed partial class BrowserView
 {
@@ -17,6 +18,9 @@ internal sealed partial class BrowserView
 
     /// <summary>The page's zoom changed, to a factor within the limits.</summary>
     public Action<double>? ZoomChanged { get; init; }
+
+    /// <summary>Whether CSS <c>app-region</c> marks drag areas: on for a page-drawn title bar (<c>TitleBar.Custom</c>).</summary>
+    public bool DragRegions { get; init; }
 
     /// <summary>The page's zoom now; the factor it will start at before the controller exists.</summary>
     public double ZoomFactor => _controller is null ? Math.Clamp(Zoom.Start, Zoom.Min, Zoom.Max) : _zoom;
@@ -52,6 +56,22 @@ internal sealed partial class BrowserView
 
         var changed = Handler(generation, "ZoomFactorChanged", _ => OnZoomFactorChanged(controller));
         Subscribe(changed, controller.AddZoomFactorChanged(changed), controller.RemoveZoomFactorChanged);
+    }
+
+    /// <summary>
+    /// A page-drawn title bar's drag areas: CSS <c>app-region</c> marks them, from the next navigation on, and WebView2
+    /// moves the window from them, with double-click and the system menu (plan 3, "Title bar drawn by the page").
+    /// </summary>
+    private void StartDragRegions(ICoreWebView2_22 webView)
+    {
+        if (!DragRegions)
+        {
+            return;
+        }
+
+        var settings = Com.Take<ICoreWebView2Settings9>(webView.GetSettings());
+        settings.PutIsNonClientRegionSupportEnabled(1);
+        Com.Release(settings);
     }
 
     /// <summary>A factor outside the limits is set back to the nearest one, which raises the event again.</summary>

@@ -123,6 +123,25 @@ public sealed class SparMouse
         }
     }
 
+    /// <summary>
+    /// Moves to the point and presses the left button, which stays down until <see cref="UpAsync"/>: with
+    /// <see cref="MoveAsync"/> between them, a drag. On Linux the input is the display's own, so a drag on a page-drawn
+    /// title bar moves the window as a person's does.
+    /// </summary>
+    public async Task DownAsync(float x, float y)
+    {
+        await _session.BeforeInputAsync(TimeSpan.FromSeconds(5));
+        await MoveAsync(x, y);
+        await _session.Window.PointerAsync(new SparTestPointer(SparTestPointerKind.Press, x, y, 1));
+    }
+
+    /// <summary>Moves to the point and releases the left button.</summary>
+    public async Task UpAsync(float x, float y)
+    {
+        await MoveAsync(x, y);
+        await _session.Window.PointerAsync(new SparTestPointer(SparTestPointerKind.Release, x, y, 1));
+    }
+
     /// <summary>Scrolls by the wheel at the point, in CSS pixels.</summary>
     public Task WheelAsync(float x, float y, float deltaX, float deltaY) =>
         _session.Window.PointerAsync(new SparTestPointer(SparTestPointerKind.Wheel, x, y, DeltaX: deltaX, DeltaY: deltaY));

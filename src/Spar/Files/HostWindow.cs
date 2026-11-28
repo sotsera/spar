@@ -65,6 +65,9 @@ internal sealed class HostWindow(TimeProvider time, INativeFileDialogs? dialogs,
     /// <summary>Whether the window zooms (<c>Zoom(false)</c> turns it off), which <c>zoom.set</c> needs.</summary>
     public bool ZoomEnabled { get; init; } = true;
 
+    /// <summary>The page-drawn title bar's layout and state; null for a window with the system's title bar.</summary>
+    public AppWindows.TitleBarState? TitleBar { get; init; }
+
     /// <summary>The window as the app's C# code sees it (<see cref="ISparCall.Window"/>); null for a host without windows of its own.</summary>
     public IAppWindow? Handle { get; init; }
 

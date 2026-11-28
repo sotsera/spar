@@ -45,6 +45,56 @@ internal static unsafe class RealInput
         ]);
     }
 
+    /// <summary>Moves the mouse to the screen point (<paramref name="x"/>, <paramref name="y"/>), in physical pixels, buttons as they are.</summary>
+    [SupportedOSPlatform("windows10.0.17763")]
+    public static void Move(int x, int y)
+    {
+        SandboxGuest.EnsureUserSession("send real input");
+        var (dx, dy) = Absolute(x, y);
+        Send([Mouse(dx, dy, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_MOVE | MOUSE_EVENT_FLAGS.MOUSEEVENTF_ABSOLUTE | MOUSE_EVENT_FLAGS.MOUSEEVENTF_VIRTUALDESK)]);
+    }
+
+    /// <summary>
+    /// Drags with the left button from one screen point to another, in physical pixels: the press, a move in
+    /// <paramref name="steps"/> steps with <paramref name="pause"/> between them (a window manager's move follows motion
+    /// it sees), and the release. It blocks the calling test thread for the pauses, never a window's.
+    /// </summary>
+    [SupportedOSPlatform("windows10.0.17763")]
+    public static void Drag(int fromX, int fromY, int toX, int toY, int steps = 8, int pause = 15)
+    {
+        SandboxGuest.EnsureUserSession("send real input");
+        const MOUSE_EVENT_FLAGS At = MOUSE_EVENT_FLAGS.MOUSEEVENTF_ABSOLUTE | MOUSE_EVENT_FLAGS.MOUSEEVENTF_VIRTUALDESK;
+        var (startX, startY) = Absolute(fromX, fromY);
+        Send([Mouse(startX, startY, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_MOVE | At), Mouse(startX, startY, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_LEFTDOWN | At)]);
+        for (var step = 1; step <= steps; step++)
+        {
+            Thread.Sleep(pause);
+            var (dx, dy) = Absolute(fromX + ((toX - fromX) * step / steps), fromY + ((toY - fromY) * step / steps));
+            Send([Mouse(dx, dy, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_MOVE | At)]);
+        }
+
+        Thread.Sleep(pause);
+        var (endX, endY) = Absolute(toX, toY);
+        Send([Mouse(endX, endY, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_LEFTUP | At)]);
+    }
+
+    /// <summary>Double-clicks the left button at the screen point, in physical pixels.</summary>
+    [SupportedOSPlatform("windows10.0.17763")]
+    public static void DoubleClick(int x, int y)
+    {
+        SandboxGuest.EnsureUserSession("send real input");
+        var (dx, dy) = Absolute(x, y);
+        const MOUSE_EVENT_FLAGS At = MOUSE_EVENT_FLAGS.MOUSEEVENTF_ABSOLUTE | MOUSE_EVENT_FLAGS.MOUSEEVENTF_VIRTUALDESK;
+        Send(
+        [
+            Mouse(dx, dy, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_MOVE | At),
+            Mouse(dx, dy, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_LEFTDOWN | At),
+            Mouse(dx, dy, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_LEFTUP | At),
+            Mouse(dx, dy, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_LEFTDOWN | At),
+            Mouse(dx, dy, 0, MOUSE_EVENT_FLAGS.MOUSEEVENTF_LEFTUP | At),
+        ]);
+    }
+
     /// <summary>
     /// Presses a key or a combination, such as <c>"F12"</c>, <c>"Control+Shift+I"</c> or <c>"Alt+ArrowLeft"</c>: the
     /// modifiers down in order, the key down and up, the modifiers up in reverse.

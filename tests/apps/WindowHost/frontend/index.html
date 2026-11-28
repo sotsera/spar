@@ -6,6 +6,12 @@
     <script type="module" src="/src/main.js"></script>
   </head>
   <body>
+    <header data-spar-titlebar id="titlebar" class="titlebar" hidden>
+      <span id="titlebar-name">Titled window</span>
+      <input type="search" id="titlebar-search" aria-label="Search titles">
+      <span class="titlebar-space"></span>
+      <div data-spar-caption></div>
+    </header>
     <header class="bar">
       <h1>Window host</h1>
       <p role="status" id="status">Starting</p>
@@ -45,6 +51,7 @@
         <p id="window-info">This window: loading</p>
         <button type="button" id="open-note">Open a note</button>
         <button type="button" id="open-panel">Open the panel</button>
+        <button type="button" id="open-titled">Open a titled window</button>
         <button type="button" id="show-confirm">Show the confirm modal</button>
         <button type="button" id="answer-yes">Answer yes</button>
         <button type="button" id="which-window">Which window</button>

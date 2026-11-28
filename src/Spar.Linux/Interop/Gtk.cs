@@ -20,6 +20,15 @@ internal static unsafe partial class Gtk
     /// <summary><c>GDK_TOPLEVEL_STATE_SUSPENDED</c> (GTK 4.12): the surface cannot be seen by the user.</summary>
     public const uint ToplevelSuspended = 1 << 16;
 
+    /// <summary><c>GdkEventType</c> 1: the pointer moved.</summary>
+    public const int MotionNotify = 1;
+
+    /// <summary><c>GdkEventType</c> 2: a button was pressed.</summary>
+    public const int ButtonPress = 2;
+
+    /// <summary><c>GdkEventType</c> 3: a button was released.</summary>
+    public const int ButtonRelease = 3;
+
     /// <summary>Opens the display named by the environment; false when there is none.</summary>
     [LibraryImport(Library)]
     public static partial int gtk_init_check();
@@ -260,4 +269,82 @@ internal static unsafe partial class Gtk
     /// <summary><c>GdkEventType</c>: 2 button press, 3 release, 4 key press, 17 touch begin, 19 touch end.</summary>
     [LibraryImport(Library)]
     public static partial int gdk_event_get_event_type(nint gdkEvent);
+
+    /// <summary>Where the event happened, in its surface's coordinates; false for an event without a position.</summary>
+    [LibraryImport(Library)]
+    public static partial int gdk_event_get_position(nint gdkEvent, double* x, double* y);
+
+    /// <summary>The button of a press or release: 1 the primary, 3 the secondary.</summary>
+    [LibraryImport(Library)]
+    public static partial uint gdk_button_event_get_button(nint gdkEvent);
+
+    /// <summary>The event's timestamp, in milliseconds.</summary>
+    [LibraryImport(Library)]
+    public static partial uint gdk_event_get_time(nint gdkEvent);
+
+    /// <summary>The device of the event (borrowed).</summary>
+    [LibraryImport(Library)]
+    public static partial nint gdk_event_get_device(nint gdkEvent);
+
+    /// <summary>
+    /// Asks the window manager to resize the toplevel from <paramref name="edge"/> (<c>GdkSurfaceEdge</c>: 0 north-west,
+    /// 1 north, 2 north-east, 3 west, 4 east, 5 south-west, 6 south, 7 south-east) with the pointer, from the press at
+    /// (<paramref name="x"/>, <paramref name="y"/>) in the surface's coordinates; without a window manager GDK resizes it.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial void gdk_toplevel_begin_resize(nint toplevel, int edge, nint device, int button, double x, double y, uint timestamp);
+
+    /// <summary>Whether a compositor draws the display's windows: GTK's client-side frame then has a shadow, outside the content.</summary>
+    [LibraryImport(Library)]
+    public static partial int gdk_display_is_composited(nint display);
+
+    /// <summary>Whether GTK and the window manager draw a frame around the window at all.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_set_decorated(nint window, int decorated);
+
+    /// <summary>Ends what the controller is tracking, such as a press whose release the window manager took.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_event_controller_reset(nint controller);
+
+    /// <summary>The widget's controllers, as a <c>GListModel</c> the caller owns.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_widget_observe_controllers(nint widget);
+
+    /// <summary>The <c>GtkNative</c> the widget is in, its window (borrowed); 0 before it is in one.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_widget_get_native(nint widget);
+
+    /// <summary>
+    /// Where <paramref name="point"/>, in <paramref name="widget"/>'s coordinates, is in <paramref name="target"/>'s
+    /// (two floats each, <c>graphene_point_t</c>); false when the two are not in one window.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial int gtk_widget_compute_point(nint widget, nint target, float* point, float* result);
+
+    /// <summary>The offset of the native's own coordinates in its surface's: the client-side shadow's width.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_native_get_surface_transform(nint native, double* x, double* y);
+
+    /// <summary>Hides or shows the widget.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_widget_set_visible(nint widget, int visible);
+
+    /// <summary>A box with no children (orientation 0, horizontal), owned by the container it is given to.</summary>
+    [LibraryImport(Library)]
+    public static partial nint gtk_box_new(int orientation, int spacing);
+
+    /// <summary>The widget the window shows as its title bar; with a hidden one, GTK draws none and keeps its frame.</summary>
+    [LibraryImport(Library)]
+    public static partial void gtk_window_set_titlebar(nint window, nint titlebar);
+
+    /// <summary>
+    /// Asks the window manager to move the toplevel with the pointer, from the press of <paramref name="button"/> at
+    /// (<paramref name="x"/>, <paramref name="y"/>) in the surface's coordinates; without a window manager GDK moves it.
+    /// </summary>
+    [LibraryImport(Library)]
+    public static partial void gdk_toplevel_begin_move(nint toplevel, nint device, int button, double x, double y, uint timestamp);
+
+    /// <summary>Asks the window manager for the window's menu at the event; false where it has none.</summary>
+    [LibraryImport(Library)]
+    public static partial int gdk_toplevel_show_window_menu(nint toplevel, nint gdkEvent);
 }

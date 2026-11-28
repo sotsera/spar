@@ -155,6 +155,7 @@ internal sealed partial class AppWindow
         _theme?.Close();
         _view?.Close();
         StopFollowingPlacement();
+        StopTitleBar();
         GLib.g_signal_handler_disconnect(_window, _closeHandler);
         Gtk.gtk_window_destroy(_window);
         _window = 0;

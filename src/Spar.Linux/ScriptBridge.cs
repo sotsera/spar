@@ -372,6 +372,9 @@ internal sealed class ScriptBridge
     /// <summary>The page's zoom changed: the current document hears it (loop thread); one not connected yet gets it as it opens.</summary>
     public void SendZoom(double factor) => SessionOfCurrent()?.SendEvent(AppWindows.WindowCommands.ZoomEvent, AppWindows.WindowCommands.ZoomPayload(factor));
 
+    /// <summary>A host event for the current document (loop thread); one not connected yet starts from the window's state.</summary>
+    public void SendEvent(string name, ReadOnlyMemory<byte> payload) => SessionOfCurrent()?.SendEvent(name, payload);
+
     /// <summary>The current document's session, if it has connected (loop thread).</summary>
     private BridgeSession? SessionOfCurrent()
     {
